@@ -20,16 +20,16 @@ class NodeStatisticsDatabaseStorage extends CoreNodeStatisticsDatabaseStorage {
           'daycount' => 1,
           'totalcount' => 1,
           'timestamp' => $this->getRequestTime(),
-          'nid' => $id
+          'nid' => $id,
         ])
         ->execute();
       return TRUE;
     }
     catch (\Exception $e) {
       $prefixed_table = $this->connection->getMongodbPrefixedTable('node_counter');
-      $result = $this->connection->getConnection()->{$prefixed_table}->updateOne(
+      $this->connection->getConnection()->{$prefixed_table}->updateOne(
         [
-          'nid' => $id
+          'nid' => $id,
         ],
         [
           '$inc' => [
@@ -37,9 +37,9 @@ class NodeStatisticsDatabaseStorage extends CoreNodeStatisticsDatabaseStorage {
             'totalcount' => 1,
           ],
           '$set' => [
-            'timestamp' => new UTCDateTime($this->getRequestTime() * 1000)
-          ]
-        ]
+            'timestamp' => new UTCDateTime($this->getRequestTime() * 1000),
+          ],
+        ],
       );
       return TRUE;
     }

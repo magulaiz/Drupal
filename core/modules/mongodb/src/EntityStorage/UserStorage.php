@@ -44,12 +44,16 @@ class UserStorage extends ContentEntityStorage implements UserStorageInterface {
    */
   public function updateLastLoginTimestamp(UserInterface $account) {
     $prefixed_table = $this->database->getMongodbPrefixedTable('users');
-    $query = $this->database->getConnection()->{$prefixed_table}->updateMany(
-      ['uid' => ['$eq' => (int) $account->id()]],
-      ['$set' => [
-        "user_translations.$[].login" => new UTCDateTime($account->getLastLoginTime() * 1000),
-        "login" => new UTCDateTime($account->getLastLoginTime() * 1000)
-      ]]
+    $this->database->getConnection()->{$prefixed_table}->updateMany(
+      [
+        'uid' => ['$eq' => (int) $account->id()],
+      ],
+      [
+        '$set' => [
+          "user_translations.$[].login" => new UTCDateTime($account->getLastLoginTime() * 1000),
+          "login" => new UTCDateTime($account->getLastLoginTime() * 1000),
+        ],
+      ],
     );
     // Ensure that the entity cache is cleared.
     $this->resetCache([$account->id()]);
@@ -60,12 +64,16 @@ class UserStorage extends ContentEntityStorage implements UserStorageInterface {
    */
   public function updateLastAccessTimestamp(AccountInterface $account, $timestamp) {
     $prefixed_table = $this->database->getMongodbPrefixedTable('users');
-    $query = $this->database->getConnection()->{$prefixed_table}->updateMany(
-      ['uid' => ['$eq' => (int) $account->id()]],
-      ['$set' => [
-        "user_translations.$[].access" => new UTCDateTime($timestamp * 1000),
-        "access" => new UTCDateTime($timestamp * 1000)
-      ]]
+    $this->database->getConnection()->{$prefixed_table}->updateMany(
+      [
+        'uid' => ['$eq' => (int) $account->id()],
+      ],
+      [
+        '$set' => [
+          "user_translations.$[].access" => new UTCDateTime($timestamp * 1000),
+          "access" => new UTCDateTime($timestamp * 1000),
+        ],
+      ],
     );
     // Ensure that the entity cache is cleared.
     $this->resetCache([$account->id()]);
@@ -76,11 +84,15 @@ class UserStorage extends ContentEntityStorage implements UserStorageInterface {
    */
   public function deleteRoleReferences(array $rids) {
     $prefixed_table = $this->database->getMongodbPrefixedTable('users');
-    $query = $this->database->getConnection()->{$prefixed_table}->updateMany(
+    $this->database->getConnection()->{$prefixed_table}->updateMany(
       [],
-      ['$pull' => ["user_translations.$[].user_translations__roles" => [
-        "roles_target_id" => ['$in' => array_values($rids)]
-      ]]]
+      [
+        '$pull' => [
+          "user_translations.$[].user_translations__roles" => [
+            "roles_target_id" => ['$in' => array_values($rids)],
+          ],
+        ],
+      ],
     );
     $this->resetCache();
   }

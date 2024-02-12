@@ -70,7 +70,8 @@ class Upsert extends QueryUpsert {
             $insert_filter,
             [
               '$set' => $insert_document,
-              '$unset' => $unset_document],
+              '$unset' => $unset_document,
+            ],
             [
               'upsert' => TRUE,
               'session' => $this->connection->getMongodbSession(),
@@ -93,7 +94,7 @@ class Upsert extends QueryUpsert {
           $result = $this->connection->getConnection()->{$prefixed_table}->updateOne(
             $insert_filter,
             [
-              '$unset' => $unset_document
+              '$unset' => $unset_document,
             ],
             [
               'session' => $this->connection->getMongodbSession(),

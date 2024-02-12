@@ -2,11 +2,9 @@
 
 namespace Drupal\mongodb\Plugin\views\query;
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\mongodb\Driver\Database\mongodb\MongodbSQLException;
-use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\filter\LatestRevision;
 use Drupal\views\Plugin\views\query\Sql;
 use Drupal\views\ResultRow;
@@ -21,96 +19,99 @@ use Drupal\views\Views;
 class ViewsQuery extends Sql {
 
   /**
+   * The array of conditions.
+   *
    * An array of sections of the condition part of the query. Works the same
    * variable $where, with the exception that it can also contain full Condition
    * objects.
    */
-  public $condition = [];
+  public array $condition = [];
 
   /**
+   * The array of having conditions.
+   *
    * An array of sections of the having condition part of the query. Works the
    * same variable $having, with the exception that it can also contain full
    * Condition objects.
    */
-  public $havingCondition = [];
+  public array $havingCondition = [];
 
   /**
-   * A list of embedded table paths for the query to unwind before the $match
-   * part of the query.
+   * A list of embedded table paths to unwind before the $match.
    *
    * @var array
    */
-  protected $mongodbFilterUnwindPaths = [];
+  protected array $mongodbFilterUnwindPaths = [];
 
   /**
    * The array containing the fields to added for conditions to the query.
    *
    * @var array
    */
-  protected $mongodbConditionFields = [];
+  protected array $mongodbConditionFields = [];
 
   /**
    * The array containing the fields to be concatenated to the query.
    *
    * @var array
    */
-  protected $mongodbConcatFields = [];
+  protected array $mongodbConcatFields = [];
 
   /**
    * The array containing the fields to be substringed to the query.
    *
    * @var array
    */
-  protected $mongodbSubstringFields = [];
+  protected array $mongodbSubstringFields = [];
 
   /**
    * The array containing the fields to be multiplied and summed to the query.
    *
    * @var array
    */
-  protected $mongodbSumMultiplyFields = [];
+  protected array $mongodbSumMultiplyFields = [];
 
   /**
    * The array containing the fields with their length to be added to the query.
    *
    * @var array
    */
-  protected $mongodbFieldsLength = [];
+  protected array $mongodbFieldsLength = [];
 
   /**
    * The array containing the date fields as a date string be added to the query.
    *
    * @var array
    */
-  protected $mongodbDateDateFormattedFields = [];
+  protected array $mongodbDateDateFormattedFields = [];
 
   /**
    * The array containing the string fields as a date string be added to the query.
    *
    * @var array
    */
-  protected $mongodbDateStringFormattedFields = [];
+  protected array $mongodbDateStringFormattedFields = [];
 
   /**
    * The array containing the group by operation for the query.
    *
    * @var array
    */
-  protected $mongodbGroupByOperation = [];
+  protected array $mongodbGroupByOperation = [];
 
   /**
    * The array containing the unrelated joins for the query.
    *
    * @var array
    */
-  protected $mongodbUnrelatedJoins = [];
+  protected array $mongodbUnrelatedJoins = [];
 
   /**
    * Get the latest translation affected revision from the query.
    *
-   * @var array
+   * @var array|false
    */
-  protected $mongodbLatestTranslationAffectedRevision = FALSE;
+  protected array $mongodbLatestTranslationAffectedRevision = FALSE;
 
   /**
    * Set the latest translation affected revision value for the query.
@@ -118,14 +119,16 @@ class ViewsQuery extends Sql {
    * @param bool $value
    *   The value to set. Defaults to true.
    */
-  public function setLatestTranslationAffectedRevision($value = TRUE) {
-    return $this->mongodbLatestTranslationAffectedRevision = (bool) $value;
+  public function setLatestTranslationAffectedRevision(bool $value = TRUE) {
+    $this->mongodbLatestTranslationAffectedRevision = (bool) $value;
+
+    return $this->mongodbLatestTranslationAffectedRevision;
   }
 
   /**
    * Get the current revision table from the view.
    *
-   * @return
+   * @return string
    *   The current revision table.
    */
   public function getCurrentRevisionTable() {
@@ -135,7 +138,7 @@ class ViewsQuery extends Sql {
   /**
    * Get the all revisions table from the view.
    *
-   * @return
+   * @return string
    *   The all revisions table.
    */
   public function getAllRevisionsTable() {
@@ -145,7 +148,7 @@ class ViewsQuery extends Sql {
   /**
    * Get the latest revision table from the view.
    *
-   * @return
+   * @return string
    *   The latest revision table.
    */
   public function getLatestRevisionTable() {
@@ -177,7 +180,7 @@ class ViewsQuery extends Sql {
    * @param $extra
    *   An array of extra conditions on the join.
    *
-   * @return
+   * @return string
    *   The unique alias that was assigned for this table.
    *
    * @see \Drupal\mongodb\Driver\Select::addMongodbJoin()
@@ -195,7 +198,7 @@ class ViewsQuery extends Sql {
       'left_field' => $left_field,
       'operator' => $operator,
       'alias' => $alias,
-      'extra' => $extra
+      'extra' => $extra,
     ];
 
     return $alias;
@@ -319,7 +322,7 @@ class ViewsQuery extends Sql {
     $this->mongodbConcatFields[$alias] = [
       'fields' => $fields,
       'alias' => $alias,
-      'integer fields' => $integer_fields
+      'integer fields' => $integer_fields,
     ];
   }
 
@@ -355,7 +358,7 @@ class ViewsQuery extends Sql {
     $this->mongodbDateDateFormattedFields[$alias] = [
       'field' => $field,
       'alias' => $alias,
-      'format' => $format
+      'format' => $format,
     ];
   }
 
@@ -379,7 +382,7 @@ class ViewsQuery extends Sql {
     $this->mongodbDateStringFormattedFields[$alias] = [
       'field' => $field,
       'alias' => $alias,
-      'format' => $format
+      'format' => $format,
     ];
   }
 
@@ -550,7 +553,7 @@ class ViewsQuery extends Sql {
       $this->mongodbGroupByOperation[$alias] = [
         'field' => $field,
         'alias' => $alias,
-        'operator' => $operator
+        'operator' => $operator,
       ];
     }
   }
@@ -621,7 +624,7 @@ class ViewsQuery extends Sql {
           if (is_array($clause) && isset($clause['operator']) && !in_array($clause['operator'], ['DATEDATE', 'DATESTRING'], TRUE) && isset($clause['value'])) {
             if (strtoupper(substr($clause['operator'], -7)) == '_STRING') {
               if (is_array($clause['value'])) {
-                foreach($clause['value'] as &$clause_value) {
+                foreach ($clause['value'] as &$clause_value) {
                   $clause_value = (string) $clause_value;
                 }
               }
@@ -633,7 +636,7 @@ class ViewsQuery extends Sql {
               $clause['value'] = (int) $clause['value'];
             }
             elseif (is_array($clause['value'])) {
-              foreach($clause['value'] as &$clause_value) {
+              foreach ($clause['value'] as &$clause_value) {
                 if (is_int($clause_value) || ctype_digit($clause_value)) {
                   $clause_value = (int) $clause_value;
                 }
@@ -655,7 +658,7 @@ class ViewsQuery extends Sql {
     $filter_group = $this->groupOperator == 'OR' ? $connection->condition('OR') : $connection->condition('AND');
 
     foreach ($this->$where as $group => $info) {
-       if (!empty($info['conditions'])) {
+      if (!empty($info['conditions'])) {
         $sub_group = $info['type'] == 'OR' ? $connection->condition('OR') : $connection->condition('AND');
         foreach ($info['conditions'] as &$clause) {
           if ($clause instanceof Condition) {
@@ -839,7 +842,7 @@ class ViewsQuery extends Sql {
         ];
       }
 
-      foreach ($entity_information as $entity_type_id => $info) {
+      foreach ($entity_information as $info) {
         $entity_type = \Drupal::entityTypeManager()->getDefinition($info['entity_type']);
         $base_field = !$info['revision'] ? $entity_type->getKey('id') : $entity_type->getKey('revision');
         $this->addField($info['alias'], $base_field, '', $params);
@@ -1087,7 +1090,7 @@ class ViewsQuery extends Sql {
         // $query->where('1 = 1', $additional_arguments);
         // $count_query->where('1 = 1', $additional_arguments);
       }
-dump($query->__toString());
+
       $start = microtime(TRUE);
 
       try {
@@ -1114,12 +1117,10 @@ dump($query->__toString());
           $row->index = $index;
         });
 
-//dump($view->result);
         if ($this->mongodbLatestTranslationAffectedRevision) {
           $this->updateLatestTranslationAffectedRevision($view->result);
         }
         $this->updateViewsResultForNonRelationalDatabases($view->result);
-dump($view->result);
 
         $view->pager->postExecute($view->result);
         $view->pager->updatePageInfo();
@@ -1310,6 +1311,8 @@ dump($view->result);
   }
 
   /**
+   * Transform result id for non relational databases.
+   *
    * Helper method for changing allowing non relational databases to transform
    * their views result to match that of relational databases.
    *

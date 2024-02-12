@@ -64,9 +64,6 @@ trait StringArgumentTrait {
       else {
         $field .= ' = ' . $placeholder;
       }
-      $placeholders = [
-        $placeholder => $argument,
-      ];
       $this->query->addSubstringField($this->realField . '_truncated', $field, 0, intval($this->options['limit']));
     }
     else {

@@ -2,7 +2,6 @@
 
 namespace Drupal\mongodb\Menu;
 
-use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Menu\MenuTreeStorage as CoreMenuTreeStorage;
@@ -30,7 +29,7 @@ class MenuTreeStorage extends CoreMenuTreeStorage {
   /**
    * {@inheritdoc}
    */
-   protected $tableExists = FALSE;
+  protected $tableExists = FALSE;
 
   /**
    * {@inheritdoc}
@@ -160,7 +159,6 @@ class MenuTreeStorage extends CoreMenuTreeStorage {
     $query->condition('parent', $original['id']);
     $children = $this->safeExecuteSelect($query)->fetchAll(\PDO::FETCH_ASSOC);
 
-    $parent_mlid = (int) $original['mlid'];
     foreach ($children as $child) {
       // Get the mlid and id values from the child and remove them for the
       // update query.
@@ -453,7 +451,7 @@ class MenuTreeStorage extends CoreMenuTreeStorage {
     if ($definitions) {
       $query = $this->connection->select($this->table, NULL, $this->options);
       $query->addField($this->table, 'id');
-      $query->condition('discovered', TRUE); // The only change in this method.
+      $query->condition('discovered', TRUE);
       $query->condition('id', array_keys($definitions), 'NOT IN');
       // Starting from links with the greatest depth will minimize the amount
       // of re-parenting done by the menu storage.

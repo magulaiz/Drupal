@@ -3,7 +3,6 @@
 namespace Drupal\mongodb\Cache;
 
 use Drupal\Core\Cache\DatabaseCacheTagsChecksum as CoreDatabaseCacheTagsChecksum;
-use Drupal\Core\Database\Connection;
 use Drupal\mongodb\Driver\Database\mongodb\Statement;
 
 /**
@@ -16,7 +15,7 @@ class DatabaseCacheTagsChecksum extends CoreDatabaseCacheTagsChecksum {
    *
    * @var bool
    */
-  protected $tableExists = FALSE;
+  protected bool $tableExists = FALSE;
 
   /**
    * {@inheritdoc}

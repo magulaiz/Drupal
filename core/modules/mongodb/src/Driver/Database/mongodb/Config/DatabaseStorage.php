@@ -39,9 +39,6 @@ class DatabaseStorage extends CoreDatabaseStorage {
    * {@inheritdoc}
    */
   public function read($name) {
-if ($name == 'search.page.user_search') {
-//echo('MongoDB Config read() $name:' . $name);
-}
     $prefixed_table = $this->connection->getMongodbPrefixedTable($this->table);
     $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
       ['collection' => ['$eq' => $this->collection], 'name' => ['$eq' => $name]],
@@ -51,11 +48,7 @@ if ($name == 'search.page.user_search') {
     $statement = new Statement($this->connection, $cursor, ['data']);
     $raw = $statement->execute()->fetchField();
     if ($raw !== FALSE) {
-      $return = $this->decode($raw);
-if ($name == 'search.page.user_search') {
-//echo 'return: ' . print_r($return, TRUE);
-}
-      return $return;
+      return $this->decode($raw);
     }
 
     return FALSE;
@@ -65,10 +58,6 @@ if ($name == 'search.page.user_search') {
    * {@inheritdoc}
    */
   public function readMultiple(array $names) {
-if (in_array('search.page.user_search', $names, TRUE)) {
-//echo('MongoDB Config readMultiple()');
-//echo '$names: ' . print_r($names, TRUE);
-}
     $prefixed_table = $this->connection->getMongodbPrefixedTable($this->table);
     $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
       ['collection' => ['$eq' => $this->collection], 'name' => ['$in' => $names]],
@@ -80,9 +69,6 @@ if (in_array('search.page.user_search', $names, TRUE)) {
     foreach ($list as &$data) {
       $data = $this->decode($data);
     }
-if (in_array('search.page.user_search', $names, TRUE)) {
-//echo 'list: ' . print_r($list['search.page.user_search'], TRUE);
-}
 
     return $list;
   }
@@ -96,13 +82,6 @@ if (in_array('search.page.user_search', $names, TRUE)) {
    */
   public function decode($raw) {
     $data = @unserialize($raw);
-if (is_array($data)) {
-  foreach($data as $key => $value) {
-    if ($key == '_core') {
-//echo ' $key: ' . $key . ' $value: ' . gettype($value) . "\n";
-    }
-  }
-}
     return is_array($data) ? $data : FALSE;
   }
 

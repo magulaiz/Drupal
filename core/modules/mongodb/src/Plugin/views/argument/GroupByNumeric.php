@@ -14,8 +14,6 @@ class GroupByNumeric extends CoreGroupByNumeric {
    */
   public function query($group_by = FALSE) {
     $this->ensureMyTable();
-    $field = $this->getField();
-    $placeholder = $this->placeholder();
 
     if ($this->table == $this->view->storage->get('base_table')) {
       $field = $this->realField;

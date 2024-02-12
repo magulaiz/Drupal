@@ -216,15 +216,19 @@ class TermStorage extends ContentEntityStorage implements TermStorageInterface {
     $prefixed_table = $this->database->getMongodbPrefixedTable('taxonomy_term_data');
     $this->database->getConnection()->{$prefixed_table}->updateMany(
       [
-        'vid' => $vid
+        'vid' => $vid,
       ],
-      [ '$set' => [
-        'weight' => 0,
-        "taxonomy_term_translations.$[translation].weight" => 0
-      ]],
-      [ 'arrayFilters' => [
-        [ "translation.vid" => $vid]
-      ]]
+      [
+        '$set' => [
+          'weight' => 0,
+          "taxonomy_term_translations.$[translation].weight" => 0,
+        ],
+      ],
+      [
+        'arrayFilters' => [
+          [ "translation.vid" => $vid],
+        ],
+      ],
     );
   }
 
@@ -239,7 +243,7 @@ class TermStorage extends ContentEntityStorage implements TermStorageInterface {
     $extra = [[
       'field' => 'nid',
       'value' => $nids,
-      'operator' => 'IN'
+      'operator' => 'IN',
     ]];
     $query->addMongodbJoin('INNER', 'taxonomy_index', 'tid', 'taxonomy_term_data', 'tid', '=', 'tn', $extra);
     $query->fields('td', ['tid']);
@@ -279,8 +283,7 @@ class TermStorage extends ContentEntityStorage implements TermStorageInterface {
    * {@inheritdoc}
    */
   public function getVocabularyHierarchyType($vid) {
-
-//@TODO Needs work!
+    //@TODO Needs work!
 
     // Return early if we already computed this value.
     if (isset($this->vocabularyHierarchyType[$vid])) {
@@ -324,7 +327,6 @@ class TermStorage extends ContentEntityStorage implements TermStorageInterface {
     $revision_field = $table_mapping->getColumnNames($this->entityType->getKey('revision'))['value'];
     $rta_field = $table_mapping->getColumnNames($this->entityType->getKey('revision_translation_affected'))['value'];
     $revision_default_field = $table_mapping->getColumnNames($this->entityType->getRevisionMetadataKey('revision_default'))['value'];
-    $langcode_field = $table_mapping->getColumnNames($this->entityType->getKey('langcode'))['value'];
     $latest_revision_table = $this->getLatestRevisionTable();
 
     $results = $this->database->select($this->getBaseTable(), 't')

@@ -2,7 +2,6 @@
 
 namespace Drupal\mongodb\modules\views;
 
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Plugin\views\join\JoinPluginBase;
 
@@ -11,7 +10,7 @@ use Drupal\views\ManyToOneHelper as CoreManyToOneHelper;
 /**
  * Overrides the class \Drupal\views\ManyToOneHelper.
  */
-class ManyToOneHelper extends CoreManyToOneHelper{
+class ManyToOneHelper extends CoreManyToOneHelper {
 
   /**
    * Get the field via formula or build it using alias and field name.
@@ -88,6 +87,7 @@ class ManyToOneHelper extends CoreManyToOneHelper{
 
   /**
    * Override ensureMyTable so we can control how this joins in.
+   *
    * The operator actually has influence over joining.
    */
   public function ensureMyTable() {
@@ -225,15 +225,11 @@ class ManyToOneHelper extends CoreManyToOneHelper{
 
     if (!$add_condition) {
       if ($formula) {
-        $placeholder = $this->placeholder();
         // TODO: MongoDB needs to do something here!
-//        $this->handler->query->addSubstringField($placeholder, $field, $start, $length);
+        // $this->handler->query->addSubstringField($placeholder, $field, $start, $length);
       }
       else {
-        $placeholder = $this->placeholder();
         if (count($this->handler->value) > 1) {
-          $placeholder .= '[]';
-
           if ($operator == 'IS NULL') {
             $condition = $this->handler->query->getConnection()->condition('AND');
             $condition->condition($field, $this->handler->value, 'NOT IN');

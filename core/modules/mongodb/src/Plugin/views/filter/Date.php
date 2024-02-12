@@ -10,7 +10,7 @@ use MongoDB\BSON\UTCDateTime;
  */
 class Date extends CoreDate {
 
-  use DateTrait; 
+  use DateTrait;
 
   /**
    * {@inheritdoc}

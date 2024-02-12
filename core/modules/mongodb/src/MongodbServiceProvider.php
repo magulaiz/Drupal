@@ -22,7 +22,7 @@ class MongodbServiceProvider extends ServiceProviderBase {
       $container->register('mongodb.workspaces.entity.query.sql', 'Drupal\mongodb\modules\workspaces\EntityQuery\QueryFactory')
         ->addArgument(new Reference(('database')))
         ->addArgument(new Reference(('workspaces.manager')))
-        ->setPublic(false)
+        ->setPublic(FALSE)
         ->setDecoratedService('mongodb.entity.query.sql', NULL, 50);
     }
   }

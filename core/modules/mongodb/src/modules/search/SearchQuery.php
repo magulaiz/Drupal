@@ -2,7 +2,6 @@
 
 namespace Drupal\mongodb\modules\search;
 
-use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\search\SearchQuery as CoreSearchQuery;
 
 /**
@@ -231,12 +230,12 @@ class SearchQuery extends CoreSearchQuery {
       $extra = [
         [
           'field' => 'type',
-          'left_field' => 'type'
+          'left_field' => 'type',
         ],
         [
           'field' => 'langcode',
-          'left_field' => 'langcode'
-        ]
+          'left_field' => 'langcode',
+        ],
       ];
 
       $normalize_query->addMongodbJoin('INNER', 'search_dataset', 'sid', 'search_index', 'sid', '=', 'd', $extra);
@@ -278,66 +277,6 @@ class SearchQuery extends CoreSearchQuery {
     // matches to the supplied positive keywords.
     $this->status |= SearchQuery::NO_KEYWORD_MATCHES;
     return FALSE;
-  }
-
-  /**
-   * Adds a custom score expression to the search query.
-   *
-   * Score expressions are used to order search results. If no calls to
-   * addScore() have taken place, a default keyword relevance score will be
-   * used. However, if at least one call to addScore() has taken place, the
-   * keyword relevance score is not automatically added.
-   *
-   * Note that you must use this method to add ordering to your searches, and
-   * not call orderBy() directly, when using the SearchQuery extender. This is
-   * because of the two-pass system the SearchQuery class uses to normalize
-   * scores.
-   *
-   * @param string $score
-   *   The score expression, which should evaluate to a number between 0 and 1.
-   *   The string 'i.relevance' in a score expression will be replaced by a
-   *   measure of keyword relevance between 0 and 1.
-   * @param array $arguments
-   *   Query arguments needed to provide values to the score expression.
-   * @param float $multiply
-   *   If set, the score is multiplied with this value. However, all scores
-   *   with multipliers are then divided by the total of all multipliers, so
-   *   that overall, the normalization is maintained.
-   *
-   * @return $this
-   *
-  public function addScore($score, $arguments = [], $multiply = FALSE) {
-    if ($multiply) {
-      $i = count($this->multiply);
-      // Modify the score expression so it is multiplied by the multiplier,
-      // with a divisor to renormalize. Note that the ROUND here is necessary
-      // for PostgreSQL and SQLite in order to ensure that the :multiply_* and
-      // :total_* arguments are treated as a numeric type, because the
-      // PostgreSQL PDO driver sometimes puts values in as strings instead of
-      // numbers in complex expressions like this.
-      $score = "(ROUND(:multiply_$i, 4)) * COALESCE(($score), 0) / (ROUND(:total_$i, 4))";
-      // Add an argument for the multiplier. The :total_$i argument is taken
-      // care of in the execute() method, which is when the total divisor is
-      // calculated.
-      $arguments[':multiply_' . $i] = $multiply;
-      $this->multiply[] = $multiply;
-    }
-
-    // Search scoring needs a way to include a keyword relevance in the score.
-    // For historical reasons, this is done by putting 'i.relevance' into the
-    // search expression. So, use string replacement to change this to a
-    // calculated query expression, counting the number of occurrences so
-    // in the execute() method we can add arguments.
-    while (strpos($score, 'i.relevance') !== FALSE) {
-      $pieces = explode('i.relevance', $score, 2);
-      $score = implode('((ROUND(:normalization_' . $this->relevance_count . ', 4)) * i.score * t.count)', $pieces);
-      $this->relevance_count++;
-    }
-
-    $this->scores[] = $score;
-    $this->scoresArguments += $arguments;
-
-    return $this;
   }
 
   /**

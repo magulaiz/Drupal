@@ -44,19 +44,14 @@ class EntityTestViewsData extends EntityViewsData {
           'id' => 'standard'
         ],
         'entity field' => 'name',
-        'real field' => 'entity_test_multivalue_basefield__name.name_value'
+        'real field' => 'entity_test_multivalue_basefield__name.name_value',
       ];
-//      $data['entity_test_multivalue_basefield']['name_value'] = $data['entity_test_multivalue_basefield']['name'];
+      // $data['entity_test_multivalue_basefield']['name_value'] = $data['entity_test_multivalue_basefield']['name'];
     }
 
     if ($this->entityType->id() == 'entity_test') {
       $data = NestedArray::mergeDeep($data, \Drupal::state()->get('entity_test.views_data', []));
     }
-
-if (isset($data['entity_test_multivalue_basefield'])) {
-//echo ' $data: ' . print_r(array_keys($data['entity_test_multivalue_basefield']));
-//dump($data['entity_test_multivalue_basefield']);
-}
 
     return $data;
   }

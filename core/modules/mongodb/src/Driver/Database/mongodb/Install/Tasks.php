@@ -23,43 +23,45 @@ class Tasks extends InstallTasks {
   /**
    * {@inheritdoc}
    */
-  protected $tasks = array(
-    array(
+  protected $tasks = [
+    [
       'function'    => 'checkEngineVersion',
       'arguments'   => [],
-    ),
-    array(
+    ],
+    [
       'function'    => 'checkDropCollectionIfExists',
-      'arguments'   => array('name' => 'drupal_install_test'),
-    ),
-    array(
+      'arguments'   => ['name' => 'drupal_install_test'],
+    ],
+    [
       'function'    => 'checkCreateCollection',
-      'arguments'   => array('name' => 'drupal_install_test', 'definition' => [
-        'fields' => [
-          'id'  => [
-            'type' => 'int',
-            'default' => NULL,
+      'arguments'   => [
+        'name' => 'drupal_install_test', 'definition' => [
+          'fields' => [
+            'id'  => [
+              'type' => 'int',
+              'default' => NULL,
+            ],
           ],
         ],
-      ]),
-    ),
-    array(
+      ],
+    ],
+    [
       'function'    => 'checkInsertCollection',
-      'arguments'   => array('name' => 'drupal_install_test', 'fields' => ['id' => 1]),
-    ),
-    array(
+      'arguments'   => ['name' => 'drupal_install_test', 'fields' => ['id' => 1]],
+    ],
+    [
       'function'    => 'checkUpdateCollection',
-      'arguments'   => array('name' => 'drupal_install_test', 'condition' => ['id', 1, '='], 'fields' => ['id' => 2]),
-    ),
-    array(
+      'arguments'   => ['name' => 'drupal_install_test', 'condition' => ['id', 1, '='], 'fields' => ['id' => 2]],
+    ],
+    [
       'function'    => 'checkDeleteCollection',
-      'arguments'   => array('name' => 'drupal_install_test', 'condition' => ['id', 2, '=']),
-    ),
-    array(
+      'arguments'   => ['name' => 'drupal_install_test', 'condition' => ['id', 2, '=']],
+    ],
+    [
       'function'    => 'checkDropCollection',
-      'arguments'   => array('name' => 'drupal_install_test'),
-    ),
-  );
+      'arguments'   => ['name' => 'drupal_install_test'],
+    ],
+  ];
 
   /**
    * {@inheritdoc}

@@ -125,7 +125,7 @@ class EntityViewsData extends CoreEntityViewsData {
     }
 
     $entity_type_id = $this->entityType->id();
-    array_walk($data, function(&$table_data) use ($entity_type_id){
+    array_walk($data, function (&$table_data) use ($entity_type_id) {
       $table_data['table']['entity type'] = $entity_type_id;
     });
 
@@ -141,12 +141,12 @@ class EntityViewsData extends CoreEntityViewsData {
     $field_schema = $this->getFieldStorageDefinitions()[$field_name]->getSchema();
     $field_definition_type = $field_definition->getType();
 
-//    $multiple = (count($field_column_mapping) > 1);
+    // $multiple = (count($field_column_mapping) > 1);
     $first = TRUE;
     foreach ($field_column_mapping as $field_column_name => $schema_field_name) {
-//      $views_field_name = ($multiple) ? $field_name . '__' . $field_column_name : $field_name;
-//      $table_data[$views_field_name] = $this->mapSingleFieldViewsData($table, $field_name, $field_definition_type, $field_column_name, $field_schema['columns'][$field_column_name]['type'], $first, $field_definition);
-//      $table_data[$views_field_name]['entity field'] = $field_name;
+      // $views_field_name = ($multiple) ? $field_name . '__' . $field_column_name : $field_name;
+      // $table_data[$views_field_name] = $this->mapSingleFieldViewsData($table, $field_name, $field_definition_type, $field_column_name, $field_schema['columns'][$field_column_name]['type'], $first, $field_definition);
+      // $table_data[$views_field_name]['entity field'] = $field_name;
 
       $table_data[$schema_field_name] = $this->mapSingleFieldViewsData($table, $field_name, $field_definition_type, $field_column_name, $field_schema['columns'][$field_column_name]['type'], $first, $field_definition);
       $table_data[$schema_field_name]['entity field'] = $field_name;
@@ -155,34 +155,34 @@ class EntityViewsData extends CoreEntityViewsData {
       if ($table != $base_table) {
         if ($table_mapping->requiresDedicatedTableStorage($field_definition->getFieldStorageDefinition())) {
           if ($this->entityType->isRevisionable()) {
-//            $table_data[$views_field_name]['real field'] = $this->storage->getCurrentRevisionTable() . '.' . $table . '.' . $views_field_name;
+            // $table_data[$views_field_name]['real field'] = $this->storage->getCurrentRevisionTable() . '.' . $table . '.' . $views_field_name;
             $table_data[$schema_field_name]['real field'] = $this->storage->getCurrentRevisionTable() . '.' . $table . '.' . $schema_field_name;
           }
           elseif ($this->entityType->isTranslatable()) {
-//            $table_data[$views_field_name]['real field'] = $this->storage->getTranslationsTable() . '.' . $table . '.' . $views_field_name;
+            // $table_data[$views_field_name]['real field'] = $this->storage->getTranslationsTable() . '.' . $table . '.' . $views_field_name;
             $table_data[$schema_field_name]['real field'] = $this->storage->getTranslationsTable() . '.' . $table . '.' . $schema_field_name;
           }
           else {
-//            $table_data[$views_field_name]['real field'] = $table . '.' . $views_field_name;
+            // $table_data[$views_field_name]['real field'] = $table . '.' . $views_field_name;
             $table_data[$schema_field_name]['real field'] = $table . '.' . $schema_field_name;
           }
         }
         elseif ($field_name != $this->entityType->getKey('id')) {
           if ($this->entityType->isRevisionable()) {
-//            $table_data[$views_field_name]['real field'] = $this->storage->getCurrentRevisionTable() . '.' . $views_field_name;
+            // $table_data[$views_field_name]['real field'] = $this->storage->getCurrentRevisionTable() . '.' . $views_field_name;
             $table_data[$schema_field_name]['real field'] = $this->storage->getCurrentRevisionTable() . '.' . $schema_field_name;
           }
           elseif ($this->entityType->isTranslatable()) {
-//            $table_data[$views_field_name]['real field'] = $this->storage->getTranslationsTable() . '.' . $views_field_name;
+            // $table_data[$views_field_name]['real field'] = $this->storage->getTranslationsTable() . '.' . $views_field_name;
             $table_data[$schema_field_name]['real field'] = $this->storage->getTranslationsTable() . '.' . $schema_field_name;
           }
           else {
-//            $table_data[$views_field_name]['real field'] = $views_field_name;
+            // $table_data[$views_field_name]['real field'] = $views_field_name;
             $table_data[$schema_field_name]['real field'] = $schema_field_name;
           }
         }
         else {
-//          $table_data[$views_field_name]['real field'] = $views_field_name;
+          // $table_data[$views_field_name]['real field'] = $views_field_name;
           $table_data[$schema_field_name]['real field'] = $schema_field_name;
         }
       }

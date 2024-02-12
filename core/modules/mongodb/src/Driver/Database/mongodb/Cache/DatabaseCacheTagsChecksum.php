@@ -3,7 +3,6 @@
 namespace Drupal\mongodb\Driver\Database\mongodb\Cache;
 
 use Drupal\Core\Cache\DatabaseCacheTagsChecksum as CoreDatabaseCacheTagsChecksum;
-use Drupal\Core\Database\Connection;
 use Drupal\mongodb\Driver\Database\mongodb\Statement;
 
 /**

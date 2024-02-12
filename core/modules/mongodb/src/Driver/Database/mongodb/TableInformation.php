@@ -4,8 +4,6 @@ namespace Drupal\mongodb\Driver\Database\mongodb;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
-use MongoDB\BSON\ObjectID;
-use MongoDB\Driver\ReadConcern;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
 
@@ -67,9 +65,6 @@ class TableInformation {
    */
   public function load($reload = FALSE) {
     if (empty($this->tableInformation) || $reload) {
-//dump('RELOAD table information!');
-//dump(empty($this->tableInformation) ? 'table information is empty' : 'table information is NOT empty');
-//dump($reload ? 'Reload TRUE' : 'Reload FALSE');
       $prefixed_table_information_table = $this->connection->getMongodbPrefixedTable(static::TABLE_NAME);
 
       $result = $this->connection->getConnection()->{$prefixed_table_information_table}->findOne(

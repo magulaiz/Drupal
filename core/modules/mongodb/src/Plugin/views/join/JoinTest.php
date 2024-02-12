@@ -31,6 +31,7 @@ class JoinTest extends CoreJoinTest {
    * Sets the joinValue property.
    *
    * @param int $join_value
+   *   The join value.
    */
   public function setJoinValue($join_value) {
     $this->joinValue = $join_value;
@@ -54,8 +55,8 @@ class JoinTest extends CoreJoinTest {
       [
         'left_field' => 'uid',
         'value' => $this->getJoinValue(),
-        'operator' => '='
-      ]
+        'operator' => '=',
+      ],
     ];
 
     if (empty($this->configuration['table formula'])) {
@@ -79,7 +80,7 @@ class JoinTest extends CoreJoinTest {
     $arguments = [];
 
     if (!empty($view_query->getCurrentRevisionTable()) && !empty($view_query->getAllRevisionsTable()) && !empty($view_query->getLatestRevisionTable())) {
-     $search_needle = $view_query->getCurrentRevisionTable() . '.';
+      $search_needle = $view_query->getCurrentRevisionTable() . '.';
       if ($view_query->hasLatestRevisionFilter()) {
         $replace_needle = $view_query->getLatestRevisionTable() . '.';
       }

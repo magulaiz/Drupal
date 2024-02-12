@@ -2,7 +2,6 @@
 
 namespace Drupal\mongodb\modules\path_alias;
 
-use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\path_alias\AliasRepository as CoreAliasRepository;
@@ -16,10 +15,9 @@ class AliasRepository extends CoreAliasRepository {
    * {@inheritdoc}
    */
   public function preloadPathAlias($preloaded, $langcode) {
-echo ' $preloaded: ' . print_r($preloaded, TRUE) . "\n";
     // @todo There is no testing for this method.
     $select = $this->getBaseQuery()
-      ->fields('base_table', ['path_alias_current_revision']); // 'path', 'alias'
+      ->fields('base_table', ['path_alias_current_revision']);
 
     if (!empty($preloaded)) {
       $conditions = $this->connection->condition('OR');
@@ -37,7 +35,6 @@ echo ' $preloaded: ' . print_r($preloaded, TRUE) . "\n";
     $select->orderBy('id', 'ASC');
 
     $result = $select->execute()->fetchAllKeyed();
-//echo ' $result: ' . print_r($result, TRUE);
 
     return $result;
   }
@@ -46,25 +43,20 @@ echo ' $preloaded: ' . print_r($preloaded, TRUE) . "\n";
    * {@inheritdoc}
    */
   public function lookupBySystemPath($path, $langcode) {
-//dump('lookupBySystemPath:');
-//dump($path);
-//dump($langcode);
     // See the queries above. Use LIKE for case-insensitive matching.
     $select = $this->getBaseQuery()
-      ->fields('base_table', ['id', 'path_alias_current_revision']) // 'id', 'path', 'alias', 'langcode'
+      ->fields('base_table', ['id', 'path_alias_current_revision'])
       ->condition('path_alias_current_revision.path', $this->connection->escapeLike($path), 'LIKE');
 
     $this->addLanguageFallback($select, $langcode);
 
     $select->orderBy('id', 'DESC');
-//dump($select->__toString());
 
     $result = $select->execute()->fetchAssoc() ?: NULL;
-//dump($result);
 
     if (isset($result['path_alias_current_revision'])) {
       $revision = NULL;
-      foreach($result['path_alias_current_revision'] as $current_revision) {
+      foreach ($result['path_alias_current_revision'] as $current_revision) {
         // @todo We need extra testing for when both the langcode revision and the
         // "und" revision is available.
         if (in_array($current_revision['langcode'], [$langcode, LanguageInterface::LANGCODE_NOT_SPECIFIED], TRUE)) {
@@ -76,7 +68,6 @@ echo ' $preloaded: ' . print_r($preloaded, TRUE) . "\n";
       $result['langcode'] = $revision['langcode'] ?? '';
       unset($result['path_alias_current_revision']);
     }
-//dump($result);
 
     return $result;
   }
@@ -87,7 +78,7 @@ echo ' $preloaded: ' . print_r($preloaded, TRUE) . "\n";
   public function lookupByAlias($alias, $langcode) {
     // See the queries above. Use LIKE for case-insensitive matching.
     $select = $this->getBaseQuery()
-      ->fields('base_table', ['id', 'path_alias_current_revision']) // 'id', 'path', 'alias', 'langcode'
+      ->fields('base_table', ['id', 'path_alias_current_revision'])
       ->condition('path_alias_current_revision.alias', $this->connection->escapeLike($alias), 'LIKE');
 
     $this->addLanguageFallback($select, $langcode);
@@ -98,7 +89,7 @@ echo ' $preloaded: ' . print_r($preloaded, TRUE) . "\n";
 
     if (isset($result['path_alias_current_revision'])) {
       $revision = NULL;
-      foreach($result['path_alias_current_revision'] as $current_revision) {
+      foreach ($result['path_alias_current_revision'] as $current_revision) {
         // @todo We need extra testing for when both the langcode revision and the
         // "und" revision is available.
         if (in_array($current_revision['langcode'], [$langcode, LanguageInterface::LANGCODE_NOT_SPECIFIED], TRUE)) {
@@ -118,7 +109,6 @@ echo ' $preloaded: ' . print_r($preloaded, TRUE) . "\n";
    * {@inheritdoc}
    */
   public function pathHasMatchingAlias($initial_substring) {
-//echo ' pathHasMatchingAlias ';
     $query = $this->getBaseQuery();
     $query->addExpression(1);
 

@@ -5,7 +5,6 @@ namespace Drupal\mongodb\modules\node;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\mongodb\Driver\Database\mongodb\StatementCountQuery;
 use Drupal\node\NodeGrantDatabaseStorage as CoreNodeGrantDatabaseStorage;
 use Drupal\node\NodeInterface;
 
@@ -213,7 +212,7 @@ class NodeGrantDatabaseStorage extends CoreNodeGrantDatabaseStorage {
    * {@inheritdoc}
    */
   public function deleteNodeRecords(array $nids) {
-    // Make sure that all $nids have an integer value
+    // Make sure that all $nids have an integer value.
     foreach ($nids as &$nid) {
       $nid = (int) $nid;
     }
@@ -236,10 +235,12 @@ class NodeGrantDatabaseStorage extends CoreNodeGrantDatabaseStorage {
           $gid = (int) $gid;
         }
         if ($is_subquery) {
-          $conditions[] = ['$and' => [
-            ['$in' => ['$gid', $gids]],
-            ['$eq' => ['$realm', $realm]]
-          ]];
+          $conditions[] = [
+            '$and' => [
+              ['$in' => ['$gid', $gids]],
+              ['$eq' => ['$realm', $realm]],
+            ],
+          ];
         }
         else {
           $and = $this->database->condition('AND');

@@ -2,8 +2,6 @@
 
 namespace Drupal\mongodb\EntityStorage;
 
-use Drupal\Core\Entity\ContentEntityTypeInterface;
-
 /**
  * The MongoDB implementation of \Drupal\user\UserStorageSchema.
  */

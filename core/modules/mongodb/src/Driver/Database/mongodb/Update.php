@@ -146,7 +146,7 @@ class Update extends QueryUpdate {
   public function embeddedTableDeleteCondition($embedded_table, $field, $value = NULL, $operator = '=') {
     $embedded_to_table = $this->tableInformation->getTableEmbeddedToTable($embedded_table);
     if (!$embedded_to_table || ($embedded_to_table != $this->table)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot add fields to the embedded table @embedded_table, because the embedded table does not belong to the @base_table.", ['@embedded_table' => $embedded_table, '@base_table' => $this->table]));
+      throw new SchemaObjectDoesNotExistException("Cannot add fields to the embedded table $embedded_table, because the embedded table does not belong to the " . $this->table . '.');
     }
 
     // Make sure that condition is a object of
@@ -173,7 +173,7 @@ class Update extends QueryUpdate {
     $this->stringFields = $this->tableInformation->getTableStringFields($this->table);
 
     // Embedded table data needs to be compiled for saving in MongoDB.
-    $embedded_tables = $this->tableInformation->getTableEmbeddedTables($this->table);
+    // $embedded_tables = $this->tableInformation->getTableEmbeddedTables($this->table);
 
     $update_mul = [];
     $update_inc = [];
@@ -245,6 +245,7 @@ class Update extends QueryUpdate {
                 $update_mul[$field] = $left_side;
               }
               break;
+
             case '+':
               if ($field == $math_matches[0]) {
                 $update_inc[$field] = $right_side;
@@ -253,6 +254,7 @@ class Update extends QueryUpdate {
                 $update_inc[$field] = $left_side;
               }
               break;
+
             case '-':
               if ($field == $math_matches[0]) {
                 $update_inc[$field] =  $right_side * -1;
@@ -261,6 +263,7 @@ class Update extends QueryUpdate {
                 $update_inc[$field] =  $left_side * -1;
               }
               break;
+
             default:
               throw new MongodbSQLException('MongoDB does not support the mathematical operator: "'.$math_matches[1].'".');
           }
@@ -446,4 +449,5 @@ class Update extends QueryUpdate {
 
     return $fields;
   }
+
 }

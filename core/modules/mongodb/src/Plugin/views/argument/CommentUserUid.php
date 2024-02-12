@@ -38,7 +38,7 @@ class CommentUserUid extends UserUid {
         [
           'field' => 'entity_type',
           'value' => $entity_type,
-        ]
+        ],
       ];
 
       $join = Views::pluginManager('join')->createInstance('standard', $def);

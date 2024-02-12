@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * The MongoDB module provides the connection between Drupal and a MongoDB database.
+ */
+
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\ConditionInterface;
@@ -16,7 +21,7 @@ function mongodb_entity_type_alter(array &$entity_types) {
   }
 
   if ($connection && $connection->driver() == 'mongodb') {
-    /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+    /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
     foreach ($entity_types as &$entity_type) {
       if ($entity_type instanceof ContentEntityType) {
         // Change the storage class to the MongoDB version if the

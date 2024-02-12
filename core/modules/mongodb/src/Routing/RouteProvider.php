@@ -37,8 +37,8 @@ class RouteProvider extends CoreRouteProvider {
 
           $statement = new Statement($this->connection, $cursor, ['name', 'route']);
           $routes = $statement->execute()->fetchAllKeyed();
-//          $result = $this->connection->query('SELECT [name], [route] FROM {' . $this->connection->escapeTable($this->tableName) . '} WHERE [name] IN ( :names[] )', [':names[]' => $routes_to_load]);
-//          $routes = $result->fetchAllKeyed();
+          // $result = $this->connection->query('SELECT [name], [route] FROM {' . $this->connection->escapeTable($this->tableName) . '} WHERE [name] IN ( :names[] )', [':names[]' => $routes_to_load]);
+          // $routes = $result->fetchAllKeyed();
 
           $this->cache->set($cid, $routes, Cache::PERMANENT, ['routes']);
         }

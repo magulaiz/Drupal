@@ -3,9 +3,6 @@
 namespace Drupal\Tests\mongodb\Kernel;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Database\SchemaException;
-use Drupal\Core\Database\SchemaObjectDoesNotExistException;
-use Drupal\Core\Database\SchemaObjectExistsException;
 
 /**
  * Tests MongoDB other method via the schema API.

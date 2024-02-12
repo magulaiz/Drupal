@@ -39,7 +39,7 @@ trait JoinPluginTrait {
     $arguments = [];
 
     if (!empty($view_query->getCurrentRevisionTable()) && !empty($view_query->getAllRevisionsTable()) && !empty($view_query->getLatestRevisionTable())) {
-     $search_needle = $view_query->getCurrentRevisionTable() . '.';
+      $search_needle = $view_query->getCurrentRevisionTable() . '.';
       if ($view_query->hasLatestRevisionFilter()) {
         $replace_needle = $view_query->getLatestRevisionTable() . '.';
       }

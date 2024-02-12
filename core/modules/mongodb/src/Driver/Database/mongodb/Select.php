@@ -4,14 +4,12 @@ namespace Drupal\mongodb\Driver\Database\mongodb;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection as DatabaseConnection;
-use Drupal\Core\Database\ConnectionInterface;
 use Drupal\Core\Database\Event\StatementExecutionEndEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 use Drupal\Core\Database\Query\ConditionInterface;
 use Drupal\Core\Database\Query\Select as QuerySelect;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Database\Query\PlaceholderInterface;
-use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 
 // cspell:ignore substringed
 
@@ -88,128 +86,128 @@ class Select extends QuerySelect {
    *
    * @var array
    */
-  protected $mongodbLookups = [];
+  protected array $mongodbLookups = [];
 
   /**
    * The array containing the group by part of the query.
    *
    * @var array
    */
-  protected $mongodbGroup = [];
+  protected array $mongodbGroup = [];
 
   /**
    * The array containing the group by fields of the query.
    *
    * @var array
    */
-  protected $mongodbGroupFields = [];
+  protected array $mongodbGroupFields = [];
 
   /**
    * The array containing the fields to added before the joins are executed.
    *
    * @var array
    */
-  protected $mongodbAddFieldsPreJoin = [];
+  protected array $mongodbAddFieldsPreJoin = [];
 
   /**
    * The list the fields to be added to $this->mongodbAddFieldsPreJoin.
    *
    * @var array
    */
-  protected $mongodbPreJoinFields = [];
+  protected array $mongodbPreJoinFields = [];
 
   /**
    * The array containing the fields to added in the query.
    *
    * @var array
    */
-  protected $mongodbAddFields = [];
+  protected array $mongodbAddFields = [];
 
   /**
    * The array containing the fields to added after all other query parts.
    *
    * @var array
    */
-  protected $mongodbAddFieldsLast = [];
+  protected array $mongodbAddFieldsLast = [];
 
   /**
    * The array containing the fields to added literally to the query.
    *
    * @var array
    */
-  protected $mongodbLiteralFields = [];
+  protected array $mongodbLiteralFields = [];
 
   /**
    * The array containing the fields to added for conditions to the query.
    *
    * @var array
    */
-  protected $mongodbConditionFields = [];
+  protected array $mongodbConditionFields = [];
 
   /**
-   * The array containing the fields to added with their multiply value to the
-   * query.
+   * The array containing the fields to added with their multiply value.
    *
    * @var array
    */
-  protected $mongodbMultiplyFields = [];
+  protected array $mongodbMultiplyFields = [];
 
   /**
    * The array containing the fields to added to each other to the query.
    *
    * @var array
    */
-  protected $mongodbSumFields = [];
+  protected array $mongodbSumFields = [];
 
   /**
    * The array containing the fields to be concatenated to the query.
    *
    * @var array
    */
-  protected $mongodbConcatFields = [];
+  protected array $mongodbConcatFields = [];
 
   /**
    * The array containing the fields to be substringed to the query.
    *
    * @var array
    */
-  protected $mongodbSubstringFields = [];
+  protected array $mongodbSubstringFields = [];
 
   /**
    * The array containing the fields to be multiplied and summed to the query.
    *
    * @var array
    */
-  protected $mongodbSumMultiplyFields = [];
+  protected array $mongodbSumMultiplyFields = [];
 
   /**
    * The array containing the fields with their length to be added to the query.
    *
    * @var array
    */
-  protected $mongodbFieldsLength = [];
+  protected array $mongodbFieldsLength = [];
 
   /**
-   * The array containing the date fields as a date string be added to the query.
+   * Array containing the date fields as a date string be added to the query.
    *
    * @var array
    */
-  protected $mongodbDateDateFormattedFields = [];
+  protected array $mongodbDateDateFormattedFields = [];
 
   /**
-   * The array containing the string fields as a date string be added to the query.
+   * Array containing the string fields as a date string be added to the query.
    *
    * @var array
    */
-  protected $mongodbDateStringFormattedFields = [];
+  protected array $mongodbDateStringFormattedFields = [];
 
   /**
-   * The array containing the fields be added to the query, if they are null
-   * then be replaced by the given value..
+   * The array containing the fields be added to the query.
+   *
+   * If they are null then be replaced by the given value..
    *
    * @var array
    */
-  protected $mongodbCoalesceValueFields = [];
+  protected array $mongodbCoalesceValueFields = [];
 
   /**
    * The array containing the fields where the one with the greatest value shall
@@ -217,58 +215,49 @@ class Select extends QuerySelect {
    *
    * @var array
    */
-  protected $mongodbGreatestFields = [];
+  protected array $mongodbGreatestFields = [];
 
   /**
    * The list of embedded tables that need to be unwound in the aggregate query.
    *
    * @var array
    */
-  protected $mongodbUnwind = [];
+  protected array $mongodbUnwind = [];
 
   /**
-   * The array containing the paths of embedded tables that need to be unwound
-   * before the condition part of the query.
+   * The array containing the paths of embedded tables.
+   *
+   * That need to be unwound before the condition part of the query.
    *
    * @var array
    */
-  protected $mongodbFilterUnwindPaths = [];
+  protected array $mongodbFilterUnwindPaths = [];
 
   /**
-   * The array containing the paths of embedded tables that need to be unwound
-   * before the lookup/join part of the query.
+   * The array containing the paths of embedded tables.
+   *
+   * That need to be unwound before the lookup/join part of the query.
    *
    * @var array
    */
-  protected $mongodbLookupUnwindPaths = [];
+  protected array $mongodbLookupUnwindPaths = [];
 
   /**
-   * The array containing the paths of embedded tables that need to be unwound
-   * before the group by part of the query.
-   *
-   * @var array
-   */
-  protected $mongodbGroupUnwindPaths = [];
-
-  /**
-   * Boolean value indicating that the default MongoDB field "_id" should be
-   * removed from the query result.
+   * Exclude the default MongoDB field "_id" from the query result.
    *
    * @var bool
    */
   protected $mongodbRemoveIdField = TRUE;
 
   /**
-   * Boolean value indicating that the query should be executed as a aggregate
-   * query.
+   * Execute the query should be executed as an aggregate query.
    *
    * @var bool
    */
   protected $mongodbUseAggregate = FALSE;
 
   /**
-   * Boolean value indicating that the query should be executed as a count
-   * query.
+   * Execute the query should be executed as a count query.
    *
    * @var bool
    */

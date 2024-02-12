@@ -159,7 +159,7 @@ class CommentStorage extends ContentEntityStorage implements CommentStorageInter
       [
         'field' => 'comment_translations.field_name',
         'left_field' => 'comment_translations.field_name',
-      ]
+      ],
     ];
     $query->addMongodbJoin('INNER', 'comment', 'comment_translations.entity_id', ['table' => 'comment', 'alias' => 'c1'], 'comment_translations.entity_id', '=', 'c2', $join_extra);
 
@@ -293,7 +293,7 @@ class CommentStorage extends ContentEntityStorage implements CommentStorageInter
         $query->element($pager_id);
       }
 
-//      $query->setCountQueryMethod($this, 'countQueryThread', [$entity, $field_name, $comments_per_page]);
+      // $query->setCountQueryMethod($this, 'countQueryThread', [$entity, $field_name, $comments_per_page]);
     }
 
     if (!$this->currentUser->hasPermission('administer comments')) {

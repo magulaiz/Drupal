@@ -17,7 +17,6 @@ class GroupByNumeric extends CoreGroupByNumeric {
   public function query() {
     $this->ensureMyTable();
     $field = $this->realField;
-//    $field = $this->getField();
 
     if (!empty($this->query->getCurrentRevisionTable()) && !empty($this->query->getAllRevisionsTable())) {
       $search_needle = $this->query->getCurrentRevisionTable() . '.';
@@ -35,7 +34,7 @@ class GroupByNumeric extends CoreGroupByNumeric {
    * {@inheritdoc}
    */
   protected function opBetween($field) {
-// @todo Code copied from Numeric::opBetween().
+    // @todo Code copied from Numeric::opBetween().
     if (is_numeric($this->value['min']) && is_numeric($this->value['max'])) {
       $operator = $this->operator == 'between' ? 'BETWEEN' : 'NOT BETWEEN';
       $this->query->addCondition($this->options['group'], $field, [$this->value['min'], $this->value['max']], $operator);
@@ -48,17 +47,16 @@ class GroupByNumeric extends CoreGroupByNumeric {
       $operator = $this->operator == 'between' ? '<=' : '>';
       $this->query->addCondition($this->options['group'], $field, $this->value['max'], $operator);
     }
-/*
-    $placeholder_min = $this->placeholder();
-    $placeholder_max = $this->placeholder();
-    if ($this->operator == 'between') {
-      $this->query->addHavingExpression($this->options['group'], "$field >= $placeholder_min", [$placeholder_min => $this->value['min']]);
-      $this->query->addHavingExpression($this->options['group'], "$field <= $placeholder_max", [$placeholder_max => $this->value['max']]);
-    }
-    else {
-      $this->query->addHavingExpression($this->options['group'], "$field < $placeholder_min OR $field > $placeholder_max", [$placeholder_min => $this->value['min'], $placeholder_max => $this->value['max']]);
-    }
-*/
+
+    // $placeholder_min = $this->placeholder();
+    // $placeholder_max = $this->placeholder();
+    // if ($this->operator == 'between') {
+    // $this->query->addHavingExpression($this->options['group'], "$field >= $placeholder_min", [$placeholder_min => $this->value['min']]);
+    // $this->query->addHavingExpression($this->options['group'], "$field <= $placeholder_max", [$placeholder_max => $this->value['max']]);
+    // }
+    // else {
+    // $this->query->addHavingExpression($this->options['group'], "$field < $placeholder_min OR $field > $placeholder_max", [$placeholder_min => $this->value['min'], $placeholder_max => $this->value['max']]);
+    // }
   }
 
   /**

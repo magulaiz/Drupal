@@ -37,13 +37,14 @@ class EmbeddedTableData {
   protected $tableInformation;
 
   /**
-   * Whether to delete existing embedded table data on an update query. Can be
-   * "APPEND" or "REPLACE". Defaults to "REPLACE". This variable is not used
-   * with inserts.
+   * Whether to delete existing embedded table data on an update query.
+   *
+   * Can be "APPEND" or "REPLACE". Defaults to "REPLACE". This variable is not
+   * used with inserts.
    *
    * @var bool
    */
-  protected $deleteExistingDataOnUpdate;
+  protected bool $deleteExistingDataOnUpdate;
 
   /**
    * Constructs a EmbeddedTableData object.
@@ -81,15 +82,15 @@ class EmbeddedTableData {
    */
   public function compile($table) {
     if (!$this->connection->schema()->tableExists($table)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot add embedded table data, because the table @table does not exist.", ['@table' => $table]));
+      throw new SchemaObjectDoesNotExistException("Cannot add embedded table data, because the table $table does not exist.");
     }
 
     if (!$this->connection->schema()->tableExists($this->baseTable)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot add embedded table data, because the base table @base_table does not exist.", ['@base_table' => $this->baseTable]));
+      throw new SchemaObjectDoesNotExistException("Cannot add embedded table data, because the base table " . $this->baseTable . " does not exist.");
     }
 
     if ($this->baseTable != $this->tableInformation->getTableBaseTable($table)) {
-      throw new SchemaException(t("Cannot add embedded table data, because the table @table is not an embedded table of base table @base_table.", ['@table' => $table, '@base_table' => $this->baseTable]));
+      throw new SchemaException("Cannot add embedded table data, because the table $table is not an embedded table of base table " . $this->baseTable . '.');
     }
 
     // Do the data validation for the embedded table.

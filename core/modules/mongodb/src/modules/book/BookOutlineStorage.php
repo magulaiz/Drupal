@@ -48,7 +48,6 @@ class BookOutlineStorage extends CoreBookOutlineStorage {
     return parent::delete($nid);
   }
 
-
   /**
    * {@inheritdoc}
    */

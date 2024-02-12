@@ -13,7 +13,7 @@ class MediaStatus extends Status {
    * {@inheritdoc}
    */
   public function query() {
-    $table = $this->ensureMyTable();
+    $this->ensureMyTable();
 
     $and_condition = $this->query->getConnection()->condition('AND');
     $and_condition->condition('media_current_revision.uid', '***CURRENT_USER***');

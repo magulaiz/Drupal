@@ -20,8 +20,7 @@ class ViewStorage extends ConfigEntityStorage {
   protected $tableInformation;
 
   /**
-   * Helper method for updating a view from one that is a for relational
-   * database to one that is for MongoDB.
+   * Helper method for updating a view from relational to MongoDB.
    *
    * @param array $values
    *   An array with view entity config data.
@@ -227,10 +226,10 @@ class ViewStorage extends ConfigEntityStorage {
    * @return boolean
    *   If there are field that do not belong to the given base table.
    */
-  protected function hasFieldsNotFromBaseTable(array &$record, $base_table) {
+  protected function hasFieldsNotFromBaseTable(array &$records, $base_table) {
     $has_fields = FALSE;
-    if (isset($record['display']) && is_array($record['display'])) {
-      foreach ($record['display'] as &$display) {
+    if (isset($records['display']) && is_array($records['display'])) {
+      foreach ($records['display'] as &$display) {
         if (isset($display['display_options']) && is_array($display['display_options'])) {
           foreach ($display['display_options'] as &$display_options) {
             if (is_array($display_options)) {
@@ -259,16 +258,16 @@ class ViewStorage extends ConfigEntityStorage {
    * @return \Drupal\Core\Entity\EntityType|null
    *   The entity type belonging to the given table or null if not found one.
    */
-  protected function getEntityTypeFromView(array &$record, array $tables = []) {
-    if (isset($record['display']) && is_array($record['display'])) {
-      foreach ($record['display'] as &$display) {
+  protected function getEntityTypeFromView(array &$records, array $tables = []) {
+    if (isset($records['display']) && is_array($records['display'])) {
+      foreach ($records['display'] as &$display) {
         if (isset($display['display_options']) && is_array($display['display_options'])) {
           foreach ($display['display_options'] as &$display_options) {
             if (is_array($display_options)) {
               foreach ($display_options as &$display_option) {
                 if (is_array($display_option) && isset($display_option['entity_type']) && !empty($display_option['table']) && in_array($display_option['table'], $tables, TRUE)) {
                   $entity_type = \Drupal::entityTypeManager()->getDefinition($display_option['entity_type']);
-                  if (in_array($record['base_table'], $this->getEntityTables($entity_type), TRUE)) {
+                  if (in_array($records['base_table'], $this->getEntityTables($entity_type), TRUE)) {
                     return $entity_type;
                   }
                 }
@@ -284,10 +283,8 @@ class ViewStorage extends ConfigEntityStorage {
    * {@inheritdoc}
    */
   protected function doCreate(array $values) {
-//dump($values);
     // Update the values so that they are ready for the MongoDB backend.
     $values = $this->updateViewForMongodb($values);
-//dump($values);
 
     // Set default language to current language if not provided.
     $values += [$this->langcodeKey => $this->languageManager->getCurrentLanguage()->getId()];

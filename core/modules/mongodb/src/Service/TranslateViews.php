@@ -2,8 +2,6 @@
 
 namespace Drupal\mongodb\Service;
 
-use Drupal\Core\Entity\EntityTypeInterface;
-
 /**
  * The MongoDB service for translating SQL queries.
  */
@@ -12,7 +10,7 @@ class TranslateViews {
   /**
    * The query translation data.
    */
-  const base_table_translations = [
+  const BASE_TABLE_TRANSLATIONS = [
     'comment_field_data' => [
       'base table' => 'comment',
     ],
@@ -123,8 +121,8 @@ class TranslateViews {
    * Translate a table to its MongoDB equivalent.
    */
   public static function baseTable($table) {
-    if (isset(self::base_table_translations[$table]['base table'])) {
-      return self::base_table_translations[$table]['base table'];
+    if (isset(self::BASE_TABLE_TRANSLATIONS[$table]['base table'])) {
+      return self::BASE_TABLE_TRANSLATIONS[$table]['base table'];
     }
     return $table;
   }
@@ -133,8 +131,8 @@ class TranslateViews {
    * Translate a table to its MongoDB equivalent.
    */
   public static function isRevisionTable($table) {
-    if (isset(self::base_table_translations[$table]['revisionable'])) {
-      return (bool) self::base_table_translations[$table]['revisionable'];
+    if (isset(self::BASE_TABLE_TRANSLATIONS[$table]['revisionable'])) {
+      return (bool) self::BASE_TABLE_TRANSLATIONS[$table]['revisionable'];
     }
     return FALSE;
   }

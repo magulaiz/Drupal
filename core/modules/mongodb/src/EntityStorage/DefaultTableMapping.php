@@ -5,7 +5,6 @@ namespace Drupal\mongodb\EntityStorage;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\Sql\DefaultTableMapping as CoreDefaultTableMapping;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorageException;
-use Drupal\Core\Entity\Sql\TableMappingInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\views\ViewsConfigUpdater;
 
@@ -82,13 +81,13 @@ class DefaultTableMapping extends CoreDefaultTableMapping {
 
     $key_fields = array_values(array_filter([$id_key, $revision_key, $bundle_key, $uuid_key, $langcode_key]));
     $all_fields = array_keys($shared_table_definitions);
-    $revisionable_fields = array_keys(array_filter($shared_table_definitions, function (FieldStorageDefinitionInterface $definition) {
-      return $definition->isRevisionable();
-    }));
+    // $revisionable_fields = array_keys(array_filter($shared_table_definitions, function (FieldStorageDefinitionInterface $definition) {
+    // return $definition->isRevisionable();
+    // }));
     // Make sure the key fields come first in the list of fields.
     $all_fields = array_merge($key_fields, array_diff($all_fields, $key_fields));
 
-    $revision_metadata_fields = $revisionable ? array_values($entity_type->getRevisionMetadataKeys()) : [];
+    // $revision_metadata_fields = $revisionable ? array_values($entity_type->getRevisionMetadataKeys()) : [];
 
     if (!$revisionable && !$translatable) {
       // The base layout stores all the base field values in the base table.
@@ -230,7 +229,7 @@ class DefaultTableMapping extends CoreDefaultTableMapping {
     if (isset($this->fieldStorageDefinitions[$field_name])) {
       $storage_definition = $this->fieldStorageDefinitions[$field_name];
       $table_names = [
-        $this->baseTable
+        $this->baseTable,
       ];
 
       if (!$storage_definition->isTranslatable() && !$storage_definition->isRevisionable()) {
@@ -240,28 +239,28 @@ class DefaultTableMapping extends CoreDefaultTableMapping {
       if ($this->translationsTable) {
         $table_names = array_merge($table_names, [
           $this->translationsTable,
-          $this->getMongodbDedicatedTableName($storage_definition, $this->translationsTable)
+          $this->getMongodbDedicatedTableName($storage_definition, $this->translationsTable),
         ]);
       }
 
       if ($this->currentRevisionTable) {
         $table_names = array_merge($table_names, [
           $this->currentRevisionTable,
-          $this->getMongodbDedicatedTableName($storage_definition, $this->currentRevisionTable)
+          $this->getMongodbDedicatedTableName($storage_definition, $this->currentRevisionTable),
         ]);
       }
 
       if ($this->latestRevisionTable) {
         $table_names = array_merge($table_names, [
           $this->latestRevisionTable,
-          $this->getMongodbDedicatedTableName($storage_definition, $this->latestRevisionTable)
+          $this->getMongodbDedicatedTableName($storage_definition, $this->latestRevisionTable),
         ]);
       }
 
       if ($this->allRevisionsTable) {
         $table_names = array_merge($table_names, [
           $this->allRevisionsTable,
-          $this->getMongodbDedicatedTableName($storage_definition, $this->allRevisionsTable)
+          $this->getMongodbDedicatedTableName($storage_definition, $this->allRevisionsTable),
         ]);
       }
 
@@ -302,29 +301,39 @@ class DefaultTableMapping extends CoreDefaultTableMapping {
    */
   public function getDedicatedTableNames() {
     $table_mapping = $this;
-    $definitions = array_filter($this->fieldStorageDefinitions, function($definition) use ($table_mapping) { return $table_mapping->requiresDedicatedTableStorage($definition); });
+    $definitions = array_filter($this->fieldStorageDefinitions, function ($definition) use ($table_mapping) {
+      return $table_mapping->requiresDedicatedTableStorage($definition);
+    });
 
     $dedicated_all_revisions_tables = [];
     if ($table_mapping->allRevisionsTable) {
-      $dedicated_all_revisions_tables = array_map(function($definition) use ($table_mapping) { return $table_mapping->getMongodbDedicatedTableName($definition, $table_mapping->allRevisionsTable); }, $definitions);
+      $dedicated_all_revisions_tables = array_map(function ($definition) use ($table_mapping) {
+        return $table_mapping->getMongodbDedicatedTableName($definition, $table_mapping->allRevisionsTable);
+      }, $definitions);
     }
 
     $dedicated_current_revision_tables = [];
     if ($table_mapping->currentRevisionTable) {
-      $dedicated_current_revision_tables = array_map(function($definition) use ($table_mapping) { return $table_mapping->getMongodbDedicatedTableName($definition, $table_mapping->currentRevisionTable); }, $definitions);
+      $dedicated_current_revision_tables = array_map(function ($definition) use ($table_mapping) {
+        return $table_mapping->getMongodbDedicatedTableName($definition, $table_mapping->currentRevisionTable);
+      }, $definitions);
     }
 
     $dedicated_latest_revision_tables = [];
     if ($table_mapping->latestRevisionTable) {
-      $dedicated_latest_revision_tables = array_map(function($definition) use ($table_mapping) { return $table_mapping->getMongodbDedicatedTableName($definition, $table_mapping->latestRevisionTable); }, $definitions);
+      $dedicated_latest_revision_tables = array_map(function ($definition) use ($table_mapping) {
+        return $table_mapping->getMongodbDedicatedTableName($definition, $table_mapping->latestRevisionTable);
+      }, $definitions);
     }
 
     $dedicated_translations_tables = [];
     if ($table_mapping->translationsTable) {
-      $dedicated_translations_tables = array_map(function($definition) use ($table_mapping) { return $table_mapping->getMongodbDedicatedTableName($definition, $table_mapping->translationsTable); }, $definitions);
+      $dedicated_translations_tables = array_map(function ($definition) use ($table_mapping) {
+        return $table_mapping->getMongodbDedicatedTableName($definition, $table_mapping->translationsTable);
+      }, $definitions);
     }
 
-    $dedicated_non_revision_non_translation_tables = array_map(function($definition) use ($table_mapping) {
+    $dedicated_non_revision_non_translation_tables = array_map(function ($definition) use ($table_mapping) {
       if (!$definition->isTranslatable() && !$definition->isRevisionable()) {
         return $table_mapping->getMongodbDedicatedTableName($definition, $table_mapping->baseTable);
       }
@@ -344,6 +353,8 @@ class DefaultTableMapping extends CoreDefaultTableMapping {
    *
    * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
    *   The field storage definition.
+   * @param string $parent_table_name
+   *   The parent table name.
    * @param bool $is_deleted
    *   (optional) Whether the table name holding the values of a deleted field
    *   should be returned.

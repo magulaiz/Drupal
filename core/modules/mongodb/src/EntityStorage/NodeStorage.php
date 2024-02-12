@@ -62,7 +62,7 @@ class NodeStorage extends ContentEntityStorage implements NodeStorageInterface {
       ->execute()
       ->fetchField();
     $count = 0;
-    foreach($node_all_revisions as $node_all_revision) {
+    foreach ($node_all_revisions as $node_all_revision) {
       if (isset($node_all_revision['default_langcode']) && ($node_all_revision['default_langcode'] == 1)) {
         $count++;
       }

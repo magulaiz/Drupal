@@ -34,13 +34,13 @@ class DatetimeDate extends Date {
     $values_a = [
       'format' => $this->query->getDateFormat(NULL, $this->dateFormat),
       'value' => $this->dateFormatter->format($a->getTimestamp() + $origin_offset, 'custom', $this->dateFormat, DateTimeItemInterface::STORAGE_TIMEZONE),
-      'operator' => (strtoupper($this->operator) == 'NOT BETWEEN' ? '<' : '>=')
+      'operator' => (strtoupper($this->operator) == 'NOT BETWEEN' ? '<' : '>='),
     ];
 
     $values_b = [
       'format' => $this->query->getDateFormat(NULL, $this->dateFormat),
       'value' => $this->dateFormatter->format($b->getTimestamp() + $origin_offset, 'custom', $this->dateFormat, DateTimeItemInterface::STORAGE_TIMEZONE),
-      'operator' => (strtoupper($this->operator) == 'NOT BETWEEN' ? '>' : '<=')
+      'operator' => (strtoupper($this->operator) == 'NOT BETWEEN' ? '>' : '<='),
     ];
 
     if (strtoupper($this->operator) == 'NOT BETWEEN') {
@@ -71,7 +71,7 @@ class DatetimeDate extends Date {
     $values = [
       'format' => $this->query->getDateFormat(NULL, $this->dateFormat),
       'value' => $this->dateFormatter->format($value->getTimestamp() + $origin_offset, 'custom', $this->dateFormat, DateTimeItemInterface::STORAGE_TIMEZONE),
-      'operator' => $this->operator
+      'operator' => $this->operator,
     ];
     $this->query->addCondition($this->options['group'], $field, $values, 'DATESTRING');
   }

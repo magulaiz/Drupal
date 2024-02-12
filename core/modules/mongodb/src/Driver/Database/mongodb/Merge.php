@@ -56,16 +56,20 @@ class Merge extends QueryMerge {
               $value = new Binary($value, Binary::TYPE_GENERIC);
             }
             break;
+
           case 'bool':
             $value = (bool) $value;
             break;
+
           case 'int':
           case 'serial':
             $value = (int) $value;
             break;
+
           case 'float':
             $value = (float) $value;
             break;
+
           case 'numeric':
             if (!($value instanceof Decimal128)) {
               $precision = isset($field_data['precision']) ? intval($field_data['precision']) : 0;
@@ -76,17 +80,20 @@ class Merge extends QueryMerge {
               $value = new Decimal128($value);
             }
             break;
+
           case 'varchar_ascii':
           case 'varchar':
           case 'char':
           case 'text':
             $value = (string) $value;
             break;
+
           case 'date':
             if (!($value instanceof UTCDateTime)) {
               $value = new UTCDateTime($value * 1000);
             }
             break;
+
         }
       }
 

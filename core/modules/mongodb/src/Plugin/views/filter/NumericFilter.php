@@ -9,22 +9,20 @@ use Drupal\views\Plugin\views\filter\NumericFilter as CoreNumericFilter;
  */
 class NumericFilter extends CoreNumericFilter {
 
-//  use FilterPluginTrait;
-
   /**
    * {@inheritdoc}
    */
   public function query() {
     $this->ensureMyTable();
     $field = $this->realField;
-/*
-    if ($this->table == $this->view->storage->get('base_table')) {
-      $field = $this->realField;
-    }
-    else {
-      $field = "$this->tableAlias.$this->realField";
-    }
-*/
+
+    // if ($this->table == $this->view->storage->get('base_table')) {
+    // $field = $this->realField;
+    // }
+    // else {
+    // $field = "$this->tableAlias.$this->realField";
+    // }
+
     if (!empty($this->query->getCurrentRevisionTable()) && !empty($this->query->getAllRevisionsTable())) {
       $search_needle = $this->query->getCurrentRevisionTable() . '.';
       $replace_needle = $this->query->getAllRevisionsTable() . '.';

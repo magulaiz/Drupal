@@ -5,8 +5,6 @@ namespace Drupal\mongodb\EntityStorage;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -142,28 +140,6 @@ class ContentEntityStorage extends SqlContentEntityStorage {
 
   /**
    * {@inheritdoc}
-   *
-  public function createTranslation(ContentEntityInterface $entity, $langcode, array $values = []) {
-    $translation = $entity->getTranslation($langcode);
-
-    $definitions = array_filter($translation->getFieldDefinitions(), function(FieldDefinitionInterface $definition) {
-      return $definition->isTranslatable();
-    });
-
-    $field_names = array_map(function(FieldDefinitionInterface $definition) {
-      return $definition->getName();
-    }, $definitions);
-
-    $values[$this->langcodeKey] = $langcode;
-    $values[$this->getEntityType()->getKey('default_langcode')] = FALSE;
-    $this->initFieldValues($translation, $values, $field_names);
-    $this->invokeHook('translation_create', $translation);
-
-    return $translation;
-  }
-
-  /**
-   * {@inheritdoc}
    */
   public function getCustomTableMapping(ContentEntityTypeInterface $entity_type, array $storage_definitions, $prefix = '') {
     $prefix = $prefix ?: ($this->temporary ? 'tmp_' : '');
@@ -179,7 +155,7 @@ class ContentEntityStorage extends SqlContentEntityStorage {
     }
 
     $table_mapping = $this->getTableMapping();
-    $dedicated_table_names = $table_mapping->getDedicatedTableNames();
+    // $dedicated_table_names = $table_mapping->getDedicatedTableNames();
 
     // TODO remove: Get all the embedded table names without the base table.
     $embedded_table_names = $this->database->tableInformation()->getTableEmbeddedTables($this->baseTable);
@@ -244,7 +220,6 @@ class ContentEntityStorage extends SqlContentEntityStorage {
     return $entities;
   }
 
-
   /**
    * Loads values for fields stored in the embedded tables.
    *
@@ -252,7 +227,9 @@ class ContentEntityStorage extends SqlContentEntityStorage {
    *   Associative array of entities values, keyed on the entity ID.
    * @param array &$translations
    *   List of translations, keyed on the entity ID.
-   * @param integer|bool $load_from_revision_id
+   * @param array $values_embedded_tables
+   *   The values of the embedded tables.
+   * @param int|bool $load_from_revision_id
    *   Flag to indicate whether revisions should be loaded or not.
    */
   protected function loadFromEmbeddedTables(array &$values, array &$translations, array &$values_embedded_tables, $load_from_revision_id = FALSE) {
@@ -410,6 +387,10 @@ class ContentEntityStorage extends SqlContentEntityStorage {
    *
    * @param array &$values
    *   An array of values keyed by entity ID.
+   * @param string $embedded_table_name
+   *   The embedded table name.
+   * @param array $embedded_table_data
+   *   The embedded table data.
    * @param bool $load_from_revision
    *   (optional) Flag to indicate whether revisions should be loaded or not,
    *   defaults to FALSE.

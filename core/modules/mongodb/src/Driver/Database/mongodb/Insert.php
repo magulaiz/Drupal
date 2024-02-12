@@ -3,8 +3,6 @@
 namespace Drupal\mongodb\Driver\Database\mongodb;
 
 use Drupal\Core\Database\Query\Insert as QueryInsert;
-use Drupal\Core\Database\IntegrityConstraintViolationException;
-use MongoDB\Driver\Exception\BulkWriteException;
 
 /**
  * MongoDB implementation of \Drupal\Core\Database\Query\Insert.
@@ -68,16 +66,12 @@ class Insert extends QueryInsert {
     $last_insert_id = 0;
 
     foreach ($this->insertValues as $insert_values) {
-//dump('$insert_values');
-//dump($insert_values);
       $insert_document = $this->getInsertDocumentForTable($this->table, $this->insertFields, $insert_values);
 
       // Get the last inserted ID.
       if ($auto_increment_field = $this->tableInformation->getTableAutoIncrementField($this->table)) {
-//dump('$auto_increment_field: ' . $auto_increment_field);
         if (!empty($insert_document[$auto_increment_field])) {
           $last_insert_id = intval($insert_document[$auto_increment_field]);
-//dump('$last_insert_id: ' . $last_insert_id);
         }
       }
 
@@ -90,7 +84,6 @@ class Insert extends QueryInsert {
         );
       }
       catch (\Exception $e) {
-//dump($insert_document);
         $this->connection->exceptionHandler()->handleExecutionException($e, NULL, $insert_values, $this->queryOptions);
       }
     }

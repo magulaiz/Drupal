@@ -199,71 +199,71 @@ class NodeViewsData extends EntityViewsData {
     $data['node']['uid_revision']['real field'] = 'nid';
     $data['node']['uid_revision']['filter']['id'] = 'node_uid_revision';
     $data['node']['uid_revision']['argument']['id'] = 'node_uid_revision';
-/*
-    $data['node_field_revision']['table']['wizard_id'] = 'node_revision';
+
+    // $data['node_field_revision']['table']['wizard_id'] = 'node_revision';
 
     // Advertise this table as a possible base table.
-    $data['node_field_revision']['table']['base']['help'] = t('Content revision is a history of changes to content.');
-    $data['node_field_revision']['table']['base']['defaults']['title'] = 'title';
+    // $data['node_field_revision']['table']['base']['help'] = t('Content revision is a history of changes to content.');
+    // $data['node_field_revision']['table']['base']['defaults']['title'] = 'title';
 
-    $data['node_field_revision']['nid']['argument'] = [
-      'id' => 'node_nid',
-      'numeric' => TRUE,
-    ];
+    // $data['node_field_revision']['nid']['argument'] = [
+    // 'id' => 'node_nid',
+    // 'numeric' => TRUE,
+    // ];
     // @todo the NID field needs different behaviour on revision/non-revision
     //   tables. It would be neat if this could be encoded in the base field
     //   definition.
-    $data['node_field_revision']['nid']['relationship']['id'] = 'standard';
-    $data['node_field_revision']['nid']['relationship']['base'] = 'node';
-    $data['node_field_revision']['nid']['relationship']['base field'] = 'nid';
-    $data['node_field_revision']['nid']['relationship']['title'] = t('Content');
-    $data['node_field_revision']['nid']['relationship']['label'] = t('Get the actual content from a content revision.');
-    $data['node_field_revision']['nid']['relationship']['extra'][] = [
-      'field' => 'langcode',
-      'left_field' => 'langcode',
-    ];
+    // $data['node_field_revision']['nid']['relationship']['id'] = 'standard';
+    // $data['node_field_revision']['nid']['relationship']['base'] = 'node';
+    // $data['node_field_revision']['nid']['relationship']['base field'] = 'nid';
+    // $data['node_field_revision']['nid']['relationship']['title'] = t('Content');
+    // $data['node_field_revision']['nid']['relationship']['label'] = t('Get the actual content from a content revision.');
+    // $data['node_field_revision']['nid']['relationship']['extra'][] = [
+    // 'field' => 'langcode',
+    // 'left_field' => 'langcode',
+    // ];
 
-    $data['node_field_revision']['vid'] = [
-      'argument' => [
-        'id' => 'node_vid',
-        'numeric' => TRUE,
-      ],
-      'relationship' => [
-        'id' => 'standard',
-        'base' => 'node',
-        'base field' => 'vid',
-        'title' => t('Content'),
-        'label' => t('Get the actual content from a content revision.'),
-        'extra' => [
-          [
-            'field' => 'langcode',
-            'left_field' => 'langcode',
-          ],
-        ],
-      ],
-    ];
+    // $data['node_field_revision']['vid'] = [
+    // 'argument' => [
+    // 'id' => 'node_vid',
+    // 'numeric' => TRUE,
+    // ],
+    // 'relationship' => [
+    // 'id' => 'standard',
+    // 'base' => 'node',
+    // 'base field' => 'vid',
+    // 'title' => t('Content'),
+    // 'label' => t('Get the actual content from a content revision.'),
+    // 'extra' => [
+    // [
+    // 'field' => 'langcode',
+    // 'left_field' => 'langcode',
+    // ],
+    // ],
+    // ],
+    // ];
 
-    $data['node_field_revision']['langcode']['help'] = t('The language the original content is in.');
-*/
+    // $data['node_field_revision']['langcode']['help'] = t('The language the original content is in.');
+
     $data['node']['revision_uid']['help'] = t('The user who created the revision.');
     $data['node']['revision_uid']['relationship']['label'] = t('revision user');
     $data['node']['revision_uid']['filter']['id'] = 'user_name';
-/*
-    $data['node_field_revision']['table']['wizard_id'] = 'node_field_revision';
 
-    $data['node_field_revision']['table']['join']['node']['left_field'] = 'vid';
-    $data['node_field_revision']['table']['join']['node']['field'] = 'vid';
+    // $data['node_field_revision']['table']['wizard_id'] = 'node_field_revision';
 
-    $data['node_field_revision']['status']['filter']['label'] = t('Published');
-    $data['node_field_revision']['status']['filter']['type'] = 'yes-no';
-    $data['node_field_revision']['status']['filter']['use_equal'] = TRUE;
+    // $data['node_field_revision']['table']['join']['node']['left_field'] = 'vid';
+    // $data['node_field_revision']['table']['join']['node']['field'] = 'vid';
 
-    $data['node_field_revision']['promote']['help'] = t('A boolean indicating whether the node is visible on the front page.');
+    // $data['node_field_revision']['status']['filter']['label'] = t('Published');
+    // $data['node_field_revision']['status']['filter']['type'] = 'yes-no';
+    // $data['node_field_revision']['status']['filter']['use_equal'] = TRUE;
 
-    $data['node_field_revision']['sticky']['help'] = t('A boolean indicating whether the node should sort to the top of content lists.');
+    // $data['node_field_revision']['promote']['help'] = t('A boolean indicating whether the node is visible on the front page.');
 
-    $data['node_field_revision']['langcode']['help'] = t('The language of the content or translation.');
-*/
+    // $data['node_field_revision']['sticky']['help'] = t('A boolean indicating whether the node should sort to the top of content lists.');
+
+    // $data['node_field_revision']['langcode']['help'] = t('The language of the content or translation.');
+
     $data['node']['link_to_revision'] = [
       'field' => [
         'title' => t('Link to revision'),
@@ -364,12 +364,12 @@ class NodeViewsData extends EntityViewsData {
             'type' => 'INNER',
           ],
         ];
-/*
-        unset($data['node_search_dataset']['table']['join']['node']['left_field']);
-        unset($data['node_search_dataset']['table']['join']['node']['left_table']);
-        unset($data['node_search_dataset']['table']['join']['node']['extra']);
-        unset($data['node_search_dataset']['table']['join']['node']['type']);
-*/
+
+        // unset($data['node_search_dataset']['table']['join']['node']['left_field']);
+        // unset($data['node_search_dataset']['table']['join']['node']['left_table']);
+        // unset($data['node_search_dataset']['table']['join']['node']['extra']);
+        // unset($data['node_search_dataset']['table']['join']['node']['type']);
+
         $data['node_search_index']['score'] = [
           'title' => t('Score'),
           'help' => t('The score of the search item. This will not be used if the search filter is not also present.'),

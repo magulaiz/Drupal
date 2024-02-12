@@ -39,8 +39,9 @@ trait TermStorageTrait {
   protected $trees = [];
 
   /**
-   * Array of all loaded term ancestry keyed by ancestor term ID, keyed by term
-   * ID.
+   * Array of all loaded term ancestry.
+   *
+   * Keyed by ancestor term ID, keyed by term ID.
    *
    * @var \Drupal\taxonomy\TermInterface[][]
    */
@@ -78,12 +79,16 @@ trait TermStorageTrait {
   /**
    * {@inheritdoc}
    */
-  public function deleteTermHierarchy($tids) {}
+  public function deleteTermHierarchy($tids) {
+    // Do nothing.
+  }
 
   /**
    * {@inheritdoc}
    */
-  public function updateTermHierarchy(EntityInterface $term) {}
+  public function updateTermHierarchy(EntityInterface $term) {
+    // Do nothing.
+  }
 
   /**
    * {@inheritdoc}

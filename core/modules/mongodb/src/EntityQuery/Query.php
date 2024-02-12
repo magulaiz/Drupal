@@ -3,12 +3,8 @@
 namespace Drupal\mongodb\EntityQuery;
 
 use Daffie\SqlLikeToRegularExpression;
-use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Query\Sql\Query as CoreQuery;
 use Drupal\Core\Entity\Query\QueryException;
-use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Entity\Sql\TableMappingInterface;
 use Drupal\mongodb\Driver\Database\mongodb\MongodbSQLException;
 use MongoDB\BSON\UTCDateTime;
@@ -41,8 +37,9 @@ class Query extends CoreQuery {
   protected $mongodbFields = [];
 
   /**
-   * An array of strings added as to the group by, keyed by the string to avoid
-   * duplicates.
+   * An array of strings added as to the group by.
+   *
+   * Keyed by the string to avoid duplicates.
    *
    * @var array
    */
@@ -79,7 +76,7 @@ class Query extends CoreQuery {
       $simple_query = FALSE;
     }
 
-    $this->mongodbSelect = $this->connection->select($base_table, 'base_table', array('conjunction' => $this->conjunction));
+    $this->mongodbSelect = $this->connection->select($base_table, 'base_table', ['conjunction' => $this->conjunction]);
     $this->mongodbSelect->addMetaData('entity_type', $this->entityTypeId);
     $id_field = $this->entityType->getKey('id');
     // Add the key field for fetchAllKeyed().

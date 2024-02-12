@@ -3,8 +3,6 @@
 namespace Drupal\mongodb\Queue;
 
 use Drupal\Core\Queue\DatabaseQueue as CoreDatabaseQueue;
-use Drupal\mongodb\Driver\Database\mongodb\Connection;
-use Drupal\mongodb\Driver\Database\mongodb\Statement;
 
 /**
  * The MongoDB implementation of \Drupal\Core\Queue\DatabaseQueue.

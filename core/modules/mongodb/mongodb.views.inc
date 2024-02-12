@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Provide views data for mongodb.module.
+ */
+
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\field\FieldStorageConfigInterface;

@@ -44,50 +44,9 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
       }
     }
 
-
     // Create dedicated field tables.
-//    $table_mapping = $this->getTableMapping($entity_type, $this->fieldStorageDefinitions);
+    // $table_mapping = $this->getTableMapping($entity_type, $this->fieldStorageDefinitions);
     $table_mapping = $this->getTableMapping($entity_type);
-    foreach ($this->fieldStorageDefinitions as $field_storage_definition) {
-      if ($table_mapping->requiresDedicatedTableStorage($field_storage_definition)) {
-        $this->createDedicatedTableSchema($field_storage_definition);
-      }
-      elseif ($table_mapping->allowsSharedTableStorage($field_storage_definition)) {
-        // The shared tables are already fully created, but we need to save the
-        // per-field schema definitions for later use.
-        $this->createSharedTableSchema($field_storage_definition, TRUE);
-      }
-    }
-
-    // Save data about entity indexes and keys.
-    $this->saveEntitySchemaData($entity_type, $schema);
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-  public function onEntityTypeCreate(EntityTypeInterface $entity_type) {
-    $this->checkEntityType($entity_type);
-    $schema_handler = $this->database->schema();
-    $base_table = $entity_type->getBaseTable();
-
-    // Create entity tables.
-    $schema = $this->getEntitySchema($entity_type, TRUE);
-
-    // Create the base table first.
-    if (!empty($schema[$base_table]) && !$schema_handler->tableExists($base_table)) {
-      $schema_handler->createTable($base_table, $schema[$base_table]);
-    }
-
-    // Create now all embedded tables.
-    foreach ($schema as $table_name => $table_schema) {
-      if (($base_table != $table_name) && !$schema_handler->tableExists($table_name)) {
-        $schema_handler->createEmbeddedTable($base_table, $table_name, $table_schema);
-      }
-    }
-
-    // Create dedicated field tables.
-    $table_mapping = $this->getTableMapping($entity_type, $this->fieldStorageDefinitions);
     foreach ($this->fieldStorageDefinitions as $field_storage_definition) {
       if ($table_mapping->requiresDedicatedTableStorage($field_storage_definition)) {
         $this->createDedicatedTableSchema($field_storage_definition);
@@ -200,8 +159,18 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
         $this->database->schema()->dropTable($dedicated_latest_revision_table);
 
         $cursor = $this->database->getConnection()->{$prefixed_table}->find(
-          [ "$all_revisions_table.$dedicated_all_revisions_table" => [ '$exists' => TRUE ]],
-          [ 'projection' => [$id_key => 1, $all_revisions_table => 1, $current_revision_table => 1, $latest_revision_table => 1, '_id' => 0]]
+          [
+            "$all_revisions_table.$dedicated_all_revisions_table" => [ '$exists' => TRUE ],
+          ],
+          [
+            'projection' => [
+              $id_key => 1,
+              $all_revisions_table => 1,
+              $current_revision_table => 1,
+              $latest_revision_table => 1,
+              '_id' => 0,
+            ],
+          ],
         );
 
         foreach ($cursor as $entity) {

@@ -2,8 +2,6 @@
 
 namespace Drupal\mongodb\EntityStorage;
 
-use Drupal\Core\Entity\EntityInterface;
-
 /**
  * The MongoDB implementation of \Drupal\media\MediaStorage.
  */

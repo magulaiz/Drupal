@@ -3,7 +3,6 @@
 namespace Drupal\mongodb\Batch;
 
 use Drupal\Core\Batch\BatchStorage as CoreBatchStorage;
-use Drupal\mongodb\Driver\Database\mongodb\Statement;
 
 /**
  * The MongoDB implementation of \Drupal\Core\Batch\BatchStorage.

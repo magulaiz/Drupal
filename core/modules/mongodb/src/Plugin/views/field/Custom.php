@@ -9,6 +9,6 @@ use Drupal\views\Plugin\views\field\Custom as CoreCustom;
  */
 class Custom extends CoreCustom {
 
-use FieldPluginTrait;
+  use FieldPluginTrait;
 
 }

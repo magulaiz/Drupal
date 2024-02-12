@@ -2,8 +2,6 @@
 
 namespace Drupal\mongodb\KeyValueStore;
 
-use MongoDB\BSON\Binary;
-
 /**
  * The MongoDB implementation for the KeyValue database storage trait.
  */

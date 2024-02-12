@@ -15,8 +15,6 @@ class UidRevision extends UserName {
   public function query($group_by = FALSE) {
     $this->ensureMyTable();
 
-    $placeholder = $this->placeholder() . '[]';
-
     $args = array_values($this->value);
 
     $def = [];
@@ -33,7 +31,7 @@ class UidRevision extends UserName {
           'field' => 'node_all_revisions.revision_uid',
           'value' => $args,
           'operator' => 'IN',
-        ]
+        ],
       ];
     }
 
@@ -42,9 +40,9 @@ class UidRevision extends UserName {
     $this->alias = $this->query->addRelationship('user_revision', $join, 'node', $this->relationship);
 
     $condition = $this->query->getConnection()->condition('OR');
-    $condition->condition('user_revision', NULL, 'IS NOT NULL'); // nid 1,2
+    $condition->condition('user_revision', NULL, 'IS NOT NULL');
     if (!empty($args)) {
-      $condition->condition('node_current_revision.uid', $args, 'IN'); // nid 1
+      $condition->condition('node_current_revision.uid', $args, 'IN');
     }
     $this->query->addCondition($this->options['group'], $condition);
   }

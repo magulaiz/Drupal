@@ -6,7 +6,6 @@ use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\locale\StringDatabaseStorage as CoreStringDatabaseStorage;
 use Drupal\locale\SourceString;
 use Drupal\locale\TranslationString;
-use Drupal\mongodb\Driver\Database\mongodb\Statement;
 
 /**
  * The MongoDB implementation of \Drupal\locale\StringDatabaseStorage.
@@ -89,7 +88,7 @@ class StringDatabaseStorage extends CoreStringDatabaseStorage {
     $query = $this->connection->select('locales_source', 's');
     $query->addMongodbJoin('INNER', 'locales_target', 'lid', 'locales_source', 'lid', '=', 't');
     $query->unwindJoinAndAddFields('t', ['lid', 'language']);
-    $result = $query->execute()->fetchAll();
+    // $result = $query->execute()->fetchAll();
     // TODO needs work on the correct return values.
     return [];
   }

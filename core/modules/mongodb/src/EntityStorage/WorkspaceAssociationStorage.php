@@ -3,7 +3,6 @@
 namespace Drupal\mongodb\EntityStorage;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\mongodb\EntityStorage\ContentEntityStorage;
 use Drupal\workspaces\WorkspaceAssociationStorageInterface;
 use Drupal\workspaces\WorkspaceInterface;
 

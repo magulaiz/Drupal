@@ -44,9 +44,18 @@ class DatabaseBackend extends CoreDatabaseBackend {
       $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
         ['cid' => ['$in' => array_keys($cid_mapping)]],
         [
-          'projection' => ['cid' => 1, 'data' => 1, 'created' => 1, 'expire' => 1, 'serialized' => 1, 'tags' => 1, 'checksum' => 1, '_id' => 0],
-          'sort' => ['cid' => 1]
-        ]
+          'projection' => [
+            'cid' => 1,
+            'data' => 1,
+            'created' => 1,
+            'expire' => 1,
+            'serialized' => 1,
+            'tags' => 1,
+            'checksum' => 1,
+            '_id' => 0,
+          ],
+          'sort' => ['cid' => 1],
+        ],
       );
 
       $statement = new Statement($this->connection, $cursor, ['cid', 'data', 'created', 'expire', 'serialized', 'tags', 'checksum']);

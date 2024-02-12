@@ -13,8 +13,9 @@ use Drupal\views\Views;
 abstract class RelationshipPluginBase extends CoreRelationshipPluginBase {
 
   /**
-   * The actual field in the database table, maybe different on other kind of
-   * query plugins/special handlers.
+   * The actual field in the database table.
+   *
+   * Maybe different on other kind of query plugins/special handlers.
    *
    * @var string
    */

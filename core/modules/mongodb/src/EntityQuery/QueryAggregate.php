@@ -67,7 +67,6 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
     return $this;
   }
 
-
   /**
    * {@inheritdoc}
    */
@@ -98,6 +97,7 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
    *
    * @param array $rows
    *   The rows from the MongoDB aggregate query.
+   *
    * @return array
    *   The updated rows.
    */
@@ -126,6 +126,7 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
    *
    * @param array $rows
    *   The rows from the MongoDB aggregate query.
+   *
    * @return array
    *   The updated rows.
    */
