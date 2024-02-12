@@ -70,12 +70,7 @@ trait DoTrustedCallbackTrait {
         $safe_callback = TRUE;
       }
       elseif (is_subclass_of($object_or_classname, TrustedCallbackInterface::class)) {
-        if (is_object($object_or_classname)) {
-          $methods = $object_or_classname->trustedCallbacks();
-        }
-        else {
-          $methods = call_user_func($object_or_classname . '::trustedCallbacks');
-        }
+        $methods = $object_or_classname::trustedCallbacks();
         $safe_callback = in_array($method_name, $methods, TRUE);
       }
       if (!$safe_callback) {
