@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\system\Plugin\Block;
 
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\system\Form\CronForm;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -62,6 +65,14 @@ class CronStatusBlock extends BlockBase implements ContainerFactoryPluginInterfa
     ];
 
     return $build;
+  }
+
+
+  /**
+   * {@inheritdoc}
+   */
+  public function blockAccess(AccountInterface $account): AccessResultInterface {
+    return AccessResult::allowedIfHasPermission($account, 'administer site configuration');
   }
 
   /**
