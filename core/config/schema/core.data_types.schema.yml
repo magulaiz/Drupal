@@ -691,6 +691,8 @@ field.storage_settings.password:
 field.field_settings.password:
   type: mapping
   label: 'Password settings'
+  constraints:
+    FullyValidatable: ~
 
 # Schema for the configuration of the URI field type.
 
@@ -708,6 +710,8 @@ field.storage_settings.uri:
 field.field_settings.uri:
   type: mapping
   label: 'URI settings'
+  constraints:
+    FullyValidatable: ~
 
 field.value.uri:
   type: mapping
@@ -726,6 +730,8 @@ field.storage_settings.created:
 field.field_settings.created:
   type: mapping
   label: 'Created timestamp settings'
+  constraints:
+    FullyValidatable: ~
 
 field.value.created:
   type: mapping
@@ -744,6 +750,8 @@ field.storage_settings.changed:
 field.field_settings.changed:
   type: mapping
   label: 'Changed timestamp settings'
+  constraints:
+    FullyValidatable: ~
 
 field.value.changed:
   type: mapping
@@ -803,6 +811,8 @@ field.field_settings.boolean:
     off_label:
       type: required_label
       label: 'Off label'
+  constraints:
+    FullyValidatable: ~
 
 field.value.boolean:
   type: mapping
