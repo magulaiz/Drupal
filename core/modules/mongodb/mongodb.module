@@ -40,18 +40,6 @@ function mongodb_entity_type_alter(array &$entity_types) {
     // Some content entity types have their specific subclassed version of
     // ContentEntityStorage, ContentEntityStorageSchema and/or EntityViewsData.
     // Override those with the MongoDB version of those subclassed versions.
-    if (!empty($entity_types['aggregator_feed'])) {
-      $entity_types['aggregator_feed']->setStorageClass('Drupal\mongodb\EntityStorage\FeedStorage');
-      $entity_types['aggregator_feed']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentEntityStorageSchema');
-      $entity_types['aggregator_feed']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\AggregatorFeedViewsData');
-    }
-
-    if (!empty($entity_types['aggregator_item'])) {
-      $entity_types['aggregator_item']->setStorageClass('Drupal\mongodb\EntityStorage\ItemStorage');
-      $entity_types['aggregator_item']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentEntityStorageSchema');
-      $entity_types['aggregator_item']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\AggregatorItemViewsData');
-    }
-
     if (!empty($entity_types['block_content'])) {
       $entity_types['block_content']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\BlockContentViewsData');
     }

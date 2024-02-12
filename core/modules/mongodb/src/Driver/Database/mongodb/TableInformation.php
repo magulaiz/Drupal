@@ -878,7 +878,7 @@ class TableInformation {
    * Get the serialized fields for the given table.
    *
    * @param string $table
-   *   The table name for which to get the selialized fields.
+   *   The table name for which to get the serialized fields.
    *
    * @return array
    *   The list of serialized field names.
@@ -976,7 +976,7 @@ class TableInformation {
    * Save the table information to the database.
    *
    * @return bool
-   *   The boolean value indicating if the database save was succesful.
+   *   The boolean value indicating if the database save was successful.
    */
   public function save($reload = FALSE) {
     $prefixed_table_information_table = $this->connection->getMongodbPrefixedTable(static::TABLE_NAME);

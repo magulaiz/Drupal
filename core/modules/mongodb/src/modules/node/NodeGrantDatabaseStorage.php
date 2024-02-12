@@ -123,7 +123,7 @@ class NodeGrantDatabaseStorage extends CoreNodeGrantDatabaseStorage {
     $grants_exist = count($grant_conditions->conditions()) > 0;
 
     $is_multilingual = \Drupal::languageManager()->isMultilingual();
-    foreach ($tables as $nalias => $tableinfo) {
+    foreach ($tables as $tableinfo) {
       $table = $tableinfo['table'];
       if (!($table instanceof SelectInterface) && $table == $base_table) {
 

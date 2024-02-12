@@ -187,7 +187,7 @@ class NodeSearch extends CoreNodeSearch {
     // per cron run.
     $limit = (int) $this->searchSettings->get('index.cron_limit');
 
-    $query = db_select('node', 'n', ['target' => 'replica']);
+    $query = $this->database->select('node', 'n', ['target' => 'replica']);
     $query->fields('n', ['nid']);
     $query->addMongodbJoin('LEFT', 'search_dataset', 'sid', 'node', 'nid', '=', 'sd', [['field' => 'type', 'value' => $this->getPluginId()]]);
     $query->fields('sd', ['sid', 'reindex']);

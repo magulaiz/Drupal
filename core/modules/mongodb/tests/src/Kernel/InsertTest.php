@@ -9,6 +9,8 @@ use Drupal\mongodb\Driver\Database\mongodb\MongodbSQLException;
 use Drupal\TestTools\Extension\SchemaInspector;
 use MongoDB\Driver\Exception\BulkWriteException;
 
+// cspell:ignore zazu
+
 /**
  * Tests MongoDB table inserting.
  *
@@ -29,23 +31,23 @@ class InsertTest extends DatabaseTestBase {
     return [
       [
         'test',
-        ['name' => 'Zazu', 'age' => 20, 'job' => 'Makes noise'],
-        ['name' => 'Zazu', 'age' => '20', 'job' => 'Makes noise']
+        ['name' => 'Zazu the parrot', 'age' => 20, 'job' => 'Makes noise'],
+        ['name' => 'Zazu the parrot', 'age' => '20', 'job' => 'Makes noise']
       ],
       [
         'test',
-        ['name' => 'Zazu', 'age' => '20', 'job' => 'Makes noise'],
-        ['name' => 'Zazu', 'age' => '20', 'job' => 'Makes noise']
+        ['name' => 'Zazu the parrot', 'age' => '20', 'job' => 'Makes noise'],
+        ['name' => 'Zazu the parrot', 'age' => '20', 'job' => 'Makes noise']
       ],
       [
         'test',
-        ['name' => 'Zazu', 'age' => 20],
-        ['name' => 'Zazu', 'age' => '20', 'job' => 'Undefined']
+        ['name' => 'Zazu the parrot', 'age' => 20],
+        ['name' => 'Zazu the parrot', 'age' => '20', 'job' => 'Undefined']
       ],
       [
         'test',
-        ['name' => 'Zazu', 'job' => 'Makes noise'],
-        ['name' => 'Zazu', 'age' => '0', 'job' => 'Makes noise']
+        ['name' => 'Zazu the parrot', 'job' => 'Makes noise'],
+        ['name' => 'Zazu the parrot', 'age' => '0', 'job' => 'Makes noise']
       ],
       [
         'test',
@@ -54,8 +56,8 @@ class InsertTest extends DatabaseTestBase {
       ],
       [
         'test',
-        ['name' => 'Zazu'],
-        ['name' => 'Zazu', 'age' => '0', 'job' => 'Undefined']
+        ['name' => 'Zazu the parrot'],
+        ['name' => 'Zazu the parrot', 'age' => '0', 'job' => 'Undefined']
       ],
       [
         'test',
@@ -69,13 +71,13 @@ class InsertTest extends DatabaseTestBase {
       ],
       [
         'test_null',
-        ['name' => 'Zazu', 'age' => 20],
-        ['name' => 'Zazu', 'age' => '20']
+        ['name' => 'Zazu the parrot', 'age' => 20],
+        ['name' => 'Zazu the parrot', 'age' => '20']
       ],
       [
         'test_null',
-        ['name' => 'Zazu'],
-        ['name' => 'Zazu', 'age' => '0']
+        ['name' => 'Zazu the parrot'],
+        ['name' => 'Zazu the parrot', 'age' => '0']
       ],
       [
         'test_null',
@@ -89,8 +91,8 @@ class InsertTest extends DatabaseTestBase {
       ],
       [
         'test_null',
-        ['name' => 'Zazu', 'age' => NULL],
-        ['name' => 'Zazu', 'age' => NULL]
+        ['name' => 'Zazu the parrot', 'age' => NULL],
+        ['name' => 'Zazu the parrot', 'age' => NULL]
       ],
       [
         'test_null',
@@ -219,7 +221,7 @@ class InsertTest extends DatabaseTestBase {
     $parent_table_row = reset($result->{$parent_table_name});
     $this->assertSame($parent_table_row['pid'], '1', 'The value for pid should be: 1.');
     $this->assertSame($parent_table_row['task'], 'eat', 'The value for task should be: eat.');
-    $this->assertSame($parent_table_row['priority'], '3', 'The value for priorty should be: 3.');
+    $this->assertSame($parent_table_row['priority'], '3', 'The value for priority should be: 3.');
 
     // Insert row in the base fields and in the embedded table.
     $query = $connection->insert($base_table_name);
@@ -237,7 +239,7 @@ class InsertTest extends DatabaseTestBase {
     $parent_table_row = reset($result->{$parent_table_name});
     $this->assertSame($parent_table_row['pid'], '2', 'The value for pid should be: 2.');
     $this->assertSame($parent_table_row['task'], 'sleep', 'The value for task should be: sleep.');
-    $this->assertSame($parent_table_row['priority'], '4', 'The value for priorty should be: 4.');
+    $this->assertSame($parent_table_row['priority'], '4', 'The value for priority should be: 4.');
 
     // There is only one row in the embedded table.
     $this->assertTrue(isset($parent_table_row[$embedded_table_name]) && is_array($parent_table_row[$embedded_table_name]) && (count($parent_table_row[$embedded_table_name]) == 1), 'The embedded table has one row.');

@@ -117,7 +117,7 @@ class Tasks extends InstallTasks {
   }
 
   /**
-   * Check the if the test collection can be droped if it exists.
+   * Check the if the test collection can be dropped if it exists.
    */
   protected function checkDropCollectionIfExists($name) {
     try {
@@ -184,7 +184,7 @@ class Tasks extends InstallTasks {
   }
 
   /**
-   * Check the if the test collection can be droped.
+   * Check the if the test collection can be dropped.
    */
   protected function checkDropCollection($name) {
     try {

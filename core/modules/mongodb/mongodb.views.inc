@@ -4,6 +4,8 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\field\FieldStorageConfigInterface;
 
+// cspell:ignore databasedriver
+
 /**
  * Implements hook_views_data_alter().
  */

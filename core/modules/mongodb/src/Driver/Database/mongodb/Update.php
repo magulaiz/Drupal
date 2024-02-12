@@ -10,6 +10,8 @@ use MongoDB\BSON\Binary;
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\UTCDateTime;
 
+// cspell:ignore addtoset
+
 /**
  * The MongoDB implementation of \Drupal\Core\Database\Query\Update.
  */
@@ -166,7 +168,7 @@ class Update extends QueryUpdate {
     $this->booleanFields = $this->tableInformation->getTableBooleanFields($this->table);
     $this->integerFields = $this->tableInformation->getTableIntegerFields($this->table);
     $this->longFields = $this->tableInformation->getTableLongFields($this->table);
-    $this->numericFields = $this->tableInformation->getTablenumericFields($this->table);
+    $this->numericFields = $this->tableInformation->getTableNumericFields($this->table);
     $this->dateFields = $this->tableInformation->getTableDateFields($this->table);
     $this->stringFields = $this->tableInformation->getTableStringFields($this->table);
 
@@ -331,7 +333,7 @@ class Update extends QueryUpdate {
             $update_set[$field] = $embedded_table_rows;
           }
           else {
-            // Maybe it is better to use the MonogoDB $push operator for this.
+            // Maybe it is better to use the MongoDB $push operator for this.
             $update_addtoset[$field] = ['$each' => $embedded_table_rows];
           }
         }
@@ -401,7 +403,7 @@ class Update extends QueryUpdate {
     $boolean_fields = $this->tableInformation->getTableBooleanFields($table);
     $integer_fields = $this->tableInformation->getTableIntegerFields($table);
     $long_fields = $this->tableInformation->getTableLongFields($table);
-    $numeric_fields = $this->tableInformation->getTablenumericFields($table);
+    $numeric_fields = $this->tableInformation->getTableNumericFields($table);
     $date_fields = $this->tableInformation->getTableDateFields($table);
     $string_fields = $this->tableInformation->getTableStringFields($table);
 

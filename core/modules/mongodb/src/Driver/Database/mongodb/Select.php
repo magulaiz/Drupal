@@ -13,6 +13,8 @@ use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Database\Query\PlaceholderInterface;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 
+// cspell:ignore substringed
+
 /**
  * The MongoDB implementation of \Drupal\Core\Database\Query\Select.
  */
@@ -51,7 +53,7 @@ class Select extends QuerySelect {
    *
    * @var bool
    */
-  protected $mongodbSortSeperate = FALSE;
+  protected $mongodbSortSeparate = FALSE;
 
   /**
    * The integer value with how many results the query as a maximum should return.
@@ -174,7 +176,7 @@ class Select extends QuerySelect {
   protected $mongodbSubstringFields = [];
 
   /**
-   * The array containing the fields to be multiplied and sumed to the query.
+   * The array containing the fields to be multiplied and summed to the query.
    *
    * @var array
    */
@@ -238,7 +240,7 @@ class Select extends QuerySelect {
    *
    * @var array
    */
-  protected $mongodbLoopupUnwindPaths = [];
+  protected $mongodbLookupUnwindPaths = [];
 
   /**
    * The array containing the paths of embedded tables that need to be unwound
@@ -337,7 +339,7 @@ class Select extends QuerySelect {
   protected $embeddedTableCondition = [];
 
   /**
-   * The table aliases for with all fields must be seleted. This array is only
+   * The table aliases for with all fields must be selected. This array is only
    * used to fake the SQL "all_fields" variable, because it is not used by
    * MongoDB.
    *
@@ -514,14 +516,14 @@ class Select extends QuerySelect {
   }
 
   /**
-   * Add a field to the query that holds the result of the concatination.
+   * Add a field to the query that holds the result of the concatenation.
    *
    * @param string $alias
    *   The alias to be used to store the result in.
    * @param array $fields
-   *   The list of fields for the concatination.
+   *   The list of fields for the concatenation.
    * @param array $integer_fields
-   *   The list integer fields for the concatination.
+   *   The list integer fields for the concatenation.
    */
   public function addConcatField($alias, array $fields = [], array $integer_fields = []) {
     if (!empty($alias) && !empty($fields)) {
@@ -745,7 +747,7 @@ class Select extends QuerySelect {
   }
 
   /**
-   * Create a tmeporary table to hold the result of the query.
+   * Create a temporary table to hold the result of the query.
    *
    * @param string $name
    *   The name for the temporary table.
@@ -1069,7 +1071,7 @@ class Select extends QuerySelect {
   /**
    * Join against another table in the database.
    *
-   * This method does the "hard" work of queuing up a table to be joined against.
+   * This method does the "hard" work of queueing up a table to be joined against.
    * In some cases, that may include dipping into the Schema API to find the necessary
    * fields on which to join.
    *
@@ -1213,7 +1215,7 @@ class Select extends QuerySelect {
     // Create our new query object that we will mutate into a count query.
     $count = clone($this);
 
-    // Order by is not usefull in a count query.
+    // Order by is not useful in a count query.
     $count->order = [];
 
     // Remove the table from the "all_fields" table list
@@ -1353,9 +1355,9 @@ class Select extends QuerySelect {
         $pipeline[] = ['$addFields' => $this->mongodbAddFieldsPreJoin];
       }
 
-      foreach ($this->mongodbLoopupUnwindPaths as $loopup_unwind_path){
-        if (!empty($loopup_unwind_path) && (!in_array($loopup_unwind_path, $unwound_tables, TRUE))) {
-          $embedded_table_parts = explode('.', $loopup_unwind_path);
+      foreach ($this->mongodbLookupUnwindPaths as $lookup_unwind_path){
+        if (!empty($lookup_unwind_path) && (!in_array($lookup_unwind_path, $unwound_tables, TRUE))) {
+          $embedded_table_parts = explode('.', $lookup_unwind_path);
           $unwind = '';
           foreach ($embedded_table_parts as $embedded_table_part) {
             $unwind = (!empty($unwind) ? $unwind . '.' : '') . $embedded_table_part;
@@ -1386,8 +1388,8 @@ class Select extends QuerySelect {
           $unwound_tables[] = $mongodbUnwindJoinAlias;
         }
         $unwind_join_add_fields = [];
-        foreach ($mongodbUnwindJoinAndAddField['fields'] as $mongodbUnwindJoinAddfield) {
-          $unwind_join_add_fields[$mongodbUnwindJoinAddfield] = '$' . $mongodbUnwindJoinAlias . '.' . $mongodbUnwindJoinAddfield;
+        foreach ($mongodbUnwindJoinAndAddField['fields'] as $mongodbUnwindJoinAddField) {
+          $unwind_join_add_fields[$mongodbUnwindJoinAddField] = '$' . $mongodbUnwindJoinAlias . '.' . $mongodbUnwindJoinAddField;
         }
         if (!empty($unwind_join_add_fields)) {
           $pipeline[] = ['$addFields' => $unwind_join_add_fields];
@@ -1472,7 +1474,7 @@ class Select extends QuerySelect {
       if (!empty($this->mongodbSort) && !$this->mongodbCountQuery) {
         // Sorting fails when sorting by multiple values from the same embedded
         // table.
-        if ($this->mongodbSortSeperate) {
+        if ($this->mongodbSortSeparate) {
           foreach ($this->mongodbSort as $sort_key => $sort_value) {
             $pipeline[] = ['$sort' => [$sort_key => $sort_value]];
           }
@@ -1875,8 +1877,8 @@ class Select extends QuerySelect {
 
         $last_dot_position = strrpos($mongodbJoin['left field'], '.');
         if ($last_dot_position !== FALSE) {
-          $loopup_unwind_path = substr($mongodbJoin['left field'], 0, $last_dot_position);
-          if (!in_array($loopup_unwind_path, [$this->mongodbBaseTable, $this->mongodbBaseAlias])) {
+          $lookup_unwind_path = substr($mongodbJoin['left field'], 0, $last_dot_position);
+          if (!in_array($lookup_unwind_path, [$this->mongodbBaseTable, $this->mongodbBaseAlias])) {
             $embedded_table_parts = explode('.', substr($mongodbJoin['left field'], 0, $last_dot_position));
             $unwind = '';
             foreach ($embedded_table_parts as $embedded_table_part) {
@@ -1916,11 +1918,11 @@ class Select extends QuerySelect {
       }
 
       $lookup_pipeline = [];
-      $loopup_field_parts = explode('.', $mongodbJoin['field']);
-      array_pop($loopup_field_parts);
+      $lookup_field_parts = explode('.', $mongodbJoin['field']);
+      array_pop($lookup_field_parts);
       $unwind = '';
-      foreach ($loopup_field_parts as $loopup_field_part) {
-        $unwind = (!empty($unwind) ? $unwind . '.' : '') . $loopup_field_part;
+      foreach ($lookup_field_parts as $lookup_field_part) {
+        $unwind = (!empty($unwind) ? $unwind . '.' : '') . $lookup_field_part;
         if (!in_array($unwind, $pipeline_unwound_tables, TRUE)) {
 //dump('unwind1');
           $lookup_pipeline[] = [
@@ -2369,7 +2371,7 @@ class Select extends QuerySelect {
       $unique_embedded_tables = array_unique($unique_embedded_tables);
       $post_count_unique_embedded_tables = count($unique_embedded_tables);
       if (($pre_count_unique_embedded_tables > $post_count_unique_embedded_tables) && (count($unique_embedded_tables) > 1)) {
-        $this->mongodbSortSeperate = TRUE;
+        $this->mongodbSortSeparate = TRUE;
       }
     }
 

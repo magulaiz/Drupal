@@ -5,10 +5,11 @@ namespace Drupal\mongodb\EntityQuery;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\Query\Sql\Condition as CoreCondition;
 use Drupal\Core\Entity\Query\ConditionInterface;
+use Drupal\Core\Entity\Query\QueryException;
+use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\Entity\Sql\TableMappingInterface;
 use Drupal\Core\Entity\TypedData\EntityDataDefinitionInterface;
 use Drupal\Core\TypedData\DataReferenceDefinitionInterface;
-use Drupal\mongodb\Driver\Database\mongodb\Condition as MongodbCondition;
 
 /**
  * The MongoDB implementation of \Drupal\Core\Entity\Query\Sql\Condition.

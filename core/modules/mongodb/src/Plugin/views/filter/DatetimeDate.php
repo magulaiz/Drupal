@@ -6,12 +6,14 @@ use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\datetime\Plugin\views\filter\Date;
 
+// cspell:ignore datestring
+
 /**
  * Overriding the views filter plugin "datetime".
  */
 class DatetimeDate extends Date {
 
-  use DateTrait; 
+  use DateTrait;
 
   /**
    * Override parent method, which deals with dates as integers.

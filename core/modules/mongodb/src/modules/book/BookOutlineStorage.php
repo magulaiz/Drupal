@@ -57,7 +57,7 @@ class BookOutlineStorage extends CoreBookOutlineStorage {
       ->fields('b', ['bid'])
       ->range(0, 1)
       ->execute()
-      ->fetchfield();
+      ->fetchField();
   }
 
   /**

@@ -59,7 +59,7 @@ class EntityField extends CoreEntityField {
       if (!isset($this->entityFieldRenderer)) {
         $entity_type = $this->entityTypeManager->getDefinition($this->getEntityType());
         // MongoDB has its own version of the class EntityFieldRenderer and
-        // therefore must the function be overriden to get an instance of the
+        // therefore must the function be overridden to get an instance of the
         // MongoDB version of the class.
         $this->entityFieldRenderer = new EntityFieldRenderer($this->view, $this->relationship, $this->languageManager, $entity_type, $this->entityTypeManager, $this->entityRepository);
       }

@@ -205,7 +205,7 @@ class Schema extends DatabaseSchema {
       // be linked to their embedded table. For embedded table created on an
       // other embedded table need to use the full list of parent embedded
       // tables to make their validation work. Parent embedded tables are
-      // seperated by dots. See:
+      // separated by dots. See:
       // https://docs.mongodb.com/manual/core/document/#document-dot-notation.
       $embedded_full_path = $this->tableInformation->getTableEmbeddedFullPath($embedded_table_name);
       $embedded_table_schema = $this->tableInformation->getTable($embedded_table_name);
@@ -344,7 +344,7 @@ class Schema extends DatabaseSchema {
       'text:big' => 'string',
 
       // The MongoDB validation for long fails when you try to insert a int.
-      // Mongodb PHP extention >= 1.5.0 is needed for MongoDB\BSON\Int64.
+      // Mongodb PHP extension >= 1.5.0 is needed for MongoDB\BSON\Int64.
       'int:tiny' => 'int',
       'int:small' => 'int',
       'int:medium' => 'int',
@@ -370,7 +370,7 @@ class Schema extends DatabaseSchema {
       'float:normal' => 'double',
       'float:big' => 'double',
 
-      // MongoDB needs a numeric field to be of type decimel.
+      // MongoDB needs a numeric field to be of type decimal.
       'numeric:tiny' => 'decimal',
       'numeric:small' => 'decimal',
       'numeric:medium' => 'decimal',
@@ -419,7 +419,7 @@ class Schema extends DatabaseSchema {
     catch (ExecutionTimeoutException $e) {
       // Running Functional tests gets timeout. One fatal error we got was:
       // "Maximum execution time of 60 seconds exceeded in
-      // /var/www/drupalvm/drupal/vendor/mongodb/mongodb/src/Model/CollectionInfo.php
+      // vendor/mongodb/mongodb/src/Model/CollectionInfo.php
       // on line 86".
       $base_tables = $this->tableInformation->getAllBaseTables();
       if (in_array($table, $base_tables)) {
@@ -466,7 +466,7 @@ class Schema extends DatabaseSchema {
     $tables = preg_grep('/^' . $table_expression . '$/i', $tables);
 
     // Hack to set the table_information table as the last table. Therefore in
-    // testing will the table be droped as the last table.
+    // testing will the table be dropped as the last table.
     if (in_array(TableInformation::TABLE_NAME, $tables, TRUE)) {
       unset($tables[TableInformation::TABLE_NAME]);
       $tables[TableInformation::TABLE_NAME] = TableInformation::TABLE_NAME;
@@ -549,8 +549,8 @@ class Schema extends DatabaseSchema {
       $indexes = $this->getTableIndexesFromDatabase($base_table_name);
       foreach ($indexes as $index) {
         // The embedded table name can be at the beginning of the string and be
-        // seperated by a dot from the rest of the string. Or the embedded table
-        // name can be somewhere in the middle of the string and be seperated
+        // separated by a dot from the rest of the string. Or the embedded table
+        // name can be somewhere in the middle of the string and be separated
         // from the rest of the string by leading dot and trailing dot.
         $is_first_table = (substr($index->getName(), 0, strlen($table . '.')) == $table . '.') ? TRUE : FALSE;
         if ($is_first_table || (strpos($index->getName(), '.' . $table . '.') !== FALSE)) {
@@ -635,7 +635,7 @@ class Schema extends DatabaseSchema {
     if (empty($base_table_name) || !$this->tableExists($base_table_name)) {
       // If there is no base table or the base table does not exist, throw an
       // exception.
-      throw new SchemaObjectDoesNotExistException(t("The table @table could not be droped, because the base table doesn't exists.", ['@table' => $table]));
+      throw new SchemaObjectDoesNotExistException(t("The table @table could not be dropped, because the base table doesn't exists.", ['@table' => $table]));
     }
 
     // Drop all tables that are an embedded table to the base table.
@@ -664,8 +664,8 @@ class Schema extends DatabaseSchema {
       $indexes = $this->getTableIndexesFromDatabase($base_table_name);
       foreach ($indexes as $index) {
         // The embedded table name can be at the beginning of the string and be
-        // seperated by a dot from the rest of the string. Or the embedded table
-        // name can be somewhere in the middle of the string and be seperated
+        // separated by a dot from the rest of the string. Or the embedded table
+        // name can be somewhere in the middle of the string and be separated
         // from the rest of the string by leading dot and trailing dot.
         if ((substr($index->getName(), 0, strlen($table . '.')) == $table . '.') || (strpos($index->getName(), '.' . $table . '.') !== FALSE)) {
           // Delete the old index.
@@ -755,7 +755,7 @@ class Schema extends DatabaseSchema {
     if (empty($base_table_name) || !$this->tableExists($base_table_name)) {
       // If there is no base table or the base table does not exist, throw an
       // exception.
-      throw new SchemaObjectDoesNotExistException(t("The table @table could not be droped, because the base table doesn't exists.", ['@table' => $table]));
+      throw new SchemaObjectDoesNotExistException(t("The table @table could not be dropped, because the base table doesn't exists.", ['@table' => $table]));
     }
 
     if (isset($keys_new['primary key']) && is_array($keys_new['primary key'])) {
@@ -897,7 +897,7 @@ class Schema extends DatabaseSchema {
     if (empty($base_table_name) || !$this->tableExists($base_table_name)) {
       // If there is no base table or the base table does not exist, throw an
       // exception.
-      throw new SchemaObjectDoesNotExistException(t("The table @table could not be droped, because the base table doesn't exists.", ['@table' => $table]));
+      throw new SchemaObjectDoesNotExistException(t("The table @table could not be dropped, because the base table doesn't exists.", ['@table' => $table]));
     }
 
     // The table information needs to be saved first. It is used to generate the
@@ -960,7 +960,7 @@ class Schema extends DatabaseSchema {
     if (empty($base_table_name) || !$this->tableExists($base_table_name)) {
       // If there is no base table or the base table does not exist, throw an
       // exception.
-      throw new SchemaObjectDoesNotExistException(t("The table @table could not be droped, because the base table doesn't exists.", ['@table' => $table]));
+      throw new SchemaObjectDoesNotExistException(t("The table @table could not be dropped, because the base table doesn't exists.", ['@table' => $table]));
     }
 
     if (isset($keys_new['primary key']) && is_array($keys_new['primary key'])) {
@@ -1023,7 +1023,7 @@ class Schema extends DatabaseSchema {
     foreach ($keys_new as $key_type => $keys) {
       if (mb_strtolower($key_type) == 'primary key') {
         // There can be only one primary key. We are going to add one. If there
-        // is an existing one that one must be droped.
+        // is an existing one that one must be dropped.
         if ($this->primaryKeyExists($table)) {
           $this->dropPrimaryKey($table);
         }
@@ -1627,7 +1627,7 @@ class Schema extends DatabaseSchema {
     if (empty($base_table_name) || !$this->tableExists($base_table_name)) {
       // If there is no base table or the base table does not exist, throw an
       // exception.
-      throw new SchemaObjectDoesNotExistException(t("The index @name on table @table could not be droped, because the base table doesn't exists.", ['@table' => $table, '@name' => $name]));
+      throw new SchemaObjectDoesNotExistException(t("The index @name on table @table could not be dropped, because the base table doesn't exists.", ['@table' => $table, '@name' => $name]));
     }
 
     $embedded_full_path = $this->tableInformation->getTableEmbeddedFullPath($table);

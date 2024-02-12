@@ -899,7 +899,7 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
 
     $entity_type = $entity_type ?: $this->entityType;
     if ($entity_type->isRevisionable()) {
-      // Adding an index for every field can create too many indezes on a single
+      // Adding an index for every field can create too many indexes on a single
       // table. For MongoDB the maximum is 64.
       //$dedicated_schema['indexes']['primary_key'] = ['entity_id', 'revision_id', 'deleted', 'delta', 'langcode'];
       $dedicated_schema['fields']['revision_id']['not null'] = TRUE;
@@ -921,7 +921,7 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
       ];
     }
     elseif ($entity_type->isTranslatable()) {
-      // Adding an index for every field can create too many indezes on a single
+      // Adding an index for every field can create too many indexes on a single
       // table. For MongoDB the maximum is 64.
       //$dedicated_schema['indexes']['primary_key'] = ['entity_id', 'deleted', 'delta', 'langcode'];
       $dedicated_schema['description'] = "Translations storage for {$storage_definition->getTargetEntityTypeId()} field {$storage_definition->getName()}.";
@@ -929,7 +929,7 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
       return [$table_mapping->getMongodbDedicatedTableName($storage_definition, $this->storage->getTranslationsTable()) => $dedicated_schema];
     }
     else {
-      // Adding an index for every field can create too many indezes on a single
+      // Adding an index for every field can create too many indexes on a single
       // table. For MongoDB the maximum is 64.
       //$dedicated_schema['indexes']['primary_key'] = ['entity_id', 'deleted', 'delta'];
       $dedicated_schema['description'] = "Storage for {$storage_definition->getTargetEntityTypeId()} field {$storage_definition->getName()}.";

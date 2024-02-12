@@ -2633,10 +2633,10 @@ class SchemaTableTest extends SchemaTestBase {
    *       table method.
    *     - the expected indexes for the base table after we have called the
    *       rename table method.
-   *     - An array with the droped table names.
+   *     - An array with the dropped table names.
    */
   public function providerDropTableWithEmbeddedTables() {
-    $droped_embedded_validation_base_1_embedded_2 = $droped_embedded_validation_base_1_embedded_3 = ['$and' => [
+    $dropped_embedded_validation_base_1_embedded_2 = $dropped_embedded_validation_base_1_embedded_3 = ['$and' => [
       ['id' => ['$type' => 'int']],
       ['id' => ['$exists' => TRUE]],
       ['test_field' => ['$type' => 'int']],
@@ -2649,7 +2649,7 @@ class SchemaTableTest extends SchemaTestBase {
       ]],
     ]];
 
-    $droped_embedded_validation_base_1_embedded_2_and_3 = ['$and' => [
+    $dropped_embedded_validation_base_1_embedded_2_and_3 = ['$and' => [
       ['id' => ['$type' => 'int']],
       ['id' => ['$exists' => TRUE]],
       ['test_field' => ['$type' => 'int']],
@@ -2698,7 +2698,7 @@ class SchemaTableTest extends SchemaTestBase {
       ]],
     ]];
 
-    $droped_validation_base_1_embedded_2_and_3_on_2_before = ['$and' => [
+    $dropped_validation_base_1_embedded_2_and_3_on_2_before = ['$and' => [
       ['id' => ['$type' => 'int']],
       ['id' => ['$exists' => TRUE]],
       ['test_field' => ['$type' => 'int']],
@@ -2796,7 +2796,7 @@ class SchemaTableTest extends SchemaTestBase {
       ]],
     ]];
 
-    $droped_validation_base_1_embedded_2_and_3_on_2_after_droped_3 = ['$and' => [
+    $dropped_validation_base_1_embedded_2_and_3_on_2_after_dropped_3 = ['$and' => [
       ['id' => ['$type' => 'int']],
       ['id' => ['$exists' => TRUE]],
       ['test_field' => ['$type' => 'int']],
@@ -2858,231 +2858,7 @@ class SchemaTableTest extends SchemaTestBase {
       ]],
     ]];
 
-    $droped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before = ['$and' => [
-      ['id' => ['$type' => 'int']],
-      ['id' => ['$exists' => TRUE]],
-      ['test_field' => ['$type' => 'int']],
-      ['test_field' => ['$exists' => TRUE]],
-      ['test_field_string' => ['$type' => 'string']],
-      ['test_field_string' => ['$exists' => TRUE]],
-      ['$or' => [
-        ['test_field_string_ascii' => ['$type' => 'string']],
-        ['test_field_string_ascii' => ['$exists' => FALSE]]
-      ]],
-      ['$or' => [
-        ['$and' => [
-          ['test_table2.id' => ['$exists' => FALSE]],
-          ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
-          ['test_table2.test_field_int_not_null' => ['$exists' => FALSE]],
-          ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
-          ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
-          ['test_table2.test_field_float_not_null' => ['$exists' => FALSE]],
-          ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
-          ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
-          ['test_table2.test_field_numeric_not_null' => ['$exists' => FALSE]],
-          ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
-        ]],
-        ['$and' => [
-          ['test_table2.id' => ['$type' => 'int']],
-          ['test_table2.id' => ['$exists' => TRUE]],
-          ['test_table2.id' => ['$gte' => 0]],
-          ['$or' => [
-            ['test_table2.test_field_int_null' => ['$type' => 'int']],
-            ['test_table2.test_field_int_null' => ['$exists' => FALSE]]
-          ]],
-          ['test_table2.test_field_int_not_null' => ['$type' => 'int']],
-          ['test_table2.test_field_int_not_null' => ['$exists' => TRUE]],
-          ['$or' => [
-            ['test_table2.test_field_int_default' => ['$type' => 'int']],
-            ['test_table2.test_field_int_default' => ['$exists' => FALSE]]
-          ]],
-          ['$or' => [
-            ['test_table2.test_field_float_null' => ['$type' => 'double']],
-            ['test_table2.test_field_float_null' => ['$exists' => FALSE]]
-          ]],
-          ['test_table2.test_field_float_not_null' => ['$type' => 'double']],
-          ['test_table2.test_field_float_not_null' => ['$exists' => TRUE]],
-          ['$or' => [
-            ['test_table2.test_field_float_default' => ['$type' => 'double']],
-            ['test_table2.test_field_float_default' => ['$exists' => FALSE]]
-          ]],
-          ['$or' => [
-            ['test_table2.test_field_numeric_null' => ['$type' => 'decimal']],
-            ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]]
-          ]],
-          ['test_table2.test_field_numeric_not_null' => ['$type' => 'decimal']],
-          ['test_table2.test_field_numeric_not_null' => ['$exists' => TRUE]],
-          ['$or' => [
-            ['test_table2.test_field_numeric_default' => ['$type' => 'decimal']],
-            ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]]
-          ]],
-        ]],
-      ]],
-      ['$or' => [
-        ['$and' => [
-          ['test_table2.test_table3.id' => ['$exists' => FALSE]],
-          ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
-          ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => FALSE]],
-          ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
-          ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
-          ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => FALSE]],
-          ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
-        ]],
-        ['$and' => [
-          ['test_table2.test_table3.id' => ['$type' => 'int']],
-          ['test_table2.test_table3.id' => ['$exists' => TRUE]],
-          ['test_table2.test_table3.id' => ['$gte' => 0]],
-          ['$or' => [
-            ['test_table2.test_table3.test_field_varchar_null' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]]
-          ]],
-          ['test_table2.test_table3.test_field_varchar_not_null' => ['$type' => 'string']],
-          ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => TRUE]],
-          ['$or' => [
-            ['test_table2.test_table3.test_field_varchar_default' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]]
-          ]],
-          ['$or' => [
-            ['test_table2.test_table3.test_field_text_null' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]]
-          ]],
-          ['test_table2.test_table3.test_field_text_not_null' => ['$type' => 'string']],
-          ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => TRUE]],
-          ['$or' => [
-            ['test_table2.test_table3.test_field_text_default' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]]
-          ]],
-        ]],
-      ]],
-      ['$or' => [
-        ['$and' => [
-          ['test_table2.test_table3.test_table5.id' => ['$exists' => FALSE]],
-          ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => FALSE]],
-        ]],
-        ['$and' => [
-          ['test_table2.test_table3.test_table5.id' => ['$type' => 'int']],
-          ['test_table2.test_table3.test_table5.id' => ['$exists' => TRUE]],
-          ['test_table2.test_table3.test_table5.id' => ['$gte' => 0]],
-          ['test_table2.test_table3.test_table5.test_field_string' => ['$type' => 'string']],
-          ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => TRUE]],
-        ]],
-      ]],
-      ['$or' => [
-        ['$and' => [
-          ['test_table2.test_table3.test_table6.id' => ['$exists' => FALSE]],
-          ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
-        ]],
-        ['$and' => [
-          ['test_table2.test_table3.test_table6.id' => ['$type' => 'int']],
-          ['test_table2.test_table3.test_table6.id' => ['$exists' => TRUE]],
-          ['$or' => [
-            ['test_table2.test_table3.test_table6.test_field_string' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]]
-          ]],
-        ]],
-      ]],
-      ['$or' => [
-        ['$and' => [
-          ['test_table2.test_table4.id' => ['$exists' => FALSE]],
-          ['test_table2.test_table4.test_field' => ['$exists' => FALSE]],
-        ]],
-        ['$and' => [
-          ['test_table2.test_table4.id' => ['$type' => 'int']],
-          ['test_table2.test_table4.id' => ['$exists' => TRUE]],
-          ['test_table2.test_table4.test_field' => ['$type' => 'int']],
-          ['test_table2.test_table4.test_field' => ['$exists' => TRUE]],
-        ]],
-      ]],
-    ]];
-
-    $droped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_droped_2 = ['$and' => [
-      ['id' => ['$type' => 'int']],
-      ['id' => ['$exists' => TRUE]],
-      ['test_field' => ['$type' => 'int']],
-      ['test_field' => ['$exists' => TRUE]],
-      ['test_field_string' => ['$type' => 'string']],
-      ['test_field_string' => ['$exists' => TRUE]],
-      ['$or' => [
-        ['test_field_string_ascii' => ['$type' => 'string']],
-        ['test_field_string_ascii' => ['$exists' => FALSE]]
-      ]],
-    ]];
-
-    $droped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_droped_3 = ['$and' => [
-      ['id' => ['$type' => 'int']],
-      ['id' => ['$exists' => TRUE]],
-      ['test_field' => ['$type' => 'int']],
-      ['test_field' => ['$exists' => TRUE]],
-      ['test_field_string' => ['$type' => 'string']],
-      ['test_field_string' => ['$exists' => TRUE]],
-      ['$or' => [
-        ['test_field_string_ascii' => ['$type' => 'string']],
-        ['test_field_string_ascii' => ['$exists' => FALSE]]
-      ]],
-      ['$or' => [
-        ['$and' => [
-          ['test_table2.id' => ['$exists' => FALSE]],
-          ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
-          ['test_table2.test_field_int_not_null' => ['$exists' => FALSE]],
-          ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
-          ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
-          ['test_table2.test_field_float_not_null' => ['$exists' => FALSE]],
-          ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
-          ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
-          ['test_table2.test_field_numeric_not_null' => ['$exists' => FALSE]],
-          ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
-        ]],
-        ['$and' => [
-          ['test_table2.id' => ['$type' => 'int']],
-          ['test_table2.id' => ['$exists' => TRUE]],
-          ['test_table2.id' => ['$gte' => 0]],
-          ['$or' => [
-            ['test_table2.test_field_int_null' => ['$type' => 'int']],
-            ['test_table2.test_field_int_null' => ['$exists' => FALSE]]
-          ]],
-          ['test_table2.test_field_int_not_null' => ['$type' => 'int']],
-          ['test_table2.test_field_int_not_null' => ['$exists' => TRUE]],
-          ['$or' => [
-            ['test_table2.test_field_int_default' => ['$type' => 'int']],
-            ['test_table2.test_field_int_default' => ['$exists' => FALSE]]
-          ]],
-          ['$or' => [
-            ['test_table2.test_field_float_null' => ['$type' => 'double']],
-            ['test_table2.test_field_float_null' => ['$exists' => FALSE]]
-          ]],
-          ['test_table2.test_field_float_not_null' => ['$type' => 'double']],
-          ['test_table2.test_field_float_not_null' => ['$exists' => TRUE]],
-          ['$or' => [
-            ['test_table2.test_field_float_default' => ['$type' => 'double']],
-            ['test_table2.test_field_float_default' => ['$exists' => FALSE]]
-          ]],
-          ['$or' => [
-            ['test_table2.test_field_numeric_null' => ['$type' => 'decimal']],
-            ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]]
-          ]],
-          ['test_table2.test_field_numeric_not_null' => ['$type' => 'decimal']],
-          ['test_table2.test_field_numeric_not_null' => ['$exists' => TRUE]],
-          ['$or' => [
-            ['test_table2.test_field_numeric_default' => ['$type' => 'decimal']],
-            ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]]
-          ]],
-        ]],
-      ]],
-      ['$or' => [
-        ['$and' => [
-          ['test_table2.test_table4.id' => ['$exists' => FALSE]],
-          ['test_table2.test_table4.test_field' => ['$exists' => FALSE]],
-        ]],
-        ['$and' => [
-          ['test_table2.test_table4.id' => ['$type' => 'int']],
-          ['test_table2.test_table4.id' => ['$exists' => TRUE]],
-          ['test_table2.test_table4.test_field' => ['$type' => 'int']],
-          ['test_table2.test_table4.test_field' => ['$exists' => TRUE]],
-        ]],
-      ]],
-    ]];
-
-    $droped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_droped_4 = ['$and' => [
+    $dropped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before = ['$and' => [
       ['id' => ['$type' => 'int']],
       ['id' => ['$exists' => TRUE]],
       ['test_field' => ['$type' => 'int']],
@@ -3205,9 +2981,233 @@ class SchemaTableTest extends SchemaTestBase {
           ]],
         ]],
       ]],
+      ['$or' => [
+        ['$and' => [
+          ['test_table2.test_table4.id' => ['$exists' => FALSE]],
+          ['test_table2.test_table4.test_field' => ['$exists' => FALSE]],
+        ]],
+        ['$and' => [
+          ['test_table2.test_table4.id' => ['$type' => 'int']],
+          ['test_table2.test_table4.id' => ['$exists' => TRUE]],
+          ['test_table2.test_table4.test_field' => ['$type' => 'int']],
+          ['test_table2.test_table4.test_field' => ['$exists' => TRUE]],
+        ]],
+      ]],
     ]];
 
-    $droped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_droped_6 = ['$and' => [
+    $dropped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_dropped_2 = ['$and' => [
+      ['id' => ['$type' => 'int']],
+      ['id' => ['$exists' => TRUE]],
+      ['test_field' => ['$type' => 'int']],
+      ['test_field' => ['$exists' => TRUE]],
+      ['test_field_string' => ['$type' => 'string']],
+      ['test_field_string' => ['$exists' => TRUE]],
+      ['$or' => [
+        ['test_field_string_ascii' => ['$type' => 'string']],
+        ['test_field_string_ascii' => ['$exists' => FALSE]]
+      ]],
+    ]];
+
+    $dropped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_dropped_3 = ['$and' => [
+      ['id' => ['$type' => 'int']],
+      ['id' => ['$exists' => TRUE]],
+      ['test_field' => ['$type' => 'int']],
+      ['test_field' => ['$exists' => TRUE]],
+      ['test_field_string' => ['$type' => 'string']],
+      ['test_field_string' => ['$exists' => TRUE]],
+      ['$or' => [
+        ['test_field_string_ascii' => ['$type' => 'string']],
+        ['test_field_string_ascii' => ['$exists' => FALSE]]
+      ]],
+      ['$or' => [
+        ['$and' => [
+          ['test_table2.id' => ['$exists' => FALSE]],
+          ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
+          ['test_table2.test_field_int_not_null' => ['$exists' => FALSE]],
+          ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
+          ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
+          ['test_table2.test_field_float_not_null' => ['$exists' => FALSE]],
+          ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
+          ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
+          ['test_table2.test_field_numeric_not_null' => ['$exists' => FALSE]],
+          ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
+        ]],
+        ['$and' => [
+          ['test_table2.id' => ['$type' => 'int']],
+          ['test_table2.id' => ['$exists' => TRUE]],
+          ['test_table2.id' => ['$gte' => 0]],
+          ['$or' => [
+            ['test_table2.test_field_int_null' => ['$type' => 'int']],
+            ['test_table2.test_field_int_null' => ['$exists' => FALSE]]
+          ]],
+          ['test_table2.test_field_int_not_null' => ['$type' => 'int']],
+          ['test_table2.test_field_int_not_null' => ['$exists' => TRUE]],
+          ['$or' => [
+            ['test_table2.test_field_int_default' => ['$type' => 'int']],
+            ['test_table2.test_field_int_default' => ['$exists' => FALSE]]
+          ]],
+          ['$or' => [
+            ['test_table2.test_field_float_null' => ['$type' => 'double']],
+            ['test_table2.test_field_float_null' => ['$exists' => FALSE]]
+          ]],
+          ['test_table2.test_field_float_not_null' => ['$type' => 'double']],
+          ['test_table2.test_field_float_not_null' => ['$exists' => TRUE]],
+          ['$or' => [
+            ['test_table2.test_field_float_default' => ['$type' => 'double']],
+            ['test_table2.test_field_float_default' => ['$exists' => FALSE]]
+          ]],
+          ['$or' => [
+            ['test_table2.test_field_numeric_null' => ['$type' => 'decimal']],
+            ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]]
+          ]],
+          ['test_table2.test_field_numeric_not_null' => ['$type' => 'decimal']],
+          ['test_table2.test_field_numeric_not_null' => ['$exists' => TRUE]],
+          ['$or' => [
+            ['test_table2.test_field_numeric_default' => ['$type' => 'decimal']],
+            ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]]
+          ]],
+        ]],
+      ]],
+      ['$or' => [
+        ['$and' => [
+          ['test_table2.test_table4.id' => ['$exists' => FALSE]],
+          ['test_table2.test_table4.test_field' => ['$exists' => FALSE]],
+        ]],
+        ['$and' => [
+          ['test_table2.test_table4.id' => ['$type' => 'int']],
+          ['test_table2.test_table4.id' => ['$exists' => TRUE]],
+          ['test_table2.test_table4.test_field' => ['$type' => 'int']],
+          ['test_table2.test_table4.test_field' => ['$exists' => TRUE]],
+        ]],
+      ]],
+    ]];
+
+    $dropped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_dropped_4 = ['$and' => [
+      ['id' => ['$type' => 'int']],
+      ['id' => ['$exists' => TRUE]],
+      ['test_field' => ['$type' => 'int']],
+      ['test_field' => ['$exists' => TRUE]],
+      ['test_field_string' => ['$type' => 'string']],
+      ['test_field_string' => ['$exists' => TRUE]],
+      ['$or' => [
+        ['test_field_string_ascii' => ['$type' => 'string']],
+        ['test_field_string_ascii' => ['$exists' => FALSE]]
+      ]],
+      ['$or' => [
+        ['$and' => [
+          ['test_table2.id' => ['$exists' => FALSE]],
+          ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
+          ['test_table2.test_field_int_not_null' => ['$exists' => FALSE]],
+          ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
+          ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
+          ['test_table2.test_field_float_not_null' => ['$exists' => FALSE]],
+          ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
+          ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
+          ['test_table2.test_field_numeric_not_null' => ['$exists' => FALSE]],
+          ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
+        ]],
+        ['$and' => [
+          ['test_table2.id' => ['$type' => 'int']],
+          ['test_table2.id' => ['$exists' => TRUE]],
+          ['test_table2.id' => ['$gte' => 0]],
+          ['$or' => [
+            ['test_table2.test_field_int_null' => ['$type' => 'int']],
+            ['test_table2.test_field_int_null' => ['$exists' => FALSE]]
+          ]],
+          ['test_table2.test_field_int_not_null' => ['$type' => 'int']],
+          ['test_table2.test_field_int_not_null' => ['$exists' => TRUE]],
+          ['$or' => [
+            ['test_table2.test_field_int_default' => ['$type' => 'int']],
+            ['test_table2.test_field_int_default' => ['$exists' => FALSE]]
+          ]],
+          ['$or' => [
+            ['test_table2.test_field_float_null' => ['$type' => 'double']],
+            ['test_table2.test_field_float_null' => ['$exists' => FALSE]]
+          ]],
+          ['test_table2.test_field_float_not_null' => ['$type' => 'double']],
+          ['test_table2.test_field_float_not_null' => ['$exists' => TRUE]],
+          ['$or' => [
+            ['test_table2.test_field_float_default' => ['$type' => 'double']],
+            ['test_table2.test_field_float_default' => ['$exists' => FALSE]]
+          ]],
+          ['$or' => [
+            ['test_table2.test_field_numeric_null' => ['$type' => 'decimal']],
+            ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]]
+          ]],
+          ['test_table2.test_field_numeric_not_null' => ['$type' => 'decimal']],
+          ['test_table2.test_field_numeric_not_null' => ['$exists' => TRUE]],
+          ['$or' => [
+            ['test_table2.test_field_numeric_default' => ['$type' => 'decimal']],
+            ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]]
+          ]],
+        ]],
+      ]],
+      ['$or' => [
+        ['$and' => [
+          ['test_table2.test_table3.id' => ['$exists' => FALSE]],
+          ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
+          ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => FALSE]],
+          ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
+          ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
+          ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => FALSE]],
+          ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
+        ]],
+        ['$and' => [
+          ['test_table2.test_table3.id' => ['$type' => 'int']],
+          ['test_table2.test_table3.id' => ['$exists' => TRUE]],
+          ['test_table2.test_table3.id' => ['$gte' => 0]],
+          ['$or' => [
+            ['test_table2.test_table3.test_field_varchar_null' => ['$type' => 'string']],
+            ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]]
+          ]],
+          ['test_table2.test_table3.test_field_varchar_not_null' => ['$type' => 'string']],
+          ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => TRUE]],
+          ['$or' => [
+            ['test_table2.test_table3.test_field_varchar_default' => ['$type' => 'string']],
+            ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]]
+          ]],
+          ['$or' => [
+            ['test_table2.test_table3.test_field_text_null' => ['$type' => 'string']],
+            ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]]
+          ]],
+          ['test_table2.test_table3.test_field_text_not_null' => ['$type' => 'string']],
+          ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => TRUE]],
+          ['$or' => [
+            ['test_table2.test_table3.test_field_text_default' => ['$type' => 'string']],
+            ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]]
+          ]],
+        ]],
+      ]],
+      ['$or' => [
+        ['$and' => [
+          ['test_table2.test_table3.test_table5.id' => ['$exists' => FALSE]],
+          ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => FALSE]],
+        ]],
+        ['$and' => [
+          ['test_table2.test_table3.test_table5.id' => ['$type' => 'int']],
+          ['test_table2.test_table3.test_table5.id' => ['$exists' => TRUE]],
+          ['test_table2.test_table3.test_table5.id' => ['$gte' => 0]],
+          ['test_table2.test_table3.test_table5.test_field_string' => ['$type' => 'string']],
+          ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => TRUE]],
+        ]],
+      ]],
+      ['$or' => [
+        ['$and' => [
+          ['test_table2.test_table3.test_table6.id' => ['$exists' => FALSE]],
+          ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
+        ]],
+        ['$and' => [
+          ['test_table2.test_table3.test_table6.id' => ['$type' => 'int']],
+          ['test_table2.test_table3.test_table6.id' => ['$exists' => TRUE]],
+          ['$or' => [
+            ['test_table2.test_table3.test_table6.test_field_string' => ['$type' => 'string']],
+            ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]]
+          ]],
+        ]],
+      ]],
+    ]];
+
+    $dropped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_dropped_6 = ['$and' => [
       ['id' => ['$type' => 'int']],
       ['id' => ['$exists' => TRUE]],
       ['test_field' => ['$type' => 'int']],
@@ -3330,13 +3330,13 @@ class SchemaTableTest extends SchemaTestBase {
       ]],
     ]];
 
-    $droped_embedded_indexes_base_1_embedded_2 = $droped_embedded_indexes_base_1_embedded_3 = $droped_embedded_indexes_base_1_embedded_2_and_3 = [
+    $dropped_embedded_indexes_base_1_embedded_2 = $dropped_embedded_indexes_base_1_embedded_3 = $dropped_embedded_indexes_base_1_embedded_2_and_3 = [
       ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
       ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
       ['name' => 'test_field__key', 'unique' => TRUE, 'key' => ['test_field' => 1]],
     ];
 
-    $droped_table_indexes_base_1_embedded_2_and_3_on_2_before = $droped_table_indexes_base_1_embedded_2_and_3_on_2_after_droped_3 = [
+    $dropped_table_indexes_base_1_embedded_2_and_3_on_2_before = $dropped_table_indexes_base_1_embedded_2_and_3_on_2_after_dropped_3 = [
       ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
       ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
       ['name' => 'test_field__key', 'unique' => TRUE, 'key' => ['test_field' => 1]],
@@ -3347,13 +3347,13 @@ class SchemaTableTest extends SchemaTestBase {
       ['name' => 'test_table2.test_field_int_null__idx', 'unique' => FALSE, 'key' => ['test_table2.test_field_int_null' => 1]],
     ];
 
-    $droped_table_indexes_base_1_embedded_2_and_3_on_2_after_droped_2 = $droped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_droped_2 = [
+    $dropped_table_indexes_base_1_embedded_2_and_3_on_2_after_dropped_2 = $dropped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_dropped_2 = [
       ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
       ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
       ['name' => 'test_field__key', 'unique' => TRUE, 'key' => ['test_field' => 1]],
     ];
 
-    $droped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before = [
+    $dropped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before = [
       ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
       ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
       ['name' => 'test_field__key', 'unique' => TRUE, 'key' => ['test_field' => 1]],
@@ -3368,7 +3368,7 @@ class SchemaTableTest extends SchemaTestBase {
       ['name' => 'test_table2.test_table3.test_table6.test_field_string__idx', 'unique' => FALSE, 'key' => ['test_table2.test_table3.test_table6.test_field_string' => 1]],
     ];
 
-    $droped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_droped_3 = [
+    $dropped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_dropped_3 = [
       ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
       ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
       ['name' => 'test_field__key', 'unique' => TRUE, 'key' => ['test_field' => 1]],
@@ -3381,7 +3381,7 @@ class SchemaTableTest extends SchemaTestBase {
       ['name' => 'test_table2.test_table4.test_field__key', 'unique' => TRUE, 'key' => ['test_table2.test_table4.test_field' => 1]],
     ];
 
-    $droped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_droped_4 = [
+    $dropped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_dropped_4 = [
       ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
       ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
       ['name' => 'test_field__key', 'unique' => TRUE, 'key' => ['test_field' => 1]],
@@ -3394,7 +3394,7 @@ class SchemaTableTest extends SchemaTestBase {
       ['name' => 'test_table2.test_table3.test_table6.test_field_string__idx', 'unique' => FALSE, 'key' => ['test_table2.test_table3.test_table6.test_field_string' => 1]],
     ];
 
-    $droped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_droped_6 = [
+    $dropped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_dropped_6 = [
       ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
       ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
       ['name' => 'test_field__key', 'unique' => TRUE, 'key' => ['test_field' => 1]],
@@ -3480,9 +3480,9 @@ class SchemaTableTest extends SchemaTestBase {
         [],
         $this->test_table2['name'],
         $this->embedded_validation_base_1_embedded_2,
-        $droped_embedded_validation_base_1_embedded_2,
+        $dropped_embedded_validation_base_1_embedded_2,
         $this->embedded_indexes_base_1_embedded_2,
-        $droped_embedded_indexes_base_1_embedded_2,
+        $dropped_embedded_indexes_base_1_embedded_2,
         [$this->test_table2['name']],
       ],
       [
@@ -3491,9 +3491,9 @@ class SchemaTableTest extends SchemaTestBase {
         [],
         $this->test_table3['name'],
         $this->embedded_validation_base_1_embedded_3,
-        $droped_embedded_validation_base_1_embedded_3,
+        $dropped_embedded_validation_base_1_embedded_3,
         $this->embedded_indexes_base_1_embedded_3,
-        $droped_embedded_indexes_base_1_embedded_3,
+        $dropped_embedded_indexes_base_1_embedded_3,
         [$this->test_table3['name']],
       ],
       [
@@ -3502,9 +3502,9 @@ class SchemaTableTest extends SchemaTestBase {
         [$this->test_table1['name'] => [$this->test_table3]],
         $this->test_table2['name'],
         $this->embedded_validation_base_1_embedded_2_and_3,
-        $droped_embedded_validation_base_1_embedded_2_and_3,
+        $dropped_embedded_validation_base_1_embedded_2_and_3,
         $this->embedded_indexes_base_1_embedded_2_and_3,
-        $droped_embedded_indexes_base_1_embedded_2_and_3,
+        $dropped_embedded_indexes_base_1_embedded_2_and_3,
         [$this->test_table2['name']],
       ],
       [
@@ -3512,9 +3512,9 @@ class SchemaTableTest extends SchemaTestBase {
         [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3]],
         [],
         $this->test_table1['name'],
-        $droped_validation_base_1_embedded_2_and_3_on_2_before,
+        $dropped_validation_base_1_embedded_2_and_3_on_2_before,
         NULL,
-        $droped_table_indexes_base_1_embedded_2_and_3_on_2_before,
+        $dropped_table_indexes_base_1_embedded_2_and_3_on_2_before,
         NULL,
         [$this->test_table1['name'], $this->test_table2['name'], $this->test_table3['name']],
       ],
@@ -3523,10 +3523,10 @@ class SchemaTableTest extends SchemaTestBase {
         [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3]],
         [],
         $this->test_table2['name'],
-        $droped_validation_base_1_embedded_2_and_3_on_2_before,
+        $dropped_validation_base_1_embedded_2_and_3_on_2_before,
         $this->test_table1['validation'],
-        $droped_table_indexes_base_1_embedded_2_and_3_on_2_before,
-        $droped_table_indexes_base_1_embedded_2_and_3_on_2_after_droped_2,
+        $dropped_table_indexes_base_1_embedded_2_and_3_on_2_before,
+        $dropped_table_indexes_base_1_embedded_2_and_3_on_2_after_dropped_2,
         [$this->test_table2['name'], $this->test_table3['name']],
       ],
       [
@@ -3534,10 +3534,10 @@ class SchemaTableTest extends SchemaTestBase {
         [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3]],
         [$this->test_table1['name'] => [$this->test_table2]],
         $this->test_table3['name'],
-        $droped_validation_base_1_embedded_2_and_3_on_2_before,
-        $droped_validation_base_1_embedded_2_and_3_on_2_after_droped_3,
-        $droped_table_indexes_base_1_embedded_2_and_3_on_2_before,
-        $droped_table_indexes_base_1_embedded_2_and_3_on_2_after_droped_3,
+        $dropped_validation_base_1_embedded_2_and_3_on_2_before,
+        $dropped_validation_base_1_embedded_2_and_3_on_2_after_dropped_3,
+        $dropped_table_indexes_base_1_embedded_2_and_3_on_2_before,
+        $dropped_table_indexes_base_1_embedded_2_and_3_on_2_after_dropped_3,
         [$this->test_table3['name']],
       ],
       [
@@ -3545,9 +3545,9 @@ class SchemaTableTest extends SchemaTestBase {
         [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
         [],
         $this->test_table1['name'],
-        $droped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
+        $dropped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
         NULL,
-        $droped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
+        $dropped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
         NULL,
         [$this->test_table1['name'], $this->test_table2['name'], $this->test_table3['name'], $this->test_table4['name'], $this->test_table5['name'], $this->test_table6['name']],
       ],
@@ -3556,10 +3556,10 @@ class SchemaTableTest extends SchemaTestBase {
         [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
         [],
         $this->test_table2['name'],
-        $droped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
-        $droped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_droped_2,
-        $droped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
-        $droped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_droped_2,
+        $dropped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
+        $dropped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_dropped_2,
+        $dropped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
+        $dropped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_dropped_2,
         [$this->test_table1['name'], $this->test_table2['name'], $this->test_table3['name'], $this->test_table4['name'], $this->test_table5['name'], $this->test_table6['name']],
       ],
       [
@@ -3567,10 +3567,10 @@ class SchemaTableTest extends SchemaTestBase {
         [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
         [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table4]],
         $this->test_table3['name'],
-        $droped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
-        $droped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_droped_3,
-        $droped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
-        $droped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_droped_3,
+        $dropped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
+        $dropped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_dropped_3,
+        $dropped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
+        $dropped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_dropped_3,
         [$this->test_table3['name'], $this->test_table5['name'], $this->test_table6['name']],
       ],
       [
@@ -3578,10 +3578,10 @@ class SchemaTableTest extends SchemaTestBase {
         [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
         [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
         $this->test_table4['name'],
-        $droped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
-        $droped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_droped_4,
-        $droped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
-        $droped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_droped_4,
+        $dropped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
+        $dropped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_dropped_4,
+        $dropped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
+        $dropped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_dropped_4,
         [$this->test_table4['name']],
       ],
       [
@@ -3589,10 +3589,10 @@ class SchemaTableTest extends SchemaTestBase {
         [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
         [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5]],
         $this->test_table6['name'],
-        $droped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
-        $droped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_droped_6,
-        $droped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
-        $droped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_droped_6,
+        $dropped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
+        $dropped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_dropped_6,
+        $dropped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
+        $dropped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_dropped_6,
         [$this->test_table6['name']],
       ],
     ];
@@ -3605,7 +3605,7 @@ class SchemaTableTest extends SchemaTestBase {
    * @covers ::tableExists
    * @dataProvider providerDropTableWithEmbeddedTables
    */
-  public function testDropTableWithEmbeddedTables($base_table_data, $embedded_tables_data, $embedded_tables_data_after, $droped_table_name, $expected_validation_before, $expected_validation_after, $expected_indexes_before, $expected_indexes_after, $deleted_tables) {
+  public function testDropTableWithEmbeddedTables($base_table_data, $embedded_tables_data, $embedded_tables_data_after, $dropped_table_name, $expected_validation_before, $expected_validation_after, $expected_indexes_before, $expected_indexes_after, $deleted_tables) {
     $schema = Database::getConnection()->schema();
 
     // Create all the tables.
@@ -3616,7 +3616,7 @@ class SchemaTableTest extends SchemaTestBase {
       }
     }
 
-    // Test everything before the table has been droped.
+    // Test everything before the table has been dropped.
     $this->assertTrue($schema->tableExists($base_table_data['name']), 'The table exists in the MongoDB database.');
     foreach ($embedded_tables_data as $parent_table_name => $embedded_table_array) {
       foreach ($embedded_table_array as $embedded_table_data) {
@@ -3641,10 +3641,10 @@ class SchemaTableTest extends SchemaTestBase {
     $this->checkTableNumberOfIndexes($base_table_data, $embedded_tables_data);
 
     // Call the to be tested method: Schema::dropTable().
-    $schema->dropTable($droped_table_name);
+    $schema->dropTable($dropped_table_name);
 
-    // Test everything after the table has been droped.
-    if ($base_table_data['name'] == $droped_table_name) {
+    // Test everything after the table has been dropped.
+    if ($base_table_data['name'] == $dropped_table_name) {
       $this->assertFalse($schema->tableExists($base_table_data['name']), 'The table does not exist in the MongoDB database.');
     }
     else {
@@ -3661,7 +3661,7 @@ class SchemaTableTest extends SchemaTestBase {
       }
     }
 
-    if ($base_table_data['name'] != $droped_table_name) {
+    if ($base_table_data['name'] != $dropped_table_name) {
       $this->checkTableValidation($base_table_data['name'], $expected_validation_after);
       $this->checkTableSchema($base_table_data['name'], $base_table_data['schema']);
     }
@@ -3673,7 +3673,7 @@ class SchemaTableTest extends SchemaTestBase {
         }
       }
     }
-    if ($base_table_data['name'] != $droped_table_name) {
+    if ($base_table_data['name'] != $dropped_table_name) {
       $this->checkTableIndexes($base_table_data['name'], $base_table_data['schema']);
     }
     foreach ($embedded_tables_data as $parent_table_name => $embedded_table_array) {
@@ -3683,7 +3683,7 @@ class SchemaTableTest extends SchemaTestBase {
         }
       }
     }
-    if ($base_table_data['name'] != $droped_table_name) {
+    if ($base_table_data['name'] != $dropped_table_name) {
       $this->checkExpectedIndexesAgainstDatabase($base_table_data['name'], $expected_indexes_after);
       $this->checkTableNumberOfIndexes($base_table_data, $embedded_tables_data_after);
     }

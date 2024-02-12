@@ -14,6 +14,8 @@ use MongoDB\BSON\ObjectID;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Driver\Cursor;
 
+// cspell:ignore typemap
+
 /**
  * The MongoDB implementation of the StatementInterface.
  */
@@ -202,7 +204,7 @@ class Statement extends StatementPrefetchIterator {
       }
     }
 
-    // Randomise the order of the result set.
+    // Randomize the order of the result set.
     if (!empty($options['random_order']) && !empty($this->data)) {
       shuffle($this->data);
     }

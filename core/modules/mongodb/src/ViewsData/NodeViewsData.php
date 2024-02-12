@@ -2,6 +2,8 @@
 
 namespace Drupal\mongodb\ViewsData;
 
+// cspell:ignore behaviour
+
 /**
  * The MongoDB implementation of \Drupal\node\NodeViewsData.
  */
@@ -314,7 +316,7 @@ class NodeViewsData extends EntityViewsData {
     if (\Drupal::moduleHandler()->moduleExists('search')) {
       $enabled = FALSE;
       $search_page_repository = \Drupal::service('search.search_page_repository');
-      foreach ($search_page_repository->getActiveSearchpages() as $page) {
+      foreach ($search_page_repository->getActiveSearchPages() as $page) {
         if ($page->getPlugin()->getPluginId() == 'node_search') {
           $enabled = TRUE;
           break;

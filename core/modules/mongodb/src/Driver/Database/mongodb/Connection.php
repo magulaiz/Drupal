@@ -7,7 +7,6 @@ use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\InvalidArgumentException;
 use Drupal\Core\Database\StatementInterface;
-use Drupal\Core\Database\SupportsTemporaryTablesInterface;
 use Drupal\Core\Database\Transaction\TransactionManagerInterface;
 use MongoDB\Client;
 use MongoDB\Database as MongodbDatabase;
@@ -17,6 +16,8 @@ use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Operation\FindOneAndUpdate;
+
+// cspell:ignore linearizable
 
 /**
  * MongoDB implementation of \Drupal\Core\Database\Connection.
@@ -100,7 +101,7 @@ class Connection extends DatabaseConnection {
    * @param array $connection_options
    *   The database connection settings array.
    *
-   * @return \MonogoDB\Database
+   * @return \MongoDB\Database
    *   A \MongoDB\Database object.
    */
   public static function open(array &$connection_options = []) {

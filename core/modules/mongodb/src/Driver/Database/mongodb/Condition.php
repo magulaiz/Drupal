@@ -11,6 +11,8 @@ use Drupal\Core\Database\Query\PlaceholderInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use MongoDB\BSON\Regex;
 
+// cspell:ignore datedate datestring fieldcompare wsod
+
 /**
  * MongoDB implementation of \Drupal\Core\Database\Query\Condition.
  */
@@ -69,7 +71,7 @@ class Condition extends QueryCondition {
   /**
    * An array of meta data.
    *
-   * Used with the views module. Variables in the condtion can then be
+   * Used with the views module. Variables in the condition can then be
    * substitutions.
    *
    * @var array

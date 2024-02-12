@@ -2087,7 +2087,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    * @covers ::primaryKeyExists
    * @dataProvider providerDropPrimaryKey
    */
-  public function testDropPrimaryKey($base_table_data, $embedded_tables_data, $table_name_to_drop_primary_key, $droped_primary_key_table_data) {
+  public function testDropPrimaryKey($base_table_data, $embedded_tables_data, $table_name_to_drop_primary_key, $dropped_primary_key_table_data) {
     $schema = Database::getConnection()->schema();
 
     $this->assertFalse($schema->tableExists($base_table_data['name']), 'The table does not exist in the MongoDB database.');
@@ -2128,13 +2128,13 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
     $this->assertFalse($schema->constraintExists($base_table_data['name'], $embedded_full_path . '__pkey'), 'The embedded table does not have a primary key.');
     $this->assertFalse($schema->primaryKeyExists($table_name_to_drop_primary_key), 'The table does not have a primary key.');
 
-    $this->checkExpectedIndexesAgainstDatabase($base_table_data['name'], $droped_primary_key_table_data['indexes']);
+    $this->checkExpectedIndexesAgainstDatabase($base_table_data['name'], $dropped_primary_key_table_data['indexes']);
 
     // Check that the validation, schema or index data is what is it should be
-    // for all table including the embedded table without the droped primary key.
-    $this->checkTableValidation($base_table_data['name'], $droped_primary_key_table_data['validation']);
+    // for all table including the embedded table without the dropped primary key.
+    $this->checkTableValidation($base_table_data['name'], $dropped_primary_key_table_data['validation']);
     if ($base_table_data['name'] == $table_name_to_drop_primary_key) {
-      $this->checkTableSchema($base_table_data['name'], $droped_primary_key_table_data['schema']);
+      $this->checkTableSchema($base_table_data['name'], $dropped_primary_key_table_data['schema']);
     }
     else {
       $this->checkTableSchema($base_table_data['name'], $base_table_data['schema']);
@@ -2142,7 +2142,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
     foreach ($embedded_tables_data as $parent_table_name => $embedded_table_array) {
       foreach ($embedded_table_array as $embedded_table_data) {
         if ($embedded_table_data['name'] == $table_name_to_drop_primary_key) {
-          $this->checkTableSchema($embedded_table_data['name'], $droped_primary_key_table_data['schema']);
+          $this->checkTableSchema($embedded_table_data['name'], $dropped_primary_key_table_data['schema']);
         }
         else {
           $embedded_table_data['schema']['embedded_to_table'] = $parent_table_name;
@@ -2151,7 +2151,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
       }
     }
     if ($base_table_data['name'] == $table_name_to_drop_primary_key) {
-      $this->checkTableIndexes($base_table_data['name'], $droped_primary_key_table_data['schema']);
+      $this->checkTableIndexes($base_table_data['name'], $dropped_primary_key_table_data['schema']);
     }
     else {
       $this->checkTableIndexes($base_table_data['name'], $base_table_data['schema']);
@@ -2159,7 +2159,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
     foreach ($embedded_tables_data as $parent_table_name => $embedded_table_array) {
       foreach ($embedded_table_array as $embedded_table_data) {
         if ($embedded_table_data['name'] == $table_name_to_drop_primary_key) {
-          $this->checkEmbeddedTableIndexes($parent_table_name, $embedded_table_data['name'], $droped_primary_key_table_data['schema']);
+          $this->checkEmbeddedTableIndexes($parent_table_name, $embedded_table_data['name'], $dropped_primary_key_table_data['schema']);
         }
         else {
           $this->checkEmbeddedTableIndexes($parent_table_name, $embedded_table_data['name'], $embedded_table_data['schema']);
@@ -2170,12 +2170,12 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
     // Update the embedded_tables_data with adding a primary key to an embedded
     // table.
     if ($base_table_data['name'] == $table_name_to_drop_primary_key) {
-      $base_table_data['schema'] = $droped_primary_key_table_data['schema'];
+      $base_table_data['schema'] = $dropped_primary_key_table_data['schema'];
     }
     foreach ($embedded_tables_data as $parent_table_name => $embedded_table_array) {
       foreach ($embedded_table_array as $key => $embedded_table_data) {
         if ($embedded_table_data['name'] == $table_name_to_drop_primary_key) {
-          $embedded_tables_data[$parent_table_name][$key]['schema'] = $droped_primary_key_table_data['schema'];
+          $embedded_tables_data[$parent_table_name][$key]['schema'] = $dropped_primary_key_table_data['schema'];
         }
       }
     }
@@ -3465,7 +3465,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
     }
 
     $embedded_full_path = Database::getConnection()->tableInformation()->getTableEmbeddedFullPath($table_name_to_add_unique_key);
-    $this->assertFalse($schema->constraintExists($base_table_data['name'], $embedded_full_path . $unique_key_name . '__key'), 'The embedded table does not have the uniquey key.');
+    $this->assertFalse($schema->constraintExists($base_table_data['name'], $embedded_full_path . $unique_key_name . '__key'), 'The embedded table does not have the unique key.');
     $this->assertFalse($schema->uniqueKeyExists($table_name_to_add_unique_key, $unique_key_name), 'The table does not have the unique key.');
 
     // Call the to be tested method: Schema::addUniqueKey().
@@ -4932,7 +4932,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    * @covers ::uniqueKeyExists
    * @dataProvider providerDropUniqueKey
    */
-  public function testDropUniqueKey($base_table_data, $embedded_tables_data, $table_name_to_drop_unique_key, $unique_key_name, $droped_unique_key_table_data) {
+  public function testDropUniqueKey($base_table_data, $embedded_tables_data, $table_name_to_drop_unique_key, $unique_key_name, $dropped_unique_key_table_data) {
     $schema = Database::getConnection()->schema();
 
     $this->assertFalse($schema->tableExists($base_table_data['name']), 'The table does not exist in the MongoDB database.');
@@ -4974,10 +4974,10 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
     $this->assertFalse($schema->uniqueKeyExists($table_name_to_drop_unique_key, $unique_key_name), 'The table does not have the unique key.');
 
     // Check that the validation, schema or index data is what is it should be
-    // for all table including the embedded table without the droped unique key.
-    $this->checkTableValidation($base_table_data['name'], $droped_unique_key_table_data['validation']);
+    // for all table including the embedded table without the dropped unique key.
+    $this->checkTableValidation($base_table_data['name'], $dropped_unique_key_table_data['validation']);
     if ($base_table_data['name'] == $table_name_to_drop_unique_key) {
-      $this->checkTableSchema($base_table_data['name'], $droped_unique_key_table_data['schema']);
+      $this->checkTableSchema($base_table_data['name'], $dropped_unique_key_table_data['schema']);
     }
     else {
       $this->checkTableSchema($base_table_data['name'], $base_table_data['schema']);
@@ -4985,7 +4985,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
     foreach ($embedded_tables_data as $parent_table_name => $embedded_table_array) {
       foreach ($embedded_table_array as $embedded_table_data) {
         if ($embedded_table_data['name'] == $table_name_to_drop_unique_key) {
-          $this->checkTableSchema($embedded_table_data['name'], $droped_unique_key_table_data['schema']);
+          $this->checkTableSchema($embedded_table_data['name'], $dropped_unique_key_table_data['schema']);
         }
         else {
           $embedded_table_data['schema']['embedded_to_table'] = $parent_table_name;
@@ -4994,7 +4994,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
       }
     }
     if ($base_table_data['name'] == $table_name_to_drop_unique_key) {
-      $this->checkTableIndexes($base_table_data['name'], $droped_unique_key_table_data['schema']);
+      $this->checkTableIndexes($base_table_data['name'], $dropped_unique_key_table_data['schema']);
     }
     else {
       $this->checkTableIndexes($base_table_data['name'], $base_table_data['schema']);
@@ -5002,24 +5002,24 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
     foreach ($embedded_tables_data as $parent_table_name => $embedded_table_array) {
       foreach ($embedded_table_array as $embedded_table_data) {
         if ($embedded_table_data['name'] == $table_name_to_drop_unique_key) {
-          $this->checkEmbeddedTableIndexes($parent_table_name, $embedded_table_data['name'], $droped_unique_key_table_data['schema']);
+          $this->checkEmbeddedTableIndexes($parent_table_name, $embedded_table_data['name'], $dropped_unique_key_table_data['schema']);
         }
         else {
           $this->checkEmbeddedTableIndexes($parent_table_name, $embedded_table_data['name'], $embedded_table_data['schema']);
         }
       }
     }
-    $this->checkExpectedIndexesAgainstDatabase($base_table_data['name'], $droped_unique_key_table_data['indexes']);
+    $this->checkExpectedIndexesAgainstDatabase($base_table_data['name'], $dropped_unique_key_table_data['indexes']);
 
     // Update the embedded_tables_data with adding a unique key to an embedded
     // table.
     if ($base_table_data['name'] == $table_name_to_drop_unique_key) {
-      $base_table_data['schema'] = $droped_unique_key_table_data['schema'];
+      $base_table_data['schema'] = $dropped_unique_key_table_data['schema'];
     }
     foreach ($embedded_tables_data as $parent_table_name => $embedded_table_array) {
       foreach ($embedded_table_array as $key => $embedded_table_data) {
         if ($embedded_table_data['name'] == $table_name_to_drop_unique_key) {
-          $embedded_tables_data[$parent_table_name][$key]['schema'] = $droped_unique_key_table_data['schema'];
+          $embedded_tables_data[$parent_table_name][$key]['schema'] = $dropped_unique_key_table_data['schema'];
         }
       }
     }
@@ -7443,7 +7443,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    * @covers ::indexExists
    * @dataProvider providerDropIndex
    */
-  public function testDropIndex($base_table_data, $embedded_tables_data, $table_name_to_drop_index, $index_name, $droped_index_table_data) {
+  public function testDropIndex($base_table_data, $embedded_tables_data, $table_name_to_drop_index, $index_name, $dropped_index_table_data) {
     $schema = Database::getConnection()->schema();
 
     $this->assertFalse($schema->tableExists($base_table_data['name']), 'The table does not exist in the MongoDB database.');
@@ -7485,10 +7485,10 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
     $this->assertFalse($schema->indexExists($table_name_to_drop_index, $index_name), 'The embedded table does not have the index.');
 
     // Check that the validation, schema or index data is what is it should be
-    // for all table including the embedded table without the droped index.
-    $this->checkTableValidation($base_table_data['name'], $droped_index_table_data['validation']);
+    // for all table including the embedded table without the dropped index.
+    $this->checkTableValidation($base_table_data['name'], $dropped_index_table_data['validation']);
     if ($base_table_data['name'] == $table_name_to_drop_index) {
-      $this->checkTableSchema($base_table_data['name'], $droped_index_table_data['schema']);
+      $this->checkTableSchema($base_table_data['name'], $dropped_index_table_data['schema']);
     }
     else {
       $this->checkTableSchema($base_table_data['name'], $base_table_data['schema']);
@@ -7496,7 +7496,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
     foreach ($embedded_tables_data as $parent_table_name => $embedded_table_array) {
       foreach ($embedded_table_array as $embedded_table_data) {
         if ($embedded_table_data['name'] == $table_name_to_drop_index) {
-          $this->checkTableSchema($embedded_table_data['name'], $droped_index_table_data['schema']);
+          $this->checkTableSchema($embedded_table_data['name'], $dropped_index_table_data['schema']);
         }
         else {
           $embedded_table_data['schema']['embedded_to_table'] = $parent_table_name;
@@ -7505,7 +7505,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
       }
     }
     if ($base_table_data['name'] == $table_name_to_drop_index) {
-      $this->checkTableIndexes($base_table_data['name'], $droped_index_table_data['schema']);
+      $this->checkTableIndexes($base_table_data['name'], $dropped_index_table_data['schema']);
     }
     else {
       $this->checkTableIndexes($base_table_data['name'], $base_table_data['schema']);
@@ -7513,24 +7513,24 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
     foreach ($embedded_tables_data as $parent_table_name => $embedded_table_array) {
       foreach ($embedded_table_array as $embedded_table_data) {
         if ($embedded_table_data['name'] == $table_name_to_drop_index) {
-          $this->checkEmbeddedTableIndexes($parent_table_name, $embedded_table_data['name'], $droped_index_table_data['schema']);
+          $this->checkEmbeddedTableIndexes($parent_table_name, $embedded_table_data['name'], $dropped_index_table_data['schema']);
         }
         else {
           $this->checkEmbeddedTableIndexes($parent_table_name, $embedded_table_data['name'], $embedded_table_data['schema']);
         }
       }
     }
-    $this->checkExpectedIndexesAgainstDatabase($base_table_data['name'], $droped_index_table_data['indexes']);
+    $this->checkExpectedIndexesAgainstDatabase($base_table_data['name'], $dropped_index_table_data['indexes']);
 
     // Update the embedded_tables_data with adding an index to an embedded
     // table.
     if ($base_table_data['name'] == $table_name_to_drop_index) {
-      $base_table_data['schema'] = $droped_index_table_data['schema'];
+      $base_table_data['schema'] = $dropped_index_table_data['schema'];
     }
     foreach ($embedded_tables_data as $parent_table_name => $embedded_table_array) {
       foreach ($embedded_table_array as $key => $embedded_table_data) {
         if ($embedded_table_data['name'] == $table_name_to_drop_index) {
-          $embedded_tables_data[$parent_table_name][$key]['schema'] = $droped_index_table_data['schema'];
+          $embedded_tables_data[$parent_table_name][$key]['schema'] = $dropped_index_table_data['schema'];
         }
       }
     }

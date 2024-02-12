@@ -31,7 +31,7 @@ class TranslationLanguageRenderer extends CoreTranslationLanguageRenderer {
       // used by Drupal.
       $storage = \Drupal::entityTypeManager()->getStorage($this->entityType->id());
       if ($this->entityType->isRevisionable()) {
-        // Do this if the base table is a revisional table.
+        // Do this if the base table is part of a revisionable entity.
         if ($this->view->storage->get('mongodb_base_table') != $this->view->storage->get('original_base_table')) {
           if (!empty($this->view->storage->get('all_revisions_table'))) {
             $langcode_key = $storage->getAllRevisionsTable() . '.' . $langcode_key;

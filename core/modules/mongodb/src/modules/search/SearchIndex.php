@@ -5,6 +5,8 @@ namespace Drupal\mongodb\modules\search;
 use Drupal\search\Exception\SearchIndexException;
 use Drupal\search\SearchIndex as CoreSearchIndex;
 
+// cspell:ignore accum tagstack tagwords
+
 /**
  * Provides search index management functions.
  */

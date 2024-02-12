@@ -43,7 +43,7 @@ class DatabaseLockBackend extends CoreDatabaseLockBackend {
           ->execute();
       }
       catch (BulkWriteException $e) {
-         $succes = FALSE;
+         $success = FALSE;
       }
       if (!$success) {
         // The lock was broken.

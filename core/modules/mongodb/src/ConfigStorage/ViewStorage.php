@@ -78,7 +78,7 @@ class ViewStorage extends ConfigEntityStorage {
                 $table = !empty($display_option['table']) ? $display_option['table'] : NULL;
                 $entity_type = !empty($display_option['entity_type']) ? $display_option['entity_type'] : NULL;
 
-                // TODO: See if we can solve this more generaly.
+                // TODO: See if we can solve this more generally.
                 if (isset($display_option['table']) && ($display_option['table'] == 'taxonomy_term__parent') &&
                   isset($display_option['field']) && ($display_option['field'] == 'parent_target_id')) {
 

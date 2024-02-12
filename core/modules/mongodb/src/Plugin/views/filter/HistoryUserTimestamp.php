@@ -5,6 +5,8 @@ namespace Drupal\mongodb\Plugin\views\filter;
 use Drupal\history\Plugin\views\filter\HistoryUserTimestamp as CoreHistoryUserTimestamp;
 use MongoDB\BSON\UTCDateTime;
 
+// cspell:ignore fieldcompare bzzzzzzzt
+
 /**
  * Overriding the views filter plugin "history_user_timestamp".
  */

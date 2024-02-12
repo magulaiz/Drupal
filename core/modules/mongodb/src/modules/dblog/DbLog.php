@@ -13,7 +13,7 @@ class DbLog extends CoreDbLog {
    * {@inheritdoc}
    */
   public function log($level, $message, array $context = []) {
-    // MongoDB does not automaticly transform an object to a string on insert.
+    // MongoDB does not automatically transform an object to a string on insert.
     if (is_object($context['link'])) {
       $context['link'] = $context['link']->__toString();
     }

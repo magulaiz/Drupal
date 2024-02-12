@@ -7,6 +7,8 @@ use Drupal\Core\Database\Query\NoFieldsException;
 use Drupal\KernelTests\Core\Database\DatabaseTestBase;
 use Drupal\TestTools\Extension\SchemaInspector;
 
+// cspell:ignore zazu
+
 /**
  * Tests MongoDB table updating.
  *

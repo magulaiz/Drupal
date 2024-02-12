@@ -456,8 +456,8 @@ class SchemaTestBase extends KernelTestBase {
     $embedded_full_path = $table_information->getTableEmbeddedFullPath($embedded_table_name);
 
     if (!$schema->tableExists($embedded_table_name)) {
-      // An non existend embedded table has no indexes. There is no need to
-      // check if those non existend indexes exist in the database. The helper
+      // An non existed embedded table has no indexes. There is no need to
+      // check if those non existed indexes exist in the database. The helper
       // method $this->checkExpectedIndexesAgainstDatabase() will check if all
       // indexes are needed according to the schema.
       return;

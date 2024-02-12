@@ -120,7 +120,7 @@ class ContentEntityStorage extends SqlContentEntityStorage {
   }
 
   /**
-   * Gets the MongoDB trnaslations table name.
+   * Gets the MongoDB translations table name.
    *
    * @return string|false
    *   The table name or FALSE if it is not available.

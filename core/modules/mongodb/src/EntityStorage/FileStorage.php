@@ -2,6 +2,7 @@
 
 namespace Drupal\mongodb\EntityStorage;
 
+use Drupal\file\FileInterface;
 use Drupal\file\FileStorageInterface;
 
 /**
@@ -12,7 +13,7 @@ class FileStorage extends ContentEntityStorage implements FileStorageInterface {
   /**
    * {@inheritdoc}
    */
-  public function spaceUsed($uid = NULL, $status = FILE_STATUS_PERMANENT) {
+  public function spaceUsed($uid = NULL, $status = FileInterface::STATUS_PERMANENT) {
     $query = $this->database->select($this->entityType->getBaseTable(), 'f')
       ->condition('status', (bool) $status);
     if (isset($uid)) {

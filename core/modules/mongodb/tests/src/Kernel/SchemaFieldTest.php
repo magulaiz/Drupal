@@ -2329,11 +2329,11 @@ class SchemaFieldTest extends SchemaTestBase {
    *       validation).
    *     - the array of table data to use as embedded tables (the name, the
    *       schema and the validation).
-   *     - the field name for field to be droped from the first embedded table.
+   *     - the field name for field to be dropped from the first embedded table.
    *     - the array of expected data. The schema key hold the expected schema
-   *       data of the embedded table without the droped field. The validation
+   *       data of the embedded table without the dropped field. The validation
    *       key holds the expected validation of the base table with all embedded
-   *       tables and without the droped field.
+   *       tables and without the dropped field.
    */
   public function providerDropField() {
     $test_table4_without_id = [
@@ -4035,7 +4035,7 @@ class SchemaFieldTest extends SchemaTestBase {
     $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The table exists in the MongoDB database.');
     $this->assertTrue($schema->tableExists($this->test_table5['name']), 'The embedded table exists in the MongoDB database.');
 
-    // Droping a non-existent field from an embedded table should return false.
+    // Dropping a non-existent field from an embedded table should return false.
     $this->assertFalse($schema->dropField($this->test_table5['name'], 'does_not_exist_field'), 'The field does not exist on the embedded table.');
   }
 
@@ -6730,7 +6730,7 @@ class SchemaFieldTest extends SchemaTestBase {
   /**
    * @covers ::changeField
    */
-  public function testChangedFieldForEmbeddeFieldDoesNotExist() {
+  public function testChangedFieldForEmbeddedFieldDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
     $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The table does not exist in the MongoDB database.');

@@ -16,8 +16,6 @@ class RouteProvider extends CoreRouteProvider {
    * {@inheritdoc}
    */
   public function preLoadRoutes($names) {
-//dump('preLoadRoutes');
-//dump($names);
     if (empty($names)) {
       throw new \InvalidArgumentException('You must specify the route names to load');
     }
@@ -57,8 +55,6 @@ class RouteProvider extends CoreRouteProvider {
    * {@inheritdoc}
    */
   protected function getRoutesByPath($path) {
-//dump('getRoutesByPath');
-//dump($path);
     $parts = preg_split('@/+@', mb_strtolower($path), NULL, PREG_SPLIT_NO_EMPTY);
 
     $collection = new RouteCollection();
@@ -82,7 +78,7 @@ class RouteProvider extends CoreRouteProvider {
       $routes = [];
     }
 
-    // We sort by fit and name in PHP to avoid a SQL filesort and avoid any
+    // We sort by fit and name in PHP to avoid a SQL file sort and avoid any
     // difference in the sorting behavior of SQL back-ends.
     usort($routes, [$this, 'routeProviderRouteCompare']);
 
@@ -91,22 +87,6 @@ class RouteProvider extends CoreRouteProvider {
     }
 
     return $collection;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getRoutesPaged($offset, $length = NULL) {
-//dump('getRoutesPaged');
-//dump($offset);
-//dump($length);
-    // The problem for MongoDB is that setting the length to the number zero is
-    // a special case and is equivalent to setting no length.
-    if (isset($length) && $length == 0) {
-      return [];
-    }
-
-    return parent::getRoutesPaged($offset, $length);
   }
 
 }

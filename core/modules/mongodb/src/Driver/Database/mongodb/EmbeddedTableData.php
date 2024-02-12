@@ -117,7 +117,7 @@ class EmbeddedTableData {
    * {@inheritdoc}
    */
   protected function getInsertPlaceholderFragment(array $nested_insert_values, array $default_fields) {
-    // Do not use this method. This method is only usefull for SQL databases.
+    // Do not use this method. This method is only useful for SQL databases.
     throw new MongodbSQLException();
   }
 }

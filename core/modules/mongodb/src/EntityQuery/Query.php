@@ -228,7 +228,7 @@ class Query extends CoreQuery {
           // specific delta.
           if (is_numeric($next)) {
             $delta = $next;
-            $index_prefix .= ".$delta";
+            // $index_prefix .= ".$delta";
             // Do not process it again.
             $key++;
             $next = $specifiers[$key + 1];
@@ -236,7 +236,7 @@ class Query extends CoreQuery {
           // If this specifier is the reserved keyword "%delta" we're adding a
           // condition on a delta range.
           elseif ($next == TableMappingInterface::DELTA) {
-            $index_prefix .= TableMappingInterface::DELTA;
+            // $index_prefix .= TableMappingInterface::DELTA;
             // Do not process it again.
             $key++;
             // If there are more specifiers to work with then continue

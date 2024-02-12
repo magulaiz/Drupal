@@ -13,6 +13,11 @@ use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 
+// cspell:ignore datedate datestring substringed
+
+/**
+ * The MongoDB implementation of the views query plugin Sql.
+ */
 class ViewsQuery extends Sql {
 
   /**
@@ -59,7 +64,7 @@ class ViewsQuery extends Sql {
   protected $mongodbSubstringFields = [];
 
   /**
-   * The array containing the fields to be multiplied and sumed to the query.
+   * The array containing the fields to be multiplied and summed to the query.
    *
    * @var array
    */
@@ -301,14 +306,14 @@ class ViewsQuery extends Sql {
   }
 
   /**
-   * Add a field to the query that holds the result of the concatination.
+   * Add a field to the query that holds the result of the concatenation.
    *
    * @param string $alias
    *   The alias to be used to store the result in.
    * @param array $fields
-   *   The list of fields for the concatination.
+   *   The list of fields for the concatenation.
    * @param array $integer_fields
-   *   The list integer fields for the concatination.
+   *   The list integer fields for the concatenation.
    */
   public function addConcatField($alias, array $fields = [], array $integer_fields = []) {
     $this->mongodbConcatFields[$alias] = [
@@ -715,7 +720,7 @@ class ViewsQuery extends Sql {
         $fieldname .= $field['table'] . '.';
       }
       $fieldname .= $field['field'];
-      $fieldalias = (!empty($field['alias']) ? $field['alias'] : $fieldname);
+      $field_alias = (!empty($field['alias']) ? $field['alias'] : $fieldname);
 
       if (!empty($field['count'])) {
         // Retained for compatibility.
@@ -723,17 +728,17 @@ class ViewsQuery extends Sql {
       }
 
       if (!empty($field['function'])) {
-        $this->compileFieldsNotEmptyFieldFunction($query, $field, $fieldname, $fieldalias);
+        $this->compileFieldsNotEmptyFieldFunction($query, $field, $fieldname, $field_alias);
       }
       // This is a formula, using no tables.
       elseif (empty($field['table'])) {
-        $this->compileFieldsEmptyFieldTable($query, $field, $fieldname, $fieldalias);
+        $this->compileFieldsEmptyFieldTable($query, $field, $fieldname, $field_alias);
       }
       elseif ($this->distinct && !in_array($fieldname, $this->groupby)) {
-        $query->addField(!empty($field['table']) ? $field['table'] : $this->view->storage->get('base_table'), $field['field'], $fieldalias);
+        $query->addField(!empty($field['table']) ? $field['table'] : $this->view->storage->get('base_table'), $field['field'], $field_alias);
       }
       elseif (empty($field['aggregate'])) {
-        $query->addField(!empty($field['table']) ? $field['table'] : $this->view->storage->get('base_table'), $field['field'], $fieldalias);
+        $query->addField(!empty($field['table']) ? $field['table'] : $this->view->storage->get('base_table'), $field['field'], $field_alias);
       }
 
       if ($this->getCountOptimized) {
@@ -746,16 +751,16 @@ class ViewsQuery extends Sql {
   /**
    * {@inheritdoc}
    */
-  protected function compileFieldsNotEmptyFieldFunction($query, $field, $fieldname, $fieldalias) {
-    $query->addGroupByOperation($fieldalias, $fieldname, strtoupper($field['function']));
+  protected function compileFieldsNotEmptyFieldFunction($query, $field, $fieldname, $field_alias) {
+    $query->addGroupByOperation($field_alias, $fieldname, strtoupper($field['function']));
     $this->hasAggregate = TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function compileFieldsEmptyFieldTable($query, $field, $fieldname, $fieldalias) {
-    $query->addGroupField($fieldalias, $fieldname);
+  protected function compileFieldsEmptyFieldTable($query, $field, $fieldname, $field_alias) {
+    $query->addGroupField($field_alias, $fieldname);
   }
 
   /**
@@ -884,7 +889,7 @@ class ViewsQuery extends Sql {
     // Add all query substitutions as metadata.
     $substitutions = \Drupal::moduleHandler()->invokeAll('views_query_substitutions', [$this->view]);
     if (isset($substitutions['***CURRENT_USER***'])) {
-      // User IDS are stored as intergers in MongoDB and MongoDB does not except
+      // User IDS are stored as integers in MongoDB and MongoDB does not except
       // string versions of integer values.
       $substitutions['***CURRENT_USER***'] = (int) $substitutions['***CURRENT_USER***'];
     }
@@ -897,7 +902,7 @@ class ViewsQuery extends Sql {
    * {@inheritdoc}
    */
   protected function addFieldsForNonRelationalDatabases(&$query) {
-    // Do this if the base table is a revisional table.
+    // Do this if the base table is part of a revisionable entity.
     if ($this->view->storage->get('mongodb_base_table') != $this->view->storage->get('original_base_table')) {
       if (!empty($this->getAllRevisionsTable()) && !empty($this->getLatestRevisionTable())) {
         if ($this->hasLatestRevisionFilter()) {
@@ -971,7 +976,7 @@ class ViewsQuery extends Sql {
   /**
    * {@inheritdoc}
    */
-  protected function updateBaseFieldForRevisionalForNonRelationalDatabases($base_field, $info) {
+  protected function updateBaseFieldForRevisionableForNonRelationalDatabases($base_field, $info) {
     if ($info['revision'] && ($info['relationship_id'] == 'none') && ($this->view->storage->get('mongodb_base_table') != $this->view->storage->get('original_base_table')) && !empty($this->getAllRevisionsTable()) && !empty($this->getLatestRevisionTable())) {
       if ($this->hasLatestRevisionFilter()) {
         $base_field = $this->getLatestRevisionTable() . '.' . $base_field;
@@ -1199,13 +1204,13 @@ dump($view->result);
     foreach ($results as &$result) {
       foreach ($this->fields as $field) {
         // Change the integer values from MongoDB to the expected string values
-        // from relational datbases.
+        // from relational databases.
         if (isset($result->{$field['alias']}) && is_int($result->{$field['alias']})) {
           $result->{$field['alias']} = (string) $result->{$field['alias']};
         }
 
         // Move the join results from their arrayed form from MongoDB to the
-        // base result that is expected from ralational databases.
+        // base result that is expected from relational databases.
         if (isset($field['table']) && $field['table'] != $this->view->storage->get('base_table') && isset($result->{$field['alias']}) && is_array($result->{$field['alias']})) {
           $result->{$field['alias']} = reset($result->{$field['alias']});
         }
@@ -1305,7 +1310,7 @@ dump($view->result);
   }
 
   /**
-   * Helper method for changing allowing non relational databases to thansform
+   * Helper method for changing allowing non relational databases to transform
    * their views result to match that of relational databases.
    *
    * @param \Drupal\views\ResultRow $result

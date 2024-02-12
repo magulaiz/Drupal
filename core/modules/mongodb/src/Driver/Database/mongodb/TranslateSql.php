@@ -8,7 +8,7 @@ use Drupal\Core\Database\Event\StatementExecutionEndEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 
 /**
- * The MongoDB service for transalting SQL queries.
+ * The MongoDB service for translating SQL queries.
  */
 class TranslateSql {
 

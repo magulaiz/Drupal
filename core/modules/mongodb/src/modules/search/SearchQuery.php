@@ -141,14 +141,14 @@ class SearchQuery extends CoreSearchQuery {
         }
         $has_or = TRUE;
         $has_new_scores = FALSE;
-        $queryor = $this->connection->condition('OR');
+        $query_or = $this->connection->condition('OR');
         foreach ($key as $or) {
           list($num_new_scores) = $this->parseWord($or);
           $has_new_scores |= $num_new_scores;
-          $queryor->condition('data', "% $or %", 'LIKE');
+          $query_or->condition('data', "% $or %", 'LIKE');
         }
-        if (count($queryor)) {
-          $this->conditions->condition($queryor);
+        if (count($query_or)) {
+          $this->conditions->condition($query_or);
           // A group of OR keywords only needs to match once.
           $this->matches += ($has_new_scores > 0);
         }

@@ -2,6 +2,8 @@
 
 namespace Drupal\mongodb\Plugin\views\argument;
 
+// cspell:ignore datestring
+
 /**
  * Trait for overriding the Drupal\datetime\Plugin\views\argument\Date class.
  */

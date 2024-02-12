@@ -15,9 +15,9 @@ trait DatabaseStorageTrait {
   public function set($key, $value) {
     // The key_value table in created during the install of the system module.
     // The MongoDB module is installed before the system module. And during the
-    // install proces of a module there is data written to the key_value table.
+    // install process of a module there is data written to the key_value table.
     // MongoDB creates the table on data insert and the table will not be known
-    // to the table information service. This is not exceptable.
+    // to the table information service. This is not acceptable.
     if (!$this->tableExists) {
       $this->tableExists = $this->ensureTableExists();
     }

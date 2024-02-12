@@ -4,6 +4,8 @@ namespace Drupal\mongodb\Plugin\views\argument;
 
 use Drupal\views\Plugin\views\argument\WeekDate as CoreWeekDate;
 
+// cspell:ignore datedate
+
 /**
  * Overriding the views argument plugin "date_week".
  */

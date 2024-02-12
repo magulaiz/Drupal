@@ -198,7 +198,7 @@ class MenuTreeStorage extends CoreMenuTreeStorage {
       $child['mlid'] = $mlid;
       $child['id'] = $id;
 
-      // Recursivly call this method for each child.
+      // Recursively call this method for each child.
       $this->moveChildren($fields, $child);
     }
   }
@@ -379,10 +379,10 @@ class MenuTreeStorage extends CoreMenuTreeStorage {
   }
 
   /**
-   * Determines interger fields in the storage.
+   * Determines integer fields in the storage.
    *
    * @return array
-   *   A list of interger fields in the database.
+   *   A list of integer fields in the database.
    */
   protected function integerFields() {
     if (empty($this->integerFields)) {

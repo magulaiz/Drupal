@@ -177,6 +177,7 @@ curlopt
 customevent
 customrequest
 cweagans
+daffie
 dailymotion
 datelist
 daterange

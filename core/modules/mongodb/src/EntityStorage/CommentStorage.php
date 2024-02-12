@@ -18,6 +18,8 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+// cspell:ignore fieldcompare
+
 /**
  * The MongoDB implementation of \Drupal\comment\CommentStorage.
  */
@@ -178,7 +180,7 @@ class CommentStorage extends ContentEntityStorage implements CommentStorageInter
       // slash.
       $query->addSubstringField('c1_thread', 'c1_comment_translations.thread', 1, -2);
 
-      // The array "c2.comment_tranlations" is unwound and yet the MongoDB
+      // The array "c2.comment_translations" is unwound and yet the MongoDB
       // throws an exception that it is an array and not a string. For MongoDB
       // it would be better to store the value thread as a string with a
       // trailing slash and as an integer value.

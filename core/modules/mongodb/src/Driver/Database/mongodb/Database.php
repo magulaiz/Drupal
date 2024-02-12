@@ -25,7 +25,7 @@ abstract class Database extends BaseDatabase {
     }
 
     if (empty(self::$databaseInfo[$key]['admin'])) {
-      // Add the datbase info to the admin database.
+      // Add the database info to the admin database.
       self::$databaseInfo[$key]['admin'] = self::$databaseInfo[$key]['default'];
       self::$databaseInfo[$key]['admin']['database'] = 'admin';
     }

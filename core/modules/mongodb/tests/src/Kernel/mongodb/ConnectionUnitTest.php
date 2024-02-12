@@ -5,6 +5,8 @@ namespace Drupal\Tests\mongodb\Kernel\mongodb;
 use Drupal\KernelTests\Core\Database\DriverSpecificConnectionUnitTestBase;
 use Drupal\mongodb\Driver\Database\mongodb\Database;
 
+// cspell:ignore inprog
+
 /**
  * MySQL-specific connection unit tests.
  *

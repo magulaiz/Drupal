@@ -214,7 +214,7 @@ class TermStorage extends ContentEntityStorage implements TermStorageInterface {
    */
   public function resetWeights($vid) {
     $prefixed_table = $this->database->getMongodbPrefixedTable('taxonomy_term_data');
-    $result = $this->database->getConnection()->{$prefixed_table}->updateMany(
+    $this->database->getConnection()->{$prefixed_table}->updateMany(
       [
         'vid' => $vid
       ],
@@ -232,7 +232,7 @@ class TermStorage extends ContentEntityStorage implements TermStorageInterface {
    * {@inheritdoc}
    */
   public function getNodeTerms(array $nids, array $vocabs = [], $langcode = NULL) {
-    $query = db_select('taxonomy_term_data', 'td');
+    $query = $this->database->select('taxonomy_term_data', 'td');
     foreach ($nids as &$nid) {
       $nid = (int) $nid;
     }
