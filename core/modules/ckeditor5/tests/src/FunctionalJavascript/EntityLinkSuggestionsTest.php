@@ -10,7 +10,6 @@ use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
 use Drupal\file\Entity\File;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\media\Entity\Media;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
@@ -23,7 +22,7 @@ use Symfony\Component\Validator\ConstraintViolation;
  * @group ckeditor5
  * @internal
  */
-class EntityLinkSuggestionsTest extends WebDriverTestBase {
+class EntityLinkSuggestionsTest extends CKEditor5TestBase {
 
   use CKEditor5TestTrait;
   use MediaTypeCreationTrait;
@@ -93,12 +92,10 @@ class EntityLinkSuggestionsTest extends WebDriverTestBase {
       ))
     ));
 
-    // Create a node type for testing.
-    $this->drupalCreateContentType(['type' => 'page']);
-
     // Create an account with "f" in the username.
     $account = $this->drupalCreateUser([
       'create page content',
+      'edit any page content',
       'use text format test_format',
     ], 'Sofie');
 
@@ -263,6 +260,114 @@ class EntityLinkSuggestionsTest extends WebDriverTestBase {
     foreach (['data-entity-type', 'data-entity-uuid'] as $attribute_name) {
       $this->assertFalse($changed_link->hasAttribute($attribute_name), "Link should no longer have $attribute_name");
     }
+  }
+
+  public function testLinkedImageBlock(): void {
+    $session = $this->getSession();
+    $assert_session = $this->assertSession();
+    $page = $session->getPage();
+    $filter_format = FilterFormat::load('test_format');
+    $filter_format->setFilterConfig('filter_html', [
+      'status' => TRUE,
+      'settings' => [
+        'allowed_html' => '<img data-entity-uuid data-entity-type data-link-entity-type data-link-entity-uuid data-link-entity-metadata alt height width src><p> <br> <a href data-entity-type data-entity-uuid data-entity-metadata download>',
+      ],
+    ]);
+    $filter_format->save();
+    $editor = Editor::load('test_format');
+    $settings = $editor->getSettings();
+    $settings['toolbar']['items'][] = 'drupalInsertImage';
+    $settings['toolbar']['items'][] = 'sourceEditing';
+
+    $settings['plugins']['ckeditor5_imageResize'] = [
+      'allow_resize' => TRUE,
+    ];
+
+    $settings['plugins']['ckeditor5_sourceEditing'] = [
+      'allowed_tags' => [],
+    ];
+
+    $editor->set('image_upload', [
+      'status' => TRUE,
+      'scheme' => 'public',
+      'directory' => 'inline-images',
+      'max_size' => '1M',
+      'max_dimensions' => ['width' => 100, 'height' => 100],
+    ]);
+    $editor->setSettings($settings);
+    $editor->save();
+    $this->assertSame([], array_map(
+      function (ConstraintViolation $v) {
+        return (string) $v->getMessage();
+      },
+      iterator_to_array(CKEditor5::validatePair(
+        Editor::load('test_format'),
+        FilterFormat::load('test_format')
+      ))
+    ));
+
+    $content_to_add = $this->drupalCreateNode([
+      'type' => 'page',
+      'title' => 'Zoo Party',
+    ]);
+    $content_to_add_uuid = $content_to_add->uuid();
+
+    $file = File::create([
+      'uri' => $this->getTestFiles('image')[0]->uri,
+    ]);
+    $file->save();
+
+    $editing_page = $this->drupalCreateNode([
+      'type' => 'page',
+      'title' => 'To Link Image',
+      'body' => [
+        'value' => sprintf('<img src="%s" data-entity-uuid="%s" alt="image with link around it" data-entity-type="file" width="40" height="20">', $file->createFileUrl(), $file->uuid()),
+        'format' => 'test_format',
+      ],
+    ]);
+
+    $this->drupalGet($editing_page->toUrl('edit-form'));
+
+    $this->waitForEditor();
+    $page->find('css', 'figure img')->click();
+    $link_button = $assert_session->waitForElementVisible('css', '[aria-label="Image toolbar"] button:last-child');
+    $link_button->click();
+    $balloon = $this->assertVisibleBalloon('.ck-link-form');
+    $autocomplete_field = $balloon->find('css', '.ck-input-text');
+    $autocomplete_field->setValue('Z');
+    $this->getSession()->getDriver()->keyDown($autocomplete_field->getXpath(), ' ');
+    $this->assertTrue($this->getSession()->wait(5000, "document.querySelectorAll('.linkit-result-line.ui-menu-item').length > 0"));
+    $results = $page->findAll('css', '.linkit-result-line.ui-menu-item');
+    $results[0]->click();
+    $balloon->pressButton('Save');
+    $this->assertBalloonClosed();
+
+    $preview_button = $assert_session->waitForElementVisible('css', '#ck-aria-label-preview-button');
+    $this->assertSame('Zoo Party (Content - page)', $preview_button->getText());
+
+    $xpath = new \DOMXPath($this->getEditorDataAsDom());
+    $this->assertCount(1, $xpath->query(sprintf('//a[@href="entity:node/1" and @data-entity-uuid="%s" and @data-entity-type="node" and @data-entity-metadata]/img[@alt="image with link around it"]', $content_to_add_uuid)));
+
+    $page->pressButton('Save');
+    $assert_session->elementExists('css', sprintf('a[href="/node/1"][data-entity-uuid="%s"][data-entity-type="node"][data-entity-metadata] img[alt="image with link around it"]', $content_to_add_uuid));
+
+    $this->drupalGet($editing_page->toUrl('edit-form'));
+    $this->waitForEditor();
+    $page->find('css', 'figure img')->click();
+    $link_button = $assert_session->waitForElementVisible('css', '[aria-label="Image toolbar"] button:last-child');
+    $link_button->click();
+
+    $preview_button = $assert_session->waitForElementVisible('css', '#ck-aria-label-preview-button');
+    $this->assertSame('Zoo Party (Content - page)', $preview_button->getText());
+
+    $xpath = new \DOMXPath($this->getEditorDataAsDom());
+    $this->assertCount(1, $xpath->query(sprintf('//a[@href="node/1" and @data-entity-uuid="%s" and @data-entity-type="node" and @data-entity-metadata]/img[@alt="image with link around it"]', $content_to_add_uuid)));
+    $preview_button->click();
+    $window_names = $this->getSession()->getWindowNames();
+    $this->getSession()->switchToWindow($window_names[1]);
+    $h1 = $page->find('css', 'h1');
+    $this->assertSame('Zoo Party', $h1->getText(), 'Clicking the preview opened a tab with the referenced node.');
+    $this->assertNull($page->find('css', 'form'), 'No forms on the page confirm we are viewing the node, not in the edit form.');
   }
 
 }

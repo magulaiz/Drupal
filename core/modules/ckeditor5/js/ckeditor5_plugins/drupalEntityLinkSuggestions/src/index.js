@@ -70,9 +70,8 @@ class DrupalEntityLinkSuggestions extends Plugin {
     previewButton.setTemplate({
       tag: 'a',
       attributes: {
-        href: bind.to('parentHref', (hrefValue) => {
+        href: bind.to('parentHref', (hrefValue, another) => {
           const { selection } = this.editor.model.document;
-
           // If the active selection is image or media, the link metadata is
           // stored in the drupalLinkEntityMetadata property.
           if (
@@ -107,6 +106,7 @@ class DrupalEntityLinkSuggestions extends Plugin {
           if (hrefValue && hrefValue.startsWith('entity:')) {
             return `/${hrefValue.replace('entity:', '')}`;
           }
+
           return hrefValue;
         }),
         target: '_blank',
@@ -124,6 +124,7 @@ class DrupalEntityLinkSuggestions extends Plugin {
             {
               text: bind.to('parentHref', (parentHref) => {
                 const { selection } = this.editor.model.document;
+
                 let entityMetadata = {};
                 if (
                   selection.getSelectedElement() &&
@@ -147,12 +148,14 @@ class DrupalEntityLinkSuggestions extends Plugin {
 
                 if (
                   entityMetadata.label &&
-                  (!parentHref || parentHref.startsWith('entity:'))
+                  (!parentHref ||
+                    parentHref.startsWith('entity:') ||
+                    entityMetadata.path.startsWith('entity:'))
                 ) {
                   const group = entityMetadata.group
                     ? ` (${entityMetadata.group})`
                     : '';
-                  return `${entityMetadata.label}${group}`;
+                  return `${entityMetadata.label}${group.replace(' - )', ')')}`;
                 }
                 return parentHref;
               }),
