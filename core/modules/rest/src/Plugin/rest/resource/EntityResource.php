@@ -10,6 +10,7 @@ use Drupal\Core\Config\Entity\ConfigEntityType;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -248,6 +249,9 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
     // Validate the received data before saving.
     $this->validate($original_entity, $changed_fields);
     try {
+      if ($original_entity instanceof EntityChangedInterface) {
+        $original_entity->setChangedTime(\Drupal::time()->getRequestTime());
+      }
       $original_entity->save();
       $this->logger->notice('Updated entity %type with ID %id.', ['%type' => $original_entity->getEntityTypeId(), '%id' => $original_entity->id()]);
 
