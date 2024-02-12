@@ -183,6 +183,18 @@ class DateRangeFieldTest extends DateTestBase {
       $output = $this->renderTestEntity($id);
       $this->assertStringContainsString($expected, $output, "Formatted date field using daterange_custom format displayed as $expected in $timezone.");
 
+      // Verify that the duration formatter works.
+      $this->displayOptions['type'] = 'daterange_duration';
+      $this->displayOptions['settings'] = ['granularity' => 7] + $this->defaultSettings;
+      $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+        ->setComponent($field_name, $this->displayOptions)
+        ->save();
+      /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
+      $date_formatter = $this->container->get('date.formatter');
+      $expected = $date_formatter->formatDiff($start_date->getTimestamp(), $end_date->getTimestamp(), ['granularity' => $this->displayOptions['settings']['granularity']]);
+      $output = $this->renderTestEntity($id);
+      $this->assertStringContainsString($expected, $output, "Formatted date field using daterange_duration format displayed as $expected in $timezone.");
+
       // Test formatters when start date and end date are the same
       $this->drupalGet('entity_test/add');
       $value = '2012-12-31 00:00:00';
@@ -360,6 +372,18 @@ class DateRangeFieldTest extends DateTestBase {
     $expected .= ' - ' . $end_date->format($this->displayOptions['settings']['date_format'], ['timezone' => 'America/New_York']);
     $output = $this->renderTestEntity($id);
     $this->assertStringContainsString($expected, $output, "Formatted date field using daterange_custom format displayed as $expected.");
+
+    // Verify that the duration formatter works.
+    $this->displayOptions['type'] = 'daterange_duration';
+    $this->displayOptions['settings'] = ['granularity' => 7] + $this->defaultSettings;
+    $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+      ->setComponent($field_name, $this->displayOptions)
+      ->save();
+    /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
+    $date_formatter = $this->container->get('date.formatter');
+    $expected = $date_formatter->formatDiff($start_date->getTimestamp(), $end_date->getTimestamp(), ['granularity' => $this->displayOptions['settings']['granularity']]);
+    $output = $this->renderTestEntity($id);
+    $this->assertStringContainsString($expected, $output, "Formatted date field using daterange_duration format displayed as $expected");
 
     // Test formatters when start date and end date are the same
     $this->drupalGet('entity_test/add');
