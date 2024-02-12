@@ -2373,12 +2373,11 @@ parameters:
 			path: modules/system/tests/modules/plugin_test/src/Plugin/TestPluginManager.php
 
 		-
-  		message: """
-  			#^Class Drupal\\\\service_provider_test\\\\TestClass implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
-  			since Symfony 6\\.4, use dependency injection instead$#
-  			"""
-  			count: 1
-  			path: modules/system/tests/modules/service_provider_test/src/TestClass.php
+			message: """
+				#^Class Drupal\\\\service_provider_test\\\\TestClass implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\: since Symfony 6\\.4, use dependency injection instead$#
+			"""
+			count: 1
+			path: modules/system/tests/modules/service_provider_test/src/TestClass.php
 
 		-
 			message: """
