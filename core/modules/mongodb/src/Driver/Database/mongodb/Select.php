@@ -26,6 +26,13 @@ class Select extends QuerySelect {
   protected $mongodbFilter;
 
   /**
+   * The array containing the filter part of the aggregate query.
+   *
+   * @var array
+   */
+  protected $mongodbAggregateFilter;
+
+  /**
    * The array containing the projection part of the query.
    *
    * @var array
@@ -445,7 +452,7 @@ class Select extends QuerySelect {
    *   The literal value to assign the alias in the query result.
    */
   public function addLiteralField($alias, $value) {
-    if (!empty($alias) && isset($value)) {
+    if (!empty($alias)) {
       $this->mongodbLiteralFields[$alias] = $value;
     }
   }
@@ -1503,8 +1510,8 @@ class Select extends QuerySelect {
             spl_object_id($this),
             $this->connection->getKey(),
             $this->connection->getTarget(),
-            $this->getQueryString(),
-            $args ?? [],
+            'SELECT COUNT WITH AGGREGATE PIPELINE: ' . serialize($pipeline),
+            $args,
             $this->connection->findCallerFromDebugBacktrace()
           );
           $this->connection->dispatchEvent($startEvent);
@@ -1554,8 +1561,8 @@ class Select extends QuerySelect {
             spl_object_id($this),
             $this->connection->getKey(),
             $this->connection->getTarget(),
-            $this->getQueryString(),
-            $args ?? [],
+            'SELECT WITH AGGREGATE PIPELINE: ' . serialize($pipeline),
+            $args,
             $this->connection->findCallerFromDebugBacktrace()
           );
           $this->connection->dispatchEvent($startEvent);
@@ -1607,7 +1614,7 @@ class Select extends QuerySelect {
           // executed.
           $this->mongodbQueryStringValue = FALSE;
 
-          return 'SELECT COUNT WITH DISTINCT FIELD: ' . serialize($field['field']) . ' FILTER: ' . serialize($this->mongodbFilter);
+          return 'SELECT COUNT WITH DISTINCT FIELD: ' . serialize($field['field'] ?? '') . ' FILTER: ' . serialize($this->mongodbFilter);
         }
 
         if ($this->connection->isEventEnabled(StatementExecutionStartEvent::class)) {
@@ -1615,8 +1622,8 @@ class Select extends QuerySelect {
             spl_object_id($this),
             $this->connection->getKey(),
             $this->connection->getTarget(),
-            $this->getQueryString(),
-            $args ?? [],
+            'SELECT COUNT WITH DISTINCT FIELD: ' . serialize($field['field'] ?? '') . ' FILTER: ' . serialize($this->mongodbFilter),
+            $args,
             $this->connection->findCallerFromDebugBacktrace()
           );
           $this->connection->dispatchEvent($startEvent);
@@ -1679,8 +1686,8 @@ class Select extends QuerySelect {
             spl_object_id($this),
             $this->connection->getKey(),
             $this->connection->getTarget(),
-            $this->getQueryString(),
-            $args ?? [],
+            'SELECT COUNT WITH AGGREGATE PIPELINE: ' . serialize($pipeline),
+            $args,
             $this->connection->findCallerFromDebugBacktrace()
           );
           $this->connection->dispatchEvent($startEvent);
@@ -1718,8 +1725,8 @@ class Select extends QuerySelect {
             spl_object_id($this),
             $this->connection->getKey(),
             $this->connection->getTarget(),
-            $this->getQueryString(),
-            $args ?? [],
+            'SELECT COUNT WITH COUNT FILTER: ' . serialize($this->mongodbFilter) . ' OPTIONS: ' . serialize($options),
+            $args,
             $this->connection->findCallerFromDebugBacktrace()
           );
           $this->connection->dispatchEvent($startEvent);
@@ -1771,8 +1778,8 @@ class Select extends QuerySelect {
           spl_object_id($this),
           $this->connection->getKey(),
           $this->connection->getTarget(),
-          $this->getQueryString(),
-          $args ?? [],
+          'SELECT WITH FIND FILTER: ' . serialize($this->mongodbFilter) . ' OPTIONS: ' . serialize($options),
+          $args,
           $this->connection->findCallerFromDebugBacktrace()
         );
         $this->connection->dispatchEvent($startEvent);
@@ -2515,11 +2522,9 @@ class Select extends QuerySelect {
 
         $has_expression = FALSE;
         foreach ($this->expressions as $expression) {
-if (isset($expression['expression'])) {
-          if (!empty($alias) && stristr($expression['expression'], $alias) !== FALSE) {
+          if (!empty($alias) && isset($expression['expression']) && stristr($expression['expression'], $alias) !== FALSE) {
             $has_expression = TRUE;
           }
-}
         }
 
         // The alias or field name will automatically added to the query result.

@@ -2,8 +2,9 @@
 
 namespace Drupal\mongodb\Driver\Database\mongodb;
 
-use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Query\NoUniqueFieldException;
 use Drupal\Core\Database\Query\Upsert as QueryUpsert;
+use MongoDB\UpdateResult;
 
 /**
  * The MongoDB implementation of \Drupal\Core\Database\Query\Upsert.
@@ -63,6 +64,7 @@ class Upsert extends QueryUpsert {
           }
         }
 
+        $result = NULL;
         if (!empty($insert_document) && !empty($unset_document)) {
           $result = $this->connection->getConnection()->{$prefixed_table}->updateOne(
             $insert_filter,
@@ -100,7 +102,9 @@ class Upsert extends QueryUpsert {
           );
         }
 
-        $affected_rows += $result->getModifiedCount() + $result->getUpsertedCount();
+        if ($result instanceof UpdateResult) {
+          $affected_rows += $result->getModifiedCount() + $result->getUpsertedCount();
+        }
       }
     }
 
@@ -115,6 +119,7 @@ class Upsert extends QueryUpsert {
    */
   public function __toString() {
     // Nothing to do.
+    return '';
   }
 
 }

@@ -290,7 +290,7 @@ class TranslateSql {
             $connection->getKey(),
             $connection->getTarget(),
             $query,
-            $args ?? [],
+            $args,
             $connection->findCallerFromDebugBacktrace()
           );
           $connection->dispatchEvent($startEvent);

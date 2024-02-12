@@ -396,7 +396,8 @@ class Schema extends DatabaseSchema {
   /**
    * {@inheritdoc}
    */
-  public function tableExists($table) {
+  public function tableExists($table, $add_prefix = TRUE) {
+    // @TODO Add the $add_prefix functionality.
     try {
       $prefixed_table = $this->connection->getMongodbPrefixedTable($table);
       $options = [

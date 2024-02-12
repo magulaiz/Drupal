@@ -3,9 +3,9 @@
 namespace Drupal\mongodb\Driver\Database\mongodb;
 
 use Drupal\Core\Database\Connection as DatabaseConnection;
-use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Database\Query\Update as QueryUpdate;
+use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\UTCDateTime;
@@ -30,6 +30,55 @@ class Update extends QueryUpdate {
    * @var \Drupal\mongodb\Driver\Database\mongodb\TableInformation
    */
   protected $tableInformation;
+
+  /**
+   * The list of blob fields.
+   *
+   * @var array
+   */
+  protected $blobFields;
+
+  /**
+   * The list of boolean fields.
+   *
+   * @var array
+   */
+  protected $booleanFields;
+
+  /**
+   * The list of integer fields.
+   *
+   * @var array
+   */
+  protected $integerFields;
+
+  /**
+   * The list of long integer fields.
+   *
+   * @var array
+   */
+  protected $longFields;
+
+  /**
+   * The list of numeric fields.
+   *
+   * @var array
+   */
+  protected $numericFields;
+
+  /**
+   * The list of date fields.
+   *
+   * @var array
+   */
+  protected $dateFields;
+
+  /**
+   * The list of string fields.
+   *
+   * @var array
+   */
+  protected $stringFields;
 
   /**
    * {@inheritdoc}

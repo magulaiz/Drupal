@@ -41,6 +41,7 @@ class Truncate extends QueryTruncate {
    */
   public function __toString() {
     // Nothing to do.
+    return '';
   }
 
 }
