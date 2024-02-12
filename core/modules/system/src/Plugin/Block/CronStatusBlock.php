@@ -67,7 +67,6 @@ class CronStatusBlock extends BlockBase implements ContainerFactoryPluginInterfa
     return $build;
   }
 
-
   /**
    * {@inheritdoc}
    */
@@ -90,7 +89,7 @@ class CronStatusBlock extends BlockBase implements ContainerFactoryPluginInterfa
    */
   public static function trustedCallbacks(): array {
     return [
-      'lazyBuilder'
+      'lazyBuilder',
     ];
   }
 
