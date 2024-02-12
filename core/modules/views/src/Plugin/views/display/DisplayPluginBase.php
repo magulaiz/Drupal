@@ -5,6 +5,7 @@ namespace Drupal\views\Plugin\views\display;
 use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
@@ -192,27 +193,20 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       unset($options['defaults']);
     }
 
-    $skip_cache = \Drupal::config('views.settings')->get('skip_cache');
-
-    if (!$skip_cache) {
-      $cid = 'views:unpack_options:' . hash('sha256', serialize([$this->options, $options])) . ':' . \Drupal::languageManager()->getCurrentLanguage()->getId();
-      if (empty(static::$unpackOptions[$cid])) {
-        $cache = \Drupal::cache('data')->get($cid);
-        if (!empty($cache->data)) {
-          $this->options = $cache->data;
-        }
-        else {
-          $this->unpackOptions($this->options, $options);
-          \Drupal::cache('data')->set($cid, $this->options, Cache::PERMANENT, $this->view->storage->getCacheTags());
-        }
-        static::$unpackOptions[$cid] = $this->options;
+    $cid = 'views:unpack_options:' . hash('sha256', serialize([$this->options, $options])) . ':' . \Drupal::languageManager()->getCurrentLanguage()->getId();
+    if (empty(static::$unpackOptions[$cid])) {
+      $cache = \Drupal::cache('data')->get($cid);
+      if (!empty($cache->data)) {
+        $this->options = $cache->data;
       }
       else {
-        $this->options = static::$unpackOptions[$cid];
+        $this->unpackOptions($this->options, $options);
+        \Drupal::cache('data')->set($cid, $this->options, Cache::PERMANENT, $this->view->storage->getCacheTags());
       }
+      static::$unpackOptions[$cid] = $this->options;
     }
     else {
-      $this->unpackOptions($this->options, $options);
+      $this->options = static::$unpackOptions[$cid];
     }
 
     // Mark the view as changed so the user has a chance to save it.
@@ -1126,7 +1120,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       ];
     }
 
-    $display_comment = views_ui_truncate($this->getOption('display_comment'), 80);
+    $display_comment = Unicode::truncate($this->getOption('display_comment'), 80, TRUE, TRUE);
     $options['display_comment'] = [
       'category' => 'other',
       'title' => $this->t('Administrative comment'),
@@ -1142,7 +1136,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     $options['title'] = [
       'category' => 'title',
       'title' => $this->t('Title'),
-      'value' => views_ui_truncate($title, 32),
+      'value' => Unicode::truncate($title, 32, FALSE, TRUE),
       'desc' => $this->t('Change the title that this display will use.'),
     ];
 

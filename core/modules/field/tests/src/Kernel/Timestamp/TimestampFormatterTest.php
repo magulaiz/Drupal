@@ -60,7 +60,7 @@ class TimestampFormatterTest extends KernelTestBase {
 
     $this->entityType = 'entity_test';
     $this->bundle = $this->entityType;
-    $this->fieldName = mb_strtolower($this->randomMachineName());
+    $this->fieldName = $this->randomMachineName();
 
     $field_storage = FieldStorageConfig::create([
       'field_name' => $this->fieldName,
@@ -146,7 +146,7 @@ class TimestampFormatterTest extends KernelTestBase {
   public function testTimestampAgoFormatter() {
     $data = [];
 
-    foreach ([1, 2, 3, 4, 5, 6] as $granularity) {
+    foreach ([1, 2, 3, 4, 5, 6, 7] as $granularity) {
       $data[] = [
         'future_format' => '@interval hence',
         'past_format' => '@interval ago',

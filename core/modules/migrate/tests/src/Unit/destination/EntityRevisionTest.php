@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\migrate\Unit\destination\EntityRevisionTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit\destination;
 
@@ -31,7 +28,7 @@ class EntityRevisionTest extends UnitTestCase {
   protected $migration;
 
   /**
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @var \Drupal\Core\Entity\RevisionableStorageInterface
    */
   protected $storage;
 
@@ -60,7 +57,7 @@ class EntityRevisionTest extends UnitTestCase {
 
     // Setup mocks to be used when creating a revision destination.
     $this->migration = $this->prophesize(MigrationInterface::class);
-    $this->storage = $this->prophesize('\Drupal\Core\Entity\EntityStorageInterface');
+    $this->storage = $this->prophesize('\Drupal\Core\Entity\RevisionableStorageInterface');
 
     $entity_type = $this->prophesize(EntityTypeInterface::class);
     $entity_type->getSingularLabel()->willReturn('crazy');
@@ -242,6 +239,14 @@ class EntityRevision extends RealEntityRevision {
    * This method is from the parent and we aren't concerned with the inner
    * workings of its implementation which would trickle into mock assertions. An
    * empty implementation avoids this.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to update.
+   * @param \Drupal\migrate\Row $row
+   *   The row object to update from.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   An updated entity from row values.
    */
   protected function updateEntity(EntityInterface $entity, Row $row) {
     return $entity;

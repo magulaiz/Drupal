@@ -42,7 +42,7 @@
   }
 
   function parseCss(element, property) {
-    return parseInt($.css(element, property), 10) || 0;
+    return parseInt(window.getComputedStyle(element)[property], 10) || 0;
   }
 
   function getDimensions(elem) {
@@ -54,7 +54,7 @@
         offset: { top: 0, left: 0 },
       };
     }
-    if ($.isWindow(raw)) {
+    if (!!raw && raw === raw.window) {
       return {
         width: elem.width(),
         height: elem.height(),
@@ -193,15 +193,15 @@
           data.my[0] === 'left'
             ? -data.elemWidth
             : data.my[0] === 'right'
-            ? data.elemWidth
-            : 0;
+              ? data.elemWidth
+              : 0;
         const atOffset =
           // eslint-disable-next-line no-nested-ternary
           data.at[0] === 'left'
             ? data.targetWidth
             : data.at[0] === 'right'
-            ? -data.targetWidth
-            : 0;
+              ? -data.targetWidth
+              : 0;
         const offset = -2 * data.offset[0];
         let newOverRight;
         let newOverLeft;
@@ -247,15 +247,15 @@
         const myOffset = top
           ? -data.elemHeight
           : data.my[1] === 'bottom'
-          ? data.elemHeight
-          : 0;
+            ? data.elemHeight
+            : 0;
         const atOffset =
           // eslint-disable-next-line no-nested-ternary
           data.at[1] === 'top'
             ? data.targetHeight
             : data.at[1] === 'bottom'
-            ? -data.targetHeight
-            : 0;
+              ? -data.targetHeight
+              : 0;
         const offset = -2 * data.offset[1];
         let newOverTop;
         let newOverBottom;
@@ -311,7 +311,7 @@
 
       $('body').append(div);
       const w1 = innerDiv.offsetWidth;
-      div.css('overflow', 'scroll');
+      div[0].style.overflow = 'scroll';
 
       let w2 = innerDiv.offsetWidth;
 
@@ -327,11 +327,11 @@
       const overflowX =
         within.isWindow || within.isDocument
           ? ''
-          : within.element.css('overflow-x');
+          : window.getComputedStyle(within.element[0])['overflow-x'];
       const overflowY =
         within.isWindow || within.isDocument
           ? ''
-          : within.element.css('overflow-y');
+          : window.getComputedStyle(within.element[0])['overflow-y'];
       const hasOverflowX =
         overflowX === 'scroll' ||
         (overflowX === 'auto' && within.width < within.element[0].scrollWidth);
@@ -346,7 +346,8 @@
     },
     getWithinInfo(element) {
       const withinElement = $(element || window);
-      const isWindow = $.isWindow(withinElement[0]);
+      const isWindow =
+        !!withinElement[0] && withinElement[0] === withinElement[0].window;
       const isDocument = !!withinElement[0] && withinElement[0].nodeType === 9;
       const hasOffset = !isWindow && !isDocument;
       return {
@@ -462,8 +463,8 @@
         pos = regexHorizontal.test(pos[0])
           ? pos.concat(['center'])
           : regexVertical.test(pos[0])
-          ? ['center'].concat(pos)
-          : ['center', 'center'];
+            ? ['center'].concat(pos)
+            : ['center', 'center'];
       }
       pos[0] = regexHorizontal.test(pos[0]) ? pos[0] : 'center';
       pos[1] = regexVertical.test(pos[1]) ? pos[1] : 'center';

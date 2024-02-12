@@ -68,7 +68,8 @@ class DateFormatAccessControlHandlerTest extends KernelTestBase {
     $entity_values = ($which_entity === 'unlocked')
       ? ['locked' => FALSE]
       : ['locked' => TRUE];
-    $entity_values['id'] = $this->randomMachineName();
+    $entity_values['id'] = $entity_values['label'] = $this->randomMachineName();
+    $entity_values['pattern'] = 'Y-m-d';
     $entity = DateFormat::create($entity_values);
     $entity->save();
 

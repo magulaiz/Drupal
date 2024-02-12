@@ -32,7 +32,7 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
    *   A new DatabaseBackend object.
    */
   protected function createCacheBackend($bin) {
-    return new DatabaseBackend($this->container->get('database'), $this->container->get('cache_tags.invalidator.checksum'), $bin, static::$maxRows);
+    return new DatabaseBackend($this->container->get('database'), $this->container->get('cache_tags.invalidator.checksum'), $bin, $this->container->get('serialization.phpserialize'), static::$maxRows);
   }
 
   /**
@@ -53,6 +53,15 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
     $cached_value_short = $this->randomMachineName();
     $backend->set($cid_short, $cached_value_short);
     $this->assertSame($cached_value_short, $backend->get($cid_short)->data, "Backend contains the correct value for short, non-ASCII cache id.");
+
+    // Set multiple items to test exceeding the chunk size.
+    $backend->deleteAll();
+    $items = [];
+    for ($i = 0; $i <= DatabaseBackend::MAX_ITEMS_PER_CACHE_SET; $i++) {
+      $items["test$i"]['data'] = $i;
+    }
+    $backend->setMultiple($items);
+    $this->assertSame(DatabaseBackend::MAX_ITEMS_PER_CACHE_SET + 1, $this->getNumRows());
   }
 
   /**

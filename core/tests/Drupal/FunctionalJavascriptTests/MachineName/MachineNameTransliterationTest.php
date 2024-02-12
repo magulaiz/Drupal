@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalJavascriptTests\MachineName;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -10,6 +12,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
  * Tests the machine name transliteration functionality.
  *
  * @group javascript
+ * @group #slow
  */
 class MachineNameTransliterationTest extends WebDriverTestBase {
 
@@ -81,10 +84,10 @@ class MachineNameTransliterationTest extends WebDriverTestBase {
       // ['en', '𐌰𐌸', '__'],
       ['en', 'Ä Ö Ü Å Ø äöüåøhello', 'a_o_u_a_o_aouaohello'],
       ['de', 'Ä Ö Ü Å Ø äöüåøhello', 'ae_oe_ue_a_o_aeoeueaohello'],
-      ['de', ']URY&m_G^;', ' _ury_m_g_'],
+      ['de', ']URY&m_G^;', ' ury_m_g'],
       ['da', 'Ä Ö Ü Å Ø äöüåøhello', 'a_o_u_aa_oe_aouaaoehello'],
       ['kg', 'ц', 'ts'],
-      ['en', ' Hello Abventor! ', '_hello_abventor_'],
+      ['en', ' Hello Abventor! ', 'hello_abventor'],
       // cSpell:enable
     ];
   }

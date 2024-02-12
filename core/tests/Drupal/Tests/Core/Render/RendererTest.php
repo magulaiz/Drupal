@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Render\RendererTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Render;
 
@@ -16,6 +13,8 @@ use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Template\Attribute;
+
+// cspell:ignore fooalert
 
 /**
  * @coversDefaultClass \Drupal\Core\Render\Renderer
@@ -362,20 +361,20 @@ class RendererTest extends RendererTestBase {
 
     // Theme suggestion is not implemented, #markup should be rendered.
     $build = [
-      '#theme' => ['suggestionnotimplemented'],
+      '#theme' => ['suggestion_not_implemented'],
       '#markup' => 'foo',
     ];
     $setup_code = function () {
       $this->themeManager->expects($this->once())
         ->method('render')
-        ->with(['suggestionnotimplemented'], $this->anything())
+        ->with(['suggestion_not_implemented'], $this->anything())
         ->willReturn(FALSE);
     };
     $data[] = [$build, 'foo', $setup_code];
 
     // Tests unimplemented theme suggestion, child #markup should be rendered.
     $build = [
-      '#theme' => ['suggestionnotimplemented'],
+      '#theme' => ['suggestion_not_implemented'],
       'child' => [
         '#markup' => 'foo',
       ],
@@ -383,7 +382,7 @@ class RendererTest extends RendererTestBase {
     $setup_code = function () {
       $this->themeManager->expects($this->once())
         ->method('render')
-        ->with(['suggestionnotimplemented'], $this->anything())
+        ->with(['suggestion_not_implemented'], $this->anything())
         ->willReturn(FALSE);
     };
     $data[] = [$build, 'foo', $setup_code];
@@ -502,7 +501,7 @@ class RendererTest extends RendererTestBase {
         '#markup' => $first,
       ],
     ];
-    $output = $this->renderer->renderRoot($elements);
+    $output = (string) $this->renderer->renderRoot($elements);
 
     // The lowest weight element should appear last in $output.
     $this->assertGreaterThan(strpos($output, $first), strpos($output, $second));
@@ -538,7 +537,7 @@ class RendererTest extends RendererTestBase {
       ],
       '#sorted' => TRUE,
     ];
-    $output = $this->renderer->renderRoot($elements);
+    $output = (string) $this->renderer->renderRoot($elements);
 
     // The elements should appear in output in the same order as the array.
     $this->assertLessThan(strpos($output, $first), strpos($output, $second));
@@ -792,12 +791,46 @@ class RendererTest extends RendererTestBase {
   }
 
   /**
+   * Provides a list of access conditions and expected cache metadata.
+   *
+   * @return array
+   */
+  public function providerRenderCache() {
+    return [
+      'full access' => [
+        NULL,
+        [
+          'render_cache_tag',
+          'render_cache_tag_child:1',
+          'render_cache_tag_child:2',
+        ],
+      ],
+      'no child access' => [
+        AccessResult::forbidden()
+          ->addCacheTags([
+            'render_cache_tag_child_access:1',
+            'render_cache_tag_child_access:2',
+          ]),
+        [
+          'render_cache_tag',
+          'render_cache_tag_child:1',
+          'render_cache_tag_child:2',
+          'render_cache_tag_child_access:1',
+          'render_cache_tag_child_access:2',
+        ],
+      ],
+    ];
+  }
+
+  /**
    * @covers ::render
    * @covers ::doRender
    * @covers \Drupal\Core\Render\RenderCache::get
    * @covers \Drupal\Core\Render\RenderCache::set
+   *
+   * @dataProvider providerRenderCache
    */
-  public function testRenderCache() {
+  public function testRenderCache($child_access, $expected_tags) {
     $this->setUpRequest();
     $this->setupMemoryCache();
 
@@ -809,6 +842,7 @@ class RendererTest extends RendererTestBase {
       ],
       '#markup' => '',
       'child' => [
+        '#access' => $child_access,
         '#cache' => [
           'keys' => ['render_cache_test_child'],
           'tags' => ['render_cache_tag_child:1', 'render_cache_tag_child:2'],
@@ -831,11 +865,6 @@ class RendererTest extends RendererTestBase {
 
     // Test that cache tags are correctly collected from the render element,
     // including the ones from its subchild.
-    $expected_tags = [
-      'render_cache_tag',
-      'render_cache_tag_child:1',
-      'render_cache_tag_child:2',
-    ];
     $this->assertEquals($expected_tags, $element['#cache']['tags'], 'Cache tags were collected from the element and its subchild.');
 
     // The cache item also has a 'rendered' cache tag.

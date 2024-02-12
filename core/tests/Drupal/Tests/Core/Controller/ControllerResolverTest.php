@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Controller\ControllerResolverTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Controller;
 
@@ -11,15 +8,14 @@ use Drupal\Core\Controller\ControllerResolver;
 use Drupal\Core\DependencyInjection\ClassResolver;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Utility\CallableResolver;
 use Drupal\Tests\UnitTestCase;
-use GuzzleHttp\Psr7\HttpFactory;
-use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
+use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * @coversDefaultClass \Drupal\Core\Controller\ControllerResolver
@@ -42,23 +38,15 @@ class ControllerResolverTest extends UnitTestCase {
   protected $container;
 
   /**
-   * The PSR-7 converter.
-   *
-   * @var \Symfony\Bridge\PsrHttpMessage\HttpMessageFactoryInterface
-   */
-  protected $httpMessageFactory;
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
 
     $this->container = new ContainerBuilder();
-    $class_resolver = new ClassResolver();
-    $class_resolver->setContainer($this->container);
-    $this->httpMessageFactory = new PsrHttpFactory(new HttpFactory(), new HttpFactory(), new HttpFactory(), new HttpFactory());
-    $this->controllerResolver = new ControllerResolver($this->httpMessageFactory, $class_resolver);
+    $class_resolver = new ClassResolver($this->container);
+    $callable_resolver = new CallableResolver($class_resolver);
+    $this->controllerResolver = new ControllerResolver($callable_resolver);
   }
 
   /**

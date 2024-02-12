@@ -9,6 +9,7 @@ use Drupal\Core\Url;
  * JSON:API integration test for the "BlockContentType" config entity type.
  *
  * @group jsonapi
+ * @group #slow
  */
 class BlockContentTypeTest extends ConfigEntityResourceTestBase {
 
@@ -90,7 +91,7 @@ class BlockContentTypeTest extends ConfigEntityResourceTestBase {
           'description' => 'Provides a competitive alternative to the "basic" type',
           'label' => 'Pascal',
           'langcode' => 'en',
-          'revision' => 0,
+          'revision' => FALSE,
           'status' => TRUE,
           'drupal_internal__id' => 'pascal',
         ],
