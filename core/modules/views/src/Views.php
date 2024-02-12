@@ -306,17 +306,12 @@ class Views {
   public static function getViewsAsOptions($views_only = FALSE, $filter = 'all', $exclude_view = NULL, $optgroup = FALSE, $sort = FALSE) {
 
     // Filter the big views array.
-    switch ($filter) {
-      case 'all':
-      case 'disabled':
-      case 'enabled':
-        $filter = ucfirst($filter);
-        $views = call_user_func(static::class . "::get{$filter}Views");
-        break;
-
-      default:
-        return [];
-    }
+    $views = match ($filter) {
+      'all' => static::getAllViews(),
+      'disabled' => static::getDisabledViews(),
+      'enabled' => static::getEnabledViews(),
+      default => [],
+    };
 
     // Prepare exclude view strings for comparison.
     if (empty($exclude_view)) {
