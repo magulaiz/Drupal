@@ -50,6 +50,10 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
     $this->entity = FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => 'one',
+      'settings' => [
+        'on_label' => 'Hello!',
+        'off_label' => 'Goodbye.',
+      ],
     ]);
     $this->entity->save();
   }
@@ -207,12 +211,6 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
    * {@inheritdoc}
    */
   public function testImmutableProperties(array $valid_values = [], ?array $additional_expected_validation_errors_when_modified = NULL): void {
-    // If we don't clear the previous settings here, we will get unrelated
-    // validation errors (in addition to the one we're expecting), because the
-    // settings from the *old* field_type won't match the config schema for the
-    // settings of the *new* field_type.
-    $this->entity->set('settings', []);
-
     // Ensure that it is at least plausible that the `entity_type` is modified:
     // a corresponding FieldStorageConfig must exist due to the entity-level
     // `RequiredConfigDependencies` constraint.
@@ -235,6 +233,10 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
     ], [
       'field_type' => [
         'field_type' => "Expected this to match the value in the 'field.storage.entity_test_mul_with_bundle.test' config at the 'type' property: 'boolean' was expected, not 'email'.",
+        'settings' => [
+          "'on_label' is an unknown key because field_type is email (see config schema type field.field_settings.email).",
+          "'off_label' is an unknown key because field_type is email (see config schema type field.field_settings.email).",
+        ],
       ],
     ]);
   }
