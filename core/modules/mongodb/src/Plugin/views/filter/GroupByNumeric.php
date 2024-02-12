@@ -63,12 +63,11 @@ class GroupByNumeric extends CoreGroupByNumeric {
    * {@inheritdoc}
    */
   protected function opSimple($field) {
-// @todo Code copied from Numeric::opBetween().
+    // @todo Code copied from Numeric::opBetween().
     $this->query->addCondition($this->options['group'], $field, $this->value['value'], $this->operator);
-/*
-    $placeholder = $this->placeholder();
-    $this->query->addHavingExpression($this->options['group'], "$field $this->operator $placeholder", [$placeholder => $this->value['value']]);
-*/
+
+    // $placeholder = $this->placeholder();
+    // $this->query->addHavingExpression($this->options['group'], "$field $this->operator $placeholder", [$placeholder => $this->value['value']]);
   }
 
   /**
@@ -82,9 +81,9 @@ class GroupByNumeric extends CoreGroupByNumeric {
       $operator = "IS NOT NULL";
     }
 
-// @todo Code copied from Numeric::opBetween().
+    // @todo Code copied from Numeric::opBetween().
     $this->query->addCondition($this->options['group'], $field, NULL, $operator);
-//    $this->query->addHavingExpression($this->options['group'], "$field $operator");
+    // $this->query->addHavingExpression($this->options['group'], "$field $operator");
   }
 
 }

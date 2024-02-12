@@ -257,23 +257,23 @@ class Update extends QueryUpdate {
 
             case '-':
               if ($field == $math_matches[0]) {
-                $update_inc[$field] =  $right_side * -1;
+                $update_inc[$field] = $right_side * -1;
               }
               elseif ($field == $math_matches[2]) {
-                $update_inc[$field] =  $left_side * -1;
+                $update_inc[$field] = $left_side * -1;
               }
               break;
 
             default:
-              throw new MongodbSQLException('MongoDB does not support the mathematical operator: "'.$math_matches[1].'".');
+              throw new MongodbSQLException('MongoDB does not support the mathematical operator: "' . $math_matches[1] . '".');
           }
         }
         else {
-          throw new MongodbSQLException('MongoDB does not support complex expressions1: "'.$data['expression'].'".');
+          throw new MongodbSQLException('MongoDB does not support complex expressions1: "' . $data['expression'] . '".');
         }
       }
       else {
-        throw new MongodbSQLException('MongoDB does not support complex expressions2: "'.$data['expression'].'".');
+        throw new MongodbSQLException('MongoDB does not support complex expressions2: "' . $data['expression'] . '".');
       }
     }
 

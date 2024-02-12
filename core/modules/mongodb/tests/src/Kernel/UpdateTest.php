@@ -40,7 +40,7 @@ class UpdateTest extends DatabaseTestBase {
     $embedded_test_data = $query->embeddedTableData()
       ->fields(['name' => 'John', 'age' => 25, 'job' => 'Singer'])
       ->values(['George', 27, 'Singer'])
-      ->values(['Ringo',28, 'Drummer'])
+      ->values(['Ringo', 28, 'Drummer'])
       ->values(['Paul', 26, 'Songwriter']);
 
     $query->fields(['name' => 'Jasper', 'age' => '4', 'job' => 'Chatters', 'embedded_test' => $embedded_test_data])
@@ -89,35 +89,35 @@ class UpdateTest extends DatabaseTestBase {
     return [
       [
         ['name' => 'Zazu', 'age' => 20, 'job' => 'Makes noise'],
-        ['name' => 'Zazu', 'age' => '20', 'job' => 'Makes noise']
+        ['name' => 'Zazu', 'age' => '20', 'job' => 'Makes noise'],
       ],
       [
         ['name' => 'Zazu', 'age' => '20', 'job' => 'Makes noise'],
-        ['name' => 'Zazu', 'age' => '20', 'job' => 'Makes noise']
+        ['name' => 'Zazu', 'age' => '20', 'job' => 'Makes noise'],
       ],
       [
         ['name' => 'Zazu', 'age' => 20],
-        ['name' => 'Zazu', 'age' => '20', 'job' => 'Undefined']
+        ['name' => 'Zazu', 'age' => '20', 'job' => 'Undefined'],
       ],
       [
         ['name' => 'Zazu', 'job' => 'Makes noise'],
-        ['name' => 'Zazu', 'age' => '0', 'job' => 'Makes noise']
+        ['name' => 'Zazu', 'age' => '0', 'job' => 'Makes noise'],
       ],
       [
         ['age' => 20, 'job' => 'Makes noise'],
-        ['name' => '', 'age' => '20', 'job' => 'Makes noise']
+        ['name' => '', 'age' => '20', 'job' => 'Makes noise'],
       ],
       [
         ['name' => 'Zazu'],
-        ['name' => 'Zazu', 'age' => '0', 'job' => 'Undefined']
+        ['name' => 'Zazu', 'age' => '0', 'job' => 'Undefined'],
       ],
       [
         ['age' => 20],
-        ['name' => '', 'age' => '20', 'job' => 'Undefined']
+        ['name' => '', 'age' => '20', 'job' => 'Undefined'],
       ],
       [
         ['job' => 'Makes noise'],
-        ['name' => '', 'age' => '0', 'job' => 'Makes noise']
+        ['name' => '', 'age' => '0', 'job' => 'Makes noise'],
       ],
     ];
   }

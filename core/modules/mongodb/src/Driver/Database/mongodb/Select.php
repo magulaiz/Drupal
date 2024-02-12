@@ -210,8 +210,7 @@ class Select extends QuerySelect {
   protected array $mongodbCoalesceValueFields = [];
 
   /**
-   * The array containing the fields where the one with the greatest value shall
-   * be added to the query.
+   * The array containing the fields where the one with the greatest value.
    *
    * @var array
    */
@@ -313,8 +312,7 @@ class Select extends QuerySelect {
   protected $mongodbUnwindJoinAndAddFields = [];
 
   /**
-   * Boolean value indicating that the query must not be executed, but instead
-   * must return the query in a string value.
+   * Return the string value of the query.
    *
    * @var bool
    */
@@ -328,9 +326,10 @@ class Select extends QuerySelect {
   protected $embeddedTableCondition = [];
 
   /**
-   * The table aliases for with all fields must be selected. This array is only
-   * used to fake the SQL "all_fields" variable, because it is not used by
-   * MongoDB.
+   * The table aliases for with all fields must be selected.
+   *
+   * This array is only used to fake the SQL "all_fields" variable, because it
+   * is not used by MongoDB.
    *
    * @var array
    *   Array of table aliases.
@@ -412,7 +411,7 @@ class Select extends QuerySelect {
       $this->mongodbGroupByOperation[$alias] = [
         'field' => $field,
         'alias' => $alias,
-        'operator' => $operator
+        'operator' => $operator,
       ];
     }
 
@@ -476,7 +475,7 @@ class Select extends QuerySelect {
       $this->mongodbMultiplyFields[$alias] = [
         'alias' => $alias,
         'field' => $field,
-        'value' => $value
+        'value' => $value,
       ];
     }
   }
@@ -499,7 +498,7 @@ class Select extends QuerySelect {
       $this->mongodbSumFields[$alias] = [
         'fields' => $fields,
         'alias' => $alias,
-        'value' => $value
+        'value' => $value,
       ];
     }
   }
@@ -519,7 +518,7 @@ class Select extends QuerySelect {
       $this->mongodbConcatFields[$alias] = [
         'fields' => $fields,
         'alias' => $alias,
-        'integer fields' => $integer_fields
+        'integer fields' => $integer_fields,
       ];
     }
   }
@@ -577,7 +576,7 @@ class Select extends QuerySelect {
       $this->mongodbDateDateFormattedFields[$alias] = [
         'field' => $field,
         'alias' => $alias,
-        'format' => $format
+        'format' => $format,
       ];
     }
   }
@@ -598,7 +597,7 @@ class Select extends QuerySelect {
       $this->mongodbDateStringFormattedFields[$alias] = [
         'alias' => $alias,
         'field' => $field,
-        'format' => $format
+        'format' => $format,
       ];
     }
   }
@@ -618,7 +617,7 @@ class Select extends QuerySelect {
       $this->mongodbCoalesceValueFields[$alias] = [
         'alias' => $alias,
         'field' => $field,
-        'value' => $value
+        'value' => $value,
       ];
     }
   }
@@ -638,7 +637,7 @@ class Select extends QuerySelect {
       $this->mongodbGreatestFields[$alias] = [
         'alias' => $alias,
         'fields' => $fields,
-        'values' => $values
+        'values' => $values,
       ];
     }
   }
@@ -928,27 +927,6 @@ class Select extends QuerySelect {
     throw new MongodbSQLException('MongoDB does not support UNION queries.');
   }
 
-//  /**
-//   * {@inheritdoc}
-//   */
-//  public function join($table, $alias = NULL, $condition = NULL, $arguments = []) {
-//    throw new MongodbSQLException('MongoDB does not support methods with SQL string input. Please use the method Select::joinInner() instead of Select::innerJoin().');
-//  }
-//
-//  /**
-//   * {@inheritdoc}
-//   */
-//  public function innerJoin($table, $alias = NULL, $condition = NULL, $arguments = []) {
-//    throw new MongodbSQLException('MongoDB does not support methods with SQL string input. Please use the method Select::joinInner() instead of Select::innerJoin().');
-//  }
-//
-//  /**
-//   * {@inheritdoc}
-//   */
-//  public function leftJoin($table, $alias = NULL, $condition = NULL, $arguments = []) {
-//    throw new MongodbSQLException('MongoDB does not support methods with SQL string input. Please use the method Select::joinLeft() instead of Select::leftJoin().');
-//  }
-
   /**
    * {@inheritdoc}
    */
@@ -990,11 +968,11 @@ class Select extends QuerySelect {
       'condition' => $condition,
       'arguments' => $arguments,
       // Fields special for MongoDB.
-//      'field' => $field,
-//      'left table' => $left_table,
-//      'left field' => $left_field,
-//      'operator' => $operator,
-//      'extra' => $extra,
+      // 'field' => $field,
+      // 'left table' => $left_table,
+      // 'left field' => $left_field,
+      // 'operator' => $operator,
+      // 'extra' => $extra,
     ];
 
     $this->mongodbJoins[$alias] += $this->getJoinConditionForMongoDB($condition, $table, $alias);
