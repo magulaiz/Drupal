@@ -9,7 +9,7 @@ parameters:
   cache_default_bin_backends: []
   memory_cache_default_bin_backends: []
   session.storage.options:
-    gc_probability: 1
+    gc_probability: 0
     gc_divisor: 100
     gc_maxlifetime: 200000
     cookie_lifetime: 2000000
