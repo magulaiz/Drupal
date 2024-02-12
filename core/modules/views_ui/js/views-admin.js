@@ -314,8 +314,9 @@
    *   The event triggered.
    */
   Drupal.viewsUi.AddItemForm.prototype.handleCheck = function (event) {
-    const $target = $(event.target);
-    const label = $target.closest('td').next().html().trim();
+    const target = event.target;
+    const closestEl = target.closest('td');
+    const label = $(closestEl).next().html().trim();
     // Add/remove the checked item to the list.
     if (event.target.checked) {
       this.$selected_div.show();
@@ -485,8 +486,9 @@
 
     // Click on the title checks the box.
     this.$form.on('click', 'td.title', (event) => {
-      const $target = $(event.currentTarget);
-      $target.closest('tr').find('input').trigger('click');
+      const target = event.currentTarget;
+      const closestEl = target.closest('tr');
+      $(closestEl).find('input').trigger('click');
     });
 
     const searchBoxSelector =
@@ -1103,15 +1105,17 @@
         '.js-form-item-options-value-all',
         context,
       );
-
       if (selectAll.length) {
         const $selectAll = $(selectAll);
         const $selectAllCheckbox = $selectAll.find('input[type=checkbox]');
-        const $checkboxes = $selectAll
-          .closest('.form-checkboxes')
-          .find(
+        const $checkboxes = [];
+        selectAll.forEach((el) => {
+          const closestEl = el.closest('.form-checkboxes');
+          const checkboxes = $(closestEl).find(
             '.js-form-type-checkbox:not(.js-form-item-options-value-all) input[type="checkbox"]',
           );
+          $checkboxes.push(checkboxes);
+        });
         // Show the select all checkbox.
         $selectAll.show();
         $selectAllCheckbox.on('click', function () {
@@ -1266,7 +1270,8 @@
             } else {
               submit.value = Drupal.t('Apply (this display)');
             }
-            const $dialog = $context.closest('.ui-dialog-content');
+            const dialog = context.closest('.ui-dialog-content');
+            const $dialog = $(dialog);
             $dialog.trigger('dialogButtonsChange');
           })
           .trigger('change');

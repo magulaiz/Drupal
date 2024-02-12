@@ -15,10 +15,12 @@
   Drupal.behaviors.tableSelect = {
     attach(context, settings) {
       // Select the inner-most table in case of nested tables.
-      once(
-        'table-select',
-        $(context).find('th.select-all').closest('table'),
-      ).forEach((table) => Drupal.tableSelect.call(table));
+      const tableHead = $(context).find('th.select-all')[0];
+      if (tableHead) {
+        once('table-select', tableHead.closest('table')).forEach((table) =>
+          Drupal.tableSelect.call(table),
+        );
+      }
     },
   };
 
@@ -76,6 +78,7 @@
           // checkbox' state.
           checkboxes.each(function () {
             const $checkbox = $(this);
+            const closesetRow = this.closest('tr');
             const stateChanged =
               $checkbox.prop('checked') !== event.target.checked;
 
@@ -91,13 +94,12 @@
             /**
              * @checkbox {HTMLElement}
              */
-            $checkbox.closest('tr').toggleClass('selected', this.checked);
+            $(closesetRow).toggleClass('selected', this.checked);
           });
           // Update the title and the state of the check all box.
           updateSelectAll(event.target.checked);
         }
       });
-
     // For each of the checkboxes within the table that are not disabled.
     checkboxes = $table
       .find('td input[type="checkbox"]:enabled')
@@ -108,16 +110,16 @@
         /**
          * @this {HTMLElement}
          */
-        $(this).closest('tr').toggleClass('selected', this.checked);
-
+        this.closest('tr').classList.toggle('selected', this.checked);
         // If this is a shift click, we need to highlight everything in the
         // range. Also make sure that we are actually checking checkboxes
         // over a range and that a checkbox has been checked or unchecked before.
         if (e.shiftKey && lastChecked && lastChecked !== e.target) {
+          const lastCheckedRow = lastChecked.closest('tr');
           // We use the checkbox's parent <tr> to do our range searching.
           Drupal.tableSelectRange(
-            $(e.target).closest('tr')[0],
-            $(lastChecked).closest('tr')[0],
+            e.target.closest('tr'),
+            lastCheckedRow,
             e.target.checked,
           );
         }
