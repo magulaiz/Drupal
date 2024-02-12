@@ -42,7 +42,7 @@ class ClaroTableTest extends KernelTestBase {
   /**
    * Confirm Claro prerender callback is not executed for non-array class.
    */
-  public function testThemeTablePositionStickyPreRender() {
+  public function testThemeTablePositionStickyPreRender(): void {
     // Enable the Claro theme.
     \Drupal::service('theme_installer')->install(['claro']);
     $this->config('system.theme')->set('default', 'claro')->save();
