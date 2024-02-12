@@ -101,7 +101,7 @@ class BaseFieldOverrideTest extends ConfigEntityResourceTestBase {
               'node.type.camelids',
             ],
           ],
-          'description' => '',
+          'description' => NULL,
           'entity_type' => 'node',
           'field_name' => 'promote',
           'field_type' => 'boolean',
