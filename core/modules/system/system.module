@@ -231,11 +231,6 @@ function system_theme() {
         'webserver' => [],
       ],
     ],
-    'status_report_general_info_cron' => [
-      'variables' => [
-        'cron' => [],
-      ],
-    ],
     'admin_page' => [
       'variables' => ['blocks' => NULL],
       'file' => 'system.admin.inc',

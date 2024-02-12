@@ -53,7 +53,19 @@
         {% endif %}
       </div>
     </div>
-    {% include 'status-report-general-info-cron.html.twig' %}
+    <div class="system-status-general-info__item card">
+      <span class="system-status-general-info__item-icon system-status-general-info__item-icon--clock"></span>
+      <div class="system-status-general-info__item-details">
+        <h3 class="system-status-general-info__item-title">{{ 'Last Cron Run'|t }}</h3>
+        {{ cron.value }}
+        {% if cron.run_cron %}
+          <div class="system-status-general-info__run-cron">{{ cron.run_cron }}</div>
+        {% endif %}
+        {% if cron.description %}
+          <div class="system-status-general-info__description">{{ cron.description }}</div>
+        {% endif %}
+      </div>
+    </div>
     <div class="system-status-general-info__item card">
       <span class="system-status-general-info__item-icon system-status-general-info__item-icon--php"></span>
       <div class="system-status-general-info__item-details">

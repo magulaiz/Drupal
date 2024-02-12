@@ -38,7 +38,16 @@
     {{ drupal.description }}
   {% endif %}
 </div>
-{% include 'status-report-general-info-cron.html.twig' %}
+<div class="system-status-general-info__item">
+  <h3 class="system-status-general-info__item-title">{{ 'Last Cron Run'|t }}</h3>
+  {{ cron.value }}
+  {% if cron.run_cron %}
+    {{ cron.run_cron }}
+  {% endif %}
+  {% if cron.description %}
+    {{ cron.description }}
+  {% endif %}
+</div>
 <div class="system-status-general-info__item">
   <h3 class="system-status-general-info__item-title">{{ 'Web Server'|t }}</h3>
   {{ webserver.value }}
