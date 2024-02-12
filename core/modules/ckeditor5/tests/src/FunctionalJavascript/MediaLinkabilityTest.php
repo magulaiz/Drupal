@@ -367,10 +367,13 @@ class MediaLinkabilityTest extends MediaTestBase {
     $this->assertSame('Zoo Party (Content - blog)', $preview_button->getText());
 
     $xpath = new \DOMXPath($this->getEditorDataAsDom());
-    $this->assertCount(1, $xpath->query(sprintf('//a[@href="entity:%s" and @data-entity-uuid="%s" and @data-entity-type="node" and @data-entity-metadata]/drupal-media', substr($content_to_add->toUrl('canonical')->toString(), 1), $content_to_add_uuid)));
+    $query = sprintf('//a[@href="entity:%s" and @data-entity-uuid="%s" and @data-entity-type="node" and @data-entity-metadata]/drupal-media', substr($content_to_add->toUrl('canonical')->toString(), 1), $content_to_add_uuid);
+    $this->assertCount(1, $xpath->query($query), "Search for $query");
 
     $page->pressButton('Save');
-    $assert_session->elementExists('css', sprintf('a[href="%s"][data-entity-uuid="%s"][data-entity-type="node"][data-entity-metadata] > article[data-link-entity-uuid="%s"][data-link-entity-type="node"][data-link-entity-metadata]', $content_to_add->toUrl('canonical')->toString(), $content_to_add_uuid, $content_to_add_uuid));
+
+    $selector = sprintf('a[href="%s"][data-entity-uuid="%s"][data-entity-type="node"][data-entity-metadata] > article[data-link-entity-uuid="%s"][data-link-entity-type="node"][data-link-entity-metadata]', $content_to_add->toUrl('canonical')->toString(), $content_to_add_uuid, $content_to_add_uuid);
+    $assert_session->elementExists('css', $selector);
     $this->drupalGet($this->host->toUrl('edit-form'));
     $this->waitForEditor();
     $page->find('css', '.ck-editor__main > .ck-editor__editable[contenteditable]')->click();
