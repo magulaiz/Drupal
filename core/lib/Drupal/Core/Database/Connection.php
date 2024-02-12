@@ -1427,8 +1427,7 @@ abstract class Connection {
   public function setTransactionManagerStackState(bool $state): void {
     $this->isTransactionManagerStackActive = $state;
   }
-
-
+  
   /**
    * Determines if there is an active transaction open.
    *
