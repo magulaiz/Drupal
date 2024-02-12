@@ -871,8 +871,6 @@ field.field_settings.integer:
     suffix:
       type: label
       label: 'Suffix'
-  constraints:
-    FullyValidatable: ~
 
 field.value.integer:
   type: mapping
@@ -911,8 +909,6 @@ field.field_settings.decimal:
     suffix:
       type: label
       label: 'Suffix'
-  constraints:
-    FullyValidatable: ~
 
 field.value.decimal:
   type: mapping
@@ -944,8 +940,6 @@ field.field_settings.float:
     suffix:
       type: label
       label: 'Suffix'
-  constraints:
-    FullyValidatable: ~
 
 field.value.float:
   type: mapping
