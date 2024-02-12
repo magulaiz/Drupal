@@ -132,7 +132,7 @@ class NodeStatisticsDatabaseStorage implements StatisticsStorageInterface {
    */
   public function maxTotalCount() {
     $query = $this->connection->select('node_counter', 'nc');
-    $query->addExpression('MAX([totalcount])');
+    $query->addExpressionMax('totalcount');
     $max_total_count = (int) $query->execute()->fetchField();
     return $max_total_count;
   }

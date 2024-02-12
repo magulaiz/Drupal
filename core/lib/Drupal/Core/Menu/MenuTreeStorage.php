@@ -592,7 +592,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     if (!empty($link['parent'])) {
       // Check if at least one visible child exists in the table.
       $query = $this->connection->select($this->table, NULL, $this->options);
-      $query->addExpression('1');
+      $query->addExpressionConstant('1');
       $query->range(0, 1);
       $query
         ->condition('menu_name', $link['menu_name'])

@@ -1,0 +1,2697 @@
+<?php
+
+namespace Drupal\mongodb\Driver\Database\mongodb;
+
+use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Connection as DatabaseConnection;
+use Drupal\Core\Database\ConnectionInterface;
+use Drupal\Core\Database\Event\StatementExecutionEndEvent;
+use Drupal\Core\Database\Event\StatementExecutionStartEvent;
+use Drupal\Core\Database\Query\ConditionInterface;
+use Drupal\Core\Database\Query\Select as QuerySelect;
+use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Database\Query\PlaceholderInterface;
+use Drupal\Core\Database\SchemaObjectDoesNotExistException;
+
+/**
+ * The MongoDB implementation of \Drupal\Core\Database\Query\Select.
+ */
+class Select extends QuerySelect {
+
+  /**
+   * The array containing the filter part of the query.
+   *
+   * @var array
+   */
+  protected $mongodbFilter;
+
+  /**
+   * The array containing the projection part of the query.
+   *
+   * @var array
+   */
+  protected $mongodbProjection;
+
+  /**
+   * The array containing the sorting part of the query.
+   *
+   * @var array
+   */
+  protected $mongodbSort = [];
+
+  /**
+   * The boolean value if the sorting part of the query can be done in one stage.
+   *
+   * @var bool
+   */
+  protected $mongodbSortSeperate = FALSE;
+
+  /**
+   * The integer value with how many results the query as a maximum should return.
+   *
+   * @var int
+   */
+  protected $mongodbLimit;
+
+  /**
+   * The integer value with how many results the query should skip.
+   *
+   * @var int
+   */
+  protected $mongodbSkip;
+
+  /**
+   * The base table alias used in the query.
+   *
+   * @var string
+   */
+  protected $mongodbBaseAlias;
+
+  /**
+   * The base table name used in the query.
+   *
+   * @var string
+   */
+  protected $mongodbBaseTable;
+
+  /**
+   * The array containing the lookups/joins part of the query.
+   *
+   * @var array
+   */
+  protected $mongodbLookups = [];
+
+  /**
+   * The array containing the group by part of the query.
+   *
+   * @var array
+   */
+  protected $mongodbGroup = [];
+
+  /**
+   * The array containing the group by fields of the query.
+   *
+   * @var array
+   */
+  protected $mongodbGroupFields = [];
+
+  /**
+   * The array containing the fields to added before the joins are executed.
+   *
+   * @var array
+   */
+  protected $mongodbAddFieldsPreJoin = [];
+
+  /**
+   * The list the fields to be added to $this->mongodbAddFieldsPreJoin.
+   *
+   * @var array
+   */
+  protected $mongodbPreJoinFields = [];
+
+  /**
+   * The array containing the fields to added in the query.
+   *
+   * @var array
+   */
+  protected $mongodbAddFields = [];
+
+  /**
+   * The array containing the fields to added after all other query parts.
+   *
+   * @var array
+   */
+  protected $mongodbAddFieldsLast = [];
+
+  /**
+   * The array containing the fields to added literally to the query.
+   *
+   * @var array
+   */
+  protected $mongodbLiteralFields = [];
+
+  /**
+   * The array containing the fields to added for conditions to the query.
+   *
+   * @var array
+   */
+  protected $mongodbConditionFields = [];
+
+  /**
+   * The array containing the fields to added with their multiply value to the
+   * query.
+   *
+   * @var array
+   */
+  protected $mongodbMultiplyFields = [];
+
+  /**
+   * The array containing the fields to added to each other to the query.
+   *
+   * @var array
+   */
+  protected $mongodbSumFields = [];
+
+  /**
+   * The array containing the fields to be concatenated to the query.
+   *
+   * @var array
+   */
+  protected $mongodbConcatFields = [];
+
+  /**
+   * The array containing the fields to be substringed to the query.
+   *
+   * @var array
+   */
+  protected $mongodbSubstringFields = [];
+
+  /**
+   * The array containing the fields to be multiplied and sumed to the query.
+   *
+   * @var array
+   */
+  protected $mongodbSumMultiplyFields = [];
+
+  /**
+   * The array containing the fields with their length to be added to the query.
+   *
+   * @var array
+   */
+  protected $mongodbFieldsLength = [];
+
+  /**
+   * The array containing the date fields as a date string be added to the query.
+   *
+   * @var array
+   */
+  protected $mongodbDateDateFormattedFields = [];
+
+  /**
+   * The array containing the string fields as a date string be added to the query.
+   *
+   * @var array
+   */
+  protected $mongodbDateStringFormattedFields = [];
+
+  /**
+   * The array containing the fields be added to the query, if they are null
+   * then be replaced by the given value..
+   *
+   * @var array
+   */
+  protected $mongodbCoalesceValueFields = [];
+
+  /**
+   * The array containing the fields where the one with the greatest value shall
+   * be added to the query.
+   *
+   * @var array
+   */
+  protected $mongodbGreatestFields = [];
+
+  /**
+   * The list of embedded tables that need to be unwound in the aggregate query.
+   *
+   * @var array
+   */
+  protected $mongodbUnwind = [];
+
+  /**
+   * The array containing the paths of embedded tables that need to be unwound
+   * before the condition part of the query.
+   *
+   * @var array
+   */
+  protected $mongodbFilterUnwindPaths = [];
+
+  /**
+   * The array containing the paths of embedded tables that need to be unwound
+   * before the lookup/join part of the query.
+   *
+   * @var array
+   */
+  protected $mongodbLoopupUnwindPaths = [];
+
+  /**
+   * The array containing the paths of embedded tables that need to be unwound
+   * before the group by part of the query.
+   *
+   * @var array
+   */
+  protected $mongodbGroupUnwindPaths = [];
+
+  /**
+   * Boolean value indicating that the default MongoDB field "_id" should be
+   * removed from the query result.
+   *
+   * @var bool
+   */
+  protected $mongodbRemoveIdField = TRUE;
+
+  /**
+   * Boolean value indicating that the query should be executed as a aggregate
+   * query.
+   *
+   * @var bool
+   */
+  protected $mongodbUseAggregate = FALSE;
+
+  /**
+   * Boolean value indicating that the query should be executed as a count
+   * query.
+   *
+   * @var bool
+   */
+  protected $mongodbCountQuery = FALSE;
+
+  /**
+   * Boolean value indicating that the query result should be in a random order.
+   *
+   * @var bool
+   */
+  protected $mongodbRandomOrder = FALSE;
+
+  /**
+   * The array containing the lookups/joins to be added to the query.
+   *
+   * @var array
+   */
+  protected $mongodbJoins = [];
+
+  /**
+   * The array containing the group by operation for the query.
+   *
+   * @var array
+   */
+  protected $mongodbGroupByOperation = [];
+
+  /**
+   * The name of the temporary table that will hold the result of the query.
+   *
+   * @var string
+   */
+  protected $mongodbTemporaryTable;
+
+  /**
+   * The embedded table that should be used as the base table for the query.
+   *
+   * @var string
+   */
+  protected $mongodbEmbeddedTableToUseAsBaseTable;
+
+  /**
+   * An array of condition for an aggregate query with group by operation.
+   *
+   * @var array
+   */
+  protected $mongodbHavingFilter;
+
+  /**
+   * An array of holding the joins to be unwound and the fields to add.
+   *
+   * @var array
+   */
+  protected $mongodbUnwindJoinAndAddFields = [];
+
+  /**
+   * Boolean value indicating that the query must not be executed, but instead
+   * must return the query in a string value.
+   *
+   * @var bool
+   */
+  protected $mongodbQueryStringValue = FALSE;
+
+  /**
+   * An array of condition for which embedded table rows must be deleted.
+   *
+   * @var array
+   */
+  protected $embeddedTableCondition = [];
+
+  /**
+   * The table aliases for with all fields must be seleted. This array is only
+   * used to fake the SQL "all_fields" variable, because it is not used by
+   * MongoDB.
+   *
+   * @var array
+   *   Array of table aliases.
+   */
+  protected $mongodbAllFieldsTables = [];
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(DatabaseConnection $connection, $table, $alias = NULL, $options = []) {
+//    parent::__construct($connection, $table, $alias, $options);
+    $options['return'] = Database::RETURN_STATEMENT;
+
+    $this->uniqueIdentifier = uniqid('', TRUE);
+    $this->connection = $connection;
+    $this->connectionKey = $this->connection->getKey();
+    $this->connectionTarget = $this->connection->getTarget();
+    $this->queryOptions = $options;
+
+    $conjunction = isset($options['conjunction']) ? $options['conjunction'] : 'AND';
+    $this->condition = $this->connection->condition($conjunction);
+    $this->having = $this->connection->condition($conjunction);
+    parent::addJoin(NULL, $table, $alias);
+
+    $this->mongodbBaseTable = $connection->escapeTable($table);
+    $this->mongodbBaseAlias = (!empty($alias) ? $connection->escapeTable($alias) : $connection->escapeTable($table));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function conditionGroupFactory($conjunction = 'AND') {
+    // We need to use \Drupal\mongodb\Driver\Connection.
+    return $this->connection->condition($conjunction);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function compile(DatabaseConnection $connection, PlaceholderInterface $queryPlaceholder) {
+    $this->condition->setMongodbBaseTable($this->mongodbBaseTable);
+    $this->condition->setMongodbBaseAlias($this->mongodbBaseAlias);
+    if (!empty($this->alterMetaData)) {
+      $this->condition->setMetaData($this->alterMetaData);
+    }
+
+    parent::compile($connection, $queryPlaceholder);
+  }
+
+  /**
+   * Set the embedded table that should be used as the base table for the query.
+   *
+   * @param string $embedded_table
+   *   The name of the embedded table to be used as the base table.
+   */
+  public function embeddedTableToUseAsBaseTable($embedded_table) {
+    $this->mongodbEmbeddedTableToUseAsBaseTable = $embedded_table;
+  }
+
+  /**
+   * Add a group by operation to the query.
+   *
+   * @param string $alias
+   *   The alias to be used to store the result on the operation in.
+   * @param string $field
+   *   The name of the field that is used.
+   * @param string $operator
+   *   The group by operation that used on the field.
+   */
+  public function addGroupByOperation($alias, $field, $operator) {
+    if (!empty($alias) && !empty($field) && !empty($operator)) {
+      $first_dot_position = strpos($field, '.');
+      if ($first_dot_position !== FALSE) {
+        $first_field_part = substr($field, 0, $first_dot_position);
+        if (in_array($first_field_part, [$this->mongodbBaseTable, $this->mongodbBaseAlias])) {
+          $field = substr($field, strlen($first_field_part) + 1);
+        }
+      }
+
+      $this->mongodbGroupByOperation[$alias] = [
+        'field' => $field,
+        'alias' => $alias,
+        'operator' => $operator
+      ];
+    }
+
+    return $alias;
+  }
+
+  /**
+   * Add a field to group by to the query.
+   *
+   * @param string $alias
+   *   The alias to be used to store the result in.
+   * @param string $field
+   *   The name of the field that to group by.
+   */
+  public function addGroupField($alias, $field) {
+    if (!empty($alias) && !empty($field)) {
+      $this->mongodbGroupFields[$alias] = $field;
+    }
+  }
+
+  /**
+   * Add a field with a literal value to the query.
+   *
+   * @param string $alias
+   *   The alias to be used to store the result in.
+   * @param string $value
+   *   The literal value to assign the alias in the query result.
+   */
+  public function addLiteralField($alias, $value) {
+    if (!empty($alias) && isset($value)) {
+      $this->mongodbLiteralFields[$alias] = $value;
+    }
+  }
+
+  /**
+   * Add a field to the query that can be used by a condition.
+   *
+   * @param string $alias
+   *   The alias to be used to store the result in.
+   * @param string $field
+   *   The name of the field hows value is assigned to the alias.
+   */
+  public function addConditionField($alias, $field) {
+    if (!empty($alias) && !empty($field)) {
+      $this->mongodbConditionFields[$alias] = $field;
+    }
+  }
+
+  /**
+   * Add a field to the query that holds the result of a multiplication.
+   *
+   * @param string $alias
+   *   The alias to be used to store the result in.
+   * @param string $field
+   *   The name of the field as the basis for the multiplication.
+   * @param string $value
+   *   The value for the multiplication.
+   */
+  public function addMultiplyField($alias, $field, $value) {
+    if (!empty($alias) && !empty($field) && !empty($value)) {
+      $this->mongodbMultiplyFields[$alias] = [
+        'alias' => $alias,
+        'field' => $field,
+        'value' => $value
+      ];
+    }
+  }
+
+  /**
+   * Add a field to the query that holds the result of a sum.
+   *
+   * @param string $alias
+   *   The alias to be used to store the result in.
+   * @param array $fields
+   *   The list of fields for the sum.
+   * @param string $value
+   *   The value to add to sum.
+   */
+  public function addSumField($alias, $fields, $value = NULL) {
+    if (!empty($alias) && !empty($fields)) {
+      if (!is_array($fields)) {
+        $fields = (array) $fields;
+      }
+      $this->mongodbSumFields[$alias] = [
+        'fields' => $fields,
+        'alias' => $alias,
+        'value' => $value
+      ];
+    }
+  }
+
+  /**
+   * Add a field to the query that holds the result of the concatination.
+   *
+   * @param string $alias
+   *   The alias to be used to store the result in.
+   * @param array $fields
+   *   The list of fields for the concatination.
+   * @param array $integer_fields
+   *   The list integer fields for the concatination.
+   */
+  public function addConcatField($alias, array $fields = [], array $integer_fields = []) {
+    if (!empty($alias) && !empty($fields)) {
+      $this->mongodbConcatFields[$alias] = [
+        'fields' => $fields,
+        'alias' => $alias,
+        'integer fields' => $integer_fields
+      ];
+    }
+  }
+
+  /**
+   * Add a field to the query that holds the result of substring value.
+   *
+   * @param string $alias
+   *   The alias to be used to store the result in.
+   * @param string $field
+   *   The name of the field for substring value.
+   * @param int $start
+   *   The start position for the substring value.
+   * @param int $start
+   *   The length value for the substring.
+   */
+  public function addSubstringField($alias, $field, $start, $length) {
+    if (!empty($alias) && !empty($field)) {
+      $this->mongodbSubstringFields[$alias] = [
+        'field' => $field,
+        'alias' => $alias,
+        'start' => $start,
+        'length' => $length,
+      ];
+    }
+  }
+
+  /**
+   * Add a field to the query that holds the result of the field length.
+   *
+   * @param string $alias
+   *   The alias to be used to store the result in.
+   * @param string $field
+   *   The name of the field for which to get its length.
+   */
+  public function addFieldLength($alias, $field) {
+    if (!empty($alias) && !empty($field)) {
+      $this->mongodbFieldsLength[$alias] = $field;
+    }
+  }
+
+  /**
+   * Add a field to the query with a date string value.
+   *
+   * @param string $alias
+   *   The alias to be used to store the result in.
+   * @param string $field
+   *   The name of the field for the basis of the date string. The field must be
+   *   a date field.
+   * @param string $format
+   *   The format used to create the date string.
+   */
+  public function addDateDateFormattedField($alias, $field, $format) {
+    if (!empty($alias) && !empty($field) && !empty($format)) {
+      $this->mongodbDateDateFormattedFields[$alias] = [
+        'field' => $field,
+        'alias' => $alias,
+        'format' => $format
+      ];
+    }
+  }
+
+  /**
+   * Add a field to the query with a date string value.
+   *
+   * @param string $alias
+   *   The alias to be used to store the result in.
+   * @param string $field
+   *   The name of the field for the basis of the date string. The field must be
+   *   a string field with a date value.
+   * @param string $format
+   *   The format used to create the date string.
+   */
+  public function addDateStringFormattedField($alias, $field, $format) {
+    if (!empty($alias) && !empty($field) && !empty($format)) {
+      $this->mongodbDateStringFormattedFields[$alias] = [
+        'alias' => $alias,
+        'field' => $field,
+        'format' => $format
+      ];
+    }
+  }
+
+  /**
+   * Add a field to the query with value of the field.
+   *
+   * @param string $alias
+   *   The alias to be used to store the result in.
+   * @param string $field
+   *   The name of the field for the value if not empty.
+   * @param string $value
+   *   The value to use if the field has no value.
+   */
+  public function addCoalesceValueField($alias, $field, $value) {
+    if (!empty($alias) && !empty($field) && !empty($value)) {
+      $this->mongodbCoalesceValueFields[$alias] = [
+        'alias' => $alias,
+        'field' => $field,
+        'value' => $value
+      ];
+    }
+  }
+
+  /**
+   * Add a field to the query with the greatest value.
+   *
+   * @param string $alias
+   *   The alias to be used to store the result in.
+   * @param array $fields
+   *   The list of fields to get the greatest value from.
+   * @param array $values
+   *   The list of values to get the greatest value from.
+   */
+  public function addGreatestField($alias, array $fields = [], array $values = []) {
+    if (!empty($alias) && (count($fields) + count($values) >= 2)) {
+      $this->mongodbGreatestFields[$alias] = [
+        'alias' => $alias,
+        'fields' => $fields,
+        'values' => $values
+      ];
+    }
+  }
+
+  /**
+   * Add a field to the query before any joins are added.
+   *
+   * @param string $alias
+   *   The alias to be used to store the result in.
+   * @param string $field
+   *   The name of the field for the value.
+   */
+  public function addPreJoinField($alias, $field) {
+    if (!empty($alias) && !empty($field)) {
+      $this->mongodbPreJoinFields[$alias] = $field;
+    }
+  }
+
+  /**
+   * Path to be unwound before the condition.
+   *
+   * @param string $path
+   *   The path of the embedded table to be unwound.
+   */
+  public function addFilterUnwindPath($path) {
+    $this->mongodbFilterUnwindPaths[] = $path;
+  }
+
+  /**
+   * Add a field to the query with the sum of the multiplications.
+   *
+   * @param string $alias
+   *   The alias to be used to store the result in.
+   * @param array $fields
+   *   The list of fields to multiply.
+   * @param array $values
+   *   The list of values to multiply by.
+   */
+  public function addSumMultiplyExpression($alias, $fields, $values) {
+    $this->expressions[$alias] = [
+      'expression' => '',
+      'type' => 'sum_multiply',
+      'fields' => $fields,
+      'values' => $values,
+      'alias' => $alias,
+      'arguments' => [],
+    ];
+
+    return $alias;
+  }
+
+  /**
+   * Add condition to a group by result.
+   *
+   * @param string $type
+   *   The type of group by operation.
+   * @param string $field
+   *   The name of the field to use for the group by operation.
+   * @param $value
+   *   The value of the condition to test against.
+   * @param string $operator
+   *   The operator to use in the condition.
+   */
+  public function havingConditionWithType($type, $field, $value = NULL, $operator = '=') {
+    if (!in_array($type, ['COUNT', 'SUM'], TRUE)) {
+      throw new MongodbSQLException(t("MongoDB does not support @type in the Select::havingConditionWithType().", ['@type' => $type]));
+    }
+
+    $this->expressions[$field] = [
+      'expression' => '',
+      'type' => $type,
+      'alias' => $field,
+    ];
+
+    $this->having->condition($field, $value, $operator);
+
+    return $this;
+  }
+
+  /**
+   * Unwind a join result and add the fields.
+   *
+   * @param string $alias
+   *   The alias to from the added join.
+   * @param array $fields
+   *   The list of fields to add to the query.
+   */
+  public function unwindJoinAndAddFields($alias, array $fields = []) {
+    if (!empty($alias)) {
+      $this->mongodbUnwindJoinAndAddFields[$alias] = [
+        'fields' => $fields,
+        'alias' => $alias,
+      ];
+    }
+  }
+
+  /**
+   * Create a tmeporary table to hold the result of the query.
+   *
+   * @param string $name
+   *   The name for the temporary table.
+   */
+  public function createTemporaryTable($name) {
+    if (!empty($name)) {
+      $this->mongodbTemporaryTable = $name;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addExpressionConstant(string $constant, ?string $alias = NULL) {
+    $alias = $this->getExpressionAlias($alias);
+
+    $this->expressions[$alias] = [
+      'type' => 'constant',
+      'constant' => $constant,
+      'alias' => $alias,
+      'arguments' => [],
+    ];
+
+    return $alias;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addExpressionField(string $field, ?string $alias = NULL) {
+    $alias = $this->getExpressionAlias($alias);
+
+    $this->expressions[$alias] = [
+      'type' => 'field',
+      'field' => $field,
+      'alias' => $alias,
+      'arguments' => [],
+    ];
+
+    return $alias;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addExpressionMax(string $field, ?string $alias = NULL) {
+    $alias = $this->getExpressionAlias($alias);
+
+    $this->expressions[$alias] = [
+      'type' => 'max',
+      'field' => $field,
+      'alias' => $alias,
+      'arguments' => [],
+    ];
+
+    return $alias;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addExpressionMin(string $field, ?string $alias = NULL) {
+    $alias = $this->getExpressionAlias($alias);
+
+    $this->expressions[$alias] = [
+      'type' => 'min',
+      'field' => $field,
+      'alias' => $alias,
+      'arguments' => [],
+    ];
+
+    return $alias;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addExpressionSum(string $field, ?string $alias = NULL) {
+    $alias = $this->getExpressionAlias($alias);
+
+    $this->expressions[$alias] = [
+      'type' => 'sum',
+      'field' => $field,
+      'alias' => $alias,
+      'arguments' => [],
+    ];
+
+    return $alias;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addExpressionCount(string $field, ?string $alias = NULL) {
+    $alias = $this->getExpressionAlias($alias);
+
+    $this->expressions[$alias] = [
+      'type' => 'count',
+      'field' => $field,
+      'alias' => $alias,
+      'arguments' => [],
+    ];
+
+    return $alias;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addExpressionCountAll(?string $alias = NULL) {
+    $alias = $this->getExpressionAlias($alias);
+
+    $this->expressions[$alias] = [
+      'type' => 'count_all',
+      'alias' => $alias,
+      'arguments' => [],
+    ];
+
+    return $alias;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addExpressionCountDistinct(string $field, ?string $alias = NULL) {
+    $alias = $this->getExpressionAlias($alias);
+
+    $this->expressions[$alias] = [
+      'type' => 'count_distinct',
+      'field' => $field,
+      'alias' => $alias,
+      'arguments' => [],
+    ];
+
+    return $alias;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addExpressionCoalesce(array $fields, ?string $alias = NULL) {
+    $alias = $this->getExpressionAlias($alias);
+
+    $this->expressions[$alias] = [
+      'type' => 'coalesce',
+      'fields' => $fields,
+      'alias' => $alias,
+      'arguments' => [],
+    ];
+
+    return $alias;
+  }
+
+  /**
+   * Helper method for getting the alias for the expression.
+   *
+   * @param string|null $alias
+   *   The base alias.
+   *
+   * @return string|null
+   *   The alias for the expression.
+   */
+  protected function getExpressionAlias(?string $alias = NULL) {
+    if (empty($alias)) {
+      $alias = 'expression';
+    }
+
+    $alias_candidate = $alias;
+    $count = 2;
+    while (!empty($this->expressions[$alias_candidate])) {
+      $alias_candidate = $alias . '_' . $count++;
+    }
+    $alias = $alias_candidate;
+
+    return $alias;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addExpression($expression, $alias = NULL, $arguments = []) {
+    throw new MongodbSQLException('MongoDB does not support methods with SQL string input.');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function union(SelectInterface $query, $type = '') {
+    throw new MongodbSQLException('MongoDB does not support UNION queries.');
+  }
+
+//  /**
+//   * {@inheritdoc}
+//   */
+//  public function join($table, $alias = NULL, $condition = NULL, $arguments = []) {
+//    throw new MongodbSQLException('MongoDB does not support methods with SQL string input. Please use the method Select::joinInner() instead of Select::innerJoin().');
+//  }
+//
+//  /**
+//   * {@inheritdoc}
+//   */
+//  public function innerJoin($table, $alias = NULL, $condition = NULL, $arguments = []) {
+//    throw new MongodbSQLException('MongoDB does not support methods with SQL string input. Please use the method Select::joinInner() instead of Select::innerJoin().');
+//  }
+//
+//  /**
+//   * {@inheritdoc}
+//   */
+//  public function leftJoin($table, $alias = NULL, $condition = NULL, $arguments = []) {
+//    throw new MongodbSQLException('MongoDB does not support methods with SQL string input. Please use the method Select::joinLeft() instead of Select::leftJoin().');
+//  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addJoin($type, $table, $alias = NULL, $condition = NULL, $arguments = []) {
+    if (!empty($condition) && !$condition instanceof ConditionInterface) {
+      throw new MongodbSQLException('Joins without the $condition argument being an instance of ConditionInterface is not supported by MongoDB');
+    }
+
+    // If no alias is specified, first try the field name itself.
+    if (empty($alias)) {
+      $alias = $table;
+    }
+
+    // Copied from Select::addJoin(). Needs to be moved to own helper method.
+    $alias_candidate = $alias;
+    $count = 2;
+    while (!empty($this->tables[$alias_candidate])) {
+      $alias_candidate = $alias . '_' . $count++;
+    }
+    $alias = $alias_candidate;
+
+    if ($condition instanceof ConditionInterface) {
+      $condition->updateAliasPlaceholder('%alias', $alias);
+    }
+
+    // Add the alias to the tables list.
+    $this->tables[$alias] = [
+      'join type' => $type,
+      'table' => $table,
+      'alias' => $alias,
+      'condition' => '',
+      'arguments' => $arguments,
+    ];
+
+    $this->mongodbJoins[$alias] = [
+      'join type' => strtoupper($type) == 'INNER' ? 'INNER' : 'LEFT',
+      'table' => $table,
+      'alias' => $alias,
+      'condition' => $condition,
+      'arguments' => $arguments,
+      // Fields special for MongoDB.
+//      'field' => $field,
+//      'left table' => $left_table,
+//      'left field' => $left_field,
+//      'operator' => $operator,
+//      'extra' => $extra,
+    ];
+
+    $this->mongodbJoins[$alias] += $this->getJoinConditionForMongoDB($condition, $table, $alias);
+
+    return $alias;
+  }
+
+  /**
+   * Helper method for getting the join data out of the join condition.
+   *
+   * @param ConditionInterface $condition
+   *   The join condition.
+   *
+   * @return array
+   */
+  protected function getJoinConditionForMongoDB(ConditionInterface $condition, string $table, string $alias) {
+//dump('$table: ' . $table);
+//dump('$alias: ' . $alias);
+
+    $return = [];
+
+    $condition_parts = $condition->conditions();
+    $conjunction = $condition_parts['#conjunction'];
+    unset($condition_parts['#conjunction']);
+    foreach ($condition_parts as $condition_part) {
+      // Get the right field.
+      if (isset($condition_part['field']) && isset($condition_part['field2'])) {
+        if (str_starts_with($condition_part['field'], $table . '.')) {
+          $return['field'] = substr($condition_part['field'], strlen($table) + 1);
+          $left_join = explode('.', $condition_part['field2']);
+          $return['left table'] = $left_join[0];
+          $return['left field'] = $left_join[1];
+        }
+        elseif (str_starts_with($condition_part['field'], $alias . '.')) {
+          $return['field'] = substr($condition_part['field'], strlen($alias) + 1);
+          $left_join = explode('.', $condition_part['field2']);
+          $return['left table'] = $left_join[0];
+          $return['left field'] = $left_join[1];
+        }
+        elseif (str_starts_with($condition_part['field2'], $table . '.')) {
+          $return['field'] = substr($condition_part['field2'], strlen($table) + 1);
+          $left_join = explode('.', $condition_part['field']);
+          $return['left table'] = $left_join[0];
+          $return['left field'] = $left_join[1];
+        }
+        elseif (str_starts_with($condition_part['field2'], $alias . '.')) {
+          $return['field'] = substr($condition_part['field2'], strlen($alias) + 1);
+          $left_join = explode('.', $condition_part['field']);
+          $return['left table'] = $left_join[0];
+          $return['left field'] = $left_join[1];
+        }
+      }
+
+      $return['operator'] = $condition_part['operator'] ?? '=';
+      $return['extra'] = [];
+    }
+
+//dump('$return');
+//dump($return);
+    return $return;
+  }
+
+  /**
+   * Join against another table in the database.
+   *
+   * This method does the "hard" work of queuing up a table to be joined against.
+   * In some cases, that may include dipping into the Schema API to find the necessary
+   * fields on which to join.
+   *
+   * @param $type
+   *   The type of join. This can be INNER, LEFT (OUTER). Defaults to LEFT.
+   * @param $table
+   *   The table against which to join. May be a string or another SelectQuery
+   *   object. If a query object is passed, it will be used as a subselect.
+   *   Unless the table name starts with the database / schema name and a dot
+   *   it will be prefixed.
+   * @param $field
+   *   The field of the table $table to use in the join.
+   * @param $left_table
+   *   The table to which the table $table joins to.
+   * @param $left_field
+   *   The field of the table $left_table to use in the join.
+   * @param $operator
+   *   The operator to use in the join. Defaults to '='.
+   * @param $alias
+   *   The alias for the table. In most cases this should be the first letter
+   *   of the table, or the first letter of each "word" in the table. If omitted,
+   *   one will be dynamically generated.
+   * @param $extra
+   *   An array of extra conditions on the join.
+   *
+   *   Each condition is either a string that's directly added, or an array of
+   *   items:
+   *     - table(optional): If not set, current table; if NULL, no table. If you
+   *       specify a table in cached configuration, Views will try to load from
+   *       an existing alias. If you use realtime joins, it works better.
+   *     - field(optional): Field or formula. In formulas we can reference the
+   *       right table by using %alias.
+   *     - left_field(optional): Field or formula. In formulas we can reference
+   *       the left table by using %alias.
+   *     - operator(optional): The operator used, Defaults to "=".
+   *     - value: Must be set. If an array, operator will be defaulted to IN.
+   *     - numeric: If true, the value will not be surrounded in quotes.
+   *
+   * @return
+   *   The unique alias that was assigned for this table.
+   *
+  public function addMongodbJoin($type, $table, $field, $left_table, $left_field, $operator = '=', $alias = NULL, $extra = []) {
+    // If no alias is specified, first try the field name itself.
+    if (empty($alias)) {
+      $alias = $table;
+    }
+
+    // If that's already in use, try the table name and field name.
+    if (!empty($this->tables[$alias])) {
+      $alias = $table . '_' . $field;
+    }
+
+    // Copied from Select::addJoin(). Need to be moved to own helper method.
+    $alias_candidate = $alias;
+    $count = 2;
+    while (!empty($this->tables[$alias_candidate])) {
+      $alias_candidate = $alias . '_' . $count++;
+    }
+    $alias = $alias_candidate;
+
+    // Add the alias to the tables list.
+    $this->tables[$alias] = [
+      'join type' => 'mongodb',
+      'table' => $table,
+      'alias' => $alias,
+      'condition' => '',
+      'arguments' => [],
+    ];
+
+    $this->mongodbJoins[$alias] = [
+      'join type' => strtoupper($type) == 'INNER' ? 'INNER' : 'LEFT',
+      'table' => $table,
+      'alias' => $alias,
+      'condition' => '',
+      'arguments' => [],
+      // Fields special for MongoDB.
+      'field' => $field,
+      'left table' => $left_table,
+      'left field' => $left_field,
+      'operator' => $operator,
+      'extra' => $extra
+    ];
+
+    return $alias;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function &getMongodbJoins() {
+    return $this->mongodbJoins;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function havingCondition($field, $value = NULL, $operator = NULL) {
+    if (in_array($field, $this->group) && (substr($field, 0, 4) != '_id.')) {
+      // If the field is being in the group by, then add the '_id.' to the
+      // field.
+      $field = '_id.' . $field;
+    }
+
+    return parent::havingCondition($field, $value, $operator);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function having($snippet, $args = []) {
+    throw new MongodbSQLException('MongoDB does not support methods with SQL string input. Please use the method Select::havingCondition() instead of Select::having().');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function &getTables() {
+    $tables = $this->tables;
+
+    // Add the "all_fields" variable to the $tables array. The "all_fields"
+    // variable is not used by MongoDB.
+    foreach ($this->mongodbAllFieldsTables as $table_alias) {
+      $tables[$table_alias]['all_fields'] = TRUE;
+    }
+
+    return $tables;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function orderRandom() {
+    $this->mongodbRandomOrder = TRUE;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function countQuery() {
+    // Create our new query object that we will mutate into a count query.
+    $count = clone($this);
+
+    // Order by is not usefull in a count query.
+    $count->order = [];
+
+    // Remove the table from the "all_fields" table list
+    $count->mongodbAllFieldsTables = array_diff($count->mongodbAllFieldsTables, [$count->mongodbBaseAlias]);
+
+    // Let MongoDB perform a count query.
+    $count->mongodbCountQuery = TRUE;
+
+    return $count;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function fields($table_alias, array $fields = []) {
+    if ($fields) {
+      foreach ($fields as $field) {
+        // We don't care what alias was assigned.
+        $this->addField($table_alias, $field);
+      }
+    }
+    else {
+      // We want all fields from this table.
+      $added_field = FALSE;
+      if (isset($this->tables[$table_alias]['table'])) {
+        $table = $this->tables[$table_alias]['table'];
+        $table_fields = $this->connection->tableInformation()->getTableFields($table);
+        if (!empty($table_fields) && is_array($table_fields)) {
+          $table_field_names = array_keys($table_fields);
+          foreach ($table_field_names as $table_field_name) {
+            $this->addField($table_alias, $table_field_name);
+            $added_field = TRUE;
+          }
+        }
+      }
+
+      if (!$added_field) {
+        // throw an exception for no fields added.
+      }
+
+      // Fake the "all_fields" setting
+      $this->mongodbAllFieldsTables += [$table_alias];
+    }
+
+    return $this;
+  }
+
+  /**
+   * Groups the result set by the specified field.
+   *
+   * @param $alias
+   *   The alias for which to group.
+   * @param $field
+   *   The field on which to group. This should be the field as aliased.
+   * @return \Drupal\Core\Database\Query\SelectInterface
+   *   The called object.
+   */
+  public function groupByAlias($alias, $field) {
+    $this->group[$alias] = $field;
+    return $this;
+  }
+
+  /**
+   * Helper method for reusing the select condition for an embedded table projection.
+   *
+   * @return \Drupal\Core\Database\Query\ConditionInterface
+   *   The cloned condition object.
+   */
+  public function cloneCondition() {
+    return clone($this->condition);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function execute() {
+    // If validation fails, simply return NULL.
+    // Note that validation routines in preExecute() may throw exceptions instead.
+    if (!$this->preExecute()) {
+      return NULL;
+    }
+
+    $this->createMongodbQuery();
+
+    // Explicitly remove the base field "_id" if it is not explicitly added.
+    if ($this->mongodbRemoveIdField && !empty($this->mongodbProjection)) {
+      $this->mongodbProjection += ['_id' => 0];
+    }
+
+    if (empty($this->mongodbBaseTable)) {
+      throw new MongodbSQLException('The mongodbBaseTable is not set. MongoDB needs this for selecting data from the database.');
+    }
+
+    $prefixed_table = $this->connection->getMongodbPrefixedTable($this->mongodbBaseTable);
+
+    $options = $this->queryOptions;
+
+    // Add the session to the query.
+    $options['session'] = $this->connection->getMongodbSession();
+
+    if ($this->mongodbUseAggregate) {
+      $pipeline = [];
+      $unwound_tables = [];
+
+      if (!empty($this->mongodbEmbeddedTableToUseAsBaseTable)) {
+        $embedded_table_parts = explode('.', $this->mongodbEmbeddedTableToUseAsBaseTable);
+        $unwind = '';
+        foreach ($embedded_table_parts as $embedded_table_part) {
+          $unwind = (!empty($unwind) ? $unwind . '.' : '') . $embedded_table_part;
+
+          // Not sure about this solution. This is needed when there is a
+          // group-by aggregation.
+          if (!empty($this->mongodbGroup)) {
+            $pipeline[] = ['$unwind' => [
+              'path' => '$' . $unwind,
+              'preserveNullAndEmptyArrays' => TRUE
+            ]];
+          }
+          else {
+            $pipeline[] = ['$unwind' => '$' . $unwind];
+          }
+          $unwound_tables[] = $unwind;
+        }
+
+        $pipeline[] = ['$replaceRoot' => [
+            'newRoot' => [
+              '$mergeObjects' => [
+                '$$ROOT',
+                '$' . $this->mongodbEmbeddedTableToUseAsBaseTable
+              ]
+            ]
+          ]
+        ];
+      }
+
+      if (!empty($this->mongodbAddFieldsPreJoin)) {
+        $pipeline[] = ['$addFields' => $this->mongodbAddFieldsPreJoin];
+      }
+
+      foreach ($this->mongodbLoopupUnwindPaths as $loopup_unwind_path){
+        if (!empty($loopup_unwind_path) && (!in_array($loopup_unwind_path, $unwound_tables, TRUE))) {
+          $embedded_table_parts = explode('.', $loopup_unwind_path);
+          $unwind = '';
+          foreach ($embedded_table_parts as $embedded_table_part) {
+            $unwind = (!empty($unwind) ? $unwind . '.' : '') . $embedded_table_part;
+
+            $pipeline[] = ['$unwind' => '$' . $unwind];
+            $unwound_tables[] = $unwind;
+          }
+        }
+      }
+
+      foreach ($this->mongodbLookups as $mongodbLookup) {
+        $pipeline[] = $mongodbLookup;
+        if (is_array($mongodbLookup)) {
+          foreach ($mongodbLookup as $mongodbLookupKey => $mongodbLookupElement) {
+            if (($mongodbLookupKey == '$unwind') && (isset($mongodbLookupElement['path']))) {
+              $unwound_tables[] = substr($mongodbLookupElement['path'], 1);
+            }
+          }
+        }
+      }
+
+      foreach ($this->mongodbUnwindJoinAndAddFields as $mongodbUnwindJoinAlias => $mongodbUnwindJoinAndAddField) {
+        if (!in_array($mongodbUnwindJoinAlias, $unwound_tables, TRUE)) {
+          $pipeline[] = ['$unwind' => [
+            'path' => '$' . $mongodbUnwindJoinAlias,
+            'preserveNullAndEmptyArrays' => TRUE
+          ]];
+          $unwound_tables[] = $mongodbUnwindJoinAlias;
+        }
+        $unwind_join_add_fields = [];
+        foreach ($mongodbUnwindJoinAndAddField['fields'] as $mongodbUnwindJoinAddfield) {
+          $unwind_join_add_fields[$mongodbUnwindJoinAddfield] = '$' . $mongodbUnwindJoinAlias . '.' . $mongodbUnwindJoinAddfield;
+        }
+        if (!empty($unwind_join_add_fields)) {
+          $pipeline[] = ['$addFields' => $unwind_join_add_fields];
+        }
+      }
+
+      // Place the $match early in the aggregation pipeline. Accept when it is a
+      // query with a group_by and a having clause.
+      foreach ($this->mongodbFilterUnwindPaths as $filter_unwind_path) {
+        if (!empty($filter_unwind_path) && (!in_array($filter_unwind_path, $unwound_tables, TRUE))) {
+          $embedded_table_parts = explode('.', $filter_unwind_path);
+          $unwind = '';
+          foreach ($embedded_table_parts as $embedded_table_part) {
+            $unwind = (!empty($unwind) ? $unwind . '.' : '') . $embedded_table_part;
+
+            $pipeline[] = ['$unwind' => [
+              'path' => '$' . $unwind,
+              'preserveNullAndEmptyArrays' => TRUE
+            ]];
+            $unwound_tables[] = $unwind;
+          }
+        }
+      }
+
+      if (!empty($this->mongodbAddFields)) {
+        foreach ($this->mongodbAddFields as $alias => $this->mongodbAddField) {
+          $pipeline[] = ['$addFields' => [$alias => $this->mongodbAddField]];
+        }
+      }
+
+      if (!empty($this->mongodbAggregateFilter)) {
+        $recompile = FALSE;
+        foreach ($this->condition->getElemMatchEmbeddedTables() as $embedded_table) {
+          if (in_array($embedded_table, $unwound_tables, TRUE)) {
+            $recompile = TRUE;
+          }
+        }
+        if ($recompile) {
+          $this->condition->setUnwoundTables($unwound_tables);
+          $this->condition->compile($this->connection, $this);
+          $this->mongodbAggregateFilter = $this->condition->toMongoAggregateArray();
+        }
+        $pipeline[] = ['$match' => $this->mongodbAggregateFilter];
+      }
+
+      if (!empty($this->mongodbProjection)) {
+        // Add the add fields to the projection when the projection is not empty.
+        if (!empty($this->mongodbAddFieldsPreJoin)) {
+          foreach ($this->mongodbAddFieldsPreJoin as $alias => $add_field) {
+            $this->mongodbProjection[$alias] = 1;
+          }
+        }
+        if (!empty($this->mongodbAddFields)) {
+          foreach ($this->mongodbAddFields as $alias => $add_field) {
+            $this->mongodbProjection[$alias] = 1;
+          }
+        }
+        $pipeline[] = ['$project' => $this->mongodbProjection];
+      }
+
+      if (!empty($this->mongodbUnwind)) {
+        sort($this->mongodbUnwind);
+        foreach ($this->mongodbUnwind as $unwind) {
+          if (!empty($unwind) && (!in_array($unwind, $unwound_tables, TRUE))) {
+            $pipeline[] = ['$unwind' => [
+              'path' => $unwind,
+              'preserveNullAndEmptyArrays' => TRUE
+            ]];
+            $unwound_tables[] = $unwind;
+          }
+        }
+      }
+
+      if (!empty($this->mongodbGroup)) {
+        $pipeline[] = ['$group' => $this->mongodbGroup];
+      }
+
+      if (!empty($this->mongodbHavingFilter)) {
+        $pipeline[] = ['$match' => $this->mongodbHavingFilter];
+      }
+
+      if (!empty($this->mongodbSort) && !$this->mongodbCountQuery) {
+        // Sorting fails when sorting by multiple values from the same embedded
+        // table.
+        if ($this->mongodbSortSeperate) {
+          foreach ($this->mongodbSort as $sort_key => $sort_value) {
+            $pipeline[] = ['$sort' => [$sort_key => $sort_value]];
+          }
+        }
+        else {
+          $pipeline[] = ['$sort' => $this->mongodbSort];
+        }
+      }
+      if (!empty($this->mongodbAddFieldsLast)) {
+        $pipeline[] = ['$addFields' => $this->mongodbAddFieldsLast];
+      }
+      if (isset($this->mongodbSkip)) {
+        $pipeline[] = ['$skip' => $this->mongodbSkip];
+      }
+      if (isset($this->mongodbLimit)) {
+        $pipeline[] = ['$limit' => $this->mongodbLimit];
+      }
+
+      if ($this->mongodbCountQuery) {
+        // Change the query to a count query.
+        $pipeline[] = ['$count' => 'total_rows'];
+
+        // Return the query as its string value.
+        if ($this->mongodbQueryStringValue) {
+          // Reset the class property. So that the next time the query will be
+          // executed.
+          $this->mongodbQueryStringValue = FALSE;
+
+          return 'SELECT COUNT WITH AGGREGATE PIPELINE: ' . serialize($pipeline);
+        }
+
+        if ($this->connection->isEventEnabled(StatementExecutionStartEvent::class)) {
+          $startEvent = new StatementExecutionStartEvent(
+            spl_object_id($this),
+            $this->connection->getKey(),
+            $this->connection->getTarget(),
+            $this->getQueryString(),
+            $args ?? [],
+            $this->connection->findCallerFromDebugBacktrace()
+          );
+          $this->connection->dispatchEvent($startEvent);
+        }
+
+        $results = $this->connection->getConnection()->{$prefixed_table}->aggregate(
+          $pipeline,
+          [
+            'session' => $this->connection->getMongodbSession(),
+          ],
+        )->toArray();
+        $result = reset($results);
+        $count = is_object($result) && isset($result->total_rows) ? $result->total_rows : 0;
+
+        if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionEndEvent::class)) {
+          $this->connection->dispatchEvent(new StatementExecutionEndEvent(
+            $startEvent->statementObjectId,
+            $startEvent->key,
+            $startEvent->target,
+            $startEvent->queryString,
+            $startEvent->args,
+            $startEvent->caller,
+            $startEvent->time
+          ));
+        }
+
+        return new StatementCountQuery($this->connection, $count, $options);
+      }
+      else {
+        // The creation of a temporary table must always be the last step in the
+        // aggregation pipeline.
+        if (isset($this->mongodbTemporaryTable)) {
+          $pipeline[] = ['$out' => $this->connection->getMongodbPrefixedTable($this->mongodbTemporaryTable)];
+        }
+
+        // Return the query as its string value.
+        if ($this->mongodbQueryStringValue) {
+          // Reset the class property. So that the next time the query will be
+          // executed.
+          $this->mongodbQueryStringValue = FALSE;
+
+          return 'SELECT WITH AGGREGATE PIPELINE: ' . serialize($pipeline);
+        }
+
+        if ($this->connection->isEventEnabled(StatementExecutionStartEvent::class)) {
+          $startEvent = new StatementExecutionStartEvent(
+            spl_object_id($this),
+            $this->connection->getKey(),
+            $this->connection->getTarget(),
+            $this->getQueryString(),
+            $args ?? [],
+            $this->connection->findCallerFromDebugBacktrace()
+          );
+          $this->connection->dispatchEvent($startEvent);
+        }
+
+        $cursor = $this->connection->getConnection()->{$prefixed_table}->aggregate(
+          $pipeline,
+          [
+            'useCursor' => TRUE,
+            'session' => $this->connection->getMongodbSession(),
+          ],
+        );
+
+        if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionEndEvent::class)) {
+          $this->connection->dispatchEvent(new StatementExecutionEndEvent(
+            $startEvent->statementObjectId,
+            $startEvent->key,
+            $startEvent->target,
+            $startEvent->queryString,
+            $startEvent->args,
+            $startEvent->caller,
+            $startEvent->time
+          ));
+        }
+
+        // The creation of a temporary table always returns the temporary table
+        // name.
+        if (isset($this->mongodbTemporaryTable)) {
+          return $this->mongodbTemporaryTable;
+        }
+      }
+    }
+    elseif ($this->mongodbCountQuery) {
+      $options = [];
+      if (isset($this->mongodbLimit)) {
+        $options['limit'] = $this->mongodbLimit;
+      }
+      if (isset($this->mongodbSkip)) {
+        $options['skip'] = $this->mongodbSkip;
+      }
+
+      // SQL99 does not support count queries on distinct multiple fields. In
+      // the method $this->createMongodbQuery() will the distinct status be
+      // removed in such cases.
+      if ($this->distinct && (count($this->fields) == 1)) {
+        // Return the query as its string value.
+        if ($this->mongodbQueryStringValue) {
+          // Reset the class property. So that the next time the query will be
+          // executed.
+          $this->mongodbQueryStringValue = FALSE;
+
+          return 'SELECT COUNT WITH DISTINCT FIELD: ' . serialize($field['field']) . ' FILTER: ' . serialize($this->mongodbFilter);
+        }
+
+        if ($this->connection->isEventEnabled(StatementExecutionStartEvent::class)) {
+          $startEvent = new StatementExecutionStartEvent(
+            spl_object_id($this),
+            $this->connection->getKey(),
+            $this->connection->getTarget(),
+            $this->getQueryString(),
+            $args ?? [],
+            $this->connection->findCallerFromDebugBacktrace()
+          );
+          $this->connection->dispatchEvent($startEvent);
+        }
+
+        $field = reset($this->fields);
+        $count = count($this->connection->getConnection()->{$prefixed_table}->distinct($field['field'], $this->mongodbFilter), $options);
+
+        if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionEndEvent::class)) {
+          $this->connection->dispatchEvent(new StatementExecutionEndEvent(
+            $startEvent->statementObjectId,
+            $startEvent->key,
+            $startEvent->target,
+            $startEvent->queryString,
+            $startEvent->args,
+            $startEvent->caller,
+            $startEvent->time
+          ));
+        }
+      }
+/*
+      elseif ($this->mongodbUseAggregate) {
+        $pipeline = [];
+        foreach ($this->mongodbFilterUnwindPaths as $filter_unwind_path) {
+          if (!empty($filter_unwind_path) && ($filter_unwind_path != $this->mongodbEmbeddedTableToUseAsBaseTable)) {
+            $embedded_table_parts = explode('.', $filter_unwind_path);
+            $unwind = '';
+            foreach ($embedded_table_parts as $embedded_table_part) {
+              $unwind = (!empty($unwind) ? $unwind . '.' : '') . $embedded_table_part;
+              $pipeline[] = ['$unwind' => [
+                'path' => '$' . $unwind,
+                'preserveNullAndEmptyArrays' => TRUE
+              ]];
+            }
+          }
+        }
+        if (!empty($this->mongodbAggregateFilter)) {
+          $pipeline[] = ['$match' => $this->mongodbAggregateFilter];
+        }
+        if (!empty($this->mongodbProjection)) {
+          $pipeline[] = ['$project' => $this->mongodbProjection];
+        }
+        if (!empty($this->mongodbGroup)) {
+          $pipeline[] = ['$group' => $this->mongodbGroup];
+        }
+        // Change the query to a count query.
+        $pipeline[] = ['$count' => 'total_rows'];
+
+        // Return the query as its string value.
+        if ($this->mongodbQueryStringValue) {
+          // Reset the class property. So that the next time the query will be
+          // executed.
+          $this->mongodbQueryStringValue = FALSE;
+
+          return 'SELECT COUNT WITH AGGREGATE PIPELINE: ' . serialize($pipeline);
+        }
+
+        if ($this->connection->isEventEnabled(StatementExecutionStartEvent::class)) {
+          $startEvent = new StatementExecutionStartEvent(
+            spl_object_id($this),
+            $this->connection->getKey(),
+            $this->connection->getTarget(),
+            $this->getQueryString(),
+            $args ?? [],
+            $this->connection->findCallerFromDebugBacktrace()
+          );
+          $this->connection->dispatchEvent($startEvent);
+        }
+
+        $results = $this->connection->getConnection()->{$prefixed_table}->aggregate($pipeline)->toArray();
+        $result = reset($results);
+        $count = is_object($result) && isset($result->total_rows) ? $result->total_rows : 0;
+
+        if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionEndEvent::class)) {
+          $this->connection->dispatchEvent(new StatementExecutionEndEvent(
+            $startEvent->statementObjectId,
+            $startEvent->key,
+            $startEvent->target,
+            $startEvent->queryString,
+            $startEvent->args,
+            $startEvent->caller,
+            $startEvent->time
+          ));
+        }
+      }
+*/
+      else {
+        // Return the query as its string value.
+        if ($this->mongodbQueryStringValue) {
+          // Reset the class property. So that the next time the query will be
+          // executed.
+          $this->mongodbQueryStringValue = FALSE;
+
+          return 'SELECT COUNT WITH COUNT FILTER: ' . serialize($this->mongodbFilter) . ' OPTIONS: ' . serialize($options);
+        }
+
+        if ($this->connection->isEventEnabled(StatementExecutionStartEvent::class)) {
+          $startEvent = new StatementExecutionStartEvent(
+            spl_object_id($this),
+            $this->connection->getKey(),
+            $this->connection->getTarget(),
+            $this->getQueryString(),
+            $args ?? [],
+            $this->connection->findCallerFromDebugBacktrace()
+          );
+          $this->connection->dispatchEvent($startEvent);
+        }
+
+        $count = $this->connection->getConnection()->{$prefixed_table}->count($this->mongodbFilter, $options);
+
+        if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionEndEvent::class)) {
+          $this->connection->dispatchEvent(new StatementExecutionEndEvent(
+            $startEvent->statementObjectId,
+            $startEvent->key,
+            $startEvent->target,
+            $startEvent->queryString,
+            $startEvent->args,
+            $startEvent->caller,
+            $startEvent->time
+          ));
+        }
+      }
+
+      return new StatementCountQuery($this->connection, $count, $options);
+    }
+    else {
+      $options['projection'] = $this->mongodbProjection;
+      if (!empty($this->mongodbSort)) {
+        $options['sort'] = $this->mongodbSort;
+      }
+      if (isset($this->mongodbSkip)) {
+        $options['skip'] = $this->mongodbSkip;
+      }
+      if (isset($this->mongodbLimit)) {
+        $options['limit'] = $this->mongodbLimit;
+      }
+      if (!empty($this->comments) && is_array($this->comments)) {
+        $options['comment'] = $this->connection->makeComment($this->comments);
+      }
+
+      // Return the query as its string value.
+      if ($this->mongodbQueryStringValue) {
+        // Reset the class property. So that the next time the query will be
+        // executed.
+        $this->mongodbQueryStringValue = FALSE;
+
+        return 'SELECT WITH FIND FILTER: ' . serialize($this->mongodbFilter) . ' OPTIONS: ' . serialize($options);
+      }
+
+      if ($this->connection->isEventEnabled(StatementExecutionStartEvent::class)) {
+        $startEvent = new StatementExecutionStartEvent(
+          spl_object_id($this),
+          $this->connection->getKey(),
+          $this->connection->getTarget(),
+          $this->getQueryString(),
+          $args ?? [],
+          $this->connection->findCallerFromDebugBacktrace()
+        );
+        $this->connection->dispatchEvent($startEvent);
+      }
+
+      $cursor = $this->connection->getConnection()->{$prefixed_table}->find($this->mongodbFilter, $options);
+
+      if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionEndEvent::class)) {
+        $this->connection->dispatchEvent(new StatementExecutionEndEvent(
+          $startEvent->statementObjectId,
+          $startEvent->key,
+          $startEvent->target,
+          $startEvent->queryString,
+          $startEvent->args,
+          $startEvent->caller,
+          $startEvent->time
+        ));
+      }
+    }
+
+    $fields = [];
+    foreach ($this->mongodbProjection as $key => $value) {
+      if ($value) {
+        $fields[] = $key;
+      }
+    }
+
+    if ($this->mongodbRandomOrder) {
+      $options['random_order'] = 1;
+    }
+
+//    if (isset($options)) {
+//      $options += $this->queryOptions;
+//    }
+//    else {
+//      $options = $this->queryOptions;
+//    }
+
+    $statement = new Statement($this->connection, $cursor, $fields);
+    $statement->execute(NULL, $options);
+    return $statement;
+  }
+
+  /**
+   * Create the MongoDB select query.
+   *
+   * @return array
+   *   The MongoDB version of the select query.
+   */
+  protected function createMongodbQuery() {
+    // For convenience, we compile the query ourselves if the caller forgot
+    // to do it. This allows constructs like "(string) $query" to work. When
+    // the query will be executed, it will be recompiled using the proper
+    // placeholder generator anyway.
+    if (!$this->compiled()) {
+      $this->compile($this->connection, $this);
+    }
+
+    if (!empty($this->mongodbEmbeddedTableToUseAsBaseTable)) {
+      $this->mongodbUseAggregate = TRUE;
+    }
+
+    // The tables
+    $this->mongodbLookups = [];
+
+    // Add the mongodb joins to the select query.
+    foreach ($this->mongodbJoins as $mongodbJoin) {
+//dump($mongodbJoin);
+      $pipeline_unwound_tables = [];
+
+      $left_table_alias = '';
+      if (isset($mongodbJoin['left table']['alias'])) {
+        // The views module way.
+        $left_table_alias = $mongodbJoin['left table']['alias'];
+      }
+      else {
+        foreach ($this->tables as $table) {
+          if (isset($table['table']) && isset($table['alias']) && isset($mongodbJoin['left table']) && isset($mongodbJoin['table']) &&
+            (($mongodbJoin['left table'] == $table['table']) || ($mongodbJoin['left table'] == $table['alias']))) {
+            $left_table_alias = $table['alias'];
+          }
+        }
+      }
+
+      $lookup_let = [];
+      $lookup_conditions = [];
+      if (!empty($mongodbJoin['left field'])) {
+        if (!empty($left_table_alias) && !in_array($left_table_alias, [$this->mongodbBaseTable, $this->mongodbBaseAlias]) &&
+          ($mongodbJoin['left table'] != $mongodbJoin['table'])
+        ) {
+          $left_table_alias_length = strlen($left_table_alias);
+          if (substr($mongodbJoin['left field'], 0, ($left_table_alias_length + 1)) != $left_table_alias . '.') {
+            $mongodbJoin['left field'] = $left_table_alias . '.' . $mongodbJoin['left field'];
+          }
+        }
+
+        $last_dot_position = strrpos($mongodbJoin['left field'], '.');
+        if ($last_dot_position !== FALSE) {
+          $loopup_unwind_path = substr($mongodbJoin['left field'], 0, $last_dot_position);
+          if (!in_array($loopup_unwind_path, [$this->mongodbBaseTable, $this->mongodbBaseAlias])) {
+            $embedded_table_parts = explode('.', substr($mongodbJoin['left field'], 0, $last_dot_position));
+            $unwind = '';
+            foreach ($embedded_table_parts as $embedded_table_part) {
+              $unwind = (!empty($unwind) ? $unwind . '.' : '') . $embedded_table_part;
+
+              // Check that we are not trying to unwind the base table.
+//              if (!isset($this->mongodbJoins[$unwind]['table']) || ($this->mongodbJoins[$unwind]['table'] != $this->mongodbBaseTable)) {
+                $this->mongodbLookups[] = [
+                  '$unwind' => [
+                    'path' => '$' . $unwind,
+                    'preserveNullAndEmptyArrays' => TRUE
+                  ]
+                ];
+//              }
+            }
+          }
+        }
+
+        if (!empty($left_table_alias)) {
+          $left_field_aliased = $left_table_alias . '__' . $mongodbJoin['left field'];
+        }
+        else {
+          $left_field_aliased = $mongodbJoin['left field'];
+        }
+        $left_field_aliased = str_replace('.', '_', $left_field_aliased);
+
+        $lookup_let[$left_field_aliased] = '$' . $mongodbJoin['left field'];
+
+        $operator = $this->connection->mapConditionOperator($mongodbJoin['operator']);
+        $operator = $operator['mongodb_operator'];
+        $lookup_conditions[] = [
+          $operator => [
+            '$$' . $left_field_aliased,
+            '$' . $mongodbJoin['field']
+          ],
+        ];
+      }
+
+      $lookup_pipeline = [];
+      $loopup_field_parts = explode('.', $mongodbJoin['field']);
+      array_pop($loopup_field_parts);
+      $unwind = '';
+      foreach ($loopup_field_parts as $loopup_field_part) {
+        $unwind = (!empty($unwind) ? $unwind . '.' : '') . $loopup_field_part;
+        if (!in_array($unwind, $pipeline_unwound_tables, TRUE)) {
+//dump('unwind1');
+          $lookup_pipeline[] = [
+            '$unwind' => [
+              'path' => '$' . $unwind,
+              'preserveNullAndEmptyArrays' => TRUE
+            ]
+          ];
+          $pipeline_unwound_tables[] = $unwind;
+        }
+      }
+
+      if (isset($mongodbJoin['extra']) && is_array($mongodbJoin['extra'])) {
+        foreach($mongodbJoin['extra'] as $extra) {
+          if (isset($extra['value']) && isset($extra['numeric']) && $extra['numeric']) {
+            $extra['value'] = (int) $extra['value'];
+          }
+          $extra_left_field_aliased = '';
+          if (isset($extra['left_field'])) {
+            $extra_left_field_aliased = $left_table_alias . '__' . str_replace('.', '_', $extra['left_field']);
+            $lookup_let[$extra_left_field_aliased] = '$' . $extra['left_field'];
+          }
+          $extra_operator = '$eq';
+          if (isset($extra['operator'])) {
+            $extra_operator = $this->connection->mapConditionOperator($extra['operator']);
+            $extra_operator = $extra_operator['mongodb_operator'];
+          }
+          if (isset($extra['field'])) {
+            $extra_field_parts = explode('.', $extra['field']);
+            array_pop($extra_field_parts);
+            $unwind = '';
+            foreach ($extra_field_parts as $extra_field_part) {
+              $unwind = (!empty($unwind) ? $unwind . '.' : '') . $extra_field_part;
+              if (!in_array($unwind, $pipeline_unwound_tables, TRUE)) {
+//dump('unwind2');
+                $lookup_pipeline[] = [
+                  '$unwind' => [
+                    'path' => '$' . $unwind,
+                    'preserveNullAndEmptyArrays' => TRUE
+                  ]
+                ];
+                $pipeline_unwound_tables[] = $unwind;
+              }
+            }
+          }
+          if (isset($extra['left_field']) && isset($extra['value'])) {
+            if (is_array($extra['value']) && ($extra_operator = '$eq')) {
+              $lookup_conditions[] = [
+                '$in' => [
+                  '$$' . $extra_left_field_aliased,
+                  $extra['value']
+                ],
+              ];
+            }
+            else {
+              $lookup_conditions[] = [
+                $extra_operator => [
+                  '$$' . $extra_left_field_aliased,
+                  $extra['value']
+                ],
+              ];
+            }
+          }
+          elseif (isset($extra['left_field']) && isset($extra['field'])) {
+            $lookup_conditions[] = [
+              $extra_operator => [
+                '$$' . $extra_left_field_aliased,
+                '$' . $extra['field']
+              ],
+            ];
+          }
+          elseif (isset($extra['field']) && isset($extra['value'])) {
+            if (is_array($extra['value']) && ($extra_operator = '$eq')) {
+              $lookup_conditions[] = [
+                '$in' => [
+                  '$' . $extra['field'],
+                  $extra['value']
+                ],
+              ];
+            }
+            else {
+              $lookup_conditions[] = [
+                $extra_operator => [
+                  '$' . $extra['field'],
+                  $extra['value']
+                ],
+              ];
+            }
+          }
+          elseif (isset($extra['condition'])) {
+            if ($extra['condition'] instanceof Condition) {
+              $lookup_conditions[] = $extra['condition']->compile($this->connection, $this);
+            }
+            else {
+              $lookup_conditions[] = $extra['condition'];
+            }
+          }
+        }
+      }
+
+      if (!empty($lookup_conditions)) {
+        $lookup_pipeline[] = [
+          '$match' => [
+            '$expr' => [
+              '$and' => $lookup_conditions,
+            ],
+          ],
+        ];
+      }
+
+      $lookup = [
+        '$lookup' => [
+          'from' => $this->connection->getMongodbPrefixedTable($mongodbJoin['table']),
+          'let' => $lookup_let,
+          'pipeline' => $lookup_pipeline,
+          'as' => $mongodbJoin['alias'],
+        ]
+      ];
+      if (empty($lookup_let)) {
+        unset($lookup['$lookup']['let']);
+      }
+      $this->mongodbLookups[] = $lookup;
+//dump($this->mongodbLookups);
+      // Inner join must have a value in the right table. This is a bit of a
+      // hack, because an inner join can result in returning multiple row for
+      // a single left table row. MongoDB is not able to do that.
+      if (strtoupper($mongodbJoin['join type']) == 'INNER') {
+        $this->mongodbLookups[] =  [
+          '$match' => [
+            $mongodbJoin['alias'] => [
+              '$ne' => []
+            ]
+          ]
+        ];
+      }
+
+      if (!empty($pipeline_unwound_tables)) {
+//dump('unwind3');
+        $this->mongodbLookups[] = [
+          '$unwind' => [
+            'path' => '$' . $mongodbJoin['alias'],
+            'preserveNullAndEmptyArrays' => TRUE
+          ]
+        ];
+      }
+
+      foreach ($pipeline_unwound_tables as $pipeline_unwound_table) {
+//dump('unwind4');
+        $this->mongodbLookups[] = [
+          '$unwind' => [
+            'path' => '$' . $mongodbJoin['alias'] . '.' . $pipeline_unwound_table,
+            'preserveNullAndEmptyArrays' => TRUE
+          ]
+        ];
+      }
+
+      $this->mongodbUseAggregate = TRUE;
+    }
+
+    // Add the MongoDB pre join fields.
+    $this->mongodbAddFieldsPreJoin = [];
+    foreach ($this->mongodbPreJoinFields as $alias => $field) {
+      $this->mongodbAddFieldsPreJoin[$this->connection->escapeField($alias)] = '$' . $field;
+      $this->mongodbProjection[$this->connection->escapeField($alias)] = 1;
+      $this->mongodbUseAggregate = TRUE;
+    }
+
+    $this->mongodbAddFields = [];
+
+    // Add the MongoDB literal fields.
+    foreach ($this->mongodbLiteralFields as $alias => $value) {
+      $this->mongodbAddFields[$this->connection->escapeField($alias)] = ['$literal' => $value];
+      $this->mongodbUseAggregate = TRUE;
+    }
+
+    // Add the MongoDB condition fields.
+    foreach ($this->mongodbConditionFields as $alias => $field) {
+      $last_dot_position = strrpos($field, '.');
+      if ($last_dot_position !== FALSE) {
+        $this->mongodbFilterUnwindPaths[] = substr($field, 0, $last_dot_position);
+      }
+      $this->mongodbAddFields[$this->connection->escapeField($alias)] = '$' . $field;
+      $this->mongodbUseAggregate = TRUE;
+    }
+
+    // Add the MongoDB multiply field.
+    foreach ($this->mongodbMultiplyFields as $alias => $data) {
+      $field = ['$ifNull' => ['$' . $data['field'], 0]];
+      $this->mongodbAddFields[$this->connection->escapeField($alias)] = ['$multiply' => [$field, $data['value']]];
+      $this->mongodbUseAggregate = TRUE;
+    }
+
+
+    // Add the MongoDB sum fields.
+    foreach ($this->mongodbSumFields as $alias => $data) {
+      $sum_fields = [];
+      foreach ($data['fields'] as $field) {
+        $sum_fields[] = ['$ifNull' => ['$' . $field, 0]];
+      }
+      if (!empty($data['value'])) {
+        $sum_fields[] = $data['value'];
+      }
+      $this->mongodbAddFields[$this->connection->escapeField($alias)] = ['$add' => $sum_fields];
+      $this->mongodbUseAggregate = TRUE;
+    }
+
+    // Add the MongoDB sum multiply fields.
+    foreach ($this->mongodbSumMultiplyFields as $alias => $data) {
+      $sum_fields = [];
+      foreach ($data['fields'] as $field) {
+        $sum_fields[] = ['$ifNull' => ['$' . $field, 0]];
+      }
+      $this->mongodbAddFields[$this->connection->escapeField($alias)] = ['$add' => $sum_fields];
+      $this->mongodbUseAggregate = TRUE;
+    }
+
+
+    // Add the MongoDB concat fields.
+    foreach ($this->mongodbConcatFields as $alias => $data) {
+      $add_fields = [];
+      foreach ($data['fields'] as $field) {
+        if (in_array($field, $data['integer fields'], TRUE)) {
+          $field = ['$substrBytes' => [$field, 0 , -1]];
+        }
+        if ($field === ' ') {
+          $add_fields[] = $field;
+        }
+        else {
+          $add_fields[] = ['$ifNull' => [$field, '']];
+        }
+      }
+      $this->mongodbAddFields[$this->connection->escapeField($alias)] = ['$concat' => $add_fields];
+      $this->mongodbUseAggregate = TRUE;
+    }
+
+    // Add the MongoDB substring fields.
+    foreach ($this->mongodbSubstringFields as $alias => $data) {
+      if (!isset($data['start']) || !is_int($data['start']) || (intval($data['start']) < 0)) {
+        // Throw error.
+      }
+      $start = (int) $data['start'];
+
+      if (!isset($data['length']) || !is_int($data['length']) || (intval($data['length']) == 0)) {
+        // Throw error.
+      }
+      $length = (int) $data['length'];
+
+      $last_dot_position = strrpos($data['field'], '.');
+      if ($last_dot_position !== FALSE) {
+        $this->mongodbFilterUnwindPaths[] = substr($data['field'], 0, $last_dot_position);
+      }
+      $field = '$' . $data['field'];
+
+      if ($length < 0) {
+        $length = [
+          '$add' => [
+            [
+              '$strLenBytes' => [
+                '$ifNull' => [
+                  $field,
+                  ''
+                ]
+              ]
+            ],
+            $length
+          ]
+        ];
+      }
+
+      $this->mongodbAddFields[$this->connection->escapeField($alias)] = ['$substrBytes' => [['$ifNull' => [$field, '']], $start, $length]];
+      $this->mongodbUseAggregate = TRUE;
+    }
+
+    // Add the MongoDB fields length.
+    foreach ($this->mongodbFieldsLength as $alias => $field) {
+      $this->mongodbAddFields[$this->connection->escapeField($alias)] = ['$strLenCP' => ['$ifNull' => [$field, '']]];
+      $this->mongodbUseAggregate = TRUE;
+    }
+
+    // Add the MongoDB date formatted fields (from a date field).
+    foreach ($this->mongodbDateDateFormattedFields as $alias => $data) {
+      $this->mongodbAddFields[$this->connection->escapeField($alias)] = [
+        '$dateToString' => [
+          'format' => $data['format'],
+          'date' => '$' . $this->connection->escapeField($data['field'])
+        ]
+      ];
+      $this->mongodbUseAggregate = TRUE;
+    }
+
+    // Add the MongoDB date formatted fields (from a string field).
+    foreach ($this->mongodbDateStringFormattedFields as $alias => $data) {
+      $this->mongodbAddFields[$this->connection->escapeField($alias)] = [
+        '$dateToString' => [
+          'format' => $data['format'],
+          'date' => [
+            '$dateFromString' => [
+              'dateString' => '$' . $this->connection->escapeField($data['field'])
+            ]
+          ]
+        ]
+      ];
+      $this->mongodbUseAggregate = TRUE;
+    }
+
+    // Add the MongoDB coalesce value fields.
+    foreach ($this->mongodbCoalesceValueFields as $alias => $data) {
+      $this->mongodbAddFields[$this->connection->escapeField($alias)] = ['$ifNull' => ['$' . $data['field'], $data['value']]];
+      $this->mongodbUseAggregate = TRUE;
+    }
+
+    // Add the MongoDB greatest fields.
+    foreach ($this->mongodbGreatestFields as $alias => $data) {
+      $max_fields = [];
+      foreach ($data['fields'] as $field) {
+        $max_fields[] = '$' . $field;
+      }
+      $max_fields = array_merge($max_fields, $data['values']);
+      $this->mongodbAddFields[$this->connection->escapeField($alias)] = ['$max' => $max_fields];
+      $this->mongodbUseAggregate = TRUE;
+    }
+
+    // Create temporary table.
+    if (!empty($this->mongodbTemporaryTable)) {
+      $this->mongodbUseAggregate = TRUE;
+    }
+
+    // SELECT
+    $this->setMongodbProjection();
+
+    // WHERE
+    $this->mongodbFilter = [];
+    $this->mongodbAggregateFilter = [];
+    if (count($this->condition)) {
+      $this->mongodbFilter = $this->condition->toMongoArray();
+      $this->mongodbAggregateFilter = $this->condition->toMongoAggregateArray();
+    }
+
+    if (!empty($this->mongodbFilterUnwindPaths)) {
+      $unnecessary_paths = [];
+      if (!empty($this->mongodbBaseAlias)) {
+        $unnecessary_paths[] = $this->mongodbBaseAlias;
+        $unnecessary_paths[] = '$' . $this->mongodbBaseAlias;
+      }
+      if (!empty($this->mongodbBaseTable)) {
+        $unnecessary_paths[] = $this->mongodbBaseTable;
+        $unnecessary_paths[] = '$' . $this->mongodbBaseTable;
+      }
+      $this->mongodbFilterUnwindPaths = array_diff($this->mongodbFilterUnwindPaths, $unnecessary_paths);
+      $this->mongodbFilterUnwindPaths = array_unique($this->mongodbFilterUnwindPaths);
+      sort($this->mongodbFilterUnwindPaths);
+      $this->mongodbFilterUnwindPaths = array_filter($this->mongodbFilterUnwindPaths);
+
+      // Remove embedded table paths that are also parts of a deeper embedded
+      // table path.
+      foreach ($this->mongodbFilterUnwindPaths as $key => $mongodbFilterUnwindPath) {
+        $matches = array_filter($this->mongodbFilterUnwindPaths, function($haystack) use ($mongodbFilterUnwindPath) {
+          if (strpos($haystack, $mongodbFilterUnwindPath) !== FALSE) {
+            return TRUE;
+          }
+          return FALSE;
+        });
+        if (count($matches) >= 2) {
+          unset($this->mongodbFilterUnwindPaths[$key]);
+        }
+      }
+
+      $this->mongodbUseAggregate = TRUE;
+    }
+
+    if ($this->distinct && $this->mongodbCountQuery && (count($this->fields) > 1)) {
+      $this->distinct = FALSE;
+    }
+
+    // DISTINCT
+    if ($this->distinct) {
+      // Remake a distinct query into an aggregate query.
+      foreach ($this->fields as $field) {
+        $field_name = $field['field'];
+        $this->group[$field_name] = $field_name;
+      }
+    }
+
+    // GROUP BY
+    $this->setMongodbGroup();
+    if (!empty($this->mongodbGroup)) {
+      $this->mongodbUseAggregate = TRUE;
+    }
+
+    // HAVING
+    if (count($this->having)) {
+      $this->mongodbHavingFilter = $this->having->toMongoAggregateArray();
+    }
+
+    // UNION
+    if ($this->union) {
+      throw new MongodbSQLException('MongoDB does not support UNION queries.');
+    }
+
+    // ORDER BY
+    $this->mongodbSort = [];
+    if ($this->order) {
+      $sort_embedded_tables = [];
+      foreach ($this->order as $field => $direction) {
+        // Remove $this->mongodbBaseTable or $this->mongodbBaseAlias from the field.
+        if (strpos($field, $this->mongodbBaseTable . '.') === 0) {
+          $field = substr($field, (strlen($this->mongodbBaseTable) + 1));
+        }
+        if (strpos($field, $this->mongodbBaseAlias . '.') === 0) {
+          $field = substr($field, (strlen($this->mongodbBaseAlias) + 1));
+        }
+
+        // If a field name is used in the group by clause, the following part
+        // must be prepended to the field name: "_id.".
+        $sort_by_field = (isset($this->mongodbGroup['_id']) && in_array($field, array_keys($this->mongodbGroup['_id']), TRUE) ? '_id.' : '') . $this->connection->escapeField($field);
+        $this->mongodbSort[$sort_by_field] = (strtoupper($direction) == 'DESC' ? -1 : 1);
+
+        if (isset($this->mongodbProjection[$sort_by_field]) && !is_array($this->mongodbProjection[$sort_by_field])) {
+          $last_dot = strrpos($this->mongodbProjection[$sort_by_field], '.');
+          if ($last_dot !== FALSE) {
+            $embedded_table = substr($this->mongodbProjection[$sort_by_field], 0, $last_dot);
+            if ($embedded_table[0] == '$') {
+              $embedded_table = substr($embedded_table, 1);
+            }
+            $sort_embedded_tables[] = $embedded_table;
+          }
+        }
+      }
+
+      $unique_embedded_tables = [];
+      foreach ($sort_embedded_tables as $id => $sort_embedded_table) {
+        $embedded_table = '';
+        $sort_embedded_table_parts = explode('.', $sort_embedded_table);
+        foreach ($sort_embedded_table_parts as $sort_embedded_table_part) {
+          if (empty($embedded_table)) {
+            $embedded_table = $sort_embedded_table_part;
+          }
+          else {
+            $embedded_table .= '.' . $sort_embedded_table_part;
+          }
+          $unique_embedded_tables[] = $embedded_table;
+        }
+      }
+
+      $pre_count_unique_embedded_tables = count($unique_embedded_tables);
+      $unique_embedded_tables = array_unique($unique_embedded_tables);
+      $post_count_unique_embedded_tables = count($unique_embedded_tables);
+      if (($pre_count_unique_embedded_tables > $post_count_unique_embedded_tables) && (count($unique_embedded_tables) > 1)) {
+        $this->mongodbSortSeperate = TRUE;
+      }
+    }
+
+    // RANGE
+    $this->mongodbSkip = NULL;
+    $this->mongodbLimit = NULL;
+    if (!empty($this->range)) {
+      $this->mongodbSkip = (int) $this->range['start'];
+      $this->mongodbLimit = (int) $this->range['length'];
+    }
+  }
+
+  /**
+   * Helper method setting the MongoDB projection part of the query.
+   */
+  protected function setMongodbProjection()
+  {
+    $this->mongodbProjection = [];
+
+    foreach ($this->fields as $field) {
+      if (isset($field['table']) && ($field['table'] != $this->mongodbBaseTable) && ($field['table'] != $this->mongodbBaseAlias)) {
+        $embedded_table = NULL;
+        if (isset($this->mongodbJoins[$field['table']]['field'])) {
+          $join_field_parts = explode('.', $this->mongodbJoins[$field['table']]['field']);
+          if (count($join_field_parts) > 1) {
+            array_pop($join_field_parts);
+            $embedded_table = implode('.', $join_field_parts);
+          }
+        }
+        if (!empty($embedded_table)) {
+          $field_name = $this->connection->escapeTable($field['table']) . '.' . $embedded_table . '.' . $this->connection->escapeField($field['field']);
+        } else {
+          $field_name = $this->connection->escapeTable($field['table']) . '.' . $this->connection->escapeField($field['field']);
+        }
+      } else {
+        $field_name = $this->connection->escapeField($field['field']);
+      }
+
+      $field_alias = $field['alias'];
+      if ($field_alias == $field_name) {
+        $this->mongodbProjection[$field_name] = 1;
+      } else {
+        if (!in_array($field['table'], [$this->mongodbBaseTable, $this->mongodbBaseAlias])) {
+          if (!isset($this->mongodbProjection[$field_alias])) {
+            $this->mongodbProjection[$field_alias] = '$' . $field_name;
+          }
+          $field_alias = $field['table'] . '_' . $field_alias;
+        }
+        $this->mongodbProjection[$field_alias] = '$' . $field_name;
+        // Selecting a field with an alias only works for aggregate queries.
+        $this->mongodbUseAggregate = TRUE;
+      }
+
+      // Add expression fields to the projection.
+      foreach ($this->expressions as $expression) {
+        $alias = $expression['alias'];
+        // Do not allow group by expressions to be added to the projection.
+        if (isset($expression['expression'])) {
+          preg_match('/(count|sum|avg|min|max)\((.*)\)/i', $expression['expression'], $wrong_matches);
+          if (count($wrong_matches) > 0) {
+            continue;
+          }
+
+          preg_match_all('/[a-z0-9_]+|[0-9]+|[*+-\/]{1}/i', $expression['expression'], $math_matches);
+          $math_matches = reset($math_matches);
+          if ((count($math_matches) == 3) && in_array($math_matches[1], ['*', '+', '-', '/'])) {
+            $first_param = ctype_digit($math_matches[0]) || is_int($math_matches[0]) ? intval($math_matches[0]) : '$' . $math_matches[0];
+            $second_param = ctype_digit($math_matches[2]) || is_int($math_matches[2]) ? intval($math_matches[2]) : '$' . $math_matches[2];
+
+            switch ($math_matches[1]) {
+              case '*':
+                $this->mongodbProjection[$alias] = ['$multiply' => [$first_param, $second_param]];
+                $this->mongodbUseAggregate = TRUE;
+                break;
+              case '/':
+                $this->mongodbProjection[$alias] = ['$divide' => [$first_param, $second_param]];
+                $this->mongodbUseAggregate = TRUE;
+                break;
+              case '+':
+                $this->mongodbProjection[$alias] = ['$add' => [$first_param, $second_param]];
+                $this->mongodbUseAggregate = TRUE;
+                break;
+              case '-':
+                $this->mongodbProjection[$alias] = ['$subtract' => [$first_param, $second_param]];
+                $this->mongodbUseAggregate = TRUE;
+                break;
+            }
+          } else {
+            $field = $expression['expression'];
+            $first_dot = strpos($field, '.');
+            if ($first_dot !== FALSE) {
+              $first_field_part = substr($field, 0, $first_dot);
+              if ($this->mongodbBaseTable == $first_field_part || $this->mongodbBaseAlias == $first_field_part) {
+                $field = substr($field, $first_dot + 1);
+              }
+            }
+
+            $table_fields = $this->connection->tableInformation()->getTableFields($this->mongodbBaseTable);
+            if (!empty($table_fields) && is_array($table_fields) && in_array($field, array_keys($table_fields), TRUE)) {
+              $this->mongodbProjection[$alias] = ['$' . $field];
+            } elseif (isset($expression['expression']) && (!is_string($expression['expression']) || ($expression['expression'] != ''))) {
+              // This is not a math expression. So, just add the expression.
+              $this->mongodbProjection[$alias] = ['$literal' => $expression['expression']];
+            }
+          }
+        }
+//        // When the expression is of a type.
+//        elseif (isset($expression['type'])) {
+//          switch ($expression['type']) {
+//            case 'count':
+//dump($expression);
+//              $field = $expression['field'];
+//              // @todo We still need to add the field.
+//              $this->mongodbProjection[$alias] = ['$sum' => 1];
+//              $this->mongodbUseAggregate = TRUE;
+//              break;
+//          }
+//        }
+      }
+    }
+  }
+
+  /**
+   * Helper method setting the MongoDB group by part of the query.
+   */
+  protected function setMongodbGroup() {
+    $this->mongodbGroup = [];
+    if ($this->group) {
+      $_ids = [];
+      foreach ($this->group as $alias => $field) {
+        $dot_position = strrpos($this->getFieldName($field), '.');
+        if ($dot_position != FALSE) {
+          if (in_array(substr($this->getFieldName($field), 0, $dot_position), [$this->mongodbBaseTable, $this->mongodbBaseAlias])) {
+            $field = substr($field, ($dot_position + 1));
+          }
+          else {
+            // If the embedded table to use as base table variable is empty or
+            // if the possible new field is more embedded then the current
+            // variable then update the variable.
+            $this->mongodbUnwind[] = '$' . substr($this->getFieldName($field), 0, $dot_position);
+          }
+        }
+
+        // For MongoDB the alias field cannot contain dots.
+        $alias = str_replace('.', '_', $alias);
+        $_ids[$alias] = '$' . $this->getFieldName($field);
+
+        $has_expression = FALSE;
+        foreach ($this->expressions as $expression) {
+if (isset($expression['expression'])) {
+          if (!empty($alias) && stristr($expression['expression'], $alias) !== FALSE) {
+            $has_expression = TRUE;
+          }
+}
+        }
+
+        // The alias or field name will automatically added to the query result.
+        // But only remove the alias or field name if it is not used in an
+        // expression.
+        if (!$has_expression) {
+          unset($this->fields[$alias]);
+          unset($this->mongodbProjection[$alias]);
+        }
+      }
+
+      $this->mongodbAddFieldsLast = [];
+      if (!empty($_ids)) {
+        $this->mongodbGroup['_id'] = $_ids;
+        // The group by result is stored by MongoDB in the variable "_id".
+        $this->mongodbRemoveIdField = FALSE;
+
+        foreach ($_ids as $alias => $field) {
+          $alias = $this->connection->escapeField($alias);
+          $this->mongodbAddFieldsLast[$alias] = '$_id.' . $alias;
+        }
+      }
+
+      // Add the MongoDB group fields.
+      foreach ($this->mongodbGroupFields as $alias => $field) {
+        $this->mongodbAddFieldsLast[$this->connection->escapeField($alias)] = '$' . $field;
+      }
+    }
+
+    // Do not add expressions to a count query.
+    if (!$this->mongodbCountQuery) {
+      foreach ($this->mongodbGroupByOperation as $operation) {
+        $this->setMongodbGroupHelper($operation['alias'], $operation['field'], $operation['operator']);
+      }
+      foreach ($this->expressions as $expression) {
+        $alias = $expression['alias'];
+
+        if (isset($expression['type'])) {
+          switch ($expression['type']) {
+            case 'count':
+              $this->mongodbGroup[$alias] = ['$sum' => 1];
+              break;
+            case 'sum_multiply':
+              $fields = $expression['fields'];
+              foreach ($fields as &$field) {
+                $base_table_length = strlen($this->mongodbBaseTable . '.');
+                if (substr($field, 0, $base_table_length) == $this->mongodbBaseTable . '.') {
+                  $field = substr($field, $base_table_length);
+                }
+                $base_alias_length = strlen($this->mongodbBaseAlias . '.');
+                if (substr($field, 0, $base_alias_length) == $this->mongodbBaseAlias . '.') {
+                  $field = substr($field, $base_alias_length);
+                }
+                $last_dot = strrpos($field, '.');
+                if ($last_dot !== FALSE) {
+                  $embedded_table = substr($field, 0, $last_dot);
+                  if (!in_array($embedded_table, $this->mongodbUnwind, TRUE)) {
+                    $this->mongodbUnwind[] = '$' . $embedded_table;
+                  }
+                }
+                $field = '$' . $field;
+              }
+              if (!empty($expression['values'])) {
+                foreach ($expression['values'] as $value) {
+                  $fields[] = ['$literal' => $value];
+                }
+              }
+              $this->mongodbGroup[$alias] = ['$sum' => ['$multiply' => $fields]];
+              break;
+          }
+        }
+        else {
+          preg_match('/(count|sum|avg|min|max)\((.*)\)/i', $expression['expression'], $matches);
+          if (count($matches) > 1) {
+            $operator = strtoupper($matches[1]);
+
+            // Get the basic field. Remove table or alias name from the field.
+            $first_dot = strpos($matches[2], '.');
+            if ($first_dot !== FALSE) {
+              $first_field_part = substr($matches[2], 0, $first_dot);
+              if ($this->mongodbBaseTable == $first_field_part || $this->mongodbBaseAlias == $first_field_part) {
+                $field = substr($matches[2], $first_dot + 1);
+              }
+              else {
+                // The first part can also be of an embedded table. Do not remove
+                // those.
+                $field = $matches[2];
+              }
+            }
+            else {
+              $field = $matches[2];
+            }
+
+            $this->setMongodbGroupHelper($alias, $field, $operator);
+          }
+        }
+      }
+      if (!empty($this->mongodbGroup) && !isset($this->mongodbGroup['_id'])) {
+        $this->mongodbGroup['_id'] = [];
+      }
+    }
+  }
+
+  /**
+   * Helper method getting the field name for its alias or its own name.
+   *
+   * @param string $alias
+   *   The alias to be used for the group by.
+   * @param string $field
+   *   The field name to be used for the group by.
+   * @param string $operator
+   *   The operator to be used for the group by.
+   */
+  protected function setMongodbGroupHelper($alias, $field, $operator) {
+    // TODO: The embedded table can be more then one level deep.
+    // Check if the field is in an embedded table.
+    $last_dot = strrpos($field, '.');
+    if ($last_dot !== FALSE) {
+      $embedded_table = substr($field, 0, $last_dot);
+      if (!in_array($embedded_table, $this->mongodbUnwind, TRUE)) {
+        $this->mongodbUnwind[] = '$' . $embedded_table;
+      }
+    }
+
+    switch (strtoupper($operator)) {
+      case 'COUNT':
+        $this->mongodbGroup[$alias] = ['$sum' => 1];
+        break;
+      case 'SUM':
+        $this->mongodbGroup[$alias] = ['$sum' => '$' . $field];
+        break;
+      case 'AVG':
+        $this->mongodbGroup[$alias] = ['$avg' => '$' . $field];
+        break;
+      case 'MIN':
+        $this->mongodbGroup[$alias] = ['$min' => '$' . $field];
+        break;
+      case 'MAX':
+        $this->mongodbGroup[$alias] = ['$max' => '$' . $field];
+        break;
+    }
+
+    $this->mongodbRemoveIdField = FALSE;
+  }
+
+  /**
+   * Helper method for getting the field name for its alias or its own name
+   *
+   * @param string $name_or_alias
+   *   The name_or_alias to used for getting the field name.
+   */
+  protected function getFieldName($name_or_alias) {
+    if (isset($this->fields[$name_or_alias]['field'])) {
+      return $this->fields[$name_or_alias]['field'];
+    }
+    return $name_or_alias;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __toString() {
+    // Let the method execute() return the query as its string value.
+    $this->mongodbQueryStringValue = TRUE;
+
+    return $this->execute();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getArguments(PlaceholderInterface $queryPlaceholder = NULL) {
+    return [];
+  }
+}

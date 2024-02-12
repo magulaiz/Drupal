@@ -1,0 +1,212 @@
+<?php
+
+use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Database\Query\ConditionInterface;
+use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Entity\ContentEntityType;
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function mongodb_entity_type_alter(array &$entity_types) {
+  $connection = NULL;
+  if (Database::getConnectionInfo()) {
+    $connection = Database::getConnection();
+  }
+
+  if ($connection && $connection->driver() == 'mongodb') {
+    /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+    foreach ($entity_types as &$entity_type) {
+      if ($entity_type instanceof ContentEntityType) {
+        // Change the storage class to the MongoDB version if the
+        // ContentEntityType uses SQL storage class.
+        if ($entity_type->getStorageClass() == 'Drupal\Core\Entity\Sql\SqlContentEntityStorage') {
+          $entity_type->setStorageClass('Drupal\mongodb\EntityStorage\ContentEntityStorage');
+        }
+        // Change the storage schema class to the MongoDB version if the
+        // ContentEntityType uses SQL storage schema class.
+        if ($entity_type->getHandlerClass('storage_schema') == 'Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema') {
+          $entity_type->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentEntityStorageSchema');
+        }
+        // Change the views data class to the MongoDB version if the
+        // ContentEntityType uses SQL views data class.
+        if ($entity_type->getHandlerClass('views_data') == 'Drupal\views\EntityViewsData') {
+          $entity_type->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityViewsData');
+        }
+      }
+    }
+
+    // Some content entity types have their specific subclassed version of
+    // ContentEntityStorage, ContentEntityStorageSchema and/or EntityViewsData.
+    // Override those with the MongoDB version of those subclassed versions.
+    if (!empty($entity_types['aggregator_feed'])) {
+      $entity_types['aggregator_feed']->setStorageClass('Drupal\mongodb\EntityStorage\FeedStorage');
+      $entity_types['aggregator_feed']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentEntityStorageSchema');
+      $entity_types['aggregator_feed']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\AggregatorFeedViewsData');
+    }
+
+    if (!empty($entity_types['aggregator_item'])) {
+      $entity_types['aggregator_item']->setStorageClass('Drupal\mongodb\EntityStorage\ItemStorage');
+      $entity_types['aggregator_item']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentEntityStorageSchema');
+      $entity_types['aggregator_item']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\AggregatorItemViewsData');
+    }
+
+    if (!empty($entity_types['block_content'])) {
+      $entity_types['block_content']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\BlockContentViewsData');
+    }
+
+    if (!empty($entity_types['comment'])) {
+      $entity_types['comment']->setStorageClass('Drupal\mongodb\EntityStorage\CommentStorage');
+      $entity_types['comment']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentEntityStorageSchema');
+      $entity_types['comment']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\CommentViewsData');
+    }
+
+    if (!empty($entity_types['content_moderation_state'])) {
+      $entity_types['content_moderation_state']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentModerationStateStorageSchema');
+    }
+
+    if (!empty($entity_types['file'])) {
+      $entity_types['file']->setStorageClass('Drupal\mongodb\EntityStorage\FileStorage');
+      $entity_types['file']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentEntityStorageSchema');
+      $entity_types['file']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\FileViewsData');
+    }
+
+    if (!empty($entity_types['media'])) {
+      $entity_types['media']->setStorageClass('Drupal\mongodb\EntityStorage\MediaStorage');
+      $entity_types['media']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\MediaViewsData');
+    }
+
+    if (!empty($entity_types['menu_link_content'])) {
+      $entity_types['menu_link_content']->setStorageClass('Drupal\mongodb\EntityStorage\MenuLinkContentStorage');
+      $entity_types['menu_link_content']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentEntityStorageSchema');
+    }
+
+    if (!empty($entity_types['node'])) {
+      $entity_types['node']->setStorageClass('Drupal\mongodb\EntityStorage\NodeStorage');
+      $entity_types['node']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentEntityStorageSchema');
+      $entity_types['node']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\NodeViewsData');
+    }
+
+    if (!empty($entity_types['path_alias'])) {
+      $entity_types['path_alias']->setStorageClass('Drupal\mongodb\EntityStorage\PathAliasStorage');
+      $entity_types['path_alias']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\PathAliasStorageSchema');
+    }
+
+    if (!empty($entity_types['shortcut_set'])) {
+      $entity_types['shortcut_set']->setStorageClass('Drupal\mongodb\EntityStorage\ShortcutSetStorage');
+    }
+
+    if (!empty($entity_types['taxonomy_term'])) {
+      $entity_types['taxonomy_term']->setStorageClass('Drupal\mongodb\EntityStorage\TermStorage');
+      $entity_types['taxonomy_term']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\TermStorageSchema');
+      $entity_types['taxonomy_term']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\TermViewsData');
+    }
+
+    if (!empty($entity_types['taxonomy_vocabulary'])) {
+      $entity_types['taxonomy_vocabulary']->setStorageClass('Drupal\mongodb\EntityStorage\VocabularyStorage');
+    }
+
+    if (!empty($entity_types['user'])) {
+      $entity_types['user']->setStorageClass('Drupal\mongodb\EntityStorage\UserStorage');
+      $entity_types['user']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\UserStorageSchema');
+      $entity_types['user']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\UserViewsData');
+    }
+
+    if (!empty($entity_types['view'])) {
+      $entity_types['view']->setStorageClass('Drupal\mongodb\ConfigStorage\ViewStorage');
+      $entity_types['view']->setClass('Drupal\mongodb\modules\views\View');
+    }
+
+    if (!empty($entity_types['workspace_association'])) {
+      $entity_types['workspace_association']->setStorageClass('Drupal\mongodb\EntityStorage\WorkspaceAssociationStorage');
+    }
+
+    // Testing content entity types.
+    if (!empty($entity_types['entity_test'])) {
+      $entity_types['entity_test']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityTestViewsData');
+    }
+    if (!empty($entity_types['entity_test_update'])) {
+      $entity_types['entity_test_update']->setStorageClass('Drupal\mongodb\EntityStorage\EntityTestUpdateStorage');
+      $entity_types['entity_test_update']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\EntityTestUpdateStorageSchema');
+      $entity_types['entity_test_update']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityViewsData');
+    }
+    if (!empty($entity_types['no_language_entity_test'])) {
+      $entity_types['no_language_entity_test']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityTestViewsData');
+    }
+    if (!empty($entity_types['entity_test_multivalue_basefield'])) {
+      $entity_types['entity_test_multivalue_basefield']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityTestViewsData');
+    }
+  }
+}
+
+/**
+ * Implements hook_field_info_alter().
+ */
+function mongodb_field_info_alter(array &$info) {
+  if (isset($info['boolean']['class'])) {
+    $info['boolean']['class'] = 'Drupal\mongodb\Plugin\Field\FieldType\BooleanItem';
+    $info['boolean']['provider'] = 'mongodb';
+  }
+  if (isset($info['timestamp']['class'])) {
+    $info['timestamp']['class'] = 'Drupal\mongodb\Plugin\Field\FieldType\TimestampItem';
+    $info['timestamp']['provider'] = 'mongodb';
+  }
+}
+
+/**
+ * Implements hook_search_plugin_alter().
+ */
+function mongodb_search_plugin_alter(array &$definitions) {
+  if (isset($definitions['node_search'])) {
+    $definitions['node_search']['class'] = 'Drupal\mongodb\Plugin\Search\NodeSearch';
+    $definitions['node_search']['provider'] = 'mongodb';
+  }
+  if (isset($definitions['user_search'])) {
+    $definitions['user_search']['class'] = 'Drupal\mongodb\Plugin\Search\UserSearch';
+    $definitions['user_search']['provider'] = 'mongodb';
+  }
+}
+
+/**
+ * Implements hook_query_TAG_alter().
+ */
+function mongodb_query_entity_reference_alter(AlterableInterface $query) {
+  // Overrides for the module content_moderation.
+  if (\Drupal::moduleHandler()->moduleExists('block_content')) {
+    if ($query instanceof SelectInterface && $query->getMetaData('entity_type') === 'block_content' && $query->hasTag('block_content_access')) {
+      if (!_mongodb_block_content_has_reusable_condition($query->conditions(), $query->getTables())) {
+        $query->condition('block_content_current_revision.reusable', TRUE);
+      }
+    }
+  }
+}
+
+/**
+ * Utility function is the MongoDB version of _block_content_has_reusable_condition.
+ */
+function _mongodb_block_content_has_reusable_condition(array $condition, array $tables) {
+  // If this is a condition group call this function recursively for each nested
+  // condition until a condition is found that return TRUE.
+  if (isset($condition['#conjunction'])) {
+    foreach (array_filter($condition, 'is_array') as $nested_condition) {
+      if (_mongodb_block_content_has_reusable_condition($nested_condition, $tables)) {
+        return TRUE;
+      }
+    }
+    return FALSE;
+  }
+  if (isset($condition['field'])) {
+    $field = $condition['field'];
+    if (is_object($field) && $field instanceof ConditionInterface) {
+      return _mongodb_block_content_has_reusable_condition($field->conditions(), $tables);
+    }
+    $base_table = \Drupal::entityTypeManager()->getDefinition('block_content')->getBaseTable();
+    foreach ($tables as $table) {
+      if ($table['table'] === $base_table && $field === 'block_content_current_revision.reusable') {
+        return TRUE;
+      }
+    }
+  }
+  return FALSE;
+}

@@ -195,7 +195,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
     }
 
     $query = $this->database->select($entity_type->getRevisionTable(), 'revision');
-    $query->leftJoin($entity_type->getBaseTable(), 'base', "[revision].[$id_field] = [base].[$id_field]");
+    $query->leftJoin($entity_type->getBaseTable(), 'base', $query->joinCondition()->compare("revision.$id_field", "base.$id_field"));
 
     $query
       ->fields('revision', [$revision_id_field, $id_field])
@@ -232,7 +232,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
     $revision_id_field = $table_mapping->getColumnNames($entity_type->getKey('revision'))['value'];
 
     $query = $this->database->select($entity_type->getBaseTable(), 'base');
-    $query->leftJoin($entity_type->getRevisionTable(), 'revision', "[base].[$revision_id_field] = [revision].[$revision_id_field]");
+    $query->leftJoin($entity_type->getRevisionTable(), 'revision', $query->joinCondition()->compare("base.$revision_id_field", "revision.$revision_id_field"));
 
     $query
       ->fields('base', [$revision_id_field, $id_field])
@@ -306,9 +306,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
   public function initializeWorkspace(WorkspaceInterface $workspace) {
     if ($parent_id = $workspace->parent->target_id) {
       $indexed_rows = $this->database->select(static::TABLE);
-      $indexed_rows->addExpression(':new_id', 'workspace', [
-        ':new_id' => $workspace->id(),
-      ]);
+      $indexed_rows->addExpressionConstant("'" . $workspace->id() . "'", 'workspace');
       $indexed_rows->fields(static::TABLE, [
         'target_entity_type_id',
         'target_entity_id',

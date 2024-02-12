@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Database\Query\ConditionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -654,6 +655,10 @@ function views_query_views_alter(AlterableInterface $query) {
         }
       }
     }
+    if (isset($table_metadata['condition']) && ($table_metadata['condition'] instanceof ConditionInterface)) {
+      $table_conditions = &$tables[$table_name]['condition']->conditions();
+      _views_query_tag_alter_condition($query, $table_conditions, $substitutions);
+    }
   }
 
   // Replaces substitutions in filter criteria.
@@ -673,9 +678,12 @@ function _views_query_tag_alter_condition(AlterableInterface $query, &$condition
         $sub_conditions = &$condition['field']->conditions();
         _views_query_tag_alter_condition($query, $sub_conditions, $substitutions);
       }
+      if (isset($condition['field2']) && is_string($condition['field2'])) {
+        $condition['field2'] = str_replace(array_keys($substitutions), array_values($substitutions), $condition['field2']);
+      }
       // $condition['value'] is a subquery so alter the subquery recursive.
       // Therefore make sure to get the metadata of the main query.
-      if (is_object($condition['value'])) {
+      if (isset($condition['value']) && is_object($condition['value'])) {
         $subquery = $condition['value'];
         $subquery->addMetaData('views_substitutions', $query->getMetaData('views_substitutions'));
         views_query_views_alter($condition['value']);

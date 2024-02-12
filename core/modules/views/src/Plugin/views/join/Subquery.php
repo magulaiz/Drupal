@@ -52,7 +52,8 @@ class Subquery extends JoinPluginBase {
     }
 
     // Add our join condition, using a subquery on the left instead of a field.
-    $condition = "($this->left_query) = $table[alias].$this->field";
+    $condition = $select_query->joinCondition()->where("($this->left_query) = $table[alias].$this->field");
+
     $arguments = [];
 
     // Tack on the extra.

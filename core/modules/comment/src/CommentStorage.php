@@ -85,7 +85,7 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
       ->condition('field_name', $comment->getFieldName())
       ->condition('entity_type', $comment->getCommentedEntityTypeId())
       ->condition('default_langcode', 1);
-    $query->addExpression('MAX([thread])', 'thread');
+    $query->addExpressionMax('thread', 'thread');
     return $query->execute()
       ->fetchField();
   }
@@ -100,7 +100,7 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
       ->condition('entity_type', $comment->getCommentedEntityTypeId())
       ->condition('thread', $comment->getParentComment()->getThread() . '.%', 'LIKE')
       ->condition('default_langcode', 1);
-    $query->addExpression('MAX([thread])', 'thread');
+    $query->addExpressionMax('thread', 'thread');
     return $query->execute()
       ->fetchField();
   }
@@ -113,8 +113,13 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
     // This is the 0-based display ordinal.
     $data_table = $this->getDataTable();
     $query = $this->database->select($data_table, 'c1');
-    $query->innerJoin($data_table, 'c2', '[c2].[entity_id] = [c1].[entity_id] AND [c2].[entity_type] = [c1].[entity_type] AND [c2].[field_name] = [c1].[field_name]');
-    $query->addExpression('COUNT(*)', 'count');
+    $query->innerJoin($data_table, 'c2',
+      $query->joinCondition()
+        ->compare('c2.entity_id', 'c1.entity_id')
+        ->compare('c2.entity_type', 'c1.entity_type')
+        ->compare('c2.field_name', 'c1.field_name')
+    );
+    $query->addExpressionCountAll('count');
     $query->condition('c2.cid', $comment->id());
     if (!$this->currentUser->hasPermission('administer comments')) {
       $query->condition('c1.status', CommentInterface::PUBLISHED);
@@ -296,7 +301,7 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
       }
 
       $count_query = $this->database->select($data_table, 'c');
-      $count_query->addExpression('COUNT(*)');
+      $count_query->addExpressionCountAll();
       $count_query
         ->condition('c.entity_id', $entity->id())
         ->condition('c.entity_type', $entity->getEntityTypeId())

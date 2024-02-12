@@ -23,9 +23,14 @@ class DeleteTruncateTest extends DatabaseTestBase {
    * Confirms that we can use a subselect in a delete successfully.
    */
   public function testSubselectDelete() {
+    if ($this->connection->driver() == 'mongodb') {
+      // The MongoDB database driver does not do delete queries with the
+      // condition being a subquery.
+      $this->markTestSkipped('The MongoDB database driver does not do conditions with a subquery.');
+    }
+
     $num_records_before = $this->connection->query('SELECT COUNT(*) FROM {test_task}')->fetchField();
     $pid_to_delete = $this->connection->query("SELECT * FROM {test_task} WHERE [task] = 'sleep' ORDER BY [tid]")->fetchField();
-
     $subquery = $this->connection->select('test', 't')
       ->fields('t', ['id'])
       ->condition('t.id', [$pid_to_delete], 'IN');
@@ -155,6 +160,13 @@ class DeleteTruncateTest extends DatabaseTestBase {
    * Deleting from a not existing table throws a DatabaseExceptionWrapper.
    */
   public function testDeleteFromNonExistingTable(): void {
+    if ($this->connection->driver() == 'mongodb') {
+      // The MongoDB database driver does not throw this exception by default.
+      // Adding this functionality will require to do a table exists on every
+      // select query. The performance will be greatly reduced.
+      $this->markTestSkipped('The MongoDB database driver does not throw this exception.');
+    }
+
     $this->expectException(DatabaseExceptionWrapper::class);
     $this->connection->delete('a-table-that-does-not-exist')->execute();
   }
@@ -163,6 +175,13 @@ class DeleteTruncateTest extends DatabaseTestBase {
    * Truncating a not existing table throws a DatabaseExceptionWrapper.
    */
   public function testTruncateNonExistingTable(): void {
+    if ($this->connection->driver() == 'mongodb') {
+      // The MongoDB database driver does not throw this exception by default.
+      // Adding this functionality will require to do a table exists on every
+      // select query. The performance will be greatly reduced.
+      $this->markTestSkipped('The MongoDB database driver does not throw this exception.');
+    }
+
     $this->expectException(DatabaseExceptionWrapper::class);
     $this->connection->truncate('a-table-that-does-not-exist')->execute();
   }

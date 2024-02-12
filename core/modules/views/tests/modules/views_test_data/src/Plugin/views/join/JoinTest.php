@@ -41,7 +41,13 @@ class JoinTest extends JoinPluginBase {
    */
   public function buildJoin($select_query, $table, $view_query) {
     // Add an additional hardcoded condition to the query.
-    $this->extra = 'views_test_data.uid = ' . $this->getJoinValue();
+    $this->extra = [
+      [
+        'field' => 'views_test_data.uid',
+        'value' => $this->getJoinValue(),
+        'operator' => '=',
+      ],
+    ];
     parent::buildJoin($select_query, $table, $view_query);
   }
 

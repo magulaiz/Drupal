@@ -124,6 +124,10 @@ class UpdateComplexTest extends DatabaseTestBase {
    * Tests UPDATE with a subselect value.
    */
   public function testSubSelectUpdate() {
+    if ($this->connection->driver() == 'mongodb') {
+      $this->markTestSkipped('The MongoDB database driver does not support subqueries.');
+    }
+
     $subselect = $this->connection->select('test_task', 't');
     $subselect->addExpression('MAX([priority]) + :increment', 'max_priority', [':increment' => 30]);
     // Clone this to make sure we are running a different query when

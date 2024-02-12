@@ -13,6 +13,10 @@ class SelectSubqueryTest extends DatabaseTestBase {
    * Tests that we can use a subquery in a FROM clause.
    */
   public function testFromSubquerySelect() {
+    if ($this->connection->driver() == 'mongodb') {
+      $this->markTestSkipped('The MongoDB database driver does not support subqueries.');
+    }
+
     // Create a subquery, which is just a normal query object.
     $subquery = $this->connection->select('test_task', 'tt');
     $subquery->addField('tt', 'pid', 'pid');
@@ -23,7 +27,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
       // Create another query that joins against the virtual table resulting
       // from the subquery.
       $select = $this->connection->select($subquery, 'tt2');
-      $select->join('test', 't', '[t].[id] = [tt2].[pid]');
+      $select->join('test', 't', $select->joinCondition()->compare('t.id', 'tt2.pid'));
       $select->addField('t', 'name');
       if ($i) {
         // Use a different number of conditions here to confuse the subquery
@@ -49,6 +53,10 @@ class SelectSubqueryTest extends DatabaseTestBase {
    * Tests that we can use a subquery in a FROM clause with a LIMIT.
    */
   public function testFromSubquerySelectWithLimit() {
+    if ($this->connection->driver() == 'mongodb') {
+      $this->markTestSkipped('The MongoDB database driver does not support subqueries.');
+    }
+
     // Create a subquery, which is just a normal query object.
     $subquery = $this->connection->select('test_task', 'tt');
     $subquery->addField('tt', 'pid', 'pid');
@@ -59,7 +67,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
     // Create another query that joins against the virtual table resulting
     // from the subquery.
     $select = $this->connection->select($subquery, 'tt2');
-    $select->join('test', 't', '[t].[id] = [tt2].[pid]');
+    $select->join('test', 't', $select->joinCondition()->compare('t.id', 'tt2.pid'));
     $select->addField('t', 'name');
 
     // The resulting query should be equivalent to:
@@ -77,6 +85,10 @@ class SelectSubqueryTest extends DatabaseTestBase {
    * Tests that we can use a subquery with an IN operator in a WHERE clause.
    */
   public function testConditionSubquerySelect() {
+    if ($this->connection->driver() == 'mongodb') {
+      $this->markTestSkipped('The MongoDB database driver does not support subqueries.');
+    }
+
     // Create a subquery, which is just a normal query object.
     $subquery = $this->connection->select('test_task', 'tt');
     $subquery->addField('tt', 'pid', 'pid');
@@ -100,6 +112,10 @@ class SelectSubqueryTest extends DatabaseTestBase {
    * Tests we can use a subquery with a relational operator in a WHERE clause.
    */
   public function testConditionSubquerySelect2() {
+    if ($this->connection->driver() == 'mongodb') {
+      $this->markTestSkipped('The MongoDB database driver does not support subqueries.');
+    }
+
     // Create a subquery, which is just a normal query object.
     $subquery = $this->connection->select('test', 't2');
     $subquery->addExpression('AVG([t2].[age])');
@@ -121,6 +137,10 @@ class SelectSubqueryTest extends DatabaseTestBase {
    * Tests we can use 2 subqueries with a relational operator in a WHERE clause.
    */
   public function testConditionSubquerySelect3() {
+    if ($this->connection->driver() == 'mongodb') {
+      $this->markTestSkipped('The MongoDB database driver does not support subqueries.');
+    }
+
     // Create subquery 1, which is just a normal query object.
     $subquery1 = $this->connection->select('test_task', 'tt');
     $subquery1->addExpression('AVG([tt].[priority])');
@@ -151,6 +171,10 @@ class SelectSubqueryTest extends DatabaseTestBase {
    * to the limited amount of data and tables. 'Valid' use cases do exist :)
    */
   public function testConditionSubquerySelect4() {
+    if ($this->connection->driver() == 'mongodb') {
+      $this->markTestSkipped('The MongoDB database driver does not support subqueries.');
+    }
+
     // Create subquery 1, which is just a normal query object.
     $subquery1 = $this->connection->select('test_task', 'tt');
     $subquery1->addExpression('AVG([tt].[priority])');
@@ -158,7 +182,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
 
     // Create subquery 2, which is just a normal query object.
     $subquery2 = $this->connection->select('test_task', 'tt2');
-    $subquery2->addExpression('MIN([tt2].[priority])');
+    $subquery2->addExpressionMin('tt2.priority');
     $subquery2->where('[tt2].[pid] <> [t].[id]');
 
     // Create subquery 3, which is just a normal query object.
@@ -187,6 +211,10 @@ class SelectSubqueryTest extends DatabaseTestBase {
    * Tests that we can use a subquery in a JOIN clause.
    */
   public function testJoinSubquerySelect() {
+    if ($this->connection->driver() == 'mongodb') {
+      $this->markTestSkipped('The MongoDB database driver does not support subqueries.');
+    }
+
     // Create a subquery, which is just a normal query object.
     $subquery = $this->connection->select('test_task', 'tt');
     $subquery->addField('tt', 'pid', 'pid');
@@ -195,7 +223,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
     // Create another query that joins against the virtual table resulting
     // from the subquery.
     $select = $this->connection->select('test', 't');
-    $select->join($subquery, 'tt', '[t].[id] = [tt].[pid]');
+    $select->join($subquery, 'tt', $select->joinCondition()->compare('t.id', 'tt.pid'));
     $select->addField('t', 'name');
 
     // The resulting query should be equivalent to:
@@ -216,6 +244,10 @@ class SelectSubqueryTest extends DatabaseTestBase {
    * rows in the {test_people} table based on the shared name column.
    */
   public function testExistsSubquerySelect() {
+    if ($this->connection->driver() == 'mongodb') {
+      $this->markTestSkipped('The MongoDB database driver does not support subqueries.');
+    }
+
     // Put George into {test_people}.
     $this->connection->insert('test_people')
       ->fields([
@@ -246,6 +278,10 @@ class SelectSubqueryTest extends DatabaseTestBase {
    * matching rows in the {test_people} table based on the shared name column.
    */
   public function testNotExistsSubquerySelect() {
+    if ($this->connection->driver() == 'mongodb') {
+      $this->markTestSkipped('The MongoDB database driver does not support subqueries.');
+    }
+
     // Put George into {test_people}.
     $this->connection->insert('test_people')
       ->fields([

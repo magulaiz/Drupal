@@ -125,6 +125,10 @@ class SelectTest extends DatabaseTestBase {
    * Tests SELECT statements with expressions.
    */
   public function testSimpleSelectExpression() {
+    if ($this->connection->driver() == 'mongodb') {
+      $this->markTestSkipped('The MongoDB database driver does not support the method addExpression().');
+    }
+
     $query = $this->connection->select('test');
     $name_field = $query->addField('test', 'name');
     $age_field = $query->addExpression("[age]*2", 'double_age');
@@ -145,6 +149,10 @@ class SelectTest extends DatabaseTestBase {
    * Tests SELECT statements with multiple expressions.
    */
   public function testSimpleSelectExpressionMultiple() {
+    if ($this->connection->driver() == 'mongodb') {
+      $this->markTestSkipped('The MongoDB database driver does not support the method addExpression().');
+    }
+
     $query = $this->connection->select('test');
     $name_field = $query->addField('test', 'name');
     $age_double_field = $query->addExpression("[age]*2");
@@ -306,6 +314,10 @@ class SelectTest extends DatabaseTestBase {
    * that.
    */
   public function testUnion() {
+    if ($this->connection->driver() == 'mongodb') {
+      $this->markTestSkipped('MongoDB does not support UNION queries for now.');
+    }
+
     $query_1 = $this->connection->select('test', 't')
       ->fields('t', ['name'])
       ->condition('age', [27, 28], 'IN');
@@ -328,6 +340,10 @@ class SelectTest extends DatabaseTestBase {
    * Tests that we can UNION ALL multiple SELECT queries together.
    */
   public function testUnionAll() {
+    if ($this->connection->driver() == 'mongodb') {
+      $this->markTestSkipped('MongoDB does not support UNION queries for now.');
+    }
+
     $query_1 = $this->connection->select('test', 't')
       ->fields('t', ['name'])
       ->condition('age', [27, 28], 'IN');
@@ -352,6 +368,10 @@ class SelectTest extends DatabaseTestBase {
    * Tests that we can get a count query for a UNION Select query.
    */
   public function testUnionCount() {
+    if ($this->connection->driver() == 'mongodb') {
+      $this->markTestSkipped('MongoDB does not support UNION queries for now.');
+    }
+
     $query_1 = $this->connection->select('test', 't')
       ->fields('t', ['name', 'age'])
       ->condition('age', [27, 28], 'IN');
@@ -372,6 +392,10 @@ class SelectTest extends DatabaseTestBase {
    * Tests that we can UNION multiple Select queries together and set the ORDER.
    */
   public function testUnionOrder() {
+    if ($this->connection->driver() == 'mongodb') {
+      $this->markTestSkipped('MongoDB does not support UNION queries for now.');
+    }
+
     // This gives George and Ringo.
     $query_1 = $this->connection->select('test', 't')
       ->fields('t', ['name'])
@@ -401,6 +425,10 @@ class SelectTest extends DatabaseTestBase {
    * Tests that we can UNION multiple Select queries together with and a LIMIT.
    */
   public function testUnionOrderLimit() {
+    if ($this->connection->driver() == 'mongodb') {
+      $this->markTestSkipped('MongoDB does not support UNION queries for now.');
+    }
+
     // This gives George and Ringo.
     $query_1 = $this->connection->select('test', 't')
       ->fields('t', ['name'])
@@ -522,6 +550,10 @@ class SelectTest extends DatabaseTestBase {
    * @dataProvider providerRegularExpressionCondition
    */
   public function testRegularExpressionCondition($expected, $column, $pattern, $operator) {
+    if ($this->connection->driver() == 'mongodb' && $pattern == '2[6]') {
+      $this->markTestSkipped('MongoDB does not support regular expressions on integer fields.');
+    }
+
     $database = $this->container->get('database');
     $database->insert('test')
       ->fields([
@@ -554,6 +586,13 @@ class SelectTest extends DatabaseTestBase {
    * Tests that an invalid count query throws an exception.
    */
   public function testInvalidSelectCount() {
+    if ($this->connection->driver() == 'mongodb') {
+      // The MongoDB database driver does throw this exception by default.
+      // Adding this functionality will require to do a table exists on every
+      // select query. The performance will be greatly reduced.
+      $this->markTestSkipped('The MongoDB database driver does throw this exception.');
+    }
+
     $this->expectException(DatabaseExceptionWrapper::class);
     // This query will fail because the table does not exist.
     $this->connection->select('some_table_that_does_not_exist', 't')
@@ -639,6 +678,47 @@ class SelectTest extends DatabaseTestBase {
       ->fields('t')
       ->condition('age', [26], $operator)
       ->execute();
+  }
+
+  /**
+   * Data provider for testConditionCompareInvalidQueryException().
+   *
+   * @return array[]
+   *   Array of non array compatible operators and if an exception should be
+   *   thrown.
+   */
+  public function providerConditionCompareInvalidQueryException() {
+    return [
+      '=' => ['=', FALSE],
+      '<' => ['<', FALSE],
+      '>' => ['>', FALSE],
+      '<=' => ['<=', FALSE],
+      '>=' => ['>=', FALSE],
+      '<>' => ['<>', FALSE],
+      'between' => ['BETWEEN', TRUE],
+      'not between' => ['NOT BETWEEN', TRUE],
+      'in' => ['IN', TRUE],
+      'not in' => ['NOT IN', TRUE],
+      'is null' => ['IS NULL', TRUE],
+      'is not null' => ['IS NOT NULL', TRUE],
+      'like' => ['LIKE', TRUE],
+      'not like' => ['NOT LIKE', TRUE],
+      'exists' => ['EXISTS', TRUE],
+      'not exists' => ['NOT EXISTS', TRUE],
+    ];
+  }
+
+  /**
+   * Tests thrown exception for condition compare method operator parameter.
+   *
+   * @dataProvider providerConditionCompareInvalidQueryException
+   */
+  public function testConditionCompareInvalidQueryException($operator, $exception) {
+    if ($exception) {
+      $this->expectException(InvalidQueryException::class);
+      $this->expectExceptionMessage("In a query compare 'some_field " . $operator . " other_field' the operator must be one of the following: '=', '<', '>', '>=', '<=', '<>'.");
+    }
+    $this->connection->condition('AND')->compare('some_field', 'other_field', $operator);
   }
 
 }

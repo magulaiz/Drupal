@@ -1,0 +1,5 @@
+name: MongoDB
+type: module
+description: 'Provides the MongoDB database driver.'
+package: Core
+version: VERSION

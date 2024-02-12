@@ -1920,7 +1920,7 @@ function system_update_10201(&$sandbox) {
   $revision_field = $entity_type->getKey('revision');
 
   $query = $database->select($revision_data_table, 'rd');
-  $query->leftJoin($revision_table, 'r', 'r.' . $revision_field . ' = rd.' . $revision_field);
+  $query->leftJoin($revision_table, 'r', $query->joinCondition()->compare('r.' . $revision_field, 'rd.' . $revision_field));
   $query->addField('rd', $revision_field, 'revision');
 
   $revision_ids = $query

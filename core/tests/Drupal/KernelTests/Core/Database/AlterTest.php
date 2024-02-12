@@ -40,10 +40,20 @@ class AlterTest extends DatabaseTestBase {
 
     $this->assertCount(2, $records, 'Returned the correct number of rows.');
 
-    $this->assertEquals('George', $records[0]->name, 'Correct data retrieved.');
+    if ($this->connection->driver() == 'mongodb') {
+      $this->assertEquals('George', $records[0]->name[0], 'Correct data retrieved.');
+    }
+    else {
+      $this->assertEquals('George', $records[0]->name, 'Correct data retrieved.');
+    }
     $this->assertEquals(4, $records[0]->{$tid_field}, 'Correct data retrieved.');
     $this->assertEquals('sing', $records[0]->{$task_field}, 'Correct data retrieved.');
-    $this->assertEquals('George', $records[1]->name, 'Correct data retrieved.');
+    if ($this->connection->driver() == 'mongodb') {
+      $this->assertEquals('George', $records[1]->name[0], 'Correct data retrieved.');
+    }
+    else {
+      $this->assertEquals('George', $records[1]->name, 'Correct data retrieved.');
+    }
     $this->assertEquals(5, $records[1]->{$tid_field}, 'Correct data retrieved.');
     $this->assertEquals('sleep', $records[1]->{$task_field}, 'Correct data retrieved.');
   }
@@ -56,7 +66,7 @@ class AlterTest extends DatabaseTestBase {
     $tid_field = $query->addField('test_task', 'tid');
     $pid_field = $query->addField('test_task', 'pid');
     $task_field = $query->addField('test_task', 'task');
-    $people_alias = $query->join('test', 'people', "[test_task].[pid] = [people].[id]");
+    $people_alias = $query->join('test', 'people', $query->joinCondition()->compare('test_task.pid', 'people.id'));
     $name_field = $query->addField($people_alias, 'name', 'name');
     $query->condition('test_task.tid', '1');
     $query->orderBy($tid_field);
@@ -67,7 +77,12 @@ class AlterTest extends DatabaseTestBase {
     $records = $result->fetchAll();
 
     $this->assertCount(1, $records, 'Returned the correct number of rows.');
-    $this->assertEquals('John', $records[0]->{$name_field}, 'Correct data retrieved.');
+    if ($this->connection->driver() == 'mongodb') {
+      $this->assertEquals('John', $records[0]->{$name_field}[0], 'Correct data retrieved.');
+    }
+    else {
+      $this->assertEquals('John', $records[0]->{$name_field}, 'Correct data retrieved.');
+    }
     $this->assertEquals(2, $records[0]->{$tid_field}, 'Correct data retrieved.');
     $this->assertEquals(1, $records[0]->{$pid_field}, 'Correct data retrieved.');
     $this->assertEquals('sleep', $records[0]->{$task_field}, 'Correct data retrieved.');
@@ -92,6 +107,13 @@ class AlterTest extends DatabaseTestBase {
    * Tests that we can alter expressions in the query.
    */
   public function testAlterExpression() {
+    if ($this->connection->driver() == 'mongodb') {
+      // The MongoDB database driver does not throw this exception by default.
+      // Adding this functionality will require to do a table exists on every
+      // select query. The performance will be greatly reduced.
+      $this->markTestSkipped('The MongoDB database driver does not support string expressions.');
+    }
+
     $query = $this->connection->select('test');
     $name_field = $query->addField('test', 'name');
     $age_field = $query->addExpression("[age]*2", 'double_age');
@@ -127,6 +149,10 @@ class AlterTest extends DatabaseTestBase {
    * Tests that we can do basic alters on subqueries.
    */
   public function testSimpleAlterSubquery() {
+    if ($this->connection->driver() == 'mongodb') {
+      $this->markTestSkipped('The MongoDB database driver does not support subqueries.');
+    }
+
     // Create a sub-query with an alter tag.
     $subquery = $this->connection->select('test', 'p');
     $subquery->addField('p', 'name');
@@ -139,7 +165,7 @@ class AlterTest extends DatabaseTestBase {
 
     // Create a main query and join to sub-query.
     $query = $this->connection->select('test_task', 'tt');
-    $query->join($subquery, 'pq', '[pq].[id] = [tt].[pid]');
+    $query->join($subquery, 'pq', $query->joinCondition()->compare('pq.id', 'tt.pid'));
     $age_field = $query->addField('pq', 'double_age');
     $name_field = $query->addField('pq', 'name');
 

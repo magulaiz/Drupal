@@ -19,12 +19,20 @@ trait SchemaIntrospectionTestTrait {
    *   'primary'. Defaults to 'index'.
    */
   protected function assertIndexOnColumns($table_name, array $column_names, $index_type = 'index') {
+//dump('$table_name: ' . $table_name);
+//dump('$column_names');
+//dump($column_names);
+//dump('$index_type: ' . $index_type);
+//dump($this->getIndexColumnNames($table_name, $index_type));
     foreach ($this->getIndexColumnNames($table_name, $index_type) as $index_columns) {
       if ($column_names == $index_columns) {
         $this->assertTrue(TRUE);
         return;
       }
     }
+
+//dump('\Drupal::service(mongodb.table_information)->getAllBaseTables()');
+//dump(\Drupal::service('mongodb.table_information')->getAllBaseTables());
     $this->assertTrue(FALSE);
   }
 

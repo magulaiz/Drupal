@@ -1,0 +1,176 @@
+services:
+  # MongoDB Services.
+  mongodb.sequences:
+    class: Drupal\mongodb\Driver\Database\mongodb\Sequences
+    arguments: ['@database']
+
+  mongodb.table_information:
+    class: Drupal\mongodb\Driver\Database\mongodb\TableInformation
+    arguments: ['@database']
+
+  mongodb.translate_sql:
+    class: Drupal\mongodb\Driver\Database\mongodb\TranslateSql
+
+  # MongoDB overrides Batch.
+  mongodb.batch.storage:
+    class: Drupal\mongodb\Batch\BatchStorage
+    arguments: ['@database', '@session', '@csrf_token']
+  batch.storage:
+    alias: mongodb.batch.storage
+
+  # MongoDB overrides Cache.
+  mongodb.cache.backend.database:
+    class: Drupal\mongodb\Driver\Database\mongodb\Cache\DatabaseBackendFactory
+    arguments: ['@database', '@cache_tags.invalidator.checksum', '@settings']
+#  cache.backend.database:
+#    alias: mongodb.cache.backend.database
+
+  mongodb.cache_tags.invalidator.checksum:
+    class: Drupal\mongodb\Driver\Database\mongodb\Cache\DatabaseCacheTagsChecksum
+    arguments: ['@database']
+    tags:
+      - { name: cache_tags_invalidator}
+#  cache_tags.invalidator.checksum:
+#    alias: mongodb.cache_tags.invalidator.checksum
+
+  # MongoDB overrides Config.
+  mongodb.config.storage.active:
+    class: Drupal\mongodb\Driver\Database\mongodb\Config\DatabaseStorage
+    arguments: ['@database', 'config']
+    public: false
+  config.storage.active:
+    alias: mongodb.config.storage.active
+
+  mongodb.config.storage.snapshot:
+    class: Drupal\mongodb\Driver\Database\mongodb\Config\DatabaseStorage
+    arguments: ['@database', config_snapshot]
+  config.storage.snapshot:
+    alias: mongodb.config.storage.snapshot
+
+  # MongoDB overrides EntityQuery.
+  mongodb.entity.query.sql:
+    class: Drupal\mongodb\EntityQuery\QueryFactory
+    arguments: ['@database']
+  entity.query.sql:
+    alias: mongodb.entity.query.sql
+
+  # MongoDB overrides KeyValue.
+  mongodb.keyvalue.database:
+    class: Drupal\mongodb\KeyValueStore\KeyValueDatabaseFactory
+    arguments: ['@serialization.phpserialize', '@database']
+  keyvalue.database:
+    alias: mongodb.keyvalue.database
+
+  mongodb.keyvalue.expirable.database:
+    class: Drupal\mongodb\KeyValueStore\KeyValueDatabaseExpirableFactory
+    arguments: ['@serialization.phpserialize', '@database']
+  keyvalue.expirable.database:
+    alias: mongodb.keyvalue.expirable.database
+
+  mongodb.keyvalue.expirable:
+    class: Drupal\mongodb\KeyValueStore\KeyValueExpirableFactory
+    arguments: ['@service_container', '%factory.keyvalue.expirable%']
+  keyvalue.expirable:
+    alias: mongodb.keyvalue.expirable
+
+  # MongoDB overrides Lock.
+  mongodb.lock:
+    class: Drupal\mongodb\Lock\DatabaseLockBackend
+    arguments: ['@database']
+  lock:
+    alias: mongodb.lock
+
+  mongodb.lock.persistent:
+    class: Drupal\mongodb\Lock\PersistentDatabaseLockBackend
+    arguments: ['@database']
+  lock.persistent:
+    alias: mongodb.lock.persistent
+
+  # MongoDB overrides Menu.
+  mongodb.menu.tree_storage:
+    class: Drupal\mongodb\Menu\MenuTreeStorage
+    arguments: ['@database', '@cache.menu', '@cache_tags.invalidator', 'menu_tree']
+    public: false  # Private to plugin.manager.menu.link and menu.link_tree
+  menu.tree_storage:
+    alias: mongodb.menu.tree_storage
+
+  # MongoDB overrides Queue.
+  mongodb.queue.database:
+    class: Drupal\mongodb\Queue\QueueDatabaseFactory
+    arguments: ['@database']
+  queue.database:
+    alias: mongodb.queue.database
+
+  # MongoDB overrides Routing.
+  mongodb.router.route_provider:
+    class: Drupal\mongodb\Routing\RouteProvider
+    arguments: ['@database', '@state', '@path.current', '@cache.data', '@path_processor_manager', '@cache_tags.invalidator', 'router', '@language_manager']
+    tags:
+      - { name: event_subscriber }
+  router.route_provider:
+    alias: mongodb.router.route_provider
+
+  # MongoDB overrides module ban.
+  mongodb.ban.ip_manager:
+    class: Drupal\mongodb\modules\ban\BanIpManager
+    arguments: ['@database']
+  ban.ip_manager:
+    alias: mongodb.ban.ip_manager
+
+  # MongoDB overrides module book.
+  mongodb.book.outline_storage:
+    class: Drupal\mongodb\modules\book\BookOutlineStorage
+    arguments: ['@database']
+  book.outline_storage:
+    alias: mongodb.book.outline_storage
+
+  # MongoDB overrides module comment.
+  mongodb.comment.statistics:
+    class: Drupal\mongodb\modules\comment\CommentStatistics
+    arguments: ['@database', '@current_user', '@entity_type.manager', '@state', '@database.replica']
+  comment.statistics:
+    alias: mongodb.comment.statistics
+
+  # MongoDB overrides module file.
+  mongodb.file.usage:
+    class: Drupal\mongodb\modules\file\DatabaseFileUsageBackend
+    arguments: ['@config.factory', '@database', 'file_usage']
+
+  # MongoDB overrides module locale.
+  mongodb.locale.storage:
+    class: Drupal\mongodb\modules\locale\StringDatabaseStorage
+    arguments: ['@database']
+  locale.storage:
+    alias: mongodb.locale.storage
+
+  # MongoDB overrides module node.
+  mongodb.node.grant_storage:
+    class: Drupal\mongodb\modules\node\NodeGrantDatabaseStorage
+    arguments: ['@database', '@module_handler', '@language_manager']
+  node.grant_storage:
+    alias: mongodb.node.grant_storage
+
+  # MongoDB overrides module path_alias.
+  mongodb.path_alias.repository:
+    class: Drupal\mongodb\modules\path_alias\AliasRepository
+    arguments: ['@database']
+  path_alias.repository:
+    alias: mongodb.path_alias.repository
+
+  # MongoDB overrides module statistics.
+  mongodb.statistics.storage.node:
+    class: Drupal\mongodb\modules\statistics\NodeStatisticsDatabaseStorage
+    arguments: ['@database', '@state', '@request_stack']
+  statistics.storage.node:
+    alias: mongodb.statistics.storage.node
+
+  # MongoDB overrides module user.
+  mongodb.user.data:
+    class: Drupal\mongodb\modules\user\UserData
+    arguments: ['@database']
+
+  # MongoDB overrides module views.
+  mongodb.views.date_sql:
+    class: Drupal\mongodb\Plugin\views\query\DateSql
+    arguments: ['@database']
+    public: false

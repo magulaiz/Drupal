@@ -72,9 +72,15 @@ class QueryTest extends DatabaseTestBase {
   public function testConditionOperatorArgumentsSQLInjection() {
     $injection = "IS NOT NULL) ;INSERT INTO {test} (name) VALUES ('test12345678'); -- ";
 
-    $previous_error_handler = set_error_handler(function ($severity, $message, $filename, $lineno) use (&$previous_error_handler) {
+    $driver = $this->connection->driver();
+    $previous_error_handler = set_error_handler(function ($severity, $message, $filename, $lineno) use (&$previous_error_handler, $driver) {
+      $condition_filepath = '@core/lib/Drupal/Core/Database/Query/Condition.php$@';
+      if ($driver == 'mongodb') {
+        $condition_filepath = '@core/modules/mongodb/src/Driver/Database/mongodb/Condition.php$@';
+      }
+
       // Normalize the filename to use UNIX directory separators.
-      if (preg_match('@core/lib/Drupal/Core/Database/Query/Condition.php$@', str_replace(DIRECTORY_SEPARATOR, '/', $filename))) {
+      if (preg_match($condition_filepath, str_replace(DIRECTORY_SEPARATOR, '/', $filename))) {
         // Convert errors to exceptions for testing purposes below.
         throw new \ErrorException($message, 0, $severity, $filename, $lineno);
       }
