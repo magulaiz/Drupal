@@ -89,8 +89,8 @@ class CommentAdminTest extends CommentTestBase {
     $this->drupalGet('admin/content/comment/approval');
     $this->assertSession()->pageTextContains('Unapproved comments (2)');
     $edit = [
-      "comments[{$comments[0]->id()}]" => 1,
-      "comments[{$comments[1]->id()}]" => 1,
+      "comments[{$comments[0]->id()}]" => TRUE,
+      "comments[{$comments[1]->id()}]" => TRUE,
     ];
     $this->submitForm($edit, 'Update');
     $this->assertSession()->pageTextContains('Unapproved comments (0)');
@@ -98,9 +98,9 @@ class CommentAdminTest extends CommentTestBase {
     // Delete multiple comments in one operation.
     $edit = [
       'operation' => 'delete',
-      "comments[{$comments[0]->id()}]" => 1,
-      "comments[{$comments[1]->id()}]" => 1,
-      "comments[{$anonymous_comment4->id()}]" => 1,
+      "comments[{$comments[0]->id()}]" => TRUE,
+      "comments[{$comments[1]->id()}]" => TRUE,
+      "comments[{$anonymous_comment4->id()}]" => TRUE,
     ];
     $this->submitForm($edit, 'Update');
     $this->assertSession()->pageTextContains('Are you sure you want to delete these comments and all their children?');
@@ -274,8 +274,8 @@ class CommentAdminTest extends CommentTestBase {
     // Delete multiple comments in one operation.
     $edit = [
       'operation' => 'delete',
-      "comments[{$comment1->id()}]" => 1,
-      "comments[{$comment2->id()}]" => 1,
+      "comments[{$comment1->id()}]" => TRUE,
+      "comments[{$comment2->id()}]" => TRUE,
     ];
     $this->drupalGet('admin/content/comment');
     $this->submitForm($edit, 'Update');

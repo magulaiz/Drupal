@@ -81,7 +81,7 @@ class SiteMaintenanceTest extends BrowserTestBase {
     $this->assertSession()->elementNotExists('xpath', '//link[contains(@href, "/core/modules/system/css/components/align.module.css")]');
     // Turn on maintenance mode.
     $edit = [
-      'maintenance_mode' => 1,
+      'maintenance_mode' => TRUE,
     ];
     $this->drupalGet('admin/config/development/maintenance');
     $this->submitForm($edit, 'Save configuration');

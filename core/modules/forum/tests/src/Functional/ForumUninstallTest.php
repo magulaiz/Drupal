@@ -107,7 +107,7 @@ class ForumUninstallTest extends BrowserTestBase {
     // Assert forum is no longer required.
     $this->assertSession()->fieldExists('uninstall[forum]');
     $this->drupalGet('admin/modules/uninstall');
-    $this->submitForm(['uninstall[forum]' => 1], 'Uninstall');
+    $this->submitForm(['uninstall[forum]' => TRUE], 'Uninstall');
     $this->submitForm([], 'Uninstall');
 
     // Check that the field is now deleted.
@@ -132,7 +132,7 @@ class ForumUninstallTest extends BrowserTestBase {
 
     // Double check everything by reinstalling the forum module again.
     $this->drupalGet('admin/modules');
-    $this->submitForm(['modules[forum][enable]' => 1], 'Install');
+    $this->submitForm(['modules[forum][enable]' => TRUE], 'Install');
     $this->assertSession()->pageTextContains('Module Forum has been installed.');
   }
 
@@ -177,7 +177,7 @@ class ForumUninstallTest extends BrowserTestBase {
     $this->assertSession()->fieldExists('uninstall[forum]');
 
     $this->drupalGet('admin/modules/uninstall');
-    $this->submitForm(['uninstall[forum]' => 1], 'Uninstall');
+    $this->submitForm(['uninstall[forum]' => TRUE], 'Uninstall');
   }
 
 }

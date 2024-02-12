@@ -92,7 +92,7 @@ class CommentAdminTest extends CommentBrowserTestBase {
     $this->drupalLogin($this->adminUser);
     $edit = [];
     $edit['action'] = 'comment_publish_action';
-    $edit['comment_bulk_form[0]'] = $anonymous_comment4->id();
+    $edit['comment_bulk_form[0]'] = TRUE;
     $this->drupalGet('admin/content/comment/approval');
     $this->submitForm($edit, 'Apply to selected items');
 
@@ -118,8 +118,8 @@ class CommentAdminTest extends CommentBrowserTestBase {
 
     $edit = [
       "action" => 'comment_publish_action',
-      "comment_bulk_form[1]" => $comments[0]->id(),
-      "comment_bulk_form[0]" => $comments[1]->id(),
+      "comment_bulk_form[1]" => TRUE,
+      "comment_bulk_form[0]" => TRUE,
     ];
     $this->submitForm($edit, 'Apply to selected items');
     $this->assertSession()->pageTextContains('Unapproved comments (0)');
@@ -152,9 +152,9 @@ class CommentAdminTest extends CommentBrowserTestBase {
     // Delete multiple comments in one operation.
     $edit = [
       'action' => 'comment_delete_action',
-      "comment_bulk_form[1]" => $comments[0]->id(),
-      "comment_bulk_form[0]" => $comments[1]->id(),
-      "comment_bulk_form[2]" => $anonymous_comment4->id(),
+      "comment_bulk_form[1]" => TRUE,
+      "comment_bulk_form[0]" => TRUE,
+      "comment_bulk_form[2]" => TRUE,
     ];
     $this->submitForm($edit, 'Apply to selected items');
     $this->assertSession()->pageTextContains('Are you sure you want to delete these comments and all their children?');

@@ -59,7 +59,7 @@ class NodeAccessMenuLinkTest extends NodeTestBase {
     $edit = [
       'title[0][value]' => $this->randomString(),
       'body[0][value]' => $this->randomString(),
-      'menu[enabled]' => 1,
+      'menu[enabled]' => TRUE,
       'menu[title]' => $menu_link_title,
     ];
     $this->drupalGet('node/add/page');

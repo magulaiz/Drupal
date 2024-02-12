@@ -162,7 +162,7 @@ class ExposedFormCheckboxesTest extends ViewTestBase {
 
     // Select one option and ensure we still have results.
     $tid = $this->terms[0]->id();
-    $this->submitForm(["tid[$tid]" => $tid], 'Apply');
+    $this->submitForm(["tid[$tid]" => TRUE], 'Apply');
     // Ensure only nodes tagged with $tid are displayed.
     $this->assertSession()->elementsCount('xpath', "//div[contains(@class, 'views-row')]", 2);
     $this->assertSession()->pageTextNotContains('The submitted value in the Reference Field element is not allowed.');

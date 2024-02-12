@@ -21,7 +21,7 @@ class DependencyTest extends ModuleTestBase {
    */
   public function testUninstallDependents() {
     // Enable the forum module.
-    $edit = ['modules[forum][enable]' => 'forum'];
+    $edit = ['modules[forum][enable]' => TRUE];
     $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
     $this->submitForm([], 'Continue');
@@ -42,14 +42,14 @@ class DependencyTest extends ModuleTestBase {
 
     // Uninstall the forum module, and check that taxonomy now can also be
     // uninstalled.
-    $edit = ['uninstall[forum]' => 'forum'];
+    $edit = ['uninstall[forum]' => TRUE];
     $this->drupalGet('admin/modules/uninstall');
     $this->submitForm($edit, 'Uninstall');
     $this->submitForm([], 'Uninstall');
     $this->assertSession()->pageTextContains('The selected modules have been uninstalled.');
 
     // Uninstall comment module.
-    $edit = ['uninstall[comment]' => 'comment'];
+    $edit = ['uninstall[comment]' => TRUE];
     $this->drupalGet('admin/modules/uninstall');
     $this->submitForm($edit, 'Uninstall');
     $this->submitForm([], 'Uninstall');

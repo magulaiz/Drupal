@@ -48,7 +48,7 @@ class FilterHooksTest extends BrowserTestBase {
     $edit = [];
     $edit['format'] = $this->randomMachineName();
     $edit['name'] = $name;
-    $edit['roles[' . RoleInterface::ANONYMOUS_ID . ']'] = 1;
+    $edit['roles[' . RoleInterface::ANONYMOUS_ID . ']'] = TRUE;
     $this->drupalGet('admin/config/content/formats/add');
     $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->pageTextContains("Added text format {$name}.");
@@ -58,7 +58,7 @@ class FilterHooksTest extends BrowserTestBase {
 
     // Update text format.
     $edit = [];
-    $edit['roles[' . RoleInterface::AUTHENTICATED_ID . ']'] = 1;
+    $edit['roles[' . RoleInterface::AUTHENTICATED_ID . ']'] = TRUE;
     $this->drupalGet('admin/config/content/formats/manage/' . $format_id);
     $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->pageTextContains("The text format {$name} has been updated.");

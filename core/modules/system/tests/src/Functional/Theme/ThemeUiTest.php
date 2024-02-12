@@ -105,7 +105,7 @@ class ThemeUiTest extends BrowserTestBase {
     // Enable the first group of dependee modules.
     $first_module_form_post = [];
     foreach ($first_modules as $module) {
-      $first_module_form_post["modules[$module][enable]"] = 1;
+      $first_module_form_post["modules[$module][enable]"] = TRUE;
     }
     $this->drupalGet('admin/modules');
     $this->submitForm($first_module_form_post, 'Install');
@@ -125,7 +125,7 @@ class ThemeUiTest extends BrowserTestBase {
     // Enable the second group of dependee modules.
     $second_module_form_post = [];
     foreach ($second_modules as $module) {
-      $second_module_form_post["modules[$module][enable]"] = 1;
+      $second_module_form_post["modules[$module][enable]"] = TRUE;
     }
     $this->drupalGet('admin/modules');
     $this->submitForm($second_module_form_post, 'Install');
@@ -177,7 +177,7 @@ class ThemeUiTest extends BrowserTestBase {
     }
     $to_uninstall = [];
     foreach ($module_names as $attribute) {
-      $to_uninstall["uninstall[$attribute]"] = 1;
+      $to_uninstall["uninstall[$attribute]"] = TRUE;
     }
     if (!empty($to_uninstall)) {
       $this->drupalGet('admin/modules/uninstall');

@@ -387,7 +387,7 @@ class FormTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains("required_checkbox field is required.");
 
     // Now try to submit the form correctly.
-    $this->submitForm(['required_checkbox' => 1], 'Submit');
+    $this->submitForm(['required_checkbox' => TRUE], 'Submit');
     $values = Json::decode($this->getSession()->getPage()->getContent());
     $expected_values = [
       'disabled_checkbox_on' => 'disabled_checkbox_on',
@@ -779,6 +779,10 @@ class FormTest extends BrowserTestBase {
       ->elementExists('css', 'input[name="hidden"]')
       ->setValue($edit['hidden']);
     unset($edit['hidden']);
+    // Checkboxes should have a TRUE/FALSE value to be correctly handled by
+    // the browser controller/emulator.
+    $edit['checkboxes_multiple[test_1]'] = TRUE;
+    $edit['checkbox_unchecked'] = FALSE;
     $this->submitForm($edit, 'Submit');
     $returned_values['hijacked'] = Json::decode($this->getSession()->getPage()->getContent());
 

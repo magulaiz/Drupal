@@ -96,7 +96,7 @@ class StyleSummaryTest extends ViewTestBase {
     // Change the summary display to an unformatted list displaying 3 items.
     $edit = [
       'options[summary][format]' => 'unformatted_summary',
-      'options[summary][options][unformatted_summary][override]' => '1',
+      'options[summary][options][unformatted_summary][override]' => TRUE,
       'options[summary][options][unformatted_summary][items_per_page]' => '3',
     ];
     $this->drupalGet('admin/structure/views/nojs/handler/test_summary/page_1/argument/type');

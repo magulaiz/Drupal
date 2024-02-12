@@ -115,9 +115,9 @@ class ViewEditTest extends UITestBase {
     $this->drupalGet('admin/structure/views/view/test_view');
     // Delete the field to cause an error on save.
     $fields = [];
-    $fields['fields[age][removed]'] = 1;
-    $fields['fields[id][removed]'] = 1;
-    $fields['fields[name][removed]'] = 1;
+    $fields['fields[age][removed]'] = TRUE;
+    $fields['fields[id][removed]'] = TRUE;
+    $fields['fields[name][removed]'] = TRUE;
     $this->drupalGet('admin/structure/views/nojs/rearrange/test_view/default/field');
     $this->submitForm($fields, 'Apply');
     $this->submitForm([], 'Save');

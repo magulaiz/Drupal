@@ -50,7 +50,7 @@ class MainContentFallbackTest extends BrowserTestBase {
   public function testMainContentFallback() {
     $edit = [];
     // Uninstall the block module.
-    $edit['uninstall[block]'] = 'block';
+    $edit['uninstall[block]'] = TRUE;
     $this->drupalGet('admin/modules/uninstall');
     $this->submitForm($edit, 'Uninstall');
     $this->submitForm([], 'Uninstall');
@@ -73,7 +73,7 @@ class MainContentFallbackTest extends BrowserTestBase {
     // Enable the block module again.
     $this->drupalLogin($this->adminUser);
     $edit = [];
-    $edit['modules[block][enable]'] = 'block';
+    $edit['modules[block][enable]'] = TRUE;
     $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
     $this->assertSession()->pageTextContains('Module Block has been installed.');

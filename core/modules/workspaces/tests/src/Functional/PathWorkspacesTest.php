@@ -53,7 +53,7 @@ class PathWorkspacesTest extends BrowserTestBase {
     $this->drupalLogin($this->rootUser);
 
     // Enable URL language detection and selection.
-    $edit = ['language_interface[enabled][language-url]' => 1];
+    $edit = ['language_interface[enabled][language-url]' => TRUE];
     $this->drupalGet('admin/config/regional/language/detection');
     $this->submitForm($edit, 'Save settings');
 

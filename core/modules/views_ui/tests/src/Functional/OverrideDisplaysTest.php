@@ -32,9 +32,9 @@ class OverrideDisplaysTest extends UITestBase {
     // display.
     $view['label'] = $this->randomMachineName(16);
     $view['id'] = $this->randomMachineName(16);
-    $view['page[create]'] = 1;
+    $view['page[create]'] = TRUE;
     $view['page[path]'] = $this->randomMachineName(16);
-    $view['block[create]'] = 1;
+    $view['block[create]'] = TRUE;
     $view_path = $view['page[path]'];
     $this->drupalGet('admin/structure/views/add');
     $this->submitForm($view, 'Save and edit');
@@ -99,12 +99,12 @@ class OverrideDisplaysTest extends UITestBase {
     // block to override it.
     $view['label'] = $this->randomMachineName(16);
     $view['id'] = $this->randomMachineName(16);
-    $view['page[create]'] = 1;
+    $view['page[create]'] = TRUE;
     $view['page[title]'] = $this->randomMachineName(16);
     $view['page[path]'] = $this->randomMachineName(16);
-    $view['page[feed]'] = 1;
+    $view['page[feed]'] = TRUE;
     $view['page[feed_properties][path]'] = $this->randomMachineName(16);
-    $view['block[create]'] = 1;
+    $view['block[create]'] = TRUE;
     $view['block[title]'] = $this->randomMachineName(16);
     $this->drupalGet('admin/structure/views/add');
     $this->submitForm($view, 'Save and edit');
@@ -199,10 +199,10 @@ class OverrideDisplaysTest extends UITestBase {
     // the block be overridden.
     $view['label'] = $this->randomMachineName(16);
     $view['id'] = $this->randomMachineName(16);
-    $view['page[create]'] = 1;
+    $view['page[create]'] = TRUE;
     $view['page[title]'] = $this->randomMachineName(16);
     $view['page[path]'] = $this->randomMachineName(16);
-    $view['block[create]'] = 1;
+    $view['block[create]'] = TRUE;
     $view['block[title]'] = $this->randomMachineName(16);
     $this->drupalGet('admin/structure/views/add');
     $this->submitForm($view, 'Save and edit');

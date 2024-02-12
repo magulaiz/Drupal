@@ -63,7 +63,7 @@ class PathLanguageTest extends PathTestBase {
     static::createLanguageFromLangcode('fr');
 
     // Enable URL language detection and selection.
-    $edit = ['language_interface[enabled][language-url]' => 1];
+    $edit = ['language_interface[enabled][language-url]' => TRUE];
     $this->drupalGet('admin/config/regional/language/detection');
     $this->submitForm($edit, 'Save settings');
 
@@ -134,9 +134,9 @@ class PathLanguageTest extends PathTestBase {
     // Confirm that the alias works even when changing language negotiation
     // options. Enable User language detection and selection over URL one.
     $edit = [
-      'language_interface[enabled][language-user]' => 1,
+      'language_interface[enabled][language-user]' => TRUE,
       'language_interface[weight][language-user]' => -9,
-      'language_interface[enabled][language-url]' => 1,
+      'language_interface[enabled][language-url]' => TRUE,
       'language_interface[weight][language-url]' => -8,
     ];
     $this->drupalGet('admin/config/regional/language/detection');

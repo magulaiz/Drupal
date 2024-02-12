@@ -85,7 +85,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
       'label' => 'Node Test View',
       'show[wizard_key]' => 'node',
       'show[sort]' => 'none',
-      'page[create]' => 1,
+      'page[create]' => TRUE,
       'page[title]' => 'Test Node View',
       'page[path]' => 'test/node/view',
       'page[style][style_plugin]' => 'default',
@@ -96,13 +96,13 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $this->submitForm([], 'Duplicate as Entity Reference');
     $this->clickLink('Settings');
     $edit = [
-      'style_options[search_fields][title]' => 'title',
+      'style_options[search_fields][title]' => TRUE,
     ];
     $this->submitForm($edit, 'Apply');
 
     // Set sort to NID ascending.
     $edit = [
-      'name[node_field_data.nid]' => 1,
+      'name[node_field_data.nid]' => TRUE,
     ];
     $this->drupalGet('admin/structure/views/nojs/add-handler/node_test_view/entity_reference_1/sort');
     $this->submitForm($edit, 'Add and configure sort criteria');
@@ -234,13 +234,13 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $edit = [
       'settings[handler_settings][target_bundles][tags]' => TRUE,
       // This must be set before new entities will be auto-created.
-      'settings[handler_settings][auto_create]' => 1,
+      'settings[handler_settings][auto_create]' => TRUE,
     ];
     $this->submitForm($edit, 'Save settings');
     $this->assertFieldExistsOnOverview($taxonomy_term_field_name);
     $this->drupalGet($bundle_path . '/fields/' . $field_path);
     $edit = [
-      'set_default_value' => '1',
+      'set_default_value' => TRUE,
       // A term that doesn't yet exist.
       'default_value_input[field_' . $taxonomy_term_field_name . '][0][target_id]' => $term_name,
     ];

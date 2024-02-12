@@ -251,7 +251,7 @@ class FilterAdminTest extends BrowserTestBase {
     $edit = [];
     $edit['format'] = $this->randomMachineName();
     $edit['name'] = $this->randomMachineName();
-    $edit['roles[' . RoleInterface::AUTHENTICATED_ID . ']'] = 1;
+    $edit['roles[' . RoleInterface::AUTHENTICATED_ID . ']'] = TRUE;
     $edit['filters[' . $second_filter . '][status]'] = TRUE;
     $edit['filters[' . $first_filter . '][status]'] = TRUE;
     $this->drupalGet('admin/config/content/formats/add');
@@ -283,8 +283,8 @@ class FilterAdminTest extends BrowserTestBase {
     // Allow authenticated users on full HTML.
     $format = FilterFormat::load($full);
     $edit = [];
-    $edit['roles[' . RoleInterface::ANONYMOUS_ID . ']'] = 0;
-    $edit['roles[' . RoleInterface::AUTHENTICATED_ID . ']'] = 1;
+    $edit['roles[' . RoleInterface::ANONYMOUS_ID . ']'] = FALSE;
+    $edit['roles[' . RoleInterface::AUTHENTICATED_ID . ']'] = TRUE;
     $this->drupalGet('admin/config/content/formats/manage/' . $full);
     $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->addressEquals('admin/config/content/formats/manage/' . $full);

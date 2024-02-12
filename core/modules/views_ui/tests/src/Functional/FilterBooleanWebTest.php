@@ -69,7 +69,7 @@ class FilterBooleanWebTest extends UITestBase {
     // Test selecting a default and removing an item.
     $edit = [];
     $edit['options[group_info][default_group]'] = 2;
-    $edit['options[group_info][group_items][3][remove]'] = 1;
+    $edit['options[group_info][group_items][3][remove]'] = TRUE;
     $this->submitForm($edit, 'Apply');
     $this->drupalGet('admin/structure/views/nojs/handler/test_view/default/filter/status');
     $this->assertSession()->fieldValueEquals('options[group_info][default_group]', 2);

@@ -78,11 +78,11 @@ class SearchAdvancedSearchFormTest extends BrowserTestBase {
 
     // Search by node type.
     $this->drupalGet('search/node');
-    $this->submitForm(array_merge($edit, ['type[page]' => 'page']), 'edit-submit--2');
+    $this->submitForm(array_merge($edit, ['type[page]' => TRUE]), 'edit-submit--2');
     $this->assertSession()->pageTextContains($this->node->label());
 
     $this->drupalGet('search/node');
-    $this->submitForm(array_merge($edit, ['type[article]' => 'article']), 'edit-submit--2');
+    $this->submitForm(array_merge($edit, ['type[article]' => TRUE]), 'edit-submit--2');
     $this->assertSession()->pageTextContains('search yielded no results');
   }
 
@@ -95,7 +95,7 @@ class SearchAdvancedSearchFormTest extends BrowserTestBase {
       'or' => 'dog gerbil',
       'phrase' => 'pets are nice',
       'negative' => 'fish snake',
-      'type[page]' => 'page',
+      'type[page]' => TRUE,
     ];
     $this->drupalGet('search/node');
     $this->submitForm($edit, 'edit-submit--2');

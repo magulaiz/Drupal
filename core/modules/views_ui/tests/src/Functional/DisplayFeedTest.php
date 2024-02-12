@@ -72,7 +72,7 @@ class DisplayFeedTest extends UITestBase {
 
     // Post and save this and check the output.
     $this->drupalGet('admin/structure/views/nojs/display/' . $view_name . '/feed_1/displays');
-    $this->submitForm(['displays[page]' => 'page'], 'Apply');
+    $this->submitForm(['displays[page]' => TRUE], 'Apply');
     // Options summary should be escaped.
     $this->assertSession()->assertEscaped('<em>Page</em>');
     $this->assertSession()->responseNotContains('<em>Page</em>');
@@ -82,7 +82,7 @@ class DisplayFeedTest extends UITestBase {
 
     // Add the default display, so there should now be multiple displays.
     $this->drupalGet('admin/structure/views/nojs/display/' . $view_name . '/feed_1/displays');
-    $this->submitForm(['displays[default]' => 'default'], 'Apply');
+    $this->submitForm(['displays[default]' => TRUE], 'Apply');
     $this->drupalGet('admin/structure/views/view/' . $view_name . '/edit/feed_1');
     $this->assertSession()->elementTextContains('xpath', '//*[@id="views-feed-1-displays"]', 'Multiple displays');
   }

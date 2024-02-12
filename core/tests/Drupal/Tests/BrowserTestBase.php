@@ -713,12 +713,29 @@ abstract class BrowserTestBase extends TestCase {
     // The easiest and most straightforward way to translate values suitable for
     // BrowserTestBase::submitForm() is to actually build the POST data
     // string and convert the resulting key/value pairs back into a flat array.
-    $query = http_build_query($values);
+    // Keys with boolean values will be converted into 0/1 in the POST data, so
+    // we filter them before building the POST data and re-add them afterwards.
+    $boolean_values = array_filter($values, [$this, 'isValueBoolean']);
+    $non_boolean_values = array_diff_key($values, $boolean_values);
+    $query = http_build_query($non_boolean_values);
     foreach (explode('&', $query) as $item) {
       [$key, $value] = explode('=', $item);
       $edit[urldecode($key)] = urldecode($value);
     }
+    // Re-add the boolean values.
+    $edit = array_merge($edit, $boolean_values);
+
     return $edit;
+  }
+
+  /**
+   * Callback for determining if a value is a boolean.
+   *
+   * @return bool
+   *   TRUE if the value is a boolean, FALSE otherwise.
+   */
+  protected function isValueBoolean($value): bool {
+    return is_bool($value);
   }
 
 }

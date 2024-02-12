@@ -122,7 +122,7 @@ class ContentTranslationUntranslatableFieldsTest extends ContentTranslationPendi
     $settings_key = 'settings[' . $this->entityTypeId . '][' . $this->bundle . '][settings][content_translation][untranslatable_fields_hide]';
     $settings_url = 'admin/config/regional/content-language';
     $this->drupalGet($settings_url);
-    $this->submitForm([$settings_key => 1], 'Save configuration');
+    $this->submitForm([$settings_key => TRUE], 'Save configuration');
 
     // Verify that the widget is displayed in the default language edit form,
     // but no clue is displayed.
@@ -145,7 +145,7 @@ class ContentTranslationUntranslatableFieldsTest extends ContentTranslationPendi
     // Configure untranslatable field widgets to be displayed on non-default
     // language edit forms.
     $this->drupalGet($settings_url);
-    $this->submitForm([$settings_key => 0], 'Save configuration');
+    $this->submitForm([$settings_key => FALSE], 'Save configuration');
 
     // Check that the widget is displayed along with its clue in the edit form
     // for both languages.
@@ -173,7 +173,7 @@ class ContentTranslationUntranslatableFieldsTest extends ContentTranslationPendi
     $field_name = "settings[{$this->entityTypeId}][{$this->bundle}][settings][content_translation][untranslatable_fields_hide]";
     $this->assertSession()->fieldValueEquals($field_name, 1);
     $this->assertSession()->fieldDisabled($field_name);
-    $this->submitForm([$settings_key => 0], 'Save configuration');
+    $this->submitForm([$settings_key => FALSE], 'Save configuration');
     $this->assertSession()->fieldValueEquals($field_name, 1);
     $this->assertSession()->fieldDisabled($field_name);
 

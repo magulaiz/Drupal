@@ -106,7 +106,7 @@ class RouteCachingLanguageTest extends BrowserTestBase {
 
     // Enable URL language detection and selection and set a prefix for both
     // languages.
-    $edit = ['language_interface[enabled][language-url]' => 1];
+    $edit = ['language_interface[enabled][language-url]' => TRUE];
     $this->drupalGet('admin/config/regional/language/detection');
     $this->submitForm($edit, 'Save settings');
     $edit = ['prefix[en]' => 'en'];

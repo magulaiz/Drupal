@@ -254,7 +254,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     // Third step: confirm.
     $page->findField('settings[handler_settings][target_bundles][' . $this->targetType . ']')->setValue($this->targetType);
     $assert_session->assertWaitOnAjaxRequest();
-    $this->submitForm(['required' => '1'], 'Save settings');
+    $this->submitForm(['required' => TRUE], 'Save settings');
 
     // Check that the field appears in the overview form.
     $this->assertSession()->elementTextContains('xpath', '//table[@id="field-overview"]//tr[@id="field-test"]/td[1]', "Test");

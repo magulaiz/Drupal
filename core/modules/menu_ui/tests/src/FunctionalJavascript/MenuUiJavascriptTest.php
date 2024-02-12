@@ -137,7 +137,7 @@ class MenuUiJavascriptTest extends WebDriverTestBase {
       'link[0][uri]' => $path,
       'title[0][value]' => $title,
       'description[0][value]' => '',
-      'enabled[value]' => 1,
+      'enabled[value]' => TRUE,
       'expanded[value]' => $expanded,
       'menu_parent' => $menu_id . ':' . $parent,
       'weight[0][value]' => $weight,

@@ -49,11 +49,11 @@ class ItemsPerPageTest extends WizardTestBase {
     $view['show[wizard_key]'] = 'node';
     $view['show[type]'] = 'article';
     $view['show[sort]'] = 'node_field_data-created:DESC';
-    $view['page[create]'] = 1;
+    $view['page[create]'] = TRUE;
     $view['page[title]'] = $this->randomMachineName(16);
     $view['page[path]'] = $this->randomMachineName(16);
     $view['page[items_per_page]'] = 4;
-    $view['block[create]'] = 1;
+    $view['block[create]'] = TRUE;
     $view['block[title]'] = $this->randomMachineName(16);
     $view['block[items_per_page]'] = 3;
     $this->drupalGet('admin/structure/views/add');

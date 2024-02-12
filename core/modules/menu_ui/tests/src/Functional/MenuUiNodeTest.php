@@ -119,7 +119,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     // Test that we cannot set a menu item from a menu that is not set as
     // available.
     $edit = [
-      'menu_options[tools]' => 1,
+      'menu_options[tools]' => TRUE,
       'menu_parent' => 'main:',
     ];
     $this->drupalGet('admin/structure/types/manage/page');
@@ -129,8 +129,8 @@ class MenuUiNodeTest extends BrowserTestBase {
 
     // Enable Tools menu as available menu.
     $edit = [
-      'menu_options[main]' => 1,
-      'menu_options[tools]' => 1,
+      'menu_options[main]' => TRUE,
+      'menu_options[tools]' => TRUE,
       'menu_parent' => 'main:',
     ];
     $this->drupalGet('admin/structure/types/manage/page');
@@ -140,7 +140,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     // Test that we can preview a node that will create a menu item.
     $edit = [
       'title[0][value]' => $node_title,
-      'menu[enabled]' => 1,
+      'menu[enabled]' => TRUE,
       'menu[title]' => 'Test preview',
     ];
     $this->drupalGet('node/add/page');
@@ -161,7 +161,7 @@ class MenuUiNodeTest extends BrowserTestBase {
 
     // Edit the node, enable the menu link setting, but skip the link title.
     $edit = [
-      'menu[enabled]' => 1,
+      'menu[enabled]' => TRUE,
     ];
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->submitForm($edit, 'Save');
@@ -182,7 +182,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     $this->drupalLogin($admin_user);
     // Assert that the link does not exist if unpublished.
     $edit = [
-      'menu[enabled]' => 1,
+      'menu[enabled]' => TRUE,
       'menu[title]' => $node_title,
       'status[value]' => FALSE,
     ];
@@ -201,7 +201,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     $this->drupalLogin($this->editor);
     // Edit the node and create a menu link.
     $edit = [
-      'menu[enabled]' => 1,
+      'menu[enabled]' => TRUE,
       'menu[title]' => $node_title,
       'menu[weight]' => 17,
     ];
@@ -329,7 +329,7 @@ class MenuUiNodeTest extends BrowserTestBase {
 
     // Edit the node and create a menu link.
     $edit = [
-      'menu[enabled]' => 1,
+      'menu[enabled]' => TRUE,
       'menu[title]' => $node_title,
       'menu[weight]' => 17,
     ];
@@ -340,7 +340,7 @@ class MenuUiNodeTest extends BrowserTestBase {
 
     // Edit the node in a different language and translate the menu link.
     $edit = [
-      'menu[enabled]' => 1,
+      'menu[enabled]' => TRUE,
       'menu[title]' => $translated_node_title,
       'menu[weight]' => 17,
     ];
@@ -392,9 +392,9 @@ class MenuUiNodeTest extends BrowserTestBase {
     $node_title = $this->randomMachineName();
     $edit = [
       'title[0][value]' => $node_title,
-      'menu[enabled]' => 1,
+      'menu[enabled]' => TRUE,
       'menu[title]' => $node_title,
-      'status[value]' => 0,
+      'status[value]' => FALSE,
     ];
     $this->drupalGet('node/add/page');
     $this->submitForm($edit, 'Save');

@@ -247,7 +247,7 @@ class DisplayBlockTest extends ViewTestBase {
 
     // Tests the override of the label capability.
     $edit = ['region' => 'content'];
-    $edit['settings[views_label_checkbox]'] = 1;
+    $edit['settings[views_label_checkbox]'] = TRUE;
     $edit['settings[views_label]'] = 'Custom title';
     $this->drupalGet('admin/structure/block/add/views_block:test_view_block-block_1/' . $default_theme);
     $this->submitForm($edit, 'Save block');

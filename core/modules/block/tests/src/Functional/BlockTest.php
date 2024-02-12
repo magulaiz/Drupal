@@ -41,8 +41,8 @@ class BlockTest extends BlockTestBase {
     $edit['visibility[request_path][pages]'] = '/user*';
     $edit['visibility[request_path][negate]'] = TRUE;
     $edit['visibility[user_role][roles][' . RoleInterface::AUTHENTICATED_ID . ']'] = TRUE;
-    $edit['visibility[response_status][status_codes][200]'] = 200;
-    $edit['visibility[response_status][status_codes][404]'] = 404;
+    $edit['visibility[response_status][status_codes][200]'] = TRUE;
+    $edit['visibility[response_status][status_codes][404]'] = TRUE;
     $this->drupalGet('admin/structure/block/add/' . $block_name . '/' . $default_theme);
     $this->assertSession()->checkboxChecked('edit-visibility-request-path-negate-0');
 

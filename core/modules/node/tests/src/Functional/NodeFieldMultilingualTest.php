@@ -50,7 +50,7 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
     ConfigurableLanguage::createFromLangcode('it')->save();
 
     // Enable URL language detection and selection.
-    $edit = ['language_interface[enabled][language-url]' => '1'];
+    $edit = ['language_interface[enabled][language-url]' => TRUE];
     $this->drupalGet('admin/config/regional/language/detection');
     $this->submitForm($edit, 'Save settings');
 

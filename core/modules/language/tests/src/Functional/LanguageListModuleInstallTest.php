@@ -35,7 +35,7 @@ class LanguageListModuleInstallTest extends BrowserTestBase {
     ]);
     $this->drupalLogin($admin_user);
     $edit = [];
-    $edit['modules[language][enable]'] = 'language';
+    $edit['modules[language][enable]'] = TRUE;
     $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
 

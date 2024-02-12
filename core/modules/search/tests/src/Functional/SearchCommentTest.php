@@ -119,9 +119,9 @@ class SearchCommentTest extends BrowserTestBase {
 
     // Allow anonymous users to search content.
     $edit = [
-      RoleInterface::ANONYMOUS_ID . '[search content]' => 1,
-      RoleInterface::ANONYMOUS_ID . '[access comments]' => 1,
-      RoleInterface::ANONYMOUS_ID . '[post comments]' => 1,
+      RoleInterface::ANONYMOUS_ID . '[search content]' => TRUE,
+      RoleInterface::ANONYMOUS_ID . '[access comments]' => TRUE,
+      RoleInterface::ANONYMOUS_ID . '[post comments]' => TRUE,
     ];
     $this->drupalGet('admin/people/permissions');
     $this->submitForm($edit, 'Save permissions');

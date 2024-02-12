@@ -67,10 +67,10 @@ class BasicTest extends WizardTestBase {
     $view2['label'] = $this->randomMachineName(16);
     $view2['id'] = $this->randomMachineName(16);
     $view2['description'] = $this->randomMachineName(16);
-    $view2['page[create]'] = 1;
+    $view2['page[create]'] = TRUE;
     $view2['page[title]'] = $this->randomMachineName(16);
     $view2['page[path]'] = $this->randomMachineName(16);
-    $view2['page[feed]'] = 1;
+    $view2['page[feed]'] = TRUE;
     $view2['page[feed_properties][path]'] = $this->randomMachineName(16);
     $this->drupalGet('admin/structure/views/add');
     $this->submitForm($view2, 'Save and edit');
@@ -119,10 +119,10 @@ class BasicTest extends WizardTestBase {
     $view3['description'] = $this->randomMachineName(16);
     $view3['show[wizard_key]'] = 'node';
     $view3['show[type]'] = 'page';
-    $view3['page[create]'] = 1;
+    $view3['page[create]'] = TRUE;
     $view3['page[title]'] = $this->randomMachineName(16);
     $view3['page[path]'] = $this->randomMachineName(16);
-    $view3['block[create]'] = 1;
+    $view3['block[create]'] = TRUE;
     $view3['block[title]'] = $this->randomMachineName(16);
     $this->drupalGet('admin/structure/views/add');
     $this->submitForm($view3, 'Save and edit');
@@ -165,7 +165,7 @@ class BasicTest extends WizardTestBase {
     $view4['description'] = $this->randomMachineName(16);
     $view4['show[wizard_key]'] = 'node';
     $view4['show[type]'] = 'page';
-    $view4['rest_export[create]'] = 1;
+    $view4['rest_export[create]'] = TRUE;
     $view4['rest_export[path]'] = $this->randomMachineName(16);
     $this->drupalGet('admin/structure/views/add');
     $this->submitForm($view4, 'Save and edit');
@@ -188,7 +188,7 @@ class BasicTest extends WizardTestBase {
     $leading_slash_view['description'] = $this->randomMachineName(16);
     $leading_slash_view['show[wizard_key]'] = 'node';
     $leading_slash_view['show[type]'] = 'page';
-    $leading_slash_view['page[create]'] = 1;
+    $leading_slash_view['page[create]'] = TRUE;
     $leading_slash_view['page[title]'] = $this->randomMachineName(16);
     $leading_slash_view['page[path]'] = '/' . $this->randomMachineName(16);
     $this->drupalGet('admin/structure/views/add');

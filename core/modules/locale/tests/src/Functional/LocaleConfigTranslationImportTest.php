@@ -62,7 +62,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
 
     // Add translation permissions now that the locale module has been enabled.
     $edit = [
-      'authenticated[translate interface]' => 'translate interface',
+      'authenticated[translate interface]' => TRUE,
     ];
     $this->drupalGet('admin/people/permissions');
     $this->submitForm($edit, 'Save permissions');
@@ -175,7 +175,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
 
     // Install any module.
     $this->drupalGet('admin/modules');
-    $this->submitForm(['modules[dblog][enable]' => 'dblog'], 'Install');
+    $this->submitForm(['modules[dblog][enable]' => TRUE], 'Install');
     $this->assertSession()->pageTextContains('Module Database Logging has been installed.');
 
     // Get the front page and ensure that the translated configuration still

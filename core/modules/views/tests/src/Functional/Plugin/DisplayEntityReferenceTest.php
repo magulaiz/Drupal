@@ -148,7 +148,7 @@ class DisplayEntityReferenceTest extends ViewTestBase {
 
     // Add the new field to the search fields.
     $this->submitForm([
-      'style_options[search_fields][' . $this->fieldName . ']' => $this->fieldName,
+      'style_options[search_fields][' . $this->fieldName . ']' => TRUE,
     ], 'Apply');
     $this->submitForm([], 'Save');
 
@@ -223,7 +223,7 @@ class DisplayEntityReferenceTest extends ViewTestBase {
 
     // Add the new field to the search fields.
     $this->drupalGet('admin/structure/views/nojs/display/test_display_entity_reference/entity_reference_1/style_options');
-    $this->submitForm(['style_options[search_fields][uid]' => 'uid'], 'Apply');
+    $this->submitForm(['style_options[search_fields][uid]' => TRUE], 'Apply');
     $this->submitForm([], 'Save');
 
     // Test that the search still works with the related field.

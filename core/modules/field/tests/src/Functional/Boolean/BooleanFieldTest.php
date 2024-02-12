@@ -112,7 +112,7 @@ class BooleanFieldTest extends BrowserTestBase {
 
     // Submit and ensure it is accepted.
     $edit = [
-      "{$field_name}[value]" => 1,
+      "{$field_name}[value]" => TRUE,
     ];
     $this->submitForm($edit, 'Save');
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
@@ -161,7 +161,7 @@ class BooleanFieldTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Use field label instead of the "On" label as the label.');
 
     // Enable setting.
-    $edit = ['fields[' . $field_name . '][settings_edit_form][settings][display_label]' => 1];
+    $edit = ['fields[' . $field_name . '][settings_edit_form][settings][display_label]' => TRUE];
     $this->submitForm($edit, $field_name . "_plugin_settings_update");
     $this->submitForm([], 'Save');
 

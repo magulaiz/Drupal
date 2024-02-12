@@ -318,7 +318,7 @@ class StyleSerializerEntityTest extends ViewTestBase {
 
     // Select only 'xml' as an accepted format.
     $this->drupalGet($style_options);
-    $this->submitForm(['style_options[formats][xml]' => 'xml'], 'Apply');
+    $this->submitForm(['style_options[formats][xml]' => TRUE], 'Apply');
     $this->submitForm([], 'Save');
 
     // Ensure a request for JSON returns 406 Not Acceptable.
@@ -332,7 +332,7 @@ class StyleSerializerEntityTest extends ViewTestBase {
 
     // Add 'json' as an accepted format, so we have multiple.
     $this->drupalGet($style_options);
-    $this->submitForm(['style_options[formats][json]' => 'json'], 'Apply');
+    $this->submitForm(['style_options[formats][json]' => TRUE], 'Apply');
     $this->submitForm([], 'Save');
 
     // Should return a 406. Emulates a sample Firefox header.
@@ -358,8 +358,8 @@ class StyleSerializerEntityTest extends ViewTestBase {
     // Now configure no format, so both serialization formats should be allowed.
     $this->drupalGet($style_options);
     $this->submitForm([
-      'style_options[formats][json]' => '0',
-      'style_options[formats][xml]' => '0',
+      'style_options[formats][json]' => FALSE,
+      'style_options[formats][xml]' => FALSE,
     ], 'Apply');
 
     // Ensure a request for JSON returns 200 OK.
@@ -462,8 +462,8 @@ class StyleSerializerEntityTest extends ViewTestBase {
     // Test an empty string for an alias, this should not be used. This also
     // tests that the form can be submitted with no aliases.
     $values = [
-      'row_options[field_options][created][raw_output]' => '1',
-      'row_options[field_options][name][raw_output]' => '1',
+      'row_options[field_options][created][raw_output]' => TRUE,
+      'row_options[field_options][name][raw_output]' => TRUE,
     ];
     $this->drupalGet($row_options);
     $this->submitForm($values, 'Apply');

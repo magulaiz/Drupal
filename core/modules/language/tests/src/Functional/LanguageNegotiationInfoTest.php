@@ -195,12 +195,12 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
 
     // After installing another module, the config should be the same.
     $this->drupalGet('admin/modules');
-    $this->submitForm(['modules[test_module][enable]' => 1], 'Install');
+    $this->submitForm(['modules[test_module][enable]' => TRUE], 'Install');
     $this->assertTrue($this->isLanguageTypeConfigurable($test_type), 'Language type is still configurable.');
 
     // After uninstalling the other module, the config should be the same.
     $this->drupalGet('admin/modules/uninstall');
-    $this->submitForm(['uninstall[test_module]' => 1], 'Uninstall');
+    $this->submitForm(['uninstall[test_module]' => TRUE], 'Uninstall');
     $this->assertTrue($this->isLanguageTypeConfigurable($test_type), 'Language type is still configurable.');
   }
 

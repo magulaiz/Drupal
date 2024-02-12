@@ -49,8 +49,8 @@ class LanguageNegotiationSessionTest extends BrowserTestBase {
     // Enable Session and Selected language for interface language detection.
     $this->drupalGet('admin/config/regional/language/detection');
     $edit = [
-      'language_interface[enabled][language-session]' => 1,
-      'language_interface[enabled][language-selected]' => 1,
+      'language_interface[enabled][language-session]' => TRUE,
+      'language_interface[enabled][language-selected]' => TRUE,
       'language_interface[weight][language-session]' => -6,
       'language_interface[weight][language-selected]' => 12,
     ];

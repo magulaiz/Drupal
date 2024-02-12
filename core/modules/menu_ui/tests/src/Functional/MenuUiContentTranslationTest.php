@@ -128,7 +128,7 @@ class MenuUiContentTranslationTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $edit = [
       'title[0][value]' => $node_title,
-      'menu[enabled]' => 1,
+      'menu[enabled]' => TRUE,
       'menu[title]' => $menu_link_title_en,
     ];
     $this->submitForm($edit, 'Save');

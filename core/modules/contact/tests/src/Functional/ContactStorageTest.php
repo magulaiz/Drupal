@@ -52,7 +52,7 @@ class ContactStorageTest extends ContactSitewideTest {
     // Create first valid contact form.
     $mail = 'simpletest@example.com';
     $this->addContactForm($id = $this->randomMachineName(16), $label = $this->randomMachineName(16), implode(',', [$mail]), '', TRUE, 'Your message has been sent.', [
-      'send_a_pony' => 1,
+      'send_a_pony' => TRUE,
     ]);
     $this->assertSession()->pageTextContains('Contact form ' . $label . ' has been added.');
 

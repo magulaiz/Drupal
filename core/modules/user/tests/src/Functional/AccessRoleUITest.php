@@ -46,7 +46,7 @@ class AccessRoleUITest extends UITestBase {
     $entity_type_manager->getStorage('user_role')->create(['id' => 'custom_role', 'label' => 'Custom role'])->save();
     $access_url = "admin/structure/views/nojs/display/test_access_role/default/access_options";
     $this->drupalGet($access_url);
-    $this->submitForm(['access_options[role][custom_role]' => 1], 'Apply');
+    $this->submitForm(['access_options[role][custom_role]' => TRUE], 'Apply');
     $this->assertSession()->statusCodeEquals(200);
 
     $this->submitForm([], 'Save');

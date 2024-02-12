@@ -133,7 +133,7 @@ class ExposedFormUITest extends UITestBase {
     // Test adding a new exposed sort criteria.
     $view_id = $this->randomView()['id'];
     $this->drupalGet("admin/structure/views/nojs/add-handler/$view_id/default/sort");
-    $this->submitForm(['name[node_field_data.created]' => 1], 'Add and configure sort criteria');
+    $this->submitForm(['name[node_field_data.created]' => TRUE], 'Add and configure sort criteria');
     $this->assertSession()->fieldValueEquals('options[order]', 'ASC');
     // Change the order and expose the sort.
     $this->submitForm(['options[order]' => 'DESC'], 'Apply');
@@ -215,7 +215,7 @@ class ExposedFormUITest extends UITestBase {
     $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/type');
     $edit = [];
     $edit["options[group_info][group_items][1][title]"] = 'Is Article';
-    $edit["options[group_info][group_items][1][value][article]"] = 'article';
+    $edit["options[group_info][group_items][1][value][article]"] = TRUE;
     $this->submitForm($edit, 'Apply');
     $this->assertSession()->addressEquals('admin/structure/views/view/test_exposed_admin_ui/edit/default');
     $this->assertNoGroupedFilterErrors();
@@ -224,12 +224,12 @@ class ExposedFormUITest extends UITestBase {
     $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/type');
     $edit = [];
     $edit["options[group_info][group_items][1][title]"] = 'Is Article';
-    $edit["options[group_info][group_items][1][value][article]"] = 'article';
+    $edit["options[group_info][group_items][1][value][article]"] = TRUE;
     $edit["options[group_info][group_items][2][title]"] = 'Is Page';
-    $edit["options[group_info][group_items][2][value][page]"] = 'page';
+    $edit["options[group_info][group_items][2][value][page]"] = TRUE;
     $edit["options[group_info][group_items][3][title]"] = 'Is Page and Article';
-    $edit["options[group_info][group_items][3][value][article]"] = 'article';
-    $edit["options[group_info][group_items][3][value][page]"] = 'page';
+    $edit["options[group_info][group_items][3][value][article]"] = TRUE;
+    $edit["options[group_info][group_items][3][value][page]"] = TRUE;
     $this->submitForm($edit, 'Apply');
     $this->assertSession()->addressEquals('admin/structure/views/view/test_exposed_admin_ui/edit/default');
     $this->assertNoGroupedFilterErrors();
@@ -291,7 +291,7 @@ class ExposedFormUITest extends UITestBase {
     $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/type');
     $edit = [];
     $edit["options[group_info][group_items][1][title]"] = '';
-    $edit["options[group_info][group_items][1][value][article]"] = 'article';
+    $edit["options[group_info][group_items][1][value][article]"] = TRUE;
     $this->submitForm($edit, 'Apply');
     $this->assertSession()->pageTextContains($this->groupFormUiErrors['missing_title']);
   }
@@ -326,11 +326,11 @@ class ExposedFormUITest extends UITestBase {
     $edit = [
       'options[group_button][radios][radios]' => 1,
       'options[group_info][group_items][1][title]' => '1st',
-      'options[group_info][group_items][1][value][all]' => 'all',
+      'options[group_info][group_items][1][value][all]' => TRUE,
       'options[group_info][group_items][2][title]' => '2nd',
-      'options[group_info][group_items][2][value][article]' => 'article',
+      'options[group_info][group_items][2][value][article]' => TRUE,
       'options[group_info][group_items][3][title]' => '3rd',
-      'options[group_info][group_items][3][value][page]' => 'page',
+      'options[group_info][group_items][3][value][page]' => TRUE,
       'options[group_info][default_group]' => '3',
     ];
     // Apply the filter settings.
@@ -343,8 +343,8 @@ class ExposedFormUITest extends UITestBase {
     $this->assertSession()->fieldValueEquals('type', '3');
     // Enable "Allow multiple selections" option and set a default group.
     $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/type');
-    $edit['options[group_info][multiple]'] = 1;
-    $edit['options[group_info][default_group_multiple][1]'] = 1;
+    $edit['options[group_info][multiple]'] = TRUE;
+    $edit['options[group_info][default_group_multiple][1]'] = TRUE;
     $this->submitForm($edit, 'Apply');
     $this->submitForm([], 'Save');
     // Check the default filter values again.
@@ -355,7 +355,7 @@ class ExposedFormUITest extends UITestBase {
 
     // Click the Expose filter button.
     $this->drupalGet('admin/structure/views/nojs/add-handler/test_exposed_admin_ui/default/filter');
-    $this->submitForm(['name[node_field_data.status]' => 1], 'Add and configure filter criteria');
+    $this->submitForm(['name[node_field_data.status]' => TRUE], 'Add and configure filter criteria');
     $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/status');
     $this->submitForm([], 'Expose filter');
     // Select 'Grouped filters' radio button.
@@ -388,8 +388,8 @@ class ExposedFormUITest extends UITestBase {
     $this->assertSession()->fieldValueEquals('status', '2');
     // Enable "Allow multiple selections" option and set a default group.
     $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/status');
-    $edit['options[group_info][multiple]'] = 1;
-    $edit['options[group_info][default_group_multiple][3]'] = 1;
+    $edit['options[group_info][multiple]'] = TRUE;
+    $edit['options[group_info][default_group_multiple][3]'] = TRUE;
     $this->submitForm($edit, 'Apply');
     $this->submitForm([], 'Save');
     // Check the default filter value again.
