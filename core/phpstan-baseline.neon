@@ -673,16 +673,6 @@ parameters:
 			path: lib/Drupal/Core/Field/Plugin/Field/FieldFormatter/TimestampFormatter.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: lib/Drupal/Core/Field/Plugin/Field/FieldType/ChangedItem.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: lib/Drupal/Core/Field/Plugin/Field/FieldType/CreatedItem.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\Field\\\\Plugin\\\\Field\\\\FieldType\\\\EntityReferenceItem\\:\\:generateSampleValue\\(\\) should return array but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Field/Plugin/Field/FieldType/EntityReferenceItem.php
@@ -1657,11 +1647,6 @@ parameters:
 			path: modules/menu_link_content/src/Plugin/Menu/MenuLinkContent.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: modules/menu_link_content/tests/src/Kernel/MenuLinksTest.php
-
-		-
 			message: "#^Method Drupal\\\\menu_ui\\\\MenuForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/menu_ui/src/MenuForm.php
@@ -2160,11 +2145,6 @@ parameters:
 			"""
 			count: 1
 			path: modules/system/tests/modules/deprecation_test/src/DeprecatedController.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/system/tests/modules/entity_test/src/Plugin/Field/FieldType/ChangedTestItem.php
 
 		-
 			message: "#^Variable \\$options might not be defined\\.$#"
@@ -2968,11 +2948,6 @@ parameters:
 			"""
 			count: 3
 			path: tests/Drupal/KernelTests/Core/Database/StatementTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 4
-			path: tests/Drupal/KernelTests/Core/Entity/ContentEntityChangedTest.php
 
 		-
 			message: "#^Variable \\$title might not be defined\\.$#"

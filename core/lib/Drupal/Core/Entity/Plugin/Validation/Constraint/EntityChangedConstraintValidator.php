@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Entity\Plugin\Validation\Constraint;
 
+use Drupal\Core\Entity\SynchronizableInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -16,7 +17,7 @@ class EntityChangedConstraintValidator extends ConstraintValidator {
   public function validate($entity, Constraint $constraint) {
     if (isset($entity)) {
       /** @var \Drupal\Core\Entity\EntityInterface $entity */
-      if (!$entity->isNew()) {
+      if (!$entity->isNew() && (!$entity instanceof SynchronizableInterface || !$entity->isSyncing())) {
         $saved_entity = \Drupal::entityTypeManager()->getStorage($entity->getEntityTypeId())->loadUnchanged($entity->id());
         // Ensure that all the entity translations are the same as or newer
         // than their current version in the storage in order to avoid

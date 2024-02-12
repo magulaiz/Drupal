@@ -17,13 +17,33 @@ namespace Drupal\Core\Field\Plugin\Field\FieldType;
 class CreatedItem extends TimestampItem {
 
   /**
+   * The time service.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface
+   */
+  protected $time;
+
+  /**
    * {@inheritdoc}
    */
   public function applyDefaultValue($notify = TRUE) {
     parent::applyDefaultValue($notify);
     // Created fields default to the current timestamp.
-    $this->setValue(['value' => REQUEST_TIME], $notify);
+    $this->setValue(['value' => $this->time()->getRequestTime()], $notify);
     return $this;
+  }
+
+  /**
+   * Get the time service.
+   *
+   * @return \Drupal\Component\Datetime\TimeInterface
+   *   The time service.
+   */
+  protected function time() {
+    if (!isset($this->time)) {
+      $this->time = \Drupal::time();
+    }
+    return $this->time;
   }
 
 }
