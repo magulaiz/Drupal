@@ -667,6 +667,8 @@ field.storage_settings.string_long:
     case_sensitive:
       type: boolean
       label: 'Case sensitive'
+  constraints:
+    FullyValidatable: ~
 
 field.field_settings.string_long:
   type: mapping
@@ -687,6 +689,8 @@ field.value.string_long:
 field.storage_settings.password:
   type: field.storage_settings.string
   label: 'Password settings'
+  constraints:
+    FullyValidatable: ~
 
 field.field_settings.password:
   type: mapping
@@ -726,6 +730,8 @@ field.value.uri:
 field.storage_settings.created:
   type: mapping
   label: 'Created timestamp settings'
+  constraints:
+    FullyValidatable: ~
 
 field.field_settings.created:
   type: mapping
@@ -746,6 +752,8 @@ field.value.created:
 field.storage_settings.changed:
   type: mapping
   label: 'Changed timestamp settings'
+  constraints:
+    FullyValidatable: ~
 
 field.field_settings.changed:
   type: mapping
@@ -770,6 +778,10 @@ field.storage_settings.entity_reference:
     target_type:
       type: string
       label: 'Type of item to reference'
+      constraints:
+        PluginExists:
+          manager: entity_type.manager
+          interface: Drupal\Core\Entity\EntityTypeInterface
 
 field.field_settings.entity_reference:
   type: mapping
@@ -826,6 +838,8 @@ field.value.boolean:
 field.storage_settings.email:
   type: mapping
   label: 'Email settings'
+  constraints:
+    FullyValidatable: ~
 
 field.field_settings.email:
   type: mapping
@@ -923,6 +937,8 @@ field.value.decimal:
 field.storage_settings.float:
   type: mapping
   label: 'Float settings'
+  constraints:
+    FullyValidatable: ~
 
 field.field_settings.float:
   type: mapping
