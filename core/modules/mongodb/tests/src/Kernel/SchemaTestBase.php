@@ -7,6 +7,9 @@ use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Base class for MongoDB schema tests.
+ *
+ * @group MongoDB
+ * @coversDefaultClass \Drupal\mongodb\Driver\Database\mongodb\Schema
  */
 class SchemaTestBase extends KernelTestBase {
 
@@ -345,7 +348,6 @@ class SchemaTestBase extends KernelTestBase {
    * Helper method to test if the table validation.
    *
    * @covers ::getTableValidation
-   * @covers ::getBaseTableValidation
    * @covers ::getTableValidationFromDatabase
    *
    * @param string $table_name
@@ -358,11 +360,11 @@ class SchemaTestBase extends KernelTestBase {
 
     $generated_validation = $schema->getTableValidation($table_name);
 
-    $this->assertEqual($generated_validation, $table_validation, 'The expected validation is the same as the generated validation.');
+    $this->assertEquals($generated_validation, $table_validation, 'The expected validation is the same as the generated validation.');
 
     $database_validation = $schema->getTableValidationFromDatabase($table_name);
 
-    $this->assertEqual($database_validation, $table_validation, 'The expected validation is the same as the validation from the database.');
+    $this->assertEquals($database_validation, $table_validation, 'The expected validation is the same as the validation from the database.');
   }
 
   /**
@@ -379,7 +381,7 @@ class SchemaTestBase extends KernelTestBase {
     $schema = Database::getConnection()->schema();
     $schema_from_table = $schema->getTableSchema($table_name);
 
-    $this->assertEqual($schema_from_table, $table_schema, 'The expected table schema is the same as the saved table schema.');
+    $this->assertEquals($schema_from_table, $table_schema, 'The expected table schema is the same as the saved table schema.');
   }
 
   /**
@@ -402,7 +404,7 @@ class SchemaTestBase extends KernelTestBase {
       $this->assertTrue($schema->constraintExists($table_name, 'pkey'), 'The primary key index does exists for the table.');
 
       $primary_key = $schema->getTableIndexFromDatabase($table_name, 'pkey');
-      $this->assertEqual(get_class($primary_key), 'MongoDB\Model\IndexInfo', 'The primary key index is an object of: "MongoDB\Model\IndexInfo".');
+      $this->assertEquals(get_class($primary_key), 'MongoDB\Model\IndexInfo', 'The primary key index is an object of: "MongoDB\Model\IndexInfo".');
 
       $this->checkIndexFields($table_schema['primary key'], $primary_key->getKey());
     }
@@ -416,7 +418,7 @@ class SchemaTestBase extends KernelTestBase {
         $this->assertTrue($schema->constraintExists($table_name, $unique_key_name . '__key'), 'The unique key index exists for the table.');
 
         $unique_key = $schema->getTableIndexFromDatabase($table_name, $unique_key_name . '__key');
-        $this->assertEqual(get_class($unique_key), 'MongoDB\Model\IndexInfo', 'The unique key index is an object of: "MongoDB\Model\IndexInfo".');
+        $this->assertEquals(get_class($unique_key), 'MongoDB\Model\IndexInfo', 'The unique key index is an object of: "MongoDB\Model\IndexInfo".');
 
         $this->checkIndexFields($unique_key_fields, $unique_key->getKey());
       }
@@ -429,7 +431,7 @@ class SchemaTestBase extends KernelTestBase {
         $this->assertTrue($schema->indexExists($table_name, $index_name), 'The index exists for the table.');
 
         $index = $schema->getTableIndexFromDatabase($table_name, $index_name . '__idx');
-        $this->assertEqual(get_class($index), 'MongoDB\Model\IndexInfo', 'The index is an object of: "MongoDB\Model\IndexInfo".');
+        $this->assertEquals(get_class($index), 'MongoDB\Model\IndexInfo', 'The index is an object of: "MongoDB\Model\IndexInfo".');
 
         $this->checkIndexFields($index_fields, $index->getKey());
       }
@@ -474,7 +476,7 @@ class SchemaTestBase extends KernelTestBase {
       $this->assertTrue($schema->constraintExists($base_table_name, $constraint), 'The primary key index does exists for the embedded table.');
 
       $primary_key = $schema->getTableIndexFromDatabase($base_table_name, $constraint);
-      $this->assertEqual(get_class($primary_key), 'MongoDB\Model\IndexInfo', 'The primary key index is an object of: "MongoDB\Model\IndexInfo".');
+      $this->assertEquals(get_class($primary_key), 'MongoDB\Model\IndexInfo', 'The primary key index is an object of: "MongoDB\Model\IndexInfo".');
 
       $embedded_primary_key_fields = [];
       foreach ($embedded_table_schema['primary key'] as $field) {
@@ -493,7 +495,7 @@ class SchemaTestBase extends KernelTestBase {
         $this->assertTrue($schema->constraintExists($base_table_name, $constraint), 'The unique key index exists for the embedded table.');
 
         $unique_key = $schema->getTableIndexFromDatabase($base_table_name, $constraint);
-        $this->assertEqual(get_class($unique_key), 'MongoDB\Model\IndexInfo', 'The unique key index is an object of: "MongoDB\Model\IndexInfo".');
+        $this->assertEquals(get_class($unique_key), 'MongoDB\Model\IndexInfo', 'The unique key index is an object of: "MongoDB\Model\IndexInfo".');
 
         $embedded_unique_key_fields = [];
         foreach ($unique_key_fields as $unique_key_field) {
@@ -511,7 +513,7 @@ class SchemaTestBase extends KernelTestBase {
         $this->assertTrue($schema->indexExists($embedded_table_name, $index_name), 'The index exists for the table.');
 
         $index = $schema->getTableIndexFromDatabase($base_table_name, $constraint);
-        $this->assertEqual(get_class($index), 'MongoDB\Model\IndexInfo', 'The index is an object of: "MongoDB\Model\IndexInfo".');
+        $this->assertEquals(get_class($index), 'MongoDB\Model\IndexInfo', 'The index is an object of: "MongoDB\Model\IndexInfo".');
 
         $embedded_index_fields = [];
         foreach ($index_fields as $index_field) {
@@ -586,7 +588,7 @@ class SchemaTestBase extends KernelTestBase {
 
     if ($schema->tableExists($base_table_data['name'])) {
       // MongoDB also creates an index for the field "_id".
-      $this->assertEqual(count($indexes) - 1, $index_count, 'The number of indexes from the table schema is the same as number of indexes from the database.');
+      $this->assertEquals(count($indexes) - 1, $index_count, 'The number of indexes from the table schema is the same as number of indexes from the database.');
     }
   }
 
@@ -607,8 +609,8 @@ class SchemaTestBase extends KernelTestBase {
       $index_exists = FALSE;
       foreach ($database_indexes as $database_index) {
         if ($database_index->getName() == $expected_index['name']) {
-          $this->assertEqual($database_index->getKey(), $expected_index['key'], 'The index key is the same as the expected key.');
-          $this->assertEqual($database_index->isUnique(), $expected_index['unique'], 'The index uniqueness is the same as the expected uniqueness.');
+          $this->assertEquals($database_index->getKey(), $expected_index['key'], 'The index key is the same as the expected key.');
+          $this->assertEquals($database_index->isUnique(), $expected_index['unique'], 'The index uniqueness is the same as the expected uniqueness.');
           $index_exists = TRUE;
         }
       }
@@ -621,8 +623,8 @@ class SchemaTestBase extends KernelTestBase {
       $index_exists = FALSE;
       foreach ($expected_indexes as $expected_index) {
         if ($database_index->getName() == $expected_index['name']) {
-          $this->assertEqual($database_index->getKey(), $expected_index['key'], 'The index key is the same as the expected key.');
-          $this->assertEqual($database_index->isUnique(), $expected_index['unique'], 'The index uniqueness is the same as the expected uniqueness.');
+          $this->assertEquals($database_index->getKey(), $expected_index['key'], 'The index key is the same as the expected key.');
+          $this->assertEquals($database_index->isUnique(), $expected_index['unique'], 'The index uniqueness is the same as the expected uniqueness.');
           $index_exists = TRUE;
         }
       }
@@ -631,7 +633,7 @@ class SchemaTestBase extends KernelTestBase {
 
     // Check the number of indexes in the database is the same as the number of
     // expected indexes.
-    $this->assertEqual(count($database_indexes), count($expected_indexes), 'The number indexes in the database is the same as the number of expected indexes.');
+    $this->assertEquals(count($database_indexes), count($expected_indexes), 'The number indexes in the database is the same as the number of expected indexes.');
   }
 
 }

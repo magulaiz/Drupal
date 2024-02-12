@@ -14,49 +14,49 @@ class TransactionTest extends DriverSpecificTransactionTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testRollbackRootWithActiveSavepoint() {
+  public function testRollbackRootWithActiveSavepoint(): void {
     $this->markTestSkipped('The MongoDB database driver does not support nested transactions.');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function testRollbackSavepoint() {
+  public function testRollbackSavepoint(): void {
     $this->markTestSkipped('The MongoDB database driver does not support nested transactions.');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function testRollbackSavepointWithLaterSavepoint() {
+  public function testRollbackSavepointWithLaterSavepoint(): void {
     $this->markTestSkipped('The MongoDB database driver does not support nested transactions.');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function testCommittedTransaction() {
+  public function testCommittedTransaction(): void {
     $this->markTestSkipped('The MongoDB database driver does not support nested transactions.');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function testTransactionWithDdlStatement() {
+  public function testTransactionWithDdlStatement(): void {
     $this->markTestSkipped('The MongoDB database driver does not support nested transactions.');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function testTransactionStacking() {
+  public function testTransactionStacking(): void {
     $this->markTestSkipped('The MongoDB database driver does not support nested transactions.');
   }
 
   /**
    * Tests that transactions can continue to be used if a query fails.
    */
-  public function testQueryFailureInTransaction() {
+  public function testQueryFailureInTransaction(): void {
     $transaction = $this->connection->startTransaction('test_transaction');
     $this->connection->schema()->dropTable('test');
 

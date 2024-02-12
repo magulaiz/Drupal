@@ -121,12 +121,11 @@ class TableInformation {
    *   The table information for the given table.
    */
   public function getTable($table) {
-//dump('getTable()');
-//dump($this->tableInformation);
     $this->load();
     if (isset($this->tableInformation[$table])) {
       return $this->toArray($this->tableInformation[$table]);
     }
+    return [];
   }
 
   /**
@@ -199,14 +198,16 @@ class TableInformation {
    * @param string $table
    *   The table name for which to get it's parents table name.
    *
-   * @return string
-   *   The table name to which the given table name is embedded.
+   * @return string|false
+   *   The table name to which the given table name is embedded or FALSE when
+   *   the table is a base table.
    */
   public function getTableEmbeddedToTable($table) {
     $this->load();
     if (isset($this->tableInformation[$table]['embedded_to_table'])) {
       return $this->toArray($this->tableInformation[$table]['embedded_to_table']);
     }
+    return FALSE;
   }
 
   /**
@@ -251,6 +252,7 @@ class TableInformation {
     if (isset($this->tableInformation[$table]['description'])) {
       return $this->toArray($this->tableInformation[$table]['description']);
     }
+    return '';
   }
 
   /**
@@ -295,6 +297,7 @@ class TableInformation {
     if (is_string($table) && isset($this->tableInformation[$table]['fields'])) {
       return $this->toArray($this->tableInformation[$table]['fields']);
     }
+    return [];
   }
 
   /**
@@ -341,6 +344,7 @@ class TableInformation {
     if (isset($this->tableInformation[$table]['fields'][$field])) {
       return $this->toArray($this->tableInformation[$table]['fields'][$field]);
     }
+    return [];
   }
 
   /**
@@ -387,6 +391,7 @@ class TableInformation {
     if (isset($this->tableInformation[$table]['primary key'])) {
       return $this->toArray($this->tableInformation[$table]['primary key']);
     }
+    return [];
   }
 
   /**
@@ -428,6 +433,7 @@ class TableInformation {
     if (isset($this->tableInformation[$table]['unique keys'])) {
       return $this->toArray($this->tableInformation[$table]['unique keys']);
     }
+    return [];
   }
 
   /**
@@ -471,6 +477,7 @@ class TableInformation {
     if (isset($this->tableInformation[$table]['unique keys'][$unique_key])) {
       return $this->toArray($this->tableInformation[$table]['unique keys'][$unique_key]);
     }
+    return [];
   }
 
   /**
@@ -517,6 +524,7 @@ class TableInformation {
     if (isset($this->tableInformation[$table]['indexes'])) {
       return $this->toArray($this->tableInformation[$table]['indexes']);
     }
+    return [];
   }
 
   /**
@@ -560,6 +568,7 @@ class TableInformation {
     if (isset($this->tableInformation[$table]['indexes'][$name])) {
       return $this->toArray($this->tableInformation[$table]['indexes'][$name]);
     }
+    return [];
   }
 
   /**
@@ -977,25 +986,15 @@ class TableInformation {
     $this->tablesToSave = array_unique($this->tablesToSave);
     foreach ($this->tablesToSave as $table_to_save) {
       if (isset($this->tableInformation[$table_to_save])) {
-//dump('$this->tableInformation[$table_to_save]: ' . $table_to_save);
-//dump($this->tableInformation[$table_to_save]);
         $set[$table_to_save] = $this->toArray($this->tableInformation[$table_to_save]);
       }
       else {
-//dump('unset $table_to_save: ' . $table_to_save);
         $unset[$table_to_save] = '';
       }
     }
-//dump('$set');
-//dump($set);
-//dump('$unset');
-//dump($unset);
     if (!empty($set) || !empty($unset)) {
       $session = $this->connection->getMongodbSession();
-//dump($session);
-//      $session->startTransaction();
       if (!empty($set) && !empty($unset)) {
-//dump('Set and Unset');
         $result = $this->connection->getConnection()->{$prefixed_table_information_table}->findOneAndUpdate(
           ['_id' => $this->id],
           ['$unset' => $unset, '$set' => $set],
@@ -1006,7 +1005,6 @@ class TableInformation {
         );
       }
       elseif (!empty($set)) {
-//dump('Set');
         $result = $this->connection->getConnection()->{$prefixed_table_information_table}->findOneAndUpdate(
           ['_id' => $this->id],
           ['$set' => $set],
@@ -1016,8 +1014,7 @@ class TableInformation {
           ],
         );
       }
-      elseif (!empty($unset)) {
-//dump('Unset');
+      else {
         $result = $this->connection->getConnection()->{$prefixed_table_information_table}->findOneAndUpdate(
           ['_id' => $this->id],
           [
@@ -1029,10 +1026,6 @@ class TableInformation {
           ],
         );
       }
-//      if ($session && $session->isInTransaction()) {
-//dump('commit transaction');
-//        $session->commitTransaction();
-//      }
 
       // Reset the cached table information.
       $this->tableInformation = [];
@@ -1056,10 +1049,10 @@ class TableInformation {
   /**
    * Helper function for the list of tables that need to be saved to the database.
    *
-   * @return array
-   *   The list of tables that must be saved to the database.
+   * @param string $table
+   *   The table name to save to the database.
    */
-  protected function tablesToSave($table) {
+  protected function tablesToSave($table): void {
     $this->tablesToSave[] = $table;
   }
 

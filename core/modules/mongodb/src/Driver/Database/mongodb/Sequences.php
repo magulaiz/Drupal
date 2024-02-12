@@ -68,6 +68,7 @@ class Sequences {
         return 1;
       }
     }
+    return 1;
   }
 
   /**
@@ -114,6 +115,7 @@ class Sequences {
         return 1;
       }
     }
+    return 1;
   }
 
   /**
@@ -199,6 +201,7 @@ class Sequences {
         return 1;
       }
     }
+    return 1;
   }
 
   /**
@@ -232,6 +235,7 @@ class Sequences {
         return 1;
       }
     }
+    return 1;
   }
 
   /**

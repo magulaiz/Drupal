@@ -350,7 +350,6 @@ class Select extends QuerySelect {
    * {@inheritdoc}
    */
   public function __construct(DatabaseConnection $connection, $table, $alias = NULL, $options = []) {
-//    parent::__construct($connection, $table, $alias, $options);
     $options['return'] = Database::RETURN_STATEMENT;
 
     $this->uniqueIdentifier = uniqid('', TRUE);
@@ -1511,7 +1510,7 @@ class Select extends QuerySelect {
             $this->connection->getKey(),
             $this->connection->getTarget(),
             'SELECT COUNT WITH AGGREGATE PIPELINE: ' . serialize($pipeline),
-            $args,
+            [],
             $this->connection->findCallerFromDebugBacktrace()
           );
           $this->connection->dispatchEvent($startEvent);
@@ -1562,7 +1561,7 @@ class Select extends QuerySelect {
             $this->connection->getKey(),
             $this->connection->getTarget(),
             'SELECT WITH AGGREGATE PIPELINE: ' . serialize($pipeline),
-            $args,
+            [],
             $this->connection->findCallerFromDebugBacktrace()
           );
           $this->connection->dispatchEvent($startEvent);
@@ -1608,6 +1607,8 @@ class Select extends QuerySelect {
       // the method $this->createMongodbQuery() will the distinct status be
       // removed in such cases.
       if ($this->distinct && (count($this->fields) == 1)) {
+        $field = reset($this->fields);
+
         // Return the query as its string value.
         if ($this->mongodbQueryStringValue) {
           // Reset the class property. So that the next time the query will be
@@ -1623,13 +1624,12 @@ class Select extends QuerySelect {
             $this->connection->getKey(),
             $this->connection->getTarget(),
             'SELECT COUNT WITH DISTINCT FIELD: ' . serialize($field['field'] ?? '') . ' FILTER: ' . serialize($this->mongodbFilter),
-            $args,
+            [],
             $this->connection->findCallerFromDebugBacktrace()
           );
           $this->connection->dispatchEvent($startEvent);
         }
 
-        $field = reset($this->fields);
         $count = count($this->connection->getConnection()->{$prefixed_table}->distinct($field['field'], $this->mongodbFilter), $options);
 
         if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionEndEvent::class)) {
@@ -1687,7 +1687,7 @@ class Select extends QuerySelect {
             $this->connection->getKey(),
             $this->connection->getTarget(),
             'SELECT COUNT WITH AGGREGATE PIPELINE: ' . serialize($pipeline),
-            $args,
+            [],
             $this->connection->findCallerFromDebugBacktrace()
           );
           $this->connection->dispatchEvent($startEvent);
@@ -1726,7 +1726,7 @@ class Select extends QuerySelect {
             $this->connection->getKey(),
             $this->connection->getTarget(),
             'SELECT COUNT WITH COUNT FILTER: ' . serialize($this->mongodbFilter) . ' OPTIONS: ' . serialize($options),
-            $args,
+            [],
             $this->connection->findCallerFromDebugBacktrace()
           );
           $this->connection->dispatchEvent($startEvent);
@@ -1779,7 +1779,7 @@ class Select extends QuerySelect {
           $this->connection->getKey(),
           $this->connection->getTarget(),
           'SELECT WITH FIND FILTER: ' . serialize($this->mongodbFilter) . ' OPTIONS: ' . serialize($options),
-          $args,
+          [],
           $this->connection->findCallerFromDebugBacktrace()
         );
         $this->connection->dispatchEvent($startEvent);
@@ -1825,11 +1825,8 @@ class Select extends QuerySelect {
 
   /**
    * Create the MongoDB select query.
-   *
-   * @return array
-   *   The MongoDB version of the select query.
    */
-  protected function createMongodbQuery() {
+  protected function createMongodbQuery(): void {
     // For convenience, we compile the query ourselves if the caller forgot
     // to do it. This allows constructs like "(string) $query" to work. When
     // the query will be executed, it will be recompiled using the proper

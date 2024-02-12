@@ -20,6 +20,20 @@ use MongoDB\Driver\Cursor;
 class Statement extends StatementPrefetchIterator {
 
   /**
+   * The current row.
+   *
+   * @var array
+   */
+  protected $currentRow = NULL;
+
+  /**
+   * The key of the current row.
+   *
+   * @var int
+   */
+  protected $currentKey = NULL;
+
+  /**
    * The MongoDB typemap.
    *
    * @var array

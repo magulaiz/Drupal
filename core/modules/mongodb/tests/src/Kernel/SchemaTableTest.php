@@ -11,7 +11,7 @@ use Drupal\Core\Database\SchemaObjectExistsException;
  * Tests MongoDB base/embedded table creation and modification via the schema API.
  *
  * @group MongoDB
- * @coversDefaultClass \Drupal\mongodb\Driver\Schema
+ * @coversDefaultClass \Drupal\mongodb\Driver\Database\mongodb\Schema
  */
 class SchemaTableTest extends SchemaTestBase {
 
@@ -779,7 +779,7 @@ class SchemaTableTest extends SchemaTestBase {
     $this->assertTrue($schema->tableExists($this->test_table1['name']), 'The table exists in the MongoDB database.');
 
     // If we try to create a table that exists an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectExistsException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
     $schema->createTable($this->test_table1['name'], $this->test_table1['schema']);
   }
 
@@ -793,7 +793,7 @@ class SchemaTableTest extends SchemaTestBase {
 
     // If we try to create an embedded table on a base table that does not
     // exists, an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
     $schema->createEmbeddedTable($this->test_table1['name'], $this->test_table2['name'], $this->test_table2['schema']);
   }
 
@@ -811,7 +811,7 @@ class SchemaTableTest extends SchemaTestBase {
     $this->assertTrue($schema->tableExists($this->test_table1['name']), 'The table exists in the MongoDB database.');
 
     // If we try to create an embedded table that exists an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectExistsException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
     $schema->createEmbeddedTable($this->test_table1['name'], $this->test_table2['name'], $this->test_table2['schema']);
   }
 
@@ -831,7 +831,7 @@ class SchemaTableTest extends SchemaTestBase {
     $this->assertTrue($schema->tableExists($this->test_table2['name']), 'The table exists in the MongoDB database.');
 
     // If we try to create an embedded table that exists an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectExistsException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
     $schema->createEmbeddedTable($this->test_table1['name'], $this->test_table2['name'], $this->test_table2['schema']);
   }
 
@@ -856,7 +856,7 @@ class SchemaTableTest extends SchemaTestBase {
 
     // If we try to create an embedded table on a base table that does not
     // exists, an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectExistsException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
     $schema->createEmbeddedTable($this->test_table1['name'], $this->test_table3['name'], $this->test_table3['schema']);
   }
 
@@ -2488,7 +2488,7 @@ class SchemaTableTest extends SchemaTestBase {
     $this->assertFalse($schema->tableExists($this->test_table1['name']), 'The table does not exist in the MongoDB database.');
 
     // If we try to delete a table on a non existent base table an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
     $schema->renameTable($this->test_table1['name'], $this->test_table2['name']);
   }
 
@@ -2509,7 +2509,7 @@ class SchemaTableTest extends SchemaTestBase {
     $this->assertTrue($schema->tableExists($this->test_table2['name']), 'The table exists in the MongoDB database.');
 
     // If we try to delete a table on a non existent base table an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectExistsException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
     $schema->renameTable($this->test_table1['name'], $this->test_table2['name']);
   }
 
@@ -2527,7 +2527,7 @@ class SchemaTableTest extends SchemaTestBase {
     $this->assertTrue($schema->tableExists($this->test_table1['name']), 'The table exists in the MongoDB database.');
 
     // If we try to rename an embedded table on a non existent embedded table an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
     $schema->renameTable($this->test_table2['name'], $this->test_table2['name']);
   }
 
@@ -2551,7 +2551,7 @@ class SchemaTableTest extends SchemaTestBase {
     $this->assertTrue($schema->tableExists($this->test_table3['name']), 'The embedded table exists in the MongoDB database.');
 
     // If we try to rename an embedded table to an existent embedded table an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectExistsException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
     $schema->renameTable($this->test_table2['name'], $this->test_table3['name']);
   }
 
@@ -2576,7 +2576,7 @@ class SchemaTableTest extends SchemaTestBase {
     $this->assertTrue($schema->tableExists($this->test_table2['name']), 'The embedded table exists in the MongoDB database.');
 
     // If we try to rename an embedded table to an existent base table an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectExistsException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
     $schema->renameTable($this->test_table2['name'], $this->test_table3['name']);
   }
 
@@ -2607,7 +2607,7 @@ class SchemaTableTest extends SchemaTestBase {
 
     // If we try to rename an embedded table on a base table that does not
     // exists, an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectExistsException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
     $schema->renameTable($this->test_table3['name'], $test_table4['name']);
   }
 

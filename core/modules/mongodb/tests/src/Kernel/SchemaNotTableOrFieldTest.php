@@ -11,7 +11,7 @@ use Drupal\Core\Database\SchemaObjectExistsException;
  * Tests MongoDB other method via the schema API.
  *
  * @group MongoDB
- * @coversDefaultClass \Drupal\mongodb\Driver\Schema
+ * @coversDefaultClass \Drupal\mongodb\Driver\Database\mongodb\Schema
  */
 class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
@@ -774,7 +774,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     // If we try to add a primary key to a table that does not exist an
     // exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
     $schema->addPrimaryKey($this->test_table5['name'], ['id']);
   }
 
@@ -795,7 +795,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     // If we try to add a primary key to a table that has a primary key an
     // exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectExistsException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
     $schema->addPrimaryKey($this->test_table4['name'], ['id']);
   }
 
@@ -822,7 +822,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     // If we try to add an unique key to a table that has an unique index on the
     // same fields an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectExistsException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
     $schema->addPrimaryKey($this->test_table4['name'], ['test_field']);
   }
 
@@ -842,7 +842,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
     $this->assertTrue($schema->tableExists($this->test_table6['name']), 'The embedded table exists in the MongoDB database.');
 
     // If we try to add a primary key to a table that has a primary key an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectExistsException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
     $schema->addPrimaryKey($this->test_table6['name'], ['id']);
   }
 
@@ -872,7 +872,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     // If we try to add an unique key to an embedded table that has an unique
     // index on the same fields an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectExistsException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
     $schema->addPrimaryKey($this->test_table4['name'], ['test_field']);
   }
 
@@ -3533,7 +3533,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     // If we try to add a unique key to a table that does not exist an exception
     // should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
     $schema->addUniqueKey($this->test_table5['name'], 'unique_id_key', ['id']);
   }
 
@@ -3554,7 +3554,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     // If we try to add a unique key to a table that has a unique key an
     // exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectExistsException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
     $schema->addUniqueKey($this->test_table4['name'], 'test_field', ['test_field']);
   }
 
@@ -3575,7 +3575,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     // If we try to add an unique key to a table that has a primary key on the
     // same fields an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectExistsException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
     $schema->addUniqueKey($this->test_table4['name'], 'unique_id_key', ['id']);
   }
 
@@ -3596,7 +3596,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     // If we try to add an unique key to a table that has an unique index on the
     // same fields an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectExistsException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
     $schema->addUniqueKey($this->test_table4['name'], 'unique_test_field_key', ['test_field']);
   }
 
@@ -3616,7 +3616,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
     $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The embedded table exists in the MongoDB database.');
 
     // If we try to add an unique key to a table that has an unique key an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectExistsException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
     $schema->addUniqueKey($this->test_table4['name'], 'test_field', ['test_field']);
   }
 
@@ -3640,7 +3640,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     // If we try to add an unique key to an embedded table that has a primary
     // key on the same fields an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectExistsException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
     $schema->addUniqueKey($this->test_table4['name'], 'unique_id_key', ['id']);
   }
 
@@ -3664,7 +3664,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     // If we try to add an unique key to an embedded table that has an unique
     // index on the same fields an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectExistsException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
     $schema->addUniqueKey($this->test_table4['name'], 'unique_test_field_key', ['test_field']);
   }
 
@@ -5036,7 +5036,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     // If we try to drop a unique key to a table that does not exist an
     // exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
     $schema->dropUniqueKey($this->test_table2['name'], 'test_fields_not_null');
   }
 
@@ -6382,7 +6382,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     // If we try to add an index to a table that does not exist an exception
     // should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
     $schema->addIndex($this->test_table5['name'], 'index_id', ['id'], []);
   }
 
@@ -6403,7 +6403,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     // If we try to add an index to a table that has an index an exception
     // should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectExistsException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
     $schema->addIndex($this->test_table6['name'], 'test_field_string', ['test_field_string'], []);
   }
 
@@ -6424,7 +6424,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     // If we try to add an index to a table that has an non-unique index on the
     // same fields an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectExistsException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
     $schema->addIndex($this->test_table6['name'], 'index_test_field_string', ['test_field_string'], []);
   }
 
@@ -6442,7 +6442,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     // If we try to rename an embedded table on a non existent embedded table an
     // exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
     $schema->addIndex($this->test_table5['name'], 'index_id', ['id'], []);
   }
 
@@ -6466,7 +6466,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     // If we try to add an index to a table that has an index an exception
     // should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectExistsException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
     $schema->addIndex($this->test_table6['name'], 'test_field_string', ['test_field_string'], []);
   }
 
@@ -6490,7 +6490,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     // If we try to add an index to an embedded table that has an index on the
     // same fields an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectExistsException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
     $schema->addIndex($this->test_table6['name'], 'index_test_field_string', ['test_field_string'], []);
   }
 
@@ -7728,7 +7728,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     // If we try to set the default value for a field on a table that does not
     // exist an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
     $schema->fieldSetDefault($this->test_table4['name'], 'id', 6);
   }
 
@@ -7746,7 +7746,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     // If we try to set the default value for a field on a table that does not
     // has such a field an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
     $schema->fieldSetDefault($this->test_table4['name'], 'does_not_exist_field', 6);
   }
 
@@ -7870,7 +7870,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     // If we try to unset the default value for a field on a table that does not
     // exist an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
     $schema->fieldSetNoDefault($this->test_table5['name'], 'test_field_string');
   }
 
@@ -7888,7 +7888,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     // If we try to un set the default value for a field on a table that does
     // not has such a field an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
     $schema->fieldSetNoDefault($this->test_table5['name'], 'does_not_exist_field');
   }
 
@@ -7963,14 +7963,14 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
     // Test the MongoDB table service getTableBaseTAble method.
     foreach ($expected_full_paths as $table => $expected_full_path) {
       $generated_full_path = $table_information->getTableEmbeddedFullPath($table);
-      $this->assertEqual($generated_full_path, $expected_full_path, 'The generated full path for the table is as expected.');
+      $this->assertEquals($generated_full_path, $expected_full_path, 'The generated full path for the table is as expected.');
     }
 
     // Test the MongoDB table service getTableBaseTAble method.
     foreach ($embedded_tables_data as $parent_table_name => $embedded_table_array) {
       foreach ($embedded_table_array as $embedded_table_data) {
         $generated_base_table = $table_information->getTableBaseTable($embedded_table_data['name']);
-        $this->assertEqual($generated_base_table, $base_table_data['name'], 'The generated base table for the table is as expected.');
+        $this->assertEquals($generated_base_table, $base_table_data['name'], 'The generated base table for the table is as expected.');
       }
     }
   }

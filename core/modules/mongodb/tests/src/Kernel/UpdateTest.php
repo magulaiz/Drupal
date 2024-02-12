@@ -16,7 +16,7 @@ class UpdateTest extends DatabaseTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $connection = $this->container->get('database');
@@ -49,28 +49,28 @@ class UpdateTest extends DatabaseTestBase {
       ->fetchObject();
 
     $this->assertTrue(is_object($result), 'The result for the table query should not be empty.');
-    $this->assertIdentical($result->name, 'Jasper', 'The value for name should be: Jasper.');
-    $this->assertIdentical($result->age, '4', 'The value for age should be: 4.');
-    $this->assertIdentical($result->job, 'Chatters', 'The value for job should be: Chatters.');
+    $this->assertSame($result->name, 'Jasper', 'The value for name should be: Jasper.');
+    $this->assertSame($result->age, '4', 'The value for age should be: 4.');
+    $this->assertSame($result->job, 'Chatters', 'The value for job should be: Chatters.');
 
     // There is only four rows in the embedded table.
     $this->assertTrue(isset($result->embedded_test) && is_array($result->embedded_test) && (count($result->embedded_test) == 4), 'The embedded table has four rows.');
 
-    $this->assertIdentical($result->embedded_test[0]['name'], 'John', 'The value for name should be: John.');
-    $this->assertIdentical($result->embedded_test[0]['age'], '25', 'The value for age should be: 25.');
-    $this->assertIdentical($result->embedded_test[0]['job'], 'Singer', 'The value for job should be: Singer.');
+    $this->assertSame($result->embedded_test[0]['name'], 'John', 'The value for name should be: John.');
+    $this->assertSame($result->embedded_test[0]['age'], '25', 'The value for age should be: 25.');
+    $this->assertSame($result->embedded_test[0]['job'], 'Singer', 'The value for job should be: Singer.');
 
-    $this->assertIdentical($result->embedded_test[1]['name'], 'George', 'The value for name should be: George.');
-    $this->assertIdentical($result->embedded_test[1]['age'], '27', 'The value for age should be: 27.');
-    $this->assertIdentical($result->embedded_test[1]['job'], 'Singer', 'The value for job should be: Singer.');
+    $this->assertSame($result->embedded_test[1]['name'], 'George', 'The value for name should be: George.');
+    $this->assertSame($result->embedded_test[1]['age'], '27', 'The value for age should be: 27.');
+    $this->assertSame($result->embedded_test[1]['job'], 'Singer', 'The value for job should be: Singer.');
 
-    $this->assertIdentical($result->embedded_test[2]['name'], 'Ringo', 'The value for name should be: Ringo.');
-    $this->assertIdentical($result->embedded_test[2]['age'], '28', 'The value for age should be: 28.');
-    $this->assertIdentical($result->embedded_test[2]['job'], 'Drummer', 'The value for job should be: Drummer.');
+    $this->assertSame($result->embedded_test[2]['name'], 'Ringo', 'The value for name should be: Ringo.');
+    $this->assertSame($result->embedded_test[2]['age'], '28', 'The value for age should be: 28.');
+    $this->assertSame($result->embedded_test[2]['job'], 'Drummer', 'The value for job should be: Drummer.');
 
-    $this->assertIdentical($result->embedded_test[3]['name'], 'Paul', 'The value for name should be: Paul.');
-    $this->assertIdentical($result->embedded_test[3]['age'], '26', 'The value for age should be: 26.');
-    $this->assertIdentical($result->embedded_test[3]['job'], 'Songwriter', 'The value for job should be: Songwriter.');
+    $this->assertSame($result->embedded_test[3]['name'], 'Paul', 'The value for name should be: Paul.');
+    $this->assertSame($result->embedded_test[3]['age'], '26', 'The value for age should be: 26.');
+    $this->assertSame($result->embedded_test[3]['job'], 'Songwriter', 'The value for job should be: Songwriter.');
   }
 
   /**
@@ -134,9 +134,9 @@ class UpdateTest extends DatabaseTestBase {
     $result = $connection->select('test_people')->fields('test_people', ['name', 'age', 'job', 'embedded_test'])->condition('job', 'Chatters')->execute()->fetchObject();
 
     $this->assertTrue(is_object($result), 'The result for the table query should not be empty.');
-    $this->assertIdentical($result->name, 'Jasper', 'The value for name should be: Jasper.');
-    $this->assertIdentical($result->age, '4', 'The value for age should be: 4.');
-    $this->assertIdentical($result->job, 'Chatters', 'The value for job should be: Chatters.');
+    $this->assertSame($result->name, 'Jasper', 'The value for name should be: Jasper.');
+    $this->assertSame($result->age, '4', 'The value for age should be: 4.');
+    $this->assertSame($result->job, 'Chatters', 'The value for job should be: Chatters.');
 
     // There are 5 rows in the embedded table.
     $this->assertTrue(isset($result->embedded_test) && is_array($result->embedded_test) && (count($result->embedded_test) == 5), 'The embedded table has 5 rows.');
@@ -144,7 +144,7 @@ class UpdateTest extends DatabaseTestBase {
     $embedded_table_second_row = end($result->embedded_test);
     foreach ($expected as $key => $value) {
       if (!empty($value)) {
-        $this->assertIdentical($embedded_table_second_row[$key], $value, 'The value for ' . $key . ' is ' . $embedded_table_second_row[$key] . '. The expected value is: ' . $value . '.');
+        $this->assertSame($embedded_table_second_row[$key], $value, 'The value for ' . $key . ' is ' . $embedded_table_second_row[$key] . '. The expected value is: ' . $value . '.');
       }
     }
   }
@@ -164,9 +164,9 @@ class UpdateTest extends DatabaseTestBase {
     $result = $connection->select('test_people')->fields('test_people', ['name', 'age', 'job', 'embedded_test'])->condition('job', 'Chatters')->execute()->fetchObject();
 
     $this->assertTrue(is_object($result), 'The result for the table query should not be empty.');
-    $this->assertIdentical($result->name, 'Jasper', 'The value for name should be: Jasper.');
-    $this->assertIdentical($result->age, '4', 'The value for age should be: 4.');
-    $this->assertIdentical($result->job, 'Chatters', 'The value for job should be: Chatters.');
+    $this->assertSame($result->name, 'Jasper', 'The value for name should be: Jasper.');
+    $this->assertSame($result->age, '4', 'The value for age should be: 4.');
+    $this->assertSame($result->job, 'Chatters', 'The value for job should be: Chatters.');
 
     // There is only one row in the embedded table.
     $this->assertTrue(isset($result->embedded_test) && is_array($result->embedded_test) && (count($result->embedded_test) == 1), 'The embedded table has 5 rows.');
@@ -174,7 +174,7 @@ class UpdateTest extends DatabaseTestBase {
     $embedded_table_second_row = reset($result->embedded_test);
     foreach ($expected as $key => $value) {
       if (!empty($value)) {
-        $this->assertIdentical($embedded_table_second_row[$key], $value, 'The value for ' . $key . ' is ' . $embedded_table_second_row[$key] . '. The expected value is: ' . $value . '.');
+        $this->assertSame($embedded_table_second_row[$key], $value, 'The value for ' . $key . ' is ' . $embedded_table_second_row[$key] . '. The expected value is: ' . $value . '.');
       }
     }
   }
@@ -209,41 +209,41 @@ class UpdateTest extends DatabaseTestBase {
     $result = $connection->select('test_people')->fields('test_people', ['name', 'age', 'job', 'embedded_test'])->condition('job', 'Chatters')->execute()->fetchObject();
 
     $this->assertTrue(is_object($result), 'The result for the table query should not be empty.');
-    $this->assertIdentical($result->name, 'Jasper', 'The value for name should be: Jasper.');
-    $this->assertIdentical($result->age, '4', 'The value for age should be: 4.');
-    $this->assertIdentical($result->job, 'Chatters', 'The value for job should be: Chatters.');
+    $this->assertSame($result->name, 'Jasper', 'The value for name should be: Jasper.');
+    $this->assertSame($result->age, '4', 'The value for age should be: 4.');
+    $this->assertSame($result->job, 'Chatters', 'The value for job should be: Chatters.');
 
     // There is only one row in the embedded table.
     $this->assertTrue(isset($result->embedded_test) && is_array($result->embedded_test) && (count($result->embedded_test) == 4), 'The embedded table has 4 rows.');
 
-    $this->assertIdentical($result->embedded_test[0]['name'], 'John', 'The value for name should be: John.');
-    $this->assertIdentical($result->embedded_test[0]['age'], '25', 'The value for age should be: 25.');
-    $this->assertIdentical($result->embedded_test[0]['job'], 'Singer', 'The value for job should be: Singer.');
+    $this->assertSame($result->embedded_test[0]['name'], 'John', 'The value for name should be: John.');
+    $this->assertSame($result->embedded_test[0]['age'], '25', 'The value for age should be: 25.');
+    $this->assertSame($result->embedded_test[0]['job'], 'Singer', 'The value for job should be: Singer.');
     $this->assertFalse(isset($result->embedded_test[0]['embedded_test_task']) && is_array($result->embedded_test[0]['embedded_test_task']));
 
-    $this->assertIdentical($result->embedded_test[1]['name'], 'George', 'The value for name should be: George.');
-    $this->assertIdentical($result->embedded_test[1]['age'], '27', 'The value for age should be: 27.');
-    $this->assertIdentical($result->embedded_test[1]['job'], 'Singer', 'The value for job should be: Singer.');
+    $this->assertSame($result->embedded_test[1]['name'], 'George', 'The value for name should be: George.');
+    $this->assertSame($result->embedded_test[1]['age'], '27', 'The value for age should be: 27.');
+    $this->assertSame($result->embedded_test[1]['job'], 'Singer', 'The value for job should be: Singer.');
     $this->assertFalse(isset($result->embedded_test[1]['embedded_test_task']) && is_array($result->embedded_test[1]['embedded_test_task']));
 
-    $this->assertIdentical($result->embedded_test[2]['name'], 'Ringo', 'The value for name should be: Ringo.');
-    $this->assertIdentical($result->embedded_test[2]['age'], '28', 'The value for age should be: 28.');
-    $this->assertIdentical($result->embedded_test[2]['job'], 'Drummer', 'The value for job should be: Drummer.');
+    $this->assertSame($result->embedded_test[2]['name'], 'Ringo', 'The value for name should be: Ringo.');
+    $this->assertSame($result->embedded_test[2]['age'], '28', 'The value for age should be: 28.');
+    $this->assertSame($result->embedded_test[2]['job'], 'Drummer', 'The value for job should be: Drummer.');
 
     $this->assertTrue(isset($result->embedded_test[2]['embedded_test_task']) && is_array($result->embedded_test[2]['embedded_test_task']) && (count($result->embedded_test[2]['embedded_test_task']) == 2), 'The embedded embedded table has 2 rows.');
-    $this->assertIdentical($result->embedded_test[2]['embedded_test_task'][0]['pid'], '1', 'The value for pid should be: 1.');
-    $this->assertIdentical($result->embedded_test[2]['embedded_test_task'][0]['task'], 'eat', 'The value for task should be: eat.');
-    $this->assertIdentical($result->embedded_test[2]['embedded_test_task'][0]['priority'], '3', 'The value for priority should be: 3.');
-    $this->assertIdentical($result->embedded_test[2]['embedded_test_task'][0]['tid'], '1', 'The value for tid should be: 1.');
+    $this->assertSame($result->embedded_test[2]['embedded_test_task'][0]['pid'], '1', 'The value for pid should be: 1.');
+    $this->assertSame($result->embedded_test[2]['embedded_test_task'][0]['task'], 'eat', 'The value for task should be: eat.');
+    $this->assertSame($result->embedded_test[2]['embedded_test_task'][0]['priority'], '3', 'The value for priority should be: 3.');
+    $this->assertSame($result->embedded_test[2]['embedded_test_task'][0]['tid'], '1', 'The value for tid should be: 1.');
 
-    $this->assertIdentical($result->embedded_test[2]['embedded_test_task'][1]['pid'], '1', 'The value for pid should be: 1.');
-    $this->assertIdentical($result->embedded_test[2]['embedded_test_task'][1]['task'], 'sleep', 'The value for task should be: sleep.');
-    $this->assertIdentical($result->embedded_test[2]['embedded_test_task'][1]['priority'], '4', 'The value for priority should be: 4.');
-    $this->assertIdentical($result->embedded_test[2]['embedded_test_task'][1]['tid'], '2', 'The value for tid should be: 2.');
+    $this->assertSame($result->embedded_test[2]['embedded_test_task'][1]['pid'], '1', 'The value for pid should be: 1.');
+    $this->assertSame($result->embedded_test[2]['embedded_test_task'][1]['task'], 'sleep', 'The value for task should be: sleep.');
+    $this->assertSame($result->embedded_test[2]['embedded_test_task'][1]['priority'], '4', 'The value for priority should be: 4.');
+    $this->assertSame($result->embedded_test[2]['embedded_test_task'][1]['tid'], '2', 'The value for tid should be: 2.');
 
-    $this->assertIdentical($result->embedded_test[3]['name'], 'Paul', 'The value for name should be: Paul.');
-    $this->assertIdentical($result->embedded_test[3]['age'], '26', 'The value for age should be: 26.');
-    $this->assertIdentical($result->embedded_test[3]['job'], 'Songwriter', 'The value for job should be: Songwriter.');
+    $this->assertSame($result->embedded_test[3]['name'], 'Paul', 'The value for name should be: Paul.');
+    $this->assertSame($result->embedded_test[3]['age'], '26', 'The value for age should be: 26.');
+    $this->assertSame($result->embedded_test[3]['job'], 'Songwriter', 'The value for job should be: Songwriter.');
     $this->assertFalse(isset($result->embedded_test[3]['embedded_test_task']) && is_array($result->embedded_test[3]['embedded_test_task']));
   }
 
@@ -284,42 +284,42 @@ class UpdateTest extends DatabaseTestBase {
     $result = $connection->select('test_people')->fields('test_people', ['name', 'age', 'job', 'embedded_test'])->condition('job', 'Chatters')->execute()->fetchObject();
 
     $this->assertTrue(is_object($result), 'The result for the table query should not be empty.');
-    $this->assertIdentical($result->name, 'Jasper', 'The value for name should be: Jasper.');
-    $this->assertIdentical($result->age, '4', 'The value for age should be: 4.');
-    $this->assertIdentical($result->job, 'Chatters', 'The value for job should be: Chatters.');
+    $this->assertSame($result->name, 'Jasper', 'The value for name should be: Jasper.');
+    $this->assertSame($result->age, '4', 'The value for age should be: 4.');
+    $this->assertSame($result->job, 'Chatters', 'The value for job should be: Chatters.');
 
     // There is only one row in the embedded table.
     $this->assertTrue(isset($result->embedded_test) && is_array($result->embedded_test) && (count($result->embedded_test) == 2), 'The embedded table has 2 rows.');
 
-    $this->assertIdentical($result->embedded_test[0]['name'], 'Zazu', 'The value for name should be: Zazu.');
-    $this->assertIdentical($result->embedded_test[0]['age'], '20', 'The value for age should be: 20.');
-    $this->assertIdentical($result->embedded_test[0]['job'], 'Makes noise', 'The value for job should be: Makes noise.');
+    $this->assertSame($result->embedded_test[0]['name'], 'Zazu', 'The value for name should be: Zazu.');
+    $this->assertSame($result->embedded_test[0]['age'], '20', 'The value for age should be: 20.');
+    $this->assertSame($result->embedded_test[0]['job'], 'Makes noise', 'The value for job should be: Makes noise.');
 
     $this->assertTrue(isset($result->embedded_test[0]['embedded_test_task']) && is_array($result->embedded_test[0]['embedded_test_task']) && (count($result->embedded_test[0]['embedded_test_task']) == 2), 'The embedded embedded table has 2 rows.');
-    $this->assertIdentical($result->embedded_test[0]['embedded_test_task'][0]['pid'], '1', 'The value for pid should be: 1.');
-    $this->assertIdentical($result->embedded_test[0]['embedded_test_task'][0]['task'], 'eat', 'The value for task should be: eat.');
-    $this->assertIdentical($result->embedded_test[0]['embedded_test_task'][0]['priority'], '3', 'The value for priority should be: 3.');
-    $this->assertIdentical($result->embedded_test[0]['embedded_test_task'][0]['tid'], '1', 'The value for tid should be: 1.');
+    $this->assertSame($result->embedded_test[0]['embedded_test_task'][0]['pid'], '1', 'The value for pid should be: 1.');
+    $this->assertSame($result->embedded_test[0]['embedded_test_task'][0]['task'], 'eat', 'The value for task should be: eat.');
+    $this->assertSame($result->embedded_test[0]['embedded_test_task'][0]['priority'], '3', 'The value for priority should be: 3.');
+    $this->assertSame($result->embedded_test[0]['embedded_test_task'][0]['tid'], '1', 'The value for tid should be: 1.');
 
-    $this->assertIdentical($result->embedded_test[0]['embedded_test_task'][1]['pid'], '2', 'The value for pid should be: 2.');
-    $this->assertIdentical($result->embedded_test[0]['embedded_test_task'][1]['task'], 'sleep', 'The value for task should be: sleep.');
-    $this->assertIdentical($result->embedded_test[0]['embedded_test_task'][1]['priority'], '4', 'The value for priority should be: 4.');
-    $this->assertIdentical($result->embedded_test[0]['embedded_test_task'][1]['tid'], '2', 'The value for tid should be: 2.');
+    $this->assertSame($result->embedded_test[0]['embedded_test_task'][1]['pid'], '2', 'The value for pid should be: 2.');
+    $this->assertSame($result->embedded_test[0]['embedded_test_task'][1]['task'], 'sleep', 'The value for task should be: sleep.');
+    $this->assertSame($result->embedded_test[0]['embedded_test_task'][1]['priority'], '4', 'The value for priority should be: 4.');
+    $this->assertSame($result->embedded_test[0]['embedded_test_task'][1]['tid'], '2', 'The value for tid should be: 2.');
 
-    $this->assertIdentical($result->embedded_test[1]['name'], 'Iago', 'The value for name should be: Iago.');
-    $this->assertIdentical($result->embedded_test[1]['age'], '21', 'The value for age should be: 21.');
-    $this->assertIdentical($result->embedded_test[1]['job'], 'Makes more noise', 'The value for job should be: Makes more noise.');
+    $this->assertSame($result->embedded_test[1]['name'], 'Iago', 'The value for name should be: Iago.');
+    $this->assertSame($result->embedded_test[1]['age'], '21', 'The value for age should be: 21.');
+    $this->assertSame($result->embedded_test[1]['job'], 'Makes more noise', 'The value for job should be: Makes more noise.');
 
     $this->assertTrue(isset($result->embedded_test[1]['embedded_test_task']) && is_array($result->embedded_test[1]['embedded_test_task']) && (count($result->embedded_test[1]['embedded_test_task']) == 2), 'The embedded embedded table has 2 rows.');
-    $this->assertIdentical($result->embedded_test[1]['embedded_test_task'][0]['pid'], '3', 'The value for pid should be: 3.');
-    $this->assertIdentical($result->embedded_test[1]['embedded_test_task'][0]['task'], 'sing', 'The value for task should be: sing.');
-    $this->assertIdentical($result->embedded_test[1]['embedded_test_task'][0]['priority'], '5', 'The value for priority should be: 5.');
-    $this->assertIdentical($result->embedded_test[1]['embedded_test_task'][0]['tid'], '3', 'The value for tid should be: 3.');
+    $this->assertSame($result->embedded_test[1]['embedded_test_task'][0]['pid'], '3', 'The value for pid should be: 3.');
+    $this->assertSame($result->embedded_test[1]['embedded_test_task'][0]['task'], 'sing', 'The value for task should be: sing.');
+    $this->assertSame($result->embedded_test[1]['embedded_test_task'][0]['priority'], '5', 'The value for priority should be: 5.');
+    $this->assertSame($result->embedded_test[1]['embedded_test_task'][0]['tid'], '3', 'The value for tid should be: 3.');
 
-    $this->assertIdentical($result->embedded_test[1]['embedded_test_task'][1]['pid'], '4', 'The value for pid should be: 4.');
-    $this->assertIdentical($result->embedded_test[1]['embedded_test_task'][1]['task'], 'code', 'The value for task should be: code.');
-    $this->assertIdentical($result->embedded_test[1]['embedded_test_task'][1]['priority'], '2', 'The value for priority should be: 2.');
-    $this->assertIdentical($result->embedded_test[1]['embedded_test_task'][1]['tid'], '4', 'The value for tid should be: 4.');
+    $this->assertSame($result->embedded_test[1]['embedded_test_task'][1]['pid'], '4', 'The value for pid should be: 4.');
+    $this->assertSame($result->embedded_test[1]['embedded_test_task'][1]['task'], 'code', 'The value for task should be: code.');
+    $this->assertSame($result->embedded_test[1]['embedded_test_task'][1]['priority'], '2', 'The value for priority should be: 2.');
+    $this->assertSame($result->embedded_test[1]['embedded_test_task'][1]['tid'], '4', 'The value for tid should be: 4.');
   }
 
   /**
@@ -356,13 +356,13 @@ class UpdateTest extends DatabaseTestBase {
     $result = $connection->select('test_people')->fields('test_people', ['name', 'age', 'job', 'embedded_test'])->condition('job', 'Chatters')->execute()->fetchObject();
 
     $this->assertTrue(is_object($result), 'The result for the table query should not be empty.');
-    $this->assertIdentical($result->name, 'Jasper', 'The value for name should be: Jasper.');
-    $this->assertIdentical($result->age, '4', 'The value for age should be: 4.');
-    $this->assertIdentical($result->job, 'Chatters', 'The value for job should be: Chatters.');
+    $this->assertSame($result->name, 'Jasper', 'The value for name should be: Jasper.');
+    $this->assertSame($result->age, '4', 'The value for age should be: 4.');
+    $this->assertSame($result->job, 'Chatters', 'The value for job should be: Chatters.');
 
     $this->assertTrue(isset($result->embedded_test) && is_array($result->embedded_test) && (count($result->embedded_test) == count($expected)), 'The embedded table has the expected number of rows.');
     foreach ($expected as $key => $value) {
-      $this->assertIdentical($result->embedded_test[$key]['name'], $value, 'The tested name is identical to the expected name.');
+      $this->assertSame($result->embedded_test[$key]['name'], $value, 'The tested name is identical to the expected name.');
     }
   }
 
@@ -381,13 +381,13 @@ class UpdateTest extends DatabaseTestBase {
     $result = $connection->select('test_people')->fields('test_people', ['name', 'age', 'job', 'embedded_test'])->condition('job', 'Chatters')->execute()->fetchObject();
 
     $this->assertTrue(is_object($result), 'The result for the table query should not be empty.');
-    $this->assertIdentical($result->name, 'Jasper', 'The value for name should be: Jasper.');
-    $this->assertIdentical($result->age, '4', 'The value for age should be: 4.');
-    $this->assertIdentical($result->job, 'Chatters', 'The value for job should be: Chatters.');
+    $this->assertSame($result->name, 'Jasper', 'The value for name should be: Jasper.');
+    $this->assertSame($result->age, '4', 'The value for age should be: 4.');
+    $this->assertSame($result->job, 'Chatters', 'The value for job should be: Chatters.');
 
     $this->assertTrue(isset($result->embedded_test) && is_array($result->embedded_test) && (count($result->embedded_test) == 2), 'The embedded table has the expected number of rows.');
     foreach (['John', 'Ringo'] as $key => $value) {
-      $this->assertIdentical($result->embedded_test[$key]['name'], $value, 'The tested name is identical to the expected name.');
+      $this->assertSame($result->embedded_test[$key]['name'], $value, 'The tested name is identical to the expected name.');
     }
   }
 
@@ -408,13 +408,13 @@ class UpdateTest extends DatabaseTestBase {
     $result = $connection->select('test_people')->fields('test_people', ['name', 'age', 'job', 'embedded_test'])->condition('job', 'Chatters')->execute()->fetchObject();
 
     $this->assertTrue(is_object($result), 'The result for the table query should not be empty.');
-    $this->assertIdentical($result->name, 'Jasper', 'The value for name should be: Jasper.');
-    $this->assertIdentical($result->age, '4', 'The value for age should be: 4.');
-    $this->assertIdentical($result->job, 'Chatters', 'The value for job should be: Chatters.');
+    $this->assertSame($result->name, 'Jasper', 'The value for name should be: Jasper.');
+    $this->assertSame($result->age, '4', 'The value for age should be: 4.');
+    $this->assertSame($result->job, 'Chatters', 'The value for job should be: Chatters.');
 
     $this->assertTrue(isset($result->embedded_test) && is_array($result->embedded_test) && (count($result->embedded_test) == 2), 'The embedded table has the expected number of rows.');
     foreach (['Ringo', 'Paul'] as $key => $value) {
-      $this->assertIdentical($result->embedded_test[$key]['name'], $value, 'The tested name is identical to the expected name.');
+      $this->assertSame($result->embedded_test[$key]['name'], $value, 'The tested name is identical to the expected name.');
     }
   }
 
@@ -425,7 +425,7 @@ class UpdateTest extends DatabaseTestBase {
     $connection = $this->container->get('database');
 
     // MongoDB does not allow a table variable to be changed twice in one update an exception is thrown.
-    $this->setExpectedException(BulkWriteException::class);
+    $this->expectException(BulkWriteException::class);
     $query = $connection->update('test_people');
     $query->fields(['embedded_test' => $query->embeddedTableData()->fields(['name' => 'Zazu', 'age' => 20, 'job' => 'Makes noise'])])
       ->condition('job', 'Chatters')
@@ -440,7 +440,7 @@ class UpdateTest extends DatabaseTestBase {
     $connection = $this->container->get('database');
 
     // The table update should result in a NoFieldsException being thrown.
-    $this->setExpectedException(NoFieldsException::class);
+    $this->expectException(NoFieldsException::class);
     $query = $connection->update('test_people');
     $query->fields(['embedded_test' => $query->embeddedTableData()->fields([])])
       ->execute();

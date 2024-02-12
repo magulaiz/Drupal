@@ -378,7 +378,7 @@ class Connection extends DatabaseConnection {
    * {@inheritdoc}
    */
   public function queryTemporary($query, array $args = [], array $options = []) {
-    $tablename = $this->generateTemporaryTableName();
+    $tablename = 'db_temporary_' . uniqid();
 
     $query->createTemporaryTable($tablename);
     $query->execute();
@@ -458,6 +458,7 @@ class Connection extends DatabaseConnection {
         return $value;
       }
     }
+    return 1;
   }
 
   /**

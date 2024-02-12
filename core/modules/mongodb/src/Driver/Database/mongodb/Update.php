@@ -143,7 +143,7 @@ class Update extends QueryUpdate {
    */
   public function embeddedTableDeleteCondition($embedded_table, $field, $value = NULL, $operator = '=') {
     $embedded_to_table = $this->tableInformation->getTableEmbeddedToTable($embedded_table);
-    if (empty($embedded_to_table) || ($embedded_to_table != $this->table)) {
+    if (!$embedded_to_table || ($embedded_to_table != $this->table)) {
       throw new SchemaObjectDoesNotExistException(t("Cannot add fields to the embedded table @embedded_table, because the embedded table does not belong to the @base_table.", ['@embedded_table' => $embedded_table, '@base_table' => $this->table]));
     }
 

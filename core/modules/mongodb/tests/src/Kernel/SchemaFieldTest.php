@@ -11,7 +11,7 @@ use Drupal\Core\Database\SchemaObjectExistsException;
  * Tests MongoDB base/embedded field creation and modification via the schema API.
  *
  * @group MongoDB
- * @coversDefaultClass \Drupal\mongodb\Driver\Schema
+ * @coversDefaultClass \Drupal\mongodb\Driver\Database\mongodb\Schema
  */
 class SchemaFieldTest extends SchemaTestBase {
 
@@ -2252,7 +2252,7 @@ class SchemaFieldTest extends SchemaTestBase {
     $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The table does not exist in the MongoDB database.');
 
     // If we try to add a field on a non existent base table an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
     $schema->addField($this->test_table4['name'], $this->test_field1['name'], $this->test_field1['spec'], $this->test_field1['keys']);
   }
 
@@ -2274,7 +2274,7 @@ class SchemaFieldTest extends SchemaTestBase {
     $this->assertTrue($schema->fieldExists($this->test_table4['name'], $this->test_field1['name']), 'The table field exists in the MongoDB database.');
 
     // If we try to add a field that exists on base table an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectExistsException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
     $schema->addField($this->test_table4['name'], $this->test_field1['name'], $this->test_field1['spec'], $this->test_field1['keys']);
   }
 
@@ -2292,7 +2292,7 @@ class SchemaFieldTest extends SchemaTestBase {
     $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The table exists in the MongoDB database.');
 
     // If we try to rename an embedded table on a non existent embedded table an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
     $schema->addField($this->test_table5['name'], $this->test_field1['name'], $this->test_field1['spec'], $this->test_field1['keys']);
   }
 
@@ -2316,7 +2316,7 @@ class SchemaFieldTest extends SchemaTestBase {
     $this->assertTrue($schema->fieldExists($this->test_table5['name'], $this->test_field1['name']), 'The field on the embedded table exists in the MongoDB database.');
 
     // If we try to rename an embedded table to an existent embedded table an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectExistsException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
     $schema->addField($this->test_table5['name'], $this->test_field1['name'], $this->test_field1['spec'], $this->test_field1['keys']);
   }
 
@@ -6692,7 +6692,7 @@ class SchemaFieldTest extends SchemaTestBase {
     $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The table exists in the MongoDB database.');
 
     // If we try to change a non existent field from a table an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
     $schema->changeField($this->test_table4['name'], 'does_not_exist_field', $this->test_field1['name'], $this->test_field1['spec'], $this->test_field1['keys']);
   }
 
@@ -6710,7 +6710,7 @@ class SchemaFieldTest extends SchemaTestBase {
     $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The table exists in the MongoDB database.');
 
     // If we try to change a field from a table to an existing field an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectExistsException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
     $schema->changeField($this->test_table4['name'], 'id', 'test_field', $this->test_field1['spec'], $this->test_field1['keys']);
   }
 
@@ -6723,7 +6723,7 @@ class SchemaFieldTest extends SchemaTestBase {
     $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The table does not exist in the MongoDB database.');
 
     // If we try to rename an embedded table on a non existent base table an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
     $schema->changeField($this->test_table4['name'], 'id', $this->test_field1['name'], $this->test_field1['spec'], $this->test_field1['keys']);
   }
 
@@ -6744,7 +6744,7 @@ class SchemaFieldTest extends SchemaTestBase {
     $this->assertTrue($schema->tableExists($this->test_table5['name']), 'The embedded table exists in the MongoDB database.');
 
     // If we try to change a non existent field from a table an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
     $schema->changeField($this->test_table5['name'], 'does_not_exist_field', $this->test_field1['name'], $this->test_field1['spec'], $this->test_field1['keys']);
   }
 
@@ -6765,7 +6765,7 @@ class SchemaFieldTest extends SchemaTestBase {
     $this->assertTrue($schema->tableExists($this->test_table5['name']), 'The embedded table exists in the MongoDB database.');
 
     // If we try to change a field from a table to an existing field an exception should be thrown.
-    $this->setExpectedException('Drupal\Core\Database\SchemaObjectExistsException');
+    $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
     $schema->changeField($this->test_table5['name'], 'id', 'test_field_string', $this->test_field1['spec'], $this->test_field1['keys']);
   }
 

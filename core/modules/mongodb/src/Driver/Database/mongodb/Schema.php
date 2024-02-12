@@ -537,10 +537,12 @@ class Schema extends DatabaseSchema {
     }
     else {
       $parent_table_name = $this->tableInformation->getTableEmbeddedToTable($table);
-      $this->tableInformation
-        ->setEmbeddedTable($new_name, $this->tableInformation->getEmbeddedTable($table), $parent_table_name)
-        ->setEmbeddedTable($table, '','')
-        ->save();
+      if ($parent_table_name) {
+        $this->tableInformation
+          ->setEmbeddedTable($new_name, $this->tableInformation->getEmbeddedTable($table), $parent_table_name)
+          ->setEmbeddedTable($table, '','')
+          ->save();
+      }
 
       // Delete all indexes for the embedded table and recreate them. The index
       // names and keys have their old embedded table name in them.
@@ -1120,7 +1122,7 @@ class Schema extends DatabaseSchema {
         $existing_index = substr($existing_index, strlen($embedded_full_path));
 
         if (substr($existing_index, -6) == '__pkey') {
-          $this->dropPrimaryKey($table, substr($existing_index, 0, -6));
+          $this->dropPrimaryKey($table);
         }
         elseif (substr($existing_index, -5) == '__key') {
           $this->dropUniqueKey($table, substr($existing_index, 0, -5));
