@@ -6,23 +6,24 @@ namespace Drupal\system\Plugin\Block;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\system\Form\CronForm;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a block to display Cron status.
- *
- * @Block(
- *   id = "system_cron_status_block",
- *   admin_label = @Translation("Cron status"),
- * )
  */
+#[Block(
+  id: "system_cron_status_block",
+  admin_label: new TranslatableMarkup("Cron status")
+)]
 class CronStatusBlock extends BlockBase implements ContainerFactoryPluginInterface, TrustedCallbackInterface {
 
   /**
