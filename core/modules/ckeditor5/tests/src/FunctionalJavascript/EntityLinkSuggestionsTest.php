@@ -345,7 +345,8 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
     $this->assertSame('Zoo Party (Content - page)', $preview_button->getText());
 
     $xpath = new \DOMXPath($this->getEditorDataAsDom());
-    $this->assertCount(1, $xpath->query(sprintf('//a[@href="entity:%s" and @data-entity-uuid="%s" and @data-entity-type="node" and @data-entity-metadata]/img[@alt="image with link around it"]', substr($content_to_add->toUrl('canonical')->toString(), 1), $content_to_add_uuid)));
+    $query = sprintf('//a[@href="entity:%s" and @data-entity-uuid="%s" and @data-entity-type="node" and @data-entity-metadata]/img[@alt="image with link around it"]', substr($content_to_add->toUrl('canonical')->toString(), 1), $content_to_add_uuid);
+    $this->assertCount(1, $xpath->query($query), "Search for $query");
 
     $page->pressButton('Save');
     $assert_session->elementExists('css', sprintf('a[href="%s"][data-entity-uuid="%s"][data-entity-type="node"][data-entity-metadata] img[alt="image with link around it"]', $content_to_add->toUrl('canonical')->toString(), $content_to_add_uuid));
