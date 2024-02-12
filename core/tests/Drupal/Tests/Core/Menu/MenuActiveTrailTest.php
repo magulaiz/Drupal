@@ -210,7 +210,7 @@ class MenuActiveTrailTest extends UnitTestCase {
 
     // Setup the menu link manager to return the menu link.
     $this->menuLinkManager->expects($this->any())
-      ->method('loadLinksbyRoute')
+      ->method('loadLinksByRoute')
       ->with('baby_llama')
       ->willReturn([$link_1]);
     $this->menuLinkManager->expects($this->any())
