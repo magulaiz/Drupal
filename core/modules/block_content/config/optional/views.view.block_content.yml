@@ -215,6 +215,7 @@ display:
               past_format: '@interval ago'
               granularity: 2
               refresh: 60
+              description: ''
         operations:
           id: operations
           table: block_content

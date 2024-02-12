@@ -44,6 +44,7 @@ display:
               past_format: '@interval ago'
               granularity: 2
               refresh: 1
+              description: ''
           # Using this class to identify the row/cell in page.
           element_class: '{{ name_alias }}'
           entity_type: entity_test
