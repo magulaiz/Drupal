@@ -6,6 +6,7 @@ use Drupal\Core\Database\Query\NoFieldsException;
 use Drupal\KernelTests\Core\Database\DatabaseTestBase;
 use Drupal\mongodb\Driver\Database\mongodb\EmbeddedTable;
 use Drupal\mongodb\Driver\Database\mongodb\MongodbSQLException;
+use Drupal\TestTools\Extension\SchemaInspector;
 use MongoDB\Driver\Exception\BulkWriteException;
 
 /**
@@ -131,9 +132,12 @@ class InsertTest extends DatabaseTestBase {
    */
   public function testEmbeddedInsert($table_name, $fields, $expected) {
     $connection = $this->container->get('database');
+    $module_handler = $this->container->get('module_handler');
+
+    // Get the schema from the table.
     $base_table_name = 'test_people';
     $embedded_table_name = 'embedded_' . $table_name;
-    $embedded_table_schema = drupal_get_module_schema('database_test', $table_name);
+    $embedded_table_schema = SchemaInspector::getTablesSpecification($module_handler, 'database_test')[$table_name];
 
     // Make sure that there is a table schema for the embedded table.
     $this->assertTrue(!empty($embedded_table_schema), 'The schema for the embedded table should not be empty.');
@@ -183,15 +187,16 @@ class InsertTest extends DatabaseTestBase {
    */
   public function testEmbeddedEmbeddedInsert($table_name, $fields, $expected) {
     $connection = $this->container->get('database');
+    $module_handler = $this->container->get('module_handler');
     $base_table_name = 'test_people';
     $parent_table_name = 'embedded_test_task';
-    $parent_table_schema = drupal_get_module_schema('database_test', 'test_task');
+    $parent_table_schema = SchemaInspector::getTablesSpecification($module_handler, 'database_test')['test_task'];
 
     // Create the embedded table on the base table.
     $connection->schema()->createEmbeddedTable($base_table_name, $parent_table_name, $parent_table_schema);
 
     $embedded_table_name = 'embedded_' . $table_name;
-    $embedded_table_schema = drupal_get_module_schema('database_test', $table_name);
+    $embedded_table_schema = SchemaInspector::getTablesSpecification($module_handler, 'database_test')[$table_name];
 
     // Make sure that there is a table schema for the embedded table.
     $this->assertTrue(!empty($embedded_table_schema), 'The schema for the embedded table should not be empty.');

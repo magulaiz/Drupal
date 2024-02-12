@@ -2,9 +2,10 @@
 
 namespace Drupal\Tests\mongodb\Kernel;
 
+use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Query\NoFieldsException;
 use Drupal\KernelTests\Core\Database\DatabaseTestBase;
-use MongoDB\Driver\Exception\BulkWriteException;
+use Drupal\TestTools\Extension\SchemaInspector;
 
 /**
  * Tests MongoDB table updating.
@@ -20,9 +21,10 @@ class UpdateTest extends DatabaseTestBase {
     parent::setUp();
 
     $connection = $this->container->get('database');
+    $module_handler = $this->container->get('module_handler');
 
     // Get the schema from the table 'test'.
-    $embedded_table_schema = drupal_get_module_schema('database_test', 'test');
+    $embedded_table_schema = SchemaInspector::getTablesSpecification($module_handler, 'database_test')['test'];
 
     // Make sure that there is a table schema for the embedded table.
     $this->assertTrue(!empty($embedded_table_schema), 'The schema for the embedded table should not be empty.');
@@ -184,9 +186,10 @@ class UpdateTest extends DatabaseTestBase {
    */
   public function testUpdateEmbeddedEmbeddedTableData() {
     $connection = $this->container->get('database');
+    $module_handler = $this->container->get('module_handler');
 
-    // Get the schema from the table 'test'.
-    $embedded_table_schema = drupal_get_module_schema('database_test', 'test_task');
+    // Get the schema from the table 'test_task'.
+    $embedded_table_schema = SchemaInspector::getTablesSpecification($module_handler, 'database_test')['test_task'];
 
     // Make sure that there is a table schema for the embedded table.
     $this->assertTrue(!empty($embedded_table_schema), 'The schema for the embedded table should not be empty.');
@@ -252,9 +255,10 @@ class UpdateTest extends DatabaseTestBase {
    */
   public function testUpdateEmbeddedEmbeddedTableData2() {
     $connection = $this->container->get('database');
+    $module_handler = $this->container->get('module_handler');
 
-    // Get the schema from the table 'test'.
-    $embedded_table_schema = drupal_get_module_schema('database_test', 'test_task');
+    // Get the schema from the table 'test_task'.
+    $embedded_table_schema = SchemaInspector::getTablesSpecification($module_handler, 'database_test')['test_task'];
 
     // Make sure that there is a table schema for the embedded table.
     $this->assertTrue(!empty($embedded_table_schema), 'The schema for the embedded table should not be empty.');
@@ -425,7 +429,7 @@ class UpdateTest extends DatabaseTestBase {
     $connection = $this->container->get('database');
 
     // MongoDB does not allow a table variable to be changed twice in one update an exception is thrown.
-    $this->expectException(BulkWriteException::class);
+    $this->expectException(DatabaseExceptionWrapper::class);
     $query = $connection->update('test_people');
     $query->fields(['embedded_test' => $query->embeddedTableData()->fields(['name' => 'Zazu', 'age' => 20, 'job' => 'Makes noise'])])
       ->condition('job', 'Chatters')
