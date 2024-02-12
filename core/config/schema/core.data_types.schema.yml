@@ -647,6 +647,8 @@ field.storage_settings.string:
 field.field_settings.string:
   type: mapping
   label: 'String settings'
+  constraints:
+    FullyValidatable: ~
 
 field.value.string:
   type: mapping
@@ -669,6 +671,8 @@ field.storage_settings.string_long:
 field.field_settings.string_long:
   type: mapping
   label: 'String (long) settings'
+  constraints:
+    FullyValidatable: ~
 
 field.value.string_long:
   type: mapping
