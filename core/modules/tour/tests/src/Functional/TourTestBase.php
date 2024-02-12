@@ -17,7 +17,7 @@ abstract class TourTestBase extends BrowserTestBase {
    * // Basic example.
    * $this->assertTourTips();
    *
-   * // Advanced example. The following would be used for multipage or
+   * // Advanced example. The following would be used for multi-page or
    * // targeting a specific subset of tips.
    * $tips = array();
    * $tips[] = array('data-id' => 'foo');
@@ -51,7 +51,7 @@ abstract class TourTestBase extends BrowserTestBase {
       return;
     }
     if ($tip_count > 0 && $expectEmpty) {
-      $this->fail(sprintf('No tips were expected but %d were found', $tip_count));
+      $this->fail("No tips were expected but $tip_count were found");
     }
     $this->assertGreaterThan(0, $tip_count);
 
