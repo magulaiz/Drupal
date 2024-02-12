@@ -16,7 +16,7 @@ class DatabaseFileUsageBackend extends CoreDatabaseFileUsageBackend {
    */
   public function add(FileInterface $file, $module, $type, $id, $count = 1) {
     $prefixed_table = $this->connection->getMongodbPrefixedTable($this->tableName);
-    $result = $this->connection->getConnection()->{$prefixed_table}->updateMany(
+    $this->connection->getConnection()->{$prefixed_table}->updateMany(
       [
         'fid' => (int) $file->id(),
         'module' => $module,
@@ -24,10 +24,10 @@ class DatabaseFileUsageBackend extends CoreDatabaseFileUsageBackend {
         'id' => (string) $id,
       ],
       [
-        '$inc' => [ 'count' => $count ]
+        '$inc' => ['count' => $count],
       ],
       [
-        'upsert' => TRUE
+        'upsert' => TRUE,
       ]
     );
 
@@ -56,18 +56,18 @@ class DatabaseFileUsageBackend extends CoreDatabaseFileUsageBackend {
     if (!$result && $count > 0) {
       $conditions = [
         'module' => (string) $module,
-        'fid' => (int) $file->id()
+        'fid' => (int) $file->id(),
       ];
       if ($type && $id) {
         $conditions['type'] = (string) $type;
         $conditions['id'] = (string) $id;
       }
       $prefixed_table = $this->connection->getMongodbPrefixedTable($this->tableName);
-      $result = $this->connection->getConnection()->{$prefixed_table}->updateMany(
+      $this->connection->getConnection()->{$prefixed_table}->updateMany(
         $conditions,
         [
-          '$inc' => [ 'count' => ($count * -1) ]
-        ]
+          '$inc' => ['count' => ($count * -1)],
+        ],
       );
     }
 

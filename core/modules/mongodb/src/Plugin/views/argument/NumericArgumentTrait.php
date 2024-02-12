@@ -22,8 +22,8 @@ trait NumericArgumentTrait {
       $this->value = [$this->argument];
     }
 
-    $placeholder = $this->placeholder();
-    $null_check = empty($this->options['not']) ? '' : " OR $this->tableAlias.$this->realField IS NULL";
+    // $placeholder = $this->placeholder();
+    // $null_check = empty($this->options['not']) ? '' : " OR $this->tableAlias.$this->realField IS NULL";
 
     if ($this->table == $this->view->storage->get('base_table')) {
       $field = $this->realField;

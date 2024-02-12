@@ -3,15 +3,8 @@
 namespace Drupal\mongodb\modules\comment;
 
 use Drupal\comment\CommentInterface;
-use Drupal\comment\CommentStatisticsInterface;
 use Drupal\comment\CommentStatistics as CoreCommentStatistics;
-use Drupal\Core\Database\Connection;
-use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\State\StateInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\user\EntityOwnerInterface;
 
 /**
@@ -78,10 +71,10 @@ class CommentStatistics extends CoreCommentStatistics {
           ($comment_translation['entity_type'] == $comment->getCommentedEntityTypeId()) &&
           ($comment_translation['field_name'] == $comment->getFieldName()) &&
           ($comment_translation['default_langcode'] == CommentInterface::PUBLISHED)) {
-            $last_reply->cid = $comment_translation['cid'];
-            $last_reply->name = $comment_translation['name'];
-            $last_reply->changed = $comment_translation['changed'];
-            $last_reply->uid = $comment_translation['uid'];
+          $last_reply->cid = $comment_translation['cid'];
+          $last_reply->name = $comment_translation['name'];
+          $last_reply->changed = $comment_translation['changed'];
+          $last_reply->uid = $comment_translation['uid'];
         }
       }
       unset($last_reply->comment_translations);

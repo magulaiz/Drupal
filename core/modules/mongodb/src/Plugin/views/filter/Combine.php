@@ -62,7 +62,7 @@ class Combine extends CoreCombine {
       if (!empty($info[$this->operator]['method'])) {
         $values = [
           'separated fields' => $separated_fields,
-          'integer fields' => $integer_fields
+          'integer fields' => $integer_fields,
         ];
         $this->{$info[$this->operator]['method']}($values);
       }
@@ -132,8 +132,7 @@ class Combine extends CoreCombine {
       $condition = $this->query->getConnection()->condition($type);
     }
 
-    foreach ($matches as $match_key => $match) {
-      $temp_placeholder = $placeholder . '_' . $match_key;
+    foreach ($matches as $match) {
       // Clean up the user input and remove the sentence delimiters.
       $word = trim($match[2], ',?!();:-"');
       $condition->condition($placeholder, '%' . $this->connection->escapeLike($word) . '%', $operator);

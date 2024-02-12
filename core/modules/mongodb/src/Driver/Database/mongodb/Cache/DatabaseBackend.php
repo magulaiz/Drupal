@@ -45,7 +45,7 @@ class DatabaseBackend extends CoreDatabaseBackend {
         ['cid' => ['$in' => array_keys($cid_mapping)]],
         [
           'projection' => ['cid' => 1, 'data' => 1, 'created' => 1, 'expire' => 1, 'serialized' => 1, 'tags' => 1, 'checksum' => 1, '_id' => 0],
-          'sort' => ['cid' => 1]
+          'sort' => ['cid' => 1],
         ]
       );
 

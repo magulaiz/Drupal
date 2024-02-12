@@ -121,4 +121,5 @@ class EmbeddedTableData {
     // Do not use this method. This method is only useful for SQL databases.
     throw new MongodbSQLException();
   }
+
 }

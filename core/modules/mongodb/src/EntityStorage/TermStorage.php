@@ -226,7 +226,7 @@ class TermStorage extends ContentEntityStorage implements TermStorageInterface {
       ],
       [
         'arrayFilters' => [
-          [ "translation.vid" => $vid],
+          ["translation.vid" => $vid],
         ],
       ],
     );
@@ -240,11 +240,13 @@ class TermStorage extends ContentEntityStorage implements TermStorageInterface {
     foreach ($nids as &$nid) {
       $nid = (int) $nid;
     }
-    $extra = [[
-      'field' => 'nid',
-      'value' => $nids,
-      'operator' => 'IN',
-    ]];
+    $extra = [
+      [
+        'field' => 'nid',
+        'value' => $nids,
+        'operator' => 'IN',
+      ],
+    ];
     $query->addMongodbJoin('INNER', 'taxonomy_index', 'tid', 'taxonomy_term_data', 'tid', '=', 'tn', $extra);
     $query->fields('td', ['tid']);
     $query->addField('tn', 'nid', 'node_nid');
@@ -283,7 +285,7 @@ class TermStorage extends ContentEntityStorage implements TermStorageInterface {
    * {@inheritdoc}
    */
   public function getVocabularyHierarchyType($vid) {
-    //@TODO Needs work!
+    // @TODO Needs work!
 
     // Return early if we already computed this value.
     if (isset($this->vocabularyHierarchyType[$vid])) {

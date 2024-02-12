@@ -100,7 +100,6 @@ class Query extends CoreQuery {
         $this->mongodbRevisionField = $all_revisions_table;
       }
       else {
-        $current_revision_table = $storage->getCurrentRevisionTable();
         // When there is revision support, the key field is the revision key.
         $this->mongodbFields[$revision_field] = $revision_field;
         $this->mongodbRevisionField = $revision_field;
@@ -224,7 +223,7 @@ class Query extends CoreQuery {
           // If this is a numeric specifier we're adding a condition on the
           // specific delta.
           if (is_numeric($next)) {
-            $delta = $next;
+            // $delta = $next;
             // $index_prefix .= ".$delta";
             // Do not process it again.
             $key++;
@@ -262,11 +261,11 @@ class Query extends CoreQuery {
           // property definitions for the relationship. In the first case,
           // also use the property definitions for column.
           if ($key < $count) {
-            $relationship_specifier = $specifiers[$key + 1];
-            $propertyDefinitions = $field_storage->getPropertyDefinitions();
+            // $relationship_specifier = $specifiers[$key + 1];
+            // $propertyDefinitions = $field_storage->getPropertyDefinitions();
 
             // Prepare the next index prefix.
-            $next_index_prefix = "$relationship_specifier.$column";
+            // $next_index_prefix = "$relationship_specifier.$column";
           }
         }
 
@@ -502,12 +501,14 @@ class Query extends CoreQuery {
   /**
    * Helper method to check if the revision matches the conditions.
    *
-   * @param Drupal\Core\Database\Query\ConditionInterface $condition
+   * @param Drupal\Core\Database\Query\ConditionInterface $condition_obj
    *   The conditions to test with.
+   * @param string $embedded_table
+   *   The embedded table name.
    * @param array $revision
    *   The revision to test for.
    *
-   * @return int|NULL
+   * @return int|null
    *   The revision_id is the revision matches the conditions or NULL if it does
    *   not.
    */
@@ -578,6 +579,7 @@ class Query extends CoreQuery {
                 $results[] = FALSE;
               }
               break;
+
             case '<':
               if ($revision_value < reset($condition['value'])) {
                 $results[] = TRUE;
@@ -586,6 +588,7 @@ class Query extends CoreQuery {
                 $results[] = FALSE;
               }
               break;
+
             case '>':
               if ($revision_value > reset($condition['value'])) {
                 $results[] = TRUE;
@@ -594,6 +597,7 @@ class Query extends CoreQuery {
                 $results[] = FALSE;
               }
               break;
+
             case '<=':
               if ($revision_value <= reset($condition['value'])) {
                 $results[] = TRUE;
@@ -602,6 +606,7 @@ class Query extends CoreQuery {
                 $results[] = FALSE;
               }
               break;
+
             case '>=':
               if ($revision_value >= reset($condition['value'])) {
                 $results[] = TRUE;
@@ -610,6 +615,7 @@ class Query extends CoreQuery {
                 $results[] = FALSE;
               }
               break;
+
             case '<>':
               if ($revision_value != reset($condition['value'])) {
                 $results[] = TRUE;
@@ -618,6 +624,7 @@ class Query extends CoreQuery {
                 $results[] = FALSE;
               }
               break;
+
             case 'IN':
               // Do not set the third parameter of in_array() because you will
               // get the wrong result when you compare string numbers with
@@ -629,6 +636,7 @@ class Query extends CoreQuery {
                 $results[] = FALSE;
               }
               break;
+
             case 'NOT IN':
               // Do not set the third parameter of in_array() because you will
               // get the wrong result when you compare string numbers with
@@ -640,6 +648,7 @@ class Query extends CoreQuery {
                 $results[] = FALSE;
               }
               break;
+
             case 'BETWEEN':
               $bottom_value = reset($condition['value']);
               $top_value = next($condition['value']);
@@ -650,6 +659,7 @@ class Query extends CoreQuery {
                 $results[] = FALSE;
               }
               break;
+
             case 'NOT BETWEEN':
               $bottom_value = reset($condition['value']);
               $top_value = next($condition['value']);
@@ -660,6 +670,7 @@ class Query extends CoreQuery {
                 $results[] = FALSE;
               }
               break;
+
             case 'IS NULL':
               if (is_null($revision_value)) {
                 $results[] = TRUE;
@@ -668,6 +679,7 @@ class Query extends CoreQuery {
                 $results[] = FALSE;
               }
               break;
+
             case 'IS NOT NULL':
               if (!is_null($revision_value)) {
                 $results[] = TRUE;
@@ -676,6 +688,7 @@ class Query extends CoreQuery {
                 $results[] = FALSE;
               }
               break;
+
             case 'LIKE':
             case 'NOT LIKE':
             case 'REGEXP':
@@ -701,9 +714,11 @@ class Query extends CoreQuery {
                 }
               }
               break;
+
             default:
               $results[] = FALSE;
               break;
+
           }
         }
       }

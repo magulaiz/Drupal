@@ -300,12 +300,12 @@ class SearchQuery extends CoreSearchQuery {
     $extra = [
       [
         'field' => 'type',
-        'left_field' => 'type'
+        'left_field' => 'type',
       ],
       [
         'field' => 'langcode',
-        'left_field' => 'langcode'
-      ]
+        'left_field' => 'langcode',
+      ],
     ];
 
     $this->addMongodbJoin('INNER', 'search_dataset', 'sid', 'search_index', 'sid', '=', 'd', $extra);
@@ -373,8 +373,8 @@ class SearchQuery extends CoreSearchQuery {
     $extra = [
       [
         'field' => 'type',
-        'left_field' => 'type'
-      ]
+        'left_field' => 'type',
+      ],
     ];
 
     $inner->addMongodbJoin('INNER', 'search_dataset', 'sid', 'search_index', 'sid', '=', 'd', $extra);

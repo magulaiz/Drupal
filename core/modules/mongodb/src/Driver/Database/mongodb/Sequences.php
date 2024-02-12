@@ -3,7 +3,6 @@
 namespace Drupal\mongodb\Driver\Database\mongodb;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\Database;
 
 /**
  * The MongoDB service for sequences of tables.
@@ -50,7 +49,7 @@ class Sequences {
     $result = $this->connection->getConnection()->{$this->getPrefixedSequencesTableName()}->findOneAndUpdate(
       ['_id' => $table],
       ['$inc' => ['sequence' => 1]],
-      ['new' => true]
+      ['new' => TRUE],
     );
 
     if ($result && isset($result->sequence)) {
@@ -61,7 +60,7 @@ class Sequences {
       $result = $this->connection->getConnection()->{$this->getPrefixedSequencesTableName()}->insertOne([
         '_id' => $table,
         'sequence' => 1,
-        'sequence2' => 0
+        'sequence2' => 0,
       ]);
 
       if ($result && ($result->getInsertedCount() > 0)) {
@@ -97,7 +96,7 @@ class Sequences {
     // Update the sequence.
     $result = $this->connection->getConnection()->{$this->getPrefixedSequencesTableName()}->findOne(
       ['_id' => $table],
-      ['projection' => ['sequence' => 1]]
+      ['projection' => ['sequence' => 1]],
     );
 
     if ($result && isset($result->sequence)) {
@@ -108,14 +107,13 @@ class Sequences {
       $result = $this->connection->getConnection()->{$this->getPrefixedSequencesTableName()}->insertOne([
         '_id' => $table,
         'sequence' => 1,
-        'sequence2' => 0
+        'sequence2' => 0,
       ]);
 
       if ($result && ($result->getInsertedCount() > 0)) {
         return 1;
       }
     }
-    return 1;
   }
 
   /**
@@ -144,7 +142,7 @@ class Sequences {
     $result = $this->connection->getConnection()->{$this->getPrefixedSequencesTableName()}->findOneAndUpdate(
       ['_id' => $table],
       ['$set' => ['sequence' => intval($value)]],
-      ['new' => true]
+      ['new' => TRUE],
     );
 
     if (!$result || !isset($result->sequence)) {
@@ -152,7 +150,7 @@ class Sequences {
       $result = $this->connection->getConnection()->{$this->getPrefixedSequencesTableName()}->insertOne([
         '_id' => $table,
         'sequence' => intval($value),
-        'sequence2' => 0
+        'sequence2' => 0,
       ]);
     }
   }
@@ -183,7 +181,7 @@ class Sequences {
     $result = $this->connection->getConnection()->{$this->getPrefixedSequencesTableName()}->findOneAndUpdate(
       ['_id' => $table],
       ['$inc' => ['sequence2' => 1]],
-      ['new' => true]
+      ['new' => TRUE],
     );
 
     if ($result && isset($result->sequence2)) {
@@ -194,14 +192,13 @@ class Sequences {
       $result = $this->connection->getConnection()->{$this->getPrefixedSequencesTableName()}->insertOne([
         '_id' => $table,
         'sequence' => 0,
-        'sequence2' => 1
+        'sequence2' => 1,
       ]);
 
       if ($result && ($result->getInsertedCount() > 0)) {
         return 1;
       }
     }
-    return 1;
   }
 
   /**
@@ -217,7 +214,7 @@ class Sequences {
     // Update the sequence.
     $result = $this->connection->getConnection()->{$this->getPrefixedSequencesTableName()}->findOne(
       ['_id' => $table],
-      ['projection' => ['sequence2' => 1]]
+      ['projection' => ['sequence2' => 1]],
     );
 
     if ($result && isset($result->sequence2)) {
@@ -228,14 +225,13 @@ class Sequences {
       $result = $this->connection->getConnection()->{$this->getPrefixedSequencesTableName()}->insertOne([
         '_id' => $table,
         'sequence' => 0,
-        'sequence2' => 1
+        'sequence2' => 1,
       ]);
 
       if ($result && ($result->getInsertedCount() > 0)) {
         return 1;
       }
     }
-    return 1;
   }
 
   /**
@@ -251,7 +247,7 @@ class Sequences {
     $result = $this->connection->getConnection()->{$this->getPrefixedSequencesTableName()}->findOneAndUpdate(
       ['_id' => $table],
       ['$set' => ['sequence2' => intval($value)]],
-      ['new' => true]
+      ['new' => TRUE],
     );
 
     if (!$result || !isset($result->sequence2)) {
@@ -259,7 +255,7 @@ class Sequences {
       $result = $this->connection->getConnection()->{$this->getPrefixedSequencesTableName()}->insertOne([
         '_id' => $table,
         'sequence' => 0,
-        'sequence2' => intval($value)
+        'sequence2' => intval($value),
       ]);
     }
   }

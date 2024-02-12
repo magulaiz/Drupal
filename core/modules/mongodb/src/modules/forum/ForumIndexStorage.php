@@ -19,7 +19,7 @@ class ForumIndexStorage extends CoreForumIndexStorage {
       ->fields('forum', ['tid'])
       ->condition('n.nid', (int) $node->id())
       ->orderBy('f.vid', 'DESC')
-      ->range(0,1);
+      ->range(0, 1);
     $query->addMongodbJoin('INNER', 'node', 'vid', 'forum', 'vid', '=', 'n');
     return $query->execute()
       ->fetchField();
@@ -61,7 +61,7 @@ class ForumIndexStorage extends CoreForumIndexStorage {
         ->condition('comment_translations.status', (bool) CommentInterface::PUBLISHED)
         ->condition('comment_translations.default_langcode', TRUE)
         ->orderBy('cid', 'DESC')
-        ->range(0,1)
+        ->range(0, 1)
         ->execute()
         ->fetchObject();
 

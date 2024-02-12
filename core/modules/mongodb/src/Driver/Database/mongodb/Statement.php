@@ -4,10 +4,7 @@ namespace Drupal\mongodb\Driver\Database\mongodb;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
-use Drupal\Core\Database\Event\StatementExecutionEndEvent;
-use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 use Drupal\Core\Database\StatementPrefetchIterator;
-use Drupal\Core\Database\RowCountException;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\ObjectID;

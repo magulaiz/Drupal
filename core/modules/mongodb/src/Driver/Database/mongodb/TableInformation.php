@@ -82,8 +82,7 @@ class TableInformation {
   }
 
   /**
-   * Helper method that recursively changes all MongoDB\Model\BSONDocuments and
-   * MongoDB\Model\BSONArrays to normal arrays.
+   * Helper method that changes all BSONDocuments and BSONArrays to arrays.
    *
    * @param array $data
    *   The table data to be saved.
@@ -621,12 +620,12 @@ class TableInformation {
     if (count($auto_increment_fields) == 1) {
       return current($auto_increment_fields);
     }
-//    elseif (isset($this->tableInformation[$table]['primary key'])) {
-//      $pkey_fields = $this->toArray($this->tableInformation[$table]['primary key']);
-//      if (count($pkey_fields) == 1) {
-//        return current($pkey_fields);
-//      }
-//    }
+    // elseif (isset($this->tableInformation[$table]['primary key'])) {
+    // $pkey_fields = $this->toArray($this->tableInformation[$table]['primary key']);
+    // if (count($pkey_fields) == 1) {
+    // return current($pkey_fields);
+    // }
+    // }
 
     return NULL;
   }

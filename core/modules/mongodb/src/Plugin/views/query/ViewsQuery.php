@@ -395,7 +395,7 @@ class ViewsQuery extends Sql {
    *   The name of the field for substring value.
    * @param int $start
    *   The start position for the substring value.
-   * @param int $start
+   * @param int $length
    *   The length value for the substring.
    */
   public function addSubstringField($alias, $field, $start, $length) {

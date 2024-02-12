@@ -66,12 +66,12 @@ trait QueryTrait {
       $extra = [
         [
           'field' => 'workspace_association_current_revision.target_entity_type_id',
-          'value' => $this->entityTypeId
+          'value' => $this->entityTypeId,
         ],
         [
           'field' => 'workspace_association_current_revision.workspace',
-          'value' => $active_workspace->id()
-        ]
+          'value' => $active_workspace->id(),
+        ],
       ];
       $this->mongodbSelect->addMongodbJoin('LEFT', 'workspace_association', 'workspace_association_current_revision.target_entity_id', 'base_table', $id_field, '=', 'workspace_association', $extra);
     }

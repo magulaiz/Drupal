@@ -2,12 +2,9 @@
 
 namespace Drupal\Tests\mongodb\Kernel;
 
-use Drupal\Core\Database\Query\NoFieldsException;
 use Drupal\KernelTests\Core\Database\DatabaseTestBase;
 use Drupal\mongodb\Driver\Database\mongodb\EmbeddedTable;
-use Drupal\mongodb\Driver\Database\mongodb\MongodbSQLException;
 use Drupal\TestTools\Extension\SchemaInspector;
-use MongoDB\Driver\Exception\BulkWriteException;
 
 // cspell:ignore zazu
 
@@ -32,82 +29,82 @@ class InsertTest extends DatabaseTestBase {
       [
         'test',
         ['name' => 'Zazu the parrot', 'age' => 20, 'job' => 'Makes noise'],
-        ['name' => 'Zazu the parrot', 'age' => '20', 'job' => 'Makes noise']
+        ['name' => 'Zazu the parrot', 'age' => '20', 'job' => 'Makes noise'],
       ],
       [
         'test',
         ['name' => 'Zazu the parrot', 'age' => '20', 'job' => 'Makes noise'],
-        ['name' => 'Zazu the parrot', 'age' => '20', 'job' => 'Makes noise']
+        ['name' => 'Zazu the parrot', 'age' => '20', 'job' => 'Makes noise'],
       ],
       [
         'test',
         ['name' => 'Zazu the parrot', 'age' => 20],
-        ['name' => 'Zazu the parrot', 'age' => '20', 'job' => 'Undefined']
+        ['name' => 'Zazu the parrot', 'age' => '20', 'job' => 'Undefined'],
       ],
       [
         'test',
         ['name' => 'Zazu the parrot', 'job' => 'Makes noise'],
-        ['name' => 'Zazu the parrot', 'age' => '0', 'job' => 'Makes noise']
+        ['name' => 'Zazu the parrot', 'age' => '0', 'job' => 'Makes noise'],
       ],
       [
         'test',
         ['age' => 20, 'job' => 'Makes noise'],
-        ['name' => '', 'age' => '20', 'job' => 'Makes noise']
+        ['name' => '', 'age' => '20', 'job' => 'Makes noise'],
       ],
       [
         'test',
         ['name' => 'Zazu the parrot'],
-        ['name' => 'Zazu the parrot', 'age' => '0', 'job' => 'Undefined']
+        ['name' => 'Zazu the parrot', 'age' => '0', 'job' => 'Undefined'],
       ],
       [
         'test',
         ['age' => 20],
-        ['name' => '', 'age' => '20', 'job' => 'Undefined']
+        ['name' => '', 'age' => '20', 'job' => 'Undefined'],
       ],
       [
         'test',
         ['job' => 'Makes noise'],
-        ['name' => '', 'age' => '0', 'job' => 'Makes noise']
+        ['name' => '', 'age' => '0', 'job' => 'Makes noise'],
       ],
       [
         'test_null',
         ['name' => 'Zazu the parrot', 'age' => 20],
-        ['name' => 'Zazu the parrot', 'age' => '20']
+        ['name' => 'Zazu the parrot', 'age' => '20'],
       ],
       [
         'test_null',
         ['name' => 'Zazu the parrot'],
-        ['name' => 'Zazu the parrot', 'age' => '0']
+        ['name' => 'Zazu the parrot', 'age' => '0'],
       ],
       [
         'test_null',
         ['age' => 20],
-        ['name' => '', 'age' => '20']
+        ['name' => '', 'age' => '20'],
       ],
       [
         'test_null',
         ['name' => NULL, 'age' => 20],
-        ['name' => NULL, 'age' => '20']
+        ['name' => NULL, 'age' => '20'],
       ],
       [
         'test_null',
         ['name' => 'Zazu the parrot', 'age' => NULL],
-        ['name' => 'Zazu the parrot', 'age' => NULL]
+        ['name' => 'Zazu the parrot', 'age' => NULL],
       ],
       [
         'test_null',
         ['name' => NULL, 'age' => NULL],
-        ['name' => NULL, 'age' => NULL]
+        ['name' => NULL, 'age' => NULL],
       ],
       [
         'test_null',
         ['name' => NULL],
-        ['name' => NULL, 'age' => '0']
+        ['name' => NULL, 'age' => '0'],
       ],
       [
         'test_null',
         ['age' => NULL],
-        ['name' => '', 'age' => NULL]
+        ['name' => '', 'age' => NULL],
       ],
     ];
   }

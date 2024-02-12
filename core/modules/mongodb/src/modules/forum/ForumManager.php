@@ -67,7 +67,7 @@ class ForumManager extends CoreForumManager {
         'cid',
         'last_comment_uid',
         'last_comment_timestamp',
-        'comment_count'
+        'comment_count',
       ]);
 
       $query->addMongodbJoin('LEFT', 'forum_index', 'nid', 'node', 'nid', '=', 'f');

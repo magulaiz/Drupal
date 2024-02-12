@@ -19,7 +19,7 @@ class ExceptionHandler extends BaseExceptionHandler {
    *
    * @param \Exception $exception
    *   The exception to be handled.
-   * @param \Drupal\Core\Database\StatementInterface|NULL $statement
+   * @param \Drupal\Core\Database\StatementInterface|null $statement
    *   The statement object requested to be executed.
    * @param array $arguments
    *   An array of arguments for the prepared statement.

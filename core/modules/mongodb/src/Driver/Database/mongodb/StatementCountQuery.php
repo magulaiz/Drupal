@@ -54,16 +54,6 @@ class StatementCountQuery implements \Iterator, StatementInterface {
     if (isset($options['target']) && $options['target'] != $this->connection->getTarget()) {
       $this->connection = Database::getConnection($options['target']);
     }
-
-//    if (isset($options['query_time'])) {
-//      dump('Do not set the query time');
-//      dump($options);
-//    }
-//
-//    $logger = $this->connection->getLogger();
-//    if (!empty($logger)) {
-//      $logger->log($this, '', $options['query_time'], $options['query_start']);
-//    }
   }
 
   /**
@@ -98,7 +88,7 @@ class StatementCountQuery implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function setFetchMode($mode, $a1 = NULL, $a2 = []) {
-    return;
+    // Do nothing.
   }
 
   /**

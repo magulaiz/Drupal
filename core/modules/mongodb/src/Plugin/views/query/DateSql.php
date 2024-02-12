@@ -21,7 +21,7 @@ class DateSql implements DateSqlInterface {
   protected static $replace = [
     // A full numeric representation of a year, 4 digits: 1999 or 2003.
     'Y' => '%Y',
-    // A two digit representation of a year	Examples: 99 or 03.
+    // A two digit representation of a year. Examples: 99 or 03.
     // 'y' => '%y',
     // A short textual representation of a month, three letters: Jan through Dec.
     // 'M' => '%b',

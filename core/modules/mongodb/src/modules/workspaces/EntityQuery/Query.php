@@ -50,11 +50,11 @@ class Query extends BaseQuery {
 
       $this->mongodbWorkspaceRevisionField = [
         'alias' => 'coalesce_' . $this->mongodbRevisionField,
-        'field' => $this->mongodbRevisionField
+        'field' => $this->mongodbRevisionField,
       ];
       $this->mongodbWorkspaceIdField = [
         'alias' => $this->mongodbIdField,
-        'field' => $this->mongodbIdField
+        'field' => $this->mongodbIdField,
       ];
     }
 

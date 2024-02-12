@@ -114,7 +114,7 @@ class Connection extends DatabaseConnection {
     // so backslashes in the password need to be doubled up.
     // The bug was reported against pdo_mongodb 1.0.2, backslashes in passwords
     // will break on this doubling up when the bug is fixed, so check the version
-    //elseif (phpversion('pdo_mongodb') < 'version_this_was_fixed_in') {
+    // elseif (phpversion('pdo_mongodb') < 'version_this_was_fixed_in') {
     if (!empty($connection_options['password'])) {
       $connection_options['password'] = str_replace('\\', '\\\\', $connection_options['password']);
     }
@@ -358,7 +358,7 @@ class Connection extends DatabaseConnection {
    * {@inheritdoc}
    */
   public function clientVersion() {
-    return;
+    // @TODO Needs to return something.
   }
 
   /**
@@ -439,7 +439,7 @@ class Connection extends DatabaseConnection {
         $result = $this->getConnection()->{$prefixed_table}->findOneAndUpdate(
           ['_id' => 1],
           ['$set' => ['value' => $existing_id + 1]],
-          ['returnDocument' => FindOneAndUpdate::RETURN_DOCUMENT_AFTER]
+          ['returnDocument' => FindOneAndUpdate::RETURN_DOCUMENT_AFTER],
         );
 
         if ($result && isset($result->value)) {
@@ -567,7 +567,7 @@ class Connection extends DatabaseConnection {
       $this->session = $this->connection->getManager()->startSession([
         'readConcern' => new ReadConcern(ReadConcern::LINEARIZABLE),
         'readPreference' => new ReadPreference(ReadPreference::PRIMARY),
-        'writeConcern' => new WriteConcern( WriteConcern::MAJORITY, 0, TRUE),
+        'writeConcern' => new WriteConcern(WriteConcern::MAJORITY, 0, TRUE),
       ]);
     }
 

@@ -3,7 +3,6 @@
 namespace Drupal\mongodb\Plugin\Search;
 
 use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\Database\StatementInterface;
 use Drupal\node\Plugin\Search\NodeSearch as CoreNodeSearch;
@@ -73,7 +72,7 @@ class NodeSearch extends CoreNodeSearch {
     $find = $query
       // Add the language code of the indexed item to the result of the query,
       // since the node will be rendered using the respective language.
-//      ->fields('i', ['langcode'])
+      // ->fields('i', ['langcode'])
       // And since SearchQuery makes these into GROUP BY queries, if we add
       // a field, for PostgreSQL we also need to make it an aggregate or a
       // GROUP BY. In this case, we want GROUP BY.
