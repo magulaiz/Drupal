@@ -153,5 +153,6 @@
 
   @nest .dropbutton-wrapper.open & {
     visibility: visible;
+    padding: 0 9px;
   }
 }

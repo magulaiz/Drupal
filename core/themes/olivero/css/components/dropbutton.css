@@ -162,4 +162,5 @@
 
 .dropbutton-wrapper.open .secondary-action {
   visibility: visible;
+  padding: 0 0.5625rem;
 }
