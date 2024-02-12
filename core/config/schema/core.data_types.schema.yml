@@ -781,7 +781,6 @@ field.storage_settings.entity_reference:
       constraints:
         PluginExists:
           manager: entity_type.manager
-          interface: Drupal\Core\Entity\EntityTypeInterface
 
 field.field_settings.entity_reference:
   type: mapping
