@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Entity\Plugin\Validation\Constraint;
 
+use Drupal\Core\Entity\SynchronizableInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
