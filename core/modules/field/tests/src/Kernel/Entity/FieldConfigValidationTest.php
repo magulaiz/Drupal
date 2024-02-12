@@ -251,6 +251,13 @@ class FieldConfigValidationTest extends FieldStorageConfigValidationTest {
         // @see \Drupal\Core\Config\Plugin\Validation\Constraint\RequiredConfigDependenciesConstraintValidator
         '' => 'This field requires a field storage.',
       ],
+      // If the settings are removed, we should see errors about them missing.
+      'settings' => [
+        'settings' => [
+          "'on_label' is a required key because field_type is boolean (see config schema type field.field_settings.boolean).",
+          "'off_label' is a required key because field_type is boolean (see config schema type field.field_settings.boolean).",
+        ],
+      ],
     ]);
   }
 
