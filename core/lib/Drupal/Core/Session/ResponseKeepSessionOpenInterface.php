@@ -11,5 +11,6 @@ namespace Drupal\Core\Session;
  *
  * @see Drupal\Core\StackMiddleware\Session
  * @see Drupal\big_pipe\src\Render\BigPipeResponse
+ * @internal
  */
 interface ResponseKeepSessionOpenInterface {}
