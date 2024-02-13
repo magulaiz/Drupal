@@ -700,6 +700,13 @@
         .find(tagsSupportDisable)
         .addBack(tagsSupportDisable)
         .prop('disabled', e.value);
+
+      $(e.target)
+        .closest('.js-form-item, .js-form-submit, .js-form-wrapper')
+        .toArray()
+        .forEach((element) => {
+          element.classList.toggle('form-disabled', e.value);
+        });
     }
   });
 
@@ -707,9 +714,15 @@
     if (e.trigger) {
       $(e.target)
         .closest('.js-form-item, .js-form-submit, .js-form-wrapper')
-        .toggleClass('form-readonly', e.value)
         .find('input, textarea')
         .prop('readonly', e.value);
+
+      $(e.target)
+        .closest('.js-form-item, .js-form-submit, .js-form-wrapper')
+        .toArray()
+        .forEach((element) => {
+          element.classList.toggle('form-readonly', e.value);
+        });
     }
   });
 
