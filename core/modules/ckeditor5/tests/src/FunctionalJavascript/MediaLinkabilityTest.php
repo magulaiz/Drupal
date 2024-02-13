@@ -386,7 +386,7 @@ class MediaLinkabilityTest extends MediaTestBase {
 
     $preview_button->click();
     $iterations = 10;
-    while ((sizeof($session->getWindowNames()) < 2 && $iterations > 0) == TRUE) {
+    while ((count($session->getWindowNames()) < 2 && $iterations > 0) == TRUE) {
       $session->wait(1000);
       $iterations--;
     }
