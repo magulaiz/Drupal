@@ -32,18 +32,11 @@ class BrowserWithJavascriptTest extends WebDriverTestBase {
     $this->assertTrue($driver->isW3C(), 'Driver is operating in W3C mode');
 
     $this->drupalGet('<front>');
-    $session = $this->getSession();
 
-    $session->resizeWindow(400, 300);
-    // Webdriver will resize to as close as possible rather than the exact value.
-    $window_size = $session->getDriver()->getWebDriverSession()->window()->getRect();
-    $width = $window_size['width'];
-    $height = $window_size['height'];
+    $this->getSession()->resizeWindow(800, 800);
     $javascript = <<<JS
     (function(){
-        let x = window.outerWidth;
-        let y = window.outerHeight;
-        return x == $width && y == $height;
+        return window.outerWidth == 800 && window.outerHeight == 800;
     }())
 JS;
     $this->assertJsCondition($javascript);
