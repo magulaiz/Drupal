@@ -391,7 +391,8 @@ trait PerformanceTestTrait {
     // @todo: get commit hash from an environment variable and add this as an
     // additional attribute.
     // @see https://www.drupal.org/project/drupal/issues/3379761
-    $resource = ResourceInfoFactory::merge(ResourceInfo::create(Attributes::create([
+    $resource = ResourceInfoFactory::defaultResource();
+    $resource = $resource->merge(ResourceInfo::create(Attributes::create([
       ResourceAttributes::SERVICE_NAMESPACE => 'Drupal',
       ResourceAttributes::SERVICE_NAME => $service_name,
       ResourceAttributes::SERVICE_INSTANCE_ID => 1,
