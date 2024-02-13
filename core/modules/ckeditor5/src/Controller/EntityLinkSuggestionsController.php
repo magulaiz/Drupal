@@ -294,7 +294,7 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
    */
   protected function computeDescription(EntityInterface $entity): ?TranslatableMarkup {
     $entity_type = $entity->getEntityType();
-    $owner = $entity_type->hasKey('owner')
+    $owner = $entity_type->hasKey('owner') && $entity->getOwner()
       ? $entity->getOwner()->getDisplayName()
       : NULL;
     $creation_datetime = method_exists($entity, 'getCreatedTime')
