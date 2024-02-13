@@ -1660,7 +1660,7 @@
       // we count from 1, so we're out of sync.
       // Match immediate children of the parent element to allow nesting.
 
-      let $selector = $(response.selector).find(
+      const $selector = $(response.selector).find(
         '> tbody > tr:visible, > tr:visible',
       );
 
