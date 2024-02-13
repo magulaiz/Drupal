@@ -357,7 +357,6 @@ class MediaLinkabilityTest extends MediaTestBase {
     $balloon = $this->assertVisibleBalloon('.ck-link-form');
     $this->assertNotNull($autocomplete_field = $balloon->find('css', '.ck-input-text'));
     $autocomplete_field->setValue('Z');
-    $this->getSession()->getDriver()->keyDown($balloon->find('css', '.ck-input-text')->getXpath(), ' ');
     $this->assertTrue($this->getSession()->wait(5000, "document.querySelectorAll('.linkit-result-line.ui-menu-item').length > 0"));
     $results = $page->findAll('css', '.linkit-result-line.ui-menu-item');
     $results[0]->click();

@@ -146,7 +146,6 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
 
     // Trigger a keydown event to activate a autocomplete search.
     $autocomplete_field->setValue('f');
-    $this->getSession()->getDriver()->keyDown($balloon->find('css', '.ck-input-text')->getXpath(), ' ');
     $this->assertTrue($this->getSession()->wait(5000, "document.querySelectorAll('.linkit-result-line.ui-menu-item').length > 0"));
 
     // Make sure the autocomplete result container is visible.
@@ -161,7 +160,6 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
 
     // Make the search term longer to narrow down the results.
     $autocomplete_field->setValue('fo');
-    $this->getSession()->getDriver()->keyDown($autocomplete_field->getXpath(), ' ');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->waitForElementRemoved('xpath', '//span[@class="linkit-result-line--title" and text()="Sofie"]');
 
@@ -196,7 +194,6 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
     $balloon = $this->assertVisibleBalloon('.ck-link-form');
     $autocomplete_field = $balloon->find('css', '.ck-input-text');
     $autocomplete_field->setValue('fo');
-    $this->getSession()->getDriver()->keyDown($autocomplete_field->getXpath(), ' ');
     $assert_session->waitForElementVisible('css', '.ck-link-form .linkit-ui-autocomplete');
     $results = $page->findAll('css', '.linkit-result-line.ui-menu-item');
     $results[1]->click();
@@ -334,7 +331,6 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
     $balloon = $this->assertVisibleBalloon('.ck-link-form');
     $autocomplete_field = $balloon->find('css', '.ck-input-text');
     $autocomplete_field->setValue('Z');
-    $this->getSession()->getDriver()->keyDown($autocomplete_field->getXpath(), ' ');
     $this->assertTrue($this->getSession()->wait(5000, "document.querySelectorAll('.linkit-result-line.ui-menu-item').length > 0"));
     $results = $page->findAll('css', '.linkit-result-line.ui-menu-item');
     $results[0]->click();
