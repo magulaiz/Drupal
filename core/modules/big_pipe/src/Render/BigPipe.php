@@ -539,7 +539,6 @@ class BigPipe {
 
     // Create a Fiber for each placeholder.
     $fibers = [];
-    $message_placeholder_id = NULL;
     foreach ($placeholder_order as $placeholder_id) {
       if (!isset($placeholders[$placeholder_id])) {
         continue;
