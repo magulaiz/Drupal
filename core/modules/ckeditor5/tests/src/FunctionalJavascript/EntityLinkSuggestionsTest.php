@@ -135,7 +135,7 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
 
     // Find the href field.
     $balloon = $this->assertVisibleBalloon('.ck-link-form');
-    $autocomplete_field = $balloon->find('css', '.ck-input-text');
+    $this->assertNotNull($autocomplete_field = $balloon->find('css', '.ck-input-text'));
 
     // Make sure all fields are empty.
     $this->assertEmpty($autocomplete_field->getValue(), 'Autocomplete field is empty.');
@@ -146,7 +146,7 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
 
     // Trigger a keydown event to activate a autocomplete search.
     $autocomplete_field->setValue('f');
-    $this->getSession()->getDriver()->keyDown($autocomplete_field->getXpath(), ' ');
+    $this->getSession()->getDriver()->keyDown($balloon->find('css', '.ck-input-text')->getXpath(), ' ');
     $this->assertTrue($this->getSession()->wait(5000, "document.querySelectorAll('.linkit-result-line.ui-menu-item').length > 0"));
 
     // Make sure the autocomplete result container is visible.
