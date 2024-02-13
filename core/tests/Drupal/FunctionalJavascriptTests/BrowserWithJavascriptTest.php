@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalJavascriptTests;
 
+use Behat\Mink\Driver\Selenium2Driver;
 use PHPUnit\Framework\AssertionFailedError;
 
 /**
@@ -26,19 +27,16 @@ class BrowserWithJavascriptTest extends WebDriverTestBase {
   protected $defaultTheme = 'stark';
 
   public function testJavascript() {
-    $this->drupalGet('<front>');
-    $session = $this->getSession();
+    $driver = $this->getSession()->getDriver();
+    $this->assertInstanceOf(Selenium2Driver::class, $driver);
+    $this->assertTrue($driver->isW3C(), 'Driver is operating in W3C mode');
 
-    $session->resizeWindow(400, 300);
+    $this->drupalGet('<front>');
+
+    $this->getSession()->resizeWindow(800, 800);
     $javascript = <<<JS
     (function(){
-        var w = window,
-        d = document,
-        e = d.documentElement,
-        g = d.getElementsByTagName('body')[0],
-        x = w.innerWidth || e.clientWidth || g.clientWidth,
-        y = w.innerHeight || e.clientHeight|| g.clientHeight;
-        return x == 400 && y == 300;
+        return window.outerWidth == 800 && window.outerHeight == 800;
     }())
 JS;
     $this->assertJsCondition($javascript);
@@ -141,8 +139,8 @@ JS;
     $session->visit($url);
 
     // There are 2 alerts to accept before we can get the content of the page.
-    $session->getDriver()->getWebdriverSession()->accept_alert();
-    $session->getDriver()->getWebdriverSession()->accept_alert();
+    $session->getDriver()->getWebdriverSession()->alert()->accept();
+    $session->getDriver()->getWebdriverSession()->alert()->accept();
 
     $out = $session->getPage()->getContent();
 
