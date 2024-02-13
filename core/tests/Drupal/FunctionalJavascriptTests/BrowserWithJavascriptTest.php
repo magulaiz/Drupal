@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalJavascriptTests;
 
+use Behat\Mink\Driver\Selenium2Driver;
 use PHPUnit\Framework\AssertionFailedError;
 
 /**
@@ -26,6 +27,10 @@ class BrowserWithJavascriptTest extends WebDriverTestBase {
   protected $defaultTheme = 'stark';
 
   public function testJavascript() {
+    $driver = $this->getSession()->getDriver();
+    $this->assertInstanceOf(Selenium2Driver::class, $driver);
+    $this->assertTrue($driver->isW3C(), 'Driver is operating in W3C mode');
+
     $this->drupalGet('<front>');
     $session = $this->getSession();
 
