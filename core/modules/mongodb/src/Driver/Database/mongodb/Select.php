@@ -532,7 +532,7 @@ class Select extends QuerySelect {
    *   The name of the field for substring value.
    * @param int $start
    *   The start position for the substring value.
-   * @param int $start
+   * @param int $length
    *   The length value for the substring.
    */
   public function addSubstringField($alias, $field, $start, $length) {
@@ -703,7 +703,7 @@ class Select extends QuerySelect {
    */
   public function havingConditionWithType($type, $field, $value = NULL, $operator = '=') {
     if (!in_array($type, ['COUNT', 'SUM'], TRUE)) {
-      throw new MongodbSQLException(t("MongoDB does not support @type in the Select::havingConditionWithType().", ['@type' => $type]));
+      throw new MongodbSQLException("MongoDB does not support $type in the Select::havingConditionWithType().");
     }
 
     $this->expressions[$field] = [
@@ -983,19 +983,19 @@ class Select extends QuerySelect {
   /**
    * Helper method for getting the join data out of the join condition.
    *
-   * @param ConditionInterface $condition
+   * @param \Drupal\Core\Database\ConditionInterface $condition
    *   The join condition.
+   * @param string $table
+   *   The table name.
+   * @param string $alias
+   *   The alias name.
    *
    * @return array
    */
   protected function getJoinConditionForMongoDB(ConditionInterface $condition, string $table, string $alias) {
-//dump('$table: ' . $table);
-//dump('$alias: ' . $alias);
-
     $return = [];
 
     $condition_parts = $condition->conditions();
-    $conjunction = $condition_parts['#conjunction'];
     unset($condition_parts['#conjunction']);
     foreach ($condition_parts as $condition_part) {
       // Get the right field.
@@ -1030,99 +1030,7 @@ class Select extends QuerySelect {
       $return['extra'] = [];
     }
 
-//dump('$return');
-//dump($return);
     return $return;
-  }
-
-  /**
-   * Join against another table in the database.
-   *
-   * This method does the "hard" work of queueing up a table to be joined against.
-   * In some cases, that may include dipping into the Schema API to find the necessary
-   * fields on which to join.
-   *
-   * @param $type
-   *   The type of join. This can be INNER, LEFT (OUTER). Defaults to LEFT.
-   * @param $table
-   *   The table against which to join. May be a string or another SelectQuery
-   *   object. If a query object is passed, it will be used as a subselect.
-   *   Unless the table name starts with the database / schema name and a dot
-   *   it will be prefixed.
-   * @param $field
-   *   The field of the table $table to use in the join.
-   * @param $left_table
-   *   The table to which the table $table joins to.
-   * @param $left_field
-   *   The field of the table $left_table to use in the join.
-   * @param $operator
-   *   The operator to use in the join. Defaults to '='.
-   * @param $alias
-   *   The alias for the table. In most cases this should be the first letter
-   *   of the table, or the first letter of each "word" in the table. If omitted,
-   *   one will be dynamically generated.
-   * @param $extra
-   *   An array of extra conditions on the join.
-   *
-   *   Each condition is either a string that's directly added, or an array of
-   *   items:
-   *     - table(optional): If not set, current table; if NULL, no table. If you
-   *       specify a table in cached configuration, Views will try to load from
-   *       an existing alias. If you use realtime joins, it works better.
-   *     - field(optional): Field or formula. In formulas we can reference the
-   *       right table by using %alias.
-   *     - left_field(optional): Field or formula. In formulas we can reference
-   *       the left table by using %alias.
-   *     - operator(optional): The operator used, Defaults to "=".
-   *     - value: Must be set. If an array, operator will be defaulted to IN.
-   *     - numeric: If true, the value will not be surrounded in quotes.
-   *
-   * @return
-   *   The unique alias that was assigned for this table.
-   *
-  public function addMongodbJoin($type, $table, $field, $left_table, $left_field, $operator = '=', $alias = NULL, $extra = []) {
-    // If no alias is specified, first try the field name itself.
-    if (empty($alias)) {
-      $alias = $table;
-    }
-
-    // If that's already in use, try the table name and field name.
-    if (!empty($this->tables[$alias])) {
-      $alias = $table . '_' . $field;
-    }
-
-    // Copied from Select::addJoin(). Need to be moved to own helper method.
-    $alias_candidate = $alias;
-    $count = 2;
-    while (!empty($this->tables[$alias_candidate])) {
-      $alias_candidate = $alias . '_' . $count++;
-    }
-    $alias = $alias_candidate;
-
-    // Add the alias to the tables list.
-    $this->tables[$alias] = [
-      'join type' => 'mongodb',
-      'table' => $table,
-      'alias' => $alias,
-      'condition' => '',
-      'arguments' => [],
-    ];
-
-    $this->mongodbJoins[$alias] = [
-      'join type' => strtoupper($type) == 'INNER' ? 'INNER' : 'LEFT',
-      'table' => $table,
-      'alias' => $alias,
-      'condition' => '',
-      'arguments' => [],
-      // Fields special for MongoDB.
-      'field' => $field,
-      'left table' => $left_table,
-      'left field' => $left_field,
-      'operator' => $operator,
-      'extra' => $extra
-    ];
-
-    return $alias;
   }
 
   /**
@@ -1237,6 +1145,7 @@ class Select extends QuerySelect {
    *   The alias for which to group.
    * @param $field
    *   The field on which to group. This should be the field as aliased.
+   *
    * @return \Drupal\Core\Database\Query\SelectInterface
    *   The called object.
    */
@@ -1296,10 +1205,12 @@ class Select extends QuerySelect {
           // Not sure about this solution. This is needed when there is a
           // group-by aggregation.
           if (!empty($this->mongodbGroup)) {
-            $pipeline[] = ['$unwind' => [
-              'path' => '$' . $unwind,
-              'preserveNullAndEmptyArrays' => TRUE
-            ]];
+            $pipeline[] = [
+              '$unwind' => [
+                'path' => '$' . $unwind,
+                'preserveNullAndEmptyArrays' => TRUE,
+              ],
+            ];
           }
           else {
             $pipeline[] = ['$unwind' => '$' . $unwind];
@@ -1307,14 +1218,15 @@ class Select extends QuerySelect {
           $unwound_tables[] = $unwind;
         }
 
-        $pipeline[] = ['$replaceRoot' => [
+        $pipeline[] = [
+          '$replaceRoot' => [
             'newRoot' => [
               '$mergeObjects' => [
                 '$$ROOT',
-                '$' . $this->mongodbEmbeddedTableToUseAsBaseTable
-              ]
-            ]
-          ]
+                '$' . $this->mongodbEmbeddedTableToUseAsBaseTable,
+              ],
+            ],
+          ],
         ];
       }
 
@@ -1322,7 +1234,7 @@ class Select extends QuerySelect {
         $pipeline[] = ['$addFields' => $this->mongodbAddFieldsPreJoin];
       }
 
-      foreach ($this->mongodbLookupUnwindPaths as $lookup_unwind_path){
+      foreach ($this->mongodbLookupUnwindPaths as $lookup_unwind_path) {
         if (!empty($lookup_unwind_path) && (!in_array($lookup_unwind_path, $unwound_tables, TRUE))) {
           $embedded_table_parts = explode('.', $lookup_unwind_path);
           $unwind = '';
@@ -1348,10 +1260,12 @@ class Select extends QuerySelect {
 
       foreach ($this->mongodbUnwindJoinAndAddFields as $mongodbUnwindJoinAlias => $mongodbUnwindJoinAndAddField) {
         if (!in_array($mongodbUnwindJoinAlias, $unwound_tables, TRUE)) {
-          $pipeline[] = ['$unwind' => [
-            'path' => '$' . $mongodbUnwindJoinAlias,
-            'preserveNullAndEmptyArrays' => TRUE
-          ]];
+          $pipeline[] = [
+            '$unwind' => [
+              'path' => '$' . $mongodbUnwindJoinAlias,
+              'preserveNullAndEmptyArrays' => TRUE,
+            ],
+          ];
           $unwound_tables[] = $mongodbUnwindJoinAlias;
         }
         $unwind_join_add_fields = [];
@@ -1372,10 +1286,12 @@ class Select extends QuerySelect {
           foreach ($embedded_table_parts as $embedded_table_part) {
             $unwind = (!empty($unwind) ? $unwind . '.' : '') . $embedded_table_part;
 
-            $pipeline[] = ['$unwind' => [
-              'path' => '$' . $unwind,
-              'preserveNullAndEmptyArrays' => TRUE
-            ]];
+            $pipeline[] = [
+              '$unwind' => [
+                'path' => '$' . $unwind,
+                'preserveNullAndEmptyArrays' => TRUE,
+              ],
+            ];
             $unwound_tables[] = $unwind;
           }
         }
@@ -1421,10 +1337,12 @@ class Select extends QuerySelect {
         sort($this->mongodbUnwind);
         foreach ($this->mongodbUnwind as $unwind) {
           if (!empty($unwind) && (!in_array($unwind, $unwound_tables, TRUE))) {
-            $pipeline[] = ['$unwind' => [
-              'path' => $unwind,
-              'preserveNullAndEmptyArrays' => TRUE
-            ]];
+            $pipeline[] = [
+              '$unwind' => [
+                'path' => $unwind,
+                'preserveNullAndEmptyArrays' => TRUE,
+              ],
+            ];
             $unwound_tables[] = $unwind;
           }
         }
@@ -1613,72 +1531,6 @@ class Select extends QuerySelect {
           ));
         }
       }
-/*
-      elseif ($this->mongodbUseAggregate) {
-        $pipeline = [];
-        foreach ($this->mongodbFilterUnwindPaths as $filter_unwind_path) {
-          if (!empty($filter_unwind_path) && ($filter_unwind_path != $this->mongodbEmbeddedTableToUseAsBaseTable)) {
-            $embedded_table_parts = explode('.', $filter_unwind_path);
-            $unwind = '';
-            foreach ($embedded_table_parts as $embedded_table_part) {
-              $unwind = (!empty($unwind) ? $unwind . '.' : '') . $embedded_table_part;
-              $pipeline[] = ['$unwind' => [
-                'path' => '$' . $unwind,
-                'preserveNullAndEmptyArrays' => TRUE
-              ]];
-            }
-          }
-        }
-        if (!empty($this->mongodbAggregateFilter)) {
-          $pipeline[] = ['$match' => $this->mongodbAggregateFilter];
-        }
-        if (!empty($this->mongodbProjection)) {
-          $pipeline[] = ['$project' => $this->mongodbProjection];
-        }
-        if (!empty($this->mongodbGroup)) {
-          $pipeline[] = ['$group' => $this->mongodbGroup];
-        }
-        // Change the query to a count query.
-        $pipeline[] = ['$count' => 'total_rows'];
-
-        // Return the query as its string value.
-        if ($this->mongodbQueryStringValue) {
-          // Reset the class property. So that the next time the query will be
-          // executed.
-          $this->mongodbQueryStringValue = FALSE;
-
-          return 'SELECT COUNT WITH AGGREGATE PIPELINE: ' . serialize($pipeline);
-        }
-
-        if ($this->connection->isEventEnabled(StatementExecutionStartEvent::class)) {
-          $startEvent = new StatementExecutionStartEvent(
-            spl_object_id($this),
-            $this->connection->getKey(),
-            $this->connection->getTarget(),
-            'SELECT COUNT WITH AGGREGATE PIPELINE: ' . serialize($pipeline),
-            [],
-            $this->connection->findCallerFromDebugBacktrace()
-          );
-          $this->connection->dispatchEvent($startEvent);
-        }
-
-        $results = $this->connection->getConnection()->{$prefixed_table}->aggregate($pipeline)->toArray();
-        $result = reset($results);
-        $count = is_object($result) && isset($result->total_rows) ? $result->total_rows : 0;
-
-        if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionEndEvent::class)) {
-          $this->connection->dispatchEvent(new StatementExecutionEndEvent(
-            $startEvent->statementObjectId,
-            $startEvent->key,
-            $startEvent->target,
-            $startEvent->queryString,
-            $startEvent->args,
-            $startEvent->caller,
-            $startEvent->time
-          ));
-        }
-      }
-*/
       else {
         // Return the query as its string value.
         if ($this->mongodbQueryStringValue) {
@@ -1780,13 +1632,6 @@ class Select extends QuerySelect {
       $options['random_order'] = 1;
     }
 
-//    if (isset($options)) {
-//      $options += $this->queryOptions;
-//    }
-//    else {
-//      $options = $this->queryOptions;
-//    }
-
     $statement = new Statement($this->connection, $cursor, $fields);
     $statement->execute(NULL, $options);
     return $statement;
@@ -1813,7 +1658,6 @@ class Select extends QuerySelect {
 
     // Add the mongodb joins to the select query.
     foreach ($this->mongodbJoins as $mongodbJoin) {
-//dump($mongodbJoin);
       $pipeline_unwound_tables = [];
 
       $left_table_alias = '';
@@ -1852,14 +1696,14 @@ class Select extends QuerySelect {
               $unwind = (!empty($unwind) ? $unwind . '.' : '') . $embedded_table_part;
 
               // Check that we are not trying to unwind the base table.
-//              if (!isset($this->mongodbJoins[$unwind]['table']) || ($this->mongodbJoins[$unwind]['table'] != $this->mongodbBaseTable)) {
-                $this->mongodbLookups[] = [
-                  '$unwind' => [
-                    'path' => '$' . $unwind,
-                    'preserveNullAndEmptyArrays' => TRUE
-                  ]
-                ];
-//              }
+              // if (!isset($this->mongodbJoins[$unwind]['table']) || ($this->mongodbJoins[$unwind]['table'] != $this->mongodbBaseTable)) {
+              $this->mongodbLookups[] = [
+                '$unwind' => [
+                  'path' => '$' . $unwind,
+                  'preserveNullAndEmptyArrays' => TRUE,
+                ],
+              ];
+              // }
             }
           }
         }
@@ -1879,7 +1723,7 @@ class Select extends QuerySelect {
         $lookup_conditions[] = [
           $operator => [
             '$$' . $left_field_aliased,
-            '$' . $mongodbJoin['field']
+            '$' . $mongodbJoin['field'],
           ],
         ];
       }
@@ -1891,19 +1735,18 @@ class Select extends QuerySelect {
       foreach ($lookup_field_parts as $lookup_field_part) {
         $unwind = (!empty($unwind) ? $unwind . '.' : '') . $lookup_field_part;
         if (!in_array($unwind, $pipeline_unwound_tables, TRUE)) {
-//dump('unwind1');
           $lookup_pipeline[] = [
             '$unwind' => [
               'path' => '$' . $unwind,
-              'preserveNullAndEmptyArrays' => TRUE
-            ]
+              'preserveNullAndEmptyArrays' => TRUE,
+            ],
           ];
           $pipeline_unwound_tables[] = $unwind;
         }
       }
 
       if (isset($mongodbJoin['extra']) && is_array($mongodbJoin['extra'])) {
-        foreach($mongodbJoin['extra'] as $extra) {
+        foreach ($mongodbJoin['extra'] as $extra) {
           if (isset($extra['value']) && isset($extra['numeric']) && $extra['numeric']) {
             $extra['value'] = (int) $extra['value'];
           }
@@ -1924,12 +1767,11 @@ class Select extends QuerySelect {
             foreach ($extra_field_parts as $extra_field_part) {
               $unwind = (!empty($unwind) ? $unwind . '.' : '') . $extra_field_part;
               if (!in_array($unwind, $pipeline_unwound_tables, TRUE)) {
-//dump('unwind2');
                 $lookup_pipeline[] = [
                   '$unwind' => [
                     'path' => '$' . $unwind,
-                    'preserveNullAndEmptyArrays' => TRUE
-                  ]
+                    'preserveNullAndEmptyArrays' => TRUE,
+                  ],
                 ];
                 $pipeline_unwound_tables[] = $unwind;
               }
@@ -1940,7 +1782,7 @@ class Select extends QuerySelect {
               $lookup_conditions[] = [
                 '$in' => [
                   '$$' . $extra_left_field_aliased,
-                  $extra['value']
+                  $extra['value'],
                 ],
               ];
             }
@@ -1948,7 +1790,7 @@ class Select extends QuerySelect {
               $lookup_conditions[] = [
                 $extra_operator => [
                   '$$' . $extra_left_field_aliased,
-                  $extra['value']
+                  $extra['value'],
                 ],
               ];
             }
@@ -1957,7 +1799,7 @@ class Select extends QuerySelect {
             $lookup_conditions[] = [
               $extra_operator => [
                 '$$' . $extra_left_field_aliased,
-                '$' . $extra['field']
+                '$' . $extra['field'],
               ],
             ];
           }
@@ -1966,7 +1808,7 @@ class Select extends QuerySelect {
               $lookup_conditions[] = [
                 '$in' => [
                   '$' . $extra['field'],
-                  $extra['value']
+                  $extra['value'],
                 ],
               ];
             }
@@ -1974,7 +1816,7 @@ class Select extends QuerySelect {
               $lookup_conditions[] = [
                 $extra_operator => [
                   '$' . $extra['field'],
-                  $extra['value']
+                  $extra['value'],
                 ],
               ];
             }
@@ -2006,43 +1848,41 @@ class Select extends QuerySelect {
           'let' => $lookup_let,
           'pipeline' => $lookup_pipeline,
           'as' => $mongodbJoin['alias'],
-        ]
+        ],
       ];
       if (empty($lookup_let)) {
         unset($lookup['$lookup']['let']);
       }
       $this->mongodbLookups[] = $lookup;
-//dump($this->mongodbLookups);
+
       // Inner join must have a value in the right table. This is a bit of a
       // hack, because an inner join can result in returning multiple row for
       // a single left table row. MongoDB is not able to do that.
       if (strtoupper($mongodbJoin['join type']) == 'INNER') {
-        $this->mongodbLookups[] =  [
+        $this->mongodbLookups[] = [
           '$match' => [
             $mongodbJoin['alias'] => [
-              '$ne' => []
-            ]
-          ]
+              '$ne' => [],
+            ],
+          ],
         ];
       }
 
       if (!empty($pipeline_unwound_tables)) {
-//dump('unwind3');
         $this->mongodbLookups[] = [
           '$unwind' => [
             'path' => '$' . $mongodbJoin['alias'],
-            'preserveNullAndEmptyArrays' => TRUE
-          ]
+            'preserveNullAndEmptyArrays' => TRUE,
+          ],
         ];
       }
 
       foreach ($pipeline_unwound_tables as $pipeline_unwound_table) {
-//dump('unwind4');
         $this->mongodbLookups[] = [
           '$unwind' => [
             'path' => '$' . $mongodbJoin['alias'] . '.' . $pipeline_unwound_table,
-            'preserveNullAndEmptyArrays' => TRUE
-          ]
+            'preserveNullAndEmptyArrays' => TRUE,
+          ],
         ];
       }
 
@@ -2082,7 +1922,6 @@ class Select extends QuerySelect {
       $this->mongodbUseAggregate = TRUE;
     }
 
-
     // Add the MongoDB sum fields.
     foreach ($this->mongodbSumFields as $alias => $data) {
       $sum_fields = [];
@@ -2105,7 +1944,6 @@ class Select extends QuerySelect {
       $this->mongodbAddFields[$this->connection->escapeField($alias)] = ['$add' => $sum_fields];
       $this->mongodbUseAggregate = TRUE;
     }
-
 
     // Add the MongoDB concat fields.
     foreach ($this->mongodbConcatFields as $alias => $data) {
@@ -2150,12 +1988,12 @@ class Select extends QuerySelect {
               '$strLenBytes' => [
                 '$ifNull' => [
                   $field,
-                  ''
-                ]
-              ]
+                  '',
+                ],
+              ],
             ],
-            $length
-          ]
+            $length,
+          ],
         ];
       }
 
@@ -2174,8 +2012,8 @@ class Select extends QuerySelect {
       $this->mongodbAddFields[$this->connection->escapeField($alias)] = [
         '$dateToString' => [
           'format' => $data['format'],
-          'date' => '$' . $this->connection->escapeField($data['field'])
-        ]
+          'date' => '$' . $this->connection->escapeField($data['field']),
+        ],
       ];
       $this->mongodbUseAggregate = TRUE;
     }
@@ -2187,10 +2025,10 @@ class Select extends QuerySelect {
           'format' => $data['format'],
           'date' => [
             '$dateFromString' => [
-              'dateString' => '$' . $this->connection->escapeField($data['field'])
-            ]
-          ]
-        ]
+              'dateString' => '$' . $this->connection->escapeField($data['field']),
+            ],
+          ],
+        ],
       ];
       $this->mongodbUseAggregate = TRUE;
     }
@@ -2246,7 +2084,7 @@ class Select extends QuerySelect {
       // Remove embedded table paths that are also parts of a deeper embedded
       // table path.
       foreach ($this->mongodbFilterUnwindPaths as $key => $mongodbFilterUnwindPath) {
-        $matches = array_filter($this->mongodbFilterUnwindPaths, function($haystack) use ($mongodbFilterUnwindPath) {
+        $matches = array_filter($this->mongodbFilterUnwindPaths, function ($haystack) use ($mongodbFilterUnwindPath) {
           if (strpos($haystack, $mongodbFilterUnwindPath) !== FALSE) {
             return TRUE;
           }
@@ -2320,7 +2158,7 @@ class Select extends QuerySelect {
       }
 
       $unique_embedded_tables = [];
-      foreach ($sort_embedded_tables as $id => $sort_embedded_table) {
+      foreach ($sort_embedded_tables as $sort_embedded_table) {
         $embedded_table = '';
         $sort_embedded_table_parts = explode('.', $sort_embedded_table);
         foreach ($sort_embedded_table_parts as $sort_embedded_table_part) {
@@ -2354,8 +2192,7 @@ class Select extends QuerySelect {
   /**
    * Helper method setting the MongoDB projection part of the query.
    */
-  protected function setMongodbProjection()
-  {
+  protected function setMongodbProjection() {
     $this->mongodbProjection = [];
 
     foreach ($this->fields as $field) {
@@ -2370,17 +2207,20 @@ class Select extends QuerySelect {
         }
         if (!empty($embedded_table)) {
           $field_name = $this->connection->escapeTable($field['table']) . '.' . $embedded_table . '.' . $this->connection->escapeField($field['field']);
-        } else {
+        }
+        else {
           $field_name = $this->connection->escapeTable($field['table']) . '.' . $this->connection->escapeField($field['field']);
         }
-      } else {
+      }
+      else {
         $field_name = $this->connection->escapeField($field['field']);
       }
 
       $field_alias = $field['alias'];
       if ($field_alias == $field_name) {
         $this->mongodbProjection[$field_name] = 1;
-      } else {
+      }
+      else {
         if (!in_array($field['table'], [$this->mongodbBaseTable, $this->mongodbBaseAlias])) {
           if (!isset($this->mongodbProjection[$field_alias])) {
             $this->mongodbProjection[$field_alias] = '$' . $field_name;
@@ -2413,20 +2253,25 @@ class Select extends QuerySelect {
                 $this->mongodbProjection[$alias] = ['$multiply' => [$first_param, $second_param]];
                 $this->mongodbUseAggregate = TRUE;
                 break;
+
               case '/':
                 $this->mongodbProjection[$alias] = ['$divide' => [$first_param, $second_param]];
                 $this->mongodbUseAggregate = TRUE;
                 break;
+
               case '+':
                 $this->mongodbProjection[$alias] = ['$add' => [$first_param, $second_param]];
                 $this->mongodbUseAggregate = TRUE;
                 break;
+
               case '-':
                 $this->mongodbProjection[$alias] = ['$subtract' => [$first_param, $second_param]];
                 $this->mongodbUseAggregate = TRUE;
                 break;
+
             }
-          } else {
+          }
+          else {
             $field = $expression['expression'];
             $first_dot = strpos($field, '.');
             if ($first_dot !== FALSE) {
@@ -2439,24 +2284,13 @@ class Select extends QuerySelect {
             $table_fields = $this->connection->tableInformation()->getTableFields($this->mongodbBaseTable);
             if (!empty($table_fields) && is_array($table_fields) && in_array($field, array_keys($table_fields), TRUE)) {
               $this->mongodbProjection[$alias] = ['$' . $field];
-            } elseif (isset($expression['expression']) && (!is_string($expression['expression']) || ($expression['expression'] != ''))) {
+            }
+            elseif (isset($expression['expression']) && (!is_string($expression['expression']) || ($expression['expression'] != ''))) {
               // This is not a math expression. So, just add the expression.
               $this->mongodbProjection[$alias] = ['$literal' => $expression['expression']];
             }
           }
         }
-//        // When the expression is of a type.
-//        elseif (isset($expression['type'])) {
-//          switch ($expression['type']) {
-//            case 'count':
-//dump($expression);
-//              $field = $expression['field'];
-//              // @todo We still need to add the field.
-//              $this->mongodbProjection[$alias] = ['$sum' => 1];
-//              $this->mongodbUseAggregate = TRUE;
-//              break;
-//          }
-//        }
       }
     }
   }
@@ -2533,6 +2367,7 @@ class Select extends QuerySelect {
             case 'count':
               $this->mongodbGroup[$alias] = ['$sum' => 1];
               break;
+
             case 'sum_multiply':
               $fields = $expression['fields'];
               foreach ($fields as &$field) {
@@ -2560,6 +2395,7 @@ class Select extends QuerySelect {
               }
               $this->mongodbGroup[$alias] = ['$sum' => ['$multiply' => $fields]];
               break;
+
           }
         }
         else {
@@ -2619,28 +2455,36 @@ class Select extends QuerySelect {
       case 'COUNT':
         $this->mongodbGroup[$alias] = ['$sum' => 1];
         break;
+
       case 'SUM':
         $this->mongodbGroup[$alias] = ['$sum' => '$' . $field];
         break;
+
       case 'AVG':
         $this->mongodbGroup[$alias] = ['$avg' => '$' . $field];
         break;
+
       case 'MIN':
         $this->mongodbGroup[$alias] = ['$min' => '$' . $field];
         break;
+
       case 'MAX':
         $this->mongodbGroup[$alias] = ['$max' => '$' . $field];
         break;
+
     }
 
     $this->mongodbRemoveIdField = FALSE;
   }
 
   /**
-   * Helper method for getting the field name for its alias or its own name
+   * Helper method for getting the field name for its alias or its own name.
    *
    * @param string $name_or_alias
    *   The name_or_alias to used for getting the field name.
+   *
+   * @return string
+   *   The field name.
    */
   protected function getFieldName($name_or_alias) {
     if (isset($this->fields[$name_or_alias]['field'])) {
@@ -2665,4 +2509,5 @@ class Select extends QuerySelect {
   public function getArguments(PlaceholderInterface $queryPlaceholder = NULL) {
     return [];
   }
+
 }

@@ -98,13 +98,6 @@ class TranslateSql {
       'filter' => ['name' => ':name'],
       'projection' => ['age' => 1],
     ],
-/*
-    [
-      'pattern' => '/^SELECT "offset" FROM {(.*)} WHERE id = :id$/',
-      'filter' => ['id' => ':id'],
-      'projection' => ['offset' => 1],
-    ],
-*/
     [
       'pattern' => '/^SELECT \[update\] FROM {(.*)} WHERE \[id\] = :id$/',
       'filter' => ['id' => ':id'],
@@ -249,8 +242,8 @@ class TranslateSql {
           [
             'sort' => ['id' => -1],
             'limit' => 1,
-            'projection' => ['id' => 1, '_id' => 0]
-          ]
+            'projection' => ['id' => 1, '_id' => 0],
+          ],
         );
 
         $this->endEvent($connection, $startEvent);
@@ -270,8 +263,8 @@ class TranslateSql {
           [
             'sort' => ['nid' => -1],
             'limit' => 1,
-            'projection' => ['nid' => 1, '_id' => 0]
-          ]
+            'projection' => ['nid' => 1, '_id' => 0],
+          ],
         );
 
         $this->endEvent($connection, $startEvent);
@@ -298,7 +291,7 @@ class TranslateSql {
 
         $cursor = $connection->getConnection()->{$prefixed_table}->find(
           ['age' => ['$gt' => $age]],
-          ['projection' => ['name' => 1, '_id' => 0]]
+          ['projection' => ['name' => 1, '_id' => 0]],
         );
 
         if (isset($startEvent) && $connection->isEventEnabled(StatementExecutionEndEvent::class)) {
@@ -432,16 +425,15 @@ class TranslateSql {
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
-        $cursor = $connection->getConnection()->{$prefixed_table}->aggregate(
+        $cursor = $connection->getConnection()->{$prefixed_table}->aggregate([
           [
-            ['$group' => [
+            '$group' => [
               '_id' => NULL,
-              'max' => ['$max' => '$test_serial']
-            ]],
-            ['$project' => ['max' => 1, '_id' => 0]],
-          ]//,
-//          ['useCursor' => TRUE]
-        );
+              'max' => ['$max' => '$test_serial'],
+            ],
+          ],
+          ['$project' => ['max' => 1, '_id' => 0]],
+        ]);
 
         $this->endEvent($connection, $startEvent);
 
@@ -449,32 +441,6 @@ class TranslateSql {
         $statement->execute(NULL, $query_options);
         return $statement;
       }
-/*
-      elseif (preg_match('/^SELECT COUNT\(\*\) >= 3 FROM {(.*)}$/', $query, $matches) || preg_match('/^SELECT COUNT\(\*\) >= :count FROM {(.*)}$/', $query, $matches)) {
-        $prefixed_table = $connection->getMongodbPrefixedTable($matches[1]);
-        $count = isset($args[':count']) ? intval($args[':count']) : 3;
-
-        $startEvent = $this->startEvent($connection, $query, $args);
-
-        // Execute the count query.
-        $count = count($connection->getConnection()->{$prefixed_table}->count(
-          [],
-          [
-            ['$group' => [
-              '_id' => '$id',
-              'count' => ['$sum' => 1]
-            ]],
-            ['$project' => ['count' => 1, '_id' => 0]],
-            ['$match' => ['$gte' => ['$count', $count]]]
-          ],
-          ['useCursor' => FALSE]
-        ));
-
-        $this->endEvent($connection, $startEvent);
-
-        return new StatementCountQuery($connection, $count, $query_options);
-      }
-*/
       elseif (preg_match('/^SELECT COUNT\(\*\) \+ 3 FROM {(.*)}$/', $query, $matches) || preg_match('/^SELECT COUNT\(\*\) \+ :count FROM {(.*)}$/', $query, $matches)) {
         $prefixed_table = $connection->getMongodbPrefixedTable($matches[1]);
         $arg_count = isset($args[':count']) ? intval($args[':count']) : 3;
@@ -485,13 +451,15 @@ class TranslateSql {
         $query_count = $connection->getConnection()->{$prefixed_table}->count(
           [],
           [
-            ['$group' => [
-              '_id' => '$id',
-              'count' => ['$sum' => 1]
-            ]],
-            ['$project' => ['count' => 1, '_id' => 0]]
+            [
+              '$group' => [
+                '_id' => '$id',
+                'count' => ['$sum' => 1],
+              ],
+            ],
+            ['$project' => ['count' => 1, '_id' => 0]],
           ],
-          ['useCursor' => FALSE]
+          ['useCursor' => FALSE],
         );
 
         $this->endEvent($connection, $startEvent);
@@ -528,11 +496,15 @@ class TranslateSql {
 
         $cursor = $connection->getConnection()->{$prefixed_table}->aggregate(
           [
-            ['$project' => [
-              'name' => ['$concat' => [$a1, $a2, $a3, $a4, $a5]]
-            ]],
+            [
+              '$project' => [
+                'name' => [
+                  '$concat' => [$a1, $a2, $a3, $a4, $a5],
+                ],
+              ],
+            ],
             ['$project' => ['name' => 1, '_id' => 0]],
-          ]
+          ],
         );
 
         $this->endEvent($connection, $startEvent);
@@ -553,11 +525,15 @@ class TranslateSql {
         $cursor = $connection->getConnection()->{$prefixed_table}->aggregate(
           [
             ['$match' => ['age' => (int) $age]],
-            ['$project' => [
-              'name' => ['$concat' => [$a1, '$job', $a2, (string) $age, $a3]]
-            ]],
+            [
+              '$project' => [
+                'name' => [
+                  '$concat' => [$a1, '$job', $a2, (string) $age, $a3],
+                ],
+              ],
+            ],
             ['$project' => ['name' => 1, '_id' => 0]],
-          ]
+          ],
         );
 
         $this->endEvent($connection, $startEvent);
@@ -578,11 +554,15 @@ class TranslateSql {
         // Fake the query a bit until MongoDB supports concat_ws.
         $cursor = $connection->getConnection()->{$prefixed_table}->aggregate(
           [
-            ['$project' => [
-              'name' => ['$concat' => [$a1, ', ', $a3, ', ', $a4]]
-            ]],
+            [
+              '$project' => [
+                'name' => [
+                  '$concat' => [$a1, ', ', $a3, ', ', $a4],
+                ],
+              ],
+            ],
             ['$project' => ['name' => 1, '_id' => 0]],
-          ]
+          ],
         );
 
         $this->endEvent($connection, $startEvent);
@@ -603,11 +583,15 @@ class TranslateSql {
         $cursor = $connection->getConnection()->{$prefixed_table}->aggregate(
           [
             ['$match' => ['age' => (int) $age]],
-            ['$project' => [
-              'name' => ['$concat' => [$a1, '-', '$name', '-', $a2, '-', ['$toString' => '$age']]]
-            ]],
+            [
+              '$project' => [
+                'name' => [
+                  '$concat' => [$a1, '-', '$name', '-', $a2, '-', ['$toString' => '$age']],
+                ],
+              ],
+            ],
             ['$project' => ['name' => 1, '_id' => 0]],
-          ]
+          ],
         );
 
         $this->endEvent($connection, $startEvent);
@@ -624,7 +608,7 @@ class TranslateSql {
         // Fake the query a bit until MongoDB supports concat_ws.
         $cursor = $connection->getConnection()->{$prefixed_table}->find(
           ['name' => ['$eq' => '[square]']],
-          ['projection' => ['name' => 1, '_id' => 0]]
+          ['projection' => ['name' => 1, '_id' => 0]],
         );
 
         $this->endEvent($connection, $startEvent);
@@ -642,11 +626,18 @@ class TranslateSql {
         // Fake the query a bit until MongoDB supports concat_ws.
         $cursor = $connection->getConnection()->{$prefixed_table}->aggregate(
           [
-            ['$project' => [
-              'name' => ['$min' => $values]
-            ]],
-            ['$project' => ['name' => 1, '_id' => 0]],
-          ]
+            [
+              '$project' => [
+                'name' => ['$min' => $values],
+              ],
+            ],
+            [
+              '$project' => [
+                'name' => 1,
+                '_id' => 0,
+              ],
+            ],
+          ],
         );
 
         $this->endEvent($connection, $startEvent);
@@ -680,7 +671,7 @@ class TranslateSql {
 
         $result = $connection->getConnection()->{$prefixed_table}->updateMany(
           ['id' => 1],
-          ['$set' => ['uid' => 1]]
+          ['$set' => ['uid' => 1]],
         );
 
         $this->endEvent($connection, $startEvent);
@@ -697,7 +688,7 @@ class TranslateSql {
 
         $result = $connection->getConnection()->{$prefixed_table}->updateMany(
           ['id' => ['$ne' => 1]],
-          ['$set' => ['uid' => 2]]
+          ['$set' => ['uid' => 2]],
         );
 
         $this->endEvent($connection, $startEvent);
@@ -716,7 +707,7 @@ class TranslateSql {
 
         $result = $connection->getConnection()->{$prefixed_table}->updateMany(
           ['id' => $id],
-          ['$set' => ['uid' => $uid]]
+          ['$set' => ['uid' => $uid]],
         );
 
         $this->endEvent($connection, $startEvent);
@@ -736,7 +727,7 @@ class TranslateSql {
 
         $result = $connection->getConnection()->{$prefixed_table}->updateMany(
           ['id' => ['$in' => [$first_id, $second_id]]],
-          ['$set' => ['uid' => $uid]]
+          ['$set' => ['uid' => $uid]],
         );
 
         $this->endEvent($connection, $startEvent);
@@ -760,7 +751,7 @@ class TranslateSql {
           }
 
           // Replace the placeholders with the real values.
-          array_walk_recursive($filter, function(&$item_value, $item_key, $args) {
+          array_walk_recursive($filter, function (&$item_value, $item_key, $args) {
             foreach ($args as $arg_key => $arg_value) {
               if ($item_value == $arg_key) {
                 $is_bracket_placeholder = substr($arg_key, -2) === '[]';
@@ -822,8 +813,6 @@ class TranslateSql {
           // object.
           if ($cursor) {
             $statement = new Statement($connection, $cursor, $this->projectionToFields($translation['projection']));
-//dump('$statement');
-//dump($statement);
             $statement->execute(NULL, $query_options);
             return $statement;
           }
@@ -894,14 +883,24 @@ class TranslateSql {
   }
 
   /**
-   * Translate a query with the range data from Connection::query_range and execute the query.
+   * Translate a query from Connection::query_range and execute the query.
    *
    * @param \Drupal\Core\Database\Connection $connection
-   *    The database connection.
+   *   The database connection.
+   * @param string $query
+   *   The string query to execute.
+   * @param string|int $start
+   *   The number of results that should be skipped.
+   * @param string|int $length
+   *   The number of results that should be returned.
+   * @param array $args
+   *   The arguments for the query.
+   * @param array $options
+   *   The options for the query.
    */
-  public function queryRange(Connection $connection, $query, $from, $count, array $args = [], array $options = []) {
-    $options['start'] = (int) $from;
-    $options['length'] = (int) $count;
+  public function queryRange(Connection $connection, $query, $start, $length, array $args = [], array $options = []) {
+    $options['start'] = (int) $start;
+    $options['length'] = (int) $length;
 
     return $this->query($connection, $query, $args, $options);
   }

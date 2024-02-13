@@ -2,8 +2,6 @@
 
 namespace Drupal\mongodb\Driver\Database\mongodb;
 
-use Composer\Autoload\ClassLoader;
-use Drupal\Core\Database\Database;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\Query\FieldsOverlapException;
 use Drupal\Core\Database\Query\NoFieldsException;
@@ -24,7 +22,7 @@ trait DocumentInsertTrait {
    * @param array $insert_fields
    *   The insert fields to be used for creating the insert document.
    * @param array $default_fields
-   *    The default fields to be used for creating the insert document.
+   *   The default fields to be used for creating the insert document.
    * @param array $insert_values
    *   The insert values to be used for creating the insert document.
    *
@@ -81,8 +79,7 @@ trait DocumentInsertTrait {
   }
 
   /**
-   * Helper function for updating the insert document in such a way that it can
-   * be stored in a MongoDB database.
+   * Helper function for updating the insert document for MongoDB storage.
    *
    * @param string $table
    *   The table name of the foreign table to be embedded in the base table.
@@ -138,15 +135,15 @@ trait DocumentInsertTrait {
           $prefixed_table = $this->connection->getMongodbPrefixedTable($table);
           $result = $this->connection->getConnection()->{$prefixed_table}->findOne(
             [
-              $auto_increment_field => ['$eq' => $insert_document[$auto_increment_field]]
+              $auto_increment_field => ['$eq' => $insert_document[$auto_increment_field]],
             ],
             [
               'projection' => [
                 $auto_increment_field => 1,
-                '_id' => 1
+                '_id' => 1,
               ],
               'session' => $this->connection->getMongodbSession(),
-            ]
+            ],
           );
 
           // Get the first result.
@@ -154,13 +151,13 @@ trait DocumentInsertTrait {
             $result = reset($result);
           }
 
-//          // TODO: Decide what is the best to do. Update the already set
-//          // auto-increment field or throw an exception.
-//          if (!empty($result)) {
-//            // We can add a test here to make sure that value is not used in the
-//            // database, before throwing an exception.
-//            throw new MongodbSQLException('You cannot give an auto-increment field a lower value then its sequence value.');
-//          }
+          // TODO: Decide what is the best to do. Update the already set
+          // auto-increment field or throw an exception.
+          // if (!empty($result)) {
+          // We can add a test here to make sure that value is not used in the
+          // database, before throwing an exception.
+          // throw new MongodbSQLException('You cannot give an auto-increment field a lower value then its sequence value.');
+          // }
         }
       }
     }
@@ -293,7 +290,7 @@ trait DocumentInsertTrait {
           $string_field_length = mb_strlen($insert_document[$string_field]);
 
           if (($max_length > 0) && ($string_field_length > $max_length)) {
-            $insert_document[$string_field] = substr($insert_document[$string_field], 0 , intval($string_field_data['length']));
+            $insert_document[$string_field] = substr($insert_document[$string_field], 0, intval($string_field_data['length']));
           }
         }
       }

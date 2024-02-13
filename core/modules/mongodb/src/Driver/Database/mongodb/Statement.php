@@ -53,19 +53,18 @@ class Statement extends StatementPrefetchIterator {
   /**
    * Constructs a StatementPrefetchIterator object.
    *
-   * @param object $clientConnection
-   *   Client database connection object, for example \PDO.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
    * @param \MongoDB\Driver\Cursor $cursor
    *   The cursor to be used in this class.
+   * @param array $fields
+   *   The fields of the query.
    * @param array $driverOptions
    *   Driver-specific options.
    * @param bool $rowCountEnabled
    *   (optional) Enables counting the rows matched. Defaults to FALSE.
    */
   public function __construct(
-//    protected readonly object $clientConnection,
     protected readonly Connection $connection,
     protected Cursor $cursor,
     protected array $fields,
@@ -75,25 +74,6 @@ class Statement extends StatementPrefetchIterator {
     $this->cursor->setTypeMap($this->typeMap);
     $this->data = $cursor->toArray();
   }
-
-//  /**
-//   * The constructor.
-//   *
-//   * @param \Drupal\Core\Database\Connection $connection
-//   *   The connection to the database.
-//   * @param \MongoDB\Driver\Cursor $cursor
-//   *   The cursor to be used in this class.
-//   * @param array $fields
-//   *   The array of field names that must exist in the query result.
-//   */
-//  public function __construct(Connection $connection, Cursor $cursor, array $fields = []) {//}, $aliases = []) {
-//    // The specific variable name is needed by the database query logger.
-//    $this->connection = $connection;
-//    $this->cursor = $cursor;
-//    $this->cursor->setTypeMap($this->typeMap);
-//    $this->data = $cursor->toArray();
-//    $this->fields = $fields;
-//  }
 
   /**
    * {@inheritdoc}
@@ -106,21 +86,6 @@ class Statement extends StatementPrefetchIterator {
     if (isset($options['target']) && $options['target'] != $this->connection->getTarget()) {
       $this->connection = Database::getConnection($options['target']);
     }
-
-//    if (isset($options['query_time'])) {
-//      dump('Do not set the query time');
-//      dump($options);
-//      dump(debug_backtrace());
-//    }
-//
-//    $logger = $this->connection->getLogger();
-//    if (!empty($logger)) {
-//      $logger->log($this, '', $options['query_time'], $options['query_start']);
-//    }
-//dump('$this->fields');
-//dump($this->fields);
-//dump('$this->data');
-//dump($this->data);
 
     foreach ($this->data as &$data) {
       if (isset($data['_id']) && $data['_id'] instanceof ObjectID) {
@@ -314,33 +279,6 @@ class Statement extends StatementPrefetchIterator {
     }
 
     return $rows;
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-  public function next(): void {
-//dump('next()');
-    if (!empty($this->data[($this->currentKey + 1)])) {
-      $this->currentRow = $this->data[++$this->currentKey];
-    }
-    else {
-      $this->currentRow = NULL;
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-  public function rewind(): void {
-    if (!empty($this->data)) {
-      $this->currentKey = 0;
-      $this->currentRow = $this->data[$this->currentKey];
-    }
-    else {
-      $this->currentKey = NULL;
-      $this->currentRow = NULL;
-    }
   }
 
   /**

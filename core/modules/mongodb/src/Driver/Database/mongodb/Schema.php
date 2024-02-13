@@ -11,7 +11,6 @@ use MongoDB\BSON\ObjectID;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Exception\ExecutionTimeoutException;
-use MongoDB\Driver\WriteConcern;
 use MongoDB\Model\IndexInfo;
 
 /**
@@ -63,17 +62,17 @@ class Schema extends DatabaseSchema {
    */
   public function createTable($name, $table) {
     if ($this->tableExists($name)) {
-      throw new SchemaObjectExistsException(t('Table @name already exists.', ['@name' => $name]));
+      throw new SchemaObjectExistsException("Table $name already exists.");
     }
 
     $table = TranslateSchema::createTable($name, $table);
 
     // Fields of type serial are automatically made not null.
     if (isset($table['primary key']) && is_array($table['primary key'])) {
-      foreach($table['primary key'] as $pkey_field) {
+      foreach ($table['primary key'] as $pkey_field) {
         if (isset($table['fields'][$pkey_field]['type']) && ($table['fields'][$pkey_field]['type'] != 'serial')) {
           if (!isset($table['fields'][$pkey_field]['not null']) || (isset($table['fields'][$pkey_field]['not null']) && !$table['fields'][$pkey_field]['not null'])) {
-            throw new SchemaException(t("The '@field' field specification does not define 'not null' as TRUE.", ['@field' => $pkey_field]));
+            throw new SchemaException("The '$pkey_field' field specification does not define 'not null' as TRUE.");
           }
         }
       }
@@ -98,12 +97,11 @@ class Schema extends DatabaseSchema {
       // transactions. The table creation will fail with a CommandException.
       // Catch this exception an throw a SchemaObjectExistsException instead.
       if ($e->getCode() == 48) {
-        throw new SchemaObjectExistsException(t('Table @name already exists.', ['@name' => $name]));
+        throw new SchemaObjectExistsException("Table $name already exists.");
       }
 
       throw $e;
     }
-
 
     // Create the new keys and/or indexes.
     $this->createKeys($name, $table);
@@ -129,17 +127,17 @@ class Schema extends DatabaseSchema {
    */
   public function createEmbeddedTable($parent_table_name, $embedded_table_name, $embedded_table_schema) {
     if (!$this->tableExists($parent_table_name)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot add embedded table @embedded_table_name to the @parent_table_name, because @parent_table_name doesn't exist.", ['@embedded_table_name' => $embedded_table_name, '@parent_table_name' => $parent_table_name]));
+      throw new SchemaObjectDoesNotExistException("Cannot add embedded table $embedded_table_name to the $parent_table_name, because $parent_table_name doesn't exist.");
     }
     if ($this->tableExists($embedded_table_name)) {
-      throw new SchemaObjectExistsException(t('The embedded table @embedded_table_name could not be created, because the @embedded_table_name already exists.', ['@embedded_table_name' => $embedded_table_name]));
+      throw new SchemaObjectExistsException("The embedded table $embedded_table_name could not be created, because the $embedded_table_name already exists.");
     }
 
     $base_table_name = $this->tableInformation->getTableBaseTable($parent_table_name);
     if (empty($base_table_name) || !$this->tableExists($base_table_name)) {
       // If there is no base table or the base table does not exist, throw an
       // exception.
-      throw new SchemaObjectDoesNotExistException(t("The embedded table @embedded_table_name could not be created, because the base table doesn't exists.", ['@embedded_table_name' => $embedded_table_name]));
+      throw new SchemaObjectDoesNotExistException("The embedded table $embedded_table_name could not be created, because the base table doesn't exists.");
     }
 
     // Save the embedded table to the MongoDB table information.
@@ -185,8 +183,9 @@ class Schema extends DatabaseSchema {
   }
 
   /**
-   * Helper method for getTableValidation(). Get the MongoDB table validation
-   * for embedded tables.
+   * Helper method for getTableValidation().
+   *
+   * Get the MongoDB table validation for embedded tables.
    *
    * @param string $table_name
    *   A table name for which to construct the MongoDB validation.
@@ -217,8 +216,10 @@ class Schema extends DatabaseSchema {
   }
 
   /**
-   * Helper method for getTableValidation(). Generates the MongoDB table
-   * validation for the given schema and full path data..
+   * Helper method for getTableValidation().
+   *
+   * Generates the MongoDB table validation for the given schema and full path
+   * data.
    *
    * @param $schema
    *   A field description array or a table description, as specified in the
@@ -281,19 +282,25 @@ class Schema extends DatabaseSchema {
           }
           else {
             if (isset($field['unsigned']) && $field['unsigned']) {
-              $validation[] = ['$or' => [
-                ['$and' => [
-                  [$field_name => ['$type' => $type]],
-                  [$field_name => ['$gte' => 0]],
-                ]],
-                [$field_name => ['$exists' => FALSE]],
-              ]];
+              $validation[] = [
+                '$or' => [
+                  [
+                    '$and' => [
+                      [$field_name => ['$type' => $type]],
+                      [$field_name => ['$gte' => 0]],
+                    ],
+                  ],
+                  [$field_name => ['$exists' => FALSE]],
+                ],
+              ];
             }
             else {
-              $validation[] = ['$or' => [
-                [$field_name => ['$type' => $type]],
-                [$field_name => ['$exists' => FALSE]],
-              ]];
+              $validation[] = [
+                '$or' => [
+                  [$field_name => ['$type' => $type]],
+                  [$field_name => ['$exists' => FALSE]],
+                ],
+              ];
             }
           }
         }
@@ -311,10 +318,14 @@ class Schema extends DatabaseSchema {
         }
 
         if (!empty($empty_embedded_table_validation)) {
-          return [['$or' => [
-            ['$and' => $empty_embedded_table_validation],
-            ['$and' => $validation]
-          ]]];
+          return [
+            [
+              '$or' => [
+                ['$and' => $empty_embedded_table_validation],
+                ['$and' => $validation],
+              ],
+            ],
+          ];
         }
       }
     }
@@ -323,6 +334,8 @@ class Schema extends DatabaseSchema {
   }
 
   /**
+   * Get the field type map.
+   *
    * This maps a generic data type in combination with its data size to the
    * engine-specific data type. For more information about available types in
    * MongoDB: https://docs.mongodb.com/manual/reference/operator/query/type/.
@@ -480,28 +493,28 @@ class Schema extends DatabaseSchema {
    */
   public function renameTable($table, $new_name) {
     if (!$this->tableExists($table)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot rename @table to @table_new: table @table doesn't exist.", ['@table' => $table, '@table_new' => $new_name]));
+      throw new SchemaObjectDoesNotExistException("Cannot rename $table to $new_name: table $table doesn't exist.");
     }
     if ($this->tableExists($new_name)) {
-      throw new SchemaObjectExistsException(t("Cannot rename @table to @table_new: table @table_new already exists.", ['@table' => $table, '@table_new' => $new_name]));
+      throw new SchemaObjectExistsException("Cannot rename $table to $new_name: table $new_name already exists.");
     }
 
     $base_table_name = $this->tableInformation->getTableBaseTable($table);
     if (empty($base_table_name) || !$this->tableExists($base_table_name)) {
       // If there is no base table or the base table does not exist, throw an
       // exception.
-      throw new SchemaObjectDoesNotExistException(t("The embedded table @embedded_table_name could not be created, because the base table doesn't exists.", ['@embedded_table_name' => $table]));
+      throw new SchemaObjectDoesNotExistException("The embedded table $table could not be created, because the base table doesn't exists.");
     }
 
     $prefixInfo = $this->getPrefixInfo($base_table_name);
     if ($base_table_name == $table) {
       // This command can only be run with a connection with the admin database.
       $connectionOptions = $this->connection->getConnectionOptions();
-      $cursor = Database::getAdminConnection()->getConnection()->command(
+      Database::getAdminConnection()->getConnection()->command(
         [
           'renameCollection' => $connectionOptions['database'] . '.' . $prefixInfo['table'],
           'to' => $connectionOptions['database'] . '.' . $prefixInfo['prefix'] . $new_name,
-          'dropTarget' => $this->dropTarget
+          'dropTarget' => $this->dropTarget,
         ],
         [
           'session' => $this->connection->getMongodbSession(),
@@ -518,7 +531,7 @@ class Schema extends DatabaseSchema {
       // Remove the old table name from the full path.
       $embedded_full_path = preg_replace('/' . $table . '\.$/i', '', $embedded_full_path);
 
-      $result = $this->connection->getConnection()->{$prefixInfo['table']}->updateMany(
+      $this->connection->getConnection()->{$prefixInfo['table']}->updateMany(
         [],
         ['$rename' => [$embedded_full_path . $table => $embedded_full_path . $new_name]],
         ['session' => $this->connection->getMongodbSession()],
@@ -528,7 +541,6 @@ class Schema extends DatabaseSchema {
     // Link all embedded tables to the new table name.
     $embedded_tables = $this->tableInformation->getTableEmbeddedTables($table);
     foreach ($embedded_tables as $embedded_table) {
-      $table_schema = $this->tableInformation->getTable($embedded_table);
       $this->tableInformation->setTableEmbeddedToTable($embedded_table, $new_name);
     }
 
@@ -540,7 +552,7 @@ class Schema extends DatabaseSchema {
       if ($parent_table_name) {
         $this->tableInformation
           ->setEmbeddedTable($new_name, $this->tableInformation->getEmbeddedTable($table), $parent_table_name)
-          ->setEmbeddedTable($table, '','')
+          ->setEmbeddedTable($table, '', '')
           ->save();
       }
 
@@ -591,7 +603,7 @@ class Schema extends DatabaseSchema {
       }
 
       // Update the base table validation.
-      $cursor = $this->connection->getConnection()->command(
+      $this->connection->getConnection()->command(
         [
           'collMod' => $prefixInfo['table'],
           'validator' => $this->getTableValidation($base_table_name),
@@ -601,16 +613,13 @@ class Schema extends DatabaseSchema {
         ],
       );
     }
-
-//    $result = current($cursor->toArray());
-//    return $result && $result->ok;
   }
 
   /**
    * {@inheritdoc}
    */
   public function dropTable($table) {
-   if (!$this->tableExists($table)) {
+    if (!$this->tableExists($table)) {
       return FALSE;
     }
 
@@ -635,7 +644,7 @@ class Schema extends DatabaseSchema {
     if (empty($base_table_name) || !$this->tableExists($base_table_name)) {
       // If there is no base table or the base table does not exist, throw an
       // exception.
-      throw new SchemaObjectDoesNotExistException(t("The table @table could not be dropped, because the base table doesn't exists.", ['@table' => $table]));
+      throw new SchemaObjectDoesNotExistException("The table $table could not be dropped, because the base table doesn't exists.");
     }
 
     // Drop all tables that are an embedded table to the base table.
@@ -745,17 +754,17 @@ class Schema extends DatabaseSchema {
    */
   public function addField($table, $field, $spec, $keys_new = []) {
     if (!$this->tableExists($table)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot add field @table.@field: table doesn't exist.", ['@field' => $field, '@table' => $table]));
+      throw new SchemaObjectDoesNotExistException("Cannot add field $table.$field: table doesn't exist.");
     }
     if ($this->fieldExists($table, $field)) {
-      throw new SchemaObjectExistsException(t("Cannot add field @table.@field: field already exists.", ['@field' => $field, '@table' => $table]));
+      throw new SchemaObjectExistsException("Cannot add field $table.$field: field already exists.");
     }
 
     $base_table_name = $this->tableInformation->getTableBaseTable($table);
     if (empty($base_table_name) || !$this->tableExists($base_table_name)) {
       // If there is no base table or the base table does not exist, throw an
       // exception.
-      throw new SchemaObjectDoesNotExistException(t("The table @table could not be dropped, because the base table doesn't exists.", ['@table' => $table]));
+      throw new SchemaObjectDoesNotExistException("The table $table could not be dropped, because the base table doesn't exists.");
     }
 
     if (isset($keys_new['primary key']) && is_array($keys_new['primary key'])) {
@@ -763,9 +772,9 @@ class Schema extends DatabaseSchema {
       if (isset($spec['not null']) && $spec['not null']) {
         $not_null_fields[] = $field;
       }
-      foreach($keys_new['primary key'] as $pkey_field) {
+      foreach ($keys_new['primary key'] as $pkey_field) {
         if (!in_array($pkey_field, $not_null_fields)) {
-          throw new SchemaException(t("The '@field' field specification does not define 'not null' as TRUE.", ['@field' => $pkey_field]));
+          throw new SchemaException("The '$pkey_field' field specification does not define 'not null' as TRUE.");
         }
       }
     }
@@ -897,7 +906,7 @@ class Schema extends DatabaseSchema {
     if (empty($base_table_name) || !$this->tableExists($base_table_name)) {
       // If there is no base table or the base table does not exist, throw an
       // exception.
-      throw new SchemaObjectDoesNotExistException(t("The table @table could not be dropped, because the base table doesn't exists.", ['@table' => $table]));
+      throw new SchemaObjectDoesNotExistException("The table $table could not be dropped, because the base table doesn't exists.");
     }
 
     // The table information needs to be saved first. It is used to generate the
@@ -950,17 +959,17 @@ class Schema extends DatabaseSchema {
    */
   public function changeField($table, $field, $field_new, $spec, $keys_new = []) {
     if (!$this->fieldExists($table, $field)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot change the definition of field @table.@name: field doesn't exist.", ['@table' => $table, '@name' => $field]));
+      throw new SchemaObjectDoesNotExistException("Cannot change the definition of field $table.$field: field doesn't exist.");
     }
     if (($field != $field_new) && $this->fieldExists($table, $field_new)) {
-      throw new SchemaObjectExistsException(t("Cannot rename field @table.@name to @name_new: target field already exists.", ['@table' => $table, '@name' => $field, '@name_new' => $field_new]));
+      throw new SchemaObjectExistsException("Cannot rename field $table.$field to $field_new: target field already exists.");
     }
 
     $base_table_name = $this->tableInformation->getTableBaseTable($table);
     if (empty($base_table_name) || !$this->tableExists($base_table_name)) {
       // If there is no base table or the base table does not exist, throw an
       // exception.
-      throw new SchemaObjectDoesNotExistException(t("The table @table could not be dropped, because the base table doesn't exists.", ['@table' => $table]));
+      throw new SchemaObjectDoesNotExistException("The table $table could not be dropped, because the base table doesn't exists.");
     }
 
     if (isset($keys_new['primary key']) && is_array($keys_new['primary key'])) {
@@ -968,9 +977,9 @@ class Schema extends DatabaseSchema {
       if (isset($spec['not null']) && $spec['not null']) {
         $not_null_fields[] = $field_new;
       }
-      foreach($keys_new['primary key'] as $pkey_field) {
+      foreach ($keys_new['primary key'] as $pkey_field) {
         if (!in_array($pkey_field, $not_null_fields)) {
-          throw new SchemaException(t("The '@field' field specification does not define 'not null' as TRUE.", ['@field' => $pkey_field]));
+          throw new SchemaException("The '$pkey_field' field specification does not define 'not null' as TRUE.");
         }
       }
     }
@@ -1056,14 +1065,11 @@ class Schema extends DatabaseSchema {
     );
     $result = current($cursor->toArray());
 
-//dump('$this->getTableValidation($base_table_name)');
-//dump($this->getTableValidation($base_table_name));
-
     $embedded_full_path = $this->tableInformation->getTableEmbeddedFullPath($table);
     if (($field != $field_new) || (!empty($original_field_spec['type']) && !empty($spec['type']) && ($original_field_spec['type'] != $spec['type']))) {
       $cursor = $this->connection->getConnection()->{$prefixInfo['table']}->find(
         [
-          $embedded_full_path . $field => ['$exists' => TRUE]
+          $embedded_full_path . $field => ['$exists' => TRUE],
         ],
         [
           'projection' => [$embedded_full_path . $field => 1, '_id' => 1],
@@ -1088,7 +1094,7 @@ class Schema extends DatabaseSchema {
 
         $this->connection->getConnection()->{$prefixInfo['table']}->updateOne(
           [
-            '_id' => $row->_id
+            '_id' => $row->_id,
           ],
           $updates,
           [
@@ -1188,6 +1194,8 @@ class Schema extends DatabaseSchema {
    *
    * @param $table
    *   The name of the table.
+   * @param $name
+   *   The index name.
    *
    * @return bool|\MongoDB\Model\IndexInfo
    *   The indexes are of the type MongoDB\Model\IndexInfo.
@@ -1297,20 +1305,20 @@ class Schema extends DatabaseSchema {
    */
   public function addPrimaryKey($table, $fields) {
     if (!$this->tableExists($table)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot add primary key to table @table: table doesn't exist.", ['@table' => $table]));
+      throw new SchemaObjectDoesNotExistException("Cannot add primary key to table $table: table doesn't exist.");
     }
 
     $base_table_name = $this->tableInformation->getTableBaseTable($table);
     if (empty($base_table_name) || !$this->tableExists($base_table_name)) {
       // If there is no base table or the base table does not exist, throw an
       // exception.
-      throw new SchemaObjectDoesNotExistException(t("Cannot add primary key to table @table, because the base table doesn't exists.", ['@table' => $table]));
+      throw new SchemaObjectDoesNotExistException("Cannot add primary key to table $table, because the base table doesn't exists.");
     }
 
     $embedded_full_path = $this->tableInformation->getTableEmbeddedFullPath($table);
     $constraint = $embedded_full_path . '__pkey';
     if ($this->constraintExists($base_table_name, $constraint)) {
-      throw new SchemaObjectExistsException(t("Cannot add primary key to table @table: primary key already exists.", ['@table' => $table]));
+      throw new SchemaObjectExistsException("Cannot add primary key to table $table: primary key already exists.");
     }
 
     $index_name = $this->ensureIdentifiersLength($base_table_name, $embedded_full_path, 'pkey');
@@ -1334,7 +1342,7 @@ class Schema extends DatabaseSchema {
         $embedded_fields[$field_full_path] = 1;
         $partial_filter_expression[] = [$field_full_path => ['$exists' => TRUE]];
       }
-      $partial_filter_expression = ['$and' => $partial_filter_expression] ;
+      $partial_filter_expression = ['$and' => $partial_filter_expression];
 
       $this->connection->getConnection()->{$prefixInfo['table']}->createIndex(
         $embedded_fields,
@@ -1351,7 +1359,7 @@ class Schema extends DatabaseSchema {
     // Test if unique index was created. If there is another unique index on the
     // same fields no exception is thrown.
     if (!$this->constraintExists($base_table_name, $constraint)) {
-      throw new SchemaObjectExistsException(t("Cannot add primary key to table @table: there is already an unique index for the same fields.", ['@table' => $table]));
+      throw new SchemaObjectExistsException("Cannot add primary key to table $table: there is already an unique index for the same fields.");
     }
 
     $this->tableInformation->setTablePrimaryKey($table, $fields)->save();
@@ -1365,7 +1373,7 @@ class Schema extends DatabaseSchema {
     if (empty($base_table_name) || !$this->tableExists($base_table_name)) {
       // If there is no base table or the base table does not exist, throw an
       // exception.
-      throw new SchemaObjectDoesNotExistException(t("The embedded table @embedded_table_name could not be created, because the base table doesn't exists.", ['@embedded_table_name' => $table]));
+      throw new SchemaObjectDoesNotExistException("The embedded table $table could not be created, because the base table doesn't exists.");
     }
 
     $embedded_full_path = $this->tableInformation->getTableEmbeddedFullPath($table);
@@ -1436,19 +1444,19 @@ class Schema extends DatabaseSchema {
    */
   public function addUniqueKey($table, $name, $fields) {
     if (!$this->tableExists($table)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot add unique key @name to table @table: table doesn't exist.", ['@table' => $table, '@name' => $name]));
+      throw new SchemaObjectDoesNotExistException("Cannot add unique key $name to table $table: table doesn't exist.");
     }
 
     $base_table_name = $this->tableInformation->getTableBaseTable($table);
     if (empty($base_table_name) || !$this->tableExists($base_table_name)) {
       // If there is no base table or the base table does not exist, throw an
       // exception.
-      throw new SchemaObjectDoesNotExistException(t("The embedded table @embedded_table_name could not be created, because the base table doesn't exists.", ['@embedded_table_name' => $table]));
+      throw new SchemaObjectDoesNotExistException("The embedded table $table could not be created, because the base table doesn't exists.");
     }
 
     $embedded_full_path = $this->tableInformation->getTableEmbeddedFullPath($table);
     if ($this->constraintExists($base_table_name, $embedded_full_path . $name . '__key')) {
-      throw new SchemaObjectExistsException(t("Cannot add unique key @name to table @table: unique key already exists.", ['@table' => $table, '@name' => $name]));
+      throw new SchemaObjectExistsException("Cannot add unique key $name to table $table: unique key already exists.");
     }
 
     $index_name = $this->ensureIdentifiersLength($base_table_name, $embedded_full_path . $name, 'key');
@@ -1472,7 +1480,7 @@ class Schema extends DatabaseSchema {
         $embedded_fields[$field_full_path] = 1;
         $partial_filter_expression[] = [$field_full_path => ['$exists' => TRUE]];
       }
-      $partial_filter_expression = ['$and' => $partial_filter_expression] ;
+      $partial_filter_expression = ['$and' => $partial_filter_expression];
 
       $this->connection->getConnection()->{$prefixInfo['table']}->createIndex(
         $embedded_fields,
@@ -1489,7 +1497,7 @@ class Schema extends DatabaseSchema {
     // Test if unique index was created. If there is another unique index on the
     // same fields no exception is thrown.
     if (!$this->constraintExists($base_table_name, $embedded_full_path . $name . '__key')) {
-      throw new SchemaObjectExistsException(t("Cannot add unique key to table @table: there is already an unique index for the same fields.", ['@table' => $table]));
+      throw new SchemaObjectExistsException("Cannot add unique key to table $table: there is already an unique index for the same fields.");
     }
 
     $this->tableInformation->setTableUniqueKey($table, $name, $fields)->save();
@@ -1503,7 +1511,7 @@ class Schema extends DatabaseSchema {
     if (empty($base_table_name) || !$this->tableExists($base_table_name)) {
       // If there is no base table or the base table does not exist, throw an
       // exception.
-      throw new SchemaObjectDoesNotExistException(t("The unique key @key on table @table could not be dropped, because the base table doesn't exists.", ['@table' => $table, '@key' => $name]));
+      throw new SchemaObjectDoesNotExistException("The unique key $name on table $table could not be dropped, because the base table doesn't exists.");
     }
 
     $embedded_full_path = $this->tableInformation->getTableEmbeddedFullPath($table);
@@ -1551,20 +1559,20 @@ class Schema extends DatabaseSchema {
    */
   public function addIndex($table, $name, $fields, array $spec) {
     if (!$this->tableExists($table)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot add index @name to table @table: table doesn't exist.", ['@table' => $table, '@name' => $name]));
+      throw new SchemaObjectDoesNotExistException("Cannot add index $name to table $table: table doesn't exist.");
     }
 
     $base_table_name = $this->tableInformation->getTableBaseTable($table);
     if (empty($base_table_name) || !$this->tableExists($base_table_name)) {
       // If there is no base table or the base table does not exist, throw an
       // exception.
-      throw new SchemaObjectDoesNotExistException(t("The unique key @key on table @table could not be dropped, because the base table doesn't exists.", ['@table' => $table, '@key' => $name]));
+      throw new SchemaObjectDoesNotExistException("The unique key $name on table $table could not be dropped, because the base table doesn't exists.");
     }
 
     $embedded_full_path = $this->tableInformation->getTableEmbeddedFullPath($table);
     $index_name = $this->ensureIdentifiersLength($base_table_name, $embedded_full_path . $name);
     if ($this->constraintExists($base_table_name, $index_name)) {
-      throw new SchemaObjectExistsException(t("Cannot add index @name to table @table: index already exists.", ['@table' => $table, '@name' => $name]));
+      throw new SchemaObjectExistsException("Cannot add index $name to table $table: index already exists.");
     }
 
     $prefixInfo = $this->getPrefixInfo($base_table_name);
@@ -1596,7 +1604,7 @@ class Schema extends DatabaseSchema {
           $partial_filter_expression[] = [$field_full_path => ['$exists' => TRUE]];
         }
       }
-      $partial_filter_expression = ['$and' => $partial_filter_expression] ;
+      $partial_filter_expression = ['$and' => $partial_filter_expression];
 
       $this->connection->getConnection()->{$prefixInfo['table']}->createIndex(
         $embedded_fields,
@@ -1613,7 +1621,7 @@ class Schema extends DatabaseSchema {
     // Test if index was created. If there is another index on the same fields
     // the following exception is thrown.
     if (!$this->constraintExists($base_table_name, $index_name)) {
-      throw new SchemaObjectExistsException(t("Cannot add index to @name to table @base_table_name: there is already an index for the same fields.", ['@base_table_name' => $base_table_name, '@name' => $name]));
+      throw new SchemaObjectExistsException("Cannot add index to $name to table $base_table_name: there is already an index for the same fields.");
     }
 
     $this->tableInformation->setTableIndex($table, $name, $fields)->save();
@@ -1627,7 +1635,7 @@ class Schema extends DatabaseSchema {
     if (empty($base_table_name) || !$this->tableExists($base_table_name)) {
       // If there is no base table or the base table does not exist, throw an
       // exception.
-      throw new SchemaObjectDoesNotExistException(t("The index @name on table @table could not be dropped, because the base table doesn't exists.", ['@table' => $table, '@name' => $name]));
+      throw new SchemaObjectDoesNotExistException("The index $name on table $table could not be dropped, because the base table doesn't exists.");
     }
 
     $embedded_full_path = $this->tableInformation->getTableEmbeddedFullPath($table);
@@ -1664,12 +1672,12 @@ class Schema extends DatabaseSchema {
    */
   public function fieldSetDefault($table, $field, $default) {
     if (!$this->tableExists($table)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot set the field default value for @field on table @table: table doesn't exist.", ['@table' => $table, '@field' => $field]));
+      throw new SchemaObjectDoesNotExistException("Cannot set the field default value for $field on table $table: table doesn't exist.");
     }
 
     $field_data = $this->tableInformation->getTableField($table, $field);
     if (empty($field_data)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot set the field default value for @field on table @table: the field does not exist on the table.", ['@table' => $table, '@field' => $field]));
+      throw new SchemaObjectDoesNotExistException("Cannot set the field default value for $field on table $table: the field does not exist on the table.");
     }
 
     $field_data['default'] = $default;
@@ -1689,12 +1697,12 @@ class Schema extends DatabaseSchema {
    */
   public function fieldSetNoDefault($table, $field) {
     if (!$this->tableExists($table)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot unset the field default value for @field on table @table: table doesn't exist.", ['@table' => $table, '@field' => $field]));
+      throw new SchemaObjectDoesNotExistException("Cannot unset the field default value for $field on table $table: table doesn't exist.");
     }
 
     $field_data = $this->tableInformation->getTableField($table, $field);
     if (empty($field_data)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot unset the field default value for @field on table @table: the field does not exist on the table.", ['@table' => $table, '@field' => $field]));
+      throw new SchemaObjectDoesNotExistException("Cannot unset the field default value for $field on table $table: the field does not exist on the table.");
     }
 
     unset($field_data['default']);
@@ -1792,11 +1800,13 @@ class Schema extends DatabaseSchema {
   }
 
   /**
-   * Calculates a base-64 encoded, MongoDB-safe sha-256 hash per MongoDB
-   * documentation: https://docs.mongodb.com/manual/reference/limits/.
+   * Calculates a base-64 encoded, MongoDB-safe sha-256 hash.
+   *
+   * For more information: https://docs.mongodb.com/manual/reference/limits/.
    *
    * @param $data
    *   String to be hashed.
+   *
    * @return string
    *   A base-64 encoded sha-256 hash, with /, \ and . replaced with _ and any
    *   space, ", $, *, <, >, :, | and ? padding characters removed.
