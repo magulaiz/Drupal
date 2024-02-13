@@ -385,7 +385,13 @@ class MediaLinkabilityTest extends MediaTestBase {
     $this->assertSame('Zoo Party (Content - blog)', $preview_button->getText());
 
     $preview_button->click();
-    $window_names = $this->getSession()->getWindowNames();
+    $iterations = 10;
+    while ((sizeof($session->getWindowNames()) < 2 && $iterations > 0) == TRUE) {
+      $session->wait(1000);
+      $iterations--;
+    }
+
+    $window_names = $session->getWindowNames();
     $this->getSession()->switchToWindow($window_names[1]);
     $h1 = $page->find('css', 'h1');
     $this->assertSame('Zoo Party', $h1->getText(), 'Clicking the preview opened a tab with the referenced node.');
