@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalJavascriptTests;
 
+use WebDriver\Exception\CurlExec as CurlExecException;
 use WebDriver\Service\CurlService;
 use WebDriver\Exception\CurlExec;
 use WebDriver\Exception as WebDriverException;
@@ -49,6 +50,7 @@ class WebDriverCurlService extends CurlService {
       CURLOPT_FAILONERROR => TRUE,
     ];
     $retries = 0;
+    $rawResult = '';
     $max_retries = static::$retry ? 10 : 1;
     while ($retries < $max_retries) {
       try {
@@ -69,7 +71,8 @@ class WebDriverCurlService extends CurlService {
               curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($parameters));
             }
             else {
-              $customHeaders[] = 'Content-Length: 0';
+              curl_setopt($curl, CURLOPT_POSTFIELDS, "{}");
+              $customHeaders[] = 'Content-Length: 2';
 
               // Suppress "Transfer-Encoding: chunked" header automatically
               // added by cURL that causes a 400 bad request (bad
@@ -94,7 +97,8 @@ class WebDriverCurlService extends CurlService {
               curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($parameters));
             }
             else {
-              $customHeaders[] = 'Content-Length: 0';
+              curl_setopt($curl, CURLOPT_POSTFIELDS, "{}");
+              $customHeaders[] = 'Content-Length: 2';
 
               // Suppress "Transfer-Encoding: chunked" header automatically
               // added by cURL that causes a 400 bad request (bad
@@ -117,19 +121,31 @@ class WebDriverCurlService extends CurlService {
 
         curl_setopt($curl, CURLOPT_HTTPHEADER, $customHeaders);
 
-        $result = curl_exec($curl);
-        $rawResult = NULL;
-        if ($result !== FALSE) {
-          $rawResult = trim($result);
-        }
+        $rawResult = curl_exec($curl);
+        $rawResult = is_string($rawResult) ? trim($rawResult) : '';
 
         $info = curl_getinfo($curl);
         $info['request_method'] = $requestMethod;
+        $info['errno'] = curl_errno($curl);
+        $info['error'] = curl_error($curl);
 
         if (array_key_exists(CURLOPT_FAILONERROR, $extraOptions) && $extraOptions[CURLOPT_FAILONERROR] && CURLE_GOT_NOTHING !== ($errno = curl_errno($curl)) && $error = curl_error($curl)) {
           curl_close($curl);
 
-          throw WebDriverException::factory(WebDriverException::CURL_EXEC, sprintf("Curl error thrown for http %s to %s%s\n\n%s", $requestMethod, $url, $parameters && is_array($parameters) ? ' with params: ' . json_encode($parameters) : '', $error));
+          $e = new CurlExecException(
+            sprintf(
+              "Curl error thrown for http %s to %s%s\n\n%s",
+              $requestMethod,
+              $url,
+              $parameters && is_array($parameters) ? ' with params: ' . json_encode($parameters) : '',
+              $error
+            ),
+            $errno
+          );
+
+          $e->setCurlInfo($info);
+
+          throw $e;
         }
 
         curl_close($curl);
@@ -146,10 +162,11 @@ class WebDriverCurlService extends CurlService {
         $retries++;
       }
     }
-    if (empty($error)) {
-      $error = "Retries: $retries and last result:\n" . ($rawResult ?? '');
+    if (!isset($exception)) {
+      $exception = new CurlExecException("Retries: $retries and last result:\n" . $rawResult);
     }
-    throw WebDriverException::factory(WebDriverException::CURL_EXEC, sprintf("Curl error thrown for http %s to %s%s\n\n%s", $requestMethod, $url, $parameters && is_array($parameters) ? ' with params: ' . json_encode($parameters) : '', $error));
+
+    throw $exception;
   }
 
 }
