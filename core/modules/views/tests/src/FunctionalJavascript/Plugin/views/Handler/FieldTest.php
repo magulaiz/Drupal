@@ -99,9 +99,10 @@ class FieldTest extends WebDriverTestBase {
     $page->find('css', '.ui-dialog .ui-dialog-buttonset')->pressButton('Apply');
     $web_assert->waitForText('Content: body (exposed)');
     $this->submitForm([], 'Save');
+    $web_assert->waitForText('The view Content has been saved.');
     $this->submitForm([], 'Update preview');
     // Open the custom text link modal.
-    $web_assert->waitForLink('Content link');
+    $this->assertNotNull($web_assert->waitForLink('Content link'));
     $page->clickLink('Content link');
     // Verify the modal title.
     $web_assert->assertWaitOnAjaxRequest();
