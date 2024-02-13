@@ -92,8 +92,8 @@ class ReviewForm extends MigrateUpgradeFormBase {
     PrivateTempStoreFactory $tempstore_private,
     MigrationState $migrationState,
     ConfigFactoryInterface $config_factory,
+    ModuleExtensionList|ModuleHandlerInterface $module_extension_list,
     protected ?TimeInterface $time = NULL,
-    ModuleExtensionList|ModuleHandlerInterface $module_extension_list
   ) {
     parent::__construct($config_factory, $migration_plugin_manager, $state, $tempstore_private);
     $this->migrationState = $migrationState;
@@ -118,8 +118,8 @@ class ReviewForm extends MigrateUpgradeFormBase {
       $container->get('tempstore.private'),
       $container->get('migrate_drupal.migration_state'),
       $container->get('config.factory'),
-      $container->get('datetime.time'),
       $container->get('extension.list.module'),
+      $container->get('datetime.time'),
     );
   }
 
