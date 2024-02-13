@@ -217,7 +217,7 @@ class NestedFormTest extends FieldTestBase {
 
     // Display the 'combined form'.
     $this->drupalGet("test-entity-constraints/nested/{$entity_1->id()}/{$entity_2->id()}");
-    $assert_session->hiddenFieldValueEquals('entity_2[changed]', \Drupal::time()->getRequestTime());
+    $assert_session->hiddenFieldValueEquals('entity_2[changed]', (string) \Drupal::time()->getRequestTime());
 
     // Submit the form and check that the entities are updated accordingly.
     $assert_session->hiddenFieldExists('entity_2[changed]')

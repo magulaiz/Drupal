@@ -266,6 +266,7 @@ EOD;
     $this->assertSession()->optionExists('config_name', 'user.settings');
 
     $this->drupalGet('admin/config/development/configuration/single/export/system.simple/system.image');
+    // cspell:disable-next-line
     $this->assertSession()->fieldValueEquals('export', "_core:\n  default_config_hash: durWHaKeBaq4d9Wpi4RqwADj1OufDepcnJuhVLmKN24\ntoolkit: gd\n");
 
     // Verify that the date format entity type is selected when specified in
@@ -277,7 +278,7 @@ EOD;
     // Verify that the fallback date format config entity is selected when
     // specified in the URL.
     $this->drupalGet('admin/config/development/configuration/single/export/date_format/fallback');
-    $option_node = $this->assertSession()->optionExists("config_name", 'Fallback date format (fallback)');
+    $option_node = $this->assertSession()->optionExists("config_name", 'fallback (Fallback date format)');
     $this->assertTrue($option_node->isSelected());
     $fallback_date = \Drupal::entityTypeManager()->getStorage('date_format')->load('fallback');
     $yaml_text = $this->assertSession()->fieldExists('export')->getValue();

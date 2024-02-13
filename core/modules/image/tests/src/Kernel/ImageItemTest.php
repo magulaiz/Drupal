@@ -144,7 +144,7 @@ class ImageItemTest extends FieldKernelTestBase {
 
     // Delete the image and try to save the entity again.
     $this->image->delete();
-    $entity = EntityTest::create(['mame' => $this->randomMachineName()]);
+    $entity = EntityTest::create(['name' => $this->randomMachineName()]);
     $entity->save();
 
     // Test image item properties.
@@ -155,17 +155,17 @@ class ImageItemTest extends FieldKernelTestBase {
   }
 
   /**
-   * Tests generateSampleItems() method under different resolutions.
+   * Tests generateSampleItems() method under different dimensions.
    */
   public function testImageItemSampleValueGeneration() {
 
-    // Default behaviour. No resolution configuration.
+    // Default behavior. No dimensions configuration.
     $entity = EntityTest::create();
     $entity->image_test->generateSampleItems();
     $this->entityValidateAndSave($entity);
     $this->assertEquals('image/jpeg', $entity->image_test->entity->get('filemime')->value);
 
-    // Max resolution bigger than 600x600.
+    // Max dimensions bigger than 600x600.
     $entity->image_test_generation->generateSampleItems();
     $this->entityValidateAndSave($entity);
     $imageItem = $entity->image_test_generation->first()->getValue();
