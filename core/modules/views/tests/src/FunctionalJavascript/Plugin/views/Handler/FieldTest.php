@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\FunctionalJavascript\Plugin\views\Handler;
 
-use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\views\Tests\ViewTestData;
 
 /**
@@ -58,7 +59,7 @@ class FieldTest extends WebDriverTestBase {
     // Disable automatic live preview to make the sequence of calls clearer.
     \Drupal::configFactory()->getEditable('views.settings')->set('ui.always_live_preview', FALSE)->save();
 
-    $this->account = $this->drupalCreateUser(['administer views']);
+    $this->account = $this->drupalCreateUser(['administer views', 'access content overview']);
     $this->drupalLogin($this->account);
 
     NodeType::create([
@@ -71,6 +72,36 @@ class FieldTest extends WebDriverTestBase {
       'field_name' => 'body',
       'bundle' => 'page',
     ])->save();
+  }
+
+  /**
+   * Tests custom text field modal title.
+   */
+  public function testModalDialogTitle() {
+    $web_assert = $this->assertSession();
+    Node::create([
+      'title' => $this->randomString(),
+      'type' => 'page',
+      'body' => 'page',
+    ])->save();
+    $url = '/admin/structure/views/view/content';
+    $this->drupalGet($url);
+    $page = $this->getSession()->getPage();
+    // Open the 'Add filter dialog'.
+    $page->clickLink('views-add-field');
+    $web_assert->waitForField('name[views.nothing]');
+    $page->checkField('name[views.nothing]');
+    $page->find('css', '.ui-dialog .ui-dialog-buttonset')->pressButton('Add and configure fields');
+    $web_assert->waitForField('options[alter][text]');
+    $page->fillField('options[alter][text]', '{{ attach_library("core/drupal.dialog.ajax") }}
+<p><a class="use-ajax" data-dialog-type="modal" href="/admin/content">Content link</a></p>');
+    $page->find('css', '.ui-dialog .ui-dialog-buttonset')->pressButton('Apply');
+    $web_assert->waitForText('Content: body (exposed)');
+    $this->submitForm([], 'Save');
+    $this->submitForm([], 'Update preview');
+    $web_assert->waitForLink('Content link');
+    $page->clickLink('Content link');
+    $this->assertEquals('Content', $this->assertSession()->waitForElement('css', '.ui-dialog-title')->getText());
   }
 
   public function testFormatterChanging() {
