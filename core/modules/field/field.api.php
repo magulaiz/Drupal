@@ -53,7 +53,27 @@
 function hook_field_info_alter(&$info) {
   // Change the default widget for fields of type 'foo'.
   if (isset($info['foo'])) {
-    $info['foo']['default_widget'] = 'mymodule_widget';
+    $info['foo']['default_widget'] = 'my_module_widget';
+  }
+}
+
+/**
+ * Alters the UI field definitions.
+ *
+ * This hook can be used for altering field definitions available in the UI
+ * dynamically per entity type. For example, it can be used to hide field types
+ * that are incompatible with an entity type.
+ *
+ * @param array $ui_definitions
+ *   Definition of all field types that can be added via UI.
+ * @param string $entity_type_id
+ *   The entity type id.
+ *
+ * @see \Drupal\Core\Field\FieldTypePluginManagerInterface::getEntityTypeUiDefinitions
+ */
+function hook_field_info_entity_type_ui_definitions_alter(array &$ui_definitions, string $entity_type_id) {
+  if ($entity_type_id === 'node') {
+    unset($ui_definitions['field_type_not_compatible_with_node']);
   }
 }
 
@@ -229,9 +249,9 @@ function hook_field_widget_single_element_form_alter(array &$element, \Drupal\Co
  */
 function hook_field_widget_single_element_WIDGET_TYPE_form_alter(array &$element, \Drupal\Core\Form\FormStateInterface $form_state, array $context) {
   // Code here will only act on widgets of type WIDGET_TYPE.  For example,
-  // hook_field_widget_single_element_mymodule_autocomplete_form_alter() will
-  // only act on widgets of type 'mymodule_autocomplete'.
-  $element['#autocomplete_route_name'] = 'mymodule.autocomplete_route';
+  // hook_field_widget_single_element_my_module_autocomplete_form_alter() will
+  // only act on widgets of type 'my_module_autocomplete'.
+  $element['#autocomplete_route_name'] = 'my_module.autocomplete_route';
 }
 
 /**
@@ -408,6 +428,31 @@ function hook_field_purge_field(\Drupal\field\Entity\FieldConfig $field) {
   \Drupal::database()->delete('my_module_field_info')
     ->condition('id', $field->id())
     ->execute();
+}
+
+/**
+ * Allows modules to alter the field type category information.
+ *
+ * This hook provides a way for modules to modify or add to the existing
+ * category information. Modules can use this hook to modify the properties of
+ * existing categories. It can also be used to define custom field type
+ * categories although the use of YAML-based plugins should be preferred over
+ * the hook.
+ *
+ * @param array &$categories
+ *   An associative array of field type categories, keyed by category machine
+ *    name.
+ *
+ * @see \Drupal\Core\Field\FieldTypeCategoryManager
+ */
+function hook_field_type_category_info_alter(array &$categories) {
+  // Modify or add field type categories.
+  $categories['my_custom_category'] = [
+    'label' => 'My Custom Category',
+    'description' => 'This is a custom category for my field types.',
+  ];
+  // Modify the properties of an existing category.
+  $categories['text']['description'] = 'Modified Text';
 }
 
 /**

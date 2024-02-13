@@ -10,9 +10,6 @@ views.settings:
       sequence:
         type: string
         label: 'Display extender'
-    skip_cache:
-      type: boolean
-      label: 'Disable views data caching'
     sql_signature:
       type: boolean
       label: 'Add Views signature to all SQL queries'
@@ -78,7 +75,7 @@ views.view.*:
           # @see \Drupal\views_ui\ViewAddForm::form()
           max: 128
     label:
-      type: label
+      type: required_label
       label: 'Label'
     module:
       type: string
@@ -111,6 +108,9 @@ views.view.*:
           display_plugin:
             type: string
             label: 'Display plugin'
+            constraints:
+              PluginExists:
+                manager: plugin.manager.views.display
           position:
             type: integer
             label: 'Position'

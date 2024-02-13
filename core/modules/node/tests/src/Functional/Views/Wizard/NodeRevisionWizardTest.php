@@ -26,24 +26,24 @@ class NodeRevisionWizardTest extends WizardTestBase {
     // Create two nodes with two revision.
     $node_storage = \Drupal::entityTypeManager()->getStorage('node');
     /** @var \Drupal\node\NodeInterface $node */
-    $node = $node_storage->create(['title' => $this->randomString(), 'type' => 'article', 'changed' => $this->requestTime + 40]);
+    $node = $node_storage->create(['title' => $this->randomString(), 'type' => 'article', 'changed' => REQUEST_TIME + 40]);
     $node->save();
 
     $node = $node->createDuplicate();
     $node->setNewRevision();
-    $node->changed->value = $this->requestTime + 20;
+    $node->changed->value = REQUEST_TIME + 20;
     $node->save();
 
-    $node = $node_storage->create(['title' => $this->randomString(), 'type' => 'article', 'changed' => $this->requestTime + 30]);
+    $node = $node_storage->create(['title' => $this->randomString(), 'type' => 'article', 'changed' => REQUEST_TIME + 30]);
     $node->save();
 
     $node = $node->createDuplicate();
     $node->setNewRevision();
-    $node->changed->value = $this->requestTime + 10;
+    $node->changed->value = REQUEST_TIME + 10;
     $node->save();
 
-    $this->drupalCreateContentType(['type' => 'not-article']);
-    $node = $node_storage->create(['title' => $this->randomString(), 'type' => 'not-article', 'changed' => $this->requestTime + 80]);
+    $this->drupalCreateContentType(['type' => 'not_article']);
+    $node = $node_storage->create(['title' => $this->randomString(), 'type' => 'not_article', 'changed' => REQUEST_TIME + 80]);
     $node->save();
 
     $type = [
@@ -54,7 +54,7 @@ class NodeRevisionWizardTest extends WizardTestBase {
 
     $view = [];
     $view['label'] = $this->randomMachineName(16);
-    $view['id'] = strtolower($this->randomMachineName(16));
+    $view['id'] = $this->randomMachineName(16);
     $view['description'] = $this->randomMachineName(16);
     $view['page[create]'] = FALSE;
     $view['show[type]'] = 'article';
@@ -85,7 +85,7 @@ class NodeRevisionWizardTest extends WizardTestBase {
     $this->submitForm($type, 'Update "Show" choice');
     $view = [];
     $view['label'] = $this->randomMachineName(16);
-    $view['id'] = strtolower($this->randomMachineName(16));
+    $view['id'] = $this->randomMachineName(16);
     $view['description'] = $this->randomMachineName(16);
     $view['page[create]'] = FALSE;
     $view['show[type]'] = 'all';

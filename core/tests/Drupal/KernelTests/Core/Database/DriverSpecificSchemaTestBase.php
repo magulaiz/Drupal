@@ -2,7 +2,6 @@
 
 namespace Drupal\KernelTests\Core\Database;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Schema;
@@ -254,7 +253,6 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
 
     // Test the primary key columns.
     $method = new \ReflectionMethod(get_class($this->schema), 'findPrimaryKeyColumns');
-    $method->setAccessible(TRUE);
     $this->assertSame(['test_serial'], $method->invoke($this->schema, 'test_table'));
 
     $this->assertTrue($this->tryInsert(), 'Insert with a serial succeeded.');
@@ -343,8 +341,8 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
 
     // Finally, check each column and try to insert invalid values into them.
     foreach ($table_spec['fields'] as $column_name => $column_spec) {
-      $this->assertTrue($this->schema->fieldExists($table_name, $column_name), new FormattableMarkup('Unsigned @type column was created.', ['@type' => $column_spec['type']]));
-      $this->assertFalse($this->tryUnsignedInsert($table_name, $column_name), new FormattableMarkup('Unsigned @type column rejected a negative value.', ['@type' => $column_spec['type']]));
+      $this->assertTrue($this->schema->fieldExists($table_name, $column_name), "Unsigned {$column_spec['type']} column was created.");
+      $this->assertFalse($this->tryUnsignedInsert($table_name, $column_name), "Unsigned {$column_spec['type']} column rejected a negative value.");
     }
   }
 
@@ -579,7 +577,6 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
    */
   public function testSchemaChangePrimaryKey(array $initial_primary_key, array $renamed_primary_key): void {
     $find_primary_key_columns = new \ReflectionMethod(get_class($this->schema), 'findPrimaryKeyColumns');
-    $find_primary_key_columns->setAccessible(TRUE);
 
     // Test making the field the primary key of the table upon creation.
     $table_name = 'test_table';
@@ -735,11 +732,16 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
     }
 
     // Ensure auto numbering now works.
+    // We use a >= assertion to allow non-core drivers, that may have specific
+    // strategies on automatic incrementing, to run core tests. For example,
+    // Oracle will allocate a 10 id with the previous insert that was meant to
+    // fail; that id will be discarded, and the insert here will get a new 11
+    // id instead.
     $id = $this->connection
       ->insert($table_name)
       ->fields(['test_field_string' => 'test'])
       ->execute();
-    $this->assertEquals(10, $id);
+    $this->assertGreaterThanOrEqual(10, $id);
   }
 
   /**
@@ -887,7 +889,6 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
    */
   public function testFindPrimaryKeyColumns(): void {
     $method = new \ReflectionMethod(get_class($this->schema), 'findPrimaryKeyColumns');
-    $method->setAccessible(TRUE);
 
     // Test with single column primary key.
     $this->schema->createTable('table_with_pk_0', [

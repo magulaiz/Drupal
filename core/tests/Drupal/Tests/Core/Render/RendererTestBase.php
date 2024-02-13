@@ -1,14 +1,14 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Render\RendererTestBase.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Render;
 
 use Drupal\Component\Datetime\Time;
+<<<<<<< HEAD
 use Drupal\Component\Datetime\TimeInterface;
+=======
+>>>>>>> 11.x
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\Context\ContextCacheKeys;
@@ -18,6 +18,7 @@ use Drupal\Core\Render\PlaceholderGenerator;
 use Drupal\Core\Render\PlaceholderingRenderCache;
 use Drupal\Core\Render\Renderer;
 use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Utility\CallableResolver;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
@@ -74,9 +75,9 @@ abstract class RendererTestBase extends UnitTestCase {
   /**
    * The mocked controller resolver.
    *
-   * @var \Drupal\Core\Controller\ControllerResolverInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\Utility\CallableResolver|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $controllerResolver;
+  protected $callableResolver;
 
   /**
    * The mocked theme manager.
@@ -128,7 +129,10 @@ abstract class RendererTestBase extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->controllerResolver = $this->createMock('Drupal\Core\Controller\ControllerResolverInterface');
+    $this->callableResolver = $this->createMock(CallableResolver::class);
+    $this->callableResolver->expects($this->any())
+      ->method('getCallableFromDefinition')
+      ->willReturnArgument(0);
     $this->themeManager = $this->createMock('Drupal\Core\Theme\ThemeManagerInterface');
     $this->elementInfo = $this->createMock('Drupal\Core\Render\ElementInfoManagerInterface');
     $this->elementInfo->expects($this->any())
@@ -190,8 +194,12 @@ abstract class RendererTestBase extends UnitTestCase {
       });
     $this->placeholderGenerator = new PlaceholderGenerator($this->cacheContextsManager, $this->rendererConfig);
     $this->renderCache = new PlaceholderingRenderCache($this->requestStack, $this->cacheFactory, $this->cacheContextsManager, $this->placeholderGenerator);
+<<<<<<< HEAD
     $this->renderer = new Renderer($this->controllerResolver, $this->themeManager, $this->elementInfo, $this->placeholderGenerator, $this->renderCache, $this->requestStack, $this->rendererConfig);
     $this->datetimeTime = new Time($this->requestStack);
+=======
+    $this->renderer = new Renderer($this->callableResolver, $this->themeManager, $this->elementInfo, $this->placeholderGenerator, $this->renderCache, $this->requestStack, $this->rendererConfig);
+>>>>>>> 11.x
 
     $container = new ContainerBuilder();
     $container->set('cache_contexts_manager', $this->cacheContextsManager);
@@ -209,7 +217,7 @@ abstract class RendererTestBase extends UnitTestCase {
    * paths, etc. for JavaScript replacement of content or assets. In this test,
    * the #lazy_builder callback PlaceholdersTest::callback() renders the context
    * inside test HTML, so using any random string would sometimes cause random
-   * test failures because the test output would be unparseable. Instead, we
+   * test failures because the test output would not be parseable. Instead, we
    * provide random tokens for replacement.
    *
    * @see PlaceholdersTest::callback()
@@ -232,7 +240,7 @@ abstract class RendererTestBase extends UnitTestCase {
    * Sets up a memory-based render cache back-end.
    */
   protected function setupMemoryCache() {
-    $this->memoryCache = $this->memoryCache ?: new VariationCache($this->requestStack, new MemoryBackend(), $this->cacheContextsManager);
+    $this->memoryCache = $this->memoryCache ?: new VariationCache($this->requestStack, new MemoryBackend(new Time($this->requestStack)), $this->cacheContextsManager);
 
     $this->cacheFactory->expects($this->atLeastOnce())
       ->method('get')
@@ -325,6 +333,11 @@ class PlaceholdersTest implements TrustedCallbackInterface {
    *   A renderable array.
    */
   public static function callbackPerUser($animal) {
+    // As well as adding the user cache context, additionally suspend the
+    // current Fiber if there is one.
+    if ($fiber = \Fiber::getCurrent()) {
+      $fiber->suspend();
+    }
     $build = static::callback($animal);
     $build['#cache']['contexts'][] = 'user';
     return $build;

@@ -11,7 +11,9 @@ block.block.*:
       # @see https://www.drupal.org/project/drupal/issues/2685917
       # @see https://www.drupal.org/project/drupal/issues/2043527
       constraints:
-        Regex: '/^[a-z0-9_.]+$/'
+        Regex:
+          pattern: '/^[a-z0-9_.]+$/'
+          message: "The %value machine name is not valid."
     theme:
       type: string
       label: 'Theme'
@@ -31,6 +33,10 @@ block.block.*:
         PluginExists:
           manager: plugin.manager.block
           interface: Drupal\Core\Block\BlockPluginInterface
+          # Block plugin IDs may not be valid in blocks that are backed by
+          # block_content entities that don't exist yet. Therefore, it's okay
+          # to consider the fallback plugin ID as valid.
+          allowFallback: true
     settings:
       type: block.settings.[%parent.plugin]
     visibility:
