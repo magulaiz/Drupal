@@ -374,7 +374,7 @@ class MediaLinkabilityTest extends MediaTestBase {
     $page->pressButton('Save');
 
     $selector = sprintf('a[href="%s"][data-entity-uuid="%s"][data-entity-type="node"][data-entity-metadata] > article[data-link-entity-uuid="%s"][data-link-entity-type="node"][data-link-entity-metadata]', $content_to_add->toUrl('canonical')->toString(), $content_to_add_uuid, $content_to_add_uuid);
-    $link_around_media =  $assert_session->elementExists('css', $selector);
+    $link_around_media = $assert_session->elementExists('css', $selector);
     $link_around_media->click();
     $h1 = $page->find('css', 'h1');
     $this->assertSame('Zoo Party', $h1->getText(), 'The link in the rendered page goes to the correct place');
