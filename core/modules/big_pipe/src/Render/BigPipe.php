@@ -734,7 +734,7 @@ EOF;
     foreach ($xpath->query('//span[@data-big-pipe-placeholder-id]') as $node) {
       $placeholder_ids[] = Html::escape($node->getAttribute('data-big-pipe-placeholder-id'));
     }
-    return $placeholder_ids;
+    return array_unique($placeholder_ids);
   }
 
   /**
