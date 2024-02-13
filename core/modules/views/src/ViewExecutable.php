@@ -464,7 +464,7 @@ class ViewExecutable {
   /**
    * The display plugin manager.
    *
-   * @var \Drupal\views\Plugin\ViewsPluginManager;
+   * @var \Drupal\views\Plugin\ViewsPluginManager
    */
   protected ViewsPluginManager $displayPluginManager;
 

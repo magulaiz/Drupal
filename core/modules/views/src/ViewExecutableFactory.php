@@ -59,7 +59,7 @@ class ViewExecutableFactory {
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
    *   The route provider.
    * @param \Drupal\views\Plugin\ViewsPluginManager|null $display_plugin_manager
-   *   The plugin manager for display.
+   *   The display plugin manager.
    */
   public function __construct(AccountInterface $user, RequestStack $request_stack, ViewsData $views_data, RouteProviderInterface $route_provider, ViewsPluginManager $display_plugin_manager = NULL) {
     $this->user = $user;
