@@ -77,7 +77,8 @@
      */
     toggle() {
       const authCheckbox = this;
-      const $row = $(this).closest('tr');
+      const closestRow = this.closest('tr');
+      const $row = $(closestRow);
       // jQuery performs too many layout calculations for .hide() and .show(),
       // leading to a major page rendering lag on sites with many roles and
       // permissions. Therefore, we toggle visibility directly.
@@ -155,9 +156,10 @@
 
         function showPermissionRow(index, row) {
           const sources = row.querySelectorAll('.table-filter-text-source');
+          const closestRow = row.closest('tr');
           if (sources.length > 0) {
             const textMatch = sources[0].textContent.search(re) !== -1;
-            $(row).closest('tr').toggle(textMatch);
+            $(closestRow).toggle(textMatch);
           }
         }
         // Search over all rows.
