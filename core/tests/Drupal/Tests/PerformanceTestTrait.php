@@ -117,9 +117,29 @@ trait PerformanceTestTrait {
 
     $performance_test_data = $collection->get('performance_test_data');
     if ($performance_test_data) {
+      // This property is set by \Drupal\Core\Test\TestSetupTrait and is needed.
+      if (!isset($this->databasePrefix)) {
+        throw new \Exception('Cannot log queries without knowing the database prefix.');
+      }
+
+      // Filter to clean up the query a bit.
+      $filter = [
+        $this->databasePrefix => '',
+        "\r\n" => ' ',
+        "\r" => ' ',
+        "\n" => ' ',
+      ];
+
+      // Alias queries we don't really care about.
+      $query_aliases = [
+        'INSERT INTO "sessions"' => 'sessions_insert',
+        'SELECT "session" FROM "sessions"' => 'sessions_select',
+        'SELECT 1 AS "expression" FROM "sessions"' => 'sessions_select_expression',
+        'INSERT INTO "watchdog"' => 'watchdog_insert',
+      ];
+
       // Separate queries into two buckets, one for queries from the cache
       // backend, and one for everything else (including those for cache tags).
-      $query_count = 0;
       $cache_get_count = 0;
       $cache_set_count = 0;
       $cache_delete_count = 0;
@@ -127,7 +147,59 @@ trait PerformanceTestTrait {
         // Don't log queries from the database cache backend because they're
         // logged separately as cache operations.
         if (!(isset($event->caller['class']) && is_a(str_replace('\\\\', '\\', $event->caller['class']), '\Drupal\Core\Cache\DatabaseBackend', TRUE))) {
-          $query_count++;
+          // Make the query easier to read.
+          $query_string = str_replace(array_keys($filter), array_values($filter), $event->queryString);
+
+          // See if we can replace highly variable queries with aliases.
+          foreach ($query_aliases as $search => $query_alias) {
+            if (str_starts_with($query_string, $search)) {
+              $performance_data->logQuery($query_alias);
+              continue 2;
+            }
+          }
+
+          // Make non-aliased queries less random.
+          $args = $event->args;
+          if (str_starts_with($query_string, 'INSERT INTO "semaphore"')) {
+            $args[':db_insert_placeholder_1'] = 'LOCK_ID';
+            $args[':db_insert_placeholder_2'] = 'EXPIRE';
+          }
+          elseif (str_starts_with($query_string, 'DELETE FROM "semaphore"')) {
+            $args[':db_condition_placeholder_1'] = 'LOCK_ID';
+          }
+          elseif (str_starts_with($query_string, 'SELECT "base_table"."uid" AS "uid", "base_table"."uid" AS "base_table_uid" FROM "users"')) {
+            $args[':db_condition_placeholder_0'] = 'ACCOUNT_NAME';
+          }
+          elseif (str_starts_with($query_string, 'SELECT COUNT(*) AS "expression" FROM (SELECT 1 AS "expression" FROM "flood" "f"')) {
+            $args[':db_condition_placeholder_1'] = 'CLIENT_IP';
+            $args[':db_condition_placeholder_2'] = 'TIMESTAMP';
+          }
+          elseif (str_starts_with($query_string, 'SELECT "name", "route", "fit" FROM "router"')) {
+            foreach ($args as $arg) {
+              if (is_string($arg) && str_contains($arg, 'files/css')) {
+                $performance_data->logQuery('router_select_css');
+                continue 2;
+              }
+              if (is_string($arg) && str_contains($arg, 'files/js')) {
+                $performance_data->logQuery('router_select_js');
+                continue 2;
+              }
+            }
+          }
+          elseif (str_starts_with($query_string, 'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table"')) {
+            if (str_contains($args[':db_condition_placeholder_1'], 'files/css')) {
+              $performance_data->logQuery('path_alias_select_css');
+              continue;
+            }
+            if (str_contains($args[':db_condition_placeholder_1'], 'files/js')) {
+              $performance_data->logQuery('path_alias_select_jss');
+              continue;
+            }
+          }
+
+          // Inline query arguments and log the query as is.
+          $query_string = str_replace(array_keys($args), array_values($this->quoteArgs($args)), $query_string);
+          $performance_data->logQuery($query_string);
         }
       }
       foreach ($performance_test_data['cache_operations'] as $operation) {
@@ -141,13 +213,28 @@ trait PerformanceTestTrait {
           $cache_delete_count++;
         }
       }
-      $performance_data->setQueryCount($query_count);
       $performance_data->setCacheGetCount($cache_get_count);
       $performance_data->setCacheSetCount($cache_set_count);
       $performance_data->setCacheDeleteCount($cache_delete_count);
     }
 
     return $performance_data;
+  }
+
+  /**
+   * Wraps a query argument in double quotes if it's a string.
+   *
+   * @param array $args
+   *   The raw query arguments.
+   *
+   * @return array
+   *   The conditionally quoted query arguments.
+   */
+  protected function quoteArgs(array $args): array {
+    $conditionalQuote = function ($arg) {
+      return is_int($arg) || is_float($arg) ? $arg : '"' . $arg . '"';
+    };
+    return array_map($conditionalQuote, $args);
   }
 
   /**
@@ -304,8 +391,7 @@ trait PerformanceTestTrait {
     // @todo: get commit hash from an environment variable and add this as an
     // additional attribute.
     // @see https://www.drupal.org/project/drupal/issues/3379761
-    $resource = ResourceInfoFactory::defaultResource();
-    $resource = $resource->merge(ResourceInfo::create(Attributes::create([
+    $resource = ResourceInfoFactory::merge(ResourceInfo::create(Attributes::create([
       ResourceAttributes::SERVICE_NAMESPACE => 'Drupal',
       ResourceAttributes::SERVICE_NAME => $service_name,
       ResourceAttributes::SERVICE_INSTANCE_ID => 1,
