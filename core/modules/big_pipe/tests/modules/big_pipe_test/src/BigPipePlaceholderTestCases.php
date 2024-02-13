@@ -105,11 +105,11 @@ class BigPipePlaceholderTestCases {
           'method' => 'replaceWith',
           // cspell:disable-next-line
           'selector' => '[data-big-pipe-placeholder-id="callback=Drupal%5CCore%5CRender%5CElement%5CStatusMessages%3A%3ArenderMessages&args%5B0%5D&token=_HAdUpwWmet0TOTe2PSiJuMntExoshbm1kh2wQzzzAA"]',
-          'data' => '',
+          'data' => '<div data-drupal-messages>' . "\n" . ' <div role="contentinfo" aria-label="Status message">' . "\n" . ' <h2 class="visually-hidden">Status message</h2>' . "\n" . ' Hello from BigPipe!' . "\n" . ' </div>' . "\n" . '</div>' . "\n",
           'settings' => NULL,
         ],
       ];
-      $status_messages->embeddedHtmlResponse = '<div data-drupal-messages-fallback class="hidden"></div>';
+      $status_messages->embeddedHtmlResponse = '<div data-drupal-messages-fallback class="hidden"></div><div data-drupal-messages>' . "\n" . '  <div role="contentinfo" aria-label="Status message">' . "\n" . '              <h2 class="visually-hidden">Status message</h2>' . "\n" . '              Hello from BigPipe!' . "\n" . '          </div>' . "\n" . '</div>' . "\n";
     }
 
     // 2. Real-world example of HTML attribute value placeholder: form action.
@@ -301,13 +301,6 @@ class BigPipePlaceholderTestCases {
         'selector' => '[data-big-pipe-placeholder-id="timecurrent-timetime"]',
         'data' => '<time datetime="1991-03-14"></time>',
         'settings' => NULL,
-      ],
-      [
-        'command' => 'message',
-        'message' => 'Hello from BigPipe!',
-        'messageWrapperQuerySelector' => NULL,
-        'messageOptions' => ['type' => 'status'],
-        'clearPrevious' => FALSE,
       ],
     ];
     $current_time->bigPipeNoJsPlaceholder = '<span data-big-pipe-nojs-placeholder-id="timecurrent-timetime"></span>';
