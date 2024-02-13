@@ -194,7 +194,49 @@ class StandardPerformanceTest extends PerformanceTestBase {
     }, 'standardUserPage');
     $this->assertNoJavaScript($performance_data);
 
-    $expected_queries = [];
+    $expected_queries = [
+      'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table" WHERE ("base_table"."status" = 1) AND ("base_table"."alias" LIKE "/user/2" ESCAPE ' . "'\\\\'" . ') AND ("base_table"."langcode" IN ("en", "und")) ORDER BY "base_table"."langcode" ASC, "base_table"."id" DESC',
+      'SELECT "name", "route", "fit" FROM "router" WHERE "pattern_outline" IN ( "/user/2", "/user/%", "/user" ) AND "number_parts" >= 2',
+      'SELECT "tag", "invalidations" FROM "cachetags" WHERE "tag" IN ( "route_match" )',
+      'SELECT "tag", "invalidations" FROM "cachetags" WHERE "tag" IN ( "entity_types" )',
+      'SELECT "tag", "invalidations" FROM "cachetags" WHERE "tag" IN ( "entity_field_info", "user_values" )',
+      'SELECT "cid", "data", "created", "expire", "serialized", "tags", "checksum" FROM "cache_bootstrap" WHERE "cid" IN ( "hook_info" ) ORDER BY "cid"',
+      'SELECT "base"."uid" AS "uid", "base"."uuid" AS "uuid", "base"."langcode" AS "langcode" FROM "users" "base" WHERE "base"."uid" IN (2)',
+      'SELECT "data".* FROM "users_field_data" "data" WHERE "data"."uid" IN (2) ORDER BY "data"."uid" ASC',
+      'SELECT "t".* FROM "user__roles" "t" WHERE ("entity_id" IN (2)) AND ("deleted" = 0) AND ("langcode" IN ("en", "und", "zxx")) ORDER BY "delta" ASC',
+      'SELECT "t".* FROM "user__user_picture" "t" WHERE ("entity_id" IN (2)) AND ("deleted" = 0) AND ("langcode" IN ("en", "und", "zxx")) ORDER BY "delta" ASC',
+      'SELECT "tag", "invalidations" FROM "cachetags" WHERE "tag" IN ( "entity_bundles" )',
+      'SELECT "name", "value" FROM "key_value" WHERE "name" IN ( "system.maintenance_mode" ) AND "collection" = "state"',
+      'SELECT "tag", "invalidations" FROM "cachetags" WHERE "tag" IN ( "routes" )',
+      'SELECT "tag", "invalidations" FROM "cachetags" WHERE "tag" IN ( "config:user.role.anonymous" )',
+      'SELECT "name", "data" FROM "config" WHERE "collection" = "" AND "name" IN ( "core.entity_view_display.user.user.full" )',
+      'SELECT "name", "value" FROM "key_value" WHERE "name" IN ( "twig_extension_hash_prefix" ) AND "collection" = "state"',
+      'SELECT "tag", "invalidations" FROM "cachetags" WHERE "tag" IN ( "rendered", "user:2", "user_view" )',
+      'SELECT "name", "value" FROM "key_value" WHERE "name" IN ( "theme:stark" ) AND "collection" = "config.entity.key_store.block"',
+      'SELECT "tag", "invalidations" FROM "cachetags" WHERE "tag" IN ( "block_view", "config:block.block.stark_site_branding", "config:system.site" )',
+      'SELECT "tag", "invalidations" FROM "cachetags" WHERE "tag" IN ( "config:block.block.stark_search_form_narrow", "config:search.settings" )',
+      'SELECT "menu_tree"."menu_name" AS "menu_name", "menu_tree"."route_name" AS "route_name", "menu_tree"."route_parameters" AS "route_parameters", "menu_tree"."url" AS "url", "menu_tree"."title" AS "title", "menu_tree"."description" AS "description", "menu_tree"."parent" AS "parent", "menu_tree"."weight" AS "weight", "menu_tree"."options" AS "options", "menu_tree"."expanded" AS "expanded", "menu_tree"."enabled" AS "enabled", "menu_tree"."provider" AS "provider", "menu_tree"."metadata" AS "metadata", "menu_tree"."class" AS "class", "menu_tree"."form_class" AS "form_class", "menu_tree"."id" AS "id" FROM "menu_tree" "menu_tree" WHERE ("route_name" = "entity.user.canonical") AND ("route_param_key" = "user=2") AND ("menu_name" = "main") ORDER BY "depth" ASC, "weight" ASC, "id" ASC',
+      'SELECT "tag", "invalidations" FROM "cachetags" WHERE "tag" IN ( "config:block.block.stark_main_menu", "config:system.menu.main" )',
+      'SELECT "tag", "invalidations" FROM "cachetags" WHERE "tag" IN ( "config:block.block.stark_search_form_wide" )',
+      'SELECT "menu_tree"."menu_name" AS "menu_name", "menu_tree"."route_name" AS "route_name", "menu_tree"."route_parameters" AS "route_parameters", "menu_tree"."url" AS "url", "menu_tree"."title" AS "title", "menu_tree"."description" AS "description", "menu_tree"."parent" AS "parent", "menu_tree"."weight" AS "weight", "menu_tree"."options" AS "options", "menu_tree"."expanded" AS "expanded", "menu_tree"."enabled" AS "enabled", "menu_tree"."provider" AS "provider", "menu_tree"."metadata" AS "metadata", "menu_tree"."class" AS "class", "menu_tree"."form_class" AS "form_class", "menu_tree"."id" AS "id" FROM "menu_tree" "menu_tree" WHERE ("route_name" = "entity.user.canonical") AND ("route_param_key" = "user=2") AND ("menu_name" = "account") ORDER BY "depth" ASC, "weight" ASC, "id" ASC',
+      'SELECT "tag", "invalidations" FROM "cachetags" WHERE "tag" IN ( "config:block.block.stark_account_menu", "config:system.menu.account" )',
+      'SELECT "tag", "invalidations" FROM "cachetags" WHERE "tag" IN ( "config:block.block.stark_breadcrumbs" )',
+      'SELECT "tag", "invalidations" FROM "cachetags" WHERE "tag" IN ( "config:block.block.stark_primary_admin_actions" )',
+      'SELECT "tag", "invalidations" FROM "cachetags" WHERE "tag" IN ( "config:block.block.stark_messages" )',
+      'SELECT "tag", "invalidations" FROM "cachetags" WHERE "tag" IN ( "local_task" )',
+      'SELECT "ud".* FROM "users_data" "ud" WHERE ("module" = "contact") AND ("uid" = "2") AND ("name" = "enabled")',
+      'SELECT "tag", "invalidations" FROM "cachetags" WHERE "tag" IN ( "config:block.block.stark_primary_local_tasks", "config:contact.settings", "user:0" )',
+      'SELECT "tag", "invalidations" FROM "cachetags" WHERE "tag" IN ( "config:block.block.stark_secondary_local_tasks" )',
+      'SELECT "tag", "invalidations" FROM "cachetags" WHERE "tag" IN ( "config:block.block.stark_help" )',
+      'SELECT "tag", "invalidations" FROM "cachetags" WHERE "tag" IN ( "config:block.block.stark_powered" )',
+      'SELECT "tag", "invalidations" FROM "cachetags" WHERE "tag" IN ( "config:block.block.stark_syndicate" )',
+      'SELECT "tag", "invalidations" FROM "cachetags" WHERE "tag" IN ( "config:block.block.stark_content", "config:block.block.stark_page_title", "config:block_list" )',
+      'SELECT "tag", "invalidations" FROM "cachetags" WHERE "tag" IN ( "library_info" )',
+      'SELECT "name", "value" FROM "key_value" WHERE "name" IN ( "asset.css_js_query_string" ) AND "collection" = "state"',
+      'SELECT "name", "value" FROM "key_value" WHERE "name" IN ( "drupal.test_wait_terminate" ) AND "collection" = "state"',
+      'SELECT "tag", "invalidations" FROM "cachetags" WHERE "tag" IN ( "http_response" )',
+      'SELECT "name", "value" FROM "key_value" WHERE "name" IN ( "system.cron_last" ) AND "collection" = "state"',
+    ];
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
     $this->assertSame(41, $performance_data->getQueryCount());
