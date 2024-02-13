@@ -174,6 +174,9 @@ trait PerformanceTestTrait {
             $args[':db_condition_placeholder_1'] = 'CLIENT_IP';
             $args[':db_condition_placeholder_2'] = 'TIMESTAMP';
           }
+          elseif (str_starts_with($query_string, 'UPDATE "users_field_data" SET "login"')) {
+            $args[':db_update_placeholder_0'] = 'TIMESTAMP';
+          }
           elseif (str_starts_with($query_string, 'SELECT "name", "route", "fit" FROM "router"')) {
             foreach ($args as $arg) {
               if (is_string($arg) && str_contains($arg, 'files/css')) {
