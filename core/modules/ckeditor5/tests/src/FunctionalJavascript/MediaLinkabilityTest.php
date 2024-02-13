@@ -344,6 +344,7 @@ class MediaLinkabilityTest extends MediaTestBase {
     $this->drupalGet($this->host->toUrl('edit-form'));
     $this->waitForEditor();
 
+    // Click somewhere outside of the editor area.
     $page->find('css', 'h1')->click();
 
     // Initial state: the Drupal Media CKEditor Widget is not selected.
@@ -373,7 +374,11 @@ class MediaLinkabilityTest extends MediaTestBase {
     $page->pressButton('Save');
 
     $selector = sprintf('a[href="%s"][data-entity-uuid="%s"][data-entity-type="node"][data-entity-metadata] > article[data-link-entity-uuid="%s"][data-link-entity-type="node"][data-link-entity-metadata]', $content_to_add->toUrl('canonical')->toString(), $content_to_add_uuid, $content_to_add_uuid);
-    $assert_session->elementExists('css', $selector);
+    $link_around_media =  $assert_session->elementExists('css', $selector);
+    $link_around_media->click();
+    $h1 = $page->find('css', 'h1');
+    $this->assertSame('Zoo Party', $h1->getText(), 'The link in the rendered page goes to the correct place');
+
     $this->drupalGet($this->host->toUrl('edit-form'));
     $this->waitForEditor();
     $page->find('css', '.ck-editor__main > .ck-editor__editable[contenteditable]')->click();
@@ -383,8 +388,8 @@ class MediaLinkabilityTest extends MediaTestBase {
 
     $preview_button = $assert_session->waitForElementVisible('css', '#ck-aria-label-preview-button');
     $this->assertSame('Zoo Party (Content - blog)', $preview_button->getText());
-
     $preview_button->click();
+
     $iterations = 10;
     while ((count($session->getWindowNames()) < 2 && $iterations > 0) == TRUE) {
       $session->wait(1000);
