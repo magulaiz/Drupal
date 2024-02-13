@@ -40,7 +40,7 @@ class ConnectionUnitTest extends DriverSpecificConnectionUnitTestBase {
       ['session' => $this->connection->getMongodbSession()],
     )->toArray()[0];
 
-    foreach($currentOp->inprog as $instance) {
+    foreach ($currentOp->inprog as $instance) {
       if (isset($instance->connectionId)) {
         $processList[] = $instance->connectionId;
       }

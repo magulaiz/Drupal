@@ -35,13 +35,13 @@ class EntityTestViewsData extends EntityViewsData {
           'id' => 'field',
         ],
         'argument' => [
-          'id' => 'string'
+          'id' => 'string',
         ],
         'filter' => [
-          'id' => 'string'
+          'id' => 'string',
         ],
         'sort' => [
-          'id' => 'standard'
+          'id' => 'standard',
         ],
         'entity field' => 'name',
         'real field' => 'entity_test_multivalue_basefield__name.name_value',

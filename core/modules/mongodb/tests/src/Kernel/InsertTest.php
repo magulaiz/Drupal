@@ -3,7 +3,6 @@
 namespace Drupal\Tests\mongodb\Kernel;
 
 use Drupal\KernelTests\Core\Database\DatabaseTestBase;
-use Drupal\mongodb\Driver\Database\mongodb\EmbeddedTable;
 use Drupal\TestTools\Extension\SchemaInspector;
 
 // cspell:ignore zazu

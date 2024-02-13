@@ -165,7 +165,7 @@ class Tasks extends InstallTasks {
    */
   protected function checkUpdateCollection($name, array $condition = [], array $fields = []) {
     try {
-      $query = Database::getConnection()->update($name)->fields($fields)->condition($condition[0], $condition[1], $condition[2])->execute();
+      Database::getConnection()->update($name)->fields($fields)->condition($condition[0], $condition[1], $condition[2])->execute();
       $this->pass(t("The database server was able to update data in the collection %name.", ['%name' => $name]));
     }
     catch (\Exception $e) {
@@ -178,7 +178,7 @@ class Tasks extends InstallTasks {
    */
   protected function checkDeleteCollection($name, array $condition = []) {
     try {
-      $query = Database::getConnection()->delete($name)->condition($condition[0], $condition[1], $condition[2])->execute();
+      Database::getConnection()->delete($name)->condition($condition[0], $condition[1], $condition[2])->execute();
       $this->pass(t("The database server was able to delete data in the collection %name.", ['%name' => $name]));
     }
     catch (\Exception $e) {

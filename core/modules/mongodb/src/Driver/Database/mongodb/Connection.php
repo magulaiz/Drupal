@@ -5,7 +5,6 @@ namespace Drupal\mongodb\Driver\Database\mongodb;
 use Drupal\Core\Database\Connection as DatabaseConnection;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\DatabaseNotFoundException;
-use Drupal\Core\Database\InvalidArgumentException;
 use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\Transaction\TransactionManagerInterface;
 use MongoDB\Client;
@@ -427,7 +426,7 @@ class Connection extends DatabaseConnection {
       [
         'new' => TRUE,
         'returnDocument' => FindOneAndUpdate::RETURN_DOCUMENT_AFTER,
-      ]
+      ],
     );
 
     if ($result && isset($result->value)) {
@@ -452,7 +451,7 @@ class Connection extends DatabaseConnection {
       // Create a new sequence and the sequences table if it does not exists.
       $result = $this->getConnection()->{$prefixed_table}->insertOne([
         '_id' => 1,
-        'value' => $value
+        'value' => $value,
       ]);
 
       if ($result && ($result->getInsertedCount() > 0)) {
