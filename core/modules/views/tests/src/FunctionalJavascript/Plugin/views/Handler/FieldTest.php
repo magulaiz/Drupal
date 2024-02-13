@@ -100,7 +100,7 @@ class FieldTest extends WebDriverTestBase {
     $web_assert->waitForText('Content: body (exposed)');
     $this->submitForm([], 'Save');
     $web_assert->waitForText('The view Content has been saved.');
-    $this->submitForm([], 'Update preview');
+    $page->checkField('live_preview');
     // Open the custom text link modal.
     $this->assertNotNull($web_assert->waitForLink('Content link'));
     $page->clickLink('Content link');
