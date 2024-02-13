@@ -5658,11 +5658,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/TempStore/TempStoreDatabaseTest.php
 
 		-
-			message: "#^Caught class PHPUnit\\\\Framework\\\\SkippedTestError not found\\.$#"
-			count: 2
-			path: tests/Drupal/KernelTests/Core/Test/BrowserTestBaseTest.php
-
-		-
 			message: "#^@dataProvider dataSetProvider related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 2
 			path: tests/Drupal/KernelTests/Core/Test/Comparator/MarkupInterfaceComparatorTest.php
@@ -5711,11 +5706,6 @@ parameters:
 			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/KernelTestBase.php
-
-		-
-			message: "#^Caught class PHPUnit\\\\Framework\\\\SkippedTestError not found\\.$#"
-			count: 2
-			path: tests/Drupal/KernelTests/KernelTestBaseTest.php
 
 		-
 			message: "#^Call to an undefined method Drupal\\\\TestSite\\\\Commands\\\\TestSiteInstallCommand\\:\\:assertTrue\\(\\)\\.$#"
