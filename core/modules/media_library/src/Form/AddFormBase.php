@@ -675,12 +675,6 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
     foreach ($this->getAddedMediaItems($form_state) as $delta => $media) {
       EntityFormDisplay::collectRenderDisplay($media, 'media_library')
         ->extractFormValues($media, $form['media'][$delta]['fields'], $form_state);
-      foreach ($media->get($this->getSourceFieldName($media->bundle->entity)) as $file_item) {
-        // Checking whether display is NULL, if null set it as TRUE
-        if ($file_item->get('display')->getValue() == NULL) {
-          $file_item->set('display', TRUE);
-        }
-      }
       $this->prepareMediaEntityForSave($media);
       $media->save();
     }
