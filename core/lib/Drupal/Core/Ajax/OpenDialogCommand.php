@@ -79,7 +79,7 @@ class OpenDialogCommand implements CommandInterface, CommandWithAttachedAssetsIn
     else {
       $title = PlainTextOutput::renderFromHtml($title);
     }
-    
+
     $dialog_options += ['title' => $title];
     $this->selector = $selector;
     $this->content = $content;
