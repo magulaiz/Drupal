@@ -59,7 +59,7 @@ class ModuleInstallConfigTest extends BrowserTestBase {
       ->set('translation.use_source', LOCALE_TRANSLATION_USE_SOURCE_LOCAL)
       ->save();
 
-    // Check and update the translation status.
+    // Set the default language to something other than English.
     $this->drupalGet('admin/config/regional/language');
     $edit = ['site_default_language' => 'de'];
     $this->submitForm($edit, 'Save configuration');
