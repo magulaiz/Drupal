@@ -49,8 +49,7 @@ class ModuleInstallConfigTest extends BrowserTestBase {
     ]);
     $this->drupalLogin($admin_user);
 
-    // Add a language. The de translation file of locale_test_translate
-    // (test.af.po) has been prepared with a configuration translation.
+    // Add a language.
     ConfigurableLanguage::createFromLangcode('de')->save();
 
     // Enable import of translations. By default this is disabled for automated
@@ -60,8 +59,7 @@ class ModuleInstallConfigTest extends BrowserTestBase {
       ->set('translation.use_source', LOCALE_TRANSLATION_USE_SOURCE_LOCAL)
       ->save();
 
-    // Check and update the translation status. This will import the de
-    // translations of locale_test_translate module.
+    // Check and update the translation status.
     $this->drupalGet('admin/config/regional/language');
     $edit = ['site_default_language' => 'de'];
     $this->submitForm($edit, 'Save configuration');
