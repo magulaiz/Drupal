@@ -2083,11 +2083,6 @@ parameters:
 			path: modules/jsonapi/src/Revisions/VersionNegotiator.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\ConfigEntityResourceTestBase\\:\\:getName\\(\\)\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Functional/ConfigEntityResourceTestBase.php
-
-		-
 			message: "#^@dataProvider providerTestFormatAgnosticNormalizers related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: modules/jsonapi/tests/src/Functional/ExternalNormalizersTest.php
@@ -2854,11 +2849,6 @@ parameters:
 			path: modules/migrate/tests/src/Kernel/MigrateSourceTestBase.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\migrate\\\\Kernel\\\\MigrateSourceTestBase\\:\\:getName\\(\\)\\.$#"
-			count: 1
-			path: modules/migrate/tests/src/Kernel/MigrateSourceTestBase.php
-
-		-
 			message: "#^Call to an undefined static method PHPUnit\\\\Util\\\\Test\\:\\:parseTestMethodAnnotations\\(\\)\\.$#"
 			count: 1
 			path: modules/migrate/tests/src/Kernel/MigrateSourceTestBase.php
@@ -3616,11 +3606,6 @@ parameters:
 			message: "#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#"
 			count: 1
 			path: modules/responsive_image/tests/src/Unit/ResponsiveImageStyleConfigEntityUnitTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\rest\\\\Functional\\\\EntityResource\\\\ConfigEntityResourceTestBase\\:\\:getName\\(\\)\\.$#"
-			count: 1
-			path: modules/rest/tests/src/Functional/EntityResource/ConfigEntityResourceTestBase.php
 
 		-
 			message: "#^Variable \\$created_entity might not be defined\\.$#"
@@ -5194,11 +5179,6 @@ parameters:
 			path: tests/Drupal/BuildTests/Composer/Template/ComposerProjectTemplatesTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\BuildTests\\\\Framework\\\\BuildTestBase\\:\\:getName\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/BuildTests/Framework/BuildTestBase.php
-
-		-
 			message: "#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#"
 			count: 2
 			path: tests/Drupal/BuildTests/Framework/Tests/BuildTestTest.php
@@ -5723,11 +5703,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/TypedData/TypedDataTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\KernelTestBase\\:\\:getName\\(\\)\\.$#"
-			count: 4
-			path: tests/Drupal/KernelTests/KernelTestBase.php
-
-		-
 			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\KernelTestBase\\:\\:getTestResultObject\\(\\)\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/KernelTestBase.php
@@ -5776,11 +5751,6 @@ parameters:
 			message: "#^Access to private property \\$factory of parent class SebastianBergmann\\\\Comparator\\\\Comparator\\.$#"
 			count: 1
 			path: tests/Drupal/TestTools/Comparator/MarkupInterfaceComparator.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\BrowserTestBase\\:\\:getName\\(\\)\\.$#"
-			count: 4
-			path: tests/Drupal/Tests/BrowserTestBase.php
 
 		-
 			message: "#^Call to an undefined static method PHPUnit\\\\Util\\\\Test\\:\\:getMissingRequirements\\(\\)\\.$#"
@@ -6535,16 +6505,6 @@ parameters:
 			path: tests/Drupal/Tests/Composer/Plugin/ProjectMessage/ConfigTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Composer\\\\Plugin\\\\Scaffold\\\\Functional\\\\ComposerHookTest\\:\\:getName\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Composer/Plugin/Scaffold/Functional/ComposerHookTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Composer\\\\Plugin\\\\Scaffold\\\\Functional\\\\ManageGitIgnoreTest\\:\\:getName\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Composer/Plugin/Scaffold/Functional/ManageGitIgnoreTest.php
-
-		-
 			message: "#^@dataProvider scaffoldAppendTestValues related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Composer/Plugin/Scaffold/Functional/ScaffoldTest.php
@@ -6558,16 +6518,6 @@ parameters:
 			message: "#^@dataProvider scaffoldOverridingSettingsExcludingHtaccessValues related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Composer/Plugin/Scaffold/Functional/ScaffoldTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Composer\\\\Plugin\\\\Scaffold\\\\Functional\\\\ScaffoldTest\\:\\:getName\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Composer/Plugin/Scaffold/Functional/ScaffoldTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Composer\\\\Plugin\\\\Scaffold\\\\Functional\\\\ScaffoldUpgradeTest\\:\\:getName\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Composer/Plugin/Scaffold/Functional/ScaffoldUpgradeTest.php
 
 		-
 			message: "#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#"
