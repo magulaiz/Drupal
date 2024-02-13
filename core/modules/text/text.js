@@ -15,7 +15,8 @@
   Drupal.behaviors.textSummary = {
     attach(context, settings) {
       once('text-summary', '.js-text-summary', context).forEach((summary) => {
-        const $widget = $(summary).closest('.js-text-format-wrapper');
+        const widgetEl = summary.closest('.js-text-format-wrapper');
+        const $widget = $(widgetEl);
 
         const $summary = $widget.find('.js-text-summary-wrapper');
         const $summaryLabel = $summary.find('label').eq(0);
