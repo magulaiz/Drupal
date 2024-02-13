@@ -86,7 +86,6 @@ class VideoUploadTest extends BrowserTestBase {
     $this->drupalLogin($this->rootUser);
   }
 
-
   /**
    * Tests using drupalMedia button to embed media into CKEditor 5.
    */
@@ -95,7 +94,7 @@ class VideoUploadTest extends BrowserTestBase {
 
     // Enabling advanced UI inside Media Library settings, helps to add 'Save and insert' button.
     $config = \Drupal::configFactory()->getEditable('media_library.settings');
-    $config->set('advanced_ui', true)->save();
+    $config->set('advanced_ui', TRUE)->save();
     \Drupal::service('plugin.cache_clearer')->clearCachedDefinitions();
 
     // Create a video asset.
@@ -103,9 +102,9 @@ class VideoUploadTest extends BrowserTestBase {
 
     // Disabling "Display" field option.
     FieldStorageConfig::load('media.field_media_video_file')
-    ->setSetting('display_field', FALSE)
-    ->setSetting('display_default', FALSE)
-    ->save();
+      ->setSetting('display_field', FALSE)
+      ->setSetting('display_default', FALSE)
+      ->save();
 
     // Adding a video media to the editor and checking for video element.
     $this->drupalGet('/node/add/blog');
@@ -116,7 +115,7 @@ class VideoUploadTest extends BrowserTestBase {
       'Media url not found inside the node adding page.'
     );
     $media_library_url = $settings['editor']['formats']['test_format']['editorSettings']['config']['drupalMedia']['libraryURL'];
-    $this->getSession()->getDriver()->getClient()->request('POST', $media_library_url, ['js' => true, '_drupal_ajax' => 1]);
+    $this->getSession()->getDriver()->getClient()->request('POST', $media_library_url, ['js' => TRUE, '_drupal_ajax' => 1]);
     $this->assertSession()->statusCodeEquals(200);
     $edit = [
       'files[upload][]' => \Drupal::service('file_system')->realpath('public://file.mp4'),
@@ -127,12 +126,11 @@ class VideoUploadTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->elementExists('xpath', $video_element_xpath);
 
-
     // Enabling "Display" field option.
     FieldStorageConfig::load('media.field_media_video_file')
-    ->setSetting('display_field', TRUE)
-    ->setSetting('display_default', TRUE)
-    ->save();
+      ->setSetting('display_field', TRUE)
+      ->setSetting('display_default', TRUE)
+      ->save();
 
     // Adding a video media to the editor and checking for video element.
     $this->drupalGet('/node/add/blog');
@@ -143,7 +141,7 @@ class VideoUploadTest extends BrowserTestBase {
       'Media url not found inside the node adding page.'
     );
     $media_library_url = $settings['editor']['formats']['test_format']['editorSettings']['config']['drupalMedia']['libraryURL'];
-    $this->getSession()->getDriver()->getClient()->request('POST', $media_library_url, ['js' => true, '_drupal_ajax' => 1]);
+    $this->getSession()->getDriver()->getClient()->request('POST', $media_library_url, ['js' => TRUE, '_drupal_ajax' => 1]);
     $this->assertSession()->statusCodeEquals(200);
     $edit = [
       'files[upload][]' => \Drupal::service('file_system')->realpath('public://file.mp4'),
@@ -184,9 +182,9 @@ class VideoUploadTest extends BrowserTestBase {
       'type' => 'file_video',
       'label' => 'visually_hidden',
     ])->removeComponent('thumbnail')
-    ->removeComponent('uid')
-    ->removeComponent('created')
-    ->save();
+      ->removeComponent('uid')
+      ->removeComponent('created')
+      ->save();
 
     // Create media_library display mode for the entity.
     EntityFormDisplay::create([
