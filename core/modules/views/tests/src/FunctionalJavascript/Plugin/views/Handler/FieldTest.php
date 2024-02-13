@@ -87,9 +87,10 @@ class FieldTest extends WebDriverTestBase {
     $url = '/admin/structure/views/view/content';
     $this->drupalGet($url);
     $page = $this->getSession()->getPage();
-    // Open the 'Add filter dialog'.
+    // Open the 'Add fields dialog'.
     $page->clickLink('views-add-field');
     $web_assert->waitForField('name[views.nothing]');
+    // Select the custom text field.
     $page->checkField('name[views.nothing]');
     $page->find('css', '.ui-dialog .ui-dialog-buttonset')->pressButton('Add and configure fields');
     $web_assert->waitForField('options[alter][text]');
@@ -99,8 +100,10 @@ class FieldTest extends WebDriverTestBase {
     $web_assert->waitForText('Content: body (exposed)');
     $this->submitForm([], 'Save');
     $this->submitForm([], 'Update preview');
+    // Open the custom text link modal.
     $web_assert->waitForLink('Content link');
     $page->clickLink('Content link');
+    // Verify the modal title.
     $this->assertEquals('Content', $this->assertSession()->waitForElement('css', '.ui-dialog-title')->getText());
   }
 
