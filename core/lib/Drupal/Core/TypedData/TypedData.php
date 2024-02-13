@@ -41,10 +41,17 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
   protected $parent;
 
   /**
+   * The data value.
+   *
+   * @var mixed
+   */
+  protected $value;
+
+  /**
    * {@inheritdoc}
    */
-  public static function createInstance($definition, $name = NULL, ?TraversableTypedDataInterface $parent = NULL) {
-    return new static($definition, $name, $parent);
+  public static function createInstance($definition, $name = NULL, ?TraversableTypedDataInterface $parent = NULL, $value = NULL) {
+    return new static($definition, $name, $parent, $value);
   }
 
   /**
@@ -58,13 +65,16 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
    * @param \Drupal\Core\TypedData\TypedDataInterface $parent
    *   (optional) The parent object of the data property, or NULL if it is the
    *   root of a typed data tree. Defaults to NULL.
+   * @param mixed $value
+   *   The data value.
    *
    * @see \Drupal\Core\TypedData\TypedDataManager::create()
    */
-  public function __construct(DataDefinitionInterface $definition, $name = NULL, ?TypedDataInterface $parent = NULL) {
+  public function __construct(DataDefinitionInterface $definition, $name = NULL, ?TypedDataInterface $parent = NULL, $value = NULL) {
     $this->definition = $definition;
     $this->parent = $parent;
     $this->name = $name;
+    $this->value = $value;
   }
 
   /**
