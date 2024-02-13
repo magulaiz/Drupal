@@ -282,7 +282,7 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
     // After the contextual link opens the dialog, move the mouse pointer
     // elsewhere on the page. If mouse up were not working correctly this would
     // actually drag the body field too.
-    $this->movePointerTo('#iframe-that-should-be-disabled');
+    $this->getSession()->getDriver()->mouseOver('.//*[@id="iframe-that-should-be-disabled"]');
 
     $new_body_block_bottom_position = $this->getElementVerticalPosition($body_field_selector, 'bottom');
     $iframe_top_position = $this->getElementVerticalPosition('#iframe-that-should-be-disabled', 'top');
@@ -315,18 +315,6 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
   protected function getElementVerticalPosition($css_selector, $position_type) {
     $this->assertContains($position_type, ['top', 'bottom'], 'Expected position type.');
     return (int) $this->getSession()->evaluateScript("document.querySelector('$css_selector').getBoundingClientRect().$position_type + window.pageYOffset");
-  }
-
-  /**
-   * Moves mouse pointer to location of $selector.
-   *
-   * @param string $selector
-   *   CSS selector.
-   */
-  protected function movePointerTo($selector) {
-    $driver_session = $this->getSession()->getDriver()->getWebDriverSession();
-    $element = $driver_session->element('css selector', $selector);
-    $driver_session->moveto(['element' => $element->getID()]);
   }
 
 }
