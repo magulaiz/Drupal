@@ -71,7 +71,7 @@ class WhoIsOnlineBlockTest extends KernelTestBase {
   /**
    * Tests the Who's Online block.
    */
-  public function testWhosOnlineBlock() {
+  public function testWhoIsOnlineBlock() {
     // Generate users.
     $user1 = User::create([
       'name' => 'user1',
