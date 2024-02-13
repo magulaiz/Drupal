@@ -60,9 +60,7 @@ class ModuleInstallConfigTest extends BrowserTestBase {
       ->save();
 
     // Set the default language to something other than English.
-    $this->drupalGet('admin/config/regional/language');
-    $edit = ['site_default_language' => 'de'];
-    $this->submitForm($edit, 'Save configuration');
+    $this->config('system.site')->set('default_langcode', 'de')->save();
 
     $this->importPoFile($this->getPoFileWithConfigDe(), 'de');
     // Install book module to test the configuration language code.
