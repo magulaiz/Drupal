@@ -24,9 +24,10 @@
           'click',
           ({ currentTarget }) => {
             // Toggle all checkboxes.
-            const $checkboxes = $(currentTarget)
-              .closest('.js-media-library-view')
-              .find('.js-media-library-item input[type="checkbox"]');
+            const closestEl = currentTarget.closest('.js-media-library-view');
+            const $checkboxes = $(closestEl).find(
+              '.js-media-library-item input[type="checkbox"]',
+            );
             $checkboxes
               .prop('checked', $(currentTarget).prop('checked'))
               .trigger('change');
