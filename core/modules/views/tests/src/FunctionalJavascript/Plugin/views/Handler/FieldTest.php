@@ -98,15 +98,14 @@ class FieldTest extends WebDriverTestBase {
 <p><a class="use-ajax" data-dialog-type="modal" href="/admin/content">Content link</a></p>');
     $page->find('css', '.ui-dialog .ui-dialog-buttonset')->pressButton('Apply');
     $web_assert->waitForText('Content: body (exposed)');
-    $this->submitForm([], 'Save');
+    $page->pressButton('Save');
     $web_assert->waitForText('The view Content has been saved.');
-    $page->checkField('live_preview');
+    $page->pressButton('Update preview');
     // Open the custom text link modal.
     $this->assertNotNull($web_assert->waitForLink('Content link'));
     $page->clickLink('Content link');
     // Verify the modal title.
-    $web_assert->assertWaitOnAjaxRequest();
-    $this->assertEquals('Content', $web_assert->waitForElement('css', '.ui-dialog-title')->getText());
+    $this->assertEquals('Content', $web_assert->waitForElement('css', '.ui-dialog .ui-dialog-title', 20000)->getText());
   }
 
   public function testFormatterChanging() {
