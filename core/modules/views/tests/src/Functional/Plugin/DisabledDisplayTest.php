@@ -88,6 +88,11 @@ class DisabledDisplayTest extends ViewTestBase {
     $this->drupalGet('test-disabled-display-2');
     $this->assertSession()->elementTextEquals('xpath', '//h1[@class="page-title"]', 'test_disabled_display');
 
+    // Confirm that the block is available in the block administration UI.
+    $this->drupalGet('admin/structure/block/list/' . $this->config('system.theme')->get('default'));
+    $this->clickLink('Place block');
+    $this->assertSession()->pageTextContains('test_disabled_display');
+
     // Disable each disabled display and save the view.
     foreach ($display_ids as $display_id) {
       $view->getExecutable()->displayHandlers->get($display_id)->setOption('enabled', FALSE);
@@ -105,6 +110,11 @@ class DisabledDisplayTest extends ViewTestBase {
     // Check that the page_2 display is now disabled again.
     $this->drupalGet('test-disabled-display-2');
     $this->assertSession()->statusCodeEquals(404);
+
+    // Confirm that the block is not available in the block administration UI.
+    $this->drupalGet('admin/structure/block/list/' . $this->config('system.theme')->get('default'));
+    $this->clickLink('Place block');
+    $this->assertSession()->pageTextNotContains('test_disabled_display');
   }
 
 }
