@@ -44,6 +44,7 @@ class ModuleInstallConfigTest extends BrowserTestBase {
       'administer account settings',
       'administer nodes',
       'administer content types',
+      'translate interface',
     ]);
     $this->drupalLogin($admin_user);
 
@@ -57,13 +58,6 @@ class ModuleInstallConfigTest extends BrowserTestBase {
       ->set('translation.import_enabled', TRUE)
       ->set('translation.use_source', LOCALE_TRANSLATION_USE_SOURCE_LOCAL)
       ->save();
-
-    // Add translation permissions now that the locale module has been enabled.
-    $edit = [
-      'authenticated[translate interface]' => 'translate interface',
-    ];
-    $this->drupalGet('admin/people/permissions');
-    $this->submitForm($edit, 'Save permissions');
 
     // Check and update the translation status. This will import the de
     // translations of locale_test_translate module.
