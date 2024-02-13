@@ -73,7 +73,12 @@ class OpenDialogCommand implements CommandInterface, CommandWithAttachedAssetsIn
    *   populated automatically from the current request.
    */
   public function __construct($selector, $title, $content, array $dialog_options = [], $settings = NULL) {
-    $title = PlainTextOutput::renderFromHtml($title);
+    if (is_array($title)) {
+      $title = \Drupal::service('renderer')->renderPlain($title);
+    }
+    else {
+      $title = PlainTextOutput::renderFromHtml($title);
+    }
     $dialog_options += ['title' => $title];
     $this->selector = $selector;
     $this->content = $content;
