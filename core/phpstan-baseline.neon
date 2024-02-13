@@ -5708,21 +5708,6 @@ parameters:
 			path: tests/Drupal/KernelTests/KernelTestBase.php
 
 		-
-			message: "#^Call to an undefined static method PHPUnit\\\\Util\\\\Test\\:\\:getMissingRequirements\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/KernelTestBase.php
-
-		-
-			message: "#^Call to an undefined static method PHPUnit\\\\Util\\\\Test\\:\\:parseTestMethodAnnotations\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/KernelTestBase.php
-
-		-
-			message: "#^Instantiated class PHPUnit\\\\Framework\\\\SkippedTestError not found\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/KernelTestBase.php
-
-		-
 			message: "#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/KernelTestBase.php
@@ -5753,16 +5738,6 @@ parameters:
 			path: tests/Drupal/TestTools/Comparator/MarkupInterfaceComparator.php
 
 		-
-			message: "#^Call to an undefined static method PHPUnit\\\\Util\\\\Test\\:\\:getMissingRequirements\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/BrowserTestBase.php
-
-		-
-			message: "#^Call to an undefined static method PHPUnit\\\\Util\\\\Test\\:\\:parseTestMethodAnnotations\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/BrowserTestBase.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: tests/Drupal/Tests/BrowserTestBase.php
@@ -5772,11 +5747,6 @@ parameters:
 				#^Call to deprecated method getConfig\\(\\) of class GuzzleHttp\\\\Client\\:
 				Client\\:\\:getConfig will be removed in guzzlehttp/guzzle\\:8\\.0\\.$#
 			"""
-			count: 1
-			path: tests/Drupal/Tests/BrowserTestBase.php
-
-		-
-			message: "#^Instantiated class PHPUnit\\\\Framework\\\\SkippedTestError not found\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/BrowserTestBase.php
 
