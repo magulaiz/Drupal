@@ -1663,11 +1663,9 @@
       const $selector = $(response.selector).find(
         '> tbody > tr:visible, > tr:visible',
       );
-
       $selector.toArray().forEach((element) => {
-        element.classList.removeClass('odd', 'even');
+        element.classList.remove('odd', 'even');
       });
-
       $selector
         .filter(':even')
         .toArray()
@@ -1676,6 +1674,7 @@
         });
 
       $selector
+        .filter(':even')
         .end()
         .filter(':odd')
         .toArray()
