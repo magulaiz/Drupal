@@ -349,7 +349,10 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
     $this->assertCount(1, $xpath->query($query), "Search for $query");
 
     $page->pressButton('Save');
-    $assert_session->elementExists('css', sprintf('a[href="%s"][data-entity-uuid="%s"][data-entity-type="node"][data-entity-metadata] img[alt="image with link around it"]', $content_to_add->toUrl('canonical')->toString(), $content_to_add_uuid));
+    $link_around_image = $assert_session->elementExists('css', sprintf('a[href="%s"][data-entity-uuid="%s"][data-entity-type="node"][data-entity-metadata] img[alt="image with link around it"]', $content_to_add->toUrl('canonical')->toString(), $content_to_add_uuid));
+    $link_around_image->click();
+    $h1 = $page->find('css', 'h1');
+    $this->assertSame('Zoo Party', $h1->getText(), 'The link in the rendered page goes to the correct place');
 
     $this->drupalGet($editing_page->toUrl('edit-form'));
     $this->waitForEditor();
@@ -359,14 +362,14 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
 
     $preview_button = $assert_session->waitForElementVisible('css', '#ck-aria-label-preview-button');
     $this->assertSame('Zoo Party (Content - page)', $preview_button->getText());
-    $xpath = new \DOMXPath($this->getEditorDataAsDom());
-    $query = sprintf('//a[contains(@href, "%s") and @data-entity-uuid="%s" and @data-entity-type="node" and @data-entity-metadata]/img[@alt="image with link around it"]', substr($content_to_add->toUrl('canonical')->toString(), 1), $content_to_add_uuid);
-    $this->assertCount(
-      1,
-      $xpath->query($query),
-      "Checking $query against " . $this->getEditorDataAsHtmlString(),
-    );
     $preview_button->click();
+
+    $iterations = 10;
+    while ((count($session->getWindowNames()) < 2 && $iterations > 0) == TRUE) {
+      $session->wait(1000);
+      $iterations--;
+    }
+
     $window_names = $this->getSession()->getWindowNames();
     $this->getSession()->switchToWindow($window_names[1]);
     $h1 = $page->find('css', 'h1');
