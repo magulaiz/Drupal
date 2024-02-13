@@ -89,7 +89,9 @@ class DrupalEntityLinkSuggestions extends Plugin {
                 .getAttribute('drupalLinkEntityMetadata'),
             );
             if (entityMetadata.path) {
-              return `/${entityMetadata.path.replace('entity:', '')}`;
+              return `${
+                drupalSettings.path.baseUrl
+              }${entityMetadata.path.replace('entity:', '')}`;
             }
           } else if (selection.hasAttribute('data-entity-metadata')) {
             // If the active selection is the link itself, the metadata is
@@ -98,13 +100,18 @@ class DrupalEntityLinkSuggestions extends Plugin {
               selection.getAttribute('data-entity-metadata'),
             );
             if (entityMetadata.path) {
-              return `/${entityMetadata.path.replace('entity:', '')}`;
+              return `${
+                drupalSettings.path.baseUrl
+              }${entityMetadata.path.replace('entity:', '')}`;
             }
           }
 
           // If path is not available via metadata, use the hrefValue directly.
           if (hrefValue && hrefValue.startsWith('entity:')) {
-            return `/${hrefValue.replace('entity:', '')}`;
+            return `${drupalSettings.path.baseUrl}/${hrefValue.replace(
+              'entity:',
+              '',
+            )}`;
           }
 
           return hrefValue;
