@@ -5,6 +5,7 @@ namespace Drupal\big_pipe\Render;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\MessageCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\Core\Asset\AttachedAssetsInterface;
@@ -593,6 +594,15 @@ class BigPipe {
           $big_pipe_js_placeholder_id = Html::decodeEntities($placeholder_id);
           $ajax_response->addCommand(new ReplaceCommand(sprintf('[data-big-pipe-placeholder-id="%s"]', $big_pipe_js_placeholder_id), $elements['#markup']));
           $ajax_response->setAttachments($elements['#attached']);
+
+          // Collect any messages set by the placeholder.
+          // @todo: injection.
+          $messages = \Drupal::messenger()->deleteAll();
+          foreach ($messages as $type => $type_messages) {
+            foreach ($type_messages as $message) {
+              $ajax_response->addCommand(new MessageCommand($message, NULL, ['type' => $type], FALSE));
+            }
+          }
 
           // Push a fake request with the asset libraries loaded so far and
           // dispatch KernelEvents::RESPONSE event. This results in the
