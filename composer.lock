@@ -495,7 +495,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "5b1a25fcd06a972559bc983ad99a98b3b1faa249"
+                "reference": "52e04d4f59d5d77f898e4a3d2a63c1d809f139f7"
             },
             "require": {
                 "asm89/stack-cors": "^2.1",
@@ -630,7 +630,8 @@
                     "lib/Drupal/Core/DrupalKernel.php",
                     "lib/Drupal/Core/DrupalKernelInterface.php",
                     "lib/Drupal/Core/Installer/InstallerRedirectTrait.php",
-                    "lib/Drupal/Core/Site/Settings.php"
+                    "lib/Drupal/Core/Site/Settings.php",
+                    "lib/Drupal/Component/Datetime/Time.php"
                 ],
                 "files": [
                     "includes/bootstrap.inc"
