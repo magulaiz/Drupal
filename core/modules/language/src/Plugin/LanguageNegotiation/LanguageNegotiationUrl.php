@@ -126,6 +126,9 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
   public function processOutbound($path, &$options = [], ?Request $request = NULL, ?BubbleableMetadata $bubbleable_metadata = NULL) {
     $url_scheme = 'http';
     $port = 80;
+    global $base_url;
+    $url_scheme = parse_url($base_url, PHP_URL_SCHEME);
+    $port = $url_scheme === 'https' ? 443 : 80;
     if ($request) {
       $url_scheme = $request->getScheme();
       $port = $request->getPort();
