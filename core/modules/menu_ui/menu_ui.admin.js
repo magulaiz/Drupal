@@ -44,6 +44,9 @@
       dataType: 'json',
       success(options) {
         const $select = $('#edit-menu-parent');
+        const closestDiv = document
+          .querySelector('#edit-menu-parent')
+          .closest('div');
         // Save key of last selected element.
         const selected = $select[0].value;
         // Remove all existing options from dropdown.
@@ -60,8 +63,7 @@
         });
 
         // Hide the parent options if there are no options for it.
-        $select
-          .closest('div')
+        $(closestDiv)
           .toggle(totalOptions > 0)
           .attr('hidden', totalOptions === 0);
       },
