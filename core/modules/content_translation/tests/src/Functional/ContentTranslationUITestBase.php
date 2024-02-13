@@ -328,7 +328,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
       $user = $this->drupalCreateUser();
       $values[$langcode] = [
         'uid' => $user->id(),
-        'created' => $this->requestTime - mt_rand(0, 1000),
+        'created' => REQUEST_TIME - mt_rand(0, 1000),
       ];
       $edit = [
         'content_translation[uid]' => $user->getAccountName(),
