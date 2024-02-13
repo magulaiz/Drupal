@@ -75,24 +75,16 @@ class ContentEntityChangedTest extends EntityKernelTestBase {
     ]);
     $entity->save();
 
-    // We explicitly use $_SERVER['REQUEST_TIME'] here instead of
-    // $this->requestTime, which is set too far back in the chain, leaving us
-    // with a time difference of 1-3 seconds.
-    $this->assertTrue(
-      $entity->getChangedTime() >= $_SERVER['REQUEST_TIME'],
-      'Changed time of original language is valid.'
-    );
+    $requestTime = \Drupal::time()->getRequestTime();
+    $this->assertGreaterThanOrEqual($requestTime, $entity->getChangedTime(), 'Changed time of original language is valid.');
 
     // We can't assert equality here because the created time is set to the
     // request time, while instances of ChangedTestItem use the current
     // timestamp every time. Therefore we check if the changed timestamp is
     // between the created time and now.
-    // We explicitly use $_SERVER['REQUEST_TIME'] here instead of
-    // $this->requestTime, which is set too far back in the chain, leaving us
-    // with a time difference of 1-3 seconds.
     $this->assertTrue(
       ($entity->getChangedTime() >= $entity->get('created')->value) &&
-      (($entity->getChangedTime() - $entity->get('created')->value) <= time() - $_SERVER['REQUEST_TIME']),
+      (($entity->getChangedTime() - $entity->get('created')->value) <= time() - $requestTime),
       'Changed and created time of original language can be assumed to be identical.'
     );
 

@@ -328,10 +328,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $this->assertArrayHasKey('test7', $ret, "Existing cache id test7 is set.");
     // Test return - ensure that objects has expected properties.
     $this->assertTrue($ret['test2']->valid, 'Item is marked as valid.');
-    // We explicitly use $_SERVER['REQUEST_TIME'] here instead of
-    // $this->requestTime, which is set too far back in the chain, leaving us
-    // with a time difference of 1-3 seconds.
-    $this->assertGreaterThanOrEqual($_SERVER['REQUEST_TIME'], $ret['test2']->created);
+    $this->assertGreaterThanOrEqual(\Drupal::time()->getRequestTime(), $ret['test2']->created);
     $this->assertLessThanOrEqual(round(microtime(TRUE), 3), $ret['test2']->created);
     $this->assertEquals(Cache::PERMANENT, $ret['test2']->expire, 'Expire time is correct.');
     // Test return - ensure it does not contain nonexistent cache ids.
@@ -410,10 +407,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
 
     $this->assertEquals($items['cid_1']['data'], $cached['cid_1']->data, 'Over-written cache item set correctly.');
     $this->assertTrue($cached['cid_1']->valid, 'Item is marked as valid.');
-    // We explicitly use $_SERVER['REQUEST_TIME'] here instead of
-    // $this->requestTime, which is set too far back in the chain, leaving us
-    // with a time difference of 1-3 seconds.
-    $this->assertGreaterThanOrEqual($_SERVER['REQUEST_TIME'], $cached['cid_1']->created);
+    $this->assertGreaterThanOrEqual(\Drupal::time()->getRequestTime(), $cached['cid_1']->created);
     $this->assertLessThanOrEqual(round(microtime(TRUE), 3), $cached['cid_1']->created);
     $this->assertEquals(CacheBackendInterface::CACHE_PERMANENT, $cached['cid_1']->expire, 'Cache expiration defaults to permanent.');
 
