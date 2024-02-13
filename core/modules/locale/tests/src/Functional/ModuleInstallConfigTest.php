@@ -3,6 +3,7 @@
 namespace Drupal\Tests\locale\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\locale\Gettext;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -65,7 +66,7 @@ class ModuleInstallConfigTest extends BrowserTestBase {
     $edit = ['site_default_language' => 'de'];
     $this->submitForm($edit, 'Save configuration');
 
-    $this->importPoFile($this->getPoFileWithConfigDe(), ['langcode' => 'de']);
+    $this->importPoFile($this->getPoFileWithConfigDe(), 'de');
     // Install book module to test the configuration language code.
     $this->drupalGet('admin/modules');
     $edit = ['modules[book][enable]' => TRUE];
@@ -81,16 +82,21 @@ class ModuleInstallConfigTest extends BrowserTestBase {
    *
    * @param string $contents
    *   Contents of the .po file to import.
-   * @param array $options
-   *   (optional) Additional options to pass to the translation import form.
+   * @param string $langcode
+   *   The langcode for the .po file.
    */
-  public function importPoFile(string $contents, array $options = []): void {
+  public function importPoFile(string $contents, string $langcode): void {
     $file_system = \Drupal::service('file_system');
     $name = $file_system->tempnam('temporary://', "po_") . '.po';
     file_put_contents($name, $contents);
-    $options['files[file]'] = $name;
-    $this->drupalGet('admin/config/regional/translate/import');
-    $this->submitForm($options, 'Import');
+
+    $file = (object) [
+      'langcode' => $langcode,
+      'uri' => $name,
+    ];
+
+    Gettext::fileToDatabase($file, []);
+
     $file_system->unlink($name);
   }
 
