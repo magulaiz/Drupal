@@ -74,7 +74,6 @@ class ModuleInstallConfigTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/types/manage/book');
     $this->drupalGet('/en/admin/structure/types/manage/book');
     $this->assertSession()->fieldValueEquals('name', 'Book page');
-
   }
 
   /**
