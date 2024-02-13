@@ -10,6 +10,7 @@ use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\HtmlResponse;
 use Drupal\Core\Render\RendererInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -206,29 +207,17 @@ class BigPipe {
    */
   protected $configFactory;
 
-  /**
-   * Constructs a new BigPipe class.
-   *
-   * @param \Drupal\Core\Render\RendererInterface $renderer
-   *   The renderer.
-   * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
-   *   The session.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
-   *   The request stack.
-   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
-   *   The HTTP kernel.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
-   *   The event dispatcher.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The config factory.
-   */
-  public function __construct(RendererInterface $renderer, SessionInterface $session, RequestStack $request_stack, HttpKernelInterface $http_kernel, EventDispatcherInterface $event_dispatcher, ConfigFactoryInterface $config_factory) {
+  public function __construct(RendererInterface $renderer, SessionInterface $session, RequestStack $request_stack, HttpKernelInterface $http_kernel, EventDispatcherInterface $event_dispatcher, ConfigFactoryInterface $config_factory, protected ?MessengerInterface $messenger = NULL) {
     $this->renderer = $renderer;
     $this->session = $session;
     $this->requestStack = $request_stack;
     $this->httpKernel = $http_kernel;
     $this->eventDispatcher = $event_dispatcher;
     $this->configFactory = $config_factory;
+    if (!isset($this->messenger)) {
+      @trigger_error('Calling ' . __CLASS__ . '::_construct() without the $messenger argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3343754', E_USER_DEPRECATED);
+      $this->messenger = \Drupal::messenger();
+    }
   }
 
   /**
@@ -582,9 +571,7 @@ class BigPipe {
           $ajax_response->addCommand(new ReplaceCommand(sprintf('[data-big-pipe-placeholder-id="%s"]', $big_pipe_js_placeholder_id), $elements['#markup']));
           $ajax_response->setAttachments($elements['#attached']);
 
-          // Collect any messages set by the placeholder.
-          // @todo: injection.
-          $messages = \Drupal::messenger()->deleteAll();
+          $messages = $this->messenger->deleteAll();
           foreach ($messages as $type => $type_messages) {
             foreach ($type_messages as $message) {
               $ajax_response->addCommand(new MessageCommand($message, NULL, ['type' => $type], FALSE));
