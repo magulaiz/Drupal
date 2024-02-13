@@ -127,7 +127,7 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
     $url_scheme = 'http';
     $port = 80;
     global $base_url;
-    $url_scheme = parse_url($base_url, PHP_URL_SCHEME);
+    $url_scheme = $base_url ? parse_url($base_url, PHP_URL_SCHEME) : 'http';
     $port = $url_scheme === 'https' ? 443 : 80;
     if ($request) {
       $url_scheme = $request->getScheme();
