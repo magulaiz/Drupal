@@ -68,7 +68,7 @@
         if (
           ajaxContainer.length &&
           (document.activeElement === document.body ||
-            Drupal.elementIsHidden(document.activeElement))
+            $(document.activeElement).not(':not([style*="display: none"])'))
         ) {
           const focusableChildren = focusable(ajaxContainer[0]);
           if (focusableChildren.length > 0) {
