@@ -698,7 +698,7 @@ function ckeditor5_editor_presave(EditorInterface $editor) {
     }
 
     // @see ckeditor5_post_update_list_type()
-    if (array_key_exists('ckeditor5_list', $settings['plugins']) && array_key_exists('ckeditor5_sourceEditing', $settings['plugins']) && !array_key_exists('styles', $settings['plugins']['ckeditor5_list']['properties'])) {
+    if (array_key_exists('ckeditor5_list', $settings['plugins']) && array_key_exists('ckeditor5_sourceEditing', $settings['plugins'])) {
       $source_edited = HTMLRestrictions::fromString(implode(' ', $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']));
       $format_restrictions = HTMLRestrictions::fromTextFormat($editor->getFilterFormat());
 
@@ -708,23 +708,27 @@ function ckeditor5_editor_presave(EditorInterface $editor) {
       // "styles" setting for the List plugin to false.
       $ol_type = HTMLRestrictions::fromString('<ol type>');
       $ul_type = HTMLRestrictions::fromString('<ul type>');
-      if (
-        !$ol_type->diff($source_edited)->allowsNothing()
-        && !$ul_type->diff($source_edited)->allowsNothing()
-        && !$format_restrictions->isUnrestricted()
-      ) {
-        $settings['plugins']['ckeditor5_list']['properties']['styles'] = FALSE;
+      if (!array_key_exists('styles', $settings['plugins']['ckeditor5_list']['properties'])) {
+        if (
+          !$ol_type->diff($source_edited)->allowsNothing()
+          && !$ul_type->diff($source_edited)->allowsNothing()
+          && !$format_restrictions->isUnrestricted()
+        ) {
+          $settings['plugins']['ckeditor5_list']['properties']['styles'] = FALSE;
+        }
+        // Otherwise, if this is a restricted text format and either <ol type> or
+        // <ul type> is allowed through Source Editing, remove them from the
+        // Source Editing configuration and instead enable the native UI.
+        else {
+          $settings['plugins']['ckeditor5_list']['properties']['styles'] = TRUE;
+        }
       }
-      // Otherwise, if this is a restricted text format and either <ol type> or
-      // <ul type> is allowed through Source Editing, remove them from the
-      // Source Editing configuration and instead enable the native UI.
-      else {
-        $settings['plugins']['ckeditor5_list']['properties']['styles'] = TRUE;
-        $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = $source_edited
-          ->diff($ol_type)
-          ->diff($ul_type)
-          ->toCKEditor5ElementsArray();
-      }
+
+      // Update the Source Editing configuration too.
+      $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = $source_edited
+        ->diff($ol_type)
+        ->diff($ul_type)
+        ->toCKEditor5ElementsArray();
     }
 
     $editor->setSettings($settings);

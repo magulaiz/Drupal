@@ -675,7 +675,7 @@ JS;
     $numbered_list_dropdown_selector = '.ck-splitbutton__arrow';
 
     // Check that there is no dropdown available for the numbered list because
-    // both reversed and startIndex are FALSE.
+    // reversed, startIndex and styles are FALSE.
     $assert_session->elementNotExists('css', $numbered_list_dropdown_selector);
     // Save content so source content is kept after changing the editor config.
     $page->pressButton('Save');
