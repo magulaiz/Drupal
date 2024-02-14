@@ -31,7 +31,7 @@ class UpdateDeleteFileIfStaleTest extends KernelTestBase {
 
     // During testing, the file change and the stale checking occurs in the same
     // request, so the beginning of request will be before the file changes and
-    // $this->requestTime - $filectime is negative or zero.
+    // \Drupal::time()->getRequestTime() - $filectime is negative or zero.
     // Set the maximum age to a number even smaller than that.
     $this->config('system.file')
       ->set('temporary_maximum_age', 100000)
