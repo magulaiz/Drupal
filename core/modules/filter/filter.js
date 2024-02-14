@@ -15,25 +15,29 @@
   Drupal.behaviors.filterGuidelines = {
     attach(context) {
       function updateFilterGuidelines(event) {
-        const $this = $(event.target);
+        const target = event.target;
         const { value } = event.target;
+        const closestEl = target.closest('.js-filter-wrapper');
+        const $this = $(closestEl);
         $this
-          .closest('.js-filter-wrapper')
           .find('[data-drupal-format-id]')
           .hide()
           .filter(`[data-drupal-format-id="${value}"]`)
           .show();
       }
 
-      $(once('filter-guidelines', '.js-filter-guidelines', context))
-        .find(':header')
-        .hide()
-        .closest('.js-filter-wrapper')
-        .find('select.js-filter-list')
-        .on('change.filterGuidelines', updateFilterGuidelines)
-        // Need to trigger the namespaced event to avoid triggering formUpdated
-        // when initializing the select.
-        .trigger('change.filterGuidelines');
+      const filter = ('filter-guidelines', '.js-filter-guidelines', context);
+      const headings = filter.querySelectorAll('h1, h2, h3, h4, h5, h6');
+      headings.forEach((el) => {
+        const closestEl = el.closest('.js-filter-wrapper');
+        el.style.display = 'none';
+        $(closestEl)
+          .find('select.js-filter-list')
+          .on('change.filterGuidelines', updateFilterGuidelines)
+          // Need to trigger the namespaced event to avoid triggering formUpdated
+          // when initializing the select.
+          .trigger('change.filterGuidelines');
+      });
     },
   };
 })(jQuery, Drupal);
