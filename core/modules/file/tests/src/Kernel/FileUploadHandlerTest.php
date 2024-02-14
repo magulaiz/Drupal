@@ -74,13 +74,20 @@ class FileUploadHandlerTest extends KernelTestBase {
    * Tests handleExtensionValidation() with different validators.
    *
    * @dataProvider validatorsProvider
+   * @group legacy
    */
-  public function testHandleExtensionValidation(array $validators, $expectedValidators): void {
+  public function testHandleExtensionValidation(array $validators, array $expectedValidators, bool $deprecation): void {
     $method = new \ReflectionMethod(
       FileUploadHandler::class,
       'handleExtensionValidation'
     );
     $method->setAccessible(TRUE);
+
+    if ($deprecation) {
+      $this->expectDeprecation(
+        '\'file_validate_extensions\' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the \'FileExtension\' constraint instead. See https://www.drupal.org/node/3363700'
+      );
+    }
     $method->invokeArgs($this->fileUploadHandler, [&$validators]);
 
     $this->assertEquals($expectedValidators, $validators);
@@ -95,35 +102,38 @@ class FileUploadHandlerTest extends KernelTestBase {
       'valid_legacy' => [
         ['file_validate_extensions' => ['txt']],
         ['FileExtension' => ['extensions' => 'txt']],
+        TRUE,
       ],
       'non_default_legacy' => [
         ['file_validate_extensions' => ['foo']],
         ['FileExtension' => ['extensions' => 'foo']],
+        TRUE,
       ],
       'empty_legacy' => [
         ['file_validate_extensions' => ''],
         [],
-      ],
-      'default_legacy' => [
-        [],
-        ['FileExtension' => ['extensions' => FileUploadHandler::DEFAULT_EXTENSIONS]],
+        TRUE,
       ],
       // Plugin extension validator.
-      'valid_plugin' => [
+      'valid_extension' => [
         ['FileExtension' => ['extensions' => 'txt']],
         ['FileExtension' => ['extensions' => 'txt']],
+        FALSE,
       ],
-      'non_default_plugin' => [
+      'non_default_extension' => [
         ['FileExtension' => ['extensions' => 'foo']],
         ['FileExtension' => ['extensions' => 'foo']],
+        FALSE,
       ],
-      'empty_plugin' => [
+      'empty_extensions' => [
         ['FileExtension' => []],
         [],
+        FALSE,
       ],
-      'default_plugin' => [
+      'undefined' => [
         [],
         ['FileExtension' => ['extensions' => FileUploadHandler::DEFAULT_EXTENSIONS]],
+        FALSE,
       ],
     ];
   }
