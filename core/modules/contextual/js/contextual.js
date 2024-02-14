@@ -85,10 +85,10 @@
    * @param {string} html
    *   The server-side rendered HTML for this contextual link.
    */
-  function initContextual($contextual, html) {
-    const $region = $contextual.closest('.contextual-region');
+  function initContextual(contextualEl, html) {
+    const $region = contextualEl.closest('.contextual-region');
     const contextual = Drupal.contextual;
-
+    const $contextual = $(contextualEl);
     $contextual
       // Update the placeholder to contain its rendered contextual links.
       .html(html)
@@ -109,7 +109,7 @@
     });
 
     let title = '';
-    const $regionHeading = $region.find('h2');
+    const $regionHeading = $($region).find('h2');
     if ($regionHeading.length) {
       title = $regionHeading[0].textContent.trim();
     }
