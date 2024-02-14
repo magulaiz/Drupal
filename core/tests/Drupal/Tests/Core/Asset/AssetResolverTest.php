@@ -126,7 +126,7 @@ class AssetResolverTest extends UnitTestCase {
    * @covers ::getCssAssets
    * @dataProvider providerAttachedAssets
    */
-  public function testGetCssAssets(AttachedAssetsInterface $assets_a, AttachedAssetsInterface $assets_b, $expected_cache_item_count) {
+  public function testGetCssAssets(AttachedAssetsInterface $assets_a, AttachedAssetsInterface $assets_b, $expected_cache_item_count): void {
     $this->assetResolver->getCssAssets($assets_a, FALSE, $this->english);
     $this->assetResolver->getCssAssets($assets_b, FALSE, $this->english);
     $this->assertCount($expected_cache_item_count, $this->cache->getAllCids());
@@ -136,7 +136,7 @@ class AssetResolverTest extends UnitTestCase {
    * @covers ::getJsAssets
    * @dataProvider providerAttachedAssets
    */
-  public function testGetJsAssets(AttachedAssetsInterface $assets_a, AttachedAssetsInterface $assets_b, $expected_cache_item_count) {
+  public function testGetJsAssets(AttachedAssetsInterface $assets_a, AttachedAssetsInterface $assets_b, $expected_cache_item_count): void {
     $this->assetResolver->getJsAssets($assets_a, FALSE, $this->english);
     $this->assetResolver->getJsAssets($assets_b, FALSE, $this->english);
     $this->assertCount($expected_cache_item_count, $this->cache->getAllCids());

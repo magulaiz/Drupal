@@ -40,7 +40,7 @@ class StandardTest extends BrowserTestBase {
   /**
    * Tests Standard installation profile.
    */
-  public function testStandard() {
+  public function testStandard(): void {
     $this->drupalGet('');
     $this->assertSession()->pageTextContains('Powered by Drupal');
 

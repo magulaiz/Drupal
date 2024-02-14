@@ -44,7 +44,7 @@ class CommentLinksTest extends CommentViewsKernelTestBase {
   /**
    * Tests the comment approve link.
    */
-  public function testLinkApprove() {
+  public function testLinkApprove(): void {
     $host = EntityTest::create(['name' => $this->randomString()]);
     $host->save();
 
@@ -110,7 +110,7 @@ class CommentLinksTest extends CommentViewsKernelTestBase {
   /**
    * Tests the comment reply link.
    */
-  public function testLinkReply() {
+  public function testLinkReply(): void {
     $this->enableModules(['field']);
     $this->installSchema('comment', ['comment_entity_statistics']);
     $this->installConfig(['field']);

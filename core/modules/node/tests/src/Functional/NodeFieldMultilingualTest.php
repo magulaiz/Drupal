@@ -71,7 +71,7 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
   /**
    * Tests whether field languages are correctly set through the node form.
    */
-  public function testMultilingualNodeForm() {
+  public function testMultilingualNodeForm(): void {
     // Create "Basic page" content.
     $langcode = language_get_default_langcode('node', 'page');
     $title_key = 'title[0][value]';
@@ -123,7 +123,7 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
   /**
    * Tests multilingual field display settings.
    */
-  public function testMultilingualDisplaySettings() {
+  public function testMultilingualDisplaySettings(): void {
     // Create "Basic page" content.
     $title_key = 'title[0][value]';
     $title_value = $this->randomMachineName(8);

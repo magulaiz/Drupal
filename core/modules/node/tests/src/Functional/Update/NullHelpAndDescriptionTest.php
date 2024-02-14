@@ -15,7 +15,7 @@ class NullHelpAndDescriptionTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.4.0.filled.standard.php.gz',
       __DIR__ . '/../../../fixtures/update/remove-description-from-article-content-type.php',
@@ -25,7 +25,7 @@ class NullHelpAndDescriptionTest extends UpdatePathTestBase {
   /**
    * Tests the upgrade path for updating empty help and description to NULL.
    */
-  public function testRunUpdates() {
+  public function testRunUpdates(): void {
     $node_type = NodeType::load('article');
     $this->assertInstanceOf(NodeType::class, $node_type);
 

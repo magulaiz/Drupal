@@ -25,7 +25,7 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function prepareEnvironment() {
+  protected function prepareEnvironment(): void {
     parent::prepareEnvironment();
     $archiver = new ArchiveTar($this->getConfigTarball(), 'gz');
 
@@ -114,7 +114,7 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
   /**
    * Confirms that the installation installed the configuration correctly.
    */
-  public function testConfigSync() {
+  public function testConfigSync(): void {
     // After installation there is no snapshot and nothing to import.
     $change_list = $this->configImporter()->getStorageComparer()->getChangelist();
     $expected = [
@@ -131,7 +131,7 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
   /**
    * Installer step: Select installation profile.
    */
-  protected function setUpProfile() {
+  protected function setUpProfile(): void {
     if ($this->existingSyncDirectory) {
       $edit = [
         'profile' => SelectProfileForm::CONFIG_INSTALL_PROFILE_KEY,

@@ -203,7 +203,7 @@ class TimezoneTest extends EntityKernelTestBase implements FormInterface {
    * save the form, otherwise stored times may be changed without the user
    * changing the element's values.
    */
-  public function testDatetimeElementTimesUnderstoodCorrectly() {
+  public function testDatetimeElementTimesUnderstoodCorrectly(): void {
     $this->assertTimesUnderstoodCorrectly('datetime', ['date', 'time']);
   }
 
@@ -212,7 +212,7 @@ class TimezoneTest extends EntityKernelTestBase implements FormInterface {
    *
    * See testDatetimeElementTimesUnderstoodCorrectly() for more explanation.
    */
-  public function testDatelistElementTimesUnderstoodCorrectly() {
+  public function testDatelistElementTimesUnderstoodCorrectly(): void {
     $this->assertTimesUnderstoodCorrectly('datelist', [
       'day',
       'month',
@@ -230,7 +230,7 @@ class TimezoneTest extends EntityKernelTestBase implements FormInterface {
    * accurately reflect the timezone that will be used to interpret times
    * entered through the element.
    */
-  public function testDatetimeTimezonePropertyProcessed() {
+  public function testDatetimeTimezonePropertyProcessed(): void {
     $this->assertDateTimezonePropertyProcessed('datetime');
   }
 
@@ -239,7 +239,7 @@ class TimezoneTest extends EntityKernelTestBase implements FormInterface {
    *
    * See testDatetimeTimezonePropertyProcessed() for more explanation.
    */
-  public function testDatelistTimezonePropertyProcessed() {
+  public function testDatelistTimezonePropertyProcessed(): void {
     $this->assertDateTimezonePropertyProcessed('datelist');
   }
 
@@ -388,13 +388,13 @@ class TimezoneTest extends EntityKernelTestBase implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
   }
 
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state): void {
   }
 
 }

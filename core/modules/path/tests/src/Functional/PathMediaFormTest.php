@@ -35,7 +35,7 @@ class PathMediaFormTest extends PathTestBase {
   /**
    * Tests the media form UI.
    */
-  public function testMediaForm() {
+  public function testMediaForm(): void {
     $assert_session = $this->assertSession();
 
     // Create media type.

@@ -75,7 +75,7 @@ trait WorkspaceTestUtilities {
    *
    * This is necessary for switchToWorkspace() to function correctly.
    */
-  protected function setupWorkspaceSwitcherBlock() {
+  protected function setupWorkspaceSwitcherBlock(): void {
     // Add the block to the sidebar.
     $this->placeBlock('workspace_switcher', [
       'id' => 'workspace_switcher',
@@ -100,7 +100,7 @@ trait WorkspaceTestUtilities {
    * @param \Drupal\workspaces\WorkspaceInterface $workspace
    *   The workspace to set active.
    */
-  protected function switchToWorkspace(WorkspaceInterface $workspace) {
+  protected function switchToWorkspace(WorkspaceInterface $workspace): void {
     $this->assertTrue($this->switcherBlockConfigured, 'This test was not written correctly: you must call setupWorkspaceSwitcherBlock() before switchToWorkspace()');
     /** @var \Drupal\Tests\WebAssert $session */
     $session = $this->assertSession();
@@ -117,7 +117,7 @@ trait WorkspaceTestUtilities {
    * This assumes that the switcher block has already been setup by calling
    * setupWorkspaceSwitcherBlock().
    */
-  protected function switchToLive() {
+  protected function switchToLive(): void {
     /** @var \Drupal\Tests\WebAssert $session */
     $session = $this->assertSession();
     $this->submitForm([], 'Switch to Live');

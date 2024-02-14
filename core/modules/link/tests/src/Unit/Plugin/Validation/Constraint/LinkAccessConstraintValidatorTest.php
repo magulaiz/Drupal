@@ -30,7 +30,7 @@ class LinkAccessConstraintValidatorTest extends UnitTestCase {
    * @covers ::validate
    * @dataProvider providerValidate
    */
-  public function testValidate($value, $user, $valid) {
+  public function testValidate($value, $user, $valid): void {
     $context = $this->createMock(ExecutionContextInterface::class);
 
     if ($valid) {

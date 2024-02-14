@@ -142,7 +142,7 @@ class NodeRevisionsTest extends NodeTestBase {
   /**
    * Checks node revision related operations.
    */
-  public function testRevisions() {
+  public function testRevisions(): void {
     // Access to the revision page for a node with 1 revision is allowed.
     $node = $this->drupalCreateNode();
     $this->drupalGet("node/" . $node->id() . "/revisions/" . $node->getRevisionId() . "/view");
@@ -338,7 +338,7 @@ class NodeRevisionsTest extends NodeTestBase {
   /**
    * Checks that revisions are correctly saved without log messages.
    */
-  public function testNodeRevisionWithoutLogMessage() {
+  public function testNodeRevisionWithoutLogMessage(): void {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     // Create a node with an initial log message.
     $revision_log = $this->randomMachineName(10);
@@ -385,7 +385,7 @@ class NodeRevisionsTest extends NodeTestBase {
   /**
    * Tests the revision translations are correctly reverted.
    */
-  public function testRevisionTranslationRevert() {
+  public function testRevisionTranslationRevert(): void {
     // Create a node and a few revisions.
     $node = $this->drupalCreateNode(['langcode' => 'en']);
 
@@ -471,7 +471,7 @@ class NodeRevisionsTest extends NodeTestBase {
    * @param $count
    *   The number of revisions to be created.
    */
-  protected function createRevisions(NodeInterface $node, $count) {
+  protected function createRevisions(NodeInterface $node, $count): void {
     for ($i = 0; $i < $count; $i++) {
       $node->title = $this->randomString();
       $node->untranslatable_string_field->value = $this->randomString();

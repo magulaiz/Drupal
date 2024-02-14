@@ -16,7 +16,7 @@ class EntityDisplayBaseTest extends UnitTestCase {
   /**
    * @covers ::getTargetEntityTypeId
    */
-  public function testGetTargetEntityTypeId() {
+  public function testGetTargetEntityTypeId(): void {
     $mock = $this->getMockForAbstractClass('\Drupal\Core\Entity\EntityDisplayBase', [], '', FALSE);
     $reflection = new \ReflectionProperty($mock, 'targetEntityType');
     $reflection->setValue($mock, 'test');
@@ -26,7 +26,7 @@ class EntityDisplayBaseTest extends UnitTestCase {
   /**
    * @covers ::getMode
    */
-  public function testGetMode() {
+  public function testGetMode(): void {
     $mock = $this->getMockForAbstractClass('\Drupal\Core\Entity\EntityDisplayBase', [], '', FALSE);
     $reflection = new \ReflectionProperty($mock, 'mode');
     $reflection->setValue($mock, 'test');
@@ -36,7 +36,7 @@ class EntityDisplayBaseTest extends UnitTestCase {
   /**
    * @covers ::getOriginalMode
    */
-  public function testGetOriginalMode() {
+  public function testGetOriginalMode(): void {
     $mock = $this->getMockForAbstractClass('\Drupal\Core\Entity\EntityDisplayBase', [], '', FALSE);
     $reflection = new \ReflectionProperty($mock, 'originalMode');
     $reflection->setValue($mock, 'test');
@@ -46,7 +46,7 @@ class EntityDisplayBaseTest extends UnitTestCase {
   /**
    * @covers ::getTargetBundle
    */
-  public function testGetTargetBundle() {
+  public function testGetTargetBundle(): void {
     $mock = $this->getMockForAbstractClass('\Drupal\Core\Entity\EntityDisplayBase', [], '', FALSE);
     $reflection = new \ReflectionProperty($mock, 'bundle');
     $reflection->setValue($mock, 'test');
@@ -56,7 +56,7 @@ class EntityDisplayBaseTest extends UnitTestCase {
   /**
    * @covers ::setTargetBundle
    */
-  public function testSetTargetBundle() {
+  public function testSetTargetBundle(): void {
     $mock = $this->getMockForAbstractClass('\Drupal\Core\Entity\EntityDisplayBase', [], '', FALSE);
     $reflection = new \ReflectionProperty($mock, 'bundle');
     $mock->setTargetBundle('test');

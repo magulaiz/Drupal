@@ -38,7 +38,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
   /**
    * Tests that hook_library_info is invoked and the cache is cleared.
    */
-  public function testHookLibraryInfoByTheme() {
+  public function testHookLibraryInfoByTheme(): void {
     // Activate test_theme and verify that the library 'kitten' is added using
     // hook_library_info_alter().
     $this->activateTheme('test_theme');
@@ -53,7 +53,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
   /**
    * Tests that libraries-override are applied to library definitions.
    */
-  public function testLibrariesOverride() {
+  public function testLibrariesOverride(): void {
     // Assert some starterkit_theme libraries that will be overridden or
     // removed.
     $this->activateTheme('starterkit_theme');
@@ -94,7 +94,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
   /**
    * Tests libraries-override on drupalSettings.
    */
-  public function testLibrariesOverrideDrupalSettings() {
+  public function testLibrariesOverrideDrupalSettings(): void {
     // Activate test theme that attempts to override drupalSettings.
     $this->activateTheme('test_theme_libraries_override_with_drupal_settings');
 
@@ -112,7 +112,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
   /**
    * Tests libraries-override on malformed assets.
    */
-  public function testLibrariesOverrideMalformedAsset() {
+  public function testLibrariesOverrideMalformedAsset(): void {
     // Activate test theme that overrides with a malformed asset.
     $this->activateTheme('test_theme_libraries_override_with_invalid_asset');
 
@@ -130,7 +130,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
   /**
    * Tests libraries overrides with multiple parent themes.
    */
-  public function testLibrariesOverridesMultiple() {
+  public function testLibrariesOverridesMultiple(): void {
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
     $theme_installer = $this->container->get('theme_installer');
     $theme_installer->install(['test_basetheme']);
@@ -153,7 +153,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
   /**
    * Tests library assets with other ways for specifying paths.
    */
-  public function testLibrariesOverrideOtherAssetLibraryNames() {
+  public function testLibrariesOverrideOtherAssetLibraryNames(): void {
     // Activate a test theme that defines libraries overrides on other types of
     // assets.
     $this->activateTheme('test_theme');
@@ -174,7 +174,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
   /**
    * Tests that base theme libraries-override still apply in sub themes.
    */
-  public function testBaseThemeLibrariesOverrideInSubTheme() {
+  public function testBaseThemeLibrariesOverrideInSubTheme(): void {
     // Activate a test theme that has subthemes.
     $this->activateTheme('test_subtheme');
 
@@ -187,7 +187,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
   /**
    * Tests libraries-extend.
    */
-  public function testLibrariesExtend() {
+  public function testLibrariesExtend(): void {
     // Simulate starterkit_theme defining the test-navigation library.
     // @see theme_test_library_info_alter()
     $this->container->get('state')
@@ -251,7 +251,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
    *
    * @group legacy
    */
-  public function testDeprecatedLibrary() {
+  public function testDeprecatedLibrary(): void {
     $this->expectDeprecation('Theme "theme_test" is overriding a deprecated library. The "theme_test/deprecated_library" asset library is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use another library instead. See https://www.example.com');
     $this->expectDeprecation('Theme "theme_test" is extending a deprecated library. The "theme_test/another_deprecated_library" asset library is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use another library instead. See https://www.example.com');
     $this->expectDeprecation('The "theme_test/deprecated_library" asset library is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use another library instead. See https://www.example.com');
@@ -269,7 +269,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
    * @param string $theme_name
    *   The name of the theme to be activated.
    */
-  protected function activateTheme($theme_name) {
+  protected function activateTheme($theme_name): void {
     $this->container->get('theme_installer')->install([$theme_name]);
 
     /** @var \Drupal\Core\Theme\ThemeInitializationInterface $theme_initializer */

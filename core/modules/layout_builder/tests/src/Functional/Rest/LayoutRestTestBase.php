@@ -102,7 +102,7 @@ abstract class LayoutRestTestBase extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     $permissions = array_keys($this->container->get('user.permissions')->getPermissions());
     // Give the test user all permissions on the site. There should be no
     // permission that gives the user access to layout sections over REST.
@@ -112,17 +112,17 @@ abstract class LayoutRestTestBase extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function assertResponseWhenMissingAuthentication($method, ResponseInterface $response) {}
+  protected function assertResponseWhenMissingAuthentication($method, ResponseInterface $response): void {}
 
   /**
    * {@inheritdoc}
    */
-  protected function assertNormalizationEdgeCases($method, Url $url, array $request_options) {}
+  protected function assertNormalizationEdgeCases($method, Url $url, array $request_options): void {}
 
   /**
    * {@inheritdoc}
    */
-  protected function assertAuthenticationEdgeCases($method, Url $url, array $request_options) {}
+  protected function assertAuthenticationEdgeCases($method, Url $url, array $request_options): void {}
 
   /**
    * {@inheritdoc}

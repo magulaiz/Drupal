@@ -27,7 +27,7 @@ class FilterEntityBundleTest extends ViewsKernelTestBase {
   /**
    * Tests the generic bundle filter.
    */
-  public function testFilterEntity() {
+  public function testFilterEntity(): void {
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
     NodeType::create(['type' => 'test_bundle', 'name' => 'Test 1'])->save();

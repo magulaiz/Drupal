@@ -23,7 +23,7 @@ class InstallerDeprecatedDriverNameTest extends BrowserTestBase {
    *
    * @see install_drupal()
    */
-  protected function doInstall() {
+  protected function doInstall(): void {
     require_once DRUPAL_ROOT . '/core/includes/install.core.inc';
     $parameters = $this->installParameters();
     // Replace the driver namespace with the driver name in the
@@ -44,7 +44,7 @@ class InstallerDeprecatedDriverNameTest extends BrowserTestBase {
   /**
    * Verifies that installation succeeded.
    */
-  public function testInstaller() {
+  public function testInstaller(): void {
     $this->assertSession()->addressEquals('/');
     $this->assertSession()->statusCodeEquals(200);
   }

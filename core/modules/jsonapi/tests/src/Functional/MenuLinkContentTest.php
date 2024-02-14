@@ -61,7 +61,7 @@ class MenuLinkContentTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     $this->grantPermissionsToTestedRole(['administer menu']);
   }
 
@@ -185,7 +185,7 @@ class MenuLinkContentTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testCollectionFilterAccess() {
+  public function testCollectionFilterAccess(): void {
     $this->doTestCollectionFilterAccessBasedOnPermissions('title', 'administer menu');
   }
 
@@ -194,7 +194,7 @@ class MenuLinkContentTest extends ResourceTestBase {
    *
    * @see https://security.drupal.org/node/161923
    */
-  public function testLinkOptionsSerialization() {
+  public function testLinkOptionsSerialization(): void {
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
 
     $document = $this->getPostDocument();

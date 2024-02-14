@@ -17,7 +17,7 @@ class InstallerEmptySettingsTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function prepareEnvironment() {
+  protected function prepareEnvironment(): void {
     parent::prepareEnvironment();
     // Create an empty settings.php file.
     $path = $this->root . DIRECTORY_SEPARATOR . $this->siteDirectory;
@@ -27,7 +27,7 @@ class InstallerEmptySettingsTest extends InstallerTestBase {
   /**
    * Verifies that installation succeeded.
    */
-  public function testInstaller() {
+  public function testInstaller(): void {
     $this->assertSession()->addressEquals('user/1');
     $this->assertSession()->statusCodeEquals(200);
   }

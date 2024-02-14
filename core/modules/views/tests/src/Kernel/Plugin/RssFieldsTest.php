@@ -47,7 +47,7 @@ class RssFieldsTest extends ViewsKernelTestBase {
    * ensure that root-relative links also work in a scenario without
    * subdirectory.
    */
-  public function testRssFields() {
+  public function testRssFields(): void {
     // Set up the current user as uid 1 so the test doesn't need to deal with
     // permission.
     $this->setUpCurrentUser(['uid' => 1]);

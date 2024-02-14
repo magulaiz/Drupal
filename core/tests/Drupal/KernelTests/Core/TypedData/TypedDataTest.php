@@ -70,7 +70,7 @@ class TypedDataTest extends KernelTestBase {
   /**
    * Tests the basics around constructing and working with typed data objects.
    */
-  public function testGetAndSet() {
+  public function testGetAndSet(): void {
     // Boolean type.
     $typed_data = $this->createTypedData(['type' => 'boolean'], TRUE);
     $this->assertInstanceOf(BooleanInterface::class, $typed_data);
@@ -383,7 +383,7 @@ class TypedDataTest extends KernelTestBase {
   /**
    * Tests using typed data lists.
    */
-  public function testTypedDataLists() {
+  public function testTypedDataLists(): void {
     // Test working with an existing list of strings.
     $value = ['one', 'two', 'three'];
     $typed_data = $this->createTypedData(ListDataDefinition::create('string'), $value);
@@ -462,7 +462,7 @@ class TypedDataTest extends KernelTestBase {
   /**
    * Tests the filter() method on typed data lists.
    */
-  public function testTypedDataListsFilter() {
+  public function testTypedDataListsFilter(): void {
     // Check that an all-pass filter leaves the list untouched.
     $value = ['zero', 'one'];
     $typed_data = $this->createTypedData(ListDataDefinition::create('string'), $value);
@@ -499,7 +499,7 @@ class TypedDataTest extends KernelTestBase {
   /**
    * Tests using a typed data map.
    */
-  public function testTypedDataMaps() {
+  public function testTypedDataMaps(): void {
     // Test working with a simple map.
     $value = [
       'one' => 'eins',
@@ -596,7 +596,7 @@ class TypedDataTest extends KernelTestBase {
   /**
    * Tests typed data validation.
    */
-  public function testTypedDataValidation() {
+  public function testTypedDataValidation(): void {
     $definition = DataDefinition::create('integer')
       ->setConstraints([
         'Range' => ['min' => 5],

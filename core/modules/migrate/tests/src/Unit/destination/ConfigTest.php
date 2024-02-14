@@ -17,7 +17,7 @@ class ConfigTest extends UnitTestCase {
   /**
    * Tests the import method.
    */
-  public function testImport() {
+  public function testImport(): void {
     $source = [
       'test' => 'x',
     ];
@@ -64,7 +64,7 @@ class ConfigTest extends UnitTestCase {
   /**
    * Tests the import method.
    */
-  public function testLanguageImport() {
+  public function testLanguageImport(): void {
     $source = [
       'langcode' => 'mi',
     ];

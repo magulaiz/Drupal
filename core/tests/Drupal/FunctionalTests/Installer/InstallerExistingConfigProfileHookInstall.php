@@ -14,7 +14,7 @@ class InstallerExistingConfigProfileHookInstall extends InstallerExistingConfigT
   /**
    * {@inheritdoc}
    */
-  protected function visitInstaller() {
+  protected function visitInstaller(): void {
     // Create an .install file with a hook_install() implementation.
     $path = $this->siteDirectory . '/profiles/' . $this->profile;
     $contents = <<<EOF
@@ -30,14 +30,14 @@ EOF;
   /**
    * Installer step: Configure settings.
    */
-  protected function setUpSettings() {
+  protected function setUpSettings(): void {
     // There are errors therefore there is nothing to do here.
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function setUpRequirementsProblem() {
+  protected function setUpRequirementsProblem(): void {
     // The parent method asserts that there are no requirements errors, but
     // this test expects a requirements error in the test method below.
     // Therefore, we override this method to suppress the parent's assertions.
@@ -46,7 +46,7 @@ EOF;
   /**
    * Final installer step: Configure site.
    */
-  protected function setUpSite() {
+  protected function setUpSite(): void {
     // There are errors therefore there is nothing to do here.
   }
 
@@ -62,7 +62,7 @@ EOF;
   /**
    * Confirms the installation has failed and the expected error is displayed.
    */
-  public function testConfigSync() {
+  public function testConfigSync(): void {
     $this->assertSession()->titleEquals('Requirements problem | Drupal');
     $this->assertSession()->pageTextContains($this->profile);
     $this->assertSession()->pageTextContains('The selected profile has a hook_install() implementation and therefore can not be installed from configuration.');

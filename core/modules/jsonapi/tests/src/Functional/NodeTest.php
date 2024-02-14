@@ -80,7 +80,7 @@ class NodeTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     switch ($method) {
       case 'GET':
         $this->grantPermissionsToTestedRole(['access content']);
@@ -107,7 +107,7 @@ class NodeTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpRevisionAuthorization($method) {
+  protected function setUpRevisionAuthorization($method): void {
     parent::setUpRevisionAuthorization($method);
     $this->grantPermissionsToTestedRole(['view all revisions']);
   }
@@ -279,7 +279,7 @@ class NodeTest extends ResourceTestBase {
    * @see \Drupal\Tests\jsonapi\Functional\TermTest::testPatchPath()
    * @see \Drupal\Tests\rest\Functional\EntityResource\Term\TermResourceTestBase::testPatchPath()
    */
-  public function testPatchPath() {
+  public function testPatchPath(): void {
     $this->setUpAuthorization('GET');
     $this->setUpAuthorization('PATCH');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -317,7 +317,7 @@ class NodeTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testGetIndividual() {
+  public function testGetIndividual(): void {
     // Cacheable normalizations are written after the response is flushed to
     // the client. We use WaitTerminateTestTrait to wait for Drupal to perform
     // its termination work before continuing.
@@ -421,7 +421,7 @@ class NodeTest extends ResourceTestBase {
     $cache = \Drupal::service('variation_cache.jsonapi_normalizations')->get(['node--camelids', $this->entity->uuid(), $this->entity->language()->getId()], new CacheableMetadata());
     $cached_fields = $cache->data['fields'];
     $this->assertSameSize($field_names, $cached_fields);
-    array_walk($field_names, function ($field_name) use ($cached_fields) {
+    array_walk($field_names, function ($field_name) use ($cached_fields): void {
       $this->assertInstanceOf(
         CacheableNormalization::class,
         $cached_fields[$field_name]
@@ -444,7 +444,7 @@ class NodeTest extends ResourceTestBase {
    *
    * @see https://github.com/json-api/json-api/issues/1033
    */
-  public function testPostNonExistingAuthor() {
+  public function testPostNonExistingAuthor(): void {
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
     $this->grantPermissionsToTestedRole(['administer nodes']);
@@ -485,7 +485,7 @@ class NodeTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testCollectionFilterAccess() {
+  public function testCollectionFilterAccess(): void {
     $label_field_name = 'title';
     $this->doTestCollectionFilterAccessForPublishableEntities($label_field_name, 'access content', 'bypass node access');
 

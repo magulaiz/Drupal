@@ -41,7 +41,7 @@ class DateTimeFieldTest extends DateTestBase {
   /**
    * Tests date field functionality.
    */
-  public function testDateField() {
+  public function testDateField(): void {
     $field_name = $this->fieldStorage->getName();
 
     $display_repository = \Drupal::service('entity_display.repository');
@@ -220,7 +220,7 @@ class DateTimeFieldTest extends DateTestBase {
   /**
    * Tests date and time field.
    */
-  public function testDatetimeField() {
+  public function testDatetimeField(): void {
     $field_name = $this->fieldStorage->getName();
     $field_label = $this->field->label();
     // Change the field to a datetime field.
@@ -381,7 +381,7 @@ class DateTimeFieldTest extends DateTestBase {
   /**
    * Tests Date List Widget functionality.
    */
-  public function testDatelistWidget() {
+  public function testDatelistWidget(): void {
     $field_name = $this->fieldStorage->getName();
     $field_label = $this->field->label();
 
@@ -660,7 +660,7 @@ class DateTimeFieldTest extends DateTestBase {
   /**
    * Tests default value functionality.
    */
-  public function testDefaultValue() {
+  public function testDefaultValue(): void {
     // Create a test content type.
     $this->drupalCreateContentType(['type' => 'date_content']);
 
@@ -786,7 +786,7 @@ class DateTimeFieldTest extends DateTestBase {
   /**
    * Tests that invalid values are caught and marked as invalid.
    */
-  public function testInvalidField() {
+  public function testInvalidField(): void {
     // Change the field to a datetime field.
     $this->fieldStorage->setSetting('datetime_type', 'datetime');
     $this->fieldStorage->save();
@@ -877,7 +877,7 @@ class DateTimeFieldTest extends DateTestBase {
   /**
    * Tests that 'Date' field storage setting form is disabled if field has data.
    */
-  public function testDateStorageSettings() {
+  public function testDateStorageSettings(): void {
     // Create a test content type.
     $this->drupalCreateContentType(['type' => 'date_content']);
 

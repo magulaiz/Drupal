@@ -48,7 +48,7 @@ class ActiveWorkspaceUpdateTest extends BrowserTestBase {
   /**
    * Tests that there is no active workspace during database updates.
    */
-  public function testActiveWorkspaceDuringUpdate() {
+  public function testActiveWorkspaceDuringUpdate(): void {
     /** @var \Drupal\workspaces\WorkspaceManagerInterface $workspace_manager */
     $workspace_manager = \Drupal::service('workspaces.manager');
 

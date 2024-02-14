@@ -46,7 +46,7 @@ class BlockContextualLinksTest extends WebDriverTestBase {
   /**
    * Test to ensure that remove contextual link is present in the block.
    */
-  public function testBlockContextualRemoveLinks() {
+  public function testBlockContextualRemoveLinks(): void {
     // Ensure that contextual filter links are visible on the page.
     $this->drupalLogin($this->rootUser);
     $this->drupalGet('<front>');

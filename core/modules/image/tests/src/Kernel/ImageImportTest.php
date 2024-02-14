@@ -20,7 +20,7 @@ class ImageImportTest extends KernelTestBase {
   /**
    * Tests importing image styles.
    */
-  public function testImport() {
+  public function testImport(): void {
     $style = ImageStyle::create([
       'name' => 'test',
       'label' => 'Test',

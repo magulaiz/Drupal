@@ -31,7 +31,7 @@ trait FieldDiscoveryTestTrait {
    * @param string $bundle
    *   (optional) The bundle.
    */
-  public function assertFieldProcess(FieldDiscoveryInterface $field_discovery, MigrationPluginManagerInterface $migration_plugin_manager, $core, $field_plugin_method = NULL, array $expected_process = [], $entity_type_id = NULL, $bundle = NULL) {
+  public function assertFieldProcess(FieldDiscoveryInterface $field_discovery, MigrationPluginManagerInterface $migration_plugin_manager, $core, $field_plugin_method = NULL, array $expected_process = [], $entity_type_id = NULL, $bundle = NULL): void {
     $definition = [
       'migration_tags' => ['Drupal ' . $core],
       'field_plugin_method' => $field_plugin_method,
@@ -66,7 +66,7 @@ trait FieldDiscoveryTestTrait {
    * @param string $bundle
    *   (optional) The bundle.
    */
-  public function assertFieldProcessKeys(FieldDiscoveryInterface $field_discovery, MigrationPluginManagerInterface $migration_plugin_manager, $core, array $expected_process_keys, $entity_type_id = NULL, $bundle = NULL) {
+  public function assertFieldProcessKeys(FieldDiscoveryInterface $field_discovery, MigrationPluginManagerInterface $migration_plugin_manager, $core, array $expected_process_keys, $entity_type_id = NULL, $bundle = NULL): void {
     $definition = [
       'migration_tags' => ['Drupal ' . $core],
     ];
@@ -95,7 +95,7 @@ trait FieldDiscoveryTestTrait {
    * @param array $expected_definition
    *   The expected source plugin definition.
    */
-  public function assertSourcePlugin($core, $class, array $expected_definition) {
+  public function assertSourcePlugin($core, $class, array $expected_definition): void {
     $field_discovery = new FieldDiscoveryTestClass($this->fieldPluginManager, $this->migrationPluginManager, $this->logger);
     $source = $field_discovery->getSourcePlugin($core);
     $this->assertInstanceOf($class, $source);

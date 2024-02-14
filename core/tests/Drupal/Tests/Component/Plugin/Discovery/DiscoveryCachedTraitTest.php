@@ -34,7 +34,7 @@ class DiscoveryCachedTraitTest extends TestCase {
    * @covers ::getDefinition
    * @dataProvider providerGetDefinition
    */
-  public function testGetDefinition($expected, $cached_definitions, $get_definitions, $plugin_id) {
+  public function testGetDefinition($expected, $cached_definitions, $get_definitions, $plugin_id): void {
     // Mock a DiscoveryCachedTrait.
     $trait = $this->getMockForTrait('Drupal\Component\Plugin\Discovery\DiscoveryCachedTrait');
     $reflection_definitions = new \ReflectionProperty($trait, 'definitions');

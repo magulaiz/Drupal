@@ -122,7 +122,7 @@ class FileTestSaveUploadFromForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state): void {
     // Process the upload and perform validation. Note: we're using the
     // form value for the $replace parameter.
     if (!$form_state->isValueEmpty('file_subdir')) {
@@ -184,6 +184,6 @@ class FileTestSaveUploadFromForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {}
+  public function submitForm(array &$form, FormStateInterface $form_state): void {}
 
 }

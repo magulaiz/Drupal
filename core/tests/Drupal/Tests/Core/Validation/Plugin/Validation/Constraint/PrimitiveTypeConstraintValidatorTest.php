@@ -28,7 +28,7 @@ class PrimitiveTypeConstraintValidatorTest extends UnitTestCase {
    *
    * @dataProvider provideTestValidate
    */
-  public function testValidate(PrimitiveInterface $typed_data, $value, $valid) {
+  public function testValidate(PrimitiveInterface $typed_data, $value, $valid): void {
     $context = $this->createMock(ExecutionContextInterface::class);
     $context->expects($this->any())
       ->method('getObject')

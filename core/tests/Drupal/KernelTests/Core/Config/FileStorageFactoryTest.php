@@ -17,7 +17,7 @@ class FileStorageFactoryTest extends KernelTestBase {
   /**
    * @covers ::getSync
    */
-  public function testGetSync() {
+  public function testGetSync(): void {
 
     // Write some random data to the sync storage.
     $name = $this->randomMachineName();

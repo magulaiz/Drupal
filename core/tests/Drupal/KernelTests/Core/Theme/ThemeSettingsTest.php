@@ -44,7 +44,7 @@ class ThemeSettingsTest extends KernelTestBase {
   /**
    * Tests that $theme.settings are imported and used as default theme settings.
    */
-  public function testDefaultConfig() {
+  public function testDefaultConfig(): void {
     $name = 'test_basetheme';
     $path = $this->availableThemes[$name]->getPath();
     $this->assertFileExists("$path/" . InstallStorage::CONFIG_INSTALL_DIRECTORY . "/$name.settings.yml");
@@ -55,7 +55,7 @@ class ThemeSettingsTest extends KernelTestBase {
   /**
    * Tests that the $theme.settings default config file is optional.
    */
-  public function testNoDefaultConfig() {
+  public function testNoDefaultConfig(): void {
     $name = 'stark';
     $path = $this->availableThemes[$name]->getPath();
     $this->assertFileDoesNotExist("$path/" . InstallStorage::CONFIG_INSTALL_DIRECTORY . "/$name.settings.yml");
@@ -66,7 +66,7 @@ class ThemeSettingsTest extends KernelTestBase {
   /**
    * Tests that the default logo config can be overridden.
    */
-  public function testLogoConfig() {
+  public function testLogoConfig(): void {
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
     $theme_installer = $this->container->get('theme_installer');
     $theme_installer->install(['stark']);

@@ -31,7 +31,7 @@ class NodeViewsFieldAccessTest extends FieldFieldAccessTestBase {
   /**
    * Check access for node fields.
    */
-  public function testNodeFields() {
+  public function testNodeFields(): void {
     $user = User::create([
       'name' => 'test user',
     ]);

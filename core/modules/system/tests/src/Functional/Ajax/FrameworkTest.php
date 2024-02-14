@@ -32,7 +32,7 @@ class FrameworkTest extends BrowserTestBase {
   /**
    * Verifies the Ajax rendering of a command in the settings.
    */
-  public function testAJAXRender() {
+  public function testAJAXRender(): void {
     // Verify that settings command is generated if JavaScript settings exist.
     $commands = $this->drupalGetAjax('ajax-test/render');
     $expected = new SettingsCommand(['ajax' => 'test'], TRUE);
@@ -42,7 +42,7 @@ class FrameworkTest extends BrowserTestBase {
   /**
    * Tests AjaxResponse::prepare() AJAX commands ordering.
    */
-  public function testOrder() {
+  public function testOrder(): void {
     $expected_commands = [];
 
     // Expected commands, in a very specific order.
@@ -79,7 +79,7 @@ class FrameworkTest extends BrowserTestBase {
   /**
    * Tests the behavior of an error alert command.
    */
-  public function testAJAXRenderError() {
+  public function testAJAXRenderError(): void {
     // Verify custom error message.
     $edit = [
       'message' => 'Custom error message.',

@@ -12,7 +12,7 @@ use Drupal\Tests\UnitTestCase;
 /**
  * Simulates a hook_update_N function.
  */
-function under_test_update_3000() {
+function under_test_update_3000(): void {
 
 }
 
@@ -21,14 +21,14 @@ function under_test_update_3000() {
  *
  * When filtered this will be rejected.
  */
-function bad_3() {
+function bad_3(): void {
 
 }
 
 /**
  * Simulates a hook_update_N function.
  */
-function under_test_update_1() {
+function under_test_update_1(): void {
 
 }
 
@@ -37,14 +37,14 @@ function under_test_update_1() {
  *
  * When filtered this will be rejected.
  */
-function failed_22_update() {
+function failed_22_update(): void {
 
 }
 
 /**
  * Simulates a hook_update_N function.
  */
-function under_test_update_20() {
+function under_test_update_20(): void {
 
 }
 
@@ -53,7 +53,7 @@ function under_test_update_20() {
  *
  * When filtered this will be rejected.
  */
-function under_test_update_1234_failed() {
+function under_test_update_1234_failed(): void {
 
 }
 
@@ -90,7 +90,7 @@ class UpdateHookRegistryTest extends UnitTestCase {
   /**
    * @covers ::getAvailableUpdates
    */
-  public function testGetVersions() {
+  public function testGetVersions(): void {
     $module_name = 'drupal\tests\core\update\under_test';
 
     $update_registry = new UpdateHookRegistry([], $this->keyValueStore);
@@ -108,7 +108,7 @@ class UpdateHookRegistryTest extends UnitTestCase {
    * @covers ::setInstalledVersion
    * @covers ::deleteInstalledVersion
    */
-  public function testGetInstalledVersion() {
+  public function testGetInstalledVersion(): void {
     $versions = [
       'module1' => 1,
       'module2' => 20,
@@ -127,12 +127,12 @@ class UpdateHookRegistryTest extends UnitTestCase {
       });
     $this->keyValueStore
       ->method('delete')
-      ->willReturnCallback(static function ($key) use (&$versions) {
+      ->willReturnCallback(static function ($key) use (&$versions): void {
         $versions[$key] = UpdateHookRegistry::SCHEMA_UNINSTALLED;
       });
     $this->keyValueStore
       ->method('set')
-      ->willReturnCallback(static function ($key, $value) use (&$versions) {
+      ->willReturnCallback(static function ($key, $value) use (&$versions): void {
         $versions[$key] = $value;
       });
 

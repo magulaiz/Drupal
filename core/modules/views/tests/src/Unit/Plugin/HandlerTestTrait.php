@@ -40,7 +40,7 @@ trait HandlerTestTrait {
   /**
    * Sets up a view executable and a view entity.
    */
-  protected function setupExecutableAndView() {
+  protected function setupExecutableAndView(): void {
     $this->view = $this->getMockBuilder('Drupal\views\Entity\View')
       ->disableOriginalConstructor()
       ->getMock();
@@ -53,7 +53,7 @@ trait HandlerTestTrait {
   /**
    * Sets up a mocked views data object.
    */
-  protected function setupViewsData() {
+  protected function setupViewsData(): void {
     $this->viewsData = $this->getMockBuilder('Drupal\views\ViewsData')
       ->disableOriginalConstructor()
       ->getMock();
@@ -62,7 +62,7 @@ trait HandlerTestTrait {
   /**
    * Sets up a mocked display object.
    */
-  protected function setupDisplay() {
+  protected function setupDisplay(): void {
     $this->display = $this->getMockBuilder('Drupal\views\Plugin\views\display\DisplayPluginBase')
       ->disableOriginalConstructor()
       ->getMock();

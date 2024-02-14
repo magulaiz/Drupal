@@ -103,7 +103,7 @@ abstract class ContentTranslationTestBase extends BrowserTestBase {
   /**
    * Adds additional languages.
    */
-  protected function setupLanguages() {
+  protected function setupLanguages(): void {
     $this->langcodes = ['it', 'fr'];
     foreach ($this->langcodes as $langcode) {
       ConfigurableLanguage::createFromLangcode($langcode)->save();
@@ -146,7 +146,7 @@ abstract class ContentTranslationTestBase extends BrowserTestBase {
   /**
    * Creates and activates translator, editor and admin users.
    */
-  protected function setupUsers() {
+  protected function setupUsers(): void {
     $this->translator = $this->drupalCreateUser($this->getTranslatorPermissions(), 'translator');
     $this->editor = $this->drupalCreateUser($this->getEditorPermissions(), 'editor');
     $this->administrator = $this->drupalCreateUser($this->getAdministratorPermissions(), 'administrator');
@@ -156,7 +156,7 @@ abstract class ContentTranslationTestBase extends BrowserTestBase {
   /**
    * Creates or initializes the bundle date if needed.
    */
-  protected function setupBundle() {
+  protected function setupBundle(): void {
     if (empty($this->bundle)) {
       $this->bundle = $this->entityTypeId;
     }
@@ -165,7 +165,7 @@ abstract class ContentTranslationTestBase extends BrowserTestBase {
   /**
    * Enables translation for the current entity type and bundle.
    */
-  protected function enableTranslation() {
+  protected function enableTranslation(): void {
     // Enable translation for the current entity type and ensure the change is
     // picked up.
     \Drupal::service('content_translation.manager')->setEnabled($this->entityTypeId, $this->bundle, TRUE);
@@ -174,7 +174,7 @@ abstract class ContentTranslationTestBase extends BrowserTestBase {
   /**
    * Creates the test fields.
    */
-  protected function setupTestFields() {
+  protected function setupTestFields(): void {
     if (empty($this->fieldName)) {
       $this->fieldName = 'field_test_et_ui_test';
     }

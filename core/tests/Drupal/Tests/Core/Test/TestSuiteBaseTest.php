@@ -85,7 +85,7 @@ class TestSuiteBaseTest extends TestCase {
    *
    * @dataProvider provideCoreTests
    */
-  public function testAddTestsBySuiteNamespaceCore($filesystem, $suite_namespace, $expected_tests) {
+  public function testAddTestsBySuiteNamespaceCore($filesystem, $suite_namespace, $expected_tests): void {
     // Set up the file system.
     $vfs = vfsStream::setup('root');
     vfsStream::create($filesystem, $vfs);
@@ -106,7 +106,7 @@ class TestSuiteBaseTest extends TestCase {
   /**
    * Tests the assumption that local time is in 'Australia/Sydney'.
    */
-  public function testLocalTimeZone() {
+  public function testLocalTimeZone(): void {
     // The 'Australia/Sydney' time zone is set in core/tests/bootstrap.php
     $this->assertEquals('Australia/Sydney', date_default_timezone_get());
   }

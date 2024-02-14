@@ -28,7 +28,7 @@ class MigrateNodeDeriverTest extends MigrateDrupal6TestBase {
   /**
    * Tests node translation migrations with translation disabled.
    */
-  public function testNoTranslations() {
+  public function testNoTranslations(): void {
     // Without content_translation, there should be no translation migrations.
     $migrations = $this->pluginManager->createInstances('d6_node_translation');
     $this->assertSame([], $migrations,
@@ -38,7 +38,7 @@ class MigrateNodeDeriverTest extends MigrateDrupal6TestBase {
   /**
    * Tests node translation migrations with translation enabled.
    */
-  public function testTranslations() {
+  public function testTranslations(): void {
     // With content_translation, there should be translation migrations for
     // each content type.
     $this->enableModules(['language', 'content_translation']);

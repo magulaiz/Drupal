@@ -38,7 +38,7 @@ class RequirementsTest extends BrowserTestBase {
   /**
    * Test the isolation level warning message on status page.
    */
-  public function testIsolationLevelWarningNotDisplaying() {
+  public function testIsolationLevelWarningNotDisplaying(): void {
     $admin_user = $this->drupalCreateUser([
       'administer site configuration',
       'access site reports',
@@ -110,7 +110,7 @@ class RequirementsTest extends BrowserTestBase {
    * @param string $isolation_level
    *   The isolation level.
    */
-  private function writeIsolationLevelSettings(string $isolation_level) {
+  private function writeIsolationLevelSettings(string $isolation_level): void {
     $settings['databases']['default']['default']['init_commands'] = (object) [
       'value' => [
         'isolation_level' => "SET SESSION TRANSACTION ISOLATION LEVEL {$isolation_level}",

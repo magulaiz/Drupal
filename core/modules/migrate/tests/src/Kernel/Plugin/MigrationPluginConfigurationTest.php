@@ -28,7 +28,7 @@ class MigrationPluginConfigurationTest extends KernelTestBase {
    *
    * @dataProvider mergeProvider
    */
-  public function testConfigurationMerge($id, $configuration, $expected) {
+  public function testConfigurationMerge($id, $configuration, $expected): void {
     /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
     $migration = $this->container->get('plugin.manager.migration')
       ->createInstance($id, $configuration);

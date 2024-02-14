@@ -161,7 +161,7 @@ class MediaEmbedFilterTestBase extends MediaJavascriptTestBase {
   /**
    * Show visually hidden fields.
    */
-  protected function showHiddenFields() {
+  protected function showHiddenFields(): void {
     $script = <<<JS
       var hidden_fields = document.querySelectorAll(".hidden");
 

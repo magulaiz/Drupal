@@ -56,7 +56,7 @@ abstract class UserKernelTestBase extends ViewsKernelTestBase {
   /**
    * Set some test data for permission related tests.
    */
-  protected function setupPermissionTestData() {
+  protected function setupPermissionTestData(): void {
     // Setup a role without any permission.
     $this->roleStorage->create(['id' => 'authenticated', 'label' => 'Authenticated'])
       ->save();

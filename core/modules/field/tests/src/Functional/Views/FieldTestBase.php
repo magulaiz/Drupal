@@ -68,7 +68,7 @@ abstract class FieldTestBase extends ViewTestBase {
     return $field_names;
   }
 
-  public function setUpFields($bundle = 'page') {
+  public function setUpFields($bundle = 'page'): void {
     foreach ($this->fieldStorages as $key => $field_storage) {
       $this->fields[$key] = FieldConfig::create([
         'field_storage' => $field_storage,

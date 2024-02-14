@@ -43,7 +43,7 @@ class ConfigSingleImportExportTest extends BrowserTestBase {
   /**
    * Tests importing a single configuration file.
    */
-  public function testImport() {
+  public function testImport(): void {
     $storage = \Drupal::entityTypeManager()->getStorage('config_test');
     $uuid = \Drupal::service('uuid');
 
@@ -210,7 +210,7 @@ EOD;
   /**
    * Tests importing a simple configuration file.
    */
-  public function testImportSimpleConfiguration() {
+  public function testImportSimpleConfiguration(): void {
     $this->drupalLogin($this->drupalCreateUser(['import configuration']));
     $config = $this->config('system.site')->set('name', 'Test simple import');
 
@@ -253,7 +253,7 @@ EOD;
   /**
    * Tests exporting a single configuration file.
    */
-  public function testExport() {
+  public function testExport(): void {
     $this->drupalLogin($this->drupalCreateUser(['export configuration']));
 
     // Verify that the simple configuration option is selected when specified

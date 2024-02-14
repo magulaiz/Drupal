@@ -38,7 +38,7 @@ class CopyTest extends FileManagedUnitTestBase {
    *
    * @covers ::copy
    */
-  public function testNormal() {
+  public function testNormal(): void {
     $contents = $this->randomMachineName(10);
     $source = $this->createFile(NULL, $contents);
     $desired_uri = 'public://' . $this->randomMachineName();
@@ -69,7 +69,7 @@ class CopyTest extends FileManagedUnitTestBase {
    *
    * @covers ::copy
    */
-  public function testExistingRename() {
+  public function testExistingRename(): void {
     // Setup a file to overwrite.
     $contents = $this->randomMachineName(10);
     $source = $this->createFile(NULL, $contents);
@@ -111,7 +111,7 @@ class CopyTest extends FileManagedUnitTestBase {
    *
    * @covers ::copy
    */
-  public function testExistingReplace() {
+  public function testExistingReplace(): void {
     // Setup a file to overwrite.
     $contents = $this->randomMachineName(10);
     $source = $this->createFile(NULL, $contents);
@@ -151,7 +151,7 @@ class CopyTest extends FileManagedUnitTestBase {
    *
    * @covers ::copy
    */
-  public function testExistingError() {
+  public function testExistingError(): void {
     $contents = $this->randomMachineName(10);
     $source = $this->createFile();
     $target = $this->createFile(NULL, $contents);
@@ -183,7 +183,7 @@ class CopyTest extends FileManagedUnitTestBase {
    *
    * @covers ::copy
    */
-  public function testInvalidStreamWrapper() {
+  public function testInvalidStreamWrapper(): void {
     $this->expectException(InvalidStreamWrapperException::class);
     $this->expectExceptionMessage('Invalid stream wrapper: foo://');
     $source = $this->createFile();
@@ -195,7 +195,7 @@ class CopyTest extends FileManagedUnitTestBase {
    *
    * @covers ::copy
    */
-  public function testEntityStorageException() {
+  public function testEntityStorageException(): void {
     /** @var \Drupal\Core\Entity\EntityTypeManager $entityTypeManager */
     $entityTypeManager = $this->prophesize(EntityTypeManager::class);
     $entityTypeManager->getStorage('file')

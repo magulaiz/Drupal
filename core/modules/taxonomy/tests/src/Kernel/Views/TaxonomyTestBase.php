@@ -104,7 +104,7 @@ abstract class TaxonomyTestBase extends ViewsKernelTestBase {
    *
    * @see https://www.drupal.org/node/1708692
    */
-  protected function mockStandardInstall() {
+  protected function mockStandardInstall(): void {
     $this->drupalCreateContentType([
       'type' => 'article',
     ]);

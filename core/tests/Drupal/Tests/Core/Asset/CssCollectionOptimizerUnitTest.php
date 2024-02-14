@@ -38,7 +38,7 @@ class CssCollectionOptimizerUnitTest extends UnitTestCase {
    *
    * @group legacy
    */
-  public function testCssImport() {
+  public function testCssImport(): void {
     $mock_grouper = $this->createMock(AssetCollectionGrouperInterface::class);
     $mock_grouper->method('group')
       ->willReturnCallback(function ($assets) {
@@ -58,7 +58,7 @@ class CssCollectionOptimizerUnitTest extends UnitTestCase {
       );
     $mock_dumper = $this->createMock(AssetDumperInterface::class);
     $mock_dumper->method('dump')
-      ->willReturnCallback(function ($css) {
+      ->willReturnCallback(function ($css): void {
         $this->dumperData = $css;
       });
     $mock_state = $this->createMock(StateInterface::class);
@@ -95,7 +95,7 @@ class CssCollectionOptimizerUnitTest extends UnitTestCase {
    *
    * @group legacy
    */
-  public function testCssLicenseAggregation() {
+  public function testCssLicenseAggregation(): void {
     $mock_grouper = $this->createMock(AssetCollectionGrouperInterface::class);
     $mock_grouper->method('group')
       ->willReturnCallback(function ($assets) {
@@ -116,7 +116,7 @@ class CssCollectionOptimizerUnitTest extends UnitTestCase {
       );
     $mock_dumper = $this->createMock(AssetDumperInterface::class);
     $mock_dumper->method('dump')
-      ->willReturnCallback(function ($css) {
+      ->willReturnCallback(function ($css): void {
         $this->dumperData = $css;
       });
     $mock_state = $this->createMock(StateInterface::class);

@@ -31,7 +31,7 @@ class ContentEntityStorageBaseTest extends KernelTestBase {
    *
    * @dataProvider providerTestCreate
    */
-  public function testCreate($bundle) {
+  public function testCreate($bundle): void {
     $storage = $this->container->get('entity_type.manager')->getStorage('entity_test');
 
     $entity = $storage->create(['type' => $bundle]);
@@ -52,7 +52,7 @@ class ContentEntityStorageBaseTest extends KernelTestBase {
   /**
    * @covers ::create
    */
-  public function testReCreate() {
+  public function testReCreate(): void {
     $storage = $this->container->get('entity_type.manager')->getStorage('entity_test');
 
     $values = $storage->create(['type' => 'test_bundle'])->toArray();

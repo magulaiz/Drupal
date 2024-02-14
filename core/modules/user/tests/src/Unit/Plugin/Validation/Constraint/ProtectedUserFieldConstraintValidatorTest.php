@@ -46,7 +46,7 @@ class ProtectedUserFieldConstraintValidatorTest extends UnitTestCase {
    *
    * @dataProvider providerTestValidate
    */
-  public function testValidate($items, $expected_violation, $name = FALSE) {
+  public function testValidate($items, $expected_violation, $name = FALSE): void {
     $constraint = new ProtectedUserFieldConstraint();
 
     // If a violation is expected, then the context's addViolation method will

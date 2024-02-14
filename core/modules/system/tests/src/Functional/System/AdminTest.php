@@ -59,7 +59,7 @@ class AdminTest extends BrowserTestBase {
   /**
    * Tests output on administrative listing pages.
    */
-  public function testAdminPages() {
+  public function testAdminPages(): void {
     // Go to Administration.
     $this->drupalGet('admin');
 
@@ -151,7 +151,7 @@ class AdminTest extends BrowserTestBase {
   /**
    * Tests compact mode.
    */
-  public function testCompactMode() {
+  public function testCompactMode(): void {
     $session = $this->getSession();
 
     // The front page defaults to 'user/login', which redirects to 'user/{user}'

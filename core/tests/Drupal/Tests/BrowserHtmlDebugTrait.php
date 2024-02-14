@@ -116,7 +116,7 @@ trait BrowserHtmlDebugTrait {
    *
    * @see \Drupal\Tests\Listeners\VerbosePrinter::printResult()
    */
-  protected function htmlOutput($message = NULL) {
+  protected function htmlOutput($message = NULL): void {
     if (!$this->htmlOutputEnabled) {
       return;
     }
@@ -137,7 +137,7 @@ trait BrowserHtmlDebugTrait {
    * Creates the directory to store browser output in if a file to write
    * URLs to has been created by \Drupal\Tests\Listeners\HtmlOutputPrinter.
    */
-  protected function initBrowserOutputFile() {
+  protected function initBrowserOutputFile(): void {
     $browser_output_file = getenv('BROWSERTEST_OUTPUT_FILE');
     $this->htmlOutputEnabled = is_string($browser_output_file) && is_file($browser_output_file);
     $this->htmlOutputBaseUrl = getenv('BROWSERTEST_OUTPUT_BASE_URL') ?: $GLOBALS['base_url'];

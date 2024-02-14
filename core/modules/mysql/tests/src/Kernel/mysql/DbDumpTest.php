@@ -70,7 +70,7 @@ class DbDumpTest extends DriverSpecificKernelTestBase {
    *
    * Register a database cache backend rather than memory-based.
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     parent::register($container);
     $container->register('cache_factory', 'Drupal\Core\Cache\DatabaseBackendFactory')
       ->addArgument(new Reference('database'))
@@ -144,7 +144,7 @@ class DbDumpTest extends DriverSpecificKernelTestBase {
   /**
    * Tests the command directly.
    */
-  public function testDbDumpCommand() {
+  public function testDbDumpCommand(): void {
     $application = new DbDumpApplication();
     $command = $application->find('dump-database-d8-mysql');
     $command_tester = new CommandTester($command);
@@ -173,7 +173,7 @@ class DbDumpTest extends DriverSpecificKernelTestBase {
   /**
    * Tests loading the script back into the database.
    */
-  public function testScriptLoad() {
+  public function testScriptLoad(): void {
     // Generate the script.
     $application = new DbDumpApplication();
     $command = $application->find('dump-database-d8-mysql');

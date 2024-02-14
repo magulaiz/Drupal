@@ -30,7 +30,7 @@ abstract class ContactFormResourceTestBase extends ConfigEntityResourceTestBase 
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     switch ($method) {
       case 'GET':
         $this->grantPermissionsToTestedRole(['access site-wide contact form']);

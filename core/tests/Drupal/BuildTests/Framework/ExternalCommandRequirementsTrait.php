@@ -34,7 +34,7 @@ trait ExternalCommandRequirementsTrait {
    *   Thrown when the requirements are not met, and this test should be
    *   skipped. Callers should not catch this exception.
    */
-  private static function checkClassCommandRequirements() {
+  private static function checkClassCommandRequirements(): void {
     @trigger_error(__METHOD__ . "() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Drupal\\TestTools\\Extension\\RequiresComposerTrait instead. See https://www.drupal.org/node/3362239", E_USER_DEPRECATED);
     $annotations = Test::parseTestMethodAnnotations(static::class);
     if (!empty($annotations['class']['requires'])) {
@@ -49,7 +49,7 @@ trait ExternalCommandRequirementsTrait {
    *   Thrown when the requirements are not met, and this test should be
    *   skipped. Callers should not catch this exception.
    */
-  private static function checkMethodCommandRequirements($name) {
+  private static function checkMethodCommandRequirements($name): void {
     @trigger_error(__METHOD__ . "() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Drupal\\TestTools\\Extension\\RequiresComposerTrait instead. See https://www.drupal.org/node/3362239", E_USER_DEPRECATED);
     $annotations = Test::parseTestMethodAnnotations(static::class, $name);
     if (!empty($annotations['method']['requires'])) {
@@ -67,7 +67,7 @@ trait ExternalCommandRequirementsTrait {
    *   Thrown when the requirements are not met, and this test should be
    *   skipped. Callers should not catch this exception.
    */
-  private static function checkExternalCommandRequirements(array $annotations) {
+  private static function checkExternalCommandRequirements(array $annotations): void {
     @trigger_error(__METHOD__ . "() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use Drupal\\TestTools\\Extension\\RequiresComposerTrait instead. See https://www.drupal.org/node/3362239", E_USER_DEPRECATED);
     // Make a list of required commands.
     $required_commands = [];

@@ -18,7 +18,7 @@ class Mysql8RequirePrimaryKeyUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function runDbTasks() {
+  protected function runDbTasks(): void {
     parent::runDbTasks();
     $database = Database::getConnection();
     $is_maria = method_exists($database, 'isMariaDb') && $database->isMariaDb();
@@ -32,7 +32,7 @@ class Mysql8RequirePrimaryKeyUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function prepareSettings() {
+  protected function prepareSettings(): void {
     parent::prepareSettings();
 
     // Set sql_require_primary_key for any future connections.
@@ -46,14 +46,14 @@ class Mysql8RequirePrimaryKeyUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles[] = __DIR__ . '/../../../../system/tests/fixtures/update/drupal-9.4.0.bare.standard.php.gz';
   }
 
   /**
    * Tests updates.
    */
-  public function testDatabaseLoaded() {
+  public function testDatabaseLoaded(): void {
     $this->runUpdates();
 
     // Ensure that after updating a user can be created and do a basic test that

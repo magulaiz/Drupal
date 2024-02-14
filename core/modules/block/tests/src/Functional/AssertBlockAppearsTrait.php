@@ -17,7 +17,7 @@ trait AssertBlockAppearsTrait {
    * @param \Drupal\block\Entity\Block $block
    *   The block entity to find on the page.
    */
-  protected function assertBlockAppears(Block $block) {
+  protected function assertBlockAppears(Block $block): void {
     $this->assertSession()->elementExists('xpath', "//div[@id = 'block-{$block->id()}']");
   }
 
@@ -27,7 +27,7 @@ trait AssertBlockAppearsTrait {
    * @param \Drupal\block\Entity\Block $block
    *   The block entity to find on the page.
    */
-  protected function assertNoBlockAppears(Block $block) {
+  protected function assertNoBlockAppears(Block $block): void {
     $this->assertSession()->elementNotExists('xpath', "//div[@id = 'block-{$block->id()}']");
   }
 

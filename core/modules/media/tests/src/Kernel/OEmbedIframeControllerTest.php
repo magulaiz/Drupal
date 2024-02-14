@@ -48,7 +48,7 @@ class OEmbedIframeControllerTest extends MediaKernelTestBase {
    *
    * @covers ::render
    */
-  public function testBadHashParameter($hash) {
+  public function testBadHashParameter($hash): void {
     /** @var callable $controller */
     $controller = $this->container
       ->get('controller_resolver')
@@ -72,7 +72,7 @@ class OEmbedIframeControllerTest extends MediaKernelTestBase {
    *
    * @covers ::render
    */
-  public function testResourcePassedToPreprocess() {
+  public function testResourcePassedToPreprocess(): void {
     $hash = $this->container->get('media.oembed.iframe_url_helper')
       ->getHash('', 0, 0);
 

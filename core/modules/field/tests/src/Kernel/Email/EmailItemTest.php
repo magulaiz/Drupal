@@ -46,7 +46,7 @@ class EmailItemTest extends FieldKernelTestBase {
   /**
    * Tests using entity fields of the email field type.
    */
-  public function testEmailItem() {
+  public function testEmailItem(): void {
     // Verify entity creation.
     $entity = EntityTest::create();
     $value = 'test@example.com';

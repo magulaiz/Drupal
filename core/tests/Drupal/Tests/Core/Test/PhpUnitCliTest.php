@@ -16,7 +16,7 @@ class PhpUnitCliTest extends UnitTestCase {
   /**
    * Ensure that the test suites are able to discover tests without incident.
    */
-  public function testPhpUnitListTests() {
+  public function testPhpUnitListTests(): void {
     // Generate the list of tests for all the tests the suites can discover.
     // The goal here is to successfully generate the list, without any
     // duplicate namespace errors or so forth. This keeps us from committing

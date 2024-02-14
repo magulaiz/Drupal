@@ -19,7 +19,7 @@ class InstallerExistingConfigNoConfigTest extends InstallerExistingConfigTestBas
   /**
    * Final installer step: Configure site.
    */
-  protected function setUpSite() {
+  protected function setUpSite(): void {
     // There are errors therefore there is nothing to do here.
   }
 
@@ -33,7 +33,7 @@ class InstallerExistingConfigNoConfigTest extends InstallerExistingConfigTestBas
   /**
    * Tests that profiles with an empty config/sync directory do not work.
    */
-  public function testConfigSync() {
+  public function testConfigSync(): void {
     $this->assertSession()->titleEquals('Configuration validation | Drupal');
     $this->assertSession()->pageTextContains('The configuration synchronization failed validation.');
     $this->assertSession()->pageTextContains('This import is empty and if applied would delete all of your configuration, so has been rejected.');

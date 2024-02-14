@@ -43,7 +43,7 @@ class TourCacheTagsTest extends PageCacheTagsTestBase {
    * Tests the following cache tags:
    * - 'tour:<tour ID>'
    */
-  public function testRenderedTour() {
+  public function testRenderedTour(): void {
     $url = Url::fromRoute('tour_test.1');
 
     // Prime the page cache.

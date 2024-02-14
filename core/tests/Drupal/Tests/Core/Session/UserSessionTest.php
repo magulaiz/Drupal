@@ -147,7 +147,7 @@ class UserSessionTest extends UnitTestCase {
    *
    * @see \Drupal\Core\Session\UserSession::hasPermission()
    */
-  public function testHasPermission($permission, array $sessions_with_access, array $sessions_without_access) {
+  public function testHasPermission($permission, array $sessions_with_access, array $sessions_without_access): void {
     foreach ($sessions_with_access as $name) {
       $this->assertTrue($this->users[$name]->hasPermission($permission));
     }
@@ -162,7 +162,7 @@ class UserSessionTest extends UnitTestCase {
    * @covers ::getRoles
    * @todo Move roles constants to a class/interface
    */
-  public function testUserGetRoles() {
+  public function testUserGetRoles(): void {
     $this->assertEquals([RoleInterface::AUTHENTICATED_ID, 'role_two'], $this->users['user_three']->getRoles());
     $this->assertEquals(['role_two'], $this->users['user_three']->getRoles(TRUE));
   }
@@ -172,7 +172,7 @@ class UserSessionTest extends UnitTestCase {
    *
    * @covers ::hasRole
    */
-  public function testHasRole() {
+  public function testHasRole(): void {
     $this->assertTrue($this->users['user_one']->hasRole('role_one'));
     $this->assertFalse($this->users['user_two']->hasRole('no role'));
     $this->assertTrue($this->users['user_three']->hasRole(RoleInterface::AUTHENTICATED_ID));

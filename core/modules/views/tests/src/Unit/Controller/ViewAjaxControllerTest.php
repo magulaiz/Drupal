@@ -126,7 +126,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
   /**
    * Tests missing view_name and view_display_id.
    */
-  public function testMissingViewName() {
+  public function testMissingViewName(): void {
     $request = new Request();
     $this->expectException(NotFoundHttpException::class);
     $this->viewAjaxController->ajaxView($request);
@@ -135,7 +135,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
   /**
    * Tests non-existent view with view_name and view_display_id.
    */
-  public function testMissingView() {
+  public function testMissingView(): void {
     $request = new Request();
     $request->request->set('view_name', 'test_view');
     $request->request->set('view_display_id', 'page_1');
@@ -152,7 +152,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
   /**
    * Tests a view without having access to it.
    */
-  public function testAccessDeniedView() {
+  public function testAccessDeniedView(): void {
     $request = new Request();
     $request->request->set('view_name', 'test_view');
     $request->request->set('view_display_id', 'page_1');
@@ -185,7 +185,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
   /**
    * Tests a valid view without arguments pagers etc.
    */
-  public function testAjaxView() {
+  public function testAjaxView(): void {
     $request = new Request();
     $request->query->set('view_name', 'test_view');
     $request->query->set('view_display_id', 'page_1');
@@ -214,7 +214,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
   /**
    * Tests a valid view with a view_path with no slash.
    */
-  public function testAjaxViewViewPathNoSlash() {
+  public function testAjaxViewViewPathNoSlash(): void {
     $request = new Request();
     $request->query->set('view_name', 'test_view');
     $request->query->set('view_display_id', 'page_1');
@@ -243,7 +243,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
   /**
    * Tests a valid view without ajax enabled.
    */
-  public function testAjaxViewWithoutAjax() {
+  public function testAjaxViewWithoutAjax(): void {
     $request = new Request();
     $request->request->set('view_name', 'test_view');
     $request->request->set('view_display_id', 'page_1');
@@ -261,7 +261,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
   /**
    * Tests a valid view with arguments.
    */
-  public function testAjaxViewWithArguments() {
+  public function testAjaxViewWithArguments(): void {
     $request = new Request();
     $request->request->set('view_name', 'test_view');
     $request->request->set('view_display_id', 'page_1');
@@ -281,7 +281,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
   /**
    * Tests a valid view with arguments.
    */
-  public function testAjaxViewWithEmptyArguments() {
+  public function testAjaxViewWithEmptyArguments(): void {
     $request = new Request();
     $request->request->set('view_name', 'test_view');
     $request->request->set('view_display_id', 'page_1');
@@ -302,7 +302,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
   /**
    * Tests a valid view with arguments.
    */
-  public function testAjaxViewWithHtmlEntityArguments() {
+  public function testAjaxViewWithHtmlEntityArguments(): void {
     $request = new Request();
     $request->request->set('view_name', 'test_view');
     $request->request->set('view_display_id', 'page_1');
@@ -322,7 +322,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
   /**
    * Tests a valid view with a pager.
    */
-  public function testAjaxViewWithPager() {
+  public function testAjaxViewWithPager(): void {
     $request = new Request();
     $request->request->set('view_name', 'test_view');
     $request->request->set('view_display_id', 'page_1');

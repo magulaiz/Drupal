@@ -19,14 +19,14 @@ class TestVarDumper {
   /**
    * A CLI handler for \Symfony\Component\VarDumper\VarDumper.
    */
-  public static function cliHandler($var) {
+  public static function cliHandler($var): void {
     $cloner = new VarCloner();
     $dumper = new CliDumper();
     fwrite(STDOUT, "\n");
     $dumper->setColors(TRUE);
     $dumper->dump(
       $cloner->cloneVar($var),
-      function ($line, $depth, $indent_pad) {
+      function ($line, $depth, $indent_pad): void {
         // A negative depth means "end of dump".
         if ($depth >= 0) {
           // Adds a two spaces indentation to the line.
@@ -39,7 +39,7 @@ class TestVarDumper {
   /**
    * A HTML handler for \Symfony\Component\VarDumper\VarDumper.
    */
-  public static function htmlHandler($var) {
+  public static function htmlHandler($var): void {
     $cloner = new VarCloner();
     $dumper = new HtmlDumper();
     $dumper->dump($cloner->cloneVar($var));

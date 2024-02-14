@@ -124,7 +124,7 @@ class ImageTest extends ImageTestBase {
     ];
   }
 
-  protected function addImage() {
+  protected function addImage(): void {
     $page = $this->getSession()->getPage();
     $this->assertNotEmpty($image_upload_field = $page->find('css', '.ck-file-dialog-button input[type="file"]'));
     $image = $this->getTestFiles('image')[0];
@@ -136,7 +136,7 @@ class ImageTest extends ImageTestBase {
   /**
    * Tests the ckeditor5_imageResize and ckeditor5_imageUpload settings forms.
    */
-  public function testImageSettingsForm() {
+  public function testImageSettingsForm(): void {
     $assert_session = $this->assertSession();
 
     $this->drupalGet('admin/config/content/formats/manage/test_format');

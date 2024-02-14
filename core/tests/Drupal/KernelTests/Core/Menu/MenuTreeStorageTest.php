@@ -43,7 +43,7 @@ class MenuTreeStorageTest extends KernelTestBase {
   /**
    * Tests the tree storage when no tree was built yet.
    */
-  public function testBasicMethods() {
+  public function testBasicMethods(): void {
     $this->doTestEmptyStorage();
     $this->doTestTable();
   }
@@ -51,14 +51,14 @@ class MenuTreeStorageTest extends KernelTestBase {
   /**
    * Ensures that there are no menu links by default.
    */
-  protected function doTestEmptyStorage() {
+  protected function doTestEmptyStorage(): void {
     $this->assertEquals(0, $this->treeStorage->countMenuLinks());
   }
 
   /**
    * Ensures that table gets created on the fly.
    */
-  protected function doTestTable() {
+  protected function doTestTable(): void {
     // Test that we can create a tree storage with an arbitrary table name and
     // that selecting from the storage creates the table.
     $tree_storage = new MenuTreeStorage($this->container->get('database'), $this->container->get('cache.menu'), $this->container->get('cache_tags.invalidator'), 'test_menu_tree');
@@ -70,7 +70,7 @@ class MenuTreeStorageTest extends KernelTestBase {
   /**
    * Tests with a simple linear hierarchy.
    */
-  public function testSimpleHierarchy() {
+  public function testSimpleHierarchy(): void {
     // Add some links with parent on the previous one and test some values.
     // <tools>
     // - test1
@@ -92,7 +92,7 @@ class MenuTreeStorageTest extends KernelTestBase {
   /**
    * Tests the tree with moving links inside the hierarchy.
    */
-  public function testMenuLinkMoving() {
+  public function testMenuLinkMoving(): void {
     // Before the move.
     // <tools>
     // - test1
@@ -170,7 +170,7 @@ class MenuTreeStorageTest extends KernelTestBase {
   /**
    * Tests with disabled child links.
    */
-  public function testMenuDisabledChildLinks() {
+  public function testMenuDisabledChildLinks(): void {
     // Add some links with parent on the previous one and test some values.
     // <tools>
     // - test1
@@ -225,7 +225,7 @@ class MenuTreeStorageTest extends KernelTestBase {
   /**
    * Tests the loadTreeData method.
    */
-  public function testLoadTree() {
+  public function testLoadTree(): void {
     $this->addMenuLink('test1', '', 'test1');
     $this->addMenuLink('test2', 'test1', 'test2');
     $this->addMenuLink('test3', 'test2', 'test3');
@@ -295,7 +295,7 @@ class MenuTreeStorageTest extends KernelTestBase {
   /**
    * Tests finding the subtree height with content menu links.
    */
-  public function testSubtreeHeight() {
+  public function testSubtreeHeight(): void {
     // root
     // - child1
     // -- child2
@@ -317,7 +317,7 @@ class MenuTreeStorageTest extends KernelTestBase {
   /**
    * Ensure hierarchy persists after a menu rebuild.
    */
-  public function testMenuRebuild() {
+  public function testMenuRebuild(): void {
     // root
     // - child1
     // -- child2
@@ -348,7 +348,7 @@ class MenuTreeStorageTest extends KernelTestBase {
   /**
    * Tests MenuTreeStorage::loadByProperties().
    */
-  public function testLoadByProperties() {
+  public function testLoadByProperties(): void {
     $tests = [
       ['foo' => 'bar'],
       [0 => 'wrong'],
@@ -373,7 +373,7 @@ class MenuTreeStorageTest extends KernelTestBase {
   /**
    * Adds a link with the given ID and supply defaults.
    */
-  protected function addMenuLink($id, $parent = '', $route_name = 'test', $route_parameters = [], $menu_name = 'tools', $extra = []) {
+  protected function addMenuLink($id, $parent = '', $route_name = 'test', $route_parameters = [], $menu_name = 'tools', $extra = []): void {
     $link = [
       'id' => $id,
       'menu_name' => $menu_name,
@@ -395,7 +395,7 @@ class MenuTreeStorageTest extends KernelTestBase {
    * @param string $new_parent
    *   The ID of the new parent link.
    */
-  protected function moveMenuLink($id, $new_parent) {
+  protected function moveMenuLink($id, $new_parent): void {
     $menu_link = $this->treeStorage->load($id);
     $menu_link['parent'] = $new_parent;
     $this->treeStorage->save($menu_link);

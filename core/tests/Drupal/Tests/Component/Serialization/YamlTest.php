@@ -44,7 +44,7 @@ class YamlTest extends TestCase {
   /**
    * @covers ::decode
    */
-  public function testDecode() {
+  public function testDecode(): void {
     $this->mockParser
       ->expects($this->once())
       ->method('decode');
@@ -54,7 +54,7 @@ class YamlTest extends TestCase {
   /**
    * @covers ::getFileExtension
    */
-  public function testGetFileExtension() {
+  public function testGetFileExtension(): void {
     $this->mockParser
       ->expects($this->never())
       ->method('getFileExtension');
@@ -73,7 +73,7 @@ class YamlTest extends TestCase {
    * @requires extension yaml
    * @dataProvider providerYamlFilesInCore
    */
-  public function testYamlFiles($file) {
+  public function testYamlFiles($file): void {
     $data = file_get_contents($file);
     try {
       $this->assertEquals(YamlSymfony::decode($data), YamlPecl::decode($data), $file);
@@ -91,7 +91,7 @@ class YamlTest extends TestCase {
    *
    * @see \Drupal\Tests\Component\Serialization\YamlTest::testObjectSupportDisabledSymfony()
    */
-  public function testObjectSupportDisabledPecl() {
+  public function testObjectSupportDisabledPecl(): void {
     $object = new \stdClass();
     $object->foo = 'bar';
     // In core all Yaml encoding is done via Symfony and it does not support
@@ -109,7 +109,7 @@ class YamlTest extends TestCase {
    *
    * @see \Drupal\Tests\Component\Serialization\YamlTest::testObjectSupportDisabledPecl()
    */
-  public function testObjectSupportDisabledSymfony() {
+  public function testObjectSupportDisabledSymfony(): void {
     $this->expectException(InvalidDataTypeException::class);
     $this->expectExceptionMessageMatches('/^Object support when parsing a YAML file has been disabled/');
     $object = new \stdClass();
@@ -160,7 +160,7 @@ class YamlParserProxy implements SerializationInterface {
    */
   protected static $mock;
 
-  public static function setMock($mock) {
+  public static function setMock($mock): void {
     static::$mock = $mock;
   }
 

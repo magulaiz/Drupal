@@ -52,7 +52,7 @@ class TriggeringElementProgrammedTest extends KernelTestBase implements FormInte
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state): void {
     // Verify that the only submit button was recognized as triggering_element.
     $this->assertEquals($form['actions']['submit']['#array_parents'], $form_state->getTriggeringElement()['#array_parents']);
   }
@@ -60,13 +60,13 @@ class TriggeringElementProgrammedTest extends KernelTestBase implements FormInte
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
   }
 
   /**
    * Tests that #limit_validation_errors of the only submit button takes effect.
    */
-  public function testLimitValidationErrors() {
+  public function testLimitValidationErrors(): void {
     // Programmatically submit the form.
     $form_state = new FormState();
     $form_state->setValue('section', 'one');

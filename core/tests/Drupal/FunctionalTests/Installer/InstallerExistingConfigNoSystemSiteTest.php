@@ -12,7 +12,7 @@ class InstallerExistingConfigNoSystemSiteTest extends InstallerExistingConfigTes
   /**
    * {@inheritdoc}
    */
-  protected function prepareEnvironment() {
+  protected function prepareEnvironment(): void {
     parent::prepareEnvironment();
     // File API functions are not available yet.
     unlink($this->siteDirectory . '/profiles/' . $this->profile . '/config/sync/system.site.yml');
@@ -21,14 +21,14 @@ class InstallerExistingConfigNoSystemSiteTest extends InstallerExistingConfigTes
   /**
    * {@inheritdoc}
    */
-  public function setUpSite() {
+  public function setUpSite(): void {
     // There are errors. Therefore, there is nothing to do here.
   }
 
   /**
    * Tests that profiles with no system.site do not work.
    */
-  public function testConfigSync() {
+  public function testConfigSync(): void {
     $this->htmlOutput(NULL);
     $this->assertSession()->titleEquals('Configuration validation | Drupal');
     $this->assertSession()->pageTextContains('The configuration synchronization failed validation.');

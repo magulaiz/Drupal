@@ -24,7 +24,7 @@ class LayoutBuilderBreadcrumbAlterTest extends EntityKernelTestBase {
   /**
    * Check that there are no errors when alter called with null route match.
    */
-  public function testBreadcrumbAlterNullRouteMatch() {
+  public function testBreadcrumbAlterNullRouteMatch(): void {
     $breadcrumb = new Breadcrumb();
     $route_match = new NullRouteMatch();
     layout_builder_system_breadcrumb_alter($breadcrumb, $route_match, []);

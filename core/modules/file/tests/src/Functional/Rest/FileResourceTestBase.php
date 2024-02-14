@@ -42,7 +42,7 @@ abstract class FileResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     switch ($method) {
       case 'GET':
         $this->grantPermissionsToTestedRole(['access content']);
@@ -65,7 +65,7 @@ abstract class FileResourceTestBase extends EntityResourceTestBase {
   /**
    * Makes the current user the file owner.
    */
-  protected function makeCurrentUserFileOwner() {
+  protected function makeCurrentUserFileOwner(): void {
     $account = static::$auth ? User::load(2) : User::load(0);
     $this->entity->setOwnerId($account->id());
     $this->entity->setOwner($account);
@@ -198,7 +198,7 @@ abstract class FileResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testPost() {
+  public function testPost(): void {
     // Drupal does not allow creating file entities independently. It allows you
     // to create file entities that are referenced from another entity (e.g. an
     // image for a node's image field).

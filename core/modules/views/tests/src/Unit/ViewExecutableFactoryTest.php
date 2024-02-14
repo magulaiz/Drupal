@@ -78,7 +78,7 @@ class ViewExecutableFactoryTest extends UnitTestCase {
    *
    * @covers ::get
    */
-  public function testGet() {
+  public function testGet(): void {
     $request_1 = new Request();
     $request_2 = new Request();
 

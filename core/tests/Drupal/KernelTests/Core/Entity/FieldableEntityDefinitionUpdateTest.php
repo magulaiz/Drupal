@@ -128,7 +128,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
    * @covers ::updateFieldableEntityType
    * @dataProvider providerTestFieldableEntityTypeUpdates
    */
-  public function testFieldableEntityTypeUpdates($initial_rev, $initial_mul, $new_rev, $new_mul, $data_migration_supported) {
+  public function testFieldableEntityTypeUpdates($initial_rev, $initial_mul, $new_rev, $new_mul, $data_migration_supported): void {
     // The 'entity_test_update' entity type is neither revisionable nor
     // translatable by default, so we need to get it into the initial testing
     // state. This also covers the "no existing data" scenario for fieldable
@@ -289,7 +289,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
    * @param bool $translatable
    *   Whether the entity type is translatable or not.
    */
-  protected function insertData($revisionable, $translatable) {
+  protected function insertData($revisionable, $translatable): void {
     // Add three test entities in order to make the "data copy" step run at
     // least three times.
     /** @var \Drupal\Core\Entity\TranslatableRevisionableStorageInterface|\Drupal\Core\Entity\EntityStorageInterface $storage */
@@ -664,7 +664,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
   /**
    * Tests that a failed entity schema update preserves the existing data.
    */
-  public function testFieldableEntityTypeUpdatesErrorHandling() {
+  public function testFieldableEntityTypeUpdatesErrorHandling(): void {
     $schema = $this->database->schema();
 
     // First, convert the entity type to be translatable for better coverage and
@@ -832,7 +832,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
   /**
    * Tests the removal of the backup tables after a successful update.
    */
-  public function testFieldableEntityTypeUpdatesRemoveBackupTables() {
+  public function testFieldableEntityTypeUpdatesRemoveBackupTables(): void {
     $schema = $this->database->schema();
 
     // Convert the entity type to be revisionable.

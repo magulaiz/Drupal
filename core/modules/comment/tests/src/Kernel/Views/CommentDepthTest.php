@@ -41,7 +41,7 @@ class CommentDepthTest extends CommentViewsKernelTestBase {
   /**
    * Test the comment depth.
    */
-  public function testCommentDepth() {
+  public function testCommentDepth(): void {
     $this->enableModules(['field']);
     $this->installConfig(['field']);
 

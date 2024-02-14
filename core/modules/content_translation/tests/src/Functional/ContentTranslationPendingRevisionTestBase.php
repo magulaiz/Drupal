@@ -76,7 +76,7 @@ abstract class ContentTranslationPendingRevisionTestBase extends ContentTranslat
   /**
    * Enables content moderation for the test entity type and bundle.
    */
-  protected function enableContentModeration() {
+  protected function enableContentModeration(): void {
     $this->drupalLogin($this->rootUser);
     $workflow_id = 'editorial';
     $this->drupalGet('/admin/config/workflow/workflows');
@@ -115,7 +115,7 @@ abstract class ContentTranslationPendingRevisionTestBase extends ContentTranslat
   /**
    * {@inheritdoc}
    */
-  protected function setupBundle() {
+  protected function setupBundle(): void {
     parent::setupBundle();
     $this->createContentType(['type' => $this->bundle]);
     $this->createEditorialWorkflow();

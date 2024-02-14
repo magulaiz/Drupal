@@ -17,7 +17,7 @@ class ConstraintTest extends TestCase {
    * @covers ::isCompatible
    * @dataProvider providerIsCompatible
    */
-  public function testIsCompatible(Constraint $version_info, $current_version, $result) {
+  public function testIsCompatible(Constraint $version_info, $current_version, $result): void {
     $this->assertSame($result, $version_info->isCompatible($current_version));
   }
 

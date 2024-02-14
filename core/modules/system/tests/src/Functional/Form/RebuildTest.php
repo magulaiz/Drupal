@@ -45,7 +45,7 @@ class RebuildTest extends BrowserTestBase {
   /**
    * Tests preservation of values.
    */
-  public function testRebuildPreservesValues() {
+  public function testRebuildPreservesValues(): void {
     $edit = [
       'checkbox_1_default_off' => TRUE,
       'checkbox_1_default_on' => FALSE,

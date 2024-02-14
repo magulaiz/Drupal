@@ -20,7 +20,7 @@ class HelpTopicsUninstall extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.4.0.bare.standard.php.gz',
       __DIR__ . '/../../../../tests/fixtures/update/help-topics-3087499.php',
@@ -34,7 +34,7 @@ class HelpTopicsUninstall extends UpdatePathTestBase {
    * @see \help_post_update_help_topics_search()
    * @see \help_post_update_help_topics_uninstall()
    */
-  public function testHelpTopicsMerge() {
+  public function testHelpTopicsMerge(): void {
     $module_handler = \Drupal::moduleHandler();
     $this->assertTrue($module_handler->moduleExists('help'));
     $this->assertTrue($module_handler->moduleExists('help_topics'));

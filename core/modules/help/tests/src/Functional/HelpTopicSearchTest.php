@@ -95,7 +95,7 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
   /**
    * Tests help topic search.
    */
-  public function testHelpSearch() {
+  public function testHelpSearch(): void {
     $german = \Drupal::languageManager()->getLanguage('de');
     $session = $this->assertSession();
 
@@ -252,7 +252,7 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
   /**
    * Tests uninstalling the help_topics module.
    */
-  public function testUninstall() {
+  public function testUninstall(): void {
     \Drupal::service('module_installer')->uninstall(['help_topics_test']);
     // Ensure we can uninstall help_topics and use the help system without
     // breaking.
@@ -270,7 +270,7 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
   /**
    * Tests uninstalling the search module.
    */
-  public function testUninstallSearch() {
+  public function testUninstallSearch(): void {
     // Ensure we can uninstall search and use the help system without
     // breaking.
     $this->drupalLogin($this->rootUser);

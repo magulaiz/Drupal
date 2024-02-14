@@ -21,7 +21,7 @@ class ConfigSyncReadmeUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../tests/fixtures/update/drupal-9.4.0.bare.standard.php.gz',
     ];
@@ -30,7 +30,7 @@ class ConfigSyncReadmeUpdateTest extends UpdatePathTestBase {
   /**
    * Tests configuration synchronization readme file update.
    */
-  public function testConfigurationSynchronizationReadmeUpdate() {
+  public function testConfigurationSynchronizationReadmeUpdate(): void {
     $readme_path = Settings::get('config_sync_directory') . '/README.txt';
     // The test setup does not write the configuration synchronization
     // directory, so let us do it here instead.

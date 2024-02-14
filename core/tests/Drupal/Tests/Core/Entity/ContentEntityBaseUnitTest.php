@@ -225,7 +225,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    * @covers ::isNewRevision
    * @covers ::setNewRevision
    */
-  public function testIsNewRevision() {
+  public function testIsNewRevision(): void {
     // Set up the entity type so that on the first call there is no revision key
     // and on the second call there is one.
     $this->entityType->expects($this->exactly(4))
@@ -260,7 +260,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   /**
    * @covers ::setNewRevision
    */
-  public function testSetNewRevisionException() {
+  public function testSetNewRevisionException(): void {
     $this->entityType->expects($this->once())
       ->method('hasKey')
       ->with('revision')
@@ -273,7 +273,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   /**
    * @covers ::isDefaultRevision
    */
-  public function testIsDefaultRevision() {
+  public function testIsDefaultRevision(): void {
     // The default value is TRUE.
     $this->assertTrue($this->entity->isDefaultRevision());
     // Change the default revision, verify that the old value is returned.
@@ -291,7 +291,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   /**
    * @covers ::getRevisionId
    */
-  public function testGetRevisionId() {
+  public function testGetRevisionId(): void {
     // The default getRevisionId() implementation returns NULL.
     $this->assertNull($this->entity->getRevisionId());
   }
@@ -299,7 +299,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   /**
    * @covers ::isTranslatable
    */
-  public function testIsTranslatable() {
+  public function testIsTranslatable(): void {
     $this->entityTypeBundleInfo->expects($this->any())
       ->method('getBundleInfo')
       ->with($this->entityTypeId)
@@ -323,7 +323,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   /**
    * @covers ::isTranslatable
    */
-  public function testIsTranslatableForMonolingual() {
+  public function testIsTranslatableForMonolingual(): void {
     $this->languageManager->expects($this->any())
       ->method('isMultilingual')
       ->willReturn(FALSE);
@@ -333,7 +333,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   /**
    * @covers ::preSaveRevision
    */
-  public function testPreSaveRevision() {
+  public function testPreSaveRevision(): void {
     // This method is internal, so check for errors on calling it only.
     $storage = $this->createMock('\Drupal\Core\Entity\EntityStorageInterface');
     $record = new \stdClass();
@@ -423,7 +423,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   /**
    * @covers ::validate
    */
-  public function testValidate() {
+  public function testValidate(): void {
     $validator = $this->createMock(ValidatorInterface::class);
     /** @var \Symfony\Component\Validator\ConstraintViolationList $empty_violation_list */
     $empty_violation_list = new ConstraintViolationList();
@@ -450,7 +450,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    * @covers ::save
    * @covers ::preSave
    */
-  public function testRequiredValidation() {
+  public function testRequiredValidation(): void {
     $validator = $this->createMock(ValidatorInterface::class);
     /** @var \Symfony\Component\Validator\ConstraintViolationList $empty_violation_list */
     $empty_violation_list = new ConstraintViolationList();
@@ -466,7 +466,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     $storage = $this->createMock('\Drupal\Core\Entity\EntityStorageInterface');
     $storage->expects($this->any())
       ->method('save')
-      ->willReturnCallback(function (ContentEntityInterface $entity) use ($storage) {
+      ->willReturnCallback(function (ContentEntityInterface $entity) use ($storage): void {
         $entity->preSave($storage);
       });
 
@@ -499,14 +499,14 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   /**
    * @covers ::bundle
    */
-  public function testBundle() {
+  public function testBundle(): void {
     $this->assertSame($this->bundle, $this->entity->bundle());
   }
 
   /**
    * @covers ::access
    */
-  public function testAccess() {
+  public function testAccess(): void {
     $access = $this->createMock('\Drupal\Core\Entity\EntityAccessControlHandlerInterface');
     $operation = $this->randomMachineName();
     $access->expects($this->exactly(2))
@@ -549,7 +549,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    * @covers ::get
    * @dataProvider providerGet
    */
-  public function testGet($expected, $field_name, $active_langcode, $fields) {
+  public function testGet($expected, $field_name, $active_langcode, $fields): void {
     // Mock ContentEntityBase.
     $mock_base = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityBase')
       ->disableOriginalConstructor()
@@ -609,7 +609,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    * @covers ::getFields
    * @dataProvider providerGetFields
    */
-  public function testGetFields($expected, $include_computed, $is_computed, $field_definitions) {
+  public function testGetFields($expected, $include_computed, $is_computed, $field_definitions): void {
     // Mock ContentEntityBase.
     $mock_base = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityBase')
       ->disableOriginalConstructor()
@@ -661,7 +661,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   /**
    * @covers ::set
    */
-  public function testSet() {
+  public function testSet(): void {
     // Exercise set(), check if it returns $this
     $this->assertSame(
       $this->entity,

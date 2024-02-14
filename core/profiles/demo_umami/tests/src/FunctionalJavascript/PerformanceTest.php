@@ -22,14 +22,14 @@ class PerformanceTest extends PerformanceTestBase {
    * Just load the front page.
    */
   public function testPagesAnonymous(): void {
-    $performance_data = $this->collectPerformanceData(function () {
+    $performance_data = $this->collectPerformanceData(function (): void {
       $this->drupalGet('<front>');
     });
     $this->assertSession()->pageTextContains('Umami');
     $this->assertSame(2, $performance_data->getStylesheetCount());
     $this->assertSame(1, $performance_data->getScriptCount());
 
-    $performance_data = $this->collectPerformanceData(function () {
+    $performance_data = $this->collectPerformanceData(function (): void {
       $this->drupalGet('node/1');
     });
     $this->assertSame(2, $performance_data->getStylesheetCount());
@@ -42,7 +42,7 @@ class PerformanceTest extends PerformanceTestBase {
   public function testFrontPagePerformance(): void {
     $admin_user = $this->drupalCreateUser(['access toolbar']);
     $this->drupalLogin($admin_user);
-    $performance_data = $this->collectPerformanceData(function () {
+    $performance_data = $this->collectPerformanceData(function (): void {
       $this->drupalGet('<front>');
     });
     $this->assertSession()->pageTextContains('Umami');

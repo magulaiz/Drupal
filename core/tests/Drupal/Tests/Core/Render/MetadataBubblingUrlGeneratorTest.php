@@ -52,12 +52,12 @@ class MetadataBubblingUrlGeneratorTest extends UrlGeneratorTest {
    *
    * @dataProvider providerUrlBubbleableMetadataBubbling
    */
-  public function testUrlBubbleableMetadataBubbling($collect_bubbleable_metadata, $invocations, array $options) {
+  public function testUrlBubbleableMetadataBubbling($collect_bubbleable_metadata, $invocations, array $options): void {
     $self = $this;
 
     $this->renderer->expects($this->exactly($invocations))
       ->method('render')
-      ->willReturnCallback(function ($build) {
+      ->willReturnCallback(function ($build): void {
         $this->assertArrayHasKey('#cache', $build);
       });
 

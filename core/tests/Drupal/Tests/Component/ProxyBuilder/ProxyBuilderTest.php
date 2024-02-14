@@ -32,7 +32,7 @@ class ProxyBuilderTest extends TestCase {
   /**
    * @covers ::buildProxyClassName
    */
-  public function testBuildProxyClassName() {
+  public function testBuildProxyClassName(): void {
     $class_name = $this->proxyBuilder->buildProxyClassName('Drupal\Tests\Component\ProxyBuilder\TestServiceNoMethod');
     $this->assertEquals('Drupal\Tests\ProxyClass\Component\ProxyBuilder\TestServiceNoMethod', $class_name);
   }
@@ -40,7 +40,7 @@ class ProxyBuilderTest extends TestCase {
   /**
    * @covers ::buildProxyClassName
    */
-  public function testBuildProxyClassNameForModule() {
+  public function testBuildProxyClassNameForModule(): void {
     $class_name = $this->proxyBuilder->buildProxyClassName('Drupal\views_ui\ParamConverter\ViewUIConverter');
     $this->assertEquals('Drupal\views_ui\ProxyClass\ParamConverter\ViewUIConverter', $class_name);
   }
@@ -48,7 +48,7 @@ class ProxyBuilderTest extends TestCase {
   /**
    * @covers ::buildProxyNamespace
    */
-  public function testBuildProxyNamespace() {
+  public function testBuildProxyNamespace(): void {
     $class_name = $this->proxyBuilder->buildProxyNamespace('Drupal\Tests\Component\ProxyBuilder\TestServiceNoMethod');
     $this->assertEquals('Drupal\Tests\ProxyClass\Component\ProxyBuilder', $class_name);
   }
@@ -60,7 +60,7 @@ class ProxyBuilderTest extends TestCase {
    * @covers ::buildConstructorMethod
    * @covers ::buildLazyLoadItselfMethod
    */
-  public function testBuildNoMethod() {
+  public function testBuildNoMethod(): void {
     $class = 'Drupal\Tests\Component\ProxyBuilder\TestServiceNoMethod';
 
     $result = $this->proxyBuilder->build($class);
@@ -71,7 +71,7 @@ class ProxyBuilderTest extends TestCase {
    * @covers ::buildMethod
    * @covers ::buildMethodBody
    */
-  public function testBuildSimpleMethod() {
+  public function testBuildSimpleMethod(): void {
     $class = 'Drupal\Tests\Component\ProxyBuilder\TestServiceSimpleMethod';
 
     $result = $this->proxyBuilder->build($class);
@@ -95,7 +95,7 @@ EOS;
    * @covers ::buildParameter
    * @covers ::buildMethodBody
    */
-  public function testBuildMethodWithParameter() {
+  public function testBuildMethodWithParameter(): void {
     $class = 'Drupal\Tests\Component\ProxyBuilder\TestServiceMethodWithParameter';
 
     $result = $this->proxyBuilder->build($class);
@@ -119,7 +119,7 @@ EOS;
    * @covers ::buildParameter
    * @covers ::buildMethodBody
    */
-  public function testBuildComplexMethod() {
+  public function testBuildComplexMethod(): void {
     $class = 'Drupal\Tests\Component\ProxyBuilder\TestServiceComplexMethod';
 
     $result = $this->proxyBuilder->build($class);
@@ -144,7 +144,7 @@ EOS;
   /**
    * @covers ::buildMethodBody
    */
-  public function testBuildServiceMethodReturnsVoid() {
+  public function testBuildServiceMethodReturnsVoid(): void {
     $class = TestServiceMethodReturnsVoid::class;
 
     $result = $this->proxyBuilder->build($class);
@@ -169,7 +169,7 @@ EOS;
    * @covers ::buildMethod
    * @covers ::buildMethodBody
    */
-  public function testBuildReturnReference() {
+  public function testBuildReturnReference(): void {
     $class = 'Drupal\Tests\Component\ProxyBuilder\TestServiceReturnReference';
 
     $result = $this->proxyBuilder->build($class);
@@ -195,7 +195,7 @@ EOS;
    * @covers ::buildParameter
    * @covers ::buildMethodBody
    */
-  public function testBuildWithInterface() {
+  public function testBuildWithInterface(): void {
     $class = 'Drupal\Tests\Component\ProxyBuilder\TestServiceWithInterface';
 
     $result = $this->proxyBuilder->build($class);
@@ -219,7 +219,7 @@ EOS;
   /**
    * @covers ::build
    */
-  public function testBuildWithNestedInterface() {
+  public function testBuildWithNestedInterface(): void {
     $class = 'Drupal\Tests\Component\ProxyBuilder\TestServiceWithChildInterfaces';
 
     $result = $this->proxyBuilder->build($class);
@@ -234,7 +234,7 @@ EOS;
    * @covers ::buildParameter
    * @covers ::buildMethodBody
    */
-  public function testBuildWithProtectedAndPrivateMethod() {
+  public function testBuildWithProtectedAndPrivateMethod(): void {
     $class = 'Drupal\Tests\Component\ProxyBuilder\TestServiceWithProtectedMethods';
 
     $result = $this->proxyBuilder->build($class);
@@ -259,7 +259,7 @@ EOS;
    * @covers ::buildParameter
    * @covers ::buildMethodBody
    */
-  public function testBuildWithPublicStaticMethod() {
+  public function testBuildWithPublicStaticMethod(): void {
     $class = 'Drupal\Tests\Component\ProxyBuilder\TestServiceWithPublicStaticMethod';
 
     $result = $this->proxyBuilder->build($class);
@@ -285,7 +285,7 @@ EOS;
    * @covers ::buildParameter
    * @covers ::buildMethodBody
    */
-  public function testBuildWithNullableSelfTypehint() {
+  public function testBuildWithNullableSelfTypehint(): void {
     $class = 'Drupal\Tests\Component\ProxyBuilder\TestServiceNullableTypehintSelf';
 
     $result = $this->proxyBuilder->build($class);
@@ -416,7 +416,7 @@ class TestServiceNoMethod {
 
 class TestServiceSimpleMethod {
 
-  public function method() {
+  public function method(): void {
 
   }
 
@@ -424,7 +424,7 @@ class TestServiceSimpleMethod {
 
 class TestServiceMethodWithParameter {
 
-  public function methodWithParameter($parameter) {
+  public function methodWithParameter($parameter): void {
 
   }
 
@@ -456,7 +456,7 @@ class TestServiceMethodReturnsVoid {
 
 class TestServiceReturnReference {
 
-  public function &returnReference() {
+  public function &returnReference(): void {
 
   }
 
@@ -470,7 +470,7 @@ interface TestInterface {
 
 class TestServiceWithInterface implements TestInterface {
 
-  public function testMethod($parameter) {
+  public function testMethod($parameter): void {
 
   }
 
@@ -478,15 +478,15 @@ class TestServiceWithInterface implements TestInterface {
 
 class TestServiceWithProtectedMethods {
 
-  public function testMethod($parameter) {
+  public function testMethod($parameter): void {
 
   }
 
-  protected function protectedMethod($parameter) {
+  protected function protectedMethod($parameter): void {
 
   }
 
-  protected function privateMethod($parameter) {
+  protected function privateMethod($parameter): void {
 
   }
 
@@ -494,7 +494,7 @@ class TestServiceWithProtectedMethods {
 
 class TestServiceWithPublicStaticMethod {
 
-  public static function testMethod($parameter) {
+  public static function testMethod($parameter): void {
   }
 
 }

@@ -28,7 +28,7 @@ class PublishActionTest extends KernelTestBase {
   /**
    * @covers \Drupal\Core\Action\Plugin\Action\Derivative\EntityPublishedActionDeriver::getDerivativeDefinitions
    */
-  public function testGetDerivativeDefinitions() {
+  public function testGetDerivativeDefinitions(): void {
     $deriver = new EntityPublishedActionDeriver(\Drupal::entityTypeManager(), \Drupal::translation());
     $definitions = $deriver->getDerivativeDefinitions([
       'action_label' => 'Save',
@@ -43,7 +43,7 @@ class PublishActionTest extends KernelTestBase {
   /**
    * @covers \Drupal\Core\Action\Plugin\Action\PublishAction::execute
    */
-  public function testPublishAction() {
+  public function testPublishAction(): void {
     $entity = EntityTestMulRevPub::create(['name' => 'test']);
     $entity->setUnpublished()->save();
 
@@ -61,7 +61,7 @@ class PublishActionTest extends KernelTestBase {
   /**
    * @covers \Drupal\Core\Action\Plugin\Action\UnpublishAction::execute
    */
-  public function testUnpublishAction() {
+  public function testUnpublishAction(): void {
     $entity = EntityTestMulRevPub::create(['name' => 'test']);
     $entity->setPublished()->save();
 

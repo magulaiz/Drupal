@@ -73,7 +73,7 @@ class CronTest extends UnitTestCase {
     // Set a flag to track when a message is logged by adding a callback
     // function for each logging method.
     foreach (get_class_methods(LoggerInterface::class) as $logger_method) {
-      $logger->{$logger_method}(Argument::cetera())->will(function () {
+      $logger->{$logger_method}(Argument::cetera())->will(function (): void {
         \Drupal::state()->set('cron_test.message_logged', TRUE);
       });
     }
@@ -140,7 +140,7 @@ class CronTest extends UnitTestCase {
     // This is avoided by throwing RequeueException for the first few calls to
     // ::processItem() and then returning void. ::testRequeueException()
     // establishes sanity assertions for this case.
-    $queue_worker_plugin->processItem('RequeueException')->will(function ($args, $mock, $method) {
+    $queue_worker_plugin->processItem('RequeueException')->will(function ($args, $mock, $method): void {
       // Fetch the number of calls to this prophesied method. This value will
       // start at zero during the first call.
       $method_calls = count($mock->findProphecyMethodCalls($method->getMethodName(), new ArgumentsWildcard($args)));
@@ -163,7 +163,7 @@ class CronTest extends UnitTestCase {
   /**
    * Resets the testing state.
    */
-  protected function resetTestingState() {
+  protected function resetTestingState(): void {
     $this->queue->deleteQueue();
     $this->state->set('cron_test.message_logged', FALSE);
     $this->state->set('cron_test.requeue_count', NULL);
@@ -188,7 +188,7 @@ class CronTest extends UnitTestCase {
    * @covers ::processQueues
    * @dataProvider processQueuesTestData
    */
-  public function testProcessQueues($item, $message_logged_assertion, $count_post_run) {
+  public function testProcessQueues($item, $message_logged_assertion, $count_post_run): void {
     $this->resetTestingState();
     $this->queue->createItem($item);
     $this->assertFalse($this->state->get('cron_test.message_logged'));
@@ -201,7 +201,7 @@ class CronTest extends UnitTestCase {
   /**
    * Verify that RequeueException causes an item to be processed multiple times.
    */
-  public function testRequeueException() {
+  public function testRequeueException(): void {
     $this->resetTestingState();
     $this->queue->createItem('RequeueException');
     $this->cron->run();

@@ -30,8 +30,8 @@ class CommandsTest extends KernelTestBase {
   /**
    * Regression test: Settings command exists regardless of JS aggregation.
    */
-  public function testAttachedSettings() {
-    $assert = function ($message) {
+  public function testAttachedSettings(): void {
+    $assert = function ($message): void {
       $response = new AjaxResponse();
       $response->setAttachments([
         'library' => ['core/drupalSettings'],
@@ -67,7 +67,7 @@ class CommandsTest extends KernelTestBase {
    *
    * @doesNotPerformAssertions
    */
-  public function testEmptyInsertCommand() {
+  public function testEmptyInsertCommand(): void {
     (new InsertCommand('foobar', []))->render();
   }
 

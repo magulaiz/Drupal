@@ -22,7 +22,7 @@ class HandlerFieldPermissionTest extends UserKernelTestBase {
   /**
    * Tests the permission field handler output.
    */
-  public function testFieldPermission() {
+  public function testFieldPermission(): void {
     $this->setupPermissionTestData();
 
     $view = Views::getView('test_field_permission');

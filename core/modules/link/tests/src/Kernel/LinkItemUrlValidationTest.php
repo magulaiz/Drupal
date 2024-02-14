@@ -19,7 +19,7 @@ class LinkItemUrlValidationTest extends FieldKernelTestBase {
   /**
    * Tests link validation.
    */
-  public function testExternalLinkValidation() {
+  public function testExternalLinkValidation(): void {
     $definition = \Drupal::typedDataManager()
       ->createDataDefinition('field_item:link');
     $link_item = \Drupal::typedDataManager()->create($definition);

@@ -59,7 +59,7 @@ class TourHelpPageTest extends BrowserTestBase {
   /**
    * Logs in users, tests help pages.
    */
-  public function testHelp() {
+  public function testHelp(): void {
     $this->drupalLogin($this->tourUser);
     $this->verifyHelp();
 
@@ -73,7 +73,7 @@ class TourHelpPageTest extends BrowserTestBase {
    * @param bool $tours_ok
    *   (optional) TRUE (default) if the user should see tours, FALSE if not.
    */
-  protected function verifyHelp($tours_ok = TRUE) {
+  protected function verifyHelp($tours_ok = TRUE): void {
     $this->drupalGet('admin/help');
 
     // All users should be able to see the module section.

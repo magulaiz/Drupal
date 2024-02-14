@@ -133,7 +133,7 @@ class ForumTest extends BrowserTestBase {
   /**
    * Tests forum functionality through the admin and user interfaces.
    */
-  public function testForum() {
+  public function testForum(): void {
     // Check that the basic forum install creates a default forum topic
     $this->drupalGet('/forum');
     // Look for the "General discussion" default forum
@@ -272,7 +272,7 @@ class ForumTest extends BrowserTestBase {
    * Verifies that forum nodes are not created without choosing "forum" from the
    * select list.
    */
-  public function testAddOrphanTopic() {
+  public function testAddOrphanTopic(): void {
     // Must remove forum topics to test creating orphan topics.
     $vid = $this->config('forum.settings')->get('vocabulary');
     $tids = \Drupal::entityQuery('taxonomy_term')
@@ -309,7 +309,7 @@ class ForumTest extends BrowserTestBase {
    * @param object $user
    *   The logged-in user.
    */
-  private function doAdminTests($user) {
+  private function doAdminTests($user): void {
     // Log in the user.
     $this->drupalLogin($user);
 
@@ -387,7 +387,7 @@ class ForumTest extends BrowserTestBase {
   /**
    * Edits the forum taxonomy.
    */
-  public function editForumVocabulary() {
+  public function editForumVocabulary(): void {
     // Backup forum taxonomy.
     $vid = $this->config('forum.settings')->get('vocabulary');
     $original_vocabulary = Vocabulary::load($vid);
@@ -485,7 +485,7 @@ class ForumTest extends BrowserTestBase {
    * @param int $tid
    *   The forum ID.
    */
-  public function deleteForum($tid) {
+  public function deleteForum($tid): void {
     // Delete the forum.
     $this->drupalGet('admin/structure/forum/edit/forum/' . $tid);
     $this->clickLink('Delete');
@@ -507,7 +507,7 @@ class ForumTest extends BrowserTestBase {
    * @param bool $admin
    *   User has 'access administration pages' privilege.
    */
-  private function doBasicTests($user, $admin) {
+  private function doBasicTests($user, $admin): void {
     // Log in the user.
     $this->drupalLogin($user);
     // Attempt to create forum topic under a container.
@@ -521,7 +521,7 @@ class ForumTest extends BrowserTestBase {
   /**
    * Tests a forum with a new post displays properly.
    */
-  public function testForumWithNewPost() {
+  public function testForumWithNewPost(): void {
     // Log in as the first user.
     $this->drupalLogin($this->adminUser);
     // Create a forum container.
@@ -618,7 +618,7 @@ class ForumTest extends BrowserTestBase {
    * @param int $response
    *   The expected HTTP response code.
    */
-  private function verifyForums(EntityInterface $node, $admin, $response = 200) {
+  private function verifyForums(EntityInterface $node, $admin, $response = 200): void {
     $response2 = ($admin) ? 200 : 403;
 
     // View forum help node.
@@ -698,7 +698,7 @@ class ForumTest extends BrowserTestBase {
    * @param array $parent
    *   (optional) An array representing the forum's parent.
    */
-  private function verifyForumView($forum, $parent = NULL) {
+  private function verifyForumView($forum, $parent = NULL): void {
     // View forum page.
     $this->drupalGet('forum/' . $forum['tid']);
     $this->assertSession()->statusCodeEquals(200);
@@ -722,7 +722,7 @@ class ForumTest extends BrowserTestBase {
   /**
    * Generates forum topics.
    */
-  private function generateForumTopics() {
+  private function generateForumTopics(): void {
     $this->nids = [];
     for ($i = 0; $i < 5; $i++) {
       $node = $this->createForumTopic($this->forum, FALSE);
@@ -733,7 +733,7 @@ class ForumTest extends BrowserTestBase {
   /**
    * Evaluate whether "Add new Forum topic" button is present or not.
    */
-  public function testForumTopicButton() {
+  public function testForumTopicButton(): void {
     $this->drupalLogin($this->adminUser);
 
     // Validate that link doesn't exist on the forum container page.

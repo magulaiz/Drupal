@@ -77,7 +77,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
   /**
    * Tests the Entity Reference Admin UI.
    */
-  public function testFieldAdminHandler() {
+  public function testFieldAdminHandler(): void {
     $bundle_path = 'admin/structure/types/manage/' . $this->type;
     // Create a new view and display it as an entity reference.
     $edit = [
@@ -258,7 +258,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
   /**
    * Tests the formatters for the Entity References.
    */
-  public function testAvailableFormatters() {
+  public function testAvailableFormatters(): void {
     // Create a new vocabulary.
     Vocabulary::create(['vid' => 'tags', 'name' => 'tags'])->save();
 
@@ -319,7 +319,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
    * The tested entity reference field has multiple target bundles and is set
    * to auto-create the target entity.
    */
-  public function testMultipleTargetBundles() {
+  public function testMultipleTargetBundles(): void {
     /** @var \Drupal\taxonomy\Entity\Vocabulary[] $vocabularies */
     $vocabularies = [];
     for ($i = 0; $i < 2; $i++) {
@@ -420,7 +420,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
    */
   protected function assertFieldSelectOptions(string $name, array $expected_options): void {
     $options = $this->assertSession()->selectExists($name)->findAll('xpath', 'option');
-    array_walk($options, function (NodeElement &$option) {
+    array_walk($options, function (NodeElement &$option): void {
       $option = $option->getValue();
     });
     $this->assertEqualsCanonicalizing($expected_options, $options);

@@ -51,7 +51,7 @@ class ViewsTest extends UnitTestCase {
    *
    * @covers ::getView
    */
-  public function testGetView() {
+  public function testGetView(): void {
     $view = new View(['id' => 'test_view'], 'view');
 
     $view_storage = $this->getMockBuilder('Drupal\Core\Config\Entity\ConfigEntityStorage')
@@ -80,7 +80,7 @@ class ViewsTest extends UnitTestCase {
    *
    * @covers ::getView
    */
-  public function testGetNonExistentView() {
+  public function testGetNonExistentView(): void {
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
     $storage = $this->prophesize(EntityStorageInterface::class);
     $storage->load('test_view_non_existent')->willReturn(NULL);
@@ -95,7 +95,7 @@ class ViewsTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetApplicableViews
    */
-  public function testGetApplicableViews($applicable_type, $expected) {
+  public function testGetApplicableViews($applicable_type, $expected): void {
     $view_1 = new View([
       'id' => 'test_view_1',
       'display' => [

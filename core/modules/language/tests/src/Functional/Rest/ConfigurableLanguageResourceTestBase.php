@@ -27,7 +27,7 @@ abstract class ConfigurableLanguageResourceTestBase extends ConfigEntityResource
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     $this->grantPermissionsToTestedRole(['administer languages']);
   }
 
@@ -81,7 +81,7 @@ abstract class ConfigurableLanguageResourceTestBase extends ConfigEntityResource
    *
    * @see https://www.drupal.org/node/2915414
    */
-  public function testGetDefaultConfig() {
+  public function testGetDefaultConfig(): void {
     $this->initAuthentication();
     $url = Url::fromUri('base:/entity/configurable_language/en')->setOption('query', ['_format' => static::$format]);
     $request_options = $this->getAuthenticationRequestOptions('GET');

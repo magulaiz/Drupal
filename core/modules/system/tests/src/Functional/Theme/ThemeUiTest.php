@@ -45,7 +45,7 @@ class ThemeUiTest extends BrowserTestBase {
   /**
    * Tests permissions for enabling themes depending on disabled modules.
    */
-  public function testModulePermissions() {
+  public function testModulePermissions(): void {
     // Log in as a user without permission to enable modules.
     $this->drupalLogin($this->drupalCreateUser([
       'administer themes',
@@ -86,12 +86,12 @@ class ThemeUiTest extends BrowserTestBase {
    *
    * @dataProvider providerTestThemeInstallWithModuleDependencies
    */
-  public function testThemeInstallWithModuleDependencies($theme_name, array $first_modules, array $second_modules, array $required_by_messages, $base_theme_to_uninstall, array $base_theme_module_names) {
+  public function testThemeInstallWithModuleDependencies($theme_name, array $first_modules, array $second_modules, array $required_by_messages, $base_theme_to_uninstall, array $base_theme_module_names): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $all_dependent_modules = array_merge($first_modules, $second_modules);
     $this->drupalGet('admin/appearance');
-    $assert_module_enabled_message = function ($enabled_modules) {
+    $assert_module_enabled_message = function ($enabled_modules): void {
       $count = count($enabled_modules);
       $module_enabled_text = $count === 1 ? "{$this->testModules[$enabled_modules[0]]} has been installed." : $count . " modules have been installed:";
       $this->assertSession()->pageTextContains($module_enabled_text);
@@ -169,7 +169,7 @@ class ThemeUiTest extends BrowserTestBase {
    * @param string[] $module_names
    *   An array of module machine names.
    */
-  protected function uninstallModules(array $module_names) {
+  protected function uninstallModules(array $module_names): void {
     $assert_session = $this->assertSession();
     $this->drupalGet('admin/modules/uninstall');
     foreach ($module_names as $attribute) {
@@ -198,7 +198,7 @@ class ThemeUiTest extends BrowserTestBase {
    * @param string $theme_name
    *   The theme name.
    */
-  protected function uninstallTheme($theme_name) {
+  protected function uninstallTheme($theme_name): void {
     $this->drupalGet('admin/appearance');
     $this->clickLink("Uninstall $theme_name theme");
     $this->assertSession()->pageTextContains("The $theme_name theme has been uninstalled.");
@@ -308,7 +308,7 @@ class ThemeUiTest extends BrowserTestBase {
   /**
    * Tests installing a theme with missing module dependencies.
    */
-  public function testInstallModuleWithMissingDependencies() {
+  public function testInstallModuleWithMissingDependencies(): void {
     $this->drupalGet('admin/appearance');
     $theme_container = $this->getSession()->getPage()->find('css', 'h3:contains("Test Theme Depending on Nonexisting Module")')->getParent();
     $this->assertStringContainsString('Requires: test_module_non_existing (missing)', $theme_container->getText());
@@ -318,7 +318,7 @@ class ThemeUiTest extends BrowserTestBase {
   /**
    * Tests installing a theme with incompatible module dependencies.
    */
-  public function testInstallModuleWithIncompatibleDependencies() {
+  public function testInstallModuleWithIncompatibleDependencies(): void {
     $this->container->get('module_installer')->install(['test_module_compatible_constraint', 'test_module_incompatible_constraint']);
     $this->drupalGet('admin/appearance');
     $theme_container = $this->getSession()->getPage()->find('css', 'h3:contains("Test Theme Depending on Version Constrained Modules")')->getParent();
@@ -329,7 +329,7 @@ class ThemeUiTest extends BrowserTestBase {
   /**
    * Tests that incompatible themes message is shown.
    */
-  public function testInstalledIncompatibleTheme() {
+  public function testInstalledIncompatibleTheme(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
     $incompatible_themes_message = 'There are errors with some installed themes. Visit the status report page for more information.';

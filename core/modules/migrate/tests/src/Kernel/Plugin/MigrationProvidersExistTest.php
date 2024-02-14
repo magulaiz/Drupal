@@ -22,7 +22,7 @@ class MigrationProvidersExistTest extends MigrateDrupalTestBase {
   /**
    * Tests that a missing source_module property raises an exception.
    */
-  public function testSourceProvider() {
+  public function testSourceProvider(): void {
     $this->enableModules(['migration_provider_test']);
     $this->expectException(BadPluginDefinitionException::class);
     $this->expectExceptionMessage('The no_source_module plugin must define the source_module property.');
@@ -32,7 +32,7 @@ class MigrationProvidersExistTest extends MigrateDrupalTestBase {
   /**
    * Tests that modules exist for all source plugins.
    */
-  public function testProvidersExist() {
+  public function testProvidersExist(): void {
     $this->enableAllModules();
 
     /** @var \Drupal\migrate\Plugin\MigrateSourcePluginManager $plugin_manager */
@@ -47,7 +47,7 @@ class MigrationProvidersExistTest extends MigrateDrupalTestBase {
   /**
    * Enable all available modules.
    */
-  protected function enableAllModules() {
+  protected function enableAllModules(): void {
     // Install all available modules.
     $module_handler = $this->container->get('module_handler');
     $modules = $this->coreModuleListDataProvider();
@@ -59,7 +59,7 @@ class MigrationProvidersExistTest extends MigrateDrupalTestBase {
   /**
    * Tests that modules exist for all field plugins.
    */
-  public function testFieldProvidersExist() {
+  public function testFieldProvidersExist(): void {
     $expected_mappings = [
       'userreference' => [
         'source_module' => 'userreference',
@@ -174,7 +174,7 @@ class MigrationProvidersExistTest extends MigrateDrupalTestBase {
    *
    * @dataProvider fieldPluginDefinitionsProvider
    */
-  public function testFieldProviderMissingRequiredProperty(array $definitions, $missing_property) {
+  public function testFieldProviderMissingRequiredProperty(array $definitions, $missing_property): void {
     $discovery = $this->getMockBuilder(MigrateFieldPluginManager::class)
       ->disableOriginalConstructor()
       ->onlyMethods(['getDefinitions'])

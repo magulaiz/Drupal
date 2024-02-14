@@ -40,7 +40,7 @@ class ViewsDataHelperTest extends UnitTestCase {
   /**
    * Tests fetchFields.
    */
-  public function testFetchFields() {
+  public function testFetchFields(): void {
     $views_data = $this->getMockBuilder('Drupal\views\ViewsData')
       ->disableOriginalConstructor()
       ->getMock();
@@ -99,7 +99,7 @@ class ViewsDataHelperTest extends UnitTestCase {
     foreach ($handler_types as $handler_type) {
       $fields = $data_helper->fetchFields('views_test_data', $handler_type);
       $expected_keys = $expected[$handler_type];
-      array_walk($expected_keys, function (&$item) {
+      array_walk($expected_keys, function (&$item): void {
         $item = "views_test_data.$item";
       });
       $this->assertEquals($expected_keys, array_keys($fields), "Handlers of type $handler_type are not listed as expected");
@@ -110,7 +110,7 @@ class ViewsDataHelperTest extends UnitTestCase {
       $fields = $data_helper->fetchFields('views_test_data', 'area', FALSE, $sub_type);
 
       $expected_keys = $expected[$sub_type];
-      array_walk($expected_keys, function (&$item) {
+      array_walk($expected_keys, function (&$item): void {
         $item = "views_test_data.$item";
       });
       $this->assertEquals($expected_keys, array_keys($fields), "Sub_type $sub_type is not filtered as expected.");

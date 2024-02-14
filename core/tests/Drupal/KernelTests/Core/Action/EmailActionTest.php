@@ -30,7 +30,7 @@ class EmailActionTest extends KernelTestBase {
   /**
    * Tests the email action plugin.
    */
-  public function testEmailAction() {
+  public function testEmailAction(): void {
     $this->config('system.site')->set('mail', 'test@example.com')->save();
 
     /** @var \Drupal\Core\Action\ActionManager $plugin_manager */

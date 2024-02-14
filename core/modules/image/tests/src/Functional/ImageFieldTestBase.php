@@ -83,7 +83,7 @@ abstract class ImageFieldTestBase extends BrowserTestBase {
    * @param string $type
    *   The type of node to create.
    */
-  public function previewNodeImage($image, $field_name, $type) {
+  public function previewNodeImage($image, $field_name, $type): void {
     $edit = [
       'title[0][value]' => $this->randomMachineName(),
     ];

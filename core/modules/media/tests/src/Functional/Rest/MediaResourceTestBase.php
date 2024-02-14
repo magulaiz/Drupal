@@ -68,7 +68,7 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     switch ($method) {
       case 'GET':
         $this->grantPermissionsToTestedRole(['view media']);
@@ -310,7 +310,7 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testPost() {
+  public function testPost(): void {
     $file_storage = $this->container->get('entity_type.manager')->getStorage('file');
 
     // Step 1: upload file, results in File entity marked temporary.
@@ -334,7 +334,7 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
    *
    * @see \Drupal\Tests\rest\Functional\FileUploadResourceTestBase
    */
-  protected function uploadFile() {
+  protected function uploadFile(): void {
     // Enable the 'file_upload' REST resource for the current format + auth.
     $this->resourceConfigStorage->create([
       'id' => 'file.upload',

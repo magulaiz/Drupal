@@ -20,7 +20,7 @@ class ConditionAccessResolverTraitTest extends UnitTestCase {
    *
    * @dataProvider providerTestResolveConditions
    */
-  public function testResolveConditions($conditions, $logic, $expected) {
+  public function testResolveConditions($conditions, $logic, $expected): void {
     $trait_object = new TestConditionAccessResolverTrait();
     $this->assertEquals($expected, $trait_object->resolveConditions($conditions, $logic));
   }

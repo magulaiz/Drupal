@@ -23,7 +23,7 @@ class ViewsAddMissingLabelsUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.4.0.bare.standard.php.gz',
       __DIR__ . '/../../../fixtures/update/fix-revision-id-update.php',
@@ -42,7 +42,7 @@ class ViewsAddMissingLabelsUpdateTest extends UpdatePathTestBase {
   /**
    * Tests the upgrade path for adding missing labels.
    */
-  public function testViewsPostUpdateFixRevisionId() {
+  public function testViewsPostUpdateFixRevisionId(): void {
     $view = View::load('test_fix_revision_id_update');
     $data = $view->toArray();
     $this->assertEmpty($data['label']);

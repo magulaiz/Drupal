@@ -18,7 +18,7 @@ class FileMoveTest extends FileTestBase {
   /**
    * Move a normal file.
    */
-  public function testNormal() {
+  public function testNormal(): void {
     // Create a file for testing
     $uri = $this->createUri();
 
@@ -51,7 +51,7 @@ class FileMoveTest extends FileTestBase {
   /**
    * Try to move a missing file.
    */
-  public function testMissing() {
+  public function testMissing(): void {
     // Move non-existent file.
     $this->expectException(FileNotExistsException::class);
     \Drupal::service('file_system')->move($this->randomMachineName(), $this->randomMachineName());
@@ -60,7 +60,7 @@ class FileMoveTest extends FileTestBase {
   /**
    * Try to move a file onto itself.
    */
-  public function testOverwriteSelf() {
+  public function testOverwriteSelf(): void {
     // Create a file for testing.
     $uri = $this->createUri();
 

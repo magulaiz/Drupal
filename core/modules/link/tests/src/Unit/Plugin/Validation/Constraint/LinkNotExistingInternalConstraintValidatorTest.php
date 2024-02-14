@@ -21,7 +21,7 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
    * @covers ::validate
    * @dataProvider providerValidate
    */
-  public function testValidate($value, $valid) {
+  public function testValidate($value, $valid): void {
     $context = $this->createMock(ExecutionContextInterface::class);
 
     if ($valid) {
@@ -90,7 +90,7 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
    *
    * @see \Drupal\Core\Url::fromUri
    */
-  public function testValidateWithMalformedUri() {
+  public function testValidateWithMalformedUri(): void {
     $link = $this->createMock('Drupal\link\LinkItemInterface');
     $link->expects($this->any())
       ->method('getUrl')

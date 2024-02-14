@@ -59,7 +59,7 @@ class ConfigTest extends TestCase {
    * @dataProvider provideGetMessageText
    * @covers ::getText
    */
-  public function testGetMessageText($expected, $config) {
+  public function testGetMessageText($expected, $config): void {
     // Root package has our config.
     $root = $this->getMockBuilder(RootPackageInterface::class)
       ->onlyMethods(['getExtra'])
@@ -76,7 +76,7 @@ class ConfigTest extends TestCase {
   /**
    * @covers ::getText
    */
-  public function testDefaultFile() {
+  public function testDefaultFile(): void {
     // Root package has no extra field.
     $root = $this->getMockBuilder(RootPackageInterface::class)
       ->onlyMethods(['getExtra'])

@@ -17,7 +17,7 @@ class TaggingTest extends DatabaseTestBase {
   /**
    * Confirms that a query has a tag added to it.
    */
-  public function testHasTag() {
+  public function testHasTag(): void {
     $query = $this->connection->select('test');
     $query->addField('test', 'name');
     $query->addField('test', 'age', 'age');
@@ -31,7 +31,7 @@ class TaggingTest extends DatabaseTestBase {
   /**
    * Tests query tagging "has all of these tags" functionality.
    */
-  public function testHasAllTags() {
+  public function testHasAllTags(): void {
     $query = $this->connection->select('test');
     $query->addField('test', 'name');
     $query->addField('test', 'age', 'age');
@@ -46,7 +46,7 @@ class TaggingTest extends DatabaseTestBase {
   /**
    * Tests query tagging "has at least one of these tags" functionality.
    */
-  public function testHasAnyTag() {
+  public function testHasAnyTag(): void {
     $query = $this->connection->select('test');
     $query->addField('test', 'name');
     $query->addField('test', 'age', 'age');
@@ -60,7 +60,7 @@ class TaggingTest extends DatabaseTestBase {
   /**
    * Confirms that an extended query has a tag added to it.
    */
-  public function testExtenderHasTag() {
+  public function testExtenderHasTag(): void {
     $query = $this->connection->select('test')
       ->extend(SelectExtender::class);
     $query->addField('test', 'name');
@@ -75,7 +75,7 @@ class TaggingTest extends DatabaseTestBase {
   /**
    * Tests extended query tagging "has all of these tags" functionality.
    */
-  public function testExtenderHasAllTags() {
+  public function testExtenderHasAllTags(): void {
     $query = $this->connection->select('test')
       ->extend(SelectExtender::class);
     $query->addField('test', 'name');
@@ -91,7 +91,7 @@ class TaggingTest extends DatabaseTestBase {
   /**
    * Tests extended query tagging for "has at least one of these tags".
    */
-  public function testExtenderHasAnyTag() {
+  public function testExtenderHasAnyTag(): void {
     $query = $this->connection->select('test')
       ->extend(SelectExtender::class);
     $query->addField('test', 'name');
@@ -108,7 +108,7 @@ class TaggingTest extends DatabaseTestBase {
    *
    * This is how we pass additional context to alter hooks.
    */
-  public function testMetaData() {
+  public function testMetaData(): void {
     $query = $this->connection->select('test');
     $query->addField('test', 'name');
     $query->addField('test', 'age', 'age');

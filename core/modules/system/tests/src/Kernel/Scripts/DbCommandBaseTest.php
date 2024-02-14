@@ -23,7 +23,7 @@ class DbCommandBaseTest extends KernelTestBase {
   /**
    * Tests specifying a database key.
    */
-  public function testSpecifyDatabaseKey() {
+  public function testSpecifyDatabaseKey(): void {
     $command = new DbCommandBaseTester();
     $command_tester = new CommandTester($command);
 
@@ -39,7 +39,7 @@ class DbCommandBaseTest extends KernelTestBase {
   /**
    * Invalid database names will throw a useful exception.
    */
-  public function testSpecifyDatabaseDoesNotExist() {
+  public function testSpecifyDatabaseDoesNotExist(): void {
     $command = new DbCommandBaseTester();
     $command_tester = new CommandTester($command);
     $command_tester->execute([
@@ -52,7 +52,7 @@ class DbCommandBaseTest extends KernelTestBase {
   /**
    * Tests supplying database connection as a URL.
    */
-  public function testSpecifyDbUrl() {
+  public function testSpecifyDbUrl(): void {
     $command = new DbCommandBaseTester();
     $command_tester = new CommandTester($command);
     $command_tester->execute([
@@ -70,7 +70,7 @@ class DbCommandBaseTest extends KernelTestBase {
   /**
    * Tests specifying a prefix for different connections.
    */
-  public function testPrefix() {
+  public function testPrefix(): void {
     if (Database::getConnection()->driver() == 'sqlite') {
       $this->markTestSkipped('SQLITE modifies the prefixes so we cannot effectively test it');
     }
@@ -109,7 +109,7 @@ class DbCommandBaseTester extends DbCommandBase {
   /**
    * {@inheritdoc}
    */
-  public function configure() {
+  public function configure(): void {
     parent::configure();
     $this->setName('test');
   }

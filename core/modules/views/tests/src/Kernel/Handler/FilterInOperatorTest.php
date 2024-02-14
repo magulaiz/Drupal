@@ -42,7 +42,7 @@ class FilterInOperatorTest extends ViewsKernelTestBase {
     return $data;
   }
 
-  public function testFilterInOperatorSimple() {
+  public function testFilterInOperatorSimple(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -108,7 +108,7 @@ class FilterInOperatorTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
   }
 
-  public function testFilterInOperatorGroupedExposedSimple() {
+  public function testFilterInOperatorGroupedExposedSimple(): void {
     $filters = $this->getGroupedExposedFilters();
     $view = Views::getView('test_view');
 
@@ -134,7 +134,7 @@ class FilterInOperatorTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $expected_result, $this->columnMap);
   }
 
-  public function testFilterNotInOperatorGroupedExposedSimple() {
+  public function testFilterNotInOperatorGroupedExposedSimple(): void {
     $filters = $this->getGroupedExposedFilters();
     $view = Views::getView('test_view');
 
@@ -167,7 +167,7 @@ class FilterInOperatorTest extends ViewsKernelTestBase {
   /**
    * Tests that we can safely change the identifier on a grouped filter.
    */
-  public function testFilterGroupedChangedIdentifier() {
+  public function testFilterGroupedChangedIdentifier(): void {
     $filters = $this->getGroupedExposedFilters();
     $view = Views::getView('test_view');
 
@@ -236,7 +236,7 @@ class FilterInOperatorTest extends ViewsKernelTestBase {
   /**
    * Tests that the InOperator filter can handle TranslatableMarkup.
    */
-  public function testFilterOptionAsMarkup() {
+  public function testFilterOptionAsMarkup(): void {
     $view = $this->prophesize(ViewExecutable::class);
     $display = $this->prophesize(DisplayPluginBase::class);
     $display->getOption('relationships')->willReturn(FALSE);

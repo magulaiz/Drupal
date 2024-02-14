@@ -56,7 +56,7 @@ class MenuUiContentModerationTest extends BrowserTestBase {
   /**
    * Tests that node drafts can not modify the menu settings.
    */
-  public function testMenuUiWithPendingRevisions() {
+  public function testMenuUiWithPendingRevisions(): void {
     $editor = $this->drupalCreateUser([
       'administer nodes',
       'administer menu',
@@ -192,7 +192,7 @@ class MenuUiContentModerationTest extends BrowserTestBase {
   /**
    * Tests that unpublished content can be selected through the menu UI.
    */
-  public function testMenuUiWithUnpublishedContent() {
+  public function testMenuUiWithUnpublishedContent(): void {
     $editor_with_unpublished_content_access = $this->drupalCreateUser([
       'administer nodes',
       'administer menu',

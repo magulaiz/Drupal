@@ -58,7 +58,7 @@ class ContentTranslationStandardFieldsTest extends BrowserTestBase {
   /**
    * Tests that translatable fields are being rendered.
    */
-  public function testFieldTranslatableArticle() {
+  public function testFieldTranslatableArticle(): void {
     // Install block and field modules.
     \Drupal::service('module_installer')->install(
       [
@@ -165,7 +165,7 @@ class ContentTranslationStandardFieldsTest extends BrowserTestBase {
   /**
    * Tests that revision_log is not translatable.
    */
-  public function testRevisionLogNotTranslatable() {
+  public function testRevisionLogNotTranslatable(): void {
     $path = 'admin/config/regional/content-language';
     $this->drupalGet($path);
     $this->assertSession()->fieldNotExists('edit-settings-node-article-fields-revision-log');

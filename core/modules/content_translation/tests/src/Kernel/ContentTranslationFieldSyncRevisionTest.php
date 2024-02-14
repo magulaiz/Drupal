@@ -125,7 +125,7 @@ class ContentTranslationFieldSyncRevisionTest extends EntityKernelTestBase {
    * @covers \Drupal\content_translation\FieldTranslationSynchronizer::synchronizeFields
    * @covers \Drupal\content_translation\FieldTranslationSynchronizer::synchronizeItems
    */
-  public function testFieldSynchronizationAndValidation() {
+  public function testFieldSynchronizationAndValidation(): void {
     // Test that when untranslatable field widgets are displayed, synchronized
     // field properties can be changed only in default revisions.
     $this->setUntranslatableFieldWidgetsDisplay(TRUE);
@@ -376,7 +376,7 @@ class ContentTranslationFieldSyncRevisionTest extends EntityKernelTestBase {
   /**
    * Tests changing the default language of an entity.
    */
-  public function testChangeDefaultLanguageNonTranslatableFieldsHidden() {
+  public function testChangeDefaultLanguageNonTranslatableFieldsHidden(): void {
     $this->setUntranslatableFieldWidgetsDisplay(FALSE);
     $entity = $this->saveNewEntity();
     $entity->langcode = 'it';
@@ -389,7 +389,7 @@ class ContentTranslationFieldSyncRevisionTest extends EntityKernelTestBase {
    * @param bool $display
    *   Whether untranslatable field widgets should be displayed.
    */
-  protected function setUntranslatableFieldWidgetsDisplay($display) {
+  protected function setUntranslatableFieldWidgetsDisplay($display): void {
     $entity_type_id = $this->storage->getEntityTypeId();
     $settings = ['untranslatable_fields_hide' => !$display];
     $this->contentTranslationManager->setBundleTranslationSettings($entity_type_id, $entity_type_id, $settings);

@@ -35,7 +35,7 @@ trait CreateTestContentEntitiesTrait {
   /**
    * Install required entity schemas.
    */
-  protected function installEntitySchemas() {
+  protected function installEntitySchemas(): void {
     $this->installEntitySchema('block_content');
     $this->installEntitySchema('comment');
     $this->installEntitySchema('file');
@@ -49,7 +49,7 @@ trait CreateTestContentEntitiesTrait {
   /**
    * Create several pieces of generic content.
    */
-  protected function createContent() {
+  protected function createContent(): void {
     $entity_type_manager = \Drupal::entityTypeManager();
 
     // Create a block content.
@@ -121,7 +121,7 @@ trait CreateTestContentEntitiesTrait {
   /**
    * Create several pieces of generic content.
    */
-  protected function createContentPostUpgrade() {
+  protected function createContentPostUpgrade(): void {
     $entity_type_manager = \Drupal::entityTypeManager();
 
     // Create a block content.

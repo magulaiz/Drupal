@@ -23,7 +23,7 @@ class GlobalThemeSettingsDefaultLogoUrlUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       DRUPAL_ROOT . '/core/modules/system/tests/fixtures/update/drupal-9.4.0.bare.standard.php.gz',
     ];
@@ -32,7 +32,7 @@ class GlobalThemeSettingsDefaultLogoUrlUpdateTest extends UpdatePathTestBase {
   /**
    * Tests update of system.theme.global:logo.url.
    */
-  public function testUpdate() {
+  public function testUpdate(): void {
     $logo_url_before = $this->config('system.theme.global')->get('logo.url');
     $this->assertSame('', $logo_url_before);
 

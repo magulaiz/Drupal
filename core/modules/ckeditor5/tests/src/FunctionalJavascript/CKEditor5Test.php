@@ -40,7 +40,7 @@ class CKEditor5Test extends CKEditor5TestBase {
   /**
    * Tests configuring CKEditor 5 for existing content.
    */
-  public function testExistingContent() {
+  public function testExistingContent(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -72,7 +72,7 @@ class CKEditor5Test extends CKEditor5TestBase {
   /**
    * Ensures that attribute values are encoded.
    */
-  public function testAttributeEncoding() {
+  public function testAttributeEncoding(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -143,7 +143,7 @@ class CKEditor5Test extends CKEditor5TestBase {
   /**
    * Test headings configuration.
    */
-  public function testHeadingsPlugin() {
+  public function testHeadingsPlugin(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -218,7 +218,7 @@ class CKEditor5Test extends CKEditor5TestBase {
   /**
    * Test for Language of Parts plugin.
    */
-  public function testLanguageOfPartsPlugin() {
+  public function testLanguageOfPartsPlugin(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -252,7 +252,7 @@ class CKEditor5Test extends CKEditor5TestBase {
   /**
    * Helper to configure CKEditor5 with Language plugin.
    */
-  public function languageOfPartsPluginInitialConfigurationHelper($page, $assert_session) {
+  public function languageOfPartsPluginInitialConfigurationHelper($page, $assert_session): void {
     $this->createNewTextFormat($page, $assert_session);
     // Press arrow down key to add the button to the active toolbar.
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-textPartLanguage'));
@@ -290,7 +290,7 @@ JS;
   /**
    * Helper to set language list option for CKEditor.
    */
-  public function languageOfPartsPluginConfigureLanguageListHelper($page, $assert_session, $option) {
+  public function languageOfPartsPluginConfigureLanguageListHelper($page, $assert_session, $option): void {
     $this->drupalGet('admin/config/content/formats/manage/ckeditor5');
     $this->assertNotEmpty($assert_session->waitForElement('css', 'a[href^="#edit-editor-settings-plugins-ckeditor5-language"]'));
 
@@ -309,7 +309,7 @@ JS;
   /**
    * Validate expected languages available in editor.
    */
-  public function languageOfPartsPluginTestHelper($page, $assert_session, $configured_languages) {
+  public function languageOfPartsPluginTestHelper($page, $assert_session, $configured_languages): void {
     $this->drupalGet('node/add/page');
     $this->assertNotEmpty($assert_session->waitForText('Choose language'));
 
@@ -400,7 +400,7 @@ JS;
   /**
    * Confirms active tab status is intact after AJAX refresh.
    */
-  public function testActiveTabsMaintained() {
+  public function testActiveTabsMaintained(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -539,7 +539,7 @@ JS;
   /**
    * Ensures that CKEditor 5 integrates with file reference filter.
    */
-  public function testEditorFileReferenceIntegration() {
+  public function testEditorFileReferenceIntegration(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -597,7 +597,7 @@ JS;
   /**
    * Ensures that CKEditor italic model is converted to em.
    */
-  public function testEmphasis() {
+  public function testEmphasis(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -624,7 +624,7 @@ JS;
   /**
    * Tests list plugin.
    */
-  public function testListPlugin() {
+  public function testListPlugin(): void {
     FilterFormat::create([
       'format' => 'test_format',
       'name' => 'CKEditor 5 with list',

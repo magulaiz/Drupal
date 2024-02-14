@@ -33,7 +33,7 @@ class ContextDefinitionTest extends UnitTestCase {
    * @covers ::getDataDefinition
    * @uses \Drupal
    */
-  public function testGetDataDefinition($is_multiple) {
+  public function testGetDataDefinition($is_multiple): void {
     $data_type = 'valid';
     $mock_data_definition = $this->getMockBuilder(ContextDefinitionInterface::class)
       ->onlyMethods([
@@ -114,7 +114,7 @@ class ContextDefinitionTest extends UnitTestCase {
    * @covers ::getDataDefinition
    * @uses \Drupal
    */
-  public function testGetDataDefinitionInvalidType($is_multiple) {
+  public function testGetDataDefinitionInvalidType($is_multiple): void {
     // Since we're trying to make getDataDefinition() throw an exception in
     // isolation, we use a data type which is not valid.
     $data_type = 'not_valid';
@@ -181,7 +181,7 @@ class ContextDefinitionTest extends UnitTestCase {
    * @covers ::getConstraint
    * @uses \Drupal
    */
-  public function testGetConstraint($expected, $constraint_array, $constraint) {
+  public function testGetConstraint($expected, $constraint_array, $constraint): void {
     $mock_context_definition = $this->getMockBuilder('Drupal\Core\Plugin\Context\ContextDefinition')
       ->disableOriginalConstructor()
       ->onlyMethods([
@@ -199,7 +199,7 @@ class ContextDefinitionTest extends UnitTestCase {
    * @covers ::getDefaultValue
    * @covers ::setDefaultValue
    */
-  public function testDefaultValue() {
+  public function testDefaultValue(): void {
     $context_definition = new ContextDefinition();
     $this->assertNull($context_definition->getDefaultValue());
     $context_definition->setDefaultValue('test');

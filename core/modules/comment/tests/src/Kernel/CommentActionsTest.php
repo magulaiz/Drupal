@@ -102,7 +102,7 @@ class CommentActionsTest extends EntityKernelTestBase {
    * @see \Drupal\Core\Action\Plugin\Action\PublishAction
    * @see \Drupal\Core\Action\Plugin\Action\SaveAction
    */
-  public function testCommentDefaultConfigActions() {
+  public function testCommentDefaultConfigActions(): void {
     $this->assertTrue($this->comment->isNew());
     $action = Action::load('comment_save_action');
     $action->execute([$this->comment]);
@@ -133,7 +133,7 @@ class CommentActionsTest extends EntityKernelTestBase {
    *
    * @see \Drupal\comment\Plugin\Action\UnpublishByKeywordComment
    */
-  public function testCommentUnpublishByKeyword() {
+  public function testCommentUnpublishByKeyword(): void {
     $this->comment->save();
     $action = Action::create([
       'id' => 'comment_unpublish_by_keyword_action',

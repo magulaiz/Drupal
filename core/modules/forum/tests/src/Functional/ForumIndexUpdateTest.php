@@ -17,7 +17,7 @@ final class ForumIndexUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       dirname(__DIR__, 2) . '/fixtures/update/drupal-10.1.0.empty.testing.forum.gz',
     ];

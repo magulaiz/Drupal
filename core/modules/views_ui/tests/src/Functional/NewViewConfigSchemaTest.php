@@ -31,7 +31,7 @@ class NewViewConfigSchemaTest extends UITestBase {
   /**
    * Tests creating brand new views.
    */
-  public function testNewViews() {
+  public function testNewViews(): void {
     $this->drupalLogin($this->drupalCreateUser(['administer views']));
 
     // Create views with all core Views wizards.

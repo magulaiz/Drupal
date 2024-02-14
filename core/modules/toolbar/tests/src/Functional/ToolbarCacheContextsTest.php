@@ -66,7 +66,7 @@ class ToolbarCacheContextsTest extends BrowserTestBase {
   /**
    * Tests toolbar cache integration.
    */
-  public function testCacheIntegration() {
+  public function testCacheIntegration(): void {
     $this->installExtraModules(['csrf_test', 'dynamic_page_cache']);
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('test-page');
@@ -80,7 +80,7 @@ class ToolbarCacheContextsTest extends BrowserTestBase {
   /**
    * Tests toolbar cache contexts.
    */
-  public function testToolbarCacheContextsCaller() {
+  public function testToolbarCacheContextsCaller(): void {
     // Test with default combination and permission to see toolbar.
     $this->assertToolbarCacheContexts(['user'], 'Expected cache contexts found for default combination and permission to see toolbar.');
 
@@ -139,7 +139,7 @@ class ToolbarCacheContextsTest extends BrowserTestBase {
    * @param string[] $module_list
    *   An array of module names.
    */
-  protected function installExtraModules(array $module_list) {
+  protected function installExtraModules(array $module_list): void {
     \Drupal::service('module_installer')->install($module_list);
 
     // Installing modules updates the container and needs a router rebuild.

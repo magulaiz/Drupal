@@ -29,7 +29,7 @@ class ArgumentStringTest extends ViewsKernelTestBase {
   /**
    * Tests the glossary feature.
    */
-  public function testGlossary() {
+  public function testGlossary(): void {
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
     NodeType::create([

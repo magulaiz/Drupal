@@ -77,7 +77,7 @@ abstract class LocaleUpdateBase extends BrowserTestBase {
    *   Path of the translations directory relative to the drupal installation
    *   directory.
    */
-  protected function setTranslationsDirectory($path) {
+  protected function setTranslationsDirectory($path): void {
     \Drupal::service('file_system')->prepareDirectory($path, FileSystemInterface::CREATE_DIRECTORY);
     $this->config('locale.settings')->set('translation.path', $path)->save();
   }
@@ -88,7 +88,7 @@ abstract class LocaleUpdateBase extends BrowserTestBase {
    * @param string $langcode
    *   The language code of the language to add.
    */
-  protected function addLanguage($langcode) {
+  protected function addLanguage($langcode): void {
     $edit = ['predefined_langcode' => $langcode];
     $this->drupalGet('admin/config/regional/language/add');
     $this->submitForm($edit, 'Add language');
@@ -110,7 +110,7 @@ abstract class LocaleUpdateBase extends BrowserTestBase {
    *   singular strings are supported, no plurals. No double quotes are allowed
    *   in source and translations strings.
    */
-  protected function makePoFile($path, $filename, $timestamp = NULL, array $translations = []) {
+  protected function makePoFile($path, $filename, $timestamp = NULL, array $translations = []): void {
     $timestamp = $timestamp ? $timestamp : REQUEST_TIME;
     $path = 'public://' . $path;
     $text = '';
@@ -179,7 +179,7 @@ EOF;
    * timestamp medium. This makes it easy to predict which translation will be
    * imported.
    */
-  protected function setTranslationFiles() {
+  protected function setTranslationFiles(): void {
     $config = $this->config('locale.settings');
 
     // A flag is set to let the locale_test module replace the project data with
@@ -216,7 +216,7 @@ EOF;
   /**
    * Sets up existing translations and their statuses in the database.
    */
-  protected function setCurrentTranslations() {
+  protected function setCurrentTranslations(): void {
     // Add non customized translations to the database.
     $langcode = 'de';
     $context = '';
@@ -305,7 +305,7 @@ EOF;
    * @param string $message
    *   (optional) A message to display with the assertion.
    */
-  protected function assertTranslation($source, $translation, $langcode, $message = '') {
+  protected function assertTranslation($source, $translation, $langcode, $message = ''): void {
     $query = Database::getConnection()->select('locales_target', 'lt');
     $query->innerJoin('locales_source', 'ls', '[ls].[lid] = [lt].[lid]');
     $db_translation = $query->fields('lt', ['translation'])

@@ -18,7 +18,7 @@ class CacheCollectorTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     parent::register($container);
     // Change container to database cache backends.
     $container
@@ -37,7 +37,7 @@ class CacheCollectorTest extends KernelTestBase {
    *
    * @dataProvider providerTestInvalidCharacters
    */
-  public function testCacheCollector($cid, $key, $value) {
+  public function testCacheCollector($cid, $key, $value): void {
     $collector = new CacheCollectorHelper($cid, $this->container->get('cache.default'), $this->container->get('lock'));
     $this->assertNull($collector->get($key));
     $collector->set($key, $value);

@@ -42,7 +42,7 @@ class VocabularyCrudTest extends KernelTestBase {
   /**
    * Tests deleting a taxonomy that contains terms.
    */
-  public function testTaxonomyVocabularyDeleteWithTerms() {
+  public function testTaxonomyVocabularyDeleteWithTerms(): void {
     $vocabulary = $this->createVocabulary();
     $query = \Drupal::entityQuery('taxonomy_term')->accessCheck(FALSE)->count();
 
@@ -72,7 +72,7 @@ class VocabularyCrudTest extends KernelTestBase {
   /**
    * Tests for loading multiple vocabularies.
    */
-  public function testTaxonomyVocabularyLoadMultiple() {
+  public function testTaxonomyVocabularyLoadMultiple(): void {
     // Ensure there are no vocabularies.
     $this->assertEmpty(Vocabulary::loadMultiple());
 
@@ -124,7 +124,7 @@ class VocabularyCrudTest extends KernelTestBase {
   /**
    * Tests uninstall and reinstall of the taxonomy module.
    */
-  public function testUninstallReinstall() {
+  public function testUninstallReinstall(): void {
     $vocabulary = $this->createVocabulary();
     // Field storages and fields attached to taxonomy term bundles should be
     // removed when the module is uninstalled.

@@ -48,7 +48,7 @@ class LayoutBuilderOptInTest extends WebDriverTestBase {
   /**
    * Tests the interaction between the two layout checkboxes.
    */
-  public function testCheckboxLogic() {
+  public function testCheckboxLogic(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -91,7 +91,7 @@ class LayoutBuilderOptInTest extends WebDriverTestBase {
   /**
    * Tests the expected default values for enabling Layout Builder.
    */
-  public function testDefaultValues() {
+  public function testDefaultValues(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 

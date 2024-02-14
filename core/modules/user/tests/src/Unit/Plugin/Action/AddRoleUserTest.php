@@ -15,7 +15,7 @@ class AddRoleUserTest extends RoleUserTestBase {
   /**
    * Tests the execute method on a user with a role.
    */
-  public function testExecuteAddExistingRole() {
+  public function testExecuteAddExistingRole(): void {
     $this->account->expects($this->never())
       ->method('addRole');
 
@@ -33,7 +33,7 @@ class AddRoleUserTest extends RoleUserTestBase {
   /**
    * Tests the execute method on a user without a specific role.
    */
-  public function testExecuteAddNonExistingRole() {
+  public function testExecuteAddNonExistingRole(): void {
     $this->account->expects($this->once())
       ->method('addRole');
 

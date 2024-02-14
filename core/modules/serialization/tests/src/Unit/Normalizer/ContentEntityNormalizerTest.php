@@ -55,7 +55,7 @@ class ContentEntityNormalizerTest extends UnitTestCase {
   /**
    * @covers ::supportsNormalization
    */
-  public function testSupportsNormalization() {
+  public function testSupportsNormalization(): void {
     $content_mock = $this->createMock('Drupal\Core\Entity\ContentEntityInterface');
     $config_mock = $this->createMock('Drupal\Core\Config\Entity\ConfigEntityInterface');
     $this->assertTrue($this->contentEntityNormalizer->supportsNormalization($content_mock));
@@ -67,7 +67,7 @@ class ContentEntityNormalizerTest extends UnitTestCase {
    *
    * @covers ::normalize
    */
-  public function testNormalize() {
+  public function testNormalize(): void {
     $this->serializer->normalize(Argument::type(FieldItemListInterface::class),
       'test_format', ['account' => NULL])->willReturn('test');
 
@@ -93,7 +93,7 @@ class ContentEntityNormalizerTest extends UnitTestCase {
    *
    * @covers ::normalize
    */
-  public function testNormalizeWithAccountContext() {
+  public function testNormalizeWithAccountContext(): void {
     $mock_account = $this->createMock('Drupal\Core\Session\AccountInterface');
 
     $context = [

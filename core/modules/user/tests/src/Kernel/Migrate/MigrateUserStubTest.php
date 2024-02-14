@@ -30,7 +30,7 @@ class MigrateUserStubTest extends MigrateDrupalTestBase {
   /**
    * Tests creation of user stubs.
    */
-  public function testStub() {
+  public function testStub(): void {
     $this->performStubTest('user');
   }
 

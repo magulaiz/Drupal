@@ -67,7 +67,7 @@ class LogTest extends KernelTestBase {
   /**
    * Tests the Log plugin.
    */
-  public function testLog() {
+  public function testLog(): void {
     $values = [
       'nid' => 2,
       'type' => 'page',

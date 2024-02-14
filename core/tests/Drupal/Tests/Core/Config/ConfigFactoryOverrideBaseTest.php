@@ -19,7 +19,7 @@ class ConfigFactoryOverrideBaseTest extends UnitTestCase {
   /**
    * @dataProvider providerTestFilterNestedArray
    */
-  public function testFilterNestedArray(array $original_data, array $override_data_before, array $override_data_after, $changed) {
+  public function testFilterNestedArray(array $original_data, array $override_data_before, array $override_data_after, $changed): void {
     $config_factory = new TestConfigFactoryOverrideBase();
     $result = $config_factory->doFilterNestedArray($original_data, $override_data_before);
     $this->assertEquals($changed, $result);
@@ -89,16 +89,16 @@ class TestConfigFactoryOverrideBase extends ConfigFactoryOverrideBase {
     return $this->filterNestedArray($original_data, $override_data);
   }
 
-  public function addCollections(ConfigCollectionInfo $collection_info) {
+  public function addCollections(ConfigCollectionInfo $collection_info): void {
   }
 
-  public function onConfigSave(ConfigCrudEvent $event) {
+  public function onConfigSave(ConfigCrudEvent $event): void {
   }
 
-  public function onConfigDelete(ConfigCrudEvent $event) {
+  public function onConfigDelete(ConfigCrudEvent $event): void {
   }
 
-  public function onConfigRename(ConfigRenameEvent $event) {
+  public function onConfigRename(ConfigRenameEvent $event): void {
   }
 
 }

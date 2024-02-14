@@ -26,7 +26,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
   /**
    * Tests that calculating dependencies for system module.
    */
-  public function testNonEntity() {
+  public function testNonEntity(): void {
     $this->installConfig(['system']);
     $config_manager = \Drupal::service('config.manager');
     $dependents = $config_manager->findConfigEntityDependencies('module', ['system']);
@@ -40,7 +40,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
   /**
    * Tests creating dependencies on configuration entities.
    */
-  public function testDependencyManagement() {
+  public function testDependencyManagement(): void {
     /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
     $config_manager = \Drupal::service('config.manager');
     $storage = $this->container->get('entity_type.manager')->getStorage('config_test');
@@ -188,7 +188,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
   /**
    * Tests ConfigManager::uninstall() and config entity dependency management.
    */
-  public function testConfigEntityUninstall() {
+  public function testConfigEntityUninstall(): void {
     /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
     $config_manager = \Drupal::service('config.manager');
     /** @var \Drupal\Core\Config\Entity\ConfigEntityStorage $storage */
@@ -248,7 +248,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
    *
    * @dataProvider providerConfigEntityUninstallComplex
    */
-  public function testConfigEntityUninstallComplex(array $entity_id_suffixes) {
+  public function testConfigEntityUninstallComplex(array $entity_id_suffixes): void {
     /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
     $config_manager = \Drupal::service('config.manager');
     /** @var \Drupal\Core\Config\Entity\ConfigEntityStorage $storage */
@@ -373,7 +373,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
    * @covers ::uninstall
    * @covers ::getConfigEntitiesToChangeOnDependencyRemoval
    */
-  public function testConfigEntityUninstallThirdParty() {
+  public function testConfigEntityUninstallThirdParty(): void {
     /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
     $config_manager = \Drupal::service('config.manager');
     /** @var \Drupal\Core\Config\Entity\ConfigEntityStorage $storage */
@@ -488,7 +488,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
   /**
    * Tests deleting a configuration entity and dependency management.
    */
-  public function testConfigEntityDelete() {
+  public function testConfigEntityDelete(): void {
     /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
     $config_manager = \Drupal::service('config.manager');
     /** @var \Drupal\Core\Config\Entity\ConfigEntityStorage $storage */
@@ -595,7 +595,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
    *
    * @see \Drupal\Core\Config\ConfigManager::getConfigEntitiesToChangeOnDependencyRemoval()
    */
-  public function testContentEntityDelete() {
+  public function testContentEntityDelete(): void {
     $this->installEntitySchema('entity_test');
     /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
     $config_manager = \Drupal::service('config.manager');

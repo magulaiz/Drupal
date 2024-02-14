@@ -47,7 +47,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
   /**
    * Checks that unchecking 'Create new revision' works when editing a node.
    */
-  public function testNodeFormSaveWithoutRevision() {
+  public function testNodeFormSaveWithoutRevision(): void {
     $this->drupalLogin($this->editor);
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
 
@@ -92,7 +92,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
   /**
    * Checks HTML double escaping of revision logs.
    */
-  public function testNodeRevisionDoubleEscapeFix() {
+  public function testNodeRevisionDoubleEscapeFix(): void {
     $this->drupalLogin($this->editor);
     $nodes = [];
 
@@ -137,7 +137,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
   /**
    * Checks the Revisions tab.
    */
-  public function testNodeRevisionsTabWithDefaultRevision() {
+  public function testNodeRevisionsTabWithDefaultRevision(): void {
     $this->drupalLogin($this->editor);
 
     // Create the node.

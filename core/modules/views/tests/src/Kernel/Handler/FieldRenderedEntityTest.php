@@ -44,7 +44,7 @@ class FieldRenderedEntityTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpFixtures() {
+  protected function setUpFixtures(): void {
     $this->installEntitySchema('user');
     $this->installEntitySchema('entity_test');
     $this->installConfig(['entity_test']);
@@ -111,7 +111,7 @@ class FieldRenderedEntityTest extends ViewsKernelTestBase {
   /**
    * Tests the default rendered entity output.
    */
-  public function testRenderedEntityWithoutAndWithField() {
+  public function testRenderedEntityWithoutAndWithField(): void {
     // First test without test_field displayed.
     \Drupal::currentUser()->setAccount($this->user);
 

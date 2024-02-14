@@ -51,7 +51,7 @@ class StringTranslationTraitTest extends UnitTestCase {
   /**
    * @covers ::t
    */
-  public function testT() {
+  public function testT(): void {
     $method = $this->reflection->getMethod('t');
 
     $result = $method->invoke($this->translation, 'something');
@@ -62,7 +62,7 @@ class StringTranslationTraitTest extends UnitTestCase {
   /**
    * @covers ::formatPlural
    */
-  public function testFormatPlural() {
+  public function testFormatPlural(): void {
     $method = $this->reflection->getMethod('formatPlural');
 
     $result = $method->invoke($this->translation, 2, 'apple', 'apples');

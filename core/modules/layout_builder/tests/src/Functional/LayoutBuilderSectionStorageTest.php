@@ -49,7 +49,7 @@ class LayoutBuilderSectionStorageTest extends BrowserTestBase {
    *
    * @see \Drupal\layout_builder_test\Plugin\SectionStorage\TestStateBasedSectionStorage
    */
-  public function testRenderByContextAwarePluginDelegate() {
+  public function testRenderByContextAwarePluginDelegate(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 

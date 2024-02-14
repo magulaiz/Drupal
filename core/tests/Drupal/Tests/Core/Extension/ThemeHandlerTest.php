@@ -70,7 +70,7 @@ class ThemeHandlerTest extends UnitTestCase {
    *
    * @see \Drupal\Core\Extension\ThemeHandler::rebuildThemeData()
    */
-  public function testRebuildThemeData() {
+  public function testRebuildThemeData(): void {
     $this->themeList->expects($this->once())
       ->method('reset')
       ->willReturnSelf();
@@ -95,7 +95,7 @@ class ThemeHandlerTest extends UnitTestCase {
   /**
    * Tests empty libraries in theme.info.yml file.
    */
-  public function testThemeLibrariesEmpty() {
+  public function testThemeLibrariesEmpty(): void {
     $theme = new Extension($this->root, 'theme', 'core/modules/system/tests/themes/test_theme_libraries_empty', 'test_theme_libraries_empty.info.yml');
     try {
       $this->themeHandler->addTheme($theme);
@@ -130,14 +130,14 @@ class StubThemeHandler extends ThemeHandler {
   /**
    * {@inheritdoc}
    */
-  protected function clearCssCache() {
+  protected function clearCssCache(): void {
     $this->clearedCssCache = TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function themeRegistryRebuild() {
+  protected function themeRegistryRebuild(): void {
     $this->registryRebuild = TRUE;
   }
 

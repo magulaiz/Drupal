@@ -58,7 +58,7 @@ class EntityStorageBaseTest extends UnitTestCase {
    *
    * @dataProvider providerLoad
    */
-  public function testLoad($expected, $entity_fixture, $query) {
+  public function testLoad($expected, $entity_fixture, $query): void {
     $mock_base = $this->getMockBuilder('\Drupal\Core\Entity\EntityStorageBase')
       ->disableOriginalConstructor()
       ->onlyMethods(['loadMultiple'])
@@ -139,7 +139,7 @@ class EntityStorageBaseTest extends UnitTestCase {
    *
    * @dataProvider providerLoadMultiple
    */
-  public function testLoadMultiple($expected, $load_multiple, $query) {
+  public function testLoadMultiple($expected, $load_multiple, $query): void {
     // Make our EntityStorageBase mock.
     $mock_base = $this->getMockBuilder('\Drupal\Core\Entity\EntityStorageBase')
       ->disableOriginalConstructor()

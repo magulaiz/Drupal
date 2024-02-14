@@ -33,7 +33,7 @@ abstract class PageCacheTagsTestBase extends BrowserTestBase {
    *   When expecting a page cache hit, you may optionally specify an array of
    *   expected cache tags. While FALSE, the cache tags will not be verified.
    */
-  protected function verifyPageCache(Url $url, $hit_or_miss, $tags = FALSE) {
+  protected function verifyPageCache(Url $url, $hit_or_miss, $tags = FALSE): void {
     $this->drupalGet($url);
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', $hit_or_miss);
 
@@ -57,7 +57,7 @@ abstract class PageCacheTagsTestBase extends BrowserTestBase {
    * @param string $hit_or_miss
    *   'HIT' if a page cache hit is expected, 'MISS' otherwise.
    */
-  protected function verifyDynamicPageCache(Url $url, $hit_or_miss) {
+  protected function verifyDynamicPageCache(Url $url, $hit_or_miss): void {
     $this->drupalGet($url);
     $this->assertSession()->responseHeaderEquals('X-Drupal-Dynamic-Cache', $hit_or_miss);
   }

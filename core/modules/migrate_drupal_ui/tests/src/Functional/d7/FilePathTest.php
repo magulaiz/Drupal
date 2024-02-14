@@ -92,7 +92,7 @@ class FilePathTest extends MigrateUpgradeTestBase {
    *
    * @dataProvider providerTestFilePath
    */
-  public function testFilePath(string $file_private_path, string $file_public_path, string $file_temporary_path, string $private, string $public, string $temporary) {
+  public function testFilePath(string $file_private_path, string $file_public_path, string $file_temporary_path, string $private, string $public, string $temporary): void {
     $this->sourceFileScheme['private'] = $file_private_path;
     $this->sourceFileScheme['public'] = $file_public_path;
     $this->sourceFileScheme['temporary'] = $file_temporary_path;
@@ -220,7 +220,7 @@ class FilePathTest extends MigrateUpgradeTestBase {
    *
    * The resulting directory is /bar/sites/default/files/foo.txt.
    */
-  protected function makeFiles() {
+  protected function makeFiles(): void {
     // Get file information from the source database.
     foreach ($this->getManagedFiles() as $file) {
       $this->assertSame(1, preg_match('/^(private|public|temporary):/', $file['uri'], $matches));

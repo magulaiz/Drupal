@@ -111,7 +111,7 @@ class MailManagerTest extends UnitTestCase {
   /**
    * Sets up the mail manager for testing.
    */
-  protected function setUpMailManager($interface = []) {
+  protected function setUpMailManager($interface = []): void {
     // Use the provided config for system.mail.interface settings.
     $this->configFactory = $this->getConfigFactoryStub([
       'system.mail' => [
@@ -154,7 +154,7 @@ class MailManagerTest extends UnitTestCase {
    *
    * @covers ::getInstance
    */
-  public function testGetInstance() {
+  public function testGetInstance(): void {
     $interface = [
       'default' => 'php_mail',
       'example_testkey' => 'test_mail_collector',
@@ -177,7 +177,7 @@ class MailManagerTest extends UnitTestCase {
    *
    * @covers ::mail
    */
-  public function testMailInRenderContext() {
+  public function testMailInRenderContext(): void {
     $interface = [
       'default' => 'php_mail',
       'example_testkey' => 'test_mail_collector',
@@ -186,7 +186,7 @@ class MailManagerTest extends UnitTestCase {
 
     $this->renderer->expects($this->exactly(1))
       ->method('executeInRenderContext')
-      ->willReturnCallback(function (RenderContext $render_context, $callback) {
+      ->willReturnCallback(function (RenderContext $render_context, $callback): void {
         $message = $callback();
         $this->assertEquals('example', $message['module']);
       });
@@ -206,7 +206,7 @@ class TestMailManager extends MailManager {
    * @param \Drupal\Component\Plugin\Discovery\DiscoveryInterface $discovery
    *   The discovery object.
    */
-  public function setDiscovery(DiscoveryInterface $discovery) {
+  public function setDiscovery(DiscoveryInterface $discovery): void {
     $this->discovery = $discovery;
   }
 

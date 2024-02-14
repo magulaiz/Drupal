@@ -61,7 +61,7 @@ class Stable9TemplateOverrideTest extends KernelTestBase {
   /**
    * Installs all core modules.
    */
-  protected function installAllModules() {
+  protected function installAllModules(): void {
     // Enable all core modules.
     $all_modules = $this->container->get('extension.list.module')->getList();
     $all_modules = array_filter($all_modules, function ($module) {
@@ -89,7 +89,7 @@ class Stable9TemplateOverrideTest extends KernelTestBase {
   /**
    * Ensures that Stable 9 overrides all relevant core templates.
    */
-  public function testStable9TemplateOverrides() {
+  public function testStable9TemplateOverrides(): void {
     $registry = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $this->themeHandler, \Drupal::service('theme.initialization'), \Drupal::service('cache.bootstrap'), \Drupal::service('extension.list.module'), 'stable9');
     $registry->setThemeManager(\Drupal::theme());
 

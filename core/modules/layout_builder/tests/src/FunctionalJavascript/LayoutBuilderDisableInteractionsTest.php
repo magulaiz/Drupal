@@ -93,7 +93,7 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
   /**
    * Tests that forms and links are disabled in the Layout Builder preview.
    */
-  public function testFormsLinksDisabled() {
+  public function testFormsLinksDisabled(): void {
     // Resize window due to bug in Chromedriver when clicking on overlays over
     // iFrames.
     // @see https://bugs.chromium.org/p/chromedriver/issues/detail?id=2758
@@ -153,7 +153,7 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
    * @param string $rendered_locator
    *   The CSS locator to confirm the block was rendered.
    */
-  protected function addBlock($block_link_text, $rendered_locator) {
+  protected function addBlock($block_link_text, $rendered_locator): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -323,7 +323,7 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
    * @param string $selector
    *   CSS selector.
    */
-  protected function movePointerTo($selector) {
+  protected function movePointerTo($selector): void {
     $driver_session = $this->getSession()->getDriver()->getWebDriverSession();
     $element = $driver_session->element('css selector', $selector);
     $driver_session->moveto(['element' => $element->getID()]);

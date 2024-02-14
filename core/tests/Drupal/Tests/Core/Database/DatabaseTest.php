@@ -71,7 +71,7 @@ class DatabaseTest extends UnitTestCase {
    * @dataProvider providerFindDriverAutoloadDirectory
    * @group legacy
    */
-  public function testFindDriverAutoloadDirectory($expected, $namespace, $include_test_drivers) {
+  public function testFindDriverAutoloadDirectory($expected, $namespace, $include_test_drivers): void {
     $this->expectDeprecation('Drupal\Core\Database\Database::findDriverAutoloadDirectory() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use DatabaseDriverList::getList() instead. See https://www.drupal.org/node/3258175');
     // The only module that provides a driver in core is a test module.
     if (!$expected) {
@@ -101,7 +101,7 @@ class DatabaseTest extends UnitTestCase {
    * @dataProvider providerFindDriverAutoloadDirectoryException
    * @group legacy
    */
-  public function testFindDriverAutoloadDirectoryException($expected_message, $namespace, $include_tests) {
+  public function testFindDriverAutoloadDirectoryException($expected_message, $namespace, $include_tests): void {
     $this->expectDeprecation('Drupal\Core\Database\Database::findDriverAutoloadDirectory() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use DatabaseDriverList::getList() instead. See https://www.drupal.org/node/3258175');
     $this->expectException(UnknownExtensionException::class);
     $this->expectExceptionMessage($expected_message);
@@ -136,14 +136,14 @@ class DatabaseTest extends UnitTestCase {
   /**
    * Adds a database driver that uses the D8's Drupal\Driver\Database namespace.
    */
-  protected function addD8CustomDrivers() {
+  protected function addD8CustomDrivers(): void {
     $this->additionalClassloader->addPsr4("Drupal\\Driver\\Database\\CoreFake\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/custom/CoreFake");
   }
 
   /**
    * Adds database drivers that are provided by modules.
    */
-  protected function addModuleDrivers() {
+  protected function addModuleDrivers(): void {
     $this->additionalClassloader->addPsr4("Drupal\\driver_test\\Driver\\Database\\DrivertestMysql\\", __DIR__ . "/../../../../../modules/system/tests/modules/driver_test/src/Driver/Database/DrivertestMysql");
     $this->additionalClassloader->addPsr4("Drupal\\CoreFake\\Driver\\Database\\CoreFake\\", __DIR__ . "/../../../../../tests/fixtures/database_drivers/module/core_fake/src/Driver/Database/CoreFake");
   }

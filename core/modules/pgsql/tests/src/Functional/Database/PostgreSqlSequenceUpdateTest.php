@@ -27,7 +27,7 @@ class PostgreSqlSequenceUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function runDbTasks() {
+  protected function runDbTasks(): void {
     parent::runDbTasks();
     $this->connection = Database::getConnection();
     if ($this->connection->driver() !== 'pgsql') {
@@ -38,7 +38,7 @@ class PostgreSqlSequenceUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.4.0.bare.standard.php.gz',
       __DIR__ . '/../../../fixtures/update/drupal-9.pgsql-orphan-sequence.php',
@@ -48,7 +48,7 @@ class PostgreSqlSequenceUpdateTest extends UpdatePathTestBase {
   /**
    * Asserts that a newly created sequence has the correct ownership.
    */
-  public function testPostgreSqlSequenceUpdate() {
+  public function testPostgreSqlSequenceUpdate(): void {
     $this->assertFalse($this->getSequenceOwner('pgsql_sequence_test', 'sequence_field'));
 
     // Run the updates.

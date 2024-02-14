@@ -48,7 +48,7 @@ class RowEntityTest extends ViewsKernelTestBase {
   /**
    * Tests the entity row handler.
    */
-  public function testEntityRow() {
+  public function testEntityRow(): void {
     $user = User::create([
       'name' => 'test user',
     ]);

@@ -62,7 +62,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    * @todo replace with whatever gets added in
    *   https://www.drupal.org/node/3061852
    */
-  protected function waitForText($text, $timeout = 10000) {
+  protected function waitForText($text, $timeout = 10000): void {
     $result = $this->assertSession()->waitForText($text, $timeout);
     $this->assertNotEmpty($result, "\"$text\" not found");
   }
@@ -78,7 +78,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    * @todo replace with whatever gets added in
    *   https://www.drupal.org/node/3061852
    */
-  protected function waitForNoText($text, $timeout = 10000) {
+  protected function waitForNoText($text, $timeout = 10000): void {
     $page = $this->getSession()->getPage();
     $result = $page->waitFor($timeout / 1000, function ($page) use ($text) {
       $actual = preg_replace('/\s+/u', ' ', $page->getText());
@@ -103,7 +103,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    * @todo replace with whatever gets added in
    *   https://www.drupal.org/node/3061852
    */
-  protected function waitForElementsCount($selector_type, $selector, $count, $timeout = 10000) {
+  protected function waitForElementsCount($selector_type, $selector, $count, $timeout = 10000): void {
     $page = $this->getSession()->getPage();
 
     $start = microtime(TRUE);
@@ -132,7 +132,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    * @todo replace with whatever gets added in
    *   https://www.drupal.org/node/3061852
    */
-  protected function waitForElementTextContains($selector, $text, $timeout = 10000) {
+  protected function waitForElementTextContains($selector, $text, $timeout = 10000): void {
     $element = $this->assertSession()->waitForElement('css', "$selector:contains('$text')", $timeout);
     $this->assertNotEmpty($element);
   }
@@ -174,7 +174,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
   /**
    * Clicks a media type tab and waits for it to appear.
    */
-  protected function switchToMediaType($type) {
+  protected function switchToMediaType($type): void {
     $link = $this->assertSession()
       ->elementExists('named', ['link', "Type $type"], $this->getTypesMenu());
 
@@ -218,7 +218,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
   /**
    * Waits for a file field to exist before uploading.
    */
-  public function addMediaFileToField($locator, $path) {
+  public function addMediaFileToField($locator, $path): void {
     $page = $this->getSession()->getPage();
     $this->waitForFieldExists($locator);
     $page->attachFileToField($locator, $path);
@@ -230,7 +230,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    * @param string $operation
    *   The final word of the button to be clicked.
    */
-  protected function saveAnd($operation) {
+  protected function saveAnd($operation): void {
     $this->assertElementExistsAfterWait('css', '.ui-dialog-buttonpane')->pressButton("Save and $operation");
 
     // assertWaitOnAjaxRequest() required for input "id" attributes to
@@ -245,7 +245,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    *   Whether validation errors are expected after the "Save" button is
    *   pressed. Defaults to FALSE.
    */
-  protected function pressSaveButton($expect_errors = FALSE) {
+  protected function pressSaveButton($expect_errors = FALSE): void {
     $buttons = $this->assertElementExistsAfterWait('css', '.ui-dialog-buttonpane');
     $buttons->pressButton('Save');
 
@@ -317,7 +317,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    *   (optional) The index of the media item, if multiple items can be added at
    *   once. Defaults to 0.
    */
-  protected function assertMediaAdded($index = 0) {
+  protected function assertMediaAdded($index = 0): void {
     $selector = '.js-media-library-add-form-added-media';
 
     // Assert that focus is shifted to the new media items.
@@ -340,7 +340,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
   /**
    * Asserts that media was not added, i.e. due to a validation error.
    */
-  protected function assertNoMediaAdded() {
+  protected function assertNoMediaAdded(): void {
     // Assert the focus is shifted to the first tabbable element of the add
     // form, which should be the source field.
     $this->assertJsCondition('jQuery(tabbable.tabbable(document.getElementById("media-library-add-form-wrapper"))[0]).is(":focus")');
@@ -363,7 +363,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    *   selected" is pressed in
    *   https://www.drupal.org/project/drupal/issues/3087227.
    */
-  protected function pressInsertSelected($expected_announcement = NULL, bool $should_close = TRUE) {
+  protected function pressInsertSelected($expected_announcement = NULL, bool $should_close = TRUE): void {
     $this->assertSession()
       ->elementExists('css', '.ui-dialog-buttonpane')
       ->pressButton('Insert selected');
@@ -396,7 +396,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    * @param string $expected_selected_count
    *   (optional) The expected text of the selection counter.
    */
-  protected function selectMediaItem($index, $expected_selected_count = NULL) {
+  protected function selectMediaItem($index, $expected_selected_count = NULL): void {
     $checkboxes = $this->getCheckboxes();
     $this->assertGreaterThan($index, count($checkboxes));
     $checkboxes[$index]->check();
@@ -421,7 +421,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
   /**
    * Switches to the grid display of the widget view.
    */
-  protected function switchToMediaLibraryGrid() {
+  protected function switchToMediaLibraryGrid(): void {
     $this->getSession()->getPage()->clickLink('Grid');
     // Assert the display change is correctly announced for screen readers.
     $this->assertAnnounceContains('Loading grid view.');
@@ -432,7 +432,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
   /**
    * Switches to the table display of the widget view.
    */
-  protected function switchToMediaLibraryTable() {
+  protected function switchToMediaLibraryTable(): void {
     hold_test_response(TRUE);
     $this->getSession()->getPage()->clickLink('Table');
     // Assert the display change is correctly announced for screen readers.
@@ -445,7 +445,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
   /**
    * Asserts that the grid display of the widget view is visible.
    */
-  protected function assertMediaLibraryGrid() {
+  protected function assertMediaLibraryGrid(): void {
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertSession()
       ->elementExists('css', '.js-media-library-view[data-view-display-id="widget"]');
@@ -454,7 +454,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
   /**
    * Asserts that the table display of the widget view is visible.
    */
-  protected function assertMediaLibraryTable() {
+  protected function assertMediaLibraryTable(): void {
     $this->assertSession()
       ->elementExists('css', '.js-media-library-view[data-view-display-id="widget_table"]');
   }
@@ -465,7 +465,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    * @param string $text
    *   The expected text of the counter.
    */
-  protected function assertSelectedMediaCount($text) {
+  protected function assertSelectedMediaCount($text): void {
     $selected_count = $this->assertSession()
       ->elementExists('css', '.js-media-library-selected-count');
 

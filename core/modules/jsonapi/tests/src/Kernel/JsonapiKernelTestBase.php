@@ -38,7 +38,7 @@ abstract class JsonapiKernelTestBase extends KernelTestBase {
    *
    * @see \Drupal\Core\Entity\Plugin\EntityReferenceSelection\SelectionBase::buildConfigurationForm()
    */
-  protected function createTextField($entity_type, $bundle, $field_name, $field_label, $cardinality = 1) {
+  protected function createTextField($entity_type, $bundle, $field_name, $field_label, $cardinality = 1): void {
     // Look for or add the specified field to the requested entity bundle.
     if (!FieldStorageConfig::loadByName($entity_type, $field_name)) {
       FieldStorageConfig::create([

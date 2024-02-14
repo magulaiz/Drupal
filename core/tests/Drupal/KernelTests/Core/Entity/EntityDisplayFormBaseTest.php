@@ -22,7 +22,7 @@ class EntityDisplayFormBaseTest extends KernelTestBase {
   /**
    * @covers ::copyFormValuesToEntity
    */
-  public function testCopyFormValuesToEntity() {
+  public function testCopyFormValuesToEntity(): void {
     $field_values = [];
     $entity = $this->prophesize(EntityDisplayInterface::class);
     $entity->getPluginCollections()->willReturn([]);
@@ -37,7 +37,7 @@ class EntityDisplayFormBaseTest extends KernelTestBase {
       'region' => 'hidden',
     ];
     $entity->removeComponent('new_field_mismatch_type_visible')
-      ->will(function (array $args) use ($entity) {
+      ->will(function (array $args) use ($entity): void {
         // On subsequent calls, getComponent() will return an empty array.
         $entity->getComponent($args[0])->willReturn([]);
       })
@@ -76,7 +76,7 @@ class EntityDisplayFormBaseTest extends KernelTestBase {
       'region' => 'hidden',
     ];
     $entity->removeComponent('field_start_visible_change_region')
-      ->will(function (array $args) use ($entity) {
+      ->will(function (array $args) use ($entity): void {
         // On subsequent calls, getComponent() will return an empty array.
         $entity->getComponent($args[0])->willReturn([]);
       })
@@ -105,7 +105,7 @@ class EntityDisplayFormBaseTest extends KernelTestBase {
         'type' => 'textfield',
         'region' => 'content',
       ])
-      ->will(function (array $args) use ($entity) {
+      ->will(function (array $args) use ($entity): void {
         // On subsequent calls, getComponent() will return the newly set values.
         $entity->getComponent($args[0])->willReturn($args[1]);
         $args[1] += [

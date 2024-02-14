@@ -31,7 +31,7 @@ class FilterPlaceholderTextTest extends ViewTestBase {
   /**
    * Tests that HTML placeholders are added, when appropriate.
    */
-  public function testPlaceholderText() {
+  public function testPlaceholderText(): void {
     $this->drupalGet('placeholder-text-test');
 
     // String filter that has no placeholder configured.

@@ -27,7 +27,7 @@ class InstallerExistingConfigSyncDirectoryProfileHookInstall extends InstallerEx
   /**
    * {@inheritdoc}
    */
-  protected function visitInstaller() {
+  protected function visitInstaller(): void {
     // Create an .install file with a hook_install() implementation.
     $path = $this->siteDirectory . '/profiles/' . $this->profile;
     $contents = <<<EOF
@@ -43,7 +43,7 @@ EOF;
   /**
    * Installer step: Select installation profile.
    */
-  protected function setUpProfile() {
+  protected function setUpProfile(): void {
     // This is the form we are testing so wait until the test method to do
     // assertions.
   }
@@ -51,21 +51,21 @@ EOF;
   /**
    * Installer step: Requirements problem.
    */
-  protected function setUpRequirementsProblem() {
+  protected function setUpRequirementsProblem(): void {
     // This form will never be reached.
   }
 
   /**
    * Installer step: Configure settings.
    */
-  protected function setUpSettings() {
+  protected function setUpSettings(): void {
     // This form will never be reached.
   }
 
   /**
    * Final installer step: Configure site.
    */
-  protected function setUpSite() {
+  protected function setUpSite(): void {
     // This form will never be reached.
   }
 
@@ -79,7 +79,7 @@ EOF;
   /**
    * Tests installing from config is not available due to hook_INSTALL().
    */
-  public function testConfigSync() {
+  public function testConfigSync(): void {
     $this->assertSession()->titleEquals('Select an installation profile | Drupal');
     $this->assertSession()->responseNotContains('Use existing configuration');
 

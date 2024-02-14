@@ -82,7 +82,7 @@ class SearchDateIntervalTest extends BrowserTestBase {
   /**
    * Tests searching with date filters that exclude some translations.
    */
-  public function testDateIntervalQueryAlter() {
+  public function testDateIntervalQueryAlter(): void {
     // Search for keyword node.
     $edit = ['keys' => 'node'];
     $this->drupalGet('search/node');

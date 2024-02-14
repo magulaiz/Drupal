@@ -33,7 +33,7 @@ class DownloadTest extends FileTestBase {
   /**
    * Tests a download that overwrites an existing local file.
    */
-  public function testOverwritingDownload() {
+  public function testOverwritingDownload(): void {
     // Create a pre-existing file at the destination.
     $destination_uri = $this->createUri('existing_file.txt');
 
@@ -46,7 +46,7 @@ class DownloadTest extends FileTestBase {
   /**
    * Tests a download that renames the downloaded file if there's a collision.
    */
-  public function testNonDestructiveDownload() {
+  public function testNonDestructiveDownload(): void {
     // Create a pre-existing file at the destination.
     $destination_uri = $this->createUri('another_existing_file.txt');
 
@@ -59,7 +59,7 @@ class DownloadTest extends FileTestBase {
   /**
    * Tests that an exception is thrown if the destination URI is not writable.
    */
-  public function testWriteProtectedDestination() {
+  public function testWriteProtectedDestination(): void {
     // Create a pre-existing file at the destination.
     $destination_uri = $this->createUri('not-writable.txt');
 
@@ -70,7 +70,7 @@ class DownloadTest extends FileTestBase {
 
     // Pass or fail, we'll need to make the file writable again so the test
     // can clean up after itself.
-    $fix_permissions = function () use ($destination_uri) {
+    $fix_permissions = function () use ($destination_uri): void {
       $this->container
         ->get('file_system')
         ->chmod($destination_uri, 0755);

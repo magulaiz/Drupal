@@ -57,7 +57,7 @@ trait AssertContentTrait {
    * @param string $content
    *   The raw content to set.
    */
-  protected function setRawContent($content) {
+  protected function setRawContent($content): void {
     $this->content = $content;
     $this->plainTextContent = NULL;
     $this->elements = NULL;
@@ -90,7 +90,7 @@ trait AssertContentTrait {
    * and when you want to use e.g. assertText() but ignore potential white-space
    * caused by HTML output templates.
    */
-  protected function removeWhiteSpace() {
+  protected function removeWhiteSpace(): void {
     $this->content = preg_replace('@>\s+<@', '><', $this->content);
     $this->plainTextContent = NULL;
     $this->elements = NULL;
@@ -110,7 +110,7 @@ trait AssertContentTrait {
    *
    * Variable drupalSettings refers to the drupalSettings JavaScript variable.
    */
-  protected function setDrupalSettings($settings) {
+  protected function setDrupalSettings($settings): void {
     $this->drupalSettings = $settings;
   }
 
@@ -680,7 +680,7 @@ trait AssertContentTrait {
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    */
-  protected function assertTitle($title, $message = '') {
+  protected function assertTitle($title, $message = ''): void {
     // Don't use xpath as it messes with HTML escaping.
     preg_match('@<title>(.*)</title>@', $this->getRawContent(), $matches);
     if (isset($matches[1])) {
@@ -709,7 +709,7 @@ trait AssertContentTrait {
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    */
-  protected function assertNoTitle($title, $message = '') {
+  protected function assertNoTitle($title, $message = ''): void {
     $actual = (string) current($this->xpath('//title'));
     if (!$message) {
       $message = new FormattableMarkup('Page title @actual is not equal to @unexpected.', [
@@ -735,7 +735,7 @@ trait AssertContentTrait {
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    */
-  protected function assertThemeOutput($callback, array $variables = [], $expected = '', $message = '') {
+  protected function assertThemeOutput($callback, array $variables = [], $expected = '', $message = ''): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
 
@@ -1056,7 +1056,7 @@ trait AssertContentTrait {
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    */
-  protected function assertOption($id, $option, $message = '') {
+  protected function assertOption($id, $option, $message = ''): void {
     $options = $this->xpath('//select[@id=:id]//option[@value=:option]', [':id' => $id, ':option' => $option]);
     $this->assertTrue(isset($options[0]), $message ? $message : new FormattableMarkup('Option @option for field @id exists.', ['@option' => $option, '@id' => $id]));
   }
@@ -1071,7 +1071,7 @@ trait AssertContentTrait {
    * @param string $message
    *   (optional) A message to display with the assertion.
    */
-  protected function assertOptionByText($id, $text, $message = '') {
+  protected function assertOptionByText($id, $text, $message = ''): void {
     $options = $this->xpath('//select[@id=:id]//option[normalize-space(text())=:text]', [':id' => $id, ':text' => $text]);
     $this->assertTrue(isset($options[0]), $message ?: 'Option with text label ' . $text . ' for select field ' . $id . ' exits.');
   }
@@ -1089,7 +1089,7 @@ trait AssertContentTrait {
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    */
-  protected function assertOptionWithDrupalSelector($drupal_selector, $option, $message = '') {
+  protected function assertOptionWithDrupalSelector($drupal_selector, $option, $message = ''): void {
     $options = $this->xpath('//select[@data-drupal-selector=:data_drupal_selector]//option[@value=:option]', [':data_drupal_selector' => $drupal_selector, ':option' => $option]);
     $this->assertTrue(isset($options[0]), $message ? $message : new FormattableMarkup('Option @option for field @data_drupal_selector exists.', ['@option' => $option, '@data_drupal_selector' => $drupal_selector]));
   }

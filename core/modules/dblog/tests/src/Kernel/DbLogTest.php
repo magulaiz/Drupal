@@ -33,7 +33,7 @@ class DbLogTest extends KernelTestBase {
   /**
    * Tests that cron correctly applies the database log row limit.
    */
-  public function testDbLogCron() {
+  public function testDbLogCron(): void {
     $row_limit = 100;
     // Generate additional log entries.
     $this->generateLogEntries($row_limit + 10);
@@ -45,7 +45,7 @@ class DbLogTest extends KernelTestBase {
     $implementation_count = 0;
     \Drupal::moduleHandler()->invokeAllWith(
       'cron',
-      function (callable $hook, string $module) use (&$implementation_count) {
+      function (callable $hook, string $module) use (&$implementation_count): void {
         $implementation_count++;
       }
     );
@@ -63,7 +63,7 @@ class DbLogTest extends KernelTestBase {
   /**
    * Tests that only valid placeholders are stored in the variables column.
    */
-  public function testInvalidPlaceholders() {
+  public function testInvalidPlaceholders(): void {
     \Drupal::logger('my_module')->warning('Hello @string @array @object', ['@string' => '', '@array' => [], '@object' => new \stdClass()]);
     $variables = \Drupal::database()
       ->select('watchdog', 'w')

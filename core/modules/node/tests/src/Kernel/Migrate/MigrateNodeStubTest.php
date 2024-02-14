@@ -36,7 +36,7 @@ class MigrateNodeStubTest extends MigrateDrupalTestBase {
   /**
    * Tests creation of node stubs.
    */
-  public function testStub() {
+  public function testStub(): void {
     $this->performStubTest('node');
   }
 

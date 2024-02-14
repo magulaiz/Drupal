@@ -24,7 +24,7 @@ class LinkTest extends UnitTestCase {
    * @covers ::compare
    * @dataProvider linkComparisonProvider
    */
-  public function testLinkComparison(Link $a, Link $b, $expected) {
+  public function testLinkComparison(Link $a, Link $b, $expected): void {
     $actual = Link::compare($a, $b);
     $this->assertSame($expected, $actual === 0);
   }
@@ -91,7 +91,7 @@ class LinkTest extends UnitTestCase {
    * @covers ::merge
    * @dataProvider linkMergeProvider
    */
-  public function testLinkMerge(Link $a, Link $b, $expected) {
+  public function testLinkMerge(Link $a, Link $b, $expected): void {
     if ($expected instanceof Link) {
       $this->assertSame($expected->getCacheTags(), Link::merge($a, $b)->getCacheTags());
     }
@@ -123,7 +123,7 @@ class LinkTest extends UnitTestCase {
   /**
    * @covers ::getLinkRelationType
    */
-  public function testGetLinkRelationType() {
+  public function testGetLinkRelationType(): void {
     $this->mockUrlAssembler();
     $link = new Link((new CacheableMetadata())->addCacheTags(['foo']), Url::fromUri('https://jsonapi.org/foo'), 'self');
     $this->assertSame('self', $link->getLinkRelationType());
@@ -132,7 +132,7 @@ class LinkTest extends UnitTestCase {
   /**
    * Mocks the unrouted URL assembler.
    */
-  protected function mockUrlAssembler() {
+  protected function mockUrlAssembler(): void {
     $url_assembler = $this->getMockBuilder(UnroutedUrlAssemblerInterface::class)
       ->disableOriginalConstructor()
       ->getMock();

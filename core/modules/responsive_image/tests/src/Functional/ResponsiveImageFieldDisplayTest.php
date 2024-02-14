@@ -88,7 +88,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
   /**
    * Tests responsive image formatters on node display for public files.
    */
-  public function testResponsiveImageFieldFormattersPublic() {
+  public function testResponsiveImageFieldFormattersPublic(): void {
     $this->addTestImageStyleMappings();
     $this->doTestResponsiveImageFieldFormatters('public');
   }
@@ -96,7 +96,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
   /**
    * Tests responsive image formatters on node display for private files.
    */
-  public function testResponsiveImageFieldFormattersPrivate() {
+  public function testResponsiveImageFieldFormattersPrivate(): void {
     $this->addTestImageStyleMappings();
     // Remove access content permission from anonymous users.
     user_role_change_permissions(RoleInterface::ANONYMOUS_ID, ['access content' => FALSE]);
@@ -106,7 +106,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
   /**
    * Tests responsive image formatters when image style is empty.
    */
-  public function testResponsiveImageFieldFormattersEmptyStyle() {
+  public function testResponsiveImageFieldFormattersEmptyStyle(): void {
     $this->addTestImageStyleMappings(TRUE);
     $this->doTestResponsiveImageFieldFormatters('public', TRUE);
   }
@@ -117,7 +117,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
    * @param bool $empty_styles
    *   If true, the image style mappings will get empty image styles.
    */
-  protected function addTestImageStyleMappings($empty_styles = FALSE) {
+  protected function addTestImageStyleMappings($empty_styles = FALSE): void {
     if ($empty_styles) {
       $this->responsiveImgStyle
         ->addImageStyleMapping('responsive_image_test_module.mobile', '1x', [
@@ -186,7 +186,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
    *   If true, use an empty string for image style names.
    *   Defaults to false.
    */
-  protected function doTestResponsiveImageFieldFormatters($scheme, $empty_styles = FALSE) {
+  protected function doTestResponsiveImageFieldFormatters($scheme, $empty_styles = FALSE): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
@@ -356,7 +356,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
   /**
    * Tests responsive image formatters on node display linked to the file.
    */
-  public function testResponsiveImageFieldFormattersLinkToFile() {
+  public function testResponsiveImageFieldFormattersLinkToFile(): void {
     $this->addTestImageStyleMappings();
     $this->assertResponsiveImageFieldFormattersLink('file');
   }
@@ -364,7 +364,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
   /**
    * Tests responsive image formatters on node display linked to the node.
    */
-  public function testResponsiveImageFieldFormattersLinkToNode() {
+  public function testResponsiveImageFieldFormattersLinkToNode(): void {
     $this->addTestImageStyleMappings();
     $this->assertResponsiveImageFieldFormattersLink('content');
   }
@@ -372,7 +372,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
   /**
    * Tests responsive image formatter on node display with an empty media query.
    */
-  public function testResponsiveImageFieldFormattersEmptyMediaQuery() {
+  public function testResponsiveImageFieldFormattersEmptyMediaQuery(): void {
     $this->responsiveImgStyle
       // Test the output of an empty media query.
       ->addImageStyleMapping('responsive_image_test_module.empty', '1x', [
@@ -422,7 +422,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
   /**
    * Tests responsive image formatter on node display with one and two sources.
    */
-  public function testResponsiveImageFieldFormattersMultipleSources() {
+  public function testResponsiveImageFieldFormattersMultipleSources(): void {
     // Setup known image style sizes so the test can assert on known sizes.
     $large_style = ImageStyle::load('large');
     assert($large_style instanceof ImageStyleInterface);

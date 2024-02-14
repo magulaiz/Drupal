@@ -83,7 +83,7 @@ class ViewsModerationStateFilterTest extends ViewsKernelTestBase {
   /**
    * Tests the content moderation state filter.
    */
-  public function testStateFilterViewsRelationship() {
+  public function testStateFilterViewsRelationship(): void {
     $workflow = Workflow::load('editorial');
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'example');
     $workflow->getTypePlugin()->addState('translated_draft', 'Bar');
@@ -178,7 +178,7 @@ class ViewsModerationStateFilterTest extends ViewsKernelTestBase {
   /**
    * Tests the moderation filter with a non-translatable entity type.
    */
-  public function testNonTranslatableEntityType() {
+  public function testNonTranslatableEntityType(): void {
     $workflow = Workflow::load('editorial');
     $workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test_no_bundle', 'entity_test_no_bundle');
     $workflow->save();
@@ -199,7 +199,7 @@ class ViewsModerationStateFilterTest extends ViewsKernelTestBase {
   /**
    * Tests the moderation state filter on an entity added via a relationship.
    */
-  public function testModerationStateFilterOnJoinedEntity() {
+  public function testModerationStateFilterOnJoinedEntity(): void {
     $workflow = Workflow::load('editorial');
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'example');
     $workflow->save();
@@ -245,7 +245,7 @@ class ViewsModerationStateFilterTest extends ViewsKernelTestBase {
   /**
    * Tests the list of states in the filter plugin.
    */
-  public function testStateFilterStatesList() {
+  public function testStateFilterStatesList(): void {
     // By default a view of nodes will not have states to filter.
     $workflow = Workflow::load('editorial');
     $workflow->getTypePlugin()->removeEntityTypeAndBundle('node', 'example');

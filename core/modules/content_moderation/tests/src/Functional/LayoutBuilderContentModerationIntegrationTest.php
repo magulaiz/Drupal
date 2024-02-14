@@ -94,7 +94,7 @@ class LayoutBuilderContentModerationIntegrationTest extends BrowserTestBase {
   /**
    * Tests that Layout changes are respected by Content Moderation.
    */
-  public function testLayoutModeration() {
+  public function testLayoutModeration(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -167,7 +167,7 @@ class LayoutBuilderContentModerationIntegrationTest extends BrowserTestBase {
   /**
    * Test placing inline blocks that belong to a moderated content block bundle.
    */
-  public function testModeratedInlineBlockBundles() {
+  public function testModeratedInlineBlockBundles(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 

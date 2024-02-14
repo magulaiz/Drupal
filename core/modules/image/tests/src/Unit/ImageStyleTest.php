@@ -97,7 +97,7 @@ class ImageStyleTest extends UnitTestCase {
   /**
    * @covers ::getDerivativeExtension
    */
-  public function testGetDerivativeExtension() {
+  public function testGetDerivativeExtension(): void {
     $image_effect_id = $this->randomMachineName();
     $logger = $this->getMockBuilder('\Psr\Log\LoggerInterface')->getMock();
     $image_effect = $this->getMockBuilder('\Drupal\image\ImageEffectBase')
@@ -119,7 +119,7 @@ class ImageStyleTest extends UnitTestCase {
   /**
    * @covers ::buildUri
    */
-  public function testBuildUri() {
+  public function testBuildUri(): void {
     // Image style that changes the extension.
     $image_effect_id = $this->randomMachineName();
     $logger = $this->getMockBuilder('\Psr\Log\LoggerInterface')->getMock();
@@ -149,7 +149,7 @@ class ImageStyleTest extends UnitTestCase {
   /**
    * @covers ::getPathToken
    */
-  public function testGetPathToken() {
+  public function testGetPathToken(): void {
     $logger = $this->getMockBuilder('\Psr\Log\LoggerInterface')->getMock();
     $private_key = $this->randomMachineName();
     $hash_salt = $this->randomMachineName();

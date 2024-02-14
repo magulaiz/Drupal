@@ -74,7 +74,7 @@ class SummaryLengthTest extends KernelTestBase {
   /**
    * Tests the node summary length functionality.
    */
-  public function testSummaryLength() {
+  public function testSummaryLength(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
 

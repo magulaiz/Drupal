@@ -69,7 +69,7 @@ abstract class WebDriverTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function installModulesFromClassProperty(ContainerInterface $container) {
+  protected function installModulesFromClassProperty(ContainerInterface $container): void {
     self::$modules = [
       'js_testing_ajax_request_test',
       'js_testing_log_test',
@@ -84,7 +84,7 @@ abstract class WebDriverTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function initFrontPage() {
+  protected function initFrontPage(): void {
     parent::initFrontPage();
     // Set a standard window size so that all javascript tests start with the
     // same viewport.
@@ -165,7 +165,7 @@ abstract class WebDriverTestBase extends BrowserTestBase {
    *
    * @see \Behat\Mink\Driver\DriverInterface::evaluateScript()
    */
-  protected function assertJsCondition($condition, $timeout = 10000, $message = '') {
+  protected function assertJsCondition($condition, $timeout = 10000, $message = ''): void {
     $message = $message ?: "JavaScript condition met:\n" . $condition;
     $result = $this->getSession()->getDriver()->wait($timeout, $condition);
     $this->assertTrue($result, $message);
@@ -186,7 +186,7 @@ abstract class WebDriverTestBase extends BrowserTestBase {
    * @throws \Behat\Mink\Exception\DriverException
    *   When the operation cannot be done.
    */
-  protected function createScreenshot($filename, $set_background_color = TRUE) {
+  protected function createScreenshot($filename, $set_background_color = TRUE): void {
     $session = $this->getSession();
     if ($set_background_color) {
       $session->executeScript("document.body.style.backgroundColor = 'white';");

@@ -25,7 +25,7 @@ class EntityTestViewsFieldAccessTest extends FieldFieldAccessTestBase {
     $this->installEntitySchema('entity_test');
   }
 
-  public function testEntityTestFields() {
+  public function testEntityTestFields(): void {
     $entity_test = EntityTest::create([
       'name' => 'test entity name',
     ]);

@@ -120,7 +120,7 @@ class DbLogResourceTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     switch ($method) {
       case 'GET':
         $this->grantPermissionsToTestedRole(['restful get dblog']);
@@ -164,6 +164,6 @@ class DbLogResourceTest extends ResourceTestBase {
    * Needed by PHPStan for unused function
    * CookieResourceTestTrait::assertResponseWhenMissingAuthentication().
    */
-  protected function getExpectedUnauthorizedEntityAccessCacheability($is_authenticated) {}
+  protected function getExpectedUnauthorizedEntityAccessCacheability($is_authenticated): void {}
 
 }

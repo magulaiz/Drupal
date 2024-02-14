@@ -56,7 +56,7 @@ class ShortcutTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     $this->grantPermissionsToTestedRole(['access shortcuts', 'customize shortcut links']);
   }
 
@@ -158,7 +158,7 @@ class ShortcutTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testCollectionFilterAccess() {
+  public function testCollectionFilterAccess(): void {
     $label_field_name = 'title';
     // Verify the expected behavior in the common case: default shortcut set.
     $this->grantPermissionsToTestedRole(['customize shortcut links']);

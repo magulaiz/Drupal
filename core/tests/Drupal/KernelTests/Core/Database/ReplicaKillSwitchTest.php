@@ -20,7 +20,7 @@ class ReplicaKillSwitchTest extends KernelTestBase {
   /**
    * Tests database.replica_kill_switch service.
    */
-  public function testSystemInitIgnoresSecondaries() {
+  public function testSystemInitIgnoresSecondaries(): void {
     // Clone the master credentials to a replica connection.
     // Note this will result in two independent connection objects that happen
     // to point to the same place.

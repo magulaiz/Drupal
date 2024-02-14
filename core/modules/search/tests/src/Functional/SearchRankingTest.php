@@ -59,7 +59,7 @@ class SearchRankingTest extends BrowserTestBase {
     ]));
   }
 
-  public function testRankings() {
+  public function testRankings(): void {
     // Add a comment field.
     $this->addDefaultCommentField('node', 'page');
 
@@ -209,7 +209,7 @@ class SearchRankingTest extends BrowserTestBase {
   /**
    * Tests rankings of HTML tags.
    */
-  public function testHTMLRankings() {
+  public function testHTMLRankings(): void {
     $full_html_format = FilterFormat::create([
       'format' => 'full_html',
       'name' => 'Full HTML',

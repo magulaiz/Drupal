@@ -52,7 +52,7 @@ trait TaxonomyTranslationTestTrait {
   /**
    * Adds additional languages.
    */
-  protected function setupLanguages() {
+  protected function setupLanguages(): void {
     ConfigurableLanguage::createFromLangcode($this->translateToLangcode)->save();
     $this->rebuildContainer();
   }
@@ -60,7 +60,7 @@ trait TaxonomyTranslationTestTrait {
   /**
    * Enables translations where it needed.
    */
-  protected function enableTranslation() {
+  protected function enableTranslation(): void {
     // Enable translation for the current entity type and ensure the change is
     // picked up.
     \Drupal::service('content_translation.manager')->setEnabled('node', 'article', TRUE);
@@ -70,7 +70,7 @@ trait TaxonomyTranslationTestTrait {
   /**
    * Adds term reference field for the article content type.
    */
-  protected function setUpTermReferenceField() {
+  protected function setUpTermReferenceField(): void {
     $handler_settings = [
       'target_bundles' => [
         $this->vocabulary->id() => $this->vocabulary->id(),

@@ -57,7 +57,7 @@ class TextWithSummaryItemTest extends FieldKernelTestBase {
   /**
    * Tests processed properties.
    */
-  public function testCrudAndUpdate() {
+  public function testCrudAndUpdate(): void {
     $entity_type = 'entity_test';
     $this->createField($entity_type);
 
@@ -101,7 +101,7 @@ class TextWithSummaryItemTest extends FieldKernelTestBase {
    * @param string $entity_type
    *   Entity type for which the field should be created.
    */
-  protected function createField($entity_type) {
+  protected function createField($entity_type): void {
     // Create a field .
     $this->fieldStorage = FieldStorageConfig::create([
       'field_name' => 'summary_field',

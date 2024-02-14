@@ -116,7 +116,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
    *
    * @covers ::buildCommentedEntityLinks
    */
-  public function testCommentLinkBuilder(NodeInterface $node, $context, $has_access_comments, $history_exists, $has_post_comments, $is_anonymous, $expected) {
+  public function testCommentLinkBuilder(NodeInterface $node, $context, $has_access_comments, $history_exists, $has_post_comments, $is_anonymous, $expected): void {
     $this->moduleHandler->expects($this->any())
       ->method('moduleExists')
       ->with('history')

@@ -62,7 +62,7 @@ class BigPipeTest extends BrowserTestBase {
    *
    * @see setUp()
    */
-  protected function performMetaRefresh() {
+  protected function performMetaRefresh(): void {
     $this->maximumMetaRefreshCount = 1;
     $this->checkForMetaRefresh();
     $this->maximumMetaRefreshCount = 0;
@@ -76,7 +76,7 @@ class BigPipeTest extends BrowserTestBase {
    * - big_pipe_page_attachments()
    * - \Drupal\big_pipe\Controller\BigPipeController
    */
-  public function testNoJsDetection() {
+  public function testNoJsDetection(): void {
     $no_js_to_js_markup = '<script>document.cookie = "' . BigPipeStrategy::NOJS_COOKIE . '=1; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT"</script>';
 
     // 1. No session (anonymous).
@@ -140,7 +140,7 @@ class BigPipeTest extends BrowserTestBase {
    *
    * @see \Drupal\big_pipe_test\BigPipePlaceholderTestCases
    */
-  public function testBigPipe() {
+  public function testBigPipe(): void {
     // Simulate production.
     $this->config('system.logging')->set('error_level', ERROR_REPORTING_HIDE)->save();
 
@@ -231,7 +231,7 @@ class BigPipeTest extends BrowserTestBase {
    *
    * @see \Drupal\big_pipe_test\BigPipePlaceholderTestCases
    */
-  public function testBigPipeNoJs() {
+  public function testBigPipeNoJs(): void {
     // Simulate production.
     $this->config('system.logging')->set('error_level', ERROR_REPORTING_HIDE)->save();
 
@@ -294,7 +294,7 @@ class BigPipeTest extends BrowserTestBase {
   /**
    * Tests BigPipe with a multi-occurrence placeholder.
    */
-  public function testBigPipeMultiOccurrencePlaceholders() {
+  public function testBigPipeMultiOccurrencePlaceholders(): void {
     $this->drupalLogin($this->rootUser);
     $this->assertSessionCookieExists('1');
     $this->assertBigPipeNoJsCookieExists('0');
@@ -430,7 +430,7 @@ class BigPipeTest extends BrowserTestBase {
   /**
    * Ensures CSRF tokens can be generated for the current user's session.
    */
-  protected function setCsrfTokenSeedInTestEnvironment() {
+  protected function setCsrfTokenSeedInTestEnvironment(): void {
     $session_data = $this->container->get('session_handler.write_safe')->read($this->getSession()->getCookie($this->getSessionName()));
     $csrf_token_seed = unserialize(explode('_sf2_meta|', $session_data)[1])['s'];
     $this->container->get('session_manager.metadata_bag')->setCsrfTokenSeed($csrf_token_seed);

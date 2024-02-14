@@ -39,7 +39,7 @@ class HandlerFilterCurrentUserTest extends UserKernelTestBase {
   /**
    * Tests the current user filter handler with anonymous user.
    */
-  public function testFilterCurrentUserAsAnonymous() {
+  public function testFilterCurrentUserAsAnonymous(): void {
     $column_map = ['uid' => 'uid'];
     $this->currentUser->setAccount(new AnonymousUserSession());
 
@@ -66,7 +66,7 @@ class HandlerFilterCurrentUserTest extends UserKernelTestBase {
   /**
    * Tests the current user filter handler with logged-in user.
    */
-  public function testFilterCurrentUserAsUser() {
+  public function testFilterCurrentUserAsUser(): void {
     $column_map = ['uid' => 'uid'];
     $user = reset($this->users);
     $this->currentUser->setAccount($user);

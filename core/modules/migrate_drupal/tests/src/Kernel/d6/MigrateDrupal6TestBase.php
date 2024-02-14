@@ -50,7 +50,7 @@ abstract class MigrateDrupal6TestBase extends MigrateDrupalTestBase {
    * @param bool $include_pictures
    *   If TRUE, migrates user pictures.
    */
-  protected function migrateUsers($include_pictures = TRUE) {
+  protected function migrateUsers($include_pictures = TRUE): void {
     $this->executeMigrations(['d6_filter_format', 'd6_user_role']);
 
     if ($include_pictures) {
@@ -71,7 +71,7 @@ abstract class MigrateDrupal6TestBase extends MigrateDrupalTestBase {
   /**
    * Migrates node types.
    */
-  protected function migrateContentTypes() {
+  protected function migrateContentTypes(): void {
     $this->installConfig(['node']);
     $this->executeMigration('d6_node_type');
   }
@@ -79,7 +79,7 @@ abstract class MigrateDrupal6TestBase extends MigrateDrupalTestBase {
   /**
    * Executes all field migrations.
    */
-  protected function migrateFields() {
+  protected function migrateFields(): void {
     $this->migrateContentTypes();
     $this->executeMigrations([
       'd6_field',
@@ -99,7 +99,7 @@ abstract class MigrateDrupal6TestBase extends MigrateDrupalTestBase {
    *   Extra things to include as part of the migrations. Values may be
    *   'revisions' or 'translations'.
    */
-  protected function migrateContent(array $include = []) {
+  protected function migrateContent(array $include = []): void {
     if (in_array('translations', $include)) {
       $this->executeMigrations(['language']);
     }
@@ -120,7 +120,7 @@ abstract class MigrateDrupal6TestBase extends MigrateDrupalTestBase {
   /**
    * Executes all taxonomy migrations.
    */
-  protected function migrateTaxonomy() {
+  protected function migrateTaxonomy(): void {
     $this->migrateContentTypes();
     $this->installEntitySchema('taxonomy_term');
     $this->executeMigrations([

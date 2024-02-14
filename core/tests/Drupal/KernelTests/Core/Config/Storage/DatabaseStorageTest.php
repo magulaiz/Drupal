@@ -28,22 +28,22 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
     return unserialize($data);
   }
 
-  protected function insert($name, $data) {
+  protected function insert($name, $data): void {
     Database::getConnection()->insert('config')->fields(['name' => $name, 'data' => $data])->execute();
   }
 
-  protected function update($name, $data) {
+  protected function update($name, $data): void {
     Database::getConnection()->update('config')->fields(['data' => $data])->condition('name', $name)->execute();
   }
 
-  protected function delete($name) {
+  protected function delete($name): void {
     Database::getConnection()->delete('config')->condition('name', $name)->execute();
   }
 
   /**
    * Tests that operations throw exceptions if the query fails.
    */
-  public function testExceptionIsThrownIfQueryFails() {
+  public function testExceptionIsThrownIfQueryFails(): void {
     $connection = Database::getConnection();
     if ($connection->databaseType() === 'sqlite') {
       // See: https://www.drupal.org/project/drupal/issues/3349286

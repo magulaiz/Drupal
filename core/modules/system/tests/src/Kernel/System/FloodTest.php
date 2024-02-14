@@ -22,7 +22,7 @@ class FloodTest extends KernelTestBase {
   /**
    * Tests flood control mechanism clean-up.
    */
-  public function testCleanUp() {
+  public function testCleanUp(): void {
     $threshold = 1;
     $window_expired = -1;
     $name = 'flood_test_cleanup';
@@ -50,7 +50,7 @@ class FloodTest extends KernelTestBase {
   /**
    * Tests flood control database backend.
    */
-  public function testDatabaseBackend() {
+  public function testDatabaseBackend(): void {
     $threshold = 1;
     $window_expired = -1;
     $name = 'flood_test_cleanup';
@@ -94,7 +94,7 @@ class FloodTest extends KernelTestBase {
   /**
    * Tests clearByPrefix method on flood backends.
    */
-  public function testClearByPrefix() {
+  public function testClearByPrefix(): void {
     $threshold = 1;
     $window_expired = 3600;
     $identifier = 'prefix-127.0.0.1';

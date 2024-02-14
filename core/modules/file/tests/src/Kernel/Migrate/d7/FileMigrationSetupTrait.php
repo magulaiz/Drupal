@@ -21,7 +21,7 @@ trait FileMigrationSetupTrait {
   /**
    * Prepare the file migration for running.
    */
-  protected function fileMigrationSetup() {
+  protected function fileMigrationSetup(): void {
     $this->installEntitySchema('file');
     $this->installSchema('file', ['file_usage']);
 
@@ -62,7 +62,7 @@ trait FileMigrationSetupTrait {
    * @param string $uid
    *   The expected owner ID.
    */
-  protected function assertEntity($id, $name, $uri, $mime, $size, $created, $changed, $uid) {
+  protected function assertEntity($id, $name, $uri, $mime, $size, $created, $changed, $uid): void {
     /** @var \Drupal\file\FileInterface $file */
     $file = File::load($id);
     $this->assertInstanceOf(FileInterface::class, $file);

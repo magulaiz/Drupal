@@ -16,7 +16,7 @@ class MenuLinksetSettingsUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../fixtures/update/drupal-9.4.0.bare.standard.php.gz',
     ];
@@ -25,7 +25,7 @@ class MenuLinksetSettingsUpdateTest extends UpdatePathTestBase {
   /**
    * Tests system_post_update_linkset_settings().
    */
-  public function testSystemPostUpdateLinksetSettings() {
+  public function testSystemPostUpdateLinksetSettings(): void {
     // Ensure config is not present.
     $config = $this->config('system.feature_flags');
     $this->assertTrue($config->isNew());

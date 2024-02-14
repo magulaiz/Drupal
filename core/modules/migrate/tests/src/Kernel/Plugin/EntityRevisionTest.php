@@ -46,7 +46,7 @@ class EntityRevisionTest extends MigrateTestBase {
   /**
    * Tests that EntityRevision correctly handles revision translations.
    */
-  public function testRevisionTranslation() {
+  public function testRevisionTranslation(): void {
     ConfigurableLanguage::createFromLangcode('fr')->save();
 
     /** @var \Drupal\node\NodeInterface $node */

@@ -45,7 +45,7 @@ class MigrateUserConfigsTranslationTest extends MigrateDrupal7TestBase {
   /**
    * Tests migration of i18n user variables to user.mail and user.settings.
    */
-  public function testUserConfig() {
+  public function testUserConfig(): void {
     // Tests migration of i18n user variables to user.mail.yml.
     $language_manager = \Drupal::service('language_manager');
     $config = $language_manager->getLanguageConfigOverride('is', 'user.mail');

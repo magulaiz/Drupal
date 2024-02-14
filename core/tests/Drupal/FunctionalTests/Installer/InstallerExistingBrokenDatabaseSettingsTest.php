@@ -19,7 +19,7 @@ class InstallerExistingBrokenDatabaseSettingsTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function prepareEnvironment() {
+  protected function prepareEnvironment(): void {
     parent::prepareEnvironment();
     // Pre-configure database credentials in settings.php.
     $connection_info = Database::getConnectionInfo();
@@ -48,14 +48,14 @@ class InstallerExistingBrokenDatabaseSettingsTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpSettings() {
+  protected function setUpSettings(): void {
     // This form will never be reached.
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function setUpRequirementsProblem() {
+  protected function setUpRequirementsProblem(): void {
     // The parent method asserts that there are no requirements errors, but
     // this test expects a requirements error in the test method below.
     // Therefore, we override this method to suppress the parent's assertions.
@@ -64,14 +64,14 @@ class InstallerExistingBrokenDatabaseSettingsTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpSite() {
+  protected function setUpSite(): void {
     // This form will never be reached.
   }
 
   /**
    * Tests the expected requirements problem.
    */
-  public function testRequirementsProblem() {
+  public function testRequirementsProblem(): void {
     $this->assertSession()->titleEquals('Requirements problem | Drupal');
     $this->assertSession()->pageTextContains('Database settings');
     $this->assertSession()->pageTextContains('Resolve all issues below to continue the installation. For help configuring your database server,');

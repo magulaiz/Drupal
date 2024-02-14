@@ -20,7 +20,7 @@ class TestConfigurablePlugin extends PluginBase implements ConfigurableInterface
   /**
    * {@inheritdoc}
    */
-  public function setConfiguration(array $configuration) {
+  public function setConfiguration(array $configuration): void {
     $this->configuration = $configuration;
   }
 

@@ -61,7 +61,7 @@ class EntityContentBaseTest extends MigrateDrupal6TestBase {
    *
    * This is the default behavior.
    */
-  public function testOverwriteAllMappedProperties() {
+  public function testOverwriteAllMappedProperties(): void {
     $this->executeMigration('d6_user');
     /** @var \Drupal\user\UserInterface $account */
     $account = User::load(2);
@@ -75,7 +75,7 @@ class EntityContentBaseTest extends MigrateDrupal6TestBase {
    *
    * The selected properties are specified in the destination configuration.
    */
-  public function testOverwriteProperties() {
+  public function testOverwriteProperties(): void {
     // Execute the migration in migrate_overwrite_test, which documents how
     // property overwrites work.
     $this->executeMigration('users');
@@ -93,7 +93,7 @@ class EntityContentBaseTest extends MigrateDrupal6TestBase {
   /**
    * Tests that translation destination fails for untranslatable entities.
    */
-  public function testUntranslatable() {
+  public function testUntranslatable(): void {
     $this->enableModules(['language_test']);
     $this->installEntitySchema('no_language_entity_test');
 

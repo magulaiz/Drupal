@@ -81,7 +81,7 @@ class CommentTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     switch ($method) {
       case 'GET':
         $this->grantPermissionsToTestedRole(['access comments', 'view test entity']);
@@ -320,7 +320,7 @@ class CommentTest extends ResourceTestBase {
    * - base fields that are marked as required, but yet can still result in
    *   validation errors other than "missing required field".
    */
-  public function testPostIndividualDxWithoutCriticalBaseFields() {
+  public function testPostIndividualDxWithoutCriticalBaseFields(): void {
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
 
@@ -360,7 +360,7 @@ class CommentTest extends ResourceTestBase {
   /**
    * Tests POSTing a comment with and without 'skip comment approval'.
    */
-  public function testPostIndividualSkipCommentApproval() {
+  public function testPostIndividualSkipCommentApproval(): void {
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
 
@@ -421,7 +421,7 @@ class CommentTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testCollectionFilterAccess() {
+  public function testCollectionFilterAccess(): void {
     // Verify the expected behavior in the common case.
     $this->doTestCollectionFilterAccessForPublishableEntities('subject', 'access comments', 'administer comments');
 

@@ -29,7 +29,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
   /**
    * Tests whether token-replacement works in various contexts.
    */
-  public function testSystemTokenRecognition() {
+  public function testSystemTokenRecognition(): void {
     // Generate prefixes and suffixes for the token context.
     $tests = [
       ['prefix' => 'this is the ', 'suffix' => ' site'],
@@ -59,7 +59,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
   /**
    * Tests the clear parameter.
    */
-  public function testClear() {
+  public function testClear(): void {
     // Valid token.
     $source = '[site:name]';
     // No user passed in, should be untouched.
@@ -81,7 +81,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
   /**
    * Tests the generation of all system site information tokens.
    */
-  public function testSystemSiteTokenReplacement() {
+  public function testSystemSiteTokenReplacement(): void {
     $url_options = [
       'absolute' => TRUE,
       'language' => $this->interfaceLanguage,
@@ -154,7 +154,7 @@ class TokenReplaceKernelTest extends TokenReplaceKernelTestBase {
   /**
    * Tests the generation of all system date tokens.
    */
-  public function testSystemDateTokenReplacement() {
+  public function testSystemDateTokenReplacement(): void {
     // Set time to one hour before request.
     $date = REQUEST_TIME - 3600;
 

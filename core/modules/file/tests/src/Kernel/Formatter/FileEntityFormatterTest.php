@@ -77,7 +77,7 @@ class FileEntityFormatterTest extends KernelTestBase {
   /**
    * Tests the file_link field formatter.
    */
-  public function testFormatterFileLink() {
+  public function testFormatterFileLink(): void {
     $entity_display = EntityViewDisplay::create([
       'targetEntityType' => 'file',
       'bundle' => 'file',
@@ -92,7 +92,7 @@ class FileEntityFormatterTest extends KernelTestBase {
   /**
    * Tests the file_link field formatter.
    */
-  public function testFormatterFileUri() {
+  public function testFormatterFileUri(): void {
     $entity_display = EntityViewDisplay::create([
       'targetEntityType' => 'file',
       'bundle' => 'file',
@@ -115,7 +115,7 @@ class FileEntityFormatterTest extends KernelTestBase {
   /**
    * Tests the file_extension field formatter.
    */
-  public function testFormatterFileExtension() {
+  public function testFormatterFileExtension(): void {
     $entity_display = EntityViewDisplay::create([
       'targetEntityType' => 'file',
       'bundle' => 'file',
@@ -140,7 +140,7 @@ class FileEntityFormatterTest extends KernelTestBase {
   /**
    * Tests the file_extension field formatter.
    */
-  public function testFormatterFileMime() {
+  public function testFormatterFileMime(): void {
     $entity_display = EntityViewDisplay::create([
       'targetEntityType' => 'file',
       'bundle' => 'file',
@@ -157,7 +157,7 @@ class FileEntityFormatterTest extends KernelTestBase {
   /**
    * Tests the file_size field formatter.
    */
-  public function testFormatterFileSize() {
+  public function testFormatterFileSize(): void {
     $entity_display = EntityViewDisplay::create([
       'targetEntityType' => 'file',
       'bundle' => 'file',
@@ -174,7 +174,7 @@ class FileEntityFormatterTest extends KernelTestBase {
   /**
    * Tests the file_link field formatter using a query string.
    */
-  public function testFormatterFileLinkWithQueryString() {
+  public function testFormatterFileLinkWithQueryString(): void {
     $file = File::create([
       'uri' => 'dummy-external-readonly://file-query-string?foo=bar',
       'filename' => 'file-query-string',

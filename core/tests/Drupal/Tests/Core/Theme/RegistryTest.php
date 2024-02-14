@@ -114,7 +114,7 @@ class RegistryTest extends UnitTestCase {
   /**
    * Tests getting the theme registry defined by a module.
    */
-  public function testGetRegistryForModule() {
+  public function testGetRegistryForModule(): void {
     $test_theme = new ActiveTheme([
       'name' => 'test_theme',
       'path' => 'core/modules/system/tests/themes/test_theme/test_theme.info.yml',
@@ -149,8 +149,8 @@ class RegistryTest extends UnitTestCase {
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('invokeAllWith')
       ->with('theme')
-      ->willReturnCallback(function (string $hook, callable $callback) {
-        $callback(function () {}, 'theme_test');
+      ->willReturnCallback(function (string $hook, callable $callback): void {
+        $callback(function (): void {}, 'theme_test');
       });
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('getModuleList')
@@ -196,7 +196,7 @@ class RegistryTest extends UnitTestCase {
    * @param array $expected
    *   The expected results.
    */
-  public function testPostProcessExtension($defined_functions, $hooks, $expected) {
+  public function testPostProcessExtension($defined_functions, $hooks, $expected): void {
     static::$functions['user'] = $defined_functions;
 
     $theme = $this->prophesize(ActiveTheme::class);

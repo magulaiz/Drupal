@@ -26,7 +26,7 @@ class ElementsTableSelectTest extends WebDriverTestBase {
   /**
    * Tests the presence of ajax functionality for all options.
    */
-  public function testAjax() {
+  public function testAjax(): void {
     // Test checkboxes (#multiple == TRUE).
     $this->drupalGet('form_test/tableselect/multiple-true');
     $session = $this->getSession();
@@ -65,16 +65,16 @@ class ElementsTableSelectTest extends WebDriverTestBase {
   /**
    * Tests table select with disabled rows.
    */
-  public function testDisabledRows() {
+  public function testDisabledRows(): void {
     // Asserts that a row number (1 based) is enabled.
-    $assert_row_enabled = function ($delta) {
+    $assert_row_enabled = function ($delta): void {
       $row = $this->assertSession()->elementExists('xpath', "//table/tbody/tr[$delta]");
       $this->assertFalse($row->hasClass('disabled'));
       $input = $row->find('css', 'input[value="row' . $delta . '"]');
       $this->assertFalse($input->hasAttribute('disabled'));
     };
     // Asserts that a row number (1 based) is disabled.
-    $assert_row_disabled = function ($delta) {
+    $assert_row_disabled = function ($delta): void {
       $row = $this->assertSession()->elementExists('xpath', "//table/tbody/tr[$delta]");
       $this->assertTrue($row->hasClass('disabled'));
       $input = $row->find('css', 'input[value="row' . $delta . '"]');

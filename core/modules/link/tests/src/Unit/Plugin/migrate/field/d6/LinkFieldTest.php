@@ -40,7 +40,7 @@ class LinkFieldTest extends UnitTestCase {
     // process pipeline created by the plugin, we need to ensure that
     // getProcess() always returns the last input to mergeProcessOfProperty().
     $migration->mergeProcessOfProperty(Argument::type('string'), Argument::type('array'))
-      ->will(function ($arguments) use ($migration) {
+      ->will(function ($arguments) use ($migration): void {
         $migration->getProcess()->willReturn($arguments[1]);
       });
 
@@ -50,7 +50,7 @@ class LinkFieldTest extends UnitTestCase {
   /**
    * @covers ::defineValueProcessPipeline
    */
-  public function testDefineValueProcessPipeline($method = 'defineValueProcessPipeline') {
+  public function testDefineValueProcessPipeline($method = 'defineValueProcessPipeline'): void {
     $this->plugin->$method($this->migration, 'field_name', []);
 
     $expected = [

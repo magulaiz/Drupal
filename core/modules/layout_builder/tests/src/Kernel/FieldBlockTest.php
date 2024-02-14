@@ -60,7 +60,7 @@ class FieldBlockTest extends EntityKernelTestBase {
    * @covers ::blockAccess
    * @dataProvider providerTestBlockAccessNotAllowed
    */
-  public function testBlockAccessEntityNotAllowed($expected, $entity_access) {
+  public function testBlockAccessEntityNotAllowed($expected, $entity_access): void {
     $entity = $this->prophesize(FieldableEntityInterface::class);
     $block = $this->getTestBlock($entity);
 
@@ -93,7 +93,7 @@ class FieldBlockTest extends EntityKernelTestBase {
    *
    * @covers ::blockAccess
    */
-  public function testBlockAccessEntityAllowedNotFieldable() {
+  public function testBlockAccessEntityAllowedNotFieldable(): void {
     $entity = $this->prophesize(EntityInterface::class);
     $block = $this->getTestBlock($entity);
 
@@ -109,7 +109,7 @@ class FieldBlockTest extends EntityKernelTestBase {
    *
    * @covers ::blockAccess
    */
-  public function testBlockAccessEntityAllowedNoField() {
+  public function testBlockAccessEntityAllowedNoField(): void {
     $entity = $this->prophesize(FieldableEntityInterface::class);
     $block = $this->getTestBlock($entity);
 
@@ -128,7 +128,7 @@ class FieldBlockTest extends EntityKernelTestBase {
    * @covers ::blockAccess
    * @dataProvider providerTestBlockAccessNotAllowed
    */
-  public function testBlockAccessEntityAllowedFieldNotAllowed($expected, $field_access) {
+  public function testBlockAccessEntityAllowedFieldNotAllowed($expected, $field_access): void {
     $entity = $this->prophesize(FieldableEntityInterface::class);
     $block = $this->getTestBlock($entity);
 
@@ -152,7 +152,7 @@ class FieldBlockTest extends EntityKernelTestBase {
    * @covers ::build
    * @dataProvider providerTestBlockAccessEntityAllowedFieldHasValue
    */
-  public function testBlockAccessEntityAllowedFieldHasValue($expected, $is_empty, $default_value) {
+  public function testBlockAccessEntityAllowedFieldHasValue($expected, $is_empty, $default_value): void {
     $entity = $this->prophesize(FieldableEntityInterface::class);
     $block = $this->getTestBlock($entity);
 
@@ -246,7 +246,7 @@ class FieldBlockTest extends EntityKernelTestBase {
    * @covers ::build
    * @dataProvider providerTestBuild
    */
-  public function testBuild(PromiseInterface $promise, $expected_markup, $log_message = '', $log_arguments = []) {
+  public function testBuild(PromiseInterface $promise, $expected_markup, $log_message = '', $log_arguments = []): void {
     $entity = $this->prophesize(FieldableEntityInterface::class);
     $field = $this->prophesize(FieldItemListInterface::class);
     $entity->get('the_field_name')->willReturn($field->reveal());
@@ -298,7 +298,7 @@ class FieldBlockTest extends EntityKernelTestBase {
   /**
    * @covers ::build
    */
-  public function testBuildException() {
+  public function testBuildException(): void {
     // In PHP 7.4 ReflectionClass cannot be serialized so this cannot be part of
     // providerTestBuild().
     $promise = new ThrowPromise(new \Exception('The exception message'));
@@ -315,7 +315,7 @@ class FieldBlockTest extends EntityKernelTestBase {
    *
    * @todo Remove in https://www.drupal.org/project/drupal/issues/2367555.
    */
-  public function testBuildWithFormException() {
+  public function testBuildWithFormException(): void {
     $field = $this->prophesize(FieldItemListInterface::class);
     $field->view(Argument::type('array'))->willThrow(new EnforcedResponseException(new Response()));
 

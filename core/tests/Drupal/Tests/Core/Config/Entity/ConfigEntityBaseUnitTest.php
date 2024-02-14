@@ -168,7 +168,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    * @covers ::calculateDependencies
    * @covers ::getDependencies
    */
-  public function testCalculateDependencies() {
+  public function testCalculateDependencies(): void {
     // Calculating dependencies will reset the dependencies array.
     $this->entity->set('dependencies', ['module' => ['node']]);
     $this->assertEmpty($this->entity->calculateDependencies()->getDependencies());
@@ -184,7 +184,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
   /**
    * @covers ::preSave
    */
-  public function testPreSaveDuringSync() {
+  public function testPreSaveDuringSync(): void {
     $this->moduleHandler->moduleExists('node')->willReturn(TRUE);
 
     $query = $this->createMock('\Drupal\Core\Entity\Query\QueryInterface');
@@ -219,7 +219,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
   /**
    * @covers ::addDependency
    */
-  public function testAddDependency() {
+  public function testAddDependency(): void {
     $method = new \ReflectionMethod('\Drupal\Core\Config\Entity\ConfigEntityBase', 'addDependency');
     $method->invoke($this->entity, 'module', $this->provider);
     $method->invoke($this->entity, 'module', 'core');
@@ -246,7 +246,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    *
    * @dataProvider providerCalculateDependenciesWithPluginCollections
    */
-  public function testCalculateDependenciesWithPluginCollections($definition, $expected_dependencies) {
+  public function testCalculateDependenciesWithPluginCollections($definition, $expected_dependencies): void {
     $this->moduleHandler->moduleExists('the_provider_of_the_entity_type')->willReturn(TRUE);
     $this->moduleHandler->moduleExists('test')->willReturn(TRUE);
     $this->moduleHandler->moduleExists('test_theme')->willReturn(FALSE);
@@ -332,7 +332,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    * @covers ::getDependencies
    * @covers ::onDependencyRemoval
    */
-  public function testCalculateDependenciesWithThirdPartySettings() {
+  public function testCalculateDependenciesWithThirdPartySettings(): void {
     $this->entity = $this->getMockForAbstractClass('\Drupal\Core\Config\Entity\ConfigEntityBase', [[], $this->entityTypeId]);
     $this->entity->setThirdPartySetting('test_provider', 'test', 'test');
     $this->entity->setThirdPartySetting('test_provider2', 'test', 'test');
@@ -349,7 +349,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
   /**
    * @covers ::__sleep
    */
-  public function testSleepWithPluginCollections() {
+  public function testSleepWithPluginCollections(): void {
     $instance_id = 'the_instance_id';
     $instance = new TestConfigurablePlugin([], $instance_id, []);
 
@@ -388,7 +388,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    * @covers ::setOriginalId
    * @covers ::getOriginalId
    */
-  public function testGetOriginalId() {
+  public function testGetOriginalId(): void {
     $new_id = $this->randomMachineName();
     $this->entity->set('id', $new_id);
     $this->assertSame($this->id, $this->entity->getOriginalId());
@@ -408,7 +408,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
   /**
    * @covers ::isNew
    */
-  public function testIsNew() {
+  public function testIsNew(): void {
     $this->assertFalse($this->entity->isNew());
     $this->assertSame($this->entity, $this->entity->enforceIsNew());
     $this->assertTrue($this->entity->isNew());
@@ -420,7 +420,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    * @covers ::set
    * @covers ::get
    */
-  public function testGet() {
+  public function testGet(): void {
     $name = 'id';
     $value = $this->randomMachineName();
     $this->assertSame($this->id, $this->entity->get($name));
@@ -432,7 +432,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    * @covers ::setStatus
    * @covers ::status
    */
-  public function testSetStatus() {
+  public function testSetStatus(): void {
     $this->assertTrue($this->entity->status());
     $this->assertSame($this->entity, $this->entity->setStatus(FALSE));
     $this->assertFalse($this->entity->status());
@@ -444,7 +444,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    * @covers ::enable
    * @depends testSetStatus
    */
-  public function testEnable() {
+  public function testEnable(): void {
     $this->entity->setStatus(FALSE);
     $this->assertSame($this->entity, $this->entity->enable());
     $this->assertTrue($this->entity->status());
@@ -454,7 +454,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    * @covers ::disable
    * @depends testSetStatus
    */
-  public function testDisable() {
+  public function testDisable(): void {
     $this->entity->setStatus(TRUE);
     $this->assertSame($this->entity, $this->entity->disable());
     $this->assertFalse($this->entity->status());
@@ -464,7 +464,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    * @covers ::setSyncing
    * @covers ::isSyncing
    */
-  public function testIsSyncing() {
+  public function testIsSyncing(): void {
     $this->assertFalse($this->entity->isSyncing());
     $this->assertSame($this->entity, $this->entity->setSyncing(TRUE));
     $this->assertTrue($this->entity->isSyncing());
@@ -475,7 +475,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
   /**
    * @covers ::createDuplicate
    */
-  public function testCreateDuplicate() {
+  public function testCreateDuplicate(): void {
     $this->entityType->expects($this->exactly(2))
       ->method('getKey')
       ->willReturnMap([
@@ -507,7 +507,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
   /**
    * @covers ::sort
    */
-  public function testSort() {
+  public function testSort(): void {
     $this->entityTypeManager->expects($this->any())
       ->method('getDefinition')
       ->with($this->entityTypeId)
@@ -550,7 +550,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
   /**
    * @covers ::toArray
    */
-  public function testToArray() {
+  public function testToArray(): void {
     $this->typedConfigManager->expects($this->never())
       ->method('getDefinition');
     $this->entityType->expects($this->any())
@@ -564,7 +564,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
   /**
    * @covers ::toArray
    */
-  public function testToArrayIdKey() {
+  public function testToArrayIdKey(): void {
     $entity = $this->getMockForAbstractClass('\Drupal\Core\Config\Entity\ConfigEntityBase', [[], $this->entityTypeId], '', TRUE, TRUE, TRUE, ['id', 'get']);
     $entity->expects($this->atLeastOnce())
       ->method('id')
@@ -594,7 +594,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    * @covers ::unsetThirdPartySetting
    * @covers ::getThirdPartyProviders
    */
-  public function testThirdPartySettings() {
+  public function testThirdPartySettings(): void {
     $key = 'test';
     $third_party = 'test_provider';
     $value = $this->getRandomGenerator()->string();
@@ -624,7 +624,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
   /**
    * @covers ::toArray
    */
-  public function testToArraySchemaException() {
+  public function testToArraySchemaException(): void {
     $this->entityType->expects($this->any())
       ->method('getPropertiesToExport')
       ->willReturn(NULL);
@@ -646,7 +646,7 @@ class TestConfigEntityWithPluginCollections extends ConfigEntityBaseWithPluginCo
 
   protected $the_plugin_collection_config;
 
-  public function setPluginManager(PluginManagerInterface $plugin_manager) {
+  public function setPluginManager(PluginManagerInterface $plugin_manager): void {
     $this->pluginManager = $plugin_manager;
   }
 

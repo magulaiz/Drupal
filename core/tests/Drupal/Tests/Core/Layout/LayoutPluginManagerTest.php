@@ -98,7 +98,7 @@ class LayoutPluginManagerTest extends UnitTestCase {
    * @covers ::getDefinitions
    * @covers ::providerExists
    */
-  public function testGetDefinitions() {
+  public function testGetDefinitions(): void {
     $expected = [
       'module_a_provided_layout',
       'theme_a_provided_layout',
@@ -114,7 +114,7 @@ class LayoutPluginManagerTest extends UnitTestCase {
    * @covers ::getDefinition
    * @covers ::processDefinition
    */
-  public function testGetDefinition() {
+  public function testGetDefinition(): void {
     $layout_definition = $this->layoutPluginManager->getDefinition('theme_a_provided_layout');
     $this->assertSame('theme_a_provided_layout', $layout_definition->id());
     $this->assertSame('2 column layout', (string) $layout_definition->getLabel());
@@ -203,7 +203,7 @@ class LayoutPluginManagerTest extends UnitTestCase {
   /**
    * @covers ::processDefinition
    */
-  public function testProcessDefinition() {
+  public function testProcessDefinition(): void {
     $this->moduleHandler->alter('layout', Argument::type('array'))->shouldNotBeCalled();
     $this->expectException(InvalidPluginDefinitionException::class);
     $this->expectExceptionMessage('The "module_a_derived_layout:array_based" layout definition must extend ' . LayoutDefinition::class);
@@ -225,7 +225,7 @@ EOS;
   /**
    * @covers ::getThemeImplementations
    */
-  public function testGetThemeImplementations() {
+  public function testGetThemeImplementations(): void {
     $core_path = '/core/lib/Drupal/Core';
     $expected = [
       'layout' => [
@@ -251,7 +251,7 @@ EOS;
   /**
    * @covers ::getCategories
    */
-  public function testGetCategories() {
+  public function testGetCategories(): void {
     $expected = [
       'Columns: 1',
       'Columns: 2',
@@ -263,7 +263,7 @@ EOS;
   /**
    * @covers ::getSortedDefinitions
    */
-  public function testGetSortedDefinitions() {
+  public function testGetSortedDefinitions(): void {
     $expected = [
       'module_a_provided_layout',
       'plugin_provided_layout',
@@ -278,7 +278,7 @@ EOS;
   /**
    * @covers ::getGroupedDefinitions
    */
-  public function testGetGroupedDefinitions() {
+  public function testGetGroupedDefinitions(): void {
     $category_expected = [
       'Columns: 1' => [
         'module_a_provided_layout',
@@ -301,7 +301,7 @@ EOS;
   /**
    * Sets up the filesystem with YAML files and annotated plugins.
    */
-  protected function setUpFilesystem() {
+  protected function setUpFilesystem(): void {
     $module_a_provided_layout = <<<'EOS'
 module_a_provided_layout:
   label: 1 column layout

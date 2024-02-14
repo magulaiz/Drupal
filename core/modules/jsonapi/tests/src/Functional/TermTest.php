@@ -64,7 +64,7 @@ class TermTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     switch ($method) {
       case 'GET':
         $this->grantPermissionsToTestedRole(['access content']);
@@ -91,7 +91,7 @@ class TermTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpRevisionAuthorization($method) {
+  protected function setUpRevisionAuthorization($method): void {
     parent::setUpRevisionAuthorization($method);
     $this->grantPermissionsToTestedRole(['administer taxonomy']);
   }
@@ -399,7 +399,7 @@ class TermTest extends ResourceTestBase {
    * @see \Drupal\Tests\jsonapi\Functional\NodeTest::testPatchPath()
    * @see \Drupal\Tests\rest\Functional\EntityResource\Node\NodeResourceTestBase::testPatchPath()
    */
-  public function testPatchPath() {
+  public function testPatchPath(): void {
     $this->setUpAuthorization('GET');
     $this->setUpAuthorization('PATCH');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -458,7 +458,7 @@ class TermTest extends ResourceTestBase {
    *
    * @dataProvider providerTestGetIndividualTermWithParent
    */
-  public function testGetIndividualTermWithParent(array $parent_term_ids) {
+  public function testGetIndividualTermWithParent(array $parent_term_ids): void {
     // Create all possible parent terms.
     Term::create(['vid' => Vocabulary::load('camelids')->id()])
       ->setName('Lamoids')
@@ -504,7 +504,7 @@ class TermTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testCollectionFilterAccess() {
+  public function testCollectionFilterAccess(): void {
     $this->doTestCollectionFilterAccessBasedOnPermissions('name', 'access content');
   }
 

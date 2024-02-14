@@ -48,7 +48,7 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
    * \Drupal\Tests\views\Kernel\Plugin\JoinTest::testBasePlugin() to ensure that
    * no functionality provided by the base join plugin is broken.
    */
-  public function testBase() {
+  public function testBase(): void {
     // Setup a simple join and test the result sql.
     $view = Views::getView('test_view');
     $view->initDisplay();
@@ -128,7 +128,7 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
   /**
    * Tests the adding of conditions by the join plugin.
    */
-  public function testLanguageBundleConditions() {
+  public function testLanguageBundleConditions(): void {
     // Setup a simple join and test the result sql.
     $view = Views::getView('test_view');
     $view->initDisplay();

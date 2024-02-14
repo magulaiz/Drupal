@@ -10,7 +10,7 @@ class MockTestConnection {
   protected $commandsRun = [];
   public $connectionString;
 
-  public function run($cmd) {
+  public function run($cmd): void {
     $this->commandsRun[] = $cmd;
   }
 

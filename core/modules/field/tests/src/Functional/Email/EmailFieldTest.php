@@ -56,7 +56,7 @@ class EmailFieldTest extends BrowserTestBase {
   /**
    * Tests email field.
    */
-  public function testEmailField() {
+  public function testEmailField(): void {
     // Create a field with settings to validate.
     $field_name = $this->randomMachineName();
     $this->fieldStorage = FieldStorageConfig::create([

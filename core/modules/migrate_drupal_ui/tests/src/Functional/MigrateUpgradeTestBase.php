@@ -61,7 +61,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
   /**
    * Navigates to the credential form and submits valid credentials.
    */
-  public function submitCredentialForm() {
+  public function submitCredentialForm(): void {
     $this->drupalGet('/upgrade');
     $this->submitForm([], 'Continue');
 
@@ -78,7 +78,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
    * @param string $path
    *   Path to the dump file.
    */
-  protected function loadFixture($path) {
+  protected function loadFixture($path): void {
     $default_db = Database::getConnection()->getKey();
     Database::setActiveConnection($this->sourceDatabase->getKey());
 
@@ -95,7 +95,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
    *
    * @todo Remove when we don't use global. https://www.drupal.org/node/2552791
    */
-  protected function createMigrationConnection() {
+  protected function createMigrationConnection(): void {
     $connection_info = Database::getConnectionInfo('default')['default'];
     if ($connection_info['driver'] === 'sqlite') {
       // Create database file in the test site's public file directory so that
@@ -175,7 +175,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
    * @throws \Behat\Mink\Exception\ResponseTextException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function assertIdConflictForm(array $entity_types) {
+  protected function assertIdConflictForm(array $entity_types): void {
     $session = $this->assertSession();
     /** @var \Drupal\Core\Entity\EntityTypeManager $entity_type_manager */
     $entity_type_manager = \Drupal::service('entity_type.manager');
@@ -203,7 +203,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
    *
    * @throws \Behat\Mink\Exception\ExpectationException
    */
-  protected function assertReviewForm(array $available_paths = NULL, array $missing_paths = NULL) {
+  protected function assertReviewForm(array $available_paths = NULL, array $missing_paths = NULL): void {
     $session = $this->assertSession();
     $session->pageTextContains('What will be upgraded?');
 
@@ -235,7 +235,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
    *
    * @throws \Behat\Mink\Exception\ExpectationException
    */
-  protected function assertUpgrade(array $entity_counts) {
+  protected function assertUpgrade(array $entity_counts): void {
     $session = $this->assertSession();
     $session->pageTextContains(t('Congratulations, you upgraded Drupal!'));
 
@@ -324,7 +324,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
   /**
    * Asserts that a migrated user can login.
    */
-  public function assertUserLogIn($uid, $pass) {
+  public function assertUserLogIn($uid, $pass): void {
     $user = User::load($uid);
     $user->passRaw = $pass;
     $this->drupalLogin($user);
@@ -343,7 +343,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
   /**
    * Checks public and private files are copied but not temporary files.
    */
-  protected function assertFileMigrations() {
+  protected function assertFileMigrations(): void {
     $fs = \Drupal::service('file_system');
     $files = $this->getManagedFiles();
     foreach ($files as $file) {
@@ -362,7 +362,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
   /**
    * Confirm emails were sent.
    */
-  protected function assertEmailsSent() {
+  protected function assertEmailsSent(): void {
     // There should be one user activation email.
     $captured_emails = \Drupal::state()->get('system.test_mail_collector', []);
     $this->assertCount(1, $captured_emails);

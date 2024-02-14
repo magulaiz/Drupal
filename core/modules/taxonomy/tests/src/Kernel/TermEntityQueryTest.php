@@ -28,7 +28,7 @@ class TermEntityQueryTest extends KernelTestBase {
   /**
    * Tests that a basic taxonomy entity query works.
    */
-  public function testTermEntityQuery() {
+  public function testTermEntityQuery(): void {
     $this->installEntitySchema('taxonomy_term');
     $vocabulary = $this->createVocabulary();
 

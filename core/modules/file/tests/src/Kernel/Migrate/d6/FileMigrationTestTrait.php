@@ -12,7 +12,7 @@ trait FileMigrationTestTrait {
   /**
    * Setup and execute d6_file migration.
    */
-  protected function setUpMigratedFiles() {
+  protected function setUpMigratedFiles(): void {
     $this->installEntitySchema('file');
     $this->installConfig(['file']);
 
@@ -22,7 +22,7 @@ trait FileMigrationTestTrait {
   /**
    * {@inheritdoc}
    */
-  protected function prepareMigration(MigrationInterface $migration) {
+  protected function prepareMigration(MigrationInterface $migration): void {
     // File migrations need a source_base_path.
     // @see MigrateUpgradeRunBatch::run
     $destination = $migration->getDestinationConfiguration();

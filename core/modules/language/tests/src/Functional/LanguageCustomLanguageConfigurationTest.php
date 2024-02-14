@@ -29,7 +29,7 @@ class LanguageCustomLanguageConfigurationTest extends BrowserTestBase {
   /**
    * Functional tests for adding, editing and deleting languages.
    */
-  public function testLanguageConfiguration() {
+  public function testLanguageConfiguration(): void {
 
     // Create user with permissions to add and remove languages.
     $admin_user = $this->drupalCreateUser([

@@ -53,7 +53,7 @@ class MailTest extends KernelTestBase {
   /**
    * Assert that the pluggable mail system is functional.
    */
-  public function testPluggableFramework() {
+  public function testPluggableFramework(): void {
     // Switch mail backends.
     $this->configureDefaultMailInterface('test_php_mail_failure');
 
@@ -80,7 +80,7 @@ class MailTest extends KernelTestBase {
   /**
    * Assert that the pluggable mail system is functional.
    */
-  public function testErrorMessageDisplay() {
+  public function testErrorMessageDisplay(): void {
     // Switch mail backends.
     $this->configureDefaultMailInterface('test_php_mail_failure');
 
@@ -100,7 +100,7 @@ class MailTest extends KernelTestBase {
    *
    * @see mail_cancel_test_mail_alter()
    */
-  public function testCancelMessage() {
+  public function testCancelMessage(): void {
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
     // Reset the state variable that holds sent messages.
@@ -120,7 +120,7 @@ class MailTest extends KernelTestBase {
   /**
    * Checks the From: and Reply-to: headers.
    */
-  public function testFromAndReplyToHeader() {
+  public function testFromAndReplyToHeader(): void {
     $language = \Drupal::languageManager()->getCurrentLanguage();
 
     // Reset the state variable that holds sent messages.
@@ -197,7 +197,7 @@ class MailTest extends KernelTestBase {
   /**
    * Checks that relative paths in mails are converted into absolute URLs.
    */
-  public function testConvertRelativeUrlsIntoAbsolute() {
+  public function testConvertRelativeUrlsIntoAbsolute(): void {
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
     $this->configureDefaultMailInterface('test_html_mail_collector');
@@ -284,7 +284,7 @@ class MailTest extends KernelTestBase {
    * By default Drupal uses relative paths for images and links. When sending
    * emails, absolute paths should be used instead.
    */
-  public function testRenderedElementsUseAbsolutePaths() {
+  public function testRenderedElementsUseAbsolutePaths(): void {
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
     $this->configureDefaultMailInterface('test_html_mail_collector');
@@ -384,7 +384,7 @@ class MailTest extends KernelTestBase {
    * @param string $mail_interface
    *   The mail interface to configure.
    */
-  protected function configureDefaultMailInterface($mail_interface) {
+  protected function configureDefaultMailInterface($mail_interface): void {
     $GLOBALS['config']['system.mail']['interface']['default'] = $mail_interface;
   }
 

@@ -39,7 +39,7 @@ class MenuAccessTest extends BrowserTestBase {
    *
    * @see \Drupal\menu_test\Access\AccessCheck::access()
    */
-  public function testMenuBlockLinksAccessCheck() {
+  public function testMenuBlockLinksAccessCheck(): void {
     $this->drupalPlaceBlock('system_menu_block:account');
     // Test that there's link rendered on the route.
     $this->drupalGet('menu_test_access_check_session');

@@ -42,7 +42,7 @@ class FieldUIIndentationTest extends BrowserTestBase {
 
   }
 
-  public function testIndentation() {
+  public function testIndentation(): void {
     $this->drupalGet('admin/structure/types/manage/page/display');
     $this->assertSession()->responseContains('js-indentation indentation');
   }

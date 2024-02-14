@@ -68,7 +68,7 @@ class MigrateFieldTest extends MigrateDrupal7TestBase {
   /**
    * Tests migrating D7 fields to field_storage_config entities.
    */
-  public function testFields() {
+  public function testFields(): void {
     \Drupal::service('module_installer')->install(['datetime_range']);
     $this->installConfig(static::$modules);
     $this->executeMigration('d7_field');
@@ -194,7 +194,7 @@ class MigrateFieldTest extends MigrateDrupal7TestBase {
   /**
    * Tests migrating D7 datetime fields.
    */
-  public function testDatetimeFields() {
+  public function testDatetimeFields(): void {
     $this->installConfig(static::$modules);
     $this->executeMigration('d7_field');
 

@@ -20,7 +20,7 @@ final class UtilitiesTest extends TestCase {
    * @covers ::isRenderArray
    * @dataProvider dataProviderIsRenderArray
    */
-  public function testIsRenderArray($build, $expected) {
+  public function testIsRenderArray($build, $expected): void {
     $this->assertSame(
       $expected,
       Utilities::isRenderArray($build)

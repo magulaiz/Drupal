@@ -24,7 +24,7 @@ class UpdateSettingsDefaultFetchUrlUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       DRUPAL_ROOT . '/core/modules/system/tests/fixtures/update/drupal-9.4.0.bare.standard.php.gz',
     ];
@@ -97,7 +97,7 @@ class UpdateSettingsDefaultFetchUrlUpdateTest extends UpdatePathTestBase {
   /**
    * Tests update of update.settings:fetch.url.
    */
-  public function testUpdate() {
+  public function testUpdate(): void {
     $fetch_url_before = $this->config('update.settings')->get('fetch.url');
     $this->assertSame('', $fetch_url_before);
 

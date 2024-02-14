@@ -28,7 +28,7 @@ class MigrateUploadFieldTest extends MigrateDrupal6TestBase {
   /**
    * Tests the Drupal 6 upload settings to Drupal 8 field migration.
    */
-  public function testUpload() {
+  public function testUpload(): void {
     $field_storage = FieldStorageConfig::load('node.upload');
     $this->assertSame('node.upload', $field_storage->id());
     $this->assertSame([['node', 'upload']], $this->getMigration('d6_upload_field')->getIdMap()->lookupDestinationIds(['']));
