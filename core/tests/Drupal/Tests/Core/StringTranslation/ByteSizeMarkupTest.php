@@ -18,7 +18,7 @@ class ByteSizeMarkupTest extends UnitTestCase {
    * @covers ::create
    * @dataProvider providerTestCommonFormatSize
    */
-  public function testCommonFormatSize($expected, $input, $precision = NULL) {
+  public function testCommonFormatSize($expected, $input, $precision = 0) {
     $size = ByteSizeMarkup::create($input, NULL, $this->getStringTranslationStub(), $precision);
     $this->assertInstanceOf(TranslatableMarkup::class, $size);
     $this->assertEquals($expected, $size);
