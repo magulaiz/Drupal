@@ -76,7 +76,7 @@ class FileUploadHandlerTest extends KernelTestBase {
    * @dataProvider validatorsProvider
    * @group legacy
    */
-  public function testHandleExtensionValidation(array $validators, array $expectedValidators, bool $deprecation): void {
+  public function testHandleExtensionValidation(array $validators, array $expectedValidators, string $message, bool $deprecation): void {
     $method = new \ReflectionMethod(
       FileUploadHandler::class,
       'handleExtensionValidation'
@@ -90,7 +90,7 @@ class FileUploadHandlerTest extends KernelTestBase {
     }
     $method->invokeArgs($this->fileUploadHandler, [&$validators]);
 
-    $this->assertEquals($expectedValidators, $validators);
+    $this->assertEquals($expectedValidators, $validators, $message);
   }
 
   /**
@@ -102,37 +102,44 @@ class FileUploadHandlerTest extends KernelTestBase {
       'valid_legacy' => [
         ['file_validate_extensions' => ['txt']],
         ['FileExtension' => ['extensions' => 'txt']],
+        'Legacy extension validator is converted to the new constraint.',
         TRUE,
       ],
       'non_default_legacy' => [
         ['file_validate_extensions' => ['foo']],
         ['FileExtension' => ['extensions' => 'foo']],
+        'Legacy extension validator is converted to the new constraint.',
         TRUE,
       ],
       'empty_legacy' => [
         ['file_validate_extensions' => ''],
         [],
+        'Legacy extension validator is removed.',
         TRUE,
       ],
       // Plugin extension validator.
       'valid_extension' => [
         ['FileExtension' => ['extensions' => 'txt']],
         ['FileExtension' => ['extensions' => 'txt']],
+        'Extension constraint is preserved.',
         FALSE,
       ],
       'non_default_extension' => [
         ['FileExtension' => ['extensions' => 'foo']],
         ['FileExtension' => ['extensions' => 'foo']],
+        'Extension constraint is preserved.',
         FALSE,
       ],
       'empty_extensions' => [
         ['FileExtension' => []],
         [],
+        'Extension constraint is removed.',
         FALSE,
       ],
       'undefined' => [
         [],
         ['FileExtension' => ['extensions' => FileUploadHandler::DEFAULT_EXTENSIONS]],
+        'Extension constraint is added with default extensions.',
         FALSE,
       ],
     ];
