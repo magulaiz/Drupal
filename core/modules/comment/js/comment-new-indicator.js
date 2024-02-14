@@ -24,18 +24,17 @@
         $placeholder.attr('data-comment-timestamp'),
         10,
       );
-      const $node = $placeholder.closest('[data-history-node-id]');
-      const nodeID = $node.attr('data-history-node-id');
+      const $node = placeholder.closest('[data-history-node-id]');
+      const nodeID = $($node).attr('data-history-node-id');
       const lastViewTimestamp = Drupal.history.getLastRead(nodeID);
+      const closestEl = placeholder.closest('.js-comment');
 
       if (timestamp > lastViewTimestamp) {
         // Turn the placeholder into an actual "new" indicator.
         placeholder.textContent = newCommentString;
-        $placeholder
-          .removeClass('hidden')
-          .closest('.js-comment')
-          // Add 'new' class to the comment, so it can be styled.
-          .addClass('new');
+        $placeholder.removeClass('hidden');
+        // Add 'new' class to the comment, so it can be styled.
+        $(closestEl).addClass('new');
 
         // Insert "new" anchor just before the "comment-<cid>" anchor if
         // this is the first new comment in the DOM.
@@ -79,9 +78,8 @@
           $placeholder.attr('data-comment-timestamp'),
           10,
         );
-        const nodeID = $placeholder
-          .closest('[data-history-node-id]')
-          .attr('data-history-node-id');
+        const closestNode = placeholder.closest('[data-history-node-id]');
+        const nodeID = $(closestNode).attr('data-history-node-id');
         if (Drupal.history.needsServerCheck(nodeID, commentTimestamp)) {
           nodeIDs.push(nodeID);
           return true;
