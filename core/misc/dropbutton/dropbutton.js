@@ -97,7 +97,10 @@
    */
   function dropbuttonClickHandler(e) {
     e.preventDefault();
-    $(e.target).closest('.dropbutton-wrapper').toggleClass('open');
+    const dropbuttonWrapper = e.target.closest('.dropbutton-wrapper');
+    if (dropbuttonWrapper) {
+      dropbuttonWrapper.classList.toggle('open');
+    }
   }
 
   /**
