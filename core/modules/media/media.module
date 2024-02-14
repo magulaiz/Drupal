@@ -205,7 +205,7 @@ function media_form_field_ui_field_storage_add_form_alter(&$form, FormStateInter
   if (!$form_state->getValue('new_storage_type')) {
     $form['description_wrapper'] = [
       '#type' => 'item',
-      '#markup' => $description_text,
+      '#markup' => "✱ " . $description_text,
     ];
   }
 }

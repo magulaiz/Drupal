@@ -230,6 +230,11 @@ class FieldStorageAddForm extends FormBase {
         'class' => 'add-field-container',
       ],
     ];
+    if ($field_type_options_radios['field_ui:entity_reference:media']) {
+      foreach (['file_upload', 'field_ui:entity_reference:media'] as $field_type) {
+        $field_type_options_radios[$field_type]['radio']['#title'] = $field_type_options_radios[$field_type]['radio']['#title'] . " ✱";
+      }
+    }
     $form['add']['new_storage_type'] = $field_type_options_radios;
 
     $form['actions']['submit']['#submit'][] = [$this, 'rebuildWithOptions'];
@@ -333,6 +338,9 @@ class FieldStorageAddForm extends FormBase {
     }
   }
 
+  /**
+   *
+   */
   public static function justUnset(array &$form, FormStateInterface $form_state) {
     $form_state->unsetValue('new_storage_type');
   }
