@@ -96,7 +96,7 @@ class ListPlugin extends CKEditor5PluginDefault implements CKEditor5PluginConfig
     // Generate configuration to use `type` attribute-based list styles on <ul>
     // and <ol> elements.
     // @see https://ckeditor.com/docs/ckeditor5/latest/api/module_list_listconfig-ListPropertiesStyleConfig.html#member-useAttribute
-    if (isset($this->getConfiguration()['properties']['styles'])) {
+    if ($this->getConfiguration()['properties']['styles']) {
       $static_plugin_config['list']['properties']['styles'] = ['useAttribute' => TRUE];
     }
     $static_plugin_config['list']['multiBlock'] = $this->getConfiguration()['multiBlock'];
