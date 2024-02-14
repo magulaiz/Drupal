@@ -45,6 +45,18 @@ Object.keys(collectedFolders).forEach((folder) => {
   collectedFolders[folder] = Array.from(new Set(collectedFolders[folder]));
 });
 
+let chromeArgs = [
+  '--no-sandbox',
+  '--ignore-certificate-errors',
+  '--allow-insecure-localhost',
+];
+if (
+  process.env.DRUPAL_TEST_WEBDRIVER_CHROME_ARGS &&
+  process.env.DRUPAL_TEST_WEBDRIVER_CHROME_ARGS.length
+) {
+  chromeArgs = process.env.DRUPAL_TEST_WEBDRIVER_CHROME_ARGS.split(' ');
+}
+
 module.exports = {
   src_folders: collectedFolders.Tests,
   output_folder: process.env.DRUPAL_NIGHTWATCH_OUTPUT,
@@ -52,8 +64,12 @@ module.exports = {
   custom_assertions_path: collectedFolders.Assertions,
   page_objects_path: collectedFolders.Pages,
   globals_path: 'globals.js',
-  selenium: {
-    start_process: false,
+  webdriver: {
+    start_process:
+      process.env.DRUPAL_TEST_CHROMEDRIVER_AUTOSTART.toLowerCase() === 'true',
+    host: process.env.DRUPAL_TEST_WEBDRIVER_HOSTNAME,
+    port: parseInt(process.env.DRUPAL_TEST_WEBDRIVER_PORT, 10),
+    log_path: process.env.DRUPAL_NIGHTWATCH_OUTPUT,
   },
   test_settings: {
     default: {
@@ -61,19 +77,13 @@ module.exports = {
         defaultTheme: 'olivero',
         adminTheme: 'claro',
       },
-      selenium_port: process.env.DRUPAL_TEST_WEBDRIVER_PORT,
-      selenium_host: process.env.DRUPAL_TEST_WEBDRIVER_HOSTNAME,
+      desiredCapabilities: {
+        browserName: 'chrome',
+        'goog:chromeOptions': {
+          args: chromeArgs,
+        },
+      },
       default_path_prefix: process.env.DRUPAL_TEST_WEBDRIVER_PATH_PREFIX || '',
-      desiredCapabilities: {
-        browserName: 'chrome',
-        acceptSslCerts: true,
-        'goog:chromeOptions': {
-          w3c: false,
-          args: process.env.DRUPAL_TEST_WEBDRIVER_CHROME_ARGS
-            ? process.env.DRUPAL_TEST_WEBDRIVER_CHROME_ARGS.split(' ')
-            : [],
-        },
-      },
       screenshots: {
         enabled: true,
         on_failure: true,
@@ -82,33 +92,7 @@ module.exports = {
       },
       end_session_on_fail: false,
       skip_testcases_on_fail: false,
-    },
-    local: {
-      webdriver: {
-        start_process: process.env.DRUPAL_TEST_CHROMEDRIVER_AUTOSTART,
-        port: process.env.DRUPAL_TEST_WEBDRIVER_PORT,
-        cli_args: process.env.DRUPAL_TEST_WEBDRIVER_CLI_ARGS
-          ? process.env.DRUPAL_TEST_WEBDRIVER_CLI_ARGS.split(' ')
-          : [],
-      },
-      desiredCapabilities: {
-        browserName: 'chrome',
-        acceptSslCerts: true,
-        'goog:chromeOptions': {
-          w3c: false,
-          args: process.env.DRUPAL_TEST_WEBDRIVER_CHROME_ARGS
-            ? process.env.DRUPAL_TEST_WEBDRIVER_CHROME_ARGS.split(' ')
-            : [],
-        },
-      },
-      screenshots: {
-        enabled: true,
-        on_failure: true,
-        on_error: true,
-        path: `${process.env.DRUPAL_NIGHTWATCH_OUTPUT}/screenshots`,
-      },
-      end_session_on_fail: false,
-      skip_testcases_on_fail: false,
+      enable_fail_fast: true,
     },
   },
 };

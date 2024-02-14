@@ -240,6 +240,7 @@ drupalmedia
 drupalmediaediting
 drupalmediatoolbar
 drupalorg
+dwebdriver
 détruire
 editables
 egulias
@@ -374,6 +375,7 @@ johansson
 jqueryui
 jsonlint
 jssdk
+justafish
 justinrainbow
 kangarookitten
 kernighan
@@ -408,6 +410,7 @@ lnumber
 loadjs
 localemark
 localetranslatedirty
+logfile
 logicalcpu
 lolspeak
 longblob
@@ -418,6 +421,7 @@ lowline
 lrdd
 lstitle
 ltitle
+lullabot
 lzma
 lzop
 macbinary
