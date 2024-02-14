@@ -25,7 +25,7 @@ trait TestCompatibilityTrait {
    *   An array of classes listed with the @covers annotation.
    */
   public function getTestClassCovers(): array {
-    $annotations = Test::parseTestMethodAnnotations(static::class, $this->getName());
+    $annotations = Test::parseTestMethodAnnotations(static::class, $this->name());
     return $annotations['class']['covers'] ?? [];
   }
 
