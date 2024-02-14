@@ -294,7 +294,7 @@ abstract class BuildTestBase extends TestCase {
    * executeCommand() and perform a different assertion on the process object.
    */
   public function assertCommandSuccessful() {
-    return $this->assertCommandExitCode(0);
+    $this->assertCommandExitCode(0);
   }
 
   /**
