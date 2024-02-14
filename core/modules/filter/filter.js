@@ -26,18 +26,15 @@
           .show();
       }
 
-      const filter = ('filter-guidelines', '.js-filter-guidelines', context);
-      const headings = filter.querySelectorAll('h1, h2, h3, h4, h5, h6');
-      headings.forEach((el) => {
-        const closestEl = el.closest('.js-filter-wrapper');
-        el.style.display = 'none';
-        $(closestEl)
-          .find('select.js-filter-list')
-          .on('change.filterGuidelines', updateFilterGuidelines)
-          // Need to trigger the namespaced event to avoid triggering formUpdated
-          // when initializing the select.
-          .trigger('change.filterGuidelines');
-      });
+      $(once('filter-guidelines', '.js-filter-guidelines', context))
+        .find(':header')
+        .hide()
+        .closest('.js-filter-wrapper')
+        .find('select.js-filter-list')
+        .on('change.filterGuidelines', updateFilterGuidelines)
+        // Need to trigger the namespaced event to avoid triggering formUpdated
+        // when initializing the select.
+        .trigger('change.filterGuidelines');
     },
   };
 })(jQuery, Drupal);
