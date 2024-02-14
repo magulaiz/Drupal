@@ -31,8 +31,10 @@ function ckeditor5_post_update_create_ckeditor_inline_view_mode() {
   $source = new FileStorage($config_path);
   $entity_type_manager = \Drupal::entityTypeManager();
   $module_handler = \Drupal::moduleHandler();
+  /** @var \Drupal\Core\Config\StorageInterface $config_storage */
+  $config_storage = \Drupal::service('config.storage');
 
-  if ($module_handler->moduleExists('media')) {
+  if ($module_handler->moduleExists('media') && !$config_storage->exists('core.entity_view_mode.media.ckeditor_inline')) {
     $entity_type_manager->getStorage('entity_view_mode')
       ->create($source->read('core.entity_view_mode.media.ckeditor_inline'))
       ->save();
