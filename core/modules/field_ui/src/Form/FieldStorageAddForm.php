@@ -230,7 +230,7 @@ class FieldStorageAddForm extends FormBase {
         'class' => 'add-field-container',
       ],
     ];
-    if ($field_type_options_radios['field_ui:entity_reference:media']) {
+    if (array_key_exists('field_ui:entity_reference:media', $field_type_options_radios)) {
       foreach (['file_upload', 'field_ui:entity_reference:media'] as $field_type) {
         $field_type_options_radios[$field_type]['radio']['#title'] = $field_type_options_radios[$field_type]['radio']['#title'] . " ✱";
       }
