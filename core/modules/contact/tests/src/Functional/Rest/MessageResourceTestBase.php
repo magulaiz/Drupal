@@ -93,7 +93,7 @@ abstract class MessageResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedNormalizedEntity(): void {
+  protected function getExpectedNormalizedEntity() {
     throw new \Exception('Not yet supported.');
   }
 
