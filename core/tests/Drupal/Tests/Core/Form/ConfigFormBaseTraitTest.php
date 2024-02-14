@@ -73,6 +73,6 @@ class ConfiguredTrait {
   use ConfigFormBaseTrait;
   public $configFactory;
 
-  protected function getEditableConfigNames(): void {}
+  protected function getEditableConfigNames() {}
 
 }
