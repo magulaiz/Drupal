@@ -21,7 +21,7 @@ tips:
     plugin: text
     label: 'Adding languages'
     weight: 2
-    selector: .button-action
+    selector: .button--action
     body: '<p>To add more languages to your site, click the "Add language" button.</p><p>Added languages will be displayed in the language list and can then be edited or deleted.</p>'
   language-reorder:
     id: language-reorder

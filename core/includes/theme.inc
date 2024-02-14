@@ -1940,13 +1940,17 @@ function template_preprocess_menu_local_action(&$variables) {
   $link += [
     'localized_options' => [],
   ];
+  $link_text = $link['title'];
   $link['localized_options']['attributes']['class'][] = 'button';
-  $link['localized_options']['attributes']['class'][] = 'button-action';
+  $link['localized_options']['attributes']['class'][] = 'button--action';
   $link['localized_options']['set_active_class'] = TRUE;
+
+  $plus_sign = new FormattableMarkup('<span aria-hidden="true">@label</span>', ['@label' => t('+')]);
+  $link_text = t('@plus-sign@local-action-title', ['@plus-sign' => $plus_sign, '@local-action-title' => $link_text]);
 
   $variables['link'] = [
     '#type' => 'link',
-    '#title' => $link['title'],
+    '#title' => $link_text,
     '#options' => $link['localized_options'],
     '#url' => $link['url'],
   ];

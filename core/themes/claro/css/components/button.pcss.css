@@ -83,10 +83,9 @@
 .button--action {
   margin: 0;
 
-  &::before {
+  & span {
     margin-inline: -0.25em 0;
     padding-inline: 0 0.25em;
-    content: "+";
     font-weight: 900;
   }
 }

@@ -241,7 +241,7 @@ function claro_preprocess_admin_block_content(&$variables) {
 function claro_preprocess_menu_local_action(array &$variables) {
   $variables['link']['#options']['attributes']['class'][] = 'button--primary';
   $variables['attributes']['class'][] = 'local-actions__item';
-  $legacy_class_key = array_search('button-action', $variables['link']['#options']['attributes']['class']);
+  $legacy_class_key = array_search('button--action', $variables['link']['#options']['attributes']['class']);
 
   if ($legacy_class_key !== FALSE) {
     $variables['link']['#options']['attributes']['class'][$legacy_class_key] = 'button--action';
