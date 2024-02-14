@@ -415,7 +415,7 @@ default:
         - core/package.json
         - core/yarn.lock
         - "**/*.css"
-        - "core/.stylelint.json"
+        - "core/.stylelintrc.json"
     - when: manual
       allow_failure: true
   script:
