@@ -709,19 +709,10 @@ function ckeditor5_editor_presave(EditorInterface $editor) {
       $ol_type = HTMLRestrictions::fromString('<ol type>');
       $ul_type = HTMLRestrictions::fromString('<ul type>');
       if (!array_key_exists('styles', $settings['plugins']['ckeditor5_list']['properties'])) {
-        if (
-          !$ol_type->diff($source_edited)->allowsNothing()
-          && !$ul_type->diff($source_edited)->allowsNothing()
-          && !$format_restrictions->isUnrestricted()
-        ) {
-          $settings['plugins']['ckeditor5_list']['properties']['styles'] = FALSE;
-        }
-        // Otherwise, if this is a restricted text format and either <ol type> or
-        // <ul type> is allowed through Source Editing, remove them from the
-        // Source Editing configuration and instead enable the native UI.
-        else {
-          $settings['plugins']['ckeditor5_list']['properties']['styles'] = TRUE;
-        }
+        $settings['plugins']['ckeditor5_list']['properties']['styles'] =
+          $ol_type->diff($source_edited)->allowsNothing() ||
+          $ul_type->diff($source_edited)->allowsNothing() ||
+          $format_restrictions->isUnrestricted();
       }
 
       // Update the Source Editing configuration too.

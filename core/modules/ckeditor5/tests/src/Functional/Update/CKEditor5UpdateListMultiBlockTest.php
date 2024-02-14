@@ -58,7 +58,14 @@ class CKEditor5UpdateListMultiBlockTest extends UpdatePathTestBase {
     $this->assertNotSame($before['basic_html']->getSettings(), $after['basic_html']->getSettings());
     $settings = $after['basic_html']->getSettings();
     $this->assertSame(['properties', 'multiBlock'], array_keys($settings['plugins']['ckeditor5_list']));
-    $this->assertSame($before['basic_html']->getSettings()['plugins']['ckeditor5_list'], $settings['plugins']['ckeditor5_list']['properties']);
+
+    // Comparing a difference between arrays, because future updates may add new
+    // things later. This ensures that there are no changes to the existing
+    // settings while ignoring any newly added items.
+    $this->assertSame([], array_diff_assoc(
+      $before['basic_html']->getSettings()['plugins']['ckeditor5_list'],
+      $settings['plugins']['ckeditor5_list']['properties'],
+    ));
     $this->assertTrue($settings['plugins']['ckeditor5_list']['multiBlock']);
 
     // test_text_format after: no changes.

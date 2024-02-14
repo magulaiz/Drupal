@@ -78,18 +78,19 @@ class CKEditor5UpdateOlStartReversed extends UpdatePathTestBase {
 
     $after = Editor::loadMultiple();
 
-    // Basic HTML after: reversed=FALSE, startIndex=FALSE, Source Editing
-    // configuration unchanged.
+    // Basic HTML after: reversed=FALSE, startIndex=FALSE.
     $settings = $after['basic_html']->getSettings();
-    $this->assertSame(['reversed' => FALSE, 'startIndex' => TRUE], $settings['plugins']['ckeditor5_list']['properties']);
-    $source_editable = HTMLRestrictions::fromString(implode(' ', $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']));
-    $this->assertSame(['type' => TRUE], $source_editable->getAllowedElements()['ol']);
+    $this->assertFalse($settings['plugins']['ckeditor5_list']['properties']['reversed']);
+    $this->assertTrue($settings['plugins']['ckeditor5_list']['properties']['startIndex']);
+    $source_edited = HTMLRestrictions::fromString(implode(' ', $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']));
+    $ol_start = HTMLRestrictions::fromString('<ol start>');
+    $this->assertFalse($ol_start->diff($source_edited)->allowsNothing());
 
-    // Full HTML after: reversed=TRUE, startIndex=TRUE, and Source Editing
-    // configuration is unchanged.
+    // Full HTML after: reversed=TRUE, startIndex=TRUE.
     $settings = $after['full_html']->getSettings();
     $this->assertNotSame($before['full_html']->getSettings(), $after['full_html']->getSettings());
-    $this->assertSame(['reversed' => TRUE, 'startIndex' => TRUE], $settings['plugins']['ckeditor5_list']['properties']);
+    $this->assertTrue($settings['plugins']['ckeditor5_list']['properties']['reversed']);
+    $this->assertTrue($settings['plugins']['ckeditor5_list']['properties']['startIndex']);
     $this->assertSame([], $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']);
 
     // test_format_list_ol_start after: reversed=FALSE, startIndex=TRUE, and
@@ -99,12 +100,23 @@ class CKEditor5UpdateOlStartReversed extends UpdatePathTestBase {
     // Hence the missing update path is applied.
     $this->assertNotSame($before['test_format_list_ol_start']->getSettings(), $after['test_format_list_ol_start']->getSettings());
     $settings = $after['test_format_list_ol_start']->getSettings();
-    $this->assertSame(['reversed' => FALSE, 'startIndex' => TRUE], $settings['plugins']['ckeditor5_list']['properties']);
+    $this->assertFalse($settings['plugins']['ckeditor5_list']['properties']['reversed']);
+    $this->assertTrue($settings['plugins']['ckeditor5_list']['properties']['startIndex']);
     $this->assertSame(['<ol foo>'], $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags']);
 
-    // test_format_list_ol_start_post_3261599 after: no changes, because it was
-    // updated from CKEditor 4 post-#3261599, which made this update a no-op.
-    $this->assertSame($before['test_format_list_ol_start_post_3261599']->getSettings(), $after['test_format_list_ol_start_post_3261599']->getSettings());
+    // Ideally, comparing a difference between arrays will work here, because
+    // future updates may add new things later. However, PHP is not able to
+    // calculate a difference of the nested array. Thus, the trick: replace new
+    // values with the old ones and compare them to the new ones. This ensures
+    // that there are no changes to the existing settings while ignoring any
+    // newly added items.
+    $this->assertSame(
+      array_replace_recursive(
+        $after['test_format_list_ol_start_post_3261599']->getSettings(),
+        $before['test_format_list_ol_start_post_3261599']->getSettings(),
+      ),
+      $after['test_format_list_ol_start_post_3261599']->getSettings(),
+    );
 
     // test_text_format after: no changes.
     $this->assertSame($before['test_text_format']->getSettings(), $after['test_text_format']->getSettings());
