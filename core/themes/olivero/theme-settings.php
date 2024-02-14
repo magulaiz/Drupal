@@ -108,10 +108,6 @@ function olivero_form_system_theme_settings_alter(&$form, FormStateInterface $fo
       '#title' => t($title),
       '#description' => t('Enter color in hexadecimal format (#abc123).') . '<br/>' . t('Derivatives will be formed from this color.'),
       '#config_target' => "olivero.settings:$key",
-      '#attributes' => [
-        // Regex copied from Color::validateHex()
-        'pattern' => '^[#]?([0-9a-fA-F]{3}){1,2}$',
-      ],
       '#wrapper_attributes' => [
         'data-drupal-selector' => 'olivero-color-picker',
       ],
