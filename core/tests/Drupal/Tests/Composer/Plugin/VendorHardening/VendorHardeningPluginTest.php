@@ -170,7 +170,7 @@ class VendorHardeningPluginTest extends TestCase {
     $this->assertFileExists($dir . '/web.config');
   }
 
-  public function providerFindBinOverlap() {
+  public static function providerFindBinOverlap() {
     return [
       [
         [],
