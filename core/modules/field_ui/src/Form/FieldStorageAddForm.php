@@ -254,7 +254,7 @@ class FieldStorageAddForm extends FormBase {
       '#value' => $this->t('Back'),
       '#submit' => [[$this, 'startOver']],
     ];
-    $form['actions']['back']['#validate'][] = '::justUnset';
+    $form['actions']['back']['#validate'][] = '::UnsetStorageType';
     $field_type_options = $form_state->get('field_type_options');
     $new_storage_type = $form_state->getValue('new_storage_type');
     $form['new_storage_type'] = [
@@ -339,9 +339,9 @@ class FieldStorageAddForm extends FormBase {
   }
 
   /**
-   *
+   * Unsets the storage type.
    */
-  public static function justUnset(array &$form, FormStateInterface $form_state) {
+  public static function UnsetStorageType(array &$form, FormStateInterface $form_state) {
     $form_state->unsetValue('new_storage_type');
   }
 
