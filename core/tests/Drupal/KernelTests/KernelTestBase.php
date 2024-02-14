@@ -2,7 +2,6 @@
 
 namespace Drupal\KernelTests;
 
-use Drupal\Component\Datetime\Time;
 use Drupal\Component\FileCache\ApcuFileCacheBackend;
 use Drupal\Component\FileCache\FileCache;
 use Drupal\Component\FileCache\FileCacheFactory;
