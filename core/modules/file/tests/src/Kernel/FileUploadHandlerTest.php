@@ -70,4 +70,62 @@ class FileUploadHandlerTest extends KernelTestBase {
     $this->assertEquals(['txt'], $subscriber->getAllowedExtensions());
   }
 
+  /**
+   * Tests handleExtensionValidation() with different validators.
+   *
+   * @dataProvider validatorsProvider
+   */
+  public function testHandleExtensionValidation(array $validators, $expectedValidators): void {
+    $method = new \ReflectionMethod(
+      FileUploadHandler::class,
+      'handleExtensionValidation'
+    );
+    $method->setAccessible(TRUE);
+    $method->invokeArgs($this->fileUploadHandler, [&$validators]);
+
+    $this->assertEquals($expectedValidators, $validators);
+  }
+
+  /**
+   * Provides data for testHandleExtensionValidation().
+   */
+  public static function validatorsProvider(): array {
+    return [
+      // Legacy extension validator.
+      'valid_legacy' => [
+        ['file_validate_extensions' => ['txt']],
+        ['FileExtension' => ['extensions' => 'txt']],
+      ],
+      'non_default_legacy' => [
+        ['file_validate_extensions' => ['foo']],
+        ['FileExtension' => ['extensions' => 'foo']],
+      ],
+      'empty_legacy' => [
+        ['file_validate_extensions' => ''],
+        [],
+      ],
+      'default_legacy' => [
+        [],
+        ['FileExtension' => ['extensions' => FileUploadHandler::DEFAULT_EXTENSIONS]],
+      ],
+      // Plugin extension validator.
+      'valid_plugin' => [
+        ['FileExtension' => ['extensions' => 'txt']],
+        ['FileExtension' => ['extensions' => 'txt']],
+      ],
+      'non_default_plugin' => [
+        ['FileExtension' => ['extensions' => 'foo']],
+        ['FileExtension' => ['extensions' => 'foo']],
+      ],
+      'empty_plugin' => [
+        ['FileExtension' => []],
+        [],
+      ],
+      'default_plugin' => [
+        [],
+        ['FileExtension' => ['extensions' => FileUploadHandler::DEFAULT_EXTENSIONS]],
+      ],
+    ];
+  }
+
 }
