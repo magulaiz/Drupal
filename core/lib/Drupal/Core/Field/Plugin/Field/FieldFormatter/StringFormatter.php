@@ -123,9 +123,8 @@ class StringFormatter extends FormatterBase {
     $elements = [];
     $url = NULL;
     $entity = $items->getEntity();
-    $entity_type = $entity->getEntityType();
 
-    if ($this->getSetting('link_to_entity') && !$entity->isNew() && $entity_type->hasLinkTemplate('canonical')) {
+    if ($this->getSetting('link_to_entity') && !$entity->isNew() && $entity->hasLinkTemplate('canonical')) {
       $url = $this->getEntityUrl($entity);
     }
 

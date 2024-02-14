@@ -7,6 +7,8 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\entity_test\Entity\EntityTestLabel;
 use Drupal\entity_test\Entity\EntityTestRev;
+use Drupal\entity_test\Entity\EntityTestWithCanonical;
+use Drupal\entity_test\Entity\EntityTestWithoutCanonical;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
@@ -69,6 +71,8 @@ class StringFormatterTest extends KernelTestBase {
     $this->installConfig(['system', 'field']);
     $this->installEntitySchema('entity_test_rev');
     $this->installEntitySchema('entity_test_label');
+    $this->installEntitySchema('entity_test_with_canonical');
+    $this->installEntitySchema('entity_test_without_canonical');
 
     $this->entityType = 'entity_test_rev';
     $this->bundle = $this->entityType;
@@ -229,6 +233,130 @@ class StringFormatterTest extends KernelTestBase {
 
     $this->renderEntityFields($entity, $display);
     $this->assertRaw($value);
+  }
+
+  /**
+   * Test "link_to_entity" with entity has canonical.
+   */
+  public function testLinkEntitiesWithCanonical(): void {
+    $field_name = 'test_field_name';
+    $entity_type = $bundle = 'entity_test_with_canonical';
+
+    $field_storage = FieldStorageConfig::create([
+      'field_name' => $field_name,
+      'entity_type' => $entity_type,
+      'type' => 'string',
+    ]);
+    $field_storage->save();
+
+    $instance = FieldConfig::create([
+      'field_storage' => $field_storage,
+      'bundle' => $bundle,
+      'label' => $this->randomMachineName(),
+    ]);
+    $instance->save();
+
+    $value = $this->randomMachineName();
+    $entity_with_canonical = EntityTestWithCanonical::create();
+    $entity_with_canonical->{$field_name}->value = $value;
+    $entity_with_canonical->save();
+    $this->assertTrue($entity_with_canonical->hasLinkTemplate('canonical'));
+
+    $display_with_link = \Drupal::service('entity_display.repository')
+      ->getViewDisplay($entity_type, $bundle)
+      ->setComponent($field_name, [
+        'type' => 'string',
+        'settings' => [
+          'link_to_entity' => TRUE,
+        ],
+        'region' => 'content',
+      ]);
+    $display_with_link->save();
+
+    // Test a link is being generated for entities with canonical URLs
+    // when link_to_entity is set to TRUE.
+    $this->renderEntityFields($entity_with_canonical, $display_with_link);
+    $this->assertLink($value);
+    $this->assertLinkByHref($entity_with_canonical->toUrl()->toString());
+
+    $display_without_link = \Drupal::service('entity_display.repository')
+      ->getViewDisplay($entity_type, $bundle)
+      ->setComponent($field_name, [
+        'type' => 'string',
+        'settings' => [
+          'link_to_entity' => FALSE,
+        ],
+        'region' => 'content',
+      ]);
+    $display_without_link->save();
+
+    // Test a link is not being generated for entities with canonical URLs
+    // when link_to_entity is set to FALSE.
+    $this->renderEntityFields($entity_with_canonical, $display_without_link);
+    $this->assertNoLink($value);
+    $this->assertNoLinkByHref($entity_with_canonical->toUrl()->toString());
+  }
+
+  /**
+   * Test "link_to_entity" with entity has not canonical.
+   */
+  public function testLinkEntitiesWithoutCanonical(): void {
+    $field_name = 'test_field_name';
+    $entity_type = $bundle = 'entity_test_without_canonical';
+
+    $field_storage = FieldStorageConfig::create([
+      'field_name' => $field_name,
+      'entity_type' => $entity_type,
+      'type' => 'string',
+    ]);
+    $field_storage->save();
+
+    $instance = FieldConfig::create([
+      'field_storage' => $field_storage,
+      'bundle' => $bundle,
+      'label' => $this->randomMachineName(),
+    ]);
+    $instance->save();
+
+    $value = $this->randomMachineName();
+    $entity_without_canonical = EntityTestWithoutCanonical::create();
+    $entity_without_canonical->{$field_name}->value = $value;
+    $entity_without_canonical->save();
+    $this->assertFalse($entity_without_canonical->hasLinkTemplate('canonical'));
+
+    $display_with_link = \Drupal::service('entity_display.repository')
+      ->getViewDisplay($entity_type, $bundle)
+      ->setComponent($field_name, [
+        'type' => 'string',
+        'settings' => [
+          'link_to_entity' => TRUE,
+        ],
+        'region' => 'content',
+      ]);
+    $display_with_link->save();
+
+    // Test a link is not being generated for entities without canonical URLs
+    // when link_to_entity is set to TRUE.
+    $this->renderEntityFields($entity_without_canonical, $display_with_link);
+    $this->assertNoLink($value);
+    $this->assertNoLinkByHref($entity_without_canonical->toUrl()->toString());
+
+    $display_without_link = \Drupal::service('entity_display.repository')
+      ->getViewDisplay($entity_type, $bundle)
+      ->setComponent($field_name, [
+        'type' => 'string',
+        'settings' => [
+          'link_to_entity' => FALSE,
+        ],
+        'region' => 'content',
+      ]);
+    $display_without_link->save();
+
+    // Test a link is not being generated for entities without canonical URLs
+    // when link_to_entity is set to FALSE.
+    $this->renderEntityFields($entity_without_canonical, $display_without_link);
+    $this->assertNoLink($value);
+    $this->assertNoLinkByHref($entity_without_canonical->toUrl()->toString());
   }
 
 }
