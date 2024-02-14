@@ -130,7 +130,11 @@
           .find(options.target)
           .addClass('machine-name-target');
         const $suffix = $context.find(options.suffix);
-        const $wrapper = $target.closest('.js-form-item');
+        const targetElement = $target[0];
+        const closestItem = targetElement
+          ? targetElement.closest('.js-form-item')
+          : $();
+        const $wrapper = $(closestItem);
         // All elements have to exist.
         if (
           !$source.length ||
