@@ -568,7 +568,11 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
     // Test HTTPS via current URL scheme.
     $request = Request::create('', 'GET', [], [], [], ['HTTPS' => 'on']);
     $request->setSession(new Session(new MockArraySessionStorage()));
-    $this->container->get('request_stack')->push($request);
+    // Clear the stack. The newly created request will become the main one,
+    // which will be checked in LanguageNegotiationUrl::processOutbound.
+    $request_stack = $this->container->get('request_stack');
+    $request_stack->pop();
+    $request_stack->push($request);
     $italian_url = Url::fromRoute('system.admin', [], ['language' => $languages['it']])->toString();
     $correct_link = 'https://' . $link;
     $this->assertSame($correct_link, $italian_url, "The right URL (via current URL scheme) ($italian_url) in accordance with the chosen language");
