@@ -4,6 +4,7 @@ namespace Drupal\help\Plugin\HelpSection;
 
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\help\Attribute\HelpSection;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\help\SearchableHelpInterface;
 use Drupal\help\HelpTopicPluginInterface;
 use Drupal\help\HelpTopicPluginManagerInterface;

@@ -3,6 +3,7 @@
 namespace Drupal\help\Plugin\HelpSection;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Link;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\help\Attribute\HelpSection;
