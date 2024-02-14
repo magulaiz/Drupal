@@ -150,7 +150,8 @@ class KernelTestBaseTest extends KernelTestBase {
    */
   public function testContainerIsolation(): void {
     $this->enableModules(['system', 'user']);
-    $this->assertNull($this->installConfig('user'));
+    $this->installConfig('user');
+    $this->assertTrue(TRUE);
   }
 
   /**
@@ -160,7 +161,8 @@ class KernelTestBaseTest extends KernelTestBase {
    */
   public function testSubsequentContainerIsolation(): void {
     $this->enableModules(['system', 'user']);
-    $this->assertNull($this->installConfig('user'));
+    $this->installConfig('user');
+    $this->assertTrue(TRUE);
   }
 
   /**
