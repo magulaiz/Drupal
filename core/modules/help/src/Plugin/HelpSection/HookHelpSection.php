@@ -11,7 +11,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the module topics list section for the help page.
- *
  */
 #[HelpSection(
   id: 'hook_help',
