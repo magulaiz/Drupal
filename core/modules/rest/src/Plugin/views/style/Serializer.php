@@ -171,7 +171,7 @@ class Serializer extends StylePluginBase implements CacheableDependencyInterface
    *     - total_pages: the total number of pages of the view.
    *     - total_items_per_page: the number of items displayed on each page.
    */
-  protected function wrapRowsInPager($rows) {
+  protected function wrapRowsInPager(array $rows): array {
     $pager = $this->view->pager;
     $class = get_class($pager);
     $current_page = $pager->getCurrentPage();
