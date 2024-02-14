@@ -28,10 +28,12 @@
       'messages--' ~ type,
     ]
   %}
-  <div role="contentinfo" aria-label="{{ status_headings[type] }}"{{ attributes.addClass(classes)|without('role', 'aria-label') }}>
+  <div role="region" aria-label="{{ status_headings[type] }}"{{ attributes.addClass(classes)|without('role', 'aria-label') }}>
     <div class="messages__content container">
       {% if type == 'error' %}
         <div role="alert">
+      {% elseif type == 'status' or type == 'warning' %}
+        <div role="status">
       {% endif %}
         {% if status_headings[type] %}
           <h2 class="visually-hidden">{{ status_headings[type] }}</h2>
@@ -45,7 +47,7 @@
         {% else %}
           <span class="messages__item">{{ messages|first }}</span>
         {% endif %}
-      {% if type == 'error' %}
+      {% if type in ['error', 'status', 'warning'] %}
         </div>
       {% endif %}
     </div>
