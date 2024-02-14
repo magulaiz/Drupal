@@ -21,6 +21,6 @@
 }
 @media all and (min-width: 600px) {
   .password-parent .toggle-password {
-    margin: 0 0.75em;
+    margin: 0 0 0 10px;
   }
 }
