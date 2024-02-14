@@ -26,7 +26,7 @@ class SectionStorage extends Plugin {
     public readonly bool $handles_permission_check = FALSE,
   ) {}
 
-  public function get(): array|object {
+  public function get(): SectionStorageDefinition {
     return new SectionStorageDefinition([
       'id' => $this->id,
       'class' => $this->class,
