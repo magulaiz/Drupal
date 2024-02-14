@@ -3,6 +3,7 @@
 namespace Drupal\help;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\help\Attribute\HelpSection;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
