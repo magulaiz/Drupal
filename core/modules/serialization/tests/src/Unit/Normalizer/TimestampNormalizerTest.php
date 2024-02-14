@@ -145,7 +145,7 @@ class TimestampNormalizerTest extends UnitTestCase {
  */
 class TimestampNormalizerTestDrupalDateTime extends DrupalDateTime {
 
-  public function setTimezone(\DateTimeZone $timezone): void {
+  public function setTimezone(\DateTimeZone $timezone) {
     parent::setTimezone($timezone);
   }
 
