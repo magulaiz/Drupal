@@ -571,6 +571,8 @@ class BigPipe {
           $ajax_response->addCommand(new ReplaceCommand(sprintf('[data-big-pipe-placeholder-id="%s"]', $big_pipe_js_placeholder_id), $elements['#markup']));
           $ajax_response->setAttachments($elements['#attached']);
 
+          // Delete all messages that were generated during the rendering of this
+          // placeholder, to render them in a BigPipe-optimized way.
           $messages = $this->messenger->deleteAll();
           foreach ($messages as $type => $type_messages) {
             foreach ($type_messages as $message) {
