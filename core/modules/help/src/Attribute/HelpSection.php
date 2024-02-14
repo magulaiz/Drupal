@@ -43,7 +43,7 @@ class HelpSection extends Plugin {
    */
   public function __construct(
     public readonly string $id,
-    public readonly ?TranslatableMarkup $title = NULL,
+    public readonly TranslatableMarkup $title,
     public readonly ?TranslatableMarkup $description = NULL,
     public readonly ?string $permission = NULL,
     public readonly ?int $weight = NULL
