@@ -35,12 +35,6 @@
           border-block-end: 0;
         }
       }
-
-      &:not(:first-child) {
-        & th {
-          padding-block-end: 0;
-        }
-      }
     }
   }
 
