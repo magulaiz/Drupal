@@ -15,6 +15,7 @@ use Drupal\field\Entity\FieldStorageConfig;
  * Tests field form handling.
  *
  * @group field
+ * @group #slow
  */
 class FormTest extends FieldTestBase {
 
@@ -667,6 +668,9 @@ class FormTest extends FieldTestBase {
   public function testLabelOnMultiValueFields() {
     $user = $this->drupalCreateUser(['administer entity_test content']);
     $this->drupalLogin($user);
+
+    // Ensure that the 'bar' bundle exists, to avoid config validation errors.
+    entity_test_create_bundle('bar', entity_type: 'entity_test_base_field_display');
 
     FieldStorageConfig::create([
       'entity_type' => 'entity_test_base_field_display',

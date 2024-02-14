@@ -245,7 +245,6 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
           'url' => base_path() . 'user/' . $author->id(),
         ],
       ],
-      'revision_log_message' => [],
       'revision_translation_affected' => [
         [
           'value' => TRUE,
@@ -266,7 +265,7 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
       ],
       'name' => [
         [
-          'value' => 'Dramallama',
+          'value' => 'Drama llama',
         ],
       ],
       'field_media_file' => [

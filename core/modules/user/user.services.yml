@@ -39,7 +39,7 @@ services:
       - { name: event_subscriber }
   user_last_access_subscriber:
     class: Drupal\user\EventSubscriber\UserRequestSubscriber
-    arguments: ['@current_user', '@entity_type.manager']
+    arguments: ['@current_user', '@entity_type.manager', '@datetime.time']
     tags:
       - { name: event_subscriber }
   theme.negotiator.admin_theme:
@@ -53,7 +53,7 @@ services:
   Drupal\user\UserAuthInterface: '@user.auth'
   user.permissions:
     class: Drupal\user\PermissionHandler
-    arguments: ['@module_handler', '@string_translation', '@controller_resolver']
+    arguments: ['@module_handler', '@string_translation', '@callable_resolver']
   Drupal\user\PermissionHandlerInterface: '@user.permissions'
   user.current_user_context:
     class: Drupal\user\ContextProvider\CurrentUserContext
@@ -63,6 +63,7 @@ services:
   user.toolbar_link_builder:
     class: Drupal\user\ToolbarLinkBuilder
     arguments: ['@current_user']
+  Drupal\user\ToolbarLinkBuilder: '@user.toolbar_link_builder'
   user.flood_control:
     class: Drupal\user\UserFloodControl
     arguments: ['@flood', '@event_dispatcher', '@request_stack']

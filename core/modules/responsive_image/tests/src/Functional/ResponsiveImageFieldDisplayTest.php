@@ -17,6 +17,7 @@ use Drupal\user\RoleInterface;
  * Tests responsive image display formatter.
  *
  * @group responsive_image
+ * @group #slow
  */
 class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
 
@@ -212,7 +213,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       '#alt' => $alt,
       '#attributes' => ['loading' => 'lazy'],
     ];
-    $default_output = str_replace("\n", '', $renderer->renderRoot($image));
+    $default_output = str_replace("\n", '', (string) $renderer->renderRoot($image));
     $this->assertSession()->responseContains($default_output);
 
     // Test field not being configured. This should not cause a fatal error.
@@ -340,7 +341,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     // The image.html.twig template has a newline after the <img> tag but
     // responsive-image.html.twig doesn't have one after the fallback image, so
     // we remove it here.
-    $default_output = trim($renderer->renderRoot($fallback_image));
+    $default_output = trim((string) $renderer->renderRoot($fallback_image));
     $this->assertSession()->responseContains($default_output);
 
     if ($scheme == 'private') {

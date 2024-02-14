@@ -10,6 +10,7 @@ use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
 /**
  * @coversDefaultClass \Drupal\jsonapi\ResourceType\ResourceTypeRepository
  * @group jsonapi
+ * @group #slow
  *
  * @internal
  */
@@ -93,7 +94,7 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
   /**
    * Data provider for testGet.
    *
-   * @returns array
+   * @return array
    *   The data for the test method.
    */
   public function getProvider() {
@@ -143,7 +144,7 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
    * mapping: the special-cased names "type" or "id", and the name
    * "{$entity_type_id}_type" or "{$entity_type_id}_id", respectively.
    *
-   * @returns array
+   * @return array
    *   The data for the test method.
    */
   public function getFieldsProvider() {

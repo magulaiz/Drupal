@@ -3,7 +3,6 @@
 namespace Drupal\Core\Test;
 
 use Drupal\Component\FileCache\FileCacheFactory;
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Environment;
 use Drupal\Core\Config\Development\ConfigSchemaChecker;
 use Drupal\Core\Config\FileStorage;
@@ -23,6 +22,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Yaml\Yaml as SymfonyYaml;
 use Drupal\Core\Routing\RouteObjectInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -135,9 +136,12 @@ trait FunctionalTestSetupTrait {
       $yaml = new SymfonyYaml();
       $content = file_get_contents($directory . '/services.yml');
       $services = $yaml->parse($content);
+      $test_file_name = (new \ReflectionClass($this))->getFileName();
+      // @todo Decide in https://www.drupal.org/project/drupal/issues/3395099 when/how to trigger deprecation errors or even failures for contrib modules.
+      $is_core_test = str_starts_with($test_file_name, DRUPAL_ROOT . DIRECTORY_SEPARATOR . 'core');
       $services['services']['testing.config_schema_checker'] = [
         'class' => ConfigSchemaChecker::class,
-        'arguments' => ['@config.typed', $this->getConfigSchemaExclusions()],
+        'arguments' => ['@config.typed', $this->getConfigSchemaExclusions(), $is_core_test],
         'tags' => [['name' => 'event_subscriber']],
       ];
       file_put_contents($directory . '/services.yml', $yaml->dump($services));
@@ -207,10 +211,6 @@ trait FunctionalTestSetupTrait {
   protected function rebuildContainer() {
     // Rebuild the kernel and bring it back to a fully bootstrapped state.
     $this->container = $this->kernel->rebuildContainer();
-
-    // Make sure the URL generator has a request object, otherwise calls to
-    // $this->drupalGet() will fail.
-    $this->prepareRequestForGenerator();
   }
 
   /**
@@ -251,6 +251,7 @@ trait FunctionalTestSetupTrait {
    */
   protected function prepareRequestForGenerator($clean_urls = TRUE, $override_server_vars = []) {
     $request = Request::createFromGlobals();
+    $request->setSession(new Session(new MockArraySessionStorage()));
     $base_path = $request->getBasePath();
     if ($clean_urls) {
       $request_path = $base_path ? $base_path . '/user' : 'user';
@@ -262,6 +263,7 @@ trait FunctionalTestSetupTrait {
     $server = array_merge($request->server->all(), $override_server_vars);
 
     $request = Request::create($request_path, 'GET', [], [], [], $server);
+    $request->setSession(new Session(new MockArraySessionStorage()));
     // Ensure the request time is REQUEST_TIME to ensure that API calls
     // in the test use the right timestamp.
     $request->server->set('REQUEST_TIME', REQUEST_TIME);
@@ -327,6 +329,14 @@ trait FunctionalTestSetupTrait {
     // some tests expect to be able to test mail system implementations.
     $config->getEditable('system.mail')
       ->set('interface.default', 'test_mail_collector')
+      ->set('mailer_dsn', [
+        'scheme' => 'null',
+        'host' => 'null',
+        'user' => NULL,
+        'password' => NULL,
+        'port' => NULL,
+        'options' => [],
+      ])
       ->save();
 
     // By default, verbosely display all errors and disable all production
@@ -463,7 +473,7 @@ trait FunctionalTestSetupTrait {
       $modules = array_unique($modules);
       try {
         $success = $container->get('module_installer')->install($modules, TRUE);
-        $this->assertTrue($success, new FormattableMarkup('Enabled modules: %modules', ['%modules' => implode(', ', $modules)]));
+        $this->assertTrue($success, 'Enabled modules: ' . implode(', ', $modules));
       }
       catch (MissingDependencyException $e) {
         // The exception message has all the details.
@@ -622,8 +632,6 @@ trait FunctionalTestSetupTrait {
     $this->classLoader = require __DIR__ . '/../../../../../autoload.php';
     $request = Request::createFromGlobals();
     $kernel = TestRunnerKernel::createFromRequest($request, $this->classLoader);
-    // TestRunnerKernel expects the working directory to be DRUPAL_ROOT.
-    chdir(DRUPAL_ROOT);
     $kernel->boot();
     $kernel->preHandle($request);
     $this->prepareDatabasePrefix();

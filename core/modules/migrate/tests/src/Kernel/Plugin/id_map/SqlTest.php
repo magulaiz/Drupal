@@ -3,13 +3,11 @@
 namespace Drupal\Tests\migrate\Kernel\Plugin\id_map;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Database\Exception\SchemaTableColumnSizeTooLargeException;
 use Drupal\Tests\migrate\Kernel\MigrateTestBase;
 use Drupal\Tests\migrate\Unit\TestSqlIdMap;
 use Drupal\migrate\MigrateException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-
-// cspell:ignore sourceid
 
 /**
  * Tests that the migrate map table is created.
@@ -151,8 +149,7 @@ class SqlTest extends MigrateTestBase {
     // Use local id map plugin to force an error.
     $map = new SqlIdMapTest($this->database, [], 'test', [], $migration, $this->eventDispatcher, $this->migrationPluginManager);
 
-    $this->expectException(DatabaseExceptionWrapper::class);
-    $this->expectExceptionMessage("Syntax error or access violation: 1074 Column length too big for column 'sourceid1' (max = 16383); use BLOB or TEXT instead:");
+    $this->expectException(SchemaTableColumnSizeTooLargeException::class);
     $map->ensureTables();
   }
 
