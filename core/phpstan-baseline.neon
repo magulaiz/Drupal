@@ -3139,16 +3139,6 @@ parameters:
 			path: profiles/demo_umami/modules/demo_umami_content/src/InstallHelper.php
 
 		-
-			message: "#^@dataProvider provideComponentPaths related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/BuildTests/Composer/Component/ComponentsIsolatedBuildTest.php
-
-		-
-			message: "#^@dataProvider provideComposerJson related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/BuildTests/Composer/ComposerValidateTest.php
-
-		-
 			message: "#^Variable \\$project_stabilities might not be defined\\.$#"
 			count: 1
 			path: tests/Drupal/BuildTests/Composer/Template/ComposerProjectTemplatesTest.php
