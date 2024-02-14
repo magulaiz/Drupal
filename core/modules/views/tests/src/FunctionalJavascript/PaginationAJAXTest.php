@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -80,7 +82,7 @@ class PaginationAJAXTest extends WebDriverTestBase {
     $this->assertEquals($expected_view_path, current($settings['views']['ajaxViews'])['view_path']);
 
     // Set the number of items displayed per page to 5 using the exposed pager.
-    $page->selectFieldOption('edit-items-per-page', 5);
+    $page->selectFieldOption('edit-items-per-page', '5');
     $page->pressButton('Filter');
     $session_assert->assertWaitOnAjaxRequest();
 
@@ -164,7 +166,7 @@ class PaginationAJAXTest extends WebDriverTestBase {
     $this->assertEquals($expected_view_path, current($settings['views']['ajaxViews'])['view_path']);
 
     // Set the number of items displayed per page to 5 using the exposed pager.
-    $page->selectFieldOption('edit-items-per-page', 5);
+    $page->selectFieldOption('edit-items-per-page', '5');
     $page->pressButton('Filter');
     $session_assert->assertWaitOnAjaxRequest();
 
