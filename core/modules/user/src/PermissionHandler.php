@@ -75,10 +75,10 @@ class PermissionHandler implements PermissionHandlerInterface {
   ) {
     if ($controllerResolver !== NULL) {
       // use of the $controller_resolver arg is discontinued...
-      @trigger_error('Calling ' . __METHOD__ . '() with the $controllerResolver argument is deprecated in drupal:10.3.0 and is removed in drupal:11.0.0. See https://www.drupal.org/node/123456789', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() with the $controllerResolver argument is deprecated in drupal:10.3.0 and is removed in drupal:11.0.0. See https://www.drupal.org/node/3421573', E_USER_DEPRECATED);
     }
     if ($permissionProvidersLocator === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $permissionProvidersLocator argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/123456789', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $permissionProvidersLocator argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3421573', E_USER_DEPRECATED);
       $this->permissionProvidersLocator = \Drupal::service(PermissionProvidersLocator::class);
     }
     $this->setStringTranslation($stringTranslation);
