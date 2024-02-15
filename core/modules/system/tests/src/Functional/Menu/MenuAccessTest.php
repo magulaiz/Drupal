@@ -101,24 +101,24 @@ class MenuAccessTest extends BrowserTestBase {
 
     // An admin user has access to all parent pages.
     $this->drupalLogin($adminUser);
-    $this->assertMenuItemRoutesAccess(200, 'admin/structure', 'admin/people');
+    $this->assertMenuItemRoutesAccess(200, 'admin/structure', 'admin/reports');
 
     // This user has access to administer menus so the structure parent page
     // should be accessible.
     $this->drupalLogin($menuAdmin);
     $this->assertMenuItemRoutesAccess(200, 'admin/structure');
-    $this->assertMenuItemRoutesAccess(403, 'admin/people');
+    $this->assertMenuItemRoutesAccess(403, 'admin/reports');
 
     // This user has access to administer filters so the config parent page
     // should be accessible.
     $this->drupalLogin($filterAdmin);
     $this->assertMenuItemRoutesAccess(200, 'admin/config');
-    $this->assertMenuItemRoutesAccess(403, 'admin/people');
+    $this->assertMenuItemRoutesAccess(403, 'admin/reports');
 
     // This user doesn't have access to any of the child pages, so the parent
     // pages should not be accessible.
     $this->drupalLogin($webUser);
-    $this->assertMenuItemRoutesAccess(403, 'admin/structure', 'admin/people');
+    $this->assertMenuItemRoutesAccess(403, 'admin/structure', 'admin/reports');
     // As menu_test adds a menu link under config.
     $this->assertMenuItemRoutesAccess(200, 'admin/config');
 
