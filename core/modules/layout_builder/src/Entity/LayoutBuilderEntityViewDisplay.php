@@ -425,7 +425,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
     parent::setComponent($name, $options);
 
     // Only continue if Layout Builder is enabled.
-    if (!$this->isLayoutBuilderEnabled()) {
+    if (!$this->isLayoutBuilderEnabled() || !$this->shouldAddNewFieldsToLayout()) {
       return $this;
     }
 

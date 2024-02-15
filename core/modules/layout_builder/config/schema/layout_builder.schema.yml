@@ -94,3 +94,6 @@ layout_builder.settings:
     expose_all_field_blocks:
       type: boolean
       label: 'Expose all field blocks'
+    add_new_fields_to_layout:
+      type: boolean
+      label: 'Automatically add new fields to Layout builder layouts.'
