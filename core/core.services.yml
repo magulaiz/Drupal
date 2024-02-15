@@ -439,6 +439,8 @@ services:
     class: Drupal\Core\Database\Connection
     factory: Drupal\Core\Database\Database::getConnection
     arguments: [default]
+    tags:
+      - { name: needs_destruction }
   Drupal\Core\Database\Connection: '@database'
   database.replica:
     class: Drupal\Core\Database\Connection
