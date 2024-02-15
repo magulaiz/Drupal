@@ -655,8 +655,7 @@ function install_run_task($task, &$install_state) {
           \Drupal::request()->getSession()->save();
         }
         // Send the response.
-        $response->send();
-        \Drupal::service('kernel')->terminate(\Drupal::request(), $response);
+        _install_send_response($response);
         exit;
       }
     }
@@ -674,8 +673,7 @@ function install_run_task($task, &$install_state) {
           \Drupal::request()->getSession()->save();
         }
         // Send the response.
-        $output->send();
-        \Drupal::service('kernel')->terminate(\Drupal::request(), $output);
+        _install_send_response($output);
         exit;
       }
       // The task is complete when we try to access the batch page and receive
@@ -1074,8 +1072,7 @@ function install_display_output($output, $install_state) {
     'ETag' => '"' . $request_time . '"',
   ];
   $response->headers->add($default_headers);
-  $response->send();
-  \Drupal::service('kernel')->terminate(\Drupal::request(), $response);
+  _install_send_response($response);
   exit;
 }
 
