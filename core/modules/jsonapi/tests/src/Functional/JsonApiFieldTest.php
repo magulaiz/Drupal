@@ -36,14 +36,14 @@ class JsonApiFieldTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
     FieldStorageConfig::create([
-      'field_name' => 'links',
+      'field_name' => 'relationships',
       'entity_type' => 'entity_test',
       'type' => 'string',
       'settings' => [],
       'cardinality' => 1,
     ])->save();
     $field_config = FieldConfig::create([
-      'field_name' => 'links',
+      'field_name' => 'relationships',
       'label' => 'Links',
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
@@ -74,7 +74,7 @@ class JsonApiFieldTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     $body = Json::decode($response);
-    $this->assertNull($body['data']['attributes']['links']);
+    $this->assertNull($body['data']['attributes']['relationships']);
   }
 
 }
