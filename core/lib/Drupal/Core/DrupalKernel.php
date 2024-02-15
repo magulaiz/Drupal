@@ -514,6 +514,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     if (FALSE === $this->booted) {
       return;
     }
+    if ($this->container->initialized('database') && $this->container->get('database')->inTransaction()) {
+      $this->container->get('database')->destruct();
+    }
     $this->container->get('stream_wrapper_manager')->unregister();
     $this->booted = FALSE;
     $this->configStorage = NULL;
@@ -687,6 +690,10 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     if ($this->getHttpKernel() instanceof TerminableInterface) {
       $this->getHttpKernel()->terminate($request, $response);
     }
+
+    // Special-case the database service so that transactions started by other
+    // destructable services are closed.
+    $this->container->get('database')->destruct();
   }
 
   /**

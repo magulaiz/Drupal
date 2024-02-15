@@ -67,6 +67,9 @@ class NormalInstallerServiceProvider implements ServiceProviderInterface {
         ->addTag('event_subscriber');
     }
 
+    // During the installer route building is handled lazily.
+    $container->getDefinition('router.builder')->clearTag('needs_destruction');
+
     $pass_config = $container->getCompilerPassConfig();
     $pass_config->setRemovingPasses(array_filter($pass_config->getRemovingPasses(), function ($pass) {
       // Remove InlineServiceDefinitionsPass, RemoveUnusedDefinitionsPass,

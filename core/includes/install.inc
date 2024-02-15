@@ -13,6 +13,7 @@ use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Site\SettingsEditor;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Requirement severity -- Informational message only.
@@ -800,7 +801,22 @@ function install_goto($path) {
     'Cache-Control' => 'no-cache',
   ];
   $response = new RedirectResponse($base_url . '/' . $path, 302, $headers);
+  _install_send_response($response);
+}
+
+/**
+ * Sends a response from the installer.
+ *
+ * Ensures the kernel and services are terminated correctly.
+ *
+ * @param \Symfony\Component\HttpFoundation\Response $response
+ *   The response to send.
+ */
+function _install_send_response(Response $response): void {
   $response->send();
+  if (\Drupal::hasContainer() && \Drupal::hasRequest()) {
+    \Drupal::service('kernel')->terminate(\Drupal::request(), $response);
+  }
 }
 
 /**
