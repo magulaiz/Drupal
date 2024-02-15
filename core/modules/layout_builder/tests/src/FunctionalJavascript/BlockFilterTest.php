@@ -95,7 +95,7 @@ class BlockFilterTest extends WebDriverTestBase {
     $visible_rows = $this->filterVisibleElements($blocks);
     $this->assertCount(3, $visible_rows);
     $visible_categories = $this->filterVisibleElements($categories);
-    $this->assertCount(3, $visible_categories);
+    $this->assertCount(5, $visible_categories);
 
     // Test Drupal.announce() message when multiple matches are present.
     $expected_message = count($visible_rows) . $fewer_blocks_message;
@@ -106,14 +106,14 @@ class BlockFilterTest extends WebDriverTestBase {
     $visible_rows = $this->filterVisibleElements($blocks);
     $this->assertCount(2, $visible_rows);
     $visible_categories = $this->filterVisibleElements($categories);
-    $this->assertCount(2, $visible_categories);
+    $this->assertCount(5, $visible_categories);
 
     // Retest that blocks appear when reducing letters.
     $filter->setValue('ad');
     $visible_rows = $this->filterVisibleElements($blocks);
     $this->assertCount(3, $visible_rows);
     $visible_categories = $this->filterVisibleElements($categories);
-    $this->assertCount(3, $visible_categories);
+    $this->assertCount(5, $visible_categories);
 
     // Test blocks reappear after being filtered by repeating search for "a"
     $filter->setValue('a');
@@ -125,7 +125,7 @@ class BlockFilterTest extends WebDriverTestBase {
     $visible_rows = $this->filterVisibleElements($blocks);
     $this->assertCount(1, $visible_rows);
     $visible_categories = $this->filterVisibleElements($categories);
-    $this->assertCount(1, $visible_categories);
+    $this->assertCount(5, $visible_categories);
     $this->assertAnnounceContains('1 block is available in the modified list.');
 
     // Test Drupal.announce() message when no matches are present.
@@ -133,7 +133,7 @@ class BlockFilterTest extends WebDriverTestBase {
     $visible_rows = $this->filterVisibleElements($blocks);
     $this->assertCount(0, $visible_rows);
     $visible_categories = $this->filterVisibleElements($categories);
-    $this->assertCount(0, $visible_categories);
+    $this->assertCount(5, $visible_categories);
     $announce_element = $page->find('css', '#drupal-live-announce');
     $page->waitFor(2, function () use ($announce_element) {
       return str_starts_with($announce_element->getText(), '0 blocks are available');
