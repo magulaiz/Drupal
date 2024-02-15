@@ -5,7 +5,7 @@ namespace Drupal\Core\Entity\Attribute;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
- * Defines a config entity type attribute object.
+ * Defines a config entity type for plugin discovery.
  *
  * Config entity type plugins use an object-based annotation method, rather than an
  * array-type (as commonly used on other plugin types).
