@@ -186,6 +186,20 @@ abstract class CommentTestBase extends BrowserTestBase {
       \Drupal::entityTypeManager()->getStorage('comment')->resetCache([$match[1]]);
       return Comment::load($match[1]);
     }
+    else {
+      $cids = \Drupal::entityQuery('comment')
+        ->accessCheck(FALSE)
+        ->condition('entity_id', $entity->id())
+        ->condition('field_name', $field_name)
+        ->sort('cid', 'DESC')
+        ->range(0, 1)
+        ->execute();
+      if (!empty($cids)) {
+        $cid = reset($cids);
+        \Drupal::entityTypeManager()->getStorage('comment')->resetCache([$cid]);
+        return Comment::load($cid);
+      }
+    }
   }
 
   /**

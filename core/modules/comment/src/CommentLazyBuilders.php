@@ -12,6 +12,7 @@ use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Defines a service for comment #lazy_builder callbacks.
@@ -61,6 +62,13 @@ class CommentLazyBuilders implements TrustedCallbackInterface {
   protected $renderer;
 
   /**
+   * The current route match.
+   *
+   * @var \Drupal\Core\Routing\RouteMatchInterface
+   */
+  protected $currentRouteMatch;
+
+  /**
    * Constructs a new CommentLazyBuilders object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -75,14 +83,17 @@ class CommentLazyBuilders implements TrustedCallbackInterface {
    *   The module handler service.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $current_route_match
+   *   The redirect destination.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFormBuilderInterface $entity_form_builder, AccountInterface $current_user, CommentManagerInterface $comment_manager, ModuleHandlerInterface $module_handler, RendererInterface $renderer) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFormBuilderInterface $entity_form_builder, AccountInterface $current_user, CommentManagerInterface $comment_manager, ModuleHandlerInterface $module_handler, RendererInterface $renderer, RouteMatchInterface $current_route_match) {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFormBuilder = $entity_form_builder;
     $this->currentUser = $current_user;
     $this->commentManager = $comment_manager;
     $this->moduleHandler = $module_handler;
     $this->renderer = $renderer;
+    $this->currentRouteMatch = $current_route_match;
   }
 
   /**
@@ -166,13 +177,16 @@ class CommentLazyBuilders implements TrustedCallbackInterface {
   protected function buildLinks(CommentInterface $entity, EntityInterface $commented_entity) {
     $links = [];
     $status = $commented_entity->get($entity->getFieldName())->status;
-
+    $current_route = Url::fromRoute('<current>')->toString();
     if ($status == CommentItemInterface::OPEN) {
       if ($entity->access('delete')) {
         $links['comment-delete'] = [
           'title' => t('Delete'),
           'url' => $entity->toUrl('delete-form'),
         ];
+        if ($current_route) {
+          $links['comment-delete']['url']->setOptions(['query' => ['destination' => $current_route]]);
+        }
       }
 
       if ($entity->access('update')) {
@@ -180,6 +194,9 @@ class CommentLazyBuilders implements TrustedCallbackInterface {
           'title' => t('Edit'),
           'url' => $entity->toUrl('edit-form'),
         ];
+        if ($current_route) {
+          $links['comment-edit']['url']->setOptions(['query' => ['destination' => $current_route]]);
+        }
       }
       $field_definition = $commented_entity->getFieldDefinition($entity->getFieldName());
       if ($entity->access('create')
@@ -193,12 +210,18 @@ class CommentLazyBuilders implements TrustedCallbackInterface {
             'pid' => $entity->id(),
           ]),
         ];
+        if ($current_route) {
+          $links['comment-reply']['url']->setOptions(['query' => ['destination' => $current_route]]);
+        }
       }
       if (!$entity->isPublished() && $entity->access('approve')) {
         $links['comment-approve'] = [
           'title' => t('Approve'),
           'url' => Url::fromRoute('comment.approve', ['comment' => $entity->id()]),
         ];
+        if ($current_route) {
+          $links['comment-approve']['url']->setOptions(['query' => ['destination' => $current_route]]);
+        }
       }
       if (empty($links) && $this->currentUser->isAnonymous()) {
         $links['comment-forbidden']['title'] = $this->commentManager->forbiddenMessage($commented_entity, $entity->getFieldName());
@@ -211,6 +234,9 @@ class CommentLazyBuilders implements TrustedCallbackInterface {
         'title' => t('Translate'),
         'url' => $entity->toUrl('drupal:content-translation-overview'),
       ];
+      if ($current_route) {
+        $links['comment-translations']['url']->setOptions(['query' => ['destination' => $current_route]]);
+      }
     }
 
     return [

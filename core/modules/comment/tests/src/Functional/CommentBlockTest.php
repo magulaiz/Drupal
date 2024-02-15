@@ -2,6 +2,12 @@
 
 namespace Drupal\Tests\comment\Functional;
 
+use Drupal\block_content\Entity\BlockContent;
+use Drupal\block_content\Entity\BlockContentType;
+use Drupal\comment\CommentInterface;
+use Drupal\comment\Entity\Comment;
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\user\RoleInterface;
 
 /**
@@ -16,7 +22,7 @@ class CommentBlockTest extends CommentTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block', 'views'];
+  protected static $modules = ['block', 'views', 'block_content'];
 
   /**
    * {@inheritdoc}
@@ -92,6 +98,57 @@ class CommentBlockTest extends CommentTestBase {
       $this->assertSession()->pageTextContains($comments[$i]->getSubject());
       $this->assertSession()->responseContains('<link rel="canonical"');
     }
+  }
+
+  /**
+   * Test to ensure that correct destination exists for comment action links.
+   */
+  public function testCommentDestination() {
+    $bundle = BlockContentType::create([
+      'id' => 'basic',
+      'label' => 'basic',
+      'revision' => FALSE,
+    ]);
+    $bundle->save();
+    $block_content = BlockContent::create([
+      'type' => 'basic',
+      'label' => 'Some block title',
+      'info' => 'Test block',
+    ]);
+    $block_content->save();
+
+    // Create comment field on block_content.
+    $this->addDefaultCommentField('block_content', 'basic', 'block_comment', CommentItemInterface::OPEN, 'block_comment');
+    $this->drupalPlaceBlock("block_content:{$block_content->uuid()}", [
+      'region' => 'content',
+      'visibility' => [
+        'request_path' => [
+          'id' => 'request_path',
+          'negate' => FALSE,
+          'pages' => '/user/*',
+        ],
+      ],
+    ]);
+    // Add a comment.
+    /** @var \Drupal\comment\CommentInterface $comment */
+    $comment = Comment::create([
+      'entity_id' => $block_content->id(),
+      'entity_type' => 'block_content',
+      'field_name' => 'block_comment',
+      'uid' => $this->rootUser->id(),
+      'status' => CommentInterface::PUBLISHED,
+      'subject' => $this->randomMachineName(),
+      'language' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
+      'comment_body' => [LanguageInterface::LANGCODE_NOT_SPECIFIED => [$this->randomMachineName()]],
+    ]);
+    $comment->save();
+
+    $this->drupalLogin($this->rootUser);
+    $this->drupalGet("user/{$this->rootUser->id()}");
+    // Test to ensure that destination parameter exist.
+    $this->assertSession()->linkByHrefExists("comment/{$comment->id()}/delete?destination=/user/{$this->rootUser->id()}");
+    $this->assertSession()->linkByHrefExists("comment/{$comment->id()}/edit?destination=/user/{$this->rootUser->id()}");
+    $this->assertSession()->linkByHrefExists("comment/reply/block_content/{$block_content->id()}/block_comment/{$comment->id()}?destination=/user/{$this->rootUser->id()}");
   }
 
 }
