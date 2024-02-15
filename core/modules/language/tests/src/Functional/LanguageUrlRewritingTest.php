@@ -141,9 +141,6 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
     // URLs as well.
     $index_php = str_contains(Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(), 'index.php');
 
-    // Clear the stack. The newly created request will become the main one,
-    // which will be checked in LanguageNegotiationUrl::processOutbound.
-    \Drupal::requestStack()->pop();
     $request = Request::createFromGlobals();
     $server = $request->server->all();
     $request = $this->prepareRequestForGenerator(TRUE, ['HTTP_HOST' => $server['HTTP_HOST'] . ':88']);

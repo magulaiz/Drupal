@@ -155,10 +155,12 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
   public function processOutbound($path, &$options = [], ?Request $request = NULL, ?BubbleableMetadata $bubbleable_metadata = NULL) {
     $url_scheme = 'http';
     $port = 80;
-    $main_request = $this->requestStack->getMainRequest();
-    if ($main_request) {
-      $url_scheme = $main_request->getScheme();
-      $port = $main_request->getPort();
+    if (!$request) {
+      $request = $this->requestStack->getMainRequest();
+    }
+    if ($request) {
+      $url_scheme = $request->getScheme();
+      $port = $request->getPort();
     }
     $languages = array_flip(array_keys($this->languageManager->getLanguages()));
     // Language can be passed as an option, or we go for current URL language.
