@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\FunctionalJavascript\Plugin\views\Handler;
 
-use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\node\Entity\Node;
