@@ -20,7 +20,7 @@ final class UserPermissionProviderCompilerPass implements CompilerPassInterface 
   /**
    * Container tag for permission providers.
    */
-  public const USER_PROVIDER_TAG = 'user.permission_provider';
+  public const USER_PERMISSION_PROVIDER_SERVICE_TAG = 'user.permission_provider';
 
   /**
    * {@inheritdoc}
@@ -68,7 +68,7 @@ final class UserPermissionProviderCompilerPass implements CompilerPassInterface 
           throw new \Exception('`permission_callbacks` with class class or service `%s` not found.', $classOrService);
         }
 
-        $definition->addTag(static::USER_PROVIDER_TAG, [
+        $definition->addTag(static::USER_PERMISSION_PROVIDER_SERVICE_TAG, [
           'method' => $method,
           'provider' => $provider,
         ]);
@@ -78,7 +78,7 @@ final class UserPermissionProviderCompilerPass implements CompilerPassInterface 
     // Permission provider locator:
     $references = [];
     $permissionProvidersMapping = [];
-    foreach ($container->findTaggedServiceIds(static::USER_PROVIDER_TAG) as $serviceId => $tags) {
+    foreach ($container->findTaggedServiceIds(static::USER_PERMISSION_PROVIDER_SERVICE_TAG) as $serviceId => $tags) {
       $methods = array_column($tags, 'method');
       $providers = array_column($tags, 'provider');
       $permissionProvidersMapping[$serviceId] = [
