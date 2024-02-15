@@ -721,6 +721,10 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
           $service->destruct();
         }
       }
+
+      // Special-case the database service so that transactions started by other
+      // destructable services are closed.
+      $this->container->get('database')->destruct();
     }
   }
 
