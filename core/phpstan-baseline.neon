@@ -1365,11 +1365,6 @@ parameters:
 			path: modules/file/tests/src/Functional/Formatter/FileVideoFormatterTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: modules/file/tests/src/Kernel/DeleteTest.php
-
-		-
 			message: "#^Variable \\$unexpected in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: modules/file/tests/src/Kernel/FileManagedUnitTestBase.php
@@ -2376,11 +2371,6 @@ parameters:
 			path: modules/system/tests/src/Kernel/MenuAccessControlHandlerTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/system/tests/src/Kernel/Token/TokenReplaceKernelTest.php
-
-		-
 			message: """
 				#^Call to deprecated method onConsecutiveCalls\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
 				Use \\<code\\>\\$double\\-\\>willReturn\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>onConsecutiveCalls\\(\\)\\)\\</code\\>$#
@@ -3185,11 +3175,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Cache/ApcuBackendTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 12
-			path: tests/Drupal/KernelTests/Core/Cache/GenericCacheBackendUnitTestBase.php
-
-		-
 			message: "#^@dataProvider providerInvalidMachineNameCharacters related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Config/ConfigEntityValidationTestBase.php
@@ -3278,29 +3263,14 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Installer/InstallerRedirectTraitTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/KeyValueStore/GarbageCollectionTest.php
-
-		-
 			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Render\\\\Element\\\\MachineNameTest\\:\\:expectErrorMessage\\(\\)\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Render/Element/MachineNameTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/TempStore/TempStoreDatabaseTest.php
-
-		-
 			message: "#^Class PHPUnit\\\\Framework\\\\Error\\\\Warning not found\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Test/Comparator/MarkupInterfaceComparatorTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 5
-			path: tests/Drupal/KernelTests/Core/TypedData/TypedDataTest.php
 
 		-
 			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\KernelTestBase\\:\\:getTestResultObject\\(\\)\\.$#"
