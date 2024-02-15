@@ -26,6 +26,7 @@ final class UserPermissionProviderCompilerPass implements CompilerPassInterface 
    * {@inheritdoc}
    */
   public function process(ContainerBuilder $container): void {
+    // Build tagged user permission provider services from YAML:
     /** @var array<string, string> $namespaceDirs */
     $moduleDirectories = array_map(static function (array $moduleData): string {
       /** @var array{type: string, pathname: string, filename: string} $moduleData */
@@ -75,7 +76,7 @@ final class UserPermissionProviderCompilerPass implements CompilerPassInterface 
       }
     }
 
-    // Permission provider locator:
+    // Build permission provider locator and mapping:
     $references = [];
     $permissionProvidersMapping = [];
     foreach ($container->findTaggedServiceIds(static::USER_PERMISSION_PROVIDER_SERVICE_TAG) as $serviceId => $tags) {
