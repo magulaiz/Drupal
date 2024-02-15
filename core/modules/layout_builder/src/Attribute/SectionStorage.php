@@ -26,6 +26,9 @@ class SectionStorage extends Plugin {
     public readonly bool $handles_permission_check = FALSE,
   ) {}
 
+  /**
+   * {@inheritdoc}
+   */
   public function get(): SectionStorageDefinition {
     return new SectionStorageDefinition([
       'id' => $this->id,
