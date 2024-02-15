@@ -108,7 +108,7 @@ class ListPlugin extends CKEditor5PluginDefault implements CKEditor5PluginConfig
    */
   public function getElementsSubset(): array {
     $subset = $this->getPluginDefinition()->getElements();
-    if (!isset($this->getConfiguration()['properties']['styles'])) {
+    if (!$this->getConfiguration()['properties']['styles']) {
       $subset = array_diff($subset, [
         '<ul type>',
         '<ol type>',
