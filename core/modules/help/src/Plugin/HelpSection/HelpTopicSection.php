@@ -27,7 +27,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
   id: 'help_topics',
   title: new TranslatableMarkup('Topics'),
   description: new TranslatableMarkup('Topics can be provided by modules or themes. Top-level help topics on your site:'),
-  weight: -10,
+  weight: -10
 )]
 class HelpTopicSection extends HelpSectionPluginBase implements ContainerFactoryPluginInterface, SearchableHelpInterface {
 
