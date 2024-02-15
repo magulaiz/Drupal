@@ -345,6 +345,24 @@ parameters:
 			path: lib/Drupal/Core/Config/ExtensionInstallStorage.php
 
 		-
+			message: """
+				#^Access to deprecated property \\$transactionLayers of class Drupal\\\\Core\\\\Database\\\\Connection\\:
+				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. The
+			  transaction stack is now managed by TransactionManager\\.$#
+			"""
+			count: 1
+			path: lib/Drupal/Core/Database/Connection.php
+
+		-
+			message: """
+				#^Call to deprecated method popTransaction\\(\\) of class Drupal\\\\Core\\\\Database\\\\Connection\\:
+				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
+				  TransactionManagerInterface methods instead\\.$#
+			"""
+			count: 1
+			path: lib/Drupal/Core/Database/Connection.php
+
+		-
 			message: "#^Method Drupal\\\\Core\\\\Config\\\\TypedConfigManager\\:\\:replaceVariable\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Config/TypedConfigManager.php
@@ -2330,14 +2348,6 @@ parameters:
 			path: modules/system/tests/modules/lazy_route_provider_install_test/src/PluginManager.php
 
 		-
-			message: """
-				#^Class Drupal\\\\service_provider_test\\\\TestClass implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: modules/system/tests/modules/service_provider_test/src/TestClass.php
-
-		-
 			message: "#^Missing cache backend declaration for performance\\.$#"
 			count: 1
 			path: modules/system/tests/modules/lazy_route_provider_install_test/src/PluginManager.php
@@ -2361,6 +2371,13 @@ parameters:
 			message: "#^Missing cache backend declaration for performance\\.$#"
 			count: 1
 			path: modules/system/tests/modules/plugin_test/src/Plugin/TestPluginManager.php
+
+		-
+			message: """
+				#^Class Drupal\\\\service_provider_test\\\\TestClass implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\: since Symfony 6\\.4, use dependency injection instead$#
+			"""
+			count: 1
+			path: modules/system/tests/modules/service_provider_test/src/TestClass.php
 
 		-
 			message: """

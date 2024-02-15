@@ -243,6 +243,11 @@ abstract class Connection {
   protected TransactionManagerInterface|FALSE $transactionManager;
 
   /**
+   * Determines if the transaction manager is processing a transaction.
+   */
+  protected bool $isTransactionManagerStackActive = FALSE;
+
+  /**
    * Constructs a Connection object.
    *
    * @param object $connection
@@ -286,10 +291,20 @@ abstract class Connection {
    * Ensures that the client connection can be garbage collected.
    */
   public function __destruct() {
-    // Ensure that the circular reference caused by Connection::__construct()
-    // using $this in the call to set the statement class can be garbage
-    // collected.
-    $this->connection = NULL;
+    // Ensure all still-open transactions get auto-committed. Usually, this
+    // happens when the Transaction::__destruct() method is invoked, but during
+    // shutdown the object transaction order is unreliable. If the connection
+    // is destroyed first, we need to make sure to auto-commit all still-open
+    // transactions.
+    // Also see https://www.drupal.org/project/drupal/issues/1608374.
+    if ($this->isTransactionManagerStackActive) {
+      $this->commitTransactionOnDestruct();
+    }
+    else {
+      foreach (array_reverse($this->transactionLayers) as $name => $active) {
+        $this->popTransaction($name);
+      }
+    }
   }
 
   /**
@@ -1403,6 +1418,17 @@ abstract class Connection {
   }
 
   /**
+   * Sets the transaction manager state.
+   *
+   * This method should only be called by TransactionManagerInterface objects.
+   *
+   * @internal
+   */
+  public function setTransactionManagerStackState(bool $state): void {
+    $this->isTransactionManagerStackActive = $state;
+  }
+
+  /**
    * Determines if there is an active transaction open.
    *
    * @return bool
@@ -1689,6 +1715,17 @@ abstract class Connection {
     if (!$success) {
       throw new TransactionCommitFailedException();
     }
+  }
+
+  /**
+   * Commit on destruction if a client transaction is still active.
+   *
+   * This method should only be called by __destruct().
+   *
+   * @internal
+   */
+  protected function commitTransactionOnDestruct(): void {
+    $this->connection->commit();
   }
 
   /**
