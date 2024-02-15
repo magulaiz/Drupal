@@ -257,7 +257,10 @@ function workspaces_toolbar() {
           ],
         ]),
       ],
-      '#cache' => ['tags' => $active_workspace ? $active_workspace->getCacheTags() : []],
+      '#cache' => [
+        'tags' => $active_workspace ? $active_workspace->getCacheTags() : [],
+        'contexts' => ['url.path'],
+      ],
     ],
     '#wrapper_attributes' => [
       'class' => ['workspaces-toolbar-tab'],
