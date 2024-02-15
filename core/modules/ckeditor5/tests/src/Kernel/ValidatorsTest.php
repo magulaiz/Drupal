@@ -578,7 +578,7 @@ class ValidatorsTest extends KernelTestBase {
       ],
       'violations' => [],
     ];
-    $data['INVALID: SourceEditing plugin configuration: <ol start type> must not be allowed because List can generate <ol reversed start>'] = [
+    $data['INVALID: SourceEditing plugin configuration: <ol start type> must not be allowed because List can generate <ol reversed start type>'] = [
       'settings' => [
         'toolbar' => [
           'items' => [
@@ -591,6 +591,7 @@ class ValidatorsTest extends KernelTestBase {
             'properties' => [
               'reversed' => TRUE,
               'startIndex' => TRUE,
+              'styles' => FALSE,
             ],
             'multiBlock' => TRUE,
           ],
@@ -608,7 +609,7 @@ class ValidatorsTest extends KernelTestBase {
         ],
       ],
     ];
-    $data['INVALID: SourceEditing plugin configuration: <ol start type> must not be allowed because List can generate <ol start>'] = [
+    $data['INVALID: SourceEditing plugin configuration: <ol start type> must not be allowed because List can generate <ol start type>'] = [
       'settings' => [
         'toolbar' => [
           'items' => [
@@ -621,6 +622,7 @@ class ValidatorsTest extends KernelTestBase {
             'properties' => [
               'reversed' => FALSE,
               'startIndex' => FALSE,
+              'styles' => FALSE,
             ],
             'multiBlock' => TRUE,
           ],
