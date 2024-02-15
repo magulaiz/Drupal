@@ -230,11 +230,6 @@ class FieldStorageAddForm extends FormBase {
         'class' => 'add-field-container',
       ],
     ];
-    if (array_key_exists('field_ui:entity_reference:media', $field_type_options_radios)) {
-      foreach (['file_upload', 'field_ui:entity_reference:media'] as $field_type) {
-        $field_type_options_radios[$field_type]['radio']['#title'] = $field_type_options_radios[$field_type]['radio']['#title'] . " ✱";
-      }
-    }
     $form['add']['new_storage_type'] = $field_type_options_radios;
 
     $form['actions']['submit']['#submit'][] = [$this, 'rebuildWithOptions'];
