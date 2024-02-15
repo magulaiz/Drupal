@@ -9,6 +9,5 @@ lullabot
 olivero
 olivero's
 simpletest
-justafish
 tempstore
 umami
