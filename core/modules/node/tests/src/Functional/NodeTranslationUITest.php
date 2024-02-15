@@ -81,7 +81,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   /**
    * Tests the basic translation UI.
    */
-  public function testTranslationUI() {
+  public function testTranslationUI(): void {
     parent::testTranslationUI();
     $this->doUninstallTest();
   }

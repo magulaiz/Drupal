@@ -156,7 +156,7 @@ class TextFieldTest extends StringFieldTest {
   /**
    * Tests widgets.
    */
-  public function testTextfieldWidgets() {
+  public function testTextfieldWidgets(): void {
     $this->_testTextfieldWidgets('text', 'text_textfield');
     $this->_testTextfieldWidgets('text_long', 'text_textarea');
   }
