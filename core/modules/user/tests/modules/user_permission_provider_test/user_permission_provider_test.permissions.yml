@@ -1,0 +1,5 @@
+permission_callbacks:
+  - \Drupal\user_permission_provider_test\PermissionCallbacks::permissionsMultiple
+  - \Drupal\user_permission_provider_test\PermissionCallbacks::permissionsSingle
+  - \Drupal\user_permission_provider_test\PermissionCallbacksWithContainerInjection::permissions
+  - \Drupal\user_permission_provider_test\PermissionCallbacksFromExistingService::permissions

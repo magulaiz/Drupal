@@ -2,12 +2,11 @@
 
 namespace Drupal\user;
 
-use Drupal\Core\Discovery\YamlDiscovery;
 use Drupal\Core\Controller\ControllerResolverInterface;
+use Drupal\Core\Discovery\YamlDiscovery;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
-use Drupal\Core\Utility\CallableResolver;
 
 /**
  * Provides the available permissions based on yml files.
@@ -54,61 +53,42 @@ class PermissionHandler implements PermissionHandlerInterface {
 
   use StringTranslationTrait;
 
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The YAML discovery class to find all .permissions.yml files.
-   *
-   * @var \Drupal\Core\Discovery\YamlDiscovery
-   */
-  protected $yamlDiscovery;
-
-  /**
-   * The callable resolver.
-   *
-   * @var \Drupal\Core\Utility\CallableResolver
-   */
-  protected CallableResolver $callableResolver;
+  private ?YamlDiscovery $yamlDiscovery = NULL;
 
   /**
    * Constructs a new PermissionHandler.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $stringTranslation
    *   The string translation.
-   * @param \Drupal\Core\Utility\CallableResolver|\Drupal\Core\Controller\ControllerResolverInterface $callable_resolver
+   * @param \Drupal\Core\Utility\CallableResolver|\Drupal\Core\Controller\ControllerResolverInterface|null $controllerResolver
    *   The callable resolver.
+   * @param \Drupal\user\PermissionProvidersLocator $permissionProvidersLocator
+   *   Permission handler locator.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, TranslationInterface $string_translation, ControllerResolverInterface|CallableResolver $callable_resolver) {
-    if ($callable_resolver instanceof ControllerResolverInterface) {
-      @trigger_error('Calling ' . __METHOD__ . '() with an argument of ControllerResolverInterface is deprecated in drupal:10.2.0 and is removed in drupal:11.0.0. Use \Drupal\Core\Utility\CallableResolver instead. See https://www.drupal.org/node/3397954', E_USER_DEPRECATED);
-      $callable_resolver = \Drupal::service('callable_resolver');
+  public function __construct(
+    private readonly ModuleHandlerInterface $moduleHandler,
+    TranslationInterface $stringTranslation,
+    private readonly ?ControllerResolverInterface $controllerResolver,
+    private ?PermissionProvidersLocator $permissionProvidersLocator = NULL,
+  ) {
+    if ($controllerResolver !== NULL) {
+      // use of the $controller_resolver arg is discontinued...
+      @trigger_error('Calling ' . __METHOD__ . '() with the $controllerResolver argument is deprecated in drupal:10.3.0 and is removed in drupal:11.0.0. See https://www.drupal.org/node/123456789', E_USER_DEPRECATED);
     }
-    $this->callableResolver = $callable_resolver;
-
-    // @todo It would be nice if you could pull all module directories from the
-    //   container.
-    $this->moduleHandler = $module_handler;
-    $this->stringTranslation = $string_translation;
+    if ($permissionProvidersLocator === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $permissionProvidersLocator argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/123456789', E_USER_DEPRECATED);
+      $this->permissionProvidersLocator = \Drupal::service(PermissionProvidersLocator::class);
+    }
+    $this->setStringTranslation($stringTranslation);
   }
 
   /**
    * Gets the YAML discovery.
-   *
-   * @return \Drupal\Core\Discovery\YamlDiscovery
-   *   The YAML discovery.
    */
   protected function getYamlDiscovery() {
-    if (!isset($this->yamlDiscovery)) {
-      $this->yamlDiscovery = new YamlDiscovery('permissions', $this->moduleHandler->getModuleDirectories());
-    }
-    return $this->yamlDiscovery;
+    return $this->yamlDiscovery ??= new YamlDiscovery('permissions', $this->moduleHandler->getModuleDirectories());
   }
 
   /**
@@ -139,61 +119,47 @@ class PermissionHandler implements PermissionHandlerInterface {
   /**
    * Builds all permissions provided by .permissions.yml files.
    *
-   * @return array[]
+   * @return array<string, array{title: \Drupal\Core\StringTranslation\TranslatableMarkup, provider: string, description: \Drupal\Core\StringTranslation\TranslatableMarkup|null}>
    *   An array with the same structure as
    *   PermissionHandlerInterface::getPermissions().
    *
    * @see \Drupal\user\PermissionHandlerInterface::getPermissions()
    */
   protected function buildPermissionsYaml() {
-    $all_permissions = [];
-    $all_callback_permissions = [];
+    $allPermissions = [];
+
+    foreach ($this->permissionProvidersLocator->getPermissionProviders() as [$provider, $permissionProvider]) {
+      foreach ($permissionProvider() as $permissionName => $permission) {
+        if (is_string($permission)) {
+          $permission = ['title' => $permission];
+        }
+
+        $allPermissions[$permissionName] = $permission + [
+          'description' => NULL,
+          'provider' => $provider,
+        ];
+      }
+    }
 
     foreach ($this->getYamlDiscovery()->findAll() as $provider => $permissions) {
-      // The top-level 'permissions_callback' is a list of methods in callable
-      // syntax, see \Drupal\Core\Utility\CallableResolver. These methods
-      // should return an array of permissions in the same structure.
-      if (isset($permissions['permission_callbacks'])) {
-        foreach ($permissions['permission_callbacks'] as $permission_callback) {
-          $callback = $this->callableResolver->getCallableFromDefinition($permission_callback);
-          if ($callback_permissions = call_user_func($callback)) {
-            // Add any callback permissions to the array of permissions. Any
-            // defaults can then get processed below.
-            foreach ($callback_permissions as $name => $callback_permission) {
-              if (!is_array($callback_permission)) {
-                $callback_permission = [
-                  'title' => $callback_permission,
-                ];
-              }
-
-              $callback_permission += [
-                'description' => NULL,
-                'provider' => $provider,
-              ];
-
-              $all_callback_permissions[$name] = $callback_permission;
-            }
-          }
+      foreach ($permissions as $permissionName => $permission) {
+        if ($permissionName === 'permission_callbacks') {
+          continue;
         }
 
-        unset($permissions['permission_callbacks']);
-      }
-
-      foreach ($permissions as &$permission) {
-        if (!is_array($permission)) {
-          $permission = [
-            'title' => $permission,
-          ];
+        if (is_string($permission)) {
+          $permission = ['title' => $permission];
         }
+
         $permission['title'] = $this->t($permission['title']);
         $permission['description'] = isset($permission['description']) ? $this->t($permission['description']) : NULL;
         $permission['provider'] = !empty($permission['provider']) ? $permission['provider'] : $provider;
-      }
 
-      $all_permissions += $permissions;
+        $allPermissions[$permissionName] = $permission;
+      }
     }
 
-    return $all_permissions + $all_callback_permissions;
+    return $allPermissions;
   }
 
   /**

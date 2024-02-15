@@ -53,7 +53,17 @@ services:
   Drupal\user\UserAuthInterface: '@user.auth'
   user.permissions:
     class: Drupal\user\PermissionHandler
-    arguments: ['@module_handler', '@string_translation', '@callable_resolver']
+    autowire: true
+    arguments:
+      $controllerResolver: null
+  user.permission_provider_locator:
+    class: Drupal\user\PermissionProvidersLocator
+    arguments:
+      - '!abstract "Mapping from provider to permission provider service locator service ID."'
+      - '!abstract "Service locator for Permission providers from UserPermissionProviderCompilerPass"'
+    public: false
+    autowire: true
+  Drupal\user\PermissionProvidersLocator: '@user.permission_provider_locator'
   Drupal\user\PermissionHandlerInterface: '@user.permissions'
   user.current_user_context:
     class: Drupal\user\ContextProvider\CurrentUserContext
