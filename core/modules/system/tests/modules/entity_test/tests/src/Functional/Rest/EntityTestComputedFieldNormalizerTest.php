@@ -83,7 +83,7 @@ class EntityTestComputedFieldNormalizerTest extends EntityTestResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testPost() {
+  public function testPost(): void {
     // Post test not required.
     $this->markTestSkipped();
   }
