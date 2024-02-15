@@ -14,6 +14,7 @@ use Drupal\Core\Database\Query\Truncate;
 use Drupal\Core\Database\Query\Update;
 use Drupal\Core\Database\Query\Upsert;
 use Drupal\Core\Database\Transaction\TransactionManagerInterface;
+use Drupal\Core\DestructableInterface;
 use Drupal\Core\Pager\PagerManagerInterface;
 
 /**
@@ -26,7 +27,7 @@ use Drupal\Core\Pager\PagerManagerInterface;
  *
  * @see http://php.net/manual/book.pdo.php
  */
-abstract class Connection {
+abstract class Connection implements DestructableInterface {
 
   /**
    * The database target this connection is for.
@@ -290,6 +291,25 @@ abstract class Connection {
     // using $this in the call to set the statement class can be garbage
     // collected.
     $this->connection = NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function destruct() {
+    $manager = $this->transactionManager();
+    if ($manager && $manager->inTransaction() && method_exists($manager, 'commitAll')) {
+      $this->transactionManager()->commitAll();
+    }
+
+    // BC layer.
+    // @phpstan-ignore-next-line
+    if (!empty($this->transactionLayers)) {
+      // @phpstan-ignore-next-line
+      $this->transactionLayers = [];
+      // @phpstan-ignore-next-line
+      $this->doCommit();
+    }
   }
 
   /**
