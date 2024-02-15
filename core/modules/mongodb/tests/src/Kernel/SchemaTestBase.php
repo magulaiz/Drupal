@@ -18,7 +18,7 @@ class SchemaTestBase extends KernelTestBase {
    *
    * @var array
    */
-  protected $test_table1 = [
+  protected $testTable1 = [
     'name' => 'test_table1',
     'schema' => [
       'description' => 'Schema table description may contain "quotes" and could be long—very long indeed.',
@@ -49,18 +49,22 @@ class SchemaTestBase extends KernelTestBase {
       'primary key' => ['id'],
       'unique keys' => ['test_field' => ['test_field']],
     ],
-    'validation' => ['$and' => [
-      ['id' => ['$type' => 'int']],
-      ['id' => ['$exists' => TRUE]],
-      ['test_field' => ['$type' => 'int']],
-      ['test_field' => ['$exists' => TRUE]],
-      ['test_field_string' => ['$type' => 'string']],
-      ['test_field_string' => ['$exists' => TRUE]],
-      ['$or' => [
-        ['test_field_string_ascii' => ['$type' => 'string']],
-        ['test_field_string_ascii' => ['$exists' => FALSE]]
-      ]]
-    ]],
+    'validation' => [
+      '$and' => [
+        ['id' => ['$type' => 'int']],
+        ['id' => ['$exists' => TRUE]],
+        ['test_field' => ['$type' => 'int']],
+        ['test_field' => ['$exists' => TRUE]],
+        ['test_field_string' => ['$type' => 'string']],
+        ['test_field_string' => ['$exists' => TRUE]],
+        [
+          '$or' => [
+            ['test_field_string_ascii' => ['$type' => 'string']],
+            ['test_field_string_ascii' => ['$exists' => FALSE]],
+          ],
+        ],
+      ],
+    ],
     'indexes' => [
       ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
       ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -73,13 +77,13 @@ class SchemaTestBase extends KernelTestBase {
    *
    * @var array
    */
-  protected $test_table2 = [
+  protected $testTable2 = [
     'name' => 'test_table2',
     'schema' => [
       'description' => 'Schema table for testing integer with null, not null and default values.',
       'fields' => [
         'id'  => [
-          'type' => 'serial', // Test that serial becomes: int, not null and >= zero.
+          'type' => 'serial',
         ],
         'test_field_int_null'  => [
           'type' => 'int',
@@ -121,48 +125,62 @@ class SchemaTestBase extends KernelTestBase {
       'primary key' => ['id'],
       'unique keys' => [
         'test_fields_not_null' => ['test_field_int_not_null', 'test_field_float_not_null', 'test_field_numeric_not_null'],
-        'test_fields_null' => ['test_field_int_null', 'test_field_float_null', 'test_field_numeric_null']
+        'test_fields_null' => ['test_field_int_null', 'test_field_float_null', 'test_field_numeric_null'],
       ],
       'indexes' => [
         'test_fields_default' => ['test_field_int_default', 'test_field_float_default', 'test_field_numeric_default'],
-        'test_field_int_null' => ['test_field_int_null']
+        'test_field_int_null' => ['test_field_int_null'],
       ],
     ],
-    'validation' => ['$and' => [
-      ['id' => ['$type' => 'int']],
-      ['id' => ['$exists' => TRUE]],
-      ['id' => ['$gte' => 0]],
-      ['$or' => [
-        ['test_field_int_null' => ['$type' => 'int']],
-        ['test_field_int_null' => ['$exists' => FALSE]]
-      ]],
-      ['test_field_int_not_null' => ['$type' => 'int']],
-      ['test_field_int_not_null' => ['$exists' => TRUE]],
-      ['$or' => [
-        ['test_field_int_default' => ['$type' => 'int']],
-        ['test_field_int_default' => ['$exists' => FALSE]]
-      ]],
-      ['$or' => [
-        ['test_field_float_null' => ['$type' => 'double']],
-        ['test_field_float_null' => ['$exists' => FALSE]]
-      ]],
-      ['test_field_float_not_null' => ['$type' => 'double']],
-      ['test_field_float_not_null' => ['$exists' => TRUE]],
-      ['$or' => [
-        ['test_field_float_default' => ['$type' => 'double']],
-        ['test_field_float_default' => ['$exists' => FALSE]]
-      ]],
-      ['$or' => [
-        ['test_field_numeric_null' => ['$type' => 'decimal']],
-        ['test_field_numeric_null' => ['$exists' => FALSE]]
-      ]],
-      ['test_field_numeric_not_null' => ['$type' => 'decimal']],
-      ['test_field_numeric_not_null' => ['$exists' => TRUE]],
-      ['$or' => [
-        ['test_field_numeric_default' => ['$type' => 'decimal']],
-        ['test_field_numeric_default' => ['$exists' => FALSE]]
-      ]],
-    ]],
+    'validation' => [
+      '$and' => [
+        ['id' => ['$type' => 'int']],
+        ['id' => ['$exists' => TRUE]],
+        ['id' => ['$gte' => 0]],
+        [
+          '$or' => [
+            ['test_field_int_null' => ['$type' => 'int']],
+            ['test_field_int_null' => ['$exists' => FALSE]],
+          ],
+        ],
+        ['test_field_int_not_null' => ['$type' => 'int']],
+        ['test_field_int_not_null' => ['$exists' => TRUE]],
+        [
+          '$or' => [
+            ['test_field_int_default' => ['$type' => 'int']],
+            ['test_field_int_default' => ['$exists' => FALSE]],
+          ],
+        ],
+        [
+          '$or' => [
+            ['test_field_float_null' => ['$type' => 'double']],
+            ['test_field_float_null' => ['$exists' => FALSE]],
+          ],
+        ],
+        ['test_field_float_not_null' => ['$type' => 'double']],
+        ['test_field_float_not_null' => ['$exists' => TRUE]],
+        [
+          '$or' => [
+            ['test_field_float_default' => ['$type' => 'double']],
+            ['test_field_float_default' => ['$exists' => FALSE]],
+          ],
+        ],
+        [
+          '$or' => [
+            ['test_field_numeric_null' => ['$type' => 'decimal']],
+            ['test_field_numeric_null' => ['$exists' => FALSE]],
+          ],
+        ],
+        ['test_field_numeric_not_null' => ['$type' => 'decimal']],
+        ['test_field_numeric_not_null' => ['$exists' => TRUE]],
+        [
+          '$or' => [
+            ['test_field_numeric_default' => ['$type' => 'decimal']],
+            ['test_field_numeric_default' => ['$exists' => FALSE]],
+          ],
+        ],
+      ],
+    ],
     'indexes' => [
       ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
       ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -178,13 +196,13 @@ class SchemaTestBase extends KernelTestBase {
    *
    * @var array
    */
-  protected $test_table3 = [
+  protected $testTable3 = [
     'name' => 'test_table3',
     'schema' => [
       'description' => 'Schema table for testing varchar with null, not null and default values.',
       'fields' => [
         'id'  => [
-          'type' => 'serial', // Test that serial becomes: int, not null and >= zero.
+          'type' => 'serial',
         ],
         'test_field_varchar_null'  => [
           'type' => 'varchar',
@@ -210,31 +228,41 @@ class SchemaTestBase extends KernelTestBase {
         ],
       ],
     ],
-    'validation' => ['$and' => [
-      ['id' => ['$type' => 'int']],
-      ['id' => ['$exists' => TRUE]],
-      ['id' => ['$gte' => 0]],
-      ['$or' => [
-        ['test_field_varchar_null' => ['$type' => 'string']],
-        ['test_field_varchar_null' => ['$exists' => FALSE]]
-      ]],
-      ['test_field_varchar_not_null' => ['$type' => 'string']],
-      ['test_field_varchar_not_null' => ['$exists' => TRUE]],
-      ['$or' => [
-        ['test_field_varchar_default' => ['$type' => 'string']],
-        ['test_field_varchar_default' => ['$exists' => FALSE]]
-      ]],
-      ['$or' => [
-        ['test_field_text_null' => ['$type' => 'string']],
-        ['test_field_text_null' => ['$exists' => FALSE]]
-      ]],
-      ['test_field_text_not_null' => ['$type' => 'string']],
-      ['test_field_text_not_null' => ['$exists' => TRUE]],
-      ['$or' => [
-        ['test_field_text_default' => ['$type' => 'string']],
-        ['test_field_text_default' => ['$exists' => FALSE]]
-      ]],
-    ]],
+    'validation' => [
+      '$and' => [
+        ['id' => ['$type' => 'int']],
+        ['id' => ['$exists' => TRUE]],
+        ['id' => ['$gte' => 0]],
+        [
+          '$or' => [
+            ['test_field_varchar_null' => ['$type' => 'string']],
+            ['test_field_varchar_null' => ['$exists' => FALSE]],
+          ],
+        ],
+        ['test_field_varchar_not_null' => ['$type' => 'string']],
+        ['test_field_varchar_not_null' => ['$exists' => TRUE]],
+        [
+          '$or' => [
+            ['test_field_varchar_default' => ['$type' => 'string']],
+            ['test_field_varchar_default' => ['$exists' => FALSE]],
+          ],
+        ],
+        [
+          '$or' => [
+            ['test_field_text_null' => ['$type' => 'string']],
+            ['test_field_text_null' => ['$exists' => FALSE]],
+          ],
+        ],
+        ['test_field_text_not_null' => ['$type' => 'string']],
+        ['test_field_text_not_null' => ['$exists' => TRUE]],
+        [
+          '$or' => [
+            ['test_field_text_default' => ['$type' => 'string']],
+            ['test_field_text_default' => ['$exists' => FALSE]],
+          ],
+        ],
+      ],
+    ],
     'indexes' => [
       ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
     ],
@@ -245,7 +273,7 @@ class SchemaTestBase extends KernelTestBase {
    *
    * @var array
    */
-  protected $test_table4 = [
+  protected $testTable4 = [
     'name' => 'test_table4',
     'schema' => [
       'description' => 'Schema table with primary and unique key.',
@@ -262,12 +290,14 @@ class SchemaTestBase extends KernelTestBase {
       'primary key' => ['id'],
       'unique keys' => ['test_field' => ['test_field']],
     ],
-    'validation' => ['$and' => [
-      ['id' => ['$type' => 'int']],
-      ['id' => ['$exists' => TRUE]],
-      ['test_field' => ['$type' => 'int']],
-      ['test_field' => ['$exists' => TRUE]],
-    ]],
+    'validation' => [
+      '$and' => [
+        ['id' => ['$type' => 'int']],
+        ['id' => ['$exists' => TRUE]],
+        ['test_field' => ['$type' => 'int']],
+        ['test_field' => ['$exists' => TRUE]],
+      ],
+    ],
     'indexes' => [
       ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
       ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -280,7 +310,7 @@ class SchemaTestBase extends KernelTestBase {
    *
    * @var array
    */
-  protected $test_table5 = [
+  protected $testTable5 = [
     'name' => 'test_table5',
     'schema' => [
       'description' => 'Schema table with no indexes.',
@@ -296,13 +326,15 @@ class SchemaTestBase extends KernelTestBase {
         ],
       ],
     ],
-    'validation' => ['$and' => [
-      ['id' => ['$type' => 'int']],
-      ['id' => ['$exists' => TRUE]],
-      ['id' => ['$gte' => 0]],
-      ['test_field_string' => ['$type' => 'string']],
-      ['test_field_string' => ['$exists' => TRUE]],
-    ]],
+    'validation' => [
+      '$and' => [
+        ['id' => ['$type' => 'int']],
+        ['id' => ['$exists' => TRUE]],
+        ['id' => ['$gte' => 0]],
+        ['test_field_string' => ['$type' => 'string']],
+        ['test_field_string' => ['$exists' => TRUE]],
+      ],
+    ],
     'indexes' => [
       ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
     ],
@@ -313,7 +345,7 @@ class SchemaTestBase extends KernelTestBase {
    *
    * @var array
    */
-  protected $test_table6 = [
+  protected $testTable6 = [
     'name' => 'test_table6',
     'schema' => [
       'description' => 'Schema table with primary and index.',
@@ -329,14 +361,18 @@ class SchemaTestBase extends KernelTestBase {
       'primary key' => ['id'],
       'indexes' => ['test_field_string' => ['test_field_string']],
     ],
-    'validation' => ['$and' => [
-      ['id' => ['$type' => 'int']],
-      ['id' => ['$exists' => TRUE]],
-      ['$or' => [
-        ['test_field_string' => ['$type' => 'string']],
-        ['test_field_string' => ['$exists' => FALSE]]
-      ]],
-    ]],
+    'validation' => [
+      '$and' => [
+        ['id' => ['$type' => 'int']],
+        ['id' => ['$exists' => TRUE]],
+        [
+          '$or' => [
+            ['test_field_string' => ['$type' => 'string']],
+            ['test_field_string' => ['$exists' => FALSE]],
+          ],
+        ],
+      ],
+    ],
     'indexes' => [
       ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
       ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -445,10 +481,12 @@ class SchemaTestBase extends KernelTestBase {
    * @covers ::constraintExists
    * @covers ::indexExists
    *
-   * @param string $table_name
-   *   The table name.
-   * @param array|null $table_schema
-   *   (optional) The table schema.
+   * @param string $parent_table_name
+   *   The parent table name.
+   * @param string $embedded_table_name
+   *   The embedded table name.
+   * @param array $embedded_table_schema
+   *   The embedded table schema.
    */
   protected function checkEmbeddedTableIndexes($parent_table_name, $embedded_table_name, $embedded_table_schema) {
     $schema = Database::getConnection()->schema();
@@ -467,7 +505,7 @@ class SchemaTestBase extends KernelTestBase {
     $base_table_name = $table_information->getTableBaseTable($parent_table_name);
     if (empty($base_table_name) || !$schema->tableExists($base_table_name)) {
       // There is no base table.
-      $this->fail(t("The parent table (%parent_table) and its parent table are both not a base table.", array('%parent_table' => $parent_table_name)));
+      $this->fail("The parent table ($parent_table) and its parent table are both not a base table.");
     }
 
     // Test the primary key
@@ -525,7 +563,7 @@ class SchemaTestBase extends KernelTestBase {
   }
 
   /**
-   * Helper method to test if all schema index fields exists in the database index and the other way around
+   * Helper method to test if all schema index fields exists.
    *
    * @param array $schema_fields
    *   The schema fields for the index to test.
@@ -593,7 +631,7 @@ class SchemaTestBase extends KernelTestBase {
   }
 
   /**
-   * Helper method to test if all expected indexes are on the given table
+   * Helper method to test if all expected indexes are on the given table.
    *
    * @param string $table
    *   The table name to check for the expected indexes.

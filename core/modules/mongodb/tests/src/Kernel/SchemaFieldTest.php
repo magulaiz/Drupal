@@ -68,22 +68,22 @@ class SchemaFieldTest extends SchemaTestBase {
   public function testFieldExists() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table1['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->test_table2['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable2['name']), 'The table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table1['name'], $this->test_table1['schema']);
+    $schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table1['name']), 'The table exists in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->test_table2['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable2['name']), 'The table does not exist in the MongoDB database.');
 
     // Test that if a field that exists on an existing table will return TRUE.
-    $this->assertTrue($schema->fieldExists($this->test_table1['name'], 'test_field'), "The table 'test_table1' has a field with the name 'test_field'.");
+    $this->assertTrue($schema->fieldExists($this->testTable1['name'], 'test_field'), "The table 'test_table1' has a field with the name 'test_field'.");
 
     // Test that if a non-existing field on an existing table will return FALSE.
-    $this->assertFalse($schema->fieldExists($this->test_table1['name'], 'does_not_exists_field'), "The table 'test_table1' does not have a field with the name 'does_not_exists_field'.");
+    $this->assertFalse($schema->fieldExists($this->testTable1['name'], 'does_not_exists_field'), "The table 'test_table1' does not have a field with the name 'does_not_exists_field'.");
 
     // Test that a  non-existing table will return FALSE.
-    $this->assertFalse($schema->fieldExists($this->test_table2['name'], 'test_field'), "The table 'test_table1' has a field with the name 'test_field'.");
+    $this->assertFalse($schema->fieldExists($this->testTable2['name'], 'test_field'), "The table 'test_table1' has a field with the name 'test_field'.");
   }
 
   /**
@@ -101,15 +101,15 @@ class SchemaFieldTest extends SchemaTestBase {
    */
   public function providerEmbeddedFieldExists() {
     return [
-      [$this->test_table2['name'], 'test_field_int_null', TRUE],
-      [$this->test_table2['name'], 'does_not_exists_field', FALSE],
-      [$this->test_table2['name'], 'test_field_int_null', TRUE],
+      [$this->testTable2['name'], 'test_field_int_null', TRUE],
+      [$this->testTable2['name'], 'does_not_exists_field', FALSE],
+      [$this->testTable2['name'], 'test_field_int_null', TRUE],
       ['does_not_exist_embedded_table', 'test_field_int_null', FALSE],
-      [$this->test_table6['name'], 'test_field_varchar_null', FALSE],
-      [$this->test_table3['name'], 'id', TRUE],
-      [$this->test_table3['name'], 'does_not_exists_field', FALSE],
-      [$this->test_table4['name'], 'test_field', TRUE],
-      [$this->test_table4['name'], 'does_not_exists_field', FALSE],
+      [$this->testTable6['name'], 'test_field_varchar_null', FALSE],
+      [$this->testTable3['name'], 'id', TRUE],
+      [$this->testTable3['name'], 'does_not_exists_field', FALSE],
+      [$this->testTable4['name'], 'test_field', TRUE],
+      [$this->testTable4['name'], 'does_not_exists_field', FALSE],
     ];
   }
 
@@ -121,14 +121,14 @@ class SchemaFieldTest extends SchemaTestBase {
     $schema = Database::getConnection()->schema();
 
     $embedded_tables_data = [
-      $this->test_table1['name'] => [$this->test_table2],
-      $this->test_table2['name'] => [$this->test_table3, $this->test_table4],
-      $this->test_table3['name'] => [$this->test_table5],
+      $this->testTable1['name'] => [$this->testTable2],
+      $this->testTable2['name'] => [$this->testTable3, $this->testTable4],
+      $this->testTable3['name'] => [$this->testTable5],
     ];
 
     // Create all the tables.
-    $schema->createTable($this->test_table1['name'], $this->test_table1['schema']);
-    $schema->createTable($this->test_table6['name'], $this->test_table6['schema']);
+    $schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
+    $schema->createTable($this->testTable6['name'], $this->testTable6['schema']);
     foreach ($embedded_tables_data as $parent_table => $embedded_table_array) {
       foreach ($embedded_table_array as $embedded_table_data) {
         $schema->createEmbeddedTable($parent_table, $embedded_table_data['name'], $embedded_table_data['schema']);
@@ -136,12 +136,12 @@ class SchemaFieldTest extends SchemaTestBase {
     }
 
     // Test if all tables are created.
-    $this->assertTrue($schema->tableExists($this->test_table1['name']), 'The table "test_table1" exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->test_table2['name']), 'The table "test_table2" exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->test_table3['name']), 'The table "test_table3" exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The table "test_table4" exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->test_table5['name']), 'The table "test_table5" exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->test_table6['name']), 'The table "test_table6" exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable1['name']), 'The table "test_table1" exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable2['name']), 'The table "test_table2" exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable3['name']), 'The table "test_table3" exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table "test_table4" exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable5['name']), 'The table "test_table5" exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable6['name']), 'The table "test_table6" exists in the MongoDB database.');
 
     $result = $schema->fieldExists($embedded_table_name, $field_name);
     if ($expected_result) {
@@ -2417,164 +2417,164 @@ class SchemaFieldTest extends SchemaTestBase {
 
     return [
       [
-        $this->test_table4,
+        $this->testTable4,
         [],
-        $this->test_table4['name'],
+        $this->testTable4['name'],
         $this->testField1,
         $test_table4_with_test_field1,
       ],
       [
-        $this->test_table5,
+        $this->testTable5,
         [],
-        $this->test_table5['name'],
+        $this->testTable5['name'],
         $this->testField1,
         $test_table5_with_test_field1,
       ],
       [
-        $this->test_table6,
+        $this->testTable6,
         [],
-        $this->test_table6['name'],
+        $this->testTable6['name'],
         $this->testField1,
         $test_table6_with_test_field1,
       ],
       [
-        $this->test_table4,
+        $this->testTable4,
         [],
-        $this->test_table4['name'],
+        $this->testTable4['name'],
         $this->testField2,
         $test_table4_with_test_field2,
       ],
       [
-        $this->test_table5,
+        $this->testTable5,
         [],
-        $this->test_table5['name'],
+        $this->testTable5['name'],
         $this->testField2,
         $test_table5_with_test_field2,
       ],
       [
-        $this->test_table6,
+        $this->testTable6,
         [],
-        $this->test_table6['name'],
+        $this->testTable6['name'],
         $this->testField2,
         $test_table6_with_test_field2,
       ],
 
       [
-        $this->test_table4,
+        $this->testTable4,
         [],
-        $this->test_table4['name'],
+        $this->testTable4['name'],
         $this->testField3,
         $test_table4_with_test_field3,
       ],
       [
-        $this->test_table5,
+        $this->testTable5,
         [],
-        $this->test_table5['name'],
+        $this->testTable5['name'],
         $this->testField3,
         $test_table5_with_test_field3,
       ],
       [
-        $this->test_table6,
+        $this->testTable6,
         [],
-        $this->test_table6['name'],
+        $this->testTable6['name'],
         $this->testField3,
         $test_table6_with_test_field3,
       ],
       [
-        $this->test_table4,
-        [$this->test_table4['name'] => [$this->test_table5]],
-        $this->test_table5['name'],
+        $this->testTable4,
+        [$this->testTable4['name'] => [$this->testTable5]],
+        $this->testTable5['name'],
         $this->testField1,
         $base_table_4_with_embedded_table_5_and_field_1,
       ],
       [
-        $this->test_table4,
-        [$this->test_table4['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table5['name'],
+        $this->testTable4,
+        [$this->testTable4['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable5['name'],
         $this->testField1,
         $base_table_4_with_embedded_table_5_and_6_and_field_1,
       ],
       [
-        $this->test_table4,
-        [$this->test_table4['name'] => [$this->test_table6, $this->test_table5]],
-        $this->test_table6['name'],
+        $this->testTable4,
+        [$this->testTable4['name'] => [$this->testTable6, $this->testTable5]],
+        $this->testTable6['name'],
         $this->testField1,
         $base_table_4_with_embedded_table_6_and_5_and_field_1,
       ],
       [
-        $this->test_table5,
-        [$this->test_table5['name'] => [$this->test_table6]],
-        $this->test_table6['name'],
+        $this->testTable5,
+        [$this->testTable5['name'] => [$this->testTable6]],
+        $this->testTable6['name'],
         $this->testField2,
         $base_table_5_with_embedded_table_6_and_field_2,
       ],
       [
-        $this->test_table5,
-        [$this->test_table5['name'] => [$this->test_table4, $this->test_table6]],
-        $this->test_table4['name'],
+        $this->testTable5,
+        [$this->testTable5['name'] => [$this->testTable4, $this->testTable6]],
+        $this->testTable4['name'],
         $this->testField2,
         $base_table_5_with_embedded_table_4_and_6_and_field_2,
       ],
       [
-        $this->test_table5,
-        [$this->test_table5['name'] => [$this->test_table6, $this->test_table4]],
-        $this->test_table6['name'],
+        $this->testTable5,
+        [$this->testTable5['name'] => [$this->testTable6, $this->testTable4]],
+        $this->testTable6['name'],
         $this->testField2,
         $base_table_5_with_embedded_table_6_and_4_and_field_2,
       ],
       [
-        $this->test_table6,
-        [$this->test_table6['name'] => [$this->test_table5]],
-        $this->test_table5['name'],
+        $this->testTable6,
+        [$this->testTable6['name'] => [$this->testTable5]],
+        $this->testTable5['name'],
         $this->testField3,
         $base_table_6_with_embedded_table_5_and_field_3,
       ],
       [
-        $this->test_table6,
-        [$this->test_table6['name'] => [$this->test_table5, $this->test_table4]],
-        $this->test_table5['name'],
+        $this->testTable6,
+        [$this->testTable6['name'] => [$this->testTable5, $this->testTable4]],
+        $this->testTable5['name'],
         $this->testField3,
         $base_table_6_with_embedded_table_5_and_4_and_field_3,
       ],
       [
-        $this->test_table6,
-        [$this->test_table6['name'] => [$this->test_table4, $this->test_table5]],
-        $this->test_table4['name'],
+        $this->testTable6,
+        [$this->testTable6['name'] => [$this->testTable4, $this->testTable5]],
+        $this->testTable4['name'],
         $this->testField3,
         $base_table_6_with_embedded_table_4_and_5_and_field_3,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table1['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable1['name'],
         $this->testField1,
         $base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_with_field_1_on_table_1,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table5['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable5['name'],
         $this->testField1,
         $base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_with_field_1_on_table_5,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table5['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable5['name'],
         $this->testField3,
         $base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_with_field_3_on_table_5,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table6['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable6['name'],
         $this->testField1,
         $base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_with_field_1_on_table_6,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table6['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable6['name'],
         $this->testField3,
         $base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_with_field_3_on_table_6,
       ],
@@ -2674,11 +2674,11 @@ class SchemaFieldTest extends SchemaTestBase {
   public function testAddFieldForTableDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
 
     // If we try to add a field on a non existent base table an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $schema->addField($this->test_table4['name'], $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
+    $schema->addField($this->testTable4['name'], $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
   }
 
   /**
@@ -2688,19 +2688,19 @@ class SchemaFieldTest extends SchemaTestBase {
   public function testAddFieldForNewFieldExists() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->fieldExists($this->test_table4['name'], $this->testField1['name']), 'The table field does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->fieldExists($this->testTable4['name'], $this->testField1['name']), 'The table field does not exist in the MongoDB database.');
 
     // Create the table and add the field to the table.
-    $schema->createTable($this->test_table4['name'], $this->test_table4['schema']);
-    $schema->addField($this->test_table4['name'], $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
+    $schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
+    $schema->addField($this->testTable4['name'], $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
 
-    $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->fieldExists($this->test_table4['name'], $this->testField1['name']), 'The table field exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->fieldExists($this->testTable4['name'], $this->testField1['name']), 'The table field exists in the MongoDB database.');
 
     // If we try to add a field that exists on base table an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->addField($this->test_table4['name'], $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
+    $schema->addField($this->testTable4['name'], $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
   }
 
   /**
@@ -2709,16 +2709,16 @@ class SchemaFieldTest extends SchemaTestBase {
   public function testAddFieldForEmbeddedTableDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
 
     // Create the to be renamed table.
-    $schema->createTable($this->test_table4['name'], $this->test_table4['schema']);
+    $schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
 
     // If we try to rename an embedded table on a non existent embedded table an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $schema->addField($this->test_table5['name'], $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
+    $schema->addField($this->testTable5['name'], $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
   }
 
   /**
@@ -2727,22 +2727,22 @@ class SchemaFieldTest extends SchemaTestBase {
   public function testAddFieldForNewEmbeddedFieldExists() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->test_table5['name']), 'The embedded table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->fieldExists($this->test_table5['name'], $this->testField1['name']), 'The field on the embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable5['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->fieldExists($this->testTable5['name'], $this->testField1['name']), 'The field on the embedded table does not exist in the MongoDB database.');
 
     // Create the to be renamed tables.
-    $schema->createTable($this->test_table4['name'], $this->test_table4['schema']);
-    $schema->createEmbeddedTable($this->test_table4['name'], $this->test_table5['name'], $this->test_table5['schema']);
-    $schema->addField($this->test_table5['name'], $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
+    $schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
+    $schema->createEmbeddedTable($this->testTable4['name'], $this->testTable5['name'], $this->testTable5['schema']);
+    $schema->addField($this->testTable5['name'], $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
 
-    $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->test_table5['name']), 'The embedded table exists in the MongoDB database.');
-    $this->assertTrue($schema->fieldExists($this->test_table5['name'], $this->testField1['name']), 'The field on the embedded table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable5['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($schema->fieldExists($this->testTable5['name'], $this->testField1['name']), 'The field on the embedded table exists in the MongoDB database.');
 
     // If we try to rename an embedded table to an existent embedded table an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->addField($this->test_table5['name'], $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
+    $schema->addField($this->testTable5['name'], $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
   }
 
   /**
@@ -3706,7 +3706,6 @@ class SchemaFieldTest extends SchemaTestBase {
         'description' => 'Schema table for testing integer with null, not null and default values.',
         'fields' => [
           'id'  => [
-            // Test that serial becomes: int, not null and >= zero.
             'type' => 'serial',
           ],
           'test_field_int_not_null'  => [
@@ -4600,142 +4599,142 @@ class SchemaFieldTest extends SchemaTestBase {
 
     return [
       [
-        $this->test_table4,
+        $this->testTable4,
         [],
-        $this->test_table4['name'],
+        $this->testTable4['name'],
         'id',
         $test_table4_without_id,
       ],
       [
-        $this->test_table4,
+        $this->testTable4,
         [],
-        $this->test_table4['name'],
+        $this->testTable4['name'],
         'test_field',
         $test_table4_without_test_field,
       ],
       [
-        $this->test_table5,
+        $this->testTable5,
         [],
-        $this->test_table5['name'],
+        $this->testTable5['name'],
         'id',
         $test_table5_without_id,
       ],
       [
-        $this->test_table5,
+        $this->testTable5,
         [],
-        $this->test_table5['name'],
+        $this->testTable5['name'],
         'test_field_string',
         $test_table5_without_test_field_string,
       ],
       [
-        $this->test_table6,
+        $this->testTable6,
         [],
-        $this->test_table6['name'],
+        $this->testTable6['name'],
         'id',
         $test_table6_without_id,
       ],
       [
-        $this->test_table6,
+        $this->testTable6,
         [],
-        $this->test_table6['name'],
+        $this->testTable6['name'],
         'test_field_string',
         $test_table6_without_test_field_string,
       ],
       [
-        $this->test_table4,
-        [$this->test_table4['name'] => [$this->test_table5]],
-        $this->test_table5['name'],
+        $this->testTable4,
+        [$this->testTable4['name'] => [$this->testTable5]],
+        $this->testTable5['name'],
         'id',
         $base_4_embedded_5_without_id,
       ],
       [
-        $this->test_table4,
-        [$this->test_table4['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table5['name'],
+        $this->testTable4,
+        [$this->testTable4['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable5['name'],
         'id',
         $base_4_embedded_5_and_6_without_id,
       ],
       [
-        $this->test_table4,
-        [$this->test_table4['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table5['name'],
+        $this->testTable4,
+        [$this->testTable4['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable5['name'],
         'test_field_string',
         $base_4_embedded_5_and_6_without_test_field_string,
       ],
       [
-        $this->test_table4,
-        [$this->test_table4['name'] => [$this->test_table6, $this->test_table5]],
-        $this->test_table6['name'],
+        $this->testTable4,
+        [$this->testTable4['name'] => [$this->testTable6, $this->testTable5]],
+        $this->testTable6['name'],
         'id',
         $base_4_embedded_6_and_5_without_id,
       ],
       [
-        $this->test_table4,
-        [$this->test_table4['name'] => [$this->test_table6, $this->test_table5]],
-        $this->test_table6['name'],
+        $this->testTable4,
+        [$this->testTable4['name'] => [$this->testTable6, $this->testTable5]],
+        $this->testTable6['name'],
         'test_field_string',
         $base_4_embedded_6_and_5_without_test_field_string,
       ],
       [
-        $this->test_table5,
-        [$this->test_table5['name'] => [$this->test_table4, $this->test_table6]],
-        $this->test_table4['name'],
+        $this->testTable5,
+        [$this->testTable5['name'] => [$this->testTable4, $this->testTable6]],
+        $this->testTable4['name'],
         'id',
         $base_5_embedded_4_and_6_without_id,
       ],
       [
-        $this->test_table5,
-        [$this->test_table5['name'] => [$this->test_table4, $this->test_table6]],
-        $this->test_table4['name'],
+        $this->testTable5,
+        [$this->testTable5['name'] => [$this->testTable4, $this->testTable6]],
+        $this->testTable4['name'],
         'test_field',
         $base_5_embedded_4_and_6_without_test_field,
       ],
       [
-        $this->test_table6,
-        [$this->test_table6['name'] => [$this->test_table4, $this->test_table5]],
-        $this->test_table4['name'],
+        $this->testTable6,
+        [$this->testTable6['name'] => [$this->testTable4, $this->testTable5]],
+        $this->testTable4['name'],
         'id',
         $base_6_embedded_4_and_5_without_id,
       ],
       [
-        $this->test_table6,
-        [$this->test_table6['name'] => [$this->test_table4, $this->test_table5]],
-        $this->test_table4['name'],
+        $this->testTable6,
+        [$this->testTable6['name'] => [$this->testTable4, $this->testTable5]],
+        $this->testTable4['name'],
         'test_field',
         $base_6_embedded_4_and_5_without_test_field,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table1['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable1['name'],
         'test_field',
         $base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_without_test_field_on_table_1,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table2['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable2['name'],
         'test_field_int_null',
         $base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_without_test_field_int_null_on_table_2,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table4['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable4['name'],
         'test_field',
         $base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_without_test_field_on_table_4,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table5['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable5['name'],
         'id',
         $base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_without_id_on_table_5,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table6['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable6['name'],
         'id',
         $base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_without_id_on_table_6,
       ],
@@ -4830,10 +4829,10 @@ class SchemaFieldTest extends SchemaTestBase {
   public function testDropFieldForTableDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
 
     // Test that the dropField method return false when the base table does not exist.
-    $this->assertFalse($schema->dropField($this->test_table4['name'], 'test_field'), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->dropField($this->testTable4['name'], 'test_field'), 'The table does not exist in the MongoDB database.');
   }
 
   /**
@@ -4842,15 +4841,15 @@ class SchemaFieldTest extends SchemaTestBase {
   public function testDropFieldForFieldDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table4['name'], $this->test_table4['schema']);
+    $schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
 
     // Test that the dropField method return false when the field does not exist
     // on the base table.
-    $this->assertFalse($schema->dropField($this->test_table4['name'], 'does-not-exist-field'), 'The field does not exist on the table in the MongoDB database.');
+    $this->assertFalse($schema->dropField($this->testTable4['name'], 'does-not-exist-field'), 'The field does not exist on the table in the MongoDB database.');
   }
 
   /**
@@ -4859,16 +4858,16 @@ class SchemaFieldTest extends SchemaTestBase {
   public function testDropFieldForEmbeddedTableDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
 
     // Create the to be renamed table.
-    $schema->createTable($this->test_table4['name'], $this->test_table4['schema']);
+    $schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
 
     // Test that the dropField method return false when the embedded table does
     // not exist on the base table.
-    $this->assertFalse($schema->dropField($this->test_table5['name'], 'id'), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->dropField($this->testTable5['name'], 'id'), 'The embedded table does not exist in the MongoDB database.');
   }
 
   /**
@@ -4877,18 +4876,18 @@ class SchemaFieldTest extends SchemaTestBase {
   public function testDropFieldForEmbeddedFieldDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->test_table5['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable5['name']), 'The embedded table does not exist in the MongoDB database.');
 
     // Create the to be renamed table.
-    $schema->createTable($this->test_table4['name'], $this->test_table4['schema']);
-    $schema->createEmbeddedTable($this->test_table4['name'], $this->test_table5['name'], $this->test_table5['schema']);
+    $schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
+    $schema->createEmbeddedTable($this->testTable4['name'], $this->testTable5['name'], $this->testTable5['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->test_table5['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable5['name']), 'The embedded table exists in the MongoDB database.');
 
     // Dropping a non-existent field from an embedded table should return false.
-    $this->assertFalse($schema->dropField($this->test_table5['name'], 'does_not_exist_field'), 'The field does not exist on the embedded table.');
+    $this->assertFalse($schema->dropField($this->testTable5['name'], 'does_not_exist_field'), 'The field does not exist on the embedded table.');
   }
 
   /**
@@ -7613,321 +7612,321 @@ class SchemaFieldTest extends SchemaTestBase {
 
     return [
       [
-        $this->test_table4,
+        $this->testTable4,
         [],
-        $this->test_table4['name'],
+        $this->testTable4['name'],
         'id',
         $this->testField1,
         $test_table4_changed_id_to_test_field1,
       ],
       [
-        $this->test_table4,
+        $this->testTable4,
         [],
-        $this->test_table4['name'],
+        $this->testTable4['name'],
         'test_field',
         $this->testField1,
         $test_table4_changed_test_field_to_test_field1,
       ],
       [
-        $this->test_table4,
+        $this->testTable4,
         [],
-        $this->test_table4['name'],
+        $this->testTable4['name'],
         'id',
         $this->testField2,
         $test_table4_changed_id_to_test_field2,
       ],
       [
-        $this->test_table4,
+        $this->testTable4,
         [],
-        $this->test_table4['name'],
+        $this->testTable4['name'],
         'test_field',
         $this->testField2,
         $test_table4_changed_test_field_to_test_field2,
       ],
       [
-        $this->test_table4,
+        $this->testTable4,
         [],
-        $this->test_table4['name'],
+        $this->testTable4['name'],
         'id',
         $this->testField3,
         $test_table4_changed_id_to_test_field3,
       ],
       [
-        $this->test_table4,
+        $this->testTable4,
         [],
-        $this->test_table4['name'],
+        $this->testTable4['name'],
         'test_field',
         $this->testField3,
         $test_table4_changed_test_field_to_test_field3,
       ],
       [
-        $this->test_table5,
+        $this->testTable5,
         [],
-        $this->test_table5['name'],
+        $this->testTable5['name'],
         'id',
         $this->testField1,
         $test_table5_changed_id_to_test_field1,
       ],
       [
-        $this->test_table5,
+        $this->testTable5,
         [],
-        $this->test_table5['name'],
+        $this->testTable5['name'],
         'test_field_string',
         $this->testField1,
         $test_table5_changed_test_field_string_to_test_field1,
       ],
       [
-        $this->test_table5,
+        $this->testTable5,
         [],
-        $this->test_table5['name'],
+        $this->testTable5['name'],
         'id',
         $this->testField2,
         $test_table5_changed_id_to_test_field2,
       ],
       [
-        $this->test_table5,
+        $this->testTable5,
         [],
-        $this->test_table5['name'],
+        $this->testTable5['name'],
         'test_field_string',
         $this->testField2,
         $test_table5_changed_test_field_string_to_test_field2,
       ],
       [
-        $this->test_table5,
+        $this->testTable5,
         [],
-        $this->test_table5['name'],
+        $this->testTable5['name'],
         'id',
         $this->testField3,
         $test_table5_changed_id_to_test_field3,
       ],
       [
-        $this->test_table5,
+        $this->testTable5,
         [],
-        $this->test_table5['name'],
+        $this->testTable5['name'],
         'test_field_string',
         $this->testField3,
         $test_table5_changed_test_field_string_to_test_field3,
       ],
       [
-        $this->test_table6,
+        $this->testTable6,
         [],
-        $this->test_table6['name'],
+        $this->testTable6['name'],
         'id',
         $this->testField1,
         $test_table6_changed_id_to_test_field1,
       ],
       [
-        $this->test_table6,
+        $this->testTable6,
         [],
-        $this->test_table6['name'],
+        $this->testTable6['name'],
         'test_field_string',
         $this->testField1,
         $test_table6_changed_test_field_string_to_test_field1,
       ],
       [
-        $this->test_table6,
+        $this->testTable6,
         [],
-        $this->test_table6['name'],
+        $this->testTable6['name'],
         'id',
         $this->testField2,
         $test_table6_changed_id_to_test_field2,
       ],
       [
-        $this->test_table6,
+        $this->testTable6,
         [],
-        $this->test_table6['name'],
+        $this->testTable6['name'],
         'test_field_string',
         $this->testField2,
         $test_table6_changed_test_field_string_to_test_field2,
       ],
       [
-        $this->test_table6,
+        $this->testTable6,
         [],
-        $this->test_table6['name'],
+        $this->testTable6['name'],
         'id',
         $this->testField3,
         $test_table6_changed_id_to_test_field3,
       ],
       [
-        $this->test_table6,
+        $this->testTable6,
         [],
-        $this->test_table6['name'],
+        $this->testTable6['name'],
         'test_field_string',
         $this->testField3,
         $test_table6_changed_test_field_string_to_test_field3,
       ],
       [
-        $this->test_table4,
-        [$this->test_table4['name'] => [$this->test_table5]],
-        $this->test_table5['name'],
+        $this->testTable4,
+        [$this->testTable4['name'] => [$this->testTable5]],
+        $this->testTable5['name'],
         'id',
         $this->testField1,
         $change_embedded_base_4_embedded_5_changed_id_to_test_field1,
       ],
       [
-        $this->test_table4,
-        [$this->test_table4['name'] => [$this->test_table5]],
-        $this->test_table5['name'],
+        $this->testTable4,
+        [$this->testTable4['name'] => [$this->testTable5]],
+        $this->testTable5['name'],
         'test_field_string',
         $this->testField1,
         $change_embedded_base_4_embedded_5_changed_test_field_string_to_test_field1,
       ],
       [
-        $this->test_table4,
-        [$this->test_table4['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table5['name'],
+        $this->testTable4,
+        [$this->testTable4['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable5['name'],
         'id',
         $this->testField1,
         $change_embedded_base_4_embedded_5_and_6_changed_id_to_test_field1,
       ],
       [
-        $this->test_table4,
-        [$this->test_table4['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table5['name'],
+        $this->testTable4,
+        [$this->testTable4['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable5['name'],
         'test_field_string',
         $this->testField1,
         $change_embedded_base_4_embedded_5_and_6_changed_test_field_string_to_test_field1,
       ],
       [
-        $this->test_table4,
-        [$this->test_table4['name'] => [$this->test_table6, $this->test_table5]],
-        $this->test_table6['name'],
+        $this->testTable4,
+        [$this->testTable4['name'] => [$this->testTable6, $this->testTable5]],
+        $this->testTable6['name'],
         'id',
         $this->testField1,
         $change_embedded_base_4_embedded_6_and_5_changed_id_to_test_field1,
       ],
       [
-        $this->test_table4,
-        [$this->test_table4['name'] => [$this->test_table6, $this->test_table5]],
-        $this->test_table6['name'],
+        $this->testTable4,
+        [$this->testTable4['name'] => [$this->testTable6, $this->testTable5]],
+        $this->testTable6['name'],
         'test_field_string',
         $this->testField1,
         $change_embedded_base_4_embedded_6_and_5_changed_test_field_string_to_test_field1,
       ],
       [
-        $this->test_table5,
-        [$this->test_table5['name'] => [$this->test_table4]],
-        $this->test_table4['name'],
+        $this->testTable5,
+        [$this->testTable5['name'] => [$this->testTable4]],
+        $this->testTable4['name'],
         'id',
         $this->testField2,
         $change_embedded_base_5_embedded_4_changed_id_to_test_field2,
       ],
       [
-        $this->test_table5,
-        [$this->test_table5['name'] => [$this->test_table4]],
-        $this->test_table4['name'],
+        $this->testTable5,
+        [$this->testTable5['name'] => [$this->testTable4]],
+        $this->testTable4['name'],
         'test_field',
         $this->testField2,
         $change_embedded_base_5_embedded_4_changed_test_field_to_test_field2,
       ],
       [
-        $this->test_table5,
-        [$this->test_table5['name'] => [$this->test_table4, $this->test_table6]],
-        $this->test_table4['name'],
+        $this->testTable5,
+        [$this->testTable5['name'] => [$this->testTable4, $this->testTable6]],
+        $this->testTable4['name'],
         'id',
         $this->testField2,
         $change_embedded_base_5_embedded_4_and_6_changed_id_to_test_field2,
       ],
       [
-        $this->test_table5,
-        [$this->test_table5['name'] => [$this->test_table4, $this->test_table6]],
-        $this->test_table4['name'],
+        $this->testTable5,
+        [$this->testTable5['name'] => [$this->testTable4, $this->testTable6]],
+        $this->testTable4['name'],
         'test_field',
         $this->testField2,
         $change_embedded_base_5_embedded_4_and_6_changed_test_field_to_test_field2,
       ],
       [
-        $this->test_table5,
-        [$this->test_table5['name'] => [$this->test_table6, $this->test_table4]],
-        $this->test_table6['name'],
+        $this->testTable5,
+        [$this->testTable5['name'] => [$this->testTable6, $this->testTable4]],
+        $this->testTable6['name'],
         'id',
         $this->testField2,
         $change_embedded_base_5_embedded_6_and_4_changed_id_to_test_field2,
       ],
       [
-        $this->test_table5,
-        [$this->test_table5['name'] => [$this->test_table6, $this->test_table4]],
-        $this->test_table6['name'],
+        $this->testTable5,
+        [$this->testTable5['name'] => [$this->testTable6, $this->testTable4]],
+        $this->testTable6['name'],
         'test_field_string',
         $this->testField2,
         $change_embedded_base_5_embedded_6_and_4_changed_test_field_string_to_test_field2,
       ],
       [
-        $this->test_table6,
-        [$this->test_table6['name'] => [$this->test_table4]],
-        $this->test_table4['name'],
+        $this->testTable6,
+        [$this->testTable6['name'] => [$this->testTable4]],
+        $this->testTable4['name'],
         'id',
         $this->testField3,
         $change_embedded_base_6_embedded_4_changed_id_to_test_field3,
       ],
       [
-        $this->test_table6,
-        [$this->test_table6['name'] => [$this->test_table4]],
-        $this->test_table4['name'],
+        $this->testTable6,
+        [$this->testTable6['name'] => [$this->testTable4]],
+        $this->testTable4['name'],
         'test_field',
         $this->testField3,
         $change_embedded_base_6_embedded_4_changed_test_field_to_test_field3,
       ],
       [
-        $this->test_table6,
-        [$this->test_table6['name'] => [$this->test_table4, $this->test_table5]],
-        $this->test_table4['name'],
+        $this->testTable6,
+        [$this->testTable6['name'] => [$this->testTable4, $this->testTable5]],
+        $this->testTable4['name'],
         'id',
         $this->testField3,
         $change_embedded_base_6_embedded_4_and_5_changed_id_to_test_field3,
       ],
       [
-        $this->test_table6,
-        [$this->test_table6['name'] => [$this->test_table4, $this->test_table5]],
-        $this->test_table4['name'],
+        $this->testTable6,
+        [$this->testTable6['name'] => [$this->testTable4, $this->testTable5]],
+        $this->testTable4['name'],
         'test_field',
         $this->testField3,
         $change_embedded_base_6_embedded_4_and_5_changed_test_field_to_test_field3,
       ],
       [
-        $this->test_table6,
-        [$this->test_table6['name'] => [$this->test_table5, $this->test_table4]],
-        $this->test_table5['name'],
+        $this->testTable6,
+        [$this->testTable6['name'] => [$this->testTable5, $this->testTable4]],
+        $this->testTable5['name'],
         'id',
         $this->testField3,
         $change_embedded_base_6_embedded_5_and_4_changed_id_to_test_field3,
       ],
       [
-        $this->test_table6,
-        [$this->test_table6['name'] => [$this->test_table5, $this->test_table4]],
-        $this->test_table5['name'],
+        $this->testTable6,
+        [$this->testTable6['name'] => [$this->testTable5, $this->testTable4]],
+        $this->testTable5['name'],
         'test_field_string',
         $this->testField3,
         $change_embedded_base_6_embedded_5_and_4_changed_test_field_string_to_test_field3,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table1['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable1['name'],
         'test_field',
         $this->testField3,
         $base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_with_field_3_on_table_1,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table4['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable4['name'],
         'id',
         $this->testField1,
         $base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_with_field_1_on_table_4,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table4['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable4['name'],
         'id',
         $this->testField3,
         $base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_with_field_3_on_table_4,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table4['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable4['name'],
         'id',
         $this->testField2,
         $base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_with_field_2_on_table_4,
@@ -8042,16 +8041,16 @@ class SchemaFieldTest extends SchemaTestBase {
   public function testChangeFieldForFieldDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
 
     // Create the to be renamed table.
-    $schema->createTable($this->test_table4['name'], $this->test_table4['schema']);
+    $schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
 
     // If we try to change a non existent field from a table an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $schema->changeField($this->test_table4['name'], 'does_not_exist_field', $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
+    $schema->changeField($this->testTable4['name'], 'does_not_exist_field', $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
   }
 
   /**
@@ -8060,16 +8059,16 @@ class SchemaFieldTest extends SchemaTestBase {
   public function testChangeFieldForNewFieldExists() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
 
     // Create the to be renamed table.
-    $schema->createTable($this->test_table4['name'], $this->test_table4['schema']);
+    $schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
 
     // If we try to change a field from a table to an existing field an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->changeField($this->test_table4['name'], 'id', 'test_field', $this->testField1['spec'], $this->testField1['keys']);
+    $schema->changeField($this->testTable4['name'], 'id', 'test_field', $this->testField1['spec'], $this->testField1['keys']);
   }
 
   /**
@@ -8078,11 +8077,11 @@ class SchemaFieldTest extends SchemaTestBase {
   public function testChangeFieldForBaseTableDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
 
     // If we try to rename an embedded table on a non existent base table an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $schema->changeField($this->test_table4['name'], 'id', $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
+    $schema->changeField($this->testTable4['name'], 'id', $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
   }
 
   /**
@@ -8091,19 +8090,19 @@ class SchemaFieldTest extends SchemaTestBase {
   public function testChangedFieldForEmbeddedFieldDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->test_table5['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable5['name']), 'The embedded table does not exist in the MongoDB database.');
 
     // Create the to be renamed table.
-    $schema->createTable($this->test_table4['name'], $this->test_table4['schema']);
-    $schema->createEmbeddedTable($this->test_table4['name'], $this->test_table5['name'], $this->test_table5['schema']);
+    $schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
+    $schema->createEmbeddedTable($this->testTable4['name'], $this->testTable5['name'], $this->testTable5['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->test_table5['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable5['name']), 'The embedded table exists in the MongoDB database.');
 
     // If we try to change a non existent field from a table an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $schema->changeField($this->test_table5['name'], 'does_not_exist_field', $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
+    $schema->changeField($this->testTable5['name'], 'does_not_exist_field', $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
   }
 
   /**
@@ -8112,19 +8111,19 @@ class SchemaFieldTest extends SchemaTestBase {
   public function testChangeFieldForNewEmbeddedFieldExists() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->test_table5['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable5['name']), 'The embedded table does not exist in the MongoDB database.');
 
     // Create the to be renamed table.
-    $schema->createTable($this->test_table4['name'], $this->test_table4['schema']);
-    $schema->createEmbeddedTable($this->test_table4['name'], $this->test_table5['name'], $this->test_table5['schema']);
+    $schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
+    $schema->createEmbeddedTable($this->testTable4['name'], $this->testTable5['name'], $this->testTable5['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->test_table5['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable5['name']), 'The embedded table exists in the MongoDB database.');
 
     // If we try to change a field from a table to an existing field an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->changeField($this->test_table5['name'], 'id', 'test_field_string', $this->testField1['spec'], $this->testField1['keys']);
+    $schema->changeField($this->testTable5['name'], 'id', 'test_field_string', $this->testField1['spec'], $this->testField1['keys']);
   }
 
 }

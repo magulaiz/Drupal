@@ -72,13 +72,15 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         ],
         'primary key' => ['id', 'test_field_string'],
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['id' => ['$gte' => 0]],
-        ['test_field_string' => ['$type' => 'string']],
-        ['test_field_string' => ['$exists' => TRUE]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['id' => ['$gte' => 0]],
+          ['test_field_string' => ['$type' => 'string']],
+          ['test_field_string' => ['$exists' => TRUE]],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1, 'test_field_string' => 1]],
@@ -99,15 +101,17 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
             'default' => "'\"Quoting fun!'\"",
           ],
         ],
-       'primary key' => ['test_field_string', 'id'],
+        'primary key' => ['test_field_string', 'id'],
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['id' => ['$gte' => 0]],
-        ['test_field_string' => ['$type' => 'string']],
-        ['test_field_string' => ['$exists' => TRUE]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['id' => ['$gte' => 0]],
+          ['test_field_string' => ['$type' => 'string']],
+          ['test_field_string' => ['$exists' => TRUE]],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => '__pkey', 'unique' => TRUE, 'key' => ['test_field_string' => 1, 'id' => 1]],
@@ -131,25 +135,33 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         'primary key' => ['id'],
         'embedded_to_table' => 'test_table4',
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['test_field' => ['$type' => 'int']],
-        ['test_field' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table5.id' => ['$exists' => FALSE]],
-            ['test_table5.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table5.id' => ['$type' => 'int']],
-            ['test_table5.id' => ['$exists' => TRUE]],
-            ['test_table5.id' => ['$gte' => 0]],
-            ['test_table5.test_field_string' => ['$type' => 'string']],
-            ['test_table5.test_field_string' => ['$exists' => TRUE]],
-          ]],
-        ]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['test_field' => ['$type' => 'int']],
+          ['test_field' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table5.id' => ['$exists' => FALSE]],
+                  ['test_table5.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table5.id' => ['$type' => 'int']],
+                  ['test_table5.id' => ['$exists' => TRUE]],
+                  ['test_table5.id' => ['$gte' => 0]],
+                  ['test_table5.test_field_string' => ['$type' => 'string']],
+                  ['test_table5.test_field_string' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -175,25 +187,33 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         'primary key' => ['id', 'test_field_string'],
         'embedded_to_table' => 'test_table4',
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['test_field' => ['$type' => 'int']],
-        ['test_field' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table5.id' => ['$exists' => FALSE]],
-            ['test_table5.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table5.id' => ['$type' => 'int']],
-            ['test_table5.id' => ['$exists' => TRUE]],
-            ['test_table5.id' => ['$gte' => 0]],
-            ['test_table5.test_field_string' => ['$type' => 'string']],
-            ['test_table5.test_field_string' => ['$exists' => TRUE]],
-          ]],
-        ]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['test_field' => ['$type' => 'int']],
+          ['test_field' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table5.id' => ['$exists' => FALSE]],
+                  ['test_table5.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table5.id' => ['$type' => 'int']],
+                  ['test_table5.id' => ['$exists' => TRUE]],
+                  ['test_table5.id' => ['$gte' => 0]],
+                  ['test_table5.test_field_string' => ['$type' => 'string']],
+                  ['test_table5.test_field_string' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -219,25 +239,33 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         'primary key' => ['test_field_string', 'id'],
         'embedded_to_table' => 'test_table4',
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['test_field' => ['$type' => 'int']],
-        ['test_field' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table5.id' => ['$exists' => FALSE]],
-            ['test_table5.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table5.id' => ['$type' => 'int']],
-            ['test_table5.id' => ['$exists' => TRUE]],
-            ['test_table5.id' => ['$gte' => 0]],
-            ['test_table5.test_field_string' => ['$type' => 'string']],
-            ['test_table5.test_field_string' => ['$exists' => TRUE]],
-          ]],
-        ]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['test_field' => ['$type' => 'int']],
+          ['test_field' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table5.id' => ['$exists' => FALSE]],
+                  ['test_table5.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table5.id' => ['$type' => 'int']],
+                  ['test_table5.id' => ['$exists' => TRUE]],
+                  ['test_table5.id' => ['$gte' => 0]],
+                  ['test_table5.test_field_string' => ['$type' => 'string']],
+                  ['test_table5.test_field_string' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -251,7 +279,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         'description' => 'Schema table for testing varchar with null, not null and default values.',
         'fields' => [
           'id' => [
-            'type' => 'serial', // Test that serial becomes: int, not null and >= zero.
+            'type' => 'serial',
           ],
           'test_field_varchar_null' => [
             'type' => 'varchar',
@@ -279,142 +307,198 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         'primary key' => ['id'],
         'embedded_to_table' => 'test_table2',
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['test_field' => ['$type' => 'int']],
-        ['test_field' => ['$exists' => TRUE]],
-        ['test_field_string' => ['$type' => 'string']],
-        ['test_field_string' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['test_field_string_ascii' => ['$type' => 'string']],
-          ['test_field_string_ascii' => ['$exists' => FALSE]]
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.id' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.id' => ['$type' => 'int']],
-            ['test_table2.id' => ['$exists' => TRUE]],
-            ['test_table2.id' => ['$gte' => 0]],
-            ['$or' => [
-              ['test_table2.test_field_int_null' => ['$type' => 'int']],
-              ['test_table2.test_field_int_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_int_not_null' => ['$type' => 'int']],
-            ['test_table2.test_field_int_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_int_default' => ['$type' => 'int']],
-              ['test_table2.test_field_int_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_field_float_null' => ['$type' => 'double']],
-              ['test_table2.test_field_float_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_float_not_null' => ['$type' => 'double']],
-            ['test_table2.test_field_float_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_float_default' => ['$type' => 'double']],
-              ['test_table2.test_field_float_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_field_numeric_null' => ['$type' => 'decimal']],
-              ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_numeric_not_null' => ['$type' => 'decimal']],
-            ['test_table2.test_field_numeric_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_numeric_default' => ['$type' => 'decimal']],
-              ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table3.id' => ['$gte' => 0]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_varchar_null' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_varchar_default' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_text_null' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_text_default' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.test_table5.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.test_table5.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.test_table5.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table3.test_table5.id' => ['$gte' => 0]],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => TRUE]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.test_table6.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.test_table6.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.test_table6.id' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_table6.test_field_string' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table4.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table4.test_field' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table4.id' => ['$type' => 'int']],
-            ['test_table2.test_table4.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table4.test_field' => ['$type' => 'int']],
-            ['test_table2.test_table4.test_field' => ['$exists' => TRUE]],
-          ]],
-        ]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['test_field' => ['$type' => 'int']],
+          ['test_field' => ['$exists' => TRUE]],
+          ['test_field_string' => ['$type' => 'string']],
+          ['test_field_string' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              ['test_field_string_ascii' => ['$type' => 'string']],
+              ['test_field_string_ascii' => ['$exists' => FALSE]],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.id' => ['$type' => 'int']],
+                  ['test_table2.id' => ['$exists' => TRUE]],
+                  ['test_table2.id' => ['$gte' => 0]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_int_null' => ['$type' => 'int']],
+                      ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_int_not_null' => ['$type' => 'int']],
+                  ['test_table2.test_field_int_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_int_default' => ['$type' => 'int']],
+                      ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_float_null' => ['$type' => 'double']],
+                      ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_float_not_null' => ['$type' => 'double']],
+                  ['test_table2.test_field_float_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_float_default' => ['$type' => 'double']],
+                      ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_numeric_null' => ['$type' => 'decimal']],
+                      ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_numeric_not_null' => ['$type' => 'decimal']],
+                  ['test_table2.test_field_numeric_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_numeric_default' => ['$type' => 'decimal']],
+                      ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table3.id' => ['$gte' => 0]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_varchar_null' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_varchar_default' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_text_null' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_text_default' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table5.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table5.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.test_table5.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table3.test_table5.id' => ['$gte' => 0]],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table6.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table6.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.test_table6.id' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_table6.test_field_string' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table4.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table4.test_field' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table4.id' => ['$type' => 'int']],
+                  ['test_table2.test_table4.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table4.test_field' => ['$type' => 'int']],
+                  ['test_table2.test_table4.test_field' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -449,142 +533,198 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         'primary key' => ['id'],
         'embedded_to_table' => 'test_table3',
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['test_field' => ['$type' => 'int']],
-        ['test_field' => ['$exists' => TRUE]],
-        ['test_field_string' => ['$type' => 'string']],
-        ['test_field_string' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['test_field_string_ascii' => ['$type' => 'string']],
-          ['test_field_string_ascii' => ['$exists' => FALSE]]
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.id' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.id' => ['$type' => 'int']],
-            ['test_table2.id' => ['$exists' => TRUE]],
-            ['test_table2.id' => ['$gte' => 0]],
-            ['$or' => [
-              ['test_table2.test_field_int_null' => ['$type' => 'int']],
-              ['test_table2.test_field_int_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_int_not_null' => ['$type' => 'int']],
-            ['test_table2.test_field_int_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_int_default' => ['$type' => 'int']],
-              ['test_table2.test_field_int_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_field_float_null' => ['$type' => 'double']],
-              ['test_table2.test_field_float_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_float_not_null' => ['$type' => 'double']],
-            ['test_table2.test_field_float_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_float_default' => ['$type' => 'double']],
-              ['test_table2.test_field_float_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_field_numeric_null' => ['$type' => 'decimal']],
-              ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_numeric_not_null' => ['$type' => 'decimal']],
-            ['test_table2.test_field_numeric_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_numeric_default' => ['$type' => 'decimal']],
-              ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table3.id' => ['$gte' => 0]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_varchar_null' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_varchar_default' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_text_null' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_text_default' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.test_table5.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.test_table5.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.test_table5.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table3.test_table5.id' => ['$gte' => 0]],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => TRUE]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.test_table6.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.test_table6.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.test_table6.id' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_table6.test_field_string' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table4.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table4.test_field' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table4.id' => ['$type' => 'int']],
-            ['test_table2.test_table4.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table4.test_field' => ['$type' => 'int']],
-            ['test_table2.test_table4.test_field' => ['$exists' => TRUE]],
-          ]],
-        ]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['test_field' => ['$type' => 'int']],
+          ['test_field' => ['$exists' => TRUE]],
+          ['test_field_string' => ['$type' => 'string']],
+          ['test_field_string' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              ['test_field_string_ascii' => ['$type' => 'string']],
+              ['test_field_string_ascii' => ['$exists' => FALSE]],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.id' => ['$type' => 'int']],
+                  ['test_table2.id' => ['$exists' => TRUE]],
+                  ['test_table2.id' => ['$gte' => 0]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_int_null' => ['$type' => 'int']],
+                      ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_int_not_null' => ['$type' => 'int']],
+                  ['test_table2.test_field_int_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_int_default' => ['$type' => 'int']],
+                      ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_float_null' => ['$type' => 'double']],
+                      ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_float_not_null' => ['$type' => 'double']],
+                  ['test_table2.test_field_float_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_float_default' => ['$type' => 'double']],
+                      ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_numeric_null' => ['$type' => 'decimal']],
+                      ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_numeric_not_null' => ['$type' => 'decimal']],
+                  ['test_table2.test_field_numeric_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_numeric_default' => ['$type' => 'decimal']],
+                      ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table3.id' => ['$gte' => 0]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_varchar_null' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_varchar_default' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_text_null' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_text_default' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table5.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table5.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.test_table5.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table3.test_table5.id' => ['$gte' => 0]],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table6.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table6.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.test_table6.id' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_table6.test_field_string' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table4.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table4.test_field' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table4.id' => ['$type' => 'int']],
+                  ['test_table2.test_table4.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table4.test_field' => ['$type' => 'int']],
+                  ['test_table2.test_table4.test_field' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -604,58 +744,58 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     return [
       [
-        $this->test_table5,
+        $this->testTable5,
         [],
-        $this->test_table5['name'],
+        $this->testTable5['name'],
         ['id'],
         $add_primary_key_table_5_with_id,
       ],
       [
-        $this->test_table5,
+        $this->testTable5,
         [],
-        $this->test_table5['name'],
+        $this->testTable5['name'],
         ['id', 'test_field_string'],
-        $add_primary_key_table_5_with_id_and_test_field_string
+        $add_primary_key_table_5_with_id_and_test_field_string,
       ],
       [
-        $this->test_table5,
+        $this->testTable5,
         [],
-        $this->test_table5['name'],
+        $this->testTable5['name'],
         ['test_field_string', 'id'],
-        $add_primary_key_table_5_with_test_field_string_and_id
+        $add_primary_key_table_5_with_test_field_string_and_id,
       ],
       [
-        $this->test_table4,
-        [$this->test_table4['name'] => [$this->test_table5]],
-        $this->test_table5['name'],
+        $this->testTable4,
+        [$this->testTable4['name'] => [$this->testTable5]],
+        $this->testTable5['name'],
         ['id'],
         $add_primary_key_base_4_with_embedded_5_and_field_id,
       ],
       [
-        $this->test_table4,
-        [$this->test_table4['name'] => [$this->test_table5]],
-        $this->test_table5['name'],
+        $this->testTable4,
+        [$this->testTable4['name'] => [$this->testTable5]],
+        $this->testTable5['name'],
         ['id', 'test_field_string'],
         $add_primary_key_base_4_with_embedded_5_and_field_id_and_test_field_string,
       ],
       [
-        $this->test_table4,
-        [$this->test_table4['name'] => [$this->test_table5]],
-        $this->test_table5['name'],
+        $this->testTable4,
+        [$this->testTable4['name'] => [$this->testTable5]],
+        $this->testTable5['name'],
         ['test_field_string', 'id'],
         $add_primary_key_base_4_with_embedded_5_and_field_test_field_string_and_id,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table3['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable3['name'],
         ['id'],
         $add_primary_key_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_with_field_id_on_table_3,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table5['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable5['name'],
         ['id'],
         $add_primary_key_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_with_field_id_on_table_5,
       ],
@@ -762,19 +902,18 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
     $this->checkTableNumberOfIndexes($base_table_data, $embedded_tables_data);
   }
 
-
   /**
    * @covers ::addPrimaryKey
    */
   public function testAddPrimaryKeyForTableDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table5['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable5['name']), 'The table does not exist in the MongoDB database.');
 
     // If we try to add a primary key to a table that does not exist an
     // exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $schema->addPrimaryKey($this->test_table5['name'], ['id']);
+    $schema->addPrimaryKey($this->testTable5['name'], ['id']);
   }
 
   /**
@@ -784,18 +923,18 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   public function testAddPrimaryKeyForPrimaryKeyExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table4['name'], $this->test_table4['schema']);
+    $schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->constraintExists($this->test_table4['name'], 'pkey'), 'The table has a primary key.');
-    $this->assertTrue($schema->primaryKeyExists($this->test_table4['name']), 'The table has a primary key.');
+    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->constraintExists($this->testTable4['name'], 'pkey'), 'The table has a primary key.');
+    $this->assertTrue($schema->primaryKeyExists($this->testTable4['name']), 'The table has a primary key.');
 
     // If we try to add a primary key to a table that has a primary key an
     // exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->addPrimaryKey($this->test_table4['name'], ['id']);
+    $schema->addPrimaryKey($this->testTable4['name'], ['id']);
   }
 
   /**
@@ -806,23 +945,23 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   public function testAddPrimaryKeyForUniqueKeyExistsOnTheSameFields() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table4['name'], $this->test_table4['schema']);
+    $schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
 
-    $schema->dropPrimaryKey($this->test_table4['name']);
+    $schema->dropPrimaryKey($this->testTable4['name']);
 
-    $this->assertFalse($schema->constraintExists($this->test_table4['name'], 'pkey'), 'The table does not have a primary key.');
-    $this->assertFalse($schema->primaryKeyExists($this->test_table4['name']), 'The table does not have a primary key.');
-    $this->assertTrue($schema->constraintExists($this->test_table4['name'], 'test_field__key'), 'The table has the unique key.');
-    $this->assertTrue($schema->uniqueKeyExists($this->test_table4['name'], 'test_field'), 'The table has the unique key.');
+    $this->assertFalse($schema->constraintExists($this->testTable4['name'], 'pkey'), 'The table does not have a primary key.');
+    $this->assertFalse($schema->primaryKeyExists($this->testTable4['name']), 'The table does not have a primary key.');
+    $this->assertTrue($schema->constraintExists($this->testTable4['name'], 'test_field__key'), 'The table has the unique key.');
+    $this->assertTrue($schema->uniqueKeyExists($this->testTable4['name'], 'test_field'), 'The table has the unique key.');
 
     // If we try to add an unique key to a table that has an unique index on the
     // same fields an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->addPrimaryKey($this->test_table4['name'], ['test_field']);
+    $schema->addPrimaryKey($this->testTable4['name'], ['test_field']);
   }
 
   /**
@@ -831,18 +970,18 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   public function testAddPrimaryKeyForEmbeddedPrimaryKeyExists() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->test_table6['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable6['name']), 'The embedded table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table4['name'], $this->test_table4['schema']);
-    $schema->createEmbeddedTable($this->test_table4['name'], $this->test_table6['name'], $this->test_table6['schema']);
+    $schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
+    $schema->createEmbeddedTable($this->testTable4['name'], $this->testTable6['name'], $this->testTable6['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->test_table6['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable6['name']), 'The embedded table exists in the MongoDB database.');
 
     // If we try to add a primary key to a table that has a primary key an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->addPrimaryKey($this->test_table6['name'], ['id']);
+    $schema->addPrimaryKey($this->testTable6['name'], ['id']);
   }
 
   /**
@@ -853,26 +992,26 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   public function testAddPrimaryKeyForEmbeddedUniqueKeyExistsOnTheSameFields() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table5['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable5['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The embedded table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table5['name'], $this->test_table5['schema']);
-    $schema->createEmbeddedTable($this->test_table5['name'], $this->test_table4['name'], $this->test_table4['schema']);
+    $schema->createTable($this->testTable5['name'], $this->testTable5['schema']);
+    $schema->createEmbeddedTable($this->testTable5['name'], $this->testTable4['name'], $this->testTable4['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table5['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable5['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The embedded table exists in the MongoDB database.');
 
-    $schema->dropPrimaryKey($this->test_table4['name']);
+    $schema->dropPrimaryKey($this->testTable4['name']);
 
-    $this->assertFalse($schema->constraintExists($this->test_table5['name'], $this->test_table4['name'] . '.__pkey'), 'The embedded table does not have a primary key.');
-    $this->assertFalse($schema->primaryKeyExists($this->test_table4['name']), 'The table does not have a primary key.');
-    $this->assertTrue($schema->constraintExists($this->test_table5['name'], $this->test_table4['name'] . '.test_field__key'), 'The embedded table has the unique key.');
-    $this->assertTrue($schema->uniqueKeyExists($this->test_table4['name'], 'test_field'), 'The table has the unique key.');
+    $this->assertFalse($schema->constraintExists($this->testTable5['name'], $this->testTable4['name'] . '.__pkey'), 'The embedded table does not have a primary key.');
+    $this->assertFalse($schema->primaryKeyExists($this->testTable4['name']), 'The table does not have a primary key.');
+    $this->assertTrue($schema->constraintExists($this->testTable5['name'], $this->testTable4['name'] . '.test_field__key'), 'The embedded table has the unique key.');
+    $this->assertTrue($schema->uniqueKeyExists($this->testTable4['name'], 'test_field'), 'The table has the unique key.');
 
     // If we try to add an unique key to an embedded table that has an unique
     // index on the same fields an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->addPrimaryKey($this->test_table4['name'], ['test_field']);
+    $schema->addPrimaryKey($this->testTable4['name'], ['test_field']);
   }
 
   /**
@@ -916,18 +1055,22 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         ],
         'unique keys' => ['test_field' => ['test_field']],
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['test_field' => ['$type' => 'int']],
-        ['test_field' => ['$exists' => TRUE]],
-        ['test_field_string' => ['$type' => 'string']],
-        ['test_field_string' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['test_field_string_ascii' => ['$type' => 'string']],
-          ['test_field_string_ascii' => ['$exists' => FALSE]]
-        ]]
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['test_field' => ['$type' => 'int']],
+          ['test_field' => ['$exists' => TRUE]],
+          ['test_field_string' => ['$type' => 'string']],
+          ['test_field_string' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              ['test_field_string_ascii' => ['$type' => 'string']],
+              ['test_field_string_ascii' => ['$exists' => FALSE]],
+            ],
+          ],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => 'test_field__key', 'unique' => TRUE, 'key' => ['test_field' => 1]],
@@ -980,48 +1123,62 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         ],
         'unique keys' => [
           'test_fields_not_null' => ['test_field_int_not_null', 'test_field_float_not_null', 'test_field_numeric_not_null'],
-          'test_fields_null' => ['test_field_int_null', 'test_field_float_null', 'test_field_numeric_null']
+          'test_fields_null' => ['test_field_int_null', 'test_field_float_null', 'test_field_numeric_null'],
         ],
         'indexes' => [
           'test_fields_default' => ['test_field_int_default', 'test_field_float_default', 'test_field_numeric_default'],
-          'test_field_int_null' => ['test_field_int_null']
+          'test_field_int_null' => ['test_field_int_null'],
         ],
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['id' => ['$gte' => 0]],
-        ['$or' => [
-          ['test_field_int_null' => ['$type' => 'int']],
-          ['test_field_int_null' => ['$exists' => FALSE]]
-        ]],
-        ['test_field_int_not_null' => ['$type' => 'int']],
-        ['test_field_int_not_null' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['test_field_int_default' => ['$type' => 'int']],
-          ['test_field_int_default' => ['$exists' => FALSE]]
-        ]],
-        ['$or' => [
-          ['test_field_float_null' => ['$type' => 'double']],
-          ['test_field_float_null' => ['$exists' => FALSE]]
-        ]],
-        ['test_field_float_not_null' => ['$type' => 'double']],
-        ['test_field_float_not_null' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['test_field_float_default' => ['$type' => 'double']],
-          ['test_field_float_default' => ['$exists' => FALSE]]
-        ]],
-        ['$or' => [
-          ['test_field_numeric_null' => ['$type' => 'decimal']],
-          ['test_field_numeric_null' => ['$exists' => FALSE]]
-        ]],
-        ['test_field_numeric_not_null' => ['$type' => 'decimal']],
-        ['test_field_numeric_not_null' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['test_field_numeric_default' => ['$type' => 'decimal']],
-          ['test_field_numeric_default' => ['$exists' => FALSE]]
-        ]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['id' => ['$gte' => 0]],
+          [
+            '$or' => [
+              ['test_field_int_null' => ['$type' => 'int']],
+              ['test_field_int_null' => ['$exists' => FALSE]],
+            ],
+          ],
+          ['test_field_int_not_null' => ['$type' => 'int']],
+          ['test_field_int_not_null' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              ['test_field_int_default' => ['$type' => 'int']],
+              ['test_field_int_default' => ['$exists' => FALSE]],
+            ],
+          ],
+          [
+            '$or' => [
+              ['test_field_float_null' => ['$type' => 'double']],
+              ['test_field_float_null' => ['$exists' => FALSE]],
+            ],
+          ],
+          ['test_field_float_not_null' => ['$type' => 'double']],
+          ['test_field_float_not_null' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              ['test_field_float_default' => ['$type' => 'double']],
+              ['test_field_float_default' => ['$exists' => FALSE]],
+            ],
+          ],
+          [
+            '$or' => [
+              ['test_field_numeric_null' => ['$type' => 'decimal']],
+              ['test_field_numeric_null' => ['$exists' => FALSE]],
+            ],
+          ],
+          ['test_field_numeric_not_null' => ['$type' => 'decimal']],
+          ['test_field_numeric_not_null' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              ['test_field_numeric_default' => ['$type' => 'decimal']],
+              ['test_field_numeric_default' => ['$exists' => FALSE]],
+            ],
+          ],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => 'test_fields_not_null__key', 'unique' => TRUE, 'key' => ['test_field_int_not_null' => 1, 'test_field_float_not_null' => 1, 'test_field_numeric_not_null' => 1]],
@@ -1046,12 +1203,14 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         ],
         'unique keys' => ['test_field' => ['test_field']],
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['test_field' => ['$type' => 'int']],
-        ['test_field' => ['$exists' => TRUE]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['test_field' => ['$type' => 'int']],
+          ['test_field' => ['$exists' => TRUE]],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => 'test_field__key', 'unique' => TRUE, 'key' => ['test_field' => 1]],
@@ -1072,14 +1231,18 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         ],
         'indexes' => ['test_field_string' => ['test_field_string']],
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['test_field_string' => ['$type' => 'string']],
-          ['test_field_string' => ['$exists' => FALSE]]
-        ]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              ['test_field_string' => ['$type' => 'string']],
+              ['test_field_string' => ['$exists' => FALSE]],
+            ],
+          ],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => 'test_field_string__idx', 'unique' => FALSE, 'key' => ['test_field_string' => 1]],
@@ -1101,26 +1264,36 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         'indexes' => ['test_field_string' => ['test_field_string']],
         'embedded_to_table' => 'test_table4',
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['test_field' => ['$type' => 'int']],
-        ['test_field' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table6.id' => ['$exists' => FALSE]],
-            ['test_table6.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table6.id' => ['$type' => 'int']],
-            ['test_table6.id' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table6.test_field_string' => ['$type' => 'string']],
-              ['test_table6.test_field_string' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['test_field' => ['$type' => 'int']],
+          ['test_field' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table6.id' => ['$exists' => FALSE]],
+                  ['test_table6.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table6.id' => ['$type' => 'int']],
+                  ['test_table6.id' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table6.test_field_string' => ['$type' => 'string']],
+                      ['test_table6.test_field_string' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -1144,39 +1317,55 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         'indexes' => ['test_field_string' => ['test_field_string']],
         'embedded_to_table' => 'test_table4',
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['test_field' => ['$type' => 'int']],
-        ['test_field' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table5.id' => ['$exists' => FALSE]],
-            ['test_table5.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table5.id' => ['$type' => 'int']],
-            ['test_table5.id' => ['$exists' => TRUE]],
-            ['test_table5.id' => ['$gte' => 0]],
-            ['test_table5.test_field_string' => ['$type' => 'string']],
-            ['test_table5.test_field_string' => ['$exists' => TRUE]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table6.id' => ['$exists' => FALSE]],
-            ['test_table6.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table6.id' => ['$type' => 'int']],
-            ['test_table6.id' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table6.test_field_string' => ['$type' => 'string']],
-              ['test_table6.test_field_string' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['test_field' => ['$type' => 'int']],
+          ['test_field' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table5.id' => ['$exists' => FALSE]],
+                  ['test_table5.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table5.id' => ['$type' => 'int']],
+                  ['test_table5.id' => ['$exists' => TRUE]],
+                  ['test_table5.id' => ['$gte' => 0]],
+                  ['test_table5.test_field_string' => ['$type' => 'string']],
+                  ['test_table5.test_field_string' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table6.id' => ['$exists' => FALSE]],
+                  ['test_table6.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table6.id' => ['$type' => 'int']],
+                  ['test_table6.id' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table6.test_field_string' => ['$type' => 'string']],
+                      ['test_table6.test_field_string' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -1201,26 +1390,36 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         'unique keys' => ['test_field' => ['test_field']],
         'embedded_to_table' => 'test_table6',
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['test_field_string' => ['$type' => 'string']],
-          ['test_field_string' => ['$exists' => FALSE]]
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table4.id' => ['$exists' => FALSE]],
-            ['test_table4.test_field' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table4.id' => ['$type' => 'int']],
-            ['test_table4.id' => ['$exists' => TRUE]],
-            ['test_table4.test_field' => ['$type' => 'int']],
-            ['test_table4.test_field' => ['$exists' => TRUE]],
-          ]],
-        ]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              ['test_field_string' => ['$type' => 'string']],
+              ['test_field_string' => ['$exists' => FALSE]],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table4.id' => ['$exists' => FALSE]],
+                  ['test_table4.test_field' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table4.id' => ['$type' => 'int']],
+                  ['test_table4.id' => ['$exists' => TRUE]],
+                  ['test_table4.test_field' => ['$type' => 'int']],
+                  ['test_table4.test_field' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -1245,39 +1444,55 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         'unique keys' => ['test_field' => ['test_field']],
         'embedded_to_table' => 'test_table6',
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['test_field_string' => ['$type' => 'string']],
-          ['test_field_string' => ['$exists' => FALSE]]
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table4.id' => ['$exists' => FALSE]],
-            ['test_table4.test_field' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table4.id' => ['$type' => 'int']],
-            ['test_table4.id' => ['$exists' => TRUE]],
-            ['test_table4.test_field' => ['$type' => 'int']],
-            ['test_table4.test_field' => ['$exists' => TRUE]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table5.id' => ['$exists' => FALSE]],
-            ['test_table5.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table5.id' => ['$type' => 'int']],
-            ['test_table5.id' => ['$exists' => TRUE]],
-            ['test_table5.id' => ['$gte' => 0]],
-            ['test_table5.test_field_string' => ['$type' => 'string']],
-            ['test_table5.test_field_string' => ['$exists' => TRUE]],
-          ]],
-        ]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              ['test_field_string' => ['$type' => 'string']],
+              ['test_field_string' => ['$exists' => FALSE]],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table4.id' => ['$exists' => FALSE]],
+                  ['test_table4.test_field' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table4.id' => ['$type' => 'int']],
+                  ['test_table4.id' => ['$exists' => TRUE]],
+                  ['test_table4.test_field' => ['$type' => 'int']],
+                  ['test_table4.test_field' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table5.id' => ['$exists' => FALSE]],
+                  ['test_table5.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table5.id' => ['$type' => 'int']],
+                  ['test_table5.id' => ['$exists' => TRUE]],
+                  ['test_table5.id' => ['$gte' => 0]],
+                  ['test_table5.test_field_string' => ['$type' => 'string']],
+                  ['test_table5.test_field_string' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -1315,142 +1530,198 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         ],
         'unique keys' => ['test_field' => ['test_field']],
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['test_field' => ['$type' => 'int']],
-        ['test_field' => ['$exists' => TRUE]],
-        ['test_field_string' => ['$type' => 'string']],
-        ['test_field_string' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['test_field_string_ascii' => ['$type' => 'string']],
-          ['test_field_string_ascii' => ['$exists' => FALSE]]
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.id' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.id' => ['$type' => 'int']],
-            ['test_table2.id' => ['$exists' => TRUE]],
-            ['test_table2.id' => ['$gte' => 0]],
-            ['$or' => [
-              ['test_table2.test_field_int_null' => ['$type' => 'int']],
-              ['test_table2.test_field_int_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_int_not_null' => ['$type' => 'int']],
-            ['test_table2.test_field_int_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_int_default' => ['$type' => 'int']],
-              ['test_table2.test_field_int_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_field_float_null' => ['$type' => 'double']],
-              ['test_table2.test_field_float_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_float_not_null' => ['$type' => 'double']],
-            ['test_table2.test_field_float_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_float_default' => ['$type' => 'double']],
-              ['test_table2.test_field_float_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_field_numeric_null' => ['$type' => 'decimal']],
-              ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_numeric_not_null' => ['$type' => 'decimal']],
-            ['test_table2.test_field_numeric_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_numeric_default' => ['$type' => 'decimal']],
-              ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table3.id' => ['$gte' => 0]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_varchar_null' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_varchar_default' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_text_null' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_text_default' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.test_table5.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.test_table5.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.test_table5.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table3.test_table5.id' => ['$gte' => 0]],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => TRUE]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.test_table6.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.test_table6.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.test_table6.id' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_table6.test_field_string' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table4.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table4.test_field' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table4.id' => ['$type' => 'int']],
-            ['test_table2.test_table4.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table4.test_field' => ['$type' => 'int']],
-            ['test_table2.test_table4.test_field' => ['$exists' => TRUE]],
-          ]],
-        ]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['test_field' => ['$type' => 'int']],
+          ['test_field' => ['$exists' => TRUE]],
+          ['test_field_string' => ['$type' => 'string']],
+          ['test_field_string' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              ['test_field_string_ascii' => ['$type' => 'string']],
+              ['test_field_string_ascii' => ['$exists' => FALSE]],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.id' => ['$type' => 'int']],
+                  ['test_table2.id' => ['$exists' => TRUE]],
+                  ['test_table2.id' => ['$gte' => 0]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_int_null' => ['$type' => 'int']],
+                      ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_int_not_null' => ['$type' => 'int']],
+                  ['test_table2.test_field_int_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_int_default' => ['$type' => 'int']],
+                      ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_float_null' => ['$type' => 'double']],
+                      ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_float_not_null' => ['$type' => 'double']],
+                  ['test_table2.test_field_float_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_float_default' => ['$type' => 'double']],
+                      ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_numeric_null' => ['$type' => 'decimal']],
+                      ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_numeric_not_null' => ['$type' => 'decimal']],
+                  ['test_table2.test_field_numeric_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_numeric_default' => ['$type' => 'decimal']],
+                      ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table3.id' => ['$gte' => 0]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_varchar_null' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_varchar_default' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_text_null' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_text_default' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table5.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table5.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.test_table5.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table3.test_table5.id' => ['$gte' => 0]],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table6.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table6.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.test_table6.id' => ['$exists' => TRUE]],
+                ],
+                [
+                  '$or' => [
+                    ['test_table2.test_table3.test_table6.test_field_string' => ['$type' => 'string']],
+                    ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table4.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table4.test_field' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table4.id' => ['$type' => 'int']],
+                  ['test_table2.test_table4.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table4.test_field' => ['$type' => 'int']],
+                  ['test_table2.test_table4.test_field' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => 'test_field__key', 'unique' => TRUE, 'key' => ['test_field' => 1]],
@@ -1471,7 +1742,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         'description' => 'Schema table for testing integer with null, not null and default values.',
         'fields' => [
           'id' => [
-            'type' => 'serial', // Test that serial becomes: int, not null and >= zero.
+            'type' => 'serial',
           ],
           'test_field_int_null' => [
             'type' => 'int',
@@ -1512,150 +1783,206 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         ],
         'unique keys' => [
           'test_fields_not_null' => ['test_field_int_not_null', 'test_field_float_not_null', 'test_field_numeric_not_null'],
-          'test_fields_null' => ['test_field_int_null', 'test_field_float_null', 'test_field_numeric_null']
+          'test_fields_null' => ['test_field_int_null', 'test_field_float_null', 'test_field_numeric_null'],
         ],
         'indexes' => [
           'test_fields_default' => ['test_field_int_default', 'test_field_float_default', 'test_field_numeric_default'],
-          'test_field_int_null' => ['test_field_int_null']
+          'test_field_int_null' => ['test_field_int_null'],
         ],
         'embedded_to_table' => 'test_table1',
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['test_field' => ['$type' => 'int']],
-        ['test_field' => ['$exists' => TRUE]],
-        ['test_field_string' => ['$type' => 'string']],
-        ['test_field_string' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['test_field_string_ascii' => ['$type' => 'string']],
-          ['test_field_string_ascii' => ['$exists' => FALSE]]
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.id' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.id' => ['$type' => 'int']],
-            ['test_table2.id' => ['$exists' => TRUE]],
-            ['test_table2.id' => ['$gte' => 0]],
-            ['$or' => [
-              ['test_table2.test_field_int_null' => ['$type' => 'int']],
-              ['test_table2.test_field_int_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_int_not_null' => ['$type' => 'int']],
-            ['test_table2.test_field_int_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_int_default' => ['$type' => 'int']],
-              ['test_table2.test_field_int_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_field_float_null' => ['$type' => 'double']],
-              ['test_table2.test_field_float_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_float_not_null' => ['$type' => 'double']],
-            ['test_table2.test_field_float_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_float_default' => ['$type' => 'double']],
-              ['test_table2.test_field_float_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_field_numeric_null' => ['$type' => 'decimal']],
-              ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_numeric_not_null' => ['$type' => 'decimal']],
-            ['test_table2.test_field_numeric_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_numeric_default' => ['$type' => 'decimal']],
-              ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table3.id' => ['$gte' => 0]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_varchar_null' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_varchar_default' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_text_null' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_text_default' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.test_table5.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.test_table5.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.test_table5.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table3.test_table5.id' => ['$gte' => 0]],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => TRUE]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.test_table6.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.test_table6.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.test_table6.id' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_table6.test_field_string' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table4.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table4.test_field' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table4.id' => ['$type' => 'int']],
-            ['test_table2.test_table4.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table4.test_field' => ['$type' => 'int']],
-            ['test_table2.test_table4.test_field' => ['$exists' => TRUE]],
-          ]],
-        ]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['test_field' => ['$type' => 'int']],
+          ['test_field' => ['$exists' => TRUE]],
+          ['test_field_string' => ['$type' => 'string']],
+          ['test_field_string' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              ['test_field_string_ascii' => ['$type' => 'string']],
+              ['test_field_string_ascii' => ['$exists' => FALSE]],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.id' => ['$type' => 'int']],
+                  ['test_table2.id' => ['$exists' => TRUE]],
+                  ['test_table2.id' => ['$gte' => 0]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_int_null' => ['$type' => 'int']],
+                      ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_int_not_null' => ['$type' => 'int']],
+                  ['test_table2.test_field_int_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_int_default' => ['$type' => 'int']],
+                      ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_float_null' => ['$type' => 'double']],
+                      ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_float_not_null' => ['$type' => 'double']],
+                  ['test_table2.test_field_float_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_float_default' => ['$type' => 'double']],
+                      ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_numeric_null' => ['$type' => 'decimal']],
+                      ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_numeric_not_null' => ['$type' => 'decimal']],
+                  ['test_table2.test_field_numeric_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_numeric_default' => ['$type' => 'decimal']],
+                      ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table3.id' => ['$gte' => 0]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_varchar_null' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_varchar_default' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_text_null' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_text_default' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table5.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table5.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.test_table5.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table3.test_table5.id' => ['$gte' => 0]],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table6.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table6.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.test_table6.id' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_table6.test_field_string' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table4.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table4.test_field' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table4.id' => ['$type' => 'int']],
+                  ['test_table2.test_table4.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table4.test_field' => ['$type' => 'int']],
+                  ['test_table2.test_table4.test_field' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -1687,142 +2014,198 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         'unique keys' => ['test_field' => ['test_field']],
         'embedded_to_table' => 'test_table2',
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['test_field' => ['$type' => 'int']],
-        ['test_field' => ['$exists' => TRUE]],
-        ['test_field_string' => ['$type' => 'string']],
-        ['test_field_string' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['test_field_string_ascii' => ['$type' => 'string']],
-          ['test_field_string_ascii' => ['$exists' => FALSE]]
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.id' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.id' => ['$type' => 'int']],
-            ['test_table2.id' => ['$exists' => TRUE]],
-            ['test_table2.id' => ['$gte' => 0]],
-            ['$or' => [
-              ['test_table2.test_field_int_null' => ['$type' => 'int']],
-              ['test_table2.test_field_int_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_int_not_null' => ['$type' => 'int']],
-            ['test_table2.test_field_int_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_int_default' => ['$type' => 'int']],
-              ['test_table2.test_field_int_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_field_float_null' => ['$type' => 'double']],
-              ['test_table2.test_field_float_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_float_not_null' => ['$type' => 'double']],
-            ['test_table2.test_field_float_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_float_default' => ['$type' => 'double']],
-              ['test_table2.test_field_float_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_field_numeric_null' => ['$type' => 'decimal']],
-              ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_numeric_not_null' => ['$type' => 'decimal']],
-            ['test_table2.test_field_numeric_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_numeric_default' => ['$type' => 'decimal']],
-              ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table3.id' => ['$gte' => 0]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_varchar_null' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_varchar_default' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_text_null' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_text_default' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.test_table5.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.test_table5.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.test_table5.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table3.test_table5.id' => ['$gte' => 0]],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => TRUE]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.test_table6.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.test_table6.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.test_table6.id' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_table6.test_field_string' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table4.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table4.test_field' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table4.id' => ['$type' => 'int']],
-            ['test_table2.test_table4.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table4.test_field' => ['$type' => 'int']],
-            ['test_table2.test_table4.test_field' => ['$exists' => TRUE]],
-          ]],
-        ]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['test_field' => ['$type' => 'int']],
+          ['test_field' => ['$exists' => TRUE]],
+          ['test_field_string' => ['$type' => 'string']],
+          ['test_field_string' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              ['test_field_string_ascii' => ['$type' => 'string']],
+              ['test_field_string_ascii' => ['$exists' => FALSE]],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.id' => ['$type' => 'int']],
+                  ['test_table2.id' => ['$exists' => TRUE]],
+                  ['test_table2.id' => ['$gte' => 0]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_int_null' => ['$type' => 'int']],
+                      ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_int_not_null' => ['$type' => 'int']],
+                  ['test_table2.test_field_int_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_int_default' => ['$type' => 'int']],
+                      ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_float_null' => ['$type' => 'double']],
+                      ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_float_not_null' => ['$type' => 'double']],
+                  ['test_table2.test_field_float_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_float_default' => ['$type' => 'double']],
+                      ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_numeric_null' => ['$type' => 'decimal']],
+                      ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_numeric_not_null' => ['$type' => 'decimal']],
+                  ['test_table2.test_field_numeric_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_numeric_default' => ['$type' => 'decimal']],
+                      ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table3.id' => ['$gte' => 0]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_varchar_null' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_varchar_default' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_text_null' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_text_default' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table5.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table5.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.test_table5.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table3.test_table5.id' => ['$gte' => 0]],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table6.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table6.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.test_table6.id' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_table6.test_field_string' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table4.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table4.test_field' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table4.id' => ['$type' => 'int']],
+                  ['test_table2.test_table4.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table4.test_field' => ['$type' => 'int']],
+                  ['test_table2.test_table4.test_field' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -1853,142 +2236,198 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         'indexes' => ['test_field_string' => ['test_field_string']],
         'embedded_to_table' => 'test_table3',
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['test_field' => ['$type' => 'int']],
-        ['test_field' => ['$exists' => TRUE]],
-        ['test_field_string' => ['$type' => 'string']],
-        ['test_field_string' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['test_field_string_ascii' => ['$type' => 'string']],
-          ['test_field_string_ascii' => ['$exists' => FALSE]]
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.id' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.id' => ['$type' => 'int']],
-            ['test_table2.id' => ['$exists' => TRUE]],
-            ['test_table2.id' => ['$gte' => 0]],
-            ['$or' => [
-              ['test_table2.test_field_int_null' => ['$type' => 'int']],
-              ['test_table2.test_field_int_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_int_not_null' => ['$type' => 'int']],
-            ['test_table2.test_field_int_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_int_default' => ['$type' => 'int']],
-              ['test_table2.test_field_int_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_field_float_null' => ['$type' => 'double']],
-              ['test_table2.test_field_float_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_float_not_null' => ['$type' => 'double']],
-            ['test_table2.test_field_float_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_float_default' => ['$type' => 'double']],
-              ['test_table2.test_field_float_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_field_numeric_null' => ['$type' => 'decimal']],
-              ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_numeric_not_null' => ['$type' => 'decimal']],
-            ['test_table2.test_field_numeric_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_numeric_default' => ['$type' => 'decimal']],
-              ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table3.id' => ['$gte' => 0]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_varchar_null' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_varchar_default' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_text_null' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_text_default' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.test_table5.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.test_table5.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.test_table5.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table3.test_table5.id' => ['$gte' => 0]],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => TRUE]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.test_table6.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.test_table6.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.test_table6.id' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_table6.test_field_string' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table4.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table4.test_field' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table4.id' => ['$type' => 'int']],
-            ['test_table2.test_table4.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table4.test_field' => ['$type' => 'int']],
-            ['test_table2.test_table4.test_field' => ['$exists' => TRUE]],
-          ]],
-        ]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['test_field' => ['$type' => 'int']],
+          ['test_field' => ['$exists' => TRUE]],
+          ['test_field_string' => ['$type' => 'string']],
+          ['test_field_string' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              ['test_field_string_ascii' => ['$type' => 'string']],
+              ['test_field_string_ascii' => ['$exists' => FALSE]],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.id' => ['$type' => 'int']],
+                  ['test_table2.id' => ['$exists' => TRUE]],
+                  ['test_table2.id' => ['$gte' => 0]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_int_null' => ['$type' => 'int']],
+                      ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_int_not_null' => ['$type' => 'int']],
+                  ['test_table2.test_field_int_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_int_default' => ['$type' => 'int']],
+                      ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_float_null' => ['$type' => 'double']],
+                      ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_float_not_null' => ['$type' => 'double']],
+                  ['test_table2.test_field_float_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_float_default' => ['$type' => 'double']],
+                      ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_numeric_null' => ['$type' => 'decimal']],
+                      ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_numeric_not_null' => ['$type' => 'decimal']],
+                  ['test_table2.test_field_numeric_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_numeric_default' => ['$type' => 'decimal']],
+                      ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table3.id' => ['$gte' => 0]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_varchar_null' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_varchar_default' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_text_null' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_text_default' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table5.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table5.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.test_table5.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table3.test_table5.id' => ['$gte' => 0]],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table6.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table6.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.test_table6.id' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_table6.test_field_string' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table4.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table4.test_field' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table4.id' => ['$type' => 'int']],
+                  ['test_table2.test_table4.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table4.test_field' => ['$type' => 'int']],
+                  ['test_table2.test_table4.test_field' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -2006,75 +2445,75 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     return [
       [
-        $this->test_table1,
+        $this->testTable1,
         [],
-        $this->test_table1['name'],
+        $this->testTable1['name'],
         $drop_primary_key_table_1_data,
       ],
       [
-        $this->test_table2,
+        $this->testTable2,
         [],
-        $this->test_table2['name'],
+        $this->testTable2['name'],
         $drop_primary_key_table_2_data,
       ],
       [
-        $this->test_table4,
+        $this->testTable4,
         [],
-        $this->test_table4['name'],
+        $this->testTable4['name'],
         $drop_primary_key_table_4_data,
       ],
       [
-        $this->test_table6,
+        $this->testTable6,
         [],
-        $this->test_table6['name'],
+        $this->testTable6['name'],
         $drop_primary_key_table_6_data,
       ],
       [
-        $this->test_table4,
-        [$this->test_table4['name'] => [$this->test_table6]],
-        $this->test_table6['name'],
+        $this->testTable4,
+        [$this->testTable4['name'] => [$this->testTable6]],
+        $this->testTable6['name'],
         $drop_primary_key_base_4_with_embedded_6_data,
       ],
       [
-        $this->test_table4,
-        [$this->test_table4['name'] => [$this->test_table6, $this->test_table5]],
-        $this->test_table6['name'],
+        $this->testTable4,
+        [$this->testTable4['name'] => [$this->testTable6, $this->testTable5]],
+        $this->testTable6['name'],
         $drop_primary_key_base_4_with_embedded_6_and_5_data,
       ],
       [
-        $this->test_table6,
-        [$this->test_table6['name'] => [$this->test_table4]],
-        $this->test_table4['name'],
+        $this->testTable6,
+        [$this->testTable6['name'] => [$this->testTable4]],
+        $this->testTable4['name'],
         $drop_primary_key_base_6_with_embedded_4_data,
       ],
       [
-        $this->test_table6,
-        [$this->test_table6['name'] => [$this->test_table4, $this->test_table5]],
-        $this->test_table4['name'],
+        $this->testTable6,
+        [$this->testTable6['name'] => [$this->testTable4, $this->testTable5]],
+        $this->testTable4['name'],
         $drop_primary_key_base_6_with_embedded_4_and_5_data,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table1['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable1['name'],
         $drop_primary_key_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_1,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table2['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable2['name'],
         $drop_primary_key_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_2,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table4['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable4['name'],
         $drop_primary_key_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_4,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table6['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable6['name'],
         $drop_primary_key_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_6,
       ],
     ];
@@ -2188,17 +2627,17 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   public function testDropPrimaryKeyForPrimaryKeyDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table5['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable5['name']), 'The table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table5['name'], $this->test_table5['schema']);
+    $schema->createTable($this->testTable5['name'], $this->testTable5['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table5['name']), 'The table exists in the MongoDB database.');
-    $this->assertFalse($schema->constraintExists($this->test_table5['name'], 'pkey'), 'The table does not have a primary key.');
-    $this->assertFalse($schema->primaryKeyExists($this->test_table5['name']), 'The table does not have a primary key.');
+    $this->assertTrue($schema->tableExists($this->testTable5['name']), 'The table exists in the MongoDB database.');
+    $this->assertFalse($schema->constraintExists($this->testTable5['name'], 'pkey'), 'The table does not have a primary key.');
+    $this->assertFalse($schema->primaryKeyExists($this->testTable5['name']), 'The table does not have a primary key.');
 
     // If we try to drop a non existent primary key on a table an exception
     // should be thrown.
-    $this->assertFalse($schema->dropPrimaryKey($this->test_table5['name']), 'The table does not have a primary key.');
+    $this->assertFalse($schema->dropPrimaryKey($this->testTable5['name']), 'The table does not have a primary key.');
   }
 
   /**
@@ -2208,20 +2647,20 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   public function testDropPrimaryKeyForEmbeddedPrimaryKeyDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->test_table5['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable5['name']), 'The embedded table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table4['name'], $this->test_table4['schema']);
-    $schema->createEmbeddedTable($this->test_table4['name'], $this->test_table5['name'], $this->test_table5['schema']);
+    $schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
+    $schema->createEmbeddedTable($this->testTable4['name'], $this->testTable5['name'], $this->testTable5['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->test_table5['name']), 'The embedded table exists in the MongoDB database.');
-    $this->assertFalse($schema->constraintExists($this->test_table4['name'], $this->test_table5['name'] . '.__pkey'), 'The embedded table does not have the primary key.');
-    $this->assertFalse($schema->primaryKeyExists($this->test_table5['name']), 'The embedded table does not have a primary key.');
+    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable5['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertFalse($schema->constraintExists($this->testTable4['name'], $this->testTable5['name'] . '.__pkey'), 'The embedded table does not have the primary key.');
+    $this->assertFalse($schema->primaryKeyExists($this->testTable5['name']), 'The embedded table does not have a primary key.');
 
     // If we try to drop a non existent primary key from a table an exception
     // should be thrown.
-    $this->assertFalse($schema->dropPrimaryKey($this->test_table5['name']), 'The embedded table does not have a primary key.');
+    $this->assertFalse($schema->dropPrimaryKey($this->testTable5['name']), 'The embedded table does not have a primary key.');
   }
 
   /**
@@ -2254,13 +2693,15 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         ],
         'unique keys' => ['unique_id_key' => ['id']],
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['id' => ['$gte' => 0]],
-        ['test_field_string' => ['$type' => 'string']],
-        ['test_field_string' => ['$exists' => TRUE]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['id' => ['$gte' => 0]],
+          ['test_field_string' => ['$type' => 'string']],
+          ['test_field_string' => ['$exists' => TRUE]],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => 'unique_id_key__key', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -2283,13 +2724,15 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         ],
         'unique keys' => ['unique_id_and_test_field_string_key' => ['id', 'test_field_string']],
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['id' => ['$gte' => 0]],
-        ['test_field_string' => ['$type' => 'string']],
-        ['test_field_string' => ['$exists' => TRUE]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['id' => ['$gte' => 0]],
+          ['test_field_string' => ['$type' => 'string']],
+          ['test_field_string' => ['$exists' => TRUE]],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => 'unique_id_and_test_field_string_key__key', 'unique' => TRUE, 'key' => ['id' => 1, 'test_field_string' => 1]],
@@ -2310,15 +2753,17 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
             'default' => "'\"Quoting fun!'\"",
           ],
         ],
-       'unique keys' => ['unique_test_field_string_and_id_key' => ['test_field_string', 'id']],
+        'unique keys' => ['unique_test_field_string_and_id_key' => ['test_field_string', 'id']],
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['id' => ['$gte' => 0]],
-        ['test_field_string' => ['$type' => 'string']],
-        ['test_field_string' => ['$exists' => TRUE]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['id' => ['$gte' => 0]],
+          ['test_field_string' => ['$type' => 'string']],
+          ['test_field_string' => ['$exists' => TRUE]],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => 'unique_test_field_string_and_id_key__key', 'unique' => TRUE, 'key' => ['test_field_string' => 1, 'id' => 1]],
@@ -2344,12 +2789,14 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
           'unique_id_and_test_field_key' => ['id', 'test_field'],
         ],
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['test_field' => ['$type' => 'int']],
-        ['test_field' => ['$exists' => TRUE]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['test_field' => ['$type' => 'int']],
+          ['test_field' => ['$exists' => TRUE]],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -2377,12 +2824,14 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
           'unique_test_field_and_id_key' => ['test_field', 'id'],
         ],
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['test_field' => ['$type' => 'int']],
-        ['test_field' => ['$exists' => TRUE]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['test_field' => ['$type' => 'int']],
+          ['test_field' => ['$exists' => TRUE]],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -2408,25 +2857,33 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         'unique keys' => ['unique_id_key' => ['id']],
         'embedded_to_table' => 'test_table4',
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['test_field' => ['$type' => 'int']],
-        ['test_field' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table5.id' => ['$exists' => FALSE]],
-            ['test_table5.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table5.id' => ['$type' => 'int']],
-            ['test_table5.id' => ['$exists' => TRUE]],
-            ['test_table5.id' => ['$gte' => 0]],
-            ['test_table5.test_field_string' => ['$type' => 'string']],
-            ['test_table5.test_field_string' => ['$exists' => TRUE]],
-          ]],
-        ]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['test_field' => ['$type' => 'int']],
+          ['test_field' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table5.id' => ['$exists' => FALSE]],
+                  ['test_table5.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table5.id' => ['$type' => 'int']],
+                  ['test_table5.id' => ['$exists' => TRUE]],
+                  ['test_table5.id' => ['$gte' => 0]],
+                  ['test_table5.test_field_string' => ['$type' => 'string']],
+                  ['test_table5.test_field_string' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -2452,25 +2909,33 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         'unique keys' => ['unique_id_and_test_field_string_key' => ['id', 'test_field_string']],
         'embedded_to_table' => 'test_table4',
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['test_field' => ['$type' => 'int']],
-        ['test_field' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table5.id' => ['$exists' => FALSE]],
-            ['test_table5.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table5.id' => ['$type' => 'int']],
-            ['test_table5.id' => ['$exists' => TRUE]],
-            ['test_table5.id' => ['$gte' => 0]],
-            ['test_table5.test_field_string' => ['$type' => 'string']],
-            ['test_table5.test_field_string' => ['$exists' => TRUE]],
-          ]],
-        ]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['test_field' => ['$type' => 'int']],
+          ['test_field' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table5.id' => ['$exists' => FALSE]],
+                  ['test_table5.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table5.id' => ['$type' => 'int']],
+                  ['test_table5.id' => ['$exists' => TRUE]],
+                  ['test_table5.id' => ['$gte' => 0]],
+                  ['test_table5.test_field_string' => ['$type' => 'string']],
+                  ['test_table5.test_field_string' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -2496,25 +2961,33 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         'unique keys' => ['unique_test_field_string_and_id_key' => ['test_field_string', 'id']],
         'embedded_to_table' => 'test_table4',
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['test_field' => ['$type' => 'int']],
-        ['test_field' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table5.id' => ['$exists' => FALSE]],
-            ['test_table5.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table5.id' => ['$type' => 'int']],
-            ['test_table5.id' => ['$exists' => TRUE]],
-            ['test_table5.id' => ['$gte' => 0]],
-            ['test_table5.test_field_string' => ['$type' => 'string']],
-            ['test_table5.test_field_string' => ['$exists' => TRUE]],
-          ]],
-        ]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['test_field' => ['$type' => 'int']],
+          ['test_field' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table5.id' => ['$exists' => FALSE]],
+                  ['test_table5.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table5.id' => ['$type' => 'int']],
+                  ['test_table5.id' => ['$exists' => TRUE]],
+                  ['test_table5.id' => ['$gte' => 0]],
+                  ['test_table5.test_field_string' => ['$type' => 'string']],
+                  ['test_table5.test_field_string' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -2543,26 +3016,36 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         ],
         'embedded_to_table' => 'test_table6',
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['test_field_string' => ['$type' => 'string']],
-          ['test_field_string' => ['$exists' => FALSE]]
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table4.id' => ['$exists' => FALSE]],
-            ['test_table4.test_field' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table4.id' => ['$type' => 'int']],
-            ['test_table4.id' => ['$exists' => TRUE]],
-            ['test_table4.test_field' => ['$type' => 'int']],
-            ['test_table4.test_field' => ['$exists' => TRUE]],
-          ]],
-        ]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              ['test_field_string' => ['$type' => 'string']],
+              ['test_field_string' => ['$exists' => FALSE]],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table4.id' => ['$exists' => FALSE]],
+                  ['test_table4.test_field' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table4.id' => ['$type' => 'int']],
+                  ['test_table4.id' => ['$exists' => TRUE]],
+                  ['test_table4.test_field' => ['$type' => 'int']],
+                  ['test_table4.test_field' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -2606,142 +3089,198 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
           'unique_id_and_test_field_string_key' => ['id', 'test_field_string'],
         ],
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['test_field' => ['$type' => 'int']],
-        ['test_field' => ['$exists' => TRUE]],
-        ['test_field_string' => ['$type' => 'string']],
-        ['test_field_string' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['test_field_string_ascii' => ['$type' => 'string']],
-          ['test_field_string_ascii' => ['$exists' => FALSE]]
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.id' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.id' => ['$type' => 'int']],
-            ['test_table2.id' => ['$exists' => TRUE]],
-            ['test_table2.id' => ['$gte' => 0]],
-            ['$or' => [
-              ['test_table2.test_field_int_null' => ['$type' => 'int']],
-              ['test_table2.test_field_int_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_int_not_null' => ['$type' => 'int']],
-            ['test_table2.test_field_int_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_int_default' => ['$type' => 'int']],
-              ['test_table2.test_field_int_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_field_float_null' => ['$type' => 'double']],
-              ['test_table2.test_field_float_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_float_not_null' => ['$type' => 'double']],
-            ['test_table2.test_field_float_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_float_default' => ['$type' => 'double']],
-              ['test_table2.test_field_float_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_field_numeric_null' => ['$type' => 'decimal']],
-              ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_numeric_not_null' => ['$type' => 'decimal']],
-            ['test_table2.test_field_numeric_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_numeric_default' => ['$type' => 'decimal']],
-              ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table3.id' => ['$gte' => 0]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_varchar_null' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_varchar_default' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_text_null' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_text_default' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.test_table5.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.test_table5.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.test_table5.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table3.test_table5.id' => ['$gte' => 0]],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => TRUE]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.test_table6.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.test_table6.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.test_table6.id' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_table6.test_field_string' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table4.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table4.test_field' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table4.id' => ['$type' => 'int']],
-            ['test_table2.test_table4.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table4.test_field' => ['$type' => 'int']],
-            ['test_table2.test_table4.test_field' => ['$exists' => TRUE]],
-          ]],
-        ]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['test_field' => ['$type' => 'int']],
+          ['test_field' => ['$exists' => TRUE]],
+          ['test_field_string' => ['$type' => 'string']],
+          ['test_field_string' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              ['test_field_string_ascii' => ['$type' => 'string']],
+              ['test_field_string_ascii' => ['$exists' => FALSE]],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.id' => ['$type' => 'int']],
+                  ['test_table2.id' => ['$exists' => TRUE]],
+                  ['test_table2.id' => ['$gte' => 0]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_int_null' => ['$type' => 'int']],
+                      ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_int_not_null' => ['$type' => 'int']],
+                  ['test_table2.test_field_int_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_int_default' => ['$type' => 'int']],
+                      ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_float_null' => ['$type' => 'double']],
+                      ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_float_not_null' => ['$type' => 'double']],
+                  ['test_table2.test_field_float_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_float_default' => ['$type' => 'double']],
+                      ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_numeric_null' => ['$type' => 'decimal']],
+                      ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_numeric_not_null' => ['$type' => 'decimal']],
+                  ['test_table2.test_field_numeric_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_numeric_default' => ['$type' => 'decimal']],
+                      ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table3.id' => ['$gte' => 0]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_varchar_null' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_varchar_default' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_text_null' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_text_default' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table5.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table5.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.test_table5.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table3.test_table5.id' => ['$gte' => 0]],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table6.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table6.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.test_table6.id' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_table6.test_field_string' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table4.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table4.test_field' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table4.id' => ['$type' => 'int']],
+                  ['test_table2.test_table4.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table4.test_field' => ['$type' => 'int']],
+                  ['test_table2.test_table4.test_field' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -2764,7 +3303,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         'description' => 'Schema table for testing integer with null, not null and default values.',
         'fields' => [
           'id' => [
-            'type' => 'serial', // Test that serial becomes: int, not null and >= zero.
+            'type' => 'serial',
           ],
           'test_field_int_null' => [
             'type' => 'int',
@@ -2815,142 +3354,198 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         ],
         'embedded_to_table' => 'test_table1',
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['test_field' => ['$type' => 'int']],
-        ['test_field' => ['$exists' => TRUE]],
-        ['test_field_string' => ['$type' => 'string']],
-        ['test_field_string' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['test_field_string_ascii' => ['$type' => 'string']],
-          ['test_field_string_ascii' => ['$exists' => FALSE]]
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.id' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.id' => ['$type' => 'int']],
-            ['test_table2.id' => ['$exists' => TRUE]],
-            ['test_table2.id' => ['$gte' => 0]],
-            ['$or' => [
-              ['test_table2.test_field_int_null' => ['$type' => 'int']],
-              ['test_table2.test_field_int_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_int_not_null' => ['$type' => 'int']],
-            ['test_table2.test_field_int_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_int_default' => ['$type' => 'int']],
-              ['test_table2.test_field_int_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_field_float_null' => ['$type' => 'double']],
-              ['test_table2.test_field_float_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_float_not_null' => ['$type' => 'double']],
-            ['test_table2.test_field_float_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_float_default' => ['$type' => 'double']],
-              ['test_table2.test_field_float_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_field_numeric_null' => ['$type' => 'decimal']],
-              ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_numeric_not_null' => ['$type' => 'decimal']],
-            ['test_table2.test_field_numeric_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_numeric_default' => ['$type' => 'decimal']],
-              ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table3.id' => ['$gte' => 0]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_varchar_null' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_varchar_default' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_text_null' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_text_default' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.test_table5.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.test_table5.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.test_table5.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table3.test_table5.id' => ['$gte' => 0]],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => TRUE]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.test_table6.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.test_table6.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.test_table6.id' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_table6.test_field_string' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table4.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table4.test_field' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table4.id' => ['$type' => 'int']],
-            ['test_table2.test_table4.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table4.test_field' => ['$type' => 'int']],
-            ['test_table2.test_table4.test_field' => ['$exists' => TRUE]],
-          ]],
-        ]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['test_field' => ['$type' => 'int']],
+          ['test_field' => ['$exists' => TRUE]],
+          ['test_field_string' => ['$type' => 'string']],
+          ['test_field_string' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              ['test_field_string_ascii' => ['$type' => 'string']],
+              ['test_field_string_ascii' => ['$exists' => FALSE]],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.id' => ['$type' => 'int']],
+                  ['test_table2.id' => ['$exists' => TRUE]],
+                  ['test_table2.id' => ['$gte' => 0]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_int_null' => ['$type' => 'int']],
+                      ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_int_not_null' => ['$type' => 'int']],
+                  ['test_table2.test_field_int_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_int_default' => ['$type' => 'int']],
+                      ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_float_null' => ['$type' => 'double']],
+                      ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_float_not_null' => ['$type' => 'double']],
+                  ['test_table2.test_field_float_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_float_default' => ['$type' => 'double']],
+                      ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_numeric_null' => ['$type' => 'decimal']],
+                      ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_numeric_not_null' => ['$type' => 'decimal']],
+                  ['test_table2.test_field_numeric_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_numeric_default' => ['$type' => 'decimal']],
+                      ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table3.id' => ['$gte' => 0]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_varchar_null' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_varchar_default' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_text_null' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_text_default' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table5.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table5.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.test_table5.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table3.test_table5.id' => ['$gte' => 0]],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table6.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table6.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.test_table6.id' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_table6.test_field_string' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table4.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table4.test_field' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table4.id' => ['$type' => 'int']],
+                  ['test_table2.test_table4.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table4.test_field' => ['$type' => 'int']],
+                  ['test_table2.test_table4.test_field' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -2973,7 +3568,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         'description' => 'Schema table for testing varchar with null, not null and default values.',
         'fields' => [
           'id' => [
-            'type' => 'serial', // Test that serial becomes: int, not null and >= zero.
+            'type' => 'serial',
           ],
           'test_field_varchar_null' => [
             'type' => 'varchar',
@@ -3001,142 +3596,198 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         'unique keys' => ['unique_id_key' => ['id']],
         'embedded_to_table' => 'test_table2',
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['test_field' => ['$type' => 'int']],
-        ['test_field' => ['$exists' => TRUE]],
-        ['test_field_string' => ['$type' => 'string']],
-        ['test_field_string' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['test_field_string_ascii' => ['$type' => 'string']],
-          ['test_field_string_ascii' => ['$exists' => FALSE]]
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.id' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.id' => ['$type' => 'int']],
-            ['test_table2.id' => ['$exists' => TRUE]],
-            ['test_table2.id' => ['$gte' => 0]],
-            ['$or' => [
-              ['test_table2.test_field_int_null' => ['$type' => 'int']],
-              ['test_table2.test_field_int_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_int_not_null' => ['$type' => 'int']],
-            ['test_table2.test_field_int_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_int_default' => ['$type' => 'int']],
-              ['test_table2.test_field_int_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_field_float_null' => ['$type' => 'double']],
-              ['test_table2.test_field_float_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_float_not_null' => ['$type' => 'double']],
-            ['test_table2.test_field_float_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_float_default' => ['$type' => 'double']],
-              ['test_table2.test_field_float_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_field_numeric_null' => ['$type' => 'decimal']],
-              ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_numeric_not_null' => ['$type' => 'decimal']],
-            ['test_table2.test_field_numeric_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_numeric_default' => ['$type' => 'decimal']],
-              ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table3.id' => ['$gte' => 0]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_varchar_null' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_varchar_default' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_text_null' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_text_default' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.test_table5.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.test_table5.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.test_table5.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table3.test_table5.id' => ['$gte' => 0]],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => TRUE]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.test_table6.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.test_table6.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.test_table6.id' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_table6.test_field_string' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table4.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table4.test_field' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table4.id' => ['$type' => 'int']],
-            ['test_table2.test_table4.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table4.test_field' => ['$type' => 'int']],
-            ['test_table2.test_table4.test_field' => ['$exists' => TRUE]],
-          ]],
-        ]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['test_field' => ['$type' => 'int']],
+          ['test_field' => ['$exists' => TRUE]],
+          ['test_field_string' => ['$type' => 'string']],
+          ['test_field_string' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              ['test_field_string_ascii' => ['$type' => 'string']],
+              ['test_field_string_ascii' => ['$exists' => FALSE]],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.id' => ['$type' => 'int']],
+                  ['test_table2.id' => ['$exists' => TRUE]],
+                  ['test_table2.id' => ['$gte' => 0]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_int_null' => ['$type' => 'int']],
+                      ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_int_not_null' => ['$type' => 'int']],
+                  ['test_table2.test_field_int_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_int_default' => ['$type' => 'int']],
+                      ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_float_null' => ['$type' => 'double']],
+                      ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_float_not_null' => ['$type' => 'double']],
+                  ['test_table2.test_field_float_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_float_default' => ['$type' => 'double']],
+                      ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_numeric_null' => ['$type' => 'decimal']],
+                      ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_numeric_not_null' => ['$type' => 'decimal']],
+                  ['test_table2.test_field_numeric_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_numeric_default' => ['$type' => 'decimal']],
+                      ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table3.id' => ['$gte' => 0]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_varchar_null' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_varchar_default' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_text_null' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_text_default' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table5.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table5.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.test_table5.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table3.test_table5.id' => ['$gte' => 0]],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table6.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table6.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.test_table6.id' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_table6.test_field_string' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table4.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table4.test_field' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table4.id' => ['$type' => 'int']],
+                  ['test_table2.test_table4.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table4.test_field' => ['$type' => 'int']],
+                  ['test_table2.test_table4.test_field' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -3171,142 +3822,198 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         'unique keys' => ['unique_id_key' => ['id']],
         'embedded_to_table' => 'test_table3',
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['test_field' => ['$type' => 'int']],
-        ['test_field' => ['$exists' => TRUE]],
-        ['test_field_string' => ['$type' => 'string']],
-        ['test_field_string' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['test_field_string_ascii' => ['$type' => 'string']],
-          ['test_field_string_ascii' => ['$exists' => FALSE]]
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.id' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.id' => ['$type' => 'int']],
-            ['test_table2.id' => ['$exists' => TRUE]],
-            ['test_table2.id' => ['$gte' => 0]],
-            ['$or' => [
-              ['test_table2.test_field_int_null' => ['$type' => 'int']],
-              ['test_table2.test_field_int_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_int_not_null' => ['$type' => 'int']],
-            ['test_table2.test_field_int_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_int_default' => ['$type' => 'int']],
-              ['test_table2.test_field_int_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_field_float_null' => ['$type' => 'double']],
-              ['test_table2.test_field_float_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_float_not_null' => ['$type' => 'double']],
-            ['test_table2.test_field_float_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_float_default' => ['$type' => 'double']],
-              ['test_table2.test_field_float_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_field_numeric_null' => ['$type' => 'decimal']],
-              ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_field_numeric_not_null' => ['$type' => 'decimal']],
-            ['test_table2.test_field_numeric_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_field_numeric_default' => ['$type' => 'decimal']],
-              ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table3.id' => ['$gte' => 0]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_varchar_null' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_varchar_default' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]]
-            ]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_text_null' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]]
-            ]],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_field_text_default' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.test_table5.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.test_table5.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.test_table5.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table3.test_table5.id' => ['$gte' => 0]],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$type' => 'string']],
-            ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => TRUE]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table3.test_table6.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table3.test_table6.id' => ['$type' => 'int']],
-            ['test_table2.test_table3.test_table6.id' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table2.test_table3.test_table6.test_field_string' => ['$type' => 'string']],
-              ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table2.test_table4.id' => ['$exists' => FALSE]],
-            ['test_table2.test_table4.test_field' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table2.test_table4.id' => ['$type' => 'int']],
-            ['test_table2.test_table4.id' => ['$exists' => TRUE]],
-            ['test_table2.test_table4.test_field' => ['$type' => 'int']],
-            ['test_table2.test_table4.test_field' => ['$exists' => TRUE]],
-          ]],
-        ]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['test_field' => ['$type' => 'int']],
+          ['test_field' => ['$exists' => TRUE]],
+          ['test_field_string' => ['$type' => 'string']],
+          ['test_field_string' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              ['test_field_string_ascii' => ['$type' => 'string']],
+              ['test_field_string_ascii' => ['$exists' => FALSE]],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.id' => ['$type' => 'int']],
+                  ['test_table2.id' => ['$exists' => TRUE]],
+                  ['test_table2.id' => ['$gte' => 0]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_int_null' => ['$type' => 'int']],
+                      ['test_table2.test_field_int_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_int_not_null' => ['$type' => 'int']],
+                  ['test_table2.test_field_int_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_int_default' => ['$type' => 'int']],
+                      ['test_table2.test_field_int_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_float_null' => ['$type' => 'double']],
+                      ['test_table2.test_field_float_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_float_not_null' => ['$type' => 'double']],
+                  ['test_table2.test_field_float_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_float_default' => ['$type' => 'double']],
+                      ['test_table2.test_field_float_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_numeric_null' => ['$type' => 'decimal']],
+                      ['test_table2.test_field_numeric_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_field_numeric_not_null' => ['$type' => 'decimal']],
+                  ['test_table2.test_field_numeric_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_field_numeric_default' => ['$type' => 'decimal']],
+                      ['test_table2.test_field_numeric_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table3.id' => ['$gte' => 0]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_varchar_null' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_varchar_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_field_varchar_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_varchar_default' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_varchar_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_text_null' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_text_null' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_field_text_not_null' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_field_text_default' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_field_text_default' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table5.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table5.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.test_table5.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table3.test_table5.id' => ['$gte' => 0]],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$type' => 'string']],
+                  ['test_table2.test_table3.test_table5.test_field_string' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table6.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table3.test_table6.id' => ['$type' => 'int']],
+                  ['test_table2.test_table3.test_table6.id' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table2.test_table3.test_table6.test_field_string' => ['$type' => 'string']],
+                      ['test_table2.test_table3.test_table6.test_field_string' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table2.test_table4.id' => ['$exists' => FALSE]],
+                  ['test_table2.test_table4.test_field' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table2.test_table4.id' => ['$type' => 'int']],
+                  ['test_table2.test_table4.id' => ['$exists' => TRUE]],
+                  ['test_table2.test_table4.test_field' => ['$type' => 'int']],
+                  ['test_table2.test_table4.test_field' => ['$exists' => TRUE]],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -3326,105 +4033,105 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     return [
       [
-        $this->test_table5,
+        $this->testTable5,
         [],
-        $this->test_table5['name'],
+        $this->testTable5['name'],
         'unique_id_key',
         ['id'],
         $add_unique_key_table_5_with_unique_id_key,
       ],
       [
-        $this->test_table5,
+        $this->testTable5,
         [],
-        $this->test_table5['name'],
+        $this->testTable5['name'],
         'unique_id_and_test_field_string_key',
         ['id', 'test_field_string'],
         $add_unique_key_table_5_with_unique_id_and_test_field_string_key,
       ],
       [
-        $this->test_table5,
+        $this->testTable5,
         [],
-        $this->test_table5['name'],
+        $this->testTable5['name'],
         'unique_test_field_string_and_id_key',
         ['test_field_string', 'id'],
         $add_unique_key_table_5_with_unique_test_field_string_and_id_key,
       ],
       [
-        $this->test_table4,
+        $this->testTable4,
         [],
-        $this->test_table4['name'],
+        $this->testTable4['name'],
         'unique_id_and_test_field_key',
         ['id', 'test_field'],
         $add_unique_key_table_4_with_unique_id_and_test_field_key,
       ],
       [
-        $this->test_table4,
+        $this->testTable4,
         [],
-        $this->test_table4['name'],
+        $this->testTable4['name'],
         'unique_test_field_and_id_key',
         ['test_field', 'id'],
         $add_unique_key_table_4_with_unique_test_field_and_id_key,
       ],
       [
-        $this->test_table4,
-        [$this->test_table4['name'] => [$this->test_table5]],
-        $this->test_table5['name'],
+        $this->testTable4,
+        [$this->testTable4['name'] => [$this->testTable5]],
+        $this->testTable5['name'],
         'unique_id_key',
         ['id'],
         $add_unique_key_base_4_with_embedded_5_and_field_id,
       ],
       [
-        $this->test_table4,
-        [$this->test_table4['name'] => [$this->test_table5]],
-        $this->test_table5['name'],
+        $this->testTable4,
+        [$this->testTable4['name'] => [$this->testTable5]],
+        $this->testTable5['name'],
         'unique_id_and_test_field_string_key',
         ['id', 'test_field_string'],
         $add_unique_key_base_4_with_embedded_5_and_field_id_and_test_field_string,
       ],
       [
-        $this->test_table4,
-        [$this->test_table4['name'] => [$this->test_table5]],
-        $this->test_table5['name'],
+        $this->testTable4,
+        [$this->testTable4['name'] => [$this->testTable5]],
+        $this->testTable5['name'],
         'unique_test_field_string_and_id_key',
         ['test_field_string', 'id'],
         $add_unique_key_base_4_with_embedded_5_and_field_test_field_string_and_id,
       ],
       [
-        $this->test_table6,
-        [$this->test_table6['name'] => [$this->test_table4]],
-        $this->test_table4['name'],
+        $this->testTable6,
+        [$this->testTable6['name'] => [$this->testTable4]],
+        $this->testTable4['name'],
         'unique_id_and_test_field_key',
         ['id', 'test_field'],
         $add_unique_key_base_6_with_embedded_4_and_field_id_and_test_field,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table1['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable1['name'],
         'unique_id_and_test_field_string_key',
         ['id', 'test_field_string'],
         $add_unique_key_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_1,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table2['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable2['name'],
         'unique_id_and_test_field_int_default_key',
         ['id', 'test_field_int_default'],
         $add_unique_key_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_2,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table3['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable3['name'],
         'unique_id_key',
         ['id'],
         $add_unique_key_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_3,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table5['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable5['name'],
         'unique_id_key',
         ['id'],
         $add_unique_key_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_5,
@@ -3528,12 +4235,12 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   public function testAddUniqueKeyForTableDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table5['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable5['name']), 'The table does not exist in the MongoDB database.');
 
     // If we try to add a unique key to a table that does not exist an exception
     // should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $schema->addUniqueKey($this->test_table5['name'], 'unique_id_key', ['id']);
+    $schema->addUniqueKey($this->testTable5['name'], 'unique_id_key', ['id']);
   }
 
   /**
@@ -3543,18 +4250,18 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   public function testAddUniqueKeyForUniqueKeyExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table4['name'], $this->test_table4['schema']);
+    $schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->constraintExists($this->test_table4['name'], 'test_field__key'), 'The table has the unique key.');
-    $this->assertTrue($schema->uniqueKeyExists($this->test_table4['name'], 'test_field'), 'The table has the unique key.');
+    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->constraintExists($this->testTable4['name'], 'test_field__key'), 'The table has the unique key.');
+    $this->assertTrue($schema->uniqueKeyExists($this->testTable4['name'], 'test_field'), 'The table has the unique key.');
 
     // If we try to add a unique key to a table that has a unique key an
     // exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->addUniqueKey($this->test_table4['name'], 'test_field', ['test_field']);
+    $schema->addUniqueKey($this->testTable4['name'], 'test_field', ['test_field']);
   }
 
   /**
@@ -3564,18 +4271,18 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   public function testAddUniqueKeyForPrimaryKeyExistsOnTheSameFields() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table4['name'], $this->test_table4['schema']);
+    $schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->constraintExists($this->test_table4['name'], '__pkey'), 'The table has a primary key.');
-    $this->assertTrue($schema->primaryKeyExists($this->test_table4['name']), 'The table has a primary key.');
+    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->constraintExists($this->testTable4['name'], '__pkey'), 'The table has a primary key.');
+    $this->assertTrue($schema->primaryKeyExists($this->testTable4['name']), 'The table has a primary key.');
 
     // If we try to add an unique key to a table that has a primary key on the
     // same fields an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->addUniqueKey($this->test_table4['name'], 'unique_id_key', ['id']);
+    $schema->addUniqueKey($this->testTable4['name'], 'unique_id_key', ['id']);
   }
 
   /**
@@ -3585,18 +4292,18 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   public function testAddUniqueKeyForUniqueKeyExistsOnTheSameFields() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table4['name'], $this->test_table4['schema']);
+    $schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->constraintExists($this->test_table4['name'], 'test_field__key'), 'The table has the unique key.');
-    $this->assertTrue($schema->uniqueKeyExists($this->test_table4['name'], 'test_field'), 'The table has the unique key.');
+    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->constraintExists($this->testTable4['name'], 'test_field__key'), 'The table has the unique key.');
+    $this->assertTrue($schema->uniqueKeyExists($this->testTable4['name'], 'test_field'), 'The table has the unique key.');
 
     // If we try to add an unique key to a table that has an unique index on the
     // same fields an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->addUniqueKey($this->test_table4['name'], 'unique_test_field_key', ['test_field']);
+    $schema->addUniqueKey($this->testTable4['name'], 'unique_test_field_key', ['test_field']);
   }
 
   /**
@@ -3605,18 +4312,18 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   public function testAddUniqueKeyForEmbeddedUniqueKeyExists() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table5['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable5['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The embedded table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table5['name'], $this->test_table5['schema']);
-    $schema->createEmbeddedTable($this->test_table5['name'], $this->test_table4['name'], $this->test_table4['schema']);
+    $schema->createTable($this->testTable5['name'], $this->testTable5['schema']);
+    $schema->createEmbeddedTable($this->testTable5['name'], $this->testTable4['name'], $this->testTable4['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table5['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable5['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The embedded table exists in the MongoDB database.');
 
     // If we try to add an unique key to a table that has an unique key an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->addUniqueKey($this->test_table4['name'], 'test_field', ['test_field']);
+    $schema->addUniqueKey($this->testTable4['name'], 'test_field', ['test_field']);
   }
 
   /**
@@ -3626,21 +4333,21 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   public function testAddUniqueKeyForEmbeddedPrimaryKeyExistsOnTheSameFields() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table5['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable5['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The embedded table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table5['name'], $this->test_table5['schema']);
-    $schema->createEmbeddedTable($this->test_table5['name'], $this->test_table4['name'], $this->test_table4['schema']);
+    $schema->createTable($this->testTable5['name'], $this->testTable5['schema']);
+    $schema->createEmbeddedTable($this->testTable5['name'], $this->testTable4['name'], $this->testTable4['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table5['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The embedded table exists in the MongoDB database.');
-    $this->assertTrue($schema->constraintExists($this->test_table5['name'], $this->test_table4['name'] . '.__pkey'), 'The embedded table has a primary key.');
-    $this->assertTrue($schema->primaryKeyExists($this->test_table4['name']), 'The table has a primary key.');
+    $this->assertTrue($schema->tableExists($this->testTable5['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($schema->constraintExists($this->testTable5['name'], $this->testTable4['name'] . '.__pkey'), 'The embedded table has a primary key.');
+    $this->assertTrue($schema->primaryKeyExists($this->testTable4['name']), 'The table has a primary key.');
 
     // If we try to add an unique key to an embedded table that has a primary
     // key on the same fields an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->addUniqueKey($this->test_table4['name'], 'unique_id_key', ['id']);
+    $schema->addUniqueKey($this->testTable4['name'], 'unique_id_key', ['id']);
   }
 
   /**
@@ -3650,21 +4357,21 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   public function testAddUniqueKeyForEmbeddedUniqueKeyExistsOnTheSameFields() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table5['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable5['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The embedded table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table5['name'], $this->test_table5['schema']);
-    $schema->createEmbeddedTable($this->test_table5['name'], $this->test_table4['name'], $this->test_table4['schema']);
+    $schema->createTable($this->testTable5['name'], $this->testTable5['schema']);
+    $schema->createEmbeddedTable($this->testTable5['name'], $this->testTable4['name'], $this->testTable4['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table5['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The embedded table exists in the MongoDB database.');
-    $this->assertTrue($schema->constraintExists($this->test_table5['name'], $this->test_table4['name'] . '.test_field__key'), 'The embedded table has the unique key.');
-    $this->assertTrue($schema->uniqueKeyExists($this->test_table4['name'], 'test_field'), 'The table has the unique key.');
+    $this->assertTrue($schema->tableExists($this->testTable5['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($schema->constraintExists($this->testTable5['name'], $this->testTable4['name'] . '.test_field__key'), 'The embedded table has the unique key.');
+    $this->assertTrue($schema->uniqueKeyExists($this->testTable4['name'], 'test_field'), 'The table has the unique key.');
 
     // If we try to add an unique key to an embedded table that has an unique
     // index on the same fields an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->addUniqueKey($this->test_table4['name'], 'unique_test_field_key', ['test_field']);
+    $schema->addUniqueKey($this->testTable4['name'], 'unique_test_field_key', ['test_field']);
   }
 
   /**
@@ -3707,18 +4414,22 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         ],
         'primary key' => ['id'],
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['test_field' => ['$type' => 'int']],
-        ['test_field' => ['$exists' => TRUE]],
-        ['test_field_string' => ['$type' => 'string']],
-        ['test_field_string' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['test_field_string_ascii' => ['$type' => 'string']],
-          ['test_field_string_ascii' => ['$exists' => FALSE]]
-        ]]
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['test_field' => ['$type' => 'int']],
+          ['test_field' => ['$exists' => TRUE]],
+          ['test_field_string' => ['$type' => 'string']],
+          ['test_field_string' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              ['test_field_string_ascii' => ['$type' => 'string']],
+              ['test_field_string_ascii' => ['$exists' => FALSE]],
+            ],
+          ],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -3773,44 +4484,58 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         'unique keys' => ['test_fields_null' => ['test_field_int_null', 'test_field_float_null', 'test_field_numeric_null']],
         'indexes' => [
           'test_fields_default' => ['test_field_int_default', 'test_field_float_default', 'test_field_numeric_default'],
-          'test_field_int_null' => ['test_field_int_null']
+          'test_field_int_null' => ['test_field_int_null'],
         ],
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['id' => ['$gte' => 0]],
-        ['$or' => [
-          ['test_field_int_null' => ['$type' => 'int']],
-          ['test_field_int_null' => ['$exists' => FALSE]]
-        ]],
-        ['test_field_int_not_null' => ['$type' => 'int']],
-        ['test_field_int_not_null' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['test_field_int_default' => ['$type' => 'int']],
-          ['test_field_int_default' => ['$exists' => FALSE]]
-        ]],
-        ['$or' => [
-          ['test_field_float_null' => ['$type' => 'double']],
-          ['test_field_float_null' => ['$exists' => FALSE]]
-        ]],
-        ['test_field_float_not_null' => ['$type' => 'double']],
-        ['test_field_float_not_null' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['test_field_float_default' => ['$type' => 'double']],
-          ['test_field_float_default' => ['$exists' => FALSE]]
-        ]],
-        ['$or' => [
-          ['test_field_numeric_null' => ['$type' => 'decimal']],
-          ['test_field_numeric_null' => ['$exists' => FALSE]]
-        ]],
-        ['test_field_numeric_not_null' => ['$type' => 'decimal']],
-        ['test_field_numeric_not_null' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['test_field_numeric_default' => ['$type' => 'decimal']],
-          ['test_field_numeric_default' => ['$exists' => FALSE]]
-        ]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['id' => ['$gte' => 0]],
+          [
+            '$or' => [
+              ['test_field_int_null' => ['$type' => 'int']],
+              ['test_field_int_null' => ['$exists' => FALSE]],
+            ],
+          ],
+          ['test_field_int_not_null' => ['$type' => 'int']],
+          ['test_field_int_not_null' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              ['test_field_int_default' => ['$type' => 'int']],
+              ['test_field_int_default' => ['$exists' => FALSE]],
+            ],
+          ],
+          [
+            '$or' => [
+              ['test_field_float_null' => ['$type' => 'double']],
+              ['test_field_float_null' => ['$exists' => FALSE]],
+            ],
+          ],
+          ['test_field_float_not_null' => ['$type' => 'double']],
+          ['test_field_float_not_null' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              ['test_field_float_default' => ['$type' => 'double']],
+              ['test_field_float_default' => ['$exists' => FALSE]],
+            ],
+          ],
+          [
+            '$or' => [
+              ['test_field_numeric_null' => ['$type' => 'decimal']],
+              ['test_field_numeric_null' => ['$exists' => FALSE]],
+            ],
+          ],
+          ['test_field_numeric_not_null' => ['$type' => 'decimal']],
+          ['test_field_numeric_not_null' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              ['test_field_numeric_default' => ['$type' => 'decimal']],
+              ['test_field_numeric_default' => ['$exists' => FALSE]],
+            ],
+          ],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -3868,44 +4593,58 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         'unique keys' => ['test_fields_not_null' => ['test_field_int_not_null', 'test_field_float_not_null', 'test_field_numeric_not_null']],
         'indexes' => [
           'test_fields_default' => ['test_field_int_default', 'test_field_float_default', 'test_field_numeric_default'],
-          'test_field_int_null' => ['test_field_int_null']
+          'test_field_int_null' => ['test_field_int_null'],
         ],
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['id' => ['$gte' => 0]],
-        ['$or' => [
-          ['test_field_int_null' => ['$type' => 'int']],
-          ['test_field_int_null' => ['$exists' => FALSE]]
-        ]],
-        ['test_field_int_not_null' => ['$type' => 'int']],
-        ['test_field_int_not_null' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['test_field_int_default' => ['$type' => 'int']],
-          ['test_field_int_default' => ['$exists' => FALSE]]
-        ]],
-        ['$or' => [
-          ['test_field_float_null' => ['$type' => 'double']],
-          ['test_field_float_null' => ['$exists' => FALSE]]
-        ]],
-        ['test_field_float_not_null' => ['$type' => 'double']],
-        ['test_field_float_not_null' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['test_field_float_default' => ['$type' => 'double']],
-          ['test_field_float_default' => ['$exists' => FALSE]]
-        ]],
-        ['$or' => [
-          ['test_field_numeric_null' => ['$type' => 'decimal']],
-          ['test_field_numeric_null' => ['$exists' => FALSE]]
-        ]],
-        ['test_field_numeric_not_null' => ['$type' => 'decimal']],
-        ['test_field_numeric_not_null' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['test_field_numeric_default' => ['$type' => 'decimal']],
-          ['test_field_numeric_default' => ['$exists' => FALSE]]
-        ]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['id' => ['$gte' => 0]],
+          [
+            '$or' => [
+              ['test_field_int_null' => ['$type' => 'int']],
+              ['test_field_int_null' => ['$exists' => FALSE]],
+            ],
+          ],
+          ['test_field_int_not_null' => ['$type' => 'int']],
+          ['test_field_int_not_null' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              ['test_field_int_default' => ['$type' => 'int']],
+              ['test_field_int_default' => ['$exists' => FALSE]],
+            ],
+          ],
+          [
+            '$or' => [
+              ['test_field_float_null' => ['$type' => 'double']],
+              ['test_field_float_null' => ['$exists' => FALSE]],
+            ],
+          ],
+          ['test_field_float_not_null' => ['$type' => 'double']],
+          ['test_field_float_not_null' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              ['test_field_float_default' => ['$type' => 'double']],
+              ['test_field_float_default' => ['$exists' => FALSE]],
+            ],
+          ],
+          [
+            '$or' => [
+              ['test_field_numeric_null' => ['$type' => 'decimal']],
+              ['test_field_numeric_null' => ['$exists' => FALSE]],
+            ],
+          ],
+          ['test_field_numeric_not_null' => ['$type' => 'decimal']],
+          ['test_field_numeric_not_null' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              ['test_field_numeric_default' => ['$type' => 'decimal']],
+              ['test_field_numeric_default' => ['$exists' => FALSE]],
+            ],
+          ],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -3930,12 +4669,14 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         ],
         'primary key' => ['id'],
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['test_field' => ['$type' => 'int']],
-        ['test_field' => ['$exists' => TRUE]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          ['test_field' => ['$type' => 'int']],
+          ['test_field' => ['$exists' => TRUE]],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -3972,34 +4713,46 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         'primary key' => ['id'],
         'embedded_to_table' => 'test_table6',
       ],
-      'validation' => ['$and' => [
-        ['id' => ['$type' => 'int']],
-        ['id' => ['$exists' => TRUE]],
-        ['$or' => [
-          ['test_field_string' => ['$type' => 'string']],
-          ['test_field_string' => ['$exists' => FALSE]]
-        ]],
-        ['$or' => [
-          ['$and' => [
-            ['test_table1.id' => ['$exists' => FALSE]],
-            ['test_table1.test_field' => ['$exists' => FALSE]],
-            ['test_table1.test_field_string' => ['$exists' => FALSE]],
-            ['test_table1.test_field_string_ascii' => ['$exists' => FALSE]],
-          ]],
-          ['$and' => [
-            ['test_table1.id' => ['$type' => 'int']],
-            ['test_table1.id' => ['$exists' => TRUE]],
-            ['test_table1.test_field' => ['$type' => 'int']],
-            ['test_table1.test_field' => ['$exists' => TRUE]],
-            ['test_table1.test_field_string' => ['$type' => 'string']],
-            ['test_table1.test_field_string' => ['$exists' => TRUE]],
-            ['$or' => [
-              ['test_table1.test_field_string_ascii' => ['$type' => 'string']],
-              ['test_table1.test_field_string_ascii' => ['$exists' => FALSE]]
-            ]],
-          ]],
-        ]],
-      ]],
+      'validation' => [
+        '$and' => [
+          ['id' => ['$type' => 'int']],
+          ['id' => ['$exists' => TRUE]],
+          [
+            '$or' => [
+              ['test_field_string' => ['$type' => 'string']],
+              ['test_field_string' => ['$exists' => FALSE]],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$and' => [
+                  ['test_table1.id' => ['$exists' => FALSE]],
+                  ['test_table1.test_field' => ['$exists' => FALSE]],
+                  ['test_table1.test_field_string' => ['$exists' => FALSE]],
+                  ['test_table1.test_field_string_ascii' => ['$exists' => FALSE]],
+                ],
+              ],
+              [
+                '$and' => [
+                  ['test_table1.id' => ['$type' => 'int']],
+                  ['test_table1.id' => ['$exists' => TRUE]],
+                  ['test_table1.test_field' => ['$type' => 'int']],
+                  ['test_table1.test_field' => ['$exists' => TRUE]],
+                  ['test_table1.test_field_string' => ['$type' => 'string']],
+                  ['test_table1.test_field_string' => ['$exists' => TRUE]],
+                  [
+                    '$or' => [
+                      ['test_table1.test_field_string_ascii' => ['$type' => 'string']],
+                      ['test_table1.test_field_string_ascii' => ['$exists' => FALSE]],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
       'indexes' => [
         ['name' => '_id_', 'unique' => FALSE, 'key' => ['_id' => 1]],
         ['name' => '__pkey', 'unique' => TRUE, 'key' => ['id' => 1]],
@@ -5068,79 +5821,79 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     return [
       [
-        $this->test_table1,
+        $this->testTable1,
         [],
-        $this->test_table1['name'],
+        $this->testTable1['name'],
         'test_field',
         $drop_unique_key_test_field_table_1_data,
       ],
       [
-        $this->test_table2,
+        $this->testTable2,
         [],
-        $this->test_table2['name'],
+        $this->testTable2['name'],
         'test_fields_not_null',
         $drop_unique_key_test_fields_not_null_table_2_data,
       ],
       [
-        $this->test_table2,
+        $this->testTable2,
         [],
-        $this->test_table2['name'],
+        $this->testTable2['name'],
         'test_fields_null',
         $drop_unique_key_test_fields_null_table_2_data,
       ],
       [
-        $this->test_table4,
+        $this->testTable4,
         [],
-        $this->test_table4['name'],
+        $this->testTable4['name'],
         'test_field',
         $drop_unique_key_test_field_table_4_data,
       ],
       [
-        $this->test_table6,
-        [$this->test_table6['name'] => [$this->test_table1]],
-        $this->test_table1['name'],
+        $this->testTable6,
+        [$this->testTable6['name'] => [$this->testTable1]],
+        $this->testTable1['name'],
         'test_field',
         $drop_unique_key_base_6_with_embedded_1_unique_key_test_field,
       ],
       [
-        $this->test_table6,
-        [$this->test_table6['name'] => [$this->test_table2]],
-        $this->test_table2['name'],
+        $this->testTable6,
+        [$this->testTable6['name'] => [$this->testTable2]],
+        $this->testTable2['name'],
         'test_fields_not_null',
         $drop_unique_key_base_6_with_embedded_2_unique_key_test_fields_not_null,
       ],
       [
-        $this->test_table6,
-        [$this->test_table6['name'] => [$this->test_table2]],
-        $this->test_table2['name'],
+        $this->testTable6,
+        [$this->testTable6['name'] => [$this->testTable2]],
+        $this->testTable2['name'],
         'test_fields_null',
         $drop_unique_key_base_6_with_embedded_2_unique_key_test_fields_null,
       ],
       [
-        $this->test_table6,
-        [$this->test_table6['name'] => [$this->test_table4]],
-        $this->test_table4['name'],
+        $this->testTable6,
+        [$this->testTable6['name'] => [$this->testTable4]],
+        $this->testTable4['name'],
         'test_field',
         $drop_unique_key_base_6_with_embedded_4_unique_key_test_field,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table1['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable1['name'],
         'test_field',
         $drop_unique_key_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_1,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table2['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable2['name'],
         'test_fields_null',
         $drop_unique_key_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_2,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table4['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable4['name'],
         'test_field',
         $drop_unique_key_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_4,
       ],
@@ -5253,12 +6006,12 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   public function testDropUniqueKeyForTableDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table2['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable2['name']), 'The table does not exist in the MongoDB database.');
 
     // If we try to drop a unique key to a table that does not exist an
     // exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $schema->dropUniqueKey($this->test_table2['name'], 'test_fields_not_null');
+    $schema->dropUniqueKey($this->testTable2['name'], 'test_fields_not_null');
   }
 
   /**
@@ -5268,17 +6021,17 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   public function testDropUniqueKeyForUniqueKeyDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table5['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable5['name']), 'The table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table5['name'], $this->test_table5['schema']);
+    $schema->createTable($this->testTable5['name'], $this->testTable5['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table5['name']), 'The table exists in the MongoDB database.');
-    $this->assertFalse($schema->constraintExists($this->test_table5['name'], 'does_not_exist__key'), 'The table does not have the unique key.');
-    $this->assertFalse($schema->uniqueKeyExists($this->test_table5['name'], 'does_not_exist'), 'The table does not have the unique key.');
+    $this->assertTrue($schema->tableExists($this->testTable5['name']), 'The table exists in the MongoDB database.');
+    $this->assertFalse($schema->constraintExists($this->testTable5['name'], 'does_not_exist__key'), 'The table does not have the unique key.');
+    $this->assertFalse($schema->uniqueKeyExists($this->testTable5['name'], 'does_not_exist'), 'The table does not have the unique key.');
 
     // If we try to drop a non existent unique key on a table an exception
     // should be thrown.
-    $this->assertFalse($schema->dropUniqueKey($this->test_table5['name'], 'does_not_exist__key'), 'The table does not have the unique key.');
+    $this->assertFalse($schema->dropUniqueKey($this->testTable5['name'], 'does_not_exist__key'), 'The table does not have the unique key.');
   }
 
   /**
@@ -5288,20 +6041,20 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   public function testDropUniqueKeyForEmbeddedUniqueKeyDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table6['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable6['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The embedded table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table6['name'], $this->test_table6['schema']);
-    $schema->createEmbeddedTable($this->test_table6['name'], $this->test_table4['name'], $this->test_table4['schema']);
+    $schema->createTable($this->testTable6['name'], $this->testTable6['schema']);
+    $schema->createEmbeddedTable($this->testTable6['name'], $this->testTable4['name'], $this->testTable4['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table6['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The embedded table exists in the MongoDB database.');
-    $this->assertFalse($schema->constraintExists($this->test_table6['name'], $this->test_table4['name'] . '.unique_does_not_exist_key__key'), 'The embedded table does not have the unique key.');
-    $this->assertFalse($schema->uniqueKeyExists($this->test_table4['name'], 'unique_does_not_exist_key'), 'The table does not have the unique key.');
+    $this->assertTrue($schema->tableExists($this->testTable6['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertFalse($schema->constraintExists($this->testTable6['name'], $this->testTable4['name'] . '.unique_does_not_exist_key__key'), 'The embedded table does not have the unique key.');
+    $this->assertFalse($schema->uniqueKeyExists($this->testTable4['name'], 'unique_does_not_exist_key'), 'The table does not have the unique key.');
 
     // If we try to drop a non existent unique key from a table the method
     // should return false.
-    $this->assertFalse($schema->dropUniqueKey($this->test_table4['name'], 'unique_does_not_exist_key'), 'The embedded table does not have the unique key.');
+    $this->assertFalse($schema->dropUniqueKey($this->testTable4['name'], 'unique_does_not_exist_key'), 'The embedded table does not have the unique key.');
   }
 
   /**
@@ -5940,7 +6693,6 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         'description' => 'Schema table for testing integer with null, not null and default values.',
         'fields' => [
           'id' => [
-            // Test that serial becomes: int, not null and >= zero.
             'type' => 'serial',
           ],
           'test_field_int_null' => [
@@ -6660,105 +7412,105 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     return [
       [
-        $this->test_table5,
+        $this->testTable5,
         [],
-        $this->test_table5['name'],
+        $this->testTable5['name'],
         'index_id',
         ['id'],
         $add_index_table_5_with_index_id,
       ],
       [
-        $this->test_table5,
+        $this->testTable5,
         [],
-        $this->test_table5['name'],
+        $this->testTable5['name'],
         'index_id_and_test_field_string',
         ['id', 'test_field_string'],
         $add_index_table_5_with_index_id_and_test_field_string,
       ],
       [
-        $this->test_table5,
+        $this->testTable5,
         [],
-        $this->test_table5['name'],
+        $this->testTable5['name'],
         'index_test_field_string_and_id',
         ['test_field_string', 'id'],
         $add_index_table_5_with_index_test_field_string_and_id,
       ],
       [
-        $this->test_table4,
+        $this->testTable4,
         [],
-        $this->test_table4['name'],
+        $this->testTable4['name'],
         'index_id_and_test_field',
         ['id', 'test_field'],
         $add_index_table_4_with_index_id_and_test_field,
       ],
       [
-        $this->test_table4,
+        $this->testTable4,
         [],
-        $this->test_table4['name'],
+        $this->testTable4['name'],
         'index_test_field_and_id',
         ['test_field', 'id'],
         $add_index_table_4_with_index_test_field_and_id,
       ],
       [
-        $this->test_table4,
-        [$this->test_table4['name'] => [$this->test_table5]],
-        $this->test_table5['name'],
+        $this->testTable4,
+        [$this->testTable4['name'] => [$this->testTable5]],
+        $this->testTable5['name'],
         'index_id',
         ['id'],
         $add_index_base_4_with_embedded_5_and_field_id,
       ],
       [
-        $this->test_table4,
-        [$this->test_table4['name'] => [$this->test_table5]],
-        $this->test_table5['name'],
+        $this->testTable4,
+        [$this->testTable4['name'] => [$this->testTable5]],
+        $this->testTable5['name'],
         'index_id_and_test_field_string',
         ['id', 'test_field_string'],
         $add_index_base_4_with_embedded_5_and_field_id_and_test_field_string,
       ],
       [
-        $this->test_table4,
-        [$this->test_table4['name'] => [$this->test_table5]],
-        $this->test_table5['name'],
+        $this->testTable4,
+        [$this->testTable4['name'] => [$this->testTable5]],
+        $this->testTable5['name'],
         'index_test_field_string_and_id',
         ['test_field_string', 'id'],
         $add_index_base_4_with_embedded_5_and_field_test_field_string_and_id,
       ],
       [
-        $this->test_table6,
-        [$this->test_table6['name'] => [$this->test_table4]],
-        $this->test_table4['name'],
+        $this->testTable6,
+        [$this->testTable6['name'] => [$this->testTable4]],
+        $this->testTable4['name'],
         'index_id_and_test_field',
         ['id', 'test_field'],
         $add_index_base_6_with_embedded_4_and_field_id_and_test_field,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table1['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable1['name'],
         'index_id_and_test_field_string',
         ['id', 'test_field_string'],
         $add_index_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_1,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table2['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable2['name'],
         'index_id_and_test_field_int_default',
         ['id', 'test_field_int_default'],
         $add_index_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_2,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table4['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable4['name'],
         'index_id_and_test_field',
         ['id', 'test_field'],
         $add_index_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_4,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table6['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable6['name'],
         'index_id_and_test_field_string',
         ['id', 'test_field_string'],
         $add_index_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_6,
@@ -6867,12 +7619,12 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   public function testAddIndexForTableDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table5['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable5['name']), 'The table does not exist in the MongoDB database.');
 
     // If we try to add an index to a table that does not exist an exception
     // should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $schema->addIndex($this->test_table5['name'], 'index_id', ['id'], []);
+    $schema->addIndex($this->testTable5['name'], 'index_id', ['id'], []);
   }
 
   /**
@@ -6882,18 +7634,18 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   public function testAddIndexForIndexExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table6['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable6['name']), 'The table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table6['name'], $this->test_table6['schema']);
+    $schema->createTable($this->testTable6['name'], $this->testTable6['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table6['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->constraintExists($this->test_table6['name'], 'test_field_string__idx'), 'The table has the index.');
-    $this->assertTrue($schema->indexExists($this->test_table6['name'], 'test_field_string'), 'The table has the index.');
+    $this->assertTrue($schema->tableExists($this->testTable6['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->constraintExists($this->testTable6['name'], 'test_field_string__idx'), 'The table has the index.');
+    $this->assertTrue($schema->indexExists($this->testTable6['name'], 'test_field_string'), 'The table has the index.');
 
     // If we try to add an index to a table that has an index an exception
     // should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->addIndex($this->test_table6['name'], 'test_field_string', ['test_field_string'], []);
+    $schema->addIndex($this->testTable6['name'], 'test_field_string', ['test_field_string'], []);
   }
 
   /**
@@ -6903,18 +7655,18 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   public function testAddIndexForIndexExistsOnTheSameFields() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table6['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable6['name']), 'The table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table6['name'], $this->test_table6['schema']);
+    $schema->createTable($this->testTable6['name'], $this->testTable6['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table6['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->constraintExists($this->test_table6['name'], 'test_field_string__idx'), 'The table has the index.');
-    $this->assertTrue($schema->indexExists($this->test_table6['name'], 'test_field_string'), 'The table has the index.');
+    $this->assertTrue($schema->tableExists($this->testTable6['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->constraintExists($this->testTable6['name'], 'test_field_string__idx'), 'The table has the index.');
+    $this->assertTrue($schema->indexExists($this->testTable6['name'], 'test_field_string'), 'The table has the index.');
 
     // If we try to add an index to a table that has an non-unique index on the
     // same fields an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->addIndex($this->test_table6['name'], 'index_test_field_string', ['test_field_string'], []);
+    $schema->addIndex($this->testTable6['name'], 'index_test_field_string', ['test_field_string'], []);
   }
 
   /**
@@ -6923,16 +7675,16 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   public function testAddIndexForEmbeddedTableDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table4['name'], $this->test_table4['schema']);
+    $schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
 
     // If we try to rename an embedded table on a non existent embedded table an
     // exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $schema->addIndex($this->test_table5['name'], 'index_id', ['id'], []);
+    $schema->addIndex($this->testTable5['name'], 'index_id', ['id'], []);
   }
 
   /**
@@ -6942,21 +7694,21 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   public function testAddIndexForEmbeddedIndexExists() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table5['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->test_table6['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable5['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable6['name']), 'The embedded table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table5['name'], $this->test_table5['schema']);
-    $schema->createEmbeddedTable($this->test_table5['name'], $this->test_table6['name'], $this->test_table6['schema']);
+    $schema->createTable($this->testTable5['name'], $this->testTable5['schema']);
+    $schema->createEmbeddedTable($this->testTable5['name'], $this->testTable6['name'], $this->testTable6['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table5['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->test_table6['name']), 'The embedded table exists in the MongoDB database.');
-    $this->assertTrue($schema->constraintExists($this->test_table5['name'], $this->test_table6['name'] . '.test_field_string__idx'), 'The embedded table has the index.');
-    $this->assertTrue($schema->indexExists($this->test_table6['name'], 'test_field_string'), 'The embedded table has the index.');
+    $this->assertTrue($schema->tableExists($this->testTable5['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable6['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($schema->constraintExists($this->testTable5['name'], $this->testTable6['name'] . '.test_field_string__idx'), 'The embedded table has the index.');
+    $this->assertTrue($schema->indexExists($this->testTable6['name'], 'test_field_string'), 'The embedded table has the index.');
 
     // If we try to add an index to a table that has an index an exception
     // should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->addIndex($this->test_table6['name'], 'test_field_string', ['test_field_string'], []);
+    $schema->addIndex($this->testTable6['name'], 'test_field_string', ['test_field_string'], []);
   }
 
   /**
@@ -6966,21 +7718,21 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   public function testAddIndexForEmbeddedIndexExistsOnTheSameFields() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table5['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->test_table6['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable5['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable6['name']), 'The embedded table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table5['name'], $this->test_table5['schema']);
-    $schema->createEmbeddedTable($this->test_table5['name'], $this->test_table6['name'], $this->test_table6['schema']);
+    $schema->createTable($this->testTable5['name'], $this->testTable5['schema']);
+    $schema->createEmbeddedTable($this->testTable5['name'], $this->testTable6['name'], $this->testTable6['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table5['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->test_table6['name']), 'The embedded table exists in the MongoDB database.');
-    $this->assertTrue($schema->constraintExists($this->test_table5['name'], $this->test_table6['name'] . '.test_field_string__idx'), 'The embedded table has the index.');
-    $this->assertTrue($schema->indexExists($this->test_table6['name'], 'test_field_string'), 'The embedded table has the index.');
+    $this->assertTrue($schema->tableExists($this->testTable5['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable6['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($schema->constraintExists($this->testTable5['name'], $this->testTable6['name'] . '.test_field_string__idx'), 'The embedded table has the index.');
+    $this->assertTrue($schema->indexExists($this->testTable6['name'], 'test_field_string'), 'The embedded table has the index.');
 
     // If we try to add an index to an embedded table that has an index on the
     // same fields an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->addIndex($this->test_table6['name'], 'index_test_field_string', ['test_field_string'], []);
+    $schema->addIndex($this->testTable6['name'], 'index_test_field_string', ['test_field_string'], []);
   }
 
   /**
@@ -7586,7 +8338,6 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         'description' => 'Schema table for testing integer with null, not null and default values.',
         'fields' => [
           'id' => [
-            // Test that serial becomes: int, not null and >= zero.
             'type' => 'serial',
           ],
           'test_field_int_null' => [
@@ -8067,58 +8818,58 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     return [
       [
-        $this->test_table2,
+        $this->testTable2,
         [],
-        $this->test_table2['name'],
+        $this->testTable2['name'],
         'test_fields_default',
         $drop_index_test_fields_default_table_2_data,
       ],
       [
-        $this->test_table2,
+        $this->testTable2,
         [],
-        $this->test_table2['name'],
+        $this->testTable2['name'],
         'test_field_int_null',
         $drop_index_test_field_int_null_table_2_data,
       ],
       [
-        $this->test_table6,
+        $this->testTable6,
         [],
-        $this->test_table6['name'],
+        $this->testTable6['name'],
         'test_field_string',
         $drop_index_test_field_string_table_6_data,
       ],
       [
-        $this->test_table6,
-        [$this->test_table6['name'] => [$this->test_table2]],
-        $this->test_table2['name'],
+        $this->testTable6,
+        [$this->testTable6['name'] => [$this->testTable2]],
+        $this->testTable2['name'],
         'test_fields_default',
         $drop_index_base_6_with_embedded_2_index_test_fields_default,
       ],
       [
-        $this->test_table6,
-        [$this->test_table6['name'] => [$this->test_table2]],
-        $this->test_table2['name'],
+        $this->testTable6,
+        [$this->testTable6['name'] => [$this->testTable2]],
+        $this->testTable2['name'],
         'test_field_int_null',
         $drop_index_base_6_with_embedded_2_index_test_field_int_null,
       ],
       [
-        $this->test_table4,
-        [$this->test_table4['name'] => [$this->test_table6]],
-        $this->test_table6['name'],
+        $this->testTable4,
+        [$this->testTable4['name'] => [$this->testTable6]],
+        $this->testTable6['name'],
         'test_field_string',
         $drop_index_base_4_with_embedded_6_index_test_field_string,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table2['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable2['name'],
         'test_fields_default',
         $drop_index_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_2,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table6['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable6['name'],
         'test_field_string',
         $drop_index_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_6,
       ],
@@ -8232,17 +8983,17 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   public function testDropIndexForIndexDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table5['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable5['name']), 'The table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table5['name'], $this->test_table5['schema']);
+    $schema->createTable($this->testTable5['name'], $this->testTable5['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table5['name']), 'The table exists in the MongoDB database.');
-    $this->assertFalse($schema->constraintExists($this->test_table5['name'], 'does_not_exist__idx'), 'The table does not have the index.');
-    $this->assertFalse($schema->indexExists($this->test_table5['name'], 'does_not_exist'), 'The table does not have the index.');
+    $this->assertTrue($schema->tableExists($this->testTable5['name']), 'The table exists in the MongoDB database.');
+    $this->assertFalse($schema->constraintExists($this->testTable5['name'], 'does_not_exist__idx'), 'The table does not have the index.');
+    $this->assertFalse($schema->indexExists($this->testTable5['name'], 'does_not_exist'), 'The table does not have the index.');
 
     // If we try to drop a non existent index on a table an exception should be
     // thrown.
-    $this->assertFalse($schema->dropIndex($this->test_table5['name'], 'does_not_exist'), 'The table does not have the index.');
+    $this->assertFalse($schema->dropIndex($this->testTable5['name'], 'does_not_exist'), 'The table does not have the index.');
   }
 
   /**
@@ -8252,20 +9003,20 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   public function testDropIndexForEmbeddedIndexDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table6['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable6['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The embedded table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table6['name'], $this->test_table6['schema']);
-    $schema->createEmbeddedTable($this->test_table6['name'], $this->test_table4['name'], $this->test_table4['schema']);
+    $schema->createTable($this->testTable6['name'], $this->testTable6['schema']);
+    $schema->createEmbeddedTable($this->testTable6['name'], $this->testTable4['name'], $this->testTable4['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table6['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The embedded table exists in the MongoDB database.');
-    $this->assertFalse($schema->constraintExists($this->test_table6['name'], $this->test_table4['name'] . '.index_does_not_exist__idx'), 'The embedded table does not have the index.');
-    $this->assertFalse($schema->indexExists($this->test_table4['name'], 'index_does_not_exist'), 'The embedded table does not have the index.');
+    $this->assertTrue($schema->tableExists($this->testTable6['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertFalse($schema->constraintExists($this->testTable6['name'], $this->testTable4['name'] . '.index_does_not_exist__idx'), 'The embedded table does not have the index.');
+    $this->assertFalse($schema->indexExists($this->testTable4['name'], 'index_does_not_exist'), 'The embedded table does not have the index.');
 
     // If we try to drop a non existent index from a table the method should
     // return false.
-    $this->assertFalse($schema->dropIndex($this->test_table4['name'], 'index_does_not_exist'), 'The embedded table does not have the index.');
+    $this->assertFalse($schema->dropIndex($this->testTable4['name'], 'index_does_not_exist'), 'The embedded table does not have the index.');
   }
 
   /**
@@ -8378,12 +9129,12 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
     ];
 
     return [
-      [$this->test_table4, 'id', 0, $field_set_default_table_4_field_id_value_0_schema],
-      [$this->test_table4, 'id', 6, $field_set_default_table_4_field_id_value_6_schema],
-      [$this->test_table4, 'id', NULL, $field_set_default_table_4_field_id_value_null_schema],
-      [$this->test_table5, 'test_field_string', '', $field_set_default_table_5_field_test_field_string_value__schema],
-      [$this->test_table5, 'test_field_string', 'My new default value', $field_set_default_table_5_field_test_field_string_value_my_new_default_value_schema],
-      [$this->test_table5, 'test_field_string', NULL, $field_set_default_table_5_field_test_field_string_value_null_schema],
+      [$this->testTable4, 'id', 0, $field_set_default_table_4_field_id_value_0_schema],
+      [$this->testTable4, 'id', 6, $field_set_default_table_4_field_id_value_6_schema],
+      [$this->testTable4, 'id', NULL, $field_set_default_table_4_field_id_value_null_schema],
+      [$this->testTable5, 'test_field_string', '', $field_set_default_table_5_field_test_field_string_value__schema],
+      [$this->testTable5, 'test_field_string', 'My new default value', $field_set_default_table_5_field_test_field_string_value_my_new_default_value_schema],
+      [$this->testTable5, 'test_field_string', NULL, $field_set_default_table_5_field_test_field_string_value_null_schema],
     ];
   }
 
@@ -8412,12 +9163,12 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   public function testFieldSetDefaultForTableDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
 
     // If we try to set the default value for a field on a table that does not
     // exist an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $schema->fieldSetDefault($this->test_table4['name'], 'id', 6);
+    $schema->fieldSetDefault($this->testTable4['name'], 'id', 6);
   }
 
   /**
@@ -8426,16 +9177,16 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   public function testFieldSetDefaultForFieldDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table4['name'], $this->test_table4['schema']);
+    $schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
 
     // If we try to set the default value for a field on a table that does not
     // has such a field an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $schema->fieldSetDefault($this->test_table4['name'], 'does_not_exist_field', 6);
+    $schema->fieldSetDefault($this->testTable4['name'], 'does_not_exist_field', 6);
   }
 
   /**
@@ -8523,9 +9274,9 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
     ];
 
     return [
-      [$this->test_table1, 'id', $field_set_no_default_table_1_field_id_schema],
-      [$this->test_table1, 'test_field_string', $field_set_no_default_table_1_field_test_field_string_schema],
-      [$this->test_table5, 'test_field_string', $field_set_no_default_table_5_field_test_field_string_schema],
+      [$this->testTable1, 'id', $field_set_no_default_table_1_field_id_schema],
+      [$this->testTable1, 'test_field_string', $field_set_no_default_table_1_field_test_field_string_schema],
+      [$this->testTable5, 'test_field_string', $field_set_no_default_table_5_field_test_field_string_schema],
     ];
   }
 
@@ -8554,12 +9305,12 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   public function testFieldSetNoDefaultForTableDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table5['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable5['name']), 'The table does not exist in the MongoDB database.');
 
     // If we try to unset the default value for a field on a table that does not
     // exist an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $schema->fieldSetNoDefault($this->test_table5['name'], 'test_field_string');
+    $schema->fieldSetNoDefault($this->testTable5['name'], 'test_field_string');
   }
 
   /**
@@ -8568,16 +9319,16 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   public function testFieldSetNoDefaultForFieldDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table5['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable5['name']), 'The table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table5['name'], $this->test_table5['schema']);
+    $schema->createTable($this->testTable5['name'], $this->testTable5['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table5['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable5['name']), 'The table exists in the MongoDB database.');
 
     // If we try to un set the default value for a field on a table that does
     // not has such a field an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $schema->fieldSetNoDefault($this->test_table5['name'], 'does_not_exist_field');
+    $schema->fieldSetNoDefault($this->testTable5['name'], 'does_not_exist_field');
   }
 
   /**
@@ -8594,13 +9345,13 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   public function providerMongodbTableServiceFullPathAndBaseTable() {
     return [
       [
-        $this->test_table1,
+        $this->testTable1,
         [
-          $this->test_table1['name'] => [$this->test_table2],
-          $this->test_table2['name'] => [$this->test_table3],
-          $this->test_table3['name'] => [$this->test_table4],
-          $this->test_table4['name'] => [$this->test_table5],
-          $this->test_table5['name'] => [$this->test_table6],
+          $this->testTable1['name'] => [$this->testTable2],
+          $this->testTable2['name'] => [$this->testTable3],
+          $this->testTable3['name'] => [$this->testTable4],
+          $this->testTable4['name'] => [$this->testTable5],
+          $this->testTable5['name'] => [$this->testTable6],
         ],
         [
           'test_table1' => '',
@@ -8612,11 +9363,11 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         ],
       ],
       [
-        $this->test_table2,
+        $this->testTable2,
         [
-          $this->test_table2['name'] => [$this->test_table1],
-          $this->test_table1['name'] => [$this->test_table3],
-          $this->test_table3['name'] => [$this->test_table4, $this->test_table5, $this->test_table6],
+          $this->testTable2['name'] => [$this->testTable1],
+          $this->testTable1['name'] => [$this->testTable3],
+          $this->testTable3['name'] => [$this->testTable4, $this->testTable5, $this->testTable6],
         ],
         [
           'test_table2' => '',
@@ -8631,8 +9382,8 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
   }
 
   /**
-   * This test the MongoDB table information service methods:
-   * getTableEmbeddedFullPath() and getTableBaseTable().
+   * @covers Drupal\mongodb\Driver\Database\mongodb\TableInformation::getTableEmbeddedFullPath
+   * @covers Drupal\mongodb\Driver\Database\mongodb\TableInformation::getTableBaseTable
    *
    * @dataProvider providerMongodbTableServiceFullPathAndBaseTable
    */

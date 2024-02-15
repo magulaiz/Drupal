@@ -864,62 +864,62 @@ class SchemaTableTest extends SchemaTestBase {
 
     return [
       [
-        $this->test_table1,
+        $this->testTable1,
         [],
-        $this->test_table1['validation'],
-        $this->test_table1['indexes'],
+        $this->testTable1['validation'],
+        $this->testTable1['indexes'],
       ],
       [
-        $this->test_table2,
+        $this->testTable2,
         [],
-        $this->test_table2['validation'],
-        $this->test_table2['indexes'],
+        $this->testTable2['validation'],
+        $this->testTable2['indexes'],
       ],
       [
-        $this->test_table3,
+        $this->testTable3,
         [],
-        $this->test_table3['validation'],
-        $this->test_table3['indexes'],
+        $this->testTable3['validation'],
+        $this->testTable3['indexes'],
       ],
       [
-        $this->test_table4,
+        $this->testTable4,
         [],
-        $this->test_table4['validation'],
-        $this->test_table4['indexes'],
+        $this->testTable4['validation'],
+        $this->testTable4['indexes'],
       ],
       [
-        $this->test_table5,
+        $this->testTable5,
         [],
-        $this->test_table5['validation'],
-        $this->test_table5['indexes'],
+        $this->testTable5['validation'],
+        $this->testTable5['indexes'],
       ],
       [
-        $this->test_table6,
+        $this->testTable6,
         [],
-        $this->test_table6['validation'],
-        $this->test_table6['indexes'],
+        $this->testTable6['validation'],
+        $this->testTable6['indexes'],
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2]],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2]],
         $this->embeddedValidationBase1Embedded2,
         $this->embeddedIndexesBase1Embedded2,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table3]],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable3]],
         $this->embeddedValidationBase1Embedded3,
         $this->embeddedIndexesBase1Embedded3,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2, $this->test_table3]],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2, $this->testTable3]],
         $this->embeddedValidationBase1Embedded2And3,
         $this->embeddedIndexesBase1Embedded2And3,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
         $validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3,
         $indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3,
       ],
@@ -977,15 +977,15 @@ class SchemaTableTest extends SchemaTestBase {
   public function testCreateTableForTableExists() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table1['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table1['name'], $this->test_table1['schema']);
+    $schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table1['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
 
     // If we try to create a table that exists an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->createTable($this->test_table1['name'], $this->test_table1['schema']);
+    $schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
   }
 
   /**
@@ -994,12 +994,12 @@ class SchemaTableTest extends SchemaTestBase {
   public function testCreateEmbeddedTableForBaseTableDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table1['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
 
     // If we try to create an embedded table on a base table that does not
     // exists, an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $schema->createEmbeddedTable($this->test_table1['name'], $this->test_table2['name'], $this->test_table2['schema']);
+    $schema->createEmbeddedTable($this->testTable1['name'], $this->testTable2['name'], $this->testTable2['schema']);
   }
 
   /**
@@ -1008,16 +1008,16 @@ class SchemaTableTest extends SchemaTestBase {
   public function testCreateEmbeddedTableForEmbeddedTableExists() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table1['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table1['name'], $this->test_table1['schema']);
-    $schema->createEmbeddedTable($this->test_table1['name'], $this->test_table2['name'], $this->test_table2['schema']);
+    $schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
+    $schema->createEmbeddedTable($this->testTable1['name'], $this->testTable2['name'], $this->testTable2['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table1['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
 
     // If we try to create an embedded table that exists an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->createEmbeddedTable($this->test_table1['name'], $this->test_table2['name'], $this->test_table2['schema']);
+    $schema->createEmbeddedTable($this->testTable1['name'], $this->testTable2['name'], $this->testTable2['schema']);
   }
 
   /**
@@ -1026,18 +1026,18 @@ class SchemaTableTest extends SchemaTestBase {
   public function testCreateEmbeddedTableForEmbeddedTableExistsAsBaseTable() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table1['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->test_table2['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable2['name']), 'The table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table1['name'], $this->test_table1['schema']);
-    $schema->createTable($this->test_table2['name'], $this->test_table2['schema']);
+    $schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
+    $schema->createTable($this->testTable2['name'], $this->testTable2['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table1['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->test_table2['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable2['name']), 'The table exists in the MongoDB database.');
 
     // If we try to create an embedded table that exists an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->createEmbeddedTable($this->test_table1['name'], $this->test_table2['name'], $this->test_table2['schema']);
+    $schema->createEmbeddedTable($this->testTable1['name'], $this->testTable2['name'], $this->testTable2['schema']);
   }
 
   /**
@@ -1047,22 +1047,22 @@ class SchemaTableTest extends SchemaTestBase {
   public function testCreateEmbeddedTableForEmbeddedTableExistsOnOtherBaseTable() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table1['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->test_table2['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->test_table2['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable2['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable2['name']), 'The embedded table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table1['name'], $this->test_table1['schema']);
-    $schema->createTable($this->test_table2['name'], $this->test_table2['schema']);
-    $schema->createEmbeddedTable($this->test_table2['name'], $this->test_table3['name'], $this->test_table3['schema']);
+    $schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
+    $schema->createTable($this->testTable2['name'], $this->testTable2['schema']);
+    $schema->createEmbeddedTable($this->testTable2['name'], $this->testTable3['name'], $this->testTable3['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table1['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->test_table2['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->test_table3['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable2['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable3['name']), 'The embedded table exists in the MongoDB database.');
 
     // If we try to create an embedded table on a base table that does not
     // exists, an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->createEmbeddedTable($this->test_table1['name'], $this->test_table3['name'], $this->test_table3['schema']);
+    $schema->createEmbeddedTable($this->testTable1['name'], $this->testTable3['name'], $this->testTable3['schema']);
   }
 
   /**
@@ -2864,153 +2864,153 @@ class SchemaTableTest extends SchemaTestBase {
 
     return [
       [
-        $this->test_table1,
+        $this->testTable1,
         [],
-        $this->test_table1['name'],
-        $this->test_table1['validation'],
-        $this->test_table1['validation'],
-        $this->test_table1['indexes'],
-        $this->test_table1['indexes'],
+        $this->testTable1['name'],
+        $this->testTable1['validation'],
+        $this->testTable1['validation'],
+        $this->testTable1['indexes'],
+        $this->testTable1['indexes'],
       ],
       [
-        $this->test_table2,
+        $this->testTable2,
         [],
-        $this->test_table2['name'],
-        $this->test_table2['validation'],
-        $this->test_table2['validation'],
-        $this->test_table2['indexes'],
-        $this->test_table2['indexes'],
+        $this->testTable2['name'],
+        $this->testTable2['validation'],
+        $this->testTable2['validation'],
+        $this->testTable2['indexes'],
+        $this->testTable2['indexes'],
       ],
       [
-        $this->test_table3,
+        $this->testTable3,
         [],
-        $this->test_table3['name'],
-        $this->test_table3['validation'],
-        $this->test_table3['validation'],
-        $this->test_table3['indexes'],
-        $this->test_table3['indexes'],
+        $this->testTable3['name'],
+        $this->testTable3['validation'],
+        $this->testTable3['validation'],
+        $this->testTable3['indexes'],
+        $this->testTable3['indexes'],
       ],
       [
-        $this->test_table4,
+        $this->testTable4,
         [],
-        $this->test_table4['name'],
-        $this->test_table4['validation'],
-        $this->test_table4['validation'],
-        $this->test_table4['indexes'],
-        $this->test_table4['indexes'],
+        $this->testTable4['name'],
+        $this->testTable4['validation'],
+        $this->testTable4['validation'],
+        $this->testTable4['indexes'],
+        $this->testTable4['indexes'],
       ],
       [
-        $this->test_table5,
+        $this->testTable5,
         [],
-        $this->test_table5['name'],
-        $this->test_table5['validation'],
-        $this->test_table5['validation'],
-        $this->test_table5['indexes'],
-        $this->test_table5['indexes'],
+        $this->testTable5['name'],
+        $this->testTable5['validation'],
+        $this->testTable5['validation'],
+        $this->testTable5['indexes'],
+        $this->testTable5['indexes'],
       ],
       [
-        $this->test_table6,
+        $this->testTable6,
         [],
-        $this->test_table6['name'],
-        $this->test_table6['validation'],
-        $this->test_table6['validation'],
-        $this->test_table6['indexes'],
-        $this->test_table6['indexes'],
+        $this->testTable6['name'],
+        $this->testTable6['validation'],
+        $this->testTable6['validation'],
+        $this->testTable6['indexes'],
+        $this->testTable6['indexes'],
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2]],
-        $this->test_table2['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2]],
+        $this->testTable2['name'],
         $this->embeddedValidationBase1Embedded2,
         $renamed_embeddedValidationBase1Embedded2,
         $this->embeddedIndexesBase1Embedded2,
         $renamed_embeddedIndexesBase1Embedded2,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table3]],
-        $this->test_table3['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable3]],
+        $this->testTable3['name'],
         $this->embeddedValidationBase1Embedded3,
         $renamed_embeddedValidationBase1Embedded3,
         $this->embeddedIndexesBase1Embedded3,
         $renamed_embeddedIndexesBase1Embedded3,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2, $this->test_table3]],
-        $this->test_table2['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2, $this->testTable3]],
+        $this->testTable2['name'],
         $this->embeddedValidationBase1Embedded2And3,
         $renamed_embeddedValidationBase1Embedded2And3,
         $this->embeddedIndexesBase1Embedded2And3,
         $renamed_embeddedIndexesBase1Embedded2And3,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3]],
-        $this->test_table1['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3]],
+        $this->testTable1['name'],
         $renamed_validation_base_1_embedded_2_and_3_on_2_before,
         $renamed_validation_base_1_embedded_2_and_3_on_2_after_renamed_1,
         $renamed_table_indexes_base_1_embedded_2_and_3_on_2_before,
         $renamed_table_indexes_base_1_embedded_2_and_3_on_2_after_renamed_1,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3]],
-        $this->test_table2['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3]],
+        $this->testTable2['name'],
         $renamed_validation_base_1_embedded_2_and_3_on_2_before,
         $renamed_validation_base_1_embedded_2_and_3_on_2_after_renamed_2,
         $renamed_table_indexes_base_1_embedded_2_and_3_on_2_before,
         $renamed_table_indexes_base_1_embedded_2_and_3_on_2_after_renamed_2,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3]],
-        $this->test_table3['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3]],
+        $this->testTable3['name'],
         $renamed_validation_base_1_embedded_2_and_3_on_2_before,
         $renamed_validation_base_1_embedded_2_and_3_on_2_after_renamed_3,
         $renamed_table_indexes_base_1_embedded_2_and_3_on_2_before,
         $renamed_table_indexes_base_1_embedded_2_and_3_on_2_after_renamed_3,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table1['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable1['name'],
         $renamed_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
         $renamed_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_renamed_1,
         $renamed_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
         $renamed_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_renamed_1,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table2['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable2['name'],
         $renamed_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
         $renamed_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_renamed_2,
         $renamed_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
         $renamed_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_renamed_2,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table3['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable3['name'],
         $renamed_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
         $renamed_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_renamed_3,
         $renamed_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
         $renamed_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_renamed_3,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table4['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable4['name'],
         $renamed_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
         $renamed_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_renamed_4,
         $renamed_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
         $renamed_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_renamed_4,
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table6['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable6['name'],
         $renamed_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
         $renamed_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_renamed_6,
         $renamed_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
@@ -3154,11 +3154,11 @@ class SchemaTableTest extends SchemaTestBase {
   public function testRenameTableForTableDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table1['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
 
     // If we try to delete a table on a non existent base table an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $schema->renameTable($this->test_table1['name'], $this->test_table2['name']);
+    $schema->renameTable($this->testTable1['name'], $this->testTable2['name']);
   }
 
   /**
@@ -3167,19 +3167,19 @@ class SchemaTableTest extends SchemaTestBase {
   public function testRenameTableForNewTableExistsAsBaseTable() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table1['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->test_table2['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable2['name']), 'The table does not exist in the MongoDB database.');
 
     // Create the to be renamed table.
-    $schema->createTable($this->test_table1['name'], $this->test_table1['schema']);
-    $schema->createTable($this->test_table2['name'], $this->test_table2['schema']);
+    $schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
+    $schema->createTable($this->testTable2['name'], $this->testTable2['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table1['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->test_table2['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable2['name']), 'The table exists in the MongoDB database.');
 
     // If we try to delete a table on a non existent base table an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->renameTable($this->test_table1['name'], $this->test_table2['name']);
+    $schema->renameTable($this->testTable1['name'], $this->testTable2['name']);
   }
 
   /**
@@ -3188,16 +3188,16 @@ class SchemaTableTest extends SchemaTestBase {
   public function testRenameTableForEmbeddedTableDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table1['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
 
     // Create the to be renamed table.
-    $schema->createTable($this->test_table1['name'], $this->test_table1['schema']);
+    $schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table1['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
 
     // If we try to rename an embedded table on a non existent embedded table an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $schema->renameTable($this->test_table2['name'], $this->test_table2['name']);
+    $schema->renameTable($this->testTable2['name'], $this->testTable2['name']);
   }
 
   /**
@@ -3206,22 +3206,22 @@ class SchemaTableTest extends SchemaTestBase {
   public function testRenameTableForNewTableExistsAsEmbeddedTable() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table1['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->test_table2['name']), 'The embedded table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->test_table3['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable2['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable3['name']), 'The embedded table does not exist in the MongoDB database.');
 
     // Create the to be renamed tables.
-    $schema->createTable($this->test_table1['name'], $this->test_table1['schema']);
-    $schema->createEmbeddedTable($this->test_table1['name'], $this->test_table2['name'], $this->test_table2['schema']);
-    $schema->createEmbeddedTable($this->test_table1['name'], $this->test_table3['name'], $this->test_table3['schema']);
+    $schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
+    $schema->createEmbeddedTable($this->testTable1['name'], $this->testTable2['name'], $this->testTable2['schema']);
+    $schema->createEmbeddedTable($this->testTable1['name'], $this->testTable3['name'], $this->testTable3['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table1['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->test_table2['name']), 'The embedded table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->test_table3['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable2['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable3['name']), 'The embedded table exists in the MongoDB database.');
 
     // If we try to rename an embedded table to an existent embedded table an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->renameTable($this->test_table2['name'], $this->test_table3['name']);
+    $schema->renameTable($this->testTable2['name'], $this->testTable3['name']);
   }
 
   /**
@@ -3230,22 +3230,22 @@ class SchemaTableTest extends SchemaTestBase {
   public function testRenameTableForNewEmbeddedTableExistAsBaseTable() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table1['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->test_table3['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->test_table2['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable3['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable2['name']), 'The embedded table does not exist in the MongoDB database.');
 
     // Create the to be renamed tables.
-    $schema->createTable($this->test_table1['name'], $this->test_table1['schema']);
-    $schema->createTable($this->test_table3['name'], $this->test_table3['schema']);
-    $schema->createEmbeddedTable($this->test_table1['name'], $this->test_table2['name'], $this->test_table2['schema']);
+    $schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
+    $schema->createTable($this->testTable3['name'], $this->testTable3['schema']);
+    $schema->createEmbeddedTable($this->testTable1['name'], $this->testTable2['name'], $this->testTable2['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table1['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->test_table3['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->test_table2['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable3['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable2['name']), 'The embedded table exists in the MongoDB database.');
 
     // If we try to rename an embedded table to an existent base table an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->renameTable($this->test_table2['name'], $this->test_table3['name']);
+    $schema->renameTable($this->testTable2['name'], $this->testTable3['name']);
   }
 
   /**
@@ -3254,29 +3254,29 @@ class SchemaTableTest extends SchemaTestBase {
    */
   public function testRenameTableForEmbeddedTableExistsOnOtherBaseTable() {
     $schema = Database::getConnection()->schema();
-    $test_table4 = $this->test_table3;
+    $test_table4 = $this->testTable3;
     $test_table4['name'] = 'test_table4';
 
-    $this->assertFalse($schema->tableExists($this->test_table1['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->test_table2['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->test_table3['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable2['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable3['name']), 'The embedded table does not exist in the MongoDB database.');
     $this->assertFalse($schema->tableExists($test_table4['name']), 'The embedded table does not exist in the MongoDB database.');
 
     // Create the to be renamed tables.
-    $schema->createTable($this->test_table1['name'], $this->test_table1['schema']);
-    $schema->createTable($this->test_table2['name'], $this->test_table2['schema']);
-    $schema->createEmbeddedTable($this->test_table1['name'], $this->test_table3['name'], $this->test_table3['schema']);
-    $schema->createEmbeddedTable($this->test_table2['name'], $test_table4['name'], $test_table4['schema']);
+    $schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
+    $schema->createTable($this->testTable2['name'], $this->testTable2['schema']);
+    $schema->createEmbeddedTable($this->testTable1['name'], $this->testTable3['name'], $this->testTable3['schema']);
+    $schema->createEmbeddedTable($this->testTable2['name'], $test_table4['name'], $test_table4['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table1['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->test_table2['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->test_table3['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable2['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable3['name']), 'The embedded table exists in the MongoDB database.');
     $this->assertTrue($schema->tableExists($test_table4['name']), 'The embedded table exists in the MongoDB database.');
 
     // If we try to rename an embedded table on a base table that does not
     // exists, an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->renameTable($this->test_table3['name'], $test_table4['name']);
+    $schema->renameTable($this->testTable3['name'], $test_table4['name']);
   }
 
   /**
@@ -4343,191 +4343,191 @@ class SchemaTableTest extends SchemaTestBase {
 
     return [
       [
-        $this->test_table1,
+        $this->testTable1,
         [],
         [],
-        $this->test_table1['name'],
-        $this->test_table1['validation'],
+        $this->testTable1['name'],
+        $this->testTable1['validation'],
         [],
-        $this->test_table1['indexes'],
+        $this->testTable1['indexes'],
         [],
-        [$this->test_table1['name']],
+        [$this->testTable1['name']],
       ],
       [
-        $this->test_table2,
+        $this->testTable2,
         [],
         [],
-        $this->test_table2['name'],
-        $this->test_table2['validation'],
+        $this->testTable2['name'],
+        $this->testTable2['validation'],
         [],
-        $this->test_table2['indexes'],
+        $this->testTable2['indexes'],
         [],
-        [$this->test_table2['name']],
+        [$this->testTable2['name']],
       ],
       [
-        $this->test_table3,
+        $this->testTable3,
         [],
         [],
-        $this->test_table3['name'],
-        $this->test_table3['validation'],
+        $this->testTable3['name'],
+        $this->testTable3['validation'],
         [],
-        $this->test_table3['indexes'],
+        $this->testTable3['indexes'],
         [],
-        [$this->test_table3['name']],
+        [$this->testTable3['name']],
       ],
       [
-        $this->test_table4,
+        $this->testTable4,
         [],
         [],
-        $this->test_table4['name'],
-        $this->test_table4['validation'],
+        $this->testTable4['name'],
+        $this->testTable4['validation'],
         [],
-        $this->test_table4['indexes'],
+        $this->testTable4['indexes'],
         [],
-        [$this->test_table4['name']],
+        [$this->testTable4['name']],
       ],
       [
-        $this->test_table5,
+        $this->testTable5,
         [],
         [],
-        $this->test_table5['name'],
-        $this->test_table5['validation'],
+        $this->testTable5['name'],
+        $this->testTable5['validation'],
         [],
-        $this->test_table5['indexes'],
+        $this->testTable5['indexes'],
         [],
-        [$this->test_table5['name']],
+        [$this->testTable5['name']],
       ],
       [
-        $this->test_table6,
+        $this->testTable6,
         [],
         [],
-        $this->test_table6['name'],
-        $this->test_table6['validation'],
+        $this->testTable6['name'],
+        $this->testTable6['validation'],
         [],
-        $this->test_table6['indexes'],
+        $this->testTable6['indexes'],
         [],
-        [$this->test_table6['name']],
+        [$this->testTable6['name']],
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2]],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2]],
         [],
-        $this->test_table2['name'],
+        $this->testTable2['name'],
         $this->embeddedValidationBase1Embedded2,
         $dropped_embeddedValidationBase1Embedded2,
         $this->embeddedIndexesBase1Embedded2,
         $dropped_embeddedIndexesBase1Embedded2,
-        [$this->test_table2['name']],
+        [$this->testTable2['name']],
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table3]],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable3]],
         [],
-        $this->test_table3['name'],
+        $this->testTable3['name'],
         $this->embeddedValidationBase1Embedded3,
         $dropped_embeddedValidationBase1Embedded3,
         $this->embeddedIndexesBase1Embedded3,
         $dropped_embeddedIndexesBase1Embedded3,
-        [$this->test_table3['name']],
+        [$this->testTable3['name']],
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2, $this->test_table3]],
-        [$this->test_table1['name'] => [$this->test_table3]],
-        $this->test_table2['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2, $this->testTable3]],
+        [$this->testTable1['name'] => [$this->testTable3]],
+        $this->testTable2['name'],
         $this->embeddedValidationBase1Embedded2And3,
         $dropped_embeddedValidationBase1Embedded2And3,
         $this->embeddedIndexesBase1Embedded2And3,
         $dropped_embeddedIndexesBase1Embedded2And3,
-        [$this->test_table2['name']],
+        [$this->testTable2['name']],
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3]],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3]],
         [],
-        $this->test_table1['name'],
+        $this->testTable1['name'],
         $dropped_validation_base_1_embedded_2_and_3_on_2_before,
         NULL,
         $dropped_table_indexes_base_1_embedded_2_and_3_on_2_before,
         NULL,
-        [$this->test_table1['name'], $this->test_table2['name'], $this->test_table3['name']],
+        [$this->testTable1['name'], $this->testTable2['name'], $this->testTable3['name']],
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3]],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3]],
         [],
-        $this->test_table2['name'],
+        $this->testTable2['name'],
         $dropped_validation_base_1_embedded_2_and_3_on_2_before,
-        $this->test_table1['validation'],
+        $this->testTable1['validation'],
         $dropped_table_indexes_base_1_embedded_2_and_3_on_2_before,
         $dropped_table_indexes_base_1_embedded_2_and_3_on_2_after_dropped_2,
-        [$this->test_table2['name'], $this->test_table3['name']],
+        [$this->testTable2['name'], $this->testTable3['name']],
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3]],
-        [$this->test_table1['name'] => [$this->test_table2]],
-        $this->test_table3['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3]],
+        [$this->testTable1['name'] => [$this->testTable2]],
+        $this->testTable3['name'],
         $dropped_validation_base_1_embedded_2_and_3_on_2_before,
         $dropped_validation_base_1_embedded_2_and_3_on_2_after_dropped_3,
         $dropped_table_indexes_base_1_embedded_2_and_3_on_2_before,
         $dropped_table_indexes_base_1_embedded_2_and_3_on_2_after_dropped_3,
-        [$this->test_table3['name']],
+        [$this->testTable3['name']],
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
         [],
-        $this->test_table1['name'],
+        $this->testTable1['name'],
         $dropped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
         NULL,
         $dropped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
         NULL,
-        [$this->test_table1['name'], $this->test_table2['name'], $this->test_table3['name'], $this->test_table4['name'], $this->test_table5['name'], $this->test_table6['name']],
+        [$this->testTable1['name'], $this->testTable2['name'], $this->testTable3['name'], $this->testTable4['name'], $this->testTable5['name'], $this->testTable6['name']],
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
         [],
-        $this->test_table2['name'],
+        $this->testTable2['name'],
         $dropped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
         $dropped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_dropped_2,
         $dropped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
         $dropped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_dropped_2,
-        [$this->test_table1['name'], $this->test_table2['name'], $this->test_table3['name'], $this->test_table4['name'], $this->test_table5['name'], $this->test_table6['name']],
+        [$this->testTable1['name'], $this->testTable2['name'], $this->testTable3['name'], $this->testTable4['name'], $this->testTable5['name'], $this->testTable6['name']],
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table4]],
-        $this->test_table3['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable4]],
+        $this->testTable3['name'],
         $dropped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
         $dropped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_dropped_3,
         $dropped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
         $dropped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_dropped_3,
-        [$this->test_table3['name'], $this->test_table5['name'], $this->test_table6['name']],
+        [$this->testTable3['name'], $this->testTable5['name'], $this->testTable6['name']],
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        $this->test_table4['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        $this->testTable4['name'],
         $dropped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
         $dropped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_dropped_4,
         $dropped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
         $dropped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_dropped_4,
-        [$this->test_table4['name']],
+        [$this->testTable4['name']],
       ],
       [
-        $this->test_table1,
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5, $this->test_table6]],
-        [$this->test_table1['name'] => [$this->test_table2], $this->test_table2['name'] => [$this->test_table3, $this->test_table4], $this->test_table3['name'] => [$this->test_table5]],
-        $this->test_table6['name'],
+        $this->testTable1,
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
+        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5]],
+        $this->testTable6['name'],
         $dropped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
         $dropped_validation_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_dropped_6,
         $dropped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
         $dropped_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_dropped_6,
-        [$this->test_table6['name']],
+        [$this->testTable6['name']],
       ],
     ];
   }
@@ -4629,9 +4629,9 @@ class SchemaTableTest extends SchemaTestBase {
   public function testDropTableForTableDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table1['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
 
-    $this->assertFalse($schema->dropTable($this->test_table1['name']), 'Dropping a non existing table in the MongoDB database.');
+    $this->assertFalse($schema->dropTable($this->testTable1['name']), 'Dropping a non existing table in the MongoDB database.');
   }
 
   /**
@@ -4640,13 +4640,13 @@ class SchemaTableTest extends SchemaTestBase {
   public function testDropTableForEmbeddedTableDoesNotExist() {
     $schema = Database::getConnection()->schema();
 
-    $this->assertFalse($schema->tableExists($this->test_table1['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
 
-    $schema->createTable($this->test_table1['name'], $this->test_table1['schema']);
+    $schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
 
-    $this->assertTrue($schema->tableExists($this->test_table1['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
 
-    $this->assertFalse($schema->dropTable($this->test_table2['name']), 'Dropping a non existing embedded table in the MongoDB database.');
+    $this->assertFalse($schema->dropTable($this->testTable2['name']), 'Dropping a non existing embedded table in the MongoDB database.');
   }
 
 }
