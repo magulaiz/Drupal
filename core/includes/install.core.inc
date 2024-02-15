@@ -170,6 +170,9 @@ function install_drupal($class_loader, $settings = [], callable $callback = NULL
       install_goto($finish_url);
     }
   }
+  elseif (\Drupal::hasContainer() && \Drupal::hasRequest()) {
+    \Drupal::service('kernel')->terminate(\Drupal::request(), new Response());
+  }
 }
 
 /**
@@ -653,6 +656,7 @@ function install_run_task($task, &$install_state) {
         }
         // Send the response.
         $response->send();
+        \Drupal::service('kernel')->terminate(\Drupal::request(), $response);
         exit;
       }
     }
@@ -671,6 +675,7 @@ function install_run_task($task, &$install_state) {
         }
         // Send the response.
         $output->send();
+        \Drupal::service('kernel')->terminate(\Drupal::request(), $output);
         exit;
       }
       // The task is complete when we try to access the batch page and receive
@@ -1070,9 +1075,7 @@ function install_display_output($output, $install_state) {
   ];
   $response->headers->add($default_headers);
   $response->send();
-  if (\Drupal::hasContainer()) {
-    \Drupal::service('kernel')->terminate(\Drupal::request(), $response);
-  }
+  \Drupal::service('kernel')->terminate(\Drupal::request(), $response);
   exit;
 }
 
