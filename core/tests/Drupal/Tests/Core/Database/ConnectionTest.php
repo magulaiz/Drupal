@@ -66,7 +66,6 @@ class ConnectionTest extends UnitTestCase {
 
   /**
    * Trying a non string value as prefix.
-   *
    */
   public function testNonStringPrefix() {
     $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
