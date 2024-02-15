@@ -65,23 +65,6 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
-   * Trying a non string value as prefix.
-   */
-  public function testNonStringPrefix() {
-    $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
-    $connection = new StubConnection($mock_pdo, []);
-
-    // setPrefix() is protected, so we make it accessible with reflection.
-    $reflection = new \ReflectionClass('Drupal\Tests\Core\Database\Stub\StubConnection');
-    $set_prefix = $reflection->getMethod('setPrefix');
-
-    $this->expectException(\AssertionError::class);
-    $this->expectExceptionMessage('The prefix argument to Drupal\Core\Database\Connection::setPrefix() must be a string, this is integer type');
-    // Set the prefix data with an integer.
-    $set_prefix->invokeArgs($connection, [1]);
-  }
-
-  /**
    * Data provider for testPrefixTables().
    *
    * @return array
@@ -905,6 +888,23 @@ class ConnectionTest extends UnitTestCase {
     $mockConnection = new StubConnection($mockPdo, []);
     $statement = new StatementPrefetch($mockPdo, $mockConnection, '');
     $this->assertInstanceOf(StatementPrefetch::class, $statement);
+  }
+
+  /**
+   * Trying a non string value as prefix.
+   */
+  public function testNonStringPrefix() {
+    $mock_pdo = $this->createMock('Drupal\Tests\Core\Database\Stub\StubPDO');
+    $connection = new StubConnection($mock_pdo, []);
+
+    // setPrefix() is protected, so we make it accessible with reflection.
+    $reflection = new \ReflectionClass('Drupal\Tests\Core\Database\Stub\StubConnection');
+    $set_prefix = $reflection->getMethod('setPrefix');
+
+    $this->expectException(\AssertionError::class);
+    $this->expectExceptionMessage('The prefix argument to Drupal\Core\Database\Connection::setPrefix() must be a string, this is integer type');
+    // Set the prefix data with an integer.
+    $set_prefix->invokeArgs($connection, [1]);
   }
 
 }
