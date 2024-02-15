@@ -801,6 +801,10 @@ function install_goto($path) {
   ];
   $response = new RedirectResponse($base_url . '/' . $path, 302, $headers);
   $response->send();
+
+  if (\Drupal::hasContainer()) {
+    \Drupal::service('kernel')->terminate(\Drupal::request(), $response);
+  }
 }
 
 /**

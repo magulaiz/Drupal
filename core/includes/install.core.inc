@@ -1070,6 +1070,9 @@ function install_display_output($output, $install_state) {
   ];
   $response->headers->add($default_headers);
   $response->send();
+  if (\Drupal::hasContainer()) {
+    \Drupal::service('kernel')->terminate(\Drupal::request(), $response);
+  }
   exit;
 }
 
