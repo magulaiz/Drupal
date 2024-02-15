@@ -52,7 +52,7 @@ use Drupal\node\NodeTypeInterface;
     'description',
     'help',
     'new_revision',
-    'prview_mode',
+    'preview_mode',
     'display_submitted',
   ]
 )]
