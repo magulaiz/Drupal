@@ -6,7 +6,7 @@ use Drupal\Component\Plugin\Attribute\Plugin;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
- * Defines an entity type attribute object.
+ * Defines an entity type for plugin discovery.
  *
  * Entity type plugins use an object-based annotation method, rather than an
  * array-type (as commonly used on other plugin types).
