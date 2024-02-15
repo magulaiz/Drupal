@@ -14,9 +14,8 @@
   grid-column: 1 / 7;
 }
 
-@media (min-width: 43.75rem) {
+@media (min-width: 43.75rem) /* 700px */ {
   .hero__content {
-    /* 700px */
     grid-column: 3 / 13;
   }
 }
