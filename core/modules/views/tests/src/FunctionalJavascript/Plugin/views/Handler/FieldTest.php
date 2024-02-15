@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\FunctionalJavascript\Plugin\views\Handler;
 
+use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\node\Entity\Node;
@@ -84,7 +85,8 @@ class FieldTest extends WebDriverTestBase {
       'type' => 'page',
       'body' => 'page',
     ])->save();
-    $url = '/admin/structure/views/view/content';
+    $base_path = \Drupal::request()->getBasePath();
+    $url = "$base_path/admin/structure/views/view/content";
     $this->drupalGet($url);
     $page = $this->getSession()->getPage();
     // Open the 'Add fields dialog'.
@@ -94,8 +96,8 @@ class FieldTest extends WebDriverTestBase {
     $page->checkField('name[views.nothing]');
     $page->find('css', '.ui-dialog .ui-dialog-buttonset')->pressButton('Add and configure fields');
     $web_assert->waitForField('options[alter][text]');
-    $page->fillField('options[alter][text]', '{{ attach_library("core/drupal.dialog.ajax") }}
-<p><a class="use-ajax" data-dialog-type="modal" href="/admin/content">Content link</a></p>');
+    $page->fillField('options[alter][text]', "{{ attach_library(\"core/drupal.dialog.ajax\") }}
+<p><a class=\"use-ajax\" data-dialog-type=\"modal\" href=\"$base_path/admin/content\">Content link</a></p>");
     $page->find('css', '.ui-dialog .ui-dialog-buttonset')->pressButton('Apply');
     $web_assert->waitForText('Content: body (exposed)');
     $web_assert->waitForButton('Save');
@@ -107,7 +109,8 @@ class FieldTest extends WebDriverTestBase {
     $this->assertNotNull($web_assert->waitForLink('Content link'));
     $page->clickLink('Content link');
     // Verify the modal title.
-    $this->assertEquals('Content', $web_assert->waitForElement('css', '.ui-dialog .ui-dialog-title', 20000)->getText());
+    $web_assert->assertWaitOnAjaxRequest();
+    $this->assertEquals('Content', $web_assert->waitForElement('css', '.ui-dialog-title')->getText());
   }
 
   public function testFormatterChanging() {
