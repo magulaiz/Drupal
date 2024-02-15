@@ -69,6 +69,7 @@ class JsonApiFieldTest extends BrowserTestBase {
     ]));
 
     $response = $this->drupalGet($url, [], ['Accept' => 'application/vnd.api+json']);
+    dump("Status code is " . $this->getSession()->getStatusCode());
     $this->assertSession()->statusCodeEquals(200);
 
     $body = Json::decode($response);
