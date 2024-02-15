@@ -416,7 +416,7 @@ class TestServiceNoMethod {
 
 class TestServiceSimpleMethod {
 
-  public function method(): void {
+  public function method() {
 
   }
 
@@ -424,7 +424,7 @@ class TestServiceSimpleMethod {
 
 class TestServiceMethodWithParameter {
 
-  public function methodWithParameter($parameter): void {
+  public function methodWithParameter($parameter) {
 
   }
 
@@ -456,7 +456,7 @@ class TestServiceMethodReturnsVoid {
 
 class TestServiceReturnReference {
 
-  public function &returnReference(): void {
+  public function &returnReference() {
 
   }
 
@@ -470,7 +470,7 @@ interface TestInterface {
 
 class TestServiceWithInterface implements TestInterface {
 
-  public function testMethod($parameter): void {
+  public function testMethod($parameter) {
 
   }
 
@@ -478,15 +478,15 @@ class TestServiceWithInterface implements TestInterface {
 
 class TestServiceWithProtectedMethods {
 
-  public function testMethod($parameter): void {
+  public function testMethod($parameter) {
 
   }
 
-  protected function protectedMethod($parameter): void {
+  protected function protectedMethod($parameter) {
 
   }
 
-  protected function privateMethod($parameter): void {
+  protected function privateMethod($parameter) {
 
   }
 
@@ -494,7 +494,7 @@ class TestServiceWithProtectedMethods {
 
 class TestServiceWithPublicStaticMethod {
 
-  public static function testMethod($parameter): void {
+  public static function testMethod($parameter) {
   }
 
 }
