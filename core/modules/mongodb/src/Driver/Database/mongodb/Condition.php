@@ -54,8 +54,9 @@ class Condition extends QueryCondition {
   protected $mongodbEmbeddedTables = [];
 
   /**
-   * An array of embedded table names used in the condition with the MongoDB
-   * $elemMatch operator.
+   * An array of embedded table names.
+   *
+   * Used in the condition with the MongoDB $elemMatch operator.
    *
    * @var array
    */
@@ -100,9 +101,9 @@ class Condition extends QueryCondition {
   }
 
   /**
-   * Set MongoDB base table name
+   * Set MongoDB base table name.
    *
-   * param string $table
+   * @param string $table
    *   The name of the table to be used as the base table of the query.
    */
   public function setMongodbBaseTable($table) {
@@ -112,7 +113,7 @@ class Condition extends QueryCondition {
   /**
    * Set MongoDB base table alias.
    *
-   * param string $alias
+   * @param string $alias
    *   The alias of the table to be used as the base table of the query.
    */
   public function setMongodbBaseAlias($alias) {
@@ -121,6 +122,9 @@ class Condition extends QueryCondition {
 
   /**
    * Set meta data for the condition.
+   *
+   * @param array $meta_data
+   *   The meta data.
    */
   public function setMetaData($meta_data) {
     $this->alterMetaData = $meta_data;
@@ -292,27 +296,6 @@ class Condition extends QueryCondition {
             $this->mongodbElemMatchEmbeddedTables += $condition['field']->getElemMatchEmbeddedTables();
             $arguments += $condition['field']->arguments();
           }
-//          elseif (isset($condition['field2'])) {
-//dump($condition);
-//dump($operator);
-//dump(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
-//dump(debug_backtrace()[2]);
-            // The key field2 is only set when we are comparing 2 fields with each
-            // other.
-//            $condition_fragments[] = trim(implode(' ', [$connection->escapeField($condition['field']), $condition['operator'], $connection->escapeField($condition['field2'])]));
-
-//            $condition_fragments[] = [
-//              '$expr' => []
-//            ];
-
-//            $action = [$operator['mongodb_operator'] => reset($condition['value'])];
-//            $condition_fragment = $condition_aggregate_fragment = [$connection->escapeField($condition['field']) => $action];
-//            if (!empty($condition['embedded_table'])) {
-//              $condition_aggregate_fragment = [$connection->escapeField($condition['embedded_table'] . '.' . $condition['field']) => $action];
-//            }
-
-//            continue;
-//          }
           else {
             // For simplicity, we treat all operators as the same data structure.
             // In the typical degenerate case, this won't get changed.
@@ -367,8 +350,8 @@ class Condition extends QueryCondition {
                   $operator['mongodb_operator'] => [
                     '$' . $connection->escapeField($condition['field']),
                     '$' . $connection->escapeField($condition['field2']),
-                  ]
-                ]
+                  ],
+                ],
               ];
             }
             else {
@@ -432,18 +415,18 @@ class Condition extends QueryCondition {
                       '$expr' => [
                         $operator['mongodb_operator'] => [
                           (is_string($condition['field']) ? $connection->escapeField($condition['field']) : $condition['field']),
-                          reset($condition['value'])
-                        ]
-                      ]
+                          reset($condition['value']),
+                        ],
+                      ],
                     ];
                     if (!empty($condition['embedded_table'])) {
                       $condition_aggregate_fragment = [
                         '$expr' => [
                           $operator['mongodb_operator'] => [
                             $connection->escapeField($condition['embedded_table'] . '.' . $condition['field']),
-                            reset($condition['value'])
-                          ]
-                        ]
+                            reset($condition['value']),
+                          ],
+                        ],
                       ];
                     }
                   }
@@ -455,6 +438,7 @@ class Condition extends QueryCondition {
                     }
                   }
                   break;
+
                 case 'IN':
                 case 'NOT IN':
                   // MongoDB  does not like array key values with '$in' and '$nin'
@@ -465,6 +449,7 @@ class Condition extends QueryCondition {
                     $condition_aggregate_fragment = [$connection->escapeField($condition['embedded_table'] . '.' . $condition['field']) => $action];
                   }
                   break;
+
                 case 'BETWEEN':
                   $top_action = ['$lte' => next($condition['value'])];
                   $top = $aggregate_top = [$connection->escapeField($condition['field']) => $top_action];
@@ -482,10 +467,11 @@ class Condition extends QueryCondition {
                   $condition_aggregate_fragment = [
                     '$and' => [
                       $aggregate_bottom,
-                      $aggregate_top
-                    ]
+                      $aggregate_top,
+                    ],
                   ];
                   break;
+
                 case 'NOT BETWEEN':
                   $top_action = ['$gt' => next($condition['value'])];
                   $top = $aggregate_top = [$connection->escapeField($condition['field']) => $top_action];
@@ -503,10 +489,11 @@ class Condition extends QueryCondition {
                   $condition_aggregate_fragment = [
                     '$or' => [
                       $aggregate_bottom,
-                      $aggregate_top
-                    ]
+                      $aggregate_top,
+                    ],
                   ];
                   break;
+
                 case 'IS NULL':
                   // In this MongoDB driver are fields with the value null not set.
                   $action = ['$exists' => FALSE];
@@ -515,6 +502,7 @@ class Condition extends QueryCondition {
                     $condition_aggregate_fragment = [$connection->escapeField($condition['embedded_table'] . '.' . $condition['field']) => $action];
                   }
                   break;
+
                 case 'IS NOT NULL':
                   // In this MongoDB driver are fields with the value null not set.
                   $action = ['$exists' => TRUE];
@@ -523,6 +511,7 @@ class Condition extends QueryCondition {
                     $condition_aggregate_fragment = [$connection->escapeField($condition['embedded_table'] . '.' . $condition['field']) => $action];
                   }
                   break;
+
                 case 'LIKE':
                 case 'LIKE BINARY':
                 case 'NOT LIKE':
@@ -558,6 +547,7 @@ class Condition extends QueryCondition {
                     }
                   }
                   break;
+
                 case 'IN BINARY':
                 case 'IN NOT BINARY':
                   $patterns = [];
@@ -579,6 +569,7 @@ class Condition extends QueryCondition {
                     $condition_aggregate_fragment = [$connection->escapeField($condition['embedded_table'] . '.' . $condition['field']) => $action];
                   }
                   break;
+
                 case 'DATEDATE':
                   // Add the embedded table data back to the field. The embedded
                   // table data will be unwound by the MongoDB query.
@@ -594,7 +585,7 @@ class Condition extends QueryCondition {
                     '$dateToString' => [
                       'format' => $condition['value']['format'],
                       'date' => '$' . $connection->escapeField($condition['field']),
-                    ]
+                    ],
                   ];
                   if (!empty($condition['value']['timezone'])) {
                     $date_to_string['$dateToString']['timezone'] = $condition['value']['timezone'];
@@ -606,21 +597,22 @@ class Condition extends QueryCondition {
                         [
                           $operator => [
                             $date_to_string,
-                            $condition['value']['value']
-                          ]
+                            $condition['value']['value'],
+                          ],
                         ],
                         [
                           '$ifNull' => [
                             '$' . $connection->escapeField($condition['field']),
-                            FALSE
-                          ]
-                        ]
-                      ]
-                    ]
+                            FALSE,
+                          ],
+                        ],
+                      ],
+                    ],
                   ];
                   break;
-                // The DATESTRING operator is created for the datetime module.
+
                 case 'DATESTRING':
+                  // The DATESTRING operator is created for the datetime module.
                   // Add the embedded table data back to the field. The embedded
                   // table data will be unwound by the MongoDB query.
                   if (!empty($condition['embedded_table'])) {
@@ -637,9 +629,9 @@ class Condition extends QueryCondition {
                       'date' => [
                         '$dateFromString' => [
                           'dateString' => '$' . $connection->escapeField($condition['field']),
-                        ]
-                      ]
-                    ]
+                        ],
+                      ],
+                    ],
                   ];
                   if (!empty($condition['value']['timezone'])) {
                     $date_to_string['$dateToString']['timezone'] = $condition['value']['timezone'];
@@ -651,19 +643,20 @@ class Condition extends QueryCondition {
                         [
                           $operator => [
                             $date_to_string,
-                            $condition['value']['value']
-                          ]
+                            $condition['value']['value'],
+                          ],
                         ],
                         [
                           '$ifNull' => [
                             '$' . $connection->escapeField($condition['field']),
-                            FALSE
-                          ]
-                        ]
-                      ]
-                    ]
+                            FALSE,
+                          ],
+                        ],
+                      ],
+                    ],
                   ];
                   break;
+
                 case 'FIELDCOMPARE':
                   // Add the embedded table data back to the field. The embedded
                   // table data will be unwound by the MongoDB query.
@@ -679,11 +672,12 @@ class Condition extends QueryCondition {
                     '$expr' => [
                       $operator => [
                         '$' . $connection->escapeField($condition['field']),
-                        '$' . $connection->escapeField($condition['value']['field'])
-                      ]
-                    ]
+                        '$' . $connection->escapeField($condition['value']['field']),
+                      ],
+                    ],
                   ];
                   break;
+
                 case 'ARRAY_EMPTY':
                 case 'ARRAY_NOT_EMPTY':
                   $operator = ($operator['operator'] == 'ARRAY_EMPTY') ? '$eq' : '$ne';
@@ -692,6 +686,7 @@ class Condition extends QueryCondition {
                     $condition_fragment = $condition_aggregate_fragment = [$connection->escapeField($condition['embedded_table'] . '.' . $condition['field']) => [$operator => []]];
                   }
                   break;
+
                 default:
                   $condition_fragment = $condition_aggregate_fragment = ' (' . $connection->escapeField($condition['field']) . ' ' . $operator['operator'] . ' ' . $operator['prefix'] . implode($operator['delimiter'], $placeholders) . ') ';
               }
@@ -699,7 +694,8 @@ class Condition extends QueryCondition {
           }
         }
 
-// TODO: Test if we can remove the whole $expr_condition_fragments and $expr_condition_aggregate_fragments!
+        // TODO: Test if we can remove the whole $expr_condition_fragments and
+        // $expr_condition_aggregate_fragments!
         // Conditions that start with $expr must be combined differently.
         if (in_array($condition['operator'], ['DATEDATE', 'DATESTRING'])) {
           $expr_condition_fragments[] = reset($condition_fragment);
@@ -714,15 +710,15 @@ class Condition extends QueryCondition {
               $embedded_table_field_operator_and_value = current($condition_fragment);
               if ($embedded_table_field_operator_and_value instanceof Regex) {
                 $embedded_table_field_operator = '$eq';
-                $embedded_table_field_value = $embedded_table_field_operator_and_value;
+                // $embedded_table_field_value = $embedded_table_field_operator_and_value;
               }
               elseif (!is_array($embedded_table_field_operator_and_value)) {
                 $embedded_table_field_operator = '$eq';
-                $embedded_table_field_value = $embedded_table_field_operator_and_value;
+                // $embedded_table_field_value = $embedded_table_field_operator_and_value;
               }
               else {
                 $embedded_table_field_operator = key($embedded_table_field_operator_and_value);
-                $embedded_table_field_value = reset($embedded_table_field_operator_and_value);
+                // $embedded_table_field_value = reset($embedded_table_field_operator_and_value);
               }
 
               if (!isset($embedded_tables_condition_fragments[$embedded_table][$embedded_table_field_name])) {
@@ -741,20 +737,20 @@ class Condition extends QueryCondition {
                         $embedded_tables_condition_fragments[$embedded_table][$embedded_table_field_name]['$in'] = [reset($embedded_table_field_operator_and_value)];
                       }
                       else {
-                        throw new MongodbSQLException(t('You cannot use multiple duplicate operators to the same field (@field) on the same embedded table (@embedded_table). The MongoDB multiple called operator is: "@operator".', ['@field' => key($condition_fragment), '@embedded_table' => $embedded_table, '@operator' => key(current($condition_fragment))]));
+                        throw new MongodbSQLException('You cannot use multiple duplicate operators to the same field (' . key($condition_fragment) . ') on the same embedded table (' . $embedded_table . '). The MongoDB multiple called operator is: "' . key(current($condition_fragment)) . '".');
                       }
                       break;
+
                     case '$lt':
                     case '$lte':
                     case '$gt':
                     case '$gte':
                     case '$in':
                     case '$nin':
+                    default:
                       // For all these cases can we do something, so that we do
                       // not have to throw an exception.
-                    default:
-                      throw new MongodbSQLException(t('You cannot use multiple duplicate operators to the same field (@field) on the same embedded table (@embedded_table). The MongoDB multiple called operator is: "@operator".', ['@field' => key($condition_fragment), '@embedded_table' => $embedded_table, '@operator' => key(current($condition_fragment))]));
-                      break;
+                      throw new MongodbSQLException('You cannot use multiple duplicate operators to the same field (' . key($condition_fragment) . ') on the same embedded table (' . $embedded_table . '). The MongoDB multiple called operator is: "' . key(current($condition_fragment)) . '".');
                   }
                 }
                 elseif (is_array($used_embedded_table_field_operator_and_values)) {
@@ -847,31 +843,31 @@ class Condition extends QueryCondition {
         }
       }
 
-      $number_of_expr_condition_fragments = count($expr_condition_fragments);
-      foreach ($expr_condition_fragments as $expr_condition_fragment) {
-        if (($conjunction == 'OR') && ($number_of_expr_condition_fragments > 1)) {
-          $this->mongodbVersion['$expr']['$or'] = $expr_condition_fragments;
-        }
-        elseif (($conjunction == 'AND') && ($number_of_expr_condition_fragments > 1)) {
-          $this->mongodbVersion['$expr']['$and'] = $expr_condition_fragments;
-        }
-        else {
-          $this->mongodbVersion['$expr'] = reset($expr_condition_fragments);
-        }
-      }
+      // number_of_expr_condition_fragments = count($expr_condition_fragments);
+      // foreach ($expr_condition_fragments as $expr_condition_fragment) {
+      // if (($conjunction == 'OR') && ($number_of_expr_condition_fragments > 1)) {
+      // $this->mongodbVersion['$expr']['$or'] = $expr_condition_fragments;
+      // }
+      // elseif (($conjunction == 'AND') && ($number_of_expr_condition_fragments > 1)) {
+      // $this->mongodbVersion['$expr']['$and'] = $expr_condition_fragments;
+      // }
+      // else {
+      // $this->mongodbVersion['$expr'] = reset($expr_condition_fragments);
+      // }
+      // }
 
-      $number_of_expr_condition_aggregate_fragments = count($expr_condition_aggregate_fragments);
-      foreach ($expr_condition_aggregate_fragments as $expr_condition_aggregate_fragment) {
-        if (($conjunction == 'OR') && ($number_of_expr_condition_aggregate_fragments > 1)) {
-          $this->mongodbAggregateVersion['$expr']['$or'] = $expr_condition_aggregate_fragments;
-        }
-        elseif (($conjunction == 'AND') && ($number_of_expr_condition_aggregate_fragments > 1)) {
-          $this->mongodbAggregateVersion['$expr']['$and'] = $expr_condition_aggregate_fragments;
-        }
-        else {
-          $this->mongodbAggregateVersion['$expr'] = reset($expr_condition_aggregate_fragments);
-        }
-      }
+      // $number_of_expr_condition_aggregate_fragments = count($expr_condition_aggregate_fragments);
+      // foreach ($expr_condition_aggregate_fragments as $expr_condition_aggregate_fragment) {
+      // if (($conjunction == 'OR') && ($number_of_expr_condition_aggregate_fragments > 1)) {
+      // $this->mongodbAggregateVersion['$expr']['$or'] = $expr_condition_aggregate_fragments;
+      // }
+      // elseif (($conjunction == 'AND') && ($number_of_expr_condition_aggregate_fragments > 1)) {
+      // $this->mongodbAggregateVersion['$expr']['$and'] = $expr_condition_aggregate_fragments;
+      // }
+      // else {
+      // $this->mongodbAggregateVersion['$expr'] = reset($expr_condition_aggregate_fragments);
+      // }
+      // }
 
       $this->arguments = $arguments;
     }
@@ -927,7 +923,7 @@ class Condition extends QueryCondition {
   /**
    * Set the embedded tables to be unwound.
    *
-   * param array $tables
+   * @param array $tables
    *   An array of the embedded table names to be unwound for this condition.
    */
   public function setUnwoundTables(array $tables = []) {

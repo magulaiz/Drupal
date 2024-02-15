@@ -160,7 +160,7 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
 
         $cursor = $this->database->getConnection()->{$prefixed_table}->find(
           [
-            "$all_revisions_table.$dedicated_all_revisions_table" => [ '$exists' => TRUE ],
+            "$all_revisions_table.$dedicated_all_revisions_table" => ['$exists' => TRUE],
           ],
           [
             'projection' => [
@@ -201,13 +201,15 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
             }
           }
 
-          $result = $this->database->getConnection()->{$prefixed_table}->updateMany(
-            [ $id_key => $entity->{$id_key} ],
-            [ '$set' => [
-              $all_revisions_table => $entity->{$all_revisions_table},
-              $current_revision_table => $entity->{$current_revision_table},
-              $latest_revision_table => $entity->{$latest_revision_table}
-            ]]
+          $this->database->getConnection()->{$prefixed_table}->updateMany(
+            [$id_key => $entity->{$id_key}],
+            [
+              '$set' => [
+                $all_revisions_table => $entity->{$all_revisions_table},
+                $current_revision_table => $entity->{$current_revision_table},
+                $latest_revision_table => $entity->{$latest_revision_table},
+              ],
+            ],
           );
         }
       }
@@ -220,8 +222,8 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
         $this->database->schema()->dropTable($dedicated_translations_table);
 
         $cursor = $this->database->getConnection()->{$prefixed_table}->find(
-          [ "$translations_table.$dedicated_translations_table" => [ '$exists' => TRUE ]],
-          [ 'projection' => [$id_key => 1, $translations_table => 1, '_id' => 0]]
+          ["$translations_table.$dedicated_translations_table" => ['$exists' => TRUE]],
+          ['projection' => [$id_key => 1, $translations_table => 1, '_id' => 0]],
         );
 
         foreach ($cursor as $entity) {
@@ -234,11 +236,13 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
             }
           }
 
-          $result = $this->database->getConnection()->{$prefixed_table}->updateMany(
-            [ $id_key => $entity->{$id_key} ],
-            [ '$set' => [
-              $translations_table => $entity->{$translations_table}
-            ]]
+          $this->database->getConnection()->{$prefixed_table}->updateMany(
+            [$id_key => $entity->{$id_key}],
+            [
+              '$set' => [
+                $translations_table => $entity->{$translations_table},
+              ],
+            ],
           );
         }
       }
@@ -319,7 +323,7 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
       }
 
       // We need to act only on shared entity schema tables.
-//      $table_mapping = $this->storage->getTableMapping();
+      // $table_mapping = $this->storage->getTableMapping();
       $table_names = array_diff($table_mapping->getTableNames(), $table_mapping->getDedicatedTableNames());
       foreach ($table_names as $table_name) {
         if (!isset($schema[$table_name])) {
@@ -339,8 +343,8 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
       }
 
       // Process tables after having gathered field information.
-// Not sure why the next method has been removed.
-//      $this->processBaseTable($entity_type, $schema[$tables['base_table']]);
+      // Not sure why the next method has been removed.
+      // $this->processBaseTable($entity_type, $schema[$tables['base_table']]);
 
       if (isset($tables['all_revisions_table'])) {
         $this->processRevisionsTable($entity_type, $schema[$tables['all_revisions_table']]);
@@ -351,34 +355,14 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
       if (isset($tables['latest_revision_table'])) {
         $this->processRevisionsTable($entity_type, $schema[$tables['latest_revision_table']]);
       }
-//      if (isset($tables['translations_table'])) {
-//        $this->processTranslationsTable($entity_type, $schema[$tables['translations_table']]);
-//      }
+      // if (isset($tables['translations_table'])) {
+      // $this->processTranslationsTable($entity_type, $schema[$tables['translations_table']]);
+      // }
 
       $this->schema[$entity_type_id] = $schema;
     }
 
     return $this->schema[$entity_type_id];
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-  protected function getSharedTableFieldSchema(FieldStorageDefinitionInterface $storage_definition, $table_name, array $column_mapping) {
-    $schema = parent::getSharedTableFieldSchema($storage_definition, $table_name, $column_mapping);
-
-    $all_revisions_table = $this->storage->getAllRevisionsTable();
-    $current_revision_table = $this->storage->getCurrentRevisionTable();
-    $latest_revision_table = $this->storage->getLatestRevisionTable();
-
-    // Process the 'id' and 'revision' entity keys for the base and revision
-    // tables.
-    if (in_array($table_name, [$all_revisions_table, $current_revision_table, $latest_revision_table], TRUE) &&
-      ($field_name === $this->entityType->getKey('revision'))) {
-      $this->processIdentifierSchema($schema, $field_name);
-    }
-
-    return $schema;
   }
 
   /**
@@ -405,19 +389,17 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
    */
   protected function initializeRevisionsTable(ContentEntityTypeInterface $entity_type) {
     $entity_type_id = $entity_type->id();
-    $id_key = $entity_type->getKey('id');
-    $revision_key = $entity_type->getKey('revision');
 
-    $schema = array(
+    $schema = [
       'description' => "The all revisions table for $entity_type_id entities.",
       'indexes' => [],
-    );
+    ];
 
     if ($entity_type->isTranslatable()) {
-      $schema['primary key'] = array($revision_key, $entity_type->getKey('langcode'));
+      $schema['primary key'] = [$entity_type->getKey('revision'), $entity_type->getKey('langcode')];
     }
     else {
-      $schema['primary key'] = array($revision_key);
+      $schema['primary key'] = [$entity_type->getKey('revision')];
     }
 
     $this->addTableDefaults($schema);
@@ -436,14 +418,13 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
    */
   protected function initializeTranslationsTable(ContentEntityTypeInterface $entity_type) {
     $entity_type_id = $entity_type->id();
-    $id_key = $entity_type->getKey('id');
 
-    $schema = array(
+    $schema = [
       'description' => "The translations table for $entity_type_id entities.",
       'indexes' => [],
-    );
+    ];
 
-    $schema['primary key'] = array($entity_type->getKey('id'), $entity_type->getKey('langcode'));
+    $schema['primary key'] = [$entity_type->getKey('id'), $entity_type->getKey('langcode')];
 
     $this->addTableDefaults($schema);
 
@@ -486,7 +467,7 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
   /**
    * {@inheritdoc}
    */
-  protected function createDedicatedTableSchema(FieldStorageDefinitionInterface $storage_definition, $only_save = false) {
+  protected function createDedicatedTableSchema(FieldStorageDefinitionInterface $storage_definition, $only_save = FALSE) {
     $table_mapping = $this->getTableMapping($this->entityType, [$storage_definition]);
     $schema = $this->getDedicatedTableSchema($storage_definition);
 
@@ -721,20 +702,20 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
   protected function getDedicatedTableSchema(FieldStorageDefinitionInterface $storage_definition, ContentEntityTypeInterface $entity_type = NULL) {
     $id_definition = $this->fieldStorageDefinitions[$this->entityType->getKey('id')];
     if ($id_definition->getType() == 'integer') {
-      $id_schema = array(
+      $id_schema = [
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'description' => 'The entity id this data is attached to',
-      );
+      ];
     }
     else {
-      $id_schema = array(
+      $id_schema = [
         'type' => 'varchar_ascii',
         'length' => 128,
         'not null' => TRUE,
         'description' => 'The entity id this data is attached to',
-      );
+      ];
     }
 
     // Define the revision ID schema.
@@ -743,58 +724,58 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
       $revision_id_schema['description'] = 'The entity revision id this data is attached to, which for an unversioned entity type is the same as the entity id';
     }
     elseif ($this->fieldStorageDefinitions[$this->entityType->getKey('revision')]->getType() == 'integer') {
-      $revision_id_schema = array(
+      $revision_id_schema = [
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'description' => 'The entity revision id this data is attached to',
-      );
+      ];
     }
     else {
-      $revision_id_schema = array(
+      $revision_id_schema = [
         'type' => 'varchar',
         'length' => 128,
         'not null' => TRUE,
         'description' => 'The entity revision id this data is attached to',
-      );
+      ];
     }
 
-    $dedicated_schema = array(
-      'fields' => array(
-        'bundle' => array(
+    $dedicated_schema = [
+      'fields' => [
+        'bundle' => [
           'type' => 'varchar_ascii',
           'length' => 128,
           'not null' => TRUE,
           'default' => '',
           'description' => 'The field instance bundle to which this row belongs, used when deleting a field instance',
-        ),
-        'deleted' => array(
+        ],
+        'deleted' => [
           'type' => 'bool',
           'not null' => TRUE,
           'default' => FALSE,
-          'description' => 'A boolean indicating whether this data item has been deleted'
-        ),
+          'description' => 'A boolean indicating whether this data item has been deleted',
+        ],
         'entity_id' => $id_schema,
         'revision_id' => $revision_id_schema,
-        'langcode' => array(
+        'langcode' => [
           'type' => 'varchar_ascii',
           'length' => 32,
           'not null' => TRUE,
           'default' => '',
           'description' => 'The language code for this data item.',
-        ),
-        'delta' => array(
+        ],
+        'delta' => [
           'type' => 'int',
           'unsigned' => TRUE,
           'not null' => TRUE,
           'description' => 'The sequence number for this data item, used for multi-value fields',
-        ),
-      ),
-      'indexes' => array(
-        'bundle' => array('bundle'),
-        'revision_id' => array('revision_id'),
-      ),
-    );
+        ],
+      ],
+      'indexes' => [
+        'bundle' => ['bundle'],
+        'revision_id' => ['revision_id'],
+      ],
+    ];
 
     // Check that the schema does not include forbidden column names.
     $schema = $storage_definition->getSchema();
@@ -821,10 +802,10 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
         // Indexes can be specified as either a column name or an array with
         // column name and length. Allow for either case.
         if (is_array($column_name)) {
-          $dedicated_schema['indexes'][$real_name][] = array(
+          $dedicated_schema['indexes'][$real_name][] = [
             $table_mapping->getFieldColumnName($storage_definition, $column_name[0]),
             $column_name[1],
-          );
+          ];
         }
         else {
           $dedicated_schema['indexes'][$real_name][] = $table_mapping->getFieldColumnName($storage_definition, $column_name);
@@ -839,10 +820,10 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
         // Unique keys can be specified as either a column name or an array with
         // column name and length. Allow for either case.
         if (is_array($column_name)) {
-          $dedicated_schema['unique keys'][$real_name][] = array(
+          $dedicated_schema['unique keys'][$real_name][] = [
             $table_mapping->getFieldColumnName($storage_definition, $column_name[0]),
             $column_name[1],
-          );
+          ];
         }
         else {
           $dedicated_schema['unique keys'][$real_name][] = $table_mapping->getFieldColumnName($storage_definition, $column_name);
@@ -870,7 +851,7 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
     if ($entity_type->isRevisionable()) {
       // Adding an index for every field can create too many indexes on a single
       // table. For MongoDB the maximum is 64.
-      //$dedicated_schema['indexes']['primary_key'] = ['entity_id', 'revision_id', 'deleted', 'delta', 'langcode'];
+      // $dedicated_schema['indexes']['primary_key'] = ['entity_id', 'revision_id', 'deleted', 'delta', 'langcode'];
       $dedicated_schema['fields']['revision_id']['not null'] = TRUE;
       $dedicated_schema['fields']['revision_id']['description'] = 'The entity revision id this data is attached to';
 
@@ -886,13 +867,13 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
       return [
         $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->storage->getAllRevisionsTable()) => $dedicated_all_revisions_schema,
         $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->storage->getCurrentRevisionTable()) => $dedicated_current_revision_schema,
-        $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->storage->getLatestRevisionTable()) => $dedicated_latest_revision_schema
+        $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->storage->getLatestRevisionTable()) => $dedicated_latest_revision_schema,
       ];
     }
     elseif ($entity_type->isTranslatable()) {
       // Adding an index for every field can create too many indexes on a single
       // table. For MongoDB the maximum is 64.
-      //$dedicated_schema['indexes']['primary_key'] = ['entity_id', 'deleted', 'delta', 'langcode'];
+      // $dedicated_schema['indexes']['primary_key'] = ['entity_id', 'deleted', 'delta', 'langcode'];
       $dedicated_schema['description'] = "Translations storage for {$storage_definition->getTargetEntityTypeId()} field {$storage_definition->getName()}.";
 
       return [$table_mapping->getMongodbDedicatedTableName($storage_definition, $this->storage->getTranslationsTable()) => $dedicated_schema];
@@ -900,7 +881,7 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
     else {
       // Adding an index for every field can create too many indexes on a single
       // table. For MongoDB the maximum is 64.
-      //$dedicated_schema['indexes']['primary_key'] = ['entity_id', 'deleted', 'delta'];
+      // $dedicated_schema['indexes']['primary_key'] = ['entity_id', 'deleted', 'delta'];
       $dedicated_schema['description'] = "Storage for {$storage_definition->getTargetEntityTypeId()} field {$storage_definition->getName()}.";
 
       return [$table_mapping->getMongodbDedicatedTableName($storage_definition, $entity_type->getBaseTable()) => $dedicated_schema];

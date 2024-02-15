@@ -220,10 +220,10 @@ class ViewStorage extends ConfigEntityStorage {
    *
    * @param array $records
    *   Associative array of query results, keyed on the entity ID.
-   * @param string $table
+   * @param string $base_table
    *   The base table name for which to search the fields of view.
    *
-   * @return boolean
+   * @return bool
    *   If there are field that do not belong to the given base table.
    */
   protected function hasFieldsNotFromBaseTable(array &$records, $base_table) {

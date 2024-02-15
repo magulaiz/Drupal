@@ -154,7 +154,7 @@ class ContentEntityStorage extends SqlContentEntityStorage {
       return [];
     }
 
-    $table_mapping = $this->getTableMapping();
+    // $table_mapping = $this->getTableMapping();
     // $dedicated_table_names = $table_mapping->getDedicatedTableNames();
 
     // TODO remove: Get all the embedded table names without the base table.
@@ -332,7 +332,7 @@ class ContentEntityStorage extends SqlContentEntityStorage {
       }
 
       // Use the collected embedded table data to retrieve the entity values.
-      foreach ($embedded_table_data as $table_name => $table_rows) {
+      foreach ($embedded_table_data as $table_rows) {
         if (is_array($table_rows)) {
           foreach ($table_rows as $table_row) {
             $id = $table_row[$this->idKey];
@@ -391,7 +391,7 @@ class ContentEntityStorage extends SqlContentEntityStorage {
    *   The embedded table name.
    * @param array $embedded_table_data
    *   The embedded table data.
-   * @param bool $load_from_revision
+   * @param bool $load_from_revision_id
    *   (optional) Flag to indicate whether revisions should be loaded or not,
    *   defaults to FALSE.
    */
@@ -565,12 +565,12 @@ class ContentEntityStorage extends SqlContentEntityStorage {
 
     $prefixed_table = $this->database->getMongodbPrefixedTable($this->baseTable);
     $update_operations = [];
-    $update_operations['$pull'] = [ $this->allRevisionsTable => [ $this->revisionKey => $revision_id ]];
+    $update_operations['$pull'] = [$this->allRevisionsTable => [$this->revisionKey => $revision_id]];
 
     // Perform all update operations on the entity.
-    $result = $this->database->getConnection()->{$prefixed_table}->updateMany(
-      [ $this->idKey => $entity_id],
-      $update_operations
+    $this->database->getConnection()->{$prefixed_table}->updateMany(
+      [$this->idKey => $entity_id],
+      $update_operations,
     );
   }
 
@@ -705,7 +705,7 @@ class ContentEntityStorage extends SqlContentEntityStorage {
       }
       else {
         // Make sure that the revision_id is not already in use.
-        if ($revision = $this->loadRevision($entity->getRevisionId())) {
+        if ($this->loadRevision($entity->getRevisionId())) {
           $entity->set($this->entityType->getKey('revision'), $this->getMongoSequences()->nextRevisionId($this->baseTable));
         }
 
@@ -732,7 +732,7 @@ class ContentEntityStorage extends SqlContentEntityStorage {
       $query = $this->database->update($this->baseTable)->condition($this->idKey, $record->{$this->idKey});
     }
     else {
-      $query = $this->database->insert($this->baseTable, array('return' => Database::RETURN_INSERT_ID));
+      $query = $this->database->insert($this->baseTable, ['return' => Database::RETURN_INSERT_ID]);
     }
 
     $embedded_tables = [];
@@ -879,7 +879,7 @@ class ContentEntityStorage extends SqlContentEntityStorage {
   /**
    * Removes the unneeded revisions from the all_revisions table.
    *
-   * @param string|integer $entity_id
+   * @param string|int $entity_id
    *   The table name to save to. Defaults to the data table.
    */
   protected function cleanupEntityAllRevisionData($entity_id) {
@@ -898,7 +898,7 @@ class ContentEntityStorage extends SqlContentEntityStorage {
         $prefixed_table = $this->database->getMongodbPrefixedTable($this->baseTable);
         $entity_data = $this->database->getConnection()->{$prefixed_table}->findOne(
           [$this->idKey => ['$eq' => $entity_id]],
-          [ 'projection' => [ $this->allRevisionsTable => 1 ]]
+          ['projection' => [$this->allRevisionsTable => 1]],
         );
 
         $revisions_langcodes = [];
@@ -924,9 +924,9 @@ class ContentEntityStorage extends SqlContentEntityStorage {
         }
         $new_all_revisions_data = array_reverse($new_all_revisions_data);
 
-        $result = $this->database->getConnection()->{$prefixed_table}->updateOne(
+        $this->database->getConnection()->{$prefixed_table}->updateOne(
           [$this->idKey => ['$eq' => $entity_id]],
-          ['$set' => [$this->allRevisionsTable => $new_all_revisions_data]]
+          ['$set' => [$this->allRevisionsTable => $new_all_revisions_data]],
         );
       }
     }
@@ -961,24 +961,16 @@ class ContentEntityStorage extends SqlContentEntityStorage {
    *
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   The entity object.
-   * @param string $table_name
-   *   The table name to save to. Defaults to the data table.
+   * @param string $names
+   *   The table names to save to. Defaults to the data table.
    *
    * @return array
    *   The records to store for the shared table
    */
   protected function getEmbeddedDedicatedTableNames(ContentEntityInterface $entity, $names = []) {
-    $vid = $entity->getRevisionId();
-    $id = $entity->id();
     $bundle = $entity->bundle();
     $entity_type = $entity->getEntityTypeId();
-    $default_langcode = $entity->getUntranslated()->language()->getId();
-    $translation_langcodes = array_keys($entity->getTranslationLanguages());
     $table_mapping = $this->getTableMapping();
-
-    if (!isset($vid)) {
-      $vid = $id;
-    }
 
     $original = !empty($entity->original) ? $entity->original : NULL;
 
@@ -1005,7 +997,7 @@ class ContentEntityStorage extends SqlContentEntityStorage {
       $dedicated_table_names[$this->baseTable] = [];
     }
 
-    foreach ($definitions as $field_name => $field_definition) {
+    foreach ($definitions as $field_definition) {
       $storage_definition = $field_definition->getFieldStorageDefinition();
       if (!$table_mapping->requiresDedicatedTableStorage($storage_definition)) {
         continue;
@@ -1062,8 +1054,6 @@ class ContentEntityStorage extends SqlContentEntityStorage {
     if (!isset($vid)) {
       $vid = $id;
     }
-
-    $original = !empty($entity->original) ? $entity->original : NULL;
 
     // Determine which fields should be actually stored.
     $definitions = $this->entityFieldManager->getFieldDefinitions($entity_type, $bundle);
@@ -1134,13 +1124,13 @@ class ContentEntityStorage extends SqlContentEntityStorage {
         $items->filterEmptyItems();
         foreach ($items as $delta => $item) {
           // We now know we have something to insert.
-          $record = array(
+          $record = [
             'entity_id' => $id,
             'revision_id' => $vid,
             'bundle' => $bundle,
             'delta' => $delta,
             'langcode' => $langcode,
-          );
+          ];
           foreach ($storage_definition->getColumns() as $column => $attributes) {
             $column_name = $table_mapping->getFieldColumnName($storage_definition, $column);
             $value = $item->$column;
@@ -1187,7 +1177,7 @@ class ContentEntityStorage extends SqlContentEntityStorage {
    */
   public function onFieldStorageDefinitionDelete(FieldStorageDefinitionInterface $storage_definition) {
     $table_mapping = $this->getTableMapping(
-//      $this->entityManager->getLastInstalledFieldStorageDefinitions($this->entityType->id())
+    // $this->entityManager->getLastInstalledFieldStorageDefinitions($this->entityType->id())
     );
 
     if ($table_mapping->requiresDedicatedTableStorage($storage_definition)) {
@@ -1210,15 +1200,15 @@ class ContentEntityStorage extends SqlContentEntityStorage {
       foreach ($dedicated_tables as $embedded_to_table => $dedicated_table) {
         $prefixed_table = $this->database->getMongodbPrefixedTable($this->getBaseTable());
         if ($embedded_to_table == $this->getBaseTable()) {
-          $query = $this->database->getConnection()->{$prefixed_table}->updateMany(
-            [ "$dedicated_table" => [ '$exists' => TRUE ]],
-            [ '$set' => [ "$dedicated_table.$[].deleted" => TRUE]]
+          $this->database->getConnection()->{$prefixed_table}->updateMany(
+            ["$dedicated_table" => ['$exists' => TRUE]],
+            ['$set' => ["$dedicated_table.$[].deleted" => TRUE]],
           );
         }
         else {
-          $query = $this->database->getConnection()->{$prefixed_table}->updateMany(
-            [ "$embedded_to_table.$dedicated_table" => [ '$exists' => TRUE ]],
-            ['$set' => ["$embedded_to_table.$[].$dedicated_table.$[].deleted" => TRUE]]
+          $this->database->getConnection()->{$prefixed_table}->updateMany(
+            ["$embedded_to_table.$dedicated_table" => ['$exists' => TRUE]],
+            ['$set' => ["$embedded_to_table.$[].$dedicated_table.$[].deleted" => TRUE]],
           );
         }
       }
@@ -1248,61 +1238,73 @@ class ContentEntityStorage extends SqlContentEntityStorage {
         $latest_revision_table = $this->getLatestRevisionTable();
         $dedicated_latest_revision_table = $table_mapping->getMongodbDedicatedTableName($storage_definition, $latest_revision_table);
 
-        $result = $this->database->getConnection()->{$prefixed_table}->updateMany(
+        $this->database->getConnection()->{$prefixed_table}->updateMany(
           [
             "$current_revision_table.$dedicated_current_revision_table" => ['$exists' => TRUE],
           ],
-          [ '$set' => [
-            "$current_revision_table.$[].$dedicated_current_revision_table.$[field].deleted" => TRUE
-          ]],
-          [ 'arrayFilters' => [[ "field.bundle" => $field_definition->getTargetBundle() ]]]
+          [
+            '$set' => [
+              "$current_revision_table.$[].$dedicated_current_revision_table.$[field].deleted" => TRUE,
+            ],
+          ],
+          ['arrayFilters' => [["field.bundle" => $field_definition->getTargetBundle()]]],
         );
 
-        $result = $this->database->getConnection()->{$prefixed_table}->updateMany(
+        $this->database->getConnection()->{$prefixed_table}->updateMany(
           [
             "$latest_revision_table.$dedicated_latest_revision_table" => ['$exists' => TRUE],
           ],
-          [ '$set' => [
-            "$latest_revision_table.$[].$dedicated_latest_revision_table.$[field].deleted" => TRUE
-          ]],
-          [ 'arrayFilters' => [[ "field.bundle" => $field_definition->getTargetBundle() ]]]
+          [
+            '$set' => [
+              "$latest_revision_table.$[].$dedicated_latest_revision_table.$[field].deleted" => TRUE,
+            ],
+          ],
+          ['arrayFilters' => [["field.bundle" => $field_definition->getTargetBundle()]]]
         );
 
-        $result = $this->database->getConnection()->{$prefixed_table}->updateMany(
+        $this->database->getConnection()->{$prefixed_table}->updateMany(
           [],
-          [ '$set' => [
-            "$all_revisions_table.$[dedicated].$dedicated_all_revisions_table.$[].deleted" => TRUE
-          ]],
-          [ 'arrayFilters' => [
-            [ "dedicated.$dedicated_all_revisions_table" => ['$exists' => TRUE]]
-          ]]
+          [
+            '$set' => [
+              "$all_revisions_table.$[dedicated].$dedicated_all_revisions_table.$[].deleted" => TRUE,
+            ],
+          ],
+          [
+            'arrayFilters' => [
+              ["dedicated.$dedicated_all_revisions_table" => ['$exists' => TRUE]],
+            ],
+          ],
         );
       }
       elseif ($this->entityType->isTranslatable()) {
         $translations_table = $this->getTranslationsTable();
         $dedicated_translations_table = $table_mapping->getMongodbDedicatedTableName($storage_definition, $translations_table);
 
-        $result = $this->database->getConnection()->{$prefixed_table}->updateMany(
+        $this->database->getConnection()->{$prefixed_table}->updateMany(
           [
             "$translations_table.$dedicated_translations_table" => ['$exists' => TRUE],
           ],
-          [ '$set' => [
-            "$translations_table.$[].$dedicated_translations_table.$[field].deleted" => TRUE,
-          ]],
-          [ 'arrayFilters' => [[ "field.bundle" => $field_definition->getTargetBundle() ]]]
+          [
+            '$set' => [
+              "$translations_table.$[].$dedicated_translations_table.$[field].deleted" => TRUE,
+            ],
+          ],
+          ['arrayFilters' => [["field.bundle" => $field_definition->getTargetBundle()]]],
         );
       }
       else {
         $base_table = $this->getBaseTable();
         $dedicated_base_table = $table_mapping->getMongodbDedicatedTableName($storage_definition, $base_table);
-        $result = $this->database->getConnection()->{$prefixed_table}->updateMany(
+        $this->database->getConnection()->{$prefixed_table}->updateMany(
           [
             $dedicated_base_table => ['$exists' => TRUE],
           ],
-          [ '$set' => [
-            "$dedicated_base_table.$[field].deleted" => TRUE,
-          ]],
-          [ 'arrayFilters' => [[ "field.bundle" => $field_definition->getTargetBundle() ]]]
+          [
+            '$set' => [
+              "$dedicated_base_table.$[field].deleted" => TRUE,
+            ],
+          ],
+          ['arrayFilters' => [["field.bundle" => $field_definition->getTargetBundle()]]],
         );
       }
     }
@@ -1422,21 +1424,21 @@ class ContentEntityStorage extends SqlContentEntityStorage {
     $prefixed_table = $this->database->getMongodbPrefixedTable($this->getBaseTable());
     foreach ($dedicated_tables as $embedded_to_table => $dedicated_table) {
       if ($embedded_to_table == $this->getBaseTable()) {
-        $query = $this->database->getConnection()->{$prefixed_table}->updateMany(
+        $this->database->getConnection()->{$prefixed_table}->updateMany(
           [
             $dedicated_table => ['$exists' => TRUE],
-            $id_key => $id
+            $id_key => $id,
           ],
-          ['$unset' => [$dedicated_table => ""]]
+          ['$unset' => [$dedicated_table => ""]],
         );
       }
       else {
-        $query = $this->database->getConnection()->{$prefixed_table}->updateMany(
+        $this->database->getConnection()->{$prefixed_table}->updateMany(
           [
             "$embedded_to_table.$dedicated_table" => ['$exists' => TRUE],
-            $id_key => $id
+            $id_key => $id,
           ],
-          ['$unset' => ["$embedded_to_table.$dedicated_table" => ""]]
+          ['$unset' => ["$embedded_to_table.$dedicated_table" => ""]],
         );
       }
     }
@@ -1446,7 +1448,7 @@ class ContentEntityStorage extends SqlContentEntityStorage {
    * {@inheritdoc}
    */
   public function countFieldData($storage_definition, $as_bool = FALSE) {
-//    $storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($this->entityTypeId);
+    // $storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($this->entityTypeId);
     $storage_definitions = $this->fieldStorageDefinitions;
     $storage_definitions[$storage_definition->getName()] = $storage_definition;
     $table_mapping = $this->getTableMapping($storage_definitions);

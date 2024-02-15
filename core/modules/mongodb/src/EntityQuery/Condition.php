@@ -71,7 +71,7 @@ class Condition extends CoreCondition {
     // The first two should use the same table but the last one needs to be a
     // new table. So for the first two, the table array index will be 'tags'
     // while the third will be 'node_reference.nid.tags'.
-    $index_prefix = '';
+    // $index_prefix = '';
     $specifiers = explode('.', $condition['field']);
     $count = count($specifiers) - 1;
     // This will contain the definitions of the last specifier seen by the
@@ -94,18 +94,18 @@ class Condition extends CoreCondition {
       // If there is revision support, only the current revisions are being
       // queried, and the field is revisionable then use the revision id.
       // Otherwise, the entity id will do.
-      if (($revision_key = $entity_type->getKey('revision')) && $allRevisions && $field_storage && $field_storage->isRevisionable()) {
-        // This contains the relevant SQL field to be used when joining entity
-        // tables.
-        $entity_id_field = $revision_key;
-        $field_id_field = 'revision_id';
-      }
-      else {
-        // This contains the relevant SQL field to be used when joining field
-        // tables.
-        $entity_id_field = $entity_type->getKey('id');
-        $field_id_field = 'entity_id';
-      }
+      // if (($revision_key = $entity_type->getKey('revision')) && $allRevisions && $field_storage && $field_storage->isRevisionable()) {
+      // This contains the relevant SQL field to be used when joining entity
+      // tables.
+      // $entity_id_field = $revision_key;
+      // $field_id_field = 'revision_id';
+      // }
+      // else {
+      // This contains the relevant SQL field to be used when joining field
+      // tables.
+      // $entity_id_field = $entity_type->getKey('id');
+      // $field_id_field = 'entity_id';
+      // }
 
       /** @var \Drupal\mongodb\EntityStorage\ContentEntityStorage $storage */
       $storage = $this->getEntityTypeManager()->getStorage($entityTypeId);
@@ -115,8 +115,6 @@ class Condition extends CoreCondition {
 
       // Check whether this field is stored in a dedicated table.
       if ($field_storage && $table_mapping->requiresDedicatedTableStorage($field_storage)) {
-        $data_table = NULL;
-
         if ($entity_type->isRevisionable() && $allRevisions) {
           $data_table = $storage->getAllRevisionsTable();
         }
@@ -138,7 +136,7 @@ class Condition extends CoreCondition {
           // specific delta.
           if (is_numeric($next)) {
             $delta = $next;
-            $index_prefix .= ".$delta";
+            // $index_prefix .= ".$delta";
             // Do not process it again.
             $key++;
             $next = $specifiers[$key + 1];
@@ -146,7 +144,7 @@ class Condition extends CoreCondition {
           // If this specifier is the reserved keyword "%delta" we're adding a
           // condition on a delta range.
           elseif ($next == TableMappingInterface::DELTA) {
-            $index_prefix .= TableMappingInterface::DELTA;
+            // $index_prefix .= TableMappingInterface::DELTA;
             // Do not process it again.
             $key++;
             // If there are more specifiers to work with then continue
@@ -179,7 +177,7 @@ class Condition extends CoreCondition {
             $propertyDefinitions = $field_storage->getPropertyDefinitions();
 
             // Prepare the next index prefix.
-            $next_index_prefix = "$relationship_specifier.$column";
+            // $next_index_prefix = "$relationship_specifier.$column";
           }
         }
         $mongodb_column = $table_mapping->getFieldColumnName($field_storage, $column);
@@ -450,7 +448,7 @@ class Condition extends CoreCondition {
         if (!$propertyDefinitions) {
           $propertyDefinitions = $field_storage->getPropertyDefinitions();
           $relationship_specifier = $specifiers[$key + 1];
-          $next_index_prefix = $relationship_specifier;
+          // $next_index_prefix = $relationship_specifier;
         }
         $entity_type_id = NULL;
         // Relationship specifier can also contain the entity type ID, i.e.
@@ -471,7 +469,7 @@ class Condition extends CoreCondition {
           // Add the new entity base table using the table and sql column.
           $propertyDefinitions = [];
           $key++;
-          $index_prefix .= "$next_index_prefix.";
+          // $index_prefix .= "$next_index_prefix.";
         }
         else {
           throw new QueryException("Invalid specifier '$relationship_specifier'");
@@ -555,6 +553,8 @@ class Condition extends CoreCondition {
    *
    * @param string $table
    *   The table name.
+   * @param string $entity_type_id
+   *   The entity type id.
    *
    * @return array|false
    *   An associative array of table field mapping for the given table, keyed by
