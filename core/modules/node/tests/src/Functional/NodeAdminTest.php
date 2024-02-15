@@ -86,7 +86,7 @@ class NodeAdminTest extends NodeTestBase {
   /**
    * Tests that the table sorting works on the content admin pages.
    */
-  public function testContentAdminSort() {
+  public function testContentAdminSort(): void {
     $this->drupalLogin($this->adminUser);
 
     $changed = \Drupal::time()->getRequestTime();
@@ -141,7 +141,7 @@ class NodeAdminTest extends NodeTestBase {
    *
    * @see TaxonomyNodeFilterTestCase
    */
-  public function testContentAdminPages() {
+  public function testContentAdminPages(): void {
     $this->drupalLogin($this->adminUser);
 
     // Use an explicit changed time to ensure the expected order in the content

@@ -26,7 +26,7 @@ class YamlFileLoaderTest extends UnitTestCase {
     FileCacheFactory::setPrefix('example');
   }
 
-  public function testParseDefinitionsWithProvider() {
+  public function testParseDefinitionsWithProvider(): void {
     $yml = <<<YAML
 services:
   example_service_1:
@@ -68,7 +68,7 @@ YAML;
   /**
    * @dataProvider providerTestExceptions
    */
-  public function testExceptions($yml, $message) {
+  public function testExceptions($yml, $message): void {
     vfsStream::setup('drupal', NULL, [
       'modules' => [
         'example' => [

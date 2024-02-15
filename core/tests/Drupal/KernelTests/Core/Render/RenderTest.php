@@ -23,7 +23,7 @@ class RenderTest extends KernelTestBase {
   /**
    * Tests theme preprocess functions being able to attach assets.
    */
-  public function testDrupalRenderThemePreprocessAttached() {
+  public function testDrupalRenderThemePreprocessAttached(): void {
     \Drupal::state()->set('theme_preprocess_attached_test', TRUE);
 
     $test_element = [
@@ -48,7 +48,7 @@ class RenderTest extends KernelTestBase {
   /**
    * Ensures that render array children are processed correctly.
    */
-  public function testRenderChildren() {
+  public function testRenderChildren(): void {
     // Ensure that #prefix and #suffix is only being printed once since that is
     // the behavior the caller code expects.
     $build = [
@@ -65,7 +65,7 @@ class RenderTest extends KernelTestBase {
   /**
    * Tests that we get an exception when we try to attach an illegal type.
    */
-  public function testProcessAttached() {
+  public function testProcessAttached(): void {
     // Specify invalid attachments in a render array.
     $build['#attached']['library'][] = 'core/drupal.states';
     $build['#attached']['drupal_process_states'][] = [];
