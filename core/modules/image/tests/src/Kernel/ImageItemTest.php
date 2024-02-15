@@ -98,7 +98,7 @@ class ImageItemTest extends FieldKernelTestBase {
   /**
    * Tests using entity fields of the image field type.
    */
-  public function testImageItem() {
+  public function testImageItem(): void {
     // Create a test entity with the image field set.
     $entity = EntityTest::create();
     $entity->image_test->target_id = $this->image->id();
@@ -157,7 +157,7 @@ class ImageItemTest extends FieldKernelTestBase {
   /**
    * Tests generateSampleItems() method under different dimensions.
    */
-  public function testImageItemSampleValueGeneration() {
+  public function testImageItemSampleValueGeneration(): void {
 
     // Default behavior. No dimensions configuration.
     $entity = EntityTest::create();
@@ -176,7 +176,7 @@ class ImageItemTest extends FieldKernelTestBase {
   /**
    * Tests a malformed image.
    */
-  public function testImageItemMalformed() {
+  public function testImageItemMalformed(): void {
     // Validate entity is an image and don't gather dimensions if it is not.
     $entity = EntityTest::create();
     $entity->image_test = NULL;

@@ -165,7 +165,7 @@ class PermissionsHashGeneratorTest extends UnitTestCase {
   /**
    * @covers ::generate
    */
-  public function testGenerate() {
+  public function testGenerate(): void {
     // Ensure that the super user (user 1) always gets the same hash.
     $super_user_hash = $this->permissionsHash->generate($this->account1);
 
@@ -184,7 +184,7 @@ class PermissionsHashGeneratorTest extends UnitTestCase {
   /**
    * @covers ::generate
    */
-  public function testGeneratePersistentCache() {
+  public function testGeneratePersistentCache(): void {
     // Set expectations for the mocked cache backend.
     $expected_cid = 'user_permissions_hash:administrator,authenticated';
 
@@ -212,7 +212,7 @@ class PermissionsHashGeneratorTest extends UnitTestCase {
   /**
    * @covers ::generate
    */
-  public function testGenerateStaticCache() {
+  public function testGenerateStaticCache(): void {
     // Set expectations for the mocked cache backend.
     $expected_cid = 'user_permissions_hash:administrator,authenticated';
 
@@ -237,7 +237,7 @@ class PermissionsHashGeneratorTest extends UnitTestCase {
   /**
    * Tests the generate method with no cache returned.
    */
-  public function testGenerateNoCache() {
+  public function testGenerateNoCache(): void {
     // Set expectations for the mocked cache backend.
     $expected_cid = 'user_permissions_hash:administrator,authenticated';
 

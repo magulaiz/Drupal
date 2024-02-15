@@ -46,7 +46,7 @@ abstract class FieldTestBase extends BrowserTestBase {
    * @param $column
    *   (Optional) The name of the column to check. Defaults to 'value'.
    */
-  public function assertFieldValues(EntityInterface $entity, $field_name, $expected_values, $langcode = LanguageInterface::LANGCODE_DEFAULT, $column = 'value') {
+  public function assertFieldValues(EntityInterface $entity, $field_name, $expected_values, $langcode = LanguageInterface::LANGCODE_DEFAULT, $column = 'value'): void {
     // Re-load the entity to make sure we have the latest changes.
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($entity->getEntityTypeId());

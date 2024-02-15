@@ -31,7 +31,7 @@ class ImageStyleXmlAnonTest extends ImageStyleResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testGet() {
+  public function testGet(): void {
     // @todo Remove this method override in https://www.drupal.org/node/2905655
     $this->markTestSkipped();
   }

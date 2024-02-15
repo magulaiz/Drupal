@@ -20,7 +20,7 @@ class OliveroPostUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../../modules/system/tests/fixtures/update/drupal-9.4.0.filled.standard.php.gz',
     ];
@@ -29,7 +29,7 @@ class OliveroPostUpdateTest extends UpdatePathTestBase {
   /**
    * Tests update hook setting base primary color.
    */
-  public function testOliveroPrimaryColorUpdate() {
+  public function testOliveroPrimaryColorUpdate(): void {
     $config = $this->config('olivero.settings');
     $this->assertEmpty($config->get('base_primary_color'));
 

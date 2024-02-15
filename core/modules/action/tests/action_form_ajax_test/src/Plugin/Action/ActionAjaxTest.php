@@ -39,7 +39,7 @@ class ActionAjaxTest extends ConfigurableActionBase {
   /**
    * {@inheritdoc}
    */
-  public function execute() {
+  public function execute(): void {
   }
 
   /**
@@ -83,7 +83,7 @@ class ActionAjaxTest extends ConfigurableActionBase {
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
     $this->configuration['party_time'] = $form_state->getValue('party_time');
   }
 

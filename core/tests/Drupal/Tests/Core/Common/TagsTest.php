@@ -24,7 +24,7 @@ class TagsTest extends UnitTestCase {
   /**
    * Explodes a series of tags.
    */
-  public function testExplodeTags() {
+  public function testExplodeTags(): void {
     $string = implode(', ', array_keys($this->validTags));
     $tags = Tags::explode($string);
     $this->assertEquals(array_values($this->validTags), $tags);
@@ -33,7 +33,7 @@ class TagsTest extends UnitTestCase {
   /**
    * Implodes a series of tags.
    */
-  public function testImplodeTags() {
+  public function testImplodeTags(): void {
     $tags = array_values($this->validTags);
     // Let's explode and implode to our heart's content.
     for ($i = 0; $i < 10; $i++) {

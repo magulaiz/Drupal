@@ -47,7 +47,7 @@ class NodeRSSContentTest extends NodeTestBase {
   /**
    * Ensures that a new node includes the custom data when added to an RSS feed.
    */
-  public function testNodeRSSContent() {
+  public function testNodeRSSContent(): void {
     // Create a node.
     $node = $this->drupalCreateNode(['type' => 'article', 'promote' => 1]);
 
@@ -77,7 +77,7 @@ class NodeRSSContentTest extends NodeTestBase {
   /**
    * Tests relative, root-relative, protocol-relative and absolute URLs.
    */
-  public function testUrlHandling() {
+  public function testUrlHandling(): void {
     // Only the plain_text text format is available by default, which escapes
     // all HTML.
     FilterFormat::create([

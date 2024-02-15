@@ -42,7 +42,7 @@ class UserChangedTest extends ViewTestBase {
   /**
    * Tests changed field.
    */
-  public function testChangedField() {
+  public function testChangedField(): void {
     $path = 'test_user_changed';
 
     $options = [];

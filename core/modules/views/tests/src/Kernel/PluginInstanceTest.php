@@ -72,7 +72,7 @@ class PluginInstanceTest extends ViewsKernelTestBase {
   /**
    * Confirms that there is plugin data for all views plugin types.
    */
-  public function testPluginData() {
+  public function testPluginData(): void {
     // Check that we have an array of data.
     $this->assertIsArray($this->definitions);
 
@@ -94,7 +94,7 @@ class PluginInstanceTest extends ViewsKernelTestBase {
    * This will iterate through all plugins from _views_fetch_plugin_data(),
    * filtering out deprecated plugins.
    */
-  public function testPluginInstances() {
+  public function testPluginInstances(): void {
     $this->assertPluginInstances(FALSE);
   }
 

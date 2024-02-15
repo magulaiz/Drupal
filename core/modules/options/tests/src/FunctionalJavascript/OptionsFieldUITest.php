@@ -85,7 +85,7 @@ class OptionsFieldUITest extends WebDriverTestBase {
    *
    * @dataProvider providerTestOptionsAllowedValues
    */
-  public function testOptionsAllowedValues($option_type, $options, $is_string_option, string $add_row_method) {
+  public function testOptionsAllowedValues($option_type, $options, $is_string_option, string $add_row_method): void {
     $assert = $this->assertSession();
     $this->fieldName = 'field_options_text';
     $this->createOptionsField($option_type);
@@ -213,7 +213,7 @@ class OptionsFieldUITest extends WebDriverTestBase {
   /**
    * Tests that the allowed options are available to the default value widget.
    */
-  public function testDefaultValueOptions() {
+  public function testDefaultValueOptions(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
     $bundle_path = 'admin/structure/types/manage/' . $this->type;
@@ -259,7 +259,7 @@ class OptionsFieldUITest extends WebDriverTestBase {
    * @param bool $is_string_option
    *   Whether the request is for string option list.
    */
-  protected function assertOrder($expected, $is_string_option) {
+  protected function assertOrder($expected, $is_string_option): void {
     $page = $this->getSession()->getPage();
     if ($is_string_option) {
       $inputs = $page->findAll('css', '.draggable .form-text.machine-name-source');
@@ -279,7 +279,7 @@ class OptionsFieldUITest extends WebDriverTestBase {
    * @param array $expected
    *   Expected order.
    */
-  protected function assertNodeFormOrder($expected) {
+  protected function assertNodeFormOrder($expected): void {
     $elements = $this->assertSession()->selectExists('field_options_text')->findAll('css', 'option');
     $elements = array_map(function ($element) {
       return $element->getText();
@@ -293,7 +293,7 @@ class OptionsFieldUITest extends WebDriverTestBase {
    * @param string $type
    *   One of 'list_integer', 'list_float' or 'list_string'.
    */
-  protected function createOptionsField($type) {
+  protected function createOptionsField($type): void {
     // Create a field.
     FieldStorageConfig::create([
       'field_name' => $this->fieldName,
@@ -378,7 +378,7 @@ JS;
   /**
    * Tests `list_string` machine name with special characters.
    */
-  public function testMachineNameSpecialCharacters() {
+  public function testMachineNameSpecialCharacters(): void {
     $this->fieldName = 'field_options_text';
     $this->createOptionsField('list_string');
     $this->drupalGet($this->adminPath);

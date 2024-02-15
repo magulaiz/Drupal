@@ -32,7 +32,7 @@ class FilterUninstallValidatorTest extends UnitTestCase {
   /**
    * @covers ::validate
    */
-  public function testValidateNoPlugins() {
+  public function testValidateNoPlugins(): void {
     $this->filterUninstallValidator->expects($this->once())
       ->method('getFilterDefinitionsByProvider')
       ->willReturn([]);
@@ -48,7 +48,7 @@ class FilterUninstallValidatorTest extends UnitTestCase {
   /**
    * @covers ::validate
    */
-  public function testValidateNoFormats() {
+  public function testValidateNoFormats(): void {
     $this->filterUninstallValidator->expects($this->once())
       ->method('getFilterDefinitionsByProvider')
       ->willReturn([
@@ -70,7 +70,7 @@ class FilterUninstallValidatorTest extends UnitTestCase {
   /**
    * @covers ::validate
    */
-  public function testValidateNoMatchingFormats() {
+  public function testValidateNoMatchingFormats(): void {
     $this->filterUninstallValidator->expects($this->once())
       ->method('getFilterDefinitionsByProvider')
       ->willReturn([

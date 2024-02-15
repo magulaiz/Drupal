@@ -24,7 +24,7 @@ class RedirectTest extends UITestBase {
   /**
    * Tests the redirecting.
    */
-  public function testRedirect() {
+  public function testRedirect(): void {
     $view_name = 'test_view';
 
     $random_destination = $this->randomMachineName();

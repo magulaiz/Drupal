@@ -12,7 +12,7 @@ class FileDeleteRecursiveTest extends FileTestBase {
   /**
    * Delete a normal file.
    */
-  public function testSingleFile() {
+  public function testSingleFile(): void {
     // Create a file for testing
     $filepath = 'public://' . $this->randomMachineName();
     file_put_contents($filepath, '');
@@ -25,7 +25,7 @@ class FileDeleteRecursiveTest extends FileTestBase {
   /**
    * Try deleting an empty directory.
    */
-  public function testEmptyDirectory() {
+  public function testEmptyDirectory(): void {
     // A directory to operate on.
     $directory = $this->createDirectory();
 
@@ -37,7 +37,7 @@ class FileDeleteRecursiveTest extends FileTestBase {
   /**
    * Try deleting a directory with some files.
    */
-  public function testDirectory() {
+  public function testDirectory(): void {
     // A directory to operate on.
     $directory = $this->createDirectory();
     $filepathA = $directory . '/A';
@@ -55,7 +55,7 @@ class FileDeleteRecursiveTest extends FileTestBase {
   /**
    * Try deleting subdirectories with some files.
    */
-  public function testSubDirectory() {
+  public function testSubDirectory(): void {
     // A directory to operate on.
     $directory = $this->createDirectory();
     $subdirectory = $this->createDirectory($directory . '/sub');

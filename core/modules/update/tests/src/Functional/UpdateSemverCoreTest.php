@@ -18,7 +18,7 @@ class UpdateSemverCoreTest extends UpdateSemverCoreTestBase {
   /**
    * Ensures proper results where there are date mismatches among modules.
    */
-  public function testDatestampMismatch() {
+  public function testDatestampMismatch(): void {
     $this->mockInstalledExtensionsInfo([
       'block' => [
         // This is 2001-09-09 01:46:40 GMT, so test for "2001-Sep-".
@@ -40,7 +40,7 @@ class UpdateSemverCoreTest extends UpdateSemverCoreTestBase {
   /**
    * Checks that running cron updates the list of available updates.
    */
-  public function testModulePageRunCron() {
+  public function testModulePageRunCron(): void {
     $this->setProjectInstalledVersion('8.0.0');
     $this->config('update.settings')
       ->set('fetch.url', Url::fromRoute('update_test.update_test')->setAbsolute()->toString())
@@ -55,7 +55,7 @@ class UpdateSemverCoreTest extends UpdateSemverCoreTestBase {
   /**
    * Checks that clearing the disk cache works.
    */
-  public function testClearDiskCache() {
+  public function testClearDiskCache(): void {
     $directories = [
       _update_manager_cache_directory(FALSE),
       _update_manager_extract_directory(FALSE),
@@ -72,7 +72,7 @@ class UpdateSemverCoreTest extends UpdateSemverCoreTestBase {
   /**
    * Checks the messages at admin/modules when the site is up to date.
    */
-  public function testModulePageUpToDate() {
+  public function testModulePageUpToDate(): void {
     $this->setProjectInstalledVersion('8.0.0');
     // Instead of using refreshUpdateStatus(), set these manually.
     $this->config('update.settings')
@@ -92,7 +92,7 @@ class UpdateSemverCoreTest extends UpdateSemverCoreTestBase {
   /**
    * Checks the messages at admin/modules when an update is missing.
    */
-  public function testModulePageRegularUpdate() {
+  public function testModulePageRegularUpdate(): void {
     $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',
       'administer modules',
@@ -127,7 +127,7 @@ class UpdateSemverCoreTest extends UpdateSemverCoreTestBase {
   /**
    * Checks the messages at admin/modules when a security update is missing.
    */
-  public function testModulePageSecurityUpdate() {
+  public function testModulePageSecurityUpdate(): void {
     $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',
       'administer modules',
@@ -168,7 +168,7 @@ class UpdateSemverCoreTest extends UpdateSemverCoreTestBase {
   /**
    * Tests the Update Manager module when the update server returns 503 errors.
    */
-  public function testServiceUnavailable() {
+  public function testServiceUnavailable(): void {
     $this->refreshUpdateStatus([], '503-error');
     // Ensure that no "Warning: SimpleXMLElement..." parse errors are found.
     $this->assertSession()->pageTextNotContains('SimpleXMLElement');
@@ -178,7 +178,7 @@ class UpdateSemverCoreTest extends UpdateSemverCoreTestBase {
   /**
    * Tests that exactly one fetch task per project is created and not more.
    */
-  public function testFetchTasks() {
+  public function testFetchTasks(): void {
     $project_a = [
       'name' => 'aaa_update_test',
     ];
@@ -204,7 +204,7 @@ class UpdateSemverCoreTest extends UpdateSemverCoreTestBase {
   /**
    * Checks language module in core package at admin/reports/updates.
    */
-  public function testLanguageModuleUpdate() {
+  public function testLanguageModuleUpdate(): void {
     $this->setProjectInstalledVersion('8.0.0');
     // Instead of using refreshUpdateStatus(), set these manually.
     $this->config('update.settings')
@@ -219,7 +219,7 @@ class UpdateSemverCoreTest extends UpdateSemverCoreTestBase {
   /**
    * Ensures that the local actions appear.
    */
-  public function testLocalActions() {
+  public function testLocalActions(): void {
     $admin_user = $this->drupalCreateUser([
       'administer site configuration',
       'administer modules',
@@ -244,7 +244,7 @@ class UpdateSemverCoreTest extends UpdateSemverCoreTestBase {
   /**
    * Checks that Drupal recovers after problems connecting to update server.
    */
-  public function testBrokenThenFixedUpdates() {
+  public function testBrokenThenFixedUpdates(): void {
     $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',
       'view update notifications',
@@ -278,7 +278,7 @@ class UpdateSemverCoreTest extends UpdateSemverCoreTestBase {
   /**
    * Tests when a dev release does not have a date.
    */
-  public function testDevNoReleaseDate() {
+  public function testDevNoReleaseDate(): void {
     $this->setProjectInstalledVersion('8.0.x-dev');
     $this->refreshUpdateStatus([$this->updateProject => 'dev-no-date']);
   }

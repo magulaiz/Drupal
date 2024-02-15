@@ -81,7 +81,7 @@ class UserPasswordResetTest extends BrowserTestBase {
   /**
    * Tests password reset functionality.
    */
-  public function testUserPasswordReset() {
+  public function testUserPasswordReset(): void {
     // Verify that accessing the password reset form without having the session
     // variables set results in an access denied message.
     $this->drupalGet(Url::fromRoute('user.reset.form', ['uid' => $this->account->id()]));
@@ -240,7 +240,7 @@ class UserPasswordResetTest extends BrowserTestBase {
    *
    * @dataProvider languagePrefixTestProvider
    */
-  public function testUserPasswordResetPreferredLanguage($setPreferredLangcode, $activeLangcode, $prefix, $visitingUrl, $expectedResetUrl, $unexpectedResetUrl) {
+  public function testUserPasswordResetPreferredLanguage($setPreferredLangcode, $activeLangcode, $prefix, $visitingUrl, $expectedResetUrl, $unexpectedResetUrl): void {
     // Set two new languages.
     ConfigurableLanguage::createFromLangcode('fr')->save();
     ConfigurableLanguage::createFromLangcode('zh-hant')->save();
@@ -324,7 +324,7 @@ class UserPasswordResetTest extends BrowserTestBase {
   /**
    * Tests user password reset while logged in.
    */
-  public function testUserPasswordResetLoggedIn() {
+  public function testUserPasswordResetLoggedIn(): void {
     $another_account = $this->drupalCreateUser();
     $this->drupalLogin($another_account);
     $this->drupalGet('user/password');
@@ -380,7 +380,7 @@ class UserPasswordResetTest extends BrowserTestBase {
   /**
    * Tests the text box on incorrect login via link to password reset page.
    */
-  public function testUserResetPasswordTextboxNotFilled() {
+  public function testUserResetPasswordTextboxNotFilled(): void {
     $this->drupalGet('user/login');
     $edit = [
       'name' => $this->randomMachineName(),
@@ -407,7 +407,7 @@ class UserPasswordResetTest extends BrowserTestBase {
   /**
    * Tests password reset flood control for one user.
    */
-  public function testUserResetPasswordUserFloodControl() {
+  public function testUserResetPasswordUserFloodControl(): void {
     \Drupal::configFactory()->getEditable('user.flood')
       ->set('user_limit', 3)
       ->save();
@@ -438,7 +438,7 @@ class UserPasswordResetTest extends BrowserTestBase {
   /**
    * Tests password reset flood control for one IP.
    */
-  public function testUserResetPasswordIpFloodControl() {
+  public function testUserResetPasswordIpFloodControl(): void {
     \Drupal::configFactory()->getEditable('user.flood')
       ->set('ip_limit', 3)
       ->save();
@@ -464,7 +464,7 @@ class UserPasswordResetTest extends BrowserTestBase {
   /**
    * Tests user password reset flood control is cleared on successful reset.
    */
-  public function testUserResetPasswordUserFloodControlIsCleared() {
+  public function testUserResetPasswordUserFloodControlIsCleared(): void {
     \Drupal::configFactory()->getEditable('user.flood')
       ->set('user_limit', 3)
       ->save();
@@ -504,7 +504,7 @@ class UserPasswordResetTest extends BrowserTestBase {
   /**
    * Tests user password reset flood control is cleared on admin reset.
    */
-  public function testUserResetPasswordUserFloodControlAdmin() {
+  public function testUserResetPasswordUserFloodControlAdmin(): void {
     $admin_user = $this->drupalCreateUser([
       'administer account settings',
       'administer users',
@@ -600,7 +600,7 @@ class UserPasswordResetTest extends BrowserTestBase {
   /**
    * Make sure that users cannot forge password reset URLs of other users.
    */
-  public function testResetImpersonation() {
+  public function testResetImpersonation(): void {
     // Create two identical user accounts except for the user name. They must
     // have the same empty password, so we can't use $this->drupalCreateUser().
     $edit = [];
@@ -645,7 +645,7 @@ class UserPasswordResetTest extends BrowserTestBase {
   /**
    * Test the autocomplete attribute is present.
    */
-  public function testResetFormHasAutocompleteAttribute() {
+  public function testResetFormHasAutocompleteAttribute(): void {
     $this->drupalGet('user/password');
     $field = $this->getSession()->getPage()->findField('name');
     $this->assertEquals('username', $field->getAttribute('autocomplete'));

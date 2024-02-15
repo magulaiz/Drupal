@@ -50,7 +50,7 @@ class EditorMediaDialogTest extends KernelTestBase {
    *
    * @covers ::buildForm
    */
-  public function testBuildForm() {
+  public function testBuildForm(): void {
     $format = FilterFormat::create([
       'filters' => [
         'media_embed' => ['status' => TRUE],

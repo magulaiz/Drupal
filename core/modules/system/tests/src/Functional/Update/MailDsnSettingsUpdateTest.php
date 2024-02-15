@@ -16,7 +16,7 @@ class MailDsnSettingsUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../fixtures/update/drupal-9.4.0.bare.standard.php.gz',
     ];
@@ -25,7 +25,7 @@ class MailDsnSettingsUpdateTest extends UpdatePathTestBase {
   /**
    * Tests system_post_update_mailer_dsn_settings().
    */
-  public function testSystemPostUpdateMailerDsnSettings() {
+  public function testSystemPostUpdateMailerDsnSettings(): void {
     $this->runUpdates();
 
     // Confirm that config was created.

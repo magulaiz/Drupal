@@ -43,7 +43,7 @@ class TestMigrateExecutable extends MigrateExecutable {
    * @param \Drupal\migrate\Plugin\MigrateSourceInterface $source
    *   The value to set.
    */
-  public function setSource($source) {
+  public function setSource($source): void {
     $this->source = $source;
   }
 
@@ -53,14 +53,14 @@ class TestMigrateExecutable extends MigrateExecutable {
    * @param array $source_id_values
    *   The values to set.
    */
-  public function setSourceIdValues($source_id_values) {
+  public function setSourceIdValues($source_id_values): void {
     $this->sourceIdValues = $source_id_values;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function handleException(\Exception $exception, $save = TRUE) {
+  public function handleException(\Exception $exception, $save = TRUE): void {
     $message = $exception->getMessage();
     if ($save) {
       $this->saveMessage($message);
@@ -100,7 +100,7 @@ class TestMigrateExecutable extends MigrateExecutable {
    * @param int $cleared_memory_usage
    *   (optional) The fake cleared memory value. Defaults to NULL.
    */
-  public function setMemoryUsage($memory_usage, $cleared_memory_usage = NULL) {
+  public function setMemoryUsage($memory_usage, $cleared_memory_usage = NULL): void {
     $this->memoryUsage = $memory_usage;
     $this->clearedMemoryUsage = $cleared_memory_usage;
   }
@@ -111,7 +111,7 @@ class TestMigrateExecutable extends MigrateExecutable {
    * @param int $memory_limit
    *   The memory limit.
    */
-  public function setMemoryLimit($memory_limit) {
+  public function setMemoryLimit($memory_limit): void {
     $this->memoryLimit = $memory_limit;
   }
 
@@ -121,7 +121,7 @@ class TestMigrateExecutable extends MigrateExecutable {
    * @param float $threshold
    *   The new threshold.
    */
-  public function setMemoryThreshold($threshold) {
+  public function setMemoryThreshold($threshold): void {
     $this->memoryThreshold = $threshold;
   }
 

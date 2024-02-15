@@ -32,7 +32,7 @@ class RendererCallbackTest extends RendererTestBase {
    *
    * @dataProvider providerTestCallback
    */
-  public function testCallback(array $render_array, $expected_deprecation) {
+  public function testCallback(array $render_array, $expected_deprecation): void {
     $this->expectException(UntrustedCallbackException::class);
     $this->expectExceptionMessage($expected_deprecation);
     $this->renderer->renderRoot($render_array);

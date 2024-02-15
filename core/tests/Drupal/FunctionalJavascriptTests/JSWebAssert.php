@@ -323,7 +323,7 @@ JS);
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    *   When the element is not visible in the viewport.
    */
-  public function assertVisibleInViewport($selector_type, $selector, $corner = FALSE, $message = 'Element is not visible in the viewport.') {
+  public function assertVisibleInViewport($selector_type, $selector, $corner = FALSE, $message = 'Element is not visible in the viewport.'): void {
     $node = $this->session->getPage()->find($selector_type, $selector);
     if ($node === NULL) {
       if (is_array($selector)) {
@@ -367,7 +367,7 @@ JS);
    *
    * @see \Drupal\FunctionalJavascriptTests\JSWebAssert::assertVisibleInViewport()
    */
-  public function assertNotVisibleInViewport($selector_type, $selector, $corner = FALSE, $message = 'Element is visible in the viewport.') {
+  public function assertNotVisibleInViewport($selector_type, $selector, $corner = FALSE, $message = 'Element is visible in the viewport.'): void {
     $node = $this->session->getPage()->find($selector_type, $selector);
     if ($node === NULL) {
       if (is_array($selector)) {
@@ -503,7 +503,7 @@ JS;
    * @param string $raw
    *   Raw (HTML) string to look for.
    */
-  public function assertNoEscaped($raw) {
+  public function assertNoEscaped($raw): void {
     $this->responseNotContains($this->escapeHtml($raw));
   }
 
@@ -515,7 +515,7 @@ JS;
    * @param string $raw
    *   Raw (HTML) string to look for.
    */
-  public function assertEscaped($raw) {
+  public function assertEscaped($raw): void {
     $this->responseContains($this->escapeHtml($raw));
   }
 
@@ -555,7 +555,7 @@ JS;
    * @throws \Behat\Mink\Exception\ElementHtmlException
    *   When an element still exists on the page.
    */
-  public function assertNoElementAfterWait($selector_type, $selector, $timeout = 10000, $message = 'Element exists on the page.') {
+  public function assertNoElementAfterWait($selector_type, $selector, $timeout = 10000, $message = 'Element exists on the page.'): void {
     $start = microtime(TRUE);
     $end = $start + ($timeout / 1000);
     $page = $this->session->getPage();

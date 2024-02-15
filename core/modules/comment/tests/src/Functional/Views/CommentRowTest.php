@@ -24,7 +24,7 @@ class CommentRowTest extends CommentTestBase {
   /**
    * Tests comment row.
    */
-  public function testCommentRow() {
+  public function testCommentRow(): void {
     $this->drupalGet('test-comment-row');
     $this->assertSession()->elementsCount('xpath', '//article[contains(@class, "comment")]', 1);
   }

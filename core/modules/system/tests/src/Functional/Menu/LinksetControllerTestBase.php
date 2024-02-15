@@ -93,7 +93,7 @@ abstract class LinksetControllerTestBase extends BrowserTestBase {
    * @param \GuzzleHttp\Psr7\Response $response
    *   The response on which to assert cacheability.
    */
-  protected function assertDrupalResponseCacheability($expect_cache, CacheableDependencyInterface $expected_metadata, Response $response) {
+  protected function assertDrupalResponseCacheability($expect_cache, CacheableDependencyInterface $expected_metadata, Response $response): void {
     $this->assertTrue(in_array($expect_cache, ['HIT', 'MISS', FALSE], TRUE), 'Cache is HIT, MISS, FALSE.');
     $this->assertSame($expected_metadata->getCacheContexts(), explode(' ', $response->getHeaderLine('X-Drupal-Cache-Contexts')));
     $this->assertSame($expected_metadata->getCacheTags(), explode(' ', $response->getHeaderLine('X-Drupal-Cache-Tags')));
@@ -141,7 +141,7 @@ abstract class LinksetControllerTestBase extends BrowserTestBase {
    * @param bool $enabled
    *   Whether the endpoint should be enabled.
    */
-  protected function enableEndpoint(bool $enabled) {
+  protected function enableEndpoint(bool $enabled): void {
     $this->config('system.feature_flags')
       ->set('linkset_endpoint', $enabled)
       ->save(TRUE);
@@ -173,7 +173,7 @@ abstract class LinksetControllerTestBase extends BrowserTestBase {
   /**
    * Rebuild the router only if needed.
    */
-  public function rebuildIfNeeded() {
+  public function rebuildIfNeeded(): void {
     /** @var \Drupal\Core\Routing\RouteBuilderInterface $router_builder */
     $router_builder = $this->container->get('router.builder');
     $router_builder->rebuildIfNeeded();

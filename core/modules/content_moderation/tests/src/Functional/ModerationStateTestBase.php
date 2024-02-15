@@ -108,7 +108,7 @@ abstract class ModerationStateTestBase extends BrowserTestBase {
    * @param string $workflow_id
    *   The workflow to attach to the bundle.
    */
-  protected function createContentTypeFromUi($content_type_name, $content_type_id, $moderated = FALSE, $workflow_id = 'editorial') {
+  protected function createContentTypeFromUi($content_type_name, $content_type_id, $moderated = FALSE, $workflow_id = 'editorial'): void {
     $this->drupalGet('admin/structure/types');
     $this->clickLink('Add content type');
 
@@ -134,7 +134,7 @@ abstract class ModerationStateTestBase extends BrowserTestBase {
    * @param string $workflow_id
    *   The workflow to attach to the bundle.
    */
-  public function enableModerationThroughUi($content_type_id, $workflow_id = 'editorial') {
+  public function enableModerationThroughUi($content_type_id, $workflow_id = 'editorial'): void {
     $this->drupalGet('/admin/config/workflow/workflows');
     $this->assertSession()->linkByHrefExists('admin/config/workflow/workflows/manage/' . $workflow_id);
     $edit['bundles[' . $content_type_id . ']'] = TRUE;
@@ -157,7 +157,7 @@ abstract class ModerationStateTestBase extends BrowserTestBase {
    * @param string $content_type_id
    *   Content type ID.
    */
-  protected function grantUserPermissionToCreateContentOfType(AccountInterface $account, $content_type_id) {
+  protected function grantUserPermissionToCreateContentOfType(AccountInterface $account, $content_type_id): void {
     $role_ids = $account->getRoles(TRUE);
     /** @var \Drupal\user\RoleInterface $role */
     $role_id = reset($role_ids);

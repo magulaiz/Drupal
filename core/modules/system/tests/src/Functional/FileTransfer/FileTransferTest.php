@@ -61,7 +61,7 @@ class FileTransferTest extends BrowserTestBase {
     return $location;
   }
 
-  public function _writeDirectory($base, $files = []) {
+  public function _writeDirectory($base, $files = []): void {
     mkdir($base);
     foreach ($files as $key => $file) {
       if (is_array($file)) {
@@ -74,7 +74,7 @@ class FileTransferTest extends BrowserTestBase {
     }
   }
 
-  public function testJail() {
+  public function testJail(): void {
     $source = $this->_buildFakeModule();
 
     // This convoluted piece of code is here because our testing framework does

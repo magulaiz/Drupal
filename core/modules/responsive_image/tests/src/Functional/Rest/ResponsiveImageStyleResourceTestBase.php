@@ -37,7 +37,7 @@ abstract class ResponsiveImageStyleResourceTestBase extends ConfigEntityResource
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     $this->grantPermissionsToTestedRole(['administer responsive images']);
   }
 

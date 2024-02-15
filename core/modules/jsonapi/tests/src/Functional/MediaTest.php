@@ -62,7 +62,7 @@ class MediaTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     switch ($method) {
       case 'GET':
         $this->grantPermissionsToTestedRole(['view media', 'view any camelids media revisions']);
@@ -87,7 +87,7 @@ class MediaTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpRevisionAuthorization($method) {
+  protected function setUpRevisionAuthorization($method): void {
     parent::setUpRevisionAuthorization($method);
     $this->grantPermissionsToTestedRole(['view all media revisions']);
   }
@@ -358,7 +358,7 @@ class MediaTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testPostIndividual() {
+  public function testPostIndividual(): void {
     // @todo Mimic \Drupal\Tests\rest\Functional\EntityResource\Media\MediaResourceTestBase::testPost()
     // @todo Later, use https://www.drupal.org/project/drupal/issues/2958554 to upload files rather than the REST module.
     parent::testPostIndividual();
@@ -396,7 +396,7 @@ class MediaTest extends ResourceTestBase {
    *
    * @todo Remove this in https://www.drupal.org/node/2824851.
    */
-  protected function doTestRelationshipMutation(array $request_options) {
+  protected function doTestRelationshipMutation(array $request_options): void {
     $this->grantPermissionsToTestedRole(['access content']);
     parent::doTestRelationshipMutation($request_options);
   }
@@ -404,7 +404,7 @@ class MediaTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testCollectionFilterAccess() {
+  public function testCollectionFilterAccess(): void {
     $this->doTestCollectionFilterAccessForPublishableEntities('name', 'view media', 'administer media');
   }
 

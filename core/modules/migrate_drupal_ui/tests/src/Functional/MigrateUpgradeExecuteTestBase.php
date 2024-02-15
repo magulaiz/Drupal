@@ -59,7 +59,7 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
   /**
    * Executes an upgrade and then an incremental upgrade.
    */
-  public function doUpgradeAndIncremental() {
+  public function doUpgradeAndIncremental(): void {
     // Start the upgrade process.
     $this->submitCredentialForm();
     $session = $this->assertSession();
@@ -92,7 +92,7 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
   /**
    * Helper to set the test mail collector in settings.php.
    */
-  public function useTestMailCollector() {
+  public function useTestMailCollector(): void {
     // Set up an override.
     $settings['config']['system.mail']['interface']['default'] = (object) [
       'value' => 'test_mail_collector',
@@ -123,7 +123,7 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  protected function assertEntityRevisionsCount(string $content_entity_type_id, int $expected_revision_count) {
+  protected function assertEntityRevisionsCount(string $content_entity_type_id, int $expected_revision_count): void {
     $entity_storage = \Drupal::entityTypeManager()->getStorage($content_entity_type_id);
     assert($entity_storage instanceof ContentEntityStorageInterface);
     $revision_ids = $entity_storage

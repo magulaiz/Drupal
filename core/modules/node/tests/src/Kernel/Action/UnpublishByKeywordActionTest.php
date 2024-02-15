@@ -36,7 +36,7 @@ class UnpublishByKeywordActionTest extends KernelTestBase {
   /**
    * Tests creating an action using the node_unpublish_by_keyword_action plugin.
    */
-  public function testUnpublishByKeywordAction() {
+  public function testUnpublishByKeywordAction(): void {
     /** @var \Drupal\node\Plugin\Action\UnpublishByKeywordNode $action */
     $action = Action::create([
       'id' => 'foo',
@@ -62,7 +62,7 @@ class UnpublishByKeywordActionTest extends KernelTestBase {
     $node2->setPublished();
     $node2->save();
 
-    $this->container->get('renderer')->executeInRenderContext(new RenderContext(), function () use (&$node1, &$node2, $action) {
+    $this->container->get('renderer')->executeInRenderContext(new RenderContext(), function () use (&$node1, &$node2, $action): void {
       $action->execute([$node1, $node2]);
     });
 

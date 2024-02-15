@@ -50,7 +50,7 @@ class UpdatePostUpdateExceptionTest extends BrowserTestBase {
   /**
    * Tests hook_post_update_NAME().
    */
-  public function testPostUpdate() {
+  public function testPostUpdate(): void {
     // There are expected to be failed updates.
     $this->checkFailedUpdates = FALSE;
 
@@ -61,7 +61,7 @@ class UpdatePostUpdateExceptionTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function doSelectionTest() {
+  protected function doSelectionTest(): void {
     $this->assertSession()->assertEscaped("Post update that throws an exception.");
   }
 

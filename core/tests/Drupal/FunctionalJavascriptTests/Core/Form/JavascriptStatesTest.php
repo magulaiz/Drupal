@@ -63,7 +63,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
    * this is a single public test method that invokes a series of protected
    * methods to do assertions on specific kinds of triggering elements.
    */
-  public function testJavascriptStates() {
+  public function testJavascriptStates(): void {
     $this->doCheckboxTriggerTests();
     $this->doCheckboxesTriggerTests();
     $this->doTextfieldTriggerTests();
@@ -76,7 +76,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
   /**
    * Tests states of elements triggered by a checkbox element.
    */
-  protected function doCheckboxTriggerTests() {
+  protected function doCheckboxTriggerTests(): void {
     $this->drupalGet('form-test/javascript-states-form');
     $page = $this->getSession()->getPage();
 
@@ -266,7 +266,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
   /**
    * Tests states of elements triggered by a checkboxes element.
    */
-  protected function doCheckboxesTriggerTests() {
+  protected function doCheckboxesTriggerTests(): void {
     $this->drupalGet('form-test/javascript-states-form');
     $page = $this->getSession()->getPage();
 
@@ -306,7 +306,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
   /**
    * Tests states of elements triggered by a textfield element.
    */
-  protected function doTextfieldTriggerTests() {
+  protected function doTextfieldTriggerTests(): void {
     $this->drupalGet('form-test/javascript-states-form');
     $page = $this->getSession()->getPage();
 
@@ -351,7 +351,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
   /**
    * Tests states of elements triggered by a radios element.
    */
-  protected function doRadiosTriggerTests() {
+  protected function doRadiosTriggerTests(): void {
     $this->drupalGet('form-test/javascript-states-form');
     $page = $this->getSession()->getPage();
 
@@ -414,7 +414,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
   /**
    * Tests states of elements triggered by a select element.
    */
-  protected function doSelectTriggerTests() {
+  protected function doSelectTriggerTests(): void {
     $this->drupalGet('form-test/javascript-states-form');
     $page = $this->getSession()->getPage();
 
@@ -446,7 +446,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
   /**
    * Tests states of elements triggered by multiple elements.
    */
-  protected function doMultipleTriggerTests() {
+  protected function doMultipleTriggerTests(): void {
     $this->drupalGet('form-test/javascript-states-form');
     $page = $this->getSession()->getPage();
 
@@ -470,7 +470,7 @@ class JavascriptStatesTest extends WebDriverTestBase {
   /**
    * Tests states of radios element triggered by other radios element.
    */
-  protected function doNestedTriggerTests() {
+  protected function doNestedTriggerTests(): void {
     $this->drupalGet('form-test/javascript-states-form');
     $page = $this->getSession()->getPage();
 

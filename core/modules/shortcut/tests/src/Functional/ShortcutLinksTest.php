@@ -46,7 +46,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
   /**
    * Tests that creating a shortcut works properly.
    */
-  public function testShortcutLinkAdd() {
+  public function testShortcutLinkAdd(): void {
     $set = $this->set;
 
     // Create an alias for the node so we can test aliases.
@@ -148,7 +148,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
   /**
    * Tests that the "add to shortcut" and "remove from shortcut" links work.
    */
-  public function testShortcutQuickLink() {
+  public function testShortcutQuickLink(): void {
     \Drupal::service('theme_installer')->install(['claro']);
     $this->config('system.theme')->set('admin', 'claro')->save();
     $this->config('node.settings')->set('use_admin_theme', '1')->save();
@@ -230,7 +230,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
   /**
    * Tests that shortcut links can be renamed.
    */
-  public function testShortcutLinkRename() {
+  public function testShortcutLinkRename(): void {
     $set = $this->set;
 
     // Attempt to rename shortcut link.
@@ -250,7 +250,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
   /**
    * Tests that changing the path of a shortcut link works.
    */
-  public function testShortcutLinkChangePath() {
+  public function testShortcutLinkChangePath(): void {
     $set = $this->set;
 
     // Tests changing a shortcut path.
@@ -273,7 +273,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
   /**
    * Tests that changing the route of a shortcut link works.
    */
-  public function testShortcutLinkChangeRoute() {
+  public function testShortcutLinkChangeRoute(): void {
     $this->drupalLogin($this->rootUser);
     $this->drupalGet('admin/content');
     $this->assertSession()->statusCodeEquals(200);
@@ -289,7 +289,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
   /**
    * Tests deleting a shortcut link.
    */
-  public function testShortcutLinkDelete() {
+  public function testShortcutLinkDelete(): void {
     $set = $this->set;
 
     $shortcuts = $set->getShortcuts();
@@ -314,7 +314,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
    * Tests that the "Add to shortcuts" link is not displayed on a page not
    * found or a page the user does not have access to.
    */
-  public function testNoShortcutLink() {
+  public function testNoShortcutLink(): void {
     // Change to a theme that displays shortcuts.
     \Drupal::service('theme_installer')->install(['claro']);
     $this->config('system.theme')
@@ -342,7 +342,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
   /**
    * Tests that the 'access shortcuts' permissions works properly.
    */
-  public function testAccessShortcutsPermission() {
+  public function testAccessShortcutsPermission(): void {
     // Change to a theme that displays shortcuts.
     \Drupal::service('theme_installer')->install(['claro']);
     $this->config('system.theme')
@@ -382,7 +382,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
   /**
    * Tests the shortcuts are correctly ordered by weight in the toolbar.
    */
-  public function testShortcutLinkOrder() {
+  public function testShortcutLinkOrder(): void {
     // Ensure to give permissions to access the shortcuts.
     $this->drupalLogin($this->drupalCreateUser([
       'access toolbar',
@@ -406,7 +406,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
   /**
    * Tests the 'access shortcuts' permission for shortcut set administration.
    */
-  private function verifyAccessShortcutsPermissionForEditPages() {
+  private function verifyAccessShortcutsPermissionForEditPages(): void {
     // Create a user with customize links and switch sets permissions  but
     // without the 'access shortcuts' permission.
     $test_permissions = [
@@ -429,7 +429,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
   /**
    * Tests the 'access shortcuts' permission with the shortcut block.
    */
-  public function testShortcutBlockAccess() {
+  public function testShortcutBlockAccess(): void {
     // Creates a block instance and place in a region through api.
     $block = $this->drupalPlaceBlock('shortcuts');
 

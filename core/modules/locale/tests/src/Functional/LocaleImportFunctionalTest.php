@@ -79,7 +79,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
   /**
    * Tests import of standalone .po files.
    */
-  public function testStandalonePoFile() {
+  public function testStandalonePoFile(): void {
     // Try importing a .po file.
     $this->importPoFile($this->getPoFile(), [
       'langcode' => 'fr',
@@ -254,7 +254,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
   /**
    * Tests msgctxt context support.
    */
-  public function testLanguageContext() {
+  public function testLanguageContext(): void {
     // Try importing a .po file.
     $this->importPoFile($this->getPoFileWithContext(), [
       'langcode' => 'hr',
@@ -269,7 +269,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
   /**
    * Tests empty msgstr at end of .po file see #611786.
    */
-  public function testEmptyMsgstr() {
+  public function testEmptyMsgstr(): void {
     $langcode = 'hu';
 
     // Try importing a .po file.
@@ -302,7 +302,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
   /**
    * Tests .po file import with configuration translation.
    */
-  public function testConfigPoFile() {
+  public function testConfigPoFile(): void {
     // Values for translations to assert. Config key, original string,
     // translation and config property name.
     $config_strings = [
@@ -368,7 +368,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
   /**
    * Tests .po file import with user.settings configuration.
    */
-  public function testConfigTranslationImportingPoFile() {
+  public function testConfigTranslationImportingPoFile(): void {
     // Set the language code.
     $langcode = 'de';
 
@@ -385,7 +385,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
   /**
    * Tests the translation are imported when a new language is created.
    */
-  public function testCreatedLanguageTranslation() {
+  public function testCreatedLanguageTranslation(): void {
     // Import a .po file to add de language.
     $this->importPoFile($this->getPoFileWithConfigDe(), ['langcode' => 'de']);
 
@@ -402,7 +402,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
    * @param array $options
    *   (optional) Additional options to pass to the translation import form.
    */
-  public function importPoFile($contents, array $options = []) {
+  public function importPoFile($contents, array $options = []): void {
     $file_system = \Drupal::service('file_system');
     $name = $file_system->tempnam('temporary://', "po_") . '.po';
     file_put_contents($name, $contents);

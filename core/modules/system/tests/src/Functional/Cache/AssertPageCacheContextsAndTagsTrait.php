@@ -15,7 +15,7 @@ trait AssertPageCacheContextsAndTagsTrait {
   /**
    * Enables page caching.
    */
-  protected function enablePageCaching() {
+  protected function enablePageCaching(): void {
     $config = $this->config('system.performance');
     $config->set('cache.page.max_age', 300);
     $config->save();
@@ -41,7 +41,7 @@ trait AssertPageCacheContextsAndTagsTrait {
    * @param string $expected_cache_context
    *   The expected cache context.
    */
-  protected function assertCacheContext($expected_cache_context) {
+  protected function assertCacheContext($expected_cache_context): void {
     $cache_contexts = explode(' ', $this->getSession()->getResponseHeader('X-Drupal-Cache-Contexts'));
     $this->assertContains($expected_cache_context, $cache_contexts, "'" . $expected_cache_context . "' is present in the X-Drupal-Cache-Contexts header.");
   }
@@ -52,7 +52,7 @@ trait AssertPageCacheContextsAndTagsTrait {
    * @param string $not_expected_cache_context
    *   The expected cache context.
    */
-  protected function assertNoCacheContext($not_expected_cache_context) {
+  protected function assertNoCacheContext($not_expected_cache_context): void {
     $cache_contexts = explode(' ', $this->getSession()->getResponseHeader('X-Drupal-Cache-Contexts'));
     $this->assertNotContains($not_expected_cache_context, $cache_contexts, "'" . $not_expected_cache_context . "' is not present in the X-Drupal-Cache-Contexts header.");
   }
@@ -67,7 +67,7 @@ trait AssertPageCacheContextsAndTagsTrait {
    * @param string[] $expected_tags
    *   The expected cache tags for the given URL.
    */
-  protected function assertPageCacheContextsAndTags(Url $url, array $expected_contexts, array $expected_tags) {
+  protected function assertPageCacheContextsAndTags(Url $url, array $expected_contexts, array $expected_tags): void {
     $absolute_url = $url->setAbsolute()->toString();
     sort($expected_contexts);
     sort($expected_tags);
@@ -99,7 +99,7 @@ trait AssertPageCacheContextsAndTagsTrait {
    * @param bool $include_default_tags
    *   (optional) Whether the default cache tags should be included.
    */
-  protected function assertCacheTags(array $expected_tags, $include_default_tags = TRUE) {
+  protected function assertCacheTags(array $expected_tags, $include_default_tags = TRUE): void {
     // The anonymous role cache tag is only added if the user is anonymous.
     if ($include_default_tags) {
       if (\Drupal::currentUser()->isAnonymous()) {
@@ -160,7 +160,7 @@ trait AssertPageCacheContextsAndTagsTrait {
    * @param int $max_age
    *   The maximum age of the cache.
    */
-  protected function assertCacheMaxAge($max_age) {
+  protected function assertCacheMaxAge($max_age): void {
     $this->assertSession()->responseHeaderContains('Cache-Control', 'max-age:' . $max_age);
   }
 

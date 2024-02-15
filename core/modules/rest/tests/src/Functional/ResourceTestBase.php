@@ -146,7 +146,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @param string[] $methods
    *   The allowed methods for this resource.
    */
-  protected function provisionResource($formats = [], $authentication = [], array $methods = ['GET', 'POST', 'PATCH', 'DELETE']) {
+  protected function provisionResource($formats = [], $authentication = [], array $methods = ['GET', 'POST', 'PATCH', 'DELETE']): void {
     $this->resourceConfigStorage->create([
       'id' => static::$resourceConfigId,
       'granularity' => RestResourceConfigInterface::RESOURCE_GRANULARITY,
@@ -166,7 +166,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * Should be called after every change made to:
    * - RestResourceConfig entities
    */
-  protected function refreshTestStateAfterRestConfigChange() {
+  protected function refreshTestStateAfterRestConfigChange(): void {
     // Ensure that the cache tags invalidator has its internal values reset.
     // Otherwise the http_response cache tag invalidation won't work.
     $this->refreshVariables();
@@ -268,7 +268,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *
    * E.g. for cookie authentication, we first need to get a cookie.
    */
-  protected function initAuthentication() {}
+  protected function initAuthentication(): void {}
 
   /**
    * Returns Guzzle request options for authentication.
@@ -291,7 +291,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @param string[] $permissions
    *   Permissions to grant.
    */
-  protected function grantPermissionsToAnonymousRole(array $permissions) {
+  protected function grantPermissionsToAnonymousRole(array $permissions): void {
     $this->grantPermissions(Role::load(RoleInterface::ANONYMOUS_ID), $permissions);
   }
 
@@ -301,7 +301,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @param string[] $permissions
    *   Permissions to grant.
    */
-  protected function grantPermissionsToAuthenticatedRole(array $permissions) {
+  protected function grantPermissionsToAuthenticatedRole(array $permissions): void {
     $this->grantPermissions(Role::load(RoleInterface::AUTHENTICATED_ID), $permissions);
   }
 
@@ -314,7 +314,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @see ::grantPermissionsToAuthenticatedRole()
    * @see ::grantPermissionsToAnonymousRole()
    */
-  protected function grantPermissionsToTestedRole(array $permissions) {
+  protected function grantPermissionsToTestedRole(array $permissions): void {
     if (static::$auth) {
       $this->grantPermissionsToAuthenticatedRole($permissions);
     }
@@ -378,7 +378,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *   FALSE if that header should be absent. Possible strings: 'MISS', 'HIT'.
    *   Defaults to FALSE.
    */
-  protected function assertResourceResponse($expected_status_code, $expected_body, ResponseInterface $response, $expected_cache_tags = FALSE, $expected_cache_contexts = FALSE, $expected_page_cache_header_value = FALSE, $expected_dynamic_page_cache_header_value = FALSE) {
+  protected function assertResourceResponse($expected_status_code, $expected_body, ResponseInterface $response, $expected_cache_tags = FALSE, $expected_cache_contexts = FALSE, $expected_page_cache_header_value = FALSE, $expected_dynamic_page_cache_header_value = FALSE): void {
     $this->assertSame($expected_status_code, $response->getStatusCode());
     if ($expected_status_code === 204) {
       // DELETE responses should not include a Content-Type header. But Apache
@@ -451,7 +451,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *   FALSE if that header should be absent. Possible strings: 'MISS', 'HIT'.
    *   Defaults to FALSE.
    */
-  protected function assertResourceErrorResponse($expected_status_code, $expected_message, ResponseInterface $response, $expected_cache_tags = FALSE, $expected_cache_contexts = FALSE, $expected_page_cache_header_value = FALSE, $expected_dynamic_page_cache_header_value = FALSE) {
+  protected function assertResourceErrorResponse($expected_status_code, $expected_message, ResponseInterface $response, $expected_cache_tags = FALSE, $expected_cache_contexts = FALSE, $expected_page_cache_header_value = FALSE, $expected_dynamic_page_cache_header_value = FALSE): void {
     $expected_body = ($expected_message !== FALSE) ? $this->serializer->encode(['message' => $expected_message], static::$format) : FALSE;
     $this->assertResourceResponse($expected_status_code, $expected_body, $response, $expected_cache_tags, $expected_cache_contexts, $expected_page_cache_header_value, $expected_dynamic_page_cache_header_value);
   }
@@ -488,7 +488,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @param array $array
    *   An array to sort.
    */
-  protected static function recursiveKSort(array &$array) {
+  protected static function recursiveKSort(array &$array): void {
     // First, sort the main array.
     ksort($array);
 

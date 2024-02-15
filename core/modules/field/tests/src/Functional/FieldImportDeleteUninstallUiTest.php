@@ -46,7 +46,7 @@ class FieldImportDeleteUninstallUiTest extends FieldTestBase {
   /**
    * Tests deleting field storages and fields as part of config import.
    */
-  public function testImportDeleteUninstall() {
+  public function testImportDeleteUninstall(): void {
     // Create a telephone field.
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_tel',

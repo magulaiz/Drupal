@@ -16,7 +16,7 @@ class FieldImportCreateTest extends FieldKernelTestBase {
   /**
    * Tests creating field storages and fields during default config import.
    */
-  public function testImportCreateDefault() {
+  public function testImportCreateDefault(): void {
     $field_name = 'field_test_import';
     $field_storage_id = "entity_test.$field_name";
     $field_id = "entity_test.entity_test.$field_name";
@@ -72,7 +72,7 @@ class FieldImportCreateTest extends FieldKernelTestBase {
   /**
    * Tests creating field storages and fields during config import.
    */
-  public function testImportCreate() {
+  public function testImportCreate(): void {
     // A field storage with one single field.
     $field_name = 'field_test_import_sync';
     $field_storage_id = "entity_test.$field_name";

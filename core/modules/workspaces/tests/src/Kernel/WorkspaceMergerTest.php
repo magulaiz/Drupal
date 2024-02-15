@@ -77,7 +77,7 @@ class WorkspaceMergerTest extends KernelTestBase {
    * @covers ::getDifferringRevisionIdsOnSource
    * @covers ::getDifferringRevisionIdsOnTarget
    */
-  public function testWorkspaceMerger() {
+  public function testWorkspaceMerger(): void {
     $this->initializeWorkspacesModule();
     $this->createWorkspaceHierarchy();
 

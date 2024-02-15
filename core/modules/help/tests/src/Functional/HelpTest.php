@@ -64,7 +64,7 @@ class HelpTest extends BrowserTestBase {
   /**
    * Logs in users, tests help pages.
    */
-  public function testHelp() {
+  public function testHelp(): void {
     // Log in the root user to ensure as many admin links appear as possible on
     // the module overview pages.
     $this->drupalLogin($this->rootUser);
@@ -120,7 +120,7 @@ class HelpTest extends BrowserTestBase {
    * @param int $response
    *   (optional) An HTTP response code. Defaults to 200.
    */
-  protected function verifyHelp($response = 200) {
+  protected function verifyHelp($response = 200): void {
     $this->drupalGet('admin/index');
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
@@ -180,7 +180,7 @@ class HelpTest extends BrowserTestBase {
     $module_data = $this->container->get('extension.list.module')->getList();
     \Drupal::moduleHandler()->invokeAllWith(
       'help',
-      function (callable $hook, string $module) use (&$modules, $module_data) {
+      function (callable $hook, string $module) use (&$modules, $module_data): void {
         $modules[$module] = $module_data[$module]->info['name'];
       }
     );

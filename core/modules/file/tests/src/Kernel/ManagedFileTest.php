@@ -35,17 +35,17 @@ class ManagedFileTest extends FileManagedUnitTestBase implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {}
+  public function validateForm(array &$form, FormStateInterface $form_state): void {}
 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {}
+  public function submitForm(array &$form, FormStateInterface $form_state): void {}
 
   /**
    * Tests that managed file elements can be programmatically submitted.
    */
-  public function testManagedFileElement() {
+  public function testManagedFileElement(): void {
     $form_state = new FormState();
     $values['managed_file'] = NULL;
     $form_state->setValues($values);

@@ -19,7 +19,7 @@ class ClaroTableTest extends KernelTestBase {
   /**
    * Confirm that Claro tables override use of the `sticky-enabled` class.
    */
-  public function testThemeTableStickyHeaders() {
+  public function testThemeTableStickyHeaders(): void {
     // Enable the Claro theme.
     \Drupal::service('theme_installer')->install(['claro']);
     $this->config('system.theme')->set('default', 'claro')->save();

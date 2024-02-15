@@ -16,7 +16,7 @@ class UserUpdateRoleMigrateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.4.0.bare.standard.php.gz',
     ];
@@ -25,7 +25,7 @@ class UserUpdateRoleMigrateTest extends UpdatePathTestBase {
   /**
    * Tests that roles have only existing permissions.
    */
-  public function testRolePermissions() {
+  public function testRolePermissions(): void {
     /** @var \Drupal\Core\Database\Connection $connection */
     $connection = \Drupal::service('database');
 

@@ -166,7 +166,7 @@ class EntityResourceTest extends JsonapiKernelTestBase {
 
     // Give anonymous users permission to view user profiles, so that we can
     // verify the cache tags of cached versions of user profile pages.
-    array_map(function ($role_id) {
+    array_map(function ($role_id): void {
       Role::create([
         'id' => $role_id,
         'permissions' => [
@@ -193,7 +193,7 @@ class EntityResourceTest extends JsonapiKernelTestBase {
   /**
    * @covers ::getCollection
    */
-  public function testGetPagedCollection() {
+  public function testGetPagedCollection(): void {
     $request = Request::create('/jsonapi/node/article');
     $request->query = new InputBag([
       'sort' => 'nid',
@@ -222,7 +222,7 @@ class EntityResourceTest extends JsonapiKernelTestBase {
   /**
    * @covers ::getCollection
    */
-  public function testGetEmptyCollection() {
+  public function testGetEmptyCollection(): void {
     $request = Request::create('/jsonapi/node/article');
     $request->query = new InputBag(['filter' => ['id' => 'invalid']]);
 

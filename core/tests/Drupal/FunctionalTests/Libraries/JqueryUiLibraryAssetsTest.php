@@ -92,7 +92,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
    * order. The necessary loading order was determined by the requirements
    * specified in each jQuery UI JavaScript file.
    */
-  public function testProperlySetWeights() {
+  public function testProperlySetWeights(): void {
     $assets = [];
 
     // Confirm that no asset is assigned multiple weights.
@@ -167,7 +167,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
   /**
    * Confirm that uses of a jQuery UI asset are configured with the same weight.
    */
-  public function testSameAssetSameWeight() {
+  public function testSameAssetSameWeight(): void {
     $asset_weights = [];
     $libraries_to_check = $this->coreLibrariesWithJqueryUiAssets;
 
@@ -216,7 +216,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
    *
    * @dataProvider providerTestAssetLoading
    */
-  public function testLibraryAssetLoadingOrder($library) {
+  public function testLibraryAssetLoadingOrder($library): void {
     $this->drupalGet("jqueryui_library_assets_test/$library");
     $this->assertSession()->statusCodeEquals(200);
 
@@ -297,7 +297,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
    *
    * @dataProvider providerTestAssetLoading
    */
-  public function testAssetLoadingUnchanged($library, array $expected_css, array $expected_js) {
+  public function testAssetLoadingUnchanged($library, array $expected_css, array $expected_js): void {
     $this->drupalGet("jqueryui_library_assets_test/$library");
     $this->assertSession()->statusCodeEquals(200);
 

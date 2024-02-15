@@ -29,7 +29,7 @@ abstract class RelationshipJoinTestBase extends PluginKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpFixtures() {
+  protected function setUpFixtures(): void {
     $this->installEntitySchema('user');
     $this->installConfig(['user']);
     parent::setUpFixtures();

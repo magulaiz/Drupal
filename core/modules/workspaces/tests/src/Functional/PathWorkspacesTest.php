@@ -71,7 +71,7 @@ class PathWorkspacesTest extends BrowserTestBase {
   /**
    * Tests path aliases with workspaces.
    */
-  public function testPathAliases() {
+  public function testPathAliases(): void {
     // Create a published node in Live, without an alias.
     $node = $this->drupalCreateNode([
       'type' => 'article',
@@ -111,7 +111,7 @@ class PathWorkspacesTest extends BrowserTestBase {
   /**
    * Tests path aliases with workspaces and user switching.
    */
-  public function testPathAliasesUserSwitch() {
+  public function testPathAliasesUserSwitch(): void {
     // Create a published node in Live, without an alias.
     $node = $this->drupalCreateNode([
       'type' => 'article',
@@ -155,7 +155,7 @@ class PathWorkspacesTest extends BrowserTestBase {
   /**
    * Tests path aliases with workspaces for translatable nodes.
    */
-  public function testPathAliasesWithTranslation() {
+  public function testPathAliasesWithTranslation(): void {
     $stage = Workspace::load('stage');
 
     // Create one node with a random alias.

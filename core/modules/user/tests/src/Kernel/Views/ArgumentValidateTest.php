@@ -53,7 +53,7 @@ class ArgumentValidateTest extends ViewsKernelTestBase {
   /**
    * Tests the User (ID) argument validator.
    */
-  public function testArgumentValidateUserUid() {
+  public function testArgumentValidateUserUid(): void {
     $view = Views::getView('test_view_argument_validate_user');
     $this->executeView($view);
 
@@ -73,7 +73,7 @@ class ArgumentValidateTest extends ViewsKernelTestBase {
   /**
    * Tests the UserName argument validator.
    */
-  public function testArgumentValidateUserName() {
+  public function testArgumentValidateUserName(): void {
     $view = Views::getView('test_view_argument_validate_username');
     $this->executeView($view);
 

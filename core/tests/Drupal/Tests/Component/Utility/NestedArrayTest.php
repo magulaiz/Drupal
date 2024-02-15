@@ -47,7 +47,7 @@ class NestedArrayTest extends TestCase {
    *
    * @covers ::getValue
    */
-  public function testGetValue() {
+  public function testGetValue(): void {
     // Verify getting a value of a nested element.
     $value = NestedArray::getValue($this->form, $this->parents);
     $this->assertSame('Nested element', $value['#value'], 'Nested element value found.');
@@ -77,7 +77,7 @@ class NestedArrayTest extends TestCase {
    *
    * @covers ::setValue
    */
-  public function testSetValue() {
+  public function testSetValue(): void {
     $new_value = [
       '#value' => 'New value',
       '#required' => TRUE,
@@ -94,7 +94,7 @@ class NestedArrayTest extends TestCase {
    *
    * @covers ::setValue
    */
-  public function testSetValueForce() {
+  public function testSetValueForce(): void {
     $new_value = [
       'one',
     ];
@@ -109,7 +109,7 @@ class NestedArrayTest extends TestCase {
    *
    * @covers ::unsetValue
    */
-  public function testUnsetValue() {
+  public function testUnsetValue(): void {
     // Verify unsetting a non-existing nested element throws no errors and the
     // non-existing key is properly reported.
     $key_existed = NULL;
@@ -129,7 +129,7 @@ class NestedArrayTest extends TestCase {
   /**
    * Tests existence of array key.
    */
-  public function testKeyExists() {
+  public function testKeyExists(): void {
     // Verify that existing key is found.
     $this->assertTrue(NestedArray::keyExists($this->form, $this->parents), 'Nested key found.');
 
@@ -145,7 +145,7 @@ class NestedArrayTest extends TestCase {
    * @covers ::mergeDeep
    * @covers ::mergeDeepArray
    */
-  public function testMergeDeepArray() {
+  public function testMergeDeepArray(): void {
     $link_options_1 = [
       'fragment' => 'x',
       'attributes' => ['title' => 'X', 'class' => ['a', 'b']],
@@ -172,7 +172,7 @@ class NestedArrayTest extends TestCase {
    *
    * @covers ::mergeDeepArray
    */
-  public function testMergeImplicitKeys() {
+  public function testMergeImplicitKeys(): void {
     $a = [
       'subkey' => ['X', 'Y'],
     ];
@@ -193,7 +193,7 @@ class NestedArrayTest extends TestCase {
    *
    * @covers ::mergeDeepArray
    */
-  public function testMergeExplicitKeys() {
+  public function testMergeExplicitKeys(): void {
     $a = [
       'subkey' => [
         0 => 'A',
@@ -229,7 +229,7 @@ class NestedArrayTest extends TestCase {
    *
    * @covers ::mergeDeepArray
    */
-  public function testMergeOutOfSequenceKeys() {
+  public function testMergeOutOfSequenceKeys(): void {
     $a = [
       'subkey' => [
         10 => 'A',
@@ -260,7 +260,7 @@ class NestedArrayTest extends TestCase {
    * @covers ::filter
    * @dataProvider providerTestFilter
    */
-  public function testFilter($array, $callable, $expected) {
+  public function testFilter($array, $callable, $expected): void {
     $this->assertEquals($expected, NestedArray::filter($array, $callable));
   }
 

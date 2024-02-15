@@ -25,7 +25,7 @@ class HandlerFilterRolesTest extends UserKernelTestBase {
   /**
    * Tests that role filter dependencies are calculated correctly.
    */
-  public function testDependencies() {
+  public function testDependencies(): void {
     $role = Role::create(['id' => 'test_user_role', 'label' => 'Test user role']);
     $role->save();
     $view = View::load('test_user_name');
@@ -98,7 +98,7 @@ class HandlerFilterRolesTest extends UserKernelTestBase {
   /**
    * Tests that a warning is triggered if the filter references a missing role.
    */
-  public function testMissingRole() {
+  public function testMissingRole(): void {
     $role = Role::create(['id' => 'test_user_role', 'label' => 'Test user role']);
     $role->save();
     /** @var \Drupal\views\Entity\View $view */

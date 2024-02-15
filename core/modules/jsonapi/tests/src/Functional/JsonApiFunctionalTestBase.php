@@ -245,7 +245,7 @@ abstract class JsonApiFunctionalTestBase extends BrowserTestBase {
    *   (optional) Set to TRUE if you want articles to reference the same tag
    *   twice.
    */
-  protected function createDefaultContent($num_articles, $num_tags, $article_has_image, $article_has_link, $is_multilingual, $referencing_twice = FALSE) {
+  protected function createDefaultContent($num_articles, $num_tags, $article_has_image, $article_has_link, $is_multilingual, $referencing_twice = FALSE): void {
     $random = $this->getRandomGenerator();
     for ($created_tags = 0; $created_tags < $num_tags; $created_tags++) {
       $term = Term::create([

@@ -21,7 +21,7 @@ class TableTest extends KernelTestBase {
   /**
    * Tableheader.js provides 'sticky' table headers, and is included by default.
    */
-  public function testThemeTableStickyHeaders() {
+  public function testThemeTableStickyHeaders(): void {
     $header = ['one', 'two', 'three'];
     $rows = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
     $table = [
@@ -40,7 +40,7 @@ class TableTest extends KernelTestBase {
   /**
    * If $sticky is FALSE, no tableheader.js should be included.
    */
-  public function testThemeTableNoStickyHeaders() {
+  public function testThemeTableNoStickyHeaders(): void {
     $header = ['one', 'two', 'three'];
     $rows = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
     $attributes = [];
@@ -68,7 +68,7 @@ class TableTest extends KernelTestBase {
    * Tests are performed when the there are no rows and that the empty text is
    * displayed correctly.
    */
-  public function testThemeTableWithEmptyMessage() {
+  public function testThemeTableWithEmptyMessage(): void {
     $header = [
       'Header 1',
       [
@@ -96,7 +96,7 @@ class TableTest extends KernelTestBase {
   /**
    * Tests that the 'no_striping' option works correctly.
    */
-  public function testThemeTableWithNoStriping() {
+  public function testThemeTableWithNoStriping(): void {
     $rows = [
       [
         'data' => [1],
@@ -115,7 +115,7 @@ class TableTest extends KernelTestBase {
   /**
    * Tests that the 'footer' option works correctly.
    */
-  public function testThemeTableFooter() {
+  public function testThemeTableFooter(): void {
     $footer = [
       [
         'data' => [1],
@@ -137,7 +137,7 @@ class TableTest extends KernelTestBase {
   /**
    * Tests that the 'header' option in cells works correctly.
    */
-  public function testThemeTableHeaderCellOption() {
+  public function testThemeTableHeaderCellOption(): void {
     $rows = [
       [
         ['data' => 1, 'header' => TRUE],
@@ -157,7 +157,7 @@ class TableTest extends KernelTestBase {
   /**
    * Tests that the 'responsive-table' class is applied correctly.
    */
-  public function testThemeTableResponsive() {
+  public function testThemeTableResponsive(): void {
     $header = ['one', 'two', 'three'];
     $rows = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
     $table = [
@@ -173,7 +173,7 @@ class TableTest extends KernelTestBase {
   /**
    * Tests that the 'responsive-table' class is not applied without headers.
    */
-  public function testThemeTableNotResponsiveHeaders() {
+  public function testThemeTableNotResponsiveHeaders(): void {
     $rows = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
     $table = [
       '#type' => 'table',
@@ -187,7 +187,7 @@ class TableTest extends KernelTestBase {
   /**
    * Tests that 'responsive-table' class only applied when responsive is TRUE.
    */
-  public function testThemeTableNotResponsiveProperty() {
+  public function testThemeTableNotResponsiveProperty(): void {
     $header = ['one', 'two', 'three'];
     $rows = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
     $table = [
@@ -203,7 +203,7 @@ class TableTest extends KernelTestBase {
   /**
    * Tests 'priority-medium' and 'priority-low' classes.
    */
-  public function testThemeTableResponsivePriority() {
+  public function testThemeTableResponsivePriority(): void {
     $header = [
       // Test associative header indices.
       'associative_key' => ['data' => 1, 'class' => [RESPONSIVE_PRIORITY_MEDIUM]],
@@ -231,7 +231,7 @@ class TableTest extends KernelTestBase {
   /**
    * Tests header elements with a mix of string and render array values.
    */
-  public function testThemeTableHeaderRenderArray() {
+  public function testThemeTableHeaderRenderArray(): void {
     $header = [
       [
         'data' => [
@@ -262,7 +262,7 @@ class TableTest extends KernelTestBase {
   /**
    * Tests row elements with a mix of string and render array values.
    */
-  public function testThemeTableRowRenderArray() {
+  public function testThemeTableRowRenderArray(): void {
     $header = ['one', 'two', 'three'];
     $rows = [
       [
@@ -303,7 +303,7 @@ class TableTest extends KernelTestBase {
   /**
    * Tests that the select/checkbox label is being generated and escaped.
    */
-  public function testThemeTableTitle() {
+  public function testThemeTableTitle(): void {
     $form = \Drupal::formBuilder()->getForm('\Drupal\form_test\Form\FormTestTableForm');
     $this->render($form);
     $this->assertEscaped('Update <em>kitten</em>');

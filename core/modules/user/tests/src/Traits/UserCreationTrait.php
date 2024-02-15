@@ -124,7 +124,7 @@ trait UserCreationTrait {
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The user account object.
    */
-  protected function setCurrentUser(AccountInterface $account) {
+  protected function setCurrentUser(AccountInterface $account): void {
     \Drupal::currentUser()->setAccount($account);
   }
 
@@ -310,7 +310,7 @@ trait UserCreationTrait {
    * @param array $permissions
    *   (optional) A list of permission names to grant.
    */
-  protected function grantPermissions(RoleInterface $role, array $permissions) {
+  protected function grantPermissions(RoleInterface $role, array $permissions): void {
     foreach ($permissions as $permission) {
       $role->grantPermission($permission);
     }

@@ -295,7 +295,7 @@ class Fixtures {
   /**
    * Create an isolated cache directory for Composer.
    */
-  public function createIsolatedComposerCacheDir() {
+  public function createIsolatedComposerCacheDir(): void {
     $cacheDir = $this->mkTmpDir('composer-cache');
     putenv("COMPOSER_CACHE_DIR=$cacheDir");
   }
@@ -303,7 +303,7 @@ class Fixtures {
   /**
    * Calls 'tearDown' in any test that copies fixtures to transient locations.
    */
-  public function tearDown() {
+  public function tearDown(): void {
     // Remove any temporary directories that were created.
     $filesystem = new Filesystem();
     foreach ($this->tmpDirs as $dir) {
@@ -331,7 +331,7 @@ class Fixtures {
    *   Key : value mappings for placeholders to replace in composer.json
    *   templates.
    */
-  public function cloneFixtureProjects($fixturesDir, array $replacements = []) {
+  public function cloneFixtureProjects($fixturesDir, array $replacements = []): void {
     $filesystem = new Filesystem();
     // We will replace 'SYMLINK' with the string 'true' in our composer.json
     // fixture.

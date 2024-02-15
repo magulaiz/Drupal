@@ -163,7 +163,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    * @param bool $single_format
    *   Provisions a single-format entity REST resource. Defaults to FALSE.
    */
-  protected function provisionEntityResource($single_format = FALSE) {
+  protected function provisionEntityResource($single_format = FALSE): void {
     if ($existing = $this->resourceConfigStorage->load(static::$resourceConfigId)) {
       $existing->delete();
     }
@@ -406,7 +406,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   /**
    * Tests a GET request for an entity, plus edge cases to ensure good DX.
    */
-  public function testGet() {
+  public function testGet(): void {
     $this->initAuthentication();
     $has_canonical_url = $this->entity->hasLinkTemplate('canonical');
 
@@ -682,7 +682,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   /**
    * Tests a POST request for an entity, plus edge cases to ensure good DX.
    */
-  public function testPost() {
+  public function testPost(): void {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
       $this->markTestSkipped('POSTing config entities is not yet supported.');
@@ -856,7 +856,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   /**
    * Tests a PATCH request for an entity, plus edge cases to ensure good DX.
    */
-  public function testPatch() {
+  public function testPatch(): void {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
       $this->markTestSkipped('PATCHing config entities is not yet supported.');
@@ -1094,7 +1094,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   /**
    * Tests a DELETE request for an entity, plus edge cases to ensure good DX.
    */
-  public function testDelete() {
+  public function testDelete(): void {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
       $this->markTestSkipped('DELETEing config entities is not yet supported.');
@@ -1166,7 +1166,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function assertNormalizationEdgeCases($method, Url $url, array $request_options) {
+  protected function assertNormalizationEdgeCases($method, Url $url, array $request_options): void {
     // \Drupal\serialization\Normalizer\EntityNormalizer::denormalize(): entity
     // types with bundles MUST send their bundle field to be denormalizable.
     $entity_type = $this->entity->getEntityType();
@@ -1197,7 +1197,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   /**
    * Asserts structure of $patchProtectedFieldNames.
    */
-  protected function assertPatchProtectedFieldNamesStructure() {
+  protected function assertPatchProtectedFieldNamesStructure(): void {
     $is_null_or_string = function ($value) {
       return is_null($value) || is_string($value);
     };
@@ -1339,7 +1339,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    * @param \Psr\Http\Message\ResponseInterface $response
    *   The response to assert.
    */
-  protected function assert406Response(ResponseInterface $response) {
+  protected function assert406Response(ResponseInterface $response): void {
     if ($this->entity->hasLinkTemplate('canonical') && ($this->account && static::$auth !== 'cookie')) {
       $this->assertSame(403, $response->getStatusCode());
     }
@@ -1364,7 +1364,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    * @param array $request_options
    *   Request options to apply.
    */
-  protected function assertResourceNotAvailable(Url $url, array $request_options) {
+  protected function assertResourceNotAvailable(Url $url, array $request_options): void {
     $has_canonical_url = $this->entity->hasLinkTemplate('canonical');
     $response = $this->request('GET', $url, $request_options);
     if (!$has_canonical_url) {
@@ -1383,7 +1383,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    * @param \Drupal\Core\Entity\FieldableEntityInterface $modified_entity
    *   The entity object of the modified (PATCHed or POSTed) entity.
    */
-  protected function assertStoredEntityMatchesSentNormalization(array $sent_normalization, FieldableEntityInterface $modified_entity) {
+  protected function assertStoredEntityMatchesSentNormalization(array $sent_normalization, FieldableEntityInterface $modified_entity): void {
     foreach ($sent_normalization as $field_name => $field_normalization) {
       // Some top-level keys in the normalization may not be fields on the
       // entity.
@@ -1437,7 +1437,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    * @param $actual
    *   The object to test.
    */
-  protected function assertEntityArraySubset($expected, $actual) {
+  protected function assertEntityArraySubset($expected, $actual): void {
     foreach ($expected as $key => $value) {
       if (is_array($value)) {
         $this->assertEntityArraySubset($value, $actual[$key]);

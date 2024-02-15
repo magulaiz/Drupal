@@ -32,7 +32,7 @@ trait HtmlOutputPrinterTrait {
    *
    * @see \Drupal\Tests\BrowserTestBase::initBrowserOutputFile()
    */
-  protected function setUpHtmlOutput() {
+  protected function setUpHtmlOutput(): void {
     if ($html_output_directory = getenv('BROWSERTEST_OUTPUT_DIRECTORY')) {
       // Initialize html output debugging.
       $html_output_directory = rtrim($html_output_directory, '/');
@@ -67,7 +67,7 @@ trait HtmlOutputPrinterTrait {
   /**
    * Prints the list of HTML output generated during the test.
    */
-  protected function printHtmlOutput() {
+  protected function printHtmlOutput(): void {
     if ($this->browserOutputFile) {
       $contents = file_get_contents($this->browserOutputFile);
       if ($contents) {

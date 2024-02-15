@@ -46,7 +46,7 @@ class ForumNodeBreadcrumbBuilderTest extends UnitTestCase {
    * @dataProvider providerTestApplies
    * @covers ::applies
    */
-  public function testApplies($expected, $route_name = NULL, $parameter_map = []) {
+  public function testApplies($expected, $route_name = NULL, $parameter_map = []): void {
     // Make some test doubles.
     $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
     $config_factory = $this->getConfigFactoryStub([]);
@@ -119,7 +119,7 @@ class ForumNodeBreadcrumbBuilderTest extends UnitTestCase {
    * @see \Drupal\forum\ForumNodeBreadcrumbBuilder::build()
    * @covers ::build
    */
-  public function testBuild() {
+  public function testBuild(): void {
     // Build all our dependencies, backwards.
     $translation_manager = $this->getMockBuilder('Drupal\Core\StringTranslation\TranslationInterface')
       ->disableOriginalConstructor()

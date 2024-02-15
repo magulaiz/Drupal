@@ -25,7 +25,7 @@ abstract class RestResourceConfigResourceTestBase extends ConfigEntityResourceTe
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     $this->grantPermissionsToTestedRole(['administer rest resources']);
   }
 

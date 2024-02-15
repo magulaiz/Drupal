@@ -37,7 +37,7 @@ abstract class DiscoveryTestBase extends KernelTestBase {
   /**
    * Tests getDefinitions() and getDefinition().
    */
-  public function testDiscoveryInterface() {
+  public function testDiscoveryInterface(): void {
     // Ensure that getDefinitions() returns the expected definitions.
     // For the arrays to be identical (instead of only equal), they must be
     // sorted equally, which seems unnecessary here.
@@ -67,8 +67,8 @@ abstract class DiscoveryTestBase extends KernelTestBase {
    * @param array $expected_definition
    *   The expected definition to test against.
    */
-  protected function assertDefinitionIdentical(array $definition, array $expected_definition) {
-    $func = function (&$item) {
+  protected function assertDefinitionIdentical(array $definition, array $expected_definition): void {
+    $func = function (&$item): void {
       if ($item instanceof TranslatableMarkup) {
         $item = (string) $item;
       }

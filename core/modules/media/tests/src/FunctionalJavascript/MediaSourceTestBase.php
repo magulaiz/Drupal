@@ -39,7 +39,7 @@ abstract class MediaSourceTestBase extends MediaJavascriptTestBase {
    * @param string $media_type_id
    *   The media type config entity ID.
    */
-  protected function createMediaTypeField($field_name, $field_type, $media_type_id) {
+  protected function createMediaTypeField($field_name, $field_type, $media_type_id): void {
     $storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'media',
@@ -80,7 +80,7 @@ abstract class MediaSourceTestBase extends MediaJavascriptTestBase {
    * @param string $media_type_id
    *   The media type config entity ID.
    */
-  protected function createMediaTypeFields(array $fields, $media_type_id) {
+  protected function createMediaTypeFields(array $fields, $media_type_id): void {
     foreach ($fields as $field_name => $field_type) {
       $this->createMediaTypeField($field_name, $field_type, $media_type_id);
     }
@@ -94,7 +94,7 @@ abstract class MediaSourceTestBase extends MediaJavascriptTestBase {
    * @param string $media_type_id
    *   The media type config entity ID.
    */
-  protected function hideMediaTypeFieldWidget($field_name, $media_type_id) {
+  protected function hideMediaTypeFieldWidget($field_name, $media_type_id): void {
 
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
     $display_repository = \Drupal::service('entity_display.repository');

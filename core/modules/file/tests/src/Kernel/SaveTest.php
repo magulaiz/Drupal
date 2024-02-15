@@ -11,7 +11,7 @@ use Drupal\file\Entity\File;
  */
 class SaveTest extends FileManagedUnitTestBase {
 
-  public function testFileSave() {
+  public function testFileSave(): void {
     // Create a new file entity.
     $file = File::create([
       'uid' => 1,

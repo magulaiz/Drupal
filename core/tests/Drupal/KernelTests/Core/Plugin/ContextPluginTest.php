@@ -29,7 +29,7 @@ class ContextPluginTest extends KernelTestBase {
   /**
    * Tests basic context definition and value getters and setters.
    */
-  public function testContext() {
+  public function testContext(): void {
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
     $type = NodeType::create(['type' => 'page', 'name' => 'Page']);

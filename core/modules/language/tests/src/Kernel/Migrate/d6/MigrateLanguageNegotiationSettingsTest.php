@@ -20,7 +20,7 @@ class MigrateLanguageNegotiationSettingsTest extends MigrateDrupal6TestBase {
   /**
    * Tests the migration with LANGUAGE_NEGOTIATION_PATH_DEFAULT.
    */
-  public function testLanguageNegotiationWithDefaultPathPrefix() {
+  public function testLanguageNegotiationWithDefaultPathPrefix(): void {
     $this->executeMigrations([
       'language',
       'd6_language_negotiation_settings',
@@ -54,7 +54,7 @@ class MigrateLanguageNegotiationSettingsTest extends MigrateDrupal6TestBase {
   /**
    * Tests the migration with LANGUAGE_NEGOTIATION_NONE.
    */
-  public function testLanguageNegotiationWithNoNegotiation() {
+  public function testLanguageNegotiationWithNoNegotiation(): void {
     $this->sourceDatabase->update('variable')
       ->fields(['value' => serialize(0)])
       ->condition('name', 'language_negotiation')
@@ -86,7 +86,7 @@ class MigrateLanguageNegotiationSettingsTest extends MigrateDrupal6TestBase {
   /**
    * Tests the migration with LANGUAGE_NEGOTIATION_PATH.
    */
-  public function testLanguageNegotiationWithPathPrefix() {
+  public function testLanguageNegotiationWithPathPrefix(): void {
     $this->sourceDatabase->update('variable')
       ->fields(['value' => serialize(2)])
       ->condition('name', 'language_negotiation')
@@ -127,7 +127,7 @@ class MigrateLanguageNegotiationSettingsTest extends MigrateDrupal6TestBase {
   /**
    * Tests the migration with LANGUAGE_NEGOTIATION_DOMAIN.
    */
-  public function testLanguageNegotiationWithDomain() {
+  public function testLanguageNegotiationWithDomain(): void {
     $this->sourceDatabase->update('variable')
       ->fields(['value' => serialize(3)])
       ->condition('name', 'language_negotiation')

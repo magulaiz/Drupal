@@ -53,7 +53,7 @@ trait NodeMigrateTypeTestTrait {
    *
    * @throws \Exception
    */
-  protected function removeNodeMigrateMapTable($type, $version) {
+  protected function removeNodeMigrateMapTable($type, $version): void {
     $name = $this->getTableName($type, $version);
     \Drupal::database()->schema()->dropTable($name);
   }
@@ -90,7 +90,7 @@ trait NodeMigrateTypeTestTrait {
    *
    * @throws \Exception
    */
-  protected function makeNodeMigrateMapTable($type, $version) {
+  protected function makeNodeMigrateMapTable($type, $version): void {
     $name = $this->getTableName($type, $version);
     $fields = [
       'source_ids_hash' => [

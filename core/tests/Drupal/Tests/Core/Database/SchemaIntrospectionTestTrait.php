@@ -20,7 +20,7 @@ trait SchemaIntrospectionTestTrait {
    *   (optional) The type of the index. Can be one of 'index', 'unique' or
    *   'primary'. Defaults to 'index'.
    */
-  protected function assertIndexOnColumns($table_name, array $column_names, $index_type = 'index') {
+  protected function assertIndexOnColumns($table_name, array $column_names, $index_type = 'index'): void {
     foreach ($this->getIndexColumnNames($table_name, $index_type) as $index_columns) {
       if ($column_names == $index_columns) {
         $this->assertTrue(TRUE);
@@ -41,7 +41,7 @@ trait SchemaIntrospectionTestTrait {
    *   (optional) The type of the index. Can be one of 'index', 'unique' or
    *   'primary'. Defaults to 'index'.
    */
-  protected function assertNoIndexOnColumns($table_name, array $column_names, $index_type = 'index') {
+  protected function assertNoIndexOnColumns($table_name, array $column_names, $index_type = 'index'): void {
     foreach ($this->getIndexColumnNames($table_name, $index_type) as $index_columns) {
       if ($column_names == $index_columns) {
         $this->assertTrue(FALSE);

@@ -63,7 +63,7 @@ class UpdatePostUpdateTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function doSelectionTest() {
+  protected function doSelectionTest(): void {
     // Ensure that normal and post_update updates are merged together on the
     // selection page.
     $this->assertSession()->responseContains('<ul><li>8001 - Normal update_N() function.</li><li>First update.</li><li>Second update.</li><li>Test0 update.</li><li>Test1 update.</li><li>Testing batch processing in post updates update.</li></ul>');
@@ -72,7 +72,7 @@ class UpdatePostUpdateTest extends BrowserTestBase {
   /**
    * Tests hook_post_update_NAME().
    */
-  public function testPostUpdate() {
+  public function testPostUpdate(): void {
     $this->runUpdates();
 
     $this->assertSession()->responseContains('<h3>Update first</h3>');

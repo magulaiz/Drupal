@@ -41,7 +41,7 @@ class NoHelpTest extends BrowserTestBase {
   /**
    * Ensures modules not implementing help do not appear on admin/help.
    */
-  public function testMainPageNoHelp() {
+  public function testMainPageNoHelp(): void {
     $this->drupalLogin($this->adminUser);
 
     $this->drupalGet('admin/help');

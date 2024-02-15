@@ -44,7 +44,7 @@ class ViewsEscapingTest extends ViewTestBase {
   /**
    * Tests for incorrectly escaped markup in the views-view-fields.html.twig.
    */
-  public function testViewsViewFieldsEscaping() {
+  public function testViewsViewFieldsEscaping(): void {
     // Test with system theme using theme function.
     $this->drupalGet('test_page_display_200');
 
@@ -72,7 +72,7 @@ class ViewsEscapingTest extends ViewTestBase {
   /**
    * Tests for incorrectly escaped markup in a header label on a display table.
    */
-  public function testViewsFieldHeaderEscaping() {
+  public function testViewsFieldHeaderEscaping(): void {
     // Test with a field header label having an html element wrapper.
     $this->drupalGet('test_field_header');
 

@@ -30,7 +30,7 @@ class TermValidationTest extends EntityKernelTestBase {
   /**
    * Tests the term validation constraints.
    */
-  public function testValidation() {
+  public function testValidation(): void {
     $this->entityTypeManager->getStorage('taxonomy_vocabulary')->create([
       'vid' => 'tags',
       'name' => 'Tags',

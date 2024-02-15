@@ -101,7 +101,7 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
    * then needed to set various things such as the config directories and the
    * container that would normally be done via the installer.
    */
-  public function installDrupal() {
+  public function installDrupal(): void {
     // Set the update URL. This must be set here rather than in
     // self::__construct() or the old URL generator will leak additional test
     // sites. Additionally, we need to prevent the path alias processor from
@@ -138,7 +138,7 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function doInstall() {
+  protected function doInstall(): void {
     $this->runDbTasks();
     // Allow classes to set database dump files.
     $this->setDatabaseDumpFiles();
@@ -155,7 +155,7 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function initFrontPage() {
+  protected function initFrontPage(): void {
     // Do nothing as Drupal is not installed yet.
   }
 
@@ -167,7 +167,7 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
   /**
    * Add settings that are missed since the installer isn't run.
    */
-  protected function prepareSettings() {
+  protected function prepareSettings(): void {
     parent::prepareSettings();
 
     // Generate a hash salt.
@@ -200,14 +200,14 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
   /**
    * Helper function to run pending database updates.
    */
-  protected function runUpdates() {
+  protected function runUpdates(): void {
     $this->doRunUpdates($this->updateUrl);
   }
 
   /**
    * Runs the install database tasks for the driver used by the test runner.
    */
-  protected function runDbTasks() {
+  protected function runDbTasks(): void {
     // Create a minimal container so that t() works.
     // @see install_begin_request()
     $container = new ContainerBuilder();
@@ -231,7 +231,7 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
   /**
    * Replace User 1 with the user created here.
    */
-  protected function replaceUser1() {
+  protected function replaceUser1(): void {
     /** @var \Drupal\user\UserInterface $account */
     // @todo Saving the account before the update is problematic.
     //   https://www.drupal.org/node/2560237
@@ -245,7 +245,7 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
   /**
    * Tests that the database was properly loaded.
    */
-  protected function testDatabaseLoaded() {
+  protected function testDatabaseLoaded(): void {
     // Set a value in the cache to prove caches are cleared.
     \Drupal::service('cache.default')->set(__CLASS__, 'Test');
 
@@ -264,7 +264,7 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
       ->fetchAllKeyed(0, 1);
     // For the purpose of fetching the notices and displaying more helpful error
     // messages, let's override the error handler temporarily.
-    set_error_handler(function ($severity, $message, $filename, $lineno) {
+    set_error_handler(function ($severity, $message, $filename, $lineno): void {
       throw new \ErrorException($message, 0, $severity, $filename, $lineno);
     });
     foreach ($result as $route_name => $route) {

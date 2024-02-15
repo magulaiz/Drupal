@@ -57,7 +57,7 @@ class ManageFieldsTest extends BrowserTestBase {
   /**
    * Tests drop button operations on the manage fields page.
    */
-  public function testFieldDropButtonOperations() {
+  public function testFieldDropButtonOperations(): void {
     $assert_session = $this->assertSession();
 
     $node_type = $this->drupalCreateContentType();
@@ -129,7 +129,7 @@ class ManageFieldsTest extends BrowserTestBase {
   /**
    * Tests adding a field.
    */
-  public function testAddField() {
+  public function testAddField(): void {
     $page = $this->getSession()->getPage();
     $type = $this->drupalCreateContentType([
       'name' => 'Article',
@@ -197,7 +197,7 @@ class ManageFieldsTest extends BrowserTestBase {
   /**
    * Tests multiple users adding a field with the same name.
    */
-  public function testAddFieldWithMultipleUsers() {
+  public function testAddFieldWithMultipleUsers(): void {
     $page = $this->getSession()->getPage();
     // Create two users.
     $user1 = $this->drupalCreateUser(['administer node fields']);
@@ -259,7 +259,7 @@ class ManageFieldsTest extends BrowserTestBase {
   /**
    * Tests editing field when the field exists in temp store.
    */
-  public function testEditFieldWithLeftOverFieldInTempStore() {
+  public function testEditFieldWithLeftOverFieldInTempStore(): void {
     $user = $this->drupalCreateUser(['administer node fields']);
 
     $node_type = $this->drupalCreateContentType();
@@ -305,7 +305,7 @@ class ManageFieldsTest extends BrowserTestBase {
   /**
    * Tests creating entity reference field to non-bundleable entity type.
    */
-  public function testEntityReferenceToNonBundleableEntity() {
+  public function testEntityReferenceToNonBundleableEntity(): void {
     $type = $this->drupalCreateContentType([
       'name' => 'kittens',
       'type' => 'kittens',
@@ -327,7 +327,7 @@ class ManageFieldsTest extends BrowserTestBase {
    *
    * @group legacy
    */
-  public function testFieldStorageFormAlter() {
+  public function testFieldStorageFormAlter(): void {
     $this->container->get('module_installer')->install(['field_ui_test_deprecated']);
     $this->rebuildContainer();
 
@@ -343,7 +343,7 @@ class ManageFieldsTest extends BrowserTestBase {
    *
    * @group legacy
    */
-  public function testFieldTypeCardinalityAlter() {
+  public function testFieldTypeCardinalityAlter(): void {
     $node_type = $this->drupalCreateContentType();
     $bundle = $node_type->id();
 
@@ -373,7 +373,7 @@ class ManageFieldsTest extends BrowserTestBase {
   /**
    * Tests hook_field_info_entity_type_ui_definitions_alter().
    */
-  public function testFieldUiDefinitionsAlter() {
+  public function testFieldUiDefinitionsAlter(): void {
     $user = $this->drupalCreateUser(['administer node fields']);
     $node_type = $this->drupalCreateContentType();
     $this->drupalLogin($user);
@@ -384,7 +384,7 @@ class ManageFieldsTest extends BrowserTestBase {
   /**
    * Ensure field category fallback works for field types without a description.
    */
-  public function testFieldCategoryFallbackWithoutDescription() {
+  public function testFieldCategoryFallbackWithoutDescription(): void {
     $user = $this->drupalCreateUser(['administer node fields']);
     $node_type = $this->drupalCreateContentType();
     $this->drupalLogin($user);

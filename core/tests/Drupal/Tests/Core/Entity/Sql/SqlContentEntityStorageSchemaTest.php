@@ -117,7 +117,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    * @covers ::getFieldSchemaData
    * @covers ::processIdentifierSchema
    */
-  public function testGetSchemaBase() {
+  public function testGetSchemaBase(): void {
     $this->entityType = new ContentEntityType([
       'id' => 'entity_test',
       'entity_keys' => ['id' => 'id'],
@@ -410,7 +410,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    * @covers ::getEntityIndexName
    * @covers ::processIdentifierSchema
    */
-  public function testGetSchemaRevisionable() {
+  public function testGetSchemaRevisionable(): void {
     $this->entityType = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityType')
       ->setConstructorArgs([
         [
@@ -514,7 +514,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    * @covers ::getEntityIndexName
    * @covers ::processDataTable
    */
-  public function testGetSchemaTranslatable() {
+  public function testGetSchemaTranslatable(): void {
     $this->entityType = new ContentEntityType([
       'id' => 'entity_test',
       'entity_keys' => [
@@ -626,7 +626,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    * @covers ::initializeRevisionDataTable
    * @covers ::processRevisionDataTable
    */
-  public function testGetSchemaRevisionableTranslatable() {
+  public function testGetSchemaRevisionableTranslatable(): void {
     $this->entityType = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityType')
       ->setConstructorArgs([
         [
@@ -838,7 +838,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    * @covers ::getDedicatedTableSchema
    * @covers ::createDedicatedTableSchema
    */
-  public function testDedicatedTableSchema() {
+  public function testDedicatedTableSchema(): void {
     $entity_type_id = 'entity_test';
     $this->entityType = new ContentEntityType([
       'id' => 'entity_test',
@@ -1015,7 +1015,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    * @covers ::getDedicatedTableSchema
    * @covers ::createDedicatedTableSchema
    */
-  public function testDedicatedTableSchemaForEntityWithStringIdentifier() {
+  public function testDedicatedTableSchemaForEntityWithStringIdentifier(): void {
     $entity_type_id = 'entity_test';
     $this->entityType = new ContentEntityType([
       'id' => 'entity_test',
@@ -1200,7 +1200,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    *
    * @dataProvider providerTestRequiresEntityDataMigration
    */
-  public function testRequiresEntityDataMigration($updated_entity_type_definition, $original_entity_type_definition, $original_storage_has_data, $shared_table_structure_changed, $migration_required) {
+  public function testRequiresEntityDataMigration($updated_entity_type_definition, $original_entity_type_definition, $original_storage_has_data, $shared_table_structure_changed, $migration_required): void {
     $this->entityType = new ContentEntityType([
       'id' => 'entity_test',
       'entity_keys' => ['id' => 'id'],
@@ -1307,7 +1307,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    *
    * @dataProvider providerTestRequiresEntityStorageSchemaChanges
    */
-  public function testRequiresEntityStorageSchemaChanges(ContentEntityTypeInterface $updated, ContentEntityTypeInterface $original, $requires_change, $change_schema, $change_shared_table) {
+  public function testRequiresEntityStorageSchemaChanges(ContentEntityTypeInterface $updated, ContentEntityTypeInterface $original, $requires_change, $change_schema, $change_shared_table): void {
 
     $this->entityType = new ContentEntityType([
       'id' => 'entity_test',
@@ -1357,7 +1357,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    *   (optional) An associative array describing the expected entity schema to
    *   be created. Defaults to expecting nothing.
    */
-  protected function setUpStorageSchema(array $expected = []) {
+  protected function setUpStorageSchema(array $expected = []): void {
     $this->entityTypeManager
       ->getDefinition($this->entityType->id())
       ->willReturn($this->entityType);
@@ -1393,7 +1393,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
             return $expected_table_schemas[$invocation_count] == $table_schema;
           })
         )
-        ->willReturnCallback(function () use (&$invocation_count) {
+        ->willReturnCallback(function () use (&$invocation_count): void {
           $invocation_count++;
         });
     }
@@ -1439,7 +1439,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    *   The schema array of the field definition, as returned from
    *   FieldStorageDefinitionInterface::getSchema().
    */
-  public function setUpStorageDefinition($field_name, array $schema) {
+  public function setUpStorageDefinition($field_name, array $schema): void {
     $this->storageDefinitions[$field_name] = $this->createMock('Drupal\Tests\Core\Field\TestBaseFieldDefinitionInterface');
     $this->storageDefinitions[$field_name]->expects($this->any())
       ->method('isBaseField')
@@ -1473,7 +1473,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
   /**
    * ::onEntityTypeUpdate.
    */
-  public function testonEntityTypeUpdateWithNewIndex() {
+  public function testonEntityTypeUpdateWithNewIndex(): void {
     $this->entityType = $original_entity_type = new ContentEntityType([
       'id' => 'entity_test',
       'entity_keys' => ['id' => 'id'],
@@ -1574,7 +1574,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    * @dataProvider providerSchemaCastValue
    * @covers ::castValue
    */
-  public function testCastValue($expected, $value, array $schema) {
+  public function testCastValue($expected, $value, array $schema): void {
     $this->assertSame($expected, SqlContentEntityStorageSchema::castValue($schema, $value));
   }
 

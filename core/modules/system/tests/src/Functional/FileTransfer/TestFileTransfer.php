@@ -41,25 +41,25 @@ class TestFileTransfer extends FileTransfer {
     return new TestFileTransfer($jail);
   }
 
-  public function connect() {
+  public function connect(): void {
     $connection = new MockTestConnection();
     $connection->connectionString = 'test://' . urlencode($this->username) . ':' . urlencode($this->password) . "@$this->host:$this->port/";
     $this->connection = $connection;
   }
 
-  public function copyFileJailed($source, $destination) {
+  public function copyFileJailed($source, $destination): void {
     $this->connection->run("copyFile $source $destination");
   }
 
-  protected function removeDirectoryJailed($directory) {
+  protected function removeDirectoryJailed($directory): void {
     $this->connection->run("rmdir $directory");
   }
 
-  public function createDirectoryJailed($directory) {
+  public function createDirectoryJailed($directory): void {
     $this->connection->run("mkdir $directory");
   }
 
-  public function removeFileJailed($destination) {
+  public function removeFileJailed($destination): void {
     $this->connection->run("rm $destination");
   }
 
@@ -71,6 +71,6 @@ class TestFileTransfer extends FileTransfer {
     return FALSE;
   }
 
-  public function chmodJailed($path, $mode, $recursive) {}
+  public function chmodJailed($path, $mode, $recursive): void {}
 
 }

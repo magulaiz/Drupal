@@ -32,7 +32,7 @@ final class ClassWriter {
    *
    * @throws \ReflectionException
    */
-  public static function mutateTestBase($autoloader) {
+  public static function mutateTestBase($autoloader): void {
     static::alterAssert($autoloader);
     static::alterTestCase($autoloader);
   }

@@ -43,7 +43,7 @@ class WorkspaceXmlBasicAuthTest extends WorkspaceResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testPatchPath() {
+  public function testPatchPath(): void {
     // Deserialization of the XML format is not supported.
     $this->markTestSkipped();
   }

@@ -148,42 +148,42 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testGetIndividual() {
+  public function testGetIndividual(): void {
     $this->markTestSkipped('Irrelevant for this test');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function testPostIndividual() {
+  public function testPostIndividual(): void {
     $this->markTestSkipped('Irrelevant for this test');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function testPatchIndividual() {
+  public function testPatchIndividual(): void {
     $this->markTestSkipped('Irrelevant for this test');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function testDeleteIndividual() {
+  public function testDeleteIndividual(): void {
     $this->markTestSkipped('Irrelevant for this test');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function testCollection() {
+  public function testCollection(): void {
     $this->markTestSkipped('Irrelevant for this test');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function testRelationships() {
+  public function testRelationships(): void {
     $this->markTestSkipped('Irrelevant for this test');
   }
 
@@ -205,7 +205,7 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testRelated() {
+  public function testRelated(): void {
     \Drupal::service('router.builder')->rebuild();
     parent::testRelated();
   }
@@ -213,7 +213,7 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * Tests using the file upload POST route; needs second request to "use" file.
    */
-  public function testPostFileUpload() {
+  public function testPostFileUpload(): void {
     \Drupal::service('router.builder')->rebuild();
     $uri = Url::fromUri('base:' . static::$postUri);
 
@@ -278,7 +278,7 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * Tests using the 'file upload and "use" file in single request" POST route.
    */
-  public function testPostFileUploadAndUseInSingleRequest() {
+  public function testPostFileUploadAndUseInSingleRequest(): void {
     \Drupal::service('router.builder')->rebuild();
     // Update the test entity so it already has a file. This allows verifying
     // that this route appends files, and does not replace them.
@@ -393,7 +393,7 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * Tests using the file upload POST route with invalid headers.
    */
-  protected function testPostFileUploadInvalidHeaders() {
+  protected function testPostFileUploadInvalidHeaders(): void {
     $uri = Url::fromUri('base:' . static::$postUri);
 
     // The wrong content type header should return a 415 code.
@@ -429,7 +429,7 @@ class FileUploadTest extends ResourceTestBase {
    *
    * A new file should be created with a suffixed name.
    */
-  public function testPostFileUploadDuplicateFile() {
+  public function testPostFileUploadDuplicateFile(): void {
     \Drupal::service('router.builder')->rebuild();
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -470,7 +470,7 @@ class FileUploadTest extends ResourceTestBase {
    *
    * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition#Directives
    */
-  public function testFileUploadStrippedFilePath() {
+  public function testFileUploadStrippedFilePath(): void {
     \Drupal::service('router.builder')->rebuild();
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -517,7 +517,7 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * Tests invalid file uploads.
    */
-  public function testInvalidFileUploads() {
+  public function testInvalidFileUploads(): void {
     \Drupal::service('router.builder')->rebuild();
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -530,7 +530,7 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * Tests using the file upload route with a unicode file name.
    */
-  public function testFileUploadUnicodeFilename() {
+  public function testFileUploadUnicodeFilename(): void {
     \Drupal::service('router.builder')->rebuild();
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -549,7 +549,7 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * Tests using the file upload route with a zero byte file.
    */
-  public function testFileUploadZeroByteFile() {
+  public function testFileUploadZeroByteFile(): void {
     \Drupal::service('router.builder')->rebuild();
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -571,7 +571,7 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * Tests using the file upload route with an invalid file type.
    */
-  protected function testFileUploadInvalidFileType() {
+  protected function testFileUploadInvalidFileType(): void {
     $uri = Url::fromUri('base:' . static::$postUri);
 
     // Test with a JSON file.
@@ -586,7 +586,7 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * Tests using the file upload route with a file size larger than allowed.
    */
-  protected function testFileUploadLargerFileSize() {
+  protected function testFileUploadLargerFileSize(): void {
     // Set a limit of 50 bytes.
     $this->field->setSetting('max_filesize', 50)
       ->save();
@@ -605,7 +605,7 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * Tests using the file upload POST route with malicious extensions.
    */
-  protected function testFileUploadMaliciousExtension() {
+  protected function testFileUploadMaliciousExtension(): void {
     // Allow all file uploads but system.file::allow_insecure_uploads is set to
     // FALSE.
     $this->field->setSetting('file_extensions', '')->save();
@@ -721,7 +721,7 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * Tests using the file upload POST route no configuration.
    */
-  public function testFileUploadNoConfiguration() {
+  public function testFileUploadNoConfiguration(): void {
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
 
@@ -875,7 +875,7 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     switch ($method) {
       case 'GET':
         $this->grantPermissionsToTestedRole(['view test entity']);

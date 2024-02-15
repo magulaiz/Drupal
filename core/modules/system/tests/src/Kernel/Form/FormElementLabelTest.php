@@ -20,7 +20,7 @@ class FormElementLabelTest extends KernelTestBase {
   /**
    * Ensures that attributes can be placed for form element label.
    */
-  public function testAttributes() {
+  public function testAttributes(): void {
     $render_array = [
       '#type' => 'label',
       '#attributes' => ['class' => ['kitten']],

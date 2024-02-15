@@ -38,7 +38,7 @@ trait AssertBreadcrumbTrait {
    * @param string $active_class
    *   (optional) The class of the active element. Defaults to 'is-active'.
    */
-  protected function assertBreadcrumb($goto, array $trail, $page_title = NULL, array $tree = [], $last_active = TRUE, $active_trail_class = 'menu-item--active-trail', $active_class = 'is-active') {
+  protected function assertBreadcrumb($goto, array $trail, $page_title = NULL, array $tree = [], $last_active = TRUE, $active_trail_class = 'menu-item--active-trail', $active_class = 'is-active'): void {
     if (isset($goto)) {
       $this->drupalGet($goto);
     }
@@ -62,7 +62,7 @@ trait AssertBreadcrumbTrait {
    *   An associative array whose keys are expected breadcrumb link paths and
    *   whose values are expected breadcrumb link texts (not sanitized).
    */
-  protected function assertBreadcrumbParts($trail) {
+  protected function assertBreadcrumbParts($trail): void {
     // Compare paths with actual breadcrumb.
     $parts = $this->getBreadcrumbParts();
     $found = $parts;

@@ -29,7 +29,7 @@ class FieldUrlTest extends ViewsKernelTestBase {
     return $data;
   }
 
-  public function testFieldUrl() {
+  public function testFieldUrl(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 

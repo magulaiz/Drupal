@@ -48,7 +48,7 @@ class StatusTest extends BrowserTestBase {
    *
    * @group legacy
    */
-  public function testStatusPage() {
+  public function testStatusPage(): void {
     // Verify if the 'Status report' is the first item link.
     $this->drupalGet('admin/reports');
     $this->assertEquals('Status report', $this->cssSelect('.list-group :first-child')[0]->getText());
@@ -191,7 +191,7 @@ class StatusTest extends BrowserTestBase {
   /**
    * Tests that the Error counter matches the displayed number of errors.
    */
-  public function testErrorElementCount() {
+  public function testErrorElementCount(): void {
     // Trigger "cron has not run recently" error:
     $cron_config = \Drupal::config('system.cron');
     $time = \Drupal::time()->getRequestTime();
@@ -211,7 +211,7 @@ class StatusTest extends BrowserTestBase {
   /**
    * Tests that the Warning counter matches the displayed number of warnings.
    */
-  public function testWarningElementCount() {
+  public function testWarningElementCount(): void {
     // Trigger "cron has not run recently" with warning threshold:
     $cron_config = \Drupal::config('system.cron');
     $time = \Drupal::time()->getRequestTime();

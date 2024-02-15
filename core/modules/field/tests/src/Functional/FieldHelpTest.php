@@ -44,7 +44,7 @@ class FieldHelpTest extends BrowserTestBase {
   /**
    * Tests the Field module's help page.
    */
-  public function testFieldHelp() {
+  public function testFieldHelp(): void {
     // Log in the admin user.
     $this->drupalLogin($this->adminUser);
 

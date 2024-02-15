@@ -45,12 +45,12 @@ class FormActionXssTest extends KernelTestBase implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {}
+  public function validateForm(array &$form, FormStateInterface $form_state): void {}
 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {}
+  public function submitForm(array &$form, FormStateInterface $form_state): void {}
 
   /**
    * {@inheritdoc}
@@ -70,7 +70,7 @@ class FormActionXssTest extends KernelTestBase implements FormInterface {
   /**
    * Tests form action attribute for XSS.
    */
-  public function testFormActionXss() {
+  public function testFormActionXss(): void {
     // Create a new request with a uri which attempts XSS.
     $request_stack = \Drupal::service('request_stack');
     /** @var \Symfony\Component\HttpFoundation\RequestStack $original_request */

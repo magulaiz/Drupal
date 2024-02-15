@@ -34,7 +34,7 @@ abstract class MigrateDrupal7TestBase extends MigrateDrupalTestBase {
   /**
    * Executes all field migrations.
    */
-  protected function migrateFields() {
+  protected function migrateFields(): void {
     $this->executeMigration('d7_field');
     $this->migrateContentTypes();
     $this->migrateCommentTypes();
@@ -47,7 +47,7 @@ abstract class MigrateDrupal7TestBase extends MigrateDrupalTestBase {
    * @param bool $include_pictures
    *   (optional) If TRUE, migrates user pictures. Defaults to TRUE.
    */
-  protected function migrateUsers($include_pictures = TRUE) {
+  protected function migrateUsers($include_pictures = TRUE): void {
     $migrations = ['d7_user_role', 'd7_user'];
 
     if ($include_pictures) {
@@ -65,7 +65,7 @@ abstract class MigrateDrupal7TestBase extends MigrateDrupalTestBase {
   /**
    * Migrates node types.
    */
-  protected function migrateContentTypes() {
+  protected function migrateContentTypes(): void {
     $this->installConfig(['node']);
     $this->installEntitySchema('node');
     $this->executeMigration('d7_node_type');
@@ -74,7 +74,7 @@ abstract class MigrateDrupal7TestBase extends MigrateDrupalTestBase {
   /**
    * Migrates comment types.
    */
-  protected function migrateCommentTypes() {
+  protected function migrateCommentTypes(): void {
     $this->installConfig(['comment']);
     $this->executeMigration('d7_comment_type');
   }
@@ -85,7 +85,7 @@ abstract class MigrateDrupal7TestBase extends MigrateDrupalTestBase {
    * @param bool $include_revisions
    *   (optional) If TRUE, migrates node revisions. Defaults to FALSE.
    */
-  protected function migrateContent($include_revisions = FALSE) {
+  protected function migrateContent($include_revisions = FALSE): void {
     $this->migrateContentTypes();
     $this->migrateCommentTypes();
 
@@ -103,7 +103,7 @@ abstract class MigrateDrupal7TestBase extends MigrateDrupalTestBase {
   /**
    * Executes all taxonomy term migrations.
    */
-  protected function migrateTaxonomyTerms() {
+  protected function migrateTaxonomyTerms(): void {
     $this->installEntitySchema('taxonomy_term');
     $this->migrateFields();
     // Uses executeMigrations() rather than executeMigration() because the

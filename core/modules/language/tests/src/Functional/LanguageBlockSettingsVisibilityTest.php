@@ -18,7 +18,7 @@ class LanguageBlockSettingsVisibilityTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  public function testUnnecessaryLanguageSettingsVisibility() {
+  public function testUnnecessaryLanguageSettingsVisibility(): void {
     $admin_user = $this->drupalCreateUser([
       'administer languages',
       'access administration pages',

@@ -23,7 +23,7 @@ class ErrorTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetLastCaller
    */
-  public function testGetLastCaller($backtrace, $expected) {
+  public function testGetLastCaller($backtrace, $expected): void {
     $this->assertSame($expected, Error::getLastCaller($backtrace));
   }
 
@@ -72,7 +72,7 @@ class ErrorTest extends UnitTestCase {
    *
    * @dataProvider providerTestFormatBacktrace
    */
-  public function testFormatBacktrace($backtrace, $expected) {
+  public function testFormatBacktrace($backtrace, $expected): void {
     $this->assertSame($expected, Error::formatBacktrace($backtrace));
   }
 

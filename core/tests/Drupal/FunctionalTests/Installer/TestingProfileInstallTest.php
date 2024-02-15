@@ -24,7 +24,7 @@ class TestingProfileInstallTest extends BrowserTestBase {
   /**
    * Ensure the Update module is installed.
    */
-  public function testUpdateModuleInstall() {
+  public function testUpdateModuleInstall(): void {
     $this->assertTrue(\Drupal::moduleHandler()->moduleExists('update'));
   }
 

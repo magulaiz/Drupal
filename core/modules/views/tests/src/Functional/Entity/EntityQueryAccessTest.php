@@ -33,7 +33,7 @@ class EntityQueryAccessTest extends ViewTestBase {
   /**
    * Tests that the 'media_access' query tag is respected by Views.
    */
-  public function testMediaEntityQueryAccess() {
+  public function testMediaEntityQueryAccess(): void {
     $this->container->get('module_installer')->install(['media']);
 
     $media_type = $this->createMediaType('test');
@@ -75,7 +75,7 @@ class EntityQueryAccessTest extends ViewTestBase {
   /**
    * Tests that the 'block_content_access' query tag is respected by Views.
    */
-  public function testBlockContentEntityQueryAccess() {
+  public function testBlockContentEntityQueryAccess(): void {
     $this->container->get('module_installer')->install(['block_content']);
 
     BlockContentType::create([

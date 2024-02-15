@@ -152,7 +152,7 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
   /**
    * Ensures that all core module and theme library files exist.
    */
-  public function testCoreLibraryCompleteness() {
+  public function testCoreLibraryCompleteness(): void {
     // First verify all libraries with no active theme.
     $this->verifyLibraryFilesExist($this->getAllLibraries());
 
@@ -174,7 +174,7 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
    *   An array of library definitions, keyed by extension, then by library, and
    *   so on.
    */
-  protected function verifyLibraryFilesExist($library_definitions) {
+  protected function verifyLibraryFilesExist($library_definitions): void {
     foreach ($library_definitions as $extension => $libraries) {
       foreach ($libraries as $library_name => $library) {
         if (in_array("$extension/$library_name", $this->librariesToSkip)) {

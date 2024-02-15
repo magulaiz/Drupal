@@ -124,7 +124,7 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
    * @param array $route_params
    *   (optional) A list of route parameters used to resolve tasks.
    */
-  protected function assertLocalTasks($route_name, $expected_tasks, $route_params = []) {
+  protected function assertLocalTasks($route_name, $expected_tasks, $route_params = []): void {
 
     $directory_list = [];
     foreach ($this->directoryList as $key => $value) {

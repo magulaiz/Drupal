@@ -22,7 +22,7 @@ class OptionsListArgumentTest extends OptionsTestBase {
   /**
    * Tests the options field argument.
    */
-  public function testViewsTestOptionsListArgument() {
+  public function testViewsTestOptionsListArgument(): void {
     $view = Views::getView('test_options_list_argument_numeric');
     $this->executeView($view, [1]);
 

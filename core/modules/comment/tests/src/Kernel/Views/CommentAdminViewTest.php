@@ -133,7 +133,7 @@ class CommentAdminViewTest extends ViewsKernelTestBase {
   /**
    * Tests comment admin view filters.
    */
-  public function testFilters() {
+  public function testFilters(): void {
     $this->doTestFilters('page_published');
     // Unpublish the comments to test the Unapproved comments tab.
     foreach ($this->comments as $comment) {
@@ -149,7 +149,7 @@ class CommentAdminViewTest extends ViewsKernelTestBase {
    * @param string $display_id
    *   The display ID.
    */
-  protected function doTestFilters($display_id) {
+  protected function doTestFilters($display_id): void {
     $comment = $this->comments[0];
     $comment_anonymous = $this->comments[1];
     /** @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */

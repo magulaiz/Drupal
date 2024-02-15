@@ -22,7 +22,7 @@ class LanguageNegotiationFormOverrideTest extends BrowserTestBase {
   /**
    * Tests that overrides do not affect language-negotiation form values.
    */
-  public function testFormWithOverride() {
+  public function testFormWithOverride(): void {
     $this->drupalLogin($this->rootUser);
     $overridden_value_en = 'whatever';
     $overridden_value_es = 'loquesea';

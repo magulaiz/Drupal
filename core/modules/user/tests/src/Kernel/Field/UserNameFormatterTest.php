@@ -70,7 +70,7 @@ class UserNameFormatterTest extends KernelTestBase {
   /**
    * Tests the formatter output.
    */
-  public function testFormatter() {
+  public function testFormatter(): void {
     $user = User::create([
       'name' => 'test name',
     ]);

@@ -25,7 +25,7 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles[] = __DIR__ . '/../../../../tests/fixtures/update/drupal-9.4.0.filled.standard.php.gz';
     $this->databaseDumpFiles[] = __DIR__ . '/../../../../tests/fixtures/update/drupal-8.update-test-schema-enabled.php';
     $this->databaseDumpFiles[] = __DIR__ . '/../../../../tests/fixtures/update/drupal-8.update-test-semver-update-n-enabled.php';
@@ -34,7 +34,7 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBase {
   /**
    * Tests that the content and configuration were properly updated.
    */
-  public function testUpdatedSite() {
+  public function testUpdatedSite(): void {
     $assert_session = $this->assertSession();
 
     $this->runUpdates();
@@ -414,14 +414,14 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function replaceUser1() {
+  protected function replaceUser1(): void {
     // Do not replace the user from our dump.
   }
 
   /**
    * Tests that the database was properly loaded.
    */
-  public function testDatabaseProperlyLoaded() {
+  public function testDatabaseProperlyLoaded(): void {
     $this->testDatabaseLoaded();
   }
 

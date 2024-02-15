@@ -46,7 +46,7 @@ class DrupalSelenium2DriverTest extends WebDriverTestBase {
   /**
    * Tests uploading remote files.
    */
-  public function testGetRemoteFilePath() {
+  public function testGetRemoteFilePath(): void {
     $web_driver = $this->getSession()->getDriver();
     $file_system = \Drupal::service('file_system');
     $entity = EntityTest::create();

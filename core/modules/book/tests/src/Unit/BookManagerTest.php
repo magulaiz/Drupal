@@ -94,7 +94,7 @@ class BookManagerTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetBookParents
    */
-  public function testGetBookParents($book, $parent, $expected) {
+  public function testGetBookParents($book, $parent, $expected): void {
     $this->assertEquals($expected, $this->bookManager->getBookParents($book, $parent));
   }
 

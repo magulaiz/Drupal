@@ -21,7 +21,7 @@ class MigrationLookupTest extends MigrationLookupTestCase {
   /**
    * @covers ::transform
    */
-  public function testTransformWithStubSkipping() {
+  public function testTransformWithStubSkipping(): void {
     $migration_plugin = $this->prophesize(MigrationInterface::class);
     $migration_plugin_manager = $this->prophesize(MigrationPluginManagerInterface::class);
 
@@ -50,7 +50,7 @@ class MigrationLookupTest extends MigrationLookupTestCase {
   /**
    * @covers ::transform
    */
-  public function testTransformWithStubbing() {
+  public function testTransformWithStubbing(): void {
     $migration_plugin = $this->prophesize(MigrationInterface::class);
     $this->migrateLookup->lookup('destination_migration', [1])->willReturn(NULL);
     $this->migrateStub->createStub('destination_migration', [1], [], FALSE)->willReturn([2]);
@@ -79,7 +79,7 @@ class MigrationLookupTest extends MigrationLookupTestCase {
    *
    * @dataProvider skipInvalidDataProvider
    */
-  public function testSkipInvalid($value) {
+  public function testSkipInvalid($value): void {
     $migration_plugin = $this->prophesize(MigrationInterface::class);
     $migration_plugin_manager = $this->prophesize(MigrationPluginManagerInterface::class);
 
@@ -117,7 +117,7 @@ class MigrationLookupTest extends MigrationLookupTestCase {
    *
    * @dataProvider noSkipValidDataProvider
    */
-  public function testNoSkipValid($value) {
+  public function testNoSkipValid($value): void {
     $migration_plugin = $this->prophesize(MigrationInterface::class);
     $migration_plugin_manager = $this->prophesize(MigrationPluginManagerInterface::class);
     $id_map = $this->prophesize(MigrateIdMapInterface::class);
@@ -168,7 +168,7 @@ class MigrationLookupTest extends MigrationLookupTestCase {
    *
    * @throws \Drupal\migrate\MigrateSkipProcessException
    */
-  public function testSuccessfulLookup(array $source_id_values, array $destination_id_values, $source_value, $expected_value) {
+  public function testSuccessfulLookup(array $source_id_values, array $destination_id_values, $source_value, $expected_value): void {
     $migration_plugin = $this->prophesize(MigrationInterface::class);
     $this->migrateLookup->lookup('foo', $source_id_values)->willReturn([$destination_id_values]);
 
@@ -249,7 +249,7 @@ class MigrationLookupTest extends MigrationLookupTestCase {
   /**
    * Tests processing multiple source IDs.
    */
-  public function testMultipleSourceIds() {
+  public function testMultipleSourceIds(): void {
     $migration_plugin = $this->prophesize(MigrationInterface::class);
     $this->migrateLookup->lookup('foo', ['id', 6])->willReturn([[2]]);
     $configuration = [
@@ -263,7 +263,7 @@ class MigrationLookupTest extends MigrationLookupTestCase {
   /**
    * Tests processing multiple migrations and source IDs.
    */
-  public function testMultipleMigrations() {
+  public function testMultipleMigrations(): void {
     $migration_plugin = $this->prophesize(MigrationInterface::class);
     $this->migrateLookup->lookup('example', [1])->willReturn([[2]]);
     $this->migrateLookup->lookup('example', [2])->willReturn([]);

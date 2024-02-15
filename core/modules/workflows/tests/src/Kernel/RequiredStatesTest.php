@@ -24,7 +24,7 @@ class RequiredStatesTest extends KernelTestBase {
    * @covers ::getRequiredStates
    * @covers ::__construct
    */
-  public function testGetRequiredStates() {
+  public function testGetRequiredStates(): void {
     $workflow = Workflow::create([
       'id' => 'test',
       'label' => 'Test workflow',
@@ -43,7 +43,7 @@ class RequiredStatesTest extends KernelTestBase {
   /**
    * @covers \Drupal\workflows\Entity\Workflow::preSave
    */
-  public function testDeleteRequiredStateAPI() {
+  public function testDeleteRequiredStateAPI(): void {
     $workflow = Workflow::create([
       'id' => 'test',
       'label' => 'Test workflow',
@@ -60,7 +60,7 @@ class RequiredStatesTest extends KernelTestBase {
   /**
    * @covers \Drupal\workflows\Entity\Workflow::preSave
    */
-  public function testNoStatesRequiredStateAPI() {
+  public function testNoStatesRequiredStateAPI(): void {
     $workflow = Workflow::create([
       'id' => 'test',
       'type' => 'workflow_type_required_state_test',
@@ -76,7 +76,7 @@ class RequiredStatesTest extends KernelTestBase {
   /**
    * Ensures that initialized configuration can be changed.
    */
-  public function testChangeRequiredStateAPI() {
+  public function testChangeRequiredStateAPI(): void {
     $workflow = Workflow::create([
       'id' => 'test',
       'label' => 'Test workflow',

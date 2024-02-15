@@ -52,7 +52,7 @@ class RequestHandlerTest extends KernelTestBase {
   /**
    * @covers ::handle
    */
-  public function testHandle() {
+  public function testHandle(): void {
     $request = new Request([], [], [], [], [], ['CONTENT_TYPE' => 'application/json'], Json::encode(['this is an array']));
     $route_match = new RouteMatch('test', (new Route('/rest/test', ['_rest_resource_config' => 'restplugin', 'example' => ''], ['_format' => 'json']))->setMethods(['GET']));
 

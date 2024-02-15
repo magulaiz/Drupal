@@ -49,7 +49,7 @@ class HistoryTimestampTest extends ViewsKernelTestBase {
   /**
    * Tests the handlers.
    */
-  public function testHandlers() {
+  public function testHandlers(): void {
     $nodes = [];
     $node = Node::create([
       'title' => 'n1',

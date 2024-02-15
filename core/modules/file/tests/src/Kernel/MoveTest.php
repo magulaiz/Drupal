@@ -39,7 +39,7 @@ class MoveTest extends FileManagedUnitTestBase {
    *
    * @covers ::move
    */
-  public function testNormal() {
+  public function testNormal(): void {
     $contents = $this->randomMachineName(10);
     $source = $this->createFile(NULL, $contents);
     $desired_filepath = 'public://' . $this->randomMachineName();
@@ -71,7 +71,7 @@ class MoveTest extends FileManagedUnitTestBase {
    *
    * @covers ::move
    */
-  public function testExistingRename() {
+  public function testExistingRename(): void {
     // Setup a file to overwrite.
     $contents = $this->randomMachineName(10);
     $source = $this->createFile(NULL, $contents);
@@ -108,7 +108,7 @@ class MoveTest extends FileManagedUnitTestBase {
    *
    * @covers ::move
    */
-  public function testExistingReplace() {
+  public function testExistingReplace(): void {
     // Setup a file to overwrite.
     $contents = $this->randomMachineName(10);
     $source = $this->createFile(NULL, $contents);
@@ -142,7 +142,7 @@ class MoveTest extends FileManagedUnitTestBase {
    *
    * @covers ::move
    */
-  public function testExistingReplaceSelf() {
+  public function testExistingReplaceSelf(): void {
     // Setup a file to overwrite.
     $contents = $this->randomMachineName(10);
     $source = $this->createFile(NULL, $contents);
@@ -172,7 +172,7 @@ class MoveTest extends FileManagedUnitTestBase {
    *
    * @covers ::move
    */
-  public function testExistingError() {
+  public function testExistingError(): void {
     $contents = $this->randomMachineName(10);
     $source = $this->createFile();
     $target = $this->createFile(NULL, $contents);
@@ -207,7 +207,7 @@ class MoveTest extends FileManagedUnitTestBase {
    *
    * @covers ::move
    */
-  public function testInvalidStreamWrapper() {
+  public function testInvalidStreamWrapper(): void {
     $this->expectException(InvalidStreamWrapperException::class);
     $this->expectExceptionMessage('Invalid stream wrapper: foo://');
     $source = $this->createFile();
@@ -219,7 +219,7 @@ class MoveTest extends FileManagedUnitTestBase {
    *
    * @covers ::move
    */
-  public function testEntityStorageException() {
+  public function testEntityStorageException(): void {
     /** @var \Drupal\Core\Entity\EntityTypeManager $entityTypeManager */
     $entityTypeManager = $this->prophesize(EntityTypeManager::class);
     $entityTypeManager->getStorage('file')

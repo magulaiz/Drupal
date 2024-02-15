@@ -20,7 +20,7 @@ class BlockContentRedirectTest extends BlockContentTestBase {
    *
    * @group legacy
    */
-  public function testBlockContentTypeRedirect() {
+  public function testBlockContentTypeRedirect(): void {
     $this->drupalLogin($this->adminUser);
     $this->expectDeprecation('The path /admin/structure/block/block-content/types is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/structure/block-content. See https://www.drupal.org/node/3320855');
     $this->drupalGet('/admin/structure/block/block-content/types');
@@ -33,7 +33,7 @@ class BlockContentRedirectTest extends BlockContentTestBase {
    *
    * @group legacy
    */
-  public function testBlockLibraryRedirect() {
+  public function testBlockLibraryRedirect(): void {
     $this->drupalLogin($this->adminUser);
     $this->expectDeprecation('The path /admin/structure/block/block-content is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/content/block. See https://www.drupal.org/node/3320855');
     $this->drupalGet('admin/structure/block/block-content');

@@ -49,7 +49,7 @@ class DefaultConfigTest extends KernelTestBase {
    *
    * @dataProvider moduleListDataProvider
    */
-  public function testModuleConfig($module) {
+  public function testModuleConfig($module): void {
     $this->assertExtensionConfig($module, 'module');
   }
 
@@ -58,7 +58,7 @@ class DefaultConfigTest extends KernelTestBase {
    *
    * @dataProvider themeListDataProvider
    */
-  public function testThemeConfig($theme) {
+  public function testThemeConfig($theme): void {
     $this->assertExtensionConfig($theme, 'theme');
   }
 
@@ -190,7 +190,7 @@ class DefaultConfigTest extends KernelTestBase {
    * @param string $type
    *   The extension type to test.
    */
-  protected function doTestsOnConfigStorage(StorageInterface $default_config_storage, $extension, string $type = 'module') {
+  protected function doTestsOnConfigStorage(StorageInterface $default_config_storage, $extension, string $type = 'module'): void {
     /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
     $config_manager = $this->container->get('config.manager');
 
@@ -221,7 +221,7 @@ class DefaultConfigTest extends KernelTestBase {
         $result = $config_manager->diff($default_config_storage, $active_config_storage, $config_name);
         // ::assertConfigDiff will throw an exception if the configuration is
         // different.
-        $this->assertNull($this->assertConfigDiff($result, $config_name, static::$skippedConfig));
+        $this->assertConfigDiff($result, $config_name, static::$skippedConfig);
       }
       else {
         $data = $default_config_storage->read($config_name);

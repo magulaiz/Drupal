@@ -279,7 +279,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * @see \Drupal\KernelTests\Core\DrupalKernel\DrupalKernelTest
    * @internal
    */
-  protected function bootEnvironment() {
+  protected function bootEnvironment(): void {
     \Drupal::unsetContainer();
 
     $this->classLoader = require $this->root . '/autoload.php';
@@ -315,7 +315,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   /**
    * Sets up the filesystem, so things like the file directory.
    */
-  protected function setUpFilesystem() {
+  protected function setUpFilesystem(): void {
     $test_db = new TestDatabase($this->databasePrefix);
     $test_site_path = $test_db->getTestSitePath();
 
@@ -342,7 +342,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   /**
    * Bootstraps a kernel for a test.
    */
-  protected function bootKernel() {
+  protected function bootKernel(): void {
     $this->setSetting('container_yamls', []);
     // Allow for test-specific overrides.
     $settings_services_file = $this->root . '/sites/default/testing.services.yml';
@@ -502,7 +502,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * We can not use the Settings object in a component, that's why we have to do
    * it here instead of \Drupal\Component\FileCache\FileCacheFactory.
    */
-  protected function initFileCache() {
+  protected function initFileCache(): void {
     $configuration = Settings::get('file_cache');
 
     // Provide a default configuration, if not set.
@@ -557,7 +557,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    *
    * @see \Drupal\Tests\KernelTestBase::bootKernel()
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     // Keep the container object around for tests.
     $this->container = $container;
 
@@ -721,7 +721,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    *
    * Additional tear down method to close the connection at the end.
    */
-  public function tearDownCloseDatabaseConnection() {
+  public function tearDownCloseDatabaseConnection(): void {
     // Destroy the database connection, which for example removes the memory
     // from sqlite in memory.
     foreach (Database::getAllConnectionInfo() as $key => $targets) {
@@ -738,7 +738,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * @throws \LogicException
    *   If any module in $modules is not enabled.
    */
-  protected function installConfig($modules) {
+  protected function installConfig($modules): void {
     foreach ((array) $modules as $module) {
       if (!$this->container->get('module_handler')->moduleExists($module)) {
         throw new \LogicException("$module module is not installed.");
@@ -763,7 +763,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * @throws \LogicException
    *   If $module is not enabled or the table schema cannot be found.
    */
-  protected function installSchema($module, $tables) {
+  protected function installSchema($module, $tables): void {
     /** @var \Drupal\Core\Extension\ModuleHandlerInterface $module_handler */
     $module_handler = $this->container->get('module_handler');
     // Database connection schema is technically able to create database tables
@@ -796,7 +796,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * @param string $entity_type_id
    *   The ID of the entity type.
    */
-  protected function installEntitySchema($entity_type_id) {
+  protected function installEntitySchema($entity_type_id): void {
     $entity_type_manager = \Drupal::entityTypeManager();
     $entity_type = $entity_type_manager->getDefinition($entity_type_id);
     \Drupal::service('entity_type.listener')->onEntityTypeCreate($entity_type);
@@ -837,7 +837,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * @throws \RuntimeException
    *   If a module is not enabled after enabling it.
    */
-  protected function enableModules(array $modules) {
+  protected function enableModules(array $modules): void {
     // Perform an ExtensionDiscovery scan as this function may receive a
     // profile that is not the current profile, and we don't yet have a cached
     // way to receive inactive profile information.
@@ -896,7 +896,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * @throws \RuntimeException
    *   If a module is not disabled after disabling it.
    */
-  protected function disableModules(array $modules) {
+  protected function disableModules(array $modules): void {
     // Unset the list of modules in the extension handler.
     $module_handler = $this->container->get('module_handler');
     $module_filenames = $module_handler->getModuleList();
@@ -962,7 +962,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    *   The value to set. Note that array values are replaced entirely; use
    *   \Drupal\Core\Site\Settings::get() to perform custom merges.
    */
-  protected function setSetting($name, $value) {
+  protected function setSetting($name, $value): void {
     $settings = Settings::getInstance() ? Settings::getAll() : [];
     $settings[$name] = $value;
     new Settings($settings);
@@ -974,7 +974,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * @param string $profile
    *   The install profile to set.
    */
-  protected function setInstallProfile($profile) {
+  protected function setInstallProfile($profile): void {
     $this->container->get('config.factory')
       ->getEditable('core.extension')
       ->set('profile', $profile)
@@ -988,14 +988,14 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   /**
    * Stops test execution.
    */
-  protected function stop() {
+  protected function stop(): void {
     $this->getTestResultObject()->stop();
   }
 
   /**
    * Dumps the current state of the virtual filesystem to STDOUT.
    */
-  protected function vfsDump() {
+  protected function vfsDump(): void {
     vfsStream::inspect(new vfsStreamPrintVisitor());
   }
 

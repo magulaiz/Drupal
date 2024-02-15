@@ -71,7 +71,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
   /**
    * Allows specific implementation to change the environment before a test run.
    */
-  public function setUpCacheBackend() {
+  public function setUpCacheBackend(): void {
   }
 
   /**
@@ -80,7 +80,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
    * Used before the real tear down because the tear down will change things
    * such as the database prefix.
    */
-  public function tearDownCacheBackend() {
+  public function tearDownCacheBackend(): void {
   }
 
   /**
@@ -133,7 +133,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
   /**
    * Tests the get and set methods of Drupal\Core\Cache\CacheBackendInterface.
    */
-  public function testSetGet() {
+  public function testSetGet(): void {
     $backend = $this->getCacheBackend();
 
     $this->assertFalse($backend->get('test1'), "Backend does not contain data for cache id test1.");
@@ -237,7 +237,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
   /**
    * Tests Drupal\Core\Cache\CacheBackendInterface::delete().
    */
-  public function testDelete() {
+  public function testDelete(): void {
     $backend = $this->getCacheBackend();
 
     $this->assertFalse($backend->get('test1'), "Backend does not contain data for cache id test1.");
@@ -265,7 +265,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
   /**
    * Tests data type preservation.
    */
-  public function testValueTypeIsKept() {
+  public function testValueTypeIsKept(): void {
     $backend = $this->getCacheBackend();
 
     $variables = [
@@ -293,7 +293,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
   /**
    * Tests Drupal\Core\Cache\CacheBackendInterface::getMultiple().
    */
-  public function testGetMultiple() {
+  public function testGetMultiple(): void {
     $backend = $this->getCacheBackend();
 
     // Set numerous testing keys.
@@ -387,7 +387,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
   /**
    * Tests \Drupal\Core\Cache\CacheBackendInterface::setMultiple().
    */
-  public function testSetMultiple() {
+  public function testSetMultiple(): void {
     $backend = $this->getCacheBackend();
 
     $future_expiration = REQUEST_TIME + 100;
@@ -452,7 +452,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
    * @covers \Drupal\Core\Cache\MemoryBackend::deleteMultiple
    * @covers \Drupal\Core\Cache\PhpBackend::deleteMultiple
    */
-  public function testDeleteMultiple() {
+  public function testDeleteMultiple(): void {
     $backend = $this->getCacheBackend();
 
     // Set numerous testing keys.
@@ -499,7 +499,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
   /**
    * Tests Drupal\Core\Cache\CacheBackendInterface::deleteAll().
    */
-  public function testDeleteAll() {
+  public function testDeleteAll(): void {
     $backend_a = $this->getCacheBackend();
     $backend_b = $this->getCacheBackend('bootstrap');
 
@@ -529,7 +529,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
    * @covers \Drupal\Core\Cache\MemoryBackend::invalidateMultiple
    * @covers \Drupal\Core\Cache\PhpBackend::invalidateMultiple
    */
-  public function testInvalidate() {
+  public function testInvalidate(): void {
     $backend = $this->getCacheBackend();
     $backend->set('test1', 1);
     $backend->set('test2', 2);
@@ -561,7 +561,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
   /**
    * Tests Drupal\Core\Cache\CacheBackendInterface::invalidateTags().
    */
-  public function testInvalidateTags() {
+  public function testInvalidateTags(): void {
     $backend = $this->getCacheBackend();
 
     // Create two cache entries with the same tag and tag value.
@@ -628,7 +628,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
   /**
    * Tests Drupal\Core\Cache\CacheBackendInterface::invalidateAll().
    */
-  public function testInvalidateAll() {
+  public function testInvalidateAll(): void {
     $backend_a = $this->getCacheBackend();
     $backend_b = $this->getCacheBackend('bootstrap');
 
@@ -649,7 +649,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
   /**
    * Tests Drupal\Core\Cache\CacheBackendInterface::removeBin().
    */
-  public function testRemoveBin() {
+  public function testRemoveBin(): void {
     $backend_a = $this->getCacheBackend();
     $backend_b = $this->getCacheBackend('bootstrap');
 

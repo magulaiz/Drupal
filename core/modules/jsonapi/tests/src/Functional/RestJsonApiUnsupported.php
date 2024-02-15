@@ -48,7 +48,7 @@ class RestJsonApiUnsupported extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     switch ($method) {
       case 'GET':
         $this->grantPermissionsToTestedRole(['access content']);
@@ -86,7 +86,7 @@ class RestJsonApiUnsupported extends ResourceTestBase {
    *
    * @see \Drupal\jsonapi\EventSubscriber\JsonApiRequestValidator::validateQueryParams()
    */
-  public function testApiJsonNotSupportedInRest() {
+  public function testApiJsonNotSupportedInRest(): void {
     $this->assertSame(['json', 'xml'], $this->container->getParameter('serializer.formats'));
 
     $this->provisionResource(['api_json'], []);

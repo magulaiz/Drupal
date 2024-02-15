@@ -17,7 +17,7 @@ class ConfigValidation {
    * @param \Symfony\Component\Validator\Context\ExecutionContextInterface $context
    *   The validation execution context.
    */
-  public static function validateLlama($string, ExecutionContextInterface $context) {
+  public static function validateLlama($string, ExecutionContextInterface $context): void {
     if (!in_array($string, ['llama', 'alpaca', 'guanaco', 'vicuña'], TRUE)) {
       $context->addViolation('no valid llama');
     }
@@ -31,7 +31,7 @@ class ConfigValidation {
    * @param \Symfony\Component\Validator\Context\ExecutionContextInterface $context
    *   The validation execution context.
    */
-  public static function validateCats($string, ExecutionContextInterface $context) {
+  public static function validateCats($string, ExecutionContextInterface $context): void {
     if (!in_array($string, ['kitten', 'cats', 'nyans'])) {
       $context->addViolation('no valid cat');
     }
@@ -45,7 +45,7 @@ class ConfigValidation {
    * @param \Symfony\Component\Validator\Context\ExecutionContextInterface $context
    *   The validation execution context.
    */
-  public static function validateCatCount($count, ExecutionContextInterface $context) {
+  public static function validateCatCount($count, ExecutionContextInterface $context): void {
     if ($count <= 1) {
       $context->addViolation('no enough cats');
     }
@@ -59,7 +59,7 @@ class ConfigValidation {
    * @param \Symfony\Component\Validator\Context\ExecutionContextInterface $context
    *   The validation execution context.
    */
-  public static function validateGiraffes($string, ExecutionContextInterface $context) {
+  public static function validateGiraffes($string, ExecutionContextInterface $context): void {
     if (!str_starts_with($string, 'hum')) {
       $context->addViolation('Giraffes just hum');
     }
@@ -73,7 +73,7 @@ class ConfigValidation {
    * @param \Symfony\Component\Validator\Context\ExecutionContextInterface $context
    *   The validation execution context.
    */
-  public static function validateMapping($mapping, ExecutionContextInterface $context) {
+  public static function validateMapping($mapping, ExecutionContextInterface $context): void {
     // Ensure we are validating the entire mapping by diffing against all the
     // keys.
     $mapping_schema = \Drupal::service('config.typed')->get('config_test.validation')->getValue();
@@ -90,7 +90,7 @@ class ConfigValidation {
    * @param \Symfony\Component\Validator\Context\ExecutionContextInterface $context
    *   The validation execution context.
    */
-  public static function validateSequence($sequence, ExecutionContextInterface $context) {
+  public static function validateSequence($sequence, ExecutionContextInterface $context): void {
     if (isset($sequence['invalid-key'])) {
       $context->addViolation('Invalid giraffe key.');
     }

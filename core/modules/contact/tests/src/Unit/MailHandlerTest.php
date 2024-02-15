@@ -101,7 +101,7 @@ class MailHandlerTest extends UnitTestCase {
    *
    * @covers ::sendMailMessages
    */
-  public function testInvalidRecipient() {
+  public function testInvalidRecipient(): void {
     $message = $this->createMock('\Drupal\contact\MessageInterface');
     $message->expects($this->once())
       ->method('isPersonal')
@@ -135,13 +135,13 @@ class MailHandlerTest extends UnitTestCase {
    *
    * @covers ::sendMailMessages
    */
-  public function testSendMailMessages(MessageInterface $message, AccountInterface $sender, $results) {
+  public function testSendMailMessages(MessageInterface $message, AccountInterface $sender, $results): void {
     $this->logger->expects($this->once())
       ->method('info');
     $this->mailManager->expects($this->any())
       ->method('mail')
       ->willReturnCallback(
-        function ($module, $key, $to, $langcode, $params, $from) use (&$results) {
+        function ($module, $key, $to, $langcode, $params, $from) use (&$results): void {
           $result = array_shift($results);
           $this->assertEquals($module, $result['module']);
           $this->assertEquals($key, $result['key']);

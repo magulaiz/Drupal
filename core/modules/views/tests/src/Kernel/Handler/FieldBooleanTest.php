@@ -33,7 +33,7 @@ class FieldBooleanTest extends ViewsKernelTestBase {
     return $data;
   }
 
-  public function testFieldBoolean() {
+  public function testFieldBoolean(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 

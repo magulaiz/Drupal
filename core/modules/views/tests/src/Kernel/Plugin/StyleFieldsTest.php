@@ -22,7 +22,7 @@ class StyleFieldsTest extends ViewsKernelTestBase {
   /**
    * Tests inline fields and separator.
    */
-  public function testInlineFields() {
+  public function testInlineFields(): void {
     $renderer = $this->container->get('renderer');
     $view = Views::getView('test_view');
     $view->setDisplay();

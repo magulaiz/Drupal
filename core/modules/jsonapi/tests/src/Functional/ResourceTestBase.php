@@ -630,7 +630,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *
    * @see ::testRevisions()
    */
-  protected function setUpRevisionAuthorization($method) {
+  protected function setUpRevisionAuthorization($method): void {
     assert($method === 'GET', 'Only read operations on revisions are supported.');
     $this->setUpAuthorization($method);
   }
@@ -659,7 +659,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @param string[] $permissions
    *   Permissions to grant.
    */
-  protected function grantPermissionsToTestedRole(array $permissions) {
+  protected function grantPermissionsToTestedRole(array $permissions): void {
     $this->grantPermissions(Role::load(RoleInterface::AUTHENTICATED_ID), $permissions);
   }
 
@@ -669,7 +669,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @param string[] $permissions
    *   Permissions to revoke.
    */
-  protected function revokePermissionsFromTestedRole(array $permissions) {
+  protected function revokePermissionsFromTestedRole(array $permissions): void {
     $role = Role::load(RoleInterface::AUTHENTICATED_ID);
     foreach ($permissions as $permission) {
       $role->revokePermission($permission);
@@ -703,7 +703,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *   FALSE if that header should be absent. Possible strings: 'MISS', 'HIT'.
    *   Defaults to FALSE.
    */
-  protected function assertResourceResponse($expected_status_code, $expected_document, ResponseInterface $response, $expected_cache_tags = FALSE, $expected_cache_contexts = FALSE, $expected_page_cache_header_value = FALSE, $expected_dynamic_page_cache_header_value = FALSE) {
+  protected function assertResourceResponse($expected_status_code, $expected_document, ResponseInterface $response, $expected_cache_tags = FALSE, $expected_cache_contexts = FALSE, $expected_page_cache_header_value = FALSE, $expected_dynamic_page_cache_header_value = FALSE): void {
     $this->assertSame($expected_status_code, $response->getStatusCode(), var_export(Json::decode((string) $response->getBody()), TRUE));
     if ($expected_status_code === 204) {
       // DELETE responses should not include a Content-Type header. But Apache
@@ -773,7 +773,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @param array $actual_document
    *   The actual response document to assert.
    */
-  protected function assertSameDocument(array $expected_document, array $actual_document) {
+  protected function assertSameDocument(array $expected_document, array $actual_document): void {
     static::recursiveKsort($expected_document);
     static::recursiveKsort($actual_document);
 
@@ -837,7 +837,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *   FALSE if that header should be absent. Possible strings: 'MISS', 'HIT'.
    *   Defaults to FALSE.
    */
-  protected function assertResourceErrorResponse($expected_status_code, $expected_message, $via_link, ResponseInterface $response, $pointer = FALSE, $expected_cache_tags = FALSE, $expected_cache_contexts = FALSE, $expected_page_cache_header_value = FALSE, $expected_dynamic_page_cache_header_value = FALSE) {
+  protected function assertResourceErrorResponse($expected_status_code, $expected_message, $via_link, ResponseInterface $response, $pointer = FALSE, $expected_cache_tags = FALSE, $expected_cache_contexts = FALSE, $expected_page_cache_header_value = FALSE, $expected_dynamic_page_cache_header_value = FALSE): void {
     assert(is_null($via_link) || $via_link instanceof Url);
     $expected_error = [];
     if (!empty(Response::$statusTexts[$expected_status_code])) {
@@ -916,7 +916,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   /**
    * Tests GETting an individual resource, plus edge cases to ensure good DX.
    */
-  public function testGetIndividual() {
+  public function testGetIndividual(): void {
     // The URL and Guzzle request options that will be used in this test. The
     // request options will be modified/expanded throughout this test:
     // - to first test all mistakes a developer might make, and assert that the
@@ -1072,7 +1072,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   /**
    * Tests GETting a collection of resources.
    */
-  public function testCollection() {
+  public function testCollection(): void {
     $entity_collection = $this->getData();
     assert(count($entity_collection) > 1, 'A collection must have more that one entity in it.');
 
@@ -1298,7 +1298,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * single expected ResourceResponse. This is repeated for every relationship
    * field of the resource type under test.
    */
-  public function testRelated() {
+  public function testRelated(): void {
     $request_options = [];
     $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
     $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions());
@@ -1317,7 +1317,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * targeted resource and the target resource IDs. These type+ID combos are
    * referred to as "resource identifiers."
    */
-  public function testRelationships() {
+  public function testRelationships(): void {
     if ($this->entity instanceof ConfigEntityInterface) {
       $this->markTestSkipped('Configuration entities cannot have relationships.');
     }
@@ -1358,7 +1358,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *
    * @see \GuzzleHttp\ClientInterface::request()
    */
-  protected function doTestRelated(array $request_options) {
+  protected function doTestRelated(array $request_options): void {
     $relationship_field_names = $this->getRelationshipFieldNames($this->entity);
     // If there are no relationship fields, we can't test related routes.
     if (empty($relationship_field_names)) {
@@ -1399,7 +1399,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @see \GuzzleHttp\ClientInterface::request()
    * @see ::testRelationships
    */
-  protected function doTestRelationshipGet(array $request_options) {
+  protected function doTestRelationshipGet(array $request_options): void {
     $relationship_field_names = $this->getRelationshipFieldNames($this->entity);
     // If there are no relationship fields, we can't test relationship routes.
     if (empty($relationship_field_names)) {
@@ -1434,7 +1434,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @see \GuzzleHttp\ClientInterface::request()
    * @see ::testRelationships
    */
-  protected function doTestRelationshipMutation(array $request_options) {
+  protected function doTestRelationshipMutation(array $request_options): void {
     /** @var \Drupal\Core\Entity\FieldableEntityInterface $resource */
     $resource = $this->createAnotherEntity('dupe');
     $resource->set('field_jsonapi_test_entity_ref', NULL);
@@ -1958,7 +1958,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   /**
    * Tests POSTing an individual resource, plus edge cases to ensure good DX.
    */
-  public function testPostIndividual() {
+  public function testPostIndividual(): void {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
       $this->markTestSkipped('POSTing config entities is not yet supported.');
@@ -2173,7 +2173,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   /**
    * Tests PATCHing an individual resource, plus edge cases to ensure good DX.
    */
-  public function testPatchIndividual() {
+  public function testPatchIndividual(): void {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
       $this->markTestSkipped('PATCHing config entities is not yet supported.');
@@ -2500,7 +2500,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   /**
    * Tests DELETEing an individual resource, plus edge cases to ensure good DX.
    */
-  public function testDeleteIndividual() {
+  public function testDeleteIndividual(): void {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
       $this->markTestSkipped('DELETEing config entities is not yet supported.');
@@ -2547,7 +2547,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @param array $array
    *   An array to sort.
    */
-  protected static function recursiveKsort(array &$array) {
+  protected static function recursiveKsort(array &$array): void {
     // First, sort the main array.
     ksort($array);
 
@@ -2653,7 +2653,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *
    * @see \GuzzleHttp\ClientInterface::request()
    */
-  protected function doTestSparseFieldSets(Url $url, array $request_options) {
+  protected function doTestSparseFieldSets(Url $url, array $request_options): void {
     $field_sets = $this->getSparseFieldSets();
     $expected_cacheability = new CacheableMetadata();
     foreach ($field_sets as $type => $field_set) {
@@ -2729,7 +2729,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *
    * @see \GuzzleHttp\ClientInterface::request()
    */
-  protected function doTestIncluded(Url $url, array $request_options) {
+  protected function doTestIncluded(Url $url, array $request_options): void {
     $relationship_field_names = $this->getRelationshipFieldNames($this->entity);
     // If there are no relationship fields, we can't include anything.
     if (empty($relationship_field_names)) {
@@ -2777,7 +2777,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   /**
    * Tests individual and collection revisions.
    */
-  public function testRevisions() {
+  public function testRevisions(): void {
     if (!$this->entity->getEntityType()->isRevisionable() || !$this->entity instanceof FieldableEntityInterface) {
       return;
     }
@@ -2849,7 +2849,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $published_key = $this->entity->getEntityType()->getKey('published');
     $revision_translation_affected_key = $this->entity->getEntityType()->getKey('revision_translation_affected');
 
-    $amend_relationship_urls = function (array &$document, $revision_id) {
+    $amend_relationship_urls = function (array &$document, $revision_id): void {
       if (!empty($document['data']['relationships'])) {
         foreach ($document['data']['relationships'] as &$relationship) {
           $pattern = '/resourceVersion=id%3A\d/';
@@ -3491,7 +3491,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @param string[] $include_paths
    *   An array of include paths for which to grant access.
    */
-  protected function grantIncludedPermissions(array $include_paths = []) {
+  protected function grantIncludedPermissions(array $include_paths = []): void {
     $applicable_permissions = array_intersect_key(static::getIncludePermissions(), array_flip($include_paths));
     $flattened_permissions = array_unique(array_reduce($applicable_permissions, 'array_merge', []));
     // Always grant access to 'view' the test entity reference field.

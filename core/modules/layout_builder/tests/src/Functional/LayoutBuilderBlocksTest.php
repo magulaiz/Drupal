@@ -16,7 +16,7 @@ class LayoutBuilderBlocksTest extends LayoutBuilderTestBase {
   /**
    * Tests that block plugins can define custom attributes and contextual links.
    */
-  public function testPluginsProvidingCustomAttributesAndContextualLinks() {
+  public function testPluginsProvidingCustomAttributesAndContextualLinks(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -47,7 +47,7 @@ class LayoutBuilderBlocksTest extends LayoutBuilderTestBase {
   /**
    * Tests preview-aware layout & block plugins.
    */
-  public function testPreviewAwarePlugins() {
+  public function testPreviewAwarePlugins(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -81,7 +81,7 @@ class LayoutBuilderBlocksTest extends LayoutBuilderTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testLayoutBuilderChooseBlocksAlter() {
+  public function testLayoutBuilderChooseBlocksAlter(): void {
     // See layout_builder_test_plugin_filter_block__layout_builder_alter().
     $assert_session = $this->assertSession();
 
@@ -137,7 +137,7 @@ class LayoutBuilderBlocksTest extends LayoutBuilderTestBase {
   /**
    * Tests that deleting a View block used in Layout Builder works.
    */
-  public function testDeletedView() {
+  public function testDeletedView(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -179,7 +179,7 @@ class LayoutBuilderBlocksTest extends LayoutBuilderTestBase {
    * @see \Drupal\Core\Render\PreviewFallbackInterface::getPreviewFallbackString()
    * @see \Drupal\layout_builder\EventSubscriber\BlockComponentRenderArray::onBuildRender()
    */
-  public function testBlockPlaceholder() {
+  public function testBlockPlaceholder(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -220,7 +220,7 @@ class LayoutBuilderBlocksTest extends LayoutBuilderTestBase {
   /**
    * Tests the ability to use a specified block label for field blocks.
    */
-  public function testFieldBlockLabel() {
+  public function testFieldBlockLabel(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -260,7 +260,7 @@ class LayoutBuilderBlocksTest extends LayoutBuilderTestBase {
   /**
    * Tests the Block UI when Layout Builder is installed.
    */
-  public function testBlockUiListing() {
+  public function testBlockUiListing(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 

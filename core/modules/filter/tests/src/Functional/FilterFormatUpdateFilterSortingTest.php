@@ -17,7 +17,7 @@ class FilterFormatUpdateFilterSortingTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../system/tests/fixtures/update/drupal-9.4.0.bare.standard.php.gz',
     ];
@@ -26,7 +26,7 @@ class FilterFormatUpdateFilterSortingTest extends UpdatePathTestBase {
   /**
    * Tests filter_post_update_sort_filters().
    */
-  public function testFilterPostUpdateSortFilters() {
+  public function testFilterPostUpdateSortFilters(): void {
     $format_config = $this->config('filter.format.plain_text');
     $this->assertSame(['filter_html_escape', 'filter_url', 'filter_autop'], array_keys($format_config->get('filters')));
 

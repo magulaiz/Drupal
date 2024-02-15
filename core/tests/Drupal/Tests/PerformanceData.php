@@ -72,7 +72,7 @@ class PerformanceData {
    * @param int $count
    *   The number of script requests recorded.
    */
-  public function setScriptCount(int $count) {
+  public function setScriptCount(int $count): void {
     $this->scriptCount = $count;
   }
 

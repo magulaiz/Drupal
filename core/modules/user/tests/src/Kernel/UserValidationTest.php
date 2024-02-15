@@ -39,7 +39,7 @@ class UserValidationTest extends KernelTestBase {
   /**
    * Tests user name validation.
    */
-  public function testUsernames() {
+  public function testUsernames(): void {
     // cSpell:disable
     $test_cases = [
       // '<username>' => ['<description>', 'assert<testName>'].
@@ -77,7 +77,7 @@ class UserValidationTest extends KernelTestBase {
   /**
    * Runs entity validation checks.
    */
-  public function testValidation() {
+  public function testValidation(): void {
     $user = User::create([
       'name' => 'test',
       'mail' => 'test@example.com',

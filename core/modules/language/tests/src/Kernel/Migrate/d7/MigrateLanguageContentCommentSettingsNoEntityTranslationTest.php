@@ -42,7 +42,7 @@ class MigrateLanguageContentCommentSettingsNoEntityTranslationTest extends Migra
   /**
    * {@inheritdoc}
    */
-  public static function migrateDumpAlter(KernelTestBase $test) {
+  public static function migrateDumpAlter(KernelTestBase $test): void {
     // Disable comment entity translation.
     $db = Database::getConnection('default', 'migrate');
 
@@ -57,7 +57,7 @@ class MigrateLanguageContentCommentSettingsNoEntityTranslationTest extends Migra
   /**
    * Tests migration of content language settings.
    */
-  public function testLanguageCommentSettings() {
+  public function testLanguageCommentSettings(): void {
     // Confirm there is no message about a missing bundle.
     $this->assertEmpty($this->migrateMessages, $this->migrateMessages['error'][0] ?? '');
 

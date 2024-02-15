@@ -31,7 +31,7 @@ class PreviewTest extends UITestBase {
   /**
    * Tests contextual links in the preview form.
    */
-  public function testPreviewContextual() {
+  public function testPreviewContextual(): void {
     \Drupal::service('module_installer')->install(['contextual']);
     $this->resetAll();
 
@@ -66,7 +66,7 @@ class PreviewTest extends UITestBase {
   /**
    * Tests arguments in the preview form.
    */
-  public function testPreviewUI() {
+  public function testPreviewUI(): void {
     $this->drupalGet('admin/structure/views/view/test_preview/edit');
     $this->assertSession()->statusCodeEquals(200);
 
@@ -148,7 +148,7 @@ SQL;
   /**
    * Tests the additional information query info area.
    */
-  public function testPreviewAdditionalInfo() {
+  public function testPreviewAdditionalInfo(): void {
     \Drupal::service('module_installer')->install(['views_ui_test']);
     $this->resetAll();
 
@@ -169,7 +169,7 @@ SQL;
   /**
    * Tests view validation error messages in the preview.
    */
-  public function testPreviewError() {
+  public function testPreviewError(): void {
     $this->drupalGet('admin/structure/views/view/test_preview_error/edit');
     $this->assertSession()->statusCodeEquals(200);
 
@@ -181,7 +181,7 @@ SQL;
   /**
    * Tests HTML is filtered from the view title when previewing.
    */
-  public function testPreviewTitle() {
+  public function testPreviewTitle(): void {
     // Update the view and change title with html tags.
     \Drupal::configFactory()->getEditable('views.view.test_preview')
       ->set('display.default.display_options.title', '<strong>Test preview title</strong>')

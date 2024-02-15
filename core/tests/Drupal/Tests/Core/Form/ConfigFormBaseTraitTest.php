@@ -16,7 +16,7 @@ class ConfigFormBaseTraitTest extends UnitTestCase {
   /**
    * @covers ::config
    */
-  public function testConfig() {
+  public function testConfig(): void {
 
     $trait = $this->createPartialMock(ConfiguredTrait::class, ['getEditableConfigNames']);
     // Set up some configuration in a mocked config factory.
@@ -44,7 +44,7 @@ class ConfigFormBaseTraitTest extends UnitTestCase {
   /**
    * @covers ::config
    */
-  public function testConfigFactoryException() {
+  public function testConfigFactoryException(): void {
     $trait = $this->getMockForTrait('Drupal\Core\Form\ConfigFormBaseTrait');
     $config_method = new \ReflectionMethod($trait, 'config');
 
@@ -57,7 +57,7 @@ class ConfigFormBaseTraitTest extends UnitTestCase {
   /**
    * @covers ::config
    */
-  public function testConfigFactoryExceptionInvalidProperty() {
+  public function testConfigFactoryExceptionInvalidProperty(): void {
     $trait = $this->getMockForTrait('Drupal\Core\Form\ConfigFormBaseTrait');
     $config_method = new \ReflectionMethod($trait, 'config');
 

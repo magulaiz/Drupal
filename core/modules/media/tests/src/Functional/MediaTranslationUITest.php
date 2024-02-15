@@ -55,7 +55,7 @@ class MediaTranslationUITest extends ContentTranslationUITestBase {
   /**
    * {@inheritdoc}
    */
-  public function setupBundle() {
+  public function setupBundle(): void {
     $this->createMediaType('test', [
       'id' => $this->bundle,
       'queue_thumbnail_downloads' => FALSE,

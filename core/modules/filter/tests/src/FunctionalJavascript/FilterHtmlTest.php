@@ -27,7 +27,7 @@ class FilterHtmlTest extends WebDriverTestBase {
   /**
    * Tests restricting HTML to table tags.
    */
-  public function testTableTags() {
+  public function testTableTags(): void {
     FilterFormat::create([
       'format' => 'some_html',
       'name' => 'Some HTML',

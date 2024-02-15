@@ -8,6 +8,6 @@
 /**
  * Tests post updates for themes.
  */
-function test_theme_updates_post_update_test(&$sandbox = NULL) {
+function test_theme_updates_post_update_test(&$sandbox = NULL): void {
   // Do nothing.
 }

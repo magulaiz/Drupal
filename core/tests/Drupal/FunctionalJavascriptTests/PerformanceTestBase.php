@@ -31,7 +31,7 @@ class PerformanceTestBase extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function installModulesFromClassProperty(ContainerInterface $container) {
+  protected function installModulesFromClassProperty(ContainerInterface $container): void {
     $this->doInstallModulesFromClassProperty($container);
   }
 

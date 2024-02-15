@@ -35,7 +35,7 @@ class EntityViewsWithMultivalueBasefieldTest extends ViewsKernelTestBase {
   /**
    * Tests entity views with multivalue base fields.
    */
-  public function testView() {
+  public function testView(): void {
     EntityTestMultiValueBasefield::create([
       'name' => 'test',
     ])->save();

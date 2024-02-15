@@ -44,7 +44,7 @@ class CallableResolverTest extends UnitTestCase {
    * @dataProvider callableResolverTestCases
    * @covers ::getCallableFromDefinition
    */
-  public function testCallbackResolver($definition, $result) {
+  public function testCallbackResolver($definition, $result): void {
     $argument = 'bar';
     $this->assertEquals($result . '+' . $argument, $this->resolver->getCallableFromDefinition($definition)($argument));
   }
@@ -119,7 +119,7 @@ class CallableResolverTest extends UnitTestCase {
    * @dataProvider callableResolverExceptionHandlingTestCases
    * @covers ::getCallableFromDefinition
    */
-  public function testCallbackResolverExceptionHandling($definition, $exception_class, $exception_message) {
+  public function testCallbackResolverExceptionHandling($definition, $exception_class, $exception_message): void {
     $this->expectException($exception_class);
     $this->expectExceptionMessage($exception_message);
     $this->resolver->getCallableFromDefinition($definition);

@@ -28,7 +28,7 @@ class ViewEditTest extends UITestBase {
   /**
    * Tests the delete link on a views UI.
    */
-  public function testDeleteLink() {
+  public function testDeleteLink(): void {
     $this->drupalGet('admin/structure/views/view/test_view');
     $this->assertSession()->linkExists('Delete view', 0, 'Ensure that the view delete link appears');
 
@@ -47,7 +47,7 @@ class ViewEditTest extends UITestBase {
   /**
    * Tests the machine name and administrative comment forms.
    */
-  public function testOtherOptions() {
+  public function testOtherOptions(): void {
     $this->drupalGet('admin/structure/views/view/test_view');
     // Add a new attachment display.
     $this->submitForm([], 'Add Attachment');
@@ -131,7 +131,7 @@ class ViewEditTest extends UITestBase {
   /**
    * Tests the language options on the views edit form.
    */
-  public function testEditFormLanguageOptions() {
+  public function testEditFormLanguageOptions(): void {
     $assert_session = $this->assertSession();
 
     // Language options should not exist without language module.
@@ -254,7 +254,7 @@ class ViewEditTest extends UITestBase {
   /**
    * Tests Representative Node for a Taxonomy Term.
    */
-  public function testRelationRepresentativeNode() {
+  public function testRelationRepresentativeNode(): void {
     // Populate and submit the form.
     $edit["name[taxonomy_term_field_data.tid_representative]"] = TRUE;
     $this->drupalGet('admin/structure/views/nojs/add-handler/test_groupwise_term_ui/default/relationship');

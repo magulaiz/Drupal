@@ -279,7 +279,7 @@ abstract class BrowserTestBase extends TestCase {
    * @see https://w3c.github.io/webdriver/webdriver-spec.html#add-cookie
    * @see https://www.w3.org/Bugs/Public/show_bug.cgi?id=20975
    */
-  protected function initFrontPage() {
+  protected function initFrontPage(): void {
     $session = $this->getSession();
     $session->visit($this->baseUrl);
   }
@@ -350,7 +350,7 @@ abstract class BrowserTestBase extends TestCase {
    *   $this->mink->registerSession('pony', $session);
    * @endcode
    */
-  protected function registerSessions() {}
+  protected function registerSessions(): void {}
 
   /**
    * {@inheritdoc}
@@ -413,7 +413,7 @@ abstract class BrowserTestBase extends TestCase {
    *
    * @see \Drupal\Core\File\FileSystemInterface::deleteRecursive()
    */
-  public static function filePreDeleteCallback($path) {
+  public static function filePreDeleteCallback($path): void {
     // When the webserver runs with the same system user as phpunit, we can
     // make read-only files writable again. If not, chmod will fail while the
     // file deletion still works if file permissions have been configured
@@ -424,7 +424,7 @@ abstract class BrowserTestBase extends TestCase {
   /**
    * Clean up the test environment.
    */
-  protected function cleanupEnvironment() {
+  protected function cleanupEnvironment(): void {
     // Remove all prefixed tables.
     $original_connection_info = Database::getConnectionInfo('simpletest_original_default');
     $original_prefix = $original_connection_info['default']['prefix'];
@@ -564,7 +564,7 @@ abstract class BrowserTestBase extends TestCase {
   /**
    * Installs Drupal into the test site.
    */
-  public function installDrupal() {
+  public function installDrupal(): void {
     $this->initUserSession();
     $this->prepareSettings();
     $this->doInstall();

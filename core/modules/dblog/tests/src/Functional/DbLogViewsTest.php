@@ -42,7 +42,7 @@ class DbLogViewsTest extends DbLogTest {
   /**
    * {@inheritdoc}
    */
-  protected function filterLogsEntries($type = NULL, $severity = NULL) {
+  protected function filterLogsEntries($type = NULL, $severity = NULL): void {
     $query = [];
     if (isset($type)) {
       $query['type[]'] = $type;
@@ -57,7 +57,7 @@ class DbLogViewsTest extends DbLogTest {
   /**
    * Tests the empty text for the watchdog view is not using an input format.
    */
-  public function testEmptyText() {
+  public function testEmptyText(): void {
     $view = Views::getView('watchdog');
     $data = $view->storage->toArray();
     $area = $data['display']['default']['display_options']['empty']['area'];

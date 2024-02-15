@@ -77,7 +77,7 @@ class UserTranslationUITest extends ContentTranslationUITestBase {
   /**
    * {@inheritdoc}
    */
-  protected function doTestTranslationEdit() {
+  protected function doTestTranslationEdit(): void {
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId);
     $storage->resetCache([$this->entityId]);
@@ -98,7 +98,7 @@ class UserTranslationUITest extends ContentTranslationUITestBase {
   /**
    * Tests translated user deletion.
    */
-  public function testTranslatedUserDeletion() {
+  public function testTranslatedUserDeletion(): void {
     $this->drupalLogin($this->administrator);
     $entity_id = $this->createEntity($this->getNewEntityValues('en'), 'en');
 

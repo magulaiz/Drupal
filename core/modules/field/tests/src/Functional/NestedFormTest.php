@@ -79,7 +79,7 @@ class NestedFormTest extends FieldTestBase {
   /**
    * Tests Field API form integration within a subform.
    */
-  public function testNestedFieldForm() {
+  public function testNestedFieldForm(): void {
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
     $display_repository = \Drupal::service('entity_display.repository');
 
@@ -201,7 +201,7 @@ class NestedFormTest extends FieldTestBase {
   /**
    * Tests entity level validation within subforms.
    */
-  public function testNestedEntityFormEntityLevelValidation() {
+  public function testNestedEntityFormEntityLevelValidation(): void {
     // Create two entities.
     $storage = $this->container->get('entity_type.manager')
       ->getStorage('entity_test_constraints');

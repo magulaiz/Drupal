@@ -21,7 +21,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
   /**
    * Tests language related methods of the Entity class.
    */
-  public function testEntityLanguageMethods() {
+  public function testEntityLanguageMethods(): void {
     // All entity variations have to have the same results.
     foreach (entity_test_entity_types() as $entity_type) {
       $this->doTestEntityLanguageMethods($entity_type);
@@ -34,7 +34,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
    * @param string $entity_type
    *   The entity type to run the tests with.
    */
-  protected function doTestEntityLanguageMethods($entity_type) {
+  protected function doTestEntityLanguageMethods($entity_type): void {
     $langcode_key = $this->entityTypeManager->getDefinition($entity_type)->getKey('langcode');
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($entity_type)
@@ -141,7 +141,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
   /**
    * Tests multilingual properties.
    */
-  public function testMultilingualProperties() {
+  public function testMultilingualProperties(): void {
     // Test all entity variations with data table support.
     foreach (entity_test_entity_types(ENTITY_TEST_TYPES_MULTILINGUAL) as $entity_type) {
       $this->doTestMultilingualProperties($entity_type);
@@ -154,7 +154,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
    * @param string $entity_type
    *   The entity type to run the tests with.
    */
-  protected function doTestMultilingualProperties($entity_type) {
+  protected function doTestMultilingualProperties($entity_type): void {
     $langcode_key = $this->entityTypeManager->getDefinition($entity_type)->getKey('langcode');
     $default_langcode_key = $this->entityTypeManager->getDefinition($entity_type)->getKey('default_langcode');
     $name = $this->randomMachineName();
@@ -304,7 +304,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
   /**
    * Tests the Entity Translation API behavior.
    */
-  public function testEntityTranslationAPI() {
+  public function testEntityTranslationAPI(): void {
     // Test all entity variations with data table support.
     foreach (entity_test_entity_types(ENTITY_TEST_TYPES_MULTILINGUAL) as $entity_type) {
       $this->doTestEntityTranslationAPI($entity_type);
@@ -317,7 +317,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
    * @param string $entity_type
    *   The entity type to run the tests with.
    */
-  protected function doTestEntityTranslationAPI($entity_type) {
+  protected function doTestEntityTranslationAPI($entity_type): void {
     $default_langcode = $this->langcodes[0];
     $langcode = $this->langcodes[1];
     $langcode_key = $this->entityTypeManager->getDefinition($entity_type)->getKey('langcode');
@@ -572,7 +572,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
   /**
    * Tests language fallback applied to field and entity translations.
    */
-  public function testLanguageFallback() {
+  public function testLanguageFallback(): void {
     // Test all entity variations with data table support.
     foreach (entity_test_entity_types(ENTITY_TEST_TYPES_MULTILINGUAL) as $entity_type) {
       $this->doTestLanguageFallback($entity_type);
@@ -585,7 +585,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
    * @param string $entity_type
    *   The entity type to run the tests with.
    */
-  protected function doTestLanguageFallback($entity_type) {
+  protected function doTestLanguageFallback($entity_type): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
 
@@ -668,7 +668,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
   /**
    * Check that field translatability is handled properly.
    */
-  public function testFieldDefinitions() {
+  public function testFieldDefinitions(): void {
     // Check that field translatability can be altered to be enabled or disabled
     // in field definitions.
     $entity_type = 'entity_test_mulrev';
@@ -713,7 +713,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
   /**
    * Tests that changing entity language does not break field language.
    */
-  public function testLanguageChange() {
+  public function testLanguageChange(): void {
     // Test all entity variations with data table support.
     foreach (entity_test_entity_types(ENTITY_TEST_TYPES_MULTILINGUAL) as $entity_type) {
       $this->doTestLanguageChange($entity_type);
@@ -726,7 +726,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
    * @param string $entity_type
    *   The entity type to run the tests with.
    */
-  protected function doTestLanguageChange($entity_type) {
+  protected function doTestLanguageChange($entity_type): void {
     $langcode_key = $this->entityTypeManager->getDefinition($entity_type)->getKey('langcode');
     $controller = $this->entityTypeManager->getStorage($entity_type);
     $langcode = $this->langcodes[0];
@@ -774,7 +774,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
   /**
    * Tests how entity adapters work with translations.
    */
-  public function testEntityAdapter() {
+  public function testEntityAdapter(): void {
     $entity_type = 'entity_test';
     $default_langcode = 'en';
     $values[$default_langcode] = ['name' => $this->randomString()];
@@ -798,7 +798,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
   /**
    * Tests if entity references are correct after adding a new translation.
    */
-  public function testFieldEntityReference() {
+  public function testFieldEntityReference(): void {
     $entity_type = 'entity_test_mul';
     $controller = $this->entityTypeManager->getStorage($entity_type);
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
@@ -825,7 +825,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
   /**
    * Tests that translation statuses are correct after removing translations.
    */
-  public function testDeleteEntityTranslation() {
+  public function testDeleteEntityTranslation(): void {
     $entity_type = 'entity_test_mul';
     $controller = $this->entityTypeManager->getStorage($entity_type);
 
@@ -917,7 +917,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
   /**
    * Tests the getTranslationStatus method.
    */
-  public function testTranslationStatus() {
+  public function testTranslationStatus(): void {
     $entity_type = 'entity_test_mul';
     $storage = $this->entityTypeManager->getStorage($entity_type);
 
@@ -998,7 +998,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
   /**
    * Tests the translation object cache.
    */
-  public function testTranslationObjectCache() {
+  public function testTranslationObjectCache(): void {
     $default_langcode = $this->langcodes[1];
     $translation_langcode = $this->langcodes[2];
 

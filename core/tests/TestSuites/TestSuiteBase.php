@@ -38,7 +38,7 @@ abstract class TestSuiteBase extends TestSuite {
    * @param string $suite_namespace
    *   SubNamespace used to separate test suite. Examples: Unit, Functional.
    */
-  protected function addTestsBySuiteNamespace($root, $suite_namespace) {
+  protected function addTestsBySuiteNamespace($root, $suite_namespace): void {
     // Core's tests are in the namespace Drupal\{$suite_namespace}Tests\ and are
     // always inside of core/tests/Drupal/{$suite_namespace}Tests. The exception
     // to this is Unit tests for historical reasons.

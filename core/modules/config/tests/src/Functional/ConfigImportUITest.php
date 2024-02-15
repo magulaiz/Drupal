@@ -53,7 +53,7 @@ class ConfigImportUITest extends BrowserTestBase {
   /**
    * Tests importing configuration.
    */
-  public function testImport() {
+  public function testImport(): void {
     $name = 'system.site';
     $dynamic_name = 'config_test.dynamic.new';
     /** @var \Drupal\Core\Config\StorageInterface $sync */
@@ -238,7 +238,7 @@ class ConfigImportUITest extends BrowserTestBase {
   /**
    * Tests concurrent importing of configuration.
    */
-  public function testImportLock() {
+  public function testImportLock(): void {
     // Create updated configuration object.
     $new_site_name = 'Config import test ' . $this->randomString();
     $this->prepareSiteNameUpdate($new_site_name);
@@ -265,7 +265,7 @@ class ConfigImportUITest extends BrowserTestBase {
   /**
    * Tests verification of site UUID before importing configuration.
    */
-  public function testImportSiteUuidValidation() {
+  public function testImportSiteUuidValidation(): void {
     $sync = \Drupal::service('config.storage.sync');
     // Create updated configuration object.
     $config_data = $this->config('system.site')->get();
@@ -282,7 +282,7 @@ class ConfigImportUITest extends BrowserTestBase {
   /**
    * Tests the screen that shows differences between active and sync.
    */
-  public function testImportDiff() {
+  public function testImportDiff(): void {
     $sync = $this->container->get('config.storage.sync');
     $config_name = 'config_test.system';
     $change_key = 'foo';
@@ -358,7 +358,7 @@ class ConfigImportUITest extends BrowserTestBase {
   /**
    * Tests that multiple validation errors are listed on the page.
    */
-  public function testImportValidation() {
+  public function testImportValidation(): void {
     // Set state value so that
     // \Drupal\config_import_test\EventSubscriber::onConfigImportValidate() logs
     // validation errors.
@@ -380,7 +380,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->assertNotEquals($this->config('system.site')->get('name'), $new_site_name);
   }
 
-  public function testConfigUninstallConfigException() {
+  public function testConfigUninstallConfigException(): void {
     $sync = $this->container->get('config.storage.sync');
 
     $core_extension = $this->config('core.extension')->get();
@@ -395,7 +395,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Can not uninstall the Configuration module as part of a configuration synchronization through the user interface.');
   }
 
-  public function prepareSiteNameUpdate($new_site_name) {
+  public function prepareSiteNameUpdate($new_site_name): void {
     $sync = $this->container->get('config.storage.sync');
     // Create updated configuration object.
     $config_data = $this->config('system.site')->get();
@@ -406,7 +406,7 @@ class ConfigImportUITest extends BrowserTestBase {
   /**
    * Tests an import that results in an error.
    */
-  public function testImportErrorLog() {
+  public function testImportErrorLog(): void {
     $name_primary = 'config_test.dynamic.primary';
     $name_secondary = 'config_test.dynamic.secondary';
     $sync = $this->container->get('config.storage.sync');
@@ -460,7 +460,7 @@ class ConfigImportUITest extends BrowserTestBase {
    *
    * @see \Drupal\Core\Entity\Event\BundleConfigImportValidate
    */
-  public function testEntityBundleDelete() {
+  public function testEntityBundleDelete(): void {
     \Drupal::service('module_installer')->install(['node']);
     $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.sync'));
 
@@ -504,7 +504,7 @@ class ConfigImportUITest extends BrowserTestBase {
    *
    * @see \Drupal\Core\EventSubscriber\ConfigImportSubscriber
    */
-  public function testExtensionValidation() {
+  public function testExtensionValidation(): void {
     \Drupal::service('module_installer')->install(['node']);
     \Drupal::service('theme_installer')->install(['test_subtheme']);
     $this->rebuildContainer();
@@ -537,7 +537,7 @@ class ConfigImportUITest extends BrowserTestBase {
   /**
    * Tests that errors set in the batch and on the ConfigImporter are merged.
    */
-  public function testBatchErrors() {
+  public function testBatchErrors(): void {
     $new_site_name = 'Config import test ' . $this->randomString();
     $this->prepareSiteNameUpdate($new_site_name);
     \Drupal::state()->set('config_import_steps_alter.error', TRUE);

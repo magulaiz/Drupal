@@ -67,7 +67,7 @@ class CacheableMetadataCalculationTest extends KernelTestBase {
    *
    * @see \Drupal\views\Entity\View::addCacheMetadata()
    */
-  public function testCacheableMetadataCalculation() {
+  public function testCacheableMetadataCalculation(): void {
     // Enabling a module that contains a view should not cause the cacheability
     // metadata to be recalculated.
     $this->enableModules([self::TEST_MODULE]);
@@ -106,7 +106,7 @@ class CacheableMetadataCalculationTest extends KernelTestBase {
   /**
    * Resets the state so we are ready for a new test.
    */
-  protected function resetState() {
+  protected function resetState(): void {
     $this->state->set('views_test_cacheable_metadata_has_been_accessed', FALSE);
   }
 

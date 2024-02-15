@@ -19,7 +19,7 @@ class DrupalLogErrorTest extends UnitTestCase {
    *
    * @dataProvider provideFatalExitCodeData
    */
-  public function testFatalExitCode(string $script, string $output, string $errorOutput, bool $processIsSuccessful) {
+  public function testFatalExitCode(string $script, string $output, string $errorOutput, bool $processIsSuccessful): void {
     // We need to override the current working directory for invocations from
     // run-tests.sh to work properly.
     $process = new PhpProcess($script, $this->root);

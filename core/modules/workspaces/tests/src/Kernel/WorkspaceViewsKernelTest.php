@@ -27,7 +27,7 @@ class WorkspaceViewsKernelTest extends ViewsKernelTestBase {
    *
    * @see \Drupal\views\Plugin\views\wizard\WizardPluginBase
    */
-  public function testCreateWorkspaceView() {
+  public function testCreateWorkspaceView(): void {
     $wizard = \Drupal::service('plugin.manager.views.wizard')->createInstance('standard:workspace', []);
     $form = [];
     $form_state = new FormState();

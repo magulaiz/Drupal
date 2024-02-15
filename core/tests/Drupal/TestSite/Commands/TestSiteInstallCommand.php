@@ -89,7 +89,7 @@ class TestSiteInstallCommand extends Command {
   /**
    * {@inheritdoc}
    */
-  protected function configure() {
+  protected function configure(): void {
     $this->setName('install')
       ->setDescription('Creates a test Drupal site')
       ->setHelp('The details to connect to the test site created will be displayed upon success. It will contain the database prefix and the user agent.')
@@ -199,7 +199,7 @@ class TestSiteInstallCommand extends Command {
    * @param string $root
    *   The Drupal root.
    */
-  protected function ensureDirectory($root) {
+  protected function ensureDirectory($root): void {
     if (!is_writable($root . '/sites/simpletest')) {
       if (!@mkdir($root . '/sites/simpletest')) {
         throw new \RuntimeException($root . '/sites/simpletest must exist and be writable to install a test site');
@@ -218,7 +218,7 @@ class TestSiteInstallCommand extends Command {
    * @param string $langcode
    *   (optional) The language to install the site in.
    */
-  public function setup($profile = 'testing', $setup_class = NULL, $langcode = 'en') {
+  public function setup($profile = 'testing', $setup_class = NULL, $langcode = 'en'): void {
     $this->profile = $profile;
     $this->langcode = $langcode;
     $this->setupBaseUrl();
@@ -231,7 +231,7 @@ class TestSiteInstallCommand extends Command {
   /**
    * Installs Drupal into the test site.
    */
-  protected function installDrupal() {
+  protected function installDrupal(): void {
     $this->initUserSession();
     $this->prepareSettings();
     $this->doInstall();
@@ -250,7 +250,7 @@ class TestSiteInstallCommand extends Command {
    *
    * @see \Drupal\TestSite\TestSetupInterface
    */
-  protected function executeSetupClass($class) {
+  protected function executeSetupClass($class): void {
     if (is_subclass_of($class, TestSetupInterface::class)) {
       /** @var \Drupal\TestSite\TestSetupInterface $instance */
       $instance = new $class();
@@ -268,7 +268,7 @@ class TestSiteInstallCommand extends Command {
    *
    * @see \Drupal\TestSite\TestPreinstallInterface
    */
-  protected function executePreinstallClass($class) {
+  protected function executePreinstallClass($class): void {
     if (is_subclass_of($class, TestPreinstallInterface::class)) {
       /** @var \Drupal\TestSite\TestPreinstallInterface $instance */
       $instance = new $class();
@@ -288,7 +288,7 @@ class TestSiteInstallCommand extends Command {
   /**
    * {@inheritdoc}
    */
-  protected function changeDatabasePrefix() {
+  protected function changeDatabasePrefix(): void {
     // Ensure that we use the database from SIMPLETEST_DB environment variable.
     Database::removeConnection('default');
     $this->changeDatabasePrefixTrait();
@@ -297,7 +297,7 @@ class TestSiteInstallCommand extends Command {
   /**
    * {@inheritdoc}
    */
-  protected function prepareDatabasePrefix() {
+  protected function prepareDatabasePrefix(): void {
     // Override this method so that we can force a lock to be created.
     $test_db = new TestDatabase(NULL, TRUE);
     $this->siteDirectory = $test_db->getTestSitePath();

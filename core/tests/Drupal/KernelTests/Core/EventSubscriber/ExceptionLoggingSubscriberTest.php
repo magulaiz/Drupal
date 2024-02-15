@@ -30,7 +30,7 @@ class ExceptionLoggingSubscriberTest extends KernelTestBase {
   /**
    * Tests \Drupal\Core\EventSubscriber\ExceptionLoggingSubscriber::onException().
    */
-  public function testExceptionLogging() {
+  public function testExceptionLogging(): void {
     $http_kernel = \Drupal::service('http_kernel');
 
     $channel_map = [
@@ -90,7 +90,7 @@ class ExceptionLoggingSubscriberTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     parent::register($container);
     $container
       ->register($this->testLogServiceName, BufferingLogger::class)

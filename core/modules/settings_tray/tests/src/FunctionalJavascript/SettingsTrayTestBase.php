@@ -38,7 +38,7 @@ class SettingsTrayTestBase extends OffCanvasTestBase {
    *   The element that contains the contextual links. If none provide the
    *   $block_selector will be used.
    */
-  protected function openBlockForm($block_selector, $contextual_link_container = '') {
+  protected function openBlockForm($block_selector, $contextual_link_container = ''): void {
     if (!$contextual_link_container) {
       $contextual_link_container = $block_selector;
     }
@@ -63,7 +63,7 @@ class SettingsTrayTestBase extends OffCanvasTestBase {
   /**
    * Enables edit mode by pressing edit button in the toolbar.
    */
-  protected function enableEditMode() {
+  protected function enableEditMode(): void {
     $this->pressToolbarEditButton();
     $this->assertEditModeEnabled();
   }
@@ -71,7 +71,7 @@ class SettingsTrayTestBase extends OffCanvasTestBase {
   /**
    * Disables edit mode by pressing edit button in the toolbar.
    */
-  protected function disableEditMode() {
+  protected function disableEditMode(): void {
     $this->pressToolbarEditButton();
     $this->assertEditModeDisabled();
   }
@@ -79,7 +79,7 @@ class SettingsTrayTestBase extends OffCanvasTestBase {
   /**
    * Press the toolbar Edit button provided by the contextual module.
    */
-  protected function pressToolbarEditButton() {
+  protected function pressToolbarEditButton(): void {
     $this->assertSession()->waitForElement('css', '[data-contextual-id] .contextual-links a');
     $edit_button = $this->getSession()
       ->getPage()
@@ -91,7 +91,7 @@ class SettingsTrayTestBase extends OffCanvasTestBase {
   /**
    * Assert that edit mode has been properly disabled.
    */
-  protected function assertEditModeDisabled() {
+  protected function assertEditModeDisabled(): void {
     $web_assert = $this->assertSession();
     $page = $this->getSession()->getPage();
     $page->find('css', static::TOOLBAR_EDIT_LINK_SELECTOR)->mouseOver();
@@ -112,7 +112,7 @@ class SettingsTrayTestBase extends OffCanvasTestBase {
   /**
    * Assert that edit mode has been properly enabled.
    */
-  protected function assertEditModeEnabled() {
+  protected function assertEditModeEnabled(): void {
     $web_assert = $this->assertSession();
     $page = $this->getSession()->getPage();
     // Move the mouse over the toolbar button so that isn't over a contextual
@@ -132,7 +132,7 @@ class SettingsTrayTestBase extends OffCanvasTestBase {
   /**
    * Asserts that Off-Canvas block form is valid.
    */
-  protected function assertOffCanvasBlockFormIsValid() {
+  protected function assertOffCanvasBlockFormIsValid(): void {
     $web_assert = $this->assertSession();
     // Confirm that Block title display label has been changed.
     $web_assert->elementTextContains('css', '.form-item-settings-label-display label', 'Display block title');

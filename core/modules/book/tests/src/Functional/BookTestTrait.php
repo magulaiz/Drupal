@@ -85,7 +85,7 @@ trait BookTestTrait {
    * @param array $breadcrumb
    *   The nodes that should be displayed in the breadcrumb.
    */
-  public function checkBookNode(EntityInterface $node, $nodes, $previous, $up, $next, array $breadcrumb) {
+  public function checkBookNode(EntityInterface $node, $nodes, $previous, $up, $next, array $breadcrumb): void {
     $this->drupalGet('node/' . $node->id());
     // Check outline structure.
     if ($nodes !== NULL) {

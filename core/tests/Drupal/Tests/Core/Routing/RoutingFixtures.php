@@ -20,7 +20,7 @@ class RoutingFixtures {
    * @param \Drupal\Core\Database\Connection $connection
    *   The connection to use to create the tables.
    */
-  public function createTables(Connection $connection) {
+  public function createTables(Connection $connection): void {
     $tables = $this->routingTableDefinition();
     $schema = $connection->schema();
 
@@ -36,7 +36,7 @@ class RoutingFixtures {
    * @param \Drupal\Core\Database\Connection $connection
    *   The connection to use to drop the tables.
    */
-  public function dropTables(Connection $connection) {
+  public function dropTables(Connection $connection): void {
     $tables = $this->routingTableDefinition();
     $schema = $connection->schema();
 

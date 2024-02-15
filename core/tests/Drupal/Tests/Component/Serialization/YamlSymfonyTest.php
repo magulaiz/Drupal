@@ -23,7 +23,7 @@ class YamlSymfonyTest extends YamlTestBase {
    * @covers ::decode
    * @dataProvider providerEncodeDecodeTests
    */
-  public function testEncodeDecode($data) {
+  public function testEncodeDecode($data): void {
     $this->assertEquals($data, YamlSymfony::decode(YamlSymfony::encode($data)));
   }
 
@@ -33,7 +33,7 @@ class YamlSymfonyTest extends YamlTestBase {
    * @covers ::decode
    * @dataProvider providerDecodeTests
    */
-  public function testDecode($string, $data) {
+  public function testDecode($string, $data): void {
     $this->assertEquals($data, YamlSymfony::decode($string));
   }
 
@@ -42,7 +42,7 @@ class YamlSymfonyTest extends YamlTestBase {
    *
    * @covers ::encode
    */
-  public function testEncode() {
+  public function testEncode(): void {
     // cSpell:disable
     $this->assertEquals('foo:
   bar: \'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus sapien ex, venenatis vitae nisi eu, posuere luctus dolor. Nullam convallis\'
@@ -53,7 +53,7 @@ class YamlSymfonyTest extends YamlTestBase {
   /**
    * @covers ::getFileExtension
    */
-  public function testGetFileExtension() {
+  public function testGetFileExtension(): void {
     $this->assertEquals('yml', YamlSymfony::getFileExtension());
   }
 
@@ -62,7 +62,7 @@ class YamlSymfonyTest extends YamlTestBase {
    *
    * @covers ::decode
    */
-  public function testError() {
+  public function testError(): void {
     $this->expectException(InvalidDataTypeException::class);
     YamlSymfony::decode('foo: [ads');
   }
@@ -72,7 +72,7 @@ class YamlSymfonyTest extends YamlTestBase {
    *
    * @covers ::encode
    */
-  public function testObjectSupportDisabled() {
+  public function testObjectSupportDisabled(): void {
     $this->expectException(InvalidDataTypeException::class);
     $this->expectExceptionMessage('Object support when dumping a YAML file has been disabled.');
     $object = new \stdClass();

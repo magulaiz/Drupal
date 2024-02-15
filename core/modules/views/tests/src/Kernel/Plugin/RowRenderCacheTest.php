@@ -59,7 +59,7 @@ class RowRenderCacheTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpFixtures() {
+  protected function setUpFixtures(): void {
     parent::setUpFixtures();
 
     $this->installEntitySchema('user');
@@ -87,7 +87,7 @@ class RowRenderCacheTest extends ViewsKernelTestBase {
   /**
    * Tests complex field rewriting and uncacheable field handlers.
    */
-  public function testAdvancedCaching() {
+  public function testAdvancedCaching(): void {
     // Test that row field output is actually cached and with the proper cache
     // contexts.
     $this->doTestRenderedOutput($this->editorUser);
@@ -110,7 +110,7 @@ class RowRenderCacheTest extends ViewsKernelTestBase {
   /**
    * Tests that rows are not cached when the none cache plugin is used.
    */
-  public function testNoCaching() {
+  public function testNoCaching(): void {
     $this->setCurrentUser($this->regularUser);
     $view = Views::getView('test_row_render_cache_none');
     $view->setDisplay();
@@ -143,7 +143,7 @@ class RowRenderCacheTest extends ViewsKernelTestBase {
    * @param bool $check_cache
    *   (optional) Whether explicitly test render cache entries.
    */
-  protected function doTestRenderedOutput(AccountInterface $account, $check_cache = FALSE) {
+  protected function doTestRenderedOutput(AccountInterface $account, $check_cache = FALSE): void {
     $this->setCurrentUser($account);
     $view = Views::getView('test_row_render_cache');
     $view->setDisplay();

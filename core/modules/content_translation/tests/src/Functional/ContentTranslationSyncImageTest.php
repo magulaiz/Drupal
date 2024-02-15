@@ -64,7 +64,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
   /**
    * Creates the test image field.
    */
-  protected function setupTestFields() {
+  protected function setupTestFields(): void {
     $this->fieldName = 'field_test_et_ui_image';
     $this->cardinality = 3;
 
@@ -103,7 +103,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
   /**
    * Tests image field synchronization.
    */
-  public function testImageFieldSync() {
+  public function testImageFieldSync(): void {
     // Check that the alt and title fields are enabled for the image field.
     $this->drupalLogin($this->editor);
     $this->drupalGet('entity_test_mul/structure/' . $this->entityTypeId . '/fields/' . $this->entityTypeId . '.' . $this->entityTypeId . '.' . $this->fieldName);

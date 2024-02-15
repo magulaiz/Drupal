@@ -29,7 +29,7 @@ class UserMailDefaultsTest extends KernelTestBase {
    *
    * @dataProvider userMailsProvider
    */
-  public function testMailDefaults($key) {
+  public function testMailDefaults($key): void {
     $body = $this->config('user.mail')->get("$key.body");
     $this->assertStringContainsString("\n\n", $body);
   }

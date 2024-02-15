@@ -22,7 +22,7 @@ class FilterCaptionTwigDebugTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     parent::register($container);
     // Enable Twig debugging.
     $parameters = $container->getParameter('twig.config');
@@ -33,7 +33,7 @@ class FilterCaptionTwigDebugTest extends KernelTestBase {
   /**
    * Tests the caption filter with Twig debugging on.
    */
-  public function testCaptionFilter() {
+  public function testCaptionFilter(): void {
     $manager = $this->container->get('plugin.manager.filter');
     $bag = new FilterPluginCollection($manager, []);
     $filter = $bag->get('filter_caption');

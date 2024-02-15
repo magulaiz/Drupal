@@ -44,7 +44,7 @@ class LocaleTranslationProjectsTest extends KernelTestBase {
   /**
    * Tests locale_translation_clear_cache_projects().
    */
-  public function testLocaleTranslationClearCacheProjects() {
+  public function testLocaleTranslationClearCacheProjects(): void {
     $this->moduleHandler->loadInclude('locale', 'inc', 'locale.translation');
 
     $expected = [];

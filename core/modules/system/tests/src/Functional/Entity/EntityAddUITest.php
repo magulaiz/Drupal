@@ -27,7 +27,7 @@ class EntityAddUITest extends BrowserTestBase {
   /**
    * Tests the add page for an entity type using bundle entities.
    */
-  public function testAddPageWithBundleEntities() {
+  public function testAddPageWithBundleEntities(): void {
     $admin_user = $this->drupalCreateUser([
       'administer entity_test_with_bundle content',
     ]);
@@ -134,7 +134,7 @@ class EntityAddUITest extends BrowserTestBase {
   /**
    * Tests the add page for an entity type not using bundle entities.
    */
-  public function testAddPageWithoutBundleEntities() {
+  public function testAddPageWithoutBundleEntities(): void {
     $admin_user = $this->drupalCreateUser([
       'administer entity_test content',
     ]);

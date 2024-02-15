@@ -43,7 +43,7 @@ class DisplayPathTest extends UITestBase {
   /**
    * Runs the tests.
    */
-  public function testPathUI() {
+  public function testPathUI(): void {
     $this->doBasicPathUITest();
     $this->doAdvancedPathsValidationTest();
     $this->doPathXssFilterTest();
@@ -52,7 +52,7 @@ class DisplayPathTest extends UITestBase {
   /**
    * Tests basic functionality in configuring a view.
    */
-  protected function doBasicPathUITest() {
+  protected function doBasicPathUITest(): void {
     $this->drupalGet('admin/structure/views/view/test_view');
 
     // Add a new page display and check the appearing text.
@@ -76,7 +76,7 @@ class DisplayPathTest extends UITestBase {
   /**
    * Tests that View paths are properly filtered for XSS.
    */
-  public function doPathXssFilterTest() {
+  public function doPathXssFilterTest(): void {
     $this->drupalGet('admin/structure/views/view/test_view');
     $this->submitForm([], 'Add Page');
     $this->drupalGet('admin/structure/views/nojs/display/test_view/page_2/path');
@@ -102,7 +102,7 @@ class DisplayPathTest extends UITestBase {
   /**
    * Tests a couple of invalid path patterns.
    */
-  protected function doAdvancedPathsValidationTest() {
+  protected function doAdvancedPathsValidationTest(): void {
     $url = 'admin/structure/views/nojs/display/test_view/page_1/path';
 
     $this->drupalGet($url);
@@ -119,7 +119,7 @@ class DisplayPathTest extends UITestBase {
   /**
    * Tests deleting a page display that has no path.
    */
-  public function testDeleteWithNoPath() {
+  public function testDeleteWithNoPath(): void {
     $this->drupalGet('admin/structure/views/view/test_view');
     $this->submitForm([], 'Add Page');
     $this->submitForm([], 'Delete Page');
@@ -130,7 +130,7 @@ class DisplayPathTest extends UITestBase {
   /**
    * Tests the menu and tab option form.
    */
-  public function testMenuOptions() {
+  public function testMenuOptions(): void {
     $this->drupalGet('admin/structure/views/view/test_view');
 
     // Add a new page display.
@@ -204,7 +204,7 @@ class DisplayPathTest extends UITestBase {
   /**
    * Tests the regression in https://www.drupal.org/node/2532490.
    */
-  public function testDefaultMenuTabRegression() {
+  public function testDefaultMenuTabRegression(): void {
     $this->container->get('module_installer')->install(['menu_link_content', 'toolbar', 'system']);
     $this->resetAll();
     $admin_user = $this->drupalCreateUser([

@@ -23,7 +23,7 @@ class ViewsRemoveDefaultArgumentSkipUrlTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.4.0.bare.standard.php.gz',
       __DIR__ . '/../../../fixtures/update/remove_default_argument_skip_url.php',
@@ -42,7 +42,7 @@ class ViewsRemoveDefaultArgumentSkipUrlTest extends UpdatePathTestBase {
   /**
    * Tests the upgrade path removing default_argument_skip_url.
    */
-  public function testViewsPostUpdateFixRevisionId() {
+  public function testViewsPostUpdateFixRevisionId(): void {
     $view = View::load('remove_default_argument_skip_url');
     $data = $view->toArray();
     $this->assertArrayHasKey('default_argument_skip_url', $data['display']['default']['display_options']['arguments']['tid']);

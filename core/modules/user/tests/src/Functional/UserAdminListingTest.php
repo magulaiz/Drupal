@@ -21,7 +21,7 @@ class UserAdminListingTest extends BrowserTestBase {
   /**
    * Tests the listing.
    */
-  public function testUserListing() {
+  public function testUserListing(): void {
     // Ensure the anonymous user cannot access the admin listing.
     $this->drupalGet('admin/people');
     $this->assertSession()->statusCodeEquals(403);

@@ -26,7 +26,7 @@ abstract class BlockResourceTestBase extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     switch ($method) {
       case 'GET':
         $this->entity->setVisibilityConfig('user_role', [])->save();

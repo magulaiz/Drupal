@@ -42,7 +42,7 @@ class BundleClassTest extends EntityKernelTestBase {
   /**
    * Tests making use of a custom bundle class.
    */
-  public function testEntitySubclass() {
+  public function testEntitySubclass(): void {
     entity_test_create_bundle('bundle_class');
 
     // Ensure we start life with empty counters.
@@ -198,7 +198,7 @@ class BundleClassTest extends EntityKernelTestBase {
   /**
    * Tests making use of a custom bundle class for an entity without bundles.
    */
-  public function testEntityNoBundleSubclass() {
+  public function testEntityNoBundleSubclass(): void {
     $this->container->get('state')->set('entity_test_bundle_class_enable_user_class', TRUE);
     $this->container->get('kernel')->rebuildContainer();
     $this->entityTypeManager->clearCachedDefinitions();
@@ -212,7 +212,7 @@ class BundleClassTest extends EntityKernelTestBase {
    *
    * @covers Drupal\Core\Entity\ContentEntityStorageBase::create
    */
-  public function testAmbiguousBundleClassExceptionCreate() {
+  public function testAmbiguousBundleClassExceptionCreate(): void {
     $this->container->get('state')->set('entity_test_bundle_class_enable_ambiguous_entity_types', TRUE);
     $this->entityTypeManager->clearCachedDefinitions();
     entity_test_create_bundle('bundle_class');
@@ -229,7 +229,7 @@ class BundleClassTest extends EntityKernelTestBase {
    *
    * @covers Drupal\Core\Entity\EntityTypeRepository::getEntityTypeFromClass
    */
-  public function testAmbiguousBundleClassExceptionEntityTypeRepository() {
+  public function testAmbiguousBundleClassExceptionEntityTypeRepository(): void {
     $this->container->get('state')->set('entity_test_bundle_class_enable_ambiguous_entity_types', TRUE);
     entity_test_create_bundle('entity_test_no_label');
     entity_test_create_bundle('entity_test_no_label', NULL, 'entity_test_no_label');
@@ -242,7 +242,7 @@ class BundleClassTest extends EntityKernelTestBase {
   /**
    * Checks exception thrown if a bundle class doesn't extend the entity class.
    */
-  public function testBundleClassShouldExtendEntityClass() {
+  public function testBundleClassShouldExtendEntityClass(): void {
     $this->container->get('state')->set('entity_test_bundle_class_non_inheriting', TRUE);
     $this->entityTypeManager->clearCachedDefinitions();
     $this->expectException(BundleClassInheritanceException::class);
@@ -253,7 +253,7 @@ class BundleClassTest extends EntityKernelTestBase {
   /**
    * Checks exception thrown if a bundle class doesn't exist.
    */
-  public function testBundleClassShouldExist() {
+  public function testBundleClassShouldExist(): void {
     $this->container->get('state')->set('entity_test_bundle_class_does_not_exist', TRUE);
     $this->entityTypeManager->clearCachedDefinitions();
     $this->expectException(MissingBundleClassException::class);

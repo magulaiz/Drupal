@@ -79,7 +79,7 @@ class MigrateExecutableTest extends MigrateTestCase {
   /**
    * Tests an import with an incomplete rewinding.
    */
-  public function testImportWithFailingRewind() {
+  public function testImportWithFailingRewind(): void {
     $exception_message = $this->getRandomGenerator()->string();
     $source = $this->createMock('Drupal\migrate\Plugin\MigrateSourceInterface');
     $source->expects($this->once())
@@ -106,7 +106,7 @@ class MigrateExecutableTest extends MigrateTestCase {
   /**
    * Tests the import method with a valid row.
    */
-  public function testImportWithValidRow() {
+  public function testImportWithValidRow(): void {
     $source = $this->getMockSource();
 
     $row = $this->getMockBuilder('Drupal\migrate\Row')
@@ -131,7 +131,7 @@ class MigrateExecutableTest extends MigrateTestCase {
   /**
    * Tests the import method with a valid row.
    */
-  public function testImportWithValidRowWithoutDestinationId() {
+  public function testImportWithValidRowWithoutDestinationId(): void {
     $source = $this->getMockSource();
 
     $row = $this->getMockBuilder('Drupal\migrate\Row')
@@ -159,7 +159,7 @@ class MigrateExecutableTest extends MigrateTestCase {
   /**
    * Tests the import method with a valid row.
    */
-  public function testImportWithValidRowNoDestinationValues() {
+  public function testImportWithValidRowNoDestinationValues(): void {
     $source = $this->getMockSource();
 
     $row = $this->getMockBuilder('Drupal\migrate\Row')
@@ -186,7 +186,7 @@ class MigrateExecutableTest extends MigrateTestCase {
    *
    * The MigrationException in this case is being thrown from the destination.
    */
-  public function testImportWithValidRowWithDestinationMigrateException() {
+  public function testImportWithValidRowWithDestinationMigrateException(): void {
     $exception_message = $this->getRandomGenerator()->string();
     $source = $this->getMockSource();
 
@@ -214,7 +214,7 @@ class MigrateExecutableTest extends MigrateTestCase {
    *
    * The MigrationException in this case is being thrown from a process plugin.
    */
-  public function testImportWithValidRowWithProcesMigrateException() {
+  public function testImportWithValidRowWithProcesMigrateException(): void {
     $exception_message = $this->getRandomGenerator()->string();
     $source = $this->getMockSource();
 
@@ -260,7 +260,7 @@ class MigrateExecutableTest extends MigrateTestCase {
   /**
    * Tests the import method with a regular Exception being thrown.
    */
-  public function testImportWithValidRowWithException() {
+  public function testImportWithValidRowWithException(): void {
     $exception_message = $this->getRandomGenerator()->string();
     $source = $this->getMockSource();
 
@@ -286,7 +286,7 @@ class MigrateExecutableTest extends MigrateTestCase {
   /**
    * Tests the processRow method.
    */
-  public function testProcessRow() {
+  public function testProcessRow(): void {
     $expected = [
       'test' => 'test destination',
       'test1' => 'test1 destination',
@@ -315,7 +315,7 @@ class MigrateExecutableTest extends MigrateTestCase {
   /**
    * Tests the processRow method with an empty pipeline.
    */
-  public function testProcessRowEmptyPipeline() {
+  public function testProcessRowEmptyPipeline(): void {
     $this->migration->expects($this->once())
       ->method('getProcessPlugins')
       ->with(NULL)
@@ -328,7 +328,7 @@ class MigrateExecutableTest extends MigrateTestCase {
   /**
    * Tests the processRow pipeline exception.
    */
-  public function testProcessRowPipelineException() {
+  public function testProcessRowPipelineException(): void {
     $row = new Row();
     $plugin = $this->prophesize(MigrateProcessInterface::class);
     $plugin->getPluginDefinition()->willReturn(['handle_multiples' => FALSE]);
@@ -350,7 +350,7 @@ class MigrateExecutableTest extends MigrateTestCase {
   /**
    * Tests a plugin which stops the pipeline.
    */
-  public function testStopPipeline() {
+  public function testStopPipeline(): void {
     $row = new Row();
     // Prophesize a plugin that stops the pipeline and returns 'first_plugin'.
     $stop_plugin = $this->prophesize(MigrateProcessInterface::class);
@@ -377,7 +377,7 @@ class MigrateExecutableTest extends MigrateTestCase {
   /**
    * Tests a plugin which does not stop the pipeline.
    */
-  public function testContinuePipeline() {
+  public function testContinuePipeline(): void {
     $row = new Row();
     // Prophesize a plugin that does not stop the pipeline.
     $continue_plugin = $this->prophesize(MigrateProcessInterface::class);
@@ -407,7 +407,7 @@ class MigrateExecutableTest extends MigrateTestCase {
   /**
    * Tests the processRow method.
    */
-  public function testProcessRowEmptyDestination() {
+  public function testProcessRowEmptyDestination(): void {
     $expected = [
       'test' => 'test destination',
       'test1' => 'test1 destination',
@@ -482,7 +482,7 @@ class MigrateExecutableTest extends MigrateTestCase {
    *
    * @covers ::rollback
    */
-  public function testRollback(array $id_map_records, bool $rollback_called = TRUE, array $source_id_keys = ['source'], array $destination_id_keys = ['destination'], int $expected_result = MigrationInterface::RESULT_COMPLETED) {
+  public function testRollback(array $id_map_records, bool $rollback_called = TRUE, array $source_id_keys = ['source'], array $destination_id_keys = ['destination'], int $expected_result = MigrationInterface::RESULT_COMPLETED): void {
     $id_map = $this
       ->getTestRollbackIdMap($id_map_records, $source_id_keys, $destination_id_keys)
       ->reveal();
@@ -605,13 +605,13 @@ class MigrateExecutableTest extends MigrateTestCase {
 
     $id_map = $this->prophesize(MigrateIdMapInterface::class);
     $id_map->setMessage(Argument::cetera())->willReturn(NULL);
-    $id_map->rewind()->will(function () use ($array_iterator) {
+    $id_map->rewind()->will(function () use ($array_iterator): void {
       $array_iterator->rewind();
     });
     $id_map->valid()->will(function () use ($array_iterator) {
       return $array_iterator->valid();
     });
-    $id_map->next()->will(function () use ($array_iterator) {
+    $id_map->next()->will(function () use ($array_iterator): void {
       $array_iterator->next();
     });
     $id_map->currentDestination()->will(function () use ($array_iterator, $destination_id_keys) {
@@ -643,7 +643,7 @@ class MigrateExecutableTest extends MigrateTestCase {
 
       return $return;
     });
-    $id_map->deleteDestination(Argument::type('array'))->will(function () {
+    $id_map->deleteDestination(Argument::type('array'))->will(function (): void {
       $destination_ids = func_get_args()[0][0];
       $matching_records = array_filter(self::$idMapRecords, function (array $record) use ($destination_ids) {
         return array_merge($record, $destination_ids) === $record;
@@ -652,7 +652,7 @@ class MigrateExecutableTest extends MigrateTestCase {
         unset(self::$idMapRecords[$record_key]);
       }
     });
-    $id_map->delete(Argument::type('array'))->will(function () {
+    $id_map->delete(Argument::type('array'))->will(function (): void {
       $source_ids = func_get_args()[0][0];
       $matching_records = array_filter(self::$idMapRecords, function (array $record) use ($source_ids) {
         return array_merge($record, $source_ids) === $record;

@@ -76,7 +76,7 @@ class WorkspaceTest extends BrowserTestBase {
   /**
    * Tests creating a workspace with special characters.
    */
-  public function testSpecialCharacters() {
+  public function testSpecialCharacters(): void {
     $this->drupalLogin($this->editor1);
 
     // Test a valid workspace name.
@@ -96,7 +96,7 @@ class WorkspaceTest extends BrowserTestBase {
   /**
    * Tests that the toolbar correctly shows the active workspace.
    */
-  public function testWorkspaceToolbar() {
+  public function testWorkspaceToolbar(): void {
     $this->drupalLogin($this->editor1);
 
     $this->drupalGet('/admin/config/workflow/workspaces/add');
@@ -127,7 +127,7 @@ class WorkspaceTest extends BrowserTestBase {
   /**
    * Tests changing the owner of a workspace.
    */
-  public function testWorkspaceOwner() {
+  public function testWorkspaceOwner(): void {
     $this->drupalLogin($this->editor1);
 
     $this->drupalGet('/admin/config/workflow/workspaces/add');
@@ -150,7 +150,7 @@ class WorkspaceTest extends BrowserTestBase {
   /**
    * Tests that editing a workspace creates a new revision.
    */
-  public function testWorkspaceFormRevisions() {
+  public function testWorkspaceFormRevisions(): void {
     $this->drupalLogin($this->editor1);
     $storage = \Drupal::entityTypeManager()->getStorage('workspace');
 
@@ -170,7 +170,7 @@ class WorkspaceTest extends BrowserTestBase {
    *
    * @group failing
    */
-  public function testWorkspaceManagePage() {
+  public function testWorkspaceManagePage(): void {
     $this->drupalLogin($this->rootUser);
     $this->setupWorkspaceSwitcherBlock();
     $assert_session = $this->assertSession();
@@ -212,7 +212,7 @@ class WorkspaceTest extends BrowserTestBase {
   /**
    * Tests adding new fields to workspace entities.
    */
-  public function testWorkspaceFieldUi() {
+  public function testWorkspaceFieldUi(): void {
     $user = $this->drupalCreateUser([
       'administer workspaces',
       'access administration pages',
@@ -243,7 +243,7 @@ class WorkspaceTest extends BrowserTestBase {
   /**
    * Verifies that a workspace with existing content may be deleted.
    */
-  public function testDeleteWorkspaceWithExistingContent() {
+  public function testDeleteWorkspaceWithExistingContent(): void {
     $this->createContentType(['type' => 'test', 'label' => 'Test']);
     $this->setupWorkspaceSwitcherBlock();
 
@@ -266,7 +266,7 @@ class WorkspaceTest extends BrowserTestBase {
   /**
    * Tests the Workspaces listing UI.
    */
-  public function testWorkspaceList() {
+  public function testWorkspaceList(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -302,7 +302,7 @@ class WorkspaceTest extends BrowserTestBase {
   /**
    * Verifies that a workspace can be published.
    */
-  public function testPublishWorkspace() {
+  public function testPublishWorkspace(): void {
     $this->createContentType(['type' => 'test', 'label' => 'Test']);
     $this->drupalLogin($this->rootUser);
 

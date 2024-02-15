@@ -26,7 +26,7 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
   /**
    * Tests rendering of ['#attached'].
    */
-  public function testAttachments() {
+  public function testAttachments(): void {
     // Test ['#attached']['http_header] = ['Status', $code].
     $this->drupalGet('/render_attached_test/teapot');
     $this->assertSession()->statusCodeEquals(418);
@@ -77,7 +77,7 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
   /**
    * Tests caching of ['#attached'].
    */
-  public function testRenderCachedBlock() {
+  public function testRenderCachedBlock(): void {
     // Make sure our test block is visible.
     $this->drupalPlaceBlock('attached_rendering_block', ['region' => 'content']);
 

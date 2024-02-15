@@ -78,7 +78,7 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
   /**
    * Saves a layout and asserts the message is correct.
    */
-  protected function assertSaveLayout() {
+  protected function assertSaveLayout(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -112,7 +112,7 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
   /**
    * Removes an entity block from the layout but does not save the layout.
    */
-  protected function removeInlineBlockFromLayout() {
+  protected function removeInlineBlockFromLayout(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $block_text = $page->find('css', static::INLINE_BLOCK_LOCATOR)->getText();
@@ -136,7 +136,7 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
    * @param string $body
    *   The body field value.
    */
-  protected function addInlineBlockToLayout($title, $body) {
+  protected function addInlineBlockToLayout($title, $body): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $page->clickLink('Add block');
@@ -163,7 +163,7 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
    * @param string $block_css_locator
    *   The CSS locator to use to select the contextual link.
    */
-  protected function configureInlineBlock($old_body, $new_body, $block_css_locator = NULL) {
+  protected function configureInlineBlock($old_body, $new_body, $block_css_locator = NULL): void {
     $block_css_locator = $block_css_locator ?: static::INLINE_BLOCK_LOCATOR;
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
@@ -186,7 +186,7 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
    * @param string|null $css_locator
    *   The css locator to use inside the main canvas if any.
    */
-  protected function assertDialogClosedAndTextVisible($text, $css_locator = NULL) {
+  protected function assertDialogClosedAndTextVisible($text, $css_locator = NULL): void {
     $assert_session = $this->assertSession();
     $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
     $assert_session->elementNotExists('css', '#drupal-off-canvas');
@@ -206,7 +206,7 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
    * @param string $label
    *   The block type label.
    */
-  protected function createBlockContentType($id, $label) {
+  protected function createBlockContentType($id, $label): void {
     $bundle = BlockContentType::create([
       'id' => $id,
       'label' => $label,

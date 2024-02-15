@@ -58,7 +58,7 @@ class LayoutBuilderThemeSuggestionsTest extends BrowserTestBase {
   /**
    * Tests alterations of the layout list via preprocess functions.
    */
-  public function testLayoutListSuggestion() {
+  public function testLayoutListSuggestion(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -70,7 +70,7 @@ class LayoutBuilderThemeSuggestionsTest extends BrowserTestBase {
   /**
    * Tests that of view mode specific field templates are suggested.
    */
-  public function testFieldBlockViewModeTemplates() {
+  public function testFieldBlockViewModeTemplates(): void {
     $assert_session = $this->assertSession();
 
     $this->drupalGet('node/1');

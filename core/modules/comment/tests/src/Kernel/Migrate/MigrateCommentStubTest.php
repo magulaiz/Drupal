@@ -54,7 +54,7 @@ class MigrateCommentStubTest extends MigrateDrupalTestBase {
   /**
    * Tests creation of comment stubs.
    */
-  public function testStub() {
+  public function testStub(): void {
     $this->performStubTest('comment');
   }
 

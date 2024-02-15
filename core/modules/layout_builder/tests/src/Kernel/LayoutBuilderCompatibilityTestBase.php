@@ -87,7 +87,7 @@ abstract class LayoutBuilderCompatibilityTestBase extends EntityKernelTestBase {
    *
    * Also configures and reloads the entity display.
    */
-  protected function installLayoutBuilder() {
+  protected function installLayoutBuilder(): void {
     $this->container->get('module_installer')->install(['layout_builder']);
     $this->refreshServices();
 
@@ -99,7 +99,7 @@ abstract class LayoutBuilderCompatibilityTestBase extends EntityKernelTestBase {
   /**
    * Enables overrides for the display and reloads the entity.
    */
-  protected function enableOverrides() {
+  protected function enableOverrides(): void {
     $this->display->setOverridable()->save();
     $this->entity = $this->reloadEntity($this->entity);
   }
@@ -112,7 +112,7 @@ abstract class LayoutBuilderCompatibilityTestBase extends EntityKernelTestBase {
    * @param array $attributes
    *   An array of field attributes to assert.
    */
-  protected function assertFieldAttributes(EntityInterface $entity, array $attributes) {
+  protected function assertFieldAttributes(EntityInterface $entity, array $attributes): void {
     $view_builder = $this->container->get('entity_type.manager')->getViewBuilder($entity->getEntityTypeId());
     $build = $view_builder->view($entity);
     $this->render($build);

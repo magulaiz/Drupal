@@ -32,7 +32,7 @@ class MigrateShortcutStubTest extends MigrateDrupalTestBase {
   /**
    * Tests creation of shortcut stubs.
    */
-  public function testStub() {
+  public function testStub(): void {
     $this->performStubTest('shortcut');
   }
 

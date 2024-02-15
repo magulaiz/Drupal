@@ -53,7 +53,7 @@ class PathAliasTest extends PathTestBase {
   /**
    * Tests the path cache.
    */
-  public function testPathCache() {
+  public function testPathCache(): void {
     // Create test node.
     $node1 = $this->drupalCreateNode();
 
@@ -87,7 +87,7 @@ class PathAliasTest extends PathTestBase {
   /**
    * Tests alias functionality through the admin interfaces.
    */
-  public function testAdminAlias() {
+  public function testAdminAlias(): void {
     // Create test node.
     $node1 = $this->drupalCreateNode();
 
@@ -256,7 +256,7 @@ class PathAliasTest extends PathTestBase {
   /**
    * Tests alias functionality through the node interfaces.
    */
-  public function testNodeAlias() {
+  public function testNodeAlias(): void {
     // Create test node.
     $node1 = $this->drupalCreateNode();
 
@@ -420,7 +420,7 @@ class PathAliasTest extends PathTestBase {
   /**
    * Tests that duplicate aliases fail validation.
    */
-  public function testDuplicateNodeAlias() {
+  public function testDuplicateNodeAlias(): void {
     // Create one node with a random alias.
     $node_one = $this->drupalCreateNode();
     $edit = [];

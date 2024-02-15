@@ -21,7 +21,7 @@ class PasswordCompatibilityUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../tests/fixtures/update/drupal-9.4.0.phpass.standard.php.gz',
     ];
@@ -30,7 +30,7 @@ class PasswordCompatibilityUpdateTest extends UpdatePathTestBase {
   /**
    * Tests that the password compatibility is working properly.
    */
-  public function testPasswordCompatibility() {
+  public function testPasswordCompatibility(): void {
     $this->runUpdates();
 
     /** @var \Drupal\Core\Extension\ModuleInstaller $installer */

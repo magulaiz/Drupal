@@ -22,7 +22,7 @@ class OptionsListFilterTest extends OptionsTestBase {
   /**
    * Tests options list field filter.
    */
-  public function testViewsTestOptionsListFilter() {
+  public function testViewsTestOptionsListFilter(): void {
     $view = Views::getView('test_options_list_filter');
     $this->executeView($view);
 
@@ -38,7 +38,7 @@ class OptionsListFilterTest extends OptionsTestBase {
   /**
    * Tests options list field filter when grouped.
    */
-  public function testViewsTestOptionsListGroupedFilter() {
+  public function testViewsTestOptionsListGroupedFilter(): void {
     $view = Views::getView('test_options_list_filter');
 
     $filters = [

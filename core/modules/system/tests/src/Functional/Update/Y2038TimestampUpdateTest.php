@@ -78,7 +78,7 @@ class Y2038TimestampUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       // Start with a standard install of Drupal 9.3.0 with the following
       // enabled modules: forum, language, locale, statistics and tracker.
@@ -90,7 +90,7 @@ class Y2038TimestampUpdateTest extends UpdatePathTestBase {
   /**
    * Tests update of time fields.
    */
-  public function testUpdate() {
+  public function testUpdate(): void {
     if (\Drupal::service('database')->databaseType() == 'sqlite') {
       $this->markTestSkipped("This test does not support the SQLite database driver.");
     }
@@ -120,7 +120,7 @@ class Y2038TimestampUpdateTest extends UpdatePathTestBase {
   /**
    * Collect the timestamp fields from the database and update table list.
    */
-  public function collectTimestampFieldsFromDatabase() {
+  public function collectTimestampFieldsFromDatabase(): void {
     /** @var \Drupal\Core\Database\Connection $connection */
     $connection = \Drupal::service('database');
 
@@ -142,7 +142,7 @@ class Y2038TimestampUpdateTest extends UpdatePathTestBase {
   /**
    * Asserts the size of the timestamp fields.
    */
-  public function assertTimestampFields($expected_values) {
+  public function assertTimestampFields($expected_values): void {
     // Check the size of all the fields.
     foreach ($this->tables as $table => $column_names) {
       $table_name = $this->connection->getPrefix() . $table;

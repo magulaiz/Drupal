@@ -46,7 +46,7 @@ class EntityTypeWithoutLanguageFormTest extends BrowserTestBase {
   /**
    * Tests configuration options with an entity without language definition.
    */
-  public function testEmptyLangcode() {
+  public function testEmptyLangcode(): void {
     // Assert that we can not enable language select from
     // content language settings page.
     $this->drupalGet('admin/config/regional/content-language');

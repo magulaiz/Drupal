@@ -29,7 +29,7 @@ class EntityReferenceFieldCreationTest extends BrowserTestBase {
   /**
    * Tests that entity reference fields cannot target entity types without IDs.
    */
-  public function testAddReferenceFieldTargetingEntityTypeWithoutId() {
+  public function testAddReferenceFieldTargetingEntityTypeWithoutId(): void {
     $this->drupalLogin($this->rootUser);
     $node_type = $this->drupalCreateContentType()->id();
 

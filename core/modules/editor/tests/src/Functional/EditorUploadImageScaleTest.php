@@ -75,7 +75,7 @@ class EditorUploadImageScaleTest extends BrowserTestBase {
   /**
    * Tests scaling of inline images.
    */
-  public function testEditorUploadImageScale() {
+  public function testEditorUploadImageScale(): void {
     // Generate testing images.
     $testing_image_list = $this->getTestFiles('image');
 
@@ -179,7 +179,7 @@ class EditorUploadImageScaleTest extends BrowserTestBase {
    * @param string|int $height
    *   The height of the image.
    */
-  protected function setMaxDimensions($width, $height) {
+  protected function setMaxDimensions($width, $height): void {
     $editor = Editor::load('basic_html');
     $image_upload_settings = $editor->getImageUploadSettings();
     $image_upload_settings['max_dimensions']['width'] = $width;

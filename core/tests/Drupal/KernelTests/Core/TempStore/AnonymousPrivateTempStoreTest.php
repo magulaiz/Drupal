@@ -43,7 +43,7 @@ class AnonymousPrivateTempStoreTest extends KernelTestBase {
   /**
    * Tests anonymous can get without a previous set.
    */
-  public function testAnonymousCanUsePrivateTempStoreGet() {
+  public function testAnonymousCanUsePrivateTempStoreGet(): void {
     $actual = $this->tempStore->get('foo');
     $this->assertNull($actual);
   }
@@ -51,7 +51,7 @@ class AnonymousPrivateTempStoreTest extends KernelTestBase {
   /**
    * Tests anonymous can use the PrivateTempStore.
    */
-  public function testAnonymousCanUsePrivateTempStoreSet() {
+  public function testAnonymousCanUsePrivateTempStoreSet(): void {
     $this->tempStore->set('foo', 'bar');
     $metadata1 = $this->tempStore->getMetadata('foo');
 

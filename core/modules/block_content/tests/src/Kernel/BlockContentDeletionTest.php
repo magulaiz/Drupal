@@ -35,7 +35,7 @@ class BlockContentDeletionTest extends KernelTestBase {
   /**
    * Tests deleting a block_content updates the discovered block plugin.
    */
-  public function testDeletingBlockContentShouldClearPluginCache() {
+  public function testDeletingBlockContentShouldClearPluginCache(): void {
     // Create a block content type.
     $block_content_type = BlockContentType::create([
       'id' => 'spiffy',

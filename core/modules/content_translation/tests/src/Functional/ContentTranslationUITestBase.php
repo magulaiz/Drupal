@@ -51,7 +51,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
   /**
    * Tests the basic translation UI.
    */
-  public function testTranslationUI() {
+  public function testTranslationUI(): void {
     $this->doTestBasicTranslation();
     $this->doTestTranslationOverview();
     $this->doTestOutdatedStatus();
@@ -66,7 +66,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
   /**
    * Tests the basic translation workflow.
    */
-  protected function doTestBasicTranslation() {
+  protected function doTestBasicTranslation(): void {
     // Create a new test entity with original values in the default language.
     $default_langcode = $this->langcodes[0];
     $values[$default_langcode] = $this->getNewEntityValues($default_langcode);
@@ -212,7 +212,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
   /**
    * Tests that the translation overview shows the correct values.
    */
-  protected function doTestTranslationOverview() {
+  protected function doTestTranslationOverview(): void {
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId);
     $storage->resetCache([$this->entityId]);
@@ -237,7 +237,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
   /**
    * Tests up-to-date status tracking.
    */
-  protected function doTestOutdatedStatus() {
+  protected function doTestOutdatedStatus(): void {
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId);
     $storage->resetCache([$this->entityId]);
@@ -285,7 +285,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
   /**
    * Tests the translation publishing status.
    */
-  protected function doTestPublishedStatus() {
+  protected function doTestPublishedStatus(): void {
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId);
     $storage->resetCache([$this->entityId]);
@@ -315,7 +315,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
   /**
    * Tests the translation authoring information.
    */
-  protected function doTestAuthoringInfo() {
+  protected function doTestAuthoringInfo(): void {
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId);
     $storage->resetCache([$this->entityId]);
@@ -366,7 +366,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
   /**
    * Tests translation deletion.
    */
-  protected function doTestTranslationDeletion() {
+  protected function doTestTranslationDeletion(): void {
     // Confirm and delete a translation.
     $this->drupalLogin($this->translator);
     $langcode = 'fr';
@@ -509,7 +509,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
   /**
    * Tests edit content translation.
    */
-  protected function doTestTranslationEdit() {
+  protected function doTestTranslationEdit(): void {
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId);
     $storage->resetCache([$this->entityId]);
@@ -531,7 +531,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
   /**
    * Tests the basic translation workflow.
    */
-  protected function doTestTranslationChanged() {
+  protected function doTestTranslationChanged(): void {
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId);
     $storage->resetCache([$this->entityId]);
@@ -599,7 +599,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
   /**
    * Tests the changed time after API and FORM save without changes.
    */
-  public function doTestChangedTimeAfterSaveWithoutChanges() {
+  public function doTestChangedTimeAfterSaveWithoutChanges(): void {
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId);
     $storage->resetCache([$this->entityId]);

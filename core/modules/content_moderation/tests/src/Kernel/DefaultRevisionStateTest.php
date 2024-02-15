@@ -60,7 +60,7 @@ class DefaultRevisionStateTest extends KernelTestBase {
   /**
    * Tests a translatable Node.
    */
-  public function testMultilingual() {
+  public function testMultilingual(): void {
     // Enable French.
     ConfigurableLanguage::createFromLangcode('fr')->save();
     $node_type = NodeType::create([

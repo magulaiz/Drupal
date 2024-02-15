@@ -103,7 +103,7 @@ class TextFormatElementFormTest extends KernelTestBase implements FormInterface 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {}
+  public function submitForm(array &$form, FormStateInterface $form_state): void {}
 
   /**
    * Form validation handler.
@@ -113,12 +113,12 @@ class TextFormatElementFormTest extends KernelTestBase implements FormInterface 
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {}
+  public function validateForm(array &$form, FormStateInterface $form_state): void {}
 
   /**
    * Tests that values are returned.
    */
-  public function testTextFormatElement() {
+  public function testTextFormatElement(): void {
     /** @var \Drupal\Core\Form\FormBuilder $form_builder */
     $form_builder = $this->container->get('form_builder');
     $form = $form_builder->getForm($this);

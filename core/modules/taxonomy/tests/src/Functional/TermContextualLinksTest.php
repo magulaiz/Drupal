@@ -24,7 +24,7 @@ class TermContextualLinksTest extends TaxonomyTestBase {
   /**
    * Tests contextual links.
    */
-  public function testTermContextualLinks() {
+  public function testTermContextualLinks(): void {
     $vocabulary = $this->createVocabulary();
     $term = $this->createTerm($vocabulary);
 

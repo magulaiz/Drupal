@@ -49,7 +49,7 @@ class DateRangeFieldTest extends DateTestBase {
   /**
    * Tests date field functionality.
    */
-  public function testDateRangeField() {
+  public function testDateRangeField(): void {
     $field_name = $this->fieldStorage->getName();
     $field_label = $this->field->label();
 
@@ -254,7 +254,7 @@ class DateRangeFieldTest extends DateTestBase {
   /**
    * Tests date and time field.
    */
-  public function testDatetimeRangeField() {
+  public function testDatetimeRangeField(): void {
     $field_name = $this->fieldStorage->getName();
     $field_label = $this->field->label();
 
@@ -432,7 +432,7 @@ class DateRangeFieldTest extends DateTestBase {
   /**
    * Tests all-day field.
    */
-  public function testAlldayRangeField() {
+  public function testAlldayRangeField(): void {
     $field_name = $this->fieldStorage->getName();
     $field_label = $this->field->label();
 
@@ -608,7 +608,7 @@ class DateRangeFieldTest extends DateTestBase {
   /**
    * Tests Date Range List Widget functionality.
    */
-  public function testDatelistWidget() {
+  public function testDatelistWidget(): void {
     $field_name = $this->fieldStorage->getName();
     $field_label = $this->field->label();
 
@@ -965,7 +965,7 @@ class DateRangeFieldTest extends DateTestBase {
   /**
    * Tests default value functionality.
    */
-  public function testDefaultValue() {
+  public function testDefaultValue(): void {
     // Create a test content type.
     $this->drupalCreateContentType(['type' => 'date_content']);
 
@@ -1143,7 +1143,7 @@ class DateRangeFieldTest extends DateTestBase {
   /**
    * Tests that invalid values are caught and marked as invalid.
    */
-  public function testInvalidField() {
+  public function testInvalidField(): void {
     // Change the field to a datetime field.
     $this->fieldStorage->setSetting('datetime_type', DateRangeItem::DATETIME_TYPE_DATETIME);
     $this->fieldStorage->save();
@@ -1356,7 +1356,7 @@ class DateRangeFieldTest extends DateTestBase {
   /**
    * Tests that 'Date' field storage setting form is disabled if field has data.
    */
-  public function testDateStorageSettings() {
+  public function testDateStorageSettings(): void {
     // Create a test content type.
     $this->drupalCreateContentType(['type' => 'date_content']);
 

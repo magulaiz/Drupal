@@ -16,7 +16,7 @@ class SystemListingTest extends KernelTestBase {
   /**
    * Tests that files in different directories take precedence as expected.
    */
-  public function testDirectoryPrecedence() {
+  public function testDirectoryPrecedence(): void {
     // Define the module files we will search for, and the directory precedence
     // we expect.
     $expected_directories = [
@@ -53,7 +53,7 @@ class SystemListingTest extends KernelTestBase {
   /**
    * Tests that directories matching file_scan_ignore_directories are ignored.
    */
-  public function testFileScanIgnoreDirectory() {
+  public function testFileScanIgnoreDirectory(): void {
     $listing = new ExtensionDiscovery($this->root, FALSE);
     $listing->setProfileDirectories(['core/profiles/testing']);
     $files = $listing->scan('module');

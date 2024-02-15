@@ -33,7 +33,7 @@ class SqlBaseTest extends UnitTestCase {
    *
    * @dataProvider sqlBaseTestProvider
    */
-  public function testMapJoinable($expected_result, $id_map_is_sql, $with_id_map, $source_options = [], $id_map_options = []) {
+  public function testMapJoinable($expected_result, $id_map_is_sql, $with_id_map, $source_options = [], $id_map_options = []): void {
     // Setup a connection object.
     $source_connection = $this->getMockBuilder('Drupal\Core\Database\Connection')
       ->disableOriginalConstructor()
@@ -169,7 +169,7 @@ class TestSqlBase extends SqlBase {
    * @param mixed $database
    *   The database mock object.
    */
-  public function setDatabase($database) {
+  public function setDatabase($database): void {
     $this->database = $database;
   }
 
@@ -186,7 +186,7 @@ class TestSqlBase extends SqlBase {
    * @param mixed $migration
    *   The migration mock.
    */
-  public function setMigration($migration) {
+  public function setMigration($migration): void {
     $this->migration = $migration;
   }
 
@@ -210,21 +210,21 @@ class TestSqlBase extends SqlBase {
    * @param array $ids
    *   An array of identifiers.
    */
-  public function setIds($ids) {
+  public function setIds($ids): void {
     $this->ids = $ids;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function fields() {
+  public function fields(): void {
     throw new \RuntimeException(__METHOD__ . " not implemented for " . __CLASS__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function query() {
+  public function query(): void {
     throw new \RuntimeException(__METHOD__ . " not implemented for " . __CLASS__);
   }
 

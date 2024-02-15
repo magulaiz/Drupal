@@ -203,7 +203,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
    *
    * @dataProvider dataTestDecoupledPendingRevisions
    */
-  public function testDecoupledPendingRevisions($sequence) {
+  public function testDecoupledPendingRevisions($sequence): void {
     $revision_id = $this->doTestEditSequence($sequence);
     $this->assertCount($revision_id, $sequence);
   }
@@ -264,7 +264,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
    *
    * @dataProvider dataTestUntranslatableFields
    */
-  public function testUntranslatableFields($sequence, $default_translation_affected) {
+  public function testUntranslatableFields($sequence, $default_translation_affected): void {
     // Configure the untranslatable fields edit mode.
     $this->state->set('entity_test.untranslatable_fields.default_translation_affected', $default_translation_affected);
     $this->bundleInfo->clearCachedBundles();
@@ -498,7 +498,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
    * @covers ::createRevision
    * @covers \Drupal\Core\Entity\Plugin\Validation\Constraint\EntityUntranslatableFieldsConstraintValidator::validate
    */
-  public function testMultipleTranslationChanges() {
+  public function testMultipleTranslationChanges(): void {
     // Configure the untranslatable fields edit mode.
     $this->state->set('entity_test.untranslatable_fields.default_translation_affected', TRUE);
     $this->bundleInfo->clearCachedBundles();
@@ -524,7 +524,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
   /**
    * Tests that internal properties are preserved while creating a new revision.
    */
-  public function testInternalProperties() {
+  public function testInternalProperties(): void {
     $entity = EntityTestMulRev::create();
     $this->doTestInternalProperties($entity);
 
@@ -544,7 +544,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
    * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   An entity object.
    */
-  protected function doTestInternalProperties(ContentEntityInterface $entity) {
+  protected function doTestInternalProperties(ContentEntityInterface $entity): void {
     $this->assertFalse($entity->isValidationRequired());
     $entity->setValidationRequired(TRUE);
     $this->assertTrue($entity->isValidationRequired());
@@ -557,7 +557,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
    *
    * @covers ::createRevision
    */
-  public function testRemovedTranslations() {
+  public function testRemovedTranslations(): void {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = EntityTestMulRev::create(['name' => 'Test 1.1 EN']);
     $this->storage->save($entity);
@@ -592,7 +592,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
    *
    * @covers ::createRevision
    */
-  public function testCreateRevisionHook() {
+  public function testCreateRevisionHook(): void {
     $entity = EntityTestMulRev::create();
     $entity->get('name')->value = 'revision_create_test_en';
     $this->storage->save($entity);

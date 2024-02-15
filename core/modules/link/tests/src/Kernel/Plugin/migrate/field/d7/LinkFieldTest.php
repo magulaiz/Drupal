@@ -43,7 +43,7 @@ class LinkFieldTest extends KernelTestBase {
     // process pipeline created by the plugin, we need to ensure that
     // getProcess() always returns the last input to mergeProcessOfProperty().
     $migration->mergeProcessOfProperty(Argument::type('string'), Argument::type('array'))
-      ->will(function ($arguments) use ($migration) {
+      ->will(function ($arguments) use ($migration): void {
         $migration->getProcess()->willReturn($arguments[1]);
       });
 
@@ -53,7 +53,7 @@ class LinkFieldTest extends KernelTestBase {
   /**
    * @covers ::alterFieldInstanceMigration
    */
-  public function testAlterFieldInstanceMigration($method = 'alterFieldInstanceMigration') {
+  public function testAlterFieldInstanceMigration($method = 'alterFieldInstanceMigration'): void {
     $this->plugin->$method($this->migration);
 
     $expected = [

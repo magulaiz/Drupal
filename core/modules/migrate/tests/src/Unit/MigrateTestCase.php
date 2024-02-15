@@ -75,7 +75,7 @@ abstract class MigrateTestCase extends UnitTestCase {
       });
     $migration->expects($this->any())
       ->method('setStatus')
-      ->willReturnCallback(function ($status) {
+      ->willReturnCallback(function ($status): void {
         $this->migrationStatus = $status;
       });
 
@@ -88,7 +88,7 @@ abstract class MigrateTestCase extends UnitTestCase {
     $configuration = &$this->migrationConfiguration;
 
     $migration->method('set')
-      ->willReturnCallback(function ($argument, $value) use (&$configuration) {
+      ->willReturnCallback(function ($argument, $value) use (&$configuration): void {
         $configuration[$argument] = $value;
       });
 
@@ -165,7 +165,7 @@ abstract class MigrateTestCase extends UnitTestCase {
    * @param array $expected_results
    *   An array of expected results.
    */
-  public function queryResultTest($iter, $expected_results) {
+  public function queryResultTest($iter, $expected_results): void {
     $this->assertSameSize($expected_results, $iter, 'Number of results match');
     $count = 0;
     foreach ($iter as $data_row) {
@@ -203,7 +203,7 @@ abstract class MigrateTestCase extends UnitTestCase {
    * @param string $message
    *   The tested result as a formatted string.
    */
-  protected function retrievalAssertHelper($expected_value, $actual_value, $message) {
+  protected function retrievalAssertHelper($expected_value, $actual_value, $message): void {
     if (is_array($expected_value)) {
       // If the expected and actual values are empty, no need to array compare.
       if (empty($expected_value && $actual_value)) {

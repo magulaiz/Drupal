@@ -14,7 +14,7 @@ class FileDeleteTest extends FileTestBase {
   /**
    * Delete a normal file.
    */
-  public function testNormal() {
+  public function testNormal(): void {
     // Create a file for testing
     $uri = $this->createUri();
 
@@ -26,7 +26,7 @@ class FileDeleteTest extends FileTestBase {
   /**
    * Try deleting a missing file.
    */
-  public function testMissing() {
+  public function testMissing(): void {
     // Try to delete a non-existing file
     $this->assertTrue(\Drupal::service('file_system')->delete('public://' . $this->randomMachineName()), 'Returns true when deleting a non-existent file.');
   }
@@ -34,7 +34,7 @@ class FileDeleteTest extends FileTestBase {
   /**
    * Try deleting a directory.
    */
-  public function testDirectory() {
+  public function testDirectory(): void {
     // A directory to operate on.
     $directory = $this->createDirectory();
 

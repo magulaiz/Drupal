@@ -2664,21 +2664,6 @@ parameters:
 			path: modules/views/tests/src/Kernel/Handler/FieldFieldTest.php
 
 		-
-			message: "#^Variable \\$rand1 might not be defined\\.$#"
-			count: 2
-			path: modules/views/tests/src/Kernel/Plugin/StyleTest.php
-
-		-
-			message: "#^Variable \\$rand2 might not be defined\\.$#"
-			count: 2
-			path: modules/views/tests/src/Kernel/Plugin/StyleTest.php
-
-		-
-			message: "#^Variable \\$rand3 might not be defined\\.$#"
-			count: 2
-			path: modules/views/tests/src/Kernel/Plugin/StyleTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/views/tests/src/Kernel/RenderCacheIntegrationTest.php

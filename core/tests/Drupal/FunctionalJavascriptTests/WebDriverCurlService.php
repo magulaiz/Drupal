@@ -28,7 +28,7 @@ class WebDriverCurlService extends CurlService {
    *
    * This is useful if the caller is implementing it's own waiting process.
    */
-  public static function enableRetry() {
+  public static function enableRetry(): void {
     static::$retry = TRUE;
   }
 
@@ -37,7 +37,7 @@ class WebDriverCurlService extends CurlService {
    *
    * This is useful if the caller is implementing it's own waiting process.
    */
-  public static function disableRetry() {
+  public static function disableRetry(): void {
     static::$retry = FALSE;
   }
 

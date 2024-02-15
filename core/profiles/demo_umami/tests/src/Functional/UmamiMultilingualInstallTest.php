@@ -24,7 +24,7 @@ class UmamiMultilingualInstallTest extends InstallerTestBase {
   /**
    * Ensures that Umami can be installed with Spanish as the default language.
    */
-  public function testUmami() {
+  public function testUmami(): void {
     $this->drupalGet('');
     // cSpell:disable-next-line
     $this->assertSession()->pageTextContains('Quiche mediterráneo profundo');
@@ -33,7 +33,7 @@ class UmamiMultilingualInstallTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpLanguage() {
+  protected function setUpLanguage(): void {
     // Place custom local translations in the translations directory to avoid
     // getting translations from localize.drupal.org.
     mkdir(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations', 0777, TRUE);

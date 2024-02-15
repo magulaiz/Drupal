@@ -71,7 +71,7 @@ class WhoIsOnlineBlockTest extends KernelTestBase {
   /**
    * Tests the Who's Online block.
    */
-  public function testWhoIsOnlineBlock() {
+  public function testWhoIsOnlineBlock(): void {
     $request_time = \Drupal::time()->getRequestTime();
     // Generate users.
     $user1 = User::create([

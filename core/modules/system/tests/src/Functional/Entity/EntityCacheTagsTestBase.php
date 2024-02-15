@@ -307,7 +307,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
    * - referencing entity type view cache tag: "<referencing entity type>_view"
    * - referencing entity type cache tag: "<referencing entity type>:<referencing entity ID>"
    */
-  public function testReferencedEntity() {
+  public function testReferencedEntity(): void {
     $entity_type = $this->entity->getEntityTypeId();
     $referencing_entity_url = $this->referencingEntity->toUrl('canonical');
     $non_referencing_entity_url = $this->nonReferencingEntity->toUrl('canonical');
@@ -644,7 +644,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
    * @param \Drupal\Core\Cache\CacheableDependencyInterface $cacheability
    *   The initial cacheability the item was rendered with.
    */
-  protected function verifyRenderCache(array $keys, array $tags, CacheableDependencyInterface $cacheability) {
+  protected function verifyRenderCache(array $keys, array $tags, CacheableDependencyInterface $cacheability): void {
     $cache_bin = $this->getRenderCacheBackend();
 
     // Also verify the existence of an entity render cache entry.

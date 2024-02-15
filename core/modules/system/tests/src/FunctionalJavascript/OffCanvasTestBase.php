@@ -37,7 +37,7 @@ abstract class OffCanvasTestBase extends WebDriverTestBase {
    * to contextual links the contextual link placeholders will be filled after
    * the page is received.
    */
-  protected function assertPageLoadComplete() {
+  protected function assertPageLoadComplete(): void {
     if ($this->loggedInUser && $this->loggedInUser->hasPermission('access contextual links')) {
       $this->assertAllContextualLinksLoaded();
     }
@@ -51,7 +51,7 @@ abstract class OffCanvasTestBase extends WebDriverTestBase {
    *
    * @todo Move this function to https://www.drupal.org/node/2821724.
    */
-  protected function assertAllContextualLinksLoaded() {
+  protected function assertAllContextualLinksLoaded(): void {
     $this->assertSession()->assertNoElementAfterWait('css', '[data-contextual-id]:empty');
   }
 
@@ -61,7 +61,7 @@ abstract class OffCanvasTestBase extends WebDriverTestBase {
    * @param string $theme
    *   The theme.
    */
-  protected function enableTheme($theme) {
+  protected function enableTheme($theme): void {
     // Enable the theme.
     \Drupal::service('theme_installer')->install([$theme]);
     $theme_config = \Drupal::configFactory()->getEditable('system.theme');
@@ -77,7 +77,7 @@ abstract class OffCanvasTestBase extends WebDriverTestBase {
    *
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    */
-  protected function waitForOffCanvasToOpen($position = 'side') {
+  protected function waitForOffCanvasToOpen($position = 'side'): void {
     $this->waitForOffCanvasArea();
     // Check that the canvas is positioned on the side.
     $this->assertSession()->elementExists('css', '.ui-dialog-position-' . $position);
@@ -86,7 +86,7 @@ abstract class OffCanvasTestBase extends WebDriverTestBase {
   /**
    * Waits for off-canvas dialog to close.
    */
-  protected function waitForOffCanvasToClose() {
+  protected function waitForOffCanvasToClose(): void {
     $this->assertSession()->assertNoElementAfterWait('css', '#drupal-off-canvas');
   }
 
@@ -122,7 +122,7 @@ abstract class OffCanvasTestBase extends WebDriverTestBase {
    * @param int $timeout
    *   (Optional) Timeout in milliseconds, defaults to 10000.
    */
-  protected function assertElementVisibleAfterWait($selector, $locator, $timeout = 10000) {
+  protected function assertElementVisibleAfterWait($selector, $locator, $timeout = 10000): void {
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertNotEmpty($this->assertSession()->waitForElementVisible($selector, $locator, $timeout));
   }

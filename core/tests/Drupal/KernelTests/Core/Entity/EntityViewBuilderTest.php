@@ -39,7 +39,7 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
   /**
    * Tests entity render cache handling.
    */
-  public function testEntityViewBuilderCache() {
+  public function testEntityViewBuilderCache(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
     $cache_contexts_manager = \Drupal::service("cache_contexts_manager");
@@ -94,7 +94,7 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
   /**
    * Tests entity render cache with references.
    */
-  public function testEntityViewBuilderCacheWithReferences() {
+  public function testEntityViewBuilderCacheWithReferences(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
     $cache_contexts_manager = \Drupal::service("cache_contexts_manager");
@@ -161,7 +161,7 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
   /**
    * Tests entity render cache toggling.
    */
-  public function testEntityViewBuilderCacheToggling() {
+  public function testEntityViewBuilderCacheToggling(): void {
     $entity_test = $this->createTestEntity('entity_test');
     $entity_test->save();
 
@@ -188,7 +188,7 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
   /**
    * Tests weighting of display components.
    */
-  public function testEntityViewBuilderWeight() {
+  public function testEntityViewBuilderWeight(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
 
@@ -210,7 +210,7 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
   /**
    * Tests EntityViewBuilder::viewField() language awareness.
    */
-  public function testViewField() {
+  public function testViewField(): void {
     // Allow access to view translations as well.
     Role::load(RoleInterface::ANONYMOUS_ID)
       ->grantPermission('view test entity translations')
@@ -357,7 +357,7 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
   /**
    * Tests that viewing an entity without template does not specify #theme.
    */
-  public function testNoTemplate() {
+  public function testNoTemplate(): void {
     // Ensure that an entity type without explicit view builder uses the
     // default.
     $entity_type_manager = \Drupal::entityTypeManager();
@@ -376,7 +376,7 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
   /**
    * Tests an entity type with an external canonical rel.
    */
-  public function testExternalEntity() {
+  public function testExternalEntity(): void {
     $this->installEntitySchema('entity_test_external');
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');

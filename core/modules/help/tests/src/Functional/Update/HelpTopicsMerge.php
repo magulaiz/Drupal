@@ -22,7 +22,7 @@ class HelpTopicsMerge extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.4.0.bare.standard.php.gz',
     ];
@@ -35,7 +35,7 @@ class HelpTopicsMerge extends UpdatePathTestBase {
    * @see \help_post_update_help_topics_search()
    * @see \help_post_update_help_topics_disable()
    */
-  public function testHelpTopicsMerge() {
+  public function testHelpTopicsMerge(): void {
     $moduleHandler = \Drupal::moduleHandler();
     $this->assertTrue($moduleHandler->moduleExists('help'));
     $this->assertFalse($moduleHandler->moduleExists('help_topics'));

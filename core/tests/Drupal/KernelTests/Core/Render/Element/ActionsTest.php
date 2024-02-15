@@ -52,16 +52,16 @@ class ActionsTest extends KernelTestBase implements FormInterface {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state): void {
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
   }
 
-  public function testDropbuttonWithBubbleableMetadata() {
+  public function testDropbuttonWithBubbleableMetadata(): void {
     $result = \Drupal::formBuilder()->getForm($this);
     \Drupal::service('renderer')->renderRoot($result);
     $this->assertEquals(['system/base', 'core/drupal.dropbutton'], $result['#attached']['library']);

@@ -94,7 +94,7 @@ class DisplayFeedTranslationTest extends ViewTestBase {
   /**
    * Tests the rendered output for fields display with multiple translations.
    */
-  public function testFeedFieldOutput() {
+  public function testFeedFieldOutput(): void {
     $node = $this->drupalCreateNode([
       'type' => 'page',
       'title' => 'en',
@@ -140,7 +140,7 @@ class DisplayFeedTranslationTest extends ViewTestBase {
    * @param \Drupal\node\Entity\Node $node
    *   The node entity that's been created.
    */
-  protected function checkFeedResults($link_style, Node $node) {
+  protected function checkFeedResults($link_style, Node $node): void {
     /** @var \Drupal\Core\Language\LanguageManagerInterface $languageManager */
     $language_manager = \Drupal::languageManager()->reset();
 

@@ -229,7 +229,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    * @param \Drupal\comment\CommentInterface $comment
    *   Comment to delete.
    */
-  public function deleteComment(CommentInterface $comment) {
+  public function deleteComment(CommentInterface $comment): void {
     $this->drupalGet('comment/' . $comment->id() . '/delete');
     $this->submitForm([], 'Delete');
     $this->assertSession()->pageTextContains('The comment and all its replies have been deleted.');
@@ -241,7 +241,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    * @param bool $enabled
    *   Boolean specifying whether the subject field should be enabled.
    */
-  public function setCommentSubject($enabled) {
+  public function setCommentSubject($enabled): void {
     $form_display = $this->container->get('entity_display.repository')
       ->getFormDisplay('comment', 'comment');
 
@@ -265,7 +265,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    *   (optional) Field name through which the comment should be posted.
    *   Defaults to 'comment'.
    */
-  public function setCommentPreview($mode, $field_name = 'comment') {
+  public function setCommentPreview($mode, $field_name = 'comment'): void {
     switch ($mode) {
       case DRUPAL_DISABLED:
         $mode_text = 'disabled';
@@ -292,7 +292,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    *   (optional) Field name through which the comment should be posted.
    *   Defaults to 'comment'.
    */
-  public function setCommentForm($enabled, $field_name = 'comment') {
+  public function setCommentForm($enabled, $field_name = 'comment'): void {
     $this->setCommentSettings('form_location', ($enabled ? CommentItemInterface::FORM_BELOW : CommentItemInterface::FORM_SEPARATE_PAGE), 'Comment controls ' . ($enabled ? 'enabled' : 'disabled') . '.', $field_name);
   }
 
@@ -305,7 +305,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    *   - 1: Contact information allowed but not required.
    *   - 2: Contact information required.
    */
-  public function setCommentAnonymous($level) {
+  public function setCommentAnonymous($level): void {
     $this->setCommentSettings('anonymous', $level, new FormattableMarkup('Anonymous commenting set to level @level.', ['@level' => $level]));
   }
 
@@ -318,7 +318,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    *   (optional) Field name through which the comment should be posted.
    *   Defaults to 'comment'.
    */
-  public function setCommentsPerPage($number, $field_name = 'comment') {
+  public function setCommentsPerPage($number, $field_name = 'comment'): void {
     $this->setCommentSettings('per_page', $number, new FormattableMarkup('Number of comments per page set to @number.', ['@number' => $number]), $field_name);
   }
 
@@ -335,7 +335,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    *   (optional) Field name through which the comment should be posted.
    *   Defaults to 'comment'.
    */
-  public function setCommentSettings($name, $value, $message, $field_name = 'comment') {
+  public function setCommentSettings($name, $value, $message, $field_name = 'comment'): void {
     $field = FieldConfig::loadByName('node', 'article', $field_name);
     $field->setSetting($name, $value);
     $field->save();
@@ -361,7 +361,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    * @param bool $approval
    *   Operation is found on approval page.
    */
-  public function performCommentOperation(CommentInterface $comment, $operation, $approval = FALSE) {
+  public function performCommentOperation(CommentInterface $comment, $operation, $approval = FALSE): void {
     $edit = [];
     $edit['operation'] = $operation;
     $edit['comments[' . $comment->id() . ']'] = TRUE;

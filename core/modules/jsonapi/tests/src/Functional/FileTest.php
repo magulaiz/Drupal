@@ -69,7 +69,7 @@ class FileTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     switch ($method) {
       case 'GET':
         $this->grantPermissionsToTestedRole(['access content']);
@@ -92,7 +92,7 @@ class FileTest extends ResourceTestBase {
   /**
    * Makes the current user the file owner.
    */
-  protected function makeCurrentUserFileOwner() {
+  protected function makeCurrentUserFileOwner(): void {
     $account = User::load(2);
     $this->entity->setOwnerId($account->id());
     $this->entity->setOwner($account);
@@ -202,7 +202,7 @@ class FileTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testPostIndividual() {
+  public function testPostIndividual(): void {
     // @todo https://www.drupal.org/node/1927648
     $this->markTestSkipped();
   }
@@ -222,7 +222,7 @@ class FileTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testCollectionFilterAccess() {
+  public function testCollectionFilterAccess(): void {
     $label_field_name = 'filename';
     // Verify the expected behavior in the common case: when the file is public.
     $this->doTestCollectionFilterAccessBasedOnPermissions($label_field_name, 'access content');

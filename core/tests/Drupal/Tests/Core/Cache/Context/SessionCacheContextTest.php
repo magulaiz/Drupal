@@ -54,7 +54,7 @@ class SessionCacheContextTest extends UnitTestCase {
   /**
    * @covers ::getContext
    */
-  public function testSameContextForSameSession() {
+  public function testSameContextForSameSession(): void {
     $this->request->setSession($this->session);
     $cache_context = new SessionCacheContext($this->requestStack);
 
@@ -73,7 +73,7 @@ class SessionCacheContextTest extends UnitTestCase {
   /**
    * @covers ::getContext
    */
-  public function testDifferentContextForDifferentSession() {
+  public function testDifferentContextForDifferentSession(): void {
     $this->request->setSession($this->session);
     $cache_context = new SessionCacheContext($this->requestStack);
 
@@ -96,7 +96,7 @@ class SessionCacheContextTest extends UnitTestCase {
   /**
    * @covers ::getContext
    */
-  public function testContextWithoutSessionInRequest() {
+  public function testContextWithoutSessionInRequest(): void {
     $cache_context = new SessionCacheContext($this->requestStack);
 
     $this->assertSame('none', $cache_context->getContext());

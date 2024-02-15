@@ -162,7 +162,7 @@ abstract class ConfigTranslationUiTestBase extends BrowserTestBase {
    * @param string $site_slogan
    *   The site slogan.
    */
-  protected function setSiteInformation($site_name, $site_slogan) {
+  protected function setSiteInformation($site_name, $site_slogan): void {
     $edit = [
       'site_name' => $site_name,
       'site_slogan' => $site_slogan,

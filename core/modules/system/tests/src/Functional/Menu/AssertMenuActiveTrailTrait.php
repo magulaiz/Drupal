@@ -25,7 +25,7 @@ trait AssertMenuActiveTrailTrait {
    * @param string $active_class
    *   (optional) The class of the active element. Defaults to 'is-active'.
    */
-  protected function assertMenuActiveTrail($tree, $last_active, $active_trail_class = 'menu-item--active-trail', $active_class = 'is-active') {
+  protected function assertMenuActiveTrail($tree, $last_active, $active_trail_class = 'menu-item--active-trail', $active_class = 'is-active'): void {
     end($tree);
     $active_link_path = key($tree);
     $active_link_title = array_pop($tree);

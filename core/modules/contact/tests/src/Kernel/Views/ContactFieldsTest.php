@@ -29,7 +29,7 @@ class ContactFieldsTest extends KernelTestBase {
   /**
    * Tests the views data generation.
    */
-  public function testViewsData() {
+  public function testViewsData(): void {
     $this->installConfig(['contact']);
     FieldStorageConfig::create([
       'type' => 'text',

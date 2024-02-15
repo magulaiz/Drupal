@@ -24,7 +24,7 @@ class InstallerTranslationMultipleLanguageTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpLanguage() {
+  protected function setUpLanguage(): void {
     // Place custom local translations in the translations directory.
     mkdir(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations', 0777, TRUE);
     file_put_contents(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations/drupal-8.0.0.de.po', $this->getPo('de'));
@@ -74,7 +74,7 @@ PO;
   /**
    * Tests that translations ended up at the expected places.
    */
-  public function testTranslationsLoaded() {
+  public function testTranslationsLoaded(): void {
     // Ensure the title is correct.
     $this->assertEquals('SITE_NAME_' . $this->langcode, \Drupal::config('system.site')->get('name'));
 
@@ -165,7 +165,7 @@ PO;
   /**
    * Helper function to verify that the expected strings are translated.
    */
-  protected function verifyImportedStringsTranslated() {
+  protected function verifyImportedStringsTranslated(): void {
     $test_samples = ['Save and continue', 'Anonymous', 'Language'];
     $langcodes = ['de', 'es'];
 

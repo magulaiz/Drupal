@@ -99,7 +99,7 @@ abstract class DateTimeHandlerTestBase extends ViewsKernelTestBase {
    * @param string $timezone
    *   The timezone identifier to set.
    */
-  protected function setSiteTimezone($timezone) {
+  protected function setSiteTimezone($timezone): void {
     // Set an explicit site timezone, and disallow per-user timezones.
     $this->config('system.date')
       ->set('timezone.user.configurable', 0)

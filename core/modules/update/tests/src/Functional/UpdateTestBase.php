@@ -66,7 +66,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
    *
    * @see \Drupal\update_test\Controller\UpdateTestController::updateTest()
    */
-  protected function refreshUpdateStatus($xml_map, $url = 'update-test') {
+  protected function refreshUpdateStatus($xml_map, $url = 'update-test'): void {
     // Tell the Update Manager module to fetch from the URL provided by
     // update_test module.
     $this->config('update.settings')->set('fetch.url', Url::fromUri('base:' . $url, ['absolute' => TRUE])->toString())->save();
@@ -81,7 +81,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
   /**
    * Runs a series of assertions that are applicable to all update statuses.
    */
-  protected function standardTests() {
+  protected function standardTests(): void {
     $this->assertSession()->responseContains('<h3>Drupal core</h3>');
     // Verify that the link to the Drupal project appears.
     $this->assertSession()->linkExists('Drupal');
@@ -104,7 +104,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
    * @param string $update_element_css_locator
    *   The CSS locator for the page element that contains the security updates.
    */
-  protected function assertSecurityUpdates($project_path_part, array $expected_security_releases, $expected_update_message_type, $update_element_css_locator) {
+  protected function assertSecurityUpdates($project_path_part, array $expected_security_releases, $expected_update_message_type, $update_element_css_locator): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $this->standardTests();
@@ -163,7 +163,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
    * @param string $version
    *   The project version.
    */
-  protected function assertVersionUpdateLinks($label, $version) {
+  protected function assertVersionUpdateLinks($label, $version): void {
     $update_element = $this->findUpdateElementByLabel($label);
     // In the release notes URL the periods are replaced with dashes.
     $url_version = str_replace('.', '-', $version);
@@ -184,7 +184,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
    *   The expected label for the newer version (for example 'Recommended
    *   version:' or 'Also available:').
    */
-  protected function confirmRevokedStatus($revoked_version, $newer_version, $new_version_label) {
+  protected function confirmRevokedStatus($revoked_version, $newer_version, $new_version_label): void {
     $this->drupalGet('admin/reports/updates');
     $this->clickLink('Check manually');
     $this->checkForMetaRefresh();
@@ -206,7 +206,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
    *   The expected label for the newer version (for example 'Recommended
    *   version:' or 'Also available:').
    */
-  protected function confirmUnsupportedStatus($unsupported_version, $newer_version, $new_version_label) {
+  protected function confirmUnsupportedStatus($unsupported_version, $newer_version, $new_version_label): void {
     $this->drupalGet('admin/reports/updates');
     $this->clickLink('Check manually');
     $this->checkForMetaRefresh();
@@ -225,7 +225,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
    *
    * @see \Behat\Mink\WebAssert::elementTextContains()
    */
-  protected function assertUpdateTableTextContains($text) {
+  protected function assertUpdateTableTextContains($text): void {
     $this->assertSession()
       ->elementTextContains('css', $this->updateTableLocator, $text);
   }
@@ -236,7 +236,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
    * @param string $text
    *   The expected text.
    */
-  protected function assertUpdateTableTextNotContains($text) {
+  protected function assertUpdateTableTextNotContains($text): void {
     $this->assertSession()->elementTextNotContains('css', $this->updateTableLocator, $text);
   }
 
@@ -248,7 +248,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
    *
    * @see \Behat\Mink\WebAssert::elementContains()
    */
-  protected function assertUpdateTableElementContains($text) {
+  protected function assertUpdateTableElementContains($text): void {
     $this->assertSession()
       ->elementContains('css', $this->updateTableLocator, $text);
   }
@@ -261,7 +261,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
    *
    * @see \Behat\Mink\WebAssert::elementNotContains()
    */
-  protected function assertUpdateTableElementNotContains($text) {
+  protected function assertUpdateTableElementNotContains($text): void {
     $this->assertSession()
       ->elementNotContains('css', $this->updateTableLocator, $text);
   }

@@ -48,7 +48,7 @@ abstract class StorageTestBase extends KernelTestBase {
   /**
    * Tests CRUD operations.
    */
-  public function testCRUD() {
+  public function testCRUD(): void {
     $stores = $this->createStorage();
     // Verify that each store returns its own collection name.
     $this->assertSame($this->collections[0], $stores[0]->getCollectionName());
@@ -127,7 +127,7 @@ abstract class StorageTestBase extends KernelTestBase {
   /**
    * Tests expected behavior for non-existing keys.
    */
-  public function testNonExistingKeys() {
+  public function testNonExistingKeys(): void {
 
     $stores = $this->createStorage();
 
@@ -155,7 +155,7 @@ abstract class StorageTestBase extends KernelTestBase {
   /**
    * Tests the setIfNotExists() method.
    */
-  public function testSetIfNotExists() {
+  public function testSetIfNotExists(): void {
     $stores = $this->createStorage();
 
     $key = $this->randomMachineName();
@@ -181,7 +181,7 @@ abstract class StorageTestBase extends KernelTestBase {
   /**
    * Tests the rename operation.
    */
-  public function testRename() {
+  public function testRename(): void {
     $stores = $this->createStorage();
     $store = $stores[0];
 
@@ -195,7 +195,7 @@ abstract class StorageTestBase extends KernelTestBase {
   /**
    * Tests the rename operation.
    */
-  public function testRenameNoChange() {
+  public function testRenameNoChange(): void {
     $stores = $this->createStorage();
     $store = $stores[0];
 

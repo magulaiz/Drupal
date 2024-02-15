@@ -73,7 +73,7 @@ class FieldTest extends WebDriverTestBase {
     ])->save();
   }
 
-  public function testFormatterChanging() {
+  public function testFormatterChanging(): void {
     $web_assert = $this->assertSession();
     $url = '/admin/structure/views/view/test_field_body';
     $this->drupalGet($url);

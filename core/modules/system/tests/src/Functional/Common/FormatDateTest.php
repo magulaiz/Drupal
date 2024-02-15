@@ -19,7 +19,7 @@ class FormatDateTest extends BrowserTestBase {
   /**
    * Tests admin-defined formats in DateFormatterInterface::format().
    */
-  public function testAdminDefinedFormatDate() {
+  public function testAdminDefinedFormatDate(): void {
     // Create and log in an admin user.
     $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',

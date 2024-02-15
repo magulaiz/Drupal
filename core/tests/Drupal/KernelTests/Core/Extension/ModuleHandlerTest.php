@@ -17,7 +17,7 @@ class ModuleHandlerTest extends KernelTestBase {
    *
    * @covers ::getName
    */
-  public function testInvalidGetName() {
+  public function testInvalidGetName(): void {
     $this->expectException(UnknownExtensionException::class);
     $this->expectExceptionMessage('The module module_nonsense does not exist.');
     $module_handler = $this->container->get('module_handler');

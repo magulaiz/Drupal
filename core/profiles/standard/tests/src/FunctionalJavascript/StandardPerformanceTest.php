@@ -40,7 +40,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
   /**
    * Tests performance for anonymous users.
    */
-  public function testAnonymous() {
+  public function testAnonymous(): void {
     // Create two nodes to be shown on the front page.
     $this->drupalCreateNode([
       'type' => 'article',
@@ -51,7 +51,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->drupalGet('search');
 
     // Test frontpage.
-    $performance_data = $this->collectPerformanceData(function () {
+    $performance_data = $this->collectPerformanceData(function (): void {
       $this->drupalGet('');
     }, 'standardFrontPage');
     $this->assertNoJavaScript($performance_data);
@@ -61,7 +61,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertSame(0, $performance_data->getCacheDeleteCount());
 
     // Test node page.
-    $performance_data = $this->collectPerformanceData(function () {
+    $performance_data = $this->collectPerformanceData(function (): void {
       $this->drupalGet('node/1');
     });
     $this->assertNoJavaScript($performance_data);
@@ -73,7 +73,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
 
     // Test user profile page.
     $user = $this->drupalCreateUser();
-    $performance_data = $this->collectPerformanceData(function () use ($user) {
+    $performance_data = $this->collectPerformanceData(function () use ($user): void {
       $this->drupalGet('user/' . $user->id());
     });
     $this->assertNoJavaScript($performance_data);
@@ -101,7 +101,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
 
     $this->drupalGet('node');
     $this->drupalGet('user/login');
-    $performance_data = $this->collectPerformanceData(function () use ($account) {
+    $performance_data = $this->collectPerformanceData(function () use ($account): void {
       $this->submitLoginForm($account);
     });
 
@@ -133,7 +133,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
 
     $this->drupalGet('node');
     $this->assertSession()->responseContains('Password');
-    $performance_data = $this->collectPerformanceData(function () use ($account) {
+    $performance_data = $this->collectPerformanceData(function () use ($account): void {
       $this->submitLoginForm($account);
     });
     $this->assertSame(49, $performance_data->getQueryCount());
@@ -145,7 +145,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
   /**
    * Submit the user login form.
    */
-  protected function submitLoginForm($account) {
+  protected function submitLoginForm($account): void {
     $this->submitForm([
       'name' => $account->getAccountName(),
       'pass' => $account->passRaw,
@@ -171,6 +171,6 @@ class StandardPerformanceTest extends PerformanceTestBase {
   /**
    * Provides an empty implementation to prevent the resetting of caches.
    */
-  protected function refreshVariables() {}
+  protected function refreshVariables(): void {}
 
 }

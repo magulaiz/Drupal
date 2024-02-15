@@ -134,7 +134,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
   /**
    * Executes all steps of migrations upgrade.
    */
-  public function testUpgrade() {
+  public function testUpgrade(): void {
     // Start the upgrade process.
     $this->submitCredentialForm();
     $session = $this->assertSession();

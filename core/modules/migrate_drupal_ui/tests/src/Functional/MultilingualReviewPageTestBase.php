@@ -40,7 +40,7 @@ abstract class MultilingualReviewPageTestBase extends MigrateUpgradeTestBase {
    *
    * @see \Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase
    */
-  public function testMigrateUpgradeReviewPage() {
+  public function testMigrateUpgradeReviewPage(): void {
     $this->prepare();
     // Start the upgrade process.
     $this->submitCredentialForm();
@@ -78,7 +78,7 @@ abstract class MultilingualReviewPageTestBase extends MigrateUpgradeTestBase {
    * This is not done in setup because setup executes before the source database
    * is loaded.
    */
-  public function prepare() {
+  public function prepare(): void {
     // Enable all modules in the source except test and example modules, but
     // include simpletest.
     /** @var \Drupal\Core\Database\Query\SelectInterface $update */

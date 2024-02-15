@@ -41,7 +41,7 @@ trait TestRequirementsTrait {
    *
    * @see https://www.drupal.org/node/3418480
    */
-  protected function checkRequirements() {
+  protected function checkRequirements(): void {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3418480', E_USER_DEPRECATED);
 
     if (!$this->getName(FALSE) || !method_exists($this, $this->getName(FALSE))) {
@@ -93,7 +93,7 @@ trait TestRequirementsTrait {
    *
    * @see https://www.drupal.org/node/3418480
    */
-  private function checkModuleRequirements($root, array $annotations) {
+  private function checkModuleRequirements($root, array $annotations): void {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3418480', E_USER_DEPRECATED);
 
     // Make a list of required modules.

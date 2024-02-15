@@ -52,7 +52,7 @@ abstract class ViewTestBase extends BrowserTestBase {
    * Because the schema of views_test_data.module is dependent on the test
    * using it, it cannot be enabled normally.
    */
-  protected function enableViewsTestModule() {
+  protected function enableViewsTestModule(): void {
     // Define the schema and views data variable before enabling the test module.
     \Drupal::state()->set('views_test_data_schema', $this->schemaDefinition());
     \Drupal::state()->set('views_test_data_views_data', $this->viewsData());
@@ -108,7 +108,7 @@ abstract class ViewTestBase extends BrowserTestBase {
    *
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    */
-  protected function helperButtonHasLabel($id, $expected_label, $message = 'Label has the expected value: %label.') {
+  protected function helperButtonHasLabel($id, $expected_label, $message = 'Label has the expected value: %label.'): void {
     $xpath = $this->assertSession()->buildXPathQuery('//button[@id=:value]|//input[@id=:value]', [':value' => $id]);
     $field = $this->getSession()->getPage()->find('xpath', $xpath);
 
@@ -127,7 +127,7 @@ abstract class ViewTestBase extends BrowserTestBase {
    * @param array $args
    *   (optional) An array of the view arguments to use for the view.
    */
-  protected function executeView(ViewExecutable $view, $args = []) {
+  protected function executeView(ViewExecutable $view, $args = []): void {
     // A view does not really work outside of a request scope, due to many
     // dependencies like the current user.
     $view->setDisplay();

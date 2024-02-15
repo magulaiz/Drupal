@@ -46,7 +46,7 @@ class StatisticsAttachedTest extends BrowserTestBase {
   /**
    * Tests if statistics.js is loaded when content is not printed.
    */
-  public function testAttached() {
+  public function testAttached(): void {
 
     $node = Node::create([
       'type' => 'page',

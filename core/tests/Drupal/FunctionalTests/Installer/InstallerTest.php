@@ -24,7 +24,7 @@ class InstallerTest extends InstallerTestBase {
   /**
    * Ensures that the user page is available after installation.
    */
-  public function testInstaller() {
+  public function testInstaller(): void {
     $this->assertNotEquals('0', \Drupal::service('asset.query_string')->get(), 'The dummy query string should be set during install');
     $this->assertSession()->addressEquals('user/1');
     $this->assertSession()->statusCodeEquals(200);
@@ -52,7 +52,7 @@ class InstallerTest extends InstallerTestBase {
   /**
    * Installer step: Select language.
    */
-  protected function setUpLanguage() {
+  protected function setUpLanguage(): void {
     // Test that \Drupal\Core\Render\BareHtmlPageRenderer adds assets and
     // metatags as expected to the first page of the installer.
     $this->assertSession()->responseContains("css/components/button.css");
@@ -67,7 +67,7 @@ class InstallerTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpProfile() {
+  protected function setUpProfile(): void {
     $settings_services_file = DRUPAL_ROOT . '/sites/default/default.services.yml';
     // Copy the testing-specific service overrides in place.
     copy($settings_services_file, $this->siteDirectory . '/services.yml');
@@ -84,7 +84,7 @@ class InstallerTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpSettings() {
+  protected function setUpSettings(): void {
     // Assert that the expected title is present.
     $this->assertEquals('Database configuration', $this->cssSelect('main h2')[0]->getText());
 
@@ -99,7 +99,7 @@ class InstallerTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpSite() {
+  protected function setUpSite(): void {
     // Assert that the expected title is present.
     $this->assertEquals('Configure site', $this->cssSelect('main h2')[0]->getText());
 
@@ -115,7 +115,7 @@ class InstallerTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function visitInstaller() {
+  protected function visitInstaller(): void {
     parent::visitInstaller();
 
     // Assert the title is correct and has the title suffix.
@@ -125,7 +125,7 @@ class InstallerTest extends InstallerTestBase {
   /**
    * Confirms that the installation succeeded.
    */
-  public function testInstalled() {
+  public function testInstalled(): void {
     $this->assertSession()->addressEquals('user/1');
     $this->assertSession()->statusCodeEquals(200);
 

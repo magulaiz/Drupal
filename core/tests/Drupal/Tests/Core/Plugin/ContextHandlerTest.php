@@ -70,7 +70,7 @@ class ContextHandlerTest extends UnitTestCase {
    *
    * @dataProvider providerTestCheckRequirements
    */
-  public function testCheckRequirements($contexts, $requirements, $expected) {
+  public function testCheckRequirements($contexts, $requirements, $expected): void {
     $this->assertSame($expected, $this->contextHandler->checkRequirements($contexts, $requirements));
   }
 
@@ -126,7 +126,7 @@ class ContextHandlerTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetMatchingContexts
    */
-  public function testGetMatchingContexts($contexts, $requirement, $expected = NULL) {
+  public function testGetMatchingContexts($contexts, $requirement, $expected = NULL): void {
     if (is_null($expected)) {
       $expected = $contexts;
     }
@@ -182,7 +182,7 @@ class ContextHandlerTest extends UnitTestCase {
    *
    * @dataProvider providerTestFilterPluginDefinitionsByContexts
    */
-  public function testFilterPluginDefinitionsByContexts($has_context, $definitions, $expected) {
+  public function testFilterPluginDefinitionsByContexts($has_context, $definitions, $expected): void {
     if ($has_context) {
       $context = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');
       $expected_context_definition = (new ContextDefinition('string'))->setConstraints(['Blank' => []]);
@@ -309,7 +309,7 @@ class ContextHandlerTest extends UnitTestCase {
   /**
    * @covers ::applyContextMapping
    */
-  public function testApplyContextMapping() {
+  public function testApplyContextMapping(): void {
     $context_hit = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');
     $context_hit->expects($this->atLeastOnce())
       ->method('hasContextValue')
@@ -350,7 +350,7 @@ class ContextHandlerTest extends UnitTestCase {
   /**
    * @covers ::applyContextMapping
    */
-  public function testApplyContextMappingMissingRequired() {
+  public function testApplyContextMappingMissingRequired(): void {
     $context = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');
     $context->expects($this->never())
       ->method('getContextValue');
@@ -387,7 +387,7 @@ class ContextHandlerTest extends UnitTestCase {
   /**
    * @covers ::applyContextMapping
    */
-  public function testApplyContextMappingMissingNotRequired() {
+  public function testApplyContextMappingMissingNotRequired(): void {
     $context = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');
     $context->expects($this->never())
       ->method('getContextValue');
@@ -422,7 +422,7 @@ class ContextHandlerTest extends UnitTestCase {
   /**
    * @covers ::applyContextMapping
    */
-  public function testApplyContextMappingNoValueRequired() {
+  public function testApplyContextMappingNoValueRequired(): void {
     $context = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');
     $context->expects($this->never())
       ->method('getContextValue');
@@ -457,7 +457,7 @@ class ContextHandlerTest extends UnitTestCase {
   /**
    * @covers ::applyContextMapping
    */
-  public function testApplyContextMappingNoValueNonRequired() {
+  public function testApplyContextMappingNoValueNonRequired(): void {
     $context = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');
     $context->expects($this->never())
       ->method('getContextValue');
@@ -490,7 +490,7 @@ class ContextHandlerTest extends UnitTestCase {
   /**
    * @covers ::applyContextMapping
    */
-  public function testApplyContextMappingConfigurableAssigned() {
+  public function testApplyContextMappingConfigurableAssigned(): void {
     $context = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');
     $context->expects($this->atLeastOnce())
       ->method('hasContextValue')
@@ -529,7 +529,7 @@ class ContextHandlerTest extends UnitTestCase {
   /**
    * @covers ::applyContextMapping
    */
-  public function testApplyContextMappingConfigurableAssignedMiss() {
+  public function testApplyContextMappingConfigurableAssignedMiss(): void {
     $context = $this->createMock('Drupal\Core\Plugin\Context\ContextInterface');
     $context->expects($this->never())
       ->method('getContextValue');

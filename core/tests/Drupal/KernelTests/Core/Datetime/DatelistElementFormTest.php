@@ -42,7 +42,7 @@ class DatelistElementFormTest extends KernelTestBase implements FormInterface, T
   /**
    * {@inheritdoc}
    */
-  public function datelistDateCallbackTrusted(array &$element, FormStateInterface $form_state, DrupalDateTime $date = NULL) {
+  public function datelistDateCallbackTrusted(array &$element, FormStateInterface $form_state, DrupalDateTime $date = NULL): void {
     $element['datelistDateCallbackExecuted'] = [
       '#value' => TRUE,
     ];
@@ -52,7 +52,7 @@ class DatelistElementFormTest extends KernelTestBase implements FormInterface, T
   /**
    * {@inheritdoc}
    */
-  public function datelistDateCallback(array &$element, FormStateInterface $form_state, DrupalDateTime $date = NULL) {
+  public function datelistDateCallback(array &$element, FormStateInterface $form_state, DrupalDateTime $date = NULL): void {
     $element['datelistDateCallbackExecuted'] = [
       '#value' => TRUE,
     ];
@@ -92,7 +92,7 @@ class DatelistElementFormTest extends KernelTestBase implements FormInterface, T
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {}
+  public function submitForm(array &$form, FormStateInterface $form_state): void {}
 
   /**
    * Form validation handler.
@@ -102,12 +102,12 @@ class DatelistElementFormTest extends KernelTestBase implements FormInterface, T
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {}
+  public function validateForm(array &$form, FormStateInterface $form_state): void {}
 
   /**
    * Tests that trusted callbacks are executed.
    */
-  public function testDatelistElement() {
+  public function testDatelistElement(): void {
     $form_state = new FormState();
     $form = \Drupal::formBuilder()->buildForm($this, $form_state);
     $this->render($form);

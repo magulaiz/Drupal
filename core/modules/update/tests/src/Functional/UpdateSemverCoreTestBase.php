@@ -28,7 +28,7 @@ class UpdateSemverCoreTestBase extends UpdateSemverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setProjectInstalledVersion($version) {
+  protected function setProjectInstalledVersion($version): void {
     $this->mockDefaultExtensionsInfo(['version' => $version]);
   }
 

@@ -41,7 +41,7 @@ class ContentModerationWorkflowTypeTest extends BrowserTestBase {
   /**
    * Tests creating a new workflow using the content moderation plugin.
    */
-  public function testNewWorkflow() {
+  public function testNewWorkflow(): void {
     $types[] = $this->createContentType();
     $types[] = $this->createContentType();
     $types[] = $this->createContentType();

@@ -22,7 +22,7 @@ class LanguageConfigFactoryOverrideTest extends KernelTestBase {
   /**
    * Tests language.config_factory_override service has the default language.
    */
-  public function testLanguageConfigFactoryOverride() {
+  public function testLanguageConfigFactoryOverride(): void {
     $this->installConfig('system');
     $this->installConfig('language');
 

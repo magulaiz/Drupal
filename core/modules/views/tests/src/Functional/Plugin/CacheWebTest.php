@@ -48,7 +48,7 @@ class CacheWebTest extends ViewTestBase {
   /**
    * Tests the output caching on an actual page.
    */
-  public function testCacheOutputOnPage() {
+  public function testCacheOutputOnPage(): void {
     $view = Views::getView('test_display');
     $view->storage->setStatus(TRUE);
     $view->setDisplay('page_1');
@@ -88,7 +88,7 @@ class CacheWebTest extends ViewTestBase {
   /**
    * Tests that a display without caching still contains the cache metadata.
    */
-  public function testDisplayWithoutCacheStillBubblesMetadata() {
+  public function testDisplayWithoutCacheStillBubblesMetadata(): void {
     $view = Views::getView('test_display');
 
     $uncached_block = $view->buildRenderable('block_1', [], FALSE);

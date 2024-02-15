@@ -82,7 +82,7 @@ abstract class FieldFieldAccessTestBase extends ViewsKernelTestBase {
    * @param string $field_content
    *   The expected field content.
    */
-  protected function assertFieldAccess($entity_type_id, $field_name, $field_content) {
+  protected function assertFieldAccess($entity_type_id, $field_name, $field_content): void {
     \Drupal::state()->set('views_field_access_test-field', $field_name);
 
     $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);

@@ -64,7 +64,7 @@ class BlockContentRevisionsTest extends BlockContentTestBase {
   /**
    * Checks block revision related operations.
    */
-  public function testRevisions() {
+  public function testRevisions(): void {
     $blocks = $this->blocks;
     $logs = $this->revisionLogs;
 

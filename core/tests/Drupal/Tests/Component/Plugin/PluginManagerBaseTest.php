@@ -52,7 +52,7 @@ class PluginManagerBaseTest extends TestCase {
    *
    * @covers ::createInstance
    */
-  public function testCreateInstance() {
+  public function testCreateInstance(): void {
     $manager = $this->getMockBuilder('Drupal\Component\Plugin\PluginManagerBase')
       ->getMockForAbstractClass();
     // PluginManagerBase::createInstance() looks for a factory object and then
@@ -72,7 +72,7 @@ class PluginManagerBaseTest extends TestCase {
    *
    * @covers ::createInstance
    */
-  public function testCreateInstanceFallback() {
+  public function testCreateInstanceFallback(): void {
     // We use our special stub class which extends PluginManagerBase and also
     // implements FallbackPluginManagerInterface.
     $manager = new StubFallbackPluginManager();
@@ -98,7 +98,7 @@ class PluginManagerBaseTest extends TestCase {
   /**
    * @covers ::getInstance
    */
-  public function testGetInstance() {
+  public function testGetInstance(): void {
     $options = [
       'foo' => 'F00',
       'bar' => 'bAr',
@@ -115,7 +115,7 @@ class PluginManagerBaseTest extends TestCase {
   /**
    * @covers ::getInstance
    */
-  public function testGetInstanceWithoutMapperShouldThrowException() {
+  public function testGetInstanceWithoutMapperShouldThrowException(): void {
     $options = [
       'foo' => 'F00',
       'bar' => 'bAr',

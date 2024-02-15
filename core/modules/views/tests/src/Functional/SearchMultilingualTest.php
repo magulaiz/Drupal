@@ -43,7 +43,7 @@ class SearchMultilingualTest extends ViewTestBase {
   /**
    * Tests search with multilingual nodes.
    */
-  public function testMultilingualSearchFilter() {
+  public function testMultilingualSearchFilter(): void {
     // Add Spanish language programmatically.
     static::createLanguageFromLangcode('es');
 

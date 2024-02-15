@@ -24,7 +24,7 @@ trait DrupalComponentTestListenerTrait {
    * @param float $time
    *   The time the test took.
    */
-  protected function componentEndTest($test, $time) {
+  protected function componentEndTest($test, $time): void {
     /** @var \PHPUnit\Framework\Test $test */
     if (str_starts_with($test->toString(), 'Drupal\Tests\Component')) {
       if ($test instanceof BrowserTestBase || $test instanceof KernelTestBase || $test instanceof UnitTestCase) {

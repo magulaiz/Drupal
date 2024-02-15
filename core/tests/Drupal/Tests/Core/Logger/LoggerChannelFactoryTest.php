@@ -18,7 +18,7 @@ class LoggerChannelFactoryTest extends UnitTestCase {
    *
    * @covers ::get
    */
-  public function testGet() {
+  public function testGet(): void {
     $factory = new LoggerChannelFactory();
     $factory->setContainer($this->createMock('Symfony\Component\DependencyInjection\ContainerInterface'));
 

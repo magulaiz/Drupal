@@ -37,7 +37,7 @@ class DefaultViewsTest extends UITestBase {
   /**
    * Tests default views.
    */
-  public function testDefaultViews() {
+  public function testDefaultViews(): void {
     // Make sure the view starts off as disabled (does not appear on the listing
     // page).
     $edit_href = 'admin/structure/views/view/glossary';
@@ -171,7 +171,7 @@ class DefaultViewsTest extends UITestBase {
   /**
    * Tests that enabling views moves them to the correct table.
    */
-  public function testSplitListing() {
+  public function testSplitListing(): void {
     $this->drupalGet('admin/structure/views');
     $this->assertSession()->elementNotExists('xpath', '//div[@id="views-entity-list"]/div[@class = "views-list-section enabled"]/table//td/text()[contains(., "test_view_status")]');
     $this->assertSession()->elementsCount('xpath', '//div[@id="views-entity-list"]/div[@class = "views-list-section disabled"]/table//td/text()[contains(., "test_view_status")]', 1);
@@ -189,7 +189,7 @@ class DefaultViewsTest extends UITestBase {
   /**
    * Tests that page displays show the correct path.
    */
-  public function testPathDestination() {
+  public function testPathDestination(): void {
     $this->drupalGet('admin/structure/views');
 
     // Check that links to views on default tabs are rendered correctly.
@@ -217,7 +217,7 @@ class DefaultViewsTest extends UITestBase {
    *   "admin/structure/views/view/glossary/*", then "/glossary/" could be
    *   passed as the expected unique string.
    */
-  public function clickViewsOperationLink($label, $unique_href_part) {
+  public function clickViewsOperationLink($label, $unique_href_part): void {
     $this->assertSession()->elementExists('xpath', "//a[normalize-space(text())='$label' and contains(@href, '$unique_href_part')]")->click();
   }
 

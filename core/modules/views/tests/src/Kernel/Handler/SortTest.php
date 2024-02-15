@@ -22,7 +22,7 @@ class SortTest extends ViewsKernelTestBase {
   /**
    * Tests numeric ordering of the result set.
    */
-  public function testNumericOrdering() {
+  public function testNumericOrdering(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -75,7 +75,7 @@ class SortTest extends ViewsKernelTestBase {
   /**
    * Tests string ordering of the result set.
    */
-  public function testStringOrdering() {
+  public function testStringOrdering(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 

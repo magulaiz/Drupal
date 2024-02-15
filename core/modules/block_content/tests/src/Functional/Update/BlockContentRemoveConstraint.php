@@ -29,7 +29,7 @@ class BlockContentRemoveConstraint extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.4.0.filled.standard.php.gz',
     ];
@@ -38,7 +38,7 @@ class BlockContentRemoveConstraint extends UpdatePathTestBase {
   /**
    * Tests the upgrade path for moderation state reindexing.
    */
-  public function testRunUpdates() {
+  public function testRunUpdates(): void {
     $constraint = 'UniqueField';
     $constraints = $this->getFieldInfoConstraints();
     if (!isset($constraints[$constraint])) {

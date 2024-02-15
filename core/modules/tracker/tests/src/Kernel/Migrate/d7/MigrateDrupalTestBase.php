@@ -37,7 +37,7 @@ abstract class MigrateDrupalTestBase extends CoreMigrateDrupalTestBase {
    * @param bool $include_pictures
    *   (optional) If TRUE, migrates user pictures. Defaults to TRUE.
    */
-  protected function migrateUsers($include_pictures = TRUE) {
+  protected function migrateUsers($include_pictures = TRUE): void {
     $migrations = ['d7_user_role', 'd7_user'];
 
     if ($include_pictures) {
@@ -55,7 +55,7 @@ abstract class MigrateDrupalTestBase extends CoreMigrateDrupalTestBase {
   /**
    * Migrates node types.
    */
-  protected function migrateContentTypes() {
+  protected function migrateContentTypes(): void {
     $this->installConfig(['node']);
     $this->installEntitySchema('node');
     $this->executeMigration('d7_node_type');

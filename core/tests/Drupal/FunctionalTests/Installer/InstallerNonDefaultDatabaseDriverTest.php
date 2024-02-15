@@ -30,7 +30,7 @@ class InstallerNonDefaultDatabaseDriverTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpSettings() {
+  protected function setUpSettings(): void {
     $driver = Database::getConnection()->driver();
     if (!in_array($driver, ['mysql', 'pgsql'])) {
       $this->markTestSkipped("This test does not support the {$driver} database driver.");
@@ -55,7 +55,7 @@ class InstallerNonDefaultDatabaseDriverTest extends InstallerTestBase {
   /**
    * Confirms that the installation succeeded.
    */
-  public function testInstalled() {
+  public function testInstalled(): void {
     $this->assertSession()->addressEquals('user/1');
     $this->assertSession()->statusCodeEquals(200);
 

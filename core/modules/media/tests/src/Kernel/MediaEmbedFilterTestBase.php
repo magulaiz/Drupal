@@ -195,7 +195,7 @@ abstract class MediaEmbedFilterTestBase extends KernelTestBase {
    * @param array $expected_attributes
    *   An array of expected attributes.
    */
-  protected function assertHasAttributes(\SimpleXMLElement $element, array $expected_attributes) {
+  protected function assertHasAttributes(\SimpleXMLElement $element, array $expected_attributes): void {
     foreach ($expected_attributes as $attribute => $value) {
       if ($value === NULL) {
         $this->assertNull($element[$attribute]);

@@ -66,7 +66,7 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
   /**
    * Tests that when creating a shortcut, the shortcut set tag is invalidated.
    */
-  public function testEntityCreation() {
+  public function testEntityCreation(): void {
     $cache_bin = $this->getRenderCacheBackend();
 
     // Create a cache entry that is tagged with a shortcut set cache tag.
@@ -89,7 +89,7 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
   /**
    * Tests visibility and cacheability of shortcuts in the toolbar.
    */
-  public function testToolbar() {
+  public function testToolbar(): void {
     $this->drupalPlaceBlock('page_title_block', ['id' => 'title']);
 
     $test_page_url = Url::fromRoute('test_page_test.test_page');

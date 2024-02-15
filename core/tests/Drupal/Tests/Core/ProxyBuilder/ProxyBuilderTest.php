@@ -34,7 +34,7 @@ class ProxyBuilderTest extends UnitTestCase {
    * @covers ::buildParameter
    * @covers ::buildMethodBody
    */
-  public function testBuildComplexMethod() {
+  public function testBuildComplexMethod(): void {
     $class = 'Drupal\Tests\Core\ProxyBuilder\TestServiceComplexMethod';
 
     $result = $this->proxyBuilder->build($class);
@@ -46,9 +46,9 @@ class ProxyBuilderTest extends UnitTestCase {
  * {@inheritdoc}
  */
 public function complexMethod($parameter, callable $function, ?\Drupal\Tests\Core\ProxyBuilder\TestServiceNoMethod $test_service = NULL, array &$elements = array (
-))
+)): void
 {
-    return $this->lazyLoadItself()->complexMethod($parameter, $function, $test_service, $elements);
+    $this->lazyLoadItself()->complexMethod($parameter, $function, $test_service, $elements);
 }
 
 EOS;
@@ -167,7 +167,7 @@ class TestServiceNoMethod {
 
 class TestServiceComplexMethod {
 
-  public function complexMethod($parameter, callable $function, TestServiceNoMethod $test_service = NULL, array &$elements = []) {
+  public function complexMethod($parameter, callable $function, TestServiceNoMethod $test_service = NULL, array &$elements = []): void {
 
   }
 

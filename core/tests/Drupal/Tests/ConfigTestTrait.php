@@ -55,7 +55,7 @@ trait ConfigTestTrait {
    * @param \Drupal\Core\Config\StorageInterface $target_storage
    *   The target config storage service.
    */
-  protected function copyConfig(StorageInterface $source_storage, StorageInterface $target_storage) {
+  protected function copyConfig(StorageInterface $source_storage, StorageInterface $target_storage): void {
     static::replaceStorageContents($source_storage, $target_storage);
   }
 

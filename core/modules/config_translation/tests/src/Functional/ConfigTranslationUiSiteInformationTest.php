@@ -14,7 +14,7 @@ class ConfigTranslationUiSiteInformationTest extends ConfigTranslationUiTestBase
   /**
    * Tests the site information translation interface.
    */
-  public function testSiteInformationTranslationUi() {
+  public function testSiteInformationTranslationUi(): void {
     $this->drupalLogin($this->adminUser);
 
     $site_name = 'Name of the site for testing configuration translation';
@@ -119,7 +119,7 @@ class ConfigTranslationUiSiteInformationTest extends ConfigTranslationUiTestBase
   /**
    * Tests the site information translation interface.
    */
-  public function testSourceValueDuplicateSave() {
+  public function testSourceValueDuplicateSave(): void {
     $this->drupalLogin($this->adminUser);
 
     $site_name = 'Site name for testing configuration translation';

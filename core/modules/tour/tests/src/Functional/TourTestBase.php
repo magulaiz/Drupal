@@ -30,7 +30,7 @@ abstract class TourTestBase extends BrowserTestBase {
    * @param bool $expectEmpty
    *   Whether or not the field is expected to be Empty.
    */
-  public function assertTourTips(array $tips = [], bool $expectEmpty = FALSE) {
+  public function assertTourTips(array $tips = [], bool $expectEmpty = FALSE): void {
     // Get the rendered tips and their data-id and data-class attributes.
     if (empty($tips)) {
       // Tips are rendered as drupalSettings values.

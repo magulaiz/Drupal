@@ -59,7 +59,7 @@ abstract class ViewsKernelTestBase extends KernelTestBase {
    * Because the schema of views_test_data.module is dependent on the test
    * using it, it cannot be enabled normally.
    */
-  protected function setUpFixtures() {
+  protected function setUpFixtures(): void {
     // First install the system module. Many Views have Page displays have menu
     // links, and for those to work, the system menus must already be present.
     $this->installConfig(['system']);
@@ -119,7 +119,7 @@ abstract class ViewsKernelTestBase extends KernelTestBase {
    * @param array $args
    *   (optional) An array of the view arguments to use for the view.
    */
-  protected function executeView($view, array $args = []) {
+  protected function executeView($view, array $args = []): void {
     $view->setDisplay();
     $view->preExecute($args);
     $view->execute();

@@ -50,7 +50,7 @@ class AjaxPageStateTest extends BrowserTestBase {
    * The libraries active-link and drupalSettings are loaded default from core
    * and available in code as scripts. Do this as the base test.
    */
-  public function testLibrariesAvailable() {
+  public function testLibrariesAvailable(): void {
     $this->drupalGet('node', []);
     // The active link library from core should be loaded.
     $this->assertSession()->responseContains('/core/misc/active-link.js');
@@ -65,7 +65,7 @@ class AjaxPageStateTest extends BrowserTestBase {
    * should be excluded as it is already loaded. This should not affect other
    * libraries so test if active-link is still available.
    */
-  public function testDrupalSettingsIsNotLoaded() {
+  public function testDrupalSettingsIsNotLoaded(): void {
     $this->drupalGet('node',
       [
         'query' =>
@@ -89,7 +89,7 @@ class AjaxPageStateTest extends BrowserTestBase {
    * The ajax_page_state[libraries] should be able to support multiple libraries
    * comma separated.
    */
-  public function testMultipleLibrariesAreNotLoaded() {
+  public function testMultipleLibrariesAreNotLoaded(): void {
     $this->drupalGet('node', [
       'query' => [
         'ajax_page_state' => [

@@ -37,7 +37,7 @@ class RouteTest extends KernelTestBase {
    *
    * @dataProvider providerTestRoute
    */
-  public function testRoute($value, $expected) {
+  public function testRoute($value, $expected): void {
     $actual = $this->doTransform($value);
     $this->assertSame($expected, $actual);
   }
@@ -198,7 +198,7 @@ class RouteTest extends KernelTestBase {
    *
    * @dataProvider providerTestRouteWithParamQuery
    */
-  public function testRouteWithParamQuery($value, $expected) {
+  public function testRouteWithParamQuery($value, $expected): void {
     // Create a user so that user/1/edit is a valid path.
     $this->setUpCurrentUser();
     $this->installConfig(['user']);

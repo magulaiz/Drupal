@@ -16,7 +16,7 @@ class PageRenderTest extends KernelTestBase {
   /**
    * Tests hook_page_attachments() exceptions.
    */
-  public function testHookPageAttachmentsExceptions() {
+  public function testHookPageAttachmentsExceptions(): void {
     $this->enableModules(['common_test', 'system']);
 
     $this->assertPageRenderHookExceptions('common_test', 'hook_page_attachments');
@@ -25,7 +25,7 @@ class PageRenderTest extends KernelTestBase {
   /**
    * Tests hook_page_attachments_alter() exceptions.
    */
-  public function testHookPageAlter() {
+  public function testHookPageAlter(): void {
     $this->enableModules(['common_test', 'system']);
 
     $this->assertPageRenderHookExceptions('common_test', 'hook_page_attachments_alter');

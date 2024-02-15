@@ -16,7 +16,7 @@ class SqlContentEntityStorageRevisionDataCleanupTest extends UpdatePathTestBase 
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.4.0.filled.standard.php.gz',
       __DIR__ . '/../../../../tests/fixtures/update/drupal-8.entity-revision-data-cleanup-2869568.php',
@@ -28,7 +28,7 @@ class SqlContentEntityStorageRevisionDataCleanupTest extends UpdatePathTestBase 
    *
    * @see system_update_8404()
    */
-  public function testRevisionDataCleanup() {
+  public function testRevisionDataCleanup(): void {
     // Ensure the test data exists.
     $connection = \Drupal::database();
 

@@ -27,7 +27,7 @@ class CKEditorStylesheetsWarningTest extends CKEditor5TestBase {
    * @param string $theme
    *   The theme to enable.
    */
-  public function installThemeThatTriggersWarning($theme) {
+  public function installThemeThatTriggersWarning($theme): void {
     $theme_installer = \Drupal::service('theme_installer');
     $theme_installer->install([$theme]);
     $this->config('system.theme')->set('default', $theme)->save();
@@ -41,7 +41,7 @@ class CKEditorStylesheetsWarningTest extends CKEditor5TestBase {
    *
    * @dataProvider providerTestWarningFilterUI
    */
-  public function testWarningFilterUi($theme, $expected_warning) {
+  public function testWarningFilterUi($theme, $expected_warning): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
     $this->addNewTextFormat($page, $assert_session);

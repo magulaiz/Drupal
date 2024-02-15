@@ -94,7 +94,7 @@ class HelpTopicTest extends BrowserTestBase {
   /**
    * Tests the main help page and individual pages for topics.
    */
-  public function testHelp() {
+  public function testHelp(): void {
     $session = $this->assertSession();
 
     // Log in the regular user.
@@ -161,7 +161,7 @@ class HelpTopicTest extends BrowserTestBase {
    *   the test verifies the user sees the help; if it's not, it verifies they
    *   are denied access.
    */
-  protected function verifyHelp($response = 200) {
+  protected function verifyHelp($response = 200): void {
     // Verify access to help topic pages.
     foreach ($this->getTopicList() as $topic => $info) {
       // View help topic page.
@@ -183,7 +183,7 @@ class HelpTopicTest extends BrowserTestBase {
   /**
    * Verifies links on various topic pages.
    */
-  public function testHelpLinks() {
+  public function testHelpLinks(): void {
     $session = $this->assertSession();
     $this->drupalLogin($this->adminUser);
 
@@ -272,7 +272,7 @@ class HelpTopicTest extends BrowserTestBase {
   /**
    * Tests breadcrumb on a help topic page.
    */
-  public function verifyBreadCrumb() {
+  public function verifyBreadCrumb(): void {
     // Verify Help Topics administration breadcrumbs.
     $trail = [
       '' => 'Home',

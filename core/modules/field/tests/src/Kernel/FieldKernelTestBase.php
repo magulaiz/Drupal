@@ -88,7 +88,7 @@ abstract class FieldKernelTestBase extends KernelTestBase {
    *   (optional) The entity type on which the field should be created.
    *   Defaults to the default bundle of the entity type.
    */
-  protected function createFieldWithStorage($suffix = '', $entity_type = 'entity_test', $bundle = NULL) {
+  protected function createFieldWithStorage($suffix = '', $entity_type = 'entity_test', $bundle = NULL): void {
     if (empty($bundle)) {
       $bundle = $entity_type;
     }
@@ -152,7 +152,7 @@ abstract class FieldKernelTestBase extends KernelTestBase {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to save.
    */
-  protected function entityValidateAndSave(EntityInterface $entity) {
+  protected function entityValidateAndSave(EntityInterface $entity): void {
     $violations = $entity->validate();
     if ($violations->count()) {
       $this->fail((string) $violations);
@@ -197,7 +197,7 @@ abstract class FieldKernelTestBase extends KernelTestBase {
    * @param $column
    *   (Optional) The name of the column to check. Defaults to 'value'.
    */
-  protected function assertFieldValues(EntityInterface $entity, $field_name, $expected_values, $langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED, $column = 'value') {
+  protected function assertFieldValues(EntityInterface $entity, $field_name, $expected_values, $langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED, $column = 'value'): void {
     $expected_values_count = count($expected_values);
 
     // Re-load the entity to make sure we have the latest changes.

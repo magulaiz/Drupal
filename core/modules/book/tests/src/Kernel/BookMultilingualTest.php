@@ -169,7 +169,7 @@ class BookMultilingualTest extends KernelTestBase {
    *
    * @dataProvider langcodesProvider
    */
-  public function testMultilingualBookManager(string $langcode) {
+  public function testMultilingualBookManager(string $langcode): void {
     $this->setCurrentLanguage($langcode);
     /** @var \Drupal\book\BookManagerInterface $bm */
     $bm = $this->container->get('book.manager');
@@ -207,7 +207,7 @@ class BookMultilingualTest extends KernelTestBase {
    *
    * @dataProvider langcodesProvider
    */
-  public function testMultilingualBookBreadcrumbBuilder(string $langcode) {
+  public function testMultilingualBookBreadcrumbBuilder(string $langcode): void {
     $this->setCurrentLanguage($langcode);
     // Test a level 3 node.
     $nid = 7;
@@ -233,7 +233,7 @@ class BookMultilingualTest extends KernelTestBase {
    *
    * @dataProvider langcodesProvider
    */
-  public function testMultilingualBookExport(string $langcode) {
+  public function testMultilingualBookExport(string $langcode): void {
     $this->setCurrentLanguage($langcode);
     /** @var \Drupal\book\BookExport $be */
     $be = $this->container->get('book.export');
