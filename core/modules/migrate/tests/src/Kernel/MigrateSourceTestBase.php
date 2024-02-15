@@ -48,7 +48,7 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
    *     counted.
    *   - (optional) Array of configuration options for the plugin under test.
    */
-  abstract public function providerSource();
+  abstract public static function providerSource();
 
   /**
    * {@inheritdoc}
@@ -80,7 +80,7 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
   protected function getPluginClass() {
     $annotations = Test::parseTestMethodAnnotations(
       static::class,
-      $this->getName()
+      $this->name()
     );
 
     if (isset($annotations['class']['covers'])) {

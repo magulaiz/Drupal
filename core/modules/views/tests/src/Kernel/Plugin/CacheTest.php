@@ -13,6 +13,7 @@ use Drupal\views_test_data\Plugin\views\filter\FilterTest as FilterPlugin;
  * Tests pluggable caching for views.
  *
  * @group views
+ * @group #slow
  * @see views_plugin_cache
  */
 class CacheTest extends ViewsKernelTestBase {
@@ -42,7 +43,7 @@ class CacheTest extends ViewsKernelTestBase {
     $this->installEntitySchema('user');
 
     // Setup the current time properly.
-    \Drupal::request()->server->set('REQUEST_TIME', time());
+    \Drupal::request()->server->set('REQUEST_TIME', \Drupal::time()->getCurrentTime());
   }
 
   /**
