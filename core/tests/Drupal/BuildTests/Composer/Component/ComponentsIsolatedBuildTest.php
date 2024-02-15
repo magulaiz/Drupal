@@ -30,7 +30,7 @@ class ComponentsIsolatedBuildTest extends ComposerBuildTestBase {
     // During the dataProvider phase, there is not a workspace directory yet.
     // So we will find relative paths and assemble them with the workspace
     // path later.
-    $drupal_root = self::getDrupalRoot();
+    $drupal_root = self::getDrupalRootStatic();
     $composer_json_finder = self::getComponentPathsFinder($drupal_root);
 
     /** @var \Symfony\Component\Finder\SplFileInfo $path */
