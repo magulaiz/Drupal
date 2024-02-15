@@ -60,6 +60,7 @@ class EntityViewDisplayValidationTest extends ConfigEntityValidationTestBase {
    */
   public function testLayoutSectionPluginIdIsValidated(): void {
     $this->enableModules(['layout_builder', 'layout_discovery']);
+    $this->installConfig('layout_builder');
 
     $this->entity = $this->container->get('entity_display.repository')
       ->getViewDisplay('user', 'user');

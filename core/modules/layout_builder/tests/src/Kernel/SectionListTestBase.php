@@ -34,6 +34,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->installConfig('layout_builder');
 
     $section_data = [
       new Section('layout_test_plugin', [], [
