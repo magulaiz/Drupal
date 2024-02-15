@@ -131,6 +131,20 @@ class Condition extends QueryCondition {
   }
 
   /**
+   * Constructs a Condition object.
+   *
+   * This method is the same as its parent class. Only without PHPCS will throw
+   * the following error: PHP4 style constructors are not allowed; use
+   * "__construct()" instead.
+   *
+   * @param string $conjunction
+   *   The operator to use to combine conditions: 'AND' or 'OR'.
+   */
+  public function __construct($conjunction) {
+    parent::__construct($conjunction);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function condition($field, $value = NULL, $operator = '=') {

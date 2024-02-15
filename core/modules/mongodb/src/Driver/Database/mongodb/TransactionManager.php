@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Drupal\mongodb\Driver\Database\mongodb;
 
 use Drupal\Core\Database\Transaction;
+use Drupal\Core\Database\Transaction\ClientConnectionTransactionState;
 use Drupal\Core\Database\Transaction\TransactionManagerBase;
-use MongoDB\Driver\Exception\CommandException;
 
 /**
  * MongoDB implementation of TransactionManagerInterface.
@@ -64,13 +64,18 @@ class TransactionManager extends TransactionManagerBase {
   protected function rollbackClientTransaction(): bool {
     try {
       $this->connection->getMongodbSession()->abortTransaction();
+      $clientRollback = TRUE;
     }
-    catch (CommandException $e) {
-      // Do nothing.
-      return FALSE;
+    catch (\Exception $e) {
+      $clientRollback = FALSE;
     }
 
-    return TRUE;
+    $this->setConnectionTransactionState($clientRollback ?
+      ClientConnectionTransactionState::RolledBack :
+      ClientConnectionTransactionState::RollbackFailed
+    );
+
+    return $clientRollback;
   }
 
   /**
@@ -79,13 +84,18 @@ class TransactionManager extends TransactionManagerBase {
   protected function commitClientTransaction(): bool {
     try {
       $this->connection->getMongodbSession()->commitTransaction();
+      $clientCommit = TRUE;
     }
-    catch (CommandException $e) {
-      // Do nothing.
-      return FALSE;
+    catch (\Exception $e) {
+      $clientCommit = FALSE;
     }
 
-    return TRUE;
+    $this->setConnectionTransactionState($clientCommit ?
+      ClientConnectionTransactionState::Committed :
+      ClientConnectionTransactionState::CommitFailed
+    );
+
+    return $clientCommit;
   }
 
 }
