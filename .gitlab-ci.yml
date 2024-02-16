@@ -389,9 +389,9 @@ default:
         - "**/*.js"
         - "**/*.yml"
         - "**/.eslintrc.json"
-        - "core/.eslintrc.jquery.json"
-        - "core/.eslintrc.legacy.json"
-        - "core/.eslintrc.passing.json"
+        - "core/.eslintignore"
+        - "core/.eslintrc.*.json"
+        - "core/.prettierignore"
         - "core/.prettierrc.json"
     - when: manual
       allow_failure: true
