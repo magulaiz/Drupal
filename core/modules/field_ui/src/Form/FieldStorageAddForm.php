@@ -232,7 +232,7 @@ class FieldStorageAddForm extends FormBase {
     ];
     $form['add']['new_storage_type'] = $field_type_options_radios;
 
-    $form['actions']['submit']['#submit'][] = [$this, 'rebuildWithOptions'];
+    $form['actions']['submit']['#submit'][] = '::rebuildWithOptions';
   }
 
   /**
@@ -247,7 +247,7 @@ class FieldStorageAddForm extends FormBase {
     $form['actions']['back'] = [
       '#type' => 'submit',
       '#value' => $this->t('Back'),
-      '#submit' => [[$this, 'startOver']],
+      '#submit' => ['::startOver'],
     ];
     $form['actions']['back']['#validate'][] = '::UnsetStorageType';
     $field_type_options = $form_state->get('field_type_options');
@@ -495,7 +495,7 @@ class FieldStorageAddForm extends FormBase {
   /**
    * Submit handler for resetting the form.
    */
-  public function startOver($form, FormStateInterface &$form_state) {
+  public static function startOver($form, FormStateInterface &$form_state) {
     // Need to do this as the parameters for buildForm are retained on rebuild.
     $form_state->setRebuild();
   }

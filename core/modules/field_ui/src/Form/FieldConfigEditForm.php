@@ -98,7 +98,6 @@ class FieldConfigEditForm extends EntityForm {
     $bundles = $this->entityTypeBundleInfo->getBundleInfo($this->entity->getTargetEntityTypeId());
 
     $form_title = $this->t('Field settings for %bundle', [
-      '%field' => $this->entity->getLabel(),
       '%bundle' => $bundles[$this->entity->getTargetBundle()]['label'],
     ]);
     $form['#title'] = $form_title;
@@ -123,6 +122,7 @@ class FieldConfigEditForm extends EntityForm {
       '#title' => $this->t('Label'),
       '#default_value' => $this->entity->isNew() ? '' : $this->entity->getLabel(),
       '#size' => 30,
+      '#required' => TRUE,
       '#maxlength' => 255,
       '#weight' => -20,
     ];
@@ -140,7 +140,7 @@ class FieldConfigEditForm extends EntityForm {
           'source' => ['new_storage_wrapper', 'label'],
           'exists' => [$this, 'fieldNameExists'],
         ],
-        '#required' => FALSE,
+        '#required' => TRUE,
       ];
     }
     $this->addAjaxCallbacks($form['new_storage_wrapper']);
@@ -364,12 +364,12 @@ class FieldConfigEditForm extends EntityForm {
    * @return bool
    *   Whether or not the field machine name is taken.
    */
-  public function fieldNameExists($value, $element, FormStateInterface $form_state) {
+  public function fieldNameExists($value, $element, FormStateInterface $form_state): bool {
     // Add the field prefix.
     $field_name = $this->configFactory->get('field_ui.settings')->get('field_prefix') . $value;
 
     $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($this->entity->getTargetEntityTypeId());
-    return isset($field_storage_definitions[$field_name]);
+    return array_key_exists($field_name, $field_storage_definitions);
   }
 
   /**
@@ -378,12 +378,10 @@ class FieldConfigEditForm extends EntityForm {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 
-    // Missing label.
     if (!$form_state->getValue('label')) {
       $form_state->setErrorByName('label', $this->t('Add new field: you need to provide a label.'));
     }
-    // Missing field name.
-    if (!$form_state->getValue('field_name')) {
+    if (trim($form_state->getValue('field_name')) === '') {
       if ($this->entity->isNew()) {
         $form_state->setErrorByName('field_name', $this->t('Add new field: you need to provide a machine name for the field.'));
       }
