@@ -29,21 +29,21 @@ class FormTestWeightForm extends FormBase {
       '#type' => 'textfield',
       '#title' => 'Textfield 1',
       '#value' => '1',
-      '#weight' => 20
+      '#weight' => 20,
     ];
 
     $form['form_textfield_test_test_2'] = [
       '#type' => 'textfield',
       '#title' => 'Textfield 2',
       '#value' => '2',
-      '#weight' => 30
+      '#weight' => 30,
     ];
 
     $form['form_textfield_test_test_3'] = [
       '#type' => 'textfield',
       '#title' => 'Textfield 2',
       '#value' => '3',
-      '#weight' => 10
+      '#weight' => 10,
     ];
 
     // For one of the test runs, set a variable to enable a form alter hook.
