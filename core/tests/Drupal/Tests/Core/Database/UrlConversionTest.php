@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Database;
 
 use Drupal\Core\Database\Database;
@@ -39,7 +41,7 @@ class UrlConversionTest extends UnitTestCase {
    *   - url: The full URL string to be tested.
    *   - database_array: An array containing the expected results.
    */
-  public function providerConvertDbUrlToConnectionInfo() {
+  public static function providerConvertDbUrlToConnectionInfo() {
     $root = dirname(__FILE__, 7);
     return [
       'MySql without prefix' => [
@@ -291,7 +293,7 @@ class UrlConversionTest extends UnitTestCase {
    *   - Drupal root string.
    *   - The expected exception message.
    */
-  public function providerInvalidArgumentsUrlConversion() {
+  public static function providerInvalidArgumentsUrlConversion() {
     return [
       ['foo', '', "Missing scheme in URL 'foo'"],
       ['foo', 'bar', "Missing scheme in URL 'foo'"],
@@ -323,7 +325,7 @@ class UrlConversionTest extends UnitTestCase {
    *     database, username, password, prefix, host, port, namespace and driver.
    *   - The expected URL after conversion.
    */
-  public function providerGetConnectionInfoAsUrl() {
+  public static function providerGetConnectionInfoAsUrl() {
     $info1 = [
       'database' => 'test_database',
       'username' => 'test_user',
@@ -475,7 +477,7 @@ class UrlConversionTest extends UnitTestCase {
    *     database, username, password, prefix, host, port, namespace and driver.
    *   - The expected exception message.
    */
-  public function providerInvalidArgumentGetConnectionInfoAsUrl() {
+  public static function providerInvalidArgumentGetConnectionInfoAsUrl() {
     return [
       'Missing database key' => [
         [

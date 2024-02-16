@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\media_library\FunctionalJavascript;
 
 use Drupal\field\Entity\FieldConfig;
@@ -148,7 +150,7 @@ class EmbeddedFormWidgetTest extends WebDriverTestBase {
    * @return array
    *   Test data.
    */
-  public function insertionReselectionProvider() {
+  public static function insertionReselectionProvider() {
     return [
       'using media_library_widget' => [
         'widget' => 'media_library_widget',

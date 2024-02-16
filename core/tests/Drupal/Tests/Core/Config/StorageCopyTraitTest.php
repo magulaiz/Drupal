@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Config;
 
 use Drupal\Core\Config\MemoryStorage;
@@ -66,7 +68,7 @@ class StorageCopyTraitTest extends UnitTestCase {
   /**
    * Provides data for testCheckRequirements().
    */
-  public function providerTestReplaceStorageContents() {
+  public static function providerTestReplaceStorageContents() {
     $data = [];
     $data[] = [TRUE, TRUE];
     $data[] = [TRUE, FALSE];

@@ -235,7 +235,7 @@ class SelectTest extends DatabaseTestBase {
       ->execute()->fetchCol();
 
     $this->assertCount(1, $names, 'Correct number of records found with NULL age.');
-    $this->assertEquals('Fozzie', $names[0], 'Correct record returned for NULL age.');
+    $this->assertEquals('Ernie', $names[0], 'Correct record returned for NULL age.');
   }
 
   /**
@@ -498,7 +498,7 @@ class SelectTest extends DatabaseTestBase {
    *     - the regular expression pattern to search for.
    *     - the regular expression operator 'REGEXP' or 'NOT REGEXP'.
    */
-  public function providerRegularExpressionCondition() {
+  public static function providerRegularExpressionCondition() {
     return [
       [['John'], 'name', 'hn$', 'REGEXP'],
       [['Paul'], 'name', '^Pau', 'REGEXP'],
@@ -598,7 +598,7 @@ class SelectTest extends DatabaseTestBase {
    *   Array of non array compatible operators and its value in the expected
    *   exception message.
    */
-  public function providerNonArrayOperatorWithArrayValueCondition() {
+  public static function providerNonArrayOperatorWithArrayValueCondition() {
     return [
       '=' => ['=', '='],
       '>' => ['>', '>'],

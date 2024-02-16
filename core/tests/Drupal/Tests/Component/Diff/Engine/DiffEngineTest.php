@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Component\Diff\Engine;
 
 use Drupal\Component\Diff\Engine\DiffEngine;
@@ -29,7 +31,7 @@ class DiffEngineTest extends TestCase {
    *   - An array of strings to change from.
    *   - An array of strings to change to.
    */
-  public function provideTestDiff() {
+  public static function provideTestDiff() {
     return [
       'empty' => [[], [], []],
       'add' => [[DiffOpAdd::class], [], ['a']],

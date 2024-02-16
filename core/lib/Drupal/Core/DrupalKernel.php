@@ -5,6 +5,7 @@ namespace Drupal\Core;
 use Composer\Autoload\ClassLoader;
 use Drupal\Component\EventDispatcher\Event;
 use Drupal\Component\FileCache\FileCacheFactory;
+use Drupal\Component\Serialization\PhpSerialize;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\DatabaseBackend;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
@@ -28,6 +29,8 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
@@ -72,13 +75,30 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         'factory' => 'Drupal\Core\Database\Database::getConnection',
         'arguments' => ['default'],
       ],
+      'request_stack' => [
+        'class' => 'Symfony\Component\HttpFoundation\RequestStack',
+      ],
+      'datetime.time' => [
+        'class' => 'Drupal\Component\Datetime\Time',
+        'arguments' => ['@request_stack'],
+      ],
       'cache.container' => [
         'class' => 'Drupal\Core\Cache\DatabaseBackend',
-        'arguments' => ['@database', '@cache_tags_provider.container', 'container', DatabaseBackend::MAXIMUM_NONE],
+        'arguments' => [
+          '@database',
+          '@cache_tags_provider.container',
+          'container',
+          '@serialization.phpserialize',
+          '@datetime.time',
+          DatabaseBackend::MAXIMUM_NONE,
+        ],
       ],
       'cache_tags_provider.container' => [
         'class' => 'Drupal\Core\Cache\DatabaseCacheTagsChecksum',
         'arguments' => ['@database'],
+      ],
+      'serialization.phpserialize' => [
+        'class' => PhpSerialize::class,
       ],
     ],
   ];
@@ -177,7 +197,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected $containerNeedsDumping;
 
   /**
-   * List of discovered services.yml pathnames.
+   * List of discovered services.yml path names.
    *
    * This is a nested array whose top-level keys are 'app' and 'site', denoting
    * the origin of a service provider. Site-specific providers have to be
@@ -346,11 +366,11 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * The sites.php file in the sites directory can define aliases in an
    * associative array named $sites. The array is written in the format
    * '<port>.<domain>.<path>' => 'directory'. As an example, to create a
-   * directory alias for https://www.drupal.org:8080/mysite/test whose
+   * directory alias for https://www.drupal.org:8080/my-site/test whose
    * configuration file is in sites/example.com, the array should be defined as:
    * @code
    * $sites = array(
-   *   '8080.www.drupal.org.mysite.test' => 'example.com',
+   *   '8080.www.drupal.org.my-site.test' => 'example.com',
    * );
    * @endcode
    *
@@ -582,6 +602,11 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       (bool) Settings::get(RequestSanitizer::SANITIZE_LOG, FALSE)
     );
 
+    // Ensure that there is a session on every request.
+    if (!$request->hasSession()) {
+      $this->initializeEphemeralSession($request);
+    }
+
     $this->loadLegacyIncludes();
 
     // Load all enabled modules.
@@ -678,14 +703,21 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @return void
    */
   public function terminate(Request $request, Response $response) {
-    // Only run terminate() when essential services have been set up properly
-    // by preHandle() before.
-    if (FALSE === $this->prepared) {
-      return;
-    }
-
-    if ($this->getHttpKernel() instanceof TerminableInterface) {
-      $this->getHttpKernel()->terminate($request, $response);
+    if ($this->booted && $this->getHttpKernel() instanceof TerminableInterface) {
+      // Only run terminate() when essential services have been set up properly
+      // by preHandle() before.
+      if ($this->prepared === TRUE) {
+        $this->getHttpKernel()->terminate($request, $response);
+      }
+      // For destructable services, always call the destruct method if they were
+      // initialized during the request. Destruction is not necessary if the
+      // service was not used.
+      foreach ($this->container->getParameter('kernel.destructable_services') as $id) {
+        if ($this->container->initialized($id)) {
+          $service = $this->container->get($id);
+          $service->destruct();
+        }
+      }
     }
   }
 
@@ -962,7 +994,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $this->container->get('session')->start();
     }
 
-    // The request stack is preserved across container rebuilds. Reinject the
+    // The request stack is preserved across container rebuilds. Re-inject the
     // new session into the main request if one was present before.
     if (($request_stack = $this->container->get('request_stack', ContainerInterface::NULL_ON_INVALID_REFERENCE))) {
       if ($request = $request_stack->getMainRequest()) {
@@ -1636,6 +1668,25 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // Normalize an empty string to a NULL value.
     return $config['profile'] ?? NULL;
+  }
+
+  /**
+   * Initializes a session backed by in-memory store and puts it on the request.
+   *
+   * A simple in-memory store is sufficient for command line tools and tests.
+   * Web requests will be processed by the session middleware where the mock
+   * session is replaced by a session object backed with persistent storage and
+   * a real session handler.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request.
+   *
+   * @see \Drupal\Core\StackMiddleware\Session::handle()
+   */
+  protected function initializeEphemeralSession(Request $request): void {
+    $session = new Session(new MockArraySessionStorage());
+    $session->start();
+    $request->setSession($session);
   }
 
 }

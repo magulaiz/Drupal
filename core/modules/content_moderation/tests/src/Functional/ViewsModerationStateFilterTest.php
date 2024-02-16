@@ -14,6 +14,7 @@ use Drupal\workflows\Entity\Workflow;
  * @coversDefaultClass \Drupal\content_moderation\Plugin\views\filter\ModerationStateFilter
  *
  * @group content_moderation
+ * @group #slow
  */
 class ViewsModerationStateFilterTest extends ViewTestBase {
 
@@ -260,7 +261,7 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
    * @return string[]
    *   An array of view IDs.
    */
-  public function providerTestWorkflowChanges() {
+  public static function providerTestWorkflowChanges() {
     return [
       'view on base table, filter on base table' => [
         'test_content_moderation_state_filter_base_table',

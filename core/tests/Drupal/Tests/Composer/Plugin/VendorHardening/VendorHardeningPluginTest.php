@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Composer\Plugin\VendorHardening;
 
 use Composer\Composer;
@@ -170,7 +172,7 @@ class VendorHardeningPluginTest extends TestCase {
     $this->assertFileExists($dir . '/web.config');
   }
 
-  public function providerFindBinOverlap() {
+  public static function providerFindBinOverlap() {
     return [
       [
         [],

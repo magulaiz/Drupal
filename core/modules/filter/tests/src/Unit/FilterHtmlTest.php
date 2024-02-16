@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\filter\Unit;
 
 use Drupal\Tests\UnitTestCase;
@@ -50,7 +52,7 @@ class FilterHtmlTest extends UnitTestCase {
    * @return array
    *   An array of test data.
    */
-  public function providerFilterAttributes() {
+  public static function providerFilterAttributes() {
     return [
       ['<a href="/blog" title="Blog">Blog</a>', '<a href="/blog">Blog</a>'],
       ['<p dir="rtl" />', '<p dir="rtl"></p>'],

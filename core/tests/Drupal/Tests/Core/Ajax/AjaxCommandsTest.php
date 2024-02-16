@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Ajax;
 
 use Drupal\Core\Ajax\AnnounceCommand;
@@ -41,7 +43,7 @@ class AjaxCommandsTest extends UnitTestCase {
    *   - Array of css elements
    *   - Expected value
    */
-  public function providerCss() {
+  public static function providerCss() {
     return [
       'empty' => [
         [],
@@ -194,7 +196,7 @@ class AjaxCommandsTest extends UnitTestCase {
   /**
    * Data provider for testAnnounceCommand().
    */
-  public function announceCommandProvider() {
+  public static function announceCommandProvider() {
     return [
       'no priority' => [
         'Things are going to change!',
