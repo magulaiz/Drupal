@@ -2,8 +2,9 @@
 
 namespace Drupal\user;
 
-use Drupal\Core\Discovery\YamlDiscovery;
+use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Controller\ControllerResolverInterface;
+use Drupal\Core\Discovery\YamlDiscovery;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -55,6 +56,11 @@ class PermissionHandler implements PermissionHandlerInterface {
   use StringTranslationTrait;
 
   /**
+   * The cache key for the user permissions.
+   */
+  const PERMISSIONS_CACHE_KEY = 'user.permissions';
+
+  /**
    * The module handler.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
@@ -84,8 +90,15 @@ class PermissionHandler implements PermissionHandlerInterface {
    *   The string translation.
    * @param \Drupal\Core\Utility\CallableResolver|\Drupal\Core\Controller\ControllerResolverInterface $callable_resolver
    *   The callable resolver.
+   * @param \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface|null $memoryCache
+   *   The memory cache.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, TranslationInterface $string_translation, ControllerResolverInterface|CallableResolver $callable_resolver) {
+  public function __construct(
+    ModuleHandlerInterface $module_handler,
+    TranslationInterface $string_translation,
+    ControllerResolverInterface|CallableResolver $callable_resolver,
+    protected ?MemoryCacheInterface $memoryCache = NULL,
+  ) {
     if ($callable_resolver instanceof ControllerResolverInterface) {
       @trigger_error('Calling ' . __METHOD__ . '() with an argument of ControllerResolverInterface is deprecated in drupal:10.2.0 and is removed in drupal:11.0.0. Use \Drupal\Core\Utility\CallableResolver instead. See https://www.drupal.org/node/3397954', E_USER_DEPRECATED);
       $callable_resolver = \Drupal::service('callable_resolver');
@@ -96,6 +109,10 @@ class PermissionHandler implements PermissionHandlerInterface {
     //   container.
     $this->moduleHandler = $module_handler;
     $this->stringTranslation = $string_translation;
+    if (!$this->memoryCache) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $memoryCache argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3421802', E_USER_DEPRECATED);
+      $this->memoryCache = \Drupal::service('user.permissions_memory_cache');
+    }
   }
 
   /**
@@ -115,9 +132,14 @@ class PermissionHandler implements PermissionHandlerInterface {
    * {@inheritdoc}
    */
   public function getPermissions() {
+    if ($cacheItem = $this->memoryCache->get(self::PERMISSIONS_CACHE_KEY)) {
+      return $cacheItem->data;
+    }
     $all_permissions = $this->buildPermissionsYaml();
+    $all_permissions = $this->sortPermissions($all_permissions);
+    $this->memoryCache->set(self::PERMISSIONS_CACHE_KEY, $all_permissions);
 
-    return $this->sortPermissions($all_permissions);
+    return $all_permissions;
   }
 
   /**
