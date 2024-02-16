@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Core\Condition\Attribute;
 
 use Drupal\Component\Plugin\Attribute\Plugin;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines a condition plugin attribute.
@@ -26,5 +27,31 @@ use Drupal\Component\Plugin\Attribute\Plugin;
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class Condition extends Plugin {
 
+  /**
+   * Constructs a Condition attribute.
+   *
+   * @param string $id
+   *   The plugin ID.
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $label
+   *   The human-readable name of the condition.
+   * @param string $module
+   *   The name of the module providing the type.
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $category
+   *   (optional) The category under which the condition should listed in the
+   *   UI.
+   * @param array $context_definitions
+   *   An array of context definitions describing the context used by the
+   *   plugin.
+   * @param string|null $deriver
+   *   (optional) The deriver class.
+   */
+  public function __construct(
+    public readonly string $id,
+    public readonly ?TranslatableMarkup $label = NULL,
+    public readonly ?string $module = NULL,
+    public readonly ?TranslatableMarkup $category = NULL,
+    public readonly array $context_definitions = [],
+    public readonly ?string $deriver = NULL,
+  ) {}
 
 }
