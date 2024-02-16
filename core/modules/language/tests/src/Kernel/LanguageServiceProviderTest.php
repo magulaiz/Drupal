@@ -11,12 +11,15 @@ use Drupal\language\ConfigurableLanguageManager;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\EventSubscriber\LanguageRequestSubscriber;
 use Drupal\language\HttpKernel\PathProcessorLanguage;
+use Drupal\Tests\language\Traits\LanguageTestTrait;
 
 /**
  * @coversDefaultClass \Drupal\language\LanguageServiceProvider
  * @group language
  */
 class LanguageServiceProviderTest extends KernelTestBase {
+
+  use LanguageTestTrait;
 
   protected static $modules = ['language'];
 
@@ -79,9 +82,7 @@ class LanguageServiceProviderTest extends KernelTestBase {
   protected function setupMultilingual() {
     // Create the translation language.
     $this->installConfig(['language']);
-    /** @var \Drupal\language\Entity\ConfigurableLanguage $language */
-    $language = ConfigurableLanguage::create(['id' => 'de']);
-    $language->save();
+    self::createLanguageFromLangcode('de');
 
     $config = $this->config('language.types');
     $config->set('configurable', [
