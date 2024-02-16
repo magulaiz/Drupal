@@ -68,8 +68,9 @@ class TermTranslationViewsTest extends TaxonomyTestBase {
   }
 
   /**
-   * Ensure that proper translation is returned when contextual filter
-   * "Content: Has taxonomy term ID (with depth)" is enabled.
+   * Ensure that proper translation is returned when contextual filter.
+   *
+   * Content: Has taxonomy term ID (with depth) is enabled.
    */
   public function testTermsTranslationWithContextualFilter() {
     $this->drupalLogin($this->rootUser);
