@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Test;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Test\TestSetupTrait;
+use Drupal\Tests\TestSetupTrait;
 use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests the TestSetupTrait trait.
  *
- * @coversDefaultClass \Drupal\Core\Test\TestSetupTrait
+ * @coversDefaultClass \Drupal\Tests\TestSetupTrait
  * @group Testing
  *
  * Run in a separate process as this test involves Database statics and
@@ -46,7 +46,7 @@ class TestSetupTraitTest extends UnitTestCase {
     $method->invoke($test_setup);
 
     // Ensure that SIMPLETEST_DB defines the default database connection after
-    // calling \Drupal\Core\Test\TestSetupTrait::changeDatabasePrefix().
+    // calling \Drupal\Tests\TestSetupTrait::changeDatabasePrefix().
     $this->assertEquals('pgsql', Database::getConnectionInfo()['default']['driver']);
     $this->assertEquals('127.0.0.1', Database::getConnectionInfo()['default']['host']);
   }

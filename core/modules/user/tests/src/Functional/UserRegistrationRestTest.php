@@ -3,8 +3,8 @@
 namespace Drupal\Tests\user\Functional;
 
 use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\Core\Test\AssertMailTrait;
 use Drupal\Core\Url;
+use Drupal\Tests\AssertMailTrait;
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use Drupal\Tests\rest\Functional\ResourceTestBase;
 use Drupal\user\UserInterface;

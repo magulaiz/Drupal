@@ -3,9 +3,9 @@
 namespace Drupal\Tests\user\Functional;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Test\AssertMailTrait;
 use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\Tests\AssertMailTrait;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;

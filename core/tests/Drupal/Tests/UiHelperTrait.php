@@ -9,7 +9,6 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
-use Drupal\Core\Test\RefreshVariablesTrait;
 use Drupal\Core\Url;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 

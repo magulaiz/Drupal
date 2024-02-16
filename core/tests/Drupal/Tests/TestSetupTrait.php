@@ -1,8 +1,12 @@
 <?php
 
-namespace Drupal\Core\Test;
+declare(strict_types=1);
+
+namespace Drupal\Tests;
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Test\SimpletestTestRunResultsStorage;
+use Drupal\Core\Test\TestDatabase;
 
 /**
  * Provides a trait for shared test setup functionality.

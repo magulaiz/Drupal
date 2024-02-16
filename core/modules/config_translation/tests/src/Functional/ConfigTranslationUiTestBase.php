@@ -2,9 +2,9 @@
 
 namespace Drupal\Tests\config_translation\Functional;
 
-use Drupal\Core\Test\AssertMailTrait;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\Tests\AssertMailTrait;
 use Drupal\Tests\BrowserTestBase;
 
 /**

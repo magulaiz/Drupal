@@ -2,12 +2,24 @@
 
 namespace Drupal\Core\Test;
 
-use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Tests\AssertMailTrait as AssertMailTraitBase;
 
 /**
  * Provides methods for testing emails sent during test runs.
+ *
+ * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use the
+ *   \Drupal\Tests\AssertMailTrait trait instead.
+ *
+ * @see https://www.drupal.org/node/3383801
  */
 trait AssertMailTrait {
+
+  use AssertMailTraitBase {
+    getMails as getMailsBase;
+    assertMail as assertMailBase;
+    assertMailString as assertMailStringBase;
+    assertMailPattern as assertMailPatternBase;
+  }
 
   /**
    * Gets an array containing all emails sent during this test case.
@@ -20,19 +32,8 @@ trait AssertMailTrait {
    *   An array containing email messages captured during the current test.
    */
   protected function getMails(array $filter = []) {
-    $captured_emails = $this->container->get('state')->get('system.test_mail_collector', []);
-    $filtered_emails = [];
-
-    foreach ($captured_emails as $message) {
-      foreach ($filter as $key => $value) {
-        if (!isset($message[$key]) || $message[$key] != $value) {
-          continue 2;
-        }
-      }
-      $filtered_emails[] = $message;
-    }
-
-    return $filtered_emails;
+    @trigger_error(__METHOD__ . "() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Tests\AssertMailTrait::getMails instead. See https://www.drupal.org/node/3383801", E_USER_DEPRECATED);
+    return $this->getMailsBase($filter);
   }
 
   /**
@@ -55,12 +56,8 @@ trait AssertMailTrait {
    *   TRUE on pass.
    */
   protected function assertMail($name, $value = '', $message = '') {
-    $captured_emails = $this->container->get('state')->get('system.test_mail_collector') ?: [];
-    $email = end($captured_emails);
-    $this->assertIsArray($email, $message);
-    $this->assertArrayHasKey($name, $email, $message);
-    $this->assertEquals($value, $email[$name], $message);
-    return TRUE;
+    @trigger_error(__METHOD__ . "() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Tests\AssertMailTrait::assertMail instead. See https://www.drupal.org/node/3383801", E_USER_DEPRECATED);
+    return $this->assertMailBase($name, $value, $message);
   }
 
   /**
@@ -79,25 +76,8 @@ trait AssertMailTrait {
    *   will be displayed.
    */
   protected function assertMailString($field_name, $string, $email_depth, $message = '') {
-    $mails = $this->getMails();
-    $string_found = FALSE;
-    // Cast MarkupInterface objects to string.
-    $string = (string) $string;
-    for ($i = count($mails) - 1; $i >= count($mails) - $email_depth && $i >= 0; $i--) {
-      $mail = $mails[$i];
-      // Normalize whitespace, as we don't know what the mail system might have
-      // done. Any run of whitespace becomes a single space.
-      $normalized_mail = preg_replace('/\s+/', ' ', $mail[$field_name]);
-      $normalized_string = preg_replace('/\s+/', ' ', $string);
-      $string_found = str_contains($normalized_mail, $normalized_string);
-      if ($string_found) {
-        break;
-      }
-    }
-    if (!$message) {
-      $message = new FormattableMarkup('Expected text found in @field of email message: "@expected".', ['@field' => $field_name, '@expected' => $string]);
-    }
-    $this->assertTrue($string_found, $message);
+    @trigger_error(__METHOD__ . "() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Tests\AssertMailTrait::assertMailString instead. See https://www.drupal.org/node/3383801", E_USER_DEPRECATED);
+    $this->assertMailStringBase($field_name, $string, $email_depth, $message);
   }
 
   /**
@@ -114,13 +94,8 @@ trait AssertMailTrait {
    *   will be displayed.
    */
   protected function assertMailPattern($field_name, $regex, $message = '') {
-    $mails = $this->getMails();
-    $mail = end($mails);
-    $regex_found = preg_match("/$regex/", $mail[$field_name]);
-    if (!$message) {
-      $message = new FormattableMarkup('Expected text found in @field of email message: "@expected".', ['@field' => $field_name, '@expected' => $regex]);
-    }
-    $this->assertTrue((bool) $regex_found, $message);
+    @trigger_error(__METHOD__ . "() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Tests\AssertMailTrait::assertMailPattern instead. See https://www.drupal.org/node/3383801", E_USER_DEPRECATED);
+    $this->assertMailPatternBase($field_name, $regex, $message);
   }
 
 }

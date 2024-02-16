@@ -6,12 +6,12 @@ namespace Drupal\TestSite\Commands;
 
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Database\Database;
-use Drupal\Core\Test\FunctionalTestSetupTrait;
 use Drupal\Core\Test\TestDatabase;
-use Drupal\Core\Test\TestSetupTrait;
+use Drupal\Tests\FunctionalTestSetupTrait;
+use Drupal\Tests\RandomGeneratorTrait;
+use Drupal\Tests\TestSetupTrait;
 use Drupal\TestSite\TestPreinstallInterface;
 use Drupal\TestSite\TestSetupInterface;
-use Drupal\Tests\RandomGeneratorTrait;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

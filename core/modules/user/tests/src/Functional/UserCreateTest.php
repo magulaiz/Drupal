@@ -2,9 +2,9 @@
 
 namespace Drupal\Tests\user\Functional;
 
-use Drupal\Core\Test\AssertMailTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Tests\AssertMailTrait;
 use Drupal\Tests\BrowserTestBase;
 
 /**

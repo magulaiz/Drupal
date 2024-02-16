@@ -2,8 +2,8 @@
 
 namespace Drupal\KernelTests\Core\Action;
 
-use Drupal\Core\Test\AssertMailTrait;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\AssertMailTrait;
 
 /**
  * Tests for the EmailAction plugin.

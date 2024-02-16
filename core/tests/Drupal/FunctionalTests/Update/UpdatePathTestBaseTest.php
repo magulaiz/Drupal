@@ -165,7 +165,7 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
    * Tests that schema can be excluded from testing.
    *
    * @see \Drupal\FunctionalTests\Update\UpdatePathTestBase::runUpdates()
-   * @see \Drupal\Core\Test\TestSetupTrait::$configSchemaCheckerExclusions
+   * @see \Drupal\Tests\TestSetupTrait::$configSchemaCheckerExclusions
    */
   public function testSchemaChecking() {
     // Create some configuration that should be skipped.

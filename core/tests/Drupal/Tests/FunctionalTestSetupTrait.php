@@ -1,6 +1,8 @@
 <?php
 
-namespace Drupal\Core\Test;
+declare(strict_types=1);
+
+namespace Drupal\Tests;
 
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Utility\Environment;
@@ -17,7 +19,7 @@ use Drupal\Core\Session\UserSession;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Site\SettingsEditor;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
-use Drupal\Tests\SessionTestTrait;
+use Drupal\Core\Test\TestRunnerKernel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Yaml\Yaml as SymfonyYaml;
@@ -629,7 +631,7 @@ trait FunctionalTestSetupTrait {
    */
   protected function prepareEnvironment() {
     // Bootstrap Drupal so we can use Drupal's built in functions.
-    $this->classLoader = require __DIR__ . '/../../../../../autoload.php';
+    $this->classLoader = require __DIR__ . '/../../../../autoload.php';
     $request = Request::createFromGlobals();
     $kernel = TestRunnerKernel::createFromRequest($request, $this->classLoader);
     $kernel->boot();

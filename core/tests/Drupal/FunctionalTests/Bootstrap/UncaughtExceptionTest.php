@@ -256,7 +256,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
    * @param string $error_message
    *   The expected error message.
    *
-   * @see \Drupal\Core\Test\FunctionalTestSetupTrait::prepareEnvironment()
+   * @see \Drupal\Tests\FunctionalTestSetupTrait::prepareEnvironment()
    * @see \Drupal\Core\DrupalKernel::bootConfiguration()
    *
    * @internal
@@ -286,7 +286,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
   /**
    * Asserts that no errors have been logged to the PHP error.log thus far.
    *
-   * @see \Drupal\Core\Test\FunctionalTestSetupTrait::prepareEnvironment()
+   * @see \Drupal\Tests\FunctionalTestSetupTrait::prepareEnvironment()
    * @see \Drupal\Core\DrupalKernel::bootConfiguration()
    *
    * @internal

@@ -1,6 +1,8 @@
 <?php
 
-namespace Drupal\Core\Test;
+declare(strict_types=1);
+
+namespace Drupal\Tests;
 
 use Drupal\Core\Cache\Cache;
 

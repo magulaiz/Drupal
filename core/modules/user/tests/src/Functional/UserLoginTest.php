@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\user\Functional;
 
-use Drupal\Core\Test\AssertMailTrait;
 use Drupal\Core\Url;
+use Drupal\Tests\AssertMailTrait;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
