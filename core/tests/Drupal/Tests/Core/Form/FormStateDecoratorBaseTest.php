@@ -950,7 +950,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
   /**
    * Provides data to self::testSet().
    */
-  public function providerSet() {
+  public static function providerSet(): array {
     return [
       ['FOO', 'BAR'],
       ['FOO', NULL],
@@ -987,7 +987,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
   /**
    * Provides data to self::testGet().
    */
-  public function providerGet() {
+  public static function providerGet(): array {
     return [
       ['FOO', 'BAR'],
       ['FOO', NULL],
@@ -1017,7 +1017,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
   /**
    * Provides data to self::testHas().
    */
-  public function providerHas() {
+  public static function providerHas(): array {
     return [
       [TRUE, 'FOO'],
       [FALSE, 'FOO'],
@@ -1445,7 +1445,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
   /**
    * Provides data to self::testPrepareCallback().
    */
-  public function providerPrepareCallback() {
+  public static function providerPrepareCallback(): array {
     $function = 'sleep';
     $shorthand_form_method = '::submit()';
     $closure = function () {};
