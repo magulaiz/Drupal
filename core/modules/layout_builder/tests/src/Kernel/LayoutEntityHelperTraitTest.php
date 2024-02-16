@@ -44,6 +44,7 @@ class LayoutEntityHelperTraitTest extends KernelTestBase {
 
     $this->installEntitySchema('user');
     $this->installEntitySchema('entity_test');
+    $this->installConfig('layout_builder');
   }
 
   /**

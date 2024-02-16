@@ -45,3 +45,19 @@ $connection->update('key_value')
   ->condition('collection', 'post_update')
   ->condition('name', 'existing_updates')
   ->execute();
+
+// Create layout_builder.settings.
+$connection->insert('config')
+  ->fields([
+    'collection',
+    'name',
+    'data',
+  ])
+  ->values([
+    'collection' => '',
+    'name' => 'layout_builder.settings',
+    'data' => serialize([
+      'add_new_fields_to_layout' => TRUE,
+    ]),
+  ])
+  ->execute();
