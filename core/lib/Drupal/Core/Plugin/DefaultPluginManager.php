@@ -158,6 +158,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
       $this->pluginDefinitionAnnotationName = $plugin_definition_attribute_name ?? 'Drupal\Component\Annotation\Plugin';
       $this->additionalAnnotationNamespaces = $plugin_definition_annotation_name ?? [];
     }
+    assert($this->validateAttributePlugin($this->pluginDefinitionAttributeName), sprintf('Attribute plugin %s does not have a deriver constructor argument.', $this->pluginDefinitionAttributeName));
   }
 
   /**
@@ -408,6 +409,24 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    */
   public function getCacheMaxAge() {
     return Cache::PERMANENT;
+  }
+
+  /**
+   * Assert that attribute plugin definition is valid.
+   *
+   * @param string|null $pluginDefinitionAttributeName
+   *   Attribute plugin class name if exists.
+   *
+   * @return bool
+   *   TRUE if plugin is valid.
+   */
+  protected function validateAttributePlugin(?string $pluginDefinitionAttributeName): bool {
+    if (is_null($pluginDefinitionAttributeName)) {
+      return TRUE;
+    }
+    $reflection_class = new \ReflectionClass($pluginDefinitionAttributeName);
+    $params = array_map(fn (\ReflectionParameter $parameter) => $parameter->getName(), $reflection_class->getConstructor()->getParameters());
+    return in_array('deriver', $params, TRUE);
   }
 
 }
