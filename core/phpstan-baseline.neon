@@ -1057,16 +1057,6 @@ parameters:
 			path: modules/block_content/tests/src/Kernel/BlockContentEntityReferenceSelectionTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: modules/block_content/tests/src/Kernel/Migrate/d6/MigrateBlockContentTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 3
-			path: modules/block_content/tests/src/Kernel/Migrate/d6/MigrateCustomBlockContentTranslationTest.php
-
-		-
 			message: "#^@dataProvider providerTestSetFirst related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 3
 			path: modules/block_content/tests/src/Unit/Access/DependentAccessTest.php
@@ -1630,11 +1620,6 @@ parameters:
 			path: modules/datetime/tests/src/Kernel/DateTimeItemTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/datetime/tests/src/Kernel/Views/FilterDateTimeTest.php
-
-		-
 			message: "#^@dataProvider providerTestDefineValueProcessPipeline related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: modules/datetime/tests/src/Unit/Plugin/migrate/field/DateFieldTest.php
@@ -1713,11 +1698,6 @@ parameters:
 			message: "#^@dataProvider dataTestMinMaxValue related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: modules/field/tests/src/Kernel/Number/NumberItemTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/field/tests/src/Kernel/Timestamp/TimestampFormatterTest.php
 
 		-
 			message: "#^@dataProvider providerInvalidEnforcedCardinality related method must be static in PHPUnit 10 and newer\\.$#"
@@ -1860,11 +1840,6 @@ parameters:
 			path: modules/file/tests/src/Functional/Formatter/FileVideoFormatterTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: modules/file/tests/src/Kernel/DeleteTest.php
-
-		-
 			message: "#^@dataProvider getFileTypes related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: modules/file/tests/src/Kernel/FileItemValidationTest.php
@@ -1883,11 +1858,6 @@ parameters:
 			message: "#^@dataProvider providerTestFileValidateExtensionsOnUri related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: modules/file/tests/src/Kernel/Plugin/Validation/Constraint/FileExtensionConstraintValidatorTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: modules/file/tests/src/Kernel/UsageTest.php
 
 		-
 			message: "#^@dataProvider validateProvider related method must be static in PHPUnit 10 and newer\\.$#"
@@ -1983,11 +1953,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/history/src/Plugin/views/filter/HistoryUserTimestamp.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: modules/history/tests/src/Kernel/Views/HistoryTimestampTest.php
 
 		-
 			message: "#^Variable \\$image_style in empty\\(\\) always exists and is not falsy\\.$#"
@@ -2753,11 +2718,6 @@ parameters:
 			message: "#^Variable \\$uuid might not be defined\\.$#"
 			count: 1
 			path: modules/menu_link_content/src/Plugin/Menu/MenuLinkContent.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: modules/menu_link_content/tests/src/Kernel/MenuLinksTest.php
 
 		-
 			message: "#^@dataProvider providerTestDisablingRouteValidation related method must be static in PHPUnit 10 and newer\\.$#"
@@ -3850,11 +3810,6 @@ parameters:
 			path: modules/system/tests/modules/deprecation_test/src/DeprecatedController.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/system/tests/modules/entity_test/src/Plugin/Field/FieldType/ChangedTestItem.php
-
-		-
 			message: "#^@dataProvider providerTestGetWithFormat related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: modules/system/tests/modules/entity_test/tests/src/Functional/Rest/EntityTestTextItemNormalizerTest.php
@@ -4004,11 +3959,6 @@ parameters:
 			message: "#^@dataProvider providerShowAdvisories related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: modules/system/tests/src/Kernel/SecurityAdvisories/SecurityAdvisoriesFetcherTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/system/tests/src/Kernel/Token/TokenReplaceKernelTest.php
 
 		-
 			message: """
@@ -4778,16 +4728,6 @@ parameters:
 			path: modules/views/tests/src/FunctionalJavascript/ClickSortingAJAXTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 3
-			path: modules/views/tests/src/Kernel/Handler/FieldDropbuttonTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Handler/FieldFieldTest.php
-
-		-
 			message: "#^@dataProvider providerTestFieldNumeric related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: modules/views/tests/src/Kernel/Handler/FieldNumericTest.php
@@ -5340,12 +5280,10 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Cache/ApcuBackendTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 12
-			path: tests/Drupal/KernelTests/Core/Cache/GenericCacheBackendUnitTestBase.php
-
-		-
-			message: "#^@dataProvider providerConfigEntityUninstallComplex related method must be static in PHPUnit 10 and newer\\.$#"
+			message: """
+				#^Call to deprecated method expectWarning\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
+				https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#
+			"""
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Config/ConfigDependencyTest.php
 
@@ -5435,11 +5373,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/DrupalKernel/DrupalKernelTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 4
-			path: tests/Drupal/KernelTests/Core/Entity/ContentEntityChangedTest.php
-
-		-
 			message: "#^@dataProvider providerTestCreate related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Entity/ContentEntityStorageBaseTest.php
@@ -5453,11 +5386,6 @@ parameters:
 			message: "#^@dataProvider providerTestFieldAccess related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Entity/EntityAccessControlHandlerTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 9
-			path: tests/Drupal/KernelTests/Core/Entity/EntityCrudHookTest.php
 
 		-
 			message: "#^@dataProvider dataTestDecoupledPendingRevisions related method must be static in PHPUnit 10 and newer\\.$#"
@@ -5503,11 +5431,6 @@ parameters:
 			message: "#^Variable \\$field might not be defined\\.$#"
 			count: 9
 			path: tests/Drupal/KernelTests/Core/Entity/EntitySchemaTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/EntityTypeConstraintsTest.php
 
 		-
 			message: "#^@dataProvider entityDefinitionIsInternalProvider related method must be static in PHPUnit 10 and newer\\.$#"
@@ -5608,11 +5531,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Installer/InstallerRedirectTraitTest.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/KeyValueStore/GarbageCollectionTest.php
-
-		-
 			message: "#^@dataProvider providerTestBuild related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Layout/IconBuilderTest.php
@@ -5651,11 +5569,6 @@ parameters:
 			message: "#^@dataProvider providerTestUriScheme related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/StreamWrapper/StreamWrapperManagerTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/TempStore/TempStoreDatabaseTest.php
 
 		-
 			message: "#^@dataProvider dataSetProvider related method must be static in PHPUnit 10 and newer\\.$#"
