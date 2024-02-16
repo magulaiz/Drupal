@@ -42,7 +42,7 @@ final class UserPermissionProviderCompilerPass implements CompilerPassInterface 
       $callbacks = $permissions['permission_callbacks'] ?? [];
       foreach ($callbacks as $callback) {
         if (!str_contains($callback, '::')) {
-          throw new \Exception('`permission_callbacks` only supports callable in string `ClassOrService::method` format.');
+          throw new \RuntimeException('`permission_callbacks` only supports callable in string `ClassOrService::method` format.');
         }
 
         [$classOrService, $method] = explode('::', $callback, 2);

@@ -68,10 +68,10 @@ class PermissionHandler implements PermissionHandlerInterface {
    *   Permission handler locator.
    */
   public function __construct(
-    private readonly ModuleHandlerInterface $moduleHandler,
+    protected readonly ModuleHandlerInterface $moduleHandler,
     TranslationInterface $stringTranslation,
-    private readonly ?ControllerResolverInterface $controllerResolver,
-    private ?PermissionProvidersLocator $permissionProvidersLocator = NULL,
+    ?ControllerResolverInterface $controllerResolver,
+    protected ?PermissionProvidersLocator $permissionProvidersLocator = NULL,
   ) {
     if ($controllerResolver !== NULL) {
       @trigger_error('Calling ' . __METHOD__ . '() with the $controllerResolver argument is deprecated in drupal:10.3.0 and is removed in drupal:11.0.0. See https://www.drupal.org/node/3421573', E_USER_DEPRECATED);

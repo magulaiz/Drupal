@@ -6,6 +6,9 @@ namespace Drupal\user;
 
 use Psr\Container\ContainerInterface;
 
+/**
+ * A locator containing services which provide dynamic permissions.
+ */
 final class PermissionProvidersLocator {
 
   /**
