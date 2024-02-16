@@ -20,13 +20,6 @@ trait TestCompatibilityTrait {
    */
   protected $previouslyDefinedErrorHandler;
 
-  protected bool $expectedWarning = FALSE;
-  protected ?string $expectedWarningMessage = NULL;
-  protected ?string $expectedWarningMessageRegularExpression = NULL;
-
-  protected bool $actualWarning = FALSE;
-  protected ?string $actualWarningMessage = NULL;
-
   public function setUpErrorHandler(): void {
     $this->setUpIgnoreDeprecationPatterns();
 
@@ -42,11 +35,7 @@ trait TestCompatibilityTrait {
             $this->collectedDeprecations[] = $errstr;
           }
 
-          if ((E_USER_WARNING === $errno || E_WARNING === $errno) && $this->expectedWarning) {
-            $this->actualWarning = TRUE;
-            $this->actualWarningMessage = $errstr;
-          }
-          elseif ((E_USER_DEPRECATED === $errno || E_DEPRECATED === $errno) && $this->isIgnoredDeprecation($errstr)) {
+          if ((E_USER_DEPRECATED === $errno || E_DEPRECATED === $errno) && $this->isIgnoredDeprecation($errstr)) {
             return TRUE;
           }
           elseif ((E_USER_DEPRECATED === $errno || E_DEPRECATED === $errno) && $this->isTestInLegacyGroup()) {
@@ -63,34 +52,11 @@ trait TestCompatibilityTrait {
 
   public function tearDownErrorHandler(): void {
     if ($this->previouslyDefinedErrorHandler !== NULL) {
-      if ($this->expectedWarning) {
-        self::assertTrue($this->actualWarning, 'A warning was expected, but it was not triggered');
-        if (isset($this->expectedWarningMessage)) {
-          self::assertStringContainsString($this->expectedWarningMessage, $this->actualWarningMessage, 'Actual warning message does not match expected');
-        }
-        elseif (isset($this->expectedWarningMessageRegularExpression)) {
-          self::assertMatchesRegularExpression($this->expectedWarningMessageRegularExpression, $this->actualWarningMessage, 'Actual warning message does not match expected regular expression');
-        }
-      }
       restore_error_handler();
     }
 
     // Checks if collected deprecations match the expectations.
     $this->tearDownExpectedDeprecations();
-  }
-
-  public function expectWarning(): void {
-    $this->expectedWarning = TRUE;
-  }
-
-  public function expectWarningMessage(string $message): void {
-    $this->expectedWarning = TRUE;
-    $this->expectedWarningMessage = $message;
-  }
-
-  public function expectWarningMessageMatches(string $regularExpression): void {
-    $this->expectedWarning = TRUE;
-    $this->expectedWarningMessageRegularExpression = $regularExpression;
   }
 
 }
