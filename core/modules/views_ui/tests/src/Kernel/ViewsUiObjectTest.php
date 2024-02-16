@@ -7,6 +7,9 @@ use Drupal\views\Entity\View;
 use Drupal\views\ViewExecutable;
 use Drupal\views_ui\ViewUI;
 
+/**
+ * @group views_ui
+ */
 class ViewsUiObjectTest extends KernelTestBase {
 
   /**
