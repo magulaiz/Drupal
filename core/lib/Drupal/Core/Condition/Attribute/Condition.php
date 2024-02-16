@@ -33,16 +33,16 @@ class Condition extends Plugin {
    * @param string $id
    *   The plugin ID.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $label
-   *   The human-readable name of the condition.
-   * @param string $module
-   *   The name of the module providing the type.
+   *   (optional) The human-readable name of the condition.
+   * @param string|null $module
+   *   (optional) The name of the module providing the type.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $category
-   *   (optional) The category under which the condition should listed in the
+   *   (optional) The category under which the condition should be listed in the
    *   UI.
    * @param array $context_definitions
-   *   An array of context definitions describing the context used by the
-   *   plugin.
-   * @param string|null $deriver
+   *   (optional) An array of context definitions describing the context used by
+   *   the plugin.
+   * @param class-string|null $deriver
    *   (optional) The deriver class.
    */
   public function __construct(
