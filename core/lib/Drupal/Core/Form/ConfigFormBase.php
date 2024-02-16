@@ -114,12 +114,14 @@ abstract class ConfigFormBase extends FormBase {
 
       $config = $this->configFactory()->getEditable($target->configName);
       $element['#default_value'] = $target->getValue($config);
-      foreach ($target->propertyPaths as $property_path) {
-        $definition = $this->typedConfigManager->getDefinition($target->configName)['mapping'][$property_path]['type'];
-        $constraints = $this->typedConfigManager->get($definition)->getConstraints();
-        foreach ($constraints as $constraint) {
-          if ($constraint instanceof RegexConstraint) {
-            $element['#attributes']['pattern'] = $constraint->pattern;
+      if ($element['#type'] === 'textfield') {
+        foreach ($target->propertyPaths as $property_path) {
+          $definition = $this->typedConfigManager->getDefinition($target->configName)['mapping'][$property_path]['type'];
+          $constraints = $this->typedConfigManager->get($definition)->getConstraints();
+          foreach ($constraints as $constraint) {
+            if ($constraint instanceof RegexConstraint) {
+              $element['#attributes']['pattern'] = $constraint->pattern;
+            }
           }
         }
       }
