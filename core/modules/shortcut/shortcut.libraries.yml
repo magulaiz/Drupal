@@ -4,3 +4,5 @@ drupal.shortcut:
     theme:
       css/shortcut.theme.css: {}
       css/shortcut.icons.theme.css: {}
+      css/shortcut.toolbar.css: {}
+      css/shortcut.icons.toolbar.css: {}

@@ -35,4 +35,4 @@ drupal.user.icons:
   version: VERSION
   css:
     theme:
-      css/user.icons.admin.css: {}
+      css/user.icons.toolbar.css: {}

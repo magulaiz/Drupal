@@ -1,11 +1,8 @@
 /**
  * @file
- * Styling for the user module icons.
+ * Styling for the user module toolbar icons.
  */
 
-/**
- * Toolbar tab icon.
- */
 .toolbar-bar .toolbar-icon-user::before {
   background-image: url(../../../misc/icons/bebebe/person.svg);
 }

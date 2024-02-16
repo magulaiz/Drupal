@@ -51,6 +51,7 @@ libraries-override:
   contextual/drupal.contextual-toolbar:
     css:
       component:
+        css/contextual.icons.toolbar.css: false
         css/contextual.toolbar.css: css/contextual/contextual.toolbar.css
 
   core/drupal.dialog.off_canvas:
@@ -197,6 +198,7 @@ libraries-override:
         css/settings_tray.module.css: css/settings_tray/settings_tray.module.css
         css/settings_tray.motion.css: css/settings_tray/settings_tray.motion.css
         css/settings_tray.toolbar.css: css/settings_tray/settings_tray.toolbar.css
+        css/settings_tray.icons.toolbar.css: false
       theme:
         css/settings_tray.theme.css: css/settings_tray/settings_tray.theme.css
 
@@ -205,6 +207,8 @@ libraries-override:
       theme:
         css/shortcut.theme.css: css/shortcut/shortcut.theme.css
         css/shortcut.icons.theme.css: css/shortcut/shortcut.icons.theme.css
+        css/shortcut.toolbar.css: false
+        css/shortcut.icons.toolbar.css: false
 
   system/base:
     css:
@@ -265,6 +269,7 @@ libraries-override:
     css:
       component:
         css/tour.module.css: css/tour/tour.module.css
+        css/tour.toolbar.css: false
 
   update/drupal.update.admin:
     css:
@@ -283,6 +288,7 @@ libraries-override:
     css:
       theme:
         css/user.icons.admin.css: css/user/user.icons.admin.css
+        css/user.icons.toolbar.css: false
 
   views/views.module:
     css:
