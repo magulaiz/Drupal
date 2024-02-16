@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\TestTools\PhpUnitCompatibility\PhpUnit10;
 
-use PHPUnit\Metadata\CoversClass;
+use PHPUnit\Metadata\Covers;
 
 // cspell:ignore errno errstr errfile errline
 
@@ -69,8 +69,8 @@ trait TestCompatibilityTrait {
    */
   public function getTestClassCovers(): array {
     $ret = [];
-    foreach ($this->valueObjectForEvents()->metadata()->isCoversClass() as $metadata) {
-      if ($metadata instanceof CoversClass) {
+    foreach ($this->valueObjectForEvents()->metadata()->isCovers() as $metadata) {
+      if ($metadata instanceof Covers) {
         $ret[] = $metadata->target();
       }
     }
