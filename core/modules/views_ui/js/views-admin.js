@@ -419,6 +419,85 @@
     },
   };
 
+  const DOMAnimations = {
+    /* Force Reflow:
+     * This ensures the browser recalculates the element's dimensions and
+     * applies the initial height correctly before starting the animation.
+     */
+    reflows(element) {
+      return element.offsetHeight;
+    },
+    /**
+     * SlideUp
+     *
+     * @param {HTMLElement} element
+     * @param {Number} duration
+     * @returns {Promise<boolean>}
+     */
+    slideUp(element, duration = 200) {
+      return new Promise(function (resolve, reject) {
+        element.style.height = `${element.offsetHeight}px`;
+        element.style.transitionProperty = `height`;
+        element.style.transitionDuration = `${duration}ms`;
+        DOMAnimations.reflows(element);
+        element.style.overflow = 'hidden';
+        element.style.height = 0;
+        window.setTimeout(function () {
+          element.style.display = 'none';
+          element.style.removeProperty('height');
+          element.style.removeProperty('transition-duration');
+          element.style.removeProperty('transition-property');
+          resolve(false);
+        }, duration);
+      });
+    },
+
+    /**
+     * SlideDown
+     *
+     * @param {HTMLElement} element
+     * @param {Number} duration
+     * @returns {Promise<boolean>}
+     */
+    slideDown(element, duration = 200) {
+      return new Promise(function (resolve, reject) {
+        element.style.removeProperty('display');
+        let display = window.getComputedStyle(element).display;
+
+        if (display === 'none') display = 'block';
+
+        element.style.display = display;
+        const height = element.offsetHeight;
+        element.style.overflow = 'hidden';
+        element.style.height = 0;
+        DOMAnimations.reflows(element);
+        element.style.transitionProperty = `height`;
+        element.style.transitionDuration = `${duration}ms`;
+        element.style.height = `${height}px`;
+        window.setTimeout(function () {
+          element.style.removeProperty('height');
+          element.style.removeProperty('overflow');
+          element.style.removeProperty('transition-duration');
+          element.style.removeProperty('transition-property');
+        }, duration);
+      });
+    },
+
+    /**
+     * SlideToggle
+     *
+     * @param {HTMLElement} element
+     * @param {Number} duration
+     * @returns {Promise<boolean>}
+     */
+    slideToggle(element, duration = 200) {
+      if (window.getComputedStyle(element).display === 'none') {
+        return this.slideDown(element, duration);
+      }
+      return this.slideUp(element, duration);
+    },
+  };
+
   /**
    * Toggle menu visibility.
    *
@@ -431,8 +510,9 @@
    *   where to put it.
    */
   Drupal.behaviors.viewsUiRenderAddViewButton.toggleMenu = function ($trigger) {
+    const el = $trigger.next()[0];
     $trigger.parent().toggleClass('open');
-    $trigger.next().slideToggle('fast');
+    DOMAnimations.slideToggle(el);
   };
 
   /**
