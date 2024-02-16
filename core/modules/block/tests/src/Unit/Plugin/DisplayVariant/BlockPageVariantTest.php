@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\block\Unit\Plugin\DisplayVariant;
 
 use Drupal\Core\Cache\CacheableMetadata;
@@ -66,7 +68,7 @@ class BlockPageVariantTest extends UnitTestCase {
       ->getMock();
   }
 
-  public function providerBuild() {
+  public static function providerBuild() {
     $blocks_config = [
       'block1' => [
         // region, is main content block, is messages block, is title block

@@ -619,7 +619,7 @@
 
     // Ensure that we have a valid URL by adding ? when no query parameter is
     // yet available, otherwise append using &.
-    if (ajax.options.url.indexOf('?') === -1) {
+    if (!ajax.options.url.includes('?')) {
       ajax.options.url += '?';
     } else {
       ajax.options.url += '&';
@@ -724,7 +724,7 @@
    * The Ajax object will, if instructed, bind to a key press response. This
    * will test to see if the key press is valid to trigger this event and
    * if it is, trigger it for us and prevent other keypresses from triggering.
-   * In this case we're handling RETURN and SPACEBAR keypresses (event codes 13
+   * In this case we're handling RETURN and SPACE BAR keypresses (event codes 13
    * and 32. RETURN is often used to submit a form when in a textfield, and
    * SPACE is often used to activate an element without submitting.
    *
@@ -739,7 +739,7 @@
 
     // Detect enter key and space bar and allow the standard response for them,
     // except for form elements of type 'text', 'tel', 'number' and 'textarea',
-    // where the spacebar activation causes inappropriate activation if
+    // where the space bar activation causes inappropriate activation if
     // #ajax['keypress'] is TRUE. On a text-type widget a space should always
     // be a space.
     if (
@@ -1085,7 +1085,9 @@
     const focusChanged = Object.keys(response || {}).some((key) => {
       const { command, method } = response[key];
       return (
-        command === 'focusFirst' || (command === 'invoke' && method === 'focus')
+        command === 'focusFirst' ||
+        command === 'openDialog' ||
+        (command === 'invoke' && method === 'focus')
       );
     });
 
@@ -1714,7 +1716,8 @@
 
       const allUniqueBundleIds = response.data.map(function (style) {
         const uniqueBundleId = style.href + ajax.instanceIndex;
-        loadjs(style.href, uniqueBundleId, {
+        // Force file to load as a CSS stylesheet using 'css!' flag.
+        loadjs(`css!${style.href}`, uniqueBundleId, {
           before(path, styleEl) {
             // This allows all attributes to be added, like media.
             Object.keys(style).forEach((attributeKey) => {

@@ -4,7 +4,7 @@
  * @file
  */
 
-// cspell:ignore divpiggydiv
+// cspell:ignore divpiggydiv Vxezb yarhar
 
 namespace Drupal\big_pipe_test;
 

@@ -11,6 +11,7 @@ use Drupal\workspaces\Entity\Workspace;
  * Tests access on workspaces.
  *
  * @group workspaces
+ * @group #slow
  */
 class WorkspaceAccessTest extends KernelTestBase {
 
@@ -48,7 +49,7 @@ class WorkspaceAccessTest extends KernelTestBase {
    * @return array
    *   An array of operations and permissions to test with.
    */
-  public function operationCases() {
+  public static function operationCases() {
     return [
       ['create', 'administer workspaces'],
       ['create', 'create workspace'],
