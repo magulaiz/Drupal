@@ -3828,26 +3828,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/Form/ConfigFormBaseTraitTest.php
 
 		-
-			message: "#^@dataProvider providerGet related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Form/FormStateDecoratorBaseTest.php
-
-		-
-			message: "#^@dataProvider providerHas related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Form/FormStateDecoratorBaseTest.php
-
-		-
-			message: "#^@dataProvider providerPrepareCallback related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Form/FormStateDecoratorBaseTest.php
-
-		-
-			message: "#^@dataProvider providerSet related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Form/FormStateDecoratorBaseTest.php
-
-		-
 			message: "#^Missing call to parent\\:\\:tearDown\\(\\) method\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Form/FormTestBase.php
@@ -3859,21 +3839,6 @@ parameters:
 			"""
 			count: 1
 			path: tests/Drupal/Tests/Core/Form/FormValidatorTest.php
-
-		-
-			message: "#^@dataProvider providerGetValues related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Form/SubformStateTest.php
-
-		-
-			message: "#^@dataProvider providerGetValuesBroken related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Form/SubformStateTest.php
-
-		-
-			message: "#^@dataProvider providerTestSetValuesBroken related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Form/SubformStateTest.php
 
 		-
 			message: """
