@@ -932,25 +932,23 @@ class SchemaTableTest extends SchemaTestBase {
    * @dataProvider providerCreateTable
    */
   public function testCreateTable($base_table_data, $embedded_tables_data, $embedded_validation, $expected_indexes) {
-    $schema = Database::getConnection()->schema();
-
-    $this->assertFalse($schema->tableExists($base_table_data['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($base_table_data['name']), 'The table does not exist in the MongoDB database.');
 
     // Call the to be tested methods: Schema::createTable() and
     // Schema::createEmbeddedTable().
-    $schema->createTable($base_table_data['name'], $base_table_data['schema']);
+    $this->schema->createTable($base_table_data['name'], $base_table_data['schema']);
     foreach ($embedded_tables_data as $parent_table_name => $embedded_table_array) {
       foreach ($embedded_table_array as $embedded_table_data) {
-        $schema->createEmbeddedTable($parent_table_name, $embedded_table_data['name'], $embedded_table_data['schema']);
+        $this->schema->createEmbeddedTable($parent_table_name, $embedded_table_data['name'], $embedded_table_data['schema']);
       }
     }
 
     // Check that the tables exist and that their validation, schema or index
     // data is what is it should be.
-    $this->assertTrue($schema->tableExists($base_table_data['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($base_table_data['name']), 'The table exists in the MongoDB database.');
     foreach ($embedded_tables_data as $parent_table_name => $embedded_table_array) {
       foreach ($embedded_table_array as $embedded_table_data) {
-        $this->assertTrue($schema->tableExists($embedded_table_data['name']), 'The embedded table exists in the MongoDB database.');
+        $this->assertTrue($this->schema->tableExists($embedded_table_data['name']), 'The embedded table exists in the MongoDB database.');
       }
     }
     $this->checkTableValidation($base_table_data['name'], $embedded_validation);
@@ -975,69 +973,61 @@ class SchemaTableTest extends SchemaTestBase {
    * @covers ::createTable
    */
   public function testCreateTableForTableExists() {
-    $schema = Database::getConnection()->schema();
+    $this->assertFalse($this->schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
 
-    $this->assertFalse($schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
+    $this->schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
 
-    $schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
-
-    $this->assertTrue($schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
 
     // If we try to create a table that exists an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
+    $this->schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
   }
 
   /**
    * @covers ::createEmbeddedTable
    */
   public function testCreateEmbeddedTableForBaseTableDoesNotExist() {
-    $schema = Database::getConnection()->schema();
-
-    $this->assertFalse($schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
 
     // If we try to create an embedded table on a base table that does not
     // exists, an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $schema->createEmbeddedTable($this->testTable1['name'], $this->testTable2['name'], $this->testTable2['schema']);
+    $this->schema->createEmbeddedTable($this->testTable1['name'], $this->testTable2['name'], $this->testTable2['schema']);
   }
 
   /**
    * @covers ::createEmbeddedTable
    */
   public function testCreateEmbeddedTableForEmbeddedTableExists() {
-    $schema = Database::getConnection()->schema();
+    $this->assertFalse($this->schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
 
-    $this->assertFalse($schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
+    $this->schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
+    $this->schema->createEmbeddedTable($this->testTable1['name'], $this->testTable2['name'], $this->testTable2['schema']);
 
-    $schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
-    $schema->createEmbeddedTable($this->testTable1['name'], $this->testTable2['name'], $this->testTable2['schema']);
-
-    $this->assertTrue($schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
 
     // If we try to create an embedded table that exists an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->createEmbeddedTable($this->testTable1['name'], $this->testTable2['name'], $this->testTable2['schema']);
+    $this->schema->createEmbeddedTable($this->testTable1['name'], $this->testTable2['name'], $this->testTable2['schema']);
   }
 
   /**
    * @covers ::createEmbeddedTable
    */
   public function testCreateEmbeddedTableForEmbeddedTableExistsAsBaseTable() {
-    $schema = Database::getConnection()->schema();
+    $this->assertFalse($this->schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable2['name']), 'The table does not exist in the MongoDB database.');
 
-    $this->assertFalse($schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->testTable2['name']), 'The table does not exist in the MongoDB database.');
+    $this->schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
+    $this->schema->createTable($this->testTable2['name'], $this->testTable2['schema']);
 
-    $schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
-    $schema->createTable($this->testTable2['name'], $this->testTable2['schema']);
-
-    $this->assertTrue($schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->testTable2['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable2['name']), 'The table exists in the MongoDB database.');
 
     // If we try to create an embedded table that exists an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->createEmbeddedTable($this->testTable1['name'], $this->testTable2['name'], $this->testTable2['schema']);
+    $this->schema->createEmbeddedTable($this->testTable1['name'], $this->testTable2['name'], $this->testTable2['schema']);
   }
 
   /**
@@ -1045,24 +1035,22 @@ class SchemaTableTest extends SchemaTestBase {
    * @covers ::tableExists
    */
   public function testCreateEmbeddedTableForEmbeddedTableExistsOnOtherBaseTable() {
-    $schema = Database::getConnection()->schema();
+    $this->assertFalse($this->schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable2['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable2['name']), 'The embedded table does not exist in the MongoDB database.');
 
-    $this->assertFalse($schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->testTable2['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->testTable2['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
+    $this->schema->createTable($this->testTable2['name'], $this->testTable2['schema']);
+    $this->schema->createEmbeddedTable($this->testTable2['name'], $this->testTable3['name'], $this->testTable3['schema']);
 
-    $schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
-    $schema->createTable($this->testTable2['name'], $this->testTable2['schema']);
-    $schema->createEmbeddedTable($this->testTable2['name'], $this->testTable3['name'], $this->testTable3['schema']);
-
-    $this->assertTrue($schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->testTable2['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->testTable3['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable2['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable3['name']), 'The embedded table exists in the MongoDB database.');
 
     // If we try to create an embedded table on a base table that does not
     // exists, an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->createEmbeddedTable($this->testTable1['name'], $this->testTable3['name'], $this->testTable3['schema']);
+    $this->schema->createEmbeddedTable($this->testTable1['name'], $this->testTable3['name'], $this->testTable3['schema']);
   }
 
   /**
@@ -2989,6 +2977,7 @@ class SchemaTableTest extends SchemaTestBase {
         $renamed_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_before,
         $renamed_table_indexes_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_after_renamed_2,
       ],
+
       [
         $this->testTable1,
         [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
@@ -3027,24 +3016,22 @@ class SchemaTableTest extends SchemaTestBase {
    * @dataProvider providerRenameTable
    */
   public function testRenameTable($base_table_data, $embedded_tables_data, $renamed_table_name, $expected_validation_before, $expected_validation_after, $expected_indexes_before, $expected_indexes_after) {
-    $schema = Database::getConnection()->schema();
-
     $renamed_table_name_old = $renamed_table_name;
     $renamed_table_name_new = $renamed_table_name . '_new';
 
     // Create all the tables.
-    $schema->createTable($base_table_data['name'], $base_table_data['schema']);
+    $this->schema->createTable($base_table_data['name'], $base_table_data['schema']);
     foreach ($embedded_tables_data as $parent_table_name => $embedded_table_array) {
       foreach ($embedded_table_array as $embedded_table_data) {
-        $schema->createEmbeddedTable($parent_table_name, $embedded_table_data['name'], $embedded_table_data['schema']);
+        $this->schema->createEmbeddedTable($parent_table_name, $embedded_table_data['name'], $embedded_table_data['schema']);
       }
     }
 
     // Test everything before the table has been renamed.
-    $this->assertTrue($schema->tableExists($base_table_data['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($base_table_data['name']), 'The table exists in the MongoDB database.');
     foreach ($embedded_tables_data as $parent_table_name => $embedded_table_array) {
       foreach ($embedded_table_array as $embedded_table_data) {
-        $this->assertTrue($schema->tableExists($embedded_table_data['name']), 'The embedded table exists in the MongoDB database.');
+        $this->assertTrue($this->schema->tableExists($embedded_table_data['name']), 'The embedded table exists in the MongoDB database.');
       }
     }
     $this->checkTableValidation($base_table_data['name'], $expected_validation_before);
@@ -3065,23 +3052,25 @@ class SchemaTableTest extends SchemaTestBase {
     $this->checkExpectedIndexesAgainstDatabase($base_table_data['name'], $expected_indexes_before);
     $this->checkTableNumberOfIndexes($base_table_data, $embedded_tables_data);
 
+//dump('$renamed_table_name_old: ' . $renamed_table_name_old);
+//dump('$renamed_table_name_new: ' . $renamed_table_name_new);
     // Call the to be tested method: Schema::renameTable().
-    $schema->renameTable($renamed_table_name_old, $renamed_table_name_new);
+    $this->schema->renameTable($renamed_table_name_old, $renamed_table_name_new);
 
     // Test everything after the table has been renamed.
     if ($base_table_data['name'] == $renamed_table_name_old) {
-      $this->assertFalse($schema->tableExists($base_table_data['name']), 'The table does not exist in the MongoDB database.');
+      $this->assertFalse($this->schema->tableExists($base_table_data['name']), 'The table does not exist in the MongoDB database.');
     }
     else {
-      $this->assertTrue($schema->tableExists($base_table_data['name']), 'The table exists in the MongoDB database.');
+      $this->assertTrue($this->schema->tableExists($base_table_data['name']), 'The table exists in the MongoDB database.');
     }
     foreach ($embedded_tables_data as $parent_table_name => $embedded_table_array) {
       foreach ($embedded_table_array as $embedded_table_data) {
         if ($embedded_table_data['name'] == $renamed_table_name_old) {
-          $this->assertTrue($schema->tableExists($renamed_table_name_new), 'The embedded table does not exist in the MongoDB database.');
+          $this->assertTrue($this->schema->tableExists($renamed_table_name_new), 'The embedded table does not exist in the MongoDB database.');
         }
         else {
-          $this->assertTrue($schema->tableExists($embedded_table_data['name']), 'The embedded table exists in the MongoDB database.');
+          $this->assertTrue($this->schema->tableExists($embedded_table_data['name']), 'The embedded table exists in the MongoDB database.');
         }
       }
     }
@@ -3152,100 +3141,90 @@ class SchemaTableTest extends SchemaTestBase {
    * @covers ::renameTable
    */
   public function testRenameTableForTableDoesNotExist() {
-    $schema = Database::getConnection()->schema();
-
-    $this->assertFalse($schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
 
     // If we try to delete a table on a non existent base table an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $schema->renameTable($this->testTable1['name'], $this->testTable2['name']);
+    $this->schema->renameTable($this->testTable1['name'], $this->testTable2['name']);
   }
 
   /**
    * @covers ::renameTable
    */
   public function testRenameTableForNewTableExistsAsBaseTable() {
-    $schema = Database::getConnection()->schema();
-
-    $this->assertFalse($schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->testTable2['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable2['name']), 'The table does not exist in the MongoDB database.');
 
     // Create the to be renamed table.
-    $schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
-    $schema->createTable($this->testTable2['name'], $this->testTable2['schema']);
+    $this->schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
+    $this->schema->createTable($this->testTable2['name'], $this->testTable2['schema']);
 
-    $this->assertTrue($schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->testTable2['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable2['name']), 'The table exists in the MongoDB database.');
 
     // If we try to delete a table on a non existent base table an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->renameTable($this->testTable1['name'], $this->testTable2['name']);
+    $this->schema->renameTable($this->testTable1['name'], $this->testTable2['name']);
   }
 
   /**
    * @covers ::renameTable
    */
   public function testRenameTableForEmbeddedTableDoesNotExist() {
-    $schema = Database::getConnection()->schema();
-
-    $this->assertFalse($schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
 
     // Create the to be renamed table.
-    $schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
+    $this->schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
 
-    $this->assertTrue($schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
 
     // If we try to rename an embedded table on a non existent embedded table an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $schema->renameTable($this->testTable2['name'], $this->testTable2['name']);
+    $this->schema->renameTable($this->testTable2['name'], $this->testTable2['name']);
   }
 
   /**
    * @covers ::renameTable
    */
   public function testRenameTableForNewTableExistsAsEmbeddedTable() {
-    $schema = Database::getConnection()->schema();
-
-    $this->assertFalse($schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->testTable2['name']), 'The embedded table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->testTable3['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable2['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable3['name']), 'The embedded table does not exist in the MongoDB database.');
 
     // Create the to be renamed tables.
-    $schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
-    $schema->createEmbeddedTable($this->testTable1['name'], $this->testTable2['name'], $this->testTable2['schema']);
-    $schema->createEmbeddedTable($this->testTable1['name'], $this->testTable3['name'], $this->testTable3['schema']);
+    $this->schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
+    $this->schema->createEmbeddedTable($this->testTable1['name'], $this->testTable2['name'], $this->testTable2['schema']);
+    $this->schema->createEmbeddedTable($this->testTable1['name'], $this->testTable3['name'], $this->testTable3['schema']);
 
-    $this->assertTrue($schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->testTable2['name']), 'The embedded table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->testTable3['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable2['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable3['name']), 'The embedded table exists in the MongoDB database.');
 
     // If we try to rename an embedded table to an existent embedded table an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->renameTable($this->testTable2['name'], $this->testTable3['name']);
+    $this->schema->renameTable($this->testTable2['name'], $this->testTable3['name']);
   }
 
   /**
    * @covers ::renameTable
    */
   public function testRenameTableForNewEmbeddedTableExistAsBaseTable() {
-    $schema = Database::getConnection()->schema();
-
-    $this->assertFalse($schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->testTable3['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->testTable2['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable3['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable2['name']), 'The embedded table does not exist in the MongoDB database.');
 
     // Create the to be renamed tables.
-    $schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
-    $schema->createTable($this->testTable3['name'], $this->testTable3['schema']);
-    $schema->createEmbeddedTable($this->testTable1['name'], $this->testTable2['name'], $this->testTable2['schema']);
+    $this->schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
+    $this->schema->createTable($this->testTable3['name'], $this->testTable3['schema']);
+    $this->schema->createEmbeddedTable($this->testTable1['name'], $this->testTable2['name'], $this->testTable2['schema']);
 
-    $this->assertTrue($schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->testTable3['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->testTable2['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable3['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable2['name']), 'The embedded table exists in the MongoDB database.');
 
     // If we try to rename an embedded table to an existent base table an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->renameTable($this->testTable2['name'], $this->testTable3['name']);
+    $this->schema->renameTable($this->testTable2['name'], $this->testTable3['name']);
   }
 
   /**
@@ -3253,30 +3232,29 @@ class SchemaTableTest extends SchemaTestBase {
    * @covers ::tableExists
    */
   public function testRenameTableForEmbeddedTableExistsOnOtherBaseTable() {
-    $schema = Database::getConnection()->schema();
     $test_table4 = $this->testTable3;
     $test_table4['name'] = 'test_table4';
 
-    $this->assertFalse($schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->testTable2['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->testTable3['name']), 'The embedded table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($test_table4['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable2['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable3['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($test_table4['name']), 'The embedded table does not exist in the MongoDB database.');
 
     // Create the to be renamed tables.
-    $schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
-    $schema->createTable($this->testTable2['name'], $this->testTable2['schema']);
-    $schema->createEmbeddedTable($this->testTable1['name'], $this->testTable3['name'], $this->testTable3['schema']);
-    $schema->createEmbeddedTable($this->testTable2['name'], $test_table4['name'], $test_table4['schema']);
+    $this->schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
+    $this->schema->createTable($this->testTable2['name'], $this->testTable2['schema']);
+    $this->schema->createEmbeddedTable($this->testTable1['name'], $this->testTable3['name'], $this->testTable3['schema']);
+    $this->schema->createEmbeddedTable($this->testTable2['name'], $test_table4['name'], $test_table4['schema']);
 
-    $this->assertTrue($schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->testTable2['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->testTable3['name']), 'The embedded table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($test_table4['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable2['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable3['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($test_table4['name']), 'The embedded table exists in the MongoDB database.');
 
     // If we try to rename an embedded table on a base table that does not
     // exists, an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->renameTable($this->testTable3['name'], $test_table4['name']);
+    $this->schema->renameTable($this->testTable3['name'], $test_table4['name']);
   }
 
   /**
@@ -4540,21 +4518,19 @@ class SchemaTableTest extends SchemaTestBase {
    * @dataProvider providerDropTableWithEmbeddedTables
    */
   public function testDropTableWithEmbeddedTables($base_table_data, $embedded_tables_data, $embedded_tables_data_after, $dropped_table_name, $expected_validation_before, $expected_validation_after, $expected_indexes_before, $expected_indexes_after, $deleted_tables) {
-    $schema = Database::getConnection()->schema();
-
     // Create all the tables.
-    $schema->createTable($base_table_data['name'], $base_table_data['schema']);
+    $this->schema->createTable($base_table_data['name'], $base_table_data['schema']);
     foreach ($embedded_tables_data as $parent_table_name => $embedded_table_array) {
       foreach ($embedded_table_array as $embedded_table_data) {
-        $schema->createEmbeddedTable($parent_table_name, $embedded_table_data['name'], $embedded_table_data['schema']);
+        $this->schema->createEmbeddedTable($parent_table_name, $embedded_table_data['name'], $embedded_table_data['schema']);
       }
     }
 
     // Test everything before the table has been dropped.
-    $this->assertTrue($schema->tableExists($base_table_data['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($base_table_data['name']), 'The table exists in the MongoDB database.');
     foreach ($embedded_tables_data as $parent_table_name => $embedded_table_array) {
       foreach ($embedded_table_array as $embedded_table_data) {
-        $this->assertTrue($schema->tableExists($embedded_table_data['name']), 'The embedded table exists in the MongoDB database.');
+        $this->assertTrue($this->schema->tableExists($embedded_table_data['name']), 'The embedded table exists in the MongoDB database.');
       }
     }
     $this->checkTableValidation($base_table_data['name'], $expected_validation_before);
@@ -4575,22 +4551,22 @@ class SchemaTableTest extends SchemaTestBase {
     $this->checkTableNumberOfIndexes($base_table_data, $embedded_tables_data);
 
     // Call the to be tested method: Schema::dropTable().
-    $schema->dropTable($dropped_table_name);
+    $this->schema->dropTable($dropped_table_name);
 
     // Test everything after the table has been dropped.
     if ($base_table_data['name'] == $dropped_table_name) {
-      $this->assertFalse($schema->tableExists($base_table_data['name']), 'The table does not exist in the MongoDB database.');
+      $this->assertFalse($this->schema->tableExists($base_table_data['name']), 'The table does not exist in the MongoDB database.');
     }
     else {
-      $this->assertTrue($schema->tableExists($base_table_data['name']), 'The table exists in the MongoDB database.');
+      $this->assertTrue($this->schema->tableExists($base_table_data['name']), 'The table exists in the MongoDB database.');
     }
     foreach ($embedded_tables_data as $parent_table_name => $embedded_table_array) {
       foreach ($embedded_table_array as $embedded_table_data) {
         if (in_array($embedded_table_data['name'], $deleted_tables, TRUE)) {
-          $this->assertFalse($schema->tableExists($embedded_table_data['name']), 'The embedded table does not exist in the MongoDB database.');
+          $this->assertFalse($this->schema->tableExists($embedded_table_data['name']), 'The embedded table does not exist in the MongoDB database.');
         }
         else {
-          $this->assertTrue($schema->tableExists($embedded_table_data['name']), 'The embedded table exists in the MongoDB database.');
+          $this->assertTrue($this->schema->tableExists($embedded_table_data['name']), 'The embedded table exists in the MongoDB database.');
         }
       }
     }
@@ -4627,26 +4603,22 @@ class SchemaTableTest extends SchemaTestBase {
    * @covers ::dropTable
    */
   public function testDropTableForTableDoesNotExist() {
-    $schema = Database::getConnection()->schema();
+    $this->assertFalse($this->schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
 
-    $this->assertFalse($schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
-
-    $this->assertFalse($schema->dropTable($this->testTable1['name']), 'Dropping a non existing table in the MongoDB database.');
+    $this->assertFalse($this->schema->dropTable($this->testTable1['name']), 'Dropping a non existing table in the MongoDB database.');
   }
 
   /**
    * @covers ::dropTable
    */
   public function testDropTableForEmbeddedTableDoesNotExist() {
-    $schema = Database::getConnection()->schema();
+    $this->assertFalse($this->schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
 
-    $this->assertFalse($schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
+    $this->schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
 
-    $schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
+    $this->assertTrue($this->schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
 
-    $this->assertTrue($schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
-
-    $this->assertFalse($schema->dropTable($this->testTable2['name']), 'Dropping a non existing embedded table in the MongoDB database.');
+    $this->assertFalse($this->schema->dropTable($this->testTable2['name']), 'Dropping a non existing embedded table in the MongoDB database.');
   }
 
 }

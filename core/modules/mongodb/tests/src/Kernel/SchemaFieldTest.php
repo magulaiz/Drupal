@@ -66,24 +66,22 @@ class SchemaFieldTest extends SchemaTestBase {
    * @covers ::fieldExists
    */
   public function testFieldExists() {
-    $schema = Database::getConnection()->schema();
+    $this->assertFalse($this->schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable2['name']), 'The table does not exist in the MongoDB database.');
 
-    $this->assertFalse($schema->tableExists($this->testTable1['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->testTable2['name']), 'The table does not exist in the MongoDB database.');
+    $this->schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
 
-    $schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
-
-    $this->assertTrue($schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->testTable2['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable1['name']), 'The table exists in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable2['name']), 'The table does not exist in the MongoDB database.');
 
     // Test that if a field that exists on an existing table will return TRUE.
-    $this->assertTrue($schema->fieldExists($this->testTable1['name'], 'test_field'), "The table 'test_table1' has a field with the name 'test_field'.");
+    $this->assertTrue($this->schema->fieldExists($this->testTable1['name'], 'test_field'), "The table 'test_table1' has a field with the name 'test_field'.");
 
     // Test that if a non-existing field on an existing table will return FALSE.
-    $this->assertFalse($schema->fieldExists($this->testTable1['name'], 'does_not_exists_field'), "The table 'test_table1' does not have a field with the name 'does_not_exists_field'.");
+    $this->assertFalse($this->schema->fieldExists($this->testTable1['name'], 'does_not_exists_field'), "The table 'test_table1' does not have a field with the name 'does_not_exists_field'.");
 
     // Test that a  non-existing table will return FALSE.
-    $this->assertFalse($schema->fieldExists($this->testTable2['name'], 'test_field'), "The table 'test_table1' has a field with the name 'test_field'.");
+    $this->assertFalse($this->schema->fieldExists($this->testTable2['name'], 'test_field'), "The table 'test_table1' has a field with the name 'test_field'.");
   }
 
   /**
@@ -118,8 +116,6 @@ class SchemaFieldTest extends SchemaTestBase {
    * @dataProvider providerEmbeddedFieldExists
    */
   public function testEmbeddedFieldExists($embedded_table_name, $field_name, $expected_result) {
-    $schema = Database::getConnection()->schema();
-
     $embedded_tables_data = [
       $this->testTable1['name'] => [$this->testTable2],
       $this->testTable2['name'] => [$this->testTable3, $this->testTable4],
@@ -127,23 +123,23 @@ class SchemaFieldTest extends SchemaTestBase {
     ];
 
     // Create all the tables.
-    $schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
-    $schema->createTable($this->testTable6['name'], $this->testTable6['schema']);
+    $this->schema->createTable($this->testTable1['name'], $this->testTable1['schema']);
+    $this->schema->createTable($this->testTable6['name'], $this->testTable6['schema']);
     foreach ($embedded_tables_data as $parent_table => $embedded_table_array) {
       foreach ($embedded_table_array as $embedded_table_data) {
-        $schema->createEmbeddedTable($parent_table, $embedded_table_data['name'], $embedded_table_data['schema']);
+        $this->schema->createEmbeddedTable($parent_table, $embedded_table_data['name'], $embedded_table_data['schema']);
       }
     }
 
     // Test if all tables are created.
-    $this->assertTrue($schema->tableExists($this->testTable1['name']), 'The table "test_table1" exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->testTable2['name']), 'The table "test_table2" exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->testTable3['name']), 'The table "test_table3" exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table "test_table4" exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->testTable5['name']), 'The table "test_table5" exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->testTable6['name']), 'The table "test_table6" exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable1['name']), 'The table "test_table1" exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable2['name']), 'The table "test_table2" exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable3['name']), 'The table "test_table3" exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable4['name']), 'The table "test_table4" exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable5['name']), 'The table "test_table5" exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable6['name']), 'The table "test_table6" exists in the MongoDB database.');
 
-    $result = $schema->fieldExists($embedded_table_name, $field_name);
+    $result = $this->schema->fieldExists($embedded_table_name, $field_name);
     if ($expected_result) {
       $this->assertTrue($result, 'The field should exist on the table.');
     }
@@ -2587,34 +2583,32 @@ class SchemaFieldTest extends SchemaTestBase {
    * @dataProvider providerAddField
    */
   public function testAddField($base_table_data, $embedded_tables_data, $table_name_to_add_field, $field_data, $base_table_with_embedded_tables_and_added_field) {
-    $schema = Database::getConnection()->schema();
-
-    $this->assertFalse($schema->tableExists($base_table_data['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($base_table_data['name']), 'The table does not exist in the MongoDB database.');
     foreach ($embedded_tables_data as $embedded_table_array) {
       foreach ($embedded_table_array as $embedded_table_data) {
-        $this->assertFalse($schema->tableExists($embedded_table_data['name']), 'The embedded table does not exist in the MongoDB database.');
+        $this->assertFalse($this->schema->tableExists($embedded_table_data['name']), 'The embedded table does not exist in the MongoDB database.');
       }
     }
-    $this->assertFalse($schema->fieldExists($table_name_to_add_field, $field_data['name']), 'The field does not exist on the embedded table in the MongoDB database.');
+    $this->assertFalse($this->schema->fieldExists($table_name_to_add_field, $field_data['name']), 'The field does not exist on the embedded table in the MongoDB database.');
 
     // Create the base table, the embedded tables and add the field.
-    $schema->createTable($base_table_data['name'], $base_table_data['schema']);
+    $this->schema->createTable($base_table_data['name'], $base_table_data['schema']);
     foreach ($embedded_tables_data as $parent_table_name => $embedded_table_array) {
       foreach ($embedded_table_array as $embedded_table_data) {
-        $schema->createEmbeddedTable($parent_table_name, $embedded_table_data['name'], $embedded_table_data['schema']);
+        $this->schema->createEmbeddedTable($parent_table_name, $embedded_table_data['name'], $embedded_table_data['schema']);
       }
     }
 
     // Call the to be tested method: Schema::addField().
-    $schema->addField($table_name_to_add_field, $field_data['name'], $field_data['spec'], $field_data['keys']);
+    $this->schema->addField($table_name_to_add_field, $field_data['name'], $field_data['spec'], $field_data['keys']);
 
-    $this->assertTrue($schema->tableExists($base_table_data['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($base_table_data['name']), 'The table exists in the MongoDB database.');
     foreach ($embedded_tables_data as $embedded_table_array) {
       foreach ($embedded_table_array as $embedded_table_data) {
-        $this->assertTrue($schema->tableExists($embedded_table_data['name']), 'The embedded table exists in the MongoDB database.');
+        $this->assertTrue($this->schema->tableExists($embedded_table_data['name']), 'The embedded table exists in the MongoDB database.');
       }
     }
-    $this->assertTrue($schema->fieldExists($table_name_to_add_field, $field_data['name']), 'The field exists on the table in the MongoDB database.');
+    $this->assertTrue($this->schema->fieldExists($table_name_to_add_field, $field_data['name']), 'The field exists on the table in the MongoDB database.');
 
     // Check that the validation, schema or index data are what they should be.
     $this->checkTableValidation($base_table_data['name'], $base_table_with_embedded_tables_and_added_field['validation']);
@@ -2672,13 +2666,11 @@ class SchemaFieldTest extends SchemaTestBase {
    * @covers ::addField
    */
   public function testAddFieldForTableDoesNotExist() {
-    $schema = Database::getConnection()->schema();
-
-    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
 
     // If we try to add a field on a non existent base table an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $schema->addField($this->testTable4['name'], $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
+    $this->schema->addField($this->testTable4['name'], $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
   }
 
   /**
@@ -2686,63 +2678,57 @@ class SchemaFieldTest extends SchemaTestBase {
    * @covers ::fieldExists
    */
   public function testAddFieldForNewFieldExists() {
-    $schema = Database::getConnection()->schema();
-
-    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->fieldExists($this->testTable4['name'], $this->testField1['name']), 'The table field does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->fieldExists($this->testTable4['name'], $this->testField1['name']), 'The table field does not exist in the MongoDB database.');
 
     // Create the table and add the field to the table.
-    $schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
-    $schema->addField($this->testTable4['name'], $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
+    $this->schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
+    $this->schema->addField($this->testTable4['name'], $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
 
-    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->fieldExists($this->testTable4['name'], $this->testField1['name']), 'The table field exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->fieldExists($this->testTable4['name'], $this->testField1['name']), 'The table field exists in the MongoDB database.');
 
     // If we try to add a field that exists on base table an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->addField($this->testTable4['name'], $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
+    $this->schema->addField($this->testTable4['name'], $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
   }
 
   /**
    * @covers ::addField
    */
   public function testAddFieldForEmbeddedTableDoesNotExist() {
-    $schema = Database::getConnection()->schema();
-
-    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
 
     // Create the to be renamed table.
-    $schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
+    $this->schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
 
-    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
 
     // If we try to rename an embedded table on a non existent embedded table an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $schema->addField($this->testTable5['name'], $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
+    $this->schema->addField($this->testTable5['name'], $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
   }
 
   /**
    * @covers ::addField
    */
   public function testAddFieldForNewEmbeddedFieldExists() {
-    $schema = Database::getConnection()->schema();
-
-    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->testTable5['name']), 'The embedded table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->fieldExists($this->testTable5['name'], $this->testField1['name']), 'The field on the embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable5['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->fieldExists($this->testTable5['name'], $this->testField1['name']), 'The field on the embedded table does not exist in the MongoDB database.');
 
     // Create the to be renamed tables.
-    $schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
-    $schema->createEmbeddedTable($this->testTable4['name'], $this->testTable5['name'], $this->testTable5['schema']);
-    $schema->addField($this->testTable5['name'], $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
+    $this->schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
+    $this->schema->createEmbeddedTable($this->testTable4['name'], $this->testTable5['name'], $this->testTable5['schema']);
+    $this->schema->addField($this->testTable5['name'], $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
 
-    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->testTable5['name']), 'The embedded table exists in the MongoDB database.');
-    $this->assertTrue($schema->fieldExists($this->testTable5['name'], $this->testField1['name']), 'The field on the embedded table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable5['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->fieldExists($this->testTable5['name'], $this->testField1['name']), 'The field on the embedded table exists in the MongoDB database.');
 
     // If we try to rename an embedded table to an existent embedded table an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->addField($this->testTable5['name'], $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
+    $this->schema->addField($this->testTable5['name'], $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
   }
 
   /**
@@ -4747,30 +4733,28 @@ class SchemaFieldTest extends SchemaTestBase {
    * @dataProvider providerDropField
    */
   public function testDropField($base_table_data, $embedded_tables_data, $table_name_to_drop_field, $field_name, $embedded_table_data_without_field) {
-    $schema = Database::getConnection()->schema();
-
-    $this->assertFalse($schema->tableExists($base_table_data['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($base_table_data['name']), 'The table does not exist in the MongoDB database.');
 
     // Create the to be base table and the embedded tables.
-    $schema->createTable($base_table_data['name'], $base_table_data['schema']);
+    $this->schema->createTable($base_table_data['name'], $base_table_data['schema']);
     foreach ($embedded_tables_data as $parent_table_name => $embedded_table_array) {
       foreach ($embedded_table_array as $embedded_table_data) {
-        $schema->createEmbeddedTable($parent_table_name, $embedded_table_data['name'], $embedded_table_data['schema']);
+        $this->schema->createEmbeddedTable($parent_table_name, $embedded_table_data['name'], $embedded_table_data['schema']);
       }
     }
 
-    $this->assertTrue($schema->tableExists($base_table_data['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($base_table_data['name']), 'The table exists in the MongoDB database.');
     foreach ($embedded_tables_data as $embedded_table_array) {
       foreach ($embedded_table_array as $embedded_table_data) {
-        $this->assertTrue($schema->tableExists($embedded_table_data['name']), 'The embedded table exists in the MongoDB database.');
+        $this->assertTrue($this->schema->tableExists($embedded_table_data['name']), 'The embedded table exists in the MongoDB database.');
       }
     }
-    $this->assertTrue($schema->fieldExists($table_name_to_drop_field, $field_name), 'The field exists on the embedded table in the MongoDB database.');
+    $this->assertTrue($this->schema->fieldExists($table_name_to_drop_field, $field_name), 'The field exists on the embedded table in the MongoDB database.');
 
     // Drop the field.
-    $schema->dropField($table_name_to_drop_field, $field_name);
+    $this->schema->dropField($table_name_to_drop_field, $field_name);
 
-    $this->assertFalse($schema->fieldExists($table_name_to_drop_field, $field_name), 'The field does not exist on the embedded table in the MongoDB database.');
+    $this->assertFalse($this->schema->fieldExists($table_name_to_drop_field, $field_name), 'The field does not exist on the embedded table in the MongoDB database.');
 
     // Check that the validation, schema or index data is moved to the new table.
     $this->checkTableValidation($base_table_data['name'], $embedded_table_data_without_field['validation']);
@@ -4827,67 +4811,59 @@ class SchemaFieldTest extends SchemaTestBase {
    * @covers ::dropField
    */
   public function testDropFieldForTableDoesNotExist() {
-    $schema = Database::getConnection()->schema();
-
-    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
 
     // Test that the dropField method return false when the base table does not exist.
-    $this->assertFalse($schema->dropField($this->testTable4['name'], 'test_field'), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->dropField($this->testTable4['name'], 'test_field'), 'The table does not exist in the MongoDB database.');
   }
 
   /**
    * @covers ::dropField
    */
   public function testDropFieldForFieldDoesNotExist() {
-    $schema = Database::getConnection()->schema();
+    $this->assertFalse($this->schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
 
-    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
+    $this->schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
 
-    $schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
-
-    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
 
     // Test that the dropField method return false when the field does not exist
     // on the base table.
-    $this->assertFalse($schema->dropField($this->testTable4['name'], 'does-not-exist-field'), 'The field does not exist on the table in the MongoDB database.');
+    $this->assertFalse($this->schema->dropField($this->testTable4['name'], 'does-not-exist-field'), 'The field does not exist on the table in the MongoDB database.');
   }
 
   /**
    * @covers ::dropField
    */
   public function testDropFieldForEmbeddedTableDoesNotExist() {
-    $schema = Database::getConnection()->schema();
-
-    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
 
     // Create the to be renamed table.
-    $schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
+    $this->schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
 
-    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
 
     // Test that the dropField method return false when the embedded table does
     // not exist on the base table.
-    $this->assertFalse($schema->dropField($this->testTable5['name'], 'id'), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->dropField($this->testTable5['name'], 'id'), 'The embedded table does not exist in the MongoDB database.');
   }
 
   /**
    * @covers ::dropField
    */
   public function testDropFieldForEmbeddedFieldDoesNotExist() {
-    $schema = Database::getConnection()->schema();
-
-    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->testTable5['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable5['name']), 'The embedded table does not exist in the MongoDB database.');
 
     // Create the to be renamed table.
-    $schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
-    $schema->createEmbeddedTable($this->testTable4['name'], $this->testTable5['name'], $this->testTable5['schema']);
+    $this->schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
+    $this->schema->createEmbeddedTable($this->testTable4['name'], $this->testTable5['name'], $this->testTable5['schema']);
 
-    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->testTable5['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable5['name']), 'The embedded table exists in the MongoDB database.');
 
     // Dropping a non-existent field from an embedded table should return false.
-    $this->assertFalse($schema->dropField($this->testTable5['name'], 'does_not_exist_field'), 'The field does not exist on the embedded table.');
+    $this->assertFalse($this->schema->dropField($this->testTable5['name'], 'does_not_exist_field'), 'The field does not exist on the embedded table.');
   }
 
   /**
@@ -7940,49 +7916,47 @@ class SchemaFieldTest extends SchemaTestBase {
    * @dataProvider providerChangeField
    */
   public function testChangeField($base_table_data, $embedded_tables_data, $table_name_to_change_field, $field_name_old, $field_data, $base_table_with_embedded_tables_and_changed_field) {
-    $schema = Database::getConnection()->schema();
-
-    $this->assertFalse($schema->tableExists($base_table_data['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($base_table_data['name']), 'The table does not exist in the MongoDB database.');
     foreach ($embedded_tables_data as $embedded_table_array) {
       foreach ($embedded_table_array as $embedded_table_data) {
-        $this->assertFalse($schema->tableExists($embedded_table_data['name']), 'The embedded table does not exist in the MongoDB database.');
+        $this->assertFalse($this->schema->tableExists($embedded_table_data['name']), 'The embedded table does not exist in the MongoDB database.');
       }
     }
-    $this->assertFalse($schema->fieldExists($table_name_to_change_field, $field_name_old), 'The field does not exist on the embedded table in the MongoDB database.');
+    $this->assertFalse($this->schema->fieldExists($table_name_to_change_field, $field_name_old), 'The field does not exist on the embedded table in the MongoDB database.');
     if ($field_name_old != $field_data['name']) {
-      $this->assertFalse($schema->fieldExists($table_name_to_change_field, $field_data['name']), 'The field does not exist on the embedded table in the MongoDB database.');
+      $this->assertFalse($this->schema->fieldExists($table_name_to_change_field, $field_data['name']), 'The field does not exist on the embedded table in the MongoDB database.');
     }
 
     // Create the table and add the field.
-    $schema->createTable($base_table_data['name'], $base_table_data['schema']);
+    $this->schema->createTable($base_table_data['name'], $base_table_data['schema']);
     foreach ($embedded_tables_data as $parent_table_name => $embedded_table_array) {
       foreach ($embedded_table_array as $embedded_table_data) {
-        $schema->createEmbeddedTable($parent_table_name, $embedded_table_data['name'], $embedded_table_data['schema']);
+        $this->schema->createEmbeddedTable($parent_table_name, $embedded_table_data['name'], $embedded_table_data['schema']);
       }
     }
 
-    $this->assertTrue($schema->tableExists($base_table_data['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($base_table_data['name']), 'The table exists in the MongoDB database.');
     foreach ($embedded_tables_data as $embedded_table_array) {
       foreach ($embedded_table_array as $embedded_table_data) {
-        $this->assertTrue($schema->tableExists($embedded_table_data['name']), 'The embedded table exists in the MongoDB database.');
+        $this->assertTrue($this->schema->tableExists($embedded_table_data['name']), 'The embedded table exists in the MongoDB database.');
       }
     }
-    $this->assertTrue($schema->fieldExists($table_name_to_change_field, $field_name_old), 'The field exists on the embedded table in the MongoDB database.');
-    $this->assertFalse($schema->fieldExists($table_name_to_change_field, $field_data['name']), 'The field does not exist on the embedded table in the MongoDB database.');
+    $this->assertTrue($this->schema->fieldExists($table_name_to_change_field, $field_name_old), 'The field exists on the embedded table in the MongoDB database.');
+    $this->assertFalse($this->schema->fieldExists($table_name_to_change_field, $field_data['name']), 'The field does not exist on the embedded table in the MongoDB database.');
 
     // Call the to be tested method: Schema::changeField().
-    $schema->changeField($table_name_to_change_field, $field_name_old, $field_data['name'], $field_data['spec'], $field_data['keys']);
+    $this->schema->changeField($table_name_to_change_field, $field_name_old, $field_data['name'], $field_data['spec'], $field_data['keys']);
 
-    $this->assertTrue($schema->tableExists($base_table_data['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($base_table_data['name']), 'The table exists in the MongoDB database.');
     foreach ($embedded_tables_data as $embedded_table_array) {
       foreach ($embedded_table_array as $embedded_table_data) {
-        $this->assertTrue($schema->tableExists($embedded_table_data['name']), 'The embedded table exists in the MongoDB database.');
+        $this->assertTrue($this->schema->tableExists($embedded_table_data['name']), 'The embedded table exists in the MongoDB database.');
       }
     }
     if ($field_name_old != $field_data['name']) {
-      $this->assertFalse($schema->fieldExists($table_name_to_change_field, $field_name_old), 'The field does not exist on the embedded table in the MongoDB database.');
+      $this->assertFalse($this->schema->fieldExists($table_name_to_change_field, $field_name_old), 'The field does not exist on the embedded table in the MongoDB database.');
     }
-    $this->assertTrue($schema->fieldExists($table_name_to_change_field, $field_data['name']), 'The field exists on the embedded table in the MongoDB database.');
+    $this->assertTrue($this->schema->fieldExists($table_name_to_change_field, $field_data['name']), 'The field exists on the embedded table in the MongoDB database.');
 
     // Check that the validation, schema or index data are what they should be.
     $this->checkTableValidation($base_table_data['name'], $base_table_with_embedded_tables_and_changed_field['validation']);
@@ -8039,91 +8013,81 @@ class SchemaFieldTest extends SchemaTestBase {
    * @covers ::changeField
    */
   public function testChangeFieldForFieldDoesNotExist() {
-    $schema = Database::getConnection()->schema();
-
-    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
 
     // Create the to be renamed table.
-    $schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
+    $this->schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
 
-    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
 
     // If we try to change a non existent field from a table an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $schema->changeField($this->testTable4['name'], 'does_not_exist_field', $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
+    $this->schema->changeField($this->testTable4['name'], 'does_not_exist_field', $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
   }
 
   /**
    * @covers ::changeField
    */
   public function testChangeFieldForNewFieldExists() {
-    $schema = Database::getConnection()->schema();
-
-    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
 
     // Create the to be renamed table.
-    $schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
+    $this->schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
 
-    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
 
     // If we try to change a field from a table to an existing field an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->changeField($this->testTable4['name'], 'id', 'test_field', $this->testField1['spec'], $this->testField1['keys']);
+    $this->schema->changeField($this->testTable4['name'], 'id', 'test_field', $this->testField1['spec'], $this->testField1['keys']);
   }
 
   /**
    * @covers ::changeField
    */
   public function testChangeFieldForBaseTableDoesNotExist() {
-    $schema = Database::getConnection()->schema();
-
-    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
 
     // If we try to rename an embedded table on a non existent base table an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $schema->changeField($this->testTable4['name'], 'id', $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
+    $this->schema->changeField($this->testTable4['name'], 'id', $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
   }
 
   /**
    * @covers ::changeField
    */
   public function testChangedFieldForEmbeddedFieldDoesNotExist() {
-    $schema = Database::getConnection()->schema();
-
-    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->testTable5['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable5['name']), 'The embedded table does not exist in the MongoDB database.');
 
     // Create the to be renamed table.
-    $schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
-    $schema->createEmbeddedTable($this->testTable4['name'], $this->testTable5['name'], $this->testTable5['schema']);
+    $this->schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
+    $this->schema->createEmbeddedTable($this->testTable4['name'], $this->testTable5['name'], $this->testTable5['schema']);
 
-    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->testTable5['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable5['name']), 'The embedded table exists in the MongoDB database.');
 
     // If we try to change a non existent field from a table an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $schema->changeField($this->testTable5['name'], 'does_not_exist_field', $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
+    $this->schema->changeField($this->testTable5['name'], 'does_not_exist_field', $this->testField1['name'], $this->testField1['spec'], $this->testField1['keys']);
   }
 
   /**
    * @covers ::changeField
    */
   public function testChangeFieldForNewEmbeddedFieldExists() {
-    $schema = Database::getConnection()->schema();
-
-    $this->assertFalse($schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($schema->tableExists($this->testTable5['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists($this->testTable5['name']), 'The embedded table does not exist in the MongoDB database.');
 
     // Create the to be renamed table.
-    $schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
-    $schema->createEmbeddedTable($this->testTable4['name'], $this->testTable5['name'], $this->testTable5['schema']);
+    $this->schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
+    $this->schema->createEmbeddedTable($this->testTable4['name'], $this->testTable5['name'], $this->testTable5['schema']);
 
-    $this->assertTrue($schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($schema->tableExists($this->testTable5['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists($this->testTable5['name']), 'The embedded table exists in the MongoDB database.');
 
     // If we try to change a field from a table to an existing field an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $schema->changeField($this->testTable5['name'], 'id', 'test_field_string', $this->testField1['spec'], $this->testField1['keys']);
+    $this->schema->changeField($this->testTable5['name'], 'id', 'test_field_string', $this->testField1['spec'], $this->testField1['keys']);
   }
 
 }

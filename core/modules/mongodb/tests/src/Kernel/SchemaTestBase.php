@@ -2,8 +2,8 @@
 
 namespace Drupal\Tests\mongodb\Kernel;
 
-use Drupal\Core\Database\Database;
 use Drupal\KernelTests\KernelTestBase;
+use MongoDB\Model\IndexInfo;
 
 /**
  * Base class for MongoDB schema tests.
@@ -381,6 +381,30 @@ class SchemaTestBase extends KernelTestBase {
   ];
 
   /**
+   * The schema object for this connection.
+   *
+   * @var \Drupal\Core\Database\Schema
+   */
+  protected $schema;
+
+  /**
+   * The MongoDB table information service.
+   *
+   * @var \Drupal\mongodb\Driver\Database\mongodb\TableInformation
+   */
+  protected $tableInformation;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+
+    $this->schema = $this->container->get('database')->schema();
+    $this->tableInformation = $this->container->get('database')->tableInformation();
+  }
+
+  /**
    * Helper method to test if the table validation.
    *
    * @covers ::getTableValidation
@@ -392,13 +416,11 @@ class SchemaTestBase extends KernelTestBase {
    *   (optional) The table validation.
    */
   protected function checkTableValidation($table_name, $table_validation = []) {
-    $schema = Database::getConnection()->schema();
-
-    $generated_validation = $schema->getTableValidation($table_name);
+    $generated_validation = $this->schema->getTableValidation($table_name);
 
     $this->assertEquals($generated_validation, $table_validation, 'The expected validation is the same as the generated validation.');
 
-    $database_validation = $schema->getTableValidationFromDatabase($table_name);
+    $database_validation = $this->schema->getTableValidationFromDatabase($table_name);
 
     $this->assertEquals($database_validation, $table_validation, 'The expected validation is the same as the validation from the database.');
   }
@@ -414,8 +436,7 @@ class SchemaTestBase extends KernelTestBase {
    *   (optional) The table schema.
    */
   protected function checkTableSchema($table_name, $table_schema = NULL) {
-    $schema = Database::getConnection()->schema();
-    $schema_from_table = $schema->getTableSchema($table_name);
+    $schema_from_table = $this->schema->getTableSchema($table_name);
 
     $this->assertEquals($schema_from_table, $table_schema, 'The expected table schema is the same as the saved table schema.');
   }
@@ -433,28 +454,26 @@ class SchemaTestBase extends KernelTestBase {
    *   (optional) The table schema.
    */
   protected function checkTableIndexes($table_name, $table_schema = NULL) {
-    $schema = Database::getConnection()->schema();
-
     // Test the primary key
     if (!empty($table_schema['primary key'])) {
-      $this->assertTrue($schema->constraintExists($table_name, 'pkey'), 'The primary key index does exists for the table.');
+      $this->assertTrue($this->schema->constraintExists($table_name, 'pkey'), 'The primary key index does exists for the table.');
 
-      $primary_key = $schema->getTableIndexFromDatabase($table_name, 'pkey');
-      $this->assertEquals(get_class($primary_key), 'MongoDB\Model\IndexInfo', 'The primary key index is an object of: "MongoDB\Model\IndexInfo".');
+      $primary_key = $this->schema->getTableIndexFromDatabase($table_name, 'pkey');
+      $this->assertInstanceOf(IndexInfo::class, $primary_key);
 
       $this->checkIndexFields($table_schema['primary key'], $primary_key->getKey());
     }
     else {
-      $this->assertFalse($schema->constraintExists($table_name, 'pkey'), 'The primary key index does not exist for the table.');
+      $this->assertFalse($this->schema->constraintExists($table_name, 'pkey'), 'The primary key index does not exist for the table.');
     }
 
     // Test the table unique keys.
     if (!empty($table_schema['unique keys']) && is_array($table_schema['unique keys'])) {
       foreach ($table_schema['unique keys'] as $unique_key_name => $unique_key_fields) {
-        $this->assertTrue($schema->constraintExists($table_name, $unique_key_name . '__key'), 'The unique key index exists for the table.');
+        $this->assertTrue($this->schema->constraintExists($table_name, $unique_key_name . '__key'), 'The unique key index exists for the table.');
 
-        $unique_key = $schema->getTableIndexFromDatabase($table_name, $unique_key_name . '__key');
-        $this->assertEquals(get_class($unique_key), 'MongoDB\Model\IndexInfo', 'The unique key index is an object of: "MongoDB\Model\IndexInfo".');
+        $unique_key = $this->schema->getTableIndexFromDatabase($table_name, $unique_key_name . '__key');
+        $this->assertInstanceOf(IndexInfo::class, $unique_key);
 
         $this->checkIndexFields($unique_key_fields, $unique_key->getKey());
       }
@@ -463,11 +482,11 @@ class SchemaTestBase extends KernelTestBase {
     // Test the table indexes.
     if (!empty($table_schema['indexes']) && is_array($table_schema['indexes'])) {
       foreach ($table_schema['indexes'] as $index_name => $index_fields) {
-        $this->assertTrue($schema->constraintExists($table_name, $index_name . '__idx'), 'The index exists for the table.');
-        $this->assertTrue($schema->indexExists($table_name, $index_name), 'The index exists for the table.');
+        $this->assertTrue($this->schema->constraintExists($table_name, $index_name . '__idx'), 'The index exists for the table.');
+        $this->assertTrue($this->schema->indexExists($table_name, $index_name), 'The index exists for the table.');
 
-        $index = $schema->getTableIndexFromDatabase($table_name, $index_name . '__idx');
-        $this->assertEquals(get_class($index), 'MongoDB\Model\IndexInfo', 'The index is an object of: "MongoDB\Model\IndexInfo".');
+        $index = $this->schema->getTableIndexFromDatabase($table_name, $index_name . '__idx');
+        $this->assertInstanceOf(IndexInfo::class, $index);
 
         $this->checkIndexFields($index_fields, $index->getKey());
       }
@@ -489,12 +508,13 @@ class SchemaTestBase extends KernelTestBase {
    *   The embedded table schema.
    */
   protected function checkEmbeddedTableIndexes($parent_table_name, $embedded_table_name, $embedded_table_schema) {
-    $schema = Database::getConnection()->schema();
-    $table_information = Database::getConnection()->tableInformation();
-    $embedded_full_path = $table_information->getTableEmbeddedFullPath($embedded_table_name);
+    // Make sure the table information gets reloaded from the database.
+    $this->tableInformation->load(TRUE);
 
-    if (!$schema->tableExists($embedded_table_name)) {
-      // An non existed embedded table has no indexes. There is no need to
+    $embedded_full_path = $this->tableInformation->getTableEmbeddedFullPath($embedded_table_name);
+
+    if (!$this->schema->tableExists($embedded_table_name)) {
+      // A non existent embedded table has no indexes. There is no need to
       // check if those non existed indexes exist in the database. The helper
       // method $this->checkExpectedIndexesAgainstDatabase() will check if all
       // indexes are needed according to the schema.
@@ -502,19 +522,19 @@ class SchemaTestBase extends KernelTestBase {
     }
 
     // Get the base table.
-    $base_table_name = $table_information->getTableBaseTable($parent_table_name);
-    if (empty($base_table_name) || !$schema->tableExists($base_table_name)) {
+    $base_table_name = $this->tableInformation->getTableBaseTable($parent_table_name);
+    if (empty($base_table_name) || !$this->schema->tableExists($base_table_name)) {
       // There is no base table.
-      $this->fail("The parent table ($parent_table) and its parent table are both not a base table.");
+      $this->fail("The parent table ($parent_table_name) and its parent table are both not a base table.");
     }
 
     // Test the primary key
     $constraint = $embedded_full_path . '__pkey';
     if (!empty($embedded_table_schema['primary key'])) {
-      $this->assertTrue($schema->constraintExists($base_table_name, $constraint), 'The primary key index does exists for the embedded table.');
+      $this->assertTrue($this->schema->constraintExists($base_table_name, $constraint), 'The primary key index does exists for the embedded table.');
 
-      $primary_key = $schema->getTableIndexFromDatabase($base_table_name, $constraint);
-      $this->assertEquals(get_class($primary_key), 'MongoDB\Model\IndexInfo', 'The primary key index is an object of: "MongoDB\Model\IndexInfo".');
+      $primary_key = $this->schema->getTableIndexFromDatabase($base_table_name, $constraint);
+      $this->assertInstanceOf(IndexInfo::class, $primary_key);
 
       $embedded_primary_key_fields = [];
       foreach ($embedded_table_schema['primary key'] as $field) {
@@ -523,17 +543,17 @@ class SchemaTestBase extends KernelTestBase {
       $this->checkIndexFields($embedded_primary_key_fields, $primary_key->getKey());
     }
     else {
-      $this->assertFalse($schema->constraintExists($base_table_name, $constraint), 'The primary key index does not exist for the embedded table.');
+      $this->assertFalse($this->schema->constraintExists($base_table_name, $constraint), 'The primary key index does not exist for the embedded table.');
     }
 
     // Test the table unique keys.
     if (!empty($embedded_table_schema['unique keys']) && is_array($embedded_table_schema['unique keys'])) {
       foreach ($embedded_table_schema['unique keys'] as $unique_key_name => $unique_key_fields) {
         $constraint = $embedded_full_path . $unique_key_name . '__key';
-        $this->assertTrue($schema->constraintExists($base_table_name, $constraint), 'The unique key index exists for the embedded table.');
+        $this->assertTrue($this->schema->constraintExists($base_table_name, $constraint), 'The unique key index exists for the embedded table.');
 
-        $unique_key = $schema->getTableIndexFromDatabase($base_table_name, $constraint);
-        $this->assertEquals(get_class($unique_key), 'MongoDB\Model\IndexInfo', 'The unique key index is an object of: "MongoDB\Model\IndexInfo".');
+        $unique_key = $this->schema->getTableIndexFromDatabase($base_table_name, $constraint);
+        $this->assertInstanceOf(IndexInfo::class, $unique_key);
 
         $embedded_unique_key_fields = [];
         foreach ($unique_key_fields as $unique_key_field) {
@@ -547,11 +567,11 @@ class SchemaTestBase extends KernelTestBase {
     if (!empty($embedded_table_schema['indexes']) && is_array($embedded_table_schema['indexes'])) {
       foreach ($embedded_table_schema['indexes'] as $index_name => $index_fields) {
         $constraint = $embedded_full_path . $index_name . '__idx';
-        $this->assertTrue($schema->constraintExists($base_table_name, $constraint), 'The index exists for the table.');
-        $this->assertTrue($schema->indexExists($embedded_table_name, $index_name), 'The index exists for the table.');
+        $this->assertTrue($this->schema->constraintExists($base_table_name, $constraint), 'The index exists for the table.');
+        $this->assertTrue($this->schema->indexExists($embedded_table_name, $index_name), 'The index exists for the table.');
 
-        $index = $schema->getTableIndexFromDatabase($base_table_name, $constraint);
-        $this->assertEquals(get_class($index), 'MongoDB\Model\IndexInfo', 'The index is an object of: "MongoDB\Model\IndexInfo".');
+        $index = $this->schema->getTableIndexFromDatabase($base_table_name, $constraint);
+        $this->assertInstanceOf(IndexInfo::class, $index);
 
         $embedded_index_fields = [];
         foreach ($index_fields as $index_field) {
@@ -595,9 +615,7 @@ class SchemaTestBase extends KernelTestBase {
    *   The embedded table data.
    */
   protected function checkTableNumberOfIndexes($base_table_data, $embedded_tables_data = []) {
-    $schema = Database::getConnection()->schema();
-
-    $indexes = $schema->getTableIndexesFromDatabase($base_table_data['name']);
+    $indexes = $this->schema->getTableIndexesFromDatabase($base_table_data['name']);
 
     $index_count = 0;
     if (!empty($base_table_data['schema']['primary key'])) {
@@ -624,7 +642,7 @@ class SchemaTestBase extends KernelTestBase {
       }
     }
 
-    if ($schema->tableExists($base_table_data['name'])) {
+    if ($this->schema->tableExists($base_table_data['name'])) {
       // MongoDB also creates an index for the field "_id".
       $this->assertEquals(count($indexes) - 1, $index_count, 'The number of indexes from the table schema is the same as number of indexes from the database.');
     }
@@ -639,8 +657,7 @@ class SchemaTestBase extends KernelTestBase {
    *   An array of arrays, with the inner array having the data for an expected index (name and key).
    */
   protected function checkExpectedIndexesAgainstDatabase($table, $expected_indexes) {
-    $schema = Database::getConnection()->schema();
-    $database_indexes = $schema->getTableIndexesFromDatabase($table);
+    $database_indexes = $this->schema->getTableIndexesFromDatabase($table);
 
     // Check that all expected indexes exist in the database.
     foreach ($expected_indexes as $expected_index) {

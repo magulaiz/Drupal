@@ -508,15 +508,12 @@ class Schema extends DatabaseSchema {
 
     $prefixInfo = $this->getPrefixInfo($base_table_name);
     if ($base_table_name == $table) {
-      // This command can only be run with a connection with the admin database.
-      $connectionOptions = $this->connection->getConnectionOptions();
-      Database::getAdminConnection()->getConnection()->command(
+      $this->connection->getConnection()->renameCollection(
+        $prefixInfo['table'],
+        $prefixInfo['prefix'] . $new_name,
+        NULL,
         [
-          'renameCollection' => $connectionOptions['database'] . '.' . $prefixInfo['table'],
-          'to' => $connectionOptions['database'] . '.' . $prefixInfo['prefix'] . $new_name,
           'dropTarget' => $this->dropTarget,
-        ],
-        [
           'session' => $this->connection->getMongodbSession(),
         ],
       );
@@ -1321,39 +1318,47 @@ class Schema extends DatabaseSchema {
       throw new SchemaObjectExistsException("Cannot add primary key to table $table: primary key already exists.");
     }
 
-    $index_name = $this->ensureIdentifiersLength($base_table_name, $embedded_full_path, 'pkey');
-    $prefixInfo = $this->getPrefixInfo($base_table_name);
-    if ($base_table_name == $table) {
-      $this->connection->getConnection()->{$prefixInfo['table']}->createIndex(
-        $this->createKeyArray($fields),
-        [
-          'name' => $index_name,
-          'unique' => TRUE,
-          'background' => $this->createIndexInBackground,
-          'session' => $this->connection->getMongodbSession(),
-        ]
-      );
-    }
-    else {
-      $embedded_fields = [];
-      $partial_filter_expression = [];
-      foreach ($fields as $field) {
-        $field_full_path = $embedded_full_path . $field;
-        $embedded_fields[$field_full_path] = 1;
-        $partial_filter_expression[] = [$field_full_path => ['$exists' => TRUE]];
+    // Sometimes working with MongoDB session the method constraintExists()
+    // returns the wrong result. Therefor catch the thrown exception when we try
+    // to create the primary key index.
+    try {
+      $index_name = $this->ensureIdentifiersLength($base_table_name, $embedded_full_path, 'pkey');
+      $prefixInfo = $this->getPrefixInfo($base_table_name);
+      if ($base_table_name == $table) {
+        $this->connection->getConnection()->{$prefixInfo['table']}->createIndex(
+          $this->createKeyArray($fields),
+          [
+            'name' => $index_name,
+            'unique' => TRUE,
+            'background' => $this->createIndexInBackground,
+            'session' => $this->connection->getMongodbSession(),
+          ]
+        );
       }
-      $partial_filter_expression = ['$and' => $partial_filter_expression];
+      else {
+        $embedded_fields = [];
+        $partial_filter_expression = [];
+        foreach ($fields as $field) {
+          $field_full_path = $embedded_full_path . $field;
+          $embedded_fields[$field_full_path] = 1;
+          $partial_filter_expression[] = [$field_full_path => ['$exists' => TRUE]];
+        }
+        $partial_filter_expression = ['$and' => $partial_filter_expression];
 
-      $this->connection->getConnection()->{$prefixInfo['table']}->createIndex(
-        $embedded_fields,
-        [
-          'name' => $index_name,
-          'unique' => TRUE,
-          'partialFilterExpression' => $partial_filter_expression,
-          'background' => $this->createIndexInBackground,
-          'session' => $this->connection->getMongodbSession(),
-        ],
-      );
+        $this->connection->getConnection()->{$prefixInfo['table']}->createIndex(
+          $embedded_fields,
+          [
+            'name' => $index_name,
+            'unique' => TRUE,
+            'partialFilterExpression' => $partial_filter_expression,
+            'background' => $this->createIndexInBackground,
+            'session' => $this->connection->getMongodbSession(),
+          ],
+        );
+      }
+    }
+    catch (CommandException $e) {
+      throw new SchemaObjectExistsException("Cannot add primary key to table $table: primary key already exists.");
     }
 
     // Test if unique index was created. If there is another unique index on the
@@ -1459,39 +1464,47 @@ class Schema extends DatabaseSchema {
       throw new SchemaObjectExistsException("Cannot add unique key $name to table $table: unique key already exists.");
     }
 
-    $index_name = $this->ensureIdentifiersLength($base_table_name, $embedded_full_path . $name, 'key');
-    $prefixInfo = $this->getPrefixInfo($base_table_name);
-    if ($table == $base_table_name) {
-      $this->connection->getConnection()->{$prefixInfo['table']}->createIndex(
-        $this->createKeyArray($fields),
-        [
-          'name' => $index_name,
-          'unique' => TRUE,
-          'background' => $this->createIndexInBackground,
-          'session' => $this->connection->getMongodbSession(),
-        ],
-      );
-    }
-    else {
-      $embedded_fields = [];
-      $partial_filter_expression = [];
-      foreach ($fields as $field) {
-        $field_full_path = $embedded_full_path . $field;
-        $embedded_fields[$field_full_path] = 1;
-        $partial_filter_expression[] = [$field_full_path => ['$exists' => TRUE]];
+    // Sometimes working with MongoDB session the method constraintExists()
+    // returns the wrong result. Therefor catch the thrown exception when we try
+    // to create the primary key index.
+    try {
+      $index_name = $this->ensureIdentifiersLength($base_table_name, $embedded_full_path . $name, 'key');
+      $prefixInfo = $this->getPrefixInfo($base_table_name);
+      if ($table == $base_table_name) {
+        $this->connection->getConnection()->{$prefixInfo['table']}->createIndex(
+          $this->createKeyArray($fields),
+          [
+            'name' => $index_name,
+            'unique' => TRUE,
+            'background' => $this->createIndexInBackground,
+            'session' => $this->connection->getMongodbSession(),
+          ],
+        );
       }
-      $partial_filter_expression = ['$and' => $partial_filter_expression];
+      else {
+        $embedded_fields = [];
+        $partial_filter_expression = [];
+        foreach ($fields as $field) {
+          $field_full_path = $embedded_full_path . $field;
+          $embedded_fields[$field_full_path] = 1;
+          $partial_filter_expression[] = [$field_full_path => ['$exists' => TRUE]];
+        }
+        $partial_filter_expression = ['$and' => $partial_filter_expression];
 
-      $this->connection->getConnection()->{$prefixInfo['table']}->createIndex(
-        $embedded_fields,
-        [
-          'name' => $index_name,
-          'unique' => TRUE,
-          'partialFilterExpression' => $partial_filter_expression,
-          'background' => $this->createIndexInBackground,
-          'session' => $this->connection->getMongodbSession(),
-        ],
-      );
+        $this->connection->getConnection()->{$prefixInfo['table']}->createIndex(
+          $embedded_fields,
+          [
+            'name' => $index_name,
+            'unique' => TRUE,
+            'partialFilterExpression' => $partial_filter_expression,
+            'background' => $this->createIndexInBackground,
+            'session' => $this->connection->getMongodbSession(),
+          ],
+        );
+      }
+    }
+    catch (CommandException $e) {
+      throw new SchemaObjectExistsException("Cannot add unique key $name to table $table: unique key already exists.");
     }
 
     // Test if unique index was created. If there is another unique index on the
@@ -1575,47 +1588,54 @@ class Schema extends DatabaseSchema {
       throw new SchemaObjectExistsException("Cannot add index $name to table $table: index already exists.");
     }
 
-    $prefixInfo = $this->getPrefixInfo($base_table_name);
-
-    if ($table == $base_table_name) {
-      $this->connection->getConnection()->{$prefixInfo['table']}->createIndex(
-        $this->createKeyArray($fields),
-        [
-          'name' => $index_name,
-          'unique' => FALSE,
-          'background' => $this->createIndexInBackground,
-          'session' => $this->connection->getMongodbSession(),
-        ],
-      );
-    }
-    else {
-      $embedded_fields = [];
-      $partial_filter_expression = [];
-      foreach ($fields as $field) {
-        // It is possible in Drupal to add an array with the kind of type of index
-        // that you would like. This is not supported by MongoDB.
-        if (is_array($field)) {
-          $field = reset($field);
-        }
-
-        if (is_string($field)) {
-          $field_full_path = $embedded_full_path . $field;
-          $embedded_fields[$field_full_path] = 1;
-          $partial_filter_expression[] = [$field_full_path => ['$exists' => TRUE]];
-        }
+    // Sometimes working with MongoDB session the method constraintExists()
+    // returns the wrong result. Therefor catch the thrown exception when we try
+    // to create the primary key index.
+    try {
+      $prefixInfo = $this->getPrefixInfo($base_table_name);
+      if ($table == $base_table_name) {
+        $this->connection->getConnection()->{$prefixInfo['table']}->createIndex(
+          $this->createKeyArray($fields),
+          [
+            'name' => $index_name,
+            'unique' => FALSE,
+            'background' => $this->createIndexInBackground,
+            'session' => $this->connection->getMongodbSession(),
+          ],
+        );
       }
-      $partial_filter_expression = ['$and' => $partial_filter_expression];
+      else {
+        $embedded_fields = [];
+        $partial_filter_expression = [];
+        foreach ($fields as $field) {
+          // It is possible in Drupal to add an array with the kind of type of index
+          // that you would like. This is not supported by MongoDB.
+          if (is_array($field)) {
+            $field = reset($field);
+          }
 
-      $this->connection->getConnection()->{$prefixInfo['table']}->createIndex(
-        $embedded_fields,
-        [
-          'name' => $index_name,
-          'unique' => FALSE,
-          'partialFilterExpression' => $partial_filter_expression,
-          'background' => $this->createIndexInBackground,
-          'session' => $this->connection->getMongodbSession(),
-        ],
-      );
+          if (is_string($field)) {
+            $field_full_path = $embedded_full_path . $field;
+            $embedded_fields[$field_full_path] = 1;
+            $partial_filter_expression[] = [$field_full_path => ['$exists' => TRUE]];
+          }
+        }
+        $partial_filter_expression = ['$and' => $partial_filter_expression];
+
+        $this->connection->getConnection()->{$prefixInfo['table']}->createIndex(
+          $embedded_fields,
+          [
+            'name' => $index_name,
+            'unique' => FALSE,
+            'partialFilterExpression' => $partial_filter_expression,
+            'background' => $this->createIndexInBackground,
+            'session' => $this->connection->getMongodbSession(),
+          ],
+        );
+      }
+    }
+    catch (CommandException $e) {
+      throw new SchemaObjectExistsException("Cannot add index $name to table $table: index already exists.");
     }
 
     // Test if index was created. If there is another index on the same fields
