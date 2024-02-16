@@ -3,6 +3,7 @@
 namespace Drupal\taxonomy\Plugin\views\argument;
 
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\taxonomy\TaxonomyIndexDepthQueryTrait;
@@ -28,12 +29,20 @@ class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPlugin
   protected $termStorage;
 
   /**
+   * The entity repository service.
+   *
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface
+   */
+  protected $entityRepository;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $termStorage) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $termStorage, EntityRepositoryInterface $entityRepository) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->termStorage = $termStorage;
+    $this->entityRepository = $entityRepository;
   }
 
   /**
@@ -44,7 +53,8 @@ class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPlugin
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity_type.manager')->getStorage('taxonomy_term')
+      $container->get('entity_type.manager')->getStorage('taxonomy_term'),
+      $container->get('entity.repository')
     );
   }
 
@@ -114,7 +124,7 @@ class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPlugin
   public function title() {
     $term = $this->termStorage->load($this->argument);
     if (!empty($term)) {
-      return $term->getName();
+      return $this->entityRepository->getTranslationFromContext($term)->label();
     }
     // TODO review text
     return $this->t('No name');

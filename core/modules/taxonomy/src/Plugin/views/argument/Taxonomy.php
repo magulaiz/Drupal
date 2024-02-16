@@ -2,6 +2,7 @@
 
 namespace Drupal\taxonomy\Plugin\views\argument;
 
+use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\views\Plugin\views\argument\NumericArgument;
@@ -22,12 +23,18 @@ class Taxonomy extends NumericArgument implements ContainerFactoryPluginInterfac
   protected $termStorage;
 
   /**
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface
+   */
+  protected $entityRepository;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $term_storage) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $term_storage, EntityRepositoryInterface $entityRepository) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->termStorage = $term_storage;
+    $this->entityRepository = $entityRepository;
   }
 
   /**
@@ -38,7 +45,8 @@ class Taxonomy extends NumericArgument implements ContainerFactoryPluginInterfac
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity_type.manager')->getStorage('taxonomy_term')
+      $container->get('entity_type.manager')->getStorage('taxonomy_term'),
+      $container->get('entity.repository')
     );
   }
 
@@ -50,7 +58,7 @@ class Taxonomy extends NumericArgument implements ContainerFactoryPluginInterfac
     if ($this->argument) {
       $term = $this->termStorage->load($this->argument);
       if (!empty($term)) {
-        return $term->getName();
+        return $this->entityRepository->getTranslationFromContext($term)->label();
       }
     }
     // TODO review text
