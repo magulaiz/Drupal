@@ -126,7 +126,11 @@ trait PerformanceTestTrait {
       foreach ($performance_test_data['database_events'] as $event) {
         // Don't log queries from the database cache backend because they're
         // logged separately as cache operations.
-        if (!(isset($event->caller['class']) && (is_a(str_replace('\\\\', '\\', $event->caller['class']), '\Drupal\Core\Cache\DatabaseBackend', TRUE) || is_a(str_replace('\\\\', '\\', $event->caller['class']), 'Drupal\Core\Cache\DatabaseCacheTagsChecksum', TRUE)))) {
+        $database_cache = FALSE;
+        if (isset($event->caller['class'])) {
+          $database_cache = is_a(str_replace('\\\\', '\\', $event->caller['class']), '\Drupal\Core\Cache\DatabaseBackend', TRUE) || is_a(str_replace('\\\\', '\\', $event->caller['class']), 'Drupal\Core\Cache\DatabaseCacheTagsChecksum', TRUE);
+        }
+        if (!$database_cache) {
           $query_count++;
         }
       }

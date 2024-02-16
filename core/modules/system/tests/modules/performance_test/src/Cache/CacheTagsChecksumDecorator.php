@@ -4,8 +4,6 @@ declare(strict_types = 1);
 
 namespace Drupal\performance_test\Cache;
 
-use Drupal\Core\Cache\Cache;
-use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheTagsChecksumInterface;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\performance_test\PerformanceDataCollector;
