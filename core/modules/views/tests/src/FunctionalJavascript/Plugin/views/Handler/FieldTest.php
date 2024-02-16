@@ -77,7 +77,7 @@ class FieldTest extends WebDriverTestBase {
   /**
    * Tests custom text field modal title.
    */
-  public function testModalDialogTitle() {
+  public function testModalDialogTitle(): void {
     $web_assert = $this->assertSession();
     Node::create([
       'title' => $this->randomString(),
