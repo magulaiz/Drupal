@@ -60,7 +60,7 @@ class TermTranslationViewsTest extends TaxonomyTestBase {
    * {@inheritdoc}
    */
   protected function setUp($import_test_views = TRUE, $modules = []): void {
-    parent::setUp($import_test_views);
+    parent::setUp($import_test_views, $modules);
     $this->setupLanguages();
     $this->enableTranslation();
     $this->setUpTerms();
