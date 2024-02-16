@@ -123,6 +123,9 @@ trait PerformanceTestTrait {
       $cache_get_count = 0;
       $cache_set_count = 0;
       $cache_delete_count = 0;
+      $cache_tag_is_valid_count = 0;
+      $cache_tag_invalidation_count = 0;
+      $cache_tag_checksum_count = 0;
       foreach ($performance_test_data['database_events'] as $event) {
         // Don't log queries from the database cache backend because they're
         // logged separately as cache operations.
@@ -145,10 +148,24 @@ trait PerformanceTestTrait {
           $cache_delete_count++;
         }
       }
+      foreach ($performance_test_data['cache_tag_operations'] as $operation) {
+        if ($operation['operation'] === 'getCurrentChecksum') {
+          $cache_tag_checksum_count++;
+        }
+        if ($operation['operation'] === 'isValid') {
+          $cache_tag_is_valid_count++;
+        }
+        if ($operation['operation'] === 'invalidateTags') {
+          $cache_tag_invalidation_count++;
+        }
+      }
       $performance_data->setQueryCount($query_count);
       $performance_data->setCacheGetCount($cache_get_count);
       $performance_data->setCacheSetCount($cache_set_count);
       $performance_data->setCacheDeleteCount($cache_delete_count);
+      $performance_data->setCacheTagChecksumCount($cache_tag_checksum_count);
+      $performance_data->setCacheTagIsValidCount($cache_tag_is_valid_count);
+      $performance_data->setCacheTagInvalidationCount($cache_tag_invalidation_count);
     }
 
     return $performance_data;
