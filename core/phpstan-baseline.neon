@@ -1789,11 +1789,6 @@ parameters:
 			path: modules/migrate/src/Plugin/migrate/destination/NullDestination.php
 
 		-
-			message: "#^Call to an undefined static method PHPUnit\\\\Util\\\\Test\\:\\:parseTestMethodAnnotations\\(\\)\\.$#"
-			count: 1
-			path: modules/migrate/tests/src/Kernel/MigrateSourceTestBase.php
-
-		-
 			message: "#^Call to an undefined static method static\\(Drupal\\\\Tests\\\\migrate\\\\Kernel\\\\MigrateTestBase\\)\\:\\:migrateDumpAlter\\(\\)\\.$#"
 			count: 1
 			path: modules/migrate/tests/src/Kernel/MigrateTestBase.php
