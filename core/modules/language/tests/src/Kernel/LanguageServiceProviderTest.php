@@ -8,7 +8,6 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\ConfigurableLanguageManager;
-use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\EventSubscriber\LanguageRequestSubscriber;
 use Drupal\language\HttpKernel\PathProcessorLanguage;
 use Drupal\Tests\language\Traits\LanguageTestTrait;
