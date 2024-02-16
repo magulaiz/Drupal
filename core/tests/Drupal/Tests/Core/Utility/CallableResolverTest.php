@@ -143,12 +143,12 @@ class CallableResolverTest extends UnitTestCase {
       'Missing method on class, array notation' => [
         [\stdClass::class, 'method_not_exists'],
         \InvalidArgumentException::class,
-        'The callable definition provided "[Drupal\Tests\Core\Utility\CallableResolverTest,method_not_exists]" is not a valid callable.',
+        'The callable definition provided "[stdClass,method_not_exists]" is not a valid callable.',
       ],
       'Missing method on class, static notation' => [
         \stdClass::class . '::method_not_exists',
         \InvalidArgumentException::class,
-        'The callable definition provided was invalid. Either class "Drupal\Tests\Core\Utility\CallableResolverTest" does not have a method "method_not_exists", or it is not callable.',
+        'The callable definition provided was invalid. Either class "stdClass" does not have a method "method_not_exists", or it is not callable.',
       ],
       'Missing class, static notation' => [
         '\NotARealClass::method',
