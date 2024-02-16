@@ -89,10 +89,12 @@
    */
   function checkMutation(node) {
     return Boolean(
-      node.nodeType === Node.ELEMENT_NODE &&
+      node &&
+        node.nodeType === Node.ELEMENT_NODE &&
         node.nodeName === 'SCRIPT' &&
         node.dataset &&
         node.dataset.bigPipeReplacementForPlaceholderWithId &&
+        drupalSettings.bigPipePlaceholderIds &&
         typeof drupalSettings.bigPipePlaceholderIds[
           node.dataset.bigPipeReplacementForPlaceholderWithId
         ] !== 'undefined',
@@ -113,7 +115,7 @@
     // occur if the script node was first observed with empty content and then
     // the child text node was added in full later.
     // @see `@ingroup large_chunk` for more information.
-    else if (checkMutation(node.parentNode)) {
+    else if (node.parentNode && checkMutation(node.parentNode)) {
       processReplacement(node.parentNode);
     }
   }
