@@ -2285,11 +2285,6 @@ parameters:
 			path: modules/system/tests/modules/deprecation_test/src/DeprecatedController.php
 
 		-
-			message: "#^@dataProvider providerTestGetWithFormat related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: modules/system/tests/modules/entity_test/tests/src/Functional/Rest/EntityTestTextItemNormalizerTest.php
-
-		-
 			message: "#^Variable \\$options might not be defined\\.$#"
 			count: 1
 			path: modules/system/tests/modules/form_test/src/Form/FormTestTableSelectJsSelectForm.php
@@ -2366,16 +2361,6 @@ parameters:
 			path: modules/system/tests/src/Functional/Theme/ThemeUiTest.php
 
 		-
-			message: "#^@dataProvider providerExtensionCompatibilityChange related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/UpdateSystem/UpdateScriptTest.php
-
-		-
-			message: "#^@dataProvider providerMissingExtension related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/UpdateSystem/UpdateScriptTest.php
-
-		-
 			message: "#^@dataProvider themeDataProvider related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: modules/system/tests/src/FunctionalJavascript/OffCanvasTest.php
@@ -2384,16 +2369,6 @@ parameters:
 			message: "#^@dataProvider testAccessProvider related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: modules/system/tests/src/Kernel/MenuAccessControlHandlerTest.php
-
-		-
-			message: "#^@dataProvider providerIgnoreAdvisories related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: modules/system/tests/src/Kernel/SecurityAdvisories/SecurityAdvisoriesFetcherTest.php
-
-		-
-			message: "#^@dataProvider providerShowAdvisories related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: modules/system/tests/src/Kernel/SecurityAdvisories/SecurityAdvisoriesFetcherTest.php
 
 		-
 			message: """
@@ -2418,31 +2393,6 @@ parameters:
 			"""
 			count: 1
 			path: modules/system/tests/src/Unit/Menu/SystemLocalTasksTest.php
-
-		-
-			message: "#^@dataProvider providerTestAlterRoutes related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: modules/system/tests/src/Unit/Routing/AdminRouteSubscriberTest.php
-
-		-
-			message: "#^@dataProvider providerCreateFromArray related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: modules/system/tests/src/Unit/SecurityAdvisories/SecurityAdvisoryTest.php
-
-		-
-			message: "#^@dataProvider providerCreateFromArrayInvalidField related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: modules/system/tests/src/Unit/SecurityAdvisories/SecurityAdvisoryTest.php
-
-		-
-			message: "#^@dataProvider providerCreateFromArrayMissingField related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: modules/system/tests/src/Unit/SecurityAdvisories/SecurityAdvisoryTest.php
-
-		-
-			message: "#^@dataProvider providerTestMachineNameController related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: modules/system/tests/src/Unit/Transliteration/MachineNameControllerTest.php
 
 		-
 			message: "#^Variable \\$help_message might not be defined\\.$#"
@@ -2943,21 +2893,6 @@ parameters:
 			path: modules/views/tests/src/FunctionalJavascript/ClickSortingAJAXTest.php
 
 		-
-			message: "#^@dataProvider providerTestFieldNumeric related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Handler/FieldNumericTest.php
-
-		-
-			message: "#^@dataProvider providerTestFilterNumericBetween related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Handler/FilterNumericTest.php
-
-		-
-			message: "#^@dataProvider providerTestResponsiveGrid related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: modules/views/tests/src/Kernel/Plugin/StyleGridResponsiveTest.php
-
-		-
 			message: "#^Variable \\$rand1 might not be defined\\.$#"
 			count: 2
 			path: modules/views/tests/src/Kernel/Plugin/StyleTest.php
@@ -3250,19 +3185,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Cache/ApcuBackendTest.php
 
 		-
-			message: """
-				#^Call to deprecated method expectWarning\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-				https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#
-			"""
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Config/ConfigDependencyTest.php
-
-		-
-			message: "#^@dataProvider providerConfigDependenciesValidation related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Config/ConfigEntityValidationTestBase.php
-
-		-
 			message: "#^@dataProvider providerInvalidMachineNameCharacters related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Config/ConfigEntityValidationTestBase.php
@@ -3298,39 +3220,9 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Database/StatementTest.php
 
 		-
-			message: "#^@dataProvider providerUntrusted related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Datetime/DatetimeElementFormTest.php
-
-		-
-			message: "#^@dataProvider providerClassLoaderAutoDetect related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/DrupalKernel/DrupalKernelTest.php
-
-		-
-			message: "#^@dataProvider providerTestCreate related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/ContentEntityStorageBaseTest.php
-
-		-
 			message: "#^Variable \\$title might not be defined\\.$#"
 			count: 2
 			path: tests/Drupal/KernelTests/Core/Entity/CreateSampleEntityTest.php
-
-		-
-			message: "#^@dataProvider providerTestFieldAccess related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/EntityAccessControlHandlerTest.php
-
-		-
-			message: "#^@dataProvider dataTestDecoupledPendingRevisions related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/EntityDecoupledTranslationRevisionsTest.php
-
-		-
-			message: "#^@dataProvider dataTestUntranslatableFields related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/EntityDecoupledTranslationRevisionsTest.php
 
 		-
 			message: "#^Variable \\$previous_untranslatable_field_value in isset\\(\\) always exists and is not nullable\\.$#"
@@ -3341,16 +3233,6 @@ parameters:
 			message: "#^Variable \\$field might not be defined\\.$#"
 			count: 9
 			path: tests/Drupal/KernelTests/Core/Entity/EntitySchemaTest.php
-
-		-
-			message: "#^@dataProvider entityDefinitionIsInternalProvider related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/EntityTypedDataDefinitionTest.php
-
-		-
-			message: "#^@dataProvider providerTestFieldableEntityTypeUpdates related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/FieldableEntityDefinitionUpdateTest.php
 
 		-
 			message: "#^Variable \\$e might not be defined\\.$#"
@@ -3383,11 +3265,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Image/ToolkitGdTest.php
 
 		-
-			message: "#^@dataProvider providerShouldRedirectToInstaller related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Installer/InstallerRedirectTraitTest.php
-
-		-
 			message: "#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#"
 			count: 2
 			path: tests/Drupal/KernelTests/Core/Installer/InstallerRedirectTraitTest.php
@@ -3406,54 +3283,9 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Installer/InstallerRedirectTraitTest.php
 
 		-
-			message: "#^@dataProvider providerTestBuild related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Layout/IconBuilderTest.php
-
-		-
-			message: "#^@dataProvider providerTestGetMaxPagerElementId related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Pager/PagerManagerTest.php
-
-		-
-			message: "#^@dataProvider providerTestConditions related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Plugin/Condition/ResponseStatusTest.php
-
-		-
-			message: "#^@dataProvider providerHasContextValue related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Plugin/ContextTypedDataTest.php
-
-		-
 			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Render\\\\Element\\\\MachineNameTest\\:\\:expectErrorMessage\\(\\)\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Render/Element/MachineNameTest.php
-
-		-
-			message: "#^@dataProvider providerDuplicateRoutePaths related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Routing/RouteProviderTest.php
-
-		-
-			message: "#^@dataProvider providerMixedCaseRoutePaths related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Routing/RouteProviderTest.php
-
-		-
-			message: "#^@dataProvider providerTestUriScheme related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/StreamWrapper/StreamWrapperManagerTest.php
-
-		-
-			message: "#^@dataProvider dataSetProvider related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 2
-			path: tests/Drupal/KernelTests/Core/Test/Comparator/MarkupInterfaceComparatorTest.php
-
-		-
-			message: "#^@dataProvider dataSetProviderDeprecatedCases related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Test/Comparator/MarkupInterfaceComparatorTest.php
 
 		-
 			message: "#^Class PHPUnit\\\\Framework\\\\Error\\\\Warning not found\\.$#"

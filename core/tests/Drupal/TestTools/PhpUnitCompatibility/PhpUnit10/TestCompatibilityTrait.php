@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\TestTools\PhpUnitCompatibility\PhpUnit10;
 
+use PHPUnit\Metadata\CoversClass;
+
 // cspell:ignore errno errstr errfile errline
 
 /**
@@ -57,6 +59,22 @@ trait TestCompatibilityTrait {
 
     // Checks if collected deprecations match the expectations.
     $this->tearDownExpectedDeprecations();
+  }
+
+  /**
+   * Gets @covers defined on the test class.
+   *
+   * @return string[]
+   *   An array of classes listed with the @covers annotation.
+   */
+  public function getTestClassCovers(): array {
+    $ret = [];
+    foreach ($this->valueObjectForEvents()->metadata()->isCoversClass() as $metadata) {
+      if ($metadata instanceof CoversClass) {
+        $ret[] = $metadata->target();
+      }
+    }
+    return $ret;
   }
 
 }
