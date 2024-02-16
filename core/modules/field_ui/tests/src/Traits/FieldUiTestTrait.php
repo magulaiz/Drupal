@@ -35,7 +35,7 @@ trait FieldUiTestTrait {
    * @param string $bundle
    *   (optional) Just provide the bundle as a string for additional settings.
    */
-  public function fieldUIAddNewField($bundle_path, $field_name, $label = NULL, $field_type = 'test_field', array $storage_edit = [], array $field_edit = [], bool $save_settings = TRUE, $bundle = NULL) {
+  public function fieldUIAddNewField($bundle_path, $field_name, $label = NULL, $field_type = 'test_field', array $storage_edit = [], array $field_edit = [], bool $save_settings = TRUE, ?string $bundle = NULL) {
     // Generate a label containing only letters and numbers to prevent random
     // test failure.
     // See https://www.drupal.org/project/drupal/issues/3030902
