@@ -3,6 +3,7 @@
 namespace Drupal\Core\Installer;
 
 use Drupal\Core\Cache\MemoryBackendFactory;
+use Drupal\Core\Config\NoSchemaConfig;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\Lock\NullLockBackend;
@@ -55,6 +56,9 @@ class NormalInstallerServiceProvider implements ServiceProviderInterface {
     $container->getDefinition('extension.list.module')->setClass(InstallerModuleExtensionList::class);
     $container->getDefinition('extension.list.theme')->setClass(InstallerThemeExtensionList::class);
     $container->getDefinition('extension.list.theme_engine')->setClass(InstallerThemeEngineExtensionList::class);
+
+    // Disable config schema in the config system during install.
+    $container->getDefinition('config.factory')->addMethodCall('setMutableConfigClass', [NoSchemaConfig::class]);
 
     // Don't register the lazy route provider in the super early installer.
     if (static::class === NormalInstallerServiceProvider::class) {

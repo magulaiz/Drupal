@@ -23,7 +23,7 @@ function demo_umami_form_install_configure_form_alter(&$form, FormStateInterface
  */
 function demo_umami_form_install_configure_submit($form, FormStateInterface $form_state) {
   $site_mail = $form_state->getValue('site_mail');
-  ContactForm::load('feedback')->setRecipients([$site_mail])->trustData()->save();
+  ContactForm::load('feedback')->setRecipients([$site_mail])->save();
 
   $password = $form_state->getValue('account')['pass'];
   demo_umami_set_users_passwords($password);

@@ -320,7 +320,7 @@ trait UserCreationTrait {
     foreach ($permissions as $permission) {
       $role->grantPermission($permission);
     }
-    $role->trustData()->save();
+    $role->save();
   }
 
 }

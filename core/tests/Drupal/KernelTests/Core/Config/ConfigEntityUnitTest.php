@@ -102,10 +102,6 @@ class ConfigEntityUnitTest extends KernelTestBase {
     $entity->save();
     $this->assertSame('999', $entity->style);
     $entity->style = 999;
-    $entity->trustData()->save();
-    $this->assertSame(999, $entity->style);
-    $entity->save();
-    $this->assertSame('999', $entity->style);
   }
 
 }

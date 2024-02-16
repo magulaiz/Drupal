@@ -113,7 +113,7 @@ final class LinksetControllerMultiLingualTest extends LinksetControllerTestBase 
       ->save();
     $this->config('system.feature_flags')
       ->set('linkset_endpoint', TRUE)
-      ->save(TRUE);
+      ->save();
     // Using rebuildIfNeeded here to implicitly test that router is only rebuilt
     // when necessary.
     $this->rebuildIfNeeded();

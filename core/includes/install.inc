@@ -549,7 +549,7 @@ function drupal_install_system($install_state) {
     \Drupal::configFactory()->getEditable('system.site')
       ->set('langcode', (string) $install_state['parameters']['langcode'])
       ->set('default_langcode', (string) $install_state['parameters']['langcode'])
-      ->save(TRUE);
+      ->save();
   }
 }
 

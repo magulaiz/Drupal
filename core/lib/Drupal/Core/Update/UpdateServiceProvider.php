@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Update;
 
+use Drupal\Core\Config\NoSchemaConfig;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
@@ -40,6 +41,18 @@ class UpdateServiceProvider implements ServiceProviderInterface, ServiceModifier
       $container->getDefinition('path_alias.path_processor')
         ->clearTag('path_processor_inbound')
         ->clearTag('path_processor_outbound');
+    }
+
+    $root = $container->getParameter('app.root');
+    require_once $root . '/core/includes/install.inc';
+    require_once $root . '/core/includes/update.inc';
+    drupal_load_updates();
+    if (!empty(update_get_update_list())) {
+      // Disable config schema in the config system during hook_update_N updates
+      // as config schema can be incorrect at this time.
+      // @todo does this actually work here - I think the service might exist
+      //   at this point.
+      $container->getDefinition('config.factory')->addMethodCall('setMutableConfigClass', [NoSchemaConfig::class]);
     }
   }
 

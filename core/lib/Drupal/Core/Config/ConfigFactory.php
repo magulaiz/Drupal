@@ -60,6 +60,13 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
   protected $configFactoryOverrides = [];
 
   /**
+   * The class to create mutable config objects.
+   *
+   * @var string
+   */
+  protected $mutableConfigClass = Config::class;
+
+  /**
    * Constructs the Config factory.
    *
    * @param \Drupal\Core\Config\StorageInterface $storage
@@ -78,15 +85,25 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
   /**
    * {@inheritdoc}
    */
-  public function getEditable($name) {
-    return $this->doGet($name, FALSE);
+  public function setMutableConfigClass(string $class): void {
+    if (!is_subclass_of($class, StorableConfigBase::class)) {
+      throw new \RuntimeException('$class must be a sub class of \Drupal\Core\Config\StorableConfigBase');
+    }
+    $this->mutableConfigClass = $class;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEditable($name, ?string $class = NULL) {
+    return $this->doGet($name, $class ?? $this->mutableConfigClass);
   }
 
   /**
    * {@inheritdoc}
    */
   public function get($name) {
-    return $this->doGet($name);
+    return $this->doGet($name, ImmutableConfig::class);
   }
 
   /**
@@ -94,22 +111,26 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    *
    * @param string $name
    *   The name of the configuration object to construct.
-   * @param bool $immutable
+   * @param string $class
    *   (optional) Create an immutable configuration object. Defaults to TRUE.
    *
    * @return \Drupal\Core\Config\Config|\Drupal\Core\Config\ImmutableConfig
    *   A configuration object.
    */
-  protected function doGet($name, $immutable = TRUE) {
-    if ($config = $this->doLoadMultiple([$name], $immutable)) {
+  protected function doGet($name, $class = TRUE) {
+    if (is_bool($class)) {
+      @trigger_error('Calling ' . __METHOD__ . '() with a boolean in the $class argument is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. This argument should be class that is used for creating config objects. See https://www.drupal.org/node/3348180', E_USER_DEPRECATED);
+      $class = $class ? ImmutableConfig::class : $this->mutableConfigClass;
+    }
+    if ($config = $this->doLoadMultiple([$name], $class)) {
       return $config[$name];
     }
     else {
       // If the configuration object does not exist in the configuration
       // storage, create a new object.
-      $config = $this->createConfigObject($name, $immutable);
+      $config = $this->createConfigObject($name, $class);
 
-      if ($immutable) {
+      if (is_subclass_of($class, ImmutableConfig::class)) {
         // Get and apply any overrides.
         $overrides = $this->loadOverrides([$name]);
         if (isset($overrides[$name])) {
@@ -141,17 +162,22 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    *
    * @param array $names
    *   List of names of configuration objects.
-   * @param bool $immutable
+   * @param string $class
    *   (optional) Create an immutable configuration objects. Defaults to TRUE.
    *
    * @return \Drupal\Core\Config\Config[]|\Drupal\Core\Config\ImmutableConfig[]
    *   List of successfully loaded configuration objects, keyed by name.
    */
-  protected function doLoadMultiple(array $names, $immutable = TRUE) {
+  protected function doLoadMultiple(array $names, $class = TRUE) {
+    if (is_bool($class)) {
+      @trigger_error('Calling ' . __METHOD__ . '() with a boolean in the $class argument is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. This argument should be class that is used for creating config objects. See https://www.drupal.org/node/3348180', E_USER_DEPRECATED);
+      $class = $class ? ImmutableConfig::class : $this->mutableConfigClass;
+    }
+    $immutable = is_subclass_of($class, ImmutableConfig::class);
     $list = [];
 
     foreach ($names as $key => $name) {
-      $cache_key = $this->getConfigCacheKey($name, $immutable);
+      $cache_key = $this->getConfigCacheKey($name, $class);
       if (isset($this->cache[$cache_key])) {
         $list[$name] = $this->cache[$cache_key];
         unset($names[$key]);
@@ -170,9 +196,9 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
       }
 
       foreach ($storage_data as $name => $data) {
-        $cache_key = $this->getConfigCacheKey($name, $immutable);
+        $cache_key = $this->getConfigCacheKey($name, $class);
 
-        $this->cache[$cache_key] = $this->createConfigObject($name, $immutable);
+        $this->cache[$cache_key] = $this->createConfigObject($name, $class);
         $this->cache[$cache_key]->initWithData($data);
         if ($immutable) {
           if (isset($module_overrides[$name])) {
@@ -282,16 +308,21 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    *
    * @param string $name
    *   The name of the configuration object.
-   * @param bool $immutable
-   *   Whether or not the object is mutable.
+   * @param string $class
+   *   The class used to create the config.
    *
    * @return string
    *   The cache key.
    */
-  protected function getConfigCacheKey($name, $immutable) {
-    $suffix = '';
+  protected function getConfigCacheKey($name, $class) {
+    if (is_bool($class)) {
+      @trigger_error('Calling ' . __METHOD__ . '() with a boolean in the $class argument is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. This argument should be class that is used for creating config objects. See https://www.drupal.org/node/3348180', E_USER_DEPRECATED);
+      $class = $class ? ImmutableConfig::class : $this->mutableConfigClass;
+    }
+    $immutable = is_subclass_of($class, ImmutableConfig::class);
+    $suffix = ':' . $class;
     if ($immutable) {
-      $suffix = ':' . implode(':', $this->getCacheKeys());
+      $suffix .= ':' . implode(':', $this->getCacheKeys());
     }
     return $name . $suffix;
   }
@@ -400,17 +431,18 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    *
    * @param string $name
    *   Configuration object name.
-   * @param bool $immutable
+   * @param bool $class
    *   Determines whether a mutable or immutable config object is returned.
    *
    * @return \Drupal\Core\Config\Config|\Drupal\Core\Config\ImmutableConfig
    *   The configuration object.
    */
-  protected function createConfigObject($name, $immutable) {
-    if ($immutable) {
-      return new ImmutableConfig($name, $this->storage, $this->eventDispatcher, $this->typedConfigManager);
+  protected function createConfigObject($name, $class) {
+    if (is_bool($class)) {
+      @trigger_error('Calling ' . __METHOD__ . '() with a boolean in the $class argument is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. This argument should be class that is used for creating config objects. See https://www.drupal.org/node/3348180', E_USER_DEPRECATED);
+      $class = $class ? ImmutableConfig::class : $this->mutableConfigClass;
     }
-    return new Config($name, $this->storage, $this->eventDispatcher, $this->typedConfigManager);
+    return new $class($name, $this->storage, $this->eventDispatcher, $this->typedConfigManager);
   }
 
 }

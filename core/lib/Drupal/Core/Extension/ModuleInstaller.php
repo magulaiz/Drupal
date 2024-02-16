@@ -4,6 +4,7 @@ namespace Drupal\Core\Extension;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Config\NoSchemaConfig;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\DrupalKernelInterface;
 use Drupal\Core\Entity\EntityStorageException;
@@ -112,7 +113,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
    * {@inheritdoc}
    */
   public function install(array $module_list, $enable_dependencies = TRUE) {
-    $extension_config = \Drupal::configFactory()->getEditable('core.extension');
+    $extension_config = \Drupal::configFactory()->getEditable('core.extension', NoSchemaConfig::class);
     // Get all module data so we can find dependencies and sort and find the
     // core requirements. The module list needs to be reset so that it can
     // re-scan and include any new modules that may have been added directly
@@ -192,18 +193,16 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
         // Load a new config object for each iteration, otherwise changes made
         // in hook_install() are not reflected in $extension_config.
-        $extension_config = \Drupal::configFactory()->getEditable('core.extension');
+        $extension_config = \Drupal::configFactory()->getEditable('core.extension', NoSchemaConfig::class);
 
         // Check the validity of the default configuration. This will throw
         // exceptions if the configuration is not valid.
         $config_installer->checkConfigurationToInstall('module', $module);
 
-        // Save this data without checking schema. This is a performance
-        // improvement for module installation.
         $extension_config
           ->set("module.$module", 0)
           ->set('module', module_config_sort($extension_config->get('module')))
-          ->save(TRUE);
+          ->save();
 
         // Prepare the new module list, sorted by weight, including filenames.
         // This list is used for both the ModuleHandler and DrupalKernel. It
@@ -397,7 +396,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       return FALSE;
     }
 
-    $extension_config = \Drupal::configFactory()->getEditable('core.extension');
+    $extension_config = \Drupal::configFactory()->getEditable('core.extension', NoSchemaConfig::class);
     $installed_modules = $extension_config->get('module') ?: [];
     if (!$module_list = array_intersect_key($module_list, $installed_modules)) {
       // Nothing to do. All modules already uninstalled.
@@ -499,9 +498,8 @@ class ModuleInstaller implements ModuleInstallerInterface {
       // Remove the schema.
       $this->uninstallSchema($module);
 
-      // Remove the module's entry from the config. Don't check schema when
-      // uninstalling a module since we are only clearing a key.
-      \Drupal::configFactory()->getEditable('core.extension')->clear("module.$module")->save(TRUE);
+      // Remove the module's entry from the config.
+      \Drupal::configFactory()->getEditable('core.extension', NoSchemaConfig::class)->clear("module.$module")->save();
 
       // Update the module handler to remove the module.
       // The current ModuleHandler instance is obsolete with the kernel rebuild
