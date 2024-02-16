@@ -245,7 +245,7 @@ class BookManager implements BookManagerInterface {
       '#type' => 'weight',
       '#title' => $this->t('Weight'),
       '#default_value' => $node->book['weight'],
-      '#delta' => max(15, abs($node->book['weight'])),
+      '#delta' => max(50, abs($node->book['weight'])),
       '#weight' => 5,
       '#description' => $this->t('Pages at a given level are ordered first by weight and then by title.'),
     ];
