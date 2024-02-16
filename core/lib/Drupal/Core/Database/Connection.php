@@ -14,7 +14,6 @@ use Drupal\Core\Database\Query\Truncate;
 use Drupal\Core\Database\Query\Update;
 use Drupal\Core\Database\Query\Upsert;
 use Drupal\Core\Database\Transaction\TransactionManagerInterface;
-use Drupal\Core\DestructableInterface;
 use Drupal\Core\Pager\PagerManagerInterface;
 
 /**
@@ -27,7 +26,7 @@ use Drupal\Core\Pager\PagerManagerInterface;
  *
  * @see http://php.net/manual/book.pdo.php
  */
-abstract class Connection implements DestructableInterface {
+abstract class Connection {
 
   /**
    * The database target this connection is for.
@@ -294,9 +293,13 @@ abstract class Connection implements DestructableInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Commits the all open transactions.
+   *
+   * @internal
+   *   This method exists only to work around a bug caused by Drupal incorrectly
+   *   relying on object destruction order to commit transactions.
    */
-  public function destruct() {
+  public function commitAll() {
     $manager = $this->transactionManager();
     if ($manager && $manager->inTransaction() && method_exists($manager, 'commitAll')) {
       $this->transactionManager()->commitAll();

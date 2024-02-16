@@ -747,4 +747,23 @@ abstract class Database {
     return ($first === 'Drupal' && strtolower($second) === $second);
   }
 
+  /**
+   * Calls commitAll() on all the open connections.
+   *
+   * @return void
+   *
+   * @internal
+   *   This method exists only to work around a bug caused by Drupal incorrectly
+   *   relying on object destruction order to commit transactions.
+   */
+  public static function commitAllOnAllConnections() {
+    foreach (self::$connections as $targets) {
+      foreach ($targets as $connection) {
+        if ($connection instanceof Connection) {
+          $connection->commitAll();
+        }
+      }
+    }
+  }
+
 }

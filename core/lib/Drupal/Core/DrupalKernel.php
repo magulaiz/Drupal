@@ -9,6 +9,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\DatabaseBackend;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
 use Drupal\Core\Config\NullStorage;
+use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Component\DependencyInjection\ReverseContainer;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
@@ -514,9 +515,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     if (FALSE === $this->booted) {
       return;
     }
-    if ($this->container->initialized('database') && $this->container->get('database')->inTransaction()) {
-      $this->container->get('database')->destruct();
-    }
+    Database::commitAllOnAllConnections();
     $this->container->get('stream_wrapper_manager')->unregister();
     $this->booted = FALSE;
     $this->configStorage = NULL;
@@ -692,8 +691,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     }
 
     // Special-case the database service so that transactions started by other
-    // destructable services are closed.
-    $this->container->get('database')->destruct();
+    // destructable services are committed.
+    Database::commitAllOnAllConnections();
   }
 
   /**
