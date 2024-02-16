@@ -80,7 +80,7 @@ class ConnectionTest extends UnitTestCase {
 
     $this->expectException(\AssertionError::class);
     $this->expectExceptionMessage('The prefix argument to Drupal\Core\Database\Connection::setPrefix() must be a string, this is integer type');
-    // Set the prefix data with an integer.
+    // Set the prefix value with an integer.
     $set_prefix->invokeArgs($connection, [1]);
   }
 
