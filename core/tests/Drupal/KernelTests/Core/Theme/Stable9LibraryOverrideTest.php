@@ -26,6 +26,7 @@ class Stable9LibraryOverrideTest extends StableLibraryOverrideTestBase {
     'media/drupal.media-icon',
     'options/drupal.options-icon',
     'telephone/drupal.telephone-icon',
+    'tour/tour-styling',
   ];
 
   /**
