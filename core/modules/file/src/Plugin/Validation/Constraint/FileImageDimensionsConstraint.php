@@ -39,7 +39,7 @@ class FileImageDimensionsConstraint extends Constraint {
   public string $resizePolicy = 'resize_larger_images';
 
   /**
-   * Message shown when image resize is disabled and image exceeds maximum.
+   * The image is too large.
    *
    * @var string
    */
