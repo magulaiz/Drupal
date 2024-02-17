@@ -5,7 +5,7 @@ namespace Drupal\Tests\image\Functional\Update;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 
 /**
- * Tests addition of image new resize_policy setting.
+ * Tests addition of new image resize_policy setting.
  *
  * @group Update
  */
