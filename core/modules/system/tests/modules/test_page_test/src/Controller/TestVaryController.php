@@ -49,7 +49,7 @@ class TestVaryController extends ControllerBase {
    * @return array
    *   Renderable array expected by renderer service.
    */
-  public function pageVary(Request $request) {
+  public function pageVary(Request $request): array {
     $expected = $request->headers->get('x-vary-test');
     $build = [
       '#title' => 'Vary test',
