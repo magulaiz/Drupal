@@ -65,7 +65,7 @@ class FileImageDimensionsConstraintValidator extends BaseFileConstraintValidator
       if ($image->getWidth() > $width || $image->getHeight() > $height) {
         switch ($resizePolicy) {
           case 'reject_larger_images_with_error':
-            $this->context->addViolation($constraint->messageImageExceedsMaximum,
+            $this->context->addViolation($constraint->messageImageTooLarge,
               [
                 '%dimensions' => $maxDimensions,
                 '%width' => $image->getWidth(),

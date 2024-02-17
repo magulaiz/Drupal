@@ -43,7 +43,7 @@ class FileImageDimensionsConstraint extends Constraint {
    *
    * @var string
    */
-  public string $messageImageExceedsMaximum = 'The image is too large. The maximum dimensions are %dimensions pixels and the image size is %widthx%height pixels.';
+  public string $messageImageTooLarge = 'The image is too large. The maximum dimensions are %dimensions pixels and the image size is %widthx%height pixels.';
 
   /**
    * The resized image too small message.
