@@ -89,8 +89,6 @@ class CKEditor5FragmentLinkTest extends WebDriverTestBase {
 
   /**
    * Tests if the fragment link to a textarea works with CKEditor 5 enabled.
-   *
-   * @group legacy
    */
   public function testFragmentLink() {
     $session = $this->getSession();

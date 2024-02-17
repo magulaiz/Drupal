@@ -70,8 +70,6 @@ class CKEditor5Test extends CKEditor5TestBase {
 
   /**
    * Ensures that attribute values are encoded.
-   *
-   * @group legacy
    */
   public function testAttributeEncoding() {
     $page = $this->getSession()->getPage();
@@ -623,8 +621,6 @@ JS;
 
   /**
    * Tests list plugin.
-   *
-   * @group legacy
    */
   public function testListPlugin() {
     FilterFormat::create([
@@ -752,8 +748,6 @@ JS;
 
   /**
    * Ensures that HTML comments are preserved in CKEditor 5.
-   *
-   * @group legacy
    */
   public function testComments(): void {
     $page = $this->getSession()->getPage();
