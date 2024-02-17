@@ -7,6 +7,7 @@ namespace Drupal\FunctionalJavascriptTests;
 use Behat\Mink\Exception\DriverException;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
 use PHPUnit\Runner\BaseTestRunner;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -96,10 +97,12 @@ abstract class WebDriverTestBase extends BrowserTestBase {
    */
   protected function tearDown(): void {
     if ($this->mink) {
-      $status = $this->getStatus();
-      if ($status === BaseTestRunner::STATUS_ERROR || $status === BaseTestRunner::STATUS_WARNING || $status === BaseTestRunner::STATUS_FAILURE) {
-        // Ensure we capture the output at point of failure.
-        @$this->htmlOutput();
+      if (RunnerVersion::getMajor() < 10) {
+        $status = $this->getStatus();
+        if ($status === BaseTestRunner::STATUS_ERROR || $status === BaseTestRunner::STATUS_WARNING || $status === BaseTestRunner::STATUS_FAILURE) {
+          // Ensure we capture the output at point of failure.
+          @$this->htmlOutput();
+        }
       }
       // Wait for all requests to finish. It is possible that an AJAX request is
       // still on-going.
