@@ -869,7 +869,7 @@ services:
     arguments: ['@request_stack']
   Drupal\Core\Routing\RouteMatchInterface: '@current_route_match'
   event_dispatcher:
-    class: Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher
+    class: Symfony\Component\EventDispatcher\EventDispatcher
     arguments: ['@service_container']
   Psr\EventDispatcher\EventDispatcherInterface: '@event_dispatcher'
   Symfony\Contracts\EventDispatcher\EventDispatcherInterface: '@event_dispatcher'
