@@ -13,7 +13,6 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\Entity\User;
-use Drupal\user\RoleInterface;
 
 /**
  * Tests that the fragment link points to CKEditor 5.
