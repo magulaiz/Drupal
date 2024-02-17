@@ -152,7 +152,6 @@ trait TestSetupTrait {
    */
   protected function prepareDatabasePrefix() {
     $test_db = new TestDatabase();
-dump([__METHOD__, $test_db]);
     $this->siteDirectory = $test_db->getTestSitePath();
     $this->databasePrefix = $test_db->getDatabasePrefix();
   }

@@ -1784,6 +1784,11 @@ parameters:
 			path: modules/migrate/tests/src/Kernel/MigrateTestBase.php
 
 		-
+			message: "#^@dataProvider providerTestSubProcessSkip related method must be static in PHPUnit 10 and newer\\.$#"
+			count: 1
+			path: modules/migrate/tests/src/Kernel/process/SubProcessWithSkipTest.php
+
+		-
 			message: "#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#"
 			count: 1
 			path: modules/migrate/tests/src/Unit/MigrateExecutableTest.php
