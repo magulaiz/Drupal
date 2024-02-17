@@ -62,19 +62,6 @@ abstract class UnitTestCase extends TestCase {
     FileCacheFactory::setPrefix('prefix');
 
     $this->root = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
-
-    // Check expected E_* triggered errors.
-    $this->setUpErrorHandler();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function tearDown(): void {
-    // Check expected E_* triggered errors.
-    $this->tearDownErrorHandler();
-
-    parent::tearDown();
   }
 
   /**

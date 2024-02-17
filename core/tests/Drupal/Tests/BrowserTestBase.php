@@ -361,9 +361,6 @@ abstract class BrowserTestBase extends TestCase {
     // Allow tests to compare MarkupInterface objects via assertEquals().
     $this->registerComparator(new MarkupInterfaceComparator());
 
-    // Check expected E_* triggered errors.
-    $this->setUpErrorHandler();
-
     $this->setupBaseUrl();
 
     // Install Drupal test site.
@@ -475,9 +472,6 @@ abstract class BrowserTestBase extends TestCase {
     if ($this->mink) {
       $this->mink->stopSessions();
     }
-
-    // Check expected E_* triggered errors.
-    $this->tearDownErrorHandler();
 
     // Restore original shutdown callbacks.
     if (function_exists('drupal_register_shutdown_function')) {

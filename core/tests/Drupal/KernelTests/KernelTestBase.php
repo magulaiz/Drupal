@@ -253,9 +253,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
 
     $this->root = static::getDrupalRoot();
 
-    // Check expected E_* triggered errors.
-    $this->setUpErrorHandler();
-
     $this->initFileCache();
     $this->bootEnvironment();
     $this->bootKernel();
@@ -714,9 +711,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     \Drupal::unsetContainer();
     $this->container = NULL;
     new Settings([]);
-
-    // Check expected E_* triggered errors.
-    $this->tearDownErrorHandler();
 
     parent::tearDown();
   }

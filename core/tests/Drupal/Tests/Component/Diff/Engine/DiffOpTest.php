@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Diff\Engine;
 
 use Drupal\Component\Diff\Engine\DiffOp;
-use Drupal\Tests\PhpUnitCompatibilityTrait;
 use Drupal\TestTools\Trait\ExpectDeprecationTrait;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\TestCase;
@@ -26,27 +25,6 @@ use PHPUnit\Framework\TestCase;
 class DiffOpTest extends TestCase {
 
   use ExpectDeprecationTrait;
-  use PhpUnitCompatibilityTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-
-    // Check expected E_* triggered errors.
-    $this->setUpErrorHandler();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function tearDown(): void {
-    // Check expected E_* triggered errors.
-    $this->tearDownErrorHandler();
-
-    parent::tearDown();
-  }
 
   /**
    * DiffOp::reverse() always throws an error.

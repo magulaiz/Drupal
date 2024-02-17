@@ -12,7 +12,6 @@ use Drupal\Component\FileSystem\FileSystem as DrupalFilesystem;
 use Drupal\Tests\DrupalTestBrowser;
 use Drupal\Tests\PhpUnitCompatibilityTrait;
 use Drupal\TestTools\Extension\RequiresComposerTrait;
-use Drupal\TestTools\Trait\ExpectDeprecationTrait;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem as SymfonyFilesystem;
 use Symfony\Component\Finder\Finder;
@@ -56,7 +55,6 @@ abstract class BuildTestBase extends TestCase {
 
   use RequiresComposerTrait;
   use PhpUnitCompatibilityTrait;
-  use ExpectDeprecationTrait;
 
   /**
    * The working directory where this test will manipulate files.
