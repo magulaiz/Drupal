@@ -39,7 +39,7 @@ class FileImageDimensionsConstraint extends Constraint {
   public string $resizePolicy = 'resize_larger_images';
 
   /**
-   * The image is too large.
+   * The image is too large message.
    *
    * @var string
    */
