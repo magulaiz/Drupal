@@ -16,6 +16,7 @@ use GuzzleHttp\RequestOptions;
  * Test image upload.
  *
  * @group ckeditor5
+ * @group legacy
  * @internal
  */
 class ImageUploadTest extends BrowserTestBase {
@@ -57,8 +58,6 @@ class ImageUploadTest extends BrowserTestBase {
 
   /**
    * Tests using the file upload route with a disallowed extension.
-   *
-   * @group legacy
    */
   public function testUploadFileExtension() {
     $this->expectDeprecation('Specifying roles in text formats is deprecated in drupal:10.3.0 and will not be supported starting in drupal:11.0.0. See https://www.drupal.org/node/3168851');
