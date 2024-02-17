@@ -545,9 +545,9 @@ class ImageItem extends FileItem {
   }
 
   /**
-   * Render API callback that moves resized elements up a level.
+   * Render API callback that moves 'resize_policy' option up a level.
    *
-   * The elements (i.e. 'resize_policy') are moved for easier processing by
+   * The 'resize_policy' option is moved for easier processing by
    * the validation and submission handlers.
    */
   public static function formProcessMergeParent($element) {
