@@ -34,7 +34,7 @@ trait ExpectDeprecationTrait {
 
   #[Before]
   public function setUpErrorHandler(): void {
-    $this->setUpIgnoreDeprecationPatterns();
+    $this->parseIgnoreDeprecationPatterns();
 
     if ($this->previouslyDefinedErrorHandler === NULL) {
       // Get current handler.
@@ -63,7 +63,7 @@ trait ExpectDeprecationTrait {
     }
   }
 
-  protected function setUpIgnoreDeprecationPatterns(): void {
+  protected function parseIgnoreDeprecationPatterns(): void {
     if (!self::$ignoreDeprecationPatterns) {
       $root = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
       $ignoreFile = $root . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . '.deprecation-ignore.txt';
@@ -121,11 +121,12 @@ trait ExpectDeprecationTrait {
     return (bool) $result;
   }
 
-  public function isTestInLegacyGroup(): bool {
-    [$testMethod] = explode(' ', $this->name());
-    $classDoc = (new \ReflectionClass($this))->getDocComment();
-    $methodDoc = (new \ReflectionMethod($this, $testMethod))->getDocComment();
-    return str_contains($classDoc, '@group legacy') || str_contains($methodDoc, '@group legacy');
+  protected function isTestInLegacyGroup(): bool {
+    $groups = [];
+    foreach ($this->valueObjectForEvents()->metadata()->isGroup() as $metadata) {
+      $groups[] = $metadata->groupName();
+    }
+    return in_array('legacy', $groups, TRUE);
   }
 
 }

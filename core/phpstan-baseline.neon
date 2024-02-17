@@ -3797,11 +3797,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/Error/DrupalLogErrorTest.php
 
 		-
-			message: "#^Missing call to parent\\:\\:tearDown\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/EventSubscriber/CustomPageExceptionHtmlSubscriberTest.php
-
-		-
 			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\EventSubscriber\\\\RedirectResponseSubscriberTest\\:\\:expectError\\(\\)\\.$#"
 			count: 2
 			path: tests/Drupal/Tests/Core/EventSubscriber/RedirectResponseSubscriberTest.php
@@ -3851,11 +3846,6 @@ parameters:
 			"""
 			count: 2
 			path: tests/Drupal/Tests/Core/Form/ConfigFormBaseTraitTest.php
-
-		-
-			message: "#^Missing call to parent\\:\\:tearDown\\(\\) method\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Form/FormTestBase.php
 
 		-
 			message: """
