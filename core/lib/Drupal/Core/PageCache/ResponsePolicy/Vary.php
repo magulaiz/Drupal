@@ -32,7 +32,7 @@ class Vary implements ResponsePolicyInterface {
   /**
    * {@inheritdoc}
    */
-  public function check(Response $response, Request $request) {
+  public function check(Response $response, Request $request): void {
     if ($this->vary) {
       $response->setVary($this->vary);
       if ($response instanceof CacheableResponseInterface) {
