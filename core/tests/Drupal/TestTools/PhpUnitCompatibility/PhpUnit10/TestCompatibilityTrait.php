@@ -69,10 +69,8 @@ trait TestCompatibilityTrait {
    */
   public function getTestClassCovers(): array {
     $ret = [];
-    foreach ($this->valueObjectForEvents()->metadata()->isCovers() as $metadata) {
-      if ($metadata instanceof Covers) {
-        $ret[] = $metadata->target();
-      }
+    foreach ($this->valueObjectForEvents()->metadata()->isCovers()->isClassLevel() as $metadata) {
+      $ret[] = $metadata->target();
     }
     return $ret;
   }
