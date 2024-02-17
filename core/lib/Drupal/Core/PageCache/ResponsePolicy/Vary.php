@@ -18,7 +18,7 @@ class Vary implements ResponsePolicyInterface {
    *
    * @var array
    */
-  protected $vary = [];
+  protected array $vary = [];
 
   /**
    * Add vary header.
