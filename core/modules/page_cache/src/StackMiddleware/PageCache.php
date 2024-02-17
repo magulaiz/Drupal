@@ -59,7 +59,7 @@ class PageCache implements HttpKernelInterface {
    *
    * @var \Symfony\Component\HttpFoundation\Request
    */
-  protected $requestUsedForCid;
+  protected Request $requestUsedForCid;
 
   /**
    * Constructs a PageCache object.
