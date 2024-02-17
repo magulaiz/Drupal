@@ -33,7 +33,7 @@ class ForumTermAccessTest extends BrowserTestBase {
    * Adds both published and unpublished forums.
    * Tests to ensure publish/unpublished forums access is respected.
    */
-  public function testForumTermAccess() {
+  public function testForumTermAccess(): void {
     $assert_session = $this->assertSession();
     // Create some users.
     $public_user = $this->drupalCreateUser(['access content']);
