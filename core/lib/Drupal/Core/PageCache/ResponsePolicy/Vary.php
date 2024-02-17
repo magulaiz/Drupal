@@ -22,8 +22,11 @@ class Vary implements ResponsePolicyInterface {
 
   /**
    * Add vary header.
+   * 
+   * @param string $header
+   *   The vary header.
    */
-  public function add($header) {
+  public function add(string $header): void {
     if (!in_array($header, $this->vary)) {
       $this->vary[] = $header;
     }
