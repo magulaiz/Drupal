@@ -1277,10 +1277,7 @@ function template_preprocess_file_upload_help(&$variables) {
     }
     elseif ($min && $max) {
       if ($resize_policy == 'reject_larger_images_with_error') {
-        $descriptions[] = t('Images must be between <strong>@min</strong> pixels and <strong>@max</strong>.', [
-          '@min' => $min,
-          '@max' => $max
-        ]);
+        $descriptions[] = t('Images must be between <strong>@min</strong> pixels and <strong>@max</strong>.', ['@min' => $min, '@max' => $max]);
       }
       else {
         $descriptions[] = t('Images must be larger than <strong>@min</strong> pixels. Images larger than <strong>@max</strong> pixels will be resized.', ['@min' => $min, '@max' => $max]);
