@@ -43,7 +43,7 @@ class PageCacheVaryTest extends BrowserTestBase {
   /**
    * Tests that custom vary header cached.
    */
-  public function testPageCacheWithVary() {
+  public function testPageCacheWithVary(): void {
     $config = $this->config('system.performance');
     $config->set('cache.page.max_age', 300);
     $config->save();
