@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\TestTools\PhpUnitCompatibility\PhpUnit10;
 
-use PHPUnit\Metadata\Covers;
-
 // cspell:ignore errno errstr errfile errline
 
 /**
