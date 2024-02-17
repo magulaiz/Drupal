@@ -6,7 +6,6 @@ use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\user\RoleInterface;
 use Drupal\user\Entity\User;
 use Symfony\Component\Validator\ConstraintViolation;
 
@@ -54,7 +53,6 @@ class AddedStylesheetsTest extends BrowserTestBase {
       'format' => 'llama',
       'name' => 'Llama',
       'filters' => [],
-      'roles' => [RoleInterface::AUTHENTICATED_ID],
     ]);
     $filtered_html_format->save();
     $this->editor = Editor::create([
@@ -91,11 +89,8 @@ class AddedStylesheetsTest extends BrowserTestBase {
 
   /**
    * Test the ckeditor5-stylesheets theme config.
-   *
-   * @group legacy
    */
   public function testCkeditorStylesheets() {
-    $this->expectDeprecation('Specifying roles in text formats is deprecated in drupal:10.3.0 and will not be supported starting in drupal:11.0.0. See https://www.drupal.org/node/3168851');
     $assert_session = $this->assertSession();
 
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */

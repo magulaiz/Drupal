@@ -8,7 +8,6 @@ use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
-use Drupal\user\RoleInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 
 /**
@@ -32,15 +31,11 @@ class CKEditor5DialogTest extends CKEditor5TestBase {
 
   /**
    * Tests if CKEditor 5 tooltips can be interacted with in dialogs.
-   *
-   * @group legacy
    */
   public function testCKEditor5FocusInTooltipsInDialog() {
-    $this->expectDeprecation('Specifying roles in text formats is deprecated in drupal:10.3.0 and will not be supported starting in drupal:11.0.0. See https://www.drupal.org/node/3168851');
     FilterFormat::create([
       'format' => 'test_format',
       'name' => 'CKEditor 5 with link',
-      'roles' => [RoleInterface::AUTHENTICATED_ID],
     ])->save();
     Editor::create([
       'format' => 'test_format',

@@ -13,7 +13,6 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Drupal\Tests\TestFileCreationTrait;
-use Drupal\user\RoleInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 
 // cspell:ignore esque māori sourceediting splitbutton upcasted
@@ -75,14 +74,12 @@ class CKEditor5Test extends CKEditor5TestBase {
    * @group legacy
    */
   public function testAttributeEncoding() {
-    $this->expectDeprecation('Specifying roles in text formats is deprecated in drupal:10.3.0 and will not be supported starting in drupal:11.0.0. See https://www.drupal.org/node/3168851');
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
     FilterFormat::create([
       'format' => 'ckeditor5',
       'name' => 'CKEditor 5 with image upload',
-      'roles' => [RoleInterface::AUTHENTICATED_ID],
     ])->save();
     Editor::create([
       'format' => 'ckeditor5',
@@ -630,11 +627,9 @@ JS;
    * @group legacy
    */
   public function testListPlugin() {
-    $this->expectDeprecation('Specifying roles in text formats is deprecated in drupal:10.3.0 and will not be supported starting in drupal:11.0.0. See https://www.drupal.org/node/3168851');
     FilterFormat::create([
       'format' => 'test_format',
       'name' => 'CKEditor 5 with list',
-      'roles' => [RoleInterface::AUTHENTICATED_ID],
     ])->save();
     Editor::create([
       'format' => 'test_format',
@@ -761,7 +756,6 @@ JS;
    * @group legacy
    */
   public function testComments(): void {
-    $this->expectDeprecation('Specifying roles in text formats is deprecated in drupal:10.3.0 and will not be supported starting in drupal:11.0.0. See https://www.drupal.org/node/3168851');
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -774,7 +768,6 @@ JS;
     FilterFormat::create([
       'format' => 'ckeditor5',
       'name' => 'CKEditor 5 HTML comments test',
-      'roles' => [RoleInterface::AUTHENTICATED_ID],
     ])->save();
     Editor::create([
       'format' => 'ckeditor5',
