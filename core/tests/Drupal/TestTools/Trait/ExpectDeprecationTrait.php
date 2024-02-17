@@ -7,6 +7,7 @@ namespace Drupal\TestTools\Trait;
 use PHPUnit\Event\Code\TestMethodBuilder;
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\BeforeClass;
 
 // cspell:ignore errno errstr errfile errline
 
@@ -32,10 +33,33 @@ trait ExpectDeprecationTrait {
   protected array $expectedDeprecations = [];
   protected array $collectedDeprecations = [];
 
+  #[BeforeClass]
+  public static function parseIgnoreDeprecationPatterns(): void {
+    if (!self::$ignoreDeprecationPatterns) {
+      $root = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
+      $ignoreFile = $root . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . '.deprecation-ignore.txt';
+      if (!is_file($ignoreFile)) {
+        throw new \InvalidArgumentException(sprintf('The ignoreFile "%s" does not exist.', $ignoreFile));
+      }
+      set_error_handler(static function ($t, $m) use ($ignoreFile, &$line) {
+        throw new \RuntimeException(sprintf('Invalid pattern found in "%s" on line "%d"', $ignoreFile, 1 + $line) . substr($m, 12));
+      });
+      try {
+        foreach (file($ignoreFile) as $line => $pattern) {
+          if ((trim($pattern)[0] ?? '#') !== '#') {
+            preg_match($pattern, '');
+            self::$ignoreDeprecationPatterns[] = $pattern;
+          }
+        }
+      }
+      finally {
+        restore_error_handler();
+      }
+    }
+  }
+
   #[Before]
   public function setUpErrorHandler(): void {
-    $this->parseIgnoreDeprecationPatterns();
-
     if ($this->previouslyDefinedErrorHandler === NULL) {
       // Get current handler.
       $handler = set_error_handler('var_dump');
@@ -60,30 +84,6 @@ trait ExpectDeprecationTrait {
           return TRUE;
         }
       );
-    }
-  }
-
-  protected function parseIgnoreDeprecationPatterns(): void {
-    if (!self::$ignoreDeprecationPatterns) {
-      $root = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
-      $ignoreFile = $root . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . '.deprecation-ignore.txt';
-      if (!is_file($ignoreFile)) {
-        throw new \InvalidArgumentException(sprintf('The ignoreFile "%s" does not exist.', $ignoreFile));
-      }
-      set_error_handler(static function ($t, $m) use ($ignoreFile, &$line) {
-        throw new \RuntimeException(sprintf('Invalid pattern found in "%s" on line "%d"', $ignoreFile, 1 + $line) . substr($m, 12));
-      });
-      try {
-        foreach (file($ignoreFile) as $line => $pattern) {
-          if ((trim($pattern)[0] ?? '#') !== '#') {
-            preg_match($pattern, '');
-            self::$ignoreDeprecationPatterns[] = $pattern;
-          }
-        }
-      }
-      finally {
-        restore_error_handler();
-      }
     }
   }
 
