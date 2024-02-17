@@ -278,7 +278,6 @@ class ImageItem extends FileItem {
       ],
     ];
     $element['resize']['resize_policy'] = [
-      '#title' => $this->t('Image resize policy'),
       '#type' => 'radios',
       '#default_value' => $settings['resize_policy'] ?? FALSE,
       '#options' => [
