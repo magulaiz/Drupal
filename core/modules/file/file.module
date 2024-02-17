@@ -258,8 +258,8 @@ function file_validate_is_image(FileInterface $file) {
  *   image meets a minimum size. A value of zero (the default) indicates that
  *   there is no restriction on size.
  * @param string $resize_policy
- *   (optional) Allows to change resizing policy when an image exceeds the
- *   maximum resolution. Defaults to "Resize larger images in a proportional way".
+ *   (optional) The image resize policy when an image exceeds the maximum
+ *   resolution. Defaults to "Resize larger images in a proportional way".
  *
  * @return array
  *   An empty array if the file meets the specified dimensions, was resized
