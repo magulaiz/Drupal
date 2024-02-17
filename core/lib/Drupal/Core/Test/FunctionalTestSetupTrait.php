@@ -514,6 +514,7 @@ trait FunctionalTestSetupTrait {
    */
   protected function installParameters() {
     $formInput = Database::getConnectionInfo()['default'];
+    // dump([__METHOD__, '** 1 **', $formInput]);
     $driverName = $formInput['driver'];
     $driverNamespace = $formInput['namespace'];
 
@@ -530,7 +531,7 @@ trait FunctionalTestSetupTrait {
       unset($formInput['host']);
       unset($formInput['port']);
     }
-
+    // dump([__METHOD__, '** 2 **', $driverNamespace, $formInput]);
     $parameters = [
       'interactive' => FALSE,
       'parameters' => [

@@ -152,6 +152,7 @@ trait TestSetupTrait {
    */
   protected function prepareDatabasePrefix() {
     $test_db = new TestDatabase();
+dump([__METHOD__, $test_db]);
     $this->siteDirectory = $test_db->getTestSitePath();
     $this->databasePrefix = $test_db->getDatabasePrefix();
   }
@@ -160,6 +161,7 @@ trait TestSetupTrait {
    * Changes the database connection to the prefixed one.
    */
   protected function changeDatabasePrefix() {
+    // dump([__METHOD__, '** 1 **', $this->databasePrefix]);
     if (empty($this->databasePrefix)) {
       $this->prepareDatabasePrefix();
     }
@@ -176,6 +178,7 @@ trait TestSetupTrait {
 
     // Clone the current connection and replace the current prefix.
     $connection_info = Database::getConnectionInfo('default');
+    // dump([__METHOD__, '** 2 **', $connection_info]);
     if (is_null($connection_info)) {
       throw new \InvalidArgumentException('There is no database connection so no tests can be run. You must provide a SIMPLETEST_DB environment variable to run PHPUnit based functional tests outside of run-tests.sh.');
     }
@@ -186,8 +189,11 @@ trait TestSetupTrait {
         // prefixes of the test runner leak into the test.
         $connection_info[$target]['prefix'] = $value['prefix'] . $this->databasePrefix;
       }
+      // dump([__METHOD__, '** 3 **', $connection_info]);
+      Database::removeConnection('default');
       Database::addConnectionInfo('default', 'default', $connection_info['default']);
     }
+    // dump([__METHOD__, '** 4 **', Database::getConnectionInfo()['default']]);
   }
 
   /**
