@@ -52,7 +52,7 @@ class PageCache implements HttpKernelInterface {
    *
    * @var string[]
    */
-  protected $cids;
+  protected array $cids = [];
 
   /**
    * The request used for generating the cache ID.
