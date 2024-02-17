@@ -22,7 +22,7 @@ class Vary implements ResponsePolicyInterface {
 
   /**
    * Add vary header.
-   * 
+   *
    * @param string $header
    *   The vary header.
    */
