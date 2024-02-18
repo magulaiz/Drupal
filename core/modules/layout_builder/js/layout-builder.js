@@ -71,24 +71,18 @@
           $filterLinks.each(toggleBlockEntry);
 
           // Only display categories containing visible links.
-          $categories.find('.js-layout-builder-category').each(function () {
-            const categoryEle = this;
-            const blockLinks = categoryEle.querySelectorAll(
-              '.js-layout-builder-block-link',
-            );
-            const isVisible = Array.from(blockLinks).every(function (link) {
-              return window.getComputedStyle(link).display !== 'none';
-            });
-            if (!isVisible) {
-              $(categoryEle).hide();
-            }
-          });
+          $categories
+            .find('.js-layout-builder-category')
+            .filter((index, link) => {
+              return link.style.display === 'none';
+            })
+            .hide();
 
           announce(
             formatPlural(
-              $categories
-                .find('.js-layout-builder-block-link')
-                .filter(':visible').length,
+              $categories.find(
+                '.js-layout-builder-category > ul > li:not([style]), li[style=""]',
+              ).length,
               '1 block is available in the modified list.',
               '@count blocks are available in the modified list.',
             ),
