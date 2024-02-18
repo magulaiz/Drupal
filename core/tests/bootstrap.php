@@ -7,6 +7,9 @@
  * @see phpunit.xml.dist
  */
 
+use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
+use Symfony\Component\ErrorHandler\DebugClassLoader;
+
 /**
  * Finds all valid extension directories recursively within a given directory.
  *
@@ -174,6 +177,10 @@ date_default_timezone_set('Australia/Sydney');
 if (getenv('SYMFONY_DEPRECATIONS_HELPER') === FALSE) {
   $deprecation_ignore_filename = realpath(__DIR__ . "/../.deprecation-ignore.txt");
   putenv("SYMFONY_DEPRECATIONS_HELPER=ignoreFile=$deprecation_ignore_filename");
+}
+
+if (RunnerVersion::getMajor() >= 10) {
+  DebugClassLoader::enable();
 }
 
 // Drupal expects to be run from its root directory. This ensures all test types
