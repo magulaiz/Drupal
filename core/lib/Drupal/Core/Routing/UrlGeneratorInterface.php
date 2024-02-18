@@ -15,7 +15,14 @@ interface UrlGeneratorInterface extends SymfonyUrlGeneratorInterface {
    * Gets the internal path (system path) for a route.
    *
    * @param string|\Symfony\Component\Routing\Route $name
-   *   The route name or a route object.
+   *   The special string that generates a routing path or route object
+   *   This defines the following special routes:
+   *   - <front>: The site's front page.
+   *   - <current>: The current page.
+   *   - <none>: The path that make links relative to the current URL.
+   *   - <nolink>: Used to create text that appears as a link, but does not
+   *     lead to an actual URL, only the text of the link is displayed without
+   *     an actual link.
    * @param array $parameters
    *   An array of parameters as passed to
    *   \Symfony\Component\Routing\Generator\UrlGeneratorInterface::generate().

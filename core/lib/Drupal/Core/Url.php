@@ -113,6 +113,13 @@ class Url implements TrustedCallbackInterface {
    *
    * @param string $route_name
    *   The name of the route
+   *   This defines the following special routes:
+   *   - <front>: The site's front page.
+   *   - <current>: The current page.
+   *   - <none>: The path that make links relative to the current URL.
+   *   - <nolink>: Used to create text that appears as a link, but does not
+   *     lead to an actual URL, only the text of the link is displayed without
+   *     an actual link.
    * @param array $route_parameters
    *   (optional) An associative array of parameter names and values.
    * @param array $options

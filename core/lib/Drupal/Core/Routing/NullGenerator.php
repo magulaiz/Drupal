@@ -28,6 +28,16 @@ class NullGenerator extends UrlGenerator {
    *
    * Methods generate(), generateFromRoute() and getPathFromRoute() all call
    * this protected method.
+   *
+   * @param string $name
+   *   The special string that generates a routing path.
+   *   This defines the following special routes:
+   *   - <front>: The site's front page.
+   *   - <current>: The current page.
+   *   - <none>: The path that make links relative to the current URL.
+   *   - <nolink>: Used to create text that appears as a link, but does not
+   *     lead to an actual URL, only the text of the link is displayed without
+   *     an actual link.
    */
   protected function getRoute($name) {
     if ($name === '<front>') {
