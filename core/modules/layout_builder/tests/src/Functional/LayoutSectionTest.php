@@ -59,7 +59,7 @@ class LayoutSectionTest extends BrowserTestBase {
   /**
    * Provides test data for ::testLayoutSectionFormatter().
    */
-  public function providerTestLayoutSectionFormatter() {
+  public static function providerTestLayoutSectionFormatter() {
     $data = [];
     $data['block_with_global_context'] = [
       [
@@ -236,7 +236,7 @@ class LayoutSectionTest extends BrowserTestBase {
     $node->save();
 
     $this->drupalGet($node->toUrl('canonical')->toString() . '/layout');
-    $this->assertSession()->statusCodeEquals(404);
+    $this->assertSession()->statusCodeEquals(403);
   }
 
   /**
