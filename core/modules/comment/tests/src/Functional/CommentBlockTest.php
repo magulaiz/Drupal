@@ -103,7 +103,7 @@ class CommentBlockTest extends CommentTestBase {
   /**
    * Test to ensure that correct destination exists for comment action links.
    */
-  public function testCommentDestination() {
+  public function testCommentDestination(): void {
     $bundle = BlockContentType::create([
       'id' => 'basic',
       'label' => 'basic',

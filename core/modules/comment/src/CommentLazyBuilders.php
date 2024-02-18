@@ -12,7 +12,6 @@ use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
-use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Defines a service for comment #lazy_builder callbacks.
@@ -62,13 +61,6 @@ class CommentLazyBuilders implements TrustedCallbackInterface {
   protected $renderer;
 
   /**
-   * The current route match.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-  protected $currentRouteMatch;
-
-  /**
    * Constructs a new CommentLazyBuilders object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -83,17 +75,14 @@ class CommentLazyBuilders implements TrustedCallbackInterface {
    *   The module handler service.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $current_route_match
-   *   The redirect destination.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFormBuilderInterface $entity_form_builder, AccountInterface $current_user, CommentManagerInterface $comment_manager, ModuleHandlerInterface $module_handler, RendererInterface $renderer, RouteMatchInterface $current_route_match) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFormBuilderInterface $entity_form_builder, AccountInterface $current_user, CommentManagerInterface $comment_manager, ModuleHandlerInterface $module_handler, RendererInterface $renderer) {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityFormBuilder = $entity_form_builder;
     $this->currentUser = $current_user;
     $this->commentManager = $comment_manager;
     $this->moduleHandler = $module_handler;
     $this->renderer = $renderer;
-    $this->currentRouteMatch = $current_route_match;
   }
 
   /**
@@ -177,6 +166,7 @@ class CommentLazyBuilders implements TrustedCallbackInterface {
   protected function buildLinks(CommentInterface $entity, EntityInterface $commented_entity) {
     $links = [];
     $status = $commented_entity->get($entity->getFieldName())->status;
+
     $current_route = Url::fromRoute('<current>')->toString();
     if ($status == CommentItemInterface::OPEN) {
       if ($entity->access('delete')) {

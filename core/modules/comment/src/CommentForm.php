@@ -7,12 +7,12 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityConstraintViolationListInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Render\RendererInterface;
@@ -50,27 +50,6 @@ class CommentForm extends ContentEntityForm {
   protected $entityFieldManager;
 
   /**
-   * The commented entity..
-   *
-   * @var \Drupal\Core\Entity\ContentEntityBase
-   */
-  protected $commentedEntity;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * Route match interface.
-   *
-   * @var \Drupal\Core\Routing\RouteMatchInterface
-   */
-  protected $routeMatch;
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -101,7 +80,7 @@ class CommentForm extends ContentEntityForm {
    *   The time service.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface|null $entity_field_manager
    *   (optional) The entity field manager service.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   * @param \Drupal\Core\Routing\RouteMatchInterface $current_route_match
    *   The current route match.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
@@ -113,15 +92,13 @@ class CommentForm extends ContentEntityForm {
     EntityTypeBundleInfoInterface $entity_type_bundle_info,
     TimeInterface $time,
     EntityFieldManagerInterface $entity_field_manager = NULL,
-    RouteMatchInterface $route_match,
-    EntityTypeManagerInterface $entity_type_manager
+    protected RouteMatchInterface $current_route_match,
+    protected EntityTypeManagerInterface $entity_type_manager
   ) {
     parent::__construct($entity_repository, $entity_type_bundle_info, $time);
     $this->currentUser = $current_user;
     $this->renderer = $renderer;
     $this->entityFieldManager = $entity_field_manager ?: \Drupal::service('entity_field.manager');
-    $this->routeMatch = $route_match;
-    $this->entityTypeManager = $entity_type_manager ?: \Drupal::service('entity_type_manager');
   }
 
   /**
@@ -160,13 +137,16 @@ class CommentForm extends ContentEntityForm {
     // If not replying to a comment, use our dedicated page callback for new
     // Comments on entities.
     $entity_url = $entity->toUrl();
-    if ($entity_url->getRouteName() === $this->routeMatch->getRouteName() &&
-      $entity_url->getRouteParameters() === $this->routeMatch->getRawParameters()) {
+    if ($entity_url->getRouteName() === $this->current_route_match->getRouteName() &&
+      $entity_url->getRouteParameters() == $this->current_route_match->getRawParameters()) {
       $form['#action'] = Url::fromRoute('comment.reply', [
         'entity_type' => $entity->getEntityTypeId(),
         'entity' => $entity->id(),
         'field_name' => $field_name,
       ])->toString();
+    }
+    if (!$comment->id() && !$comment->hasParentComment()) {
+      $form['#action'] = Url::fromRoute('comment.reply', ['entity_type' => $entity->getEntityTypeId(), 'entity' => $entity->id(), 'field_name' => $field_name])->toString();
     }
 
     $comment_preview = $form_state->get('comment_preview');
@@ -458,10 +438,11 @@ class CommentForm extends ContentEntityForm {
       // Redirect the user to the entity they are commenting on.
     }
     $entity_url = $entity->toUrl();
-    if ($entity_url->getRouteName() === $this->routeMatch->getRouteName() &&
-      $entity_url->getRouteParameters() === $this->routeMatch->getRawParameters()) {
+    if ($entity_url->getRouteName() === $this->current_route_match->getRouteName() &&
+      $entity_url->getRouteParameters() === $this->current_route_match->getRawParameters()) {
       $form_state->setRedirectUrl($uri);
     }
+    $form_state->setRedirectUrl($uri);
   }
 
 }
