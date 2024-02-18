@@ -7,6 +7,7 @@
  * @see phpunit.xml.dist
  */
 
+use Drupal\TestTools\PhpUnitCompatibility\IgnoreDeprecation;
 use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
 use Symfony\Component\ErrorHandler\DebugClassLoader;
 use PHPUnit\Runner\ErrorHandler;
@@ -183,15 +184,23 @@ if (getenv('SYMFONY_DEPRECATIONS_HELPER') === FALSE) {
 }
 
 if (RunnerVersion::getMajor() >= 10) {
-  // @todo Needs to have an early error handler to manage DebugClassLoader
-  //   deprecations. For now just dumping the error message.
+  // @todo Force the ignore file for now.
+  $deprecation_ignore_filename = realpath(__DIR__ . "/../.deprecation-ignore.txt");
+
+  IgnoreDeprecation::init($deprecation_ignore_filename);
+
+  // Need to have an early error handler to manage deprecations triggered by
+  // DebugClassLoader, that can occur before tests' set up.
   $phpUnitErrorHandler = new ErrorHandler();
   set_error_handler(
     function (int $errno, string $errstr, string $errfile = NULL, int $errline = NULL) use ($phpUnitErrorHandler): bool {
-      if (E_USER_DEPRECATED === $errno || E_DEPRECATED === $errno) {
-        dump($errstr);
+      if ((E_USER_DEPRECATED === $errno || E_DEPRECATED === $errno) && IgnoreDeprecation::isIgnoredDeprecation($errstr)) {
+        // Deprecation handled is one of those in the ignore list.
+        return TRUE;
       }
       else {
+        // Fallback to PHPUnit's error handler if no other processing.
+        // dump(['Bootstrap level fallback to PHPUnit', $errno, $errstr, $errfile, $errline]);
         call_user_func($phpUnitErrorHandler, $errno, $errstr, $errfile, $errline);
       }
       return TRUE;

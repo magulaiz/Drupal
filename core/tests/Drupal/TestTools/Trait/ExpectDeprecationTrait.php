@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\TestTools\Trait;
 
+use Drupal\TestTools\PhpUnitCompatibility\IgnoreDeprecation;
 use PHPUnit\Event\Code\TestMethodBuilder;
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\Before;
-use PHPUnit\Framework\Attributes\BeforeClass;
 
 // cspell:ignore errno errstr errfile errline
 
@@ -25,38 +25,8 @@ trait ExpectDeprecationTrait {
    */
   protected $previouslyDefinedErrorHandler;
 
-  /**
-   * @var list<string>
-   */
-  protected static array $ignoreDeprecationPatterns = [];
-
   protected array $expectedDeprecations = [];
   protected array $collectedDeprecations = [];
-
-  #[BeforeClass]
-  public static function parseIgnoreDeprecationPatterns(): void {
-    if (!self::$ignoreDeprecationPatterns) {
-      $root = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
-      $ignoreFile = $root . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . '.deprecation-ignore.txt';
-      if (!is_file($ignoreFile)) {
-        throw new \InvalidArgumentException(sprintf('The ignoreFile "%s" does not exist.', $ignoreFile));
-      }
-      set_error_handler(static function ($t, $m) use ($ignoreFile, &$line) {
-        throw new \RuntimeException(sprintf('Invalid pattern found in "%s" on line "%d"', $ignoreFile, 1 + $line) . substr($m, 12));
-      });
-      try {
-        foreach (file($ignoreFile) as $line => $pattern) {
-          if ((trim($pattern)[0] ?? '#') !== '#') {
-            preg_match($pattern, '');
-            self::$ignoreDeprecationPatterns[] = $pattern;
-          }
-        }
-      }
-      finally {
-        restore_error_handler();
-      }
-    }
-  }
 
   #[Before]
   public function setUpErrorHandler(): void {
@@ -72,13 +42,12 @@ trait ExpectDeprecationTrait {
             $this->collectedDeprecations[] = $errstr;
           }
 
-          if ((E_USER_DEPRECATED === $errno || E_DEPRECATED === $errno) && $this->isIgnoredDeprecation($errstr)) {
-            return TRUE;
-          }
-          elseif ((E_USER_DEPRECATED === $errno || E_DEPRECATED === $errno) && $this->isTestInLegacyGroup()) {
+          if ((E_USER_DEPRECATED === $errno || E_DEPRECATED === $errno) && $this->isTestInLegacyGroup()) {
+            // dump(['Test level legacy', $errno, $errstr, $errfile, $errline]);
             return TRUE;
           }
           else {
+            // dump(['Test level fallback', $errno, $errstr, $errfile, $errline]);
             call_user_func($handler, $errno, $errstr, $errfile, $errline);
           }
           return TRUE;
@@ -103,22 +72,10 @@ trait ExpectDeprecationTrait {
   }
 
   public function expectDeprecation(string $message): void {
-    $test = TestMethodBuilder::fromTestCase($this);
-    if (!$test->metadata()->isIgnoreDeprecations()->isNotEmpty() && !$this->isTestInLegacyGroup()) {
+    if (!$this->valueObjectForEvents()->metadata()->isIgnoreDeprecations()->isNotEmpty() && !$this->isTestInLegacyGroup()) {
       throw new \RuntimeException('expectDeprecation() can only be called from tests marked with #[IgnoreDeprecations] or \'@group legacy\'');
     }
     $this->expectedDeprecations[] = $message;
-  }
-
-  public function isIgnoredDeprecation(string $deprecationMessage): bool {
-    if (!self::$ignoreDeprecationPatterns) {
-      return FALSE;
-    }
-    $result = @preg_filter(self::$ignoreDeprecationPatterns, '$0', $deprecationMessage);
-    if (preg_last_error() !== \PREG_NO_ERROR) {
-      throw new \RuntimeException(preg_last_error_msg());
-    }
-    return (bool) $result;
   }
 
   protected function isTestInLegacyGroup(): bool {
