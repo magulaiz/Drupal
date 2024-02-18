@@ -15,6 +15,7 @@ use Drupal\KernelTests\KernelTestBase;
  * Tests that the installed config matches the default config.
  *
  * @group Config
+ * @group #slow
  */
 class DefaultConfigTest extends KernelTestBase {
 
@@ -142,7 +143,7 @@ class DefaultConfigTest extends KernelTestBase {
    *   An array of theme names to test, with both key and value being the name
    *   of the theme.
    */
-  public function themeListDataProvider() {
+  public static function themeListDataProvider() {
     $prefix = dirname(__DIR__, 4) . DIRECTORY_SEPARATOR . 'themes';
     $theme_dirs = array_keys(iterator_to_array(new \FilesystemIterator($prefix)));
     $theme_names = array_map(function ($path) use ($prefix) {
