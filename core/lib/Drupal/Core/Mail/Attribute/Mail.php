@@ -34,10 +34,11 @@ class Mail extends Plugin {
    *   (optional) The deriver class.
    */
   public function __construct(
-    public readonly string $id,
     public readonly TranslatableMarkup $label,
     public readonly ?TranslatableMarkup $description = NULL,
-    public readonly ?string $deriver = NULL,
-  ) {}
+     ...$base
+  ) {
+    parent::__construct(...$base);
+  }
 
 }

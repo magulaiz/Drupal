@@ -19,8 +19,10 @@ class PluginExample extends Plugin {
    *   Some other sample plugin metadata.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly ?string $custom = NULL
-  ) {}
+    public readonly ?string $custom = NULL,
+     ...$base
+  ) {
+    parent::__construct(...$base);
+  }
 
 }

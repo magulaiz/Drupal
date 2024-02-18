@@ -21,9 +21,11 @@ class CustomPlugin extends Plugin {
    *   The title.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly string $title
-  ) {}
+    public readonly string $title,
+    ...$base
+  ) {
+    parent::__construct(...$base);
+  }
 
 }
 

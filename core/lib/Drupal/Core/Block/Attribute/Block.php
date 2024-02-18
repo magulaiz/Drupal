@@ -29,12 +29,13 @@ class Block extends Plugin {
    *   (optional) An array of form class names keyed by a string.
    */
   public function __construct(
-    public readonly string $id,
     public readonly ?TranslatableMarkup $admin_label = NULL,
     public readonly ?TranslatableMarkup $category = NULL,
     public readonly array $context_definitions = [],
-    public readonly ?string $deriver = NULL,
-    public readonly array $forms = []
-  ) {}
+    public readonly array $forms = [],
+    ...$base
+  ) {
+    parent::__construct(...$base);
+  }
 
 }
