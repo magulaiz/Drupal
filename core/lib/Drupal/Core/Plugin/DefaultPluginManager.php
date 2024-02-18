@@ -158,7 +158,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
       $this->pluginDefinitionAnnotationName = $plugin_definition_attribute_name ?? 'Drupal\Component\Annotation\Plugin';
       $this->additionalAnnotationNamespaces = $plugin_definition_annotation_name ?? [];
     }
-    assert($this->validateAttributePlugin($this->pluginDefinitionAttributeName), sprintf('Attribute plugin %s does not have a variadic $base constructor argument.', $this->pluginDefinitionAttributeName));
+    assert($this->validatePluginAttributeClass($this->pluginDefinitionAttributeName), sprintf('Attribute plugin %s does not have a variadic $base constructor argument.', $this->pluginDefinitionAttributeName));
   }
 
   /**
@@ -420,7 +420,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    * @return bool
    *   TRUE if plugin is valid.
    */
-  protected function validateAttributePlugin(?string $pluginDefinitionAttributeName): bool {
+  protected function validatePluginAttributeClass(?string $pluginDefinitionAttributeName): bool {
     if (is_null($pluginDefinitionAttributeName)) {
       return TRUE;
     }
