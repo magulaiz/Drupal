@@ -13,10 +13,10 @@ class PluginExample extends Plugin {
   /**
    * Constructs a PluginExample attribute.
    *
-   * @param string $id
-   *   The plugin ID.
    * @param string $custom
    *   Some other sample plugin metadata.
+   * @param string ...$base
+   *   Plugin ID and deriver class.
    */
   public function __construct(
     public readonly ?string $custom = NULL,

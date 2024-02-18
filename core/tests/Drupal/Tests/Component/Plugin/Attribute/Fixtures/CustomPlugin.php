@@ -15,10 +15,10 @@ class CustomPlugin extends Plugin {
   /**
    * Constructs a CustomPlugin attribute object.
    *
-   * @param string $id
-   *   The attribute class ID.
    * @param string $title
    *   The title.
+   * @param string ...$base
+   *   Plugin ID and deriver class.
    */
   public function __construct(
     public readonly string $title,
