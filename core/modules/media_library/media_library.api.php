@@ -60,16 +60,12 @@
  * source plugin definition which provides an add form for the media library:
  *
  * @code
- * @MediaSource(
- *   id = "file",
- *   label = @Translation("File"),
- *   description = @Translation("Use local files for reusable media."),
- *   allowed_field_types = {"file"},
- *   default_thumbnail_filename = "generic.png",
- *   forms = {
- *     "media_library_add" = "\Drupal\media_library\Form\FileUploadForm",
- *   },
- * )
+ * #[MediaSource(
+ *   id: "file",
+ *   label: new TranslatableMarkup("File"),
+ *   description: new TranslatableMarkup("Use local files for reusable media."),
+ *   allowed_field_types: ["file"],
+ * )]
  * @endcode
  *
  * This can also be done in hook_media_source_info_alter(). For example:
