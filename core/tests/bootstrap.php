@@ -9,6 +9,7 @@
 
 use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
 use Symfony\Component\ErrorHandler\DebugClassLoader;
+use PHPUnit\Runner\ErrorHandler;
 
 /**
  * Finds all valid extension directories recursively within a given directory.
@@ -180,6 +181,21 @@ if (getenv('SYMFONY_DEPRECATIONS_HELPER') === FALSE) {
 }
 
 if (RunnerVersion::getMajor() >= 10) {
+  // @todo Needs to have an early error handler to manage DebugClassLoader
+  //   deprecations. For now just dumping the error message.
+  $phpUnitErrorHandler = new ErrorHandler();
+  set_error_handler(
+    function (int $errno, string $errstr, string $errfile = NULL, int $errline = NULL) use ($phpUnitErrorHandler): bool {
+      if (E_USER_DEPRECATED === $errno || E_DEPRECATED === $errno) {
+        dump($errstr);
+      }
+      else {
+        call_user_func($phpUnitErrorHandler, $errno, $errstr, $errfile, $errline);
+      }
+      return TRUE;
+    }
+  );
+
   DebugClassLoader::enable();
 }
 
