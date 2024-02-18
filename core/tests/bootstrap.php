@@ -196,6 +196,7 @@ if (RunnerVersion::getMajor() >= 10) {
     function (int $errno, string $errstr, string $errfile = NULL, int $errline = NULL) use ($phpUnitErrorHandler): bool {
       if ((E_USER_DEPRECATED === $errno || E_DEPRECATED === $errno) && IgnoreDeprecation::isIgnoredDeprecation($errstr)) {
         // Deprecation handled is one of those in the ignore list.
+        // dump(['Bootstrap ignore', $errno, $errstr, $errfile, $errline]);
         return TRUE;
       }
       else {

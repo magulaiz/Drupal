@@ -41,12 +41,12 @@
 %Method "Symfony\\Component\\EventDispatcher\\EventSubscriberInterface::.*" might add ".*" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message.%
 %Method "Symfony\\Component\\HttpFoundation\\Session\\Storage\\NativeSessionStorage::.*" might add ".*" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message.%
 %Method "Symfony\\Component\\Validator\\Constraint::.*" might add ".*" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message.%
-%Method "Symfony\\Component\\Validator\\Constraints::.*" might add ".*" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message.%
+%Method "Symfony\\Component\\Validator\\Constraints.*" might add ".*" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message.%
 %Method "Symfony\\Component\\Validator\\ConstraintValidatorInterface::.*" might add ".*" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message.%
 %Method "Symfony\\Contracts\\Service\\ResetInterface::.*" might add ".*" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message.%
 %The "Symfony\\Component\\Validator\\Constraints\\.*::\$.*" property is considered final. You should not override it in "[^"]+".%
 %The "Symfony\\Component\\Validator\\ConstraintValidator::\$.*" property is considered final. You should not override it in "[^"]+".%
-%Class "Drupal.*" should implement method "Symfony\\Component\\Validator\\ConstraintViolationInterface::.* Not implementing it is deprecated since Symfony 6\.3\.%
+%Class "Drupal.*" should implement method "Symfony\\Component\\Validator\\ConstraintViolationInterface.*" Not implementing it is deprecated since Symfony 6\.(2|3)\.%
 
 # Temporarily for testing Symfony 6.4.
 %Since symfony/dependency-injection 6.4: "Symfony\\Component\\DependencyInjection\\ContainerAwareTrait" is deprecated, use dependency injection instead.%
