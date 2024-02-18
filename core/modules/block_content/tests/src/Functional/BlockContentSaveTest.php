@@ -70,6 +70,8 @@ class BlockContentSaveTest extends BlockContentTestBase {
   public function testDeterminingChanges() {
     // Initial creation.
     $block = $this->createBlockContent('test_changes');
+    // Creating a block should set the changed date to greater than the
+    // release of Drupal 1.
     $this->assertGreaterThan(979534800, $block->getChangedTime(), 'Creating a block sets default "changed" timestamp.');
 
     // Update the block without applying changes.
