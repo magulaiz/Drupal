@@ -146,9 +146,13 @@ class CommentBlockTest extends CommentTestBase {
     $this->drupalLogin($this->rootUser);
     $this->drupalGet("user/{$this->rootUser->id()}");
     // Test to ensure that destination parameter exist.
-    $this->assertSession()->linkByHrefExists("comment/{$comment->id()}/delete?destination=/user/{$this->rootUser->id()}");
-    $this->assertSession()->linkByHrefExists("comment/{$comment->id()}/edit?destination=/user/{$this->rootUser->id()}");
-    $this->assertSession()->linkByHrefExists("comment/reply/block_content/{$block_content->id()}/block_comment/{$comment->id()}?destination=/user/{$this->rootUser->id()}");
+    $base = base_path();
+    $url_delete = "comment/{$comment->id()}/delete?destination=" . $base . "user/{$this->rootUser->id()}";
+    $url_edit = "comment/{$comment->id()}/edit?destination=" . $base . "user/{$this->rootUser->id()}";
+    $url_reply = "comment/reply/block_content/{$block_content->id()}/block_comment/{$comment->id()}?destination=" . $base . "user/{$this->rootUser->id()}";
+    $this->assertSession()->linkByHrefExists($url_delete);
+    $this->assertSession()->linkByHrefExists($url_edit);
+    $this->assertSession()->linkByHrefExists($url_reply);
   }
 
 }
