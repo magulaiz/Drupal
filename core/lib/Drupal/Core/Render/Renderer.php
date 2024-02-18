@@ -812,7 +812,7 @@ class Renderer implements RendererInterface {
    *
    * @return array
    *   The given array with the escaped markup wrapped in a Markup object.
-   *   If $elements['#markup'] is an instance of 
+   *   If $elements['#markup'] is an instance of
    *   \Drupal\Component\Render\MarkupInterface, it won't be escaped or filtered
    *   again.
    *
