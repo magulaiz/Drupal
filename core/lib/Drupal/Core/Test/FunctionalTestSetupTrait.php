@@ -530,6 +530,7 @@ trait FunctionalTestSetupTrait {
       unset($formInput['host']);
       unset($formInput['port']);
     }
+
     $parameters = [
       'interactive' => FALSE,
       'parameters' => [
