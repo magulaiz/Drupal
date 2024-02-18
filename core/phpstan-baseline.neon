@@ -3155,11 +3155,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Cache/ApcuBackendTest.php
 
 		-
-			message: "#^@dataProvider providerInvalidMachineNameCharacters related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Config/ConfigEntityValidationTestBase.php
-
-		-
 			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Config\\\\ConfigInstallTest\\:\\:expectWarning\\(\\)\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Config/ConfigInstallTest.php
@@ -3508,11 +3503,6 @@ parameters:
 			message: "#^@dataProvider providerTestValidRelativeData related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Component/Utility/UrlHelperTest.php
-
-		-
-			message: "#^@dataProvider providerIsCompatible related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/Version/ConstraintTest.php
 
 		-
 			message: "#^Result of static method Drupal\\\\Composer\\\\Composer\\:\\:ensureComposerVersion\\(\\) \\(void\\) is used\\.$#"

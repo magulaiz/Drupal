@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\TestTools\Trait;
 
-use Drupal\TestTools\PhpUnitCompatibility\IgnoreDeprecation;
-use PHPUnit\Event\Code\TestMethodBuilder;
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\Before;
 
