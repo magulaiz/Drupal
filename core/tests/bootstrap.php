@@ -11,6 +11,8 @@ use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
 use Symfony\Component\ErrorHandler\DebugClassLoader;
 use PHPUnit\Runner\ErrorHandler;
 
+// cspell:ignore errno errstr errfile errline
+
 /**
  * Finds all valid extension directories recursively within a given directory.
  *
