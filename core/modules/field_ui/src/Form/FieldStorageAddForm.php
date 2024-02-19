@@ -317,12 +317,7 @@ class FieldStorageAddForm extends FormBase {
   }
 
   /**
-   * Validates the first step of the form.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
+   * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if (!$form_state->getValue('new_storage_type')) {
