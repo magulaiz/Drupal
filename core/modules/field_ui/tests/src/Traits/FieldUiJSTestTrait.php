@@ -53,7 +53,7 @@ trait FieldUiJSTestTrait {
     $field_card?->click();
     $page->findButton('Continue')->click();
 
-    $this->assertSession()->waitForField('edit-label');
+    $this->assertNotEmpty($this->assertSession()->waitForField('edit-label'));
     $field_label = $page->findField('edit-label');
     $this->assertTrue($field_label->isVisible());
     $field_label = $page->find('css', 'input[data-drupal-selector="edit-label"]');
@@ -113,11 +113,13 @@ trait FieldUiJSTestTrait {
     $this->assertSession()->responseNotContains('&amp;lt;');
 
     // Second step: 'Field settings' form.
-    $this->getSession()->getPage()->fillField('edit-label', $label);
-    $this->getSession()->getPage()->findField('description')->focus();
-    $this->assertSession()->assertWaitOnAjaxRequest();
-    $this->getSession()->getPage()->pressButton('Save settings');
-    $this->assertTrue($this->assertSession()->waitForText("Saved $label configuration."));
+    $session = $this->getSession();
+    $assert_session = $this->assertSession();
+    $session->getPage()->fillField('edit-label', $label);
+    $session->getPage()->findField('description')->focus();
+    $assert_session->assertWaitOnAjaxRequest();
+    $session->getPage()->pressButton('Save settings');
+    $this->assertTrue($assert_session->waitForText("Saved $label configuration."));
 
     // Check that the field appears in the overview form.
     $xpath = $this->assertSession()->buildXPathQuery("//table[@id=\"field-overview\"]//tr/td[1 and text() = :label]", [

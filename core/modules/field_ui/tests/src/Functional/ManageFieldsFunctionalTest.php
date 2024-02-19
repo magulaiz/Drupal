@@ -260,7 +260,7 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     $this->submitForm($edit, 'Save settings');
 
     $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
-    $this->assertStringContainsString("/admin/structure/types/manage/$this->contentType/add-field/node/", $this->getSession()->getCurrentUrl());
+    $this->assertSession()->addressMatches("*/admin/structure/types/manage/$this->contentType/add-field/node/*");
   }
 
   /**

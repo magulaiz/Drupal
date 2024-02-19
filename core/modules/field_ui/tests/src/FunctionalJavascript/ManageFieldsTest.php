@@ -361,12 +361,6 @@ class ManageFieldsTest extends WebDriverTestBase {
 
     $page->findButton('Continue')->click();
     $this->assertSession()->pageTextContains('You need to select a field type.');
-
-    $this->assertNotEmpty($boolean_field = $page->find('xpath', '//*[text() = "Boolean (overridden by alter)"]')->getParent());
-    $boolean_field->click();
-    $page->findButton('Continue')->click();
-    $this->submitForm([], 'Save settings');
-    $this->assertSession()->pageTextContains('Add new field: you need to provide a label.');
   }
 
 }

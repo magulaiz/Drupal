@@ -158,8 +158,7 @@ class CommentFieldsTest extends CommentTestBase {
     ];
     $this->drupalGet('admin/config/people/accounts/fields/add-field');
     $this->submitForm($edit, 'Continue');
-    $temp_store = \Drupal::service('tempstore.private')->get('field_ui');
-    $field_name = $temp_store->get('temp_name');
+    $field_name = \Drupal::service('tempstore.private')->get('field_ui')->get('temp_name');
 
     // Try to save the comment field without selecting a comment type.
     $edit = [];
