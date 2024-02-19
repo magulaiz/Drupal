@@ -73,7 +73,7 @@
           // Only display categories containing visible links.
           $categories
             .find('.js-layout-builder-category')
-            .filter((index, link) => {
+            .filter((i, link) => {
               return link.style.display === 'none';
             })
             .hide();
