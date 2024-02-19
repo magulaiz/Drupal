@@ -276,14 +276,14 @@ class ViewsQuery extends Sql {
    * {@inheritdoc}
    */
   public function addWhere($group, $field, $value = NULL, $operator = NULL) {
-    throw new MongodbSQLException('MongoDB does not support SQL strings. Please use the method ViewsQuery::addCondition() instead of this method.');
+    throw new MongodbSQLException('MongoDB does not support SQL strings. Use the method ViewsQuery::addCondition() instead of this method.');
   }
 
   /**
    * {@inheritdoc}
    */
   public function addWhereExpression($group, $snippet, $args = []) {
-    throw new MongodbSQLException('MongoDB does not support SQL strings. Please use the method ViewsQuery::addCondition() instead of this method.');
+    throw new MongodbSQLException('MongoDB does not support SQL strings. Use the method ViewsQuery::addCondition() instead of this method.');
   }
 
   /**
@@ -490,7 +490,7 @@ class ViewsQuery extends Sql {
    * {@inheritdoc}
    */
   public function addHavingExpression($group, $snippet, $args = []) {
-    throw new MongodbSQLException('MongoDB does not support SQL strings. Please use the method ViewsQuery::addHavingCondition() instead of this method.');
+    throw new MongodbSQLException('MongoDB does not support SQL strings. Use the method ViewsQuery::addHavingCondition() instead of this method.');
   }
 
   /**

@@ -5,6 +5,8 @@ namespace Drupal\mongodb\modules\statistics;
 use Drupal\statistics\NodeStatisticsDatabaseStorage as CoreNodeStatisticsDatabaseStorage;
 use MongoDB\BSON\UTCDateTime;
 
+// cspell:ignore daycount totalcount
+
 /**
  * The MongoDB implementation of \Drupal\statistics\NodeStatisticsDatabaseStorage.
  */

@@ -16,7 +16,7 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Operation\FindOneAndUpdate;
 
-// cspell:ignore linearizable
+// cspell:ignore linearizable aprepare aquery
 
 /**
  * MongoDB implementation of \Drupal\Core\Database\Connection.

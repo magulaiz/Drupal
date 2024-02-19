@@ -1057,7 +1057,7 @@ class Select extends QuerySelect {
    * {@inheritdoc}
    */
   public function having($snippet, $args = []) {
-    throw new MongodbSQLException('MongoDB does not support methods with SQL string input. Please use the method Select::havingCondition() instead of Select::having().');
+    throw new MongodbSQLException('MongoDB does not support methods with SQL string input. Use the method Select::havingCondition() instead of Select::having().');
   }
 
   /**

@@ -193,7 +193,7 @@ class Condition extends QueryCondition {
    * {@inheritdoc}
    */
   public function where($snippet, $args = []) {
-    throw new MongodbSQLException('MongoDB does not support methods with SQL string input. Please use the method Condition::condition() instead of Condition::where().');
+    throw new MongodbSQLException('MongoDB does not support methods with SQL string input. Use the method Condition::condition() instead of Condition::where().');
   }
 
   /**
