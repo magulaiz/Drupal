@@ -3530,11 +3530,6 @@ parameters:
 			path: tests/Drupal/Tests/Composer/Plugin/VendorHardening/VendorHardeningPluginTest.php
 
 		-
-			message: "#^@dataProvider providerTestComposerJson related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/ComposerIntegrationTest.php
-
-		-
 			message: """
 				#^Call to deprecated method onConsecutiveCalls\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
 				Use \\<code\\>\\$double\\-\\>willReturn\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>onConsecutiveCalls\\(\\)\\)\\</code\\>$#
@@ -3715,6 +3710,11 @@ parameters:
 			message: "#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#"
 			count: 4
 			path: tests/Drupal/Tests/Core/Entity/EntityStorageBaseTest.php
+
+		-
+			message: "#^@dataProvider provideFormObjectInvalidOperationData related method must be static in PHPUnit 10 and newer\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Core/Entity/EntityTypeManagerTest.php
 
 		-
 			message: "#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#"
