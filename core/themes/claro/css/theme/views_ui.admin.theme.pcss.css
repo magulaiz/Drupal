@@ -671,5 +671,5 @@ html:not(.no-touchevents) .edit-display-settings-top.views-ui-display-tab-bucket
 /* Alert the user that the View is disabled. */
 .views-edit-view.disabled,
 .views-edit-view.disabled .claro-details {
-  background-color: #fff4f4;
+  background-color: #f3f3f3;
 }

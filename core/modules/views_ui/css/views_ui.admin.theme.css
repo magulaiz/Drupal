@@ -836,5 +836,5 @@ td.group-title {
 
 /* Alert the user that the View is disabled. */
 .views-edit-view.disabled {
-  background-color: #fff4f4;
+  background-color: #f3f3f3;
 }
