@@ -20,7 +20,7 @@ class Query extends CoreQuery {
   /**
    * The build MongoDB select query.
    *
-   * @var \Drupal\mongodb\Driver\Select
+   * @var \Drupal\mongodb\Driver\Database\mongodb\Select
    */
   protected $mongodbSelect;
 

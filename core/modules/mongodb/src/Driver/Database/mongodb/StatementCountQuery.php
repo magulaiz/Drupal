@@ -26,14 +26,14 @@ class StatementCountQuery implements \Iterator, StatementInterface {
   /**
    * Reference to the Drupal database connection object for this statement.
    *
-   * @var \Drupal\mongodb\Driver\Connection
+   * @var \Drupal\mongodb\Driver\Database\mongodb\Connection
    */
   public $connection;
 
   /**
    * The constructor.
    *
-   * @param \Drupal\mongodb\Driver\Connection $connection
+   * @param \Drupal\mongodb\Driver\Database\mongodb\Connection $connection
    *   Database connection object for MongoDB.
    * @param int $count
    *   The result of the count query.

@@ -96,11 +96,7 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
    * When destructing, $stack must have been already emptied.
    */
   public function __destruct() {
-if ($this->stack !== []) {
-  dump(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
-  dump('$this->dumpStackItemsAsString(): ' . $this->dumpStackItemsAsString());
-}
-//    assert($this->stack === [], "Transaction \$stack was not empty. Active stack: " . $this->dumpStackItemsAsString());
+    assert($this->stack === [], "Transaction \$stack was not empty. Active stack: " . $this->dumpStackItemsAsString());
   }
 
   /**

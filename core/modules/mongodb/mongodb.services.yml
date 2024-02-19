@@ -22,16 +22,16 @@ services:
   mongodb.cache.backend.database:
     class: Drupal\mongodb\Driver\Database\mongodb\Cache\DatabaseBackendFactory
     arguments: ['@database', '@cache_tags.invalidator.checksum', '@settings']
-#  cache.backend.database:
-#    alias: mongodb.cache.backend.database
+    # cache.backend.database:
+    # alias: mongodb.cache.backend.database
 
   mongodb.cache_tags.invalidator.checksum:
     class: Drupal\mongodb\Driver\Database\mongodb\Cache\DatabaseCacheTagsChecksum
     arguments: ['@database']
     tags:
       - { name: cache_tags_invalidator}
-#  cache_tags.invalidator.checksum:
-#    alias: mongodb.cache_tags.invalidator.checksum
+    # cache_tags.invalidator.checksum:
+    # alias: mongodb.cache_tags.invalidator.checksum
 
   # MongoDB overrides Config.
   mongodb.config.storage.active:

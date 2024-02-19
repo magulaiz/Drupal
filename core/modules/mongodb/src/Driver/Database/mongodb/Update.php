@@ -96,7 +96,7 @@ class Update extends QueryUpdate {
    */
   public function conditionGroupFactory($conjunction = 'AND') {
     // Make sure that condition is an object of
-    // \Drupal\mongodb\Driver\Condition.
+    // \Drupal\mongodb\Driver\Database\mongodb\Condition.
     return $this->connection->condition($conjunction);
   }
 
@@ -107,7 +107,7 @@ class Update extends QueryUpdate {
    *   The action of how to update the embedded data. Can be "APPEND" or
    *   "REPLACE". Defaults to "REPLACE".
    *
-   * @return \Drupal\mongodb\Driver\EmbeddedTableData
+   * @return \Drupal\mongodb\Driver\Database\mongodb\EmbeddedTableData
    *   An object holding the data for an embedded table.
    */
   public function embeddedTableData($action = 'REPLACE') {
@@ -150,7 +150,7 @@ class Update extends QueryUpdate {
     }
 
     // Make sure that condition is a object of
-    // \Drupal\mongodb\Driver\Condition.
+    // \Drupal\mongodb\Driver\Database\mongodb\Condition.
     if (!isset($this->embeddedTableDeleteCondition[$embedded_table]) || !($this->embeddedTableDeleteCondition[$embedded_table] instanceof Condition)) {
       $this->embeddedTableDeleteCondition[$embedded_table] = $this->connection->condition('AND');
     }
@@ -326,7 +326,7 @@ class Update extends QueryUpdate {
         if ($this->table == $this->tableInformation->getTableBaseTable($embedded_table)) {
           // The variable $field holds the embedded table name.
           // The variable $value holds an instance of
-          // \Drupal\mongodb\Driver\EmbeddedTableData.
+          // \Drupal\mongodb\Driver\Database\mongodb\EmbeddedTableData.
           $embedded_table_rows = $value->compile($embedded_table);
           foreach ($embedded_table_rows as &$embedded_table_row) {
             $embedded_table_row = $this->getUpdateValuesForTable($embedded_table, $embedded_table_row);

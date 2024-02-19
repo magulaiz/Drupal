@@ -95,7 +95,7 @@ trait DocumentInsertTrait {
    * @return array
    *   The total insert document part for the given table.
    *
-   * @throws \Drupal\mongodb\Driver\MongodbSQLException
+   * @throws \Drupal\mongodb\Driver\Database\mongodb\MongodbSQLException
    */
   protected function getInsertDocumentForTable($table, $insert_fields, $insert_values) {
     if (!$this->tableInformation) {

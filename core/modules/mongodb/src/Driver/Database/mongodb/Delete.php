@@ -41,7 +41,7 @@ class Delete extends QueryDelete {
    * {@inheritdoc}
    */
   public function conditionGroupFactory($conjunction = 'AND') {
-    // Make sure that condition is a object of \Drupal\mongodb\Driver\Condition.
+    // Make sure that condition is a object of \Drupal\mongodb\Driver\Database\mongodb\Condition.
     return $this->connection->condition($conjunction);
   }
 

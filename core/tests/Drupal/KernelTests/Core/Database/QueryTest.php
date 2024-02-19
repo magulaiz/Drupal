@@ -74,9 +74,11 @@ class QueryTest extends DatabaseTestBase {
 
     $driver = $this->connection->driver();
     $previous_error_handler = set_error_handler(function ($severity, $message, $filename, $lineno) use (&$previous_error_handler, $driver) {
-      $condition_filepath = '@core/lib/Drupal/Core/Database/Query/Condition.php$@';
       if ($driver == 'mongodb') {
         $condition_filepath = '@core/modules/mongodb/src/Driver/Database/mongodb/Condition.php$@';
+      }
+      else {
+        $condition_filepath = '@core/lib/Drupal/Core/Database/Query/Condition.php$@';
       }
 
       // Normalize the filename to use UNIX directory separators.

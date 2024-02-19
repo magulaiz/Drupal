@@ -14,6 +14,16 @@ use Drupal\Core\Database\Transaction\TransactionManagerBase;
 class TransactionManager extends TransactionManagerBase {
 
   /**
+   * Destructor.
+   *
+   * When destructing, $stack must have been already emptied.
+   */
+  public function __destruct() {
+    // @TODO Fix working with Drupal transactions.
+    // assert($this->stack === [], "Transaction \$stack was not empty. Active stack: " . $this->dumpStackItemsAsString());
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function push(string $name = ''): Transaction {

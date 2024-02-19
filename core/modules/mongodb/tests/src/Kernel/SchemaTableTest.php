@@ -3052,8 +3052,6 @@ class SchemaTableTest extends SchemaTestBase {
     $this->checkExpectedIndexesAgainstDatabase($base_table_data['name'], $expected_indexes_before);
     $this->checkTableNumberOfIndexes($base_table_data, $embedded_tables_data);
 
-//dump('$renamed_table_name_old: ' . $renamed_table_name_old);
-//dump('$renamed_table_name_new: ' . $renamed_table_name_new);
     // Call the to be tested method: Schema::renameTable().
     $this->schema->renameTable($renamed_table_name_old, $renamed_table_name_new);
 

@@ -361,7 +361,7 @@ class Select extends QuerySelect {
    * {@inheritdoc}
    */
   public function conditionGroupFactory($conjunction = 'AND') {
-    // We need to use \Drupal\mongodb\Driver\Connection.
+    // We need to use \Drupal\mongodb\Driver\Database\mongodb\Connection.
     return $this->connection->condition($conjunction);
   }
 
@@ -1538,6 +1538,9 @@ class Select extends QuerySelect {
           // executed.
           $this->mongodbQueryStringValue = FALSE;
 
+          // Remove the session from the options as it is not serializable.
+          unset($options['session']);
+
           return 'SELECT COUNT WITH COUNT FILTER: ' . serialize($this->mongodbFilter) . ' OPTIONS: ' . serialize($options);
         }
 
@@ -1591,15 +1594,22 @@ class Select extends QuerySelect {
         // executed.
         $this->mongodbQueryStringValue = FALSE;
 
+        // Remove the session from the options as it is not serializable.
+        unset($options['session']);
+
         return 'SELECT WITH FIND FILTER: ' . serialize($this->mongodbFilter) . ' OPTIONS: ' . serialize($options);
       }
 
       if ($this->connection->isEventEnabled(StatementExecutionStartEvent::class)) {
+        // Remove the session from the options as it is not serializable.
+        $options_to_serialize = $options;
+        unset($options_to_serialize['session']);
+
         $startEvent = new StatementExecutionStartEvent(
           spl_object_id($this),
           $this->connection->getKey(),
           $this->connection->getTarget(),
-          'SELECT WITH FIND FILTER: ' . serialize($this->mongodbFilter) . ' OPTIONS: ' . serialize($options),
+          'SELECT WITH FIND FILTER: ' . serialize($this->mongodbFilter) . ' OPTIONS: ' . serialize($options_to_serialize),
           [],
           $this->connection->findCallerFromDebugBacktrace()
         );

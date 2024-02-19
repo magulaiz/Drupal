@@ -21,7 +21,7 @@ class Sequences {
   /**
    * The current database connection.
    *
-   * @var \Drupal\mongodb\Driver\Connection
+   * @var \Drupal\mongodb\Driver\Database\mongodb\Connection
    */
   protected $connection;
 

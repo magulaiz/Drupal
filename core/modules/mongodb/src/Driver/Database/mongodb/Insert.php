@@ -3,6 +3,7 @@
 namespace Drupal\mongodb\Driver\Database\mongodb;
 
 use Drupal\Core\Database\Query\Insert as QueryInsert;
+use MongoDB\Driver\Exception\CommandException;
 
 /**
  * MongoDB implementation of \Drupal\Core\Database\Query\Insert.
@@ -32,10 +33,10 @@ class Insert extends QueryInsert {
   /**
    * Creates an object holding the data for an embedded table.
    *
-   * @return \Drupal\mongodb\Driver\EmbeddedTableData
+   * @return \Drupal\mongodb\Driver\Database\mongodb\EmbeddedTableData
    *   An object holding the data for an embedded table.
    */
-  public function embeddedTableData() {
+  public function embeddedTableData(): EmbeddedTableData {
     return new EmbeddedTableData($this->connection, $this->table, $this->tableInformation);
   }
 
@@ -65,6 +66,7 @@ class Insert extends QueryInsert {
 
     $last_insert_id = 0;
 
+    $transaction = $this->connection->startTransaction();
     foreach ($this->insertValues as $insert_values) {
       $insert_document = $this->getInsertDocumentForTable($this->table, $this->insertFields, $insert_values);
 

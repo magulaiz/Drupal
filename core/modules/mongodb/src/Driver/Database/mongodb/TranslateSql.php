@@ -34,7 +34,7 @@ class TranslateSql {
       'projection' => ['tag' => 1, 'invalidations' => 1],
     ],
     [
-      'pattern' => '/^SELECT data FROM {(.*)} WHERE collection = :collection AND name = :name$/',
+      'pattern' => '/^SELECT \[data\] FROM {(.*)} WHERE \[collection\] = :collection AND \[name\] = :name$/',
       'filter' => ['collection' => ':collection', 'name' => ':name'],
       'projection' => ['data' => 1],
     ],
