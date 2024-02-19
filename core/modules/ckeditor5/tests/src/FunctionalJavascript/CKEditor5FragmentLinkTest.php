@@ -83,6 +83,7 @@ class CKEditor5FragmentLinkTest extends WebDriverTestBase {
     $this->account = $this->drupalCreateUser([
       'administer nodes',
       'create page content',
+      'use text format ckeditor5',
     ]);
     $this->drupalLogin($this->account);
   }
