@@ -52,7 +52,7 @@ class ComposerIntegrationTest extends UnitTestCase {
    *
    * @dataProvider providerTestComposerJson
    */
-  public function testComposerTilde($path) {
+  public function testComposerTilde(string $path): void {
     if (preg_match('#composer/Metapackage/CoreRecommended/composer.json$#', $path)) {
       $this->markTestSkipped("$path has tilde");
     }
@@ -78,9 +78,9 @@ class ComposerIntegrationTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerTestComposerJson() {
+  public static function providerTestComposerJson(): array {
     $data = [];
-    $composer_json_finder = $this->getComposerJsonFinder(realpath(__DIR__ . '/../../../../'));
+    $composer_json_finder = self::getComposerJsonFinder(realpath(__DIR__ . '/../../../../'));
     foreach ($composer_json_finder->getIterator() as $composer_json) {
       $data[$composer_json->getPathname()] = [$composer_json->getPathname()];
     }
