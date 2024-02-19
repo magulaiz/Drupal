@@ -117,7 +117,7 @@ abstract class ConfigFormBase extends FormBase {
       if ($element['#type'] === 'textfield') {
         foreach ($target->propertyPaths as $property_path) {
           $definition = $this->typedConfigManager->getDefinition($target->configName)['mapping'][$property_path]['type'];
-          $constraints = $this->typedConfigManager->get($definition)->getConstraints();
+          $constraints = $this->typedConfigManager->getDefinition($definition)['constraints'];
           foreach ($constraints as $constraint) {
             if ($constraint instanceof RegexConstraint) {
               $element['#attributes']['pattern'] = $constraint->pattern;
