@@ -487,7 +487,7 @@
               if(maxWidth === 0){
                 parentCell.style['max-width'] = `100%`;
               } else {
-                parentCell.style['max-width'] = `calc(${maxWidth}px - 100px)`;
+                parentCell.style['max-width'] = `calc(${maxWidth}px)`;
               }
               isInsideTabledrag.removeAttribute('data-drupal-calibrate-width');
               parentCell.removeAttribute('data-drupal-ckeditor5-cell');
