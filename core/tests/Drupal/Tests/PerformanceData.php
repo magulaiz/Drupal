@@ -232,7 +232,7 @@ class PerformanceData {
   }
 
   /**
-   * Gets the cache tag isValid count.
+   * Gets the cache tag invalidation count.
    *
    * @return int
    *   The number of cache tag invalidations recorded.
