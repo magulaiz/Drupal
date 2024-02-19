@@ -1,0 +1,5 @@
+services:
+  test_services:
+    module:
+      paths:
+        - '/src/'

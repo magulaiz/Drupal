@@ -8,6 +8,7 @@ namespace Drupal\Core\DependencyInjection;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Core\Serialization\Yaml;
+use Symfony\Component\Config\Resource\GlobResource;
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
@@ -396,7 +397,126 @@ class YamlFileLoader
             $definition->setAutowired($service['autowire']);
         }
 
-        $this->container->setDefinition($id, $definition);
+        if (isset($service['autoconfigure'])) {
+           $definition->setAutoconfigured($service['autoconfigure']);
+        }
+
+        if (array_key_exists('module', $service) || array_key_exists('modules', $service)) {
+            if (array_key_exists('resource', $service)) {
+              throw new \InvalidArgumentException('Service definitions may not have a `module` or `modules` definition simultaneously with a `resource` definition.');
+            }
+
+            [$provider] = explode('.', basename($file), 2);
+            $this->registerModuleDiscovery(
+                (array) $this->container->get('container.namespaces'),
+                $definition,
+                $provider,
+                array_intersect_key($service['module'] ?? [], array_flip(['paths'])),
+                array_intersect_key($service['modules'] ?? [], array_flip(['paths'])),
+            );
+        }
+        else {
+            $this->container->setDefinition($id, $definition);
+        }
+    }
+
+    /**
+     * Merges discovery paths, globs paths, and adds classes to container.
+     *
+     * @param \Symfony\Component\DependencyInjection\Definition $prototype
+     *   A definition to use as template
+     * @param array{paths?: string[]} $thisModuleConfiguration
+     *   Configures automatic service creation for all classes in paths for the
+     *   module in context.
+     * @param array{paths?: string[]} $allModulesConfiguration
+     *   Configures automatic service creation for all classes in paths for all
+     *   enabled modules.
+     */
+    private function registerModuleDiscovery(array $namespaces, Definition $prototype, string $provider, array $thisModuleConfiguration, array $allModulesConfiguration): void {
+        $discovery = static function (array $namespaces, string $scopePath, ContainerInterface $container, bool $isAllNamespaces) {
+            $classes = [];
+
+            foreach ($namespaces as $moduleNamespace => $moduleSrcPath) {
+                $absoluteModuleDir = DRUPAL_ROOT . '/' . $moduleSrcPath;
+
+                if (\strlen($scopePath) !== strcspn($scopePath, '*?{[')) {
+                    $prefix = dirname($moduleSrcPath);
+                    $pattern = $scopePath;
+                }
+                else {
+                    $prefix = dirname($moduleSrcPath) . $scopePath;
+                    $pattern = '';
+                }
+
+                try {
+                    $resource = new GlobResource($prefix, $pattern, TRUE);
+                } catch (\InvalidArgumentException) {
+                    continue;
+                }
+
+                if ($isAllNamespaces === TRUE && $resource->getPrefix() === $absoluteModuleDir) {
+                    throw new \Exception('Paths for all modules must be a subdirectory of src/.');
+                }
+
+                $prefixLen = \strlen($absoluteModuleDir);
+                foreach ($resource as $path => $info) {
+                    if (!str_starts_with($path, $absoluteModuleDir)) {
+                        throw new \Exception('Paths may not escape extension src/ directories with relative paths.');
+                    }
+
+                    if (!str_ends_with($path, '.php')) {
+                        continue;
+                    }
+
+                    $class = $moduleNamespace . '\\' . ltrim(str_replace('/', '\\', substr($path, $prefixLen, -4)), '\\');
+
+                    try {
+                        $r = $container->getReflectionClass($class);
+                    }
+                    catch (\ReflectionException $e) {
+                        $classes[$class] = $e->getMessage();
+                        continue;
+                    }
+
+                  // check to make sure the expected class exists
+                  if (!$r) {
+                      throw new InvalidArgumentException(sprintf('Expected to find class "%s" in file "%s" while importing services from resource "%s", but it was not found! Check the namespace prefix used with the resource.', $class, $path, $pattern));
+                  }
+
+                  if ($r->isInstantiable() || $r->isInterface()) {
+                      $classes[$class] = null;
+                  }
+                }
+            }
+
+            return $classes;
+        };
+
+        $classes = [];
+        foreach ($thisModuleConfiguration['paths'] ?? [] as $path) {
+            $classes += $discovery(array_intersect_key($namespaces, array_flip(['Drupal\\' . $provider])), $path, $this->container, FALSE);
+        }
+        foreach ($allModulesConfiguration['paths'] ?? [] as $path) {
+            $classes += $discovery($namespaces, $path, $this->container, TRUE);
+        }
+
+        $existingClasses = array_map(static fn(Definition $definition): ?string => $definition->getClass(), $this->container->getDefinitions());
+        $getPrototype = static fn () => clone $prototype;
+        foreach ($classes as $class => $errorMessage) {
+            // Ignore services if they already exist:
+            if ($this->container->has($class) || in_array($class, $existingClasses, TRUE)) {
+                continue;
+            }
+
+            $definition = $getPrototype();
+            $this->container->setDefinition($class, $definition);
+            if (null !== $errorMessage) {
+                $definition->addError($errorMessage);
+
+                continue;
+            }
+            $definition->setClass($class);
+        }
     }
 
     /**

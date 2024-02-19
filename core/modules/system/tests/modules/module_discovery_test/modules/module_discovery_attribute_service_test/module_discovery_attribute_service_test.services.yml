@@ -1,0 +1,13 @@
+services:
+  autoconfigure_attribute_to_service:
+    autoconfigure: true
+    modules:
+      paths:
+        - '/src/AttributeToService/'
+
+  autoconfigure_attribute_to_service_locator:
+    class: Symfony\Component\DependencyInjection\ServiceLocator
+    arguments:
+      - "!abstract 'Services tagged with `attribute_to_service`'"
+    tags:
+      - { name: container.service_locator }

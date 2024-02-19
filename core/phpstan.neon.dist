@@ -31,6 +31,7 @@ parameters:
     - modules/system/tests/modules/plugin_test/src/Plugin/plugin_test/fruit/ExtendingNonInstalledClass.php
     - modules/system/tests/modules/plugin_test/src/Plugin/plugin_test/custom_annotation/UsingNonInstalledTraitClass.php
     - modules/system/tests/modules/plugin_test/src/Plugin/plugin_test/custom_annotation/ExtendingNonInstalledClass.php
+    - modules/system/tests/modules/module_discovery_test/modules/module_discovery_malformed_class_test/src/BadClass.php
 
   ignoreErrors:
     # new static() is a best practice in Drupal, so we cannot fix that.

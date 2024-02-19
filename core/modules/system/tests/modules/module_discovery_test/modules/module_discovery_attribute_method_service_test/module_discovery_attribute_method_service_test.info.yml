@@ -1,0 +1,5 @@
+name: Attribute to service tag test.
+type: module
+description: Tests classes and methods in a namespace are converted to services and tagged.
+package: Testing
+version: VERSION

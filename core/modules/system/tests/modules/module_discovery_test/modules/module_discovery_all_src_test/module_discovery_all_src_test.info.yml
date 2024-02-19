@@ -1,0 +1,5 @@
+name: Tests src directory in modules
+description: Tests 'src' may not be used for modules outside of this module.
+type: module
+package: Testing
+version: VERSION

@@ -1,0 +1,5 @@
+name: Module discovery with a malformed class
+description: Contains a module for discovery which contains a class that throws an exception on reflection.
+type: module
+package: Testing
+version: VERSION

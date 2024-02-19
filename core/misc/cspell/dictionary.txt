@@ -309,6 +309,8 @@ fulltext
 funic
 gabilondo
 gids
+glob
+globbing
 gloop
 gnumeric
 googleapis

@@ -1,0 +1,5 @@
+services:
+  glob_test:
+    modules:
+      paths:
+        - '/src/*/Second*'

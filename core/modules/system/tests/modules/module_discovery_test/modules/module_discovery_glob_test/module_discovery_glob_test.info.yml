@@ -1,0 +1,5 @@
+name: Module discovery glob tests
+type: module
+description: Module with various directory levels and file names for testing globs.
+package: Testing
+version: VERSION

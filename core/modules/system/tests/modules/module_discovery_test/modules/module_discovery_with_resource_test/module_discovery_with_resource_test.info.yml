@@ -1,0 +1,5 @@
+name: Tests modules and resources.
+description: Tests 'resource' alongside module.
+type: module
+package: Testing
+version: VERSION

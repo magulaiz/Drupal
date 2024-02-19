@@ -1,0 +1,16 @@
+services:
+  # For testing defaults from this definition are copied to created services:
+  definition_template:
+    autowire: true
+    tags:
+      - { name: tag_copied_to_all_services }
+    modules:
+      paths:
+        - '/src/ServiceDefinitionTemplate/'
+
+  definition_template_locator:
+    class: Symfony\Component\DependencyInjection\ServiceLocator
+    arguments:
+      - "!abstract 'Services tagged with `tag_copied_to_all_services`'"
+    tags:
+      - { name: container.service_locator }
