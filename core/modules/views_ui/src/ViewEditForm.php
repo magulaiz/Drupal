@@ -176,14 +176,14 @@ class ViewEditForm extends ViewFormBase {
       }
     }
 
-    $display_label = $this->t('Displays');
+    $display_label = '<h1 class="unit-title clearfix">' . $this->t('Displays') . '<h1>';
     if ($view_status == 'disabled') {
       $view_disabled = '<h2>' . $this->t('Note: This view is disabled.') . '</h2>';
       $display_label = $view_disabled . $display_label;
     }
 
     $form['displays'] = [
-      '#prefix' => '<h1 class="unit-title clearfix">' . $display_label . '</h1>',
+      '#prefix' => $display_label,
       '#type' => 'container',
       '#attributes' => [
         'class' => [
