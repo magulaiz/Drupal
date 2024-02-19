@@ -484,7 +484,11 @@
                 sibling = sibling.nextSibling;
               } while (sibling);
               const maxWidth = parentRow.getBoundingClientRect().width - widths;
-              parentCell.style['max-width'] = `${maxWidth}px`;
+              if(maxWidth === 0){
+                parentCell.style['max-width'] = `100%`;
+              } else {
+                parentCell.style['max-width'] = `calc(${maxWidth}px - 100px)`;
+              }
               isInsideTabledrag.removeAttribute('data-drupal-calibrate-width');
               parentCell.removeAttribute('data-drupal-ckeditor5-cell');
             };
