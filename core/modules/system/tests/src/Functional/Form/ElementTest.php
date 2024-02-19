@@ -38,7 +38,7 @@ class ElementTest extends BrowserTestBase {
   /**
    * Tests the element order.
    */
-  public function testElementOrder() {
+  public function testElementOrder(): void {
     $this->drupalGet('form-test/form-weights');
 
     // Verify that the elements appear in the order of their weights.
