@@ -820,3 +820,15 @@ html:not(.no-touchevents) .views-ui-display-tab-bucket__header--actions {
 html:not(.no-touchevents) .edit-display-settings-top.views-ui-display-tab-bucket {
   padding: var(--space-m) var(--space-xs);
 }
+
+/* Alert the user that the View is disabled. */
+
+.views-edit-view.disabled,
+.views-edit-view.disabled .claro-details {
+  background-color: #fff4f4;
+}
+
+.views-edit-view.disabled h1::after {
+  content: "Note: This View is disabled.";
+  font-size: 2em;
+}
