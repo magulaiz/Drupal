@@ -115,7 +115,7 @@ function form_test_tableselect_ajax_callback($form, FormStateInterface $form_sta
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function form_test_form_form_test_weight_alter(&$form, FormStateInterface $form_state) {
+function form_test_form_form_test_weight_alter(&$form, FormStateInterface $form_state): void {
   // Change a form element weight, but only if a variable has been set in the
   // form (so that the same form can be used without this modification in other
   // tests).
