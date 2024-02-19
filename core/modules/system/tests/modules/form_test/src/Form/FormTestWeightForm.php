@@ -24,7 +24,7 @@ class FormTestWeightForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $alter = FALSE) {
+  public function buildForm(array $form, FormStateInterface $form_state, $alter = FALSE): array {
     $form['form_textfield_test_1'] = [
       '#type' => 'textfield',
       '#title' => 'Textfield 1',
