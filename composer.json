@@ -10,7 +10,7 @@
     },
     "require": {
         "composer/installers": "^2.0",
-        "daffie/sql-like-to-regular-expression": "dev-master",
+        "daffie/sql-like-to-regular-expression": "^1.0",
         "drupal/core": "self.version",
         "drupal/core-project-message": "self.version",
         "drupal/core-vendor-hardening": "self.version",

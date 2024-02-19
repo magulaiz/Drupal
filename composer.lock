@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0255b02c3d884aaf667075f7ea9a3e41",
+    "content-hash": "7d5160a06d1c8705609d6afaaebff761",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -290,10 +290,10 @@
         },
         {
             "name": "daffie/sql-like-to-regular-expression",
-            "version": "dev-master",
+            "version": "1.0",
             "source": {
                 "type": "git",
-                "url": "git@gitlab.com:daffie/sql-like-to-regular-expression.git",
+                "url": "https://gitlab.com/daffie/sql-like-to-regular-expression.git",
                 "reference": "436355fb6b0f8a5c4ddac4bbd22aa3ee35bfcc9f"
             },
             "dist": {
@@ -308,7 +308,6 @@
             "require-dev": {
                 "phpunit/phpunit": ">=4.8.28 <5"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -332,6 +331,10 @@
                 "regular expression",
                 "sql"
             ],
+            "support": {
+                "issues": "https://gitlab.com/api/v4/projects/3017152/issues",
+                "source": "https://gitlab.com/daffie/sql-like-to-regular-expression/-/tree/1.0"
+            },
             "time": "2017-04-01T12:06:41+00:00"
         },
         {
