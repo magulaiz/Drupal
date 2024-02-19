@@ -34,25 +34,22 @@ class StatusReport extends RenderElementBase {
    * #pre_render callback to group requirements.
    */
   public static function preRenderGroupRequirements($element) {
-    $severities = static::getSeverities();
     $grouped_requirements = [];
+    RequirementSeverity::convertLegacyIntSeveritiesToEnums($element['#requirements']);
+    /** @var array{title: \Drupal\Core\StringTranslation\TranslatableMarkup, value: mixed, description: \Drupal\Core\StringTranslation\TranslatableMarkup, severity: \Drupal\Core\Extension\Requirement\RequirementSeverity} $requirement */
     foreach ($element['#requirements'] as $key => $requirement) {
-      $severity = $severities[RequirementSeverity::INFO->value];
+      $severity = RequirementSeverity::INFO;
       if (isset($requirement['severity'])) {
-        if (is_int($requirement['severity'])) {
-          @\trigger_error('Calling ' . __METHOD__ . '() with \'severity\' as int values instead of RequirementSeverity enums is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3410939', \E_USER_DEPRECATED);
-          $requirement['severity'] = RequirementSeverity::from($requirement['severity']);
-        }
         $requirement_severity = $requirement['severity'] === RequirementSeverity::OK ? RequirementSeverity::INFO : $requirement['severity'];
-        $severity = $severities[$requirement_severity->value];
+        $severity = $requirement_severity;
       }
       elseif (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'install') {
-        $severity = $severities[RequirementSeverity::OK->value];
+        $severity = RequirementSeverity::OK;
       }
 
-      $grouped_requirements[$severity['status']]['title'] = $severity['title'];
-      $grouped_requirements[$severity['status']]['type'] = $severity['status'];
-      $grouped_requirements[$severity['status']]['items'][$key] = $requirement;
+      $grouped_requirements[$severity->status()]['title'] = $severity->title();
+      $grouped_requirements[$severity->status()]['type'] = $severity->status();
+      $grouped_requirements[$severity->status()]['items'][$key] = $requirement;
     }
 
     // Order the grouped requirements by a set order.
@@ -70,8 +67,14 @@ class StatusReport extends RenderElementBase {
    * Gets the severities.
    *
    * @return array
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/3410939
    */
   public static function getSeverities() {
+    @\trigger_error('Calling ' . __METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from in drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3410939', \E_USER_DEPRECATED);
     return [
       RequirementSeverity::INFO->value => [
         'title' => t('Checked', [], ['context' => 'Examined']),

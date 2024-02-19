@@ -2271,12 +2271,12 @@ function install_check_requirements($install_state) {
  */
 function install_display_requirements($install_state, $requirements) {
   // Check the severity of the requirements reported.
-  $severity = RequirementSeverity::getMaxSeverity($requirements);
+  $severity = RequirementSeverity::maxSeverityFromRequirements($requirements);
 
   // If there are errors, always display them. If there are only warnings, skip
   // them if the user has provided a URL parameter acknowledging the warnings
   // and indicating a desire to continue anyway. See drupal_requirements_url().
-  if ($severity == RequirementSeverity::ERROR || ($severity == RequirementSeverity::WARNING && empty($install_state['parameters']['continue']))) {
+  if ($severity == RequirementSeverity::ERROR || ($severity === RequirementSeverity::WARNING && empty($install_state['parameters']['continue']))) {
     if ($install_state['interactive']) {
       $build['report']['#type'] = 'status_report';
       $build['report']['#requirements'] = $requirements;
@@ -2297,7 +2297,7 @@ function install_display_requirements($install_state, $requirements) {
         // Skip warnings altogether for non-interactive installations; these
         // proceed in a single request so there is no good opportunity (and no
         // good method) to warn the user anyway.
-        if (isset($requirement['severity']) && $requirement['severity'] == RequirementSeverity::ERROR) {
+        if (isset($requirement['severity']) && $requirement['severity'] === RequirementSeverity::ERROR) {
           $render_array = [
             '#type' => 'inline_template',
             '#template' => '{{ title }}:{{ value }}<br /><br />{{ description }}',

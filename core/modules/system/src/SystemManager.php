@@ -107,7 +107,7 @@ class SystemManager {
    */
   public function checkRequirements() {
     $requirements = $this->listRequirements();
-    return RequirementSeverity::getMaxSeverity($requirements) === RequirementSeverity::ERROR;
+    return RequirementSeverity::maxSeverityFromRequirements($requirements) === RequirementSeverity::ERROR;
   }
 
   /**
@@ -155,7 +155,7 @@ class SystemManager {
    */
   public function getMaxSeverity(&$requirements) {
     @\trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Extension\Requirement\RequirementSeverity::getMaxSeverity() instead. See https://www.drupal.org/node/3410939', \E_USER_DEPRECATED);
-    return RequirementSeverity::getMaxSeverity($requirements)->value;
+    return RequirementSeverity::maxSeverityFromRequirements($requirements)->value;
   }
 
   /**

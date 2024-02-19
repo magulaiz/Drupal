@@ -579,7 +579,7 @@ function drupal_current_script_url($query = []) {
  * update.php) and returns a URL that can be used to attempt to proceed to the
  * next step of the script.
  *
- * @param $severity
+ * @param int|\Drupal\Core\Extension\Requirement\RequirementSeverity $severity
  *   The severity of the requirements problem, as returned by
  *   drupal_requirements_severity().
  *
@@ -592,7 +592,11 @@ function drupal_current_script_url($query = []) {
  * @see drupal_current_script_url()
  * @see \Drupal\Component\Utility\UrlHelper::filterBadProtocol()
  */
-function drupal_requirements_url(RequirementSeverity $severity) {
+function drupal_requirements_url(int|RequirementSeverity $severity): string {
+  if (is_int($severity)) {
+    @trigger_error('Passing an integer to ' . __FUNCTION__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Pass a \Drupal\Core\Extension\Requirement\RequirementSeverity enum instead. See https://www.drupal.org/node/3410939', E_USER_DEPRECATED);
+    $severity = RequirementSeverity::from($severity);
+  }
   $query = [];
   // If there are no errors, only warnings, append 'continue=1' to the URL so
   // the user can bypass this screen on the next page load.
@@ -669,7 +673,7 @@ function drupal_check_profile($profile) {
  */
 function drupal_requirements_severity(&$requirements) {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Extension\Requirement\RequirementSeverity::getMaxSeverity() instead. See https://www.drupal.org/node/3410939', E_USER_DEPRECATED);
-  return RequirementSeverity::getMaxSeverity($requirements)->value;
+  return RequirementSeverity::maxSeverityFromRequirements($requirements)->value;
 }
 
 /**
@@ -690,7 +694,7 @@ function drupal_check_module($module) {
   }
   // Check requirements
   $requirements = \Drupal::moduleHandler()->invoke($module, 'requirements', ['install']);
-  if (is_array($requirements) && RequirementSeverity::getMaxSeverity($requirements) == RequirementSeverity::ERROR) {
+  if (is_array($requirements) && RequirementSeverity::maxSeverityFromRequirements($requirements) == RequirementSeverity::ERROR) {
     // Print any error messages
     foreach ($requirements as $requirement) {
       if (isset($requirement['severity']) && $requirement['severity'] == RequirementSeverity::ERROR) {

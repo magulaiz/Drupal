@@ -5,7 +5,6 @@ namespace Drupal\system\Element;
 use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Element\RenderElementBase;
-use Drupal\Core\Render\Element\StatusReport;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 
 /**
@@ -37,6 +36,8 @@ class StatusReportPage extends RenderElementBase {
       '#theme' => 'status_report_general_info',
     ];
     // Loop through requirements and pull out items.
+    RequirementSeverity::convertLegacyIntSeveritiesToEnums($element['#requirements']);
+    /** @var array{title: \Drupal\Core\StringTranslation\TranslatableMarkup, value: mixed, description: \Drupal\Core\StringTranslation\TranslatableMarkup, severity: \Drupal\Core\Extension\Requirement\RequirementSeverity} $requirement */
     foreach ($element['#requirements'] as $key => $requirement) {
       switch ($key) {
         case 'cron':
@@ -59,10 +60,11 @@ class StatusReportPage extends RenderElementBase {
         case 'php':
         case 'php_memory_limit':
           $element['#general_info']['#' . $key] = $requirement;
-          if (isset($requirement['severity']) && $requirement['severity']->value < RequirementSeverity::WARNING->value) {
-            if (empty($requirement['severity']) || $requirement['severity'] == RequirementSeverity::OK) {
-              unset($element['#requirements'][$key]);
-            }
+          if (isset($requirement['severity']) &&
+            in_array($requirement['severity'], [RequirementSeverity::INFO, RequirementSeverity::OK]) &&
+            ($requirement['severity'] !== RequirementSeverity::INFO)
+          ) {
+            unset($element['#requirements'][$key]);
           }
           break;
       }
@@ -94,22 +96,18 @@ class StatusReportPage extends RenderElementBase {
       ],
     ];
 
-    $severities = StatusReport::getSeverities();
+    RequirementSeverity::convertLegacyIntSeveritiesToEnums($element['#requirements']);
     foreach ($element['#requirements'] as $key => &$requirement) {
-      $severity = $severities[RequirementSeverity::INFO->value];
+      $severity = RequirementSeverity::INFO;
       if (isset($requirement['severity'])) {
-        if (is_int($requirement['severity'])) {
-          @\trigger_error('Calling ' . __METHOD__ . '() with \'severity\' as int values instead of RequirementSeverity enums is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3410939', \E_USER_DEPRECATED);
-          $requirement['severity'] = RequirementSeverity::from($requirement['severity']);
-        }
-        $severity = $severities[$requirement['severity']->value];
+        $severity = $requirement['severity'];
       }
       elseif (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'install') {
-        $severity = $severities[RequirementSeverity::OK->value];
+        $severity = RequirementSeverity::OK;
       }
 
-      if (isset($counters[$severity['status']])) {
-        $counters[$severity['status']]['amount']++;
+      if (isset($counters[$severity->status()])) {
+        $counters[$severity->status()]['amount']++;
       }
     }
 

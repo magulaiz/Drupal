@@ -16,12 +16,19 @@ include_once \DRUPAL_ROOT . '/core/includes/install.inc';
 class LegacyRequirementSeverityTest extends KernelTestBase {
 
   /**
-   * @covers drupal_requirements_severity
+   * @covers       drupal_requirements_severity
    * @dataProvider requirementProvider
    */
-  public function testGetMaxSeverity(array $requirements, int $expectedSeverity): void {
-    $this->expectDeprecation('drupal_requirements_severity() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Extension\Requirement\RequirementSeverity::getMaxSeverity() instead. See https://www.drupal.org/node/3410939');
-    $this->expectDeprecation('Calling Drupal\Core\Extension\Requirement::getMaxSeverity() with \'severity\' as int values instead of RequirementSeverity enums is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3410939');
+  public function testGetMaxSeverity(
+    array $requirements,
+    int $expectedSeverity
+  ): void {
+    $this->expectDeprecation(
+      'drupal_requirements_severity() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Extension\Requirement\RequirementSeverity::getMaxSeverity() instead. See https://www.drupal.org/node/3410939'
+    );
+    $this->expectDeprecation(
+      'Calling methods with an array of $requirements with \'severity\' as int values instead of Drupal\Core\Extension\Requirement\RequirementSeverity enums is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3410939'
+    );
     $severity = drupal_requirements_severity($requirements);
     $this->assertEquals($expectedSeverity, $severity);
   }
@@ -49,8 +56,9 @@ class LegacyRequirementSeverityTest extends KernelTestBase {
       'title' => 'Bar',
       'severity' => \REQUIREMENT_OK,
     ];
+
     return [
-      [
+      'error is most severe' => [
         [
           $info,
           $error,
@@ -58,14 +66,14 @@ class LegacyRequirementSeverityTest extends KernelTestBase {
         ],
         \REQUIREMENT_ERROR,
       ],
-      [
+      'ok is most severe' => [
         [
           $info,
           $ok,
         ],
         \REQUIREMENT_OK,
       ],
-      [
+      'warning is most severe' => [
         [
           $warning,
           $info,

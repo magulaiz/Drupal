@@ -989,8 +989,9 @@ function hook_updater_info_alter(&$updaters) {
  * Drupal itself (by install.php) with an installation profile or later by hand.
  * As a consequence, install-time requirements must be checked without access
  * to the full Drupal API, because it is not available during install.php.
- * If a requirement has a severity of RequirementSeverity::ERROR, install.php will abort
- * or at least the module will not install.
+ * If a requirement has a severity of
+ * \Drupal\Core\Extension\Requirement\RequirementSeverity::ERROR, install.php
+ * will abort or at least the module will not install.
  * Other severity levels have no effect on the installation.
  * Module dependencies do not belong to these installation requirements,
  * but should be defined in the module's .info.yml file.
@@ -1003,7 +1004,8 @@ function hook_updater_info_alter(&$updaters) {
  * tasks and security issues.
  * The returned 'requirements' will be listed on the status report in the
  * administration section, with indication of the severity level.
- * Moreover, any requirement with a severity of RequirementSeverity::ERROR severity will
+ * Moreover, any requirement with a severity of
+ * \Drupal\Core\Extension\Requirement\RequirementSeverity::ERROR severity will
  * result in a notice on the administration configuration page.
  *
  * @param $phase
@@ -1013,7 +1015,7 @@ function hook_updater_info_alter(&$updaters) {
  *   - runtime: The runtime requirements are being checked and shown on the
  *     status report page.
  *
- * @return array
+ * @return array<string, array{title: \Drupal\Core\StringTranslation\TranslatableMarkup, value: mixed, description: \Drupal\Core\StringTranslation\TranslatableMarkup, severity: \Drupal\Core\Extension\Requirement\RequirementSeverity}>
  *   An associative array where the keys are arbitrary but must be unique (it
  *   is suggested to use the module short name as a prefix) and the values are
  *   themselves associative arrays with the following elements:
@@ -1022,11 +1024,8 @@ function hook_updater_info_alter(&$updaters) {
  *     install phase, this should only be used for version numbers, do not set
  *     it if not applicable.
  *   - description: The description of the requirement/status.
- *   - severity: The requirement's result/severity level, one of:
- *     - RequirementSeverity::INFO: For info only.
- *     - RequirementSeverity::OK: The requirement is satisfied.
- *     - RequirementSeverity::WARNING: The requirement failed with a warning.
- *     - RequirementSeverity::ERROR: The requirement failed with an error.
+ *   - severity: The requirement's result/severity level, one of
+ *     \Drupal\Core\Extension\Requirement\RequirementSeverity enums.
  */
 function hook_requirements($phase) {
   $requirements = [];
