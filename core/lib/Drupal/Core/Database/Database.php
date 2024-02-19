@@ -494,9 +494,17 @@ abstract class Database {
       $key = self::$activeKey;
     }
     if (isset($target)) {
+      if (self::$connections[$key][$target] instanceof Connection) {
+        self::$connections[$key][$target]->commitAll();
+      }
       unset(self::$connections[$key][$target]);
     }
-    else {
+    elseif (isset(self::$connections[$key])) {
+      foreach (self::$connections[$key] as $connection) {
+        if ($connection instanceof Connection) {
+          $connection->commitAll();
+        }
+      }
       unset(self::$connections[$key]);
     }
     // Force garbage collection to run. This ensures that client connection
@@ -750,19 +758,36 @@ abstract class Database {
   /**
    * Calls commitAll() on all the open connections.
    *
+   * If drupal_register_shutdown_function() exists the commit will occur during
+   * shutdown so that it occurs at the latest possible moment.
+   *
+   * @param bool $shutdown
+   *   Internal param to denote that the method is being called by
+   *   _drupal_shutdown_function().
+   *
    * @return void
    *
    * @internal
    *   This method exists only to work around a bug caused by Drupal incorrectly
    *   relying on object destruction order to commit transactions.
    */
-  public static function commitAllOnAllConnections() {
-    foreach (self::$connections as $targets) {
-      foreach ($targets as $connection) {
-        if ($connection instanceof Connection) {
-          $connection->commitAll();
+  public static function commitAllOnAllConnections(bool $shutdown = FALSE): void {
+    static $registered = FALSE;
+
+    if ($shutdown || !function_exists('drupal_register_shutdown_function')) {
+      foreach (self::$connections as $targets) {
+        foreach ($targets as $connection) {
+          if ($connection instanceof Connection) {
+            $connection->commitAll();
+          }
         }
       }
+      return;
+    }
+
+    if (!$registered) {
+      $registered = TRUE;
+      drupal_register_shutdown_function('\Drupal\Core\Database\Database::commitAllOnAllConnections', TRUE);
     }
   }
 
