@@ -13,6 +13,8 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Drupal\Tests\TestFileCreationTrait;
+use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 
 // cspell:ignore esque māori sourceediting splitbutton upcasted
@@ -104,6 +106,11 @@ class CKEditor5Test extends CKEditor5TestBase {
         FilterFormat::load('ckeditor5')
       ))
     ));
+
+    $this->grantPermissions(
+      Role::load(RoleInterface::AUTHENTICATED_ID),
+      ['use text format ckeditor5']
+    );
 
     $this->drupalGet('node/add/page');
     $this->waitForEditor();
@@ -656,6 +663,11 @@ JS;
         FilterFormat::load('test_format')
       ))
     ));
+    $this->grantPermissions(
+      Role::load(RoleInterface::AUTHENTICATED_ID),
+      ['use text format test_format']
+    );
+
     $ordered_list_html = '<ol><li>apple</li><li>banana</li><li>cantaloupe</li></ol>';
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
@@ -776,6 +788,11 @@ JS;
         FilterFormat::load('ckeditor5')
       ))
     ));
+
+    $this->grantPermissions(
+      Role::load(RoleInterface::AUTHENTICATED_ID),
+      ['use text format ckeditor5']
+    );
 
     $this->drupalGet('node/1/edit');
     $page->selectFieldOption('body[0][format]', 'ckeditor5');
