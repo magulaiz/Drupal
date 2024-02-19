@@ -75,11 +75,19 @@
             return;
           }
 
+          // Javascript equivalent to Jquery wrap()
+          function wrapItem(el) {
+            const element = el[0];
+            const wrappingElement = document.createElement('div');
+            wrappingElement.className = 'vertical-tabs clearfix';
+            element.replaceWith(wrappingElement);
+            wrappingElement.appendChild(element);
+            return $(element);
+          }
+
           // Create the tab column.
           const tabList = $('<ul class="vertical-tabs__menu"></ul>');
-          $this
-            .wrap('<div class="vertical-tabs clearfix"></div>')
-            .before(tabList);
+          wrapItem($this).before(tabList);
 
           // Transform each details into a tab.
           $details.each(function () {
