@@ -672,15 +672,21 @@ class ForumTest extends BrowserTestBase {
       $this->assertSession()->pageTextContains('Forum topic ' . $edit['title[0][value]'] . ' has been updated.');
 
       // Verify topic was moved to a different forum.
-      $forum_tid = $this->container
+      $forum_tids = $this->container
         ->get('database')
         ->select('forum', 'f')
         ->fields('f', ['tid'])
         ->condition('nid', $node->id())
         ->condition('vid', $node->getRevisionId())
         ->execute()
-        ->fetchField();
-      $this->assertSame($this->rootForum['tid'], $forum_tid, 'The forum topic is linked to a different forum');
+        ->fetchCol();
+      $expected = [$this->rootForum['tid'], $this->forum['tid']];
+      $difference = array_diff($expected, $forum_tids);
+      $this->assertEmpty($difference, 'The forum topic is linked to a different forum and the shadow remains');
+
+      // Verify the shadow topic title is shown.
+      $this->drupalGet('forum/' . $this->forum['tid']);
+      $this->assertSession()->responseContains($edit['title[0][value]'], 'Shadow topic title is shown');
 
       // Delete forum node.
       $this->drupalGet('node/' . $node->id() . '/delete');

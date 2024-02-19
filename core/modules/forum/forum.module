@@ -17,6 +17,7 @@ use Drupal\language\Plugin\migrate\source\d7\LanguageContentSettingsTaxonomyVoca
 use Drupal\migrate\Plugin\MigrateSourceInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
+use Drupal\node\NodeInterface;
 use Drupal\taxonomy\Plugin\migrate\source\d6\Term as D6Term;
 use Drupal\taxonomy\Plugin\migrate\source\d6\Vocabulary as D6Vocabulary;
 use Drupal\taxonomy\Plugin\migrate\source\d6\VocabularyPerType as D6VocabularyPerType;
@@ -162,7 +163,7 @@ function forum_entity_bundle_field_info_alter(&$fields, EntityTypeInterface $ent
  *
  * Assigns the forum taxonomy when adding a topic from within a forum.
  */
-function forum_node_presave(EntityInterface $node) {
+function forum_node_presave(NodeInterface $node) {
   if (\Drupal::service('forum_manager')->checkNodeType($node)) {
     // Make sure all fields are set properly:
     $node->icon = !empty($node->icon) ? $node->icon : '';
@@ -172,7 +173,11 @@ function forum_node_presave(EntityInterface $node) {
       if (!$node->isNew()) {
         $old_tid = \Drupal::service('forum.index_storage')->getOriginalTermId($node);
         if ($old_tid && isset($node->forum_tid) && ($node->forum_tid != $old_tid) && !empty($node->shadow)) {
-          // A shadow copy needs to be created. Retain new term and add old term.
+
+          // A shadow copy needs to be created. Retain new term and add old
+          // term. This requires a new revision, as {forum} is keyed by revision
+          // ID.
+          $node->setNewRevision(TRUE);
           $node->taxonomy_forums[count($node->taxonomy_forums)] = ['target_id' => $old_tid];
         }
       }
@@ -346,6 +351,7 @@ function forum_form_node_form_alter(&$form, FormStateInterface $form_state, $for
       '#description' => t('If you move this topic, you can leave a link in the old forum to the new forum.'),
     ];
     $form['forum_tid'] = ['#type' => 'value', '#value' => $node->forum_tid];
+    $form['#entity_builders'][] = 'forum_node_form_entity_builder';
   }
 
   if (isset($form['taxonomy_forums'])) {
@@ -359,6 +365,15 @@ function forum_form_node_form_alter(&$form, FormStateInterface $form_state, $for
       $widget['#default_value'] = is_numeric($requested_forum_id) ? $requested_forum_id : '';
     }
   }
+}
+
+/**
+ * Entity builder for the node edit form.
+ *
+ * @see forum_form_node_form_alter()
+ */
+function forum_node_form_entity_builder($entity_type, NodeInterface $node, &$form, FormStateInterface $form_state) {
+  $node->shadow = $form_state->getValue('shadow');
 }
 
 /**
