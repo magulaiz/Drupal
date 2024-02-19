@@ -374,16 +374,24 @@
         return;
       }
       const $menu = $(menu);
-
       const $addDisplayDropdown = $(
         `<li class="add"><a href="#"><span class="icon add"></span>${Drupal.t(
           'Add',
         )}</a><ul class="action-list" style="display:none;"></ul></li>`,
       );
       const $displayButtons = $menu.nextAll('input.add-display').detach();
+      const displayButtons = $displayButtons.toArray();
+
+      // / Javascript equivalent to Jquery wrap()
+      function wrapItem(el) {
+        const wrappingElement = document.createElement('li');
+        el.replaceWith(wrappingElement);
+        wrappingElement.appendChild(el);
+      }
+
+      $displayButtons.appendTo($addDisplayDropdown.find('.action-list'));
+      displayButtons.forEach((el) => wrapItem(el));
       $displayButtons
-        .appendTo($addDisplayDropdown.find('.action-list'))
-        .wrap('<li>')
         .parent()
         .eq(0)
         .addClass('first')
