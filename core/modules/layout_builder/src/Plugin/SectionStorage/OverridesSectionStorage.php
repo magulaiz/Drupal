@@ -398,6 +398,14 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
    */
   protected function handleTranslationAccess(AccessResult $result, $operation, AccountInterface $account) {
     $entity = $this->getEntity();
+
+    // This may be invoked for entities that don't have any layout field yet
+    // in case no entity of the bundle/type created any layout yet as the field
+    // is created on demand only once a first layout was created.
+    if (!$entity || !$entity->hasField(static::FIELD_NAME)) {
+      return AccessResult::neutral();
+    }
+
     // Access is always denied on non-default translations.
     $field_config = $entity->getFieldDefinition(static::FIELD_NAME)->getConfig($entity->bundle());
     // Access is allow if one of the following conditions is true:
