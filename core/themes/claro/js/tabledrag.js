@@ -77,7 +77,7 @@
         const $row = $(row);
         // Javascript equivalent to wrapInner() jquery.
         function wrapInnerItem(element, wrapperTag, wrapperClass) {
-          var wrapper = document.createElement(wrapperTag);
+          const wrapper = document.createElement(wrapperTag);
           if (wrapperClass) {
             wrapper.className = wrapperClass;
           }
