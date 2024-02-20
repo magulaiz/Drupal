@@ -58,7 +58,7 @@ function twig_render_template($template_file, array $variables) {
       $current_template = basename($template_file);
       $suggestions = $variables['template_suggestions'];
 
-      foreach ($suggestions as $key => &$suggestion) {
+      foreach ($suggestions as &$suggestion) {
         if ($suggestion === $variables['template_suggestion']) {
           $suggestion = 'x ' . $current_template;
         }
