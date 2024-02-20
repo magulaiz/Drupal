@@ -1214,7 +1214,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           }
         }
 
-        $all_revisions_table = $this->getAllRevisionsTable();
+        $all_revisions_table = $this->getJsonStorageAllRevisionsTable();
         $query->condition("base.$all_revisions_table.{$this->revisionKey}", $revision_ids, 'IN');
       }
     }
@@ -2713,11 +2713,11 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $prefixed_table = $this->database->getMongodbPrefixedTable($this->getBaseTable());
 
         if ($this->entityType->isRevisionable()) {
-          $all_revisions_table = $this->getAllRevisionsTable();
+          $all_revisions_table = $this->getJsonStorageAllRevisionsTable();
           $dedicated_all_revisions_table = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $all_revisions_table);
-          $current_revision_table = $this->getCurrentRevisionTable();
+          $current_revision_table = $this->getJsonStorageCurrentRevisionTable();
           $dedicated_current_revision_table = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $current_revision_table);
-          $latest_revision_table = $this->getLatestRevisionTable();
+          $latest_revision_table = $this->getJsonStorageLatestRevisionTable();
           $dedicated_latest_revision_table = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $latest_revision_table);
 
           $this->database->getConnection()->{$prefixed_table}->updateMany(
@@ -2766,7 +2766,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           );
         }
         elseif ($this->entityType->isTranslatable()) {
-          $translations_table = $this->getTranslationsTable();
+          $translations_table = $this->getJsonStorageTranslationsTable();
           $dedicated_translations_table = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $translations_table);
 
           $this->database->getConnection()->{$prefixed_table}->updateMany(
@@ -2850,12 +2850,12 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     if ($this->database->driver() == 'mongodb') {
       $dedicated_tables = [];
       if ($this->entityType->isRevisionable()) {
-        $dedicated_tables[$this->getAllRevisionsTable()] = $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->getAllRevisionsTable(), $is_deleted);
-        $dedicated_tables[$this->getCurrentRevisionTable()] = $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->getCurrentRevisionTable(), $is_deleted);
-        $dedicated_tables[$this->getLatestRevisionTable()] = $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->getLatestRevisionTable(), $is_deleted);
+        $dedicated_tables[$this->getJsonStorageAllRevisionsTable()] = $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->getJsonStorageAllRevisionsTable(), $is_deleted);
+        $dedicated_tables[$this->getJsonStorageCurrentRevisionTable()] = $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->getJsonStorageCurrentRevisionTable(), $is_deleted);
+        $dedicated_tables[$this->getJsonStorageLatestRevisionTable()] = $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->getJsonStorageLatestRevisionTable(), $is_deleted);
       }
       elseif (!$this->entityType->isRevisionable() && $this->entityType->isTranslatable()) {
-        $dedicated_tables[$this->getTranslationsTable()] = $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->getTranslationsTable(), $is_deleted);
+        $dedicated_tables[$this->getJsonStorageTranslationsTable()] = $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->getJsonStorageTranslationsTable(), $is_deleted);
       }
       elseif (!$this->entityType->isRevisionable() && !$this->entityType->isTranslatable()) {
         $dedicated_tables[$this->getBaseTable()] = $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->getBaseTable(), $is_deleted);

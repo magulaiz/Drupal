@@ -216,7 +216,7 @@ class DefaultTableMapping implements TableMappingInterface {
    * @internal
    */
   public static function create(ContentEntityTypeInterface $entity_type, array $storage_definitions, $prefix = '', bool $json_storage = FALSE) {
-    $table_mapping = new static($entity_type, $storage_definitions, $prefix);
+    $table_mapping = new static($entity_type, $storage_definitions, $prefix, $json_storage);
 
     $revisionable = $entity_type->isRevisionable();
     $translatable = $entity_type->isTranslatable();
