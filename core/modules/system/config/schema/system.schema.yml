@@ -174,9 +174,12 @@ system.logging:
     error_level:
       type: string
       label: 'Error messages to display'
-    deprecations:
+    deprecation_level:
       type: string
-      lagel: 'Deprecations to display (all, contrib & custom, custom only)'
+      label: 'Deprecations to display (all, contrib & custom, custom only)'
+    ignored_deprecations:
+      type: string
+      label: 'List of ignored deprecations'
 
 system.performance:
   type: config_object

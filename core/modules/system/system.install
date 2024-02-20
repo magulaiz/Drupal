@@ -1711,3 +1711,14 @@ function _system_advisories_requirements(array &$requirements): void {
     }
   }
 }
+
+/**
+ * Set default values for new deprecation logging variables.
+ */
+function system_update_10202(&$sandbox) {
+  $config = \Drupal::configFactory()->getEditable('system.logging');
+  $config->set('deprecation_level', 'none');
+  $config->set('ignored_deprecations', '');
+  $config->save();
+}
+
