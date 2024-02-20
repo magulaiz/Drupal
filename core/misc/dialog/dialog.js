@@ -79,8 +79,9 @@ class DialogEvent extends Event {
     function openDialog(settings) {
       settings = $.extend({}, drupalSettings.dialog, options, settings);
       // Trigger a global event to allow scripts to bind events to the dialog.
-      const event = new DialogEvent('beforecreate', dialog, settings);
-      domElement.dispatchEvent(event);
+      domElement.dispatchEvent(
+        new DialogEvent('beforecreate', dialog, settings),
+      );
       $element.dialog(settings);
       dialog.open = true;
 
