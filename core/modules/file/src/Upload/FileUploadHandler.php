@@ -349,7 +349,7 @@ class FileUploadHandler {
       );
       // Empty string means all extensions are allowed so we should remove the
       // validator.
-      if (\is_string($validators['file_validate_extensions']) && empty($validators['file_validate_extensions'])) {
+      if ($validators['file_validate_extensions'] === '') {
         unset($validators['file_validate_extensions']);
         return '';
       }
