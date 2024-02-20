@@ -35,7 +35,7 @@
 }
 
 :is(.forum table, .text-content table, .views-table, .draggable-table) tbody tr:last-child th {
-  border-bottom: 0;
+  border-block-end: 0;
 }
 
 :is(.forum table, .text-content table, .views-table, .draggable-table) tr:last-child td {
