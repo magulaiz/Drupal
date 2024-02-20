@@ -441,15 +441,6 @@ class ThemeManager implements ThemeManagerInterface {
       }
     }
 
-    // Invoke hook_theme_suggestions_alter() and
-    // hook_theme_suggestions_HOOK_alter().
-    $hooks = [
-      'theme_suggestions',
-      'theme_suggestions_' . $base_theme_hook,
-    ];
-    $this->moduleHandler->alter($hooks, $suggestions, $variables, $base_theme_hook);
-    $this->alter($hooks, $suggestions, $variables, $base_theme_hook);
-
     return $suggestions;
   }
 
