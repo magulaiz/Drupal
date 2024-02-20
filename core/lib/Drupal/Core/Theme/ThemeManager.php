@@ -367,17 +367,20 @@ class ThemeManager implements ThemeManagerInterface {
   protected function buildThemeHookSuggestions(string $hook, string $info_base_hook, array &$variables): array {
     $template_suggestion = &$variables['template_suggestion'];
     $template_suggestions = &$variables['template_suggestions'];
+
     // Set base hook for later use. For example if '#theme' => 'node__article'
     // is called, we run hook_theme_suggestions_node_alter() rather than
     // hook_theme_suggestions_node__article_alter(), and also pass in the base
     // hook as the last parameter to the suggestions alter hooks.
     $base_theme_hook = $info_base_hook ?: $hook;
+
     // The $hook's theme registry may specify a "base hook" that differs from
     // the base string of $hook. If so, we need to be aware of both strings.
     $base_of_hook = explode('__', $hook)[0];
 
     // Invoke hook_theme_suggestions_HOOK().
     $suggestions = $this->moduleHandler->invokeAll('theme_suggestions_' . $base_theme_hook, [$variables]);
+
     // If the theme implementation was invoked with a direct theme suggestion
     // like '#theme' => 'node__article', add it to the suggestions array before
     // invoking suggestion alter hooks.
@@ -385,7 +388,7 @@ class ThemeManager implements ThemeManagerInterface {
       $suggestions[] = $hook;
     }
 
-        // Add all the template suggestions with the same base to the suggestions
+    // Add all the template suggestions with the same base to the suggestions
     // array before invoking suggestion alter hooks.
     $contains_base_hook = in_array($base_theme_hook, $template_suggestions);
     foreach (array_reverse($template_suggestions, TRUE) as $key => $suggestion) {
