@@ -9,15 +9,9 @@ services:
   block_content.bc_subscriber:
     class: Drupal\block_content\Routing\RouteSubscriber
     arguments: ['@entity_type.manager', '@module_handler', '@config.factory']
-    tags:
-      - { name: event_subscriber }
   block_content.route_subscriber:
     class: Drupal\block_content\Routing\RouteSubscriber
     arguments: [ '@entity_type.manager', '@module_handler', '@config.factory' ]
-    tags:
-      - { name: event_subscriber }
   block_content.config_subscriber:
     class: Drupal\block_content\EventSubscriber\BlockContentConfigSubscriber
     arguments: [ '@router.builder', '@cache_tags.invalidator', '@entity_type.manager' ]
-    tags:
-      - { name: event_subscriber }
