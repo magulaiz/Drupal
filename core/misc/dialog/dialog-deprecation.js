@@ -31,7 +31,7 @@
       const isWindowHasDialogListener = windowEvents[event.type];
       if (isWindowHasDialogListener) {
         Drupal.deprecationError({
-          message: `Jquery event ${event.type} will deprecated soon`,
+          message: `Jquery event ${event.type} will deprecated soon in Drupal core.`,
         });
       }
     };
