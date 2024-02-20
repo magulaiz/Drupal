@@ -58,7 +58,7 @@ class CacheTagsChecksumDecorator implements CacheTagsChecksumInterface, CacheTag
   /**
    * Logs a cache tag operation.
    *
-   * @param array $tags
+   * @param string[] $tags
    *   The cache tags.
    * @param float $start
    *   The start microtime.
