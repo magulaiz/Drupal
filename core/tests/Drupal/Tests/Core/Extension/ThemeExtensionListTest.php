@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Extension;
 
 use Drupal\Core\Cache\NullBackend;
@@ -135,7 +137,7 @@ class ThemeExtensionListTest extends UnitTestCase {
    * @return array
    *   An array of theme test data.
    */
-  public function providerTestGetBaseThemes() {
+  public static function providerTestGetBaseThemes() {
     $data = [];
 
     // Tests a theme without any base theme.

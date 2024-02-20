@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Datetime;
 
 use Drupal\Core\Datetime\DateHelper;
@@ -58,7 +60,7 @@ class DateHelperTest extends UnitTestCase {
     $this->assertSame($expected, DateHelper::weekDaysOrdered($weekdays));
   }
 
-  public function providerTestWeekDaysOrdered() {
+  public static function providerTestWeekDaysOrdered() {
     $data = [];
     $data[] = [
       0,

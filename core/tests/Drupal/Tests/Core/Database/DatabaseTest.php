@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Database;
 
 use Composer\Autoload\ClassLoader;
@@ -86,7 +88,7 @@ class DatabaseTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerFindDriverAutoloadDirectory() {
+  public static function providerFindDriverAutoloadDirectory() {
     return [
       'core mysql' => ['core/modules/mysql/src/Driver/Database/mysql/', 'Drupal\mysql\Driver\Database\mysql', FALSE],
       'D8 custom fake' => [FALSE, 'Drupal\Driver\Database\CoreFake', TRUE],
@@ -111,7 +113,7 @@ class DatabaseTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerFindDriverAutoloadDirectoryException() {
+  public static function providerFindDriverAutoloadDirectoryException() {
     return [
       'test module but tests not included' => [
         "The database_driver Drupal\driver_test\Driver\Database\DrivertestMysql does not exist.",
