@@ -215,7 +215,7 @@ class DefaultTableMapping implements TableMappingInterface {
    *
    * @internal
    */
-  public static function create(ContentEntityTypeInterface $entity_type, array $storage_definitions, $prefix = '') {
+  public static function create(ContentEntityTypeInterface $entity_type, array $storage_definitions, $prefix = '', bool $json_storage = FALSE) {
     $table_mapping = new static($entity_type, $storage_definitions, $prefix);
 
     $revisionable = $entity_type->isRevisionable();
@@ -303,7 +303,7 @@ class DefaultTableMapping implements TableMappingInterface {
       'delta',
     ];
 
-    if ($this->jsonStorage) {
+    if ($json_storage) {
       // Add all fields to all embedded tables, this makes EntityQuery happy!
       if ($revisionable) {
         $table_mapping->setFieldNames($table_mapping->jsonStorageAllRevisionsTable, $all_fields);
