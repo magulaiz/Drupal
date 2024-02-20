@@ -57,39 +57,15 @@ class ViewsTemplateTest extends ViewsKernelTestBase {
     $output = $this->render($build);
     $extension = '.html.twig';
     $expected = '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
-      . '   ▪️ container--more-link--test-page-display--default' . $extension . PHP_EOL
-      . '   ▪️ container--more-link--default' . $extension . PHP_EOL
-      . '   ▪️ container--more-link--test-page-display' . $extension . PHP_EOL
-      . '   ▪️ container--more-link' . $extension . PHP_EOL
-      . '   ✅ container' . $extension . PHP_EOL
+      . '   * container--more-link--test-page-display--default' . $extension . PHP_EOL
+      . '   * container--more-link--default' . $extension . PHP_EOL
+      . '   * container--more-link--tag1' . $extension . PHP_EOL
+      . '   * container--more-link--tag2' . $extension . PHP_EOL
+      . '   * container--more-link--test-page-display' . $extension . PHP_EOL
+      . '   * container--more-link' . $extension . PHP_EOL
+      . '   x container' . $extension . PHP_EOL
       . '-->' . PHP_EOL;
     $this->assertStringContainsString($expected, $output, 'Views more link container suggestions found in Twig debug output');
-  }
-
-  /**
-   * Tests the views theme suggestions.
-   *
-   * @throws \Exception
-   */
-  public function testThemeSuggestionsViewsView() {
-    $build = [
-      '#type' => 'view',
-      '#name' => 'test_page_display',
-      '#display_id' => 'default',
-      '#arguments' => [],
-    ];
-
-    $output = $this->render($build);
-    $extension = '.html.twig';
-    $expected = '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
-      . '   * views-view--test-page-display--default' . $extension . PHP_EOL
-      . '   * views-view--default' . $extension . PHP_EOL
-      . '   * views-view--tag1' . $extension . PHP_EOL
-      . '   * views-view--tag2' . $extension . PHP_EOL
-      . '   * views-view--test-page-display' . $extension . PHP_EOL
-      . '   x views-view' . $extension . PHP_EOL
-      . '-->' . PHP_EOL;
-    $this->assertStringContainsString($expected, $output, 'Views theme suggestions found in Twig debug output');
   }
 
 }
