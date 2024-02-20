@@ -75,15 +75,34 @@
        */
       const createItemWrapBoundaries = (row) => {
         const $row = $(row);
-        const $firstCell = $row
-          .find('td:first-of-type')
-          .eq(0)
-          .wrapInner(Drupal.theme('tableDragCellContentWrapper'))
-          .wrapInner(
-            $(Drupal.theme('tableDragCellItemsWrapper')).addClass(
-              'js-tabledrag-cell-content',
-            ),
+
+        function generateElements(html) {
+          const el = document.createElement('div');
+          el.innerHTML = html.trim();
+          return el.firstChild;
+        }
+
+        function wrapItem(el) {
+          const handle = el.querySelector('.tabledrag-handle');
+
+          const contentWrapper = generateElements(
+            Drupal.theme('tableDragCellContentWrapper'),
           );
+          const itemsWrapper = generateElements(
+            Drupal.theme('tableDragCellItemsWrapper'),
+          );
+          itemsWrapper.classList.add('js-tabledrag-cell-content');
+          contentWrapper.innerHTML = el.innerHTML;
+          itemsWrapper.append(contentWrapper);
+          const r = itemsWrapper.querySelector('.tabledrag-handle');
+          r.remove();
+          el.innerHTML = '';
+          itemsWrapper.prepend(handle);
+          el.appendChild(itemsWrapper);
+        }
+
+        const $firstCell = $row.find('td:first-of-type').eq(0);
+        wrapItem($row.find('td:first-of-type').eq(0)[0]);
 
         const $targetElem = $firstCell.find('.js-tabledrag-cell-content');
 
