@@ -441,7 +441,8 @@ class ThemeManager implements ThemeManagerInterface {
       }
     }
 
-    return $suggestions;
+    $variables['template_suggestions'] = array_unique($template_suggestions);
+    return array_unique($suggestions);
   }
 
   /**
