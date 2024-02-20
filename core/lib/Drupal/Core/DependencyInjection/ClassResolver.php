@@ -16,7 +16,7 @@ class ClassResolver implements ClassResolverInterface {
    * Constructs a new ClassResolver object.
    *
    * @param \Drupal\Core\DependencyInjection\DependencyAutowire $dependencyAutowire
-   *    The dependency auto-wire service.
+   *   The dependency auto-wire service.
    * @param \Symfony\Component\DependencyInjection\ContainerInterface|null $container
    *   The service container.
    */

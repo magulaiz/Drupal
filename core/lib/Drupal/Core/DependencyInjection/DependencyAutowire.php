@@ -4,18 +4,22 @@ declare(strict_types=1);
 
 namespace Drupal\Core\DependencyInjection;
 
+use Drupal\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\Exception\AutowiringFailedException;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Provides a service for auto-wire dependencies.
  */
-final class DependencyAutowire implements ContainerAwareInterface {
+final class DependencyAutowire {
 
-  use ContainerAwareTrait;
+  /**
+   * Constructs a new DependencyAutowire object.
+   */
+  public function __construct(
+    protected ContainerInterface $container,
+  ) {}
 
   /**
    * Creates new instance by auto-wiring dependencies.
@@ -94,7 +98,7 @@ final class DependencyAutowire implements ContainerAwareInterface {
       if (!$service) {
         $class = $method->getDeclaringClass()->getName();
         $method_name = $method->getName();
-        $service = $type ? (string) $type : '';
+        $service = $type ? $type->getName() : '';
 
         throw new AutowiringFailedException($service, sprintf('Cannot autowire service "%s": argument "$%s" of method "%s::%s()", you should configure its value explicitly.', $service, $parameter_name, $class, $method_name));
       }
