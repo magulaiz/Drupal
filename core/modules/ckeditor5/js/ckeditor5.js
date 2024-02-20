@@ -484,7 +484,7 @@
                 sibling = sibling.nextSibling;
               } while (sibling);
               const maxWidth = parentRow.getBoundingClientRect().width - widths;
-              if(maxWidth === 0){
+              if (maxWidth === 0) {
                 parentCell.style['max-width'] = `100%`;
               } else {
                 parentCell.style['max-width'] = `calc(${maxWidth}px)`;
