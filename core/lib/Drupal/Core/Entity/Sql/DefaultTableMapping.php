@@ -76,30 +76,30 @@ class DefaultTableMapping implements TableMappingInterface {
   /**
    * The JSON storage table that stores the all revisions data for the entity.
    *
-   * @var string
+   * @var string|null
    */
-  protected string $jsonStorageAllRevisionsTable;
+  protected ?string $jsonStorageAllRevisionsTable;
 
   /**
    * The JSON storage table that stores the current revision data.
    *
-   * @var string
+   * @var string|null
    */
-  protected string $jsonStorageCurrentRevisionTable;
+  protected ?string $jsonStorageCurrentRevisionTable;
 
   /**
    * The JSON storage table that stores the latest revision data.
    *
-   * @var string
+   * @var string|null
    */
-  protected string $jsonStorageLatestRevisionTable;
+  protected ?string $jsonStorageLatestRevisionTable;
 
   /**
    * The JSON storage table that stores the translations data.
    *
-   * @var string
+   * @var string|null
    */
-  protected string $jsonStorageTranslationsTable;
+  protected ?string $jsonStorageTranslationsTable;
 
   /**
    * A list of field names per table.

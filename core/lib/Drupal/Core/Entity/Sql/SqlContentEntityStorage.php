@@ -109,32 +109,32 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   protected $revisionDataTable;
 
   /**
-   * The table that stores all revisions, if the entity supports revisions.
+   * The JSON storage table that stores the all revisions data for the entity.
    *
-   * @var string
+   * @var string|null
    */
-  protected $allRevisionsTable;
+  protected ?string $jsonStorageAllRevisionsTable;
 
   /**
-   * The table that stores the current revision, if the entity supports revisions.
+   * The JSON storage table that stores the current revision data.
    *
-   * @var string
+   * @var string|null
    */
-  protected $currentRevisionTable;
+  protected ?string $jsonStorageCurrentRevisionTable;
 
   /**
-   * The table that stores the latest revision, if the entity supports revisions.
+   * The JSON storage table that stores the latest revision data.
    *
-   * @var string
+   * @var string|null
    */
-  protected $latestRevisionTable;
+  protected ?string $jsonStorageLatestRevisionTable;
 
   /**
-   * The table that stores properties, if the entity has multilingual support.
+   * The JSON storage table that stores the translations data.
    *
-   * @var string
+   * @var string|null
    */
-  protected $translationsTable;
+  protected ?string $jsonStorageTranslationsTable;
 
   /**
    * The MongoDB sequence service.
@@ -238,10 +238,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $this->revisionDataTable = NULL;
 
     // The JSON storage embedded tables.
-    $this->allRevisionsTable = NULL;
-    $this->currentRevisionTable = NULL;
-    $this->latestRevisionTable = NULL;
-    $this->translationsTable = NULL;
+    $this->jsonStorageAllRevisionsTable = NULL;
+    $this->jsonStorageCurrentRevisionTable = NULL;
+    $this->jsonStorageLatestRevisionTable = NULL;
+    $this->jsonStorageTranslationsTable = NULL;
 
     $table_mapping = $this->getTableMapping();
     $this->baseTable = $table_mapping->getBaseTable();
@@ -249,9 +249,9 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     if ($revisionable) {
       $this->revisionKey = $this->entityType->getKey('revision') ?: 'revision_id';
       if ($this->database->driver() == 'mongodb') {
-        $this->allRevisionsTable = $table_mapping->getJsonStorageAllRevisionsTable();
-        $this->currentRevisionTable = $table_mapping->getJsonStorageCurrentRevisionTable();
-        $this->latestRevisionTable = $table_mapping->getJsonStorageLatestRevisionTable();
+        $this->jsonStorageAllRevisionsTable = $table_mapping->getJsonStorageAllRevisionsTable();
+        $this->jsonStorageCurrentRevisionTable = $table_mapping->getJsonStorageCurrentRevisionTable();
+        $this->jsonStorageLatestRevisionTable = $table_mapping->getJsonStorageLatestRevisionTable();
       }
       else {
         $this->revisionTable = $table_mapping->getRevisionTable();
@@ -269,7 +269,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $this->revisionDataTable = $table_mapping->getRevisionDataTable();
     }
     if (!$revisionable && $translatable && ($this->database->driver() == 'mongodb')) {
-      $this->translationsTable = $table_mapping->getJsonStorageTranslationsTable();
+      $this->jsonStorageTranslationsTable = $table_mapping->getJsonStorageTranslationsTable();
     }
   }
 
@@ -320,7 +320,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   The table name or FALSE if it is not available.
    */
   public function getJsonStorageAllRevisionsTable() {
-    return $this->allRevisionsTable;
+    return $this->jsonStorageAllRevisionsTable;
   }
 
   /**
@@ -330,7 +330,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   The table name or FALSE if it is not available.
    */
   public function getJsonStorageCurrentRevisionTable() {
-    return $this->currentRevisionTable;
+    return $this->jsonStorageCurrentRevisionTable;
   }
 
   /**
@@ -340,7 +340,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   The table name or FALSE if it is not available.
    */
   public function getJsonStorageLatestRevisionTable() {
-    return $this->latestRevisionTable;
+    return $this->jsonStorageLatestRevisionTable;
   }
 
   /**
@@ -350,7 +350,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   The table name or FALSE if it is not available.
    */
   public function getJsonStorageTranslationsTable() {
-    return $this->translationsTable;
+    return $this->jsonStorageTranslationsTable;
   }
 
   /**
@@ -674,45 +674,45 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   Flag to indicate whether revisions should be loaded or not.
    */
   protected function loadFromEmbeddedTables(array &$values, array &$translations, array &$values_embedded_tables, $load_from_revision_id = FALSE) {
-    if ($load_from_revision_id && $this->allRevisionsTable) {
-      $embedded_table = $this->allRevisionsTable;
+    if ($load_from_revision_id && $this->jsonStorageAllRevisionsTable) {
+      $embedded_table = $this->jsonStorageAllRevisionsTable;
       $table_mapping = $this->getTableMapping();
 
       // Find revisioned fields that are not entity keys. Exclude the langcode
       // key as the base table holds only the default language.
       $base_fields = array_diff($table_mapping->getFieldNames($this->baseTable), [$this->langcodeKey]);
 
-      $revisioned_fields = array_diff($table_mapping->getFieldNames($this->allRevisionsTable), [$this->idKey, $this->uuidKey]);
+      $revisioned_fields = array_diff($table_mapping->getFieldNames($this->jsonStorageAllRevisionsTable), [$this->idKey, $this->uuidKey]);
 
       // If there are no data fields then only revisioned fields are needed
       // else both data fields and revisioned fields are needed to map the
       // entity values.
       $all_fields = $revisioned_fields;
     }
-    elseif ($this->currentRevisionTable) {
-      $embedded_table = $this->currentRevisionTable;
+    elseif ($this->jsonStorageCurrentRevisionTable) {
+      $embedded_table = $this->jsonStorageCurrentRevisionTable;
       $table_mapping = $this->getTableMapping();
 
       // Find revisioned fields that are not entity keys. Exclude the langcode
       // key as the base table holds only the default language.
       $base_fields = array_diff($table_mapping->getFieldNames($this->baseTable), [$this->langcodeKey]);
 
-      $revisioned_fields = array_diff($table_mapping->getFieldNames($this->currentRevisionTable), [$this->idKey, $this->uuidKey]);
+      $revisioned_fields = array_diff($table_mapping->getFieldNames($this->jsonStorageCurrentRevisionTable), [$this->idKey, $this->uuidKey]);
 
       // If there are no data fields then only revisioned fields are needed
       // else both data fields and revisioned fields are needed to map the
       // entity values.
       $all_fields = $revisioned_fields;
     }
-    elseif ($this->translationsTable) {
-      $embedded_table = $this->translationsTable;
+    elseif ($this->jsonStorageTranslationsTable) {
+      $embedded_table = $this->jsonStorageTranslationsTable;
       $table_mapping = $this->getTableMapping();
 
       // Find revisioned fields that are not entity keys. Exclude the langcode
       // key as the base table holds only the default language.
       $base_fields = array_diff($table_mapping->getFieldNames($this->baseTable), [$this->langcodeKey]);
 
-      $translations_fields = array_diff($table_mapping->getFieldNames($this->translationsTable), [$this->idKey, $this->uuidKey]);
+      $translations_fields = array_diff($table_mapping->getFieldNames($this->jsonStorageTranslationsTable), [$this->idKey, $this->uuidKey]);
 
       // If there are no data fields then only revisioned fields are needed
       // else both data fields and revisioned fields are needed to map the
@@ -747,20 +747,20 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $embedded_table_data = [];
       foreach ($embedded_tables as $embedded_table_name => $embedded_table_rows) {
         if (!empty($embedded_table_name) && is_array($embedded_table_rows)) {
-          if ($embedded_table_name == $this->translationsTable) {
-            $embedded_table_data[$this->translationsTable] = $embedded_table_rows;
+          if ($embedded_table_name == $this->jsonStorageTranslationsTable) {
+            $embedded_table_data[$this->jsonStorageTranslationsTable] = $embedded_table_rows;
           }
-          elseif (($embedded_table_name == $this->currentRevisionTable) && !$load_from_revision_id) {
-            $embedded_table_data[$this->currentRevisionTable] = $embedded_table_rows;
+          elseif (($embedded_table_name == $this->jsonStorageCurrentRevisionTable) && !$load_from_revision_id) {
+            $embedded_table_data[$this->jsonStorageCurrentRevisionTable] = $embedded_table_rows;
           }
-          elseif (($embedded_table_name == $this->allRevisionsTable) && $load_from_revision_id) {
+          elseif (($embedded_table_name == $this->jsonStorageAllRevisionsTable) && $load_from_revision_id) {
             foreach ($embedded_table_rows as $embedded_table_revision) {
               if ($load_from_revision_id && isset($embedded_table_revision[$this->revisionKey]) && ($embedded_table_revision[$this->revisionKey] == $load_from_revision_id)) {
-                $embedded_table_data[$this->allRevisionsTable][] = $embedded_table_revision;
+                $embedded_table_data[$this->jsonStorageAllRevisionsTable][] = $embedded_table_revision;
               }
             }
           }
-          elseif (!$this->translationsTable && !$this->currentRevisionTable && !$this->latestRevisionTable && !$this->allRevisionsTable) {
+          elseif (!$this->jsonStorageTranslationsTable && !$this->jsonStorageCurrentRevisionTable && !$this->jsonStorageLatestRevisionTable && !$this->jsonStorageAllRevisionsTable) {
             $embedded_tables[$this->idKey] = $values[$id][$this->idKey][LanguageInterface::LANGCODE_DEFAULT];
             // TODO: Maybe there should be some else statement for the
             // next if statement.
@@ -1110,7 +1110,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
       $prefixed_table = $this->database->getMongodbPrefixedTable($this->baseTable);
       $update_operations = [];
-      $update_operations['$pull'] = [$this->allRevisionsTable => [$this->revisionKey => $revision_id]];
+      $update_operations['$pull'] = [$this->jsonStorageAllRevisionsTable => [$this->revisionKey => $revision_id]];
 
       // Perform all update operations on the entity.
       $this->database->getConnection()->{$prefixed_table}->updateMany(
@@ -1458,18 +1458,18 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       }
 
       $embedded_tables = [];
-      if ($this->allRevisionsTable) {
-        $embedded_tables[] = ['table' => $this->allRevisionsTable, 'update action' => 'append'];
+      if ($this->jsonStorageAllRevisionsTable) {
+        $embedded_tables[] = ['table' => $this->jsonStorageAllRevisionsTable, 'update action' => 'append'];
       }
       // Not sure about the change on the next line. It fixes the EntityDuplicateTest.
-      if ($this->currentRevisionTable && ($entity->isDefaultRevision() || ($entity->getRevisionId() == $entity->getLoadedRevisionId()))) {
-        $embedded_tables[] = ['table' => $this->currentRevisionTable, 'update action' => 'replace'];
+      if ($this->jsonStorageCurrentRevisionTable && ($entity->isDefaultRevision() || ($entity->getRevisionId() == $entity->getLoadedRevisionId()))) {
+        $embedded_tables[] = ['table' => $this->jsonStorageCurrentRevisionTable, 'update action' => 'replace'];
       }
-      if ($this->latestRevisionTable && ($entity->isNewRevision() || ($entity->getRevisionId() >= $this->getLatestRevisionId($entity->id())))) {
-        $embedded_tables[] = ['table' => $this->latestRevisionTable, 'update action' => 'replace'];
+      if ($this->jsonStorageLatestRevisionTable && ($entity->isNewRevision() || ($entity->getRevisionId() >= $this->getLatestRevisionId($entity->id())))) {
+        $embedded_tables[] = ['table' => $this->jsonStorageLatestRevisionTable, 'update action' => 'replace'];
       }
-      if ($this->translationsTable) {
-        $embedded_tables[] = ['table' => $this->translationsTable, 'update action' => 'replace'];
+      if ($this->jsonStorageTranslationsTable) {
+        $embedded_tables[] = ['table' => $this->jsonStorageTranslationsTable, 'update action' => 'replace'];
       }
 
       // Get the dedicated table data for the all revisions, current revision,
@@ -1710,7 +1710,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       // revision id. MongoDB stores all revision data in a single document/row.
       // As such there is no need for an aggregate query.
       $all_revisions = $this->database->select($this->getBaseTable(), 't')
-        ->fields('t', [$this->allRevisionsTable])
+        ->fields('t', [$this->jsonStorageAllRevisionsTable])
         ->condition($this->entityType->getKey('id'), (int) $entity_id)
         ->execute()
         ->fetchField();
@@ -1754,15 +1754,15 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $entity_data = $this->database->getConnection()->{$prefixed_table}->findOne(
           [$this->idKey => ['$eq' => $entity_id]],
           [
-            'projection' => [$this->allRevisionsTable => 1],
+            'projection' => [$this->jsonStorageAllRevisionsTable => 1],
             'session' => $this->database->getMongodbSession(),
           ],
         );
 
         $revisions_langcodes = [];
         $new_all_revisions_data = [];
-        if (isset($entity_data->{$this->allRevisionsTable})) {
-          $all_revisions_data = (array) $entity_data->{$this->allRevisionsTable};
+        if (isset($entity_data->{$this->jsonStorageAllRevisionsTable})) {
+          $all_revisions_data = (array) $entity_data->{$this->jsonStorageAllRevisionsTable};
           $all_revisions_data = array_reverse($all_revisions_data);
           foreach ($all_revisions_data as $revision) {
             $exists = FALSE;
@@ -1784,7 +1784,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
         $this->database->getConnection()->{$prefixed_table}->updateOne(
           [$this->idKey => ['$eq' => $entity_id]],
-          ['$set' => [$this->allRevisionsTable => $new_all_revisions_data]],
+          ['$set' => [$this->jsonStorageAllRevisionsTable => $new_all_revisions_data]],
           ['session' => $this->database->getMongodbSession()],
         );
       }
@@ -1840,19 +1840,19 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     }
 
     $dedicated_table_names = [];
-    if ($this->allRevisionsTable) {
-      $dedicated_table_names[$this->allRevisionsTable] = [];
+    if ($this->jsonStorageAllRevisionsTable) {
+      $dedicated_table_names[$this->jsonStorageAllRevisionsTable] = [];
     }
-    if ($this->currentRevisionTable) {
-      $dedicated_table_names[$this->currentRevisionTable] = [];
+    if ($this->jsonStorageCurrentRevisionTable) {
+      $dedicated_table_names[$this->jsonStorageCurrentRevisionTable] = [];
     }
-    if ($this->latestRevisionTable) {
-      $dedicated_table_names[$this->latestRevisionTable] = [];
+    if ($this->jsonStorageLatestRevisionTable) {
+      $dedicated_table_names[$this->jsonStorageLatestRevisionTable] = [];
     }
-    if ($this->translationsTable) {
-      $dedicated_table_names[$this->translationsTable] = [];
+    if ($this->jsonStorageTranslationsTable) {
+      $dedicated_table_names[$this->jsonStorageTranslationsTable] = [];
     }
-    if (!$this->allRevisionsTable && !$this->currentRevisionTable && !$this->latestRevisionTable && !$this->translationsTable) {
+    if (!$this->jsonStorageAllRevisionsTable && !$this->jsonStorageCurrentRevisionTable && !$this->jsonStorageLatestRevisionTable && !$this->jsonStorageTranslationsTable) {
       $dedicated_table_names[$this->baseTable] = [];
     }
 
@@ -1869,23 +1869,23 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         continue;
       }
 
-      if ($this->allRevisionsTable) {
-        $dedicated_table_names[$this->allRevisionsTable][] = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $this->allRevisionsTable);
+      if ($this->jsonStorageAllRevisionsTable) {
+        $dedicated_table_names[$this->jsonStorageAllRevisionsTable][] = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $this->jsonStorageAllRevisionsTable);
       }
 
-      if ($this->currentRevisionTable) {
-        $dedicated_table_names[$this->currentRevisionTable][] = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $this->currentRevisionTable);
+      if ($this->jsonStorageCurrentRevisionTable) {
+        $dedicated_table_names[$this->jsonStorageCurrentRevisionTable][] = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $this->jsonStorageCurrentRevisionTable);
       }
 
-      if ($this->latestRevisionTable) {
-        $dedicated_table_names[$this->latestRevisionTable][] = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $this->latestRevisionTable);
+      if ($this->jsonStorageLatestRevisionTable) {
+        $dedicated_table_names[$this->jsonStorageLatestRevisionTable][] = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $this->jsonStorageLatestRevisionTable);
       }
 
-      if ($this->translationsTable) {
-        $dedicated_table_names[$this->translationsTable][] = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $this->translationsTable);
+      if ($this->jsonStorageTranslationsTable) {
+        $dedicated_table_names[$this->jsonStorageTranslationsTable][] = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $this->jsonStorageTranslationsTable);
       }
 
-      if (!$this->allRevisionsTable && !$this->currentRevisionTable && !$this->latestRevisionTable && !$this->translationsTable) {
+      if (!$this->jsonStorageAllRevisionsTable && !$this->jsonStorageCurrentRevisionTable && !$this->jsonStorageLatestRevisionTable && !$this->jsonStorageTranslationsTable) {
         $dedicated_table_names[$this->baseTable][] = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $this->baseTable);
       }
     }
@@ -1922,19 +1922,19 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
     $records = [];
 
-    if ($this->allRevisionsTable) {
-      $records[$this->allRevisionsTable] = [];
+    if ($this->jsonStorageAllRevisionsTable) {
+      $records[$this->jsonStorageAllRevisionsTable] = [];
     }
-    if ($this->currentRevisionTable) {
-      $records[$this->currentRevisionTable] = [];
+    if ($this->jsonStorageCurrentRevisionTable) {
+      $records[$this->jsonStorageCurrentRevisionTable] = [];
     }
-    if ($this->latestRevisionTable) {
-      $records[$this->latestRevisionTable] = [];
+    if ($this->jsonStorageLatestRevisionTable) {
+      $records[$this->jsonStorageLatestRevisionTable] = [];
     }
-    if ($this->translationsTable) {
-      $records[$this->translationsTable] = [];
+    if ($this->jsonStorageTranslationsTable) {
+      $records[$this->jsonStorageTranslationsTable] = [];
     }
-    if (!$this->allRevisionsTable && !$this->currentRevisionTable && !$this->latestRevisionTable && !$this->translationsTable) {
+    if (!$this->jsonStorageAllRevisionsTable && !$this->jsonStorageCurrentRevisionTable && !$this->jsonStorageLatestRevisionTable && !$this->jsonStorageTranslationsTable) {
       $records[$this->baseTable] = [];
     }
 
@@ -1945,27 +1945,27 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       }
 
       $dedicated_all_revisions_table_name = NULL;
-      if ($this->allRevisionsTable) {
-        $dedicated_all_revisions_table_name = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $this->allRevisionsTable);
+      if ($this->jsonStorageAllRevisionsTable) {
+        $dedicated_all_revisions_table_name = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $this->jsonStorageAllRevisionsTable);
       }
 
       $dedicated_current_revision_table_name = NULL;
-      if ($this->currentRevisionTable) {
-        $dedicated_current_revision_table_name = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $this->currentRevisionTable);
+      if ($this->jsonStorageCurrentRevisionTable) {
+        $dedicated_current_revision_table_name = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $this->jsonStorageCurrentRevisionTable);
       }
 
       $dedicated_latest_revision_table_name = NULL;
-      if ($this->latestRevisionTable) {
-        $dedicated_latest_revision_table_name = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $this->latestRevisionTable);
+      if ($this->jsonStorageLatestRevisionTable) {
+        $dedicated_latest_revision_table_name = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $this->jsonStorageLatestRevisionTable);
       }
 
       $dedicated_translations_table_name = NULL;
-      if ($this->translationsTable) {
-        $dedicated_translations_table_name = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $this->translationsTable);
+      if ($this->jsonStorageTranslationsTable) {
+        $dedicated_translations_table_name = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $this->jsonStorageTranslationsTable);
       }
 
       $dedicated_base_table_name = NULL;
-      if (!$this->allRevisionsTable && !$this->currentRevisionTable && !$this->latestRevisionTable && !$this->translationsTable) {
+      if (!$this->jsonStorageAllRevisionsTable && !$this->jsonStorageCurrentRevisionTable && !$this->jsonStorageLatestRevisionTable && !$this->jsonStorageTranslationsTable) {
         $dedicated_base_table_name = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $this->baseTable);
       }
 
@@ -1998,17 +1998,17 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             }
             $record[$column_name] = SqlContentEntityStorageSchema::castValue($attributes, $value);
           }
-          if (isset($records[$this->allRevisionsTable]) && is_array($records[$this->allRevisionsTable])) {
-            $records[$this->allRevisionsTable][$dedicated_all_revisions_table_name][] = $record;
+          if (isset($records[$this->jsonStorageAllRevisionsTable]) && is_array($records[$this->jsonStorageAllRevisionsTable])) {
+            $records[$this->jsonStorageAllRevisionsTable][$dedicated_all_revisions_table_name][] = $record;
           }
-          if (isset($records[$this->currentRevisionTable]) && is_array($records[$this->currentRevisionTable])) {
-            $records[$this->currentRevisionTable][$dedicated_current_revision_table_name][] = $record;
+          if (isset($records[$this->jsonStorageCurrentRevisionTable]) && is_array($records[$this->jsonStorageCurrentRevisionTable])) {
+            $records[$this->jsonStorageCurrentRevisionTable][$dedicated_current_revision_table_name][] = $record;
           }
-          if (isset($records[$this->latestRevisionTable]) && is_array($records[$this->latestRevisionTable])) {
-            $records[$this->latestRevisionTable][$dedicated_latest_revision_table_name][] = $record;
+          if (isset($records[$this->jsonStorageLatestRevisionTable]) && is_array($records[$this->jsonStorageLatestRevisionTable])) {
+            $records[$this->jsonStorageLatestRevisionTable][$dedicated_latest_revision_table_name][] = $record;
           }
-          if (isset($records[$this->translationsTable]) && is_array($records[$this->translationsTable])) {
-            $records[$this->translationsTable][$dedicated_translations_table_name][] = $record;
+          if (isset($records[$this->jsonStorageTranslationsTable]) && is_array($records[$this->jsonStorageTranslationsTable])) {
+            $records[$this->jsonStorageTranslationsTable][$dedicated_translations_table_name][] = $record;
           }
           if (isset($records[$this->baseTable]) && is_array($records[$this->baseTable])) {
             $records[$this->baseTable][$dedicated_base_table_name][] = $record;
