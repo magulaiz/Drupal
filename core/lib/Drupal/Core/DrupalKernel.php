@@ -3,6 +3,7 @@
 namespace Drupal\Core;
 
 use Composer\Autoload\ClassLoader;
+use Drupal\Component\DependencyInjection\ReverseContainer;
 use Drupal\Component\EventDispatcher\Event;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Serialization\PhpSerialize;
@@ -11,7 +12,6 @@ use Drupal\Core\Cache\DatabaseBackend;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
 use Drupal\Core\Config\NullStorage;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Component\DependencyInjection\ReverseContainer;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DependencyInjection\YamlFileLoader;
@@ -554,6 +554,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * {@inheritdoc}
    *
    * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
+   *
    * @return void
    */
   public function setContainer(ContainerInterface $container = NULL) {
@@ -701,6 +702,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * {@inheritdoc}
    *
    * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
+   *
    * @return void
    */
   public function terminate(Request $request, Response $response) {
@@ -760,7 +762,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *   The class loader that is used for this request. Passed by reference and
    *   exposed to the local scope of reverse_proxy_settings.php, so as to allow it to be
    *   decorated with Symfony's ApcClassLoader, for example.
-   * @param string|null
+   * @param string|null $app_root
    *   The path to the application root as a string. If not supplied, the
    *   application root will be computed.
    */
@@ -781,9 +783,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * Converts an exception into a response.
    *
    * @param \Exception $e
-   *   An exception
+   *   An exception.
    * @param \Symfony\Component\HttpFoundation\Request $request
-   *   A Request instance
+   *   A Request instance.
    * @param int $type
    *   The type of the request (one of HttpKernelInterface::MAIN_REQUEST or
    *   HttpKernelInterface::SUB_REQUEST)
@@ -1086,7 +1088,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // Override PHP settings required for Drupal to work properly.
     // sites/default/default.settings.php contains more runtime settings.
     // The .htaccess file contains settings that cannot be changed at runtime.
-
     if (PHP_SAPI !== 'cli') {
       // Use session cookies, not transparent sessions that puts the session id
       // in the query string.
@@ -1263,7 +1264,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * Attach synthetic values on to kernel.
    *
    * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-   *   Container object
+   *   Container object.
    *
    * @return \Symfony\Component\DependencyInjection\ContainerInterface
    */
@@ -1310,7 +1311,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // the following directories:
     // - Element
     // - Entity
-    // - Plugin
+    // - Plugin.
     foreach (['Core', 'Component'] as $parent_directory) {
       $path = 'core/lib/Drupal/' . $parent_directory;
       $parent_namespace = 'Drupal\\' . $parent_directory;
@@ -1582,7 +1583,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * Validates the hostname supplied from the HTTP request.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object
+   *   The request object.
    *
    * @return bool
    *   TRUE if the hostname is valid, or FALSE otherwise.
