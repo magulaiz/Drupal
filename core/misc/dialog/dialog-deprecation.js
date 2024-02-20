@@ -9,15 +9,11 @@
         const $element = $($event.target);
         const event = $event.originalEvent;
         const dialog = event.dialog;
-        const arguments = [
-          $event,
-          dialog,
-          $element
-        ]
+        const dialogArguments = [$event, dialog, $element];
         if (event?.settings) {
-          arguments.push(event.settings);
+          dialogArguments.push(event.settings);
         }
-        $event.handleObj.handler.apply(this, arguments);
+        $event.handleObj.handler.apply(this, dialogArguments);
       },
     };
 

@@ -242,9 +242,7 @@
       $('body .settings-tray-active-editable').removeClass(
         'settings-tray-active-editable',
       );
-      const $activeElement = $(
-        `#${e.settings.settingsTrayActiveEditableId}`,
-      );
+      const $activeElement = $(`#${e.settings.settingsTrayActiveEditableId}`);
       if ($activeElement.length) {
         $activeElement.addClass('settings-tray-active-editable');
       }

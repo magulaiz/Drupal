@@ -96,9 +96,7 @@ class DialogEvent extends Event {
     }
 
     function closeDialog(value) {
-      domElement.dispatchEvent(
-        new DialogEvent('beforeclose', dialog),
-      );
+      domElement.dispatchEvent(new DialogEvent('beforeclose', dialog));
 
       // Unlocks the body when the dialog closes.
       bodyScrollLock.clearBodyLocks();
@@ -107,9 +105,7 @@ class DialogEvent extends Event {
       dialog.returnValue = value;
       dialog.open = false;
 
-      domElement.dispatchEvent(
-        new DialogEvent('afterclose', dialog),
-      );
+      domElement.dispatchEvent(new DialogEvent('afterclose', dialog));
     }
 
     dialog.show = () => {
