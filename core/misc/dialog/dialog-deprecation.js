@@ -1,8 +1,5 @@
 (function ($, Drupal, once) {
-  if (once(
-    'drupal-dialog-deprecation-listener',
-    'html',
-  ).length) {
+  if (once('drupal-dialog-deprecation-listener', 'html').length) {
     const eventSpecial = {
       handle($event) {
         const $element = $($event.target);
