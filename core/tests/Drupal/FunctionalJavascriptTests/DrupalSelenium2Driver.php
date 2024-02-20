@@ -20,6 +20,15 @@ class DrupalSelenium2Driver extends Selenium2Driver {
    * {@inheritdoc}
    */
   public function __construct($browserName = 'firefox', $desiredCapabilities = NULL, $wdHost = 'http://localhost:4444/wd/hub') {
+    if (isset($desiredCapabilities['chromeOptions'])) {
+      @trigger_error('The "chromeOptions" array key is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use "goog:chromeOptions instead. See https://www.drupal.org/node/3422624', E_USER_DEPRECATED);
+      $desiredCapabilities['goog:chromeOptions'] = $desiredCapabilities['chromeOptions'];
+      unset($desiredCapabilities['chromeOptions']);
+    }
+    if ($browserName === 'chrome' && !isset($desiredCapabilities['goog:chromeOptions']['w3c'])) {
+      // @todo Deprecate defaulting behavior and require w3c to be set.
+      $desiredCapabilities['goog:chromeOptions']['w3c'] = FALSE;
+    }
     parent::__construct($browserName, $desiredCapabilities, $wdHost);
     ServiceFactory::getInstance()->setServiceClass('service.curl', WebDriverCurlService::class);
   }
