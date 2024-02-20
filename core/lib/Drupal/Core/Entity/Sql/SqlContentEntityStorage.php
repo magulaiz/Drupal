@@ -442,13 +442,13 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     // comparing old and new storage schema, we compute the table mapping
     // without caching.
     if ($storage_definitions) {
-      return $this->getCustomTableMapping($this->entityType, $storage_definitions);
+      return $this->getCustomTableMapping($this->entityType, $storage_definitions, '', ($this->database->driver() == 'mongodb'));
     }
 
     // If we are using our internal storage definitions, which is our main use
     // case, we can statically cache the computed table mapping.
     if (!isset($this->tableMapping)) {
-      $this->tableMapping = $this->getCustomTableMapping($this->entityType, $this->fieldStorageDefinitions);
+      $this->tableMapping = $this->getCustomTableMapping($this->entityType, $this->fieldStorageDefinitions, '', ($this->database->driver() == 'mongodb'));
     }
 
     return $this->tableMapping;
@@ -465,15 +465,18 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    * @param string $prefix
    *   (optional) A prefix to be used by all the tables of this mapping.
    *   Defaults to an empty string.
+   * @param bool $json_storage
+   *    (optional) Flag to indicate that we are storing entity data in JSON
+   *    documents. Defaults to FALSE.
    *
    * @return \Drupal\Core\Entity\Sql\TableMappingInterface
    *   A table mapping object for the entity's tables.
    *
    * @internal
    */
-  public function getCustomTableMapping(ContentEntityTypeInterface $entity_type, array $storage_definitions, $prefix = '') {
+  public function getCustomTableMapping(ContentEntityTypeInterface $entity_type, array $storage_definitions, $prefix = '', bool $json_storage = FALSE) {
     $prefix = $prefix ?: ($this->temporary ? 'tmp_' : '');
-    return DefaultTableMapping::create($entity_type, $storage_definitions, $prefix);
+    return DefaultTableMapping::create($entity_type, $storage_definitions, $prefix, $json_storage);
   }
 
   /**
@@ -1327,20 +1330,31 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    * {@inheritdoc}
    */
   public function save(EntityInterface $entity) {
-    try {
-      $transaction = $this->database->startTransaction();
-      $return = parent::save($entity);
-
-      // Ignore replica server temporarily.
-      \Drupal::service('database.replica_kill_switch')->trigger();
-      return $return;
-    }
-    catch (\Exception $e) {
-      if (isset($transaction)) {
-        $transaction->rollBack();
+    if ($this->database->driver() == 'mongodb') {
+      try {
+        return parent::save($entity);
       }
-      Error::logException(\Drupal::logger($this->entityTypeId), $e);
-      throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
+      catch (\Exception $e) {
+        Error::logException(\Drupal::logger($this->entityTypeId), $e);
+        throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
+      }
+    }
+    else {
+      try {
+        $transaction = $this->database->startTransaction();
+        $return = parent::save($entity);
+
+        // Ignore replica server temporarily.
+        \Drupal::service('database.replica_kill_switch')->trigger();
+        return $return;
+      }
+      catch (\Exception $e) {
+        if (isset($transaction)) {
+          $transaction->rollBack();
+        }
+        Error::logException(\Drupal::logger($this->entityTypeId), $e);
+        throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
+      }
     }
   }
 

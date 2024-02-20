@@ -141,9 +141,9 @@ class ContentEntityStorage extends SqlContentEntityStorage {
   /**
    * {@inheritdoc}
    */
-  public function getCustomTableMapping(ContentEntityTypeInterface $entity_type, array $storage_definitions, $prefix = '') {
+  public function getCustomTableMapping(ContentEntityTypeInterface $entity_type, array $storage_definitions, $prefix = '', bool $json_storage = FALSE) {
     $prefix = $prefix ?: ($this->temporary ? 'tmp_' : '');
-    return DefaultTableMapping::create($entity_type, $storage_definitions, $prefix);
+    return DefaultTableMapping::create($entity_type, $storage_definitions, $prefix, $json_storage);
   }
 
   /**

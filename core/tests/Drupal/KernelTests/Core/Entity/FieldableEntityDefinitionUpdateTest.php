@@ -744,7 +744,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
       $tables = $schema->findTables('tmp_%');
       $this->assertCount(0, $tables);
 
-      $current_table_names = $storage->getCustomTableMapping($original_entity_type, $original_storage_definitions)->getTableNames();
+      $current_table_names = $storage->getCustomTableMapping($original_entity_type, $original_storage_definitions, '', ($this->database->driver() == 'mongodb'))->getTableNames();
       foreach ($current_table_names as $table_name) {
         $this->assertTrue($schema->tableExists($table_name));
       }

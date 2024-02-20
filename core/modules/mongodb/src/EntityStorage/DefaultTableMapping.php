@@ -63,7 +63,7 @@ class DefaultTableMapping extends CoreDefaultTableMapping {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContentEntityTypeInterface $entity_type, array $storage_definitions, $prefix = '') {
+  public static function create(ContentEntityTypeInterface $entity_type, array $storage_definitions, $prefix = '', bool $json_storage = FALSE) {
     $table_mapping = new static($entity_type, $storage_definitions, $prefix);
 
     $revisionable = $entity_type->isRevisionable();

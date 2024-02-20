@@ -199,7 +199,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       $field_storage_definitions = $storage_definitions ?: $this->fieldStorageDefinitions;
     }
 
-    return $this->storage->getCustomTableMapping($entity_type, $field_storage_definitions);
+    return $this->storage->getCustomTableMapping($entity_type, $field_storage_definitions, '', ($this->database->driver() == 'mongodb'));
   }
 
   /**
@@ -504,12 +504,12 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    */
   protected function preUpdateEntityTypeSchema(EntityTypeInterface $entity_type, EntityTypeInterface $original, array $field_storage_definitions, array $original_field_storage_definitions, array &$sandbox = NULL) {
     $temporary_prefix = static::getTemporaryTableMappingPrefix($entity_type, $field_storage_definitions);
-    $sandbox['temporary_table_mapping'] = $this->storage->getCustomTableMapping($entity_type, $field_storage_definitions, $temporary_prefix);
-    $sandbox['new_table_mapping'] = $this->storage->getCustomTableMapping($entity_type, $field_storage_definitions);
-    $sandbox['original_table_mapping'] = $this->storage->getCustomTableMapping($original, $original_field_storage_definitions);
+    $sandbox['temporary_table_mapping'] = $this->storage->getCustomTableMapping($entity_type, $field_storage_definitions, $temporary_prefix, ($this->database->driver() == 'mongodb'));
+    $sandbox['new_table_mapping'] = $this->storage->getCustomTableMapping($entity_type, $field_storage_definitions, '', ($this->database->driver() == 'mongodb'));
+    $sandbox['original_table_mapping'] = $this->storage->getCustomTableMapping($original, $original_field_storage_definitions, '', ($this->database->driver() == 'mongodb'));
 
     $backup_prefix = static::getTemporaryTableMappingPrefix($original, $original_field_storage_definitions, 'old_');
-    $sandbox['backup_table_mapping'] = $this->storage->getCustomTableMapping($original, $original_field_storage_definitions, $backup_prefix);
+    $sandbox['backup_table_mapping'] = $this->storage->getCustomTableMapping($original, $original_field_storage_definitions, $backup_prefix, ($this->database->driver() == 'mongodb'));
     $sandbox['backup_prefix_key'] = substr($backup_prefix, 4);
     $sandbox['backup_request_time'] = \Drupal::time()->getRequestTime();
 
