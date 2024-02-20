@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cc8b1ab994ccedaa9640ee62c4760bbb",
+    "content-hash": "50678d888725975acfa1fb438696b593",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -5591,16 +5591,16 @@
         },
         {
             "name": "lullabot/php-webdriver",
-            "version": "v2.0.2",
+            "version": "v2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Lullabot/php-webdriver.git",
-                "reference": "4188cd774a694e7617dbe0837eb802c69170b01d"
+                "reference": "ca66013201d8b0ef634ee5d1685fc7bb95c88d89"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Lullabot/php-webdriver/zipball/4188cd774a694e7617dbe0837eb802c69170b01d",
-                "reference": "4188cd774a694e7617dbe0837eb802c69170b01d",
+                "url": "https://api.github.com/repos/Lullabot/php-webdriver/zipball/ca66013201d8b0ef634ee5d1685fc7bb95c88d89",
+                "reference": "ca66013201d8b0ef634ee5d1685fc7bb95c88d89",
                 "shasum": ""
             },
             "require": {
@@ -5631,9 +5631,9 @@
                 "webtest"
             ],
             "support": {
-                "source": "https://github.com/Lullabot/php-webdriver/tree/v2.0.2"
+                "source": "https://github.com/Lullabot/php-webdriver/tree/v2.0.3"
             },
-            "time": "2024-02-06T15:37:24+00:00"
+            "time": "2024-02-20T16:25:25+00:00"
         },
         {
             "name": "mglaman/phpstan-drupal",
