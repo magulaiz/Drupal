@@ -66,7 +66,7 @@ trait FieldUiJSTestTrait {
     $field_field_name->setValue($field_name);
     $this->assertSession()->waitForField('description');
     $page->findField('description')->focus();
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertNoElementAfterWait('css', '.ajax-progress-throbber');
     if ($save_settings) {
       // Second step: Save field settings.
       $page->findButton('Save settings')->click();
