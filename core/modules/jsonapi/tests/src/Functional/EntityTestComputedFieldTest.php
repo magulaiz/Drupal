@@ -123,6 +123,13 @@ class EntityTestComputedFieldTest extends ResourceTestBase {
               'self' => ['href' => $self_url . '/relationships/computed_reference_field'],
             ],
           ],
+          'computed_test_cacheable_reference_field' => [
+            'data' => NULL,
+            'links' => [
+              'related' => ['href' => $self_url . '/computed_test_cacheable_reference_field'],
+              'self' => ['href' => $self_url . '/relationships/computed_test_cacheable_reference_field'],
+            ],
+          ],
           'user_id' => [
             'data' => [
               'id' => $author->uuid(),
@@ -172,6 +179,9 @@ class EntityTestComputedFieldTest extends ResourceTestBase {
     if ($sparse_fieldset === NULL || in_array('computed_test_cacheable_string_field', $sparse_fieldset)) {
       $cache_contexts = Cache::mergeContexts($cache_contexts, ['url.query_args:computed_test_cacheable_string_field']);
     }
+    if ($sparse_fieldset === NULL || in_array('computed_test_cacheable_reference_field', $sparse_fieldset)) {
+      $cache_contexts = Cache::mergeContexts($cache_contexts, ['url.query_args:computed_test_cacheable_reference_field']);
+    }
 
     return $cache_contexts;
   }
@@ -180,6 +190,9 @@ class EntityTestComputedFieldTest extends ResourceTestBase {
     $expected_cache_tags = parent::getExpectedCacheTags($sparse_fieldset);
     if ($sparse_fieldset === NULL || in_array('computed_test_cacheable_string_field', $sparse_fieldset)) {
       $expected_cache_tags = Cache::mergeTags($expected_cache_tags, ['field:computed_test_cacheable_string_field']);
+    }
+    if ($sparse_fieldset === NULL || in_array('computed_test_cacheable_reference_field', $sparse_fieldset)) {
+      $expected_cache_tags = Cache::mergeTags($expected_cache_tags, ['field:computed_test_cacheable_reference_field']);
     }
 
     return $expected_cache_tags;

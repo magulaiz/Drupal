@@ -2,6 +2,7 @@
 
 namespace Drupal\jsonapi\Normalizer;
 
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\jsonapi\JsonApiResource\ResourceObject;
@@ -27,9 +28,16 @@ class FieldNormalizer extends NormalizerBase implements DenormalizerInterface {
     /** @var \Drupal\Core\Field\FieldItemListInterface $field */
     $normalized_items = $this->normalizeFieldItems($field, $format, $context);
     assert($context['resource_object'] instanceof ResourceObject);
-    return $context['resource_object']->getResourceType()->getFieldByInternalName($field->getName())->hasOne()
+
+    $normalized_item_list = $context['resource_object']->getResourceType()->getFieldByInternalName($field->getName())->hasOne()
       ? array_shift($normalized_items) ?: CacheableNormalization::permanent(NULL)
       : CacheableNormalization::aggregate($normalized_items);
+
+    if ($field instanceof CacheableDependencyInterface) {
+      return $normalized_item_list->withCacheableDependency($field);
+    }
+
+    return $normalized_item_list;
   }
 
   /**
