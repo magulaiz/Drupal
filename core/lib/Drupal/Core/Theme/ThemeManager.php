@@ -219,71 +219,14 @@ class ThemeManager implements ThemeManagerInterface {
       'theme_hook_original' => $original_hook,
     ];
 
-    // Set base hook for later use. For example if '#theme' => 'node__article'
-    // is called, we run hook_theme_suggestions_node_alter() rather than
-    // hook_theme_suggestions_node__article_alter(), and also pass in the base
-    // hook as the last parameter to the suggestions alter hooks.
-    $base_theme_hook = $info['base hook'] ?? $hook;
+    // Add two read-only variables that help the template engine understand
+    // how the template was chosen from among all suggestions.
+    $variables['template_suggestions'] = $template_suggestions;
+    $variables['template_suggestion'] = $hook;
 
-    // The $hook's theme registry may specify a "base hook" that differs from
-    // the base string of $hook. If so, we need to be aware of both strings.
-    $base_of_hook = explode('__', $hook)[0];
+    $suggestions = $this->buildThemeHookSuggestions($hook, $info['base hook'] ?? '', $variables);
 
-    // Invoke hook_theme_suggestions_HOOK().
-    $suggestions = $this->moduleHandler->invokeAll('theme_suggestions_' . $base_theme_hook, [$variables]);
-
-    // Add all the template suggestions with the same base to the suggestions
-    // array before invoking suggestion alter hooks.
-    $contains_base_hook = in_array($base_theme_hook, $template_suggestions);
-    foreach (array_reverse($template_suggestions, TRUE) as $key => $suggestion) {
-      $suggestion_base = explode('__', $suggestion)[0];
-      if ($suggestion_base === $base_of_hook || $suggestion_base === $base_theme_hook) {
-        if ($suggestion !== $base_theme_hook) {
-          $suggestions[] = $suggestion;
-        }
-        // Temporarily remove from $template_suggestions the suggestions that we
-        // are adding to $suggestions given to the alter hooks. However, ensure
-        // that we leave one entry for the base hook so we can splice those
-        // $suggestions back into $template_suggestions later.
-        if ($contains_base_hook && $suggestion !== $base_theme_hook
-          || !$contains_base_hook && $suggestion !== $hook) {
-          unset($template_suggestions[$key]);
-        }
-      }
-    }
-
-    // Invoke hook_theme_suggestions_alter() and
-    // hook_theme_suggestions_HOOK_alter().
-    $hooks = [
-      'theme_suggestions',
-      'theme_suggestions_' . $base_theme_hook,
-    ];
-    $this->moduleHandler->alter($hooks, $suggestions, $variables, $base_theme_hook);
-    $this->alter($hooks, $suggestions, $variables, $base_theme_hook);
-
-    // Merge $suggestions back into $template_suggestions before the "base hook"
-    // entry.
-    $template_suggestions = array_values($template_suggestions);
-    array_splice(
-      $template_suggestions,
-      array_search($contains_base_hook ? $base_theme_hook : $hook, $template_suggestions),
-      $contains_base_hook ? 0 : 1,
-      array_reverse($suggestions)
-    );
-
-    // Check if each suggestion exists in the theme registry, and if so,
-    // use it instead of the base hook. For example, a function may use
-    // '#theme' => 'node', but a module can add 'node__article' as a suggestion
-    // via hook_theme_suggestions_HOOK_alter(), enabling a theme to have
-    // an alternate template file for article nodes.
-    $template_suggestion = $hook;
-    foreach (array_reverse($suggestions) as $suggestion) {
-      if ($theme_registry->has($suggestion)) {
-        $template_suggestion = $suggestion;
-        $info = $theme_registry->get($suggestion);
-        break;
-      }
-    }
+    $info = $variables['info'] ?? $info;
 
     // Include a file if the variable preprocessor is held elsewhere.
     if (!empty($info['includes'])) {
@@ -397,10 +340,7 @@ class ThemeManager implements ThemeManagerInterface {
     if (isset($theme_hook_suggestion)) {
       $variables['theme_hook_suggestion'] = $theme_hook_suggestion;
     }
-    // Add two read-only variables that help the template engine understand
-    // how the template was chosen from among all suggestions.
-    $variables['template_suggestions'] = $template_suggestions;
-    $variables['template_suggestion'] = $template_suggestion;
+
     $output = $render_function($template_file, $variables);
     return ($output instanceof MarkupInterface) ? $output : (string) $output;
   }
@@ -425,11 +365,16 @@ class ThemeManager implements ThemeManagerInterface {
    *   This method may change at any time. It is not for use outside this class.
    */
   protected function buildThemeHookSuggestions(string $hook, string $info_base_hook, array &$variables): array {
+    $template_suggestion = &$variables['template_suggestion'];
+    $template_suggestions = &$variables['template_suggestions'];
     // Set base hook for later use. For example if '#theme' => 'node__article'
     // is called, we run hook_theme_suggestions_node_alter() rather than
     // hook_theme_suggestions_node__article_alter(), and also pass in the base
     // hook as the last parameter to the suggestions alter hooks.
     $base_theme_hook = $info_base_hook ?: $hook;
+    // The $hook's theme registry may specify a "base hook" that differs from
+    // the base string of $hook. If so, we need to be aware of both strings.
+    $base_of_hook = explode('__', $hook)[0];
 
     // Invoke hook_theme_suggestions_HOOK().
     $suggestions = $this->moduleHandler->invokeAll('theme_suggestions_' . $base_theme_hook, [$variables]);
@@ -438,6 +383,59 @@ class ThemeManager implements ThemeManagerInterface {
     // invoking suggestion alter hooks.
     if ($info_base_hook) {
       $suggestions[] = $hook;
+    }
+
+        // Add all the template suggestions with the same base to the suggestions
+    // array before invoking suggestion alter hooks.
+    $contains_base_hook = in_array($base_theme_hook, $template_suggestions);
+    foreach (array_reverse($template_suggestions, TRUE) as $key => $suggestion) {
+      $suggestion_base = explode('__', $suggestion)[0];
+      if ($suggestion_base === $base_of_hook || $suggestion_base === $base_theme_hook) {
+        if ($suggestion !== $base_theme_hook) {
+          $suggestions[] = $suggestion;
+        }
+        // Temporarily remove from $template_suggestions the suggestions that we
+        // are adding to $suggestions given to the alter hooks. However, ensure
+        // that we leave one entry for the base hook so we can splice those
+        // $suggestions back into $template_suggestions later.
+        if ($contains_base_hook && $suggestion !== $base_theme_hook
+          || !$contains_base_hook && $suggestion !== $hook) {
+          unset($template_suggestions[$key]);
+        }
+      }
+    }
+
+    // Invoke hook_theme_suggestions_alter() and
+    // hook_theme_suggestions_HOOK_alter().
+    $hooks = [
+      'theme_suggestions',
+      'theme_suggestions_' . $base_theme_hook,
+    ];
+    $this->moduleHandler->alter($hooks, $suggestions, $variables, $base_theme_hook);
+    $this->alter($hooks, $suggestions, $variables, $base_theme_hook);
+
+    // Merge $suggestions back into $template_suggestions before the "base hook"
+    // entry.
+    $template_suggestions = array_values($template_suggestions);
+    array_splice(
+      $template_suggestions,
+      array_search($contains_base_hook ? $base_theme_hook : $hook, $template_suggestions),
+      $contains_base_hook ? 0 : 1,
+      array_reverse($suggestions)
+    );
+
+    // Check if each suggestion exists in the theme registry, and if so,
+    // use it instead of the base hook. For example, a function may use
+    // '#theme' => 'node', but a module can add 'node__article' as a suggestion
+    // via hook_theme_suggestions_HOOK_alter(), enabling a theme to have
+    // an alternate template file for article nodes.
+    $theme_registry = $this->themeRegistry->getRuntime();
+    foreach (array_reverse($suggestions) as $suggestion) {
+      if ($theme_registry->has($suggestion)) {
+        $template_suggestion = $suggestion;
+        $variables['info'] = $theme_registry->get($suggestion);
+        break;
+      }
     }
 
     // Invoke hook_theme_suggestions_alter() and
