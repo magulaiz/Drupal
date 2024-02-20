@@ -6,4 +6,4 @@ update_script_test.settings:
   mapping:
     requirement_type:
       type: integer
-      label: 'Requirement enum value'
+      label: 'Requirement type'

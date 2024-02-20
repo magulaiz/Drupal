@@ -67,7 +67,7 @@ enum RequirementSeverity: int {
    *   The most severe requirement.
    */
   public static function maxSeverityFromRequirements(array $requirements): RequirementSeverity {
-    RequirementSeverity::convertLegacyIntSeveritiesToEnums($requirements);
+    RequirementSeverity::convertLegacyIntSeveritiesToEnums($requirements, __METHOD__);
     return array_reduce(
       $requirements,
       function (RequirementSeverity $severity, $requirement) {
@@ -84,21 +84,16 @@ enum RequirementSeverity: int {
    * @param array<string, array{title: \Drupal\Core\StringTranslation\TranslatableMarkup, value: mixed, description: \Drupal\Core\StringTranslation\TranslatableMarkup, severity: \Drupal\Core\Extension\Requirement\RequirementSeverity}> $requirements
    *   An array of requirements, in the same format as is returned by
    *   hook_requirements().
+   * @param string $deprecationMethod
+   *   The method name to pass to the deprecation message.
    */
-  public static function convertLegacyIntSeveritiesToEnums(array &$requirements): void {
+  public static function convertLegacyIntSeveritiesToEnums(array &$requirements, string $deprecationMethod): void {
     foreach ($requirements as &$requirement) {
       if (isset($requirement['severity']) && \is_int($requirement['severity'])) {
-        @\trigger_error('Calling methods with an array of $requirements with \'severity\' as int values instead of ' . RequirementSeverity::class . ' enums is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3410939', \E_USER_DEPRECATED);
+        @\trigger_error("Calling {$deprecationMethod}() with an array of \$requirements with 'severity' as int values instead of " . RequirementSeverity::class . " enums is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3410939", \E_USER_DEPRECATED);
         $requirement['severity'] = RequirementSeverity::from($requirement['severity']);
       }
     }
-  }
-
-  /**
-   * Returns if the given severity is less than the current severity.
-   */
-  public function isMoreSevereThan(RequirementSeverity $severity): bool {
-    return $this->value > $severity->value;
   }
 
 }

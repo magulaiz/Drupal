@@ -27,7 +27,7 @@ class LegacyRequirementSeverityTest extends KernelTestBase {
       'drupal_requirements_severity() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Extension\Requirement\RequirementSeverity::getMaxSeverity() instead. See https://www.drupal.org/node/3410939'
     );
     $this->expectDeprecation(
-      'Calling methods with an array of $requirements with \'severity\' as int values instead of Drupal\Core\Extension\Requirement\RequirementSeverity enums is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3410939'
+      'Calling Drupal\Core\Extension\Requirement\RequirementSeverity::maxSeverityFromRequirements() with an array of $requirements with \'severity\' as int values instead of Drupal\Core\Extension\Requirement\RequirementSeverity enums is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3410939'
     );
     $severity = drupal_requirements_severity($requirements);
     $this->assertEquals($expectedSeverity, $severity);

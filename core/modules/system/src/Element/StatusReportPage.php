@@ -36,8 +36,7 @@ class StatusReportPage extends RenderElementBase {
       '#theme' => 'status_report_general_info',
     ];
     // Loop through requirements and pull out items.
-    RequirementSeverity::convertLegacyIntSeveritiesToEnums($element['#requirements']);
-    /** @var array{title: \Drupal\Core\StringTranslation\TranslatableMarkup, value: mixed, description: \Drupal\Core\StringTranslation\TranslatableMarkup, severity: \Drupal\Core\Extension\Requirement\RequirementSeverity} $requirement */
+    RequirementSeverity::convertLegacyIntSeveritiesToEnums($element['#requirements'], __METHOD__);
     foreach ($element['#requirements'] as $key => $requirement) {
       switch ($key) {
         case 'cron':
@@ -61,7 +60,7 @@ class StatusReportPage extends RenderElementBase {
         case 'php_memory_limit':
           $element['#general_info']['#' . $key] = $requirement;
           if (isset($requirement['severity']) &&
-            in_array($requirement['severity'], [RequirementSeverity::INFO, RequirementSeverity::OK]) &&
+            in_array($requirement['severity'], [RequirementSeverity::INFO, RequirementSeverity::OK], TRUE) &&
             ($requirement['severity'] !== RequirementSeverity::INFO)
           ) {
             unset($element['#requirements'][$key]);
@@ -96,7 +95,7 @@ class StatusReportPage extends RenderElementBase {
       ],
     ];
 
-    RequirementSeverity::convertLegacyIntSeveritiesToEnums($element['#requirements']);
+    RequirementSeverity::convertLegacyIntSeveritiesToEnums($element['#requirements'], __METHOD__);
     foreach ($element['#requirements'] as $key => &$requirement) {
       $severity = RequirementSeverity::INFO;
       if (isset($requirement['severity'])) {

@@ -31,9 +31,9 @@ class RequirementSeverityTest extends UnitTestCase {
       'severity' => \REQUIREMENT_ERROR,
     ];
     $this->expectDeprecation(
-      'Calling methods with an array of $requirements with \'severity\' as int values instead of Drupal\Core\Extension\Requirement\RequirementSeverity enums is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3410939'
+      'Calling ' . __METHOD__ . '() with an array of $requirements with \'severity\' as int values instead of Drupal\Core\Extension\Requirement\RequirementSeverity enums is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3410939'
     );
-    RequirementSeverity::convertLegacyIntSeveritiesToEnums($requirements);
+    RequirementSeverity::convertLegacyIntSeveritiesToEnums($requirements, __METHOD__);
     $this->assertEquals(
       RequirementSeverity::INFO,
       $requirements['foo']['severity']
@@ -45,28 +45,10 @@ class RequirementSeverityTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::isMoreSevereThan
-   */
-  public function testIsLessThan(): void {
-    $this->assertTrue(
-      RequirementSeverity::ERROR->isMoreSevereThan(RequirementSeverity::WARNING)
-    );
-    $this->assertTrue(
-      RequirementSeverity::WARNING->isMoreSevereThan(RequirementSeverity::OK)
-    );
-    $this->assertTrue(
-      RequirementSeverity::OK->isMoreSevereThan(RequirementSeverity::INFO)
-    );
-  }
-
-  /**
    * @covers ::maxSeverityFromRequirements
    * @dataProvider requirementProvider
    */
-  public function testGetMaxSeverity(
-    array $requirements,
-    RequirementSeverity $expectedSeverity
-  ): void {
+  public function testGetMaxSeverity(array $requirements, RequirementSeverity $expectedSeverity): void {
     $severity = RequirementSeverity::maxSeverityFromRequirements($requirements);
     $this->assertEquals($expectedSeverity, $severity);
   }
