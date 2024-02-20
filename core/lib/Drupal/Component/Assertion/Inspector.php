@@ -28,7 +28,7 @@ class Inspector {
    *   TRUE if $traversable can be traversed with foreach.
    */
   public static function assertTraversable($traversable) {
-    return is_array($traversable) || $traversable instanceof \Traversable;
+    return is_iterable($traversable);
   }
 
   /**
