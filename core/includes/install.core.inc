@@ -422,6 +422,7 @@ function install_begin_request($class_loader, &$install_state) {
   $kernel->boot();
   $container = $kernel->getContainer();
   // If Drupal is being installed behind a proxy, configure the request.
+  // @todo Remove this call in Drupal 9.0.0.
   ReverseProxyMiddleware::setSettingsOnRequest($request, Settings::getInstance());
 
   // Register the file translation service.

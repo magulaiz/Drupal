@@ -23,6 +23,7 @@ use Drupal\Core\Installer\InstallerRedirectTrait;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Security\RequestSanitizer;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\StackMiddleware\ReverseProxyMiddleware;
 use Drupal\Core\Test\TestDatabase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
@@ -730,6 +731,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     try {
       if (!$this->booted) {
+        static::setTrustedProxies($request, $this->classLoader);
         $this->initializeSettings($request);
         $this->boot();
       }
@@ -747,6 +749,32 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $response->prepare($request);
 
     return $response;
+  }
+
+  /**
+   * Set the trusted proxies to the request.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request.
+   * @param \Composer\Autoload\ClassLoader $class_loader
+   *   The class loader that is used for this request. Passed by reference and
+   *   exposed to the local scope of reverse_proxy_settings.php, so as to allow it to be
+   *   decorated with Symfony's ApcClassLoader, for example.
+   * @param string|null
+   *   The path to the application root as a string. If not supplied, the
+   *   application root will be computed.
+   */
+  public static function setTrustedProxies(Request $request, &$class_loader, $app_root = NULL) {
+    if ($app_root === NULL) {
+      $app_root = static::guessApplicationRoot();
+    }
+    $reverse_proxy_settings_path = $app_root . '/sites/reverse_proxy_settings.php';
+    if (!file_exists($reverse_proxy_settings_path)) {
+      return;
+    }
+    $settings = [];
+    require $reverse_proxy_settings_path;
+    ReverseProxyMiddleware::setSettingsOnRequest($request, new Settings($settings));
   }
 
   /**
@@ -803,7 +831,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $listing->setProfileDirectories($profile_directories);
 
       // Now find modules.
-      $this->moduleData = $profiles + $listing->scan('module');
+      $this->moduleData = $profiles  $listing->scan('module');
     }
     return $this->moduleData[$module] ?? FALSE;
   }
