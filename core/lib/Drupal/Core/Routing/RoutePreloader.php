@@ -124,7 +124,7 @@ class RoutePreloader implements EventSubscriberInterface {
     $events[RoutingEvents::FINISHED] = ['onFinishedRoutes'];
     // Load the routes before the controller is executed (which happens after
     // the kernel request event).
-    $events[KernelEvents::REQUEST][] = ['onRequest'];
+    $events[KernelEvents::REQUEST][] = ['onRequest', 30];
     return $events;
   }
 
