@@ -8,6 +8,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Path\PathValidatorInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\link\LinkItemInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -24,6 +25,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class LinkFormatter extends FormatterBase {
+
+  use StringTranslationTrait;
 
   /**
    * The path validator service.
@@ -83,6 +86,7 @@ class LinkFormatter extends FormatterBase {
       'url_plain' => '',
       'rel' => '',
       'target' => '',
+      'external_target' => '',
     ] + parent::defaultSettings();
   }
 
@@ -129,6 +133,17 @@ class LinkFormatter extends FormatterBase {
       '#return_value' => '_blank',
       '#default_value' => $this->getSetting('target'),
     ];
+    $elements['external_target'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Open external link in new window'),
+      '#return_value' => '_blank',
+      '#default_value' => $this->getSetting('external_target'),
+      '#states' => [
+        'disabled' => [
+          ':input[name*="[target]"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
 
     return $elements;
   }
@@ -160,6 +175,9 @@ class LinkFormatter extends FormatterBase {
     }
     if (!empty($settings['target'])) {
       $summary[] = $this->t('Open link in new window');
+    }
+    if (!empty($settings['external_target'])) {
+      $summary[] = $this->t('Open external link in new window');
     }
 
     return $summary;
@@ -249,6 +267,10 @@ class LinkFormatter extends FormatterBase {
     // Add optional 'rel' attribute to link options.
     if (!empty($settings['rel'])) {
       $options['attributes']['rel'] = $settings['rel'];
+    }
+    // If the link is external open in a new window/tab.
+    if ($url->isExternal() && !empty($settings['external_target']) && empty($settings['target'])) {
+      $options['attributes']['target'] = $settings['external_target'];
     }
     // Add optional 'target' attribute to link options.
     if (!empty($settings['target'])) {

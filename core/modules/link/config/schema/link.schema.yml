@@ -19,6 +19,9 @@ field.formatter.settings.link:
     target:
       type: string
       label: 'Open link in new window'
+    external_target:
+      type: string
+      label: 'Open external link in new window'
 
 field.formatter.settings.link_separate:
   type: field.formatter.settings.link
