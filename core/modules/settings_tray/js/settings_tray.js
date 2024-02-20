@@ -243,7 +243,7 @@
         'settings-tray-active-editable',
       );
       const $activeElement = $(
-        `#${e.detail.settings.settingsTrayActiveEditableId}`,
+        `#${e.settings.settingsTrayActiveEditableId}`,
       );
       if ($activeElement.length) {
         $activeElement.addClass('settings-tray-active-editable');

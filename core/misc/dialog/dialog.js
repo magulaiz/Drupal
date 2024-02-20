@@ -5,6 +5,14 @@
  * @see http://www.whatwg.org/specs/web-apps/current-work/multipage/commands.html#the-dialog-element
  */
 
+class DialogEvent extends Event {
+  constructor(type, dialog, settings = null) {
+    super(`dialog:${type}`, { bubbles: true });
+    this.dialog = dialog;
+    this.settings = settings;
+  }
+}
+
 (function ($, Drupal, drupalSettings, bodyScrollLock) {
   /**
    * Default dialog options.
@@ -71,15 +79,8 @@
     function openDialog(settings) {
       settings = $.extend({}, drupalSettings.dialog, options, settings);
       // Trigger a global event to allow scripts to bind events to the dialog.
-      domElement.dispatchEvent(
-        new CustomEvent('dialog:beforecreate', {
-          bubbles: true,
-          detail: {
-            dialog,
-            settings,
-          },
-        }),
-      );
+      const event = new DialogEvent('beforecreate', dialog, settings);
+      domElement.dispatchEvent(event);
       $element.dialog(settings);
       dialog.open = true;
 
@@ -90,24 +91,13 @@
       }
 
       domElement.dispatchEvent(
-        new CustomEvent('dialog:aftercreate', {
-          bubbles: true,
-          detail: {
-            dialog,
-            settings,
-          },
-        }),
+        new DialogEvent('aftercreate', dialog, settings),
       );
     }
 
     function closeDialog(value) {
       domElement.dispatchEvent(
-        new CustomEvent('dialog:beforeclose', {
-          bubbles: true,
-          detail: {
-            dialog,
-          },
-        }),
+        new DialogEvent('beforeclose', dialog),
       );
 
       // Unlocks the body when the dialog closes.
@@ -118,12 +108,7 @@
       dialog.open = false;
 
       domElement.dispatchEvent(
-        new CustomEvent('dialog:afterclose', {
-          bubbles: true,
-          detail: {
-            dialog,
-          },
-        }),
+        new DialogEvent('afterclose', dialog),
       );
     }
 

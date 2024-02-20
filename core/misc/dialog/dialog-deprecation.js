@@ -8,14 +8,14 @@
       handle($event) {
         const $element = $($event.target);
         const event = $event.originalEvent;
-        const dialog = event.detail.dialog;
+        const dialog = event.dialog;
         const arguments = [
           $event,
           dialog,
           $element
         ]
-        if (event.detail?.settings) {
-          arguments.push(event.detail.settings);
+        if (event?.settings) {
+          arguments.push(event.settings);
         }
         $event.handleObj.handler.apply(this, arguments);
       },
@@ -31,7 +31,7 @@
       const isWindowHasDialogListener = windowEvents[event.type];
       if (isWindowHasDialogListener) {
         Drupal.deprecationError({
-          message: `Jquery event ${event.type} will deprecated soon in Drupal core.`,
+          message: `jQuery event ${event.type} is deprecated in 11.0.0 and is removed from Drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3390549`,
         });
       }
     };

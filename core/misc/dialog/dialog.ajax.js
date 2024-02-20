@@ -272,7 +272,7 @@
    */
   window.addEventListener('dialog:aftercreate', (event) => {
     const $element = $(event.target);
-    const dialog = event.detail.dialog;
+    const dialog = event.dialog;
     $element.on('click.dialog', '.dialog-cancel', (e) => {
       dialog.close('cancel');
       e.preventDefault();

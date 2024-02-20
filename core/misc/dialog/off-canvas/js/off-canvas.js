@@ -347,8 +347,8 @@
         if (Drupal.offCanvas.isOffCanvas($element)) {
           Drupal.offCanvas.beforeCreate({
             $element,
-            dialog: e.detail.dialog,
-            settings: e.detail.settings,
+            dialog: e.dialog,
+            settings: e.settings,
           });
         }
       });
@@ -358,13 +358,13 @@
         if (Drupal.offCanvas.isOffCanvas($element)) {
           Drupal.offCanvas.render({
             $element,
-            dialog: e.detail.dialog,
-            settings: e.detail.settings,
+            dialog: e.dialog,
+            settings: e.settings,
           });
           Drupal.offCanvas.afterCreate({
             $element,
-            dialog: e.detail.dialog,
-            settings: e.detail.settings,
+            dialog: e.dialog,
+            settings: e.settings,
           });
         }
       });
@@ -374,7 +374,7 @@
         if (Drupal.offCanvas.isOffCanvas($element)) {
           Drupal.offCanvas.beforeClose({
             $element,
-            dialog: e.detail.dialog,
+            dialog: e.dialog,
           });
         }
       });

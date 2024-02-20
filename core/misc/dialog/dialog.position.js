@@ -116,7 +116,7 @@
   window.addEventListener('dialog:aftercreate', (e) => {
     const autoResize = debounce(resetSize, 20);
     const $element = $(e.target);
-    const settings = e.detail.settings;
+    const { settings } = e;
     const eventData = { settings, $element };
 
     if (settings.autoResize === true || settings.autoResize === 'true') {
