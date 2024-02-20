@@ -183,7 +183,7 @@ class ViewEditForm extends ViewFormBase {
     }
 
     $form['displays'] = [
-      '#prefix' => $display_label,
+      '#prefix' => '<h1 class="unit-title clearfix">' . $display_label . '</h1>',
       '#type' => 'container',
       '#attributes' => [
         'class' => [
