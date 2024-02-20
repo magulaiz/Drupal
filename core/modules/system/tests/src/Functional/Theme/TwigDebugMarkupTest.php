@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\Theme;
 
-use Drupal\Component\Utility\Html;
 use Drupal\Tests\BrowserTestBase;
 
 /**

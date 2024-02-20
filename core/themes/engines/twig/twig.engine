@@ -60,10 +60,10 @@ function twig_render_template($template_file, array $variables) {
       $base_hook = explode('__', $variables['theme_hook_original'])[0];
       $invalid_suggestions = [];
       foreach ($suggestions as &$suggestion) {
-         if (($suggestion !== $base_hook && !str_starts_with($suggestion, $base_hook . '__')) || str_contains($suggestion, '-')) {
+        if (($suggestion !== $base_hook && !str_starts_with($suggestion, $base_hook . '__')) || str_contains($suggestion, '-')) {
           $invalid_suggestions[] = $suggestion;
         }
-        if ($suggestion === $variables['template_suggestion']) {
+        elseif ($suggestion === $variables['template_suggestion']) {
           $suggestion = 'x ' . $current_template;
         }
         else {
