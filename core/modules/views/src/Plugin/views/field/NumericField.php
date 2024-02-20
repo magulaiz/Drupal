@@ -158,7 +158,7 @@ class NumericField extends FieldPluginBase {
     }
 
     // After the hide_empty check NULL values should be treated as a 0 value.
-    $value = $value ?? 0;
+    $value ??= 0;
     if (!empty($this->options['set_precision'])) {
       $precision = $this->options['precision'];
     }
