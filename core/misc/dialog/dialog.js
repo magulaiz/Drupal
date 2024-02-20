@@ -5,7 +5,7 @@
  * @see http://www.whatwg.org/specs/web-apps/current-work/multipage/commands.html#the-dialog-element
  */
 
-class DialogEvent extends Event {
+class DrupalDialogEvent extends Event {
   constructor(type, dialog, settings = null) {
     super(`dialog:${type}`, { bubbles: true });
     this.dialog = dialog;
@@ -79,10 +79,9 @@ class DialogEvent extends Event {
     function openDialog(settings) {
       settings = $.extend({}, drupalSettings.dialog, options, settings);
       // Trigger a global event to allow scripts to bind events to the dialog.
-      domElement.dispatchEvent(
-        new DialogEvent('beforecreate', dialog, settings),
-      );
-      $element.dialog(settings);
+      const event = new DrupalDialogEvent('beforecreate', dialog, settings);
+      domElement.dispatchEvent(event);
+      $element.dialog(event.settings);
       dialog.open = true;
 
       // Locks the body scroll only when it opens in modal.
@@ -92,12 +91,12 @@ class DialogEvent extends Event {
       }
 
       domElement.dispatchEvent(
-        new DialogEvent('aftercreate', dialog, settings),
+        new DrupalDialogEvent('aftercreate', dialog, settings),
       );
     }
 
     function closeDialog(value) {
-      domElement.dispatchEvent(new DialogEvent('beforeclose', dialog));
+      domElement.dispatchEvent(new DrupalDialogEvent('beforeclose', dialog));
 
       // Unlocks the body when the dialog closes.
       bodyScrollLock.clearBodyLocks();
@@ -106,7 +105,7 @@ class DialogEvent extends Event {
       dialog.returnValue = value;
       dialog.open = false;
 
-      domElement.dispatchEvent(new DialogEvent('afterclose', dialog));
+      domElement.dispatchEvent(new DrupalDialogEvent('afterclose', dialog));
     }
 
     dialog.show = () => {

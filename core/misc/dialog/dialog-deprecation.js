@@ -1,9 +1,8 @@
 (function ($, Drupal, once) {
-  const doc = once(
+  if (once(
     'drupal-dialog-deprecation-listener',
-    document.documentElement,
-  )?.shift();
-  if (doc) {
+    'html',
+  ).length) {
     const eventSpecial = {
       handle($event) {
         const $element = $($event.target);
@@ -27,7 +26,7 @@
       const isWindowHasDialogListener = windowEvents[event.type];
       if (isWindowHasDialogListener) {
         Drupal.deprecationError({
-          message: `jQuery event ${event.type} is deprecated in 11.0.0 and is removed from Drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3390549`,
+          message: `jQuery event ${event.type} is deprecated in 11.0.0 and is removed from Drupal:12.0.0. See https://www.drupal.org/node/3422670`,
         });
       }
     };
@@ -37,6 +36,6 @@
       'dialog:aftercreate',
       'dialog:beforeclose',
       'dialog:afterclose',
-    ].forEach((e) => doc.addEventListener(e, listenDialogEvent));
+    ].forEach((e) => window.addEventListener(e, listenDialogEvent));
   }
 })(jQuery, Drupal, once);
