@@ -57,13 +57,9 @@ function twig_render_template($template_file, array $variables) {
       $extension = twig_extension();
       $current_template = basename($template_file);
       $suggestions = $variables['template_suggestions'];
-      $base_hook = explode('__', $variables['theme_hook_original'])[0];
-      $invalid_suggestions = [];
-      foreach ($suggestions as &$suggestion) {
-        if (($suggestion !== $base_hook && !str_starts_with($suggestion, $base_hook . '__')) || str_contains($suggestion, '-')) {
-          $invalid_suggestions[] = $suggestion;
-        }
-        elseif ($suggestion === $variables['template_suggestion']) {
+
+      foreach ($suggestions as $key => &$suggestion) {
+        if ($suggestion === $variables['template_suggestion']) {
           $suggestion = 'x ' . $current_template;
         }
         else {
@@ -72,6 +68,13 @@ function twig_render_template($template_file, array $variables) {
       }
       $output['debug_info'] .= "\n<!-- FILE NAME SUGGESTIONS:\n   " . Html::escape(implode("\n   ", $suggestions)) . "\n-->";
 
+      $base_hook = explode('__', $variables['theme_hook_original'])[0];
+      $invalid_suggestions = [];
+      foreach ($variables['template_suggestions'] as $suggestion) {
+        if (($suggestion !== $base_hook && !str_starts_with($suggestion, $base_hook . '__')) || str_contains($suggestion, '-')) {
+          $invalid_suggestions[] = $suggestion;
+        }
+      }
       if (!empty($invalid_suggestions)) {
         $output['debug_info'] .= "\n<!-- INVALID FILE NAME SUGGESTIONS:";
         $output['debug_info'] .= "\n   See https://api.drupal.org/api/drupal/core!lib!Drupal!Core!Render!theme.api.php/function/hook_theme_suggestions_alter";
