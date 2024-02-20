@@ -6,12 +6,15 @@ namespace Drupal\Tests\Component\Assertion;
 
 use PHPUnit\Framework\TestCase;
 use Drupal\Component\Assertion\Inspector;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * @coversDefaultClass \Drupal\Component\Assertion\Inspector
  * @group Assertion
  */
 class InspectorTest extends TestCase {
+
+  use ExpectDeprecationTrait;
 
   /**
    * Tests asserting argument is an array or traversable object.
@@ -21,7 +24,7 @@ class InspectorTest extends TestCase {
    * @group legacy
    */
   public function testAssertTraversable() {
-    $this->expectDeprecationMessage('Drupal\Component\Assertion\Inspector::assertTraversable() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use is_iterable() instead. See https://www.drupal.org/node/342277');
+    $this->expectDeprecation('Drupal\Component\Assertion\Inspector::assertTraversable() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use is_iterable() instead. See https://www.drupal.org/node/342277');
     $this->assertTrue(Inspector::assertTraversable([]));
     $this->assertTrue(Inspector::assertTraversable(new \ArrayObject()));
     $this->assertFalse(Inspector::assertTraversable(new \stdClass()));
