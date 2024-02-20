@@ -63,6 +63,45 @@ class DefaultTableMapping implements TableMappingInterface {
   protected $revisionDataTable;
 
   /**
+   * Flag to indicate that we are storing entity data in JSON documents.
+   *
+   * All relational databases (MySQL, MariaDB, PostgreSQL, SQLite, SQL Server
+   * and OracleDB) do not store entity data in JSON documents. Only MongoDB
+   * stores entity data in JSON documents.
+   *
+   * @var bool
+   */
+  protected bool $jsonStorage;
+
+  /**
+   * The JSON storage table that stores the all revisions data for the entity.
+   *
+   * @var string
+   */
+  protected string $jsonStorageAllRevisionsTable;
+
+  /**
+   * The JSON storage table that stores the current revision data.
+   *
+   * @var string
+   */
+  protected string $jsonStorageCurrentRevisionTable;
+
+  /**
+   * The JSON storage table that stores the latest revision data.
+   *
+   * @var string
+   */
+  protected string $jsonStorageLatestRevisionTable;
+
+  /**
+   * The JSON storage table that stores the translations data.
+   *
+   * @var string
+   */
+  protected string $jsonStorageTranslationsTable;
+
+  /**
    * A list of field names per table.
    *
    * This corresponds to the return value of
@@ -124,23 +163,39 @@ class DefaultTableMapping implements TableMappingInterface {
    * @param string $prefix
    *   (optional) A prefix to be used by all the tables of this mapping.
    *   Defaults to an empty string.
+   * @param bool $json_storage
+   *   (optional) Flag to indicate that we are storing entity data in JSON
+   *   documents. Defaults to FALSE.
    */
-  public function __construct(ContentEntityTypeInterface $entity_type, array $storage_definitions, $prefix = '') {
+  public function __construct(ContentEntityTypeInterface $entity_type, array $storage_definitions, $prefix = '', bool $json_storage = FALSE) {
     $this->entityType = $entity_type;
     $this->fieldStorageDefinitions = $storage_definitions;
     $this->prefix = $prefix;
+    $this->jsonStorage = $json_storage;
 
     // @todo Remove table names from the entity type definition in
     //   https://www.drupal.org/node/2232465.
     $this->baseTable = $this->prefix . $entity_type->getBaseTable() ?: $entity_type->id();
-    if ($entity_type->isRevisionable()) {
-      $this->revisionTable = $this->prefix . $entity_type->getRevisionTable() ?: $entity_type->id() . '_revision';
+    if ($this->jsonStorage) {
+      if ($entity_type->isRevisionable()) {
+        $this->jsonStorageAllRevisionsTable = $this->prefix . $entity_type->id() . '_all_revisions';
+        $this->jsonStorageCurrentRevisionTable = $this->prefix . $entity_type->id() . '_current_revision';
+        $this->jsonStorageLatestRevisionTable = $this->prefix . $entity_type->id() . '_latest_revision';
+      }
+      elseif ($entity_type->isTranslatable()) {
+        $this->jsonStorageTranslationsTable = $this->prefix . $entity_type->id() . '_translations';
+      }
     }
-    if ($entity_type->isTranslatable()) {
-      $this->dataTable = $this->prefix . $entity_type->getDataTable() ?: $entity_type->id() . '_field_data';
-    }
-    if ($entity_type->isRevisionable() && $entity_type->isTranslatable()) {
-      $this->revisionDataTable = $this->prefix . $entity_type->getRevisionDataTable() ?: $entity_type->id() . '_field_revision';
+    else {
+      if ($entity_type->isRevisionable()) {
+        $this->revisionTable = $this->prefix . $entity_type->getRevisionTable() ?: $entity_type->id() . '_revision';
+      }
+      if ($entity_type->isTranslatable()) {
+        $this->dataTable = $this->prefix . $entity_type->getDataTable() ?: $entity_type->id() . '_field_data';
+      }
+      if ($entity_type->isRevisionable() && $entity_type->isTranslatable()) {
+        $this->revisionDataTable = $this->prefix . $entity_type->getRevisionDataTable() ?: $entity_type->id() . '_field_revision';
+      }
     }
   }
 
@@ -247,14 +302,52 @@ class DefaultTableMapping implements TableMappingInterface {
       'langcode',
       'delta',
     ];
-    foreach ($dedicated_table_definitions as $field_name => $definition) {
-      $tables = [$table_mapping->getDedicatedDataTableName($definition)];
-      if ($revisionable && $definition->isRevisionable()) {
-        $tables[] = $table_mapping->getDedicatedRevisionTableName($definition);
+
+    if ($this->jsonStorage) {
+      // Add all fields to all embedded tables, this makes EntityQuery happy!
+      if ($revisionable) {
+        $table_mapping->setFieldNames($table_mapping->jsonStorageAllRevisionsTable, $all_fields);
+        $table_mapping->setFieldNames($table_mapping->jsonStorageCurrentRevisionTable, $all_fields);
+        $table_mapping->setFieldNames($table_mapping->jsonStorageLatestRevisionTable, $all_fields);
       }
-      foreach ($tables as $table_name) {
-        $table_mapping->setFieldNames($table_name, [$field_name]);
-        $table_mapping->setExtraColumns($table_name, $extra_columns);
+      elseif ($translatable) {
+        $table_mapping->setFieldNames($table_mapping->jsonStorageTranslationsTable, $all_fields);
+      }
+
+      foreach ($dedicated_table_definitions as $field_name => $definition) {
+        $tables = [];
+        if ($table_mapping->jsonStorageCurrentRevisionTable) {
+          $tables[] = $table_mapping->getJsonStorageDedicatedTableName($definition, $table_mapping->jsonStorageCurrentRevisionTable);
+        }
+        if ($table_mapping->jsonStorageTranslationsTable) {
+          $tables[] = $table_mapping->getJsonStorageDedicatedTableName($definition, $table_mapping->jsonStorageTranslationsTable);
+        }
+        if ($table_mapping->jsonStorageAllRevisionsTable) {
+          $tables[] = $table_mapping->getJsonStorageDedicatedTableName($definition, $table_mapping->jsonStorageAllRevisionsTable);
+        }
+        if ($table_mapping->jsonStorageLatestRevisionTable) {
+          $tables[] = $table_mapping->getJsonStorageDedicatedTableName($definition, $table_mapping->jsonStorageLatestRevisionTable);
+        }
+        if (!$definition->isTranslatable() && !$definition->isRevisionable()) {
+          $tables[] = $table_mapping->getJsonStorageDedicatedTableName($definition, $table_mapping->baseTable);
+        }
+
+        foreach ($tables as $table_name) {
+          $table_mapping->setFieldNames($table_name, [$field_name]);
+          $table_mapping->setExtraColumns($table_name, $extra_columns);
+        }
+      }
+    }
+    else {
+      foreach ($dedicated_table_definitions as $field_name => $definition) {
+        $tables = [$table_mapping->getDedicatedDataTableName($definition)];
+        if ($revisionable && $definition->isRevisionable()) {
+          $tables[] = $table_mapping->getDedicatedRevisionTableName($definition);
+        }
+        foreach ($tables as $table_name) {
+          $table_mapping->setFieldNames($table_name, [$field_name]);
+          $table_mapping->setExtraColumns($table_name, $extra_columns);
+        }
       }
     }
 
@@ -310,6 +403,54 @@ class DefaultTableMapping implements TableMappingInterface {
   }
 
   /**
+   * Gets the JSON storage all revisions table name.
+   *
+   * @return string|null
+   *   The all revisions table name.
+   *
+   * @internal
+   */
+  public function getJsonStorageAllRevisionsTable() {
+    return $this->jsonStorageAllRevisionsTable;
+  }
+
+  /**
+   * Gets the JSON storage current revision table name.
+   *
+   * @return string|null
+   *   The current revision table name.
+   *
+   * @internal
+   */
+  public function getJsonStorageCurrentRevisionTable() {
+    return $this->jsonStorageCurrentRevisionTable;
+  }
+
+  /**
+   * Gets the JSON storage latest revision table name.
+   *
+   * @return string|null
+   *   The latest revision table name.
+   *
+   * @internal
+   */
+  public function getJsonStorageLatestRevisionTable() {
+    return $this->jsonStorageLatestRevisionTable;
+  }
+
+  /**
+   * Gets the JSON storage translations table name.
+   *
+   * @return string|null
+   *   The translations table name.
+   *
+   * @internal
+   */
+  public function getJsonStorageTranslationsTable() {
+    return $this->jsonStorageTranslationsTable;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getTableNames() {
@@ -358,18 +499,57 @@ class DefaultTableMapping implements TableMappingInterface {
     $result = NULL;
 
     if (isset($this->fieldStorageDefinitions[$field_name])) {
-      // Since a field may be stored in more than one table, we inspect tables
-      // in order of relevance: the data table if present is the main place
-      // where field data is stored, otherwise the base table is responsible for
-      // storing field data. Revision metadata is an exception as it's stored
-      // only in the revision table.
       $storage_definition = $this->fieldStorageDefinitions[$field_name];
-      $table_names = array_filter([
-        $this->dataTable,
-        $this->baseTable,
-        $this->revisionTable,
-        $this->getDedicatedDataTableName($storage_definition),
-      ]);
+      if ($this->jsonStorage) {
+        $table_names = [
+          $this->baseTable,
+        ];
+
+        if (!$storage_definition->isTranslatable() && !$storage_definition->isRevisionable()) {
+          $table_names[] = $this->getJsonStorageDedicatedTableName($storage_definition, $this->baseTable);
+        }
+
+        if ($this->jsonStorageTranslationsTable) {
+          $table_names = array_merge($table_names, [
+            $this->jsonStorageTranslationsTable,
+            $this->getJsonStorageDedicatedTableName($storage_definition, $this->jsonStorageTranslationsTable),
+          ]);
+        }
+
+        if ($this->jsonStorageCurrentRevisionTable) {
+          $table_names = array_merge($table_names, [
+            $this->jsonStorageCurrentRevisionTable,
+            $this->getJsonStorageDedicatedTableName($storage_definition, $this->jsonStorageCurrentRevisionTable),
+          ]);
+        }
+
+        if ($this->jsonStorageLatestRevisionTable) {
+          $table_names = array_merge($table_names, [
+            $this->jsonStorageLatestRevisionTable,
+            $this->getJsonStorageDedicatedTableName($storage_definition, $this->jsonStorageLatestRevisionTable),
+          ]);
+        }
+
+        if ($this->jsonStorageAllRevisionsTable) {
+          $table_names = array_merge($table_names, [
+            $this->jsonStorageAllRevisionsTable,
+            $this->getJsonStorageDedicatedTableName($storage_definition, $this->jsonStorageAllRevisionsTable),
+          ]);
+        }
+      }
+      else {
+        // Since a field may be stored in more than one table, we inspect tables
+        // in order of relevance: the data table if present is the main place
+        // where field data is stored, otherwise the base table is responsible for
+        // storing field data. Revision metadata is an exception as it's stored
+        // only in the revision table.
+        $table_names = array_filter([
+          $this->dataTable,
+          $this->baseTable,
+          $this->revisionTable,
+          $this->getDedicatedDataTableName($storage_definition),
+        ]);
+      }
 
       // Collect field columns.
       $field_columns = [];
@@ -390,6 +570,16 @@ class DefaultTableMapping implements TableMappingInterface {
 
     if (!isset($result)) {
       throw new SqlContentEntityStorageException("Table information not available for the '$field_name' field.");
+    }
+
+    // The class Drupal\views\ViewsConfigUpdater needs the entity base table
+    // name instead of the embedded table name.
+    // @todo Need to test if this does not makes the driver slow.
+    if ($this->jsonStorage) {
+      $backtrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT & DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+      if (isset($backtrace[1]['class']) && ($backtrace[1]['class'] == ViewsConfigUpdater::class)) {
+        return $this->entityType->getBaseTable();
+      }
     }
 
     return $result;
@@ -534,14 +724,60 @@ class DefaultTableMapping implements TableMappingInterface {
     $definitions = array_filter($this->fieldStorageDefinitions, function ($definition) use ($table_mapping) {
       return $table_mapping->requiresDedicatedTableStorage($definition);
     });
-    $data_tables = array_map(function ($definition) use ($table_mapping) {
-      return $table_mapping->getDedicatedDataTableName($definition);
-    }, $definitions);
-    $revision_tables = array_map(function ($definition) use ($table_mapping) {
-      return $table_mapping->getDedicatedRevisionTableName($definition);
-    }, $definitions);
-    $dedicated_tables = array_merge(array_values($data_tables), array_values($revision_tables));
-    return $dedicated_tables;
+
+    if ($this->jsonStorage) {
+      $dedicated_all_revisions_tables = [];
+      if ($table_mapping->jsonStorageAllRevisionsTable) {
+        $dedicated_all_revisions_tables = array_map(function ($definition) use ($table_mapping) {
+          return $table_mapping->getJsonStorageDedicatedTableName($definition, $table_mapping->jsonStorageAllRevisionsTable);
+        }, $definitions);
+      }
+
+      $dedicated_current_revision_tables = [];
+      if ($table_mapping->jsonStorageCurrentRevisionTable) {
+        $dedicated_current_revision_tables = array_map(function ($definition) use ($table_mapping) {
+          return $table_mapping->getJsonStorageDedicatedTableName($definition, $table_mapping->jsonStorageCurrentRevisionTable);
+        }, $definitions);
+      }
+
+      $dedicated_latest_revision_tables = [];
+      if ($table_mapping->jsonStorageLatestRevisionTable) {
+        $dedicated_latest_revision_tables = array_map(function ($definition) use ($table_mapping) {
+          return $table_mapping->getJsonStorageDedicatedTableName($definition, $table_mapping->jsonStorageLatestRevisionTable);
+        }, $definitions);
+      }
+
+      $dedicated_translations_tables = [];
+      if ($table_mapping->jsonStorageTranslationsTable) {
+        $dedicated_translations_tables = array_map(function ($definition) use ($table_mapping) {
+          return $table_mapping->getJsonStorageDedicatedTableName($definition, $table_mapping->jsonStorageTranslationsTable);
+        }, $definitions);
+      }
+
+      $dedicated_non_revision_non_translation_tables = array_map(function ($definition) use ($table_mapping) {
+        if (!$definition->isTranslatable() && !$definition->isRevisionable()) {
+          return $table_mapping->getJsonStorageDedicatedTableName($definition, $table_mapping->baseTable);
+        }
+      }, $definitions);
+
+      return array_merge(
+        array_values($dedicated_all_revisions_tables),
+        array_values($dedicated_current_revision_tables),
+        array_values($dedicated_latest_revision_tables),
+        array_values($dedicated_translations_tables),
+        array_values($dedicated_non_revision_non_translation_tables),
+      );
+    }
+    else {
+      $data_tables = array_map(function ($definition) use ($table_mapping) {
+        return $table_mapping->getDedicatedDataTableName($definition);
+      }, $definitions);
+      $revision_tables = array_map(function ($definition) use ($table_mapping) {
+        return $table_mapping->getDedicatedRevisionTableName($definition);
+      }, $definitions);
+      $dedicated_tables = array_merge(array_values($data_tables), array_values($revision_tables));
+      return $dedicated_tables;
+    }
   }
 
   /**
@@ -644,6 +880,41 @@ class DefaultTableMapping implements TableMappingInterface {
       }
     }
     return $table_name;
+  }
+
+  /**
+   * Generates a table name for a field embedded table.
+   *
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
+   *   The field storage definition.
+   * @param string $parent_table_name
+   *   The parent table name.
+   * @param bool $is_deleted
+   *   (optional) Whether the table name holding the values of a deleted field
+   *   should be returned.
+   *
+   * @return string
+   *   A string containing the generated name for the database table.
+   */
+  public function getJsonStorageDedicatedTableName(FieldStorageDefinitionInterface $storage_definition, $parent_table_name, $is_deleted = FALSE) {
+    if ($is_deleted) {
+      // When a field is a deleted, the table is renamed to
+      // {field_deleted_data_FIELD_UUID}. To make sure we don't end up with
+      // table names longer than 64 characters, we hash the unique storage
+      // identifier and return the first 10 characters so we end up with a short
+      // unique ID.
+      return "field_deleted_data_" . substr(hash('sha256', $storage_definition->getUniqueStorageIdentifier()), 0, 10);
+    }
+    else {
+      $table_name = $parent_table_name . '__' . $storage_definition->getName();
+      // Limit the string to 48 characters, keeping a 16 characters margin for
+      // db prefixes.
+      if (strlen($table_name) > 48) {
+        // Truncate the parent table name and hash the of the field UUID.
+        $table_name = substr($parent_table_name, 0, 34) . '__' . substr(hash('sha256', $storage_definition->getUniqueStorageIdentifier()), 0, 10);
+      }
+      return $table_name;
+    }
   }
 
 }
