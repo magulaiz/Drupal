@@ -75,15 +75,31 @@
        */
       const createItemWrapBoundaries = (row) => {
         const $row = $(row);
-        const $firstCell = $row
-          .find('td:first-of-type')
-          .eq(0)
-          .wrapInner(Drupal.theme('tableDragCellContentWrapper'))
-          .wrapInner(
-            $(Drupal.theme('tableDragCellItemsWrapper')).addClass(
-              'js-tabledrag-cell-content',
-            ),
-          );
+        // Javascript equivalent to wrapInner() jquery.
+        function wrapInnerItem(element, wrapperTag, wrapperClass) {
+          var wrapper = document.createElement(wrapperTag);
+          if (wrapperClass) {
+            wrapper.className = wrapperClass;
+          }
+          while (element.firstChild) {
+            wrapper.appendChild(element.firstChild);
+          }
+          element.appendChild(wrapper);
+          return element;
+        }
+
+        const td = $row.find('td:first-of-type')[0];
+        const contentWrapper = wrapInnerItem(
+          td,
+          'div',
+          'tabledrag-cell-content__item',
+        );
+        const firstCell = wrapInnerItem(
+          contentWrapper,
+          'div',
+          'tabledrag-cell-content js-tabledrag-cell-content',
+        );
+        const $firstCell = $(firstCell);
         const $targetElem = $firstCell.find('.js-tabledrag-cell-content');
 
         // Move handle into the '.js-tabledrag-cell-content' target.
