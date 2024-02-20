@@ -18,7 +18,7 @@ class ScaleAndCropImageEffect extends CropImageEffect {
   /**
    * {@inheritdoc}
    */
-  public function applyEffect(ImageInterface $image) {
+  public function apply(ImageInterface $image) {
     $width = $this->configuration['width'];
     $height = $this->configuration['height'];
     $scale = max($width / $image->getWidth(), $height / $image->getHeight());

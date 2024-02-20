@@ -20,7 +20,7 @@ class ResizeImageEffect extends ConfigurableImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function applyEffect(ImageInterface $image) {
+  public function apply(ImageInterface $image) {
     if (!$image->resize($this->configuration['width'], $this->configuration['height'])) {
       $this->logger->error('Image resize failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', ['%toolkit' => $image->getToolkitId(), '%path' => $image->getSource(), '%mimetype' => $image->getMimeType(), '%dimensions' => $image->getWidth() . 'x' . $image->getHeight()]);
       return FALSE;

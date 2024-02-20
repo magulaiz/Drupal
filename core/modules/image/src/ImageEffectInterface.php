@@ -28,7 +28,7 @@ interface ImageEffectInterface extends PluginInspectionInterface, ConfigurableIn
    * @return bool
    *   TRUE on success. FALSE if unable to perform the image effect on the image.
    */
-  public function applyEffect(ImageInterface $image);
+  public function apply(ImageInterface $image);
 
   /**
    * Determines the dimensions of the styled image.
