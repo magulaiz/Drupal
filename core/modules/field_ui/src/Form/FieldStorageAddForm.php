@@ -479,6 +479,7 @@ class FieldStorageAddForm extends FormBase {
   public function rebuildWithOptions($form, FormStateInterface &$form_state) {
     $storage_type = $form_state->getValue('new_storage_type');
     $storage_type_list = $form['add']['new_storage_type'];
+    // Skip step in case of no storage type options (eg- Boolean, Email).
     if (array_key_exists($storage_type, $storage_type_list) &&  $storage_type_list[$storage_type]['radio']['#display_as_group'] === 'false') {
       $this->submitForm($form, $form_state);
     }

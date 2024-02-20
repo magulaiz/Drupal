@@ -381,10 +381,8 @@ class FieldConfigEditForm extends EntityForm {
     if (!$form_state->getValue('label')) {
       $form_state->setErrorByName('label', $this->t('Add new field: you need to provide a label.'));
     }
-    if (empty($form_state->getValue('field_name'))) {
-      if ($this->entity->isNew()) {
+    if (empty($form_state->getValue('field_name')) && $this->entity->isNew()) {
         $form_state->setErrorByName('field_name', $this->t('Add new field: you need to provide a machine name for the field.'));
-      }
     }
     // Field name validation.
     else {
@@ -421,6 +419,7 @@ class FieldConfigEditForm extends EntityForm {
     parent::submitForm($form, $form_state);
 
     if ($this->entity->isNew()) {
+      // @see FieldStorageAddForm::submitForm for context of retrieval.
       $existing_values = $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->tempStore->get('temp_name'))['field_config_values'] ?: $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName())['field_config_values'];
       $new_entity_values = $existing_values;
       $new_entity_values['field_name'] = $form_state->getValue('field_name');
@@ -431,7 +430,8 @@ class FieldConfigEditForm extends EntityForm {
       ];
       unset($new_entity_values['label']);
       $new_entity_values['field_storage'] = $this->entityTypeManager->getStorage('field_storage_config')->create($new_entity_values);
-      // Delete temporary entity and create a new field instance.
+      // Delete temporary entity and create a new field instance as machine name
+      // is immutable.
       $this->entity->delete();
       // We don't want the field instance to be translatable by default.
       $new_entity_values['translatable'] = FALSE;
