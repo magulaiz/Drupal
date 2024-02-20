@@ -7,6 +7,7 @@ namespace Drupal\Tests\Core\Utility;
 use Drupal\Core\DependencyInjection\ClassResolver;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\DependencyInjection\DependencyAutowire;
 use Drupal\Core\Utility\CallableResolver;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -35,7 +36,7 @@ class CallableResolverTest extends UnitTestCase {
     $container = new ContainerBuilder();
     $container->set('test_service', $this);
 
-    $class_resolver = new ClassResolver($container);
+    $class_resolver = new ClassResolver(new DependencyAutowire($container), $container);
 
     $this->resolver = new CallableResolver($class_resolver);
   }

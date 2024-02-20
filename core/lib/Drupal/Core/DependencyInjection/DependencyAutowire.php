@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Core\DependencyInjection;
 
-use Drupal\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\AutowiringFailedException;
 use Symfony\Component\DependencyInjection\Reference;
 
