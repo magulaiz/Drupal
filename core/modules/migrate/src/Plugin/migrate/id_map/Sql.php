@@ -590,14 +590,17 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   public function lookupSourceId(array $destination_id_values) {
     $source_id_fields = $this->sourceIdFields();
     $query = $this->getDatabase()->select($this->mapTableName(), 'map');
-    foreach ($source_id_fields as $source_field_name => $id_map_field_name) {
-      $query->addField('map', $id_map_field_name, $source_field_name);
+    foreach ($source_id_fields as $id_map_field_name) {
+      $query->addField('map', $id_map_field_name);
     }
     foreach ($this->destinationIdFields() as $field_name => $destination_id) {
       $query->condition("map.$destination_id", $destination_id_values[$field_name], '=');
     }
-    $result = $query->execute();
-    return $result->fetchAssoc() ?: [];
+    $source_ids = (array) $query->execute()->fetchAssoc() ?: [];
+    foreach ($source_id_fields as $key => $id) {
+      $source_id_fields[$key] = $source_ids[$id];
+    }
+    return $source_id_fields;
   }
 
   /**
