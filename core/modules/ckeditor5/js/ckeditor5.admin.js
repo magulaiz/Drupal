@@ -652,6 +652,10 @@
           '#filter-format-edit-form, #filter-format-add-form',
         );
 
+        if (!form) {
+          return;
+        }
+
         // Get the current stored UI state as an object.
         const currentStates = form.hasAttribute('data-drupal-ui-state')
           ? JSON.parse(form.getAttribute('data-drupal-ui-state'))
@@ -714,7 +718,9 @@
         if (activeTab) {
           setTimeout(() => {
             const activeTabLink = document.querySelector(activeTab);
-            activeTabLink.click();
+            if (activeTabLink) {
+              activeTabLink.click();
+            }
 
             // Only change focus on the plugin-settings-wrapper element.
             if (id !== 'plugin-settings-wrapper') {
@@ -1050,22 +1056,5 @@
 
     // Call the original behavior.
     originalFilterStatusAttach(context, settings);
-  };
-
-  // Activates otherwise-inactive tabs that have form elements with validation
-  // errors.
-  // @todo Remove when https://www.drupal.org/project/drupal/issues/2911932 lands.
-  Drupal.behaviors.tabErrorsVisible = {
-    attach(context) {
-      context.querySelectorAll('details .form-item .error').forEach((item) => {
-        const details = item.closest('details');
-        if (details.style.display === 'none') {
-          const tabSelect = document.querySelector(`[href='#${details.id}']`);
-          if (tabSelect) {
-            tabSelect.click();
-          }
-        }
-      });
-    },
   };
 })(Drupal, drupalSettings, jQuery, JSON, once, Sortable, tabbable);

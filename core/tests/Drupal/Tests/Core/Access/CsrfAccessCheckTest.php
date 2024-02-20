@@ -31,7 +31,7 @@ class CsrfAccessCheckTest extends UnitTestCase {
   /**
    * The mock route match.
    *
-   * @var \Drupal\Core\RouteMatch\RouteMatchInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\Routing\RouteMatchInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $routeMatch;
 
@@ -39,6 +39,8 @@ class CsrfAccessCheckTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $this->csrfToken = $this->getMockBuilder('Drupal\Core\Access\CsrfTokenGenerator')
       ->disableOriginalConstructor()
       ->getMock();

@@ -17,7 +17,7 @@ class ModuleRouteSubscriberTest extends UnitTestCase {
   /**
    * The mock module handler.
    *
-   * @var Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $moduleHandler;
 
@@ -25,6 +25,8 @@ class ModuleRouteSubscriberTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
 
     $value_map = [

@@ -23,7 +23,7 @@ class EntityUnitTest extends UnitTestCase {
   /**
    * The entity under test.
    *
-   * @var \Drupal\Core\Entity\Entity|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\Entity\EntityInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entity;
 
@@ -87,6 +87,8 @@ class EntityUnitTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $this->values = [
       'id' => 1,
       'langcode' => 'en',

@@ -16,7 +16,7 @@ class RegistryTest extends UnitTestCase {
   /**
    * The mocked theme registry.
    *
-   * @var \Drupal\Core\Theme\Registry|PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\Theme\Registry|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $registry;
 
@@ -208,7 +208,6 @@ class RegistryTest extends UnitTestCase {
 
     $class = new \ReflectionClass(Registry::class);
     $reflection_method = $class->getMethod('postProcessExtension');
-    $reflection_method->setAccessible(TRUE);
     $reflection_method->invokeArgs($this->registry, [&$hooks, $theme->reveal()]);
 
     $this->assertEquals($expected, $hooks);
