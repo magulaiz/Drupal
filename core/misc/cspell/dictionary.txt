@@ -9,7 +9,6 @@ adminforms
 afterclose
 aftercreate
 ahah
-ajaxcallback
 ajaxing
 allwords
 alphadecimal
@@ -20,7 +19,6 @@ applix
 archiver
 archivers
 arrakis
-arrayx
 arrowrefresh
 arrowreturn
 arrowreturnthick
@@ -163,7 +161,6 @@ controlgroup
 conv
 corge
 cpio
-createkey
 createrole
 createuser
 crema
@@ -183,7 +180,6 @@ daterange
 datestamp
 datetimeiso
 datetimeplus
-daycount
 dbtng
 dburl
 dealerdirect
@@ -195,9 +191,6 @@ delsp
 denormalizable
 denormalizer
 denormalizers
-dependee
-dependee's
-dependees
 derivedfrom
 desaturate
 desaturated
@@ -274,7 +267,6 @@ falsey
 falsish
 fapi
 fastcgi
-fatals
 favourite
 favstar
 fcgi
@@ -336,7 +328,6 @@ hoglet
 hookname
 hosters
 hrefs
-htkey
 htmlcorrector
 httpheader
 httplug
@@ -345,12 +336,10 @@ hustlin
 hwldf
 icann
 iconwrap
-idconflict
 idekey
 iframes
 iframeupload
 imagecache
-imagecreatefrom
 imagetextalternative
 indexname
 inited
@@ -427,7 +416,6 @@ mank
 maryjane
 matchout
 mathematica
-maxage
 maximumred
 maxlifetime
 maynot
@@ -450,7 +438,6 @@ mimetypes
 minifyzombies
 minusthick
 mlfr
-mlid
 mocktail
 mocktails
 mocky
@@ -469,7 +456,6 @@ mulrevpub
 multibuys
 multibyte
 multicardinality
-multifield
 multilanguage
 multipass
 multisite
@@ -488,7 +474,6 @@ ndocs
 necolas
 newcol
 newfieldinitial
-newnode
 newwin
 nids
 nightwatch
@@ -526,7 +511,6 @@ onecol
 oneplusfourgrid
 onetwo
 onewidgetfield
-onoff
 opendocument
 openxmlformats
 optgroups
@@ -535,7 +519,6 @@ orgchart
 ossp
 otel
 otlp
-otsikko
 outdent
 outro
 overridable
@@ -570,7 +553,6 @@ pingback
 pjpeg
 placeholdered
 placeholdering
-plid
 plusthick
 porterstemmer
 postcondition
@@ -799,9 +781,6 @@ testcase
 testcontent
 testcontextawareblock
 testdialog
-testfilter
-testfunc
-testfunction
 testgroups
 testkey
 testlogger
@@ -812,7 +791,6 @@ textboxes
 texte
 textfields
 textformat
-textgroup
 textwithsummary
 themename
 themer
@@ -840,7 +818,6 @@ toolkits
 toolongdomainexampledomainexampledomainexampledomainexampledomain
 toplevel
 torder
-totalcount
 touchevents
 trackback
 trailingslash
@@ -853,7 +830,6 @@ troopal
 truecolor
 twistie
 twocol
-typehint
 tzid
 uids
 ulwa
