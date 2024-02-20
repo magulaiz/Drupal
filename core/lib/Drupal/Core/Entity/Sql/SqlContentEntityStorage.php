@@ -25,6 +25,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Utility\Error;
+use Drupal\mongodb\Driver\Database\mongodb\EmbeddedTableData;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -576,9 +577,9 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           }
         }
 
-        if ($load_from_revision_id && ($record->{$this->revisionKey} != $load_from_revision_id)) {
+        if ($load_from_revision && ($record->{$this->revisionKey} != $load_from_revision)) {
           $values[$id]['isDefaultRevision'][LanguageInterface::LANGCODE_DEFAULT] = '0';
-          $values[$id][$this->revisionKey][LanguageInterface::LANGCODE_DEFAULT] = (string) $load_from_revision_id;
+          $values[$id][$this->revisionKey][LanguageInterface::LANGCODE_DEFAULT] = (string) $load_from_revision;
         }
         else {
           $values[$id]['isDefaultRevision'][LanguageInterface::LANGCODE_DEFAULT] = '1';
@@ -589,7 +590,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $translations = array_fill_keys(array_keys($values), []);
 
       // Load values from shared and dedicated tables.
-      $this->loadFromEmbeddedTables($values, $translations, $values_embedded_tables, $load_from_revision_id);
+      $this->loadFromEmbeddedTables($values, $translations, $values_embedded_tables, $load_from_revision);
     }
     else {
       // Get the names of the fields that are stored in the base table and, if
@@ -1396,6 +1397,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    * {@inheritdoc}
    */
   protected function doSaveFieldItems(ContentEntityInterface $entity, array $names = []) {
+    $full_save = empty($names);
     $update = !$full_save || !$entity->isNew();
 
     if ($this->database->driver() == 'mongodb') {
@@ -1582,7 +1584,6 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       }
     }
     else {
-      $full_save = empty($names);
       if ($full_save) {
         $shared_table_fields = TRUE;
         $dedicated_table_fields = TRUE;
@@ -1981,7 +1982,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             if (!empty($attributes['serialize'])) {
               $value = serialize($value);
             }
-            $record[$column_name] = ContentEntityStorageSchema::castValue($attributes, $value);
+            $record[$column_name] = SqlContentEntityStorageSchema::castValue($attributes, $value);
           }
           if (isset($records[$this->allRevisionsTable]) && is_array($records[$this->allRevisionsTable])) {
             $records[$this->allRevisionsTable][$dedicated_all_revisions_table_name][] = $record;
@@ -2822,6 +2823,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     // Check whether the whole field storage definition is gone, or just some
     // bundle fields.
     $storage_definition = $field_definition->getFieldStorageDefinition();
+    $is_deleted = $storage_definition->isDeleted();
     $table_mapping = $this->getTableMapping();
     $table_name = $table_mapping->getDedicatedDataTableName($storage_definition, $storage_definition->isDeleted());
 
