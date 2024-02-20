@@ -256,22 +256,22 @@ function field_test_entity_query_entity_test_mulrev_alter(QueryInterface &$query
 }
 
 /**
- * Implements hook_entity_query_TAG_alter() for 'entity_query_alter_tag_test'.
+ * Implements hook_entity_query_tag_TAG_alter() for 'entity_query_alter_tag_test'.
  *
  * @see Drupal\KernelTests\Core\Entity\EntityQueryTest::testAlterHook
  */
-function field_test_entity_query_entity_query_alter_tag_test_alter(QueryInterface &$query): void {
+function field_test_entity_query_tag_entity_query_alter_tag_test_alter(QueryInterface &$query): void {
   $query->condition('id', '13', '<>');
 }
 
 /**
- * Implements hook_entity_query_ENTITY_TYPE_TAG_alter().
+ * Implements hook_entity_query_tag_ENTITY_TYPE_TAG_alter().
  *
  * Entity type is 'entity_test_mulrev' and tag is
  * 'entity_query_entity_test_mulrev_alter_tag_test'.
  *
  * @see Drupal\KernelTests\Core\Entity\EntityQueryTest::testAlterHook
  */
-function field_test_entity_query_entity_test_mulrev_entity_query_entity_test_mulrev_alter_tag_test_alter(QueryInterface &$query): void {
+function field_test_entity_query_tag_entity_test_mulrev_entity_query_entity_test_mulrev_alter_tag_test_alter(QueryInterface &$query): void {
   $query->condition('id', '15', '<>');
 }

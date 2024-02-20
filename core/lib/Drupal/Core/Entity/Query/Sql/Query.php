@@ -97,11 +97,9 @@ class Query extends QueryBase implements QueryInterface {
    */
   protected function alter(): Query {
     $hooks = ['entity_query', 'entity_query_' . $this->getEntityTypeId()];
-    if (isset($this->alterTags)) {
-      foreach ($this->alterTags as $tag => $value) {
-        $hooks[] = 'entity_query_' . $tag;
-        $hooks[] = 'entity_query_' . $this->getEntityTypeId() . '_' . $tag;
-      }
+    foreach ($this->alterTags as $tag => $value) {
+      $hooks[] = 'entity_query_tag_' . $tag;
+      $hooks[] = 'entity_query_tag_' . $this->getEntityTypeId() . '_' . $tag;
     }
     \Drupal::moduleHandler()->alter($hooks, $this);
     return $this;
