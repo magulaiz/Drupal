@@ -113,7 +113,7 @@ class Term extends FieldableEntity {
       $language = ($row->get('i18n_mode') === '1') ? $default_language['language'] : $row->get('language');
     }
 
-    $language = $language ?? $default_language['language'];
+    $language ??= $default_language['language'];
     $row->setSourceProperty('language', $language);
 
     // Get Field API field values.
