@@ -79,7 +79,7 @@ class ClassResolverTest extends KernelTestBase {
     \assert($class_resolver instanceof ClassResolverInterface);
 
     $this->expectException(AutowiringFailedException::class);
-    $this->expectExceptionMessage('Cannot autowire service "Drupal\Core\Lock\LockBackendInterface": argument "$lock" of method "Drupal\class_resolver_test\AutowiringFailed::_construct()", you should configure its value explicitly.');
+    $this->expectExceptionMessage('Cannot autowire service "Drupal\Core\Lock\LockBackendInterface": argument "$lock" of method "Drupal\class_resolver_test\AutowiringFailed::__construct()", you should configure its value explicitly.');
     $class_resolver->getInstanceFromDefinition(AutowiringFailed::class);
   }
 
