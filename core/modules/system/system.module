@@ -1039,7 +1039,7 @@ function system_cron() {
     $fetcher->getSecurityAdvisories();
   }
 
-  // Perform session gargage collection. PHP's built-in probability
+  // Perform session garbage collection. PHP's built-in probability
   // based garbage collection is disabled by default in the session
   // configuration in core.services.yml.
   /** @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
