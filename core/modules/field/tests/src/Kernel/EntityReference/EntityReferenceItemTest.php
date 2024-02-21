@@ -410,11 +410,11 @@ class EntityReferenceItemTest extends FieldKernelTestBase {
       'field_storage' => $field_storage,
       'bundle' => 'entity_test',
       'settings' => [
-        'handler' => 'madeup:thing',
+        'handler' => 'fake:thing',
       ],
       'isSyncing' => TRUE,
     ]);
-    $this->assertEquals('madeup:thing', $field->getSetting('handler'));
+    $this->assertEquals('fake:thing', $field->getSetting('handler'));
   }
 
   /**
