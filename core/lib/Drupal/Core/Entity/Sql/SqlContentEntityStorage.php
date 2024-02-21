@@ -111,30 +111,30 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   /**
    * The JSON storage table that stores the all revisions data for the entity.
    *
-   * @var string|null
+   * @var string
    */
-  protected ?string $jsonStorageAllRevisionsTable;
+  protected $jsonStorageAllRevisionsTable;
 
   /**
    * The JSON storage table that stores the current revision data.
    *
-   * @var string|null
+   * @var string
    */
-  protected ?string $jsonStorageCurrentRevisionTable;
+  protected $jsonStorageCurrentRevisionTable;
 
   /**
    * The JSON storage table that stores the latest revision data.
    *
-   * @var string|null
+   * @var string
    */
-  protected ?string $jsonStorageLatestRevisionTable;
+  protected $jsonStorageLatestRevisionTable;
 
   /**
    * The JSON storage table that stores the translations data.
    *
-   * @var string|null
+   * @var string
    */
-  protected ?string $jsonStorageTranslationsTable;
+  protected $jsonStorageTranslationsTable;
 
   /**
    * The MongoDB sequence service.

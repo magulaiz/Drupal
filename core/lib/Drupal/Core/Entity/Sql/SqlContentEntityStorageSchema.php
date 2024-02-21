@@ -1256,9 +1256,9 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
         if (isset($tables['latest_revision_table'])) {
           $this->processJsonStorageRevisionsTable($entity_type, $schema[$tables['latest_revision_table']]);
         }
-        // if (isset($tables['translations_table'])) {
-        // $this->processJsonStorageTranslationsTable($entity_type, $schema[$tables['translations_table']]);
-        // }
+        if (isset($tables['translations_table'])) {
+          $this->processJsonStorageTranslationsTable($entity_type, $schema[$tables['translations_table']]);
+        }
       }
       else {
         // Process tables after having gathered field information.
@@ -1307,6 +1307,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    */
   protected function getEntitySchemaTables(TableMappingInterface $table_mapping) {
     if ($this->database->driver() == 'mongodb') {
+      /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
       return array_filter([
         'base_table' => $table_mapping->getBaseTable(),
         'all_revisions_table' => $table_mapping->getJsonStorageAllRevisionsTable(),

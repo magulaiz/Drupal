@@ -76,30 +76,30 @@ class DefaultTableMapping implements TableMappingInterface {
   /**
    * The JSON storage table that stores the all revisions data for the entity.
    *
-   * @var string|null
+   * @var string
    */
-  protected ?string $jsonStorageAllRevisionsTable;
+  protected $jsonStorageAllRevisionsTable;
 
   /**
    * The JSON storage table that stores the current revision data.
    *
-   * @var string|null
+   * @var string
    */
-  protected ?string $jsonStorageCurrentRevisionTable;
+  protected $jsonStorageCurrentRevisionTable;
 
   /**
    * The JSON storage table that stores the latest revision data.
    *
-   * @var string|null
+   * @var string
    */
-  protected ?string $jsonStorageLatestRevisionTable;
+  protected $jsonStorageLatestRevisionTable;
 
   /**
    * The JSON storage table that stores the translations data.
    *
-   * @var string|null
+   * @var string
    */
-  protected ?string $jsonStorageTranslationsTable;
+  protected $jsonStorageTranslationsTable;
 
   /**
    * A list of field names per table.
@@ -252,8 +252,10 @@ class DefaultTableMapping implements TableMappingInterface {
       // denormalized in the base table but also stored in the revision table
       // together with the entity ID and the revision ID as identifiers.
       $table_mapping->setFieldNames($table_mapping->baseTable, array_diff($all_fields, $revision_metadata_fields));
-      $revision_key_fields = [$id_key, $revision_key];
-      $table_mapping->setFieldNames($table_mapping->revisionTable, array_merge($revision_key_fields, $revisionable_fields));
+      if (!$json_storage) {
+        $revision_key_fields = [$id_key, $revision_key];
+        $table_mapping->setFieldNames($table_mapping->revisionTable, array_merge($revision_key_fields, $revisionable_fields));
+      }
     }
     elseif (!$revisionable && $translatable) {
       // Multilingual layouts store key field values in the base table. The
@@ -262,9 +264,10 @@ class DefaultTableMapping implements TableMappingInterface {
       // denormalized copy of the bundle field value to allow for more
       // performant queries. This means that only the UUID is not stored on
       // the data table.
-      $table_mapping
-        ->setFieldNames($table_mapping->baseTable, $key_fields)
-        ->setFieldNames($table_mapping->dataTable, array_values(array_diff($all_fields, [$uuid_key])));
+      $table_mapping->setFieldNames($table_mapping->baseTable, $key_fields);
+      if (!$json_storage) {
+        $table_mapping->setFieldNames($table_mapping->dataTable, array_values(array_diff($all_fields, [$uuid_key])));
+      }
     }
     elseif ($revisionable && $translatable) {
       // The revisionable multilingual layout stores key field values in the
@@ -276,18 +279,24 @@ class DefaultTableMapping implements TableMappingInterface {
       // table, as well.
       $table_mapping->setFieldNames($table_mapping->baseTable, $key_fields);
 
-      // Like in the multilingual, non-revisionable case the UUID is not
-      // in the data table. Additionally, do not store revision metadata
-      // fields in the data table.
-      $data_fields = array_values(array_diff($all_fields, [$uuid_key], $revision_metadata_fields));
-      $table_mapping->setFieldNames($table_mapping->dataTable, $data_fields);
+      if (!$json_storage) {
+        // Like in the multilingual, non-revisionable case the UUID is not
+        // in the data table. Additionally, do not store revision metadata
+        // fields in the data table.
+        $data_fields = array_values(array_diff($all_fields, [$uuid_key], $revision_metadata_fields));
+        $table_mapping->setFieldNames($table_mapping->dataTable, $data_fields);
 
-      $revision_base_fields = array_merge([$id_key, $revision_key, $langcode_key], $revision_metadata_fields);
-      $table_mapping->setFieldNames($table_mapping->revisionTable, $revision_base_fields);
+        $revision_base_fields = array_merge([
+          $id_key,
+          $revision_key,
+          $langcode_key
+        ], $revision_metadata_fields);
+        $table_mapping->setFieldNames($table_mapping->revisionTable, $revision_base_fields);
 
-      $revision_data_key_fields = [$id_key, $revision_key, $langcode_key];
-      $revision_data_fields = array_diff($revisionable_fields, $revision_metadata_fields, [$langcode_key]);
-      $table_mapping->setFieldNames($table_mapping->revisionDataTable, array_merge($revision_data_key_fields, $revision_data_fields));
+        $revision_data_key_fields = [$id_key, $revision_key, $langcode_key];
+        $revision_data_fields = array_diff($revisionable_fields, $revision_metadata_fields, [$langcode_key]);
+        $table_mapping->setFieldNames($table_mapping->revisionDataTable, array_merge($revision_data_key_fields, $revision_data_fields));
+      }
     }
 
     // Add dedicated tables.
