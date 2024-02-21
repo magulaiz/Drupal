@@ -138,7 +138,7 @@ class Language extends NegatableConditionPluginBase implements ContainerFactoryP
     $language = $this->getContextValue('language');
     // Language visibility settings.
     $result = !empty($this->configuration['langcodes'][$language->getId()]);
-    return $this->evaluateIsNegated($result);
+    return $this->evaluateNegate($result);
   }
 
   /**

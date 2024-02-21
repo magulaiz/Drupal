@@ -81,10 +81,8 @@ class UserRole extends NegatableConditionPluginBase {
       return TRUE;
     }
     $user = $this->getContextValue('user');
-
     $result = (bool) array_intersect($this->configuration['roles'], $user->getRoles());
-
-    return $this->evaluateIsNegated($result);
+    return $this->evaluateNegate($result);
   }
 
   /**

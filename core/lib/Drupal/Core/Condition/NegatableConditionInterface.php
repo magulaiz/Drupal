@@ -14,12 +14,12 @@ interface NegatableConditionInterface extends ConditionInterface {
   /**
    * Negate the condition result.
    *
-   * @param bool $evaluation_result
-   *   Condition evaluation result boolean.
+   * @param bool $result
+   *   The result from a previous condition that is to be negated.
    *
    * @return bool
    *   TRUE if the result is FALSE, FALSE otherwise.
    */
-  public function evaluateIsNegated(bool $evaluation_result): bool;
+  public function evaluateNegate(bool $result): bool;
 
 }

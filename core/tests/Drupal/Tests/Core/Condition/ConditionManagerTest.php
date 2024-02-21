@@ -36,7 +36,7 @@ class ConditionManagerTest extends UnitTestCase {
    *
    * @var \Drupal\Core\Condition\ConditionManager
    */
-  public $sut;
+  public $conditionManager;
 
   /**
    * {@inheritdoc}
@@ -50,7 +50,7 @@ class ConditionManagerTest extends UnitTestCase {
 
     $namespaces = new \ArrayObject();
 
-    $this->sut = new ConditionManager($namespaces, $this->cache, $this->moduleHandler);
+    $this->conditionManager = new ConditionManager($namespaces, $this->cache, $this->moduleHandler);
   }
 
   /**
@@ -65,7 +65,7 @@ class ConditionManagerTest extends UnitTestCase {
       ->method('evaluate')
       ->willReturn($execution_result);
 
-    $this->assertSame($execution_result, $this->sut->execute($condition));
+    $this->assertSame($execution_result, $this->conditionManager->execute($condition));
   }
 
 }

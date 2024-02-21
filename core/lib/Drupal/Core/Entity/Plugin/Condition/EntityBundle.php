@@ -93,7 +93,7 @@ class EntityBundle extends NegatableConditionPluginBase implements ContainerFact
 
     $result = $entity instanceof ContentEntityInterface && !empty($this->configuration['bundles'][$entity->bundle()]);
 
-    return $this->evaluateIsNegated($result);
+    return $this->evaluateNegate($result);
   }
 
   /**

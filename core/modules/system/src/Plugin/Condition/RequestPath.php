@@ -169,7 +169,7 @@ class RequestPath extends NegatableConditionPluginBase implements ContainerFacto
       $result = $this->pathMatcher->matchPath($path_alias, $pages) || (($path != $path_alias) && $this->pathMatcher->matchPath($path, $pages));
     }
 
-    return $this->evaluateIsNegated($result);
+    return $this->evaluateNegate($result);
   }
 
   /**
