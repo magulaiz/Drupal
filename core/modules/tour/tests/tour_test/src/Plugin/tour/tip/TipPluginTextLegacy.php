@@ -14,8 +14,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Displays some text as a tip.
  */
 #[Tip(
-  id: 'text',
-  title: new TranslatableMarkup('Text'),
+  id: 'text_legacy',
+  title: new TranslatableMarkup('Text Legacy'),
 )]
 class TipPluginTextLegacy extends TipPluginBase implements ContainerFactoryPluginInterface {
 
