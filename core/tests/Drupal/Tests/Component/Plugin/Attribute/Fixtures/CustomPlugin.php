@@ -21,11 +21,9 @@ class CustomPlugin extends Plugin {
    *   Plugin ID and deriver class.
    */
   public function __construct(
-    public readonly string $title,
-    ...$base
-  ) {
-    parent::__construct(...$base);
-  }
+    public readonly string $id,
+    public readonly string $title
+  ) {}
 
 }
 

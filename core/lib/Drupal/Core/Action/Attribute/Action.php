@@ -39,14 +39,13 @@ class Action extends Plugin {
    *   Plugin ID and deriver class.
    */
   public function __construct(
+    public readonly string $id,
     public readonly ?TranslatableMarkup $label = NULL,
     public readonly ?TranslatableMarkup $action_label = NULL,
     public readonly ?TranslatableMarkup $category = NULL,
+    public readonly ?string $deriver = NULL,
     public readonly ?string $confirm_form_route_name = NULL,
-    public readonly ?string $type = NULL,
-    ...$base
-  ) {
-    parent::__construct(...$base);
-  }
+    public readonly ?string $type = NULL
+  ) {}
 
 }

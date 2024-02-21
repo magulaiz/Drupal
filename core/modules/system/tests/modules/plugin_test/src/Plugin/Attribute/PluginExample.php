@@ -19,10 +19,8 @@ class PluginExample extends Plugin {
    *   Plugin ID and deriver class.
    */
   public function __construct(
-    public readonly ?string $custom = NULL,
-     ...$base
-  ) {
-    parent::__construct(...$base);
-  }
+    public readonly string $id,
+    public readonly ?string $custom = NULL
+  ) {}
 
 }

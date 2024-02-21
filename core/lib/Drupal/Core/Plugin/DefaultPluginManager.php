@@ -158,7 +158,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
       $this->pluginDefinitionAnnotationName = $plugin_definition_attribute_name ?? 'Drupal\Component\Annotation\Plugin';
       $this->additionalAnnotationNamespaces = $plugin_definition_annotation_name ?? [];
     }
-    assert($this->validatePluginAttributeClass($this->pluginDefinitionAttributeName), sprintf('Attribute plugin %s does not have a variadic $base constructor argument.', $this->pluginDefinitionAttributeName));
+    assert($this->validatePluginAttributeClass($this->pluginDefinitionAttributeName), sprintf('Attribute plugin %s does not have a deriver constructor argument.', $this->pluginDefinitionAttributeName));
   }
 
   /**
@@ -425,12 +425,8 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
       return TRUE;
     }
     $reflection_class = new \ReflectionClass($pluginDefinitionAttributeName);
-    $base_parameters = array_filter($reflection_class->getConstructor()->getParameters(), fn (\ReflectionParameter $parameter) => $parameter->getName() === 'base');
-    if (count($base_parameters) !== 1) {
-      return FALSE;
-    }
-    $base_parameter = reset($base_parameters);
-    return $base_parameter->isVariadic();
+    $params = array_map(fn (\ReflectionParameter $parameter) => $parameter->getName(), $reflection_class->getConstructor()->getParameters());
+    return in_array('deriver', $params, TRUE);
   }
 
 }

@@ -27,13 +27,12 @@ class Block extends Plugin {
    *   Plugin ID and deriver class.
    */
   public function __construct(
+    public readonly string $id,
     public readonly ?TranslatableMarkup $admin_label = NULL,
     public readonly ?TranslatableMarkup $category = NULL,
     public readonly array $context_definitions = [],
-    public readonly array $forms = [],
-    ...$base
-  ) {
-    parent::__construct(...$base);
-  }
+    public readonly ?string $deriver = NULL,
+    public readonly array $forms = []
+  ) {}
 
 }
