@@ -52,7 +52,7 @@
               $link.closest('.js-layout-builder-category')[0],
             )
           ) {
-            const closestLayoutBuilderCategory = $link.closest(
+            const closestLayoutBuilderCategory = link.closest(
               '.js-layout-builder-category',
             );
 
@@ -420,7 +420,11 @@
         $('[data-layout-content-preview-placeholder-label]').each(
           (i, element) => {
             // $(element).children().show();
-            element.children.style.display = 'block';
+            // element.childNode.style.display = 'block';
+            let child = element.children;
+            for (let key = 0; key < child.length; key++) {
+              child[key].style.display = 'block';
+            }
           },
         );
       };
