@@ -477,7 +477,7 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
       '#options' => $handlers_options,
       '#default_value' => $field->getSetting('handler'),
       '#required' => TRUE,
-      '#ajax' => [],
+      '#ajax' => TRUE,
       '#limit_validation_errors' => [],
     ];
     $form['handler']['handler_submit'] = [
@@ -703,7 +703,7 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
    * @see static::fieldSettingsAjaxProcess()
    */
   public static function fieldSettingsAjaxProcessElement(&$element, $main_form) {
-    if (isset($element['#ajax']) && empty($element['#ajax']['element'])) {
+    if (!empty($element['#ajax'])) {
       $element['#ajax'] = [
         'trigger_as' => ['name' => 'handler_settings_submit'],
         'wrapper' => 'field-combined',
