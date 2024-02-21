@@ -53,7 +53,7 @@
     const selector = placeholder.closest('.comment-new-comments');
     const previousElement =
       selector.previousElementSibling.classList.remove('last');
-    const showElement = (selector.style.display = 'block');
+    const showElement = selector.style.display = 'block';
     return showElement;
     // return (
     //   $placeholder
