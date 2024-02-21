@@ -493,7 +493,7 @@ abstract class Database {
     if (!isset($key)) {
       $key = self::$activeKey;
     }
-    if (isset($target)) {
+    if (isset($target) && isset(self::$connections[$key][$target])) {
       if (self::$connections[$key][$target] instanceof Connection) {
         self::$connections[$key][$target]->commitAll();
       }
