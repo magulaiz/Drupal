@@ -29,6 +29,8 @@ class LanguageDependencyInjectionTest extends LanguageTestBase {
    * @see \Drupal\Core\Language\Language
    */
   public function testDependencyInjectedNewDefaultLanguage() {
+    $this->installConfig(['system']);
+
     $default_language = ConfigurableLanguage::load(\Drupal::languageManager()->getDefaultLanguage()->getId());
     // Change the language default object to different values.
     $fr = ConfigurableLanguage::createFromLangcode('fr');
