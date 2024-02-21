@@ -57,7 +57,7 @@ function views_update_1101(&$sandbox) {
     }
     if ($changed) {
       $view->save();
-      \Drupal::logger('views')->notice('Updated view @id with new options.', ['@id' => $view->id()]);
+      \Drupal::logger('views')->notice('Updated view @id with new pager and style options.', ['@id' => $view->id()]);
     }
   }
 
