@@ -57,6 +57,12 @@ class ExtensionExistsConstraintValidator extends ConstraintValidator implements 
    * {@inheritdoc}
    */
   public function validate(mixed $extension_name, Constraint $constraint) {
+    // Support optional values.
+    // @todo Do this in a blocking issue.
+    if ($extension_name === NULL) {
+      return;
+    }
+
     $variables = ['@name' => $extension_name];
 
     switch ($constraint->type) {
