@@ -421,7 +421,7 @@
           (i, element) => {
             // $(element).children().show();
             // element.childNode.style.display = 'block';
-            let child = element.children;
+            const child = element.children;
             for (let key = 0; key < child.length; key++) {
               child[key].style.display = 'block';
             }
