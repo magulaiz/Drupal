@@ -47,6 +47,7 @@ system.site:
     mail_notification:
       type: email
       label: 'Notification email address'
+      nullable: true
 
 system.maintenance:
   type: config_object
