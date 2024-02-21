@@ -152,8 +152,8 @@
       //    elements by selector.
       //    https://www.drupal.org/project/drupal/issues/2821793
       if (view) {
-        const closestEl = view.closest('.views-element-container');
-        $(closestEl).attr('id', 'media-library-view');
+        const closestElement = view.closest('.views-element-container');
+        $(closestElement).attr('id', 'media-library-view');
       }
 
       // We would ideally use a generic JavaScript specific class to detect the

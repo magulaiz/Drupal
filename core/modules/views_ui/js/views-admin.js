@@ -315,8 +315,8 @@
    */
   Drupal.viewsUi.AddItemForm.prototype.handleCheck = function (event) {
     const target = event.target;
-    const closestEl = target.closest('td');
-    const label = $(closestEl).next().html().trim();
+    const closestElement = target.closest('td');
+    const label = $(closestElement).next().html().trim();
     // Add/remove the checked item to the list.
     if (event.target.checked) {
       this.$selected_div.show();
@@ -492,8 +492,8 @@
     // Click on the title checks the box.
     this.$form.on('click', 'td.title', (event) => {
       const target = event.currentTarget;
-      const closestEl = target.closest('tr');
-      $(closestEl).find('input').trigger('click');
+      const closestElement = target.closest('tr');
+      $(closestElement).find('input').trigger('click');
     });
 
     const searchBoxSelector =
@@ -1118,8 +1118,8 @@
         const $selectAllCheckbox = $selectAll.find('input[type=checkbox]');
         const $checkboxes = [];
         selectAll.forEach((el) => {
-          const closestEl = el.closest('.form-checkboxes');
-          const checkboxes = $(closestEl).find(
+          const closestElement = el.closest('.form-checkboxes');
+          const checkboxes = $(closestElement).find(
             '.js-form-type-checkbox:not(.js-form-item-options-value-all) input[type="checkbox"]',
           );
           $checkboxes.push(checkboxes);

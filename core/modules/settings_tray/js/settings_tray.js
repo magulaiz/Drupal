@@ -91,10 +91,10 @@
         $editables
           .not(contextualItemsSelector)
           .on('click.settingstray', (e) => {
-            const contextualEl = e.target.closest('.contextual');
+            const contextualElement = e.target.closest('.contextual');
             // Contextual links are allowed to function in Edit mode.
             if (
-              $(contextualEl).length ||
+              $(contextualElement).length ||
               !localStorage.getItem('Drupal.contextualToolbar.isViewing')
             ) {
               return;

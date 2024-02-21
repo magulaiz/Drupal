@@ -42,11 +42,11 @@
         (e) => {
           const $target = $(e.currentTarget);
           const type = $target.attr('data-type');
-          const closestEl = e.currentTarget.closest(
+          const closestElement = e.currentTarget.closest(
             '[data-drupal-messages-area]',
           );
           const area =
-            $(closestEl).attr('data-drupal-messages-area') || 'default';
+            $(closestElement).attr('data-drupal-messages-area') || 'default';
           const message = messageObjects[area].zone;
           const action = $target.attr('data-action');
 
