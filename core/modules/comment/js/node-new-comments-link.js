@@ -83,8 +83,8 @@
         10,
       );
       fieldName = $placeholder.attr('data-history-node-field-name');
-      const closestEl = placeholder.closest('[data-history-node-id]');
-      const nodeID = $(closestEl).attr('data-history-node-id');
+      const closestElement = placeholder.closest('[data-history-node-id]');
+      const nodeID = $(closestElement).attr('data-history-node-id');
       const lastViewTimestamp = Drupal.history.getLastRead(nodeID);
 
       // Queue this placeholder's "X new comments" link to be downloaded from
@@ -168,8 +168,8 @@
           $placeholder.attr('data-history-node-last-comment-timestamp'),
           10,
         );
-        const closestEl = placeholder.closest('[data-history-node-id]');
-        const nodeID = $(closestEl).attr('data-history-node-id');
+        const closestElement = placeholder.closest('[data-history-node-id]');
+        const nodeID = $(closestElement).attr('data-history-node-id');
         if (Drupal.history.needsServerCheck(nodeID, lastCommentTimestamp)) {
           nodeIDs.push(nodeID);
           // Hide this placeholder link until it is certain we'll need it.

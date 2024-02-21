@@ -31,8 +31,8 @@
             `a[data-drupal-link-system-path="${currentPath}"]`,
           );
           if ($menuItem.length !== 0) {
-            const menuItemEl = $menuItem[0];
-            const menuLink = menuItemEl.closest('a');
+            const menuItemElement = $menuItem[0];
+            const menuLink = menuItemElement.closest('a');
             $(menuLink).addClass('is-active');
             break;
           }

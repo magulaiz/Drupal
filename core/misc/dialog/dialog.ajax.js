@@ -14,7 +14,7 @@
    */
   Drupal.behaviors.dialog = {
     attach(context, settings) {
-      const contextEl = $(context);
+      const contextElement = $(context);
       // Provide a known 'drupal-modal' DOM element for Drupal-based modal
       // dialogs. Non-modal dialogs are responsible for creating their own
       // elements, since there can be multiple non-modal dialogs at a time.
@@ -29,7 +29,7 @@
 
       // Special behaviors specific when attaching content within a dialog.
       // These behaviors usually fire after a validation error inside a dialog.
-      const $dialog = contextEl.closest('.ui-dialog-content');
+      const $dialog = contextElement.closest('.ui-dialog-content');
       if ($dialog.length) {
         // Remove and replace the dialog buttons with those from the new form.
         if ($dialog.dialog('option', 'drupalAutoButtons')) {

@@ -689,7 +689,7 @@
 
   const $document = $(document);
   $document.on('state:disabled', (e) => {
-    const closestEl = e.target.closest(
+    const closestElement = e.target.closest(
       '.js-form-item, .js-form-submit, .js-form-wrapper',
     );
     // Only act when this change was triggered by a dependency and not by the
@@ -697,7 +697,7 @@
     const tagsSupportDisable =
       'button, fieldset, optgroup, option, select, textarea, input';
     if (e.trigger) {
-      $(closestEl)
+      $(closestElement)
         .toggleClass('form-disabled', e.value)
         .find(tagsSupportDisable)
         .addBack(tagsSupportDisable)
@@ -706,11 +706,11 @@
   });
 
   $document.on('state:readonly', (e) => {
-    const closestEl = e.target.closest(
+    const closestElement = e.target.closest(
       '.js-form-item, .js-form-submit, .js-form-wrapper',
     );
     if (e.trigger) {
-      $(closestEl)
+      $(closestElement)
         .toggleClass('form-readonly', e.value)
         .find('input, textarea')
         .prop('readonly', e.value);
@@ -719,18 +719,20 @@
 
   $document.on('state:required', (e) => {
     if (e.trigger) {
-      const closestEl = e.target.closest('.js-form-item, .js-form-wrapper');
+      const closestElement = e.target.closest(
+        '.js-form-item, .js-form-wrapper',
+      );
       if (e.value) {
         const label = `label${e.target.id ? `[for=${e.target.id}]` : ''}`;
         $(e.target).attr({ required: 'required', 'aria-required': 'true' });
-        const $label = $(closestEl).find(label);
+        const $label = $(closestElement).find(label);
         // Avoids duplicate required markers on initialization.
         if (!$label.hasClass('js-form-required').length) {
           $label.addClass('js-form-required form-required');
         }
       } else {
         $(e.target).removeAttr('required aria-required');
-        $(closestEl)
+        $(closestElement)
           .find('label.js-form-required')
           .removeClass('js-form-required form-required');
       }
@@ -739,10 +741,10 @@
 
   $document.on('state:visible', (e) => {
     if (e.trigger) {
-      const closestEl = e.target.closest(
+      const closestElement = e.target.closest(
         '.js-form-item, .js-form-submit, .js-form-wrapper',
       );
-      let $element = $(closestEl);
+      let $element = $(closestElement);
       // For links, update the state of itself instead of the wrapper.
       if (e.target.tagName === 'A') {
         $element = $(e.target);
@@ -752,9 +754,12 @@
   });
 
   $document.on('state:checked', (e) => {
-    const closestEl = e.target.closest('.js-form-item, .js-form-wrapper');
+    const closestElement = e.target.closest('.js-form-item, .js-form-wrapper');
     if (e.trigger) {
-      $(closestEl).find('input').prop('checked', e.value).trigger('change');
+      $(closestElement)
+        .find('input')
+        .prop('checked', e.value)
+        .trigger('change');
     }
   });
 
