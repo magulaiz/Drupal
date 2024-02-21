@@ -3,6 +3,7 @@
 namespace Drupal\Core\Ajax;
 
 use Drupal\Component\Render\PlainTextOutput;
+use function PHPUnit\Framework\throwException;
 
 /**
  * Defines an AJAX command to open certain content in a dialog.
@@ -74,7 +75,7 @@ class OpenDialogCommand implements CommandInterface, CommandWithAttachedAssetsIn
    */
   public function __construct($selector, $title, $content, array $dialog_options = [], $settings = NULL) {
     if (is_array($title)) {
-      $title = \Drupal::service('renderer')->renderPlain($title);
+      $title = 'Send the title as a string.';
     }
     else {
       $title = PlainTextOutput::renderFromHtml($title);

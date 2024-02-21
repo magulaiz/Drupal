@@ -27,7 +27,7 @@ class ModalRenderer extends DialogRenderer {
     $response->setAttachments($main_content['#attached']);
 
     // If the main content doesn't provide a title, use the title resolver.
-    $title = $main_content['#title'] ?? $this->titleResolver->getTitle($request, $route_match->getRouteObject());
+    $title = $main_content['#title']['#markup'] ?? $this->titleResolver->getTitle($request, $route_match->getRouteObject());
 
     // Determine the dialog options for the OpenDialogCommand.
     $options = $this->getDialogOptions($request);
