@@ -313,6 +313,8 @@ function hook_views_data() {
       'id' => 'standard',
       // Default label for relationship in the UI.
       'label' => t('Example node'),
+      // Description shown within the add relationship handler in the UI.
+      'help' => t('Relationship between the node and node field data'),
     ],
   ];
 
@@ -511,6 +513,8 @@ function hook_views_data_alter(array &$data) {
       // ID of relationship handler plugin to use.
       'id' => 'standard',
       'label' => t('Default label for relationship'),
+      // Description shown within the add relationship handler in the UI.
+      'help' => t('Description of the dummy field relationship'),
     ],
   ];
 
