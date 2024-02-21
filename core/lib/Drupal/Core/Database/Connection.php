@@ -309,10 +309,11 @@ abstract class Connection {
     // BC layer.
     // @phpstan-ignore-next-line
     if (!empty($this->transactionLayers)) {
+      // Make all transactions committable.
       // @phpstan-ignore-next-line
-      $this->transactionLayers = [];
+      $this->transactionLayers = array_fill_keys(array_keys($this->transactionLayers), FALSE);
       // @phpstan-ignore-next-line
-      $this->doCommit();
+      $this->popCommittableTransactions();
     }
   }
 
