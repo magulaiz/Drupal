@@ -52,6 +52,13 @@ trait SchemaCheckTrait {
         'This value should not be blank.',
       ],
     ],
+    'system.theme' => [
+      // TRICKY: chicken vs egg: `system` module must be installed before the
+      // `stark` theme can be installed!
+      'default' => [
+        "Theme 'stark' is not installed.",
+      ],
+    ],
   ];
 
   /**
