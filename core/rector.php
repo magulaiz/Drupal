@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
+use Rector\Php71\Rector\FuncCall\RemoveExtraParametersRector;
 use Rector\ValueObject\PhpVersion;
 
 return RectorConfig::configure()
@@ -22,6 +23,7 @@ return RectorConfig::configure()
     'theme',
   ])
   ->withRules([
+    RemoveExtraParametersRector::class,
   ])
   ->withImportNames(
     importDocBlockNames: FALSE,
