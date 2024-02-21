@@ -34,7 +34,7 @@ final class UserSessionFinalizer {
   /**
    * Finalizes the login process and logs in a user.
    *
-   * The function logs in the user, records a watchdog message about the new
+   * This method logs in the user, records a watchdog message about the new
    * session, saves the login timestamp, calls hook_user_login(), and generates
    * a new session.
    *
