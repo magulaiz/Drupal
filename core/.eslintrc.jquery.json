@@ -1,7 +1,5 @@
 {
-  "plugins": [
-    "jquery"
-  ],
+  "plugins": ["jquery"],
   "rules": {
     "jquery/no-ajax": 0,
     "jquery/no-ajax-events": 2,
@@ -51,6 +49,6 @@
     "jquery/no-trim": 2,
     "jquery/no-val": 2,
     "jquery/no-when": 2,
-    "jquery/no-wrap": 0
+    "jquery/no-wrap": 2
   }
 }
