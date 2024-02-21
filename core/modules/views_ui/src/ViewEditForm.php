@@ -178,7 +178,8 @@ class ViewEditForm extends ViewFormBase {
 
     $display_label = $this->t('Displays');
     if ($view_status == 'disabled') {
-      $view_disabled = $this->t('⚠️ Note: This view is disabled.') . '<br>';
+      $view_disabled_warning = $this->t('⚠️ Note: This view is disabled.');
+      $view_disabled = $view_disabled_warning . '<br><span class="visually-hidden">' . $view_disabled_warning . '</span>';
       $display_label = $view_disabled . $display_label;
     }
 
