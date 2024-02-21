@@ -25,11 +25,6 @@ return RectorConfig::configure()
   ->withRules([
     RemoveExtraParametersRector::class,
   ])
-  ->withImportNames(
-    importDocBlockNames: FALSE,
-    importShortClasses: FALSE,
-    removeUnusedImports: TRUE,
-  )
   ->withIndent(indentSize: 2)
 ;
 
