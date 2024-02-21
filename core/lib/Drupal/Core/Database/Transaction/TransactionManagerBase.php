@@ -132,7 +132,8 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
    *
    * @internal
    *   This method exists only to work around a bug caused by Drupal incorrectly
-   *   relying on object destruction order to commit transactions.
+   *   relying on object destruction order to commit transactions. Xdebug 3.3.0
+   *   changes the order of object destruction when the develop mode is enabled.
    */
   public function commitAll(): void {
     foreach (array_reverse($this->stack()) as $id => $item) {

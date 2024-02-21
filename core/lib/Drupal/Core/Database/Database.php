@@ -769,12 +769,13 @@ abstract class Database {
    *
    * @internal
    *   This method exists only to work around a bug caused by Drupal incorrectly
-   *   relying on object destruction order to commit transactions.
+   *   relying on object destruction order to commit transactions. Xdebug 3.3.0
+   *   changes the order of object destruction when the develop mode is enabled.
    */
-  public static function commitAllOnAllConnections(bool $shutdown = FALSE): void {
+  public static function commitAllOnShutdown(bool $shutdown = FALSE): void {
     static $registered = FALSE;
 
-    if ($shutdown || !function_exists('drupal_register_shutdown_function')) {
+    if ($shutdown) {
       foreach (self::$connections as $targets) {
         foreach ($targets as $connection) {
           if ($connection instanceof Connection) {
@@ -785,9 +786,13 @@ abstract class Database {
       return;
     }
 
+    if (!function_exists('drupal_register_shutdown_function')) {
+      return;
+    }
+
     if (!$registered) {
       $registered = TRUE;
-      drupal_register_shutdown_function('\Drupal\Core\Database\Database::commitAllOnAllConnections', TRUE);
+      drupal_register_shutdown_function('\Drupal\Core\Database\Database::commitAllOnShutdown', TRUE);
     }
   }
 
