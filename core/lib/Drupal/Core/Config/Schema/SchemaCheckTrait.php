@@ -52,6 +52,16 @@ trait SchemaCheckTrait {
         'This value should not be blank.',
       ],
     ],
+    'book.settings' => [
+      // @todo Simple config cannot have dependencies on any other config.
+      //   Remove this in <issue to be created>
+      'allowed_types.*' => [
+        "The 'book' bundle does not exist on the 'node' entity type.",
+      ],
+      'child_type' => [
+        "The 'book' bundle does not exist on the 'node' entity type.",
+      ],
+    ],
   ];
 
   /**
