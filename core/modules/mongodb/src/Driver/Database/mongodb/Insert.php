@@ -66,7 +66,7 @@ class Insert extends QueryInsert {
 
     $last_insert_id = 0;
 
-    $transaction = $this->connection->startTransaction();
+    // $transaction = $this->connection->startTransaction();
     foreach ($this->insertValues as $insert_values) {
       $insert_document = $this->getInsertDocumentForTable($this->table, $this->insertFields, $insert_values);
 
