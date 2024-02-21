@@ -190,6 +190,9 @@ views_display:
         style:
           type: boolean
           label: 'Style'
+        style_options:
+          type: boolean
+          label: 'Style options'
         row:
           type: boolean
           label: 'Row'
@@ -211,6 +214,9 @@ views_display:
         filter_groups:
           type: boolean
           label: 'Filter groups'
+        pager_options:
+          type: boolean
+          label: 'Pager options'
         header:
           type: boolean
           label: 'Header'
@@ -252,6 +258,12 @@ views_display:
     link_url:
       type: text
       label: 'Link URL'
+    pager_options:
+      type: boolean
+      label: 'Pager options'
+    style_options:
+      type: boolean
+      label: 'Style options'
     header:
       type: sequence
       label: 'Header'

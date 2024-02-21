@@ -18,3 +18,50 @@ function views_install() {
 function views_update_last_removed() {
   return 8500;
 }
+
+/**
+ * Add 'style_options' and 'pager_options' to existing views.
+ */
+function views_update_1101(&$sandbox) {
+  if (!isset($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+    $views_storage = \Drupal::entityTypeManager()->getStorage('view');
+    $sandbox['view_ids'] = $views_storage->getQuery()->execute();
+    $sandbox['max'] = count($sandbox['view_ids']);
+  }
+
+  $limit = 5; // Process 5 views per batch operation to manage performance.
+  $views_storage = \Drupal::entityTypeManager()->getStorage('view');
+  $view_ids_chunk = array_slice($sandbox['view_ids'], $sandbox['progress'], $limit);
+  $views = $views_storage->loadMultiple($view_ids_chunk);
+
+  foreach ($views as $view) {
+    $changed = FALSE;
+    foreach ($view->get('display') as $display_id => $display) {
+      // Check and add 'style_options' if 'style' is set.
+      if (isset($display['display_options']['style'])) {
+        $view->set("display.$display_id.display_options.style_options", TRUE);
+        $changed = TRUE;
+      }
+      // Check and add 'pager_options' if 'pager' is set.
+      if (isset($display['display_options']['pager'])) {
+        $view->set("display.$display_id.display_options.pager_options", TRUE);
+        $changed = TRUE;
+      }
+    }
+    if ($changed) {
+      $view->save();
+      \Drupal::logger('views')->notice('Updated view @id with new options.', ['@id' => $view->id()]);
+    }
+  }
+
+  $sandbox['progress'] += count($view_ids_chunk);
+
+  if ($sandbox['progress'] >= $sandbox['max']) {
+    $sandbox['#finished'] = 1;
+    // Clear caches once after all batches are processed.
+    drupal_flush_all_caches();
+  } else {
+    $sandbox['#finished'] = $sandbox['progress'] / $sandbox['max'];
+  }
+}
