@@ -144,11 +144,11 @@ services:
     alias: mongodb.locale.storage
 
   # MongoDB overrides module node.
-#  mongodb.node.grant_storage:
-#    class: Drupal\mongodb\modules\node\NodeGrantDatabaseStorage
-#    arguments: ['@database', '@module_handler', '@language_manager']
-#  node.grant_storage:
-#    alias: mongodb.node.grant_storage
+  # mongodb.node.grant_storage:
+  # class: Drupal\mongodb\modules\node\NodeGrantDatabaseStorage
+  # arguments: ['@database', '@module_handler', '@language_manager']
+  # node.grant_storage:
+  # alias: mongodb.node.grant_storage
 
   # MongoDB overrides module path_alias.
   mongodb.path_alias.repository:

@@ -784,8 +784,6 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     }
 
     $table_mapping = $this->getTableMapping($this->entityType, [$storage_definition]);
-    $field_table_name = $table_mapping->getFieldTableName($storage_definition->getName());
-
     if ($table_mapping->requiresDedicatedTableStorage($storage_definition)) {
       if ($this->database->driver() == 'mongodb') {
         $base_table = $this->storage->getBaseTable();
@@ -1010,6 +1008,8 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
         }
 
         try {
+          $field_table_name = $table_mapping->getFieldTableName($storage_definition->getName());
+
           if ($this->database->supportsTransactionalDDL()) {
             // If the database supports transactional DDL, we can go ahead and rely
             // on it. If not, we will have to rollback manually if something fails.
@@ -2829,6 +2829,16 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
         'revision_id' => ['revision_id'],
       ],
     ];
+
+    if ($this->database->driver() == 'mongodb') {
+      // MongoDB stores boolean values as a boolean not as an integer.
+      $data_schema['fields']['deleted'] = [
+        'type' => 'bool',
+        'not null' => TRUE,
+        'default' => FALSE,
+        'description' => 'A boolean indicating whether this data item has been deleted',
+      ];
+    }
 
     // Check that the schema does not include forbidden column names.
     $schema = $storage_definition->getSchema();
