@@ -21,7 +21,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 class SearchPlugin extends Plugin {
 
   /**
-   * Constructs a Tip attribute.
+   * Constructs a SearchPlugin attribute.
    *
    * @param string $id
    *   The plugin ID.
