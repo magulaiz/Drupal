@@ -277,7 +277,7 @@ abstract class Connection {
   }
 
   /**
-   * Commits the all open transactions.
+   * Commits all the open transactions.
    *
    * @internal
    *   This method exists only to work around a bug caused by Drupal incorrectly
