@@ -57,7 +57,7 @@ function views_post_update_add_display_options(&$sandbox) {
     }
     if ($changed) {
       $view->save();
-      \Drupal::messenger()->addMessage(t('Updated view @id with new pager and style options.', ['@id' => $view->id()]));
+      \Drupal::logger('views')->notice('Updated view @id with new pager and style options.', ['@id' => $view->id()]);
     }
   }
 
