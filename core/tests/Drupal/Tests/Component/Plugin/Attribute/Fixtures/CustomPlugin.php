@@ -20,7 +20,7 @@ class CustomPlugin extends Plugin {
    * @param string $title
    *   The title.
    * @param string|null $deriver
-   *    (optional) The deriver class.
+   *   (optional) The deriver class.
    */
   public function __construct(
     public readonly string $id,
