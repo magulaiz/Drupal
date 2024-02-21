@@ -30,7 +30,7 @@ function views_update_1101(&$sandbox) {
     $sandbox['max'] = count($sandbox['view_ids']);
   }
 
-  $limit = 5; // Process 5 views per batch operation to manage performance.
+  $limit = 5;
   $views_storage = \Drupal::entityTypeManager()->getStorage('view');
   $view_ids_chunk = array_slice($sandbox['view_ids'], $sandbox['progress'], $limit);
   $views = $views_storage->loadMultiple($view_ids_chunk);
@@ -70,4 +70,5 @@ function views_update_1101(&$sandbox) {
   } else {
     $sandbox['#finished'] = $sandbox['progress'] / $sandbox['max'];
   }
+
 }
