@@ -85,10 +85,10 @@
    * @param {string} html
    *   The server-side rendered HTML for this contextual link.
    */
-  function initContextual(contextualEl, html) {
-    const $region = contextualEl.closest('.contextual-region');
+  function initContextual(contextualElement, html) {
+    const $region = contextualElement.closest('.contextual-region');
     const contextual = Drupal.contextual;
-    const $contextual = $(contextualEl);
+    const $contextual = $(contextualElement);
     $contextual
       // Update the placeholder to contain its rendered contextual links.
       .html(html)

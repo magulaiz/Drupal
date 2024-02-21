@@ -17,8 +17,8 @@
       function updateFilterGuidelines(event) {
         const target = event.target;
         const { value } = event.target;
-        const closestEl = target.closest('.js-filter-wrapper');
-        const $this = $(closestEl);
+        const closestElement = target.closest('.js-filter-wrapper');
+        const $this = $(closestElement);
         $this
           .find('[data-drupal-format-id]')
           .hide()
@@ -34,10 +34,10 @@
         return element;
       }
 
-      const contextEl = document.querySelector('.js-filter-guidelines');
-      const closestWrapper = closest(contextEl, '.js-filter-wrapper');
+      const contextElement = document.querySelector('.js-filter-guidelines');
+      const closestWrapper = closest(contextElement, '.js-filter-wrapper');
       if (closestWrapper) {
-        const $context = $(contextEl);
+        const $context = $(contextElement);
         const selectElement = $(closestWrapper).find('select.js-filter-list');
         $context.find(':header').hide();
         selectElement

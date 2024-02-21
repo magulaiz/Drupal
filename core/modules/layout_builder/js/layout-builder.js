@@ -45,11 +45,11 @@
         const toggleBlockEntry = (index, link) => {
           const $link = $(link);
           const textMatch = link.textContent.toLowerCase().includes(query);
-          const closestEl = link.closest('.js-layout-builder-category');
+          const closestElement = link.closest('.js-layout-builder-category');
           // Checks if a category is currently hidden.
           // Toggles the category on if so.
-          if (Drupal.elementIsHidden(closestEl)) {
-            $(closestEl).show();
+          if (Drupal.elementIsHidden(closestElement)) {
+            $(closestElement).show();
           }
           // Toggle the li tag of the matching link.
           $link.parent().toggle(textMatch);
@@ -127,14 +127,14 @@
     if (to === itemRegion[0]) {
       const closestItem = item.closest('[data-layout-delta]');
       const closestFrom = from.closest('[data-layout-delta]');
-      const closestEl = item.closest('[data-layout-update-url]');
+      const closestElement = item.closest('[data-layout-update-url]');
       // Find the destination delta.
       const deltaTo = $(closestItem).data('layout-delta');
       // If the block didn't leave the original delta use the destination.
       const deltaFrom = $from ? $(closestFrom).data('layout-delta') : deltaTo;
       ajax({
         url: [
-          $(closestEl).data('layout-update-url'),
+          $(closestElement).data('layout-update-url'),
           deltaFrom,
           deltaTo,
           itemRegion.data('region'),

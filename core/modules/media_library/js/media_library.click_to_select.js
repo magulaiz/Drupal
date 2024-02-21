@@ -22,9 +22,13 @@
       ).on('click', (event) => {
         // Links inside the trigger should not be click-able.
         event.preventDefault();
-        const closestEl = event.currentTarget.closest('.js-click-to-select');
+        const closestElement = event.currentTarget.closest(
+          '.js-click-to-select',
+        );
         // Click the hidden checkbox when the trigger is clicked.
-        const $input = $(closestEl).find('.js-click-to-select-checkbox input');
+        const $input = $(closestElement).find(
+          '.js-click-to-select-checkbox input',
+        );
         $input.prop('checked', !$input.prop('checked')).trigger('change');
       });
 
@@ -36,13 +40,16 @@
         ),
       )
         .on('change', ({ currentTarget }) => {
-          const closestEl = currentTarget.closest('.js-click-to-select');
-          $(closestEl).toggleClass('checked', $(currentTarget).prop('checked'));
+          const closestElement = currentTarget.closest('.js-click-to-select');
+          $(closestElement).toggleClass(
+            'checked',
+            $(currentTarget).prop('checked'),
+          );
         })
         // Adds is-focus class to the click-to-select element.
         .on('focus blur', ({ currentTarget, type }) => {
-          const closestEl = currentTarget.closest('.js-click-to-select');
-          $(closestEl).toggleClass('is-focus', type === 'focus');
+          const closestElement = currentTarget.closest('.js-click-to-select');
+          $(closestElement).toggleClass('is-focus', type === 'focus');
         });
 
       // Adds hover class to the click-to-select element.
@@ -53,8 +60,8 @@
           context,
         ),
       ).on('mouseover mouseout', ({ currentTarget, type }) => {
-        const closestEl = currentTarget.closest('.js-click-to-select');
-        $(closestEl).toggleClass('is-hover', type === 'mouseover');
+        const closestElement = currentTarget.closest('.js-click-to-select');
+        $(closestElement).toggleClass('is-hover', type === 'mouseover');
       });
     },
   };

@@ -174,8 +174,8 @@
               '%extensions': extensionPattern.replace(/\|/g, ', '),
             },
           );
-          const closestEl = this.closest('div.js-form-managed-file');
-          $(closestEl).prepend(
+          const closestElement = this.closest('div.js-form-managed-file');
+          $(closestElement).prepend(
             `<div class="messages messages--error file-upload-js-error" aria-live="polite">${error}</div>`,
           );
           this.value = '';
@@ -194,8 +194,8 @@
      *   The event triggered. For example `change.autoFileUpload`.
      */
     triggerUploadButton(event) {
-      const closestEl = event.target.closest('.js-form-managed-file');
-      $(closestEl)
+      const closestElement = event.target.closest('.js-form-managed-file');
+      $(closestElement)
         .find('.js-form-submit[data-drupal-selector$="upload-button"]')
         .trigger('mousedown');
     },
@@ -210,12 +210,12 @@
      */
     disableFields(event) {
       const $clickedButton = $(this);
-      const closestEl = this.closest('div.js-form-managed-file');
+      const closestElement = this.closest('div.js-form-managed-file');
       $clickedButton.trigger('formUpdated');
       // Check if we're working with an "Upload" button.
       let $enabledFields = [];
-      if ($(closestEl).length > 0) {
-        $enabledFields = $(closestEl).find('input.js-form-file');
+      if ($(closestElement).length > 0) {
+        $enabledFields = $(closestElement).find('input.js-form-file');
       }
 
       // Temporarily disable upload fields other than the one we're currently
@@ -248,8 +248,8 @@
      */
     progressBar(event) {
       const $clickedButton = $(this);
-      const closestEl = this.closest('.js-form-managed-file');
-      const $progressId = $(closestEl).find('input.file-progress');
+      const closestElement = this.closest('.js-form-managed-file');
+      const $progressId = $(closestElement).find('input.file-progress');
       if ($progressId.length) {
         const originalName = $progressId.attr('name');
 
@@ -266,7 +266,7 @@
       }
       // Show the progress bar if the upload takes longer than half a second.
       setTimeout(() => {
-        $(closestEl).find('div.ajax-progress-bar').slideDown();
+        $(closestElement).find('div.ajax-progress-bar').slideDown();
       }, 500);
       $clickedButton.trigger('fileUpload');
     },
