@@ -1197,8 +1197,13 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         // MongoDB needs integer values to be real integers.
         $definition = $this->entityFieldManager->getFieldStorageDefinitions($this->entityTypeId)[$this->idKey];
         if ($definition->getType() == 'integer') {
-          foreach ($ids as &$id) {
-            $id = (int) $id;
+          if (is_array($ids)) {
+            foreach ($ids as &$id) {
+              $id = (int) $id;
+            }
+          }
+          else {
+            $ids = (int) $ids;
           }
         }
 
@@ -1209,8 +1214,13 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         // MongoDB needs integer values to be real integers.
         $definition = $this->entityFieldManager->getFieldStorageDefinitions($this->entityTypeId)[$this->revisionKey];
         if ($definition->getType() == 'integer') {
-          foreach ($revision_ids as &$revision_id) {
-            $revision_id = (int) $revision_id;
+          if (is_array($revision_ids)) {
+            foreach ($revision_ids as &$revision_id) {
+              $revision_id = (int) $revision_id;
+            }
+          }
+          else {
+            $revision_ids = (int) $revision_ids;
           }
         }
 
