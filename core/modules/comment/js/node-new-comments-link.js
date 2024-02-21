@@ -51,8 +51,10 @@
    */
   function show(placeholder) {
     const selector = placeholder.closest('.comment-new-comments');
-    const previousElement = selector.previousElementSibling.classList.remove('last');
-    return (selector.style.display = 'block');
+    const previousElement =
+      selector.previousElementSibling.classList.remove('last');
+    const showElement = (selector.style.display = 'block');
+    return showElement;
     // return (
     //   $placeholder
     //     // Find the parent <li>.
