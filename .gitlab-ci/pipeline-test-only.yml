@@ -43,7 +43,9 @@ variables:
       [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
       [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
       [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
+    - echo -e "\e[0Ksection_start:`date +%s`:my_first_section[collapsed=true]\r\e[0KInstall PHP Extension"
     - pecl install mongodb && docker-php-ext-enable mongodb
+    - echo -e "\e[0Ksection_end:`date +%s`:my_first_section\r\e[0K"
     - $CI_PROJECT_DIR/.gitlab-ci/scripts/server-setup.sh
   script:
     - $CI_PROJECT_DIR/.gitlab-ci/scripts/test-only.sh
