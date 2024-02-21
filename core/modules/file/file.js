@@ -254,41 +254,6 @@
       const $progressId = $clickedButton
         .closest('div.js-form-managed-file')
         .find('input.file-progress');
-      const progressbar = $clickedButton
-        .closest('div.js-form-managed-file')
-        .find('div.ajax-progress-bar')[0];
-
-      /**
-       * SlideDown
-       *
-       * @param {HTMLElement} element
-       * @param {Number} duration
-       * @returns {Promise<boolean>}
-       */
-      function slideDown(element, duration = 200) {
-        function reflows(el) {
-          return el.offsetHeight;
-        }
-        return new Promise(function (resolve, reject) {
-          element.style.removeProperty('display');
-          let display = window.getComputedStyle(element).display;
-          if (display === 'none') display = 'block';
-          element.style.display = display;
-          const height = element.offsetHeight;
-          element.style.overflow = 'hidden';
-          element.style.height = 0;
-          reflows(element);
-          element.style.transitionProperty = `height`;
-          element.style.transitionDuration = `${duration}ms`;
-          element.style.height = `${height}px`;
-          window.setTimeout(function () {
-            element.style.removeProperty('height');
-            element.style.removeProperty('overflow');
-            element.style.removeProperty('transition-duration');
-            element.style.removeProperty('transition-property');
-          }, duration);
-        });
-      }
 
       if ($progressId.length) {
         const originalName = $progressId.attr('name');
@@ -304,12 +269,6 @@
           $progressId.attr('name', originalName);
         }, 1000);
       }
-      // Show the progress bar if the upload takes longer than half a second.
-      setTimeout(() => {
-        if (progressbar) {
-          slideDown(progressbar);
-        }
-      }, 500);
       $clickedButton.trigger('fileUpload');
     },
 
