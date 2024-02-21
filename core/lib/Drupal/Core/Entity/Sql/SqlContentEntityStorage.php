@@ -875,7 +875,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     // Load field data.
     $langcodes = array_keys($this->languageManager->getLanguages(LanguageInterface::STATE_ALL));
     foreach ($storage_definitions as $field_name => $storage_definition) {
-      $table = $table_mapping->getMongodbDedicatedTableName($storage_definition, $embedded_table_name);
+      $table = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $embedded_table_name);
 
       if (isset($embedded_table_data[$embedded_table_name])) {
         $embedded_table_data = $embedded_table_data[$embedded_table_name];
@@ -2860,15 +2860,15 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     if ($this->database->driver() == 'mongodb') {
       $dedicated_tables = [];
       if ($this->entityType->isRevisionable()) {
-        $dedicated_tables[$this->getJsonStorageAllRevisionsTable()] = $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->getJsonStorageAllRevisionsTable(), $is_deleted);
-        $dedicated_tables[$this->getJsonStorageCurrentRevisionTable()] = $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->getJsonStorageCurrentRevisionTable(), $is_deleted);
-        $dedicated_tables[$this->getJsonStorageLatestRevisionTable()] = $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->getJsonStorageLatestRevisionTable(), $is_deleted);
+        $dedicated_tables[$this->getJsonStorageAllRevisionsTable()] = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $this->getJsonStorageAllRevisionsTable(), $is_deleted);
+        $dedicated_tables[$this->getJsonStorageCurrentRevisionTable()] = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $this->getJsonStorageCurrentRevisionTable(), $is_deleted);
+        $dedicated_tables[$this->getJsonStorageLatestRevisionTable()] = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $this->getJsonStorageLatestRevisionTable(), $is_deleted);
       }
       elseif (!$this->entityType->isRevisionable() && $this->entityType->isTranslatable()) {
-        $dedicated_tables[$this->getJsonStorageTranslationsTable()] = $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->getJsonStorageTranslationsTable(), $is_deleted);
+        $dedicated_tables[$this->getJsonStorageTranslationsTable()] = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $this->getJsonStorageTranslationsTable(), $is_deleted);
       }
       elseif (!$this->entityType->isRevisionable() && !$this->entityType->isTranslatable()) {
-        $dedicated_tables[$this->getBaseTable()] = $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->getBaseTable(), $is_deleted);
+        $dedicated_tables[$this->getBaseTable()] = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $this->getBaseTable(), $is_deleted);
       }
 
       reset($dedicated_tables);

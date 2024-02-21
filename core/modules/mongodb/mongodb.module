@@ -75,11 +75,11 @@ function mongodb_entity_type_alter(array &$entity_types) {
       $entity_types['menu_link_content']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentEntityStorageSchema');
     }
 
-    if (!empty($entity_types['node'])) {
-      $entity_types['node']->setStorageClass('Drupal\mongodb\EntityStorage\NodeStorage');
-      $entity_types['node']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentEntityStorageSchema');
-      $entity_types['node']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\NodeViewsData');
-    }
+//    if (!empty($entity_types['node'])) {
+//      $entity_types['node']->setStorageClass('Drupal\mongodb\EntityStorage\NodeStorage');
+//      $entity_types['node']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentEntityStorageSchema');
+//      $entity_types['node']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\NodeViewsData');
+//    }
 
     if (!empty($entity_types['path_alias'])) {
       $entity_types['path_alias']->setStorageClass('Drupal\mongodb\EntityStorage\PathAliasStorage');
@@ -100,11 +100,11 @@ function mongodb_entity_type_alter(array &$entity_types) {
       $entity_types['taxonomy_vocabulary']->setStorageClass('Drupal\mongodb\EntityStorage\VocabularyStorage');
     }
 
-    if (!empty($entity_types['user'])) {
-      $entity_types['user']->setStorageClass('Drupal\mongodb\EntityStorage\UserStorage');
-      $entity_types['user']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\UserStorageSchema');
-      $entity_types['user']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\UserViewsData');
-    }
+//    if (!empty($entity_types['user'])) {
+//      $entity_types['user']->setStorageClass('Drupal\mongodb\EntityStorage\UserStorage');
+//      $entity_types['user']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\UserStorageSchema');
+//      $entity_types['user']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\UserViewsData');
+//    }
 
     if (!empty($entity_types['view'])) {
       $entity_types['view']->setStorageClass('Drupal\mongodb\ConfigStorage\ViewStorage');

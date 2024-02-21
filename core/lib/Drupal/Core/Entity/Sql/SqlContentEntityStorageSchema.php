@@ -2910,17 +2910,17 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       if ($entity_type->isRevisionable()) {
         // Adding an index for every field can create too many indexes on a single
         // table. For MongoDB the maximum is 64.
-        // $dedicated_schema['indexes']['primary_key'] = ['entity_id', 'revision_id', 'deleted', 'delta', 'langcode'];
-        $dedicated_schema['fields']['revision_id']['not null'] = TRUE;
-        $dedicated_schema['fields']['revision_id']['description'] = 'The entity revision id this data is attached to';
+        // $data_schema['indexes']['primary_key'] = ['entity_id', 'revision_id', 'deleted', 'delta', 'langcode'];
+        $data_schema['fields']['revision_id']['not null'] = TRUE;
+        $data_schema['fields']['revision_id']['description'] = 'The entity revision id this data is attached to';
 
-        $dedicated_all_revisions_schema = $dedicated_schema;
+        $dedicated_all_revisions_schema = $data_schema;
         $dedicated_all_revisions_schema['description'] = "Revision archive storage for {$storage_definition->getTargetEntityTypeId()} field {$storage_definition->getName()}.";
 
-        $dedicated_current_revision_schema = $dedicated_schema;
+        $dedicated_current_revision_schema = $data_schema;
         $dedicated_current_revision_schema['description'] = "Current revision storage for {$storage_definition->getTargetEntityTypeId()} field {$storage_definition->getName()}.";
 
-        $dedicated_latest_revision_schema = $dedicated_schema;
+        $dedicated_latest_revision_schema = $data_schema;
         $dedicated_latest_revision_schema['description'] = "Latest revision storage for {$storage_definition->getTargetEntityTypeId()} field {$storage_definition->getName()}.";
 
         return [
@@ -2932,18 +2932,18 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       elseif ($entity_type->isTranslatable()) {
         // Adding an index for every field can create too many indexes on a single
         // table. For MongoDB the maximum is 64.
-        // $dedicated_schema['indexes']['primary_key'] = ['entity_id', 'deleted', 'delta', 'langcode'];
-        $dedicated_schema['description'] = "Translations storage for {$storage_definition->getTargetEntityTypeId()} field {$storage_definition->getName()}.";
+        // $data_schema['indexes']['primary_key'] = ['entity_id', 'deleted', 'delta', 'langcode'];
+        $data_schema['description'] = "Translations storage for {$storage_definition->getTargetEntityTypeId()} field {$storage_definition->getName()}.";
 
-        return [$table_mapping->getJsonStorageDedicatedTableName($storage_definition, $this->storage->getJsonStorageTranslationsTable()) => $dedicated_schema];
+        return [$table_mapping->getJsonStorageDedicatedTableName($storage_definition, $this->storage->getJsonStorageTranslationsTable()) => $data_schema];
       }
       else {
         // Adding an index for every field can create too many indexes on a single
         // table. For MongoDB the maximum is 64.
-        // $dedicated_schema['indexes']['primary_key'] = ['entity_id', 'deleted', 'delta'];
-        $dedicated_schema['description'] = "Storage for {$storage_definition->getTargetEntityTypeId()} field {$storage_definition->getName()}.";
+        // $data_schema['indexes']['primary_key'] = ['entity_id', 'deleted', 'delta'];
+        $data_schema['description'] = "Storage for {$storage_definition->getTargetEntityTypeId()} field {$storage_definition->getName()}.";
 
-        return [$table_mapping->getJsonStorageDedicatedTableName($storage_definition, $entity_type->getBaseTable()) => $dedicated_schema];
+        return [$table_mapping->getJsonStorageDedicatedTableName($storage_definition, $entity_type->getBaseTable()) => $data_schema];
       }
     }
     else {
