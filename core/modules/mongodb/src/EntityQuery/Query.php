@@ -94,7 +94,7 @@ class Query extends CoreQuery {
       $storage = $this->getEntityTypeManager()->getStorage($this->entityTypeId);
 
       if ($this->allRevisions) {
-        $all_revisions_table = $storage->getAllRevisionsTable();
+        $all_revisions_table = $storage->getJsonStorageAllRevisionsTable();
         // When there is revision support, the key field is the revision key.
         $this->mongodbFields[$all_revisions_table] = $all_revisions_table;
         $this->mongodbRevisionField = $all_revisions_table;
@@ -384,7 +384,7 @@ class Query extends CoreQuery {
         if ($this->allRevisions) {
           $entities = $this->mongodbSelect->execute()->fetchAll();
           $count = 0;
-          $all_revisions_table = \Drupal::entityTypeManager()->getStorage($this->entityType->id())->getAllRevisionsTable();
+          $all_revisions_table = \Drupal::entityTypeManager()->getStorage($this->entityType->id())->getJsonStorageAllRevisionsTable();
           foreach ($entities as $entity) {
             $count += count($entity->$all_revisions_table);
           }
@@ -411,7 +411,7 @@ class Query extends CoreQuery {
         // revision_id must be located from the embedded all revisions table.
         // All other entity queries return the current revision_id from the base
         // table.
-        $all_revisions_table = \Drupal::entityTypeManager()->getStorage($this->entityType->id())->getAllRevisionsTable();
+        $all_revisions_table = \Drupal::entityTypeManager()->getStorage($this->entityType->id())->getJsonStorageAllRevisionsTable();
         $revision_field = $this->entityType->getKey('revision');
         $id_field = $this->entityType->getKey('id');
 
