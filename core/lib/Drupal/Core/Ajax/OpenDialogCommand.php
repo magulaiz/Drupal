@@ -3,7 +3,6 @@
 namespace Drupal\Core\Ajax;
 
 use Drupal\Component\Render\PlainTextOutput;
-use function PHPUnit\Framework\throwException;
 
 /**
  * Defines an AJAX command to open certain content in a dialog.
