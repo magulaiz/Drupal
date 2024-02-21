@@ -887,17 +887,26 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $testConnection = Database::getConnection('test_fail');
 
     // Add a fake item to the stack.
-    $reflectionMethod = new \ReflectionMethod($testConnection->transactionManager(), 'addStackItem');
-    $reflectionMethod->invoke($testConnection->transactionManager(), 'bar', new StackItem('qux', StackItemType::Root));
+    $manager = $testConnection->transactionManager();
+    $reflectionMethod = new \ReflectionMethod($manager, 'addStackItem');
+    $reflectionMethod->invoke($manager, 'bar', new StackItem('qux', StackItemType::Root));
+    // Ensure transaction state can be determined during object destruction.
+    // This is necessary for the test to pass when xdebug.mode has the 'develop'
+    // option enabled.
     $reflectionProperty = new \ReflectionProperty(TransactionManagerBase::class, 'connectionTransactionState');
-    $reflectionProperty->setValue($testConnection->transactionManager(), ClientConnectionTransactionState::Active);
+    $reflectionProperty->setValue($manager, ClientConnectionTransactionState::Active);
 
-    // $this->expectException(\AssertionError::class);
-    // $this->expectExceptionMessageMatches("/^Transaction .stack was not empty\\. Active stack: bar\\\\qux/");
+    $this->expectException(\AssertionError::class);
+    $this->expectExceptionMessageMatches("/^Transaction .stack was not empty\\. Active stack: bar\\\\qux/");
+    // Ensure that __destruct() results in an assertion error. Note that this
+    // will normally be called by PHP during the object's destruction but Drupal
+    // will commit all transactions when a database is closed thereby making
+    // this impossible to test with calling it directly.
+    $manager->__destruct();
+
+    // Clean up.
     unset($testConnection);
     Database::closeConnection('test_fail');
-
-    $this->assertTrue(TRUE, 'This test is meaningless now');
   }
 
   /**
