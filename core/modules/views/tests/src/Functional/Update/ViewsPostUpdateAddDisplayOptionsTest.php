@@ -13,7 +13,7 @@ use Drupal\views\Entity\View;
  * @group views
  * @group update
  */
-class ViewsAddDisplayOptionsUpdateTest extends UpdatePathTestBase {
+class ViewsPostUpdateAddDisplayOptionsTest extends UpdatePathTestBase {
 
   /**
    * Modules to enable.
