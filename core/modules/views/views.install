@@ -39,12 +39,12 @@ function views_update_1101(&$sandbox) {
     $changed = FALSE;
     foreach ($view->get('display') as $display_id => $display) {
       // Check and add 'style_options' if 'style' is set.
-      if (isset($display['display_options']['style'])) {
+      if (isset($display['display_options']['style']) && !isset($display['display_options']['style_options'])) {
         $view->set("display.$display_id.display_options.style_options", TRUE);
         $changed = TRUE;
       }
       // Check and add 'pager_options' if 'pager' is set.
-      if (isset($display['display_options']['pager'])) {
+      if (isset($display['display_options']['pager']) && !isset($display['display_options']['pager_options'])) {
         $view->set("display.$display_id.display_options.pager_options", TRUE);
         $changed = TRUE;
       }
