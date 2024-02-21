@@ -277,6 +277,22 @@ abstract class Connection {
   }
 
   /**
+   * Commits the all open transactions.
+   *
+   * @internal
+   *   This method exists only to work around a bug caused by Drupal incorrectly
+   *   relying on object destruction order to commit transactions. Xdebug 3.3.0
+   *   changes the order of object destruction when the develop mode is enabled.
+   */
+  public function commitAll() {
+    if (!empty($this->transactionLayers)) {
+      // Make all transactions committable.
+      $this->transactionLayers = array_fill_keys(array_keys($this->transactionLayers), FALSE);
+      $this->popCommittableTransactions();
+    }
+  }
+
+  /**
    * Returns the default query options for any given query.
    *
    * A given query can be customized with a number of option flags in an

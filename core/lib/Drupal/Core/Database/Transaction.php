@@ -48,6 +48,11 @@ class Transaction {
   protected $name;
 
   public function __construct(Connection $connection, $name = NULL) {
+    // Transactions rely on objects being destroyed in order to be committed.
+    // PHP makes no guarantee about the order in which objects are destroyed so
+    // ensure all transactions are committed on shutdown.
+    Database::commitAllOnShutdown();
+
     $this->connection = $connection;
     // If there is no transaction depth, then no transaction has started. Name
     // the transaction 'drupal_transaction'.
