@@ -43,6 +43,9 @@
         "drupal-scaffold": {
             "locations": {
                 "web-root": "web/"
+            },
+            "file-mapping": {
+                ".gitignore": false
             }
         },
         "installer-paths": {
