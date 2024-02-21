@@ -50,10 +50,10 @@
    *   The placeholder element passed in as a parameter.
    */
   function show(placeholder) {
-    let selector = placeholder.closest('.comment-new-comments');
-    let previousElement =
+    const selector = placeholder.closest('.comment-new-comments');
+    const previousElement =
       selector.previousElementSibling.classList.remove('last');
-    let showElement = (previousElement.style.display = 'block');
+    const showElement = (previousElement.style.display = 'block');
     return showElement;
     // return (
     //   $placeholder
