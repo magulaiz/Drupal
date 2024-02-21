@@ -49,7 +49,7 @@
    * @return {jQuery}
    *   The placeholder element passed in as a parameter.
    */
-  function show(placeholder) {
+  function show($placeholder) {
     return (
       $placeholder
         // Find the parent <li>.
