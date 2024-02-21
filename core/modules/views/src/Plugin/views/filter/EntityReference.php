@@ -278,9 +278,10 @@ class EntityReference extends ManyToOne {
       switch ($sub_handler) {
         case 'views':
           if (isset($sub_handler_settings['view']['no_view_help'])) {
-            // If there are no views with entity reference displays, ViewsSelection
-            // still validates the view. This will prevent form config extra form
-            // submission, so we remove it here.
+            // If there are no views with entity reference displays,
+            // ViewsSelection still validates the view.
+            // This will prevent form config extra form submission,
+            // so we remove it here.
             unset($sub_handler_settings['view']['#element_validate']);
           }
           break;
@@ -293,31 +294,13 @@ class EntityReference extends ManyToOne {
           $sub_handler_settings['auto_create_bundle']['#access'] = FALSE;
       }
 
-      // Workaround for https://www.drupal.org/project/drupal/issues/2651418.
-      // @todo Remove the below when the referenced issue is fixed.
-      foreach (Element::children($sub_handler_settings) as $key) {
-        if (\array_key_exists('#ajax', $sub_handler_settings[$key]) &&
-          !\is_array($sub_handler_settings[$key]['#ajax'])
-        ) {
-          $sub_handler_settings[$key]['#ajax'] = [];
-        }
-
-        foreach (Element::children($sub_handler_settings[$key]) as $sub_key) {
-          if (\array_key_exists('#ajax', $sub_handler_settings[$key][$sub_key]) &&
-            !\is_array($sub_handler_settings[$key][$sub_key]['#ajax'])
-          ) {
-            $sub_handler_settings[$key][$sub_key]['#ajax'] = [];
-          }
-        }
-      }
-
       $subform = NestedArray::mergeDeepArray([
         $subform,
         $sub_handler_settings,
       ], TRUE);
 
       $form[$subform_key] = $subform;
-      $this->removeRequiredOfSubformChildren($form[$subform_key]);
+      $this->cleanUpSubformChildren($form[$subform_key]);
     }
 
     $form['widget'] = [
@@ -335,20 +318,28 @@ class EntityReference extends ManyToOne {
   }
 
   /**
-   * Remove the required property to prevent focus errors.
+   * Clean up subform children for properties that could cause problems.
+   *
+   * Views modal forms do not work with required or ajax elements.
    *
    * @param array $element
    *   The form element.
    */
-  protected function removeRequiredOfSubformChildren(array &$element) {
+  protected function cleanUpSubformChildren(array &$element) {
+    // Remove the required property to prevent focus errors.
     if (isset($element['#required']) && $element['#required']) {
       $element['#required'] = FALSE;
       $element['#element_validate'][] = [static::class, 'validateRequired'];
     }
 
+    // Remove the ajax property as it does not work.
+    if (!empty($element['#ajax'])) {
+      unset($element['#ajax']);
+    }
+
     // Recursively apply to nested fields within the handler sub form.
     foreach (Element::children($element) as $delta) {
-      $this->removeRequiredOfSubformChildren($element[$delta]);
+      $this->cleanUpSubformChildren($element[$delta]);
     }
   }
 
