@@ -202,19 +202,19 @@ class Query extends CoreQuery {
 
       $data_table = NULL;
       if ($field_storage && $field_storage->isRevisionable() && $this->allRevisions) {
-        $data_table = $storage->getAllRevisionsTable();
+        $data_table = $storage->getJsonStorageAllRevisionsTable();
       }
       elseif ($field_storage && $field_storage->isRevisionable() && !$this->allRevisions) {
-        $data_table = $storage->getCurrentRevisionTable();
+        $data_table = $storage->getJsonStorageCurrentRevisionTable();
       }
       elseif ($field_storage && $field_storage->isTranslatable()) {
-        $data_table = $storage->getTranslationsTable();
+        $data_table = $storage->getJsonStorageTranslationsTable();
       }
 
       // Check whether this field is stored in a dedicated table.
       if ($field_storage && $table_mapping->requiresDedicatedTableStorage($field_storage)) {
         $embedded_to_table = is_null($data_table) ? $storage->getBaseTable() : $data_table;
-        $dedicated_table = $table_mapping->getMongodbDedicatedTableName($field_storage, $embedded_to_table);
+        $dedicated_table = $table_mapping->getJsonStorageDedicatedTableName($field_storage, $embedded_to_table);
 
         // Find the field column.
         $column = $field_storage->getMainPropertyName();

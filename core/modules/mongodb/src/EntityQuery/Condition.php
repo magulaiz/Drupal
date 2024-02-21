@@ -116,16 +116,16 @@ class Condition extends CoreCondition {
       // Check whether this field is stored in a dedicated table.
       if ($field_storage && $table_mapping->requiresDedicatedTableStorage($field_storage)) {
         if ($entity_type->isRevisionable() && $allRevisions) {
-          $data_table = $storage->getAllRevisionsTable();
+          $data_table = $storage->getJsonStorageAllRevisionsTable();
         }
         elseif ($entity_type->isRevisionable() && !$allRevisions) {
-          $data_table = $storage->getCurrentRevisionTable();
+          $data_table = $storage->getJsonStorageCurrentRevisionTable();
         }
         else {
-          $data_table = $storage->getTranslationsTable();
+          $data_table = $storage->getJsonStorageTranslationsTable();
         }
 
-        $dedicated_table = $table_mapping->getMongodbDedicatedTableName($field_storage, ($data_table ?: $storage->getBaseTable()));
+        $dedicated_table = $table_mapping->getJsonStorageDedicatedTableName($field_storage, ($data_table ?: $storage->getBaseTable()));
 
         $delta = NULL;
         // Find the field column.
@@ -277,13 +277,13 @@ class Condition extends CoreCondition {
         // Check whether this field is stored in a dedicated table.
         $data_table = NULL;
         if ($entity_type->isRevisionable() && $allRevisions) {
-          $data_table = $storage->getAllRevisionsTable();
+          $data_table = $storage->getJsonStorageAllRevisionsTable();
         }
         elseif ($entity_type->isRevisionable() && !$allRevisions) {
-          $data_table = $storage->getCurrentRevisionTable();
+          $data_table = $storage->getJsonStorageCurrentRevisionTable();
         }
         else {
-          $data_table = $storage->getTranslationsTable();
+          $data_table = $storage->getJsonStorageTranslationsTable();
         }
         if ($data_table) {
           $this->mongodbQuery->addMetaData('simple_query', FALSE);
@@ -344,18 +344,18 @@ class Condition extends CoreCondition {
         // We cannot use those parameters and we must look at the entity type.
         if ($mongodb_column == $entity_type->getKey('default_langcode')) {
           if ($entity_type->isRevisionable() && $allRevisions) {
-            $data_table = $storage->getAllRevisionsTable();
+            $data_table = $storage->getJsonStorageAllRevisionsTable();
           }
           elseif ($entity_type->isRevisionable() && !$allRevisions) {
-            $data_table = $storage->getCurrentRevisionTable();
+            $data_table = $storage->getJsonStorageCurrentRevisionTable();
           }
           elseif ($entity_type->isTranslatable()) {
-            $data_table = $storage->getTranslationsTable();
+            $data_table = $storage->getJsonStorageTranslationsTable();
           }
         }
 
         if ($entity_type->isRevisionable() && !$allRevisions) {
-          $data_table = $storage->getCurrentRevisionTable();
+          $data_table = $storage->getJsonStorageCurrentRevisionTable();
         }
 
         $conditions = $conditionContainer->conditions();
