@@ -381,12 +381,12 @@ trait PerformanceTestTrait {
       }
       $cache_tag_operations = $performance_test_data['cache_tag_operations'] ?? [];
       foreach ($cache_tag_operations as $operation) {
-        $cache_span = $tracer->spanBuilder('cache_tag ' . $operation['operation']->name . ' ' . $operation['tags'])
+        $cache_tag_span = $tracer->spanBuilder('cache_tag ' . $operation['operation']->name . ' ' . $operation['tags'])
           ->setStartTimestamp((int) ($operation['start'] * $nanoseconds_per_second))
           ->setAttribute('cache_tag.operation', $operation['operation']->name)
           ->setAttribute('cache_tag.tags', $operation['tags'])
           ->startSpan();
-        $cache_span->end((int) ($operation['stop'] * $nanoseconds_per_second));
+        $cache_tag_span->end((int) ($operation['stop'] * $nanoseconds_per_second));
       }
 
       $lcp_timestamp = NULL;
