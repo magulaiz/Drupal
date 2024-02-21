@@ -24,12 +24,14 @@ class Mail extends Plugin {
   /**
    * Constructs a Mail attribute.
    *
+   * @param string $id
+   *   The plugin ID.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup $label
    *   The label of the plugin.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $description
    *   (optional) A description of the plugin.
-   * @param string ...$base
-   *   Plugin ID and deriver class.
+   * @param string|null $deriver
+   *   (optional) The deriver class.
    */
   public function __construct(
     public readonly string $id,
