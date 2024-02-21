@@ -20,9 +20,9 @@ function views_update_last_removed() {
 }
 
 /**
- * Add 'style_options' and 'pager_options' to existing views.
+ * Adds 'style_options' and 'pager_options' to existing views.
  */
-function views_update_1101(&$sandbox) {
+function views_post_update_add_display_options(&$sandbox) {
   if (!isset($sandbox['progress'])) {
     $sandbox['progress'] = 0;
     $views_storage = \Drupal::entityTypeManager()->getStorage('view');
@@ -57,19 +57,18 @@ function views_update_1101(&$sandbox) {
     }
     if ($changed) {
       $view->save();
-      \Drupal::logger('views')->notice('Updated view @id with new options.', ['@id' => $view->id()]);
+      \Drupal::messenger()->addMessage(t('Updated view @id with new pager and style options.', ['@id' => $view->id()]));
     }
   }
 
   $sandbox['progress'] += count($view_ids_chunk);
 
   if ($sandbox['progress'] >= $sandbox['max']) {
-    $sandbox['#finished'] = 1;
     // Clear caches once after all batches are processed.
     drupal_flush_all_caches();
+    return t('All views have been updated with new pager and style options.');
   }
   else {
     $sandbox['#finished'] = $sandbox['progress'] / $sandbox['max'];
   }
-
 }
