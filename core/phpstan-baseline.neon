@@ -297,6 +297,24 @@ parameters:
 
 		-
 			message: """
+				#^Access to deprecated property \\$transactionLayers of class Drupal\\\\Core\\\\Database\\\\Connection\\:
+				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. The
+				  transaction stack is now managed by TransactionManager\\.$#
+			"""
+			count: 1
+			path: lib/Drupal/Core/Database/Connection.php
+
+		-
+			message: """
+				#^Call to deprecated method popTransaction\\(\\) of class Drupal\\\\Core\\\\Database\\\\Connection\\:
+				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
+				  TransactionManagerInterface methods instead\\.$#
+			"""
+			count: 1
+			path: lib/Drupal/Core/Database/Connection.php
+
+		-
+			message: """
 				#^Fetching deprecated class constant RETURN_AFFECTED of class Drupal\\\\Core\\\\Database\\\\Database\\:
 				in drupal\\:9\\.4\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
 				  replacement\\.$#
