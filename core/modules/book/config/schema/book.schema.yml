@@ -40,7 +40,10 @@ book.settings:
       label: 'Content type for child pages'
       constraints:
         EntityBundleExists: node
-        # @todo validate that this is one of %parent.allowed_types
+        ExistsIn:
+          selector: '%parent.allowed_types'
+          which: values
+          message: The content type for the <em>Add child page</em> link must be one of those selected as an allowed book outline type.
 
 block.settings.book_navigation:
   type: block_settings
