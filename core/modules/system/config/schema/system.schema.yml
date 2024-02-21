@@ -115,6 +115,8 @@ system.date:
 system.diff:
   type: config_object
   label: 'Diff settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     context:
       type: mapping
@@ -123,9 +125,15 @@ system.diff:
         lines_leading:
           type: integer
           label: 'Number of leading lines in a diff'
+          constraints:
+            Range:
+              min: 0
         lines_trailing:
           type: integer
           label: 'Number of trailing lines in a diff'
+          constraints:
+            Range:
+              min: 0
 
 system.logging:
   type: config_object
