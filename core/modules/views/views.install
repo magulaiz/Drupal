@@ -67,7 +67,8 @@ function views_update_1101(&$sandbox) {
     $sandbox['#finished'] = 1;
     // Clear caches once after all batches are processed.
     drupal_flush_all_caches();
-  } else {
+  }
+  else {
     $sandbox['#finished'] = $sandbox['progress'] / $sandbox['max'];
   }
 
