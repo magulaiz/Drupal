@@ -226,13 +226,22 @@ system.rss:
 system.theme:
   type: config_object
   label: 'Theme settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     admin:
       type: string
       label: 'Administration theme'
+      nullable: true
+      constraints:
+        ExtensionName: []
+        ExtensionExists: theme
     default:
       type: string
       label: 'Default theme'
+      constraints:
+        ExtensionName: []
+        ExtensionExists: theme
 
 system.menu.*:
   type: config_entity
