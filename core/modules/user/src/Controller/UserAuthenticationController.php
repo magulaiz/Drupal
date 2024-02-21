@@ -9,7 +9,7 @@ use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\user\UserAuthInterface;
 use Drupal\user\UserFloodControlInterface;
 use Drupal\user\UserInterface;
-use Drupal\user\UserSessionFinalizer;
+use Drupal\user\UserSessionFinalize;
 use Drupal\user\UserStorageInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -114,8 +114,8 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    *   The available serialization formats.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
-   * @param \Drupal\user\UserSessionFinalizer|null $userSessionFinalizer
-   *   The user session finalizer.
+   * @param \Drupal\user\UserSessionFinalize|null $userSessionFinalize
+   *   The user session finalize service.
    */
   public function __construct(
     UserFloodControlInterface $user_flood_control,
@@ -126,7 +126,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
     Serializer $serializer,
     array $serializer_formats,
     LoggerInterface $logger,
-    protected ?UserSessionFinalizer $userSessionFinalizer = NULL,
+    protected ?UserSessionFinalize $userSessionFinalize = NULL,
   ) {
     $this->userFloodControl = $user_flood_control;
     $this->userStorage = $user_storage;
@@ -136,9 +136,9 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
     $this->serializerFormats = $serializer_formats;
     $this->routeProvider = $route_provider;
     $this->logger = $logger;
-    if (!$userSessionFinalizer) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $userSessionFinalizer argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
-      $this->userSessionFinalizer = \Drupal::service('user.session_finalizer');
+    if (!$userSessionFinalize) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $userSessionFinalize argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
+      $this->userSessionFinalize = \Drupal::service('user.session_finalize');
     }
   }
 
@@ -165,7 +165,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
       $serializer,
       $formats,
       $container->get('logger.factory')->get('user'),
-      $container->get('user.session_finalizer')
+      $container->get('user.session_finalize')
     );
   }
 
@@ -316,7 +316,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    *   The user.
    */
   protected function userLoginFinalize(UserInterface $user) {
-    $this->userSessionFinalizer->finalizeLogin($user);
+    $this->userSessionFinalize->finalizeLogin($user);
   }
 
   /**
@@ -334,7 +334,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    * Logs the user out.
    */
   protected function userLogout() {
-    $this->userSessionFinalizer->finalizeLogout();
+    $this->userSessionFinalize->finalizeLogout();
   }
 
   /**

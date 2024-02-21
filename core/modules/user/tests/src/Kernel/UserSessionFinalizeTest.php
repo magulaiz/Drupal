@@ -15,12 +15,12 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
- * Tests the user session finalizer.
+ * Tests the user session finalize.
  *
  * @group user
- * @coversDefaultClass \Drupal\user\UserSessionFinalizer
+ * @coversDefaultClass \Drupal\user\UserSessionFinalize
  */
-class UserSessionFinalizerTest extends KernelTestBase {
+class UserSessionFinalizeTest extends KernelTestBase {
 
   use UserCreationTrait;
 
@@ -60,8 +60,8 @@ class UserSessionFinalizerTest extends KernelTestBase {
     $user = $this->createUser();
 
     // Handle the login.
-    $finalizer = $this->container->get('user.session_finalizer');
-    $finalizer->finalizeLogin($user);
+    $finalize = $this->container->get('user.session_finalize');
+    $finalize->finalizeLogin($user);
 
     // Get the session.
     $request = $this->container->get('request_stack')->getCurrentRequest();
@@ -93,11 +93,11 @@ class UserSessionFinalizerTest extends KernelTestBase {
     $this->container->set('session_manager', $sessionManager);
 
     // Handle the login.
-    $finalizer = $this->container->get('user.session_finalizer');
-    $finalizer->finalizeLogin($user);
+    $finalize = $this->container->get('user.session_finalize');
+    $finalize->finalizeLogin($user);
 
     // We assert the user is logged already in the testLogin method.
-    $finalizer->finalizeLogout();
+    $finalize->finalizeLogout();
 
     // Assert our user logout hook was called.
     $this->assertEquals($user->id(), \Drupal::state()->get('user_hooks_test_user_logout'));

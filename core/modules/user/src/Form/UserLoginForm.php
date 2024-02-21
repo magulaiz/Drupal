@@ -9,7 +9,7 @@ use Drupal\Core\Render\BareHtmlPageRendererInterface;
 use Drupal\Core\Url;
 use Drupal\user\UserAuthInterface;
 use Drupal\user\UserInterface;
-use Drupal\user\UserSessionFinalizer;
+use Drupal\user\UserSessionFinalize;
 use Drupal\user\UserStorageInterface;
 use Drupal\user\UserFloodControlInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -69,8 +69,8 @@ class UserLoginForm extends FormBase {
    *   The renderer.
    * @param \Drupal\Core\Render\BareHtmlPageRendererInterface $bare_html_renderer
    *   The renderer.
-   * @param \Drupal\user\UserSessionFinalizer|null $userSessionFinalizer
-   *   The user session finalizer.
+   * @param \Drupal\user\UserSessionFinalize|null $userSessionFinalize
+   *   The user session finalize service.
    */
   public function __construct(
     UserFloodControlInterface $user_flood_control,
@@ -78,16 +78,16 @@ class UserLoginForm extends FormBase {
     UserAuthInterface $user_auth,
     RendererInterface $renderer,
     BareHtmlPageRendererInterface $bare_html_renderer,
-    protected ?UserSessionFinalizer $userSessionFinalizer = NULL,
+    protected ?UserSessionFinalize $userSessionFinalize = NULL,
   ) {
     $this->userFloodControl = $user_flood_control;
     $this->userStorage = $user_storage;
     $this->userAuth = $user_auth;
     $this->renderer = $renderer;
     $this->bareHtmlPageRenderer = $bare_html_renderer;
-    if (!$this->userSessionFinalizer) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $userSessionFinalizer argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
-      $this->userSessionFinalizer = \Drupal::service('user.session_finalizer');
+    if (!$this->userSessionFinalize) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $userSessionFinalize argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
+      $this->userSessionFinalize = \Drupal::service('user.session_finalize');
     }
   }
 
@@ -101,7 +101,7 @@ class UserLoginForm extends FormBase {
       $container->get('user.auth'),
       $container->get('renderer'),
       $container->get('bare_html_page_renderer'),
-      $container->get('user.session_finalizer')
+      $container->get('user.session_finalize')
     );
   }
 
@@ -177,7 +177,7 @@ class UserLoginForm extends FormBase {
       $this->getRequest()->query->set('destination', $this->getRequest()->request->get('destination'));
     }
 
-    $this->userSessionFinalizer->finalizeLogin($account);
+    $this->userSessionFinalize->finalizeLogin($account);
   }
 
   /**

@@ -30,7 +30,7 @@ services:
   Drupal\user\UserDataInterface: '@user.data'
   user_maintenance_mode_subscriber:
     class: Drupal\user\EventSubscriber\MaintenanceModeSubscriber
-    arguments: ['@maintenance_mode', '@current_user', '@user.session_finalizer']
+    arguments: ['@maintenance_mode', '@current_user', '@user.session_finalize']
   user_access_denied_subscriber:
     class: Drupal\user\EventSubscriber\AccessDeniedSubscriber
     arguments: ['@current_user']
@@ -73,7 +73,7 @@ services:
   user.module_permissions_link_helper:
     class: Drupal\user\ModulePermissionsLinkHelper
     arguments: ['@user.permissions', '@access_manager', '@extension.list.module']
-  user.session_finalizer:
-    class: Drupal\user\UserSessionFinalizer
+  user.session_finalize:
+    class: Drupal\user\UserSessionFinalize
     arguments: ['@current_user', '@request_stack', '@session_manager', '@entity_type.manager', '@module_handler', '@logger.channel.user', '@datetime.time']
-  Drupal\user\UserSessionFinalizer: '@user.session_finalizer'
+  Drupal\user\UserSessionFinalize: '@user.session_finalize'

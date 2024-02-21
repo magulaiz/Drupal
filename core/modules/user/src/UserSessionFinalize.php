@@ -14,12 +14,12 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Finalizer for user sessions.
+ * Finalize user sessions.
  */
-final class UserSessionFinalizer {
+final class UserSessionFinalize {
 
   /**
-   * Creates a new UserSessionFinalizer.
+   * Creates a new UserSessionFinalize service.
    */
   public function __construct(
     protected AccountProxyInterface $accountProxy,
@@ -32,7 +32,7 @@ final class UserSessionFinalizer {
   ) {}
 
   /**
-   * Finalizes the login process and logs in a user.
+   * Finalize the login process and logs in a user.
    *
    * This method logs in the user, records a watchdog message about the new
    * session, saves the login timestamp, calls hook_user_login(), and generates

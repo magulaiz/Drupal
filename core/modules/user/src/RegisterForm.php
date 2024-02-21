@@ -27,20 +27,20 @@ class RegisterForm extends AccountForm {
    *   The entity type bundle service.
    * @param \Drupal\Component\Datetime\TimeInterface|null $time
    *   The time service.
-   * @param \Drupal\user\UserSessionFinalizer|null $userSessionFinalizer
-   *   The user session finalizer.
+   * @param \Drupal\user\UserSessionFinalize|null $userSessionFinalize
+   *   The user session finalize service.
    */
   public function __construct(
     EntityRepositoryInterface $entity_repository,
     LanguageManagerInterface $language_manager,
     EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL,
     TimeInterface $time = NULL,
-    protected ?UserSessionFinalizer $userSessionFinalizer = NULL,
+    protected ?UserSessionFinalize $userSessionFinalize = NULL,
   ) {
     parent::__construct($entity_repository, $language_manager, $entity_type_bundle_info, $time);
-    if (!$this->userSessionFinalizer) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $userSessionFinalizer argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
-      $this->userSessionFinalizer = \Drupal::service('user.session_finalizer');
+    if (!$this->userSessionFinalize) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $userSessionFinalize argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
+      $this->userSessionFinalize = \Drupal::service('user.session_finalize');
     }
   }
 
@@ -53,7 +53,7 @@ class RegisterForm extends AccountForm {
       $container->get('language_manager'),
       $container->get('entity_type.bundle.info'),
       $container->get('datetime.time'),
-      $container->get('user.session_finalizer')
+      $container->get('user.session_finalize')
     );
   }
 
@@ -160,7 +160,7 @@ class RegisterForm extends AccountForm {
     // No email verification required; log in user immediately.
     elseif (!$admin && !\Drupal::config('user.settings')->get('verify_mail') && $account->isActive()) {
       _user_mail_notify('register_no_approval_required', $account);
-      $this->userSessionFinalizer->finalizeLogin($account);
+      $this->userSessionFinalize->finalizeLogin($account);
       $this->messenger()->addStatus($this->t('Registration successful. You are now logged in.'));
       $form_state->setRedirect('<front>');
     }

@@ -446,15 +446,15 @@ function template_preprocess_username(&$variables) {
  *   The account to log in.
  *
  * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
- *    Drupal\user\UserSessionFinalizer::finalizeLogin() instead.
+ *    Drupal\user\UserSessionFinalize::finalizeLogin() instead.
  *
  * @see https://www.drupal.org/node/3379194
  * @see \Drupal\user\Authentication\Provider\Cookie
  * @see hook_user_login()
  */
 function user_login_finalize(UserInterface $account) {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use Drupal\user\UserSessionFinalizer::finalizeLogin() instead. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
-  \Drupal::service('user.session_finalizer')->finalizeLogin($account);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use Drupal\user\UserSessionFinalize::finalizeLogin() instead. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
+  \Drupal::service('user.session_finalize')->finalizeLogin($account);
 }
 
 /**
@@ -1217,13 +1217,13 @@ function user_toolbar() {
  * Logs the current user out.
  *
  * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
- *   Drupal\user\UserSessionFinalizer::finalizeLogout() instead.
+ *   Drupal\user\UserSessionFinalize::finalizeLogout() instead.
  *
  * @see https://www.drupal.org/node/3379194
  */
 function user_logout() {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use Drupal\user\UserSessionFinalizer::finalizeLogout() instead. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
-  \Drupal::service('user.session_finalizer')->finalizeLogout();
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use Drupal\user\UserSessionFinalize::finalizeLogout() instead. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
+  \Drupal::service('user.session_finalize')->finalizeLogout();
 }
 
 /**
