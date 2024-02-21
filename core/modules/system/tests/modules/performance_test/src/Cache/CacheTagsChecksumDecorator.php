@@ -22,7 +22,7 @@ class CacheTagsChecksumDecorator implements CacheTagsChecksumInterface, CacheTag
     $start = microtime(TRUE);
     $return = $this->checksumInvalidator->getCurrentChecksum($tags);
     $stop = microtime(TRUE);
-    $this->logCacheTagOperation($tags, $start, $stop, 'getCurrentChecksum');
+    $this->logCacheTagOperation($tags, $start, $stop, CacheTagOperation::getCurrentChecksum);
     return $return;
   }
 
@@ -33,7 +33,7 @@ class CacheTagsChecksumDecorator implements CacheTagsChecksumInterface, CacheTag
     $start = microtime(TRUE);
     $return = $this->checksumInvalidator->isValid($checksum, $tags);
     $stop = microtime(TRUE);
-    $this->logCacheTagOperation($tags, $start, $stop, 'isValid');
+    $this->logCacheTagOperation($tags, $start, $stop, CacheTagOperation::isValid);
     return $return;
   }
 
@@ -44,7 +44,7 @@ class CacheTagsChecksumDecorator implements CacheTagsChecksumInterface, CacheTag
     $start = microtime(TRUE);
     $return = $this->checksumInvalidator->invalidateTags($tags);
     $stop = microtime(TRUE);
-    $this->logCacheTagOperation($tags, $start, $stop, 'invalidateTags');
+    $this->logCacheTagOperation($tags, $start, $stop, CacheTagOperation::invalidateTags);
     return $return;
   }
 
@@ -64,12 +64,12 @@ class CacheTagsChecksumDecorator implements CacheTagsChecksumInterface, CacheTag
    *   The start microtime.
    * @param float $stop
    *   The stop microtime.
-   * @param string $operation
+   * @param \Drupal\performance_test\Cache\CacheTagOperation $operation
    *   The type of operation being logged.
    *
    * @return void
    */
-  protected function logCacheTagOperation(array $tags, float $start, float $stop, string $operation): void {
+  protected function logCacheTagOperation(array $tags, float $start, float $stop, CacheTagOperation $operation): void {
     $this->performanceDataCollector->addCacheTagOperation([
       'operation' => $operation,
       'tags' => implode(', ', $tags),

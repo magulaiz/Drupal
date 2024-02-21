@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests;
 
+use Drupal\performance_test\Cache\CacheTagOperation;
 use OpenTelemetry\API\Trace\SpanKind;
 use OpenTelemetry\Contrib\Otlp\OtlpHttpTransportFactory;
 use OpenTelemetry\Contrib\Otlp\SpanExporter;
@@ -149,15 +150,11 @@ trait PerformanceTestTrait {
         }
       }
       foreach ($performance_test_data['cache_tag_operations'] as $operation) {
-        if ($operation['operation'] === 'getCurrentChecksum') {
-          $cache_tag_checksum_count++;
-        }
-        if ($operation['operation'] === 'isValid') {
-          $cache_tag_is_valid_count++;
-        }
-        if ($operation['operation'] === 'invalidateTags') {
-          $cache_tag_invalidation_count++;
-        }
+        match($operation['operation']) {
+          CacheTagOperation::getCurrentChecksum => $cache_tag_checksum_count++,
+          CacheTagOperation::isValid => $cache_tag_is_valid_count++,
+          CacheTagOperation::invalidateTags => $cache_tag_invalidation_count++,
+        };
       }
       $performance_data->setQueryCount($query_count);
       $performance_data->setCacheGetCount($cache_get_count);
@@ -374,11 +371,20 @@ trait PerformanceTestTrait {
       }
       $cache_operations = $performance_test_data['cache_operations'] ?? [];
       foreach ($cache_operations as $operation) {
-        $cache_span = $tracer->spanBuilder($operation['operation'] . ' ' . $operation['bin'])
+        $cache_span = $tracer->spanBuilder('cache ' . $operation['operation'] . ' ' . $operation['bin'])
           ->setStartTimestamp((int) ($operation['start'] * $nanoseconds_per_second))
           ->setAttribute('cache.operation', $operation['operation'])
           ->setAttribute('cache.cids', $operation['cids'])
           ->setAttribute('cache.bin', $operation['bin'])
+          ->startSpan();
+        $cache_span->end((int) ($operation['stop'] * $nanoseconds_per_second));
+      }
+      $cache_tag_operations = $performance_test_data['cache_tag_operations'] ?? [];
+      foreach ($cache_tag_operations as $operation) {
+        $cache_span = $tracer->spanBuilder('cache_tag '. $operation['operation']->name . ' ' . $operation['tags'])
+          ->setStartTimestamp((int) ($operation['start'] * $nanoseconds_per_second))
+          ->setAttribute('cache_tag.operation', $operation['operation']->name)
+          ->setAttribute('cache_tag.tags', $operation['tags'])
           ->startSpan();
         $cache_span->end((int) ($operation['stop'] * $nanoseconds_per_second));
       }
