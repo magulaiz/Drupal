@@ -313,7 +313,11 @@ trait PerformanceTestTrait {
       ResourceAttributes::DEPLOYMENT_ENVIRONMENT => 'local',
     ])));
 
-    $transport = (new OtlpHttpTransportFactory())->create($collector, 'application/x-protobuf');
+    $otel_collector_headers = getenv('OTEL_COLLECTOR_HEADERS') ?: [];
+    if ($otel_collector_headers) {
+      $otel_collector_headers = json_decode($otel_collector_headers, TRUE);
+    }
+    $transport = (new OtlpHttpTransportFactory())->create($collector, 'application/x-protobuf', $otel_collector_headers);
     $exporter = new SpanExporter($transport);
     $tracerProvider = new TracerProvider(new SimpleSpanProcessor($exporter), NULL, $resource);
     $tracer = $tracerProvider->getTracer('Drupal');
@@ -405,6 +409,28 @@ trait PerformanceTestTrait {
       $span->end($last_timestamp);
       $tracerProvider->shutdown();
     }
+  }
+
+  /**
+   * Asserts that a count is between a min and max inclusively.
+   *
+   * @param int $min
+   *   Minimum value.
+   * @param int $max
+   *   Maximum value.
+   * @param int $actual
+   *   The number to assert against.
+   *
+   * @return void
+   *
+   * @throws \PHPUnit\Framework\ExpectationFailedException
+   */
+  protected function assertCountBetween(int $min, int $max, int $actual) {
+    static::assertThat(
+      $actual,
+      static::logicalAnd(static::greaterThanOrEqual($min), static::lessThanOrEqual($max)),
+      "$actual is greater or equal to $min and is smaller or equal to $max",
+    );
   }
 
 }
