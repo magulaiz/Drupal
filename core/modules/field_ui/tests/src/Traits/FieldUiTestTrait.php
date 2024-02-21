@@ -32,7 +32,7 @@ trait FieldUiTestTrait {
    * @param bool $save_settings
    *   (optional) Parameter for conditional execution of second and third step
    *   (Saving the storage settings and field settings). Defaults to 'TRUE'.
-   * @param string $bundle
+   * @param string|null $bundle
    *   (optional) Just provide the bundle as a string for additional settings.
    */
   public function fieldUIAddNewField($bundle_path, $field_name, $label = NULL, $field_type = 'test_field', array $storage_edit = [], array $field_edit = [], bool $save_settings = TRUE, ?string $bundle = NULL) {

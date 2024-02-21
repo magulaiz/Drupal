@@ -131,7 +131,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $this->submitForm($edit, 'Change handler');
     $edit = [
       'label' => 'Test Entity Reference Field',
-      'field_name' => "$field_name",
+      'field_name' => $field_name,
       'required' => FALSE,
       'settings[handler_settings][view][view_and_display]' => 'node_test_view:entity_reference_1',
     ];

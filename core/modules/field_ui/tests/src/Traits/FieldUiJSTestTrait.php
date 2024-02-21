@@ -111,12 +111,12 @@ trait FieldUiJSTestTrait {
     $this->assertSession()->responseNotContains('&amp;lt;');
 
     // Second step: 'Field settings' form.
-    $session = $this->getSession();
+    $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
-    $session->getPage()->fillField('edit-label', $label);
-    $session->getPage()->findField('description')->focus();
+    $page->fillField('edit-label', $label);
+    $page->findField('description')->focus();
     $assert_session->assertWaitOnAjaxRequest();
-    $session->getPage()->pressButton('Save settings');
+    $page->pressButton('Save settings');
     $this->assertTrue($assert_session->waitForText("Saved $label configuration."));
 
     // Check that the field appears in the overview form.
@@ -150,7 +150,7 @@ trait FieldUiJSTestTrait {
       if ($field_card) {
         break;
       }
-      $this->assertSession()->waitForButton('Back');
+      $this->assertNotEmpty($this->assertSession()->waitForButton('Back'));
       $this->getSession()->getPage()->pressButton('Back');
     }
     return $field_card->getParent();

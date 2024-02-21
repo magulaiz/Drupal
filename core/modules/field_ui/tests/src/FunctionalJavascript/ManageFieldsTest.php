@@ -217,8 +217,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     // Ensure the default value is reloaded when the field storage settings
     // are changed.
     $page->fillField('label', $field_name);
-    $page->findField('description')->focus();
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertNoElementAfterWait('css', '.ajax-progress-throbber');
     $default_input_1_name = "default_value_input[field_test_field_1][0][value]";
     $default_input_1 = $assert_session->fieldExists($default_input_1_name);
     $this->assertFalse($default_input_1->isVisible());
@@ -233,7 +232,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     $cardinality->setValue(2);
     $default_input_2 = $assert_session->waitForField($default_input_2_name);
     // Ensure the default value for first input is retained.
-    $assert_session->waitForField($default_input_1_name);
+    $this->assertNotEmpty($assert_session->waitForField($default_input_1_name));
     $assert_session->fieldValueEquals($default_input_1_name, 'There can be only one!');
     $page->findField($default_input_2_name)->setValue('But maybe also two?');
     $cardinality->setValue('1');
