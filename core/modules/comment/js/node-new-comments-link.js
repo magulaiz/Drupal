@@ -49,18 +49,21 @@
    * @return {jQuery}
    *   The placeholder element passed in as a parameter.
    */
-  function show($placeholder) {
-    return (
-      $placeholder
-        // Find the parent <li>.
-        .closest('.comment-new-comments')
-        // Find the preceding <li>, if any, and remove its 'last' class, if any.
-        .prev()
-        .removeClass('last')
-        // Go back to the parent <li> and show it.
-        .end()
-        .show()
-    );
+  function show(placeholder) {
+    const selector = placeholder.closest('.comment-new-comments');
+    const previousElement = selector.previousElementSibling.classList.remove('last');
+    return (selector.style.display = 'block');
+    // return (
+    //   $placeholder
+    //     // Find the parent <li>.
+    //     .closest('.comment-new-comments')
+    //     // Find the preceding <li>, if any, and remove its 'last' class, if any.
+    //     .prev()
+    //     .removeClass('last')
+    //     // Go back to the parent <li> and show it.
+    //     .end()
+    //     .show()
+    // );
   }
 
   /**
