@@ -40,7 +40,7 @@
     "jquery/no-proxy": 2,
     "jquery/no-ready": 2,
     "jquery/no-serialize": 2,
-    "jquery/no-show": 0,
+    "jquery/no-show": 2,
     "jquery/no-size": 2,
     "jquery/no-sizzle": 0,
     "jquery/no-slide": 0,

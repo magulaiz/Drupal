@@ -1207,7 +1207,8 @@
       this.progress.object.stopMonitoring();
     }
     // Undo hide.
-    $(this.wrapper).show();
+    // $(this.wrapper).show();
+    this.wrapper.style.display = 'block';
     // Re-enable the element.
     $(this.element).prop('disabled', false);
     // Reattach behaviors, if they were detached in beforeSerialize(), and the
