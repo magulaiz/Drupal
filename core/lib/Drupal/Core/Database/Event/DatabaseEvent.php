@@ -18,7 +18,8 @@ abstract class DatabaseEvent extends Event {
    * Constructs a DatabaseEvent object.
    */
   public function __construct() {
-    $this->time = hrtime(TRUE);
+    $hrtime = hrtime(TRUE);
+    $this->time = $hrtime[0] * 1e9 + $hrtime[1];
   }
 
 }
