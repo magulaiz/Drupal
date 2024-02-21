@@ -11,7 +11,7 @@ use Drupal\views\Entity\View;
  * @see views_post_update_add_display_options()
  *
  * @group views
- * @group update
+ * @group Update
  */
 class ViewsPostUpdateAddDisplayOptionsTest extends UpdatePathTestBase {
 
@@ -28,32 +28,35 @@ class ViewsPostUpdateAddDisplayOptionsTest extends UpdatePathTestBase {
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.4.0.bare.standard.php.gz',
-      __DIR__ . '/../../../fixtures/update/views-add-display-options-update.php',
+      __DIR__ . '/../../../fixtures/update/add_display_options_update.php',
     ];
   }
 
   /**
    * Tests the upgrade path for adding 'style_options' and 'pager_options'.
    */
-  public function testViewsAddDisplayOptionsUpdate() {
+  public function testViewsAddDisplayOptionsUpdateForAllDisplays() {
     // Load the view to test the update on.
-    $view = View::load('test_view');
-    $displayOptions = $view->get('display')['default']['display_options'];
+    $view = View::load('add_display_options_update');
 
-    // Assert 'style_options' and 'pager_options' are missing before the update.
-    $this->assertFalse(isset($displayOptions['style_options']), "Before update: 'style_options' is missing.");
-    $this->assertFalse(isset($displayOptions['pager_options']), "Before update: 'pager_options' is missing.");
+    // Assert specific configurations are missing before the update for each display.
+    foreach ($view->get('display') as $displayId => $display) {
+      $this->assertArrayNotHasKey('type', $display['display_options']['style'], "Before update: 'style' type is missing in display '{$displayId}'.");
+      $this->assertArrayNotHasKey('options', $display['display_options']['pager'], "Before update: 'pager' options are missing in display '{$displayId}'.");
+    }
 
     // Run the update process.
     $this->runUpdates();
 
     // Reload the view after the update.
-    $view = View::load('test_view');
-    $displayOptions = $view->get('display')['default']['display_options'];
+    $view = View::load('add_display_options_update');
 
-    // Assert 'style_options' and 'pager_options' have been added by the update.
-    $this->assertTrue(isset($displayOptions['style_options']), "After update: 'style_options' has been added.");
-    $this->assertTrue(isset($displayOptions['pager_options']), "After update: 'pager_options' has been added.");
+    // Assert specific style and pager configurations have been added or
+    // modified by the update for each display.
+    foreach ($view->get('display') as $displayId => $display) {
+      $this->assertArrayHasKey('type', $display['display_options']['style'], "After update: 'style' type has been added or modified in display '{$displayId}'.");
+      $this->assertArrayHasKey('options', $display['display_options']['pager'], "After update: 'pager' options have been added or modified in display '{$displayId}'.");
+    }
   }
 
 }
