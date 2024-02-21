@@ -3,13 +3,12 @@
 system.site:
   type: config_object
   label: 'Site information'
+  constraints:
+    FullyValidatable: ~
   mapping:
     uuid:
       type: uuid
       label: 'Site UUID'
-      constraints:
-        Uuid: []
-        NotNull: []
     name:
       type: label
       label: 'Site name'
@@ -38,11 +37,15 @@ system.site:
     weight_select_max:
       type: integer
       label: 'Weight element maximum value'
+      constraints:
+        Range:
+          # @see PHP_INT_MAX
+          max: 2147483647
     default_langcode:
       type: langcode
       label: 'Site default language code'
     mail_notification:
-      type: string
+      type: email
       label: 'Notification email address'
 
 system.maintenance:
