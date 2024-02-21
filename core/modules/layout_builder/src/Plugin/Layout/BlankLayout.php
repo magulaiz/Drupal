@@ -2,6 +2,7 @@
 
 namespace Drupal\layout_builder\Plugin\Layout;
 
+use Drupal\Core\Layout\Attribute\Layout;
 use Drupal\Core\Layout\LayoutDefault;
 
 /**
@@ -13,11 +14,10 @@ use Drupal\Core\Layout\LayoutDefault;
  *
  * @internal
  *   This layout plugin is intended for internal use by Layout Builder only.
- *
- * @Layout(
- *   id = "layout_builder_blank",
- * )
  */
+#[Layout(
+  id: 'layout_builder_blank',
+)]
 class BlankLayout extends LayoutDefault {
 
   /**

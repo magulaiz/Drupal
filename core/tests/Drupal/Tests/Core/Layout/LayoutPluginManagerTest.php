@@ -340,20 +340,21 @@ EOS;
 namespace Drupal\Core\Plugin\Layout;
 use Drupal\Core\Layout\LayoutDefault;
 /**
- * @Layout(
- *   id = "plugin_provided_layout",
- *   label = @Translation("Layout plugin"),
- *   category = @Translation("Columns: 1"),
- *   description = @Translation("Test layout"),
- *   path = "core/lib/Drupal/Core",
- *   template = "templates/plugin-provided-layout",
- *   regions = {
- *     "main" = {
- *       "label" = @Translation("Main Region", context = "layout_region")
- *     }
- *   }
- * )
+ * The TestLayout Class.
  */
+#[Layout(
+  id: 'plugin_provided_layout',
+  label: new TranslatableMarkup('Layout plugin'),
+  category: new TranslatableMarkup('Columns: 1'),
+  description: new TranslatableMarkup('Test layout'),
+  path: "core/lib/Drupal/Core",
+  template: "templates/plugin-provided-layout",
+  regions: [
+    "main" => [
+      "label" => new TranslatableMarkup("Main Region", context = "layout_region")
+    ],
+  ],
+)]
 class TestLayout extends LayoutDefault {}
 EOS;
     vfsStream::setup('root');
