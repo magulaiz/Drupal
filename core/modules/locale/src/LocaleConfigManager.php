@@ -674,7 +674,7 @@ class LocaleConfigManager {
         // Config will only be overridden if shipped language code is not available.
         if (!$config->isNew()) {
           $langcode = $config->get('langcode');
-          $is_available_langcode= in_array($langcode, $available_langcodes);
+          $is_available_langcode = in_array($langcode, $available_langcodes);
           if ((empty($langcode) || $langcode == 'en') && !$is_available_langcode) {
             $config->set('langcode', $default_langcode)->save();
           }
