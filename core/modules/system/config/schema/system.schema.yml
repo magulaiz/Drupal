@@ -138,10 +138,22 @@ system.diff:
 system.logging:
   type: config_object
   label: 'Logging settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     error_level:
       type: string
       label: 'Error messages to display'
+      constraints:
+        Choice:
+          # @see ERROR_REPORTING_HIDEs
+          - hide
+          # @see ERROR_REPORTING_DISPLAY_SOME
+          - some
+          # @see ERROR_REPORTING_DISPLAY_ALL
+          - all
+          # @see ERROR_REPORTING_DISPLAY_VERBOSE
+          - verbose
 
 system.performance:
   type: config_object
