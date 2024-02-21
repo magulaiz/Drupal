@@ -12,15 +12,17 @@ class OpenModalDialogWithUrl implements CommandInterface {
   /**
    * Constructs a OpenModalDialogWithUrl object.
    *
-   * @see OpenDialogCommand a similar class which deals with opening modals
-   * but we don't want to inherit any of its public methods except render()
-   * hence not extending it. For usage examples and better understanding the
-   * difference between the two @see AjaxCommandsTest
-   *
    * @param string $url
    *   The URL of the page.
    * @param array $settings
    *   The dialog settings.
+   *
+   * @see OpenDialogCommand
+   * A similar class which deals with opening modals, but we don't want to
+   * inherit any of its public methods except render() hence not extending
+   * it. For usage examples and better understanding the difference between
+   * the two look at their tests.
+   * @see AjaxCommandsTest
    */
   public function __construct(
     protected string $url,
