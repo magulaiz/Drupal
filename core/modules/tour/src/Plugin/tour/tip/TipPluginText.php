@@ -3,18 +3,19 @@
 namespace Drupal\tour\Plugin\tour\tip;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Utility\Token;
+use Drupal\tour\Attribute\Tip;
 use Drupal\tour\TipPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Displays some text as a tip.
- *
- * @Tip(
- *   id = "text",
- *   title = @Translation("Text")
- * )
  */
+#[Tip(
+  id: 'text',
+  title: new TranslatableMarkup('Text'),
+)]
 class TipPluginText extends TipPluginBase implements ContainerFactoryPluginInterface {
 
   /**
