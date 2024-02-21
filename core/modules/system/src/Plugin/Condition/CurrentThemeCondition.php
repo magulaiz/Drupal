@@ -105,7 +105,6 @@ class CurrentThemeCondition extends NegatableConditionPluginBase implements Cont
     }
 
     $result = $this->themeManager->getActiveTheme()->getName() == $this->configuration['theme'];
-
     return $this->evaluateNegate($result);
   }
 
