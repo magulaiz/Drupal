@@ -125,7 +125,9 @@
     attach() {
       function onFormSubmit(e) {
         const $form = $(e.currentTarget);
-        const formValues = $form.serialize();
+        const formValues = new URLSearchParams(
+          new FormData(e.currentTarget),
+        ).toString();
         const previousValues = $form[0].getAttribute(
           'data-drupal-form-submit-last',
         );
