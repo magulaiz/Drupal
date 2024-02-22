@@ -1,3 +1,5 @@
+[View it in GitLab](https://git.drupalcode.org/project/drupal/-/blob/11.x/RELEASES.md)
+
 ```mermaid
 ---
 displayMode: compact
