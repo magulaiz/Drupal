@@ -432,6 +432,7 @@
    */
   Drupal.behaviors.viewsUiRenderAddViewButton.toggleMenu = function ($trigger) {
     $trigger.parent().toggleClass('open');
+    $trigger.next().slideToggle('fast');
   };
 
   /**
