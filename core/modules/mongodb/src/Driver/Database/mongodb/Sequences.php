@@ -185,7 +185,7 @@ class Sequences {
     );
 
     if ($result && isset($result->sequence2)) {
-      return $result->sequence2 + 1;
+      return $result->sequence2;
     }
     else {
       // Create a new sequence and the sequences table if it does not exists.
