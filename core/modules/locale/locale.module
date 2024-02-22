@@ -1368,3 +1368,149 @@ function locale_translation_language_table($form_element) {
   }
   return $form_element;
 }
+
+function locale_get_plural_form_labels($langcode) {
+  switch ($langcode) {
+    // One plural form
+    case 'bo':
+    case 'kk':
+    case 'ky':
+    case 'lo':
+    case 'rhg':
+    case 'tr':
+    case 'ug':
+    case 'vi':
+      return array(
+        t('Singular and plural form'),
+      );
+      break;
+
+    // Two plural forms (exceptions)
+    case 'jv':
+      return array(
+        t('Form for 0'),
+        t('Form for other numbers'),
+      );
+      break;
+    case 'mk':
+      return array(
+        t('Form for numbers ending with 1'),
+        t('Form for other numbers'),
+      );
+      break;
+
+    // Three plural forms
+    case 'be':
+    case 'bs':
+    case 'cs':
+    case 'hr':
+    case 'ru':
+    case 'sr':
+    case 'uk':
+      return array(
+        t('Form for numbers ending with 1 (except 11, 111, 211, etc.)'),
+        t('Form for numbers ending with 2-4 (except 12-14, 112-114, 212-214, etc.)'),
+        t('Form for numbers ending with 5-9 (and 0, 10-20, 110-120, 210-220, etc.)'),
+      );
+      break;
+    case 'lt':
+      return array(
+        t('Form for numbers ending with 1 (except 11, 111, 211, etc.)'),
+        t('Form for numbers ending with 2-9 (except 12-19, 112-119, 212-219, etc.)'),
+        t('Form for 10-20, 110-120, 210-220, etc.'),
+      );
+      break;
+    case 'lv':
+      return array(
+        t('Form for numbers ending with 1 (except 11, 111, 211, etc.)'),
+        t('Form for other numbers (except 0)'),
+        t('Form for 0'),
+      );
+      break;
+    case 'pl':
+      return array(
+        t('Singular form'),
+        t('Form for numbers ending with 2-4 (except 12-14, 112-114, 212-214, etc.)'),
+        t('Form for other numbers'),
+      );
+      break;
+    case 'ro':
+      return array(
+        t('Singular form'),
+        t('Form for 0, 2-19, 101-119, 201-219, etc.'),
+        t('Form for other numbers'),
+      );
+      break;
+    case 'sk':
+      return array(
+        t('Singular form'),
+        t('Form for 2-4'),
+        t('Form for 5 and more'),
+      );
+      break;
+
+    // Four plural forms
+    case 'cy':
+      return array(
+        t('Singular form'),
+        t('Form for 2'),
+        t('Form for 3 and more (except 8 and 11)'),
+        t('Form for 8 and 11'),
+      );
+      break;
+    case 'gd':
+      return array(
+        t('Form for 1 and 11'),
+        t('Form for 2 and 12'),
+        t('Form for 3-19 (except 11 and 12)'),
+        t('Form for 20 and more'),
+      );
+      break;
+    case 'mt':
+      return array(
+        t('Singular form'),
+        t('Form for 0, 2-10, 102-110, 202-210, etc.'),
+        t('Form for 11-19, 111-119, 211-219, etc.'),
+        t('Form for 20-101, 120-201, 220-301, etc.'),
+      );
+      break;
+    case 'sl':
+      return array(
+        t('Form for 1, 101, 201, etc.'),
+        t('Form for 2, 102, 202, etc.'),
+        t('Form for 3, 4, 103, 104, 203, 204, etc.'),
+        t('Form for other numbers'),
+      );
+      break;
+
+    // Five plural forms
+    case 'ga':
+      return array(
+        t('Singular form'),
+        t('Form for 2'),
+        t('Form for 3-6'),
+        t('Form for 7-10'),
+        t('Form for 11 and more'),
+      );
+      break;
+
+    // Six plural forms
+    case 'ar':
+      return array(
+        t('Singular form'),
+        t('Form for 0'),
+        t('Form for 2'),
+        t('Form for 3-10, 103-110, 203-210, etc.'),
+        t('Form for 11-99, 111-199, 211-299, etc.'),
+        t('Form for 100-102, 200-202, etc.'),
+      );
+      break;
+
+    // Two plural forms (default)
+    default:
+      return array(
+        t('Singular form'),
+        t('Plural form'),
+      );
+  }
+}
