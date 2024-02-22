@@ -9,6 +9,10 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Provides support for reverse proxies.
+ *
+ * @deprecated in drupal:8.6.1 and is removed from drupal:9.0.0.
+ *   Use the new configuration file "sites/reverse_proxy_settings.php" instead.
+ * @see \Drupal\Core\DrupalKernel::setTrustedProxies()
  */
 class ReverseProxyMiddleware implements HttpKernelInterface {
 
@@ -59,6 +63,10 @@ class ReverseProxyMiddleware implements HttpKernelInterface {
   public static function setSettingsOnRequest(Request $request, Settings $settings) {
     // Initialize proxy settings.
     if ($settings->get('reverse_proxy', FALSE)) {
+      if (3 === func_num_args() && TRUE === func_get_arg(2)) {
+        @trigger_error('The "' . __NAMESPACE__ . '\\' . __CLASS__ . '" class has been deprecated in Drupal 8.6.1 and will be removed before Drupal 9.0.0. Use the new configuration file "sites/reverse_proxy_settings.php" instead. See https://www.drupal.org/project/drupal/issues/2998728.', E_USER_DEPRECATED);
+      }
+
       $proxies = $settings->get('reverse_proxy_addresses', []);
       if (count($proxies) > 0) {
         // Set the default value. This is the most relaxed setting possible and
