@@ -38,6 +38,15 @@ class ViewsPostUpdateAddDisplayOptionsTest extends UpdatePathTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+
+    $this->installModulesFromClassProperty($this->container);
+  }
+
+  /**
    * Tests the upgrade path for adding 'style_options' and 'pager_options'.
    */
   public function testViewsAddDisplayOptionsUpdateForAllDisplays() {
