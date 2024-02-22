@@ -116,11 +116,6 @@ class TermStorageSchema extends SqlContentEntityStorageSchema {
       }
     }
 
-//    // For MongoDB.
-//    if ($table_name == 'taxonomy_term_translations') {
-//      $schema['primary key'] = ['tid', 'vid', 'langcode'];
-//    }
-
     return $schema;
   }
 
