@@ -18,7 +18,10 @@ use Drupal\Core\Entity\EntityStorageInterface;
  * @Block(
  *   id = "book_navigation",
  *   admin_label = @Translation("Book navigation"),
- *   category = @Translation("Menus")
+ *   category = @Translation("Menus"),
+ *   context_definitions = {
+ *     "node" = @ContextDefinition("entity:node", required = FALSE, label = @Translation("Node"))
+ *    }
  * )
  */
 class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInterface {
@@ -123,7 +126,7 @@ class BookNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
   public function build() {
     $current_bid = 0;
 
-    $node = $this->routeMatch->getParameter('node');
+    $node = $this->getContextValue('node');
     if ($node instanceof NodeInterface && !empty($node->book['bid'])) {
       $current_bid = $node->book['bid'];
     }
