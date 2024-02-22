@@ -449,12 +449,6 @@ class AjaxCommandsTest extends UnitTestCase {
     $command->setDialogTitle('New title');
     $expected['dialogOptions']['title'] = 'New title';
     $this->assertEquals($expected, $command->render());
-
-    $command = new OpenDialogCommand('#some-dialog', ['markup' => 'Title'], '<p>Text!</p>', [
-      'url' => FALSE,
-      'width' => 500,
-    ]);
-    $this->expectDeprecation('Calling OpenDialogCommand::__construct() with $title as an array is deprecated in drupal:10.4.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/2663316');
   }
 
   /**
