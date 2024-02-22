@@ -186,16 +186,6 @@ class ViewEditForm extends ViewFormBase {
       ],
     ];
 
-    if ($view_status == 'disabled') {
-      $views_overview_url = Url::fromRoute('entity.view.collection', [], ['absolute' => TRUE]);
-      $views_overview = Link::fromTextAndUrl($this->t('Views Overview'), $views_overview_url)->toString();
-      $form['displays']['view-disabled'] = [
-        '#type' => 'container',
-        '#attributes' => ['class' => ['view-changed', 'messages', 'messages--warning']],
-        '#children' => $this->t('This view is disabled. It can be re-enabled on the @link Page', ['@link'=>$views_overview]),
-      ];
-    }
-
     $form['displays']['top'] = $this->renderDisplayTop($view);
 
     // The rest requires a display to be selected.
@@ -210,6 +200,17 @@ class ViewEditForm extends ViewFormBase {
           'class' => ['edit-display-settings'],
         ],
       ];
+
+      if ($view_status == 'disabled') {
+        $form['#attributes']['class'][] = 'views-instance-disabled';
+        $views_overview_url = Url::fromRoute('entity.view.collection', [], ['absolute' => TRUE]);
+        $views_overview = Link::fromTextAndUrl($this->t('Views Overview'), $views_overview_url)->toString();
+        $form['displays']['settings']['view-disabled'] = [
+          '#type' => 'container',
+          '#attributes' => ['class' => ['view-changed', 'messages', 'messages--warning']],
+          '#children' => $this->t('This view is disabled. It can be re-enabled on the @link Page', ['@link' => $views_overview]),
+        ];
+      }
 
       // Add a text that the display is disabled.
       if ($view->getExecutable()->displayHandlers->has($display_id)) {
@@ -229,7 +230,6 @@ class ViewEditForm extends ViewFormBase {
         $tab_content['#attributes']['class'][] = 'views-display-deleted';
       }
       // Mark disabled displays as such.
-
       if ($view->getExecutable()->displayHandlers->has($display_id) && !$view->getExecutable()->displayHandlers->get($display_id)->isEnabled()) {
         $tab_content['#attributes']['class'][] = 'views-display-disabled';
       }

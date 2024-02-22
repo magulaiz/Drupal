@@ -838,3 +838,6 @@ td.group-title {
 .views-edit-view.disabled  #edit-displays {
   background-color: #f3f4f9;
 }
+.views-instance-disabled #edit-displays{
+  background-color: #f3f4f9;
+}
