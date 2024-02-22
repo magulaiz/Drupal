@@ -4,8 +4,8 @@ dependencies:
   module:
     - node
     - user
-id: add_display_options_update
-label: 'Add Display Options Updates'
+id: add_style_and_pager_options_update
+label: 'Add Style and Pager Display Options Update'
 module: views
 description: ''
 tag: ''
@@ -18,7 +18,7 @@ display:
     display_plugin: default
     position: 0
     display_options:
-      title: 'Add Display Options Updates'
+      title: 'Add Style and Pager Display Options Update'
       fields:
         title:
           id: title

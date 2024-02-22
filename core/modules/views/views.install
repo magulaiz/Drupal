@@ -22,7 +22,7 @@ function views_update_last_removed() {
 /**
  * Adds 'style_options' and 'pager_options' to existing views.
  */
-function views_post_update_add_display_options(&$sandbox) {
+function views_post_update_add_style_and_pager_display_options(&$sandbox) {
   if (!isset($sandbox['progress'])) {
     $sandbox['progress'] = 0;
     $views_storage = \Drupal::entityTypeManager()->getStorage('view');
