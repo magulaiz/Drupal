@@ -363,15 +363,15 @@ function views_ui_entity_operation(EntityInterface $entity): array {
     $plugin = $entity->getPlugin();
     $plugin_id = $plugin->getBaseId();
     if ($plugin_id === 'views_block') {
-      $vid_parts = explode('-', $plugin->getDerivativeId());
-      $vid = $vid_parts[0] ?? '';
-      $display_id = $vid_parts[1] ?? '';
-      $view = View::load($vid);
-      if ($view->access('edit')) {
+      $view_id_parts = explode('-', $plugin->getDerivativeId());
+      $view_id = $view_id_parts[0] ?? '';
+      $display_id = $view_id_parts[1] ?? '';
+      $view = View::load($view_id);
+      if ($view && $view->access('edit')) {
         $operations['view-edit'] = [
           'title' => t('Edit view'),
           'url' => Url::fromRoute('entity.view.edit_display_form', [
-            'view' => $view->id(),
+            'view' => $view_id,
             'display_id' => $display_id,
           ]),
           'weight' => 50,

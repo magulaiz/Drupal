@@ -16,7 +16,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use Drupal\Core\Url;
 
 /**
  * Tests \Drupal\system\Plugin\Block\SystemMenuBlock.
@@ -191,7 +190,7 @@ class SystemMenuBlockTest extends KernelTestBase {
     $this->assertEquals([
       'menu-edit' => [
         'title' => $this->t('Edit menu'),
-        'url' => Url::fromRoute('entity.menu.edit_form', ['menu' => $this->menu->id()]),
+        'url' => $this->menu->toUrl('edit-form'),
         'weight' => 50,
       ],
     ], menu_ui_entity_operation($block));

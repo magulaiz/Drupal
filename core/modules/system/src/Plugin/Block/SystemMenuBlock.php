@@ -5,7 +5,6 @@ namespace Drupal\system\Plugin\Block;
 use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Menu\MenuActiveTrailInterface;
 use Drupal\Core\Menu\MenuLinkTreeInterface;
@@ -43,13 +42,6 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
    * @var \Drupal\Core\Menu\MenuActiveTrailInterface
    */
   protected $menuActiveTrail;
-
-  /**
-   * The module handler used to check whether menu_ui is installed.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected ModuleHandlerInterface $moduleHandler;
 
   /**
    * Constructs a new SystemMenuBlock.

@@ -480,10 +480,10 @@ function menu_ui_entity_operation(EntityInterface $entity): array {
     if ($plugin_id === 'system_menu_block') {
       $menu_id = $plugin->getDerivativeId();
       $menu = Menu::load($menu_id);
-      if ($menu->access('edit')) {
+      if ($menu && $menu->access('edit')) {
         $operations['menu-edit'] = [
           'title' => t('Edit menu'),
-          'url' => Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_id]),
+          'url' => $menu->toUrl('edit-form'),
           'weight' => 50,
         ];
       }
