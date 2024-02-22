@@ -3,6 +3,7 @@
 namespace Drupal\Tests\filter\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
 /**
@@ -48,7 +49,6 @@ class FilterHooksTest extends BrowserTestBase {
     $edit = [];
     $edit['format'] = $this->randomMachineName();
     $edit['name'] = $name;
-    $edit['roles[' . RoleInterface::ANONYMOUS_ID . ']'] = 1;
     $this->drupalGet('admin/config/content/formats/add');
     $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->pageTextContains("Added text format {$name}.");
@@ -56,13 +56,26 @@ class FilterHooksTest extends BrowserTestBase {
 
     $format_id = $edit['format'];
 
+    // Grant RoleInterface::ANONYMOUS_ID to use the generated text format.
+    // @see core/profiles/standard/config/install/user.role.authenticated.yml
+    $this->grantPermissions(
+      Role::load(RoleInterface::ANONYMOUS_ID),
+      ["use text format $format_id"]
+    );
+
     // Update text format.
     $edit = [];
-    $edit['roles[' . RoleInterface::AUTHENTICATED_ID . ']'] = 1;
     $this->drupalGet('admin/config/content/formats/manage/' . $format_id);
     $this->submitForm($edit, 'Save configuration');
     $this->assertSession()->pageTextContains("The text format {$name} has been updated.");
     $this->assertSession()->pageTextContains('hook_filter_format_update invoked.');
+
+    // Grant RoleInterface::AUTHENTICATED_ID to use the generated text format.
+    // @see core/profiles/standard/config/install/user.role.authenticated.yml
+    $this->grantPermissions(
+      Role::load(RoleInterface::AUTHENTICATED_ID),
+      ["use text format $format_id"]
+    );
 
     // Use the format created.
     $title = $this->randomMachineName(8);
