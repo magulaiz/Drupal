@@ -277,9 +277,6 @@ function language_negotiation_url_prefixes_update() {
     // The prefix for this language should be updated if it's not assigned yet
     // or the prefix is set to the empty string.
     if (empty($prefixes[$language->getId()])) {
-      if ($language->getId() === NULL) {
-        throw new \Exception('language_negotiation_url_prefixes_update');
-      }
       // For the default language, set the prefix to the empty string,
       // otherwise use the langcode.
       $prefixes[$language->getId()] = $language->isDefault() ? '' : $language->getId();
