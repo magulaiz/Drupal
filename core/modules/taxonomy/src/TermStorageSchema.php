@@ -17,13 +17,6 @@ class TermStorageSchema extends SqlContentEntityStorageSchema {
   protected function getEntitySchema(ContentEntityTypeInterface $entity_type, $reset = FALSE) {
     $schema = parent::getEntitySchema($entity_type, $reset);
 
-    if ($data_table = $this->storage->getDataTable()) {
-      $schema[$data_table]['indexes'] += [
-        'taxonomy_term__tree' => ['vid', 'weight', 'name'],
-        'taxonomy_term__vid_name' => ['vid', 'name'],
-      ];
-    }
-
     $schema['taxonomy_index'] = [
       'description' => 'Maintains denormalized information about node/term relationships.',
       'fields' => [
@@ -77,6 +70,23 @@ class TermStorageSchema extends SqlContentEntityStorageSchema {
       ],
     ];
 
+    if ($this->database->driver() == 'mongodb') {
+      // Boolean fields in MongoDB are stored as a boolean value.
+      $schema['taxonomy_index']['fields']['status']['type'] = 'bool';
+      $schema['taxonomy_index']['fields']['sticky']['type'] = 'bool';
+
+      // Date fields in MongoDB are stored as a date value.
+      $schema['taxonomy_index']['fields']['created']['type'] = 'date';
+    }
+    else {
+      if ($data_table = $this->storage->getDataTable()) {
+        $schema[$data_table]['indexes'] += [
+          'taxonomy_term__tree' => ['vid', 'weight', 'name'],
+          'taxonomy_term__vid_name' => ['vid', 'name'],
+        ];
+      }
+    }
+
     return $schema;
   }
 
@@ -87,6 +97,7 @@ class TermStorageSchema extends SqlContentEntityStorageSchema {
     $schema = parent::getSharedTableFieldSchema($storage_definition, $table_name, $column_mapping);
     $field_name = $storage_definition->getName();
 
+    // For relational databases like MySQL, MariaDB, PostgreSQL and SQLite.
     if ($table_name == 'taxonomy_term_field_data') {
       // Remove unneeded indexes.
       unset($schema['indexes']['taxonomy_term_field__vid__target_id']);
@@ -105,6 +116,11 @@ class TermStorageSchema extends SqlContentEntityStorageSchema {
       }
     }
 
+//    // For MongoDB.
+//    if ($table_name == 'taxonomy_term_translations') {
+//      $schema['primary key'] = ['tid', 'vid', 'langcode'];
+//    }
+
     return $schema;
   }
 
@@ -120,14 +136,24 @@ class TermStorageSchema extends SqlContentEntityStorageSchema {
     if ($storage_definition->getName() === 'parent') {
       /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
       $table_mapping = $this->storage->getTableMapping();
-      $dedicated_table_name = $table_mapping->getDedicatedDataTableName($storage_definition);
 
-      unset($dedicated_table_schema[$dedicated_table_name]['indexes']['bundle']);
-      $dedicated_table_schema[$dedicated_table_name]['indexes']['bundle_delta_target_id'] = [
-        'bundle',
-        'delta',
-        $table_mapping->getFieldColumnName($storage_definition, 'target_id'),
-      ];
+      $dedicated_table_names = [];
+      if ($this->database->driver() == 'mongodb') {
+        $dedicated_table_names[] = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $table_mapping->getJsonStorageAllRevisionsTable());
+        $dedicated_table_names[] = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $table_mapping->getJsonStorageCurrentRevisionTable());
+        $dedicated_table_names[] = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $table_mapping->getJsonStorageLatestRevisionTable());
+      }
+      else {
+        $dedicated_table_names[] = $table_mapping->getDedicatedDataTableName($storage_definition);
+      }
+      foreach ($dedicated_table_names as $dedicated_table_name) {
+        unset($dedicated_table_schema[$dedicated_table_name]['indexes']['bundle']);
+        $dedicated_table_schema[$dedicated_table_name]['indexes']['bundle_delta_target_id'] = [
+          'bundle',
+          'delta',
+          $table_mapping->getFieldColumnName($storage_definition, 'target_id'),
+        ];
+      }
     }
 
     return $dedicated_table_schema;

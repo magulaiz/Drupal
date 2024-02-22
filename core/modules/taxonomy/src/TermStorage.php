@@ -230,91 +230,126 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
         $this->treeChildren[$vid] = [];
         $this->treeParents[$vid] = [];
         $this->treeTerms[$vid] = [];
-        $query = $this->database->select($this->getDataTable(), 't');
-        $query->join('taxonomy_term__parent', 'p', $query->joinCondition()->compare('t.tid', 'p.entity_id'));
-        $query->addExpressionField('parent_target_id', 'parent');
-        $result = $query
-          ->addTag('taxonomy_term_access')
-          ->fields('t')
-          ->condition('t.vid', $vid)
-          ->condition('t.default_langcode', 1)
-          ->orderBy('t.weight')
-          ->orderBy('t.name')
-          ->execute();
-        foreach ($result as $term) {
-          $this->treeChildren[$vid][$term->parent][] = $term->tid;
-          $this->treeParents[$vid][$term->tid][] = $term->parent;
-          $this->treeTerms[$vid][$term->tid] = $term;
+
+        if ($this->database->driver() == 'mongodb') {
+          $query = $this->database->select($this->getBaseTable(), 't')
+            ->fields('t', ['tid', 'taxonomy_term_current_revision'])
+            ->addTag('taxonomy_term_access')
+            ->condition('taxonomy_term_current_revision.vid', $vid)
+            ->condition('taxonomy_term_current_revision.default_langcode', TRUE)
+            ->orderBy('taxonomy_term_current_revision.weight')
+            ->orderBy('taxonomy_term_current_revision.name');
+
+          $result = $query->execute()->fetchAll();
+          foreach ($result as $term) {
+            foreach ($term->taxonomy_term_current_revision as $current_revision) {
+              if (is_array($current_revision['taxonomy_term_current_revision__parent'])) {
+                foreach ($current_revision['taxonomy_term_current_revision__parent'] as $current_revision_parent) {
+                  $term->parent = NULL;
+                  if (isset($current_revision_parent['parent_target_id'])) {
+                    $term->parent = $current_revision_parent['parent_target_id'];
+                  }
+                  if (!is_null($term->parent)) {
+                    $this->treeChildren[$vid][$term->parent][] = $term->tid;
+                    $this->treeParents[$vid][$term->tid][] = $term->parent;
+                    $this->treeTerms[$vid][$term->tid] = $term;
+                  }
+                }
+              }
+            }
+            unset($term->taxonomy_term_current_revision);
+          }
         }
-      }
+        else {
+          $query = $this->database->select($this->getDataTable(), 't');
+          $query->join('taxonomy_term__parent', 'p', $query->joinCondition()
+            ->compare('t.tid', 'p.entity_id'));
+          $query->addExpressionField('parent_target_id', 'parent');
+          $result = $query
+            ->addTag('taxonomy_term_access')
+            ->fields('t')
+            ->condition('t.vid', $vid)
+            ->condition('t.default_langcode', 1)
+            ->orderBy('t.weight')
+            ->orderBy('t.name')
+            ->execute();
+          foreach ($result as $term) {
+            $this->treeChildren[$vid][$term->parent][] = $term->tid;
+            $this->treeParents[$vid][$term->tid][] = $term->parent;
+            $this->treeTerms[$vid][$term->tid] = $term;
+          }
+        }
 
-      // Load full entities, if necessary. The entity controller statically
-      // caches the results.
-      $term_entities = [];
-      if ($load_entities) {
-        $term_entities = $this->loadMultiple(array_keys($this->treeTerms[$vid]));
-      }
+        // Load full entities, if necessary. The entity controller statically
+        // caches the results.
+        $term_entities = [];
+        if ($load_entities) {
+          $term_entities = $this->loadMultiple(array_keys($this->treeTerms[$vid]));
+        }
 
-      $max_depth = (!isset($max_depth)) ? count($this->treeChildren[$vid]) : $max_depth;
-      $tree = [];
+        $max_depth = (!isset($max_depth)) ? count($this->treeChildren[$vid]) : $max_depth;
+        $tree = [];
 
-      // Keeps track of the parents we have to process, the last entry is used
-      // for the next processing step.
-      $process_parents = [];
-      $process_parents[] = $parent;
+        // Keeps track of the parents we have to process, the last entry is used
+        // for the next processing step.
+        $process_parents = [];
+        $process_parents[] = $parent;
 
-      // Loops over the parent terms and adds its children to the tree array.
-      // Uses a loop instead of a recursion, because it's more efficient.
-      while (count($process_parents)) {
-        $parent = array_pop($process_parents);
-        // The number of parents determines the current depth.
-        $depth = count($process_parents);
-        if ($max_depth > $depth && !empty($this->treeChildren[$vid][$parent])) {
-          $has_children = FALSE;
-          $child = current($this->treeChildren[$vid][$parent]);
-          do {
-            if (empty($child)) {
-              break;
+        // Loops over the parent terms and adds its children to the tree array.
+        // Uses a loop instead of a recursion, because it's more efficient.
+        while (count($process_parents)) {
+          $parent = array_pop($process_parents);
+          // The number of parents determines the current depth.
+          $depth = count($process_parents);
+          if ($max_depth > $depth && !empty($this->treeChildren[$vid][$parent])) {
+            $has_children = FALSE;
+            $child = current($this->treeChildren[$vid][$parent]);
+            do {
+              if (empty($child)) {
+                break;
+              }
+              $term = $load_entities ? $term_entities[$child] : $this->treeTerms[$vid][$child];
+              if (isset($this->treeParents[$vid][$load_entities ? $term->id() : $term->tid])) {
+                // Clone the term so that the depth attribute remains correct
+                // in the event of multiple parents.
+                $term = clone $term;
+              }
+              $term->depth = $depth;
+              if (!$load_entities) {
+                unset($term->parent);
+              }
+              $tid = $load_entities ? $term->id() : $term->tid;
+              $term->parents = $this->treeParents[$vid][$tid];
+              $tree[] = $term;
+              if (!empty($this->treeChildren[$vid][$tid])) {
+                $has_children = TRUE;
+
+                // We have to continue with this parent later.
+                $process_parents[] = $parent;
+                // Use the current term as parent for the next iteration.
+                $process_parents[] = $tid;
+
+                // Reset pointers for child lists because we step in there more
+                // often with multi parents.
+                reset($this->treeChildren[$vid][$tid]);
+                // Move pointer so that we get the correct term the next time.
+                next($this->treeChildren[$vid][$parent]);
+                break;
+              }
             }
-            $term = $load_entities ? $term_entities[$child] : $this->treeTerms[$vid][$child];
-            if (isset($this->treeParents[$vid][$load_entities ? $term->id() : $term->tid])) {
-              // Clone the term so that the depth attribute remains correct
-              // in the event of multiple parents.
-              $term = clone $term;
-            }
-            $term->depth = $depth;
-            if (!$load_entities) {
-              unset($term->parent);
-            }
-            $tid = $load_entities ? $term->id() : $term->tid;
-            $term->parents = $this->treeParents[$vid][$tid];
-            $tree[] = $term;
-            if (!empty($this->treeChildren[$vid][$tid])) {
-              $has_children = TRUE;
+            while ($child = next($this->treeChildren[$vid][$parent]));
 
-              // We have to continue with this parent later.
-              $process_parents[] = $parent;
-              // Use the current term as parent for the next iteration.
-              $process_parents[] = $tid;
-
-              // Reset pointers for child lists because we step in there more
-              // often with multi parents.
-              reset($this->treeChildren[$vid][$tid]);
-              // Move pointer so that we get the correct term the next time.
-              next($this->treeChildren[$vid][$parent]);
-              break;
+            if (!$has_children) {
+              // We processed all terms in this hierarchy-level, reset pointer
+              // so that this function works the next time it gets called.
+              reset($this->treeChildren[$vid][$parent]);
             }
-          } while ($child = next($this->treeChildren[$vid][$parent]));
-
-          if (!$has_children) {
-            // We processed all terms in this hierarchy-level, reset pointer
-            // so that this function works the next time it gets called.
-            reset($this->treeChildren[$vid][$parent]);
           }
         }
       }
       $this->trees[$cache_key] = $tree;
     }
+
     return $this->trees[$cache_key];
   }
 
@@ -322,48 +357,125 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
    * {@inheritdoc}
    */
   public function nodeCount($vid) {
-    $query = $this->database->select('taxonomy_index', 'ti');
-    $query->addExpressionCountDistinct('ti.nid');
-    $query->leftJoin($this->getBaseTable(), 'td', $query->joinCondition()->compare('ti.tid', 'td.tid'));
-    $query->condition('td.vid', $vid);
-    $query->addTag('vocabulary_node_count');
-    return $query->execute()->fetchField();
+    if ($this->database->driver() == 'mongodb') {
+      // @todo There is too little testing for this. Why is there a join in this
+      // query.
+      // @see \Drupal\Tests\taxonomy\Functional\TokenReplaceTest.
+      $query = $this->database->select('taxonomy_index', 'ti');
+      $query->addMongodbJoin('LEFT', 'taxonomy_term_data', 'tid', 'taxonomy_index', 'tid', '=', 'td', [['field' => 'taxonomy_term_translations.vid', 'value' => $vid]]);
+      $query->addTag('vocabulary_node_count');
+      $results = $query->execute()->fetchAll();
+      $nids = [];
+      foreach ($results as $result) {
+        if (isset($result->nid) && !in_array($result->nid, $nids)) {
+          $nids[] = $result->nid;
+        }
+      }
+      return count($nids);
+    }
+    else {
+      $query = $this->database->select('taxonomy_index', 'ti');
+      $query->addExpressionCountDistinct('ti.nid');
+      $query->leftJoin($this->getBaseTable(), 'td', $query->joinCondition()->compare('ti.tid', 'td.tid'));
+      $query->condition('td.vid', $vid);
+      $query->addTag('vocabulary_node_count');
+      return $query->execute()->fetchField();
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function resetWeights($vid) {
-    $this->database->update($this->getDataTable())
-      ->fields(['weight' => 0])
-      ->condition('vid', $vid)
-      ->execute();
+    if ($this->database->driver() == 'mongodb') {
+      $prefixed_table = $this->database->getMongodbPrefixedTable('taxonomy_term_data');
+      $this->database->getConnection()->{$prefixed_table}->updateMany(
+        [
+          'vid' => $vid,
+        ],
+        [
+          '$set' => [
+            'weight' => 0,
+            "taxonomy_term_translations.$[translation].weight" => 0,
+          ],
+        ],
+        [
+          'arrayFilters' => [
+            ["translation.vid" => $vid],
+          ],
+        ],
+      );
+    }
+    else {
+      $this->database->update($this->getDataTable())
+        ->fields(['weight' => 0])
+        ->condition('vid', $vid)
+        ->execute();
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   public function getNodeTerms(array $nids, array $vids = [], $langcode = NULL) {
-    $query = $this->database->select($this->getDataTable(), 'td');
-    $query->innerJoin('taxonomy_index', 'tn', $query->joinCondition()->compare('td.tid', 'tn.tid'));
-    $query->fields('td', ['tid']);
-    $query->addField('tn', 'nid', 'node_nid');
-    $query->orderby('td.weight');
-    $query->orderby('td.name');
-    $query->condition('tn.nid', $nids, 'IN');
-    $query->addTag('taxonomy_term_access');
-    if (!empty($vids)) {
-      $query->condition('td.vid', $vids, 'IN');
-    }
-    if (!empty($langcode)) {
-      $query->condition('td.langcode', $langcode);
-    }
+    if ($this->database->driver() == 'mongodb') {
+      $query = $this->database->select('taxonomy_term_data', 'td');
+      foreach ($nids as &$nid) {
+        $nid = (int) $nid;
+      }
+      $extra = [
+        [
+          'field' => 'nid',
+          'value' => $nids,
+          'operator' => 'IN',
+        ],
+      ];
+      $query->addMongodbJoin('INNER', 'taxonomy_index', 'tid', 'taxonomy_term_data', 'tid', '=', 'tn', $extra);
+      $query->fields('td', ['tid']);
+      $query->addField('tn', 'nid', 'node_nid');
+      $query->orderby('taxonomy_term_translations.weight');
+      $query->orderby('taxonomy_term_translations.name');
+      $query->addTag('taxonomy_term_access');
+      if (!empty($vocabs)) {
+        $query->condition('taxonomy_term_translations.vid', $vocabs, 'IN');
+      }
+      if (!empty($langcode)) {
+        $query->condition('taxonomy_term_translations.langcode', $langcode);
+      }
 
-    $results = [];
-    $all_tids = [];
-    foreach ($query->execute() as $term_record) {
-      $results[$term_record->node_nid][] = $term_record->tid;
-      $all_tids[] = $term_record->tid;
+      $results = [];
+      $all_tids = [];
+      foreach ($query->execute() as $term_record) {
+        if (isset($term_record->tn_node_nid) && is_array($term_record->tn_node_nid)) {
+          foreach ($term_record->tn_node_nid as $node_nid) {
+            $results[$node_nid][] = $term_record->tid;
+          }
+        }
+        $all_tids[] = $term_record->tid;
+      }
+    }
+    else {
+      $query = $this->database->select($this->getDataTable(), 'td');
+      $query->innerJoin('taxonomy_index', 'tn', $query->joinCondition()->compare('td.tid', 'tn.tid'));
+      $query->fields('td', ['tid']);
+      $query->addField('tn', 'nid', 'node_nid');
+      $query->orderby('td.weight');
+      $query->orderby('td.name');
+      $query->condition('tn.nid', $nids, 'IN');
+      $query->addTag('taxonomy_term_access');
+      if (!empty($vids)) {
+        $query->condition('td.vid', $vids, 'IN');
+      }
+      if (!empty($langcode)) {
+        $query->condition('td.langcode', $langcode);
+      }
+
+      $results = [];
+      $all_tids = [];
+      foreach ($query->execute() as $term_record) {
+        $results[$term_record->node_nid][] = $term_record->tid;
+        $all_tids[] = $term_record->tid;
+      }
     }
 
     $all_terms = $this->loadMultiple($all_tids);
@@ -373,6 +485,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
         $terms[$nid][$tid] = $all_terms[$tid];
       }
     }
+
     return $terms;
   }
 

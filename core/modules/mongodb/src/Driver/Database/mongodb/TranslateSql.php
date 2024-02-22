@@ -399,6 +399,28 @@ class TranslateSql {
         $statement->execute(NULL, $query_options);
         return $statement;
       }
+      elseif (preg_match('/^SELECT \[vid\] FROM {(.*)} WHERE \[uid\] = :uid ORDER BY \[vid\]$/', $query, $matches)) {
+        $prefixed_table = $connection->getMongodbPrefixedTable($matches[1]);
+        $uid = (int) $args[':uid'];
+
+        $startEvent = $this->startEvent($connection, $query, $args);
+
+        $cursor = $connection->getConnection()->{$prefixed_table}->find(
+          ['uid' => ['$eq' => $uid]],
+          [
+            'projection' => ['vid' => 1, '_id' => 0],
+            'sort' => ['vid' => 1],
+            'skip' => isset($options['skip']) ? $options['skip'] : 0,
+            'limit' => isset($options['limit']) ? $options['limit'] : 0,
+          ]
+        );
+
+        $this->endEvent($connection, $startEvent);
+
+        $statement = new Statement($connection, $cursor, ['name']);
+        $statement->execute(NULL, $query_options);
+        return $statement;
+      }
       elseif (preg_match("/^SELECT \* FROM {test_task} WHERE \[task\] = 'sleep' ORDER BY \[tid\]$/", $query, $matches)) {
         $prefixed_table = $connection->getMongodbPrefixedTable('test_task');
 

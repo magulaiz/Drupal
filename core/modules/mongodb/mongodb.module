@@ -50,8 +50,8 @@ function mongodb_entity_type_alter(array &$entity_types) {
     }
 
     if (!empty($entity_types['comment'])) {
-      $entity_types['comment']->setStorageClass('Drupal\mongodb\EntityStorage\CommentStorage');
-      $entity_types['comment']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentEntityStorageSchema');
+      // $entity_types['comment']->setStorageClass('Drupal\mongodb\EntityStorage\CommentStorage');
+      // $entity_types['comment']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentEntityStorageSchema');
       $entity_types['comment']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\CommentViewsData');
     }
 
@@ -60,8 +60,8 @@ function mongodb_entity_type_alter(array &$entity_types) {
     }
 
     if (!empty($entity_types['file'])) {
-      $entity_types['file']->setStorageClass('Drupal\mongodb\EntityStorage\FileStorage');
-      $entity_types['file']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentEntityStorageSchema');
+      // $entity_types['file']->setStorageClass('Drupal\mongodb\EntityStorage\FileStorage');
+      // $entity_types['file']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentEntityStorageSchema');
       $entity_types['file']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\FileViewsData');
     }
 
@@ -72,14 +72,14 @@ function mongodb_entity_type_alter(array &$entity_types) {
 
     if (!empty($entity_types['menu_link_content'])) {
       $entity_types['menu_link_content']->setStorageClass('Drupal\mongodb\EntityStorage\MenuLinkContentStorage');
-      $entity_types['menu_link_content']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentEntityStorageSchema');
+      // $entity_types['menu_link_content']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentEntityStorageSchema');
     }
 
-//    if (!empty($entity_types['node'])) {
-//      $entity_types['node']->setStorageClass('Drupal\mongodb\EntityStorage\NodeStorage');
-//      $entity_types['node']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentEntityStorageSchema');
-//      $entity_types['node']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\NodeViewsData');
-//    }
+    if (!empty($entity_types['node'])) {
+      // $entity_types['node']->setStorageClass('Drupal\mongodb\EntityStorage\NodeStorage');
+      // $entity_types['node']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentEntityStorageSchema');
+      $entity_types['node']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\NodeViewsData');
+    }
 
     if (!empty($entity_types['path_alias'])) {
       $entity_types['path_alias']->setStorageClass('Drupal\mongodb\EntityStorage\PathAliasStorage');
@@ -91,8 +91,8 @@ function mongodb_entity_type_alter(array &$entity_types) {
     }
 
     if (!empty($entity_types['taxonomy_term'])) {
-      $entity_types['taxonomy_term']->setStorageClass('Drupal\mongodb\EntityStorage\TermStorage');
-      $entity_types['taxonomy_term']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\TermStorageSchema');
+      // $entity_types['taxonomy_term']->setStorageClass('Drupal\mongodb\EntityStorage\TermStorage');
+      // $entity_types['taxonomy_term']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\TermStorageSchema');
       $entity_types['taxonomy_term']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\TermViewsData');
     }
 
@@ -100,11 +100,11 @@ function mongodb_entity_type_alter(array &$entity_types) {
       $entity_types['taxonomy_vocabulary']->setStorageClass('Drupal\mongodb\EntityStorage\VocabularyStorage');
     }
 
-//    if (!empty($entity_types['user'])) {
-//      $entity_types['user']->setStorageClass('Drupal\mongodb\EntityStorage\UserStorage');
-//      $entity_types['user']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\UserStorageSchema');
-//      $entity_types['user']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\UserViewsData');
-//    }
+    if (!empty($entity_types['user'])) {
+      // $entity_types['user']->setStorageClass('Drupal\mongodb\EntityStorage\UserStorage');
+      // $entity_types['user']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\UserStorageSchema');
+      $entity_types['user']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\UserViewsData');
+    }
 
     if (!empty($entity_types['view'])) {
       $entity_types['view']->setStorageClass('Drupal\mongodb\ConfigStorage\ViewStorage');
@@ -115,21 +115,21 @@ function mongodb_entity_type_alter(array &$entity_types) {
       $entity_types['workspace_association']->setStorageClass('Drupal\mongodb\EntityStorage\WorkspaceAssociationStorage');
     }
 
-//    // Testing content entity types.
-//    if (!empty($entity_types['entity_test'])) {
-//      $entity_types['entity_test']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityTestViewsData');
-//    }
-//    if (!empty($entity_types['entity_test_update'])) {
-//      $entity_types['entity_test_update']->setStorageClass('Drupal\mongodb\EntityStorage\EntityTestUpdateStorage');
-//      $entity_types['entity_test_update']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\EntityTestUpdateStorageSchema');
-//      $entity_types['entity_test_update']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityViewsData');
-//    }
-//    if (!empty($entity_types['no_language_entity_test'])) {
-//      $entity_types['no_language_entity_test']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityTestViewsData');
-//    }
-//    if (!empty($entity_types['entity_test_multivalue_basefield'])) {
-//      $entity_types['entity_test_multivalue_basefield']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityTestViewsData');
-//    }
+    // Testing content entity types.
+    if (!empty($entity_types['entity_test'])) {
+      $entity_types['entity_test']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityTestViewsData');
+    }
+    if (!empty($entity_types['entity_test_update'])) {
+      // $entity_types['entity_test_update']->setStorageClass('Drupal\mongodb\EntityStorage\EntityTestUpdateStorage');
+      // $entity_types['entity_test_update']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\EntityTestUpdateStorageSchema');
+      $entity_types['entity_test_update']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityViewsData');
+    }
+    if (!empty($entity_types['no_language_entity_test'])) {
+      $entity_types['no_language_entity_test']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityTestViewsData');
+    }
+    if (!empty($entity_types['entity_test_multivalue_basefield'])) {
+      $entity_types['entity_test_multivalue_basefield']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityTestViewsData');
+    }
   }
 }
 
