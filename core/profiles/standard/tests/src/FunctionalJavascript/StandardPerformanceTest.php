@@ -60,7 +60,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertSame(47, $performance_data->getCacheSetCount());
     $this->assertSame(0, $performance_data->getCacheDeleteCount());
     $this->assertCountBetween(143, 146, $performance_data->getCacheTagChecksumCount());
-    $this->assertCountBetween(177, 180, $performance_data->getCacheTagIsValidCount());
+    $this->assertCountBetween(47, 50, $performance_data->getCacheTagIsValidCount());
     $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
 
     // Test node page.
@@ -74,7 +74,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertSame(16, $performance_data->getCacheSetCount());
     $this->assertSame(0, $performance_data->getCacheDeleteCount());
     $this->assertCountBetween(79, 80, $performance_data->getCacheTagChecksumCount());
-    $this->assertCountBetween(149, 150, $performance_data->getCacheTagIsValidCount());
+    $this->assertCountBetween(41, 42, $performance_data->getCacheTagIsValidCount());
     $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
 
     // Test user profile page.
@@ -87,7 +87,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertSame(81, $performance_data->getCacheGetCount());
     $this->assertSame(16, $performance_data->getCacheSetCount());
     $this->assertSame(0, $performance_data->getCacheDeleteCount());
-    $this->assertCountBetween(129, 130, $performance_data->getCacheTagIsValidCount());
+    $this->assertCountBetween(36, 37, $performance_data->getCacheTagIsValidCount());
     $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
   }
 
