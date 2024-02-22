@@ -47,9 +47,7 @@ class UploadedFileValidator implements UploadedFileValidatorInterface {
    *   The Symfony validator.
    */
   protected function getValidator(): ValidatorInterface {
-    if (!isset($this->validator)) {
-      $this->validator = $this->validatorFactory->createValidator();
-    }
+    $this->validator ??= $this->validatorFactory->createValidator();
     return $this->validator;
   }
 

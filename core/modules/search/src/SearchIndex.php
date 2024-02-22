@@ -169,9 +169,7 @@ class SearchIndex implements SearchIndexInterface {
             $accumulator .= $word . ' ';
             // Check word length.
             if (is_numeric($word) || mb_strlen($word) >= $minimum_word_size) {
-              if (!isset($scored_words[$word])) {
-                $scored_words[$word] = 0;
-              }
+              $scored_words[$word] ??= 0;
               $scored_words[$word] += $score * $focus;
               // Focus is a decaying value in terms of the amount of unique
               // words up to this point. From 100 words and more, it decays, to

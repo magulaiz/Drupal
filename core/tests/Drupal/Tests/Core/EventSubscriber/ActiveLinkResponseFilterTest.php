@@ -292,9 +292,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
             }
             else {
               $active_attributes = $situation['attributes'];
-              if (!isset($active_attributes['class'])) {
-                $active_attributes['class'] = [];
-              }
+              $active_attributes['class'] ??= [];
               $active_attributes['class'][] = 'is-active';
               $target_markup = $create_markup(new Attribute($active_attributes));
             }

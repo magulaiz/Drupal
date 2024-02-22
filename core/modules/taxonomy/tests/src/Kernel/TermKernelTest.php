@@ -119,9 +119,7 @@ class TermKernelTest extends KernelTestBase {
 
     // Count elements in every tree depth.
     foreach ($tree as $element) {
-      if (!isset($depth_count[$element->depth])) {
-        $depth_count[$element->depth] = 0;
-      }
+      $depth_count[$element->depth] ??= 0;
       $depth_count[$element->depth]++;
     }
     $this->assertEquals(3, $depth_count[0], 'Three elements in taxonomy tree depth 0.');

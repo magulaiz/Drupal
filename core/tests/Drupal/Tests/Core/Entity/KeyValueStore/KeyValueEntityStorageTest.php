@@ -639,12 +639,8 @@ class KeyValueEntityStorageTest extends UnitTestCase {
   public function getMockEntity($class = EntityBaseTest::class, array $arguments = [], $methods = []) {
     // Ensure the entity is passed at least an array of values and an entity
     // type ID
-    if (!isset($arguments[0])) {
-      $arguments[0] = [];
-    }
-    if (!isset($arguments[1])) {
-      $arguments[1] = 'test_entity_type';
-    }
+    $arguments[0] ??= [];
+    $arguments[1] ??= 'test_entity_type';
     return $this->getMockForAbstractClass($class, $arguments, '', TRUE, TRUE, TRUE, $methods);
   }
 

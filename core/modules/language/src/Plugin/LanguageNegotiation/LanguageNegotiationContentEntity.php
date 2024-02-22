@@ -121,9 +121,7 @@ class LanguageNegotiationContentEntity extends LanguageNegotiationMethodBase imp
         unset($options['language']);
       }
 
-      if (!isset($options['query'][static::QUERY_PARAMETER])) {
-        $options['query'][static::QUERY_PARAMETER] = $langcode;
-      }
+      $options['query'][static::QUERY_PARAMETER] ??= $langcode;
 
       if ($bubbleable_metadata) {
         // Cached URLs that have been processed by this outbound path

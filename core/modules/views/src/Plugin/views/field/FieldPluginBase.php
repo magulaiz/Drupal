@@ -140,9 +140,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       $this->additional_fields = $this->definition['additional fields'];
     }
 
-    if (!isset($this->options['exclude'])) {
-      $this->options['exclude'] = '';
-    }
+    $this->options['exclude'] ??= '';
   }
 
   /**
@@ -1369,9 +1367,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     $this->last_render_text = $value;
 
     if (!empty($alter['make_link']) && (!empty($alter['path']) || !empty($alter['url']))) {
-      if (!isset($tokens)) {
-        $tokens = $this->getRenderTokens($alter);
-      }
+      $tokens ??= $this->getRenderTokens($alter);
       $value = $this->renderAsLink($alter, $value, $tokens);
     }
 
@@ -1569,9 +1565,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     // currently can only be altered in preprocessors and not within the UI.
     if (isset($alter['link_attributes']) && is_array($alter['link_attributes'])) {
       foreach ($alter['link_attributes'] as $key => $attribute) {
-        if (!isset($options['attributes'][$key])) {
-          $options['attributes'][$key] = $this->viewsTokenReplace($attribute, $tokens);
-        }
+        $options['attributes'][$key] ??= $this->viewsTokenReplace($attribute, $tokens);
       }
     }
 
@@ -1638,9 +1632,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     $count = 0;
     foreach ($this->displayHandler->getHandlers('argument') as $arg => $handler) {
       $token = "{{ arguments.$arg }}";
-      if (!isset($tokens[$token])) {
-        $tokens[$token] = '';
-      }
+      $tokens[$token] ??= '';
 
       // Use strip tags as there should never be HTML in the path.
       // However, we need to preserve special characters like " that
@@ -1878,9 +1870,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * @return \Drupal\Core\Utility\LinkGeneratorInterface
    */
   protected function linkGenerator() {
-    if (!isset($this->linkGenerator)) {
-      $this->linkGenerator = \Drupal::linkGenerator();
-    }
+    $this->linkGenerator ??= \Drupal::linkGenerator();
     return $this->linkGenerator;
   }
 
@@ -1890,9 +1880,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * @return \Drupal\Core\Render\RendererInterface
    */
   protected function getRenderer() {
-    if (!isset($this->renderer)) {
-      $this->renderer = \Drupal::service('renderer');
-    }
+    $this->renderer ??= \Drupal::service('renderer');
 
     return $this->renderer;
   }

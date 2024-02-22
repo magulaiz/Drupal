@@ -122,12 +122,8 @@ function language_element_info_alter(&$type) {
   // Alter the language_select element so that it will be rendered like a select
   // field.
   if (isset($type['language_select'])) {
-    if (!isset($type['language_select']['#process'])) {
-      $type['language_select']['#process'] = [];
-    }
-    if (!isset($type['language_select']['#theme_wrappers'])) {
-      $type['language_select']['#theme_wrappers'] = [];
-    }
+    $type['language_select']['#process'] ??= [];
+    $type['language_select']['#theme_wrappers'] ??= [];
     $type['language_select']['#process'] = array_merge($type['language_select']['#process'], [
       'language_process_language_select',
       ['Drupal\Core\Render\Element\Select', 'processSelect'],

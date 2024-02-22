@@ -139,11 +139,9 @@ class WorkspaceManager implements WorkspaceManagerInterface {
    */
   public function isEntityTypeSupported(EntityTypeInterface $entity_type) {
     $entity_type_id = $entity_type->id();
-    if (!isset($this->supported[$entity_type_id])) {
-      // Only entity types which are revisionable and publishable can belong
-      // to a workspace.
-      $this->supported[$entity_type_id] = $entity_type->entityClassImplements(EntityPublishedInterface::class) && $entity_type->isRevisionable();
-    }
+    // Only entity types which are revisionable and publishable can belong
+    // to a workspace.
+    $this->supported[$entity_type_id] ??= $entity_type->entityClassImplements(EntityPublishedInterface::class) && $entity_type->isRevisionable();
     return $this->supported[$entity_type_id];
   }
 

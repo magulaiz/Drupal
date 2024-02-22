@@ -71,9 +71,7 @@ class ToolbarItem extends RenderElement {
         'data-toolbar-tray' => $id . '-tray',
       ];
       // Merge in module-provided attributes.
-      if (!isset($element['tray']['#wrapper_attributes'])) {
-        $element['tray']['#wrapper_attributes'] = [];
-      }
+      $element['tray']['#wrapper_attributes'] ??= [];
       $element['tray']['#wrapper_attributes'] += $attributes;
       $element['tray']['#wrapper_attributes']['class'][] = 'toolbar-tray';
     }

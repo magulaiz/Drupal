@@ -49,9 +49,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
    *   Bin name.
    */
   protected function getTestBin() {
-    if (!isset($this->testBin)) {
-      $this->testBin = 'page';
-    }
+    $this->testBin ??= 'page';
     return $this->testBin;
   }
 
@@ -90,9 +88,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
    *   Cache backend to test.
    */
   protected function getCacheBackend($bin = NULL) {
-    if (!isset($bin)) {
-      $bin = $this->getTestBin();
-    }
+    $bin ??= $this->getTestBin();
     if (!isset($this->cachebackends[$bin])) {
       $this->cachebackends[$bin] = $this->createCacheBackend($bin);
       // Ensure the backend is empty.

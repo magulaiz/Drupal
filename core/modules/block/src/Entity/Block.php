@@ -281,9 +281,7 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
    * {@inheritdoc}
    */
   public function getVisibilityConditions() {
-    if (!isset($this->visibilityCollection)) {
-      $this->visibilityCollection = new ConditionPluginCollection($this->conditionPluginManager(), $this->get('visibility'));
-    }
+    $this->visibilityCollection ??= new ConditionPluginCollection($this->conditionPluginManager(), $this->get('visibility'));
     return $this->visibilityCollection;
   }
 
@@ -301,9 +299,7 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
    *   The condition plugin manager.
    */
   protected function conditionPluginManager() {
-    if (!isset($this->conditionPluginManager)) {
-      $this->conditionPluginManager = \Drupal::service('plugin.manager.condition');
-    }
+    $this->conditionPluginManager ??= \Drupal::service('plugin.manager.condition');
     return $this->conditionPluginManager;
   }
 

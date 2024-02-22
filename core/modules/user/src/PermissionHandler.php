@@ -105,9 +105,7 @@ class PermissionHandler implements PermissionHandlerInterface {
    *   The YAML discovery.
    */
   protected function getYamlDiscovery() {
-    if (!isset($this->yamlDiscovery)) {
-      $this->yamlDiscovery = new YamlDiscovery('permissions', $this->moduleHandler->getModuleDirectories());
-    }
+    $this->yamlDiscovery ??= new YamlDiscovery('permissions', $this->moduleHandler->getModuleDirectories());
     return $this->yamlDiscovery;
   }
 

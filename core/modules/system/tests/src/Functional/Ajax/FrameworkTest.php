@@ -148,9 +148,7 @@ class FrameworkTest extends BrowserTestBase {
    */
   protected function drupalGetAjax($path, array $options = [], array $headers = []) {
     $headers[] = 'X-Requested-With: XMLHttpRequest';
-    if (!isset($options['query'][MainContentViewSubscriber::WRAPPER_FORMAT])) {
-      $options['query'][MainContentViewSubscriber::WRAPPER_FORMAT] = 'drupal_ajax';
-    }
+    $options['query'][MainContentViewSubscriber::WRAPPER_FORMAT] ??= 'drupal_ajax';
     return Json::decode($this->drupalGet($path, $options, $headers));
   }
 

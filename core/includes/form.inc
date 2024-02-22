@@ -1035,17 +1035,13 @@ function _batch_populate_queue(&$batch, $set_id) {
 function _batch_queue($batch_set) {
   static $queues;
 
-  if (!isset($queues)) {
-    $queues = [];
-  }
+  $queues ??= [];
 
   if (isset($batch_set['queue'])) {
     $name = $batch_set['queue']['name'];
     $class = $batch_set['queue']['class'];
 
-    if (!isset($queues[$class][$name])) {
-      $queues[$class][$name] = new $class($name, \Drupal::database());
-    }
+    $queues[$class][$name] ??= new $class($name, \Drupal::database());
     return $queues[$class][$name];
   }
 }

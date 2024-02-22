@@ -239,15 +239,11 @@ trait UserCreationTrait {
    */
   protected function createRole(array $permissions, $rid = NULL, $name = NULL, $weight = NULL) {
     // Generate a random, lowercase machine name if none was passed.
-    if (!isset($rid)) {
-      $rid = $this->randomMachineName(8);
-    }
+    $rid ??= $this->randomMachineName(8);
     // Generate a random label.
-    if (!isset($name)) {
-      // In the role UI role names are trimmed and random string can start or
-      // end with a space.
-      $name = trim($this->randomString(8));
-    }
+    // In the role UI role names are trimmed and random string can start or
+    // end with a space.
+    $name ??= trim($this->randomString(8));
 
     // Check the all the permissions strings are valid.
     if (!$this->checkPermissions($permissions)) {

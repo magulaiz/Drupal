@@ -121,9 +121,7 @@ class PoDatabaseWriter implements PoWriterInterface {
    *     One of LOCALE_CUSTOMIZED or LOCALE_NOT_CUSTOMIZED.
    */
   public function setOptions(array $options) {
-    if (!isset($options['overwrite_options'])) {
-      $options['overwrite_options'] = [];
-    }
+    $options['overwrite_options'] ??= [];
     $options['overwrite_options'] += [
       'not_customized' => FALSE,
       'customized' => FALSE,

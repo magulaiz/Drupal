@@ -401,13 +401,9 @@ class AccessPolicyProcessorTest extends UnitTestCase {
       $cache_static = $cache_static->reveal();
     }
 
-    if (!isset($current_user)) {
-      $current_user = $this->prophesize(AccountProxyInterface::class)->reveal();
-    }
+    $current_user ??= $this->prophesize(AccountProxyInterface::class)->reveal();
 
-    if (!isset($account_switcher)) {
-      $account_switcher = $this->prophesize(AccountSwitcherInterface::class)->reveal();
-    }
+    $account_switcher ??= $this->prophesize(AccountSwitcherInterface::class)->reveal();
 
     return new AccessPolicyProcessor(
       $variation_cache,

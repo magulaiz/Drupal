@@ -90,9 +90,7 @@ trait ResourceResponseTestTrait {
       unset($merged_document['links']);
     }
     else {
-      if (!isset($merged_document['data'])) {
-        $merged_document['data'] = $is_multiple ? [] : NULL;
-      }
+      $merged_document['data'] ??= $is_multiple ? [] : NULL;
       $merged_document['links'] = [
         'self' => [
           'href' => $self_link,

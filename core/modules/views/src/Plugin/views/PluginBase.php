@@ -226,9 +226,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
       return;
     }
 
-    if (!isset($definition)) {
-      $definition = $this->defineOptions();
-    }
+    $definition ??= $this->defineOptions();
 
     foreach ($options as $key => $value) {
       if (is_array($value)) {
@@ -394,9 +392,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
           assert(is_numeric($key) || preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $key) === 1, 'Tokens need to be valid Twig variables.');
           $token_array = [$key => $token_array];
         }
-        if (!isset($twig_tokens[$top])) {
-          $twig_tokens[$top] = [];
-        }
+        $twig_tokens[$top] ??= [];
         $twig_tokens[$top] += $token_array;
       }
     }
@@ -660,9 +656,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    * @return \Drupal\Core\Render\RendererInterface
    */
   protected function getRenderer() {
-    if (!isset($this->renderer)) {
-      $this->renderer = \Drupal::service('renderer');
-    }
+    $this->renderer ??= \Drupal::service('renderer');
 
     return $this->renderer;
   }

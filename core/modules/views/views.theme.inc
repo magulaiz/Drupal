@@ -585,9 +585,7 @@ function template_preprocess_views_view_table(&$variables) {
       if (!empty($fields[$field])) {
         $field_output = $handler->getField($num, $field);
         $column_reference['wrapper_element'] = $fields[$field]->elementType(TRUE, TRUE);
-        if (!isset($column_reference['content'])) {
-          $column_reference['content'] = [];
-        }
+        $column_reference['content'] ??= [];
 
         // Only bother with separators and stuff if the field shows up.
         // Place the field into the column, along with an optional separator.

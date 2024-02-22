@@ -327,9 +327,7 @@ class PagerTest extends BrowserTestBase {
    * @internal
    */
   protected function assertClass(NodeElement $element, string $class, string $message = NULL): void {
-    if (!isset($message)) {
-      $message = "Class .$class found.";
-    }
+    $message ??= "Class .$class found.";
     $this->assertTrue($element->hasClass($class), $message);
   }
 
@@ -346,9 +344,7 @@ class PagerTest extends BrowserTestBase {
    * @internal
    */
   protected function assertNoClass(NodeElement $element, string $class, string $message = NULL): void {
-    if (!isset($message)) {
-      $message = "Class .$class not found.";
-    }
+    $message ??= "Class .$class not found.";
     $this->assertFalse($element->hasClass($class), $message);
   }
 
