@@ -14,8 +14,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @see SearchPluginBase
  *
  * @ingroup search
- *
- * @Annotation
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class SearchPlugin extends Plugin {
