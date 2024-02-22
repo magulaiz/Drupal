@@ -176,14 +176,8 @@ class ViewEditForm extends ViewFormBase {
       }
     }
 
-    $display_label = '<h1 class="unit-title clearfix">' . $this->t('Displays') . '</h1>';
-    if ($view_status == 'disabled') {
-      $view_disabled = '<p class="view-changed messages messages--warning js-form-wrapper form-wrapper">⚠️ Note: This view is disabled.</p>';
-      $display_label = $view_disabled . ' ' . $display_label;
-    }
-
     $form['displays'] = [
-      '#prefix' => $display_label,
+      '#prefix' => '<h1 class="unit-title clearfix">' . $this->t('Displays') . '</h1>',
       '#type' => 'container',
       '#attributes' => [
         'class' => [
@@ -191,6 +185,16 @@ class ViewEditForm extends ViewFormBase {
         ],
       ],
     ];
+
+    if ($view_status == 'disabled') {
+      $views_overview_url = Url::fromRoute('entity.view.collection', [], ['absolute' => TRUE]);
+      $views_overview = Link::fromTextAndUrl($this->t('Views Overview'), $views_overview_url)->toString();
+      $form['displays']['view-disabled'] = [
+        '#type' => 'container',
+        '#attributes' => ['class' => ['view-changed', 'messages', 'messages--warning']],
+        '#children' => $this->t('This view is disabled. It can be re-enabled on the @link Page', ['@link'=>$views_overview]),
+      ];
+    }
 
     $form['displays']['top'] = $this->renderDisplayTop($view);
 
