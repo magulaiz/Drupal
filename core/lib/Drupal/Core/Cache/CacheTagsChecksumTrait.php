@@ -51,7 +51,10 @@ trait CacheTagsChecksumTrait {
    * Implements \Drupal\Core\Cache\CacheTagsInvalidatorInterface::invalidateTags()
    */
   public function invalidateTags(array $tags) {
-    // Only invalidate tags once per request unless they are written again.
+    // If there are no cache tags, then there is no cache tag to invalidate.
+    if (empty($tags)) {
+      return;
+    }
     foreach ($tags as $key => $tag) {
       if (isset($this->invalidatedTags[$tag])) {
         unset($tags[$key]);
@@ -139,6 +142,11 @@ trait CacheTagsChecksumTrait {
    */
   protected function calculateChecksum(array $tags) {
     $checksum = 0;
+    // If there are no cache tags, then there is no cache tag to checksum,
+    // so return early..
+    if (empty($tags)) {
+      return $checksum;
+    }
 
     $query_tags = array_diff($tags, array_keys($this->tagCache));
     if ($query_tags) {
