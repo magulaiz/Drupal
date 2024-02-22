@@ -194,7 +194,7 @@ class OverviewTerms extends FormBase {
           }
         }
       }
-      $back_step = $back_step ?? 0;
+      $back_step ??= 0;
 
       // Continue rendering the tree until we reach the a new root item.
       if ($page_entries >= $page_increment + $back_step + 1 && $raw_term->depth == 0 && $root_entries > 1) {

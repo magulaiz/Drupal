@@ -207,8 +207,8 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
     $session = $this->assertSession();
     $session->pageTextContains('What will be upgraded?');
 
-    $available_paths = $available_paths ?? $this->getAvailablePaths();
-    $missing_paths = $missing_paths ?? $this->getMissingPaths();
+    $available_paths ??= $this->getAvailablePaths();
+    $missing_paths ??= $this->getMissingPaths();
     // Test the available migration paths.
     foreach ($available_paths as $available) {
       $session->elementExists('xpath', "//td[contains(@class, 'checked') and text() = '$available']");
