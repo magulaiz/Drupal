@@ -573,7 +573,7 @@ function locale_config_batch_update_components(array $options, array $langcodes 
  * @return array
  *   The batch definition.
  *
- * @see locale_config_batch_refresh_name()
+ * @see locale_config_batch_update_config_translations()
  */
 function locale_config_batch_build(array $names, array $langcodes, array $options = [], bool $update_default_config_langcodes = FALSE) {
   $options += ['finish_feedback' => TRUE];
@@ -584,7 +584,7 @@ function locale_config_batch_build(array $names, array $langcodes, array $option
     ->setErrorMessage(t('Error updating configuration translations'));
 
   if ($update_default_config_langcodes && \Drupal::languageManager()->getDefaultLanguage()->getId() !== 'en') {
-    $batch_builder->addOperation('locale_config_batch_set_config_langcodes');
+    $batch_builder->addOperation('locale_config_batch_update_default_config_langcodes');
   }
 
   // Chunking the array of names into batches of 20 for better performance.
@@ -595,9 +595,8 @@ function locale_config_batch_build(array $names, array $langcodes, array $option
     // it is very expensive to initialize the \Drupal::config() object on each
     // request. We batch a small number of configuration object upgrades
     // together to improve the overall performance of the process.
-    $batch_builder->addOperation('locale_config_batch_refresh_name', [$chunk, $langcodes]);
+    $batch_builder->addOperation('locale_config_batch_update_config_translations', [$batch_names, $langcodes]);
   }
-
   if (!empty($options['finish_feedback'])) {
     $batch_builder->setFinishCallback('locale_config_batch_finished');
   }
@@ -612,7 +611,7 @@ function locale_config_batch_build(array $names, array $langcodes, array $option
  * @param array|\ArrayAccess $context
  *   The batch context.
  */
-function locale_config_batch_set_config_langcodes(&$context) {
+function locale_config_batch_update_default_config_langcodes(&$context) {
   \Drupal::service('locale.config_manager')->updateDefaultConfigLangcodes();
   $context['finished'] = 1;
   $context['message'] = t('Updated default configuration to %langcode', ['%langcode' => \Drupal::languageManager()->getDefaultLanguage()->getId()]);
@@ -632,7 +631,7 @@ function locale_config_batch_set_config_langcodes(&$context) {
  *
  * @see locale_config_batch_build()
  */
-function locale_config_batch_refresh_name(array $names, array $langcodes, &$context) {
+function locale_config_batch_update_config_translations(array $names, array $langcodes, &$context) {
   if (!isset($context['results']['stats']['config'])) {
     $context['results']['stats']['config'] = 0;
   }
