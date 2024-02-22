@@ -74,7 +74,8 @@ class OpenDialogCommand implements CommandInterface, CommandWithAttachedAssetsIn
    */
   public function __construct($selector, $title, $content, array $dialog_options = [], $settings = NULL) {
     if (is_array($title)) {
-      $title = 'Send the title as a string.';
+      @trigger_error('Calling OpenDialogCommand::__construct() with $title as an array is deprecated in drupal:10.4.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/2663316', E_USER_DEPRECATED);
+      $title = \Drupal::service('renderer')->renderPlain($title);
     }
     else {
       $title = PlainTextOutput::renderFromHtml($title);

@@ -60,7 +60,7 @@ class DialogRenderer implements MainContentRendererInterface {
     // Determine the title: use the title provided by the main content if any,
     // otherwise get it from the routing information.
     $title = NULL;
-    if ($main_content['#title']) {
+    if (array_key_exists('#title', $main_content)) {
       if ($main_content['#title'] instanceof TranslatableMarkup) {
         $title = $main_content['#title']->render();
       }

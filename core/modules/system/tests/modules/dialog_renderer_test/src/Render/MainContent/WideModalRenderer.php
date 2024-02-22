@@ -58,7 +58,7 @@ class WideModalRenderer extends ModalRenderer {
 
     // If the main content doesn't provide a title, use the title resolver.
     $title = NULL;
-    if ($main_content['#title']) {
+    if (array_key_exists('#title', $main_content)) {
       if ($main_content['#title'] instanceof TranslatableMarkup) {
         $title = $main_content['#title']->render();
       }
