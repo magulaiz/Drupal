@@ -1384,8 +1384,6 @@ function locale_get_plural_form_labels($langcode) {
         t('Singular and plural form'),
       ];
 
-    break;
-
     // Two plural forms (exceptions)
     case 'jv':
       return [
@@ -1393,14 +1391,11 @@ function locale_get_plural_form_labels($langcode) {
         t('Form for other numbers'),
       ];
 
-    break;
     case 'mk':
       return [
         t('Form for numbers ending with 1'),
         t('Form for other numbers'),
       ];
-
-    break;
 
     // Three plural forms
     case 'be':
@@ -1416,7 +1411,6 @@ function locale_get_plural_form_labels($langcode) {
         t('Form for numbers ending with 5-9 (and 0, 10-20, 110-120, 210-220, etc.)'),
       ];
 
-    break;
     case 'lt':
       return [
         t('Form for numbers ending with 1 (except 11, 111, 211, etc.)'),
@@ -1424,7 +1418,6 @@ function locale_get_plural_form_labels($langcode) {
         t('Form for 10-20, 110-120, 210-220, etc.'),
       ];
 
-    break;
     case 'lv':
       return [
         t('Form for numbers ending with 1 (except 11, 111, 211, etc.)'),
@@ -1432,7 +1425,6 @@ function locale_get_plural_form_labels($langcode) {
         t('Form for 0'),
       ];
 
-    break;
     case 'pl':
       return [
         t('Singular form'),
@@ -1440,7 +1432,6 @@ function locale_get_plural_form_labels($langcode) {
         t('Form for other numbers'),
       ];
 
-    break;
     case 'ro':
       return [
         t('Singular form'),
@@ -1448,15 +1439,12 @@ function locale_get_plural_form_labels($langcode) {
         t('Form for other numbers'),
       ];
 
-    break;
     case 'sk':
       return [
         t('Singular form'),
         t('Form for 2-4'),
         t('Form for 5 and more'),
       ];
-
-    break;
 
     // Four plural forms
     case 'cy':
@@ -1467,7 +1455,6 @@ function locale_get_plural_form_labels($langcode) {
         t('Form for 8 and 11'),
       ];
 
-    break;
     case 'gd':
       return [
         t('Form for 1 and 11'),
@@ -1476,7 +1463,6 @@ function locale_get_plural_form_labels($langcode) {
         t('Form for 20 and more'),
       ];
 
-    break;
     case 'mt':
       return [
         t('Singular form'),
@@ -1485,7 +1471,6 @@ function locale_get_plural_form_labels($langcode) {
         t('Form for 20-101, 120-201, 220-301, etc.'),
       ];
 
-    break;
     case 'sl':
       return [
         t('Form for 1, 101, 201, etc.'),
@@ -1493,8 +1478,6 @@ function locale_get_plural_form_labels($langcode) {
         t('Form for 3, 4, 103, 104, 203, 204, etc.'),
         t('Form for other numbers'),
       ];
-
-    break;
 
     // Five plural forms
     case 'ga':
@@ -1506,8 +1489,6 @@ function locale_get_plural_form_labels($langcode) {
         t('Form for 11 and more'),
       ];
 
-    break;
-
     // Six plural forms
     case 'ar':
       return [
@@ -1518,8 +1499,6 @@ function locale_get_plural_form_labels($langcode) {
         t('Form for 11-99, 111-199, 211-299, etc.'),
         t('Form for 100-102, 200-202, etc.'),
       ];
-
-    break;
 
     // Two plural forms (default)
     default:
