@@ -131,7 +131,7 @@ trait PerformanceTestTrait {
       foreach ($performance_test_data['database_events'] as $event) {
         // Don't log queries from the database cache backend because they're
         // logged separately as cache operations.
-        if (!$this->isDatabaseCache($event)) {
+        if (!static::isDatabaseCache($event)) {
           $query_count++;
         }
       }
@@ -358,7 +358,7 @@ trait PerformanceTestTrait {
       $performance_test_data = $collection->get('performance_test_data');
       $query_events = $performance_test_data['database_events'] ?? [];
       foreach ($query_events as $key => $event) {
-        if ($this->isDatabaseCache($event)) {
+        if (static::isDatabaseCache($event)) {
           continue;
         }
         // Use the first part of the database query for the span name.
@@ -466,7 +466,7 @@ trait PerformanceTestTrait {
    * @return bool
    *   Whether the event was triggered by the database cache implementation.
    */
-  protected function isDatabaseCache(DatabaseEvent $event): bool {
+  protected static function isDatabaseCache(DatabaseEvent $event): bool {
     $class = str_replace('\\\\', '\\', $event->caller['class']);
     return is_a($class, '\Drupal\Core\Cache\DatabaseBackend', TRUE) || is_a($class, '\Drupal\Core\Cache\DatabaseCacheTagsChecksum', TRUE);
   }
