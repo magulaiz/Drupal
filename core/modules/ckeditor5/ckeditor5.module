@@ -600,9 +600,7 @@ function ckeditor5_config_schema_info_alter(&$definitions) {
  */
 function _ckeditor5_theme_css($theme = NULL): array {
   $css = [];
-  if (!isset($theme)) {
-    $theme = \Drupal::config('system.theme')->get('default');
-  }
+  $theme ??= \Drupal::config('system.theme')->get('default');
   if (isset($theme) && $theme_path = \Drupal::service('extension.list.theme')->getPath($theme)) {
     $info = \Drupal::service('extension.list.theme')->getExtensionInfo($theme);
     if (isset($info['ckeditor5-stylesheets']) && $info['ckeditor5-stylesheets'] !== FALSE) {

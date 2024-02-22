@@ -575,9 +575,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // Use memory for key value storages to avoid database queries. Store the
     // key value factory on the test object so that key value storages persist
     // container rebuilds, otherwise all state data would vanish.
-    if (!isset($this->keyValue)) {
-      $this->keyValue = new KeyValueMemoryFactory();
-    }
+    $this->keyValue ??= new KeyValueMemoryFactory();
     $container->set('keyvalue', $this->keyValue);
 
     // Set the default language on the minimal container.

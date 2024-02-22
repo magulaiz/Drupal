@@ -284,9 +284,7 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
       }
     }
 
-    if (!isset($attach_to)) {
-      $attach_to = $this->t('None');
-    }
+    $attach_to ??= $this->t('None');
 
     $options['displays'] = [
       'category' => 'page',

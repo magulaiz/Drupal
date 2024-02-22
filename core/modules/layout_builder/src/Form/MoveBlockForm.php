@@ -187,9 +187,7 @@ class MoveBlockForm extends FormBase {
     $components = $current_section->getComponentsByRegion($selected_region);
 
     // If the component is not in this region, add it to the listed components.
-    if (!isset($components[$uuid])) {
-      $components[$uuid] = $sections[$delta]->getComponent($uuid);
-    }
+    $components[$uuid] ??= $sections[$delta]->getComponent($uuid);
     $state_weight_delta = round(count($components) / 2);
     foreach ($components as $component_uuid => $component) {
       /** @var \Drupal\Core\Block\BlockPluginInterface $plugin */

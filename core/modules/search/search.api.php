@@ -48,9 +48,7 @@
  */
 function hook_search_preprocess($text, $langcode = NULL) {
   // If the language is not set, get it from the language manager.
-  if (!isset($langcode)) {
-    $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
-  }
+  $langcode ??= \Drupal::languageManager()->getCurrentLanguage()->getId();
 
   // If the langcode is set to 'en' then add variations of the word "testing"
   // which can also be found during English language searches.

@@ -115,9 +115,7 @@ class LocaleTranslation implements TranslatorInterface, DestructableInterface {
     }
     // Strings are cached by langcode, context and roles, using instances of the
     // LocaleLookup class to handle string lookup and caching.
-    if (!isset($this->translations[$langcode][$context])) {
-      $this->translations[$langcode][$context] = new LocaleLookup($langcode, $context, $this->storage, $this->cache, $this->lock, $this->configFactory, $this->languageManager, $this->requestStack);
-    }
+    $this->translations[$langcode][$context] ??= new LocaleLookup($langcode, $context, $this->storage, $this->cache, $this->lock, $this->configFactory, $this->languageManager, $this->requestStack);
     $translation = $this->translations[$langcode][$context]->get($string);
     // If the translation is TRUE, no translation exists, but that string needs
     // to be stored in the persistent cache for performance reasons (so for
@@ -134,9 +132,7 @@ class LocaleTranslation implements TranslatorInterface, DestructableInterface {
    *   TRUE if english should be translated, FALSE if not.
    */
   protected function canTranslateEnglish() {
-    if (!isset($this->translateEnglish)) {
-      $this->translateEnglish = $this->configFactory->get('locale.settings')->get('translate_english');
-    }
+    $this->translateEnglish ??= $this->configFactory->get('locale.settings')->get('translate_english');
     return $this->translateEnglish;
   }
 

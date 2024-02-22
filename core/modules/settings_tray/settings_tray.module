@@ -169,9 +169,7 @@ function settings_tray_block_alter(&$definitions) {
   foreach ($definitions as &$definition) {
     // If a block plugin does not define its own 'settings_tray' form, use the
     // plugin class itself.
-    if (!isset($definition['forms']['settings_tray'])) {
-      $definition['forms']['settings_tray'] = $definition['class'];
-    }
+    $definition['forms']['settings_tray'] ??= $definition['class'];
   }
 }
 

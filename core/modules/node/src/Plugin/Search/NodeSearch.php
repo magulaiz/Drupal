@@ -758,9 +758,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
     // Split out the advanced search parameters.
     foreach ($f as $advanced) {
       [$key, $value] = explode(':', $advanced, 2);
-      if (!isset($defaults[$key])) {
-        $defaults[$key] = [];
-      }
+      $defaults[$key] ??= [];
       $defaults[$key][] = $value;
     }
 

@@ -232,9 +232,7 @@ class Filter {
    */
   protected static function expandItem($filter_index, array $filter_item) {
     if (isset($filter_item[EntityCondition::VALUE_KEY])) {
-      if (!isset($filter_item[EntityCondition::PATH_KEY])) {
-        $filter_item[EntityCondition::PATH_KEY] = $filter_index;
-      }
+      $filter_item[EntityCondition::PATH_KEY] ??= $filter_index;
 
       $filter_item = [
         static::CONDITION_KEY => $filter_item,
@@ -242,9 +240,7 @@ class Filter {
       ];
     }
 
-    if (!isset($filter_item[static::CONDITION_KEY][EntityCondition::OPERATOR_KEY])) {
-      $filter_item[static::CONDITION_KEY][EntityCondition::OPERATOR_KEY] = '=';
-    }
+    $filter_item[static::CONDITION_KEY][EntityCondition::OPERATOR_KEY] ??= '=';
 
     return $filter_item;
   }

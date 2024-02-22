@@ -102,9 +102,7 @@ class PathProcessorLanguage implements InboundPathProcessorInterface, OutboundPa
    * {@inheritdoc}
    */
   public function processOutbound($path, &$options = [], Request $request = NULL, BubbleableMetadata $bubbleable_metadata = NULL) {
-    if (!isset($this->multilingual)) {
-      $this->multilingual = $this->languageManager->isMultilingual();
-    }
+    $this->multilingual ??= $this->languageManager->isMultilingual();
     if ($this->multilingual) {
       $this->negotiator->reset();
       $scope = 'outbound';

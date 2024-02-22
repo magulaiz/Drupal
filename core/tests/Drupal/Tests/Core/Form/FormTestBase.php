@@ -314,9 +314,7 @@ abstract class FormTestBase extends UnitTestCase {
       '#name' => 'op',
       '#is_button' => TRUE,
     ];
-    if (!isset($types[$type])) {
-      $types[$type] = [];
-    }
+    $types[$type] ??= [];
     return $types[$type];
   }
 

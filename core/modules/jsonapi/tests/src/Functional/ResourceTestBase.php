@@ -1259,9 +1259,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $merged_response = static::toCollectionResourceResponse($individual_responses, $self_link, TRUE);
 
     $merged_document = $merged_response->getResponseData();
-    if (!isset($merged_document['data'])) {
-      $merged_document['data'] = [];
-    }
+    $merged_document['data'] ??= [];
 
     $cacheability = static::getExpectedCollectionCacheability($this->account, $collection, NULL, $filtered);
     $cacheability->setCacheMaxAge($merged_response->getCacheableMetadata()->getCacheMaxAge());

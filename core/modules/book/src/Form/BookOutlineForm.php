@@ -83,9 +83,7 @@ class BookOutlineForm extends ContentEntityForm {
     }
 
     // Find the depth limit for the parent select.
-    if (!isset($this->entity->book['parent_depth_limit'])) {
-      $this->entity->book['parent_depth_limit'] = $this->bookManager->getParentDepthLimit($this->entity->book);
-    }
+    $this->entity->book['parent_depth_limit'] ??= $this->bookManager->getParentDepthLimit($this->entity->book);
     $form = $this->bookManager->addFormElements($form, $form_state, $this->entity, $this->currentUser(), FALSE);
 
     return $form;

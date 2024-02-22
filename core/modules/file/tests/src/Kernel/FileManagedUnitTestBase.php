@@ -194,20 +194,16 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
    *   File URI.
    */
   public function createUri($filepath = NULL, $contents = NULL, $scheme = NULL) {
-    if (!isset($filepath)) {
-      // Prefix with non-latin characters to ensure that all file-related
-      // tests work with international filenames.
-      // cSpell:disable-next-line
-      $filepath = 'Файл для тестирования ' . $this->randomMachineName();
-    }
+    // Prefix with non-latin characters to ensure that all file-related
+    // tests work with international filenames.
+    // cSpell:disable-next-line
+    $filepath ??= 'Файл для тестирования ' . $this->randomMachineName();
     if (!isset($scheme)) {
       $scheme = 'public';
     }
     $filepath = $scheme . '://' . $filepath;
 
-    if (!isset($contents)) {
-      $contents = "file_put_contents() doesn't seem to appreciate empty strings so let's put in some data.";
-    }
+    $contents ??= "file_put_contents() doesn't seem to appreciate empty strings so let's put in some data.";
 
     file_put_contents($filepath, $contents);
     $this->assertFileExists($filepath);

@@ -137,9 +137,7 @@ class LanguageNegotiationSession extends LanguageNegotiationMethodBase implement
       // enabled, and the corresponding option has been set, we must preserve
       // any explicit user language preference even with cookies disabled.
       if ($this->queryRewrite) {
-        if (!isset($options['query'][$this->queryParam])) {
-          $options['query'][$this->queryParam] = $this->queryValue;
-        }
+        $options['query'][$this->queryParam] ??= $this->queryValue;
         if ($bubbleable_metadata) {
           // Cached URLs that have been processed by this outbound path
           // processor must be:

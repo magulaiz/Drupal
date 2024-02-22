@@ -1505,10 +1505,8 @@ class ViewExecutable {
     // Initialize the style plugin.
     $this->initStyle();
 
-    if (!isset($this->response)) {
-      // Set the response so other parts can alter it.
-      $this->response = new Response('', 200);
-    }
+    // Set the response so other parts can alter it.
+    $this->response ??= new Response('', 200);
 
     // Give field handlers the opportunity to perform additional queries
     // using the entire resultset prior to rendering.
@@ -1804,9 +1802,7 @@ class ViewExecutable {
    *   The response object of the view.
    */
   public function getResponse() {
-    if (!isset($this->response)) {
-      $this->response = new Response();
-    }
+    $this->response ??= new Response();
     return $this->response;
   }
 
@@ -2267,9 +2263,7 @@ class ViewExecutable {
 
     $this->setDisplay($display_id);
 
-    if (!isset($display_id)) {
-      $display_id = $this->current_display;
-    }
+    $display_id ??= $this->current_display;
 
     // Get info about the types so we can get the right data.
     $types = static::getHandlerTypes();

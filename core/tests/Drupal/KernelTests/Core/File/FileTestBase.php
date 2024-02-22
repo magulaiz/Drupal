@@ -105,9 +105,7 @@ abstract class FileTestBase extends KernelTestBase {
       $expected_mode = $expected_mode | $expected_mode >> 3 | $expected_mode >> 6;
     }
 
-    if (!isset($message)) {
-      $message = t('Expected file permission to be %expected, actually were %actual.', ['%actual' => decoct($actual_mode), '%expected' => decoct($expected_mode)]);
-    }
+    $message ??= t('Expected file permission to be %expected, actually were %actual.', ['%actual' => decoct($actual_mode), '%expected' => decoct($expected_mode)]);
     $this->assertEquals($expected_mode, $actual_mode, $message);
   }
 
@@ -141,9 +139,7 @@ abstract class FileTestBase extends KernelTestBase {
       $expected_mode = $expected_mode | $expected_mode >> 3 | $expected_mode >> 6;
     }
 
-    if (!isset($message)) {
-      $message = t('Expected directory permission to be %expected, actually were %actual.', ['%actual' => decoct($actual_mode), '%expected' => decoct($expected_mode)]);
-    }
+    $message ??= t('Expected directory permission to be %expected, actually were %actual.', ['%actual' => decoct($actual_mode), '%expected' => decoct($expected_mode)]);
     $this->assertEquals($expected_mode, $actual_mode, $message);
   }
 
@@ -159,9 +155,7 @@ abstract class FileTestBase extends KernelTestBase {
    */
   public function createDirectory($path = NULL) {
     // A directory to operate on.
-    if (!isset($path)) {
-      $path = 'public://' . $this->randomMachineName();
-    }
+    $path ??= 'public://' . $this->randomMachineName();
     $this->assertTrue(\Drupal::service('file_system')->mkdir($path));
     $this->assertDirectoryExists($path);
     return $path;
@@ -184,20 +178,16 @@ abstract class FileTestBase extends KernelTestBase {
    *   File URI.
    */
   public function createUri($filepath = NULL, $contents = NULL, $scheme = NULL) {
-    if (!isset($filepath)) {
-      // Prefix with non-latin characters to ensure that all file-related
-      // tests work with international filenames.
-      // cSpell:disable-next-line
-      $filepath = 'Файл для тестирования ' . $this->randomMachineName();
-    }
+    // Prefix with non-latin characters to ensure that all file-related
+    // tests work with international filenames.
+    // cSpell:disable-next-line
+    $filepath ??= 'Файл для тестирования ' . $this->randomMachineName();
     if (!isset($scheme)) {
       $scheme = 'public';
     }
     $filepath = $scheme . '://' . $filepath;
 
-    if (!isset($contents)) {
-      $contents = "file_put_contents() doesn't seem to appreciate empty strings so let's put in some data.";
-    }
+    $contents ??= "file_put_contents() doesn't seem to appreciate empty strings so let's put in some data.";
 
     file_put_contents($filepath, $contents);
     $this->assertFileExists($filepath);
