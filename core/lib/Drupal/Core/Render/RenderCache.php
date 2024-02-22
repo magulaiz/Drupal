@@ -68,6 +68,7 @@ class RenderCache implements RenderCacheInterface {
       if (!$this->requestStack->getCurrentRequest()->isMethodCacheable()) {
         // @todo: should this be a configurable deny list as a container
         // parameter?
+        // @see https://www.drupal.org/project/drupal/issues/3423127
         if (in_array('render_cache_form', $cache->tags, TRUE)) {
           return FALSE;
         }
