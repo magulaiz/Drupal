@@ -118,7 +118,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertSame(1, $performance_data->getCacheSetCount());
     $this->assertSame(1, $performance_data->getCacheDeleteCount());
     $this->assertSame(1, $performance_data->getCacheTagChecksumCount());
-    $this->assertSame(69, $performance_data->getCacheTagIsValidCount());
+    $this->assertSame(28, $performance_data->getCacheTagIsValidCount());
     $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
   }
 
@@ -151,7 +151,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertSame(1, $performance_data->getCacheSetCount());
     $this->assertSame(1, $performance_data->getCacheDeleteCount());
     $this->assertSame(1, $performance_data->getCacheTagChecksumCount());
-    $this->assertSame(107, $performance_data->getCacheTagIsValidCount());
+    $this->assertSame(31, $performance_data->getCacheTagIsValidCount());
     $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
   }
 

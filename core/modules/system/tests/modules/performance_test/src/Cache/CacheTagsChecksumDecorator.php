@@ -33,7 +33,11 @@ class CacheTagsChecksumDecorator implements CacheTagsChecksumInterface, CacheTag
     $start = microtime(TRUE);
     $return = $this->checksumInvalidator->isValid($checksum, $tags);
     $stop = microtime(TRUE);
-    $this->logCacheTagOperation($tags, $start, $stop, CacheTagOperation::isValid);
+    // Don't bother logging operations when $tags is an empty array because this
+    // is a no-op.
+    if (!empty($tags)) {
+      $this->logCacheTagOperation($tags, $start, $stop, CacheTagOperation::isValid);
+    }
     return $return;
   }
 
