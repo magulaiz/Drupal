@@ -94,30 +94,30 @@
        *   Drupal table drag row dropped.
        */
       function checkEmptyRegions(table, rowObject) {
-        let direction = 'before';
-        // Move the element after or before the region that display the quantity of filtered.
-        const previousElement =
-          rowObject.element.previousElementSibling || null;
-        const nextElement = rowObject.element.nextElementSibling || null;
-        if (
-          rowObject.direction === 'up' &&
-          previousElement?.previousElementSibling === null
-        ) {
-          rowObject.swap('after', previousElement);
-        }
-        if (
-          (nextElement &&
-            nextElement.classList.contains('js-region-filter-quantity')) ||
-          (previousElement &&
-            previousElement.classList.contains('js-region-filter-quantity'))
-        ) {
-          let el = previousElement;
-          if (rowObject.direction === 'down') {
-            direction = 'after';
-            el = nextElement;
-          }
-          rowObject.swap(direction, el);
-        }
+        // let direction = 'before';
+        // // Move the element after or before the region that display the quantity of filtered.
+        // const previousElement =
+        //   rowObject.element.previousElementSibling || null;
+        // const nextElement = rowObject.element.nextElementSibling || null;
+        // if (
+        //   rowObject.direction === 'up' &&
+        //   previousElement?.previousElementSibling === null
+        // ) {
+        //   rowObject.swap('after', previousElement);
+        // }
+        // if (
+        //   (nextElement &&
+        //     nextElement.classList.contains('js-region-filter-quantity')) ||
+        //   (previousElement &&
+        //     previousElement.classList.contains('js-region-filter-quantity'))
+        // ) {
+        //   let el = previousElement;
+        //   if (rowObject.direction === 'down') {
+        //     direction = 'after';
+        //     el = nextElement;
+        //   }
+        //   rowObject.swap(direction, el);
+        // }
 
         table.find('tr.region-message').each(function () {
           const $this = $(this);
