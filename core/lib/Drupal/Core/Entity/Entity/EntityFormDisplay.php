@@ -202,16 +202,16 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
     // Associate the cache tags for the form display.
     $this->renderer->addCacheableDependency($form, $this);
 
-    // Add a process callback so we can assign weights and hide extra fields.
-    $form['#process'][] = [$this, 'processForm'];
+    // Add an after build callback so that we can assign weights and hide extra fields.
+    $form['#after_build'][] = [$this, 'processForm'];
   }
 
   /**
-   * Process callback: assigns weights and hides extra fields.
+   * After build callback: assigns weights and hides extra fields.
    *
    * @see \Drupal\Core\Entity\Entity\EntityFormDisplay::buildForm()
    */
-  public function processForm($element, FormStateInterface $form_state, $form) {
+  public function processForm(array $element): array {
     // Assign the weights configured in the form display.
     foreach ($this->getComponents() as $name => $options) {
       if (isset($element[$name])) {
