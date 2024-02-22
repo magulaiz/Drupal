@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\migrate\Kernel\SqlBaseTest.
- */
-
 namespace Drupal\Tests\migrate\Kernel;
 
 use Drupal\Core\Database\Query\ConditionInterface;
@@ -194,7 +189,7 @@ class SqlBaseTest extends MigrateTestBase {
    * @return array
    *   The scenarios to test.
    */
-  public function highWaterDataProvider() {
+  public static function highWaterDataProvider() {
     return [
       'no high-water value set' => [],
       'high-water value set' => [33],

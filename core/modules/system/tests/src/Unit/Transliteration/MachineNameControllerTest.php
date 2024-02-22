@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Unit\Transliteration;
 
 use Drupal\Core\Access\CsrfTokenGenerator;
@@ -57,7 +59,7 @@ class MachineNameControllerTest extends UnitTestCase {
    *     - An array of request parameters.
    *     - The expected content of the JSONresponse.
    */
-  public function providerTestMachineNameController() {
+  public static function providerTestMachineNameController() {
     // cspell:ignore äwesome
     $valid_data = [
       [['text' => 'Bob', 'langcode' => 'en'], '"Bob"'],

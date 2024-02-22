@@ -220,7 +220,7 @@ class FileUploadHandler {
     }
 
     // A file URI may already have a trailing slash or look like "public://".
-    if (substr($destination, -1) != '/') {
+    if (!str_ends_with($destination, '/')) {
       $destination .= '/';
     }
 
@@ -280,7 +280,7 @@ class FileUploadHandler {
     $file->setFilename($this->fileSystem->basename($file->getFileUri()));
 
     if ($replace === FileSystemInterface::EXISTS_REPLACE) {
-      $existingFile = $this->loadByUri($file->getFileUri());
+      $existingFile = $this->fileRepository->loadByUri($file->getFileUri());
       if ($existingFile) {
         $file->fid = $existingFile->id();
         $file->setOriginalId($existingFile->id());
@@ -376,10 +376,19 @@ class FileUploadHandler {
       }
     }
     else {
+      if (!empty($validators['file_validate_extensions'][0])) {
+        // The deprecated 'file_validate_extensions' has configuration, so that
+        // should be used.
+        $validators['FileExtension']['extensions'] = $validators['file_validate_extensions'][0];
+        @trigger_error('\'file_validate_extensions\' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the \'FileExtension\' constraint instead. See https://www.drupal.org/node/3363700', E_USER_DEPRECATED);
+        return $validators['FileExtension']['extensions'];
+      }
+
       // No validator was provided, so add one using the default list.
       // Build a default non-munged safe list for
       // \Drupal\system\EventSubscriber\SecurityFileUploadEventSubscriber::sanitizeName().
       $validators['FileExtension'] = ['extensions' => self::DEFAULT_EXTENSIONS];
+
     }
     return $validators['FileExtension']['extensions'] ?? '';
   }
@@ -392,8 +401,14 @@ class FileUploadHandler {
    *
    * @return \Drupal\file\FileInterface|null
    *   The first file with the matched URI if found, NULL otherwise.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0.
+   *   Use \Drupal\file\FileRepositoryInterface::loadByUri().
+   *
+   * @see https://www.drupal.org/node/3409326
    */
   protected function loadByUri(string $uri): ?FileInterface {
+    @trigger_error('FileUploadHandler::loadByUri() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\file\FileRepositoryInterface::loadByUri(). See https://www.drupal.org/node/3409326', E_USER_DEPRECATED);
     return $this->fileRepository->loadByUri($uri);
   }
 

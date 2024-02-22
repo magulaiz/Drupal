@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\phpass\Unit;
 
 use Drupal\phpass\Password\PhpassHashedPassword;
@@ -112,6 +114,16 @@ class LegacyPasswordHashingTest extends UnitTestCase {
     $this->assertFalse($password_hasher->needsRehash($rehashed_password), 'Re-hashed password does not need a new hash.');
     $this->assertTrue($password_hasher->check($this->password, $rehashed_password), 'Password check succeeds with re-hashed password.');
     $this->assertTrue($this->passwordHasher->check($this->password, $rehashed_password), 'Password check succeeds with re-hashed password with original hasher.');
+  }
+
+  /**
+   * Tests password validation when the hash is NULL.
+   *
+   * @covers ::check
+   */
+  public function testEmptyHash(): void {
+    $this->assertFalse($this->passwordHasher->check($this->password, NULL));
+    $this->assertFalse($this->passwordHasher->check($this->password, ''));
   }
 
 }

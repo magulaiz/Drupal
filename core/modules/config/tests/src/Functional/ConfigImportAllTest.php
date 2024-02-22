@@ -29,13 +29,21 @@ class ConfigImportAllTest extends ModuleTestBase {
   protected $webUser;
 
   /**
-   * The profile to install as a basis for testing.
+   * Modules to enable.
    *
-   * Using the standard profile as this has a lot of additional configuration.
-   *
-   * @var string
+   * @var array
    */
-  protected $profile = 'standard';
+  protected static $modules = ['config'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $profile = 'testing';
 
   /**
    * {@inheritdoc}

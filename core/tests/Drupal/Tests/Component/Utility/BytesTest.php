@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Bytes;
@@ -42,7 +44,7 @@ class BytesTest extends TestCase {
    *   \Drupal\Component\Utility\Bytes::toNumber(): size, and the expected
    *   return value with the expected type (float).
    */
-  public function providerTestToNumber(): array {
+  public static function providerTestToNumber(): array {
     return [
       ['1', 1.0],
       ['1 byte', 1.0],
@@ -96,7 +98,7 @@ class BytesTest extends TestCase {
    *   \Drupal\Component\Utility\Bytes::validate(): string, and the expected
    *   return value with the expected type (bool).
    */
-  public function providerTestValidate(): array {
+  public static function providerTestValidate(): array {
     return [
       // String not starting with a number.
       ['foo', FALSE],
