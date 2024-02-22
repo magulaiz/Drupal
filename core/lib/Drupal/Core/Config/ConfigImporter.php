@@ -457,8 +457,8 @@ class ConfigImporter {
 
     // If we're installing the install profile ensure it comes last. This will
     // occur when installing a site from configuration.
-    $install_profile_key = array_search($new_extensions['profile'], $this->extensionChangelist['module']['install'], TRUE);
-    if ($install_profile_key !== FALSE) {
+    if (isset($new_extensions['profile'])) {
+      $install_profile_key = array_search($new_extensions['profile'], $this->extensionChangelist['module']['install'], TRUE);
       unset($this->extensionChangelist['module']['install'][$install_profile_key]);
       $this->extensionChangelist['module']['install'][] = $new_extensions['profile'];
     }

@@ -90,8 +90,7 @@ class ConfigImportInstallProfileTest extends BrowserTestBase {
     $this->assertFalse(\Drupal::service('theme_handler')->themeExists('stark'), 'The stark theme has been uninstalled.');
     $this->assertTrue(\Drupal::service('theme_handler')->themeExists('test_theme_theme'), 'The test_theme_theme theme has been installed.');
 
-    // Uninstall testing_config_import profile without setting the profile to
-    // FALSE.
+    // Uninstall testing_config_import profile without removing the profile key.
     unset($core['module']['testing_config_import']);
     $sync->write('core.extension', $core);
     $this->drupalGet('admin/config/development/configuration');
@@ -100,7 +99,7 @@ class ConfigImportInstallProfileTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('The install profile testing_config_import is not in the list of installed modules.');
 
     // Uninstall testing_config_import profile properly.
-    $core['profile'] = FALSE;
+    unset($core['profile']);
     $sync->write('core.extension', $core);
     $this->drupalGet('admin/config/development/configuration');
     $this->submitForm([], 'Import all');

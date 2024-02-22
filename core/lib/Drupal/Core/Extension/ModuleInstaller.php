@@ -502,11 +502,11 @@ class ModuleInstaller implements ModuleInstallerInterface {
       // uninstalling a module since we are only clearing a key.
       $core_extension = \Drupal::configFactory()->getEditable('core.extension');
       $core_extension->clear("module.$module");
-      // If the install profile is being uninstalled then set the site's profile
-      // to FALSE to indicate that the site no longer has an installation
+      // If the install profile is being uninstalled then remove the site's
+      // profile key to indicate that the site no longer has an installation
       // profile.
       if ($core_extension->get('profile') === $module) {
-        $core_extension->set('profile', FALSE);
+        $core_extension->clear('profile');
       }
       $core_extension->save(TRUE);
 

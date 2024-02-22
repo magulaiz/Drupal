@@ -112,13 +112,14 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
     // Get the install profile from the site's configuration.
     $current_core_extension = $config_importer->getStorageComparer()->getTargetStorage()->read('core.extension');
     $install_profile = $current_core_extension['profile'] ?? NULL;
+    $new_install_profile = $core_extension['profile'] ?? NULL;
 
     // Ensure the profile is not changing.
-    if ($install_profile !== $core_extension['profile']) {
+    if ($install_profile !== $new_install_profile) {
       if (InstallerKernel::installationAttempted()) {
         $config_importer->logError($this->t('The selected installation profile %install_profile does not match the profile stored in configuration %config_profile.', [
           '%install_profile' => $install_profile,
-          '%config_profile' => $core_extension['profile'],
+          '%config_profile' => $new_install_profile,
         ]));
         // If this error has occurred the other checks are irrelevant.
         return;

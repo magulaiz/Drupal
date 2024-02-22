@@ -1660,14 +1660,16 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   /**
    * Gets the active install profile.
    *
-   * @return string|null
-   *   The name of the any active install profile or distribution.
+   * @return string|null|false
+   *   The name of the active install profile or distribution, FALSE if there is
+   *   no install profile or NULL if Drupal is being installed.
    */
   protected function getInstallProfile() {
     $config = $this->getConfigStorage()->read('core.extension');
-
-    // Normalize an empty string to a NULL value.
-    return $config['profile'] ?? NULL;
+    if (!array_key_exists('profile', $config)) {
+      return FALSE;
+    }
+    return $config['profile'];
   }
 
   /**
