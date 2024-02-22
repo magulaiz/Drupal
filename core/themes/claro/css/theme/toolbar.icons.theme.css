@@ -90,7 +90,7 @@
   padding-left: 4em;
 }
 
-.toolbar .toolbar-bar .toolbar-tab > .toolbar-icon.is-active:before {
+.toolbar .toolbar-bar .toolbar-tab > .toolbar-icon.is-active::before {
   filter: invert(100%);
 }
 
