@@ -154,7 +154,8 @@ abstract class WebDriverTestBase extends BrowserTestBase {
           unset($args[1]['chromeOptions']);
         }
         if (isset($args[0]) && $args[0] === 'chrome' && !isset($args[1]['goog:chromeOptions']['w3c'])) {
-          // @todo Deprecate defaulting behavior and require w3c to be set.
+          // @todo https://www.drupal.org/project/drupal/issues/3421202
+          //   Deprecate defaulting behavior and require w3c to be set.
           $args[1]['goog:chromeOptions']['w3c'] = FALSE;
         }
         $json = json_encode($args);
