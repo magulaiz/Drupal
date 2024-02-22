@@ -30,14 +30,15 @@ class CacheTagsChecksumDecorator implements CacheTagsChecksumInterface, CacheTag
    * {@inheritdoc}
    */
   public function isValid($checksum, array $tags) {
+    // If there are no cache tags, the cache item is always valid, and the child
+    // method will be a no-op, so don't log anything.
+    if (empty($tags)) {
+      return $this->checksumInvalidator->isValid($checksum, $tags);
+    }
     $start = microtime(TRUE);
     $return = $this->checksumInvalidator->isValid($checksum, $tags);
     $stop = microtime(TRUE);
-    // Don't bother logging operations when $tags is an empty array because this
-    // is a no-op.
-    if (!empty($tags)) {
-      $this->logCacheTagOperation($tags, $start, $stop, CacheTagOperation::isValid);
-    }
+    $this->logCacheTagOperation($tags, $start, $stop, CacheTagOperation::isValid);
     return $return;
   }
 
