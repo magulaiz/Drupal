@@ -1666,10 +1666,10 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   protected function getInstallProfile() {
     $config = $this->getConfigStorage()->read('core.extension');
-    if (!array_key_exists('profile', $config)) {
+    if (is_array($config) && !array_key_exists('profile', $config)) {
       return FALSE;
     }
-    return $config['profile'];
+    return $config['profile'] ?? NULL;
   }
 
   /**
