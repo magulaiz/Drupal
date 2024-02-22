@@ -140,7 +140,7 @@ class TextFormatterTest extends EntityKernelTestBase {
       ->create(['name' => $this->randomMachineName()]);
     $entity->formatted_text = [
       'value' => $text,
-      'format' => $filter_format_id = $filter_format->id(),
+      'format' => $filter_format->id(),
     ];
     $entity->save();
 
@@ -154,7 +154,7 @@ class TextFormatterTest extends EntityKernelTestBase {
     \Drupal::service('renderer')->renderRoot($build[0]);
     $this->assertSame($expected, (string) $build[0]['#markup']);
     $this->assertEquals(
-      FilterFormat::load($filter_format_id)->getCacheTags(),
+      $filter_format->getCacheTags(),
       $build[0]['#cache']['tags'],
       "The $formatter formatter has not the expected cache tags when formatting a formatted text field."
     );
