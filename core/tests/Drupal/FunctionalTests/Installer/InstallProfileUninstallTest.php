@@ -59,7 +59,7 @@ class InstallProfileUninstallTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Testing config import module');
     $this->assertSession()->fieldEnabled('modules[testing_config_import_module][enable]')->check();
     $this->getSession()->getPage()->pressButton('Install');
-    $this->assertSession()->pageTextContains('Module Testing config import module has been enabled.');
+    $this->assertSession()->pageTextContains('Module Testing config import module has been installed.');
 
     // Test that uninstalling the module and then the profile works.
     $this->drupalGet('admin/modules/uninstall');
