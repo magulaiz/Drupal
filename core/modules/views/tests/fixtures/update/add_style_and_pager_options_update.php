@@ -13,7 +13,7 @@ $connection = Database::getConnection();
 $connection->insert('config')
   ->fields([
     'collection' => '',
-    'name' => 'views.view.add_display_options_update',
-    'data' => serialize(Yaml::decode(file_get_contents('core/modules/views/tests/fixtures/update/views.view.add_display_options_update.yml'))),
+    'name' => 'views.view.add_style_and_pager_options_update',
+    'data' => serialize(Yaml::decode(file_get_contents('core/modules/views/tests/fixtures/update/views.view.add_style_and_pager_options_update.yml'))),
   ])
   ->execute();
