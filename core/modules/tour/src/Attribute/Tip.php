@@ -16,8 +16,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @see \Drupal\tour\TipPluginInterface
  * @see \Drupal\tour\TipPluginManager
  * @see plugin_api
- *
- * @Annotation
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class Tip extends Plugin {
