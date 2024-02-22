@@ -110,8 +110,8 @@ trait CacheTagsChecksumTrait {
    * Implements \Drupal\Core\Cache\CacheTagsChecksumInterface::isValid()
    */
   public function isValid($checksum, array $tags) {
-    // If the array is empty, we return early to avoid calling the methods
-    // with an empty array.
+    // If there is no cache tags, then there is no cache tag to invalidate,
+    // hence it's always valid.
     if (empty($tags)) {
       return TRUE;
     }
