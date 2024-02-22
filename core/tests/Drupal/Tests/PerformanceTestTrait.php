@@ -358,7 +358,7 @@ trait PerformanceTestTrait {
       $performance_test_data = $collection->get('performance_test_data');
       $query_events = $performance_test_data['database_events'] ?? [];
       foreach ($query_events as $key => $event) {
-        if ($this->isDatabasecache($event)) {
+        if ($this->isDatabaseCache($event)) {
           continue;
         }
         // Use the first part of the database query for the span name.
