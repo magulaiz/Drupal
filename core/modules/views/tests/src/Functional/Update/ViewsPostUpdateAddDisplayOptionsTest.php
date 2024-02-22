@@ -41,8 +41,8 @@ class ViewsPostUpdateAddDisplayOptionsTest extends UpdatePathTestBase {
 
     // Assert specific configurations are missing before the update for each display.
     foreach ($view->get('display') as $displayId => $display) {
-      $this->assertArrayNotHasKey('style_options', $display['display_options']['style'], "Before update: 'style' type is missing in display '{$displayId}'.");
-      $this->assertArrayNotHasKey('pager_options', $display['display_options']['pager'], "Before update: 'pager' options are missing in display '{$displayId}'.");
+      $this->assertArrayNotHasKey('style_options', $display['display_options'], "Before update: 'style' type is missing in display '{$displayId}'.");
+      $this->assertArrayNotHasKey('pager_options', $display['display_options'], "Before update: 'pager' options are missing in display '{$displayId}'.");
     }
 
     // Run the update process.
@@ -54,8 +54,8 @@ class ViewsPostUpdateAddDisplayOptionsTest extends UpdatePathTestBase {
     // Assert specific style and pager configurations have been added or
     // modified by the update for each display.
     foreach ($view->get('display') as $displayId => $display) {
-      $this->assertArrayHasKey('style_options', $display['display_options']['style'], "After update: 'style' type has been added or modified in display '{$displayId}'.");
-      $this->assertArrayHasKey('pager_options', $display['display_options']['pager'], "After update: 'pager' options have been added or modified in display '{$displayId}'.");
+      $this->assertArrayHasKey('style_options', $display['display_options'], "After update: 'style' type has been added or modified in display '{$displayId}'.");
+      $this->assertArrayHasKey('pager_options', $display['display_options'], "After update: 'pager' options have been added or modified in display '{$displayId}'.");
     }
   }
 
