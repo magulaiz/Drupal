@@ -1,7 +1,5 @@
 {
-  "plugins": [
-    "jquery"
-  ],
+  "plugins": ["jquery"],
   "rules": {
     "jquery/no-ajax": 0,
     "jquery/no-ajax-events": 2,
@@ -10,7 +8,7 @@
     "jquery/no-bind": 2,
     "jquery/no-class": 0,
     "jquery/no-clone": 0,
-    "jquery/no-closest": 0,
+    "jquery/no-closest": 2,
     "jquery/no-css": 2,
     "jquery/no-data": 0,
     "jquery/no-deferred": 0,

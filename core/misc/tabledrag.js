@@ -1136,9 +1136,9 @@
       switch (rowSettings.action) {
         case 'depth':
           // Get the depth of the target row.
-          targetElement.value = $(sourceElement)
+          targetElement.value = sourceElement
             .closest('tr')
-            .find('.js-indentation').length;
+            .querySelectorAll('.js-indentation').length;
           break;
 
         case 'match':
@@ -1343,13 +1343,13 @@
     addClasses,
   ) {
     const $tableRow = $(tableRow);
-
+    const tableRowElement = tableRow;
     this.element = tableRow;
     this.method = method;
     this.group = [tableRow];
     this.groupDepth = $tableRow.find('.js-indentation').length;
     this.changed = false;
-    this.table = $tableRow.closest('table')[0];
+    this.table = tableRowElement ? tableRowElement.closest('table') : null;
     this.indentEnabled = indentEnabled;
     this.maxDepth = maxDepth;
     // Direction the row is being moved.
@@ -1374,19 +1374,18 @@
   Drupal.tableDrag.prototype.row.prototype.addChangedWarning = function () {
     // Do not add the changed warning if one is already present.
     if (!$(this.table.parentNode).find('.tabledrag-changed-warning').length) {
-      const $form = $(this.table).closest('form');
+      const $form = this.table.closest('form');
+
       $(Drupal.theme('tableDragChangedWarning'))
         .insertBefore(this.table)
         .hide()
         // If a warning has already been shown, do not fade the warning in, so
         // it appears static when the table is rebuilt.
-        .fadeIn(
-          $form[0].hasAttribute('data-tabledrag-save-warning') ? 0 : 'slow',
-        );
+        .fadeIn($form.hasAttribute('data-tabledrag-save-warning') ? 0 : 'slow');
 
       // Keep track of the warning having been added in an element that lives
       // outside the table which rebuilds when certain changes occur.
-      $form[0].setAttribute('data-tabledrag-save-warning', true);
+      $form.setAttribute('data-tabledrag-save-warning', true);
     }
   };
 

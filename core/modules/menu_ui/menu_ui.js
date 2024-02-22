@@ -50,9 +50,11 @@
         // alterations.
         const $checkbox = $this.find('.js-form-item-menu-enabled input');
         const $linkTitle = $context.find('.js-form-item-menu-title input');
-        const $title = $this
-          .closest('form')
-          .find('.js-form-item-title-0-value input');
+        const checkbox = this.querySelector('.js-form-item-menu-enabled input');
+        const tabsPane = checkbox.closest('.vertical-tabs-pane');
+        const closestForm = this.closest('form');
+        const $title = $(closestForm).find('.js-form-item-title-0-value input');
+
         // Bail out if we do not have all required fields.
         if (!($checkbox.length && $linkTitle.length && $title.length)) {
           return;
@@ -77,7 +79,8 @@
             $linkTitle[0].value = '';
             $linkTitle.removeData('menuLinkAutomaticTitleOverridden');
           }
-          $checkbox.closest('.vertical-tabs-pane').trigger('summaryUpdated');
+
+          $(tabsPane).trigger('summaryUpdated');
           $checkbox.trigger('formUpdated');
         });
         // Take over any title change.

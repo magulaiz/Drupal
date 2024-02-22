@@ -102,13 +102,15 @@
 
           $(tabList).find('> li').eq(0).addClass('first');
           $(tabList).find('> li').eq(-1).addClass('last');
-
           if (!tabFocus) {
             // If the current URL has a fragment and one of the tabs contains an
             // element that matches the URL fragment, activate that tab.
+
             const $locationHash = $this.find(window.location.hash);
             if (window.location.hash && $locationHash.length) {
-              tabFocus = $locationHash.closest('.vertical-tabs__pane');
+              const locationHash = $locationHash[0];
+              const closestPane = locationHash.closest('.vertical-tabs__pane');
+              tabFocus = $(closestPane);
             } else {
               tabFocus = $this.find('> .vertical-tabs__pane').eq(0);
             }

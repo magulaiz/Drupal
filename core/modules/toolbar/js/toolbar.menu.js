@@ -31,7 +31,9 @@
             `a[data-drupal-link-system-path="${currentPath}"]`,
           );
           if ($menuItem.length !== 0) {
-            $menuItem.closest('a').addClass('is-active');
+            const menuItemEl = $menuItem[0];
+            const menuLink = menuItemEl.closest('a');
+            $(menuLink).addClass('is-active');
             break;
           }
           const lastIndex = currentPath.lastIndexOf('/');
@@ -81,8 +83,9 @@
      *   A jQuery Event object.
      */
     function toggleClickHandler(event) {
-      const $toggle = $(event.target);
-      const $item = $toggle.closest('li');
+      const toggle = event.target;
+      const closestItem = toggle.closest('li');
+      const $item = $(closestItem);
       // Toggle the list item.
       toggleList($item);
       // Close open sibling menus.

@@ -68,9 +68,11 @@
         const $mainInputParent = $mainInput
           .parent()
           .addClass(cssClasses.passwordParent);
-        const $passwordWidget = $mainInput.closest(
+
+        const closestPasswordWidget = value.closest(
           '.js-form-type-password-confirm',
         );
+        const $passwordWidget = $(closestPasswordWidget);
         const $confirmInput = $passwordWidget.find('input.js-password-confirm');
         const $passwordConfirmMessage = $(
           Drupal.theme('passwordConfirmMessage', settings.password),

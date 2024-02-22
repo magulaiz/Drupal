@@ -134,7 +134,7 @@
         // Remove the color-success class from new block if applicable.
         table.find('.color-success').removeClass('color-success');
         const $rowObject = $(rowObject);
-        if (!rowObject.element.matches('.drag-previous')) {
+        if (!rowObject.element?.matches('.drag-previous')) {
           table.find('.drag-previous').removeClass('drag-previous');
           $rowObject.addClass('drag-previous');
         }
@@ -221,7 +221,7 @@
         'change',
         function (event) {
           // Make our new row and select field.
-          const row = $(this).closest('tr');
+          const row = this.closest('tr');
           const select = $(this);
           // Find the correct region and insert the row as the last in the
           // region.

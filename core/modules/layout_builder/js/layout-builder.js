@@ -45,14 +45,11 @@
         const toggleBlockEntry = (index, link) => {
           const $link = $(link);
           const textMatch = link.textContent.toLowerCase().includes(query);
+          const closestEl = link.closest('.js-layout-builder-category');
           // Checks if a category is currently hidden.
           // Toggles the category on if so.
-          if (
-            Drupal.elementIsHidden(
-              $link.closest('.js-layout-builder-category')[0],
-            )
-          ) {
-            $link.closest('.js-layout-builder-category').show();
+          if (Drupal.elementIsHidden(closestEl)) {
+            $(closestEl).show();
           }
           // Toggle the li tag of the matching link.
           $link.parent().toggle(textMatch);
@@ -123,19 +120,22 @@
   Drupal.layoutBuilderBlockUpdate = function (item, from, to) {
     const $item = $(item);
     const $from = $(from);
+    const closestRegion = item.closest('.js-layout-builder-region');
 
     // Check if the region from the event and region for the item match.
-    const itemRegion = $item.closest('.js-layout-builder-region');
+    const itemRegion = $(closestRegion);
     if (to === itemRegion[0]) {
+      const closestItem = item.closest('[data-layout-delta]');
+      const closestFrom = from.closest('[data-layout-delta]');
+      const closestEl = item.closest('[data-layout-update-url]');
+
       // Find the destination delta.
-      const deltaTo = $item.closest('[data-layout-delta]').data('layout-delta');
+      const deltaTo = $(closestItem).data('layout-delta');
       // If the block didn't leave the original delta use the destination.
-      const deltaFrom = $from
-        ? $from.closest('[data-layout-delta]').data('layout-delta')
-        : deltaTo;
+      const deltaFrom = $from ? $(closestFrom).data('layout-delta') : deltaTo;
       ajax({
         url: [
-          $item.closest('[data-layout-update-url]').data('layout-update-url'),
+          $(closestEl).data('layout-update-url'),
           deltaFrom,
           deltaTo,
           itemRegion.data('region'),
@@ -191,10 +191,7 @@
         .find('a')
         // Don't disable contextual links.
         // @see \Drupal\contextual\Element\ContextualLinksPlaceholder
-        .not(
-          (index, element) =>
-            $(element).closest('[data-contextual-id]').length > 0,
-        )
+        .not((index, element) => element.closest('[data-contextual-id]'))
         .on('click mouseup touchstart', (e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -209,10 +206,7 @@
         .find(
           'button, [href], input, select, textarea, iframe, [tabindex]:not([tabindex="-1"]):not(.tabbable)',
         )
-        .not(
-          (index, element) =>
-            $(element).closest('[data-contextual-id]').length > 0,
-        )
+        .not((index, element) => element.closest('[data-contextual-id]'))
         .attr('tabindex', -1);
     },
   };

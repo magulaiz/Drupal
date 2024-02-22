@@ -87,17 +87,16 @@
         // Keep jQuery because of the use of `:input`.
         $(context).find('table .bundle-settings .translatable :input'),
       ).forEach((input) => {
-        const $input = $(input);
-        const $bundleSettings = $input.closest('.bundle-settings');
+        const closestBundle = input.closest('.bundle-settings');
+        const $bundleSettings = $(closestBundle);
+        const translatableInput = $bundleSettings
+          .nextUntil('.bundle-settings', '.field-settings')
+          .find('.translatable :input:not(:checked)')[0];
+        const closestField = translatableInput.closest('.field-settings');
         if (input.checked) {
           $bundleSettings.nextUntil('.bundle-settings').hide();
         } else {
-          $bundleSettings
-            .nextUntil('.bundle-settings', '.field-settings')
-            .find('.translatable :input:not(:checked)')
-            .closest('.field-settings')
-            .nextUntil(':not(.column-settings)')
-            .hide();
+          $(closestField).nextUntil(':not(.column-settings)').hide();
         }
       });
 
@@ -107,7 +106,8 @@
       $(once('translation-entity-admin-bind', 'body'))
         .on('click', 'table .bundle-settings .translatable :input', (e) => {
           const $target = $(e.target);
-          const $bundleSettings = $target.closest('.bundle-settings');
+          const closestBundle = e.target.closest('.bundle-settings');
+          const $bundleSettings = $(closestBundle);
           const $settings = $bundleSettings.nextUntil('.bundle-settings');
           const $fieldSettings = $settings.filter('.field-settings');
           if (e.target.checked) {
@@ -122,7 +122,8 @@
         })
         .on('click', 'table .field-settings .translatable :input', (e) => {
           const $target = $(e.target);
-          const $fieldSettings = $target.closest('.field-settings');
+          const closestField = e.target.closest('.field-settings');
+          const $fieldSettings = $(closestField);
           const $columnSettings = $fieldSettings.nextUntil(
             '.field-settings, .bundle-settings',
           );

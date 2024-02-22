@@ -22,10 +22,9 @@
       ).on('click', (event) => {
         // Links inside the trigger should not be click-able.
         event.preventDefault();
+        const closestEl = event.currentTarget.closest('.js-click-to-select');
         // Click the hidden checkbox when the trigger is clicked.
-        const $input = $(event.currentTarget)
-          .closest('.js-click-to-select')
-          .find('.js-click-to-select-checkbox input');
+        const $input = $(closestEl).find('.js-click-to-select-checkbox input');
         $input.prop('checked', !$input.prop('checked')).trigger('change');
       });
 
@@ -37,15 +36,13 @@
         ),
       )
         .on('change', ({ currentTarget }) => {
-          $(currentTarget)
-            .closest('.js-click-to-select')
-            .toggleClass('checked', $(currentTarget).prop('checked'));
+          const closestEl = currentTarget.closest('.js-click-to-select');
+          $(closestEl).toggleClass('checked', $(currentTarget).prop('checked'));
         })
         // Adds is-focus class to the click-to-select element.
         .on('focus blur', ({ currentTarget, type }) => {
-          $(currentTarget)
-            .closest('.js-click-to-select')
-            .toggleClass('is-focus', type === 'focus');
+          const closestEl = currentTarget.closest('.js-click-to-select');
+          $(closestEl).toggleClass('is-focus', type === 'focus');
         });
 
       // Adds hover class to the click-to-select element.
@@ -56,9 +53,8 @@
           context,
         ),
       ).on('mouseover mouseout', ({ currentTarget, type }) => {
-        $(currentTarget)
-          .closest('.js-click-to-select')
-          .toggleClass('is-hover', type === 'mouseover');
+        const closestEl = currentTarget.closest('.js-click-to-select');
+        $(closestEl).toggleClass('is-hover', type === 'mouseover');
       });
     },
   };
