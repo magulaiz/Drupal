@@ -119,8 +119,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Taxonomy',
       'Text',
       'Throttle',
-      // @todo Remove Tracker in https://www.drupal.org/project/drupal/issues/3261452
-      'Tracker',
       'Trigger',
       'Update status',
       'Upload',
