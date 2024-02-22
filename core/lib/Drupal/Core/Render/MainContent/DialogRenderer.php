@@ -8,6 +8,7 @@ use Drupal\Core\Ajax\OpenDialogCommand;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -60,9 +61,14 @@ class DialogRenderer implements MainContentRendererInterface {
     // otherwise get it from the routing information.
     $title = NULL;
     if ($main_content['#title']) {
-      $title = $main_content['#title'];
-      if ($main_content['#title']['#markup']) {
-        $title = $main_content['#title']['#markup'];
+      if ($main_content['#title'] instanceof TranslatableMarkup) {
+        $title = $main_content['#title']->render();
+      }
+      elseif (is_array($main_content['#title'])) {
+        $title = \Drupal::service('renderer')->renderPlain($main_content['#title']);
+      }
+      else {
+        $title = $main_content['#title'];
       }
     }
     elseif ($this->titleResolver->getTitle($request, $route_match->getRouteObject())) {

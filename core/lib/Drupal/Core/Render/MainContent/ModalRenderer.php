@@ -5,6 +5,7 @@ namespace Drupal\Core\Render\MainContent;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -29,9 +30,14 @@ class ModalRenderer extends DialogRenderer {
     // If the main content doesn't provide a title, use the title resolver.
     $title = NULL;
     if ($main_content['#title']) {
-      $title = $main_content['#title'];
-      if ($main_content['#title']['#markup']) {
-        $title = $main_content['#title']['#markup'];
+      if ($main_content['#title'] instanceof TranslatableMarkup) {
+        $title = $main_content['#title']->render();
+      }
+      elseif (is_array($main_content['#title'])) {
+        $title = \Drupal::service('renderer')->renderPlain($main_content['#title']);
+      }
+      else {
+        $title = $main_content['#title'];
       }
     }
     elseif ($this->titleResolver->getTitle($request, $route_match->getRouteObject())) {
