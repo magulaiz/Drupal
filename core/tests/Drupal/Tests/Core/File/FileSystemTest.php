@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\File;
 
 use Drupal\Core\File\Exception\FileException;
@@ -111,7 +113,7 @@ class FileSystemTest extends UnitTestCase {
     $this->assertSame($expected, $this->fileSystem->basename($uri, $suffix));
   }
 
-  public function providerTestBasename() {
+  public static function providerTestBasename() {
     $data = [];
     $data[] = [
       'public://nested/dir',

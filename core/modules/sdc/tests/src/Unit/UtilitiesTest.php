@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\sdc\Unit;
 
 use Drupal\sdc\Utilities;
@@ -25,7 +27,7 @@ final class UtilitiesTest extends TestCase {
     );
   }
 
-  public function dataProviderIsRenderArray() {
+  public static function dataProviderIsRenderArray() {
     return [
       'valid markup render array' => [['#markup' => 'hello world'], TRUE],
       'invalid "foo" string' => [['foo', '#markup' => 'hello world'], FALSE],

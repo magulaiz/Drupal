@@ -13,6 +13,8 @@ use Drupal\user\Entity\Role;
 use PHPUnit\Framework\ExpectationFailedException;
 use Symfony\Component\HttpFoundation\Request;
 
+// cspell:ignore htkey
+
 /**
  * Tests BrowserTestBase functionality.
  *
@@ -39,6 +41,22 @@ class BrowserTestBaseTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
+
+  /**
+   * Tests that JavaScript Drupal settings can be read.
+   */
+  public function testDrupalSettings() {
+    // Trigger a 403 because those pages have very little else going on.
+    $this->drupalGet('admin');
+    $this->assertSame([], $this->getDrupalSettings());
+
+    // Now try the same 403 as an authenticated user and verify that Drupal
+    // settings do show up.
+    $account = $this->drupalCreateUser();
+    $this->drupalLogin($account);
+    $this->drupalGet('admin');
+    $this->assertNotSame([], $this->getDrupalSettings());
+  }
 
   /**
    * Tests basic page test.
@@ -508,7 +526,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
   /**
    * Tests the protections provided by .htkey.
    */
-  public function testHtkey() {
+  public function testHtKey() {
     // Remove the Simpletest private key file so we can test the protection
     // against requests that forge a valid testing user agent to gain access
     // to the installer.

@@ -17,6 +17,7 @@ use Prophecy\Argument;
  * @coversDefaultClass \Drupal\jsonapi\Query\Filter
  * @group jsonapi
  * @group jsonapi_query
+ * @group #slow
  *
  * @internal
  */
@@ -326,7 +327,7 @@ class FilterTest extends JsonapiKernelTestBase {
   /**
    * Data provider for testCreateFromQueryParameter.
    */
-  public function parameterProvider() {
+  public static function parameterProvider() {
     return [
       'shorthand' => [
         ['uid' => ['value' => 1]],

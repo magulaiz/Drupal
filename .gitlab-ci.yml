@@ -46,7 +46,7 @@ variables:
   # Let composer know what self.version means.
   COMPOSER_ROOT_VERSION: "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}-dev"
   CONCURRENCY: 24
-  GIT_DEPTH: "3"
+  GIT_DEPTH: "50"
   PARENT_PIPELINE_ID: $CI_PIPELINE_ID
   _TARGET_PHP: "8.2"
 
@@ -375,35 +375,49 @@ default:
       codequality: phpcs-quality-report.json
 
 '🧹 JavaScript linting (eslint)':
-  <<: [ *with-yarn, *default-job-settings-lint ]
+  <<: [ *with-yarn ]
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
+  # Run on push, or on MRs if CSS files have changed, or manually.
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - core/package.json
+        - core/yarn.lock
+        - "**/*.js"
+        - "**/*.yml"
+    - when: manual
+      allow_failure: true
   script:
+    - yarn --cwd=./core run -s check:ckeditor5
     - yarn --cwd=./core run -s lint:core-js-passing --format gitlab
   artifacts:
     reports:
       codequality: eslint-quality-report.json
 
 '🧹 CSS linting (stylelint)':
-  <<: [ *with-yarn, *default-job-settings-lint ]
+  <<: [ *with-yarn ]
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
+  # Run on push, or on MRs if CSS files have changed, or manually.
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - core/package.json
+        - core/yarn.lock
+        - "**/*.css"
+    - when: manual
+      allow_failure: true
   script:
+    - yarn run --cwd=./core build:css --check
     - yarn run --cwd=./core lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
   artifacts:
     reports:
       codequality: stylelint-quality-report.json
-
-'🧹 Compilation check':
-  <<: [ *with-yarn, *default-job-settings-lint ]
-  stage: 🪄 Lint
-  variables:
-    KUBERNETES_CPU_REQUEST: "2"
-  script:
-    - yarn run --cwd=./core build:css --check
-    - cd core && yarn run -s check:ckeditor5
 
 '📔 Spell-checking':
   <<: [ *with-yarn, *default-job-settings-lint ]
@@ -411,7 +425,9 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "2"
   script:
-    - export TARGET_BRANCH=${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}
-    - git fetch -vn --depth=$GIT_DEPTH "${CI_MERGE_REQUEST_PROJECT_URL:-origin}" "+refs/heads/$TARGET_BRANCH:refs/heads/$TARGET_BRANCH"
-    - export MODIFIED=`git diff --name-only refs/heads/$TARGET_BRANCH|while read r;do echo "$CI_PROJECT_DIR/$r";done|tr "\n" " "`
-    - echo $MODIFIED | tr ' ' '\n' | yarn --cwd=./core run -s spellcheck:core --no-must-find-files --file-list stdin
+    - if [ -n "$CI_MERGE_REQUEST_TARGET_BRANCH_SHA" ]; then
+        echo "HEAD is $(git rev-parse HEAD). \$CI_MERGE_REQUEST_TARGET_BRANCH_SHA is ${CI_MERGE_REQUEST_TARGET_BRANCH_SHA}";
+      else
+        echo "HEAD is $(git rev-parse HEAD). \$CI_MERGE_REQUEST_DIFF_BASE_SHA is ${CI_MERGE_REQUEST_DIFF_BASE_SHA}";
+      fi;
+    - git diff ${CI_MERGE_REQUEST_TARGET_BRANCH_SHA:-$CI_MERGE_REQUEST_DIFF_BASE_SHA} --name-only | sed "s_^_../_" | yarn --cwd=./core run -s spellcheck:core --no-must-find-files --file-list stdin

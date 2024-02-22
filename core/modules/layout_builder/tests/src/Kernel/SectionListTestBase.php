@@ -180,8 +180,12 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
   /**
    * Provides test data for ::testRemoveAllSections().
    */
-  public function providerTestRemoveAllSections() {
-    return [[NULL], [FALSE], [TRUE]];
+  public static function providerTestRemoveAllSections() {
+    $data = [];
+    $data[] = [NULL, []];
+    $data[] = [FALSE, []];
+    $data[] = [TRUE, [new Section('layout_builder_blank')]];
+    return $data;
   }
 
   /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Component\Plugin\Discovery;
 
 use PHPUnit\Framework\TestCase;
@@ -20,7 +22,7 @@ class DiscoveryCachedTraitTest extends TestCase {
    *   - Definitions to be returned by getDefinitions().
    *   - Plugin name to query for.
    */
-  public function providerGetDefinition() {
+  public static function providerGetDefinition() {
     return [
       ['definition', [], ['plugin_name' => 'definition'], 'plugin_name'],
       ['definition', ['plugin_name' => 'definition'], [], 'plugin_name'],

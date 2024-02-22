@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\sdc\Unit;
 
 use Drupal\sdc\Component\SchemaCompatibilityChecker;
@@ -48,7 +50,7 @@ final class SchemaCompatibilityCheckerTest extends UnitTestCase {
    * @return array[]
    *   The batches of data.
    */
-  public function dataProviderIsCompatible(): array {
+  public static function dataProviderIsCompatible(): array {
     $schema = [
       'type' => 'object',
       'required' => ['text'],

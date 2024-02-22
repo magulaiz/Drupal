@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\update\Unit;
 
 use ColinODell\PsrTestLogger\TestLogger;
@@ -115,7 +117,7 @@ class UpdateFetcherTest extends UnitTestCase {
    *   - 'site_key' - An arbitrary site key.
    *   - 'expected' - The expected URL from UpdateFetcher::buildFetchUrl().
    */
-  public function providerTestUpdateBuildFetchUrl() {
+  public static function providerTestUpdateBuildFetchUrl() {
     $data = [];
 
     // First test that we didn't break the trivial case.

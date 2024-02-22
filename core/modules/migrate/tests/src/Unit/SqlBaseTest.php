@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Unit;
 
 use Drupal\migrate\Plugin\MigrationInterface;
@@ -83,7 +85,7 @@ class SqlBaseTest extends UnitTestCase {
    * @return array
    *   An array of data per test run.
    */
-  public function sqlBaseTestProvider() {
+  public static function sqlBaseTestProvider() {
     return [
       // Source ids are empty so mapJoinable() is false.
       [

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Plugin;
 
 use Drupal\Component\Plugin\Definition\PluginDefinition;
@@ -412,7 +414,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
     $this->assertEquals($expected, $definition);
   }
 
-  public function providerTestProcessDefinition() {
+  public static function providerTestProcessDefinition() {
     $data = [];
 
     $data['merge'][] = [
