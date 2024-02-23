@@ -251,7 +251,7 @@ class AnnounceFeedTestValidatePermissions extends DrupalWebTestCase {
     module_load_include('inc', 'announce_feed_test', 'announce_feed_test');
     parent::setUp('user', 'toolbar', 'announcements_feed', 'announce_feed_test');
     $response_json = $base_url . '/announcements-feed-json/community-feeds';
-    variable_set('announcements_feed_json_url',($response_json);
+    variable_set('announcements_feed_json_url', $response_json);
   }
 
   /**
