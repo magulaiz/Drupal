@@ -144,7 +144,7 @@ function announcements_feed_sort_featured($a, $b) {
 }
 
 /**
- * Filter the announcements relevant to the Drupal version used with valid URL controlled by the D.O.
+ * Filter the announcements relevant to the Drupal version used with valid URL controlled by drupal.org.
  *
  * @param array $announcement
  *   Announcement feed array item to check.
