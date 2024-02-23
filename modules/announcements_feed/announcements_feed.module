@@ -6,6 +6,31 @@
  */
 
 /**
+ * Default maximum age of cached feed data in seconds.
+ */
+define('ANNOUNCEMENTS_FEED_DEFAULT_MAX_AGE', 86400);
+
+/**
+ * Default cron interval for refreshing feed data in seconds.
+ */
+define('ANNOUNCEMENTS_FEED_DEFAULT_CRON_INTERVAL', 21600);
+
+/**
+ * Default limit for number of feed items to fetch.
+ */
+define('ANNOUNCEMENTS_FEED_DEFAULT_LIMIT', 10);
+
+/**
+ * Default URL for the announcements JSON feed.
+ */
+define('ANNOUNCEMENTS_FEED_DEFAULT_JSON_URL', 'https://www.drupal.org/announcements.json');
+
+/**
+ * Default URL for the announcements feed at drupal.org.
+ */
+define('ANNOUNCEMENTS_FEED_DEFAULT_LINK', 'https://www.drupal.org/about/announcements');
+
+/**
  * Implements hook_help().
  */
 function announcements_feed_help($path) {
@@ -105,7 +130,7 @@ function announcements_feed_toolbar_pre_render_alter($toolbar) {
  */
 function announcements_feed_cron() {
   module_load_include('inc', 'announcements_feed', 'announcements_feed');
-  $cron_interval = variable_get('announcements_feed_cron_interval', 21600);
+  $cron_interval = variable_get('announcements_feed_cron_interval', ANNOUNCEMENTS_FEED_DEFAULT_CRON_INTERVAL);
   $last_check = variable_get('announcements_feed_last_fetch', 0);
   $time = time();
   if (($time - $last_check) > $cron_interval) {

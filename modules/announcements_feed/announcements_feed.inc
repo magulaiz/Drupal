@@ -32,7 +32,7 @@ function announcements_feed_get_announcements() {
   $build = array_merge($build, array(
     '#theme' => 'announcements_feed',
     '#count' => count($announcements),
-    '#feed_link' => variable_get('announcements_feed_link'),
+    '#feed_link' => variable_get('announcements_feed_link', ANNOUNCEMENTS_FEED_DEFAULT_LINK),
   ));
   return $build;
 }
@@ -91,7 +91,7 @@ function announcements_feed_get_all_announcements() {
 function announcements_feed_fetch($force = FALSE) {
   $announcements = cache_get('announcements_feed');
   if (empty($announcements)) {
-    $announcements_feed_json_url = variable_get('announcements_feed_json_url');
+    $announcements_feed_json_url = variable_get('announcements_feed_json_url', ANNOUNCEMENTS_FEED_DEFAULT_JSON_URL);
     $response = drupal_http_request($announcements_feed_json_url);
     if ($response->code == 200) {
       $feeds = json_decode($response->data, TRUE);
@@ -104,7 +104,7 @@ function announcements_feed_fetch($force = FALSE) {
         $announcements = $feeds['items'];
       }
       $announcements = array_filter($announcements, 'announcements_feed_filter_announcements');
-      cache_set('announcements_feed', $announcements, 'cache', REQUEST_TIME + variable_get('announcements_feed_max_age', 86400));
+      cache_set('announcements_feed', $announcements, 'cache', REQUEST_TIME + variable_get('announcements_feed_max_age', ANNOUNCEMENTS_FEED_DEFAULT_MAX_AGE));
     }
     else {
       watchdog(
@@ -121,7 +121,7 @@ function announcements_feed_fetch($force = FALSE) {
   }
   // The drupal.org endpoint is sorted by created date in descending order.
   // We will limit the announcements based on the configuration limit.
-  $announcements_feed_limit = variable_get('announcements_feed_limit', 10);
+  $announcements_feed_limit = variable_get('announcements_feed_limit', ANNOUNCEMENTS_FEED_DEFAULT_LIMIT);
   $announcements = array_slice($announcements, 0, $announcements_feed_limit);
   // For the remaining announcements, put all the featured announcements
   // before the rest.

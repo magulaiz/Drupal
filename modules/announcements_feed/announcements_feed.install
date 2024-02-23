@@ -6,18 +6,6 @@
  */
 
 /**
- * Implements hook_install().
- */
-function announcements_feed_install() {
-  // Creating the default values.
-  variable_set('announcements_feed_max_age', 86400);
-  variable_set('announcements_feed_cron_interval', 21600);
-  variable_set('announcements_feed_limit', 10);
-  variable_set('announcements_feed_json_url', 'https://www.drupal.org/announcements.json');
-  variable_set('announcements_feed_link', 'https://www.drupal.org/about/announcements');
-}
-
-/**
  * Implements hook_uninstall().
  */
 function announcements_feed_uninstall() {
