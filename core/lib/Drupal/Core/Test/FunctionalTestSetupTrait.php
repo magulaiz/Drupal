@@ -129,11 +129,10 @@ trait FunctionalTestSetupTrait {
       // Otherwise, use the default services as a starting point for overrides.
       $settings_services_file = DRUPAL_ROOT . '/sites/default/default.services.yml';
     }
-    // Copy the testing-specific service overrides in place.
-    copy($settings_services_file, $directory . '/services.yml');
 
+    // Put the testing-specific service overrides in place.
     $yaml = new SymfonyYaml();
-    $content = file_get_contents($directory . '/services.yml');
+    $content = file_get_contents($settings_services_file);
     // Disable session garbage collection since test environments do not last
     // long enough to have stale sessions. This prevents random delete queries
     // from running during tests.
