@@ -10,7 +10,7 @@
  */
 function announce_feed_test_menu() {
   $items['announcements-feed-json/%'] = array(
-    'title' => 'Announcements Feed test',
+    'title' => 'Announcements feed JSON',
     'page callback' => 'announce_feed_test_set_feed_config',
     'page arguments' => array(1),
     // In unit tests, restrictions are not required.
