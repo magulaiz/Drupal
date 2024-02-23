@@ -47,7 +47,7 @@
   padding-block: var(--sp1);
   padding-inline-start: 0;
   padding-inline-end: var(--sp1);
-  vertical-align: middle;
+  vertical-align: top;
 }
 
 :is(.text-content table, .views-table, .draggable-table) th {
