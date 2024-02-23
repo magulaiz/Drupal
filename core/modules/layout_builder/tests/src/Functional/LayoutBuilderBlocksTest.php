@@ -176,7 +176,7 @@ class LayoutBuilderBlocksTest extends LayoutBuilderTestBase {
   /**
    * Tests that a display disabled View block won't appear in the blocks list.
    */
-  public function testDisplayDisabledView() {
+  public function testDisplayDisabledView(): void {
     $assert_session = $this->assertSession();
 
     $this->drupalLogin($this->drupalCreateUser([
