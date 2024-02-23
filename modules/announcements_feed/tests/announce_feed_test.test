@@ -287,6 +287,41 @@ class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
 class AnnounceFeedTestInvalidJsonTestCase extends DrupalWebTestCase {
 
   /**
+   * A user with permission to access toolbar and access announcements.
+   *
+   * @var object
+   */
+  protected $user;
+
+  /**
+   * A test endpoint which contains the community feeds.
+   *
+   * @var string
+   */
+  protected $responseJson;
+
+  /**
+   * A test endpoint which does not exist.
+   *
+   * @var string
+   */
+  protected $unknownJson;
+
+  /**
+   * A test endpoint which returns invalid JSON.
+   *
+   * @var string
+   */
+  protected $invalidJson;
+
+  /**
+   * A test endpoint that will have some feeds removed.
+   *
+   * @var string
+   */
+  protected $removed;
+
+  /**
    * {@inheritdoc}
    */
   public static function getInfo() {
@@ -310,7 +345,6 @@ class AnnounceFeedTestInvalidJsonTestCase extends DrupalWebTestCase {
     ));
     $this->drupalLogin($this->user);
     $this->responseJson = $base_url . '/announcements-feed-json/community-feeds';
-    // This file not present, to check the URL not found for JSON.
     $this->unknownJson = $base_url . '/announcements-feed-json/unknown';
     $this->invalidJson = $base_url . '/announcements-feed-json/invalid-feeds';
     variable_set('announcements_feed_json_url', $this->responseJson);
