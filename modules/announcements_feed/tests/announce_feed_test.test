@@ -238,7 +238,7 @@ class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Validate login',
-      'description' => 'Checking the notification alert when a new user logs in and won\'t appear next the user log in',
+      'description' => 'Tests the module permissions.',
       'group' => 'Announcements Feed',
     );
   }
