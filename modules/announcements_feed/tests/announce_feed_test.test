@@ -239,7 +239,7 @@ class AnnounceFeedTestValidatePermissions extends DrupalWebTestCase {
     return array(
       'name' => 'Permissions validation',
       'description' => 'Tests the module permissions.',
-      'group' => 'Announcements Feed',
+      'group' => 'Announcements',
     );
   }
 
