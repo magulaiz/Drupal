@@ -89,7 +89,6 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
     $this->clickLink('Announcements');
     variable_set('announcements_feed_json_url', $this->updatedJson);
     cache_clear_all('announcements_feed', 'cache', TRUE);
-
     $this->drupalGet('admin/announcements_feed');
     $this->assertText('Only 9 - Drupal 106 is available and this feed is Updated');
     $this->drupalLogout();
@@ -145,7 +144,7 @@ class AnnounceFeedTestValidateUrl extends DrupalUnitTestCase {
    * {@inheritdoc}
    */
   public function setUp() {
-    parent::setUp('announcements_feed');
+    parent::setUp();
     module_load_include('inc', 'announcements_feed', 'announcements_feed');
   }
 
@@ -198,7 +197,7 @@ class AnnounceFeedTestRelevantVersion extends DrupalUnitTestCase {
    * {@inheritdoc}
    */
   public function setUp() {
-    parent::setUp('announcements_feed');
+    parent::setUp();
     module_load_include('inc', 'announcements_feed', 'announcements_feed');
   }
 
@@ -208,13 +207,13 @@ class AnnounceFeedTestRelevantVersion extends DrupalUnitTestCase {
   public function testValidateUrl() {
     $version_strings = array(
       array('^7', TRUE),
-      // Will TRUE Only if drupal version is exact 7.0.
+      // TRUE only if Drupal version is exactly 7.0.
       array('=7.0', FALSE),
       array('>=7', TRUE),
       array('^7 || ^8 || ^9', TRUE),
       array('>=7.52', TRUE),
       array('^7.1 || ^8 || ^9', TRUE),
-      // Can set TRUE Only if drupal version is exact 7.100.
+      // TRUE only if Drupal version is exactly 7.9999.
       array('=7.9999', FALSE),
       array('^8 || ^9', FALSE),
       array('>8', FALSE),
