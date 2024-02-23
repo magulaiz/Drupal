@@ -37,9 +37,7 @@ function template_preprocess_language_negotiation_configure_form(&$variables) {
     $table = [
       '#type' => 'table',
       '#header' => $header,
-      '#attributes' => [
-        'id' => 'language-negotiation-methods-' . $type,
-      ],
+      '#attributes' => ['id' => 'language-negotiation-methods-' . $type],
       '#tabledrag' => [
         [
           'action' => 'order',

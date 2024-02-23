@@ -224,9 +224,6 @@ class NegotiationConfigureForm extends ConfigFormBase {
     $table_form = [
       '#title' => $this->t('@type language detection', ['@type' => $info['name']]),
       '#tree' => TRUE,
-      '#attributes' => [
-        'data-drag-orientation' => 'drag-y',
-      ],
       '#description' => $info['description'],
       '#language_negotiation_info' => [],
       '#show_operations' => FALSE,

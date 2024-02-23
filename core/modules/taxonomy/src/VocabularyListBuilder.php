@@ -194,9 +194,7 @@ class VocabularyListBuilder extends DraggableListBuilder {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
-    $form['vocabularies']['#attributes'] = [
-      'id' => 'taxonomy',
-    ];
+    $form['vocabularies']['#attributes'] = ['id' => 'taxonomy'];
     $form['actions']['submit']['#value'] = t('Save');
 
     return $form;
