@@ -189,7 +189,7 @@ class AnnounceFeedTestRelevantVersion extends DrupalUnitTestCase {
     return array(
       'name' => 'Version-specific logic validation',
       'description' => 'Unit test to check the version-specific logic.',
-      'group' => 'Announcements Feed',
+      'group' => 'Announcements',
     );
   }
 
