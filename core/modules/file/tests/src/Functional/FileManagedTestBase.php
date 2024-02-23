@@ -185,9 +185,7 @@ abstract class FileManagedTestBase extends BrowserTestBase {
     // tests work with international filenames.
     // cSpell:disable-next-line
     $filepath ??= 'Файл для тестирования ' . $this->randomMachineName();
-    if (!isset($scheme)) {
-      $scheme = 'public';
-    }
+    $scheme ??= 'public';
     $filepath = $scheme . '://' . $filepath;
 
     $contents ??= "file_put_contents() doesn't seem to appreciate empty strings so let's put in some data.";

@@ -604,9 +604,7 @@ function update_storage_clear() {
  */
 function _update_manager_unique_identifier() {
   static $id;
-  if (!isset($id)) {
-    $id = substr(hash('sha256', Settings::getHashSalt()), 0, 8);
-  }
+  $id ??= substr(hash('sha256', Settings::getHashSalt()), 0, 8);
   return $id;
 }
 

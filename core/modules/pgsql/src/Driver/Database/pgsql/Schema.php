@@ -206,9 +206,7 @@ EOD;
    *   PostgreSQL's temporary namespace name.
    */
   protected function getTempNamespaceName() {
-    if (!isset($this->tempNamespaceName)) {
-      $this->tempNamespaceName = $this->connection->query('SELECT nspname FROM pg_namespace WHERE oid = pg_my_temp_schema()')->fetchField();
-    }
+    $this->tempNamespaceName ??= $this->connection->query('SELECT nspname FROM pg_namespace WHERE oid = pg_my_temp_schema()')->fetchField();
     return $this->tempNamespaceName;
   }
 
@@ -384,9 +382,7 @@ EOD;
    *   A field description array, as specified in the schema documentation.
    */
   protected function processField($field) {
-    if (!isset($field['size'])) {
-      $field['size'] = 'normal';
-    }
+    $field['size'] ??= 'normal';
 
     // Set the correct database-engine specific datatype.
     // In case one is already provided, force it to lowercase.
@@ -405,9 +401,7 @@ EOD;
       // The PostgreSQL schema in Drupal creates a check constraint
       // to ensure that a value inserted is >= 0. To provide the extra
       // integer capacity, here, we bump up the column field size.
-      if (!isset($map)) {
-        $map = $this->getFieldTypeMap();
-      }
+      $map ??= $this->getFieldTypeMap();
       switch ($field['pgsql_type']) {
         case 'smallint':
           $field['pgsql_type'] = $map['int:medium'];
