@@ -368,7 +368,7 @@ class AnnounceFeedTestInvalidJsonTestCase extends DrupalWebTestCase {
     $this->drupalGet('admin/announcements_feed');
     $this->assertText('An error occurred while parsing the announcements feed, check the logs for more information.');
 
-    // Test when the JSON feeds are invalid i.e. Json not formatted.
+    // Test when the JSON feed is invalid.
     $this->drupalLogout();
     $this->drupalLogin($this->user);
     $this->drupalGet('');
