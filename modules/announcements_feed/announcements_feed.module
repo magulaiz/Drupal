@@ -28,7 +28,7 @@ function announcements_feed_help($path) {
  */
 function announcements_feed_menu() {
   $items['admin/announcements_feed'] = array(
-    'title' => 'Announcements',
+    'title' => 'Community announcements',
     'description' => 'Announcements and updates posted by the drupal.org community.',
     'page callback' => 'announcements_feed_get_announcements',
     'access arguments' => array('access announcements'),
