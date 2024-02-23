@@ -295,7 +295,7 @@ class AnnounceFeedTestInvalidJsonTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Invalid / unknown JSON feed URL',
-      'description' => 'Testing announcements feed when json is invalid or URL not found.',
+      'description' => 'Testing announcements feed with invalid JSON or non-existing JSON URL.',
       'group' => 'Announcements Feed',
     );
   }
