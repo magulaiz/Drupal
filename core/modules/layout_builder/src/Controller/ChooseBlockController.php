@@ -223,7 +223,8 @@ class ChooseBlockController implements ContainerInjectionInterface {
   protected function getBlockLinks(SectionStorageInterface $section_storage, int $delta, $region, array $blocks) {
     $links = [];
     foreach ($blocks as $block_id => $block) {
-      if (!isset($block['_block_ui_hidden']) || $block['_block_ui_hidden'] == FALSE) {
+      if (!isset($block['_block_ui_hidden']) || $block['_block_ui_hidden'] == FALSE
+        || isset($block['provider']) && $block['provider'] == 'layout_builder') {
         $attributes = $this->getAjaxAttributes();
         $attributes['class'][] = 'js-layout-builder-block-link';
         $link = [
