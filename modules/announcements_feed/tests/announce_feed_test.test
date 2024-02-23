@@ -93,7 +93,7 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
     $this->assertText('Only 9 - Drupal 106 is available and this feed is Updated');
     $this->drupalLogout();
 
-    // Testing the removed json feed.
+    // Testing the removed JSON feed.
     $this->drupalLogin($this->user);
     $this->drupalGet('');
     $this->clickLink('Announcements');
@@ -113,7 +113,7 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
       'access toolbar',
       'access announcements',
     ));
-    // Change the feed url to empty json file.
+    // Change the feed URL to empty JSON file.
     // For resetting temp storage.
     variable_set('announcements_feed_json_url', $this->emptyJson);
     cache_clear_all('announcements_feed', 'cache', TRUE);
@@ -135,7 +135,7 @@ class AnnounceFeedTestValidateUrl extends DrupalUnitTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Validate URL',
-      'description' => 'Unit test for the module to check the validate url function',
+      'description' => 'Unit test to check the validate URL functions.',
       'group' => 'Announcements Feed',
     );
   }
@@ -175,8 +175,8 @@ class AnnounceFeedTestValidateUrl extends DrupalUnitTestCase {
       $this->assertEqual($url[1], $result, 'Returned ' . ($url[1] ? 'TRUE' : 'FALSE'));
     }
   }
-
 }
+
 /**
  * Unit test for version compatibility functions.
  */
@@ -187,8 +187,8 @@ class AnnounceFeedTestRelevantVersion extends DrupalUnitTestCase {
    */
   public static function getInfo() {
     return array(
-      'name' => 'Validate the Version',
-      'description' => 'Unit test for the module to check the Relevant Version function',
+      'name' => 'Version-specific logic validation',
+      'description' => 'Unit test to check the version-specific logic.',
       'group' => 'Announcements Feed',
     );
   }
@@ -202,9 +202,9 @@ class AnnounceFeedTestRelevantVersion extends DrupalUnitTestCase {
   }
 
   /**
-   * Test for validating the announcements_feed_validate_url function.
+   * Test for validating the announcements_feed_is_relevant_item function.
    */
-  public function testValidateUrl() {
+  public function testIsRelevantItem() {
     $version_strings = array(
       array('^7', TRUE),
       // TRUE only if Drupal version is exactly 7.0.
@@ -225,10 +225,10 @@ class AnnounceFeedTestRelevantVersion extends DrupalUnitTestCase {
       $this->assertEqual($strings[1], $result, 'Returned ' . ($strings[1] ? 'TRUE' : 'FALSE'));
     }
   }
-
 }
+
 /**
- * Testing the Announcements feed login test cases.
+ * Test the Announcements module permissions.
  */
 class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
 
