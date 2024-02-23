@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Unit\Plugin\area;
 
 use Drupal\Core\Routing\RouteProviderInterface;
@@ -90,7 +92,7 @@ class ResultTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerTestResultArea() {
+  public static function providerTestResultArea() {
     return [
       ['@label', 'ResultTest'],
       ['@start', '1'],

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
@@ -1005,7 +1007,7 @@ class MediaTest extends MediaTestBase {
   /**
    * For testing view modes in different scenarios.
    */
-  public function providerTestViewMode(): array {
+  public static function providerTestViewMode(): array {
     return [
       'with alignment' => [TRUE],
       'without alignment' => [FALSE],

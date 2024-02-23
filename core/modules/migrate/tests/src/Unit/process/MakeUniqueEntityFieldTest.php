@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -116,7 +118,7 @@ class MakeUniqueEntityFieldTest extends MigrateProcessTestCase {
   /**
    * Data provider for testMakeUniqueEntityField().
    */
-  public function providerTestMakeUniqueEntityField() {
+  public static function providerTestMakeUniqueEntityField() {
     return [
       // Tests no duplication.
       [0],

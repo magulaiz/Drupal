@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\media\Unit;
 
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
@@ -164,7 +166,7 @@ END;
    * @return array[]
    *   Sets of arguments to pass to the test method.
    */
-  public function providerInvalidResponse(): array {
+  public static function providerInvalidResponse(): array {
     return [
       'expired' => [
         -86400,

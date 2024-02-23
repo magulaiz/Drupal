@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\StringTranslation;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -34,7 +36,7 @@ class PluralTranslatableMarkupTest extends UnitTestCase {
   /**
    * Data provider for ::testPluralTranslatableMarkupSerialization().
    */
-  public function providerPluralTranslatableMarkupSerialization() {
+  public static function providerPluralTranslatableMarkupSerialization() {
     return [
       [1, 'singular 1'],
       [2, 'plural 2'],

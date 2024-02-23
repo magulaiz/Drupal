@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Test;
 
 use Drupal\Core\Test\PhpUnitTestRunner;
@@ -97,7 +99,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
     $this->assertStringEndsWith('phpunit-23.xml', $runner->xmlLogFilePath(23));
   }
 
-  public function providerTestSummarizeResults() {
+  public static function providerTestSummarizeResults() {
     return [
       [
         [
