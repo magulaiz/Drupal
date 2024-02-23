@@ -89,10 +89,9 @@
       ).forEach((input) => {
         const $input = $(input);
         const $bundleSettings = $input.closest('.bundle-settings');
-        if (input.checked) {
-          $bundleSettings.nextUntil('.bundle-settings').show();
-        } else {
+        if (!input.checked) {
           $bundleSettings.nextUntil('.bundle-settings').hide();
+        } else {
           $bundleSettings
             .nextUntil('.bundle-settings', '.field-settings')
             .find('.translatable :input:not(:checked)')
