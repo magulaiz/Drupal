@@ -52,7 +52,7 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
     return array(
       'name' => 'JSON feeds validation / processing',
       'description' => 'Testing how the code handles multiple types of JSON feeds.',
-      'group' => 'Announcements Feed',
+      'group' => 'Announcements',
     );
   }
 
@@ -134,9 +134,9 @@ class AnnounceFeedTestValidateUrl extends DrupalUnitTestCase {
    */
   public static function getInfo() {
     return array(
-      'name' => 'Validate URL',
+      'name' => 'JSON feed URLs validation',
       'description' => 'Unit test to check the validate URL functions.',
-      'group' => 'Announcements Feed',
+      'group' => 'Announcements',
     );
   }
 
@@ -230,16 +230,16 @@ class AnnounceFeedTestRelevantVersion extends DrupalUnitTestCase {
 /**
  * Test the Announcements module permissions.
  */
-class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
+class AnnounceFeedTestValidatePermissions extends DrupalWebTestCase {
 
   /**
    * {@inheritdoc}
    */
   public static function getInfo() {
     return array(
-      'name' => 'Validate login',
+      'name' => 'Permissions validation',
       'description' => 'Tests the module permissions.',
-      'group' => 'Announcements Feed',
+      'group' => 'Announcements',
     );
   }
 
@@ -257,7 +257,7 @@ class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
   /**
    * Testing the announcements page with access announcements permission.
    */
-  public function testAnnounceValidateLogin() {
+  public function testAnnounceWithPermission() {
     // Create a user with proper permission.
     $account = $this->drupalCreateUser(array(
       'access toolbar',
@@ -328,7 +328,7 @@ class AnnounceFeedTestInvalidJsonTestCase extends DrupalWebTestCase {
     return array(
       'name' => 'Invalid / unknown JSON feed URL',
       'description' => 'Testing announcements feed with invalid JSON or non-existing JSON URL.',
-      'group' => 'Announcements Feed',
+      'group' => 'Announcements',
     );
   }
 

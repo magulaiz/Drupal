@@ -210,13 +210,13 @@ function announcements_feed_is_relevant_item($version) {
 }
 
 /**
- * Check whether a link is controlled by D.O.
+ * Check whether a link is controlled by drupal.org.
  *
  * @param string $url
  *   URL to check.
  *
  * @return bool
- *   Return True if the URL is controlled by the D.O.
+ *   Return TRUE if the URL is controlled by drupal.org.
  */
 function announcements_feed_validate_url($url) {
   if (empty($url)) {
