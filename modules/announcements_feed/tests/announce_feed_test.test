@@ -189,7 +189,7 @@ class AnnounceFeedTestRelevantVersion extends DrupalUnitTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Version-specific logic validation',
-      'description' => 'Unit test for the module to check the Relevant Version function',
+      'description' => 'Unit test to check the version-specific logic.',
       'group' => 'Announcements Feed',
     );
   }
