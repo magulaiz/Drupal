@@ -328,7 +328,7 @@ class AnnounceFeedTestInvalidJsonTestCase extends DrupalWebTestCase {
     return array(
       'name' => 'Invalid / unknown JSON feed URL',
       'description' => 'Testing announcements feed with invalid JSON or non-existing JSON URL.',
-      'group' => 'Announcements Feed',
+      'group' => 'Announcements',
     );
   }
 
