@@ -52,7 +52,7 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
     return array(
       'name' => 'JSON feeds validation / processing',
       'description' => 'Testing how the code handles multiple types of JSON feeds.',
-      'group' => 'Announcements Feed',
+      'group' => 'Announcements',
     );
   }
 
