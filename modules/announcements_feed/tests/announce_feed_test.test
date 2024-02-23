@@ -6,7 +6,7 @@
  */
 
 /**
- * Tests for validating Json feed with different json urls.
+ * Tests for validating JSON feed with different json urls.
  */
 class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
 
@@ -61,8 +61,6 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
    */
   public function setUp() {
     global $base_url;
-    global $base_path;
-    $module_path = drupal_get_path('module', 'announcements_feed');
     module_load_include('inc', 'announce_feed_test', 'announce_feed_test');
     parent::setUp('user', 'toolbar', 'announcements_feed', 'announce_feed_test');
     $this->user = $this->drupalCreateUser(array(

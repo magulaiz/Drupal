@@ -29,9 +29,6 @@ function announce_feed_test_set_feed_config($json_name) {
     // Return an empty response.
     drupal_not_found();
   }
-  if (!_cache_get_object('cache')) {
-    cache_clear_all('announcements_feed', 'cache');
-  }
 
   $contents = file_get_contents($file);
   drupal_json_output(drupal_json_decode($contents));
