@@ -205,7 +205,7 @@ class AnnounceFeedTestRelevantVersion extends DrupalUnitTestCase {
   /**
    * Test for validating the announcements_feed_is_relevant_item function.
    */
-  public function testValidateUrl() {
+  public function testIsRelevantItem() {
     $version_strings = array(
       array('^7', TRUE),
       // Will TRUE Only if drupal version is exact 7.0.
