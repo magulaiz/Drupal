@@ -6,7 +6,7 @@
  */
 
 /**
- * Tests for validating Json feed with different json urls.
+ * Tests for validating JSON feed with different JSON URLs.
  */
 class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
 
