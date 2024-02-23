@@ -7,7 +7,6 @@ use Composer\Semver\VersionParser;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
-use Drupal\Core\Extension\InfoParser;
 use Drupal\Core\Theme\StarterKitInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Filesystem\Filesystem;
@@ -617,10 +616,7 @@ class GenerateTheme extends Command {
    * @return bool
    */
   private function isStarterkitTheme(Extension $theme): bool {
-    $info_parser = new InfoParser($this->root);
-    $info = $info_parser->parse($theme->getPathname());
-
-    return $info['starterkit'] ?? FALSE === TRUE;
+    return file_exists($theme->getPath() . '/' . $theme->getName() . '.starterkit.yml');
   }
 
 }

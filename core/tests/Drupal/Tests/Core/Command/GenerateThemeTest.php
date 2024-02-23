@@ -144,16 +144,13 @@ class GenerateThemeTest extends QuickStartTestBase {
     $info['version'] = '9.4.0';
     file_put_contents($starterkit_info_yml, Yaml::encode($info));
 
-    // Add starterkit back into first generated theme.
-    $starterkit_starterkit_yml = $this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/starterkit_theme.starterkit.yml';
-    $sk = Yaml::decode(file_get_contents($starterkit_starterkit_yml));
-    $sk['info']['starterkit'] = TRUE;
-    file_put_contents($starterkit_starterkit_yml, Yaml::encode($sk));
-
     $process = $this->generateThemeFromStarterkit();
     $exit_code = $process->run();
     $this->assertSame('Theme generated successfully to themes/test_custom_theme', trim($process->getOutput()), $process->getErrorOutput());
     $this->assertSame(0, $exit_code);
+
+    file_put_contents($this->getWorkspaceDirectory() . '/themes/test_custom_theme/test_custom_theme.starterkit.yml', '');
+
     $install_command = [
       $this->php,
       'core/scripts/drupal',
@@ -421,7 +418,6 @@ SH;
         'capture_stderr_separately' => TRUE,
       ]
     );
-
 
     $output = $tester->getDisplay();
     self::assertStringContainsString('[WARNING] Paths were defined `no_edit` but no files found.', $output);
