@@ -60,7 +60,9 @@ namespace Drupal\views_ui\ProxyClass\ParamConverter {
          */
         protected function lazyLoadItself()
         {
-              $this->service ??= $this->container->get($this->drupalProxyOriginalServiceId);
+            if (!isset($this->service)) {
+                $this->service = $this->container->get($this->drupalProxyOriginalServiceId);
+            }
 
             return $this->service;
         }
