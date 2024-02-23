@@ -916,11 +916,14 @@ class DefaultTableMapping implements TableMappingInterface {
     }
     else {
       $table_name = $parent_table_name . '__' . $storage_definition->getName();
-      // Limit the string to 48 characters, keeping a 16 characters margin for
+      // Limit the string to 220 characters, keeping a 16 characters margin for
       // db prefixes.
-      if (strlen($table_name) > 48) {
+      // The maximum table name for MongoDB is 255 characters for unsharded
+      // collections and 235 characters for sharded collections.
+      // @see: https://www.mongodb.com/docs/manual/reference/limits/#mongodb-limit-Restriction-on-Collection-Names
+      if (strlen($table_name) > 220) {
         // Truncate the parent table name and hash the of the field UUID.
-        $table_name = substr($parent_table_name, 0, 34) . '__' . substr(hash('sha256', $storage_definition->getUniqueStorageIdentifier()), 0, 10);
+        $table_name = substr($parent_table_name, 0, 208) . '__' . substr(hash('sha256', $storage_definition->getUniqueStorageIdentifier()), 0, 10);
       }
       return $table_name;
     }

@@ -536,8 +536,16 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     $schema = array_intersect_key($schema, $temporary_table_names);
 
     // Create entity tables.
-    foreach ($schema as $table_name => $table_schema) {
-      $this->database->schema()->createTable($temporary_table_names[$table_name], $table_schema);
+    if ($this->database->driver() == 'mongodb') {
+      $base_table = $temporary_table_names[$entity_type->getBaseTable()];
+      if (!empty($schema[$entity_type->getBaseTable()])) {
+        $this->database->schema()->createTable($base_table, $schema[$entity_type->getBaseTable()]);
+      }
+    }
+    else {
+      foreach ($schema as $table_name => $table_schema) {
+        $this->database->schema()->createTable($temporary_table_names[$table_name], $table_schema);
+      }
     }
 
     // Create dedicated field tables.
@@ -547,8 +555,11 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
 
         // Filter out tables which are not part of the table mapping.
         $schema = array_intersect_key($schema, $temporary_table_names);
-        foreach ($schema as $table_name => $table_schema) {
-          $this->database->schema()->createTable($temporary_table_names[$table_name], $table_schema);
+
+        if ($this->database->driver() != 'mongodb') {
+          foreach ($schema as $table_name => $table_schema) {
+            $this->database->schema()->createTable($temporary_table_names[$table_name], $table_schema);
+          }
         }
       }
     }
@@ -600,7 +611,15 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     // definitions.
     try {
       foreach ($sandbox['temporary_table_names'] as $current_table_name => $temp_table_name) {
-        $this->database->schema()->renameTable($temp_table_name, $current_table_name);
+        if ($this->database->driver() == 'mongodb') {
+          // For MongoDB all entity data is stored in the base table.
+          if ($current_table_name == $entity_type->getBaseTable()) {
+            $this->database->schema()->renameTable($temp_table_name, $current_table_name);
+          }
+        }
+        else {
+          $this->database->schema()->renameTable($temp_table_name, $current_table_name);
+        }
       }
 
       // Store the updated entity schema.
