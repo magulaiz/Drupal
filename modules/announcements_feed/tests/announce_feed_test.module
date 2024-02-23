@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Module for testing the Announcements Feed functionality.
+ * Helper functions for testing the announcements feed functionality.
  */
 
 /**
