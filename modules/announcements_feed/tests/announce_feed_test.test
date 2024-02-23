@@ -230,7 +230,7 @@ class AnnounceFeedTestRelevantVersion extends DrupalUnitTestCase {
 /**
  * Test the Announcements module permissions.
  */
-class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
+class AnnounceFeedTestValidatePermissions extends DrupalWebTestCase {
 
   /**
    * {@inheritdoc}
