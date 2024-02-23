@@ -190,6 +190,11 @@ class GenerateTheme extends Command {
       return 1;
     }
 
+    $this->tmp_dir = $this->getUniqueTmpDirPath();
+
+    $filesystem = new Filesystem();
+    $filesystem->mkdir($this->tmp_dir);
+
     // Get more specific source theme details now that it's safe.
     $this->source_theme = $this->getThemeInfo($this->source_theme_name);
     $source_path = $this->source_theme->getPath();
@@ -206,8 +211,6 @@ class GenerateTheme extends Command {
       ));
 
     // Copy entire contents of source theme to tmp_dir.
-    $this->tmp_dir = $this->getUniqueTmpDirPath();
-    $filesystem = new Filesystem();
     $filesystem->mirror($source_path, $this->tmp_dir, $mirror_iterator);
 
     // Get all the source/dest/token strings needed for renaming & editing.
@@ -287,9 +290,12 @@ class GenerateTheme extends Command {
         foreach ($config['no_edit'] as $glob) {
           $finder = new Finder();
           $files = $finder->in($this->tmp_dir)->files()->name($glob);
-          $paths = array_merge($paths, array_map(fn ($file) => $file->getRelativePathname(), iterator_to_array($files)));
+          $paths[] = array_map(static fn ($file) => $file->getRelativePathname(), iterator_to_array($files));
         }
-        $this->paths_to_skip_edit = $paths;
+        $this->paths_to_skip_edit = array_merge(...$paths);
+        if (count($this->paths_to_skip_edit) === 0) {
+          $this->io->warning('Paths were defined `no_edit` but no files found.');
+        }
       }
 
       if (isset($config['no_rename']) && is_array($config['no_rename'])) {
@@ -297,9 +303,12 @@ class GenerateTheme extends Command {
         foreach ($config['no_rename'] as $glob) {
           $finder = new Finder();
           $files = $finder->in($this->tmp_dir)->files()->name($glob);
-          $paths = array_merge($paths, array_map(fn ($file) => $file->getRelativePathname(), iterator_to_array($files)));
+          $paths[] = array_map(static fn ($file) => $file->getRelativePathname(), iterator_to_array($files));
         }
-        $this->paths_to_skip_rename = $paths;
+        $this->paths_to_skip_rename = array_merge(...$paths);
+        if (count($this->paths_to_skip_rename) === 0) {
+          $this->io->warning('Paths were defined `no_rename` but no files found.');
+        }
       }
 
       if (isset($config['info']) && is_array($config['info'])) {

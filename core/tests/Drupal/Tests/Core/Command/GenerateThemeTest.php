@@ -390,7 +390,7 @@ SH;
       [
         'name' => 'Test custom starterkit theme',
         'description' => 'Custom theme generated from a starterkit theme',
-        'capture_stderr_separately' => true,
+        'capture_stderr_separately' => TRUE,
       ]
     );
 
@@ -399,6 +399,35 @@ SH;
     $theme_path_absolute = $this->getWorkspaceDirectory() . '/themes/test_custom_theme';
     self::assertDirectoryExists($theme_path_absolute);
     self::assertDirectoryDoesNotExist($theme_path_absolute . '/src');
+  }
+
+  public function testNoEditNoRenameMissingFiles(): void {
+    $starterkit_yml = $this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/starterkit_theme.starterkit.yml';
+    $info = Yaml::decode(file_get_contents($starterkit_yml));
+    $info['no_edit'] = [
+      '/js/starterkit_theme.js',
+    ];
+    $info['no_rename'] = [
+      '/js/starterkit_theme.js',
+    ];
+    file_put_contents($starterkit_yml, Yaml::encode($info));
+
+    $tester = new CommandTester(new GenerateTheme(NULL, $this->getWorkspaceDirectory()));
+    $tester->execute(
+      ['machine-name' => 'test_custom_theme'],
+      [
+        'name' => 'Test custom starterkit theme',
+        'description' => 'Custom theme generated from a starterkit theme',
+        'capture_stderr_separately' => TRUE,
+      ]
+    );
+
+
+    $output = $tester->getDisplay();
+    self::assertStringContainsString('[WARNING] Paths were defined `no_edit` but no files found.', $output);
+    self::assertStringContainsString('[WARNING] Paths were defined `no_rename` but no files found.', $output);
+    self::assertStringContainsString('Theme generated successfully to themes/test_custom_theme', $output);
+    $this->assertThemeExists('themes/test_custom_theme');
   }
 
 }
