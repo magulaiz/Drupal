@@ -248,8 +248,6 @@ class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
    */
   public function setUp() {
     global $base_url;
-    global $base_path;
-    $module_path = drupal_get_path('module', 'announcements_feed');
     module_load_include('inc', 'announce_feed_test', 'announce_feed_test');
     parent::setUp('user', 'toolbar', 'announcements_feed', 'announce_feed_test');
     $response_json = $base_url . '/announcements-feed-json/community-feeds';
@@ -267,7 +265,6 @@ class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
     ));
     $this->drupalLogin($account);
     $this->drupalGet('');
-    // Since it is valid login the class should be matches in html.
     $this->drupalGet('admin/announcements_feed');
     $this->assertText('Announcements');
     $this->drupalLogout();
@@ -305,8 +302,6 @@ class AnnounceFeedTestInvalidJsonTestCase extends DrupalWebTestCase {
    */
   public function setUp() {
     global $base_url;
-    global $base_path;
-    $module_path = drupal_get_path('module', 'announcements_feed');
     module_load_include('inc', 'announce_feed_test', 'announce_feed_test');
     parent::setUp('user', 'toolbar', 'announcements_feed', 'announce_feed_test');
     $this->user = $this->drupalCreateUser(array(
