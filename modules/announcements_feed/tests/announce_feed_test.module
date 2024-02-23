@@ -21,7 +21,7 @@ function announce_feed_test_menu() {
 }
 
 /**
- * Helper function to set announcements feed url.
+ * Helper function to set announcements feed URL.
  */
 function announce_feed_test_set_feed_config($json_name) {
   $file = __DIR__ . "/announce_feed/$json_name.json";
