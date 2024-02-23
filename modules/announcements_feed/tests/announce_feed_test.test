@@ -74,7 +74,7 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
     $this->updatedJson = $base_url . '/announcements-feed-json/updated';
     $this->emptyJson = $base_url . '/announcements-feed-json/empty';
     $this->removed = $base_url . '/announcements-feed-json/removed';
-    set_announce_feed_test_endpoint($this->responseJson);
+    variable_set('announcements_feed_json_url', $this->responseJson);
   }
 
   /**
@@ -89,7 +89,7 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
     $this->drupalLogin($this->user);
     $this->drupalGet('');
     $this->clickLink('Announcements');
-    set_announce_feed_test_endpoint($this->updatedJson);
+    variable_set('announcements_feed_json_url', $this->updatedJson);
     cache_clear_all('announcements_feed', 'cache', TRUE);
 
     $this->drupalGet('admin/announcements_feed');
@@ -100,7 +100,7 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
     $this->drupalLogin($this->user);
     $this->drupalGet('');
     $this->clickLink('Announcements');
-    set_announce_feed_test_endpoint($this->removed);
+    variable_set('announcements_feed_json_url', $this->removed);
     cache_clear_all('announcements_feed', 'cache', TRUE);
     $this->drupalGet('admin/announcements_feed');
     $this->assertNoText('Only 9 - Drupal 106 is available and this feed is Updated');
@@ -118,7 +118,7 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
     ));
     // Change the feed url to empty json file.
     // For resetting temp storage.
-    set_announce_feed_test_endpoint($this->emptyJson);
+    variable_set('announcements_feed_json_url', $this->emptyJson);
     cache_clear_all('announcements_feed', 'cache', TRUE);
     $this->drupalLogin($this->user);
     // Only no announcements available message should show.
@@ -256,7 +256,7 @@ class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
     module_load_include('inc', 'announce_feed_test', 'announce_feed_test');
     parent::setUp('user', 'toolbar', 'announcements_feed', 'announce_feed_test');
     $response_json = $base_url . '/announcements-feed-json/community-feeds';
-    set_announce_feed_test_endpoint($response_json);
+    variable_set('announcements_feed_json_url',($response_json);
   }
 
   /**
@@ -321,7 +321,7 @@ class AnnounceFeedTestInvalidJsonTestCase extends DrupalWebTestCase {
     // This file not present, to check the URL not found for JSON.
     $this->unknownJson = $base_url . '/announcements-feed-json/unknown';
     $this->invalidJson = $base_url . '/announcements-feed-json/invalid-feeds';
-    set_announce_feed_test_endpoint($this->responseJson);
+    variable_set('announcements_feed_json_url', $this->responseJson);
   }
 
   /**
@@ -337,7 +337,7 @@ class AnnounceFeedTestInvalidJsonTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->user);
     $this->drupalGet('');
     $this->clickLink('Announcements');
-    set_announce_feed_test_endpoint($this->unknownJson);
+    variable_set('announcements_feed_json_url', $this->unknownJson);
     cache_clear_all('announcements_feed', 'cache', TRUE);
     $this->drupalGet('admin/announcements_feed');
     $this->assertText('An error occurred while parsing the announcements feed, check the logs for more information.');
@@ -347,7 +347,7 @@ class AnnounceFeedTestInvalidJsonTestCase extends DrupalWebTestCase {
     $this->drupalLogin($this->user);
     $this->drupalGet('');
     $this->clickLink('Announcements');
-    set_announce_feed_test_endpoint($this->invalidJson);
+    variable_set('announcements_feed_json_url', $this->invalidJson);
     cache_clear_all('announcements_feed', 'cache', TRUE);
     $this->drupalGet('admin/announcements_feed');
     $this->assertText('An error occurred while parsing the announcements feed, check the logs for more information.');
