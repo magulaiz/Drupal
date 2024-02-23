@@ -87,7 +87,9 @@ final class TwigExtension extends AbstractExtension {
   protected function mergeAdditionalRenderContext(Component $component, array $context): array {
     $context['componentMetadata'] = $component->metadata->normalize();
     $component_attributes = ['data-component-id' => $component->getPluginId()];
-    $context['attributes'] ??= new Attribute($component_attributes);
+    if (!isset($context['attributes'])) {
+      $context['attributes'] = new Attribute($component_attributes);
+    }
     // If there is an "attributes" property, merge the additional attributes
     // into it if possible.
     elseif ($context['attributes'] instanceof Attribute) {
