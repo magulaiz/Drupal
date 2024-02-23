@@ -134,7 +134,7 @@ class AnnounceFeedTestValidateUrl extends DrupalUnitTestCase {
    */
   public static function getInfo() {
     return array(
-      'name' => 'Validate URL',
+      'name' => 'JSON feed URLs validation',
       'description' => 'Unit test to check the validate URL functions.',
       'group' => 'Announcements',
     );
