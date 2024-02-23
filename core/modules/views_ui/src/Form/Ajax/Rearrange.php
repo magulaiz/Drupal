@@ -92,9 +92,6 @@ class Rearrange extends ViewsFormBase {
       '#tree' => TRUE,
       '#prefix' => '<div class="scroll" data-drupal-views-scroll>',
       '#suffix' => '</div>',
-      '#attributes' => [
-        'data-drag-orientation' => 'drag-y',
-      ],
     ];
 
     foreach ($display->getOption($types[$type]['plural']) as $id => $field) {

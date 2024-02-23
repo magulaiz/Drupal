@@ -320,7 +320,6 @@ class NegotiationConfigureForm extends ConfigFormBase {
         ];
       }
     }
-    $form['#attributes']['dragY'] = 'drag-y';
     $form[$type] = $table_form;
   }
 

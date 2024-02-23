@@ -94,15 +94,6 @@ class RoleListBuilder extends DraggableListBuilder {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
-    $form = parent::buildForm($form, $form_state);
-    $form["entities"]['#attributes']['data-drag-orientation'] = 'drag-y';
-    return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 

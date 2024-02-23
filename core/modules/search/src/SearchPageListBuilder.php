@@ -183,7 +183,6 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildForm($form, $form_state);
-    $form["entities"]['#attributes']['data-drag-orientation'] = 'drag-y';
     $search_settings = $this->config('search.settings');
     // Collect some stats.
     $remaining = 0;

@@ -182,14 +182,6 @@
     this.indentEnabled = false;
 
     /**
-     *
-     * @type {string}
-     */
-    this.dragOrientation = this.table.dataset.dragOrientation
-      ? this.table.dataset.dragOrientation
-      : 'drag';
-
-    /**
      * Keeps track of rows that have changed.
      */
     this.changedRowIds = Drupal.tableDrag[table.id]
@@ -206,6 +198,7 @@
         }
       });
     });
+    this.dragOrientation = this.indentEnabled ? 'drag' : 'drag-y';
     if (this.indentEnabled) {
       /**
        * Total width of indents, set in makeDraggable.
@@ -233,7 +226,6 @@
         $indentation.get(1).offsetLeft - $indentation.get(0).offsetLeft;
       testRow.remove();
     }
-
     // Make each applicable row draggable.
     // Match immediate children of the parent element to allow nesting.
     $table.find('> tr.draggable, > tbody > tr.draggable').each(function () {

@@ -196,7 +196,6 @@ class VocabularyListBuilder extends DraggableListBuilder {
     $form = parent::buildForm($form, $form_state);
     $form['vocabularies']['#attributes'] = [
       'id' => 'taxonomy',
-      'data-drag-orientation' => 'drag-y',
     ];
     $form['actions']['submit']['#value'] = t('Save');
 

@@ -137,7 +137,6 @@ class LanguageListBuilder extends DraggableListBuilder {
 
     $form[$this->entitiesKey]['#languages'] = $this->entities;
     $form['actions']['submit']['#value'] = t('Save configuration');
-    $form["languages"]['#attributes']['data-drag-orientation'] = 'drag-y';
     return $form;
   }
 

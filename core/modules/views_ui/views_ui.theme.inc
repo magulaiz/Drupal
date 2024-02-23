@@ -362,7 +362,6 @@ function template_preprocess_views_ui_rearrange_filter_form(&$variables) {
     $rows[] = [['data' => t('No fields available.'), 'colspan' => '2']];
   }
 
-  $dragY = !empty($form['#attributes']['dragY']) ? 'drag-y' : '';
   // Set up tabledrag so that the weights are changed when rows are dragged.
   $variables['table'] = [
     '#type' => 'table',
@@ -370,7 +369,6 @@ function template_preprocess_views_ui_rearrange_filter_form(&$variables) {
     '#attributes' => [
       'id' => 'views-rearrange-filters',
       'class' => ['arrange'],
-      'data-drag-orientation' => $dragY,
     ],
     '#tabledrag' => [
       [
