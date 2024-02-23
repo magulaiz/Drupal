@@ -146,10 +146,10 @@ class GenerateTheme extends Command {
   /**
    * {@inheritdoc}
    */
-  public function __construct(string $name = NULL) {
+  public function __construct(string $name = NULL, ?string $root = NULL) {
     parent::__construct($name);
 
-    $this->root = dirname(__DIR__, 5);
+    $this->root = $root ?? dirname(__DIR__, 5);
   }
 
   /**
@@ -194,16 +194,21 @@ class GenerateTheme extends Command {
     $this->source_theme = $this->getThemeInfo($this->source_theme_name);
     $source_path = $this->source_theme->getPath();
 
-    // Copy entire contents of source theme to tmp_dir.
-    $this->tmp_dir = $this->getUniqueTmpDirPath();
-    $filesystem = new Filesystem();
-    $filesystem->mirror($source_path, $this->tmp_dir);
-
     // Load info from THEMENAME.starterkit.yml if it exists.
     $this->getStarterKitConfig();
 
-    // Remove files marked for deletion.
-    $this->removeDeletableFiles();
+    $mirror_iterator = new Finder();
+    $mirror_iterator
+      ->in($source_path)
+      ->notPath(array_map(
+        static fn ($path) => trim($path, '/'),
+        $this->paths_to_delete
+      ));
+
+    // Copy entire contents of source theme to tmp_dir.
+    $this->tmp_dir = $this->getUniqueTmpDirPath();
+    $filesystem = new Filesystem();
+    $filesystem->mirror($source_path, $this->tmp_dir, $mirror_iterator);
 
     // Get all the source/dest/token strings needed for renaming & editing.
     $this->prepareForRenameAndEdit();
@@ -299,28 +304,6 @@ class GenerateTheme extends Command {
 
       if (isset($config['info']) && is_array($config['info'])) {
         $this->info_overrides = $config['info'];
-      }
-    }
-  }
-
-  /**
-   * Removes files marked for deletion from $this->tmp_dir.
-   *
-   * @return void
-   */
-  private function removeDeletableFiles() {
-    $paths = $this->paths_to_delete;
-    if (is_array($paths) && !empty($paths)) {
-      $finder = new Finder();
-      $filesystem = new Filesystem();
-      foreach (array_map(fn ($path) => trim($path, '/'), $paths) as $path) {
-        if (is_string($path)) {
-          $files = $finder->in($this->tmp_dir)->path($path);
-          foreach ($files as $file) {
-            $filesystem->remove($file->getRealPath());
-          }
-          // @todo: Is there a way to find & remove empty directories?
-        }
       }
     }
   }

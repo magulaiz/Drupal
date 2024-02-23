@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Command;
 
 use Drupal\BuildTests\QuickStart\QuickStartTestBase;
+use Drupal\Core\Command\GenerateTheme;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\sqlite\Driver\Database\sqlite\Install\Tasks;
+use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
@@ -18,6 +20,9 @@ use Symfony\Component\Process\Process;
  * @group Command
  */
 class GenerateThemeTest extends QuickStartTestBase {
+
+  protected $destroyBuild = FALSE;
+
 
   /**
    * The PHP executable path.
@@ -368,6 +373,32 @@ SH;
     $result = $process->run();
     $this->assertStringContainsString('Theme source theme olivero is not a valid starter kit.', trim($process->getErrorOutput()));
     $this->assertSame(1, $result);
+  }
+
+  public function testDeleteDirectory(): void {
+    $starterkit_yml = $this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/starterkit_theme.starterkit.yml';
+    $info = Yaml::decode(file_get_contents($starterkit_yml));
+    $info['delete'] = [
+      '/src',
+      '/starterkit_theme.starterkit.yml',
+    ];
+    file_put_contents($starterkit_yml, Yaml::encode($info));
+
+    $tester = new CommandTester(new GenerateTheme(NULL, $this->getWorkspaceDirectory()));
+    $tester->execute(
+      ['machine-name' => 'test_custom_theme'],
+      [
+        'name' => 'Test custom starterkit theme',
+        'description' => 'Custom theme generated from a starterkit theme',
+        'capture_stderr_separately' => true,
+      ]
+    );
+
+    $this->assertEquals('Theme generated successfully to themes/test_custom_theme', trim($tester->getDisplay()), $tester->getErrorOutput());
+    $this->assertThemeExists('themes/test_custom_theme');
+    $theme_path_absolute = $this->getWorkspaceDirectory() . '/themes/test_custom_theme';
+    self::assertDirectoryExists($theme_path_absolute);
+    self::assertDirectoryDoesNotExist($theme_path_absolute . '/src');
   }
 
 }
