@@ -316,10 +316,8 @@ function update_calculate_project_update_status(&$project_data, $available) {
         continue;
       }
     }
-    if (!isset($target_major)) {
-      // If there are no valid support branches, use the current major.
-      $target_major = $existing_major;
-    }
+    // If there are no valid support branches, use the current major.
+    $target_major ??= $existing_major;
 
   }
   else {
@@ -421,9 +419,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
     // See if this is a higher major version than our target and yet still
     // supported. If so, record it as an "Also available" release.
     if ($release_major_version > $target_major) {
-      if (!isset($project_data['also'])) {
-        $project_data['also'] = [];
-      }
+      $project_data['also'] ??= [];
       if (!isset($project_data['also'][$release_major_version])) {
         $project_data['also'][$release_major_version] = $version;
         $project_data['releases'][$version] = $release_info;
