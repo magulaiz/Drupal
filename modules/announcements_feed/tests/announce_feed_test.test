@@ -136,7 +136,7 @@ class AnnounceFeedTestValidateUrl extends DrupalUnitTestCase {
     return array(
       'name' => 'Validate URL',
       'description' => 'Unit test to check the validate URL functions.',
-      'group' => 'Announcements Feed',
+      'group' => 'Announcements',
     );
   }
 
