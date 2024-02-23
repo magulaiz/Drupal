@@ -150,7 +150,7 @@ function announcements_feed_sort_featured($a, $b) {
  *   Announcement feed array item to check.
  *
  * @return bool
- *   Return True if $announcement is relevant and the URL is valid.
+ *   Return TRUE if $announcement is relevant and the URL is valid.
  */
 function announcements_feed_filter_announcements($announcement) {
   $announcement_url = '';
