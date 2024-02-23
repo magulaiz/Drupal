@@ -285,7 +285,7 @@ class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
 }
 
 /**
- * Testing the invalid JSON URL for announcements feed test cases.
+ * Tests the announcements feed with invalid JSON URLs.
  */
 class AnnounceFeedTestInvalidJsonTestCase extends DrupalWebTestCase {
 
