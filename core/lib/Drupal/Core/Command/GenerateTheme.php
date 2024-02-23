@@ -17,6 +17,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Finder\Glob;
 use Symfony\Component\Process\Process;
 use function Symfony\Component\String\u;
 
@@ -69,6 +70,8 @@ class GenerateTheme extends Command {
    * Matching files/dirs will be removed from $this->temp_dir before other operations.
    *
    * @var String[]
+   *
+   * @todo this should be renamed pathsToIgnore
    */
   private $paths_to_delete = [
     '/src/StarterKit.php',
@@ -198,19 +201,44 @@ class GenerateTheme extends Command {
     $this->source_theme = $this->getThemeInfo($this->source_theme_name);
     $source_path = $this->source_theme->getPath();
 
-    // Load info from THEMENAME.starterkit.yml if it exists.
-    $this->getStarterKitConfig();
+    $config_file = $source_path . '/' . $this->source_theme->getName() . '.starterkit.yml';
+    $config = Yaml::decode(file_get_contents($config_file));
 
-    $mirror_iterator = new Finder();
-    $mirror_iterator
+    if (isset($config['info']) && is_array($config['info'])) {
+      $this->info_overrides = $config['info'];
+    }
+
+    $paths_to_ignore = [];
+    if (isset($config['delete']) && is_array($config['delete'])) {
+      $paths_to_ignore = $config['delete'];
+    }
+    $mirror_iterator = (new Finder)
       ->in($source_path)
       ->notPath(array_map(
-        static fn ($path) => trim($path, '/'),
-        $this->paths_to_delete
+        [self::class, 'processPaths'],
+        $paths_to_ignore
       ));
 
     // Copy entire contents of source theme to tmp_dir.
     $filesystem->mirror($source_path, $this->tmp_dir, $mirror_iterator);
+
+    if (isset($config['no_edit']) && is_array($config['no_edit'])) {
+      $no_edit_globs = array_map([self::class, 'processPaths'], $config['no_edit']);
+      $files = (new Finder)->in($this->tmp_dir)->files()->path($no_edit_globs);
+      $this->paths_to_skip_edit = array_map(static fn ($file) => $file->getRelativePathname(), iterator_to_array($files));
+      if (count($this->paths_to_skip_edit) === 0) {
+        $this->io->warning('Paths were defined `no_edit` but no files found.');
+      }
+    }
+
+    if (isset($config['no_rename']) && is_array($config['no_rename'])) {
+      $no_rename_globs = array_map([self::class, 'processPaths'], $config['no_rename']);
+      $files = (new Finder)->in($this->tmp_dir)->files()->path($no_rename_globs);
+      $this->paths_to_skip_rename = array_map(static fn ($file) => $file->getRelativePathname(), iterator_to_array($files));
+      if (count($this->paths_to_skip_rename) === 0) {
+        $this->io->warning('Paths were defined `no_rename` but no files found.');
+      }
+    }
 
     // Get all the source/dest/token strings needed for renaming & editing.
     $this->prepareForRenameAndEdit();
@@ -265,55 +293,6 @@ class GenerateTheme extends Command {
     }
 
     return TRUE;
-  }
-
-  /**
-   * Reads THEMENAME.starterkit.yml.
-   *
-   * @return void
-   */
-  private function getStarterKitConfig() {
-    $source_path = $this->source_theme->getPath();
-    $themename = $this->source_theme_name;
-    $config_file = $source_path . '/' . $themename . '.starterkit.yml';
-
-    if (is_file($config_file) && $config_file = file_get_contents($config_file)) {
-      $config = Yaml::decode($config_file);
-
-      if (isset($config['delete']) && is_array($config['delete'])) {
-        $this->paths_to_delete = $config['delete'];
-      }
-
-      if (isset($config['no_edit']) && is_array($config['no_edit'])) {
-        $paths = [];
-        foreach ($config['no_edit'] as $glob) {
-          $finder = new Finder();
-          $files = $finder->in($this->tmp_dir)->files()->name($glob);
-          $paths[] = array_map(static fn ($file) => $file->getRelativePathname(), iterator_to_array($files));
-        }
-        $this->paths_to_skip_edit = array_merge(...$paths);
-        if (count($this->paths_to_skip_edit) === 0) {
-          $this->io->warning('Paths were defined `no_edit` but no files found.');
-        }
-      }
-
-      if (isset($config['no_rename']) && is_array($config['no_rename'])) {
-        $paths = [];
-        foreach ($config['no_rename'] as $glob) {
-          $finder = new Finder();
-          $files = $finder->in($this->tmp_dir)->files()->name($glob);
-          $paths[] = array_map(static fn ($file) => $file->getRelativePathname(), iterator_to_array($files));
-        }
-        $this->paths_to_skip_rename = array_merge(...$paths);
-        if (count($this->paths_to_skip_rename) === 0) {
-          $this->io->warning('Paths were defined `no_rename` but no files found.');
-        }
-      }
-
-      if (isset($config['info']) && is_array($config['info'])) {
-        $this->info_overrides = $config['info'];
-      }
-    }
   }
 
   /**
@@ -617,6 +596,13 @@ class GenerateTheme extends Command {
    */
   private function isStarterkitTheme(Extension $theme): bool {
     return file_exists($theme->getPath() . '/' . $theme->getName() . '.starterkit.yml');
+  }
+
+  private static function processPaths(string $path): string {
+    if (str_starts_with($path, '**')) {
+      $path = ltrim($path, '*');
+    }
+    return trim(Glob::toRegex($path), '/');
   }
 
 }
