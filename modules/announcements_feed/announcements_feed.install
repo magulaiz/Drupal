@@ -21,7 +21,7 @@ function announcements_feed_install() {
  * Implements hook_uninstall().
  */
 function announcements_feed_uninstall() {
-  // Deleting the announcements_feed variable.
+  // Delete the announcements_feed module variables.
   variable_del('announcements_feed_limit');
   variable_del('announcements_feed_cron_interval');
   variable_del('announcements_feed_max_age');

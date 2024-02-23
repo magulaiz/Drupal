@@ -172,7 +172,7 @@ function announcements_feed_filter_announcements($announcement) {
  *   Version to check.
  *
  * @return bool
- *   Return True if the version matches Drupal version.
+ *   Return TRUE if the version matches Drupal version.
  */
 function announcements_feed_is_relevant_item($version) {
   if ($version == '*') {
@@ -181,7 +181,7 @@ function announcements_feed_is_relevant_item($version) {
   // Split the version if received in || formats.
   $version_patterns = '/\|\|/';
   $all_versions = preg_split($version_patterns, $version);
-  // supports. Also, operation is optional and defaults to equals.
+  // The operation is optional and defaults to equals.
   $p_op = '(?P<operation>!=|\^|==|=|<|<=|>|>=|<>)?';
   $operations = '=';
   // Extracts major version from version string like 7, 8, 9.
