@@ -592,10 +592,17 @@
               // $.event.special[EVENT_NAME].trigger in order to wait for the
               // commands to finish executing. Now that they have, re-trigger
               // those events.
-              $(document).trigger('ajaxSuccess', [xmlhttprequest, this]);
-              $(document).trigger('ajaxComplete', [xmlhttprequest, this]);
+              const successEvent = new CustomEvent('ajaxSuccess', {
+                detail: { xmlhttprequest, context: this },
+              });
+              document.dispatchEvent(successEvent);
+              const completeEvent = new CustomEvent('ajaxComplete', {
+                detail: { xmlhttprequest, context: this },
+              });
+              document.dispatchEvent(completeEvent);
               if (--$.active === 0) {
-                $(document).trigger('ajaxStop');
+                const ajaxStopEvent = new CustomEvent('ajaxStop');
+                document.dispatchEvent(ajaxStopEvent);
               }
             })
         );
@@ -752,7 +759,7 @@
     ) {
       event.preventDefault();
       event.stopPropagation();
-      $(element).trigger(ajax.elementSettings.event);
+      element.dispatchEvent(new Event(ajax.elementSettings.event));
     }
   };
 
@@ -1123,7 +1130,7 @@
               }
             }
             if (target) {
-              $(target).trigger('focus');
+              target.dispatchEvent(new FocusEvent('focus'));
             }
           }
           // Reattach behaviors, if they were detached in beforeSerialize(). The

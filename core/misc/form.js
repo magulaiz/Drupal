@@ -153,7 +153,8 @@
    * @fires event:formUpdated
    */
   function triggerFormUpdated(element) {
-    $(element).trigger('formUpdated');
+    const formUpdateEvent = new CustomEvent('formUpdated');
+    element.dispatchEvent(formUpdateEvent);
   }
 
   /**
@@ -298,13 +299,16 @@
     const hash = url.hash.substring(1);
     if (hash) {
       const $target = $(`#${hash}`);
-      $('body').trigger('formFragmentLinkClickOrHashChange', [$target]);
-
+      document.querySelector('body').dispatchEvent(
+        new CustomEvent('formFragmentLinkClickOrHashChange', {
+          detail: { $target },
+        }),
+      );
       /**
        * Clicking a fragment link or a hash change should focus the target
        * element, but event timing issues in multiple browsers require a timeout.
        */
-      setTimeout(() => $target.trigger('focus'), 300);
+      setTimeout(() => $target.dispatchEvent(new FocusEvent('focus')), 300);
     }
   };
 
