@@ -353,7 +353,7 @@ class AnnounceFeedTestInvalidJsonTestCase extends DrupalWebTestCase {
   /**
    * Test the announcements feed with invalid JSON or non-existing JSON URL.
    */
-  public function testUnkownFeedResponse() {
+  public function testInvalidFeedResponse() {
     // Test when the JSON URL is not found.
     $this->user = $this->drupalCreateUser(array(
       'access toolbar',
