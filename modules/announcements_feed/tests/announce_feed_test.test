@@ -6,7 +6,7 @@
  */
 
 /**
- * Tests for validating JSON feed with different json urls.
+ * Tests for validating JSON feed with different JSON URLs.
  */
 class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
 
@@ -32,7 +32,7 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
   protected $updatedJson;
 
   /**
-   * A test endpoint which displays an empty json.
+   * A test endpoint which displays an empty JSON.
    *
    * @var string
    */
@@ -50,8 +50,8 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
    */
   public static function getInfo() {
     return array(
-      'name' => 'Validate Json Feeds',
-      'description' => 'Checking how the code handle multiple types of json feeds',
+      'name' => 'JSON feeds validation / processing',
+      'description' => 'Testing how the code handles multiple types of JSON feeds.',
       'group' => 'Announcements Feed',
     );
   }
