@@ -280,7 +280,7 @@ class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
     $account = $this->drupalCreateUser(array('access toolbar'));
     $this->drupalLogin($account);
     $this->drupalGet('admin/announcements_feed');
-    $this->assertText('You are not authorized to access this page.');
+    $this->assertResponse(403);
   }
 
 }
