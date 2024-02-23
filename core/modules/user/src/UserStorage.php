@@ -29,7 +29,16 @@ class UserStorage extends SqlContentEntityStorage implements UserStorageInterfac
         $sql_mode = $database->query("SELECT @@sql_mode;")->fetchField();
         $database->query("SET sql_mode = '$sql_mode,NO_AUTO_VALUE_ON_ZERO'");
       }
+      elseif ($this->database->driver() === 'mongodb') {
+        $entity->set($this->idKey, $this->getMongoSequences()->nextEntityId('users'));
+
+        $entity->enforceIsNew();
+      }
     }
+    elseif (($this->database->driver() === 'mongodb') && ($entity->id() > 0) && ($this->getMongoSequences()->currentEntityId('users') < $entity->id())) {
+      $this->getMongoSequences()->setEntityId('users', $entity->id());
+    }
+
     parent::doSaveFieldItems($entity, $names);
 
     // Reset the SQL mode if we've changed it.

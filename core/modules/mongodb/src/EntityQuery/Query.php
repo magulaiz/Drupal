@@ -465,6 +465,7 @@ class Query extends CoreQuery {
           // Return a keyed array of results. The key is either the revision_id or
           // the entity_id depending on whether the entity type supports revisions.
           // The value is always the entity id.
+//dump((string) $this->mongodbSelect);
           $results = $this->mongodbSelect->execute()->fetchAll();
 
           $entities = [];
