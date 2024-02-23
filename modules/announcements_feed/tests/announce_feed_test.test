@@ -229,7 +229,7 @@ class AnnounceFeedTestRelevantVersion extends DrupalUnitTestCase {
 }
 
 /**
- * Testing the Announcements feed login test cases.
+ * Test the Announcements module permissions.
  */
 class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
 
