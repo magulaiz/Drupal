@@ -176,8 +176,8 @@ class AnnounceFeedTestValidateUrl extends DrupalUnitTestCase {
       $this->assertEqual($url[1], $result, 'Returned ' . ($url[1] ? 'TRUE' : 'FALSE'));
     }
   }
-
 }
+
 /**
  * Unit test for version compatibility functions.
  */
