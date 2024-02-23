@@ -257,7 +257,7 @@ class AnnounceFeedTestValidatePermissions extends DrupalWebTestCase {
   /**
    * Testing the announcements page with access announcements permission.
    */
-  public function testAnnounceValidateLogin() {
+  public function testAnnounceWithPermission() {
     // Create a user with proper permission.
     $account = $this->drupalCreateUser(array(
       'access toolbar',
