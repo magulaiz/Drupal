@@ -5,6 +5,9 @@ namespace Drupal\Core\Render\Element;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Url;
+use Drupal\Core\Render\Element\FormElement;
+use Drupal\Core\Access\AccessManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a base class for form element plugins.
@@ -94,6 +97,32 @@ use Drupal\Core\Url;
  * @ingroup theme_render
  */
 abstract class FormElement extends RenderElement implements FormElementInterface {
+
+  /**
+   * The access manager service.
+   *
+   * @var \Drupal\Core\Access\AccessManagerInterface
+   */
+  protected $accessManager;
+
+  /**
+   * Constructs a YourFormElement object.
+   *
+   * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
+   *   The access manager service.
+   */
+  public function __construct(AccessManagerInterface $access_manager) {
+    $this->accessManager = $access_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('access_manager')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -197,9 +226,7 @@ abstract class FormElement extends RenderElement implements FormElementInterface
         $options['query'] = $element['#autocomplete_query_parameters'];
       }
       $url = Url::fromRoute($element['#autocomplete_route_name'], $parameters, $options)->toString(TRUE);
-      /** @var \Drupal\Core\Access\AccessManagerInterface $access_manager */
-      $access_manager = \Drupal::service('access_manager');
-      $access = $access_manager->checkNamedRoute($element['#autocomplete_route_name'], $parameters, \Drupal::currentUser(), TRUE);
+      $access = $this->accessManager->checkNamedRoute($element['#autocomplete_route_name'], $parameters, \Drupal::currentUser(), TRUE);
     }
 
     if ($access) {
