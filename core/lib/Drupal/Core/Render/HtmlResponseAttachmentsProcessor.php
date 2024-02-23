@@ -34,6 +34,13 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorInterface {
 
   /**
+   * Contains the unique link headers.
+   *
+   * @var array
+   */
+  protected $linkHeaders = [];
+
+  /**
    * The asset resolver service.
    *
    * @var \Drupal\Core\Asset\AssetResolverInterface
@@ -214,6 +221,19 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
 
     // Set the HTTP headers and status code on the response if any bubbled.
     if (!empty($attached['http_header'])) {
+      // Remove duplicate headers for links.
+      foreach ($attached['http_header'] as $header_key => $header_value) {
+        if ($header_value[0] === 'Link') {
+          if (in_array($header_value[1], $this->linkHeaders, TRUE)) {
+            assert(isset($attached['http_header'][$header_key]), 'Duplicate header ' . $header_value[1] . ' found.');
+            unset($attached['http_header'][$header_key]);
+          }
+          else {
+            $this->linkHeaders[] = $header_value[1];
+          }
+        }
+      }
+
       $this->setHeaders($response, $attached['http_header']);
     }
 

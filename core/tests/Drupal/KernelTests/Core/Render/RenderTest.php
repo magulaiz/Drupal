@@ -72,4 +72,23 @@ class RenderTest extends KernelTestBase {
     $renderer->renderBarePage($build, '', 'maintenance_page');
   }
 
+  /**
+   * Tests removal of duplicate link headers.
+   */
+  public function testDuplicateLinkHeaders() {
+    $link = [
+      [
+        'rel' => 're-record',
+        'href' => '/not/fade/away',
+      ],
+      TRUE,
+    ];
+    $build['#attached']['html_head_link'][] = $link;
+    $build['#attached']['html_head_link'][] = $link;
+    $renderer = $this->container->get('bare_html_page_renderer');
+    $response = $renderer->renderBarePage($build, '', 'maintenance_page');
+    $headers = $response->headers->all();
+    $this->assertCount(1, $headers['link']);
+  }
+
 }
