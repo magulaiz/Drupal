@@ -226,8 +226,8 @@ class AnnounceFeedTestRelevantVersion extends DrupalUnitTestCase {
       $this->assertEqual($strings[1], $result, 'Returned ' . ($strings[1] ? 'TRUE' : 'FALSE'));
     }
   }
-
 }
+
 /**
  * Testing the Announcements feed login test cases.
  */
