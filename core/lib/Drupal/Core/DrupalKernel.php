@@ -1224,10 +1224,12 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       }
 
       // Rebuild the request stack bottom up.
+      $new_request_stack = $container->get('request_stack');
+      $request_context = $container->get('router.request_context');
       foreach ($requests as $request) {
         $original_request_stack->push($request);
-        $container->get('request_stack')->push($request);
-        $container->get('router.request_context')->fromRequest($request);
+        $new_request_stack->push($request);
+        $request_context->fromRequest($request);
       }
     }
 
@@ -1241,9 +1243,10 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     }
 
     // Refresh references to the session on all requests.
+    $new_session = $container->get('session');
     foreach ($requests as $request) {
       if ($request->hasSession()) {
-        $request->setSession($container->get('session'));
+        $request->setSession($new_session);
       }
     }
 
@@ -1256,9 +1259,10 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // Re-add messages.
     if ($this->container->initialized('messenger')) {
       $all_messages = $this->container->get('messenger')->all();
+      $messenger = $container->get('messenger');
       foreach ($all_messages as $type => $messages) {
         foreach ($messages as $message) {
-          $container->get('messenger')->addMessage($message, $type);
+          $messenger->addMessage($message, $type);
         }
       }
     }
