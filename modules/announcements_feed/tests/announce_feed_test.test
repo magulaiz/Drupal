@@ -380,5 +380,5 @@ class AnnounceFeedTestInvalidJsonTestCase extends DrupalWebTestCase {
 
     $this->drupalLogout();
   }
-
 }
+
