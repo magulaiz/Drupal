@@ -114,7 +114,7 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
       'access toolbar',
       'access announcements',
     ));
-    // Change the feed url to empty json file.
+    // Change the feed URL to empty JSON file.
     // For resetting temp storage.
     variable_set('announcements_feed_json_url', $this->emptyJson);
     cache_clear_all('announcements_feed', 'cache', TRUE);
