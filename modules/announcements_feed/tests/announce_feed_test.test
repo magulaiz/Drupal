@@ -32,7 +32,7 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
   protected $updatedJson;
 
   /**
-   * A test endpoint which displays an empty json.
+   * A test endpoint which displays an empty JSON.
    *
    * @var string
    */
