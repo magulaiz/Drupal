@@ -372,7 +372,7 @@ class FormValidatorTest extends UnitTestCase {
   /**
    * If form token is invalid, it should cancel and stop all further validation.
    */
-  public function testCancelingValidationDoesNotRunElementValidation() {
+  public function testCancelingValidationDoesNotRunElementValidation(): void {
     $request_stack = new RequestStack();
     $request = new Request([], [], [], [], [], ['REQUEST_URI' => '/test/example?foo=bar']);
     $request_stack->push($request);
