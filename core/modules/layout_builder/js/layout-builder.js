@@ -208,7 +208,7 @@
        * and elements specifically assigned a tab index, other than those
        * related to contextual links.
        */
-      $blocks
+      const blocks = $blocks
         .find(
           'button, [href], input, select, textarea, iframe, [tabindex]:not([tabindex="-1"]):not(.tabbable)',
         )
@@ -216,7 +216,9 @@
           (index, element) =>
             $(element).closest('[data-contextual-id]').length > 0,
         )
-        .setAttribute('tabindex', -1);
+        .toArray();
+      blocks.forEach((block) => block.setAttribute('tabindex', -1));
+      // .setAttribute('tabindex', -1);
     },
   };
 
@@ -435,7 +437,7 @@
        * disable content preview in the Layout Builder UI.
        */
       if (!isContentPreview) {
-        $layoutBuilderContentPreview.setAttribute('checked', false);
+        $layoutBuilderContentPreview[0].setAttribute('checked', false);
         disableContentPreview();
       }
     },

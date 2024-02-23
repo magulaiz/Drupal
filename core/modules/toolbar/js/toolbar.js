@@ -253,19 +253,25 @@
                   sessionStorage.getItem('Drupal.toolbar.toolbarState'),
                 )
               : {};
+            const activeTab = this.get('activeTab');
             const toolbarState = {
               ...previousToolbarState,
               orientation:
                 Drupal.toolbar.models.toolbarModel.get('orientation'),
               hasActiveTab,
               activeTabId: hasActiveTab ? this.get('activeTab').id : null,
-              activeTray: $(this.get('activeTab'))[0].getAttribute(
-                'data-toolbar-tray',
-              ),
+              activeTray: activeTab
+                ? activeTab.getAttribute('data-toolbar-tray')
+                : null,
               isOriented: this.get('isOriented'),
               isFixed: this.get('isFixed'),
               userButtonMinWidth: userButton ? userButton.clientWidth : 0,
             };
+
+            // unset activeTray when no tray being open
+            if (!toolbarState.activeTray) {
+              delete toolbarState.activeTray;
+            }
             // Store toolbar UI state in session storage, so it can be accessed
             // by JavaScript that executes before the first paint.
             // @see core/modules/toolbar/js/toolbar.anti-flicker.js

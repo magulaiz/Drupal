@@ -150,12 +150,13 @@
        * If there is an element and the renderer is 'off_canvas' then we want
        * to add our changes.
        */
-      .filter(
-        (instance) =>
-          instance &&
-          instance.element.getAttribute('data-dialog-renderer') ===
-            'off_canvas',
-      )
+      .filter((instance) => {
+        if (instance && instance.element) {
+          const element = instance.element;
+          return element.getAttribute('data-dialog-renderer') === 'off_canvas';
+        }
+        return null;
+      })
       /**
        * Loop through all Ajax instances that use the 'off_canvas' renderer to
        * set active editable ID.
