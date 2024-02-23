@@ -6,7 +6,7 @@
  */
 
 /**
- * Returns the list of Announcements.
+ * Returns the list of announcements.
  *
  * @return array
  *   A build array with announcements.
