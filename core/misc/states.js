@@ -741,14 +741,14 @@
         .closest('.js-form-item, .js-form-wrapper')
         .find('input')
         .prop('checked', e.value)
-        .trigger('change');
+        .dispatchEvent(new Event('change'));
     }
   });
 
   $document.on('state:collapsed', (e) => {
     if (e.trigger) {
       if (e.target.hasAttribute('open') === e.value) {
-        $(e.target).find('> summary').trigger('click');
+        $(e.target).find('> summary').dispatchEvent(new Event('click'));
       }
     }
   });

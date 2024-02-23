@@ -219,7 +219,10 @@
     });
 
     if (broadcast) {
-      $(document).trigger('drupalViewportOffsetChange', offsets);
+      const event = new CustomEvent('drupalViewportOffsetChange', {
+        detail: { offsets },
+      });
+      document.dispatchEvent(event);
     }
     return offsets;
   }

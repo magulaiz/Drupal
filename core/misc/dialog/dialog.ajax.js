@@ -35,7 +35,7 @@
         // Remove and replace the dialog buttons with those from the new form.
         if ($dialog.dialog('option', 'drupalAutoButtons')) {
           // Trigger an event to detect/sync changes to buttons.
-          $dialog.trigger('dialogButtonsChange');
+          $dialog.dispatchEvent(new Event('dialogButtonsChange'));
         }
 
         setTimeout(function () {

@@ -69,7 +69,7 @@
       if (!hasFocus) {
         hasFocus = this.uiDialog.get(0);
       }
-      $(hasFocus).eq(0).trigger('focus');
+      $(hasFocus).eq(0).dispatchEvent(new FocusEvent('focus'));
     },
   });
 })(jQuery, window.tabbable);

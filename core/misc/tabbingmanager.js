@@ -178,7 +178,10 @@
         tabbingContext.activate();
 
         // Allow modules to respond to the constrain event.
-        $(document).trigger('drupalTabbingConstrained', tabbingContext);
+        const tabEvent = new CustomEvent('drupalTabbingConstrained', {
+          detail: { tabbingContext },
+        });
+        document.dispatchEvent(tabEvent);
 
         return tabbingContext;
       },
@@ -245,7 +248,7 @@
         if ($hasFocus.length === 0) {
           $hasFocus = $set.eq(0);
         }
-        $hasFocus.trigger('focus');
+        $hasFocus.dispatchEvent(new FocusEvent('focus'));
 
         // Trap focus within the set.
         if ($set.length && tabbingContext.trapFocus) {
@@ -364,7 +367,11 @@
           this.released = true;
           Drupal.tabbingManager.release(this);
           // Allow modules to respond to the tabbingContext release event.
-          $(document).trigger('drupalTabbingContextReleased', this);
+          const tabReleasedEvent = new CustomEvent(
+            'drupalTabbingContextReleased',
+            { detail: { context: this } },
+          );
+          document.dispatchEvent(tabReleasedEvent);
         }
       },
 
@@ -379,7 +386,11 @@
           this.active = true;
           Drupal.tabbingManager.activate(this);
           // Allow modules to respond to the constrain event.
-          $(document).trigger('drupalTabbingContextActivated', this);
+          const tabActivatedEvent = new CustomEvent(
+            'drupalTabbingContextActivated',
+            { detail: { context: this } },
+          );
+          document.dispatchEvent(tabActivatedEvent);
         }
       },
 
@@ -393,7 +404,11 @@
           this.active = false;
           Drupal.tabbingManager.deactivate(this);
           // Allow modules to respond to the constrain event.
-          $(document).trigger('drupalTabbingContextDeactivated', this);
+          const tabDeactivatedEvent = new CustomEvent(
+            'drupalTabbingContextDeactivated',
+            { detail: { context: this } },
+          );
+          document.dispatchEvent(tabDeactivatedEvent);
         }
       },
     },
