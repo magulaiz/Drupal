@@ -282,8 +282,8 @@ class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
     $this->drupalGet('admin/announcements_feed');
     $this->assertResponse(403);
   }
-
 }
+
 /**
  * Testing the invalid JSON URL for announcements feed test cases.
  */
