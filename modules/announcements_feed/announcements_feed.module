@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Fetch community announcements from www.drupal.org feed.
+ * Used to create an announcements feed using the JSON data from drupal.org.
  */
 
 /**
