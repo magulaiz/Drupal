@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Component\Serialization;
 
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
@@ -123,7 +125,7 @@ class YamlTest extends TestCase {
   /**
    * Data provider that lists all YAML files in core.
    */
-  public function providerYamlFilesInCore() {
+  public static function providerYamlFilesInCore() {
     $files = [];
     $dirs = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(__DIR__ . '/../../../../../', \RecursiveDirectoryIterator::FOLLOW_SYMLINKS));
     foreach ($dirs as $dir) {

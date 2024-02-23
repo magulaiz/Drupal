@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Unit\Menu;
 
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -74,7 +76,7 @@ class SystemLocalTasksTest extends LocalTaskIntegrationTestBase {
   /**
    * Provides a list of routes to test.
    */
-  public function getSystemAdminRoutes() {
+  public static function getSystemAdminRoutes() {
     return [
       ['system.admin_content', [['system.admin_content']]],
       [

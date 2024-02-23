@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Asset;
 
 use Drupal\Core\Asset\LibraryDependencyResolver;
@@ -71,7 +73,7 @@ class LibraryDependencyResolverTest extends UnitTestCase {
   /**
    * Provides test data for ::testGetLibrariesWithDependencies().
    */
-  public function providerTestGetLibrariesWithDependencies() {
+  public static function providerTestGetLibrariesWithDependencies() {
     return [
       // Empty list of libraries.
       [[], []],
@@ -123,7 +125,7 @@ class LibraryDependencyResolverTest extends UnitTestCase {
   /**
    * Provides test data for ::testGetMinimalRepresentativeSubset().
    */
-  public function providerTestGetMinimalRepresentativeSubset() {
+  public static function providerTestGetMinimalRepresentativeSubset() {
     return [
       // Empty list of libraries.
       [[], []],

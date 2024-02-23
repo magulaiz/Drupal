@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Plugin\Context;
 
 use Drupal\Component\Plugin\Context\ContextDefinitionInterface;
@@ -19,7 +21,7 @@ class ContextDefinitionTest extends UnitTestCase {
   /**
    * Very simple data provider.
    */
-  public function providerGetDataDefinition() {
+  public static function providerGetDataDefinition() {
     return [
       [TRUE],
       [FALSE],
@@ -161,7 +163,7 @@ class ContextDefinitionTest extends UnitTestCase {
   /**
    * Data provider for testGetConstraint.
    */
-  public function providerGetConstraint() {
+  public static function providerGetConstraint() {
     return [
       [NULL, [], 'nonexistent_constraint_name'],
       [

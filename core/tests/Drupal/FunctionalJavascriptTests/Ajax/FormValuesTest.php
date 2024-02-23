@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalJavascriptTests\Ajax;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -115,7 +117,7 @@ class FormValuesTest extends WebDriverTestBase {
   /**
    * Data provider for testSimpleAjaxFormValue.
    */
-  public function formModeProvider() {
+  public static function formModeProvider() {
     return [
       ['direct'],
       ['dialog'],
