@@ -77,9 +77,7 @@ class ImageStyleDeleteForm extends EntityDeleteForm {
    *   An option list suitable for the form select '#options'.
    */
   protected function getReplacementOptions() {
-    if (!isset($this->replacementOptions)) {
-      $this->replacementOptions = array_diff_key(image_style_options(), [$this->getEntity()->id() => '']);
-    }
+    $this->replacementOptions ??= array_diff_key(image_style_options(), [$this->getEntity()->id() => '']);
     return $this->replacementOptions;
   }
 
