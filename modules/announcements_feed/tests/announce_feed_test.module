@@ -13,7 +13,7 @@ function announce_feed_test_menu() {
     'title' => 'Announcements Feed test',
     'page callback' => 'announce_feed_test_set_feed_config',
     'page arguments' => array(1),
-    // In unit tests, restrictions not required.
+    // In unit tests, restrictions are not required.
     'access callback' => TRUE,
   );
 
