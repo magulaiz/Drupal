@@ -238,7 +238,7 @@ class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Validate login',
-      'description' => 'Checking the notification alert when a new user logs in and won\'t appear next the user log in',
+      'description' => 'Tests the module permissions.',
       'group' => 'Announcements Feed',
     );
   }
@@ -277,12 +277,12 @@ class AnnounceFeedTestValidateLoginTestCase extends DrupalWebTestCase {
     $account = $this->drupalCreateUser(array('access toolbar'));
     $this->drupalLogin($account);
     $this->drupalGet('admin/announcements_feed');
-    $this->assertText('You are not authorized to access this page.');
+    $this->assertResponse(403);
   }
-
 }
+
 /**
- * Testing the invalid JSON URL for announcements feed test cases.
+ * Tests the announcements feed with invalid JSON URLs.
  */
 class AnnounceFeedTestInvalidJsonTestCase extends DrupalWebTestCase {
 
@@ -291,8 +291,8 @@ class AnnounceFeedTestInvalidJsonTestCase extends DrupalWebTestCase {
    */
   public static function getInfo() {
     return array(
-      'name' => 'Invalid Feed / Unkown JSON feed URL',
-      'description' => 'Testing announcements feed when json is invalid or URL not found.',
+      'name' => 'Invalid / unknown JSON feed URL',
+      'description' => 'Testing announcements feed with invalid JSON or non-existing JSON URL.',
       'group' => 'Announcements Feed',
     );
   }
