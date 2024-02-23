@@ -203,7 +203,7 @@ class AnnounceFeedTestRelevantVersion extends DrupalUnitTestCase {
   }
 
   /**
-   * Test for validating the announcements_feed_validate_url function.
+   * Test for validating the announcements_feed_is_relevant_item function.
    */
   public function testValidateUrl() {
     $version_strings = array(
