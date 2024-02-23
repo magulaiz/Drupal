@@ -98,7 +98,7 @@ function announcements_feed_fetch($force = FALSE) {
       $feeds = json_decode($response->data, TRUE);
       if (!isset($feeds['items'])) {
         watchdog('announcements_feed', 'The feed format is not valid.', NULL, WATCHDOG_ERROR);
-        throw new Exception('Invalid format');
+        throw new Exception('Announcements feed JSON format is invalid');
       }
       $announcements = array();
       if ($feeds['items']) {
