@@ -36,16 +36,16 @@ class GenerateTheme extends Command {
   /**
    * The Symfony output decorator.
    *
-   * @var Symfony\Component\Console\Style\SymfonyStyle
+   * @var \Symfony\Component\Console\Style\SymfonyStyle
    */
-  private $io;
+  private SymfonyStyle $io;
 
   /**
    * The temporary directory files are stored during operations.
    *
-   * @var [type]
+   * @var string
    */
-  private $tmp_dir;
+  private string $tmpDir;
 
   /**
    * The machine name of the source theme.
@@ -57,26 +57,11 @@ class GenerateTheme extends Command {
   /**
    * The theme to be duplicated.
    *
-   * @var Drupal\Core\Extension\Extension
+   * @var \Drupal\Core\Extension\Extension|null
    */
-  private $source_theme;
+  private ?Extension $source_theme;
 
   private $source_theme_info;
-
-  /**
-   * Paths to delete.
-   *
-   * Array of filepaths, directories, or globs relative to the theme root.
-   * Matching files/dirs will be removed from $this->temp_dir before other operations.
-   *
-   * @var String[]
-   *
-   * @todo this should be renamed pathsToIgnore
-   */
-  private $paths_to_delete = [
-    '/src/StarterKit.php',
-    '/*.starterkit.yml',
-  ];
 
   /**
    * Paths to skip editing.
@@ -103,7 +88,7 @@ class GenerateTheme extends Command {
    *
    * @var []
    */
-  private $info_overrides = [
+  private array $infoOverrides = [
     'hidden' => NULL,
     'starterkit' => NULL,
     'version' => '1.0.0',
@@ -135,7 +120,8 @@ class GenerateTheme extends Command {
    *
    *  - old patterns point to the source theme
    *  - new patterns point to the destination theme
-   *  - token patterns are strings that do not contain and are not contained by either old or new patterns
+   *  - token patterns are strings that do not contain and are not contained by
+   * either old or new patterns
    *
    * @var array
    */
@@ -144,6 +130,11 @@ class GenerateTheme extends Command {
     'new' => [],
     'token' => [],
   ];
+
+  /**
+   * @var \Symfony\Component\Filesystem\Filesystem
+   */
+  private Filesystem $filesystem;
 
   /**
    * {@inheritdoc}
@@ -169,14 +160,19 @@ class GenerateTheme extends Command {
       ->addUsage('custom_theme --name "Custom Theme" --starterkit mystarterkit');
   }
 
+  protected function initialize(InputInterface $input, OutputInterface $output): void {
+    $this->io = new SymfonyStyle($input, $output);
+    $this->filesystem = new Filesystem();
+    $this->tmpDir = $this->getUniqueTmpDirPath();
+
+    // Change the directory to the Drupal root.
+    chdir($this->root);
+  }
+
   /**
    * {@inheritdoc}
    */
   protected function execute(InputInterface $input, OutputInterface $output): int {
-    // Change the directory to the Drupal root.
-    chdir($this->root);
-
-    $this->io = new SymfonyStyle($input, $output);
 
     // Get all command args & options.
     $destination_theme = $input->getArgument('machine-name');
@@ -187,53 +183,60 @@ class GenerateTheme extends Command {
     $this->destination_theme_label = $input->getOption('name') ?: $destination_theme;
     $this->destination_theme_description = $input->getOption('description');
 
-    // Ensure source/destination themes are valid
-    if (!$this->checkValidCommand($destination, $this->source_theme_name)) {
+    if (is_dir($destination)) {
+      $this->io->getErrorStyle()->error("Theme could not be generated because the destination directory $destination exists already.");
       return 1;
     }
 
-    $this->tmp_dir = $this->getUniqueTmpDirPath();
-
-    $filesystem = new Filesystem();
-    $filesystem->mkdir($this->tmp_dir);
-
-    // Get more specific source theme details now that it's safe.
     $this->source_theme = $this->getThemeInfo($this->source_theme_name);
-    $source_path = $this->source_theme->getPath();
-
-    $config_file = $source_path . '/' . $this->source_theme->getName() . '.starterkit.yml';
-    $config = Yaml::decode(file_get_contents($config_file));
-
-    if (isset($config['info']) && is_array($config['info'])) {
-      $this->info_overrides = $config['info'];
+    if ($this->source_theme === NULL) {
+      $this->io->getErrorStyle()->error("Theme source theme $this->source_theme_name cannot be found.");
+      return 1;
     }
 
-    $paths_to_ignore = [];
-    if (isset($config['delete']) && is_array($config['delete'])) {
-      $paths_to_ignore = $config['delete'];
+    $starterkit_config_file = $this->source_theme->getPath() . '/' . $this->source_theme->getName() . '.starterkit.yml';
+    if (!file_exists($starterkit_config_file)) {
+      $this->io->getErrorStyle()->error("Theme source theme $this->source_theme_name is not a valid starter kit.");
+      return 1;
+    }
+    $starterkit_config = Yaml::decode(file_get_contents($starterkit_config_file));
+
+    $this->filesystem->mkdir($this->tmpDir);
+
+
+    if (isset($starterkit_config['info']) && is_array($starterkit_config['info'])) {
+      $this->infoOverrides = $starterkit_config['info'];
+    }
+
+    $paths_to_ignore = [
+      '/src/StarterKit.php',
+      '/*.starterkit.yml',
+    ];
+    if (isset($starterkit_config['delete']) && is_array($starterkit_config['delete'])) {
+      $paths_to_ignore = $starterkit_config['delete'];
     }
     $mirror_iterator = (new Finder)
-      ->in($source_path)
+      ->in($this->source_theme->getPath())
       ->notPath(array_map(
         [self::class, 'processPaths'],
         $paths_to_ignore
       ));
 
     // Copy entire contents of source theme to tmp_dir.
-    $filesystem->mirror($source_path, $this->tmp_dir, $mirror_iterator);
+    $this->filesystem->mirror($this->source_theme->getPath(), $this->tmpDir, $mirror_iterator);
 
-    if (isset($config['no_edit']) && is_array($config['no_edit'])) {
-      $no_edit_globs = array_map([self::class, 'processPaths'], $config['no_edit']);
-      $files = (new Finder)->in($this->tmp_dir)->files()->path($no_edit_globs);
+    if (isset($starterkit_config['no_edit']) && is_array($starterkit_config['no_edit'])) {
+      $no_edit_globs = array_map([self::class, 'processPaths'], $starterkit_config['no_edit']);
+      $files = self::createFilesFinder($this->tmpDir)->path($no_edit_globs);
       $this->paths_to_skip_edit = array_map(static fn ($file) => $file->getRelativePathname(), iterator_to_array($files));
       if (count($this->paths_to_skip_edit) === 0) {
         $this->io->warning('Paths were defined `no_edit` but no files found.');
       }
     }
 
-    if (isset($config['no_rename']) && is_array($config['no_rename'])) {
-      $no_rename_globs = array_map([self::class, 'processPaths'], $config['no_rename']);
-      $files = (new Finder)->in($this->tmp_dir)->files()->path($no_rename_globs);
+    if (isset($starterkit_config['no_rename']) && is_array($starterkit_config['no_rename'])) {
+      $no_rename_globs = array_map([self::class, 'processPaths'], $starterkit_config['no_rename']);
+      $files = self::createFilesFinder($this->tmpDir)->path($no_rename_globs);
       $this->paths_to_skip_rename = array_map(static fn ($file) => $file->getRelativePathname(), iterator_to_array($files));
       if (count($this->paths_to_skip_rename) === 0) {
         $this->io->warning('Paths were defined `no_rename` but no files found.');
@@ -241,7 +244,12 @@ class GenerateTheme extends Command {
     }
 
     // Get all the source/dest/token strings needed for renaming & editing.
-    $this->prepareForRenameAndEdit();
+    $this->prepareForRenameAndEdit(
+      $this->source_theme_name,
+      $this->source_theme_info['name'] ?? $this->source_theme_name,
+      $this->destination_theme,
+      $this->destination_theme_label
+    );
 
     // Replace temporary placeholder tokens with final strings.
     $this->doRenameAndEdit();
@@ -257,7 +265,7 @@ class GenerateTheme extends Command {
     }
 
     // Move altered theme to final destination.
-    $filesystem->mirror($this->tmp_dir, $destination);
+    $this->filesystem->mirror($this->tmpDir, $destination);
 
     $output->writeln(sprintf('Theme generated successfully to %s', $destination));
 
@@ -265,54 +273,20 @@ class GenerateTheme extends Command {
   }
 
   /**
-   * Performs various checks to ensure command failures happen more gracefully.
-   *
-   * @param string $destination
-   *   Path of the destination theme.
-   * @param string $source_theme_name
-   *   Path of the source theme.
-   *
-   * @return bool
-   */
-  private function checkValidCommand($destination, $source_theme_name) {
-    $io = $this->io;
-
-    if (is_dir($destination)) {
-      $io->getErrorStyle()->error("Theme could not be generated because the destination directory $destination exists already.");
-      return FALSE;
-    }
-
-    if (!$source_theme = $this->getThemeInfo($source_theme_name)) {
-      $io->getErrorStyle()->error("Theme source theme $source_theme_name cannot be found.");
-      return FALSE;
-    }
-
-    if (!$this->isStarterkitTheme($source_theme)) {
-      $io->getErrorStyle()->error("Theme source theme $source_theme_name is not a valid starter kit.");
-      return FALSE;
-    }
-
-    return TRUE;
-  }
-
-  /**
-   * Overrides source *.info.yml with key/value pairs specified in *.starterkit.yml.
+   * Overrides source *.info.yml with key/value pairs specified in
+   * *.starterkit.yml.
    *
    * @return int|NULL returns an exit code or NULL to continue.
    */
   private function overrideThemeInfo() {
-    $info_overrides = $this->info_overrides;
-    $source_theme_name = $this->source_theme_name;
-    $theme = $this->destination_theme;
-    $tmp_dir = $this->tmp_dir;
-    $info_file = "$tmp_dir/$theme.info.yml";
+    $info_file = "$this->tmpDir/$this->destination_theme.info.yml";
 
     if ($info_contents = file_get_contents($info_file)) {
       $info = Yaml::decode($info_contents);
       $this->source_theme_info = $info;
 
       if (!array_key_exists('version', $info)) {
-        $confirm_versionless_source_theme = new ConfirmationQuestion(sprintf('The source theme %s does not have a version specified. This makes tracking changes in the source theme difficult. Are you sure you want to continue?', $source_theme_name));
+        $confirm_versionless_source_theme = new ConfirmationQuestion(sprintf('The source theme %s does not have a version specified. This makes tracking changes in the source theme difficult. Are you sure you want to continue?', $this->source_theme_name));
         if (!$this->io->askQuestion($confirm_versionless_source_theme)) {
           return 0;
         }
@@ -352,14 +326,12 @@ class GenerateTheme extends Command {
       // Create the generator string before doing *.info.yml overrides.
       $generator_string = "$this->source_theme_name:$source_version";
 
-      if (isset($info_overrides) && is_array($info_overrides) && !empty($info_overrides)) {
-        foreach ($info_overrides as $key => $value) {
-          if ($value === NULL) {
-            unset($info[$key]);
-          }
-          else {
-            $info[$key] = $value;
-          }
+      foreach ($this->infoOverrides as $key => $value) {
+        if ($value === NULL) {
+          unset($info[$key]);
+        }
+        else {
+          $info[$key] = $value;
         }
       }
 
@@ -387,42 +359,25 @@ class GenerateTheme extends Command {
   }
 
   /**
-   * Compiles strings from source theme that will need replaced with strings from destination theme.
+   * Compiles strings from source theme that will need replaced with strings
+   * from destination theme.
    */
-  private function prepareForRenameAndEdit() {
-    $old_machine_name = $this->source_theme_name;
-    $old_label = $this->source_theme_info['name'] ?? $this->source_theme_name;
-    $new_machine_name = $this->destination_theme;
-    $new_label = $this->destination_theme_label;
-
+  private function prepareForRenameAndEdit(string $source_name, string $source_label, $destination_name, $destination_label) {
     $this->find_and_replace_patterns = [
       'old' => [
-        'machine_name' => $old_machine_name,
-        'label' => $old_label,
-        'machine_class_name' => u($old_machine_name)->camel()->title(),
-        'label_class_name' => u($old_label)->camel()->title(),
+        'machine_name' => $source_name,
+        'label' => $source_label,
+        'machine_class_name' => u($source_name)->camel()->title(),
+        'label_class_name' => u($source_label)->camel()->title(),
       ],
       'new' => [
-        'machine_name' => $new_machine_name,
-        'label' => $new_label,
-        'machine_class_name' => u($new_machine_name)->camel()->title(),
-        'label_class_name' => u($new_label)->camel()->title(),
+        'machine_name' => $destination_name,
+        'label' => $destination_label,
+        'machine_class_name' => u($destination_name)->camel()->title(),
+        'label_class_name' => u($destination_label)->camel()->title(),
       ],
     ];
 
-    $this->generateFindAndReplaceTokens();
-  }
-
-  /**
-   * Generates intermediary tokens.
-   *
-   * Generates tokens that do not contain, and are not contained
-   * within the source or destination theme strings. This prevents issues where
-   * source/destination string overlaps result in recursive renaming.
-   *
-   * @return void
-   */
-  private function generateFindAndReplaceTokens() {
     $old_strings = $this->find_and_replace_patterns['old'];
     $new_strings = $this->find_and_replace_patterns['new'];
 
@@ -449,7 +404,8 @@ class GenerateTheme extends Command {
   }
 
   /**
-   * Replaces source strings with destination strings by way of an intermediary token.
+   * Replaces source strings with destination strings by way of an intermediary
+   * token.
    */
   private function doRenameAndEdit() {
     $fs = new Filesystem();
@@ -465,10 +421,7 @@ class GenerateTheme extends Command {
     foreach ($patterns['token'] as $pattern_id => $token) {
       $old_str = $patterns['old'][$pattern_id];
 
-      $finder = new Finder();
-      $files = $finder
-        ->in($this->tmp_dir)
-        ->files()
+      $files = self::createFilesFinder($this->tmpDir)
         ->contains("/$old_str/")
         ->filter(fn ($file) => !in_array($file->getRelativePathname(), $this->paths_to_skip_edit));
 
@@ -483,10 +436,7 @@ class GenerateTheme extends Command {
     foreach ($patterns['token'] as $pattern_id => $token) {
       $new_str = $patterns['new'][$pattern_id];
 
-      $finder = new Finder();
-      $files = $finder
-        ->in($this->tmp_dir)
-        ->files()
+      $files = self::createFilesFinder($this->tmpDir)
         ->contains("/$token/")
         ->filter(fn ($file) => !in_array($file->getRelativePathname(), $this->paths_to_skip_edit));
 
@@ -501,10 +451,7 @@ class GenerateTheme extends Command {
     foreach ($patterns['token'] as $pattern_id => $token) {
       $old_str = $patterns['old'][$pattern_id];
 
-      $finder = new Finder();
-      $files = $finder
-        ->in($this->tmp_dir)
-        ->files()
+      $files = self::createFilesFinder($this->tmpDir)
         ->name("/$old_str/")
         ->filter(fn ($file) => !in_array($file->getRelativePathname(), $this->paths_to_skip_rename));
 
@@ -521,10 +468,7 @@ class GenerateTheme extends Command {
     foreach ($patterns['token'] as $pattern_id => $token) {
       $new_str = $patterns['new'][$pattern_id];
 
-      $finder = new Finder();
-      $files = $finder
-        ->in($this->tmp_dir)
-        ->files()
+      $files = self::createFilesFinder($this->tmpDir)
         ->name("/$token/")
         ->filter(fn ($file) => !in_array($file->getRelativePathname(), $this->paths_to_skip_rename));
 
@@ -539,16 +483,14 @@ class GenerateTheme extends Command {
   }
 
   private function doPostProcess() {
-    $theme_name = $this->source_theme_name;
-    $theme_path = $this->source_theme->getPath();
     $loader = new ClassLoader();
-    $loader->addPsr4("Drupal\\$theme_name\\", "$theme_path/src");
+    $loader->addPsr4("Drupal\\$this->source_theme_name\\", "{$this->source_theme->getPath()}/src");
     $loader->register();
 
     $generator_classname = "Drupal\\$this->source_theme_name\\StarterKit";
     if (class_exists($generator_classname)) {
       if (is_a($generator_classname, StarterKitInterface::class, TRUE)) {
-        $generator_classname::postProcess($this->tmp_dir, $this->destination_theme, $this->destination_theme_label);
+        $generator_classname::postProcess($this->tmpDir, $this->destination_theme, $this->destination_theme_label);
       }
       else {
         $this->io->getErrorStyle()->error("The $generator_classname does not implement \Drupal\Core\Theme\StarterKitInterface and cannot perform post-processing.");
@@ -586,23 +528,15 @@ class GenerateTheme extends Command {
     return $themes[$theme];
   }
 
-  /**
-   * Checks if the theme is a starterkit theme.
-   *
-   * @param \Drupal\Core\Extension\Extension $theme
-   *   The theme extension.
-   *
-   * @return bool
-   */
-  private function isStarterkitTheme(Extension $theme): bool {
-    return file_exists($theme->getPath() . '/' . $theme->getName() . '.starterkit.yml');
-  }
-
   private static function processPaths(string $path): string {
     if (str_starts_with($path, '**')) {
       $path = ltrim($path, '*');
     }
     return trim(Glob::toRegex($path), '/');
+  }
+
+  private static function createFilesFinder(string $dir) {
+    return (new Finder)->in($dir)->files();
   }
 
 }
