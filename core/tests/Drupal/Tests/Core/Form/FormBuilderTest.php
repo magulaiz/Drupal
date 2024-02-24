@@ -618,7 +618,7 @@ class FormBuilderTest extends FormTestBase {
   /**
    * @covers ::buildForm
    */
-  public function testGetAjaxRequest() {
+  public function testGetAjaxRequest(): void {
     $request = new Request([FormBuilderInterface::AJAX_FORM_REQUEST => TRUE]);
     $request->query->set('form_id', 'different_form_id');
     $request->setMethod('GET');
