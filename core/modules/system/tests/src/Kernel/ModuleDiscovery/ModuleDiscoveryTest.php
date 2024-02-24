@@ -12,10 +12,6 @@ use Drupal\module_discovery_attribute_service_test\AttributeToService\TestClassS
 use Drupal\module_discovery_collision_test\ExistingServiceByClass;
 use Drupal\module_discovery_collision_test\NewDiscoveryService;
 use Drupal\module_discovery_definition_template_test\ServiceDefinitionTemplate\TestServiceDefinitionTemplate;
-use Drupal\module_discovery_glob_test\FirstService;
-use Drupal\module_discovery_glob_test\Second\SecondService;
-use Drupal\module_discovery_glob_test\Second\Third\ThirdService;
-use Drupal\module_discovery_glob_test\Second\UnmatchedSecondService;
 use Drupal\module_discovery_test\TestService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;

@@ -446,7 +446,7 @@ class YamlFileLoader
                     throw new \Exception('Globbing is not supported in patterns.');
                 }
 
-                // Normalise the path by removing reduntant slashes and ensuring
+                // Normalize the path by removing redundant slashes and ensuring
                 // the path exists.
                 $prefix = realpath($prefix);
                 if ($prefix === FALSE) {
