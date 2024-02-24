@@ -58,13 +58,15 @@
 
   {% if header %}
     <thead>
-      <tr>
-        {% for cell in header %}
+      {% if header.cells %}
+      <tr{{ header.row_attributes }}>
+        {% for cell in header.cells %}
           <{{ cell.tag }}{{ cell.attributes }}>
             {{- cell.content -}}
           </{{ cell.tag }}>
         {% endfor %}
       </tr>
+    {% endif %}
     </thead>
   {% endif %}
 
