@@ -1341,6 +1341,10 @@ class EntityQueryTest extends EntityKernelTestBase {
    * Tests __toString().
    */
   public function testToString() {
+    if (\Drupal::database()->driver() == 'mongodb') {
+      $this->markTestSkipped('The MongoDB database driver does not support changing queries to a string.');
+    }
+
     $query = $this->storage->getQuery()->accessCheck(FALSE);
     $group_blue = $query->andConditionGroup()->condition("{$this->figures}.color", ['blue'], 'IN');
     $group_red = $query->andConditionGroup()->condition("{$this->figures}.color", ['red'], 'IN');
