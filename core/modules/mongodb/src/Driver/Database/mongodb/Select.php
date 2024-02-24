@@ -383,9 +383,14 @@ class Select extends QuerySelect {
    *
    * @param string $embedded_table
    *   The name of the embedded table to be used as the base table.
+   *
+   * @return $this
+   *   The select query.
    */
-  public function embeddedTableToUseAsBaseTable($embedded_table) {
+  public function embeddedTableToUseAsBaseTable($embedded_table): self {
     $this->mongodbEmbeddedTableToUseAsBaseTable = $embedded_table;
+
+    return $this;
   }
 
   /**
@@ -661,9 +666,14 @@ class Select extends QuerySelect {
    *
    * @param string $path
    *   The path of the embedded table to be unwound.
+   *
+   * @return $this
+   *   The select query.
    */
-  public function addFilterUnwindPath($path) {
+  public function addFilterUnwindPath($path): self {
     $this->mongodbFilterUnwindPaths[] = $path;
+
+    return $this;
   }
 
   /**
