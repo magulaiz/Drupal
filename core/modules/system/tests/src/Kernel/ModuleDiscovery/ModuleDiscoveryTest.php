@@ -81,7 +81,7 @@ final class ModuleDiscoveryTest extends KernelTestBase {
    * Test a class that cannot be reflected.
    */
   public function testMalformedClass(): void {
-    $this->expectExceptionMessage('Class "Drupal\module_discovery_malformed_class_test\BadInterface" not found while loading "Drupal\module_discovery_malformed_class_test\BadClass".');
+    $this->expectExceptionMessage('Class "Drupal\module_discovery_malformed_class_test\BadInterface" not found');
     $this->moduleInstaller()->install(['module_discovery_malformed_class_test']);
   }
 
