@@ -432,7 +432,7 @@ class ContentEntityChangedTest extends EntityKernelTestBase {
       'Changed flag of German translation is reset by adding a new translation and a new revision.'
     );
 
-    if (Database::getConnection()->driver != 'mongodb') {
+    if (Database::getConnection()->driver() != 'mongodb') {
       // @todo Fix this assertion for MongoDB.
       $this->assertTrue(
         $this->getRevisionTranslationAffectedFlag($french),
