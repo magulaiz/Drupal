@@ -595,7 +595,7 @@ class FormBuilderTest extends FormTestBase {
   /**
    * @covers ::buildForm
    */
-  public function testPostAjaxRequest() {
+  public function testPostAjaxRequest(): void {
     $request = new Request([FormBuilderInterface::AJAX_FORM_REQUEST => TRUE], ['form_id' => 'different_form_id']);
     $request->setMethod('POST');
     $this->requestStack->push($request);
