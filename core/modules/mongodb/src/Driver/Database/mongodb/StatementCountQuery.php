@@ -81,7 +81,7 @@ class StatementCountQuery implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function rowCount() {
-    return $this->count;
+    return (int) $this->count;
   }
 
   /**
