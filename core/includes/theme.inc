@@ -9,24 +9,24 @@
  */
 
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\Core\Url;
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\StorageException;
+use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Render\AttachmentsInterface;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Render\RenderableInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Template\AttributeHelper;
 use Drupal\Core\Theme\ThemeSettings;
-use Drupal\Core\Render\Element;
-use Drupal\Core\Render\Markup;
+use Drupal\Core\Url;
 use Drupal\Core\Utility\TableSort;
-use Drupal\Core\Installer\InstallerKernel;
 
 /**
  * @defgroup content_flags Content markers
@@ -410,7 +410,6 @@ function theme_render_and_autoescape($arg) {
 
   // This is a normal render array, which is safe by definition, with special
   // simple cases already handled.
-
   // Early return if this element was pre-rendered (no need to re-render).
   if (isset($arg['#printed']) && $arg['#printed'] == TRUE && isset($arg['#markup']) && strlen($arg['#markup']) > 0) {
     return (string) $arg['#markup'];
@@ -468,7 +467,7 @@ function theme_settings_convert_to_config(array $theme_settings, Config $config)
  *   An associative array possibly containing:
  *   - attributes['timestamp']:
  *   - timestamp:
- *   - text:
+ *   - text:.
  */
 function template_preprocess_time(&$variables) {
   /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
@@ -776,7 +775,7 @@ function template_preprocess_links(&$variables) {
  *   - attributes: Associative array of attributes to be placed in the img tag.
  *   - srcset: Array of multiple URIs and sizes/multipliers.
  *   - sizes: The sizes attribute for viewport-based selection of images.
- *     - http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content.html#introduction-3:viewport-based-selection-2
+ *     - http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content.html#introduction-3:viewport-based-selection-2.
  */
 function template_preprocess_image(&$variables) {
   /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
@@ -918,7 +917,7 @@ function template_preprocess_table(&$variables) {
   // Format the table columns:
   if (!empty($variables['colgroups'])) {
     foreach ($variables['colgroups'] as &$colgroup) {
-      // Check if we're dealing with a simple or complex column
+      // Check if we're dealing with a simple or complex column.
       if (isset($colgroup['data'])) {
         $cols = $colgroup['data'];
         unset($colgroup['data']);
@@ -997,9 +996,9 @@ function template_preprocess_table(&$variables) {
         // TableSort::header() removes the 'sort', 'initial_click_sort' and
         // 'field' keys.
         $cell_attributes = new Attribute($cell);
-        // Add row_attributes to header cells
+        // Add row_attributes to header cells.
         if (!empty($cell['row_attributes'])) {
-            $variables['header'][$col_key]['row_attributes'] = new Attribute($cell['row_attributes']);
+          $variables['header'][$col_key]['row_attributes'] = new Attribute($cell['row_attributes']);
         }
       }
       $variables['header'][$col_key] = [];
@@ -1018,7 +1017,7 @@ function template_preprocess_table(&$variables) {
         $cells = $row;
         $row_attributes = [];
 
-        // Check if we're dealing with a simple or complex row
+        // Check if we're dealing with a simple or complex row.
         if (isset($row['data'])) {
           $cells = $row['data'];
           $variables['no_striping'] = $row['no_striping'] ?? FALSE;
@@ -1432,8 +1431,7 @@ function theme_get_suggestions($args, $base, $delimiter = '__') {
   // page__node
   // page__node__%
   // page__node__1
-  // page__node__edit
-
+  // page__node__edit.
   $suggestions = [];
   $prefix = $base;
   foreach ($args as $arg) {
@@ -1796,7 +1794,6 @@ function template_preprocess_pager(&$variables) {
   // The last is the last page listed by this pager piece (re quantity).
   $pager_last = $pager_current + $quantity - $pager_middle;
   // End of marker calculations.
-
   // Prepare for generation loop.
   $i = $pager_first;
   if ($pager_last > $pager_max) {
@@ -1810,7 +1807,6 @@ function template_preprocess_pager(&$variables) {
     $i = 1;
   }
   // End of generation loop preparation.
-
   // Create the "first" and "previous" links if we are not on the first page.
   if ($current_page > 0) {
     $items['first'] = [];
