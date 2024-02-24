@@ -74,15 +74,11 @@ final class ModuleDiscoveryTest extends KernelTestBase {
   }
 
   /**
-   * Tests globs.
+   * Tests globs patterns do not work.
    */
-  public function testGlobbing(): void {
+  public function testGlobbingPatterns(): void {
+    $this->expectExceptionMessage('Globbing is not supported in patterns.');
     $this->moduleInstaller()->install(['module_discovery_glob_test']);
-    $container = \Drupal::getContainer();
-    $this->assertFalse($container->has(FirstService::class));
-    $this->assertTrue($container->has(SecondService::class));
-    $this->assertFalse($container->has(UnmatchedSecondService::class));
-    $this->assertFalse($container->has(ThirdService::class));
   }
 
   /**

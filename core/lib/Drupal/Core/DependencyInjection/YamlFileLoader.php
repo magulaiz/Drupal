@@ -8,13 +8,13 @@ namespace Drupal\Core\DependencyInjection;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Core\Serialization\Yaml;
-use Symfony\Component\Config\Resource\GlobResource;
 use Symfony\Component\DependencyInjection\Alias;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\ChildDefinition;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
+use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\Finder\Finder;
 
 /**
  * YamlFileLoader loads YAML files service definitions.
@@ -437,30 +437,34 @@ class YamlFileLoader
             $classes = [];
 
             foreach ($namespaces as $moduleNamespace => $moduleSrcPath) {
-                $absoluteModuleDir = DRUPAL_ROOT . '/' . $moduleSrcPath;
+                $absoluteModuleSrcPath = DRUPAL_ROOT .  '/' . $moduleSrcPath;
+                $prefix = dirname($moduleSrcPath) . '/' . ltrim($scopePath, '/');
 
-                if (\strlen($scopePath) !== strcspn($scopePath, '*?{[')) {
-                    $prefix = dirname($moduleSrcPath);
-                    $pattern = $scopePath;
-                }
-                else {
-                    $prefix = dirname($moduleSrcPath) . $scopePath;
-                    $pattern = '';
+                // This strcspn conditional is the same one implemented by
+                // \Symfony\Component\Config\Loader\FileLoader::glob().
+                if (\strlen($prefix) !== strcspn($prefix, '*?{[')) {
+                    throw new \Exception('Globbing is not supported in patterns.');
                 }
 
-                try {
-                    $resource = new GlobResource($prefix, $pattern, TRUE);
-                } catch (\InvalidArgumentException) {
+                // Normalise the path by removing reduntant slashes and ensuring
+                // the path exists.
+                $prefix = realpath($prefix);
+                if ($prefix === FALSE) {
+                    // Skip when module doesn't have a matching path.
                     continue;
                 }
 
-                if ($isAllNamespaces === TRUE && $resource->getPrefix() === $absoluteModuleDir) {
+                if ($isAllNamespaces === TRUE && $prefix === $absoluteModuleSrcPath) {
                     throw new \Exception('Paths for all modules must be a subdirectory of src/.');
                 }
 
-                $prefixLen = \strlen($absoluteModuleDir);
-                foreach ($resource as $path => $info) {
-                    if (!str_starts_with($path, $absoluteModuleDir)) {
+                $files = (new Finder())
+                   ->followLinks()
+                   ->in($prefix);
+
+                $prefixLen = \strlen($absoluteModuleSrcPath);
+                foreach ($files as $path => $info) {
+                    if (!str_starts_with($path, $absoluteModuleSrcPath)) {
                         throw new \Exception('Paths may not escape extension src/ directories with relative paths.');
                     }
 
@@ -480,7 +484,7 @@ class YamlFileLoader
 
                   // check to make sure the expected class exists
                   if (!$r) {
-                      throw new InvalidArgumentException(sprintf('Expected to find class "%s" in file "%s" while importing services from resource "%s", but it was not found! Check the namespace prefix used with the resource.', $class, $path, $pattern));
+                      throw new InvalidArgumentException(sprintf('Expected to find class "%s" in file "%s".', $class, $path));
                   }
 
                   if ($r->isInstantiable() || $r->isInterface()) {
