@@ -73,3 +73,4 @@ services:
     autowire: true
     tags:
       - { name: 'user.permission_provider', method: 'permissions', provider: 'layout_builder' }
+  Drupal\layout_builder\LayoutBuilderOverridesPermissions: '@layout_builder.permissions'

@@ -24,3 +24,4 @@ services:
     autowire: true
     tags:
       - { name: 'user.permission_provider', method: 'fieldPermissions', provider: 'field_ui' }
+  Drupal\field_ui\FieldUiPermissions: '@field_ui.permissions'

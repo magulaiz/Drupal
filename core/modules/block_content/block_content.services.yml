@@ -14,3 +14,4 @@ services:
     autowire: true
     tags:
       - { name: 'user.permission_provider', method: 'blockTypePermissions', provider: 'block_content' }
+  Drupal\block_content\BlockContentPermissions: '@block_content.permissions'

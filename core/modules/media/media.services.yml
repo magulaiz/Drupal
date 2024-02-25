@@ -28,3 +28,4 @@ services:
     autowire: true
     tags:
       - { name: 'user.permission_provider', method: 'mediaTypePermissions', provider: 'media' }
+  Drupal\media\MediaPermissions: '@media.permissions'

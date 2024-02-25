@@ -15,3 +15,4 @@ services:
     autowire: true
     tags:
       - { name: 'user.permission_provider', method: 'permissions', provider: 'filter' }
+  Drupal\filter\FilterPermissions: '@filter.permissions'

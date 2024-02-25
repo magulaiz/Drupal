@@ -14,3 +14,4 @@ services:
     autowire: true
     tags:
       - { name: 'user.permission_provider', method: 'permissions', provider: 'taxonomy' }
+  Drupal\taxonomy\TaxonomyPermissions: '@taxonomy.permissions'

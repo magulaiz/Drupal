@@ -28,3 +28,4 @@ services:
     autowire: true
     tags:
       - { name: 'user.permission_provider', method: 'transitionPermissions', provider: 'content_moderation' }
+  Drupal\content_moderation\Permissions: '@content_moderation.permissions'

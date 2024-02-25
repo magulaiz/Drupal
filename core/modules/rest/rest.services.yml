@@ -23,6 +23,7 @@ services:
       $restPluginManager: '@plugin.manager.rest'
     tags:
       - { name: 'user.permission_provider', method: 'permissions', provider: 'rest' }
+  Drupal\rest\RestPermissions: '@rest.permissions'
 
   # Event subscribers.
   rest.resource_response.subscriber:
