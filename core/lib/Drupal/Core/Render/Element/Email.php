@@ -13,8 +13,8 @@ use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
  * - #default_value: An RFC-compliant email address.
  * - #size: The size of the input element in characters.
  * - #pattern: A string for the native HTML5 pattern attribute.
- * - #multiple: (optional) If TRUE, the element accepts multiple email
- *   addresses separated by commas. Defaults to FALSE.
+ * - #multiple: (optional) If TRUE, the element accepts multiple email addresses
+ *   separated by commas. Defaults to FALSE.
  *
  * Example usage:
  * @code
@@ -83,7 +83,7 @@ class Email extends FormElement {
       return;
     }
 
-    // If field is multiple, validate each address individually.
+    // If the field is multiple, validate each address individually.
     // Email addresses could be only comma-separated.
     // @see https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/multiple#email_input
     $multiple = $element['#multiple'];
@@ -91,7 +91,7 @@ class Email extends FormElement {
       ? array_map('trim', explode(',', $value))
       : [$value];
 
-    // Make sure all email addresses are non-empty.
+    // Display an error when an email address is empty.
     if (in_array('', $emails)) {
       $form_state->setError($element, t('All email addresses must be non-empty.'));
     }
@@ -110,11 +110,11 @@ class Email extends FormElement {
       }
     }
 
-    // Set trimmed email address/es.
+    // Set trimmed and validated email address(es).
     $form_state->setValueForElement($element, implode(',', $emails));
 
     if ($invalid_emails) {
-      $multiple_error_suffix = $multiple ? ' and separate by comma multiple values.' : '.';
+      $multiple_error_suffix = $multiple ? ' and separate the addresses with a comma.' : '.';
       $form_state->setError($element, new PluralTranslatableMarkup(
         count($invalid_emails),
         'The email address %mails is not valid. Use the format user@example.com' . $multiple_error_suffix,

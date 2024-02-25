@@ -36,7 +36,7 @@ class EmailTest extends BrowserTestBase {
     $this->submitForm($edit, 'Submit');
     $this->assertSession()->pageTextContains('The email address invalid is not valid. Use the format user@example.com.');
     $this->assertSession()->pageTextContains('Address field is required.');
-    $this->assertSession()->pageTextContains('The email addresses invalid-first, invalid-second are not valid. Use the format user@example.com and separate by comma multiple values.');
+    $this->assertSession()->pageTextContains('The email addresses invalid-first, invalid-second are not valid. Use the format user@example.com and separate the addresses with a comma.');
 
     $edit = [];
     $edit['email_required'] = 'invalid-required';
@@ -44,7 +44,7 @@ class EmailTest extends BrowserTestBase {
     $this->drupalGet('form-test/email');
     $this->submitForm($edit, 'Submit');
     $this->assertSession()->pageTextContains('The email address invalid-required is not valid. Use the format user@example.com.');
-    $this->assertSession()->pageTextContains('The email address invalid-multiple is not valid. Use the format user@example.com and separate by comma multiple values.');
+    $this->assertSession()->pageTextContains('The email address invalid-multiple is not valid. Use the format user@example.com and separate the addresses with a comma.');
 
     $edit = [];
     $edit['email_required'] = 'example@drupal.org,example2@drupal.org';
