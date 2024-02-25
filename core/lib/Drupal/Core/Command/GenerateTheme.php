@@ -210,12 +210,48 @@ class GenerateTheme extends Command {
     }
 
     // Replace temporary placeholder tokens with final strings.
+    /*
     $this->doRenameAndEdit(
-      $this->source_theme_name,
-      $this->source_theme_info['name'] ?? $this->source_theme_name,
-      $this->destination_theme,
-      $this->destination_theme_label
+    $this->source_theme_name,
+    $this->source_theme_info['name'] ?? $this->source_theme_name,
+    $this->destination_theme,
+    $this->destination_theme_label
     );
+     */
+
+    $patterns = [
+      'old' => [
+        'machine_name' => $this->source_theme_name,
+        'label' => $this->source_theme->getName(),
+        'machine_class_name' => (string) u($this->source_theme_name)->camel()->title(),
+        'label_class_name' => (string) u($this->source_theme->getName())->camel()->title(),
+      ],
+      'new' => [
+        'machine_name' => $this->destination_theme,
+        'label' => $this->destination_theme_label,
+        'machine_class_name' => (string) u($this->destination_theme)->camel()->title(),
+        'label_class_name' => (string) u($this->destination_theme_label)->camel()->title(),
+      ],
+    ];
+    $filesToEdit = self::createFilesFinder($this->tmpDir)
+      ->contains(array_values($patterns['old']))
+      ->notPath($this->paths_to_skip_edit);
+    foreach ($filesToEdit as $file) {
+      $contents = file_get_contents($file->getRealPath());
+      $contents = str_replace($patterns['old'], $patterns['new'], $contents);
+      file_put_contents($file->getRealPath(), $contents);
+    }
+
+    $filesToRename = self::createFilesFinder($this->tmpDir)
+      ->name(array_map(static fn (string $pattern) => "*$pattern*", array_values($patterns['old'])))
+      ->notPath($this->paths_to_skip_rename);
+    foreach ($filesToRename as $file) {
+      $filepath_segments = explode('/', $file->getRealPath());
+      $filename = array_pop($filepath_segments);
+      $filename = str_replace($patterns['old'], $patterns['new'], $filename);
+      $filepath_segments[] = $filename;
+      $this->filesystem->rename($file->getRealPath(), implode('/', $filepath_segments));
+    }
 
     // Alter THEMENAME.info.yml for new theme.
     if (!is_null($exit_code = $this->overrideThemeInfo($starterkit_config['info']))) {
@@ -255,7 +291,6 @@ class GenerateTheme extends Command {
 
     if ($info_contents = file_get_contents($info_file)) {
       $info = Yaml::decode($info_contents);
-      $this->source_theme_info = $info;
 
       if (!array_key_exists('version', $info)) {
         $confirm_versionless_source_theme = new ConfirmationQuestion(sprintf('The source theme %s does not have a version specified. This makes tracking changes in the source theme difficult. Are you sure you want to continue?', $this->source_theme_name));
@@ -315,119 +350,6 @@ class GenerateTheme extends Command {
     }
 
     return NULL;
-  }
-
-  /**
-   * Replaces source strings with destination strings.
-   */
-  private function doRenameAndEdit(string $source_name, string $source_label, $destination_name, $destination_label) {
-    $patterns = [
-      'old' => [
-        'machine_name' => $source_name,
-        'label' => $source_label,
-        'machine_class_name' => u($source_name)->camel()->title(),
-        'label_class_name' => u($source_label)->camel()->title(),
-      ],
-      'new' => [
-        'machine_name' => $destination_name,
-        'label' => $destination_label,
-        'machine_class_name' => u($destination_name)->camel()->title(),
-        'label_class_name' => u($destination_label)->camel()->title(),
-      ],
-    ];
-
-    $old_strings = $patterns['old'];
-    $new_strings = $patterns['new'];
-
-    $patterns['token'] = [];
-
-    foreach ($old_strings as $key => $string) {
-      if (isset($new_strings[$key])) {
-        $token = NULL;
-        $token_needs_generated = TRUE;
-        while ($token_needs_generated) {
-          $token = uniqid('sk');
-
-          $token_needs_generated = (
-            str_contains($token, $old_strings[$key]) ||
-            str_contains($token, $new_strings[$key]) ||
-            str_contains($old_strings[$key], $token) ||
-            str_contains($new_strings[$key], $token)
-          );
-        }
-
-        $patterns['token'][$key] = $token;
-      }
-    }
-
-    /**
-     * Replace source strings with tokens, then tokens with destination strings.
-     * File contents must be changed first so Finder filter is given the correct paths.
-     */
-
-    // Replace source patterns with tokens in file contents
-    foreach ($patterns['token'] as $pattern_id => $token) {
-      $old_str = $patterns['old'][$pattern_id];
-
-      $files = self::createFilesFinder($this->tmpDir)
-        ->contains("/$old_str/")
-        ->filter(fn ($file) => !in_array($file->getRelativePathname(), $this->paths_to_skip_edit));
-
-      foreach ($files as $file) {
-        $contents = file_get_contents($file->getRealPath());
-        $contents = str_replace($old_str, $token, $contents);
-        file_put_contents($file->getRealPath(), $contents);
-      }
-    }
-
-    // Replace token with destination patterns in file contents
-    foreach ($patterns['token'] as $pattern_id => $token) {
-      $new_str = $patterns['new'][$pattern_id];
-
-      $files = self::createFilesFinder($this->tmpDir)
-        ->contains("/$token/")
-        ->filter(fn ($file) => !in_array($file->getRelativePathname(), $this->paths_to_skip_edit));
-
-      foreach ($files as $file) {
-        $contents = file_get_contents($file->getRealPath());
-        $contents = str_replace($token, $new_str, $contents);
-        file_put_contents($file->getRealPath(), $contents);
-      }
-    }
-
-    // Replace source patterns with tokens in filenames
-    foreach ($patterns['token'] as $pattern_id => $token) {
-      $old_str = $patterns['old'][$pattern_id];
-
-      $files = self::createFilesFinder($this->tmpDir)
-        ->name("/$old_str/")
-        ->filter(fn ($file) => !in_array($file->getRelativePathname(), $this->paths_to_skip_rename));
-
-      foreach ($files as $file) {
-        $filepath_segments = explode('/', $file->getRealPath());
-        $filename = array_pop($filepath_segments);
-        $filename = str_replace($old_str, $token, $filename);
-        $filepath_segments[] = $filename;
-        $this->filesystem->rename($file->getRealPath(), implode('/', $filepath_segments));
-      }
-    }
-
-    // Replace tokens with destination patterns in filenames
-    foreach ($patterns['token'] as $pattern_id => $token) {
-      $new_str = $patterns['new'][$pattern_id];
-
-      $files = self::createFilesFinder($this->tmpDir)
-        ->name("/$token/")
-        ->filter(fn ($file) => !in_array($file->getRelativePathname(), $this->paths_to_skip_rename));
-
-      foreach ($files as $file) {
-        $filepath_segments = explode('/', $file->getRealPath());
-        $filename = array_pop($filepath_segments);
-        $filename = str_replace($token, $new_str, $filename);
-        $filepath_segments[] = $filename;
-        $this->filesystem->rename($file->getRealPath(), implode('/', $filepath_segments));
-      }
-    }
   }
 
   /**
