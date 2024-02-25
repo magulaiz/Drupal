@@ -1,0 +1,25 @@
+{#
+/**
+ * @file
+ * This component displays node metadata
+ *
+ * Available variables:
+ *  - author_attributes
+ *  - author_name
+ *  - author_picture
+ *  - date
+ **/
+ #}
+
+<div class="node__meta">
+  {% if author_picture %}
+    <div class="node__author-image">
+      {{ author_picture }}
+    </div>
+  {% endif %}
+  <span {{ author_attributes }}>
+    {{ 'By'|t }} {% apply spaceless %}<span class="node__author">
+      {{ author_name }}
+    </span>{% endapply %}, {{ date }}
+  </span>
+</div>
