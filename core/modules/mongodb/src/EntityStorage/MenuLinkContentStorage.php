@@ -2,12 +2,12 @@
 
 namespace Drupal\mongodb\EntityStorage;
 
-use Drupal\menu_link_content\MenuLinkContentStorageInterface;
+use Drupal\menu_link_content\MenuLinkContentStorage as CoreMenuLinkContentStorage;
 
 /**
  * Storage handler for menu_link_content entities.
  */
-class MenuLinkContentStorage extends ContentEntityStorage implements MenuLinkContentStorageInterface {
+class MenuLinkContentStorage extends CoreMenuLinkContentStorage {
 
   /**
    * {@inheritdoc}

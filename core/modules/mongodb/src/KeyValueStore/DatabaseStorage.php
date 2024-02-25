@@ -2,6 +2,7 @@
 
 namespace Drupal\mongodb\KeyValueStore;
 
+use Drupal\Component\Assertion\Inspector;
 use Drupal\Core\KeyValueStore\DatabaseStorage as CoreDatabaseStorage;
 use Drupal\mongodb\Driver\Database\mongodb\Statement;
 
@@ -42,14 +43,17 @@ class DatabaseStorage extends CoreDatabaseStorage {
     if (empty($keys)) {
       return [];
     }
-    foreach ($keys as &$key) {
-      $key = (string) $key;
-    }
+
+    // Check that key values are string values.
+    assert(Inspector::assertAllStrings($keys), 'All keys must be strings.');
 
     $prefixed_table = $this->connection->getMongodbPrefixedTable($this->table);
     $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
-      ['collection' => ['$eq' => (string) $this->collection], 'name' => ['$in' => $keys]],
-      ['projection' => ['name' => 1, 'value' => 1, '_id' => 0]]
+      [
+        'collection' => ['$eq' => (string) $this->collection],
+        'name' => ['$in' => $keys],
+      ],
+      ['projection' => ['name' => 1, 'value' => 1, '_id' => 0]],
     );
 
     $statement = new Statement($this->connection, $cursor, ['name', 'value']);

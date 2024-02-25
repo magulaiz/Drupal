@@ -6,6 +6,7 @@ use Drupal\Component\Serialization\PhpSerialize;
 use Drupal\Core\Database\Database;
 use Drupal\Core\KeyValueStore\DatabaseStorageExpirable;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\mongodb\KeyValueStore\DatabaseStorageExpirable as MongodbDatabaseStorageExpirable;
 
 /**
  * Tests garbage collection for the expirable key-value database storage.
@@ -27,7 +28,12 @@ class GarbageCollectionTest extends KernelTestBase {
   public function testGarbageCollection() {
     $collection = $this->randomMachineName();
     $connection = Database::getConnection();
-    $store = new DatabaseStorageExpirable($collection, new PhpSerialize(), $connection);
+    if ($connection->driver() == 'mongodb') {
+      $store = new MongodbDatabaseStorageExpirable($collection, new PhpSerialize(), $connection);
+    }
+    else {
+      $store = new DatabaseStorageExpirable($collection, new PhpSerialize(), $connection);
+    }
 
     // Insert some items and confirm that they're set.
     for ($i = 0; $i <= 3; $i++) {

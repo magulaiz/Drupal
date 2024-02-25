@@ -14,7 +14,7 @@ services:
   # MongoDB overrides Batch.
   mongodb.batch.storage:
     class: Drupal\mongodb\Batch\BatchStorage
-    arguments: ['@database', '@session', '@csrf_token']
+    arguments: ['@database', '@session', '@csrf_token', '@datetime.time']
   batch.storage:
     alias: mongodb.batch.storage
 
