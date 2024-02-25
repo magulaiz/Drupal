@@ -52,15 +52,15 @@ class ViewStorage extends ConfigEntityStorage {
         }
         if ($entity_type) {
           if ($entity_type->isRevisionable() && in_array($original_base_table, [$entity_type->getRevisionTable(), $entity_type->getRevisionDataTable()], TRUE)) {
-            $values['all_revisions_table'] = \Drupal::entityTypeManager()->getStorage($entity_type->id())->getAllRevisionsTable();
-            $values['latest_revision_table'] = \Drupal::entityTypeManager()->getStorage($entity_type->id())->getLatestRevisionTable();
-            $values['current_revision_table'] = \Drupal::entityTypeManager()->getStorage($entity_type->id())->getCurrentRevisionTable();
+            $values['all_revisions_table'] = \Drupal::entityTypeManager()->getStorage($entity_type->id())->getJsonStorageAllRevisionsTable();
+            $values['latest_revision_table'] = \Drupal::entityTypeManager()->getStorage($entity_type->id())->getJsonStorageLatestRevisionTable();
+            $values['current_revision_table'] = \Drupal::entityTypeManager()->getStorage($entity_type->id())->getJsonStorageCurrentRevisionTable();
           }
           elseif ($entity_type->isRevisionable()) {
-            $values['current_revision_table'] = \Drupal::entityTypeManager()->getStorage($entity_type->id())->getCurrentRevisionTable();
+            $values['current_revision_table'] = \Drupal::entityTypeManager()->getStorage($entity_type->id())->getJsonStorageCurrentRevisionTable();
           }
           elseif (!empty($entity_type->getDataTable()) && ($original_base_table == $entity_type->getDataTable())) {
-            $values['translations_table'] = \Drupal::entityTypeManager()->getStorage($entity_type->id())->getTranslationsTable();
+            $values['translations_table'] = \Drupal::entityTypeManager()->getStorage($entity_type->id())->getJsonStorageTranslationsTable();
           }
         }
       }
@@ -206,9 +206,10 @@ class ViewStorage extends ConfigEntityStorage {
         $entity_type->getDataTable(),
         $entity_type->getRevisionTable(),
         $entity_type->getRevisionDataTable(),
-        $storage->getAllRevisionsTable(),
-        $storage->getCurrentRevisionTable(),
-        $storage->getTranslationsTable(),
+        $storage->getJsonStorageAllRevisionsTable(),
+        $storage->getJsonStorageCurrentRevisionTable(),
+        $storage->getJsonStorageLatestRevisionTable(),
+        $storage->getJsonStorageTranslationsTable(),
       ];
       return array_filter($entity_tables);
     }

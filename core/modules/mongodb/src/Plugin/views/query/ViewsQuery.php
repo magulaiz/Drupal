@@ -111,7 +111,7 @@ class ViewsQuery extends Sql {
    *
    * @var array|false
    */
-  protected array $mongodbLatestTranslationAffectedRevision = FALSE;
+  protected array $mongodbLatestTranslationAffectedRevision = [];
 
   /**
    * Set the latest translation affected revision value for the query.

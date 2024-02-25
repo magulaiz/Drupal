@@ -31,10 +31,10 @@ class EntityViewsData extends CoreEntityViewsData {
     $all_revisions_table = '';
     $current_revision_table = '';
     if ($revisionable) {
-      $all_revisions_table = $this->storage->getAllRevisionsTable();
+      $all_revisions_table = $this->storage->getJsonStorageAllRevisionsTable();
       $data[$base_table]['table']['all revisions table'] = $all_revisions_table;
 
-      $current_revision_table = $this->storage->getCurrentRevisionTable();
+      $current_revision_table = $this->storage->getJsonStorageCurrentRevisionTable();
       $data[$base_table]['table']['current revision table'] = $current_revision_table;
 
       $data[$base_table]['table']['entity revision field'] = $revision_field;
@@ -47,7 +47,7 @@ class EntityViewsData extends CoreEntityViewsData {
 
     $translations_table = '';
     if ($translatable && !$revisionable) {
-      $translations_table = $this->storage->getTranslationsTable();
+      $translations_table = $this->storage->getJsonStorageTranslationsTable();
       $data[$base_table]['table']['translations table'] = $translations_table;
     }
     else {
@@ -156,11 +156,11 @@ class EntityViewsData extends CoreEntityViewsData {
         if ($table_mapping->requiresDedicatedTableStorage($field_definition->getFieldStorageDefinition())) {
           if ($this->entityType->isRevisionable()) {
             // $table_data[$views_field_name]['real field'] = $this->storage->getCurrentRevisionTable() . '.' . $table . '.' . $views_field_name;
-            $table_data[$schema_field_name]['real field'] = $this->storage->getCurrentRevisionTable() . '.' . $table . '.' . $schema_field_name;
+            $table_data[$schema_field_name]['real field'] = $this->storage->getJsonStorageCurrentRevisionTable() . '.' . $table . '.' . $schema_field_name;
           }
           elseif ($this->entityType->isTranslatable()) {
             // $table_data[$views_field_name]['real field'] = $this->storage->getTranslationsTable() . '.' . $table . '.' . $views_field_name;
-            $table_data[$schema_field_name]['real field'] = $this->storage->getTranslationsTable() . '.' . $table . '.' . $schema_field_name;
+            $table_data[$schema_field_name]['real field'] = $this->storage->getJsonStorageTranslationsTable() . '.' . $table . '.' . $schema_field_name;
           }
           else {
             // $table_data[$views_field_name]['real field'] = $table . '.' . $views_field_name;
@@ -170,11 +170,11 @@ class EntityViewsData extends CoreEntityViewsData {
         elseif ($field_name != $this->entityType->getKey('id')) {
           if ($this->entityType->isRevisionable()) {
             // $table_data[$views_field_name]['real field'] = $this->storage->getCurrentRevisionTable() . '.' . $views_field_name;
-            $table_data[$schema_field_name]['real field'] = $this->storage->getCurrentRevisionTable() . '.' . $schema_field_name;
+            $table_data[$schema_field_name]['real field'] = $this->storage->getJsonStorageCurrentRevisionTable() . '.' . $schema_field_name;
           }
           elseif ($this->entityType->isTranslatable()) {
             // $table_data[$views_field_name]['real field'] = $this->storage->getTranslationsTable() . '.' . $views_field_name;
-            $table_data[$schema_field_name]['real field'] = $this->storage->getTranslationsTable() . '.' . $schema_field_name;
+            $table_data[$schema_field_name]['real field'] = $this->storage->getJsonStorageTranslationsTable() . '.' . $schema_field_name;
           }
           else {
             // $table_data[$views_field_name]['real field'] = $views_field_name;

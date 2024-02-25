@@ -51,6 +51,10 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
       return;
     }
 
+    if ($connection->driver() == 'mongodb') {
+      $this->markTestSkipped('MongoDB does not throw an exception when queried for not existing columns.');
+    }
+
     Database::getConnection()->schema()->dropTable('config');
     // In order to simulate database issue create a table with an incorrect
     // specification.

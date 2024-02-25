@@ -39,7 +39,7 @@ class TranslateSql {
       'projection' => ['data' => 1],
     ],
     [
-      'pattern' => '/^SELECT name, data FROM {(.*)} WHERE collection = :collection AND name IN \( :names\[\] \)$/',
+      'pattern' => '/^SELECT \[name\], \[data\] FROM {(.*)} WHERE \[collection\] = :collection AND \[name\] IN \( :names\[\] \)$/',
       'filter' => ['name' => ['$in' => ':names[]'], 'collection' => ':collection'],
       'projection' => ['name' => 1, 'data' => 1],
     ],
@@ -61,7 +61,7 @@ class TranslateSql {
 
     // Query_range queries.
     [
-      'pattern' => '/^SELECT 1 FROM {(.*)} WHERE collection = :collection AND name = :name$/',
+      'pattern' => '/^SELECT 1 FROM {(.*)} WHERE \[collection\] = :collection AND \[name\] = :name$/',
       'filter' => ['name' => ':name', 'collection' => ':collection'],
       'projection' => [],
     ],
@@ -677,12 +677,50 @@ class TranslateSql {
         $cursor = $connection->getConnection()->{$prefixed_table}->find(
           // There is no record with the age being -1. The same result as 1 = 0.
           ['age' => ['$eq' => -1]],
-          ['projection' => ['id' => 1, '_id' => 0]]
+          ['projection' => ['id' => 1, '_id' => 0]],
         );
 
         $this->endEvent($connection, $startEvent);
 
         $statement = new Statement($connection, $cursor, ['id']);
+        $statement->execute(NULL, $query_options);
+        return $statement;
+      }
+      elseif (preg_match('/^SELECT DISTINCT \[collection\] FROM {(.*)} WHERE \[collection\] <> :collection ORDER by \[collection\]$/', $query, $matches)) {
+        $prefixed_table = $connection->getMongodbPrefixedTable($matches[1]);
+        $collection = $args[':collection'];
+
+        $startEvent = $this->startEvent($connection, $query, $args);
+
+        $cursor = $connection->getConnection()->{$prefixed_table}->aggregate(
+          [
+            [
+              '$group' => [
+                '_id' => '$collection',
+                'collection' => ['$first' => '$collection'],
+              ],
+            ],
+            [
+              '$match' => [
+                '$expr' => [
+                  '$ne' => [ '$collection', $collection ],
+                ]
+              ],
+            ],
+            [
+              '$sort' => [
+                'collection' => 1,
+              ],
+            ],
+          ],
+          [
+            'useCursor' => TRUE,
+          ]
+        );
+
+        $this->endEvent($connection, $startEvent);
+
+        $statement = new Statement($connection, $cursor, ['collection']);
         $statement->execute(NULL, $query_options);
         return $statement;
       }

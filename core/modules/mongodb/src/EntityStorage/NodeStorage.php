@@ -5,14 +5,12 @@ namespace Drupal\mongodb\EntityStorage;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
-use Drupal\node\NodeStorageInterface;
+use Drupal\node\NodeStorage as CoreNodeStorage;
 
 /**
  * The MongoDB implementation of \Drupal\node\NodeStorage.
  */
-class NodeStorage extends ContentEntityStorage implements NodeStorageInterface {
-
-  use NodeStorageTrait;
+class NodeStorage extends CoreNodeStorage {
 
   /**
    * {@inheritdoc}
@@ -68,16 +66,6 @@ class NodeStorage extends ContentEntityStorage implements NodeStorageInterface {
       }
     }
     return $count;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function clearRevisionsLanguage(LanguageInterface $language) {
-    return $this->database->update('node_revision')
-      ->fields(['langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED])
-      ->condition('langcode', $language->getId())
-      ->execute();
   }
 
 }
