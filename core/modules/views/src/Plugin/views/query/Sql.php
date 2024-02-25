@@ -7,6 +7,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
@@ -141,6 +142,13 @@ class Sql extends QueryPluginBase {
   public array $count_field;
 
   /**
+   * The views logger channel.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelInterface
+   */
+  protected $logger;
+
+  /**
    * Constructs a Sql object.
    *
    * @param array $configuration
@@ -155,8 +163,10 @@ class Sql extends QueryPluginBase {
    *   The database-specific date handler.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger.
+   * @param \Drupal\Core\Logger\LoggerChannelInterface $logger
+   *   The views logger channel.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, DateSqlInterface $date_sql, MessengerInterface $messenger) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, DateSqlInterface $date_sql, MessengerInterface $messenger, LoggerChannelInterface $logger = NULL) {
     // By default, use AND operator to connect WHERE groups.
     $this->groupOperator = 'AND';
 
@@ -165,6 +175,11 @@ class Sql extends QueryPluginBase {
     $this->entityTypeManager = $entity_type_manager;
     $this->dateSql = $date_sql;
     $this->messenger = $messenger;
+    if (!$logger) {
+      @trigger_error('Calling Sql::__construct() without the $logger argument is deprecated in drupal:10.3.0 and will be required before drupal:11.0.0.', E_USER_DEPRECATED);
+      $logger = \Drupal::service('logger.channel.views');
+    }
+    $this->logger = $logger;
   }
 
   /**
@@ -177,7 +192,8 @@ class Sql extends QueryPluginBase {
       $plugin_definition,
       $container->get('entity_type.manager'),
       $container->get('views.date_sql'),
-      $container->get('messenger')
+      $container->get('messenger'),
+      $container->get('logger.channel.views')
     );
   }
 
@@ -1673,13 +1689,27 @@ class Sql extends QueryPluginBase {
           $entity = $entities[$id];
         }
         else {
-          $entity = NULL;
+          // If main entity failed to load then this is either a race condition
+          // where the entity was deleted since the query was executed or the
+          // database is inconsistent. Drop that row and log an error.
+          if ($relationship_id == 'none') {
+            $this->logger->warning('Failed to load entity @id for view @view. If this warning persists then it indicates that the database has inconsistent entity data.', [
+              '@id' => $id,
+              '@view' => $this->view->id(),
+            ]);
+            unset($results[$index]);
+            break;
+          }
+          else {
+            $entity = NULL;
+          }
         }
 
         if ($relationship_id == 'none') {
           $results[$index]->_entity = $entity;
         }
-        else {
+        // The index might no longer exist if the main entity failed to load.
+        elseif (isset($results[$index])) {
           $results[$index]->_relationship_entities[$relationship_id] = $entity;
         }
       }
