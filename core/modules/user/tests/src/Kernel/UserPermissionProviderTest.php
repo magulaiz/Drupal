@@ -76,7 +76,7 @@ final class UserPermissionProviderTest extends KernelTestBase {
    */
   public function testPermissionLocator(): void {
     $testCallbacks = [];
-    foreach ($this->permissionProviderLocator()->getPermissionProviders() as [$provider, $callback]) {
+    foreach ($this->permissionProviderLocator()->getPermissionProviders() as $provider => $callback) {
       if ($provider !== 'user_permission_provider_test') {
         continue;
       }

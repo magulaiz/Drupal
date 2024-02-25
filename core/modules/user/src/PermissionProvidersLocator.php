@@ -29,16 +29,15 @@ final class PermissionProvidersLocator {
   /**
    * Get permission providers.
    *
-   * @return \Generator<array{string, callable}>
-   *   Yields an array contain with a provider and a callable from a service
-   *   method.
+   * @return \Generator<string, callable>
+   *   Yields permission provider callables from service methods.
    */
   public function getPermissionProviders(): \Generator {
     foreach ($this->permissionProvidersMapping as $serviceId => $configuration) {
       ['methods' => $methods, 'provider' => $provider] = $configuration;
       $permissionProvider = $this->permissionProvidersLocator->get($serviceId);
       foreach ($methods as $method) {
-        yield [$provider, \Closure::fromCallable([$permissionProvider, $method])];
+        yield $provider => \Closure::fromCallable([$permissionProvider, $method]);
       }
     }
   }

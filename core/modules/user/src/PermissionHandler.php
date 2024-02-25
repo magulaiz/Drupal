@@ -127,7 +127,7 @@ class PermissionHandler implements PermissionHandlerInterface {
   protected function buildPermissionsYaml() {
     $allPermissions = [];
 
-    foreach ($this->permissionProvidersLocator->getPermissionProviders() as [$provider, $permissionProvider]) {
+    foreach ($this->permissionProvidersLocator->getPermissionProviders() as $provider => $permissionProvider) {
       foreach ($permissionProvider() as $permissionName => $permission) {
         if (is_string($permission)) {
           $permission = ['title' => $permission];
