@@ -20,7 +20,7 @@ services:
     class: Drupal\rest\RestPermissions
     autowire: true
     arguments:
-      $rest_plugin_manager: '@plugin.manager.rest'
+      $restPluginManager: '@plugin.manager.rest'
     tags:
       - { name: 'user.permission_provider', method: 'permissions', provider: 'rest' }
 

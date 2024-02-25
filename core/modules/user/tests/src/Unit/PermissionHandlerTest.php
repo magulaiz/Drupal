@@ -224,8 +224,12 @@ EOF
 
   /**
    * Tests a YAML file containing both static permissions and a callback.
+   *
+   * @legacy
    */
   public function testPermissionsYamlStaticAndCallback() {
+    $this->expectDeprecation('permission_callbacks in module_a.permissions.yml is deprecated in drupal:10.3.0 and must be converted to permission providers in drupal:11.0.0. See https://www.drupal.org/node/3421580');
+
     vfsStreamWrapper::register();
     $root = new vfsStreamDirectory('modules');
     vfsStreamWrapper::setRoot($root);

@@ -143,7 +143,7 @@ class PermissionHandler implements PermissionHandlerInterface {
     foreach ($this->getYamlDiscovery()->findAll() as $provider => $permissions) {
       foreach ($permissions as $permissionName => $permission) {
         if ($permissionName === 'permission_callbacks') {
-          @trigger_error(sprintf('permission_callbacks in %s.permissions.yml files is deprecated in drupal:10.3.0 and must be converted to permission providers in drupal:11.0.0. See https://www.drupal.org/node/3421580', $provider), E_USER_DEPRECATED);
+          @trigger_error(sprintf('permission_callbacks in %s.permissions.yml is deprecated in drupal:10.3.0 and must be converted to permission providers in drupal:11.0.0. See https://www.drupal.org/node/3421580', $provider), E_USER_DEPRECATED);
           continue;
         }
 

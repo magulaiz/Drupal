@@ -73,8 +73,11 @@ final class UserPermissionProviderTest extends KernelTestBase {
    * Tests permission provider locator.
    *
    * @covers \Drupal\user\PermissionProvidersLocator
+   * @legacy
    */
   public function testPermissionLocator(): void {
+    $this->expectDeprecation('permission_callbacks in user_permission_provider_test.permissions.yml is deprecated in drupal:10.3.0 and must be converted to permission providers in drupal:11.0.0. See https://www.drupal.org/node/3421580');
+
     $testCallbacks = [];
     foreach ($this->permissionProviderLocator()->getPermissionProviders() as $provider => $callback) {
       if ($provider !== 'user_permission_provider_test') {
