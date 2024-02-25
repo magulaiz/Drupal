@@ -63,7 +63,7 @@ services:
 
   mongodb.keyvalue.expirable.database:
     class: Drupal\mongodb\KeyValueStore\KeyValueDatabaseExpirableFactory
-    arguments: ['@serialization.phpserialize', '@database']
+    arguments: ['@serialization.phpserialize', '@database', '@datetime.time']
   keyvalue.expirable.database:
     alias: mongodb.keyvalue.expirable.database
 

@@ -101,7 +101,7 @@ function mongodb_entity_type_alter(array &$entity_types) {
     }
 
     if (!empty($entity_types['user'])) {
-      // $entity_types['user']->setStorageClass('Drupal\mongodb\EntityStorage\UserStorage');
+      $entity_types['user']->setStorageClass('Drupal\mongodb\EntityStorage\UserStorage');
       // $entity_types['user']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\UserStorageSchema');
       $entity_types['user']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\UserViewsData');
     }

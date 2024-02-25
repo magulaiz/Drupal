@@ -5,13 +5,13 @@ namespace Drupal\mongodb\EntityStorage;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\UserInterface;
-use Drupal\user\UserStorageInterface;
+use Drupal\user\UserStorage as CoreUserStorage;
 use MongoDB\BSON\UTCDateTime;
 
 /**
  * The MongoDB implementation of \Drupal\user\UserStorage.
  */
-class UserStorage extends ContentEntityStorage implements UserStorageInterface {
+class UserStorage extends CoreUserStorage {
 
   /**
    * {@inheritdoc}
