@@ -3,7 +3,6 @@
 namespace Drupal\Core\Flood;
 
 use Drupal\Component\Datetime\TimeInterface;
-use Drupal\Core\CronInterface;
 use Drupal\Core\CronSubscriberInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseException;
