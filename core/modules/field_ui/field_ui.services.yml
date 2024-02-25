@@ -19,3 +19,8 @@ services:
     autowire: true
     tags:
       - { name: access_check, applies_to: _field_ui_field_reuse_access }
+  field_ui.permissions:
+    class: Drupal\field_ui\FieldUiPermissions
+    autowire: true
+    tags:
+      - { name: 'user.permission_provider', method: 'fieldPermissions', provider: 'field_ui' }

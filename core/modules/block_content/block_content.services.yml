@@ -9,3 +9,8 @@ services:
     arguments: ['@entity_type.manager', '@module_handler']
     tags:
       - { name: event_subscriber }
+  block_content.permissions:
+    class: Drupal\block_content\BlockContentPermissions
+    autowire: true
+    tags:
+      - { name: 'user.permission_provider', method: 'blockTypePermissions', provider: 'block_content' }

@@ -16,6 +16,13 @@ services:
   logger.channel.rest:
     parent: logger.channel_base
     arguments: ['rest']
+  rest.permissions:
+    class: Drupal\rest\RestPermissions
+    autowire: true
+    arguments:
+      $rest_plugin_manager: '@plugin.manager.rest'
+    tags:
+      - { name: 'user.permission_provider', method: 'permissions', provider: 'rest' }
 
   # Event subscribers.
   rest.resource_response.subscriber:

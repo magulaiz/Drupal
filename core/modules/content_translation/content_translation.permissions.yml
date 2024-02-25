@@ -10,6 +10,3 @@ translate any entity:
   title: 'Translate any entity'
 translate editable entities:
   title: 'Manage translations for any entity that the user can edit'
-
-permission_callbacks:
-  - \Drupal\content_translation\ContentTranslationPermissions::contentPermissions

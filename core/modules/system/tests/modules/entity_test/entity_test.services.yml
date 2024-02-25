@@ -8,3 +8,9 @@ services:
     class: Drupal\entity_test\Cache\EntityTestViewGrantsCacheContext
     tags:
       - { name: cache.context }
+
+  entity_test.permissions:
+    class: Drupal\entity_test\EntityTestPermissions
+    autowire: true
+    tags:
+      - { name: 'user.permission_provider', method: 'entityTestBundlePermissions', provider: 'entity_test' }

@@ -27,3 +27,8 @@ services:
     arguments: ['@entity_type.manager', '@?workspaces.association']
     tags:
       - { name: event_subscriber }
+  content_moderation.permissions:
+    class: Drupal\content_moderation\Permissions
+    autowire: true
+    tags:
+      - { name: 'user.permission_provider', method: 'transitionPermissions', provider: 'content_moderation' }

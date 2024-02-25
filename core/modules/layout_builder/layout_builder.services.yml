@@ -72,3 +72,8 @@ services:
     arguments: ['@layout_builder.tempstore_repository', '@messenger']
     tags:
       - { name: event_subscriber }
+  layout_builder.permissions:
+    class: Drupal\layout_builder\LayoutBuilderOverridesPermissions
+    autowire: true
+    tags:
+      - { name: 'user.permission_provider', method: 'permissions', provider: 'layout_builder' }

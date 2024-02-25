@@ -13,6 +13,3 @@ delete all taxonomy revisions:
 
 view all taxonomy revisions:
   title: 'View all term revisions'
-
-permission_callbacks:
-  - Drupal\taxonomy\TaxonomyPermissions::permissions

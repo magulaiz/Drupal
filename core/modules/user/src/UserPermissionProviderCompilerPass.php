@@ -41,6 +41,8 @@ final class UserPermissionProviderCompilerPass implements CompilerPassInterface 
       /** @var callable-string[] $callbacks */
       $callbacks = $permissions['permission_callbacks'] ?? [];
       foreach ($callbacks as $callback) {
+        @trigger_error(sprintf('permission_callbacks in %s.permissions.yml files is deprecated in drupal:10.3.0 and must be converted to permission providers in drupal:11.0.0. See https://www.drupal.org/node/3421580', $provider), E_USER_DEPRECATED);
+
         if (!str_contains($callback, '::')) {
           throw new \RuntimeException('`permission_callbacks` only supports callable in string `ClassOrService::method` format.');
         }
