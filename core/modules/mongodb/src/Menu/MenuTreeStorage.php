@@ -255,25 +255,15 @@ class MenuTreeStorage extends CoreMenuTreeStorage {
     return [];
   }
 
+
   /**
    * {@inheritdoc}
    */
   public function getExpanded($menu_name, array $parents) {
-    // @todo Go back to tracking in state or some other way which menus have
-    //   expanded links? https://www.drupal.org/node/2302187
-    do {
-      $query = $this->connection->select($this->table, $this->options);
-      $query->fields($this->table, ['id']);
-      $query->condition('menu_name', $menu_name);
-      $query->condition('expanded', TRUE);
-      $query->condition('has_children', TRUE);
-      $query->condition('enabled', TRUE);
-      $query->condition('parent', $parents, 'IN');
-      $query->condition('id', $parents, 'NOT IN');
-      $result = $this->safeExecuteSelect($query)->fetchAllKeyed(0, 0);
-      $parents += $result;
-    } while (!empty($result));
-    return $parents;
+    foreach ($parents as &$parent) {
+      $parent = (int) $parent;
+    }
+    return parent::getExpanded($menu_name, $parents);
   }
 
   /**

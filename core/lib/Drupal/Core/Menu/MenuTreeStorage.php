@@ -300,7 +300,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       // We may be moving the link to a new menu.
       $affected_menus[$fields['menu_name']] = $fields['menu_name'];
       $query = $this->connection->update($this->table, $this->options);
-      $query->condition('mlid', $link['mlid']);
+      $query->condition('mlid', (int) $link['mlid']);
       $query->fields($fields)
         ->execute();
       if ($original) {
@@ -437,7 +437,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     $query->range(0, 1);
 
     for ($i = 1; $i <= static::MAX_DEPTH && $original["p$i"]; $i++) {
-      $query->condition("p$i", $original["p$i"]);
+      $query->condition("p$i", (int) $original["p$i"]);
     }
 
     $max_depth = $this->safeExecuteSelect($query)->fetchField();
@@ -601,7 +601,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
         ->condition('parent', $link['parent'])
         ->condition('enabled', 1);
 
-      $parent_has_children = ((bool) $query->execute()->fetchField()) ? 1 : 0;
+      $parent_has_children = ((bool) $query->execute()->fetchField() ? 1 : 0);
       $this->connection->update($this->table, $this->options)
         ->fields(['has_children' => $parent_has_children])
         ->condition('id', $link['parent'])
@@ -880,7 +880,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       // tree. In other words: we exclude everything unreachable from the
       // custom root.
       for ($i = 1; $i <= $root['depth']; $i++) {
-        $query->condition("p$i", $root["p$i"]);
+        $query->condition("p$i", (int) $root["p$i"]);
       }
 
       // When specifying a custom root, the menu is determined by that root.
@@ -921,10 +921,10 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       $query->condition('parent', $parameters->expandedParents, 'IN');
     }
     if (isset($parameters->minDepth) && $parameters->minDepth > 1) {
-      $query->condition('depth', $parameters->minDepth, '>=');
+      $query->condition('depth', (int) $parameters->minDepth, '>=');
     }
     if (isset($parameters->maxDepth)) {
-      $query->condition('depth', $parameters->maxDepth, '<=');
+      $query->condition('depth', (int) $parameters->maxDepth, '<=');
     }
     // Add custom query conditions, if any were passed.
     if (!empty($parameters->conditions)) {
@@ -1049,7 +1049,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     $query->fields($this->table, ['id']);
     $query->condition('menu_name', $root['menu_name']);
     for ($i = 1; $i <= $root['depth']; $i++) {
-      $query->condition("p$i", $root["p$i"]);
+      $query->condition("p$i", (int) $root["p$i"]);
     }
     // The next p column should not be empty. This excludes the root link.
     $query->condition("p$i", 0, '>');
