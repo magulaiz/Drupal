@@ -24,21 +24,11 @@ function mongodb_entity_type_alter(array &$entity_types) {
     /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
     foreach ($entity_types as &$entity_type) {
       if ($entity_type instanceof ContentEntityType) {
-        // Change the storage class to the MongoDB version if the
-        // ContentEntityType uses SQL storage class.
-        // if ($entity_type->getStorageClass() == 'Drupal\Core\Entity\Sql\SqlContentEntityStorage') {
-        // $entity_type->setStorageClass('Drupal\mongodb\EntityStorage\ContentEntityStorage');
-        // }
-        // Change the storage schema class to the MongoDB version if the
-        // ContentEntityType uses SQL storage schema class.
-        // if ($entity_type->getHandlerClass('storage_schema') == 'Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema') {
-        // $entity_type->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentEntityStorageSchema');
-        // }
         // Change the views data class to the MongoDB version if the
         // ContentEntityType uses SQL views data class.
-        // if ($entity_type->getHandlerClass('views_data') == 'Drupal\views\EntityViewsData') {
-        // $entity_type->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityViewsData');
-        // }
+        if ($entity_type->getHandlerClass('views_data') == 'Drupal\views\EntityViewsData') {
+          $entity_type->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityViewsData');
+        }
       }
     }
 

@@ -6,6 +6,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Queue\DatabaseQueue;
 use Drupal\Core\Queue\Memory;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\mongodb\Queue\DatabaseQueue as MongodbDatabaseQueue;
 
 /**
  * Queues and unqueues a set of items to check the basic queue functionality.
@@ -18,12 +19,20 @@ class QueueTest extends KernelTestBase {
    * Tests the System queue.
    */
   public function testSystemQueue() {
-    // Create two queues.
-    $queue1 = new DatabaseQueue($this->randomMachineName(), Database::getConnection());
-    $queue1->createQueue();
-    $queue2 = new DatabaseQueue($this->randomMachineName(), Database::getConnection());
-    $queue2->createQueue();
-
+    if (Database::getConnection()->databaseType() == 'mongodb') {
+      // Create two queues.
+      $queue1 = new MongodbDatabaseQueue($this->randomMachineName(), Database::getConnection());
+      $queue1->createQueue();
+      $queue2 = new MongodbDatabaseQueue($this->randomMachineName(), Database::getConnection());
+      $queue2->createQueue();
+    }
+    else {
+      // Create two queues.
+      $queue1 = new DatabaseQueue($this->randomMachineName(), Database::getConnection());
+      $queue1->createQueue();
+      $queue2 = new DatabaseQueue($this->randomMachineName(), Database::getConnection());
+      $queue2->createQueue();
+    }
     $this->runQueueTest($queue1, $queue2);
   }
 

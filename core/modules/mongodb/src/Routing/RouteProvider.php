@@ -55,7 +55,7 @@ class RouteProvider extends CoreRouteProvider {
    * {@inheritdoc}
    */
   protected function getRoutesByPath($path) {
-    $parts = preg_split('@/+@', mb_strtolower($path), NULL, PREG_SPLIT_NO_EMPTY);
+    $parts = preg_split('@/+@', mb_strtolower($path), -1, PREG_SPLIT_NO_EMPTY);
 
     $collection = new RouteCollection();
 

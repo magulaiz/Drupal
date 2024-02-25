@@ -280,12 +280,12 @@ class Update extends QueryUpdate {
     foreach ($this->fields as $field => $value) {
       if (is_null($value)) {
         $field_data = $this->tableInformation->getTableField($this->table, $field);
-        if (($field_data['type'] == 'int') && (!empty($field_data['not null']))) {
+        if (isset($field_data['type']) && isset($field_data['not null']) && ($field_data['type'] == 'int') && (!empty($field_data['not null']))) {
           // If a field has the value NULL and the field setting not null, then
           // give the field the value zero.
           $update_set[$field] = 0;
         }
-        elseif (($field_data['type'] == 'bool') && (!empty($field_data['not null']))) {
+        elseif (isset($field_data['type']) && isset($field_data['not null']) && ($field_data['type'] == 'bool') && (!empty($field_data['not null']))) {
           // If a field has the value NULL and the field setting not null, then
           // give the field the value FALSE.
           $update_set[$field] = FALSE;
