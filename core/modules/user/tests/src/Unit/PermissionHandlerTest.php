@@ -21,6 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  * Tests the permission handler.
  *
  * @group user
+ * @group legacy
  *
  * @coversDefaultClass \Drupal\user\PermissionHandler
  */

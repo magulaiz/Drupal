@@ -16,6 +16,7 @@ use Drupal\user_permission_provider_test\TestPermissionProvider;
  * Testing for user permission providers.
  *
  * @group user
+ * @group legacy
  */
 final class UserPermissionProviderTest extends KernelTestBase {
 
