@@ -21,6 +21,8 @@ use Symfony\Component\Process\Process;
  */
 class GenerateThemeTest extends QuickStartTestBase {
 
+  protected $destroyBuild = FALSE;
+
   /**
    * The PHP executable path.
    *
@@ -146,7 +148,16 @@ class GenerateThemeTest extends QuickStartTestBase {
     $this->assertSame('Theme generated successfully to themes/test_custom_theme', trim($process->getOutput()), $process->getErrorOutput());
     $this->assertSame(0, $exit_code);
 
-    file_put_contents($this->getWorkspaceDirectory() . '/themes/test_custom_theme/test_custom_theme.starterkit.yml', '');
+    file_put_contents($this->getWorkspaceDirectory() . '/themes/test_custom_theme/test_custom_theme.starterkit.yml', <<<YAML
+delete: []
+no_edit: []
+no_rename: []
+info:
+  hidden: null
+  starterkit: null
+  version: 1.0.0
+YAML
+);
 
     $install_command = [
       $this->php,
@@ -373,13 +384,12 @@ SH;
     $starterkit_yml = $this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/starterkit_theme.starterkit.yml';
     $info = Yaml::decode(file_get_contents($starterkit_yml));
     $info['delete'] = [
-      '/src',
+      '/src/*',
       '/starterkit_theme.starterkit.yml',
     ];
     file_put_contents($starterkit_yml, Yaml::encode($info));
 
-    $tester = new CommandTester(new GenerateTheme(NULL, $this->getWorkspaceDirectory()));
-    $tester->execute(
+    $tester = $this->runCommand(
       ['machine-name' => 'test_custom_theme'],
       [
         'name' => 'Test custom starterkit theme',
@@ -392,6 +402,7 @@ SH;
     $this->assertThemeExists('themes/test_custom_theme');
     $theme_path_absolute = $this->getWorkspaceDirectory() . '/themes/test_custom_theme';
     self::assertDirectoryExists($theme_path_absolute);
+    self::assertFileDoesNotExist($theme_path_absolute . '/src/StarterKit.php');
     self::assertDirectoryDoesNotExist($theme_path_absolute . '/src');
   }
 

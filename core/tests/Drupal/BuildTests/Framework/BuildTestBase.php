@@ -282,7 +282,7 @@ abstract class BuildTestBase extends TestCase {
    *   Text we expect to find in the output of the command.
    */
   public function assertCommandOutputContains($expected) {
-    $this->assertStringContainsString($expected, $this->commandProcess->getOutput());
+    $this->assertStringContainsString($expected, $this->commandProcess->getOutput(), $this->commandProcess->getErrorOutput());
   }
 
   /**
