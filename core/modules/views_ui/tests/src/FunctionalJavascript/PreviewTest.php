@@ -306,7 +306,9 @@ class PreviewTest extends WebDriverTestBase {
    * @internal
    */
   protected function assertClass(NodeElement $element, string $class, string $message = ''): void {
-    $message ??= "Class .$class found.";
+    if (!isset($message)) {
+      $message = "Class .$class found.";
+    }
     $this->assertStringContainsString($class, $element->getAttribute('class'), $message);
   }
 
