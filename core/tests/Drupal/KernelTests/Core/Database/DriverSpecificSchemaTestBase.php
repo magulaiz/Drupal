@@ -106,7 +106,6 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
    *   The table to insert.
    */
   protected function tryInsertExpectsIntegrityConstraintViolationException(string $tableName): void {
-//dump('daffie');
     try {
       $this->connection
         ->insert($tableName)

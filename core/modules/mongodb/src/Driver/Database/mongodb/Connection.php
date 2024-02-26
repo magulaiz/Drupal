@@ -292,6 +292,9 @@ class Connection extends DatabaseConnection {
    * @return string
    */
   public function getMongodbPrefixedTable($table) {
+    if (is_null($table)) {
+      return '';
+    }
     if (strpos($table, '.') !== FALSE) {
       $parts = explode('.', $table);
       if ($parts[0] != $this->getConnection()->getDatabaseName()) {

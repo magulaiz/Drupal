@@ -115,7 +115,9 @@ trait DocumentInsertTrait {
     if ($auto_increment_field = $this->tableInformation->getTableAutoIncrementField($table)) {
       // We need the sequences service that belongs to the current connection.
       $sequences = $this->connection->sequences();
-      if (empty($insert_document[$auto_increment_field])) {
+      // Auto increment field can have the value of zero. Like with the
+      // anonymous user.
+      if (!isset($insert_document[$auto_increment_field])) {
         $insert_document[$auto_increment_field] = $sequences->nextId($table);
       }
       else {

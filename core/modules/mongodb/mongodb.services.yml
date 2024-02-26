@@ -3,13 +3,16 @@ services:
   mongodb.sequences:
     class: Drupal\mongodb\Driver\Database\mongodb\Sequences
     arguments: ['@database']
+  Drupal\mongodb\Driver\Database\mongodb\Sequences: '@mongodb.sequences'
 
   mongodb.table_information:
     class: Drupal\mongodb\Driver\Database\mongodb\TableInformation
     arguments: ['@database']
+  Drupal\mongodb\Driver\Database\mongodb\TableInformation: '@mongodb.table_information'
 
   mongodb.translate_sql:
     class: Drupal\mongodb\Driver\Database\mongodb\TranslateSql
+  Drupal\mongodb\Driver\Database\mongodb\TranslateSql: '@mongodb.translate_sql'
 
   # MongoDB overrides Batch.
   mongodb.batch.storage:
@@ -103,6 +106,7 @@ services:
     arguments: ['@database']
   queue.database:
     alias: mongodb.queue.database
+  Drupal\mongodb\Queue\QueueDatabaseFactory: '@mongodb.queue.database'
 
   # MongoDB overrides Routing.
   mongodb.router.route_provider:
@@ -130,7 +134,7 @@ services:
   # MongoDB overrides module comment.
   mongodb.comment.statistics:
     class: Drupal\mongodb\modules\comment\CommentStatistics
-    arguments: ['@database', '@current_user', '@entity_type.manager', '@state', '@database.replica']
+    arguments: ['@database', '@current_user', '@entity_type.manager', '@state', '@datetime.time', '@database.replica']
   comment.statistics:
     alias: mongodb.comment.statistics
 

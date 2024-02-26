@@ -112,6 +112,16 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
           $row->{$field} = $row->{$mongodb_field};
           unset($row->{$mongodb_field});
         }
+
+        if (!isset($row->{$field})) {
+          // MongoDB does not allow aliases to have dots in them. The select
+          // query changes them to underscore characters.
+          $field_without_dots = str_replace('.', '_', $field);
+          if (isset($row->{$field_without_dots})) {
+            $field = $field_without_dots;
+          }
+        }
+
         if (is_array($row->{$field}) && count($row->{$field}) == 1) {
           // Embedded table row values are return as an array.
           $row->{$field} = reset($row->{$field});

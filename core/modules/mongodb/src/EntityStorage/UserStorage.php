@@ -3,6 +3,7 @@
 namespace Drupal\mongodb\EntityStorage;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\UserInterface;
 use Drupal\user\UserStorage as CoreUserStorage;
@@ -28,7 +29,7 @@ class UserStorage extends CoreUserStorage {
       $this->getMongoSequences()->setEntityId('users', $entity->id());
     }
 
-    return parent::doSaveFieldItems($entity, $names);
+    return SqlContentEntityStorage::doSaveFieldItems($entity, $names);
   }
 
   /**

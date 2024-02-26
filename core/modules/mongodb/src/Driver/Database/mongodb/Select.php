@@ -794,12 +794,7 @@ class Select extends QuerySelect {
   public function addExpressionMax(string $field, ?string $alias = NULL) {
     $alias = $this->getExpressionAlias($alias);
 
-    $this->expressions[$alias] = [
-      'type' => 'max',
-      'field' => $field,
-      'alias' => $alias,
-      'arguments' => [],
-    ];
+    $this->addGroupByOperation($alias, $field, 'MAX');
 
     return $alias;
   }
@@ -2293,6 +2288,7 @@ class Select extends QuerySelect {
           }
           else {
             $field = $expression['expression'];
+
             $first_dot = strpos($field, '.');
             if ($first_dot !== FALSE) {
               $first_field_part = substr($field, 0, $first_dot);

@@ -68,7 +68,7 @@ class DatabaseEventTest extends DatabaseTestBase {
     catch (\Exception $e) {
       // Expected, keep going.
     }
-dump($subscriber);
+
     $this->assertSame(2, $subscriber->countStatementStarts);
     $this->assertSame(1, $subscriber->countStatementEnds);
     $this->assertSame(0, $subscriber->countStatementFailures);
