@@ -242,7 +242,7 @@ abstract class Database {
     }
 
     // Prefix information, default to an empty prefix.
-    $info['prefix'] = $info['prefix'] ?? '';
+    $info['prefix'] ??= '';
 
     // Backwards compatibility layer for Drupal 8 style database connection
     // arrays. Those have the wrong 'namespace' key set, or not set at all

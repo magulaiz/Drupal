@@ -453,7 +453,7 @@ class DateHelper {
    *   The number of days in the month, or null if the $date has errors.
    */
   public static function daysInMonth($date = NULL) {
-    $date = $date ?? 'now';
+    $date ??= 'now';
     if (!$date instanceof DrupalDateTime) {
       $date = new DrupalDateTime($date);
     }
@@ -474,7 +474,7 @@ class DateHelper {
    *   The number of days in the year, or null if the $date has errors.
    */
   public static function daysInYear($date = NULL) {
-    $date = $date ?? 'now';
+    $date ??= 'now';
     if (!$date instanceof DrupalDateTime) {
       $date = new DrupalDateTime($date);
     }
@@ -500,7 +500,7 @@ class DateHelper {
    *   The number of the day in the week, or null if the $date has errors.
    */
   public static function dayOfWeek($date = NULL) {
-    $date = $date ?? 'now';
+    $date ??= 'now';
     if (!$date instanceof DrupalDateTime) {
       $date = new DrupalDateTime($date);
     }
@@ -525,7 +525,7 @@ class DateHelper {
    *   errors.
    */
   public static function dayOfWeekName($date = NULL, $abbr = TRUE) {
-    $date = $date ?? 'now';
+    $date ??= 'now';
     if (!$date instanceof DrupalDateTime) {
       $date = new DrupalDateTime($date);
     }

@@ -257,7 +257,7 @@ abstract class Connection {
     assert(count($this->identifierQuotes) === 2 && Inspector::assertAllStrings($this->identifierQuotes), '\Drupal\Core\Database\Connection::$identifierQuotes must contain 2 string values');
 
     // Manage the table prefix.
-    $connection_options['prefix'] = $connection_options['prefix'] ?? '';
+    $connection_options['prefix'] ??= '';
     $this->setPrefix($connection_options['prefix']);
 
     // Work out the database driver namespace if none is provided. This normally

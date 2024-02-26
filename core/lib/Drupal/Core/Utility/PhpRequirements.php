@@ -71,7 +71,7 @@ final class PhpRequirements {
    */
   public static function getMinimumSupportedPhp(?\DateTime $date = NULL): string {
     // By default, use the current date (right now).
-    $date = $date ?? new \DateTime('now');
+    $date ??= new \DateTime('now');
 
     // In case no data are available or all known PHP versions in this class
     // are already end-of-life, default to the version that had the most recent

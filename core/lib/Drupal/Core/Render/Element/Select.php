@@ -153,8 +153,7 @@ class Select extends FormElement {
       }
     }
     // Provide the correct default value for #sort_start.
-    $element['#sort_start'] = $element['#sort_start'] ??
-      (isset($element['#empty_value']) ? 1 : 0);
+    $element['#sort_start'] ??= isset($element['#empty_value']) ? 1 : 0;
     return $element;
   }
 

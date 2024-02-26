@@ -24,11 +24,11 @@ class RangeConstraint extends Range {
    */
   public function __construct(array $options = NULL) {
     if (isset($options['min']) && isset($options['max'])) {
-      $options['notInRangeMessage'] = $options['notInRangeMessage'] ?? 'This value should be between %min and %max.';
+      $options['notInRangeMessage'] ??= 'This value should be between %min and %max.';
     }
     else {
-      $options['minMessage'] = $options['minMessage'] ?? 'This value should be %limit or more.';
-      $options['maxMessage'] = $options['maxMessage'] ?? 'This value should be %limit or less.';
+      $options['minMessage'] ??= 'This value should be %limit or more.';
+      $options['maxMessage'] ??= 'This value should be %limit or less.';
     }
     parent::__construct($options);
   }
