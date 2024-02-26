@@ -739,11 +739,6 @@ parameters:
 			path: lib/Drupal/Core/Menu/MenuLinkManager.php
 
 		-
-			message: "#^Method Drupal\\\\Core\\\\Menu\\\\MenuLinkManager\\:\\:menuNameInUse\\(\\) should return bool but return statement is missing\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Menu/MenuLinkManager.php
-
-		-
 			message: "#^Missing cache backend declaration for performance\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Menu/MenuLinkManager.php

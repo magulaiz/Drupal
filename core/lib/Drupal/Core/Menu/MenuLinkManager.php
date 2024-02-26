@@ -259,7 +259,8 @@ class MenuLinkManager implements MenuLinkManagerInterface {
    * {@inheritdoc}
    */
   public function menuNameInUse($menu_name) {
-    $this->treeStorage->menuNameInUse($menu_name);
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/project/drupal/issues/2736647', E_USER_DEPRECATED);
+    return $this->treeStorage->menuNameInUse($menu_name);
   }
 
   /**

@@ -184,6 +184,11 @@ interface MenuLinkManagerInterface extends PluginManagerInterface {
    *
    * @return bool
    *   TRUE if any links are present in the named menu, FALSE otherwise.
+   *
+   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. There is
+   * no replacement.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/2736647
    */
   public function menuNameInUse($menu_name);
 
