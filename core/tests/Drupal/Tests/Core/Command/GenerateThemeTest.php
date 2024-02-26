@@ -483,6 +483,10 @@ SH;
     self::assertFileExists($theme_path_absolute . '/js/baz/starterkit_theme.bar.js');
   }
 
+  public function testNoEdit(): void {
+    $this->markTestIncomplete('needs to be written');
+  }
+
   private function runCommand(array $input, array $options = []): CommandTester {
     $tester = new CommandTester(new GenerateTheme(NULL, $this->getWorkspaceDirectory()));
     $tester->execute($input, $options);
