@@ -21,8 +21,6 @@ use Symfony\Component\Process\Process;
  */
 class GenerateThemeTest extends QuickStartTestBase {
 
-  protected $destroyBuild = FALSE;
-
   /**
    * The PHP executable path.
    *
