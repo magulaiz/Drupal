@@ -68,8 +68,6 @@ variables:
   POSTGRES_USER: drupaltestbot
   POSTGRES_PASSWORD: drupaltestbotpw
   MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-dev-shm-usage","--disable-gpu","--headless","--dns-prefetch-disable"]}}, "http://localhost:9515"]'
-  CI_PARALLEL_NODE_INDEX: $CI_NODE_INDEX
-  CI_PARALLEL_NODE_TOTAL: $CI_NODE_TOTAL
 
 .with-database: &with-database
   name: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB:production
@@ -87,8 +85,7 @@ variables:
 
 .run-tests: &run-tests
   script:
-    # Need to pass this along directly.
-    - sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./core/scripts/run-tests.sh --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --all --ci-parallel-node-index $CI_PARALLEL_NODE_INDEX --ci-parallel-node-total $CI_PARALLEL_NODE_TOTAL
+    - php ./core/scripts/run-tests.sh --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --all --ci-parallel-node-index $CI_NODE_INDEX --ci-parallel-node-total $CI_NODE_TOTAL
 
 .run-repeat-class-test: &run-repeat-class-test
   script:
@@ -100,7 +97,7 @@ variables:
         echo '   "Key" to "REPEAT_TEST_CLASS" and "Value" to "Drupal\Tests\ckeditor5\FunctionalJavascript\MediaLinkabilityTest"';
         exit 1;
       else
-        sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./core/scripts/run-tests.sh --color --keep-results --concurrency "$CONCURRENCY" --repeat "100" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --class $REPEAT_TEST_CLASS
+        php ./core/scripts/run-tests.sh --color --keep-results --concurrency "$CONCURRENCY" --repeat "100" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --class $REPEAT_TEST_CLASS
       fi
 
 ################
@@ -177,25 +174,19 @@ variables:
   <<: [ *with-composer-and-yarn, *default-job-settings ]
   variables:
     KUBERNETES_CPU_REQUEST: "24"
+    DRUPAL_TEST_DB_URL: $SIMPLETEST_DB
+    DRUPAL_TEST_BASE_URL: http://localhost/subdirectory
+    DRUPAL_TEST_CHROMEDRIVER_AUTOSTART: "false"
+    DRUPAL_TEST_WEBDRIVER_HOSTNAME: localhost
+    DRUPAL_TEST_WEBDRIVER_CHROME_ARGS: '--disable-dev-shm-usage --disable-gpu --headless --dns-prefetch-disable'
+    DRUPAL_TEST_WEBDRIVER_PORT: 9515
+    DRUPAL_NIGHTWATCH_OUTPUT: ../nightwatch_output
+    COLUMNS: 1000
   services:
     - <<: *with-database
     - <<: *with-chrome
   script:
-    - export DRUPAL_TEST_DB_URL=$SIMPLETEST_DB
-    - cp ./core/.env.example ./core/.env
-    # dotenv-safe/config does not support environment variables
-    # @see https://github.com/rolodato/dotenv-safe/issues/126
-    # @todo move this to `variables` when the above is resolved
-    - echo "DRUPAL_TEST_BASE_URL='http://localhost/subdirectory'" >> ./core/.env
-    - echo "DRUPAL_TEST_CHROMEDRIVER_AUTOSTART=false" >> ./core/.env
-    - echo "DRUPAL_TEST_DB_URL='${DRUPAL_TEST_DB_URL}'" >> ./core/.env
-    - echo "DRUPAL_TEST_WEBDRIVER_HOSTNAME='localhost'" >> ./core/.env
-    - echo "DRUPAL_TEST_WEBDRIVER_CHROME_ARGS='--disable-dev-shm-usage --disable-gpu --headless --dns-prefetch-disable'" >> ./core/.env
-    - echo "DRUPAL_TEST_WEBDRIVER_PORT='9515'" >> ./core/.env
-    - echo "DRUPAL_NIGHTWATCH_OUTPUT='"../nightwatch_output"'" >> ./core/.env
-    - echo "COLUMNS=1000" >> ./core/.env
-    - chown -R www-data:www-data ./sites /var/www
-    - sudo -u www-data yarn run --cwd=./core test:nightwatch --workers=4
+    - yarn run --cwd=./core test:nightwatch --workers=4
   after_script:
     - cp /builds/chromedriver.log ./
   artifacts:
@@ -223,6 +214,7 @@ variables:
   variables:
     KUBERNETES_CPU_REQUEST: "24"
     MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-dev-shm-usage","--disable-gpu","--headless","--no-sandbox"]}}, "http://chrome:9515"]'
+    SIMPLETEST_BASE_URL: "http://$HOSTNAME/subdirectory"
   tags:
     - performance-test-runner
   services:
@@ -235,8 +227,5 @@ variables:
       [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
       [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
       [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
-    - export OTEL_COLLECTOR="$OTEL_COLLECTOR"
     - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
-    - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
-    - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
-    - sudo SIMPLETEST_BASE_URL="http://$HOSTNAME/subdirectory" SIMPLETEST_DB="$SIMPLETEST_DB" MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" OTEL_COLLECTOR="$OTEL_COLLECTOR" -u www-data ./vendor/bin/phpunit --verbose -c core --group OpenTelemetry --log-junit=./sites/default/files/simpletest/phpunit-performance.xml
+    - vendor/bin/phpunit --verbose -c core --group OpenTelemetry --log-junit=./sites/default/files/simpletest/phpunit-performance.xml
