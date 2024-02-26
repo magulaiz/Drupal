@@ -49,18 +49,7 @@ class ClearCacheBlockTest extends BrowserTestBase {
   }
 
   /**
-   * Tests block access based on permissions.
-   */
-  public function testCacheClearBlockAccess(): void {
-    $this->drupalGet('<front>');
-    $this->assertSession()->pageTextContains('Clear cache block');
-    $this->drupalLogout();
-    $this->drupalGet('<front>');
-    $this->assertSession()->pageTextNotContains('Clear cache block');
-  }
-
-  /**
-   * Tests block behavior.
+   * Tests block behavior and access based on permissions.
    */
   public function testCacheClearBlock(): void {
     $this->drupalGet('<front>');
@@ -68,6 +57,10 @@ class ClearCacheBlockTest extends BrowserTestBase {
     $page = $this->getSession()->getPage();
     $page->pressButton('Clear all caches');
     $this->assertSession()->statusMessageContains('Caches cleared.');
+
+    // Confirm that access is not allowed for non-authorized users.
+    $this->drupalGet('<front>');
+    $this->assertSession()->pageTextNotContains('Clear cache block');
   }
 
 }
