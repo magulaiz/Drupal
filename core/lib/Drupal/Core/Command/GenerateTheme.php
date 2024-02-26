@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Command;
 
 use Composer\Autoload\ClassLoader;
@@ -61,8 +63,6 @@ class GenerateTheme extends Command {
    */
   private ?Extension $source_theme;
 
-  private $source_theme_info;
-
   /**
    * Paths to skip editing.
    *
@@ -96,13 +96,6 @@ class GenerateTheme extends Command {
    * @var String
    */
   private $destination_theme_label;
-
-  /**
-   * The description of the destination theme.
-   *
-   * @var String
-   */
-  private $destination_theme_description;
 
   /**
    * @var \Symfony\Component\Filesystem\Filesystem
@@ -158,7 +151,6 @@ class GenerateTheme extends Command {
     $destination = trim($input->getOption('path'), '/') . '/' . $destination_theme;
     $this->source_theme_name = $input->getOption('starterkit');
     $this->destination_theme_label = $input->getOption('name');
-    $this->destination_theme_description = $input->getOption('description');
 
     if (is_dir($destination)) {
       $this->io->getErrorStyle()->error("Theme could not be generated because the destination directory $destination exists already.");
@@ -172,10 +164,22 @@ class GenerateTheme extends Command {
     }
 
     try {
+      $source_version = self::determineSourceVersion(
+        $this->source_theme,
+        $this->io
+      );
+    }
+    catch (\Exception $e) {
+      $this->io->getErrorStyle()->error($e->getMessage());
+      return 1;
+    }
+
+    try {
       $starterkit_config = self::loadStarterKitConfig(
         $this->source_theme,
+        $source_version,
         $this->destination_theme_label,
-        $this->destination_theme_description
+        $input->getOption('description')
       );
     }
     catch (\Exception $e) {
@@ -209,16 +213,6 @@ class GenerateTheme extends Command {
       }
     }
 
-    // Replace temporary placeholder tokens with final strings.
-    /*
-    $this->doRenameAndEdit(
-    $this->source_theme_name,
-    $this->source_theme_info['name'] ?? $this->source_theme_name,
-    $this->destination_theme,
-    $this->destination_theme_label
-    );
-     */
-
     $patterns = [
       'old' => [
         'machine_name' => $this->source_theme_name,
@@ -227,9 +221,9 @@ class GenerateTheme extends Command {
         'label_class_name' => (string) u($this->source_theme->getName())->camel()->title(),
       ],
       'new' => [
-        'machine_name' => $this->destination_theme,
+        'machine_name' => $destination_theme,
         'label' => $this->destination_theme_label,
-        'machine_class_name' => (string) u($this->destination_theme)->camel()->title(),
+        'machine_class_name' => (string) u($destination_theme)->camel()->title(),
         'label_class_name' => (string) u($this->destination_theme_label)->camel()->title(),
       ],
     ];
@@ -253,10 +247,10 @@ class GenerateTheme extends Command {
       $this->filesystem->rename($file->getRealPath(), implode('/', $filepath_segments));
     }
 
-    // Alter THEMENAME.info.yml for new theme.
-    if (!is_null($exit_code = $this->overrideThemeInfo($starterkit_config['info']))) {
-      return $exit_code;
-    }
+    $info_file = "$this->tmpDir/$this->destination_theme.info.yml";
+    $info = Yaml::decode(file_get_contents($info_file));
+    $info = array_filter(array_merge($info, $starterkit_config['info']));
+    file_put_contents($info_file, Yaml::encode($info));
 
     $loader = new ClassLoader();
     $loader->addPsr4("Drupal\\$this->source_theme_name\\", "{$this->source_theme->getPath()}/src");
@@ -279,77 +273,6 @@ class GenerateTheme extends Command {
     $this->io->writeln(sprintf('Theme generated successfully to %s', $destination));
 
     return 0;
-  }
-
-  /**
-   * Overrides source *.info.yml with key/value pairs.
-   *
-   * @return int|NULL returns an exit code or NULL to continue.
-   */
-  private function overrideThemeInfo(array $info_overrides) {
-    $info_file = "$this->tmpDir/$this->destination_theme.info.yml";
-
-    if ($info_contents = file_get_contents($info_file)) {
-      $info = Yaml::decode($info_contents);
-
-      if (!array_key_exists('version', $info)) {
-        $confirm_versionless_source_theme = new ConfirmationQuestion(sprintf('The source theme %s does not have a version specified. This makes tracking changes in the source theme difficult. Are you sure you want to continue?', $this->source_theme_name));
-        if (!$this->io->askQuestion($confirm_versionless_source_theme)) {
-          return 0;
-        }
-      }
-
-      $source_version = $info['version'] ?? 'unknown-version';
-      if ($source_version === 'VERSION') {
-        $source_version = \Drupal::VERSION;
-      }
-
-      // A version in the generator string like "9.4.0-dev" is not very helpful.
-      // When this occurs, generate a version string that points to a commit.
-      if (VersionParser::parseStability($source_version) === 'dev') {
-        $git_check = Process::fromShellCommandline('git --help');
-        $git_check->run();
-        if ($git_check->getExitCode()) {
-          $this->io->error(sprintf('The source theme %s has a development version number (%s). Determining a specific commit is not possible because git is not installed. Either install git or use a tagged release to generate a theme.', $this->source_theme->getName(), $source_version));
-          return 1;
-        }
-
-        // Get the git commit for the source theme.
-        $source_path = $this->source_theme->getPath();
-        $git_get_commit = Process::fromShellCommandline("git rev-list --max-count=1 --abbrev-commit HEAD -C $source_path");
-        $git_get_commit->run();
-        if ($git_get_commit->getOutput() === '') {
-          $confirm_packaged_dev_release = new ConfirmationQuestion(sprintf('The source theme %s has a development version number (%s). Because it is not a git checkout, a specific commit could not be identified. This makes tracking changes in the source theme difficult. Are you sure you want to continue?', $this->source_theme->getName(), $source_version));
-          if (!$this->io->askQuestion($confirm_packaged_dev_release)) {
-            return 0;
-          }
-          $source_version .= '#unknown-commit';
-        }
-        else {
-          $source_version .= '#' . trim($git_get_commit->getOutput());
-        }
-      }
-
-      // Create the generator string before doing *.info.yml overrides.
-      $generator_string = "$this->source_theme_name:$source_version";
-
-      foreach ($info_overrides as $key => $value) {
-        if ($value === NULL) {
-          unset($info[$key]);
-        }
-        else {
-          $info[$key] = $value;
-        }
-      }
-
-      // Insert generator string, theme label, and description from command after overrides.
-      $info['generator'] = $generator_string;
-
-      $info_contents = Yaml::encode($info);
-      file_put_contents($info_file, $info_contents);
-    }
-
-    return NULL;
   }
 
   /**
@@ -390,6 +313,7 @@ class GenerateTheme extends Command {
 
   private static function loadStarterKitConfig(
     Extension $theme,
+    string $version,
     string $name,
     string $description
   ): array {
@@ -405,6 +329,7 @@ class GenerateTheme extends Command {
         'hidden' => NULL,
         'starterkit' => NULL,
         'version' => '1.0.0',
+        'generator' => "{$theme->getName()}:$version",
       ],
       'delete' => [
         '/src/StarterKit.php',
@@ -433,6 +358,62 @@ class GenerateTheme extends Command {
     }
 
     return $starterkit_config;
+  }
+
+  private static function determineSourceVersion(
+    Extension $theme,
+    SymfonyStyle $io
+  ): string {
+    $info = Yaml::decode(file_get_contents($theme->getPathname()));
+    $source_version = $info['version'] ?? '';
+    if ($source_version === '') {
+      $confirm = new ConfirmationQuestion(sprintf(
+        'The source theme %s does not have a version specified. This makes tracking changes in the source theme difficult. Are you sure you want to continue?',
+        $theme->getName()
+      ));
+      if (!$io->askQuestion($confirm)) {
+        throw new \RuntimeException('source version could not be determined');
+      }
+      $source_version = 'unknown-version';
+    }
+    if ($source_version === 'VERSION') {
+      $source_version = \Drupal::VERSION;
+    }
+
+    // A version in the generator string like "9.4.0-dev" is not very helpful.
+    // When this occurs, generate a version string that points to a commit.
+    if (VersionParser::parseStability($source_version) === 'dev') {
+      $git_check = Process::fromShellCommandline('git --help');
+      $git_check->run();
+      if ($git_check->getExitCode()) {
+        throw new \RuntimeException(
+          sprintf(
+            'The source theme %s has a development version number (%s). Determining a specific commit is not possible because git is not installed. Either install git or use a tagged release to generate a theme.',
+            $theme->getName(),
+            $source_version
+          )
+        );
+      }
+
+      // Get the git commit for the source theme.
+      $git_get_commit = Process::fromShellCommandline("git rev-list --max-count=1 --abbrev-commit HEAD -C {$theme->getPath()}");
+      $git_get_commit->run();
+      if (!$git_get_commit->isSuccessful() || $git_get_commit->getOutput() === '') {
+        $confirm = new ConfirmationQuestion(sprintf(
+          'The source theme %s has a development version number (%s). Because it is not a git checkout, a specific commit could not be identified. This makes tracking changes in the source theme difficult. Are you sure you want to continue?',
+          $theme->getName(),
+          $source_version
+        ));
+        if (!$io->askQuestion($confirm)) {
+          throw new \RuntimeException('source version could not be determined');
+        }
+        $source_version .= '#unknown-commit';
+      }
+      else {
+        $source_version .= '#' . trim($git_get_commit->getOutput());
+      }
+    }
+    return $source_version;
   }
 
 }

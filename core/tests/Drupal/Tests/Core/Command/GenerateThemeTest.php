@@ -157,7 +157,7 @@ info:
   starterkit: null
   version: 1.0.0
 YAML
-);
+    );
 
     $install_command = [
       $this->php,
@@ -295,7 +295,7 @@ SH;
 
     $process = $this->generateThemeFromStarterkit($env);
     $result = $process->run();
-    $this->assertEquals("[ERROR] The source theme starterkit_theme has a development version number     \n         (7.x-dev). Determining a specific commit is not possible because git is\n         not installed. Either install git or use a tagged release to generate a\n         theme.", trim($process->getOutput()), $process->getErrorOutput());
+    $this->assertEquals("[ERROR] The source theme starterkit_theme has a development version number     \n         (7.x-dev). Determining a specific commit is not possible because git is\n         not installed. Either install git or use a tagged release to generate a\n         theme.", trim($process->getErrorOutput()), $process->getErrorOutput());
     $this->assertSame(1, $result);
     $this->assertFileDoesNotExist($this->getWorkspaceDirectory() . "/themes/test_custom_theme");
   }
