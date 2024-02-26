@@ -64,40 +64,6 @@ class GenerateTheme extends Command {
   private ?Extension $source_theme;
 
   /**
-   * Paths to skip editing.
-   *
-   * Array of filepaths, directories, or globs relative to the theme root.
-   * Matching files/dirs will not have their contents edited.
-   *
-   * @var String[]
-   */
-  private $paths_to_skip_edit = [];
-
-  /**
-   * Paths to skip renaming.
-   *
-   * Array of filepaths, directories, or globs relative to the theme root.
-   * Matching files/dirs will not be renamed.
-   *
-   * @var String[]
-   */
-  private $paths_to_skip_rename = [];
-
-  /**
-   * The machine name of the destination theme.
-   *
-   * @var String
-   */
-  private $destination_theme;
-
-  /**
-   * The human-readable name of the destination theme.
-   *
-   * @var String
-   */
-  private $destination_theme_label;
-
-  /**
    * @var \Symfony\Component\Filesystem\Filesystem
    */
   private Filesystem $filesystem;
@@ -146,11 +112,10 @@ class GenerateTheme extends Command {
 
     // Get all command args & options.
     $destination_theme = $input->getArgument('machine-name');
-    $this->destination_theme = $destination_theme;
 
     $destination = trim($input->getOption('path'), '/') . '/' . $destination_theme;
     $this->source_theme_name = $input->getOption('starterkit');
-    $this->destination_theme_label = $input->getOption('name');
+    $theme_label = $input->getOption('name');
 
     if (is_dir($destination)) {
       $this->io->getErrorStyle()->error("Theme could not be generated because the destination directory $destination exists already.");
@@ -178,7 +143,7 @@ class GenerateTheme extends Command {
       $starterkit_config = self::loadStarterKitConfig(
         $this->source_theme,
         $source_version,
-        $this->destination_theme_label,
+        $theme_label,
         $input->getOption('description')
       );
     }
@@ -197,18 +162,21 @@ class GenerateTheme extends Command {
 
     $this->filesystem->mirror($this->source_theme->getPath(), $this->tmpDir, $mirror_iterator);
 
+    // verify files match the patterns
+    // @todo could this go into loading of the config logic
     if (count($starterkit_config['no_edit']) > 0) {
       $files = self::createFilesFinder($this->tmpDir)->path($starterkit_config['no_edit']);
-      $this->paths_to_skip_edit = array_map(static fn ($file) => $file->getRelativePathname(), iterator_to_array($files));
-      if (count($this->paths_to_skip_edit) === 0) {
+      $starterkit_config['no_edit'] = array_map(static fn ($file) => $file->getRelativePathname(), iterator_to_array($files));
+      if (count($starterkit_config['no_edit']) === 0) {
         $this->io->warning('Paths were defined `no_edit` but no files found.');
       }
     }
-
+    // verify files match the patterns
+    // @todo could this go into loading of the config logic
     if (count($starterkit_config['no_rename']) > 0) {
       $files = self::createFilesFinder($this->tmpDir)->path($starterkit_config['no_rename']);
-      $this->paths_to_skip_rename = array_map(static fn ($file) => $file->getRelativePathname(), iterator_to_array($files));
-      if (count($this->paths_to_skip_rename) === 0) {
+      $starterkit_config['no_rename'] = array_map(static fn ($file) => $file->getRelativePathname(), iterator_to_array($files));
+      if (count($starterkit_config['no_rename']) === 0) {
         $this->io->warning('Paths were defined `no_rename` but no files found.');
       }
     }
@@ -222,14 +190,14 @@ class GenerateTheme extends Command {
       ],
       'new' => [
         'machine_name' => $destination_theme,
-        'label' => $this->destination_theme_label,
+        'label' => $theme_label,
         'machine_class_name' => (string) u($destination_theme)->camel()->title(),
-        'label_class_name' => (string) u($this->destination_theme_label)->camel()->title(),
+        'label_class_name' => (string) u($theme_label)->camel()->title(),
       ],
     ];
     $filesToEdit = self::createFilesFinder($this->tmpDir)
       ->contains(array_values($patterns['old']))
-      ->notPath($this->paths_to_skip_edit);
+      ->notPath($starterkit_config['no_edit']);
     foreach ($filesToEdit as $file) {
       $contents = file_get_contents($file->getRealPath());
       $contents = str_replace($patterns['old'], $patterns['new'], $contents);
@@ -238,7 +206,7 @@ class GenerateTheme extends Command {
 
     $filesToRename = self::createFilesFinder($this->tmpDir)
       ->name(array_map(static fn (string $pattern) => "*$pattern*", array_values($patterns['old'])))
-      ->notPath($this->paths_to_skip_rename);
+      ->notPath($starterkit_config['no_rename']);
     foreach ($filesToRename as $file) {
       $filepath_segments = explode('/', $file->getRealPath());
       $filename = array_pop($filepath_segments);
@@ -247,7 +215,7 @@ class GenerateTheme extends Command {
       $this->filesystem->rename($file->getRealPath(), implode('/', $filepath_segments));
     }
 
-    $info_file = "$this->tmpDir/$this->destination_theme.info.yml";
+    $info_file = "$this->tmpDir/$destination_theme.info.yml";
     $info = Yaml::decode(file_get_contents($info_file));
     $info = array_filter(array_merge($info, $starterkit_config['info']));
     file_put_contents($info_file, Yaml::encode($info));
@@ -259,7 +227,7 @@ class GenerateTheme extends Command {
     $generator_classname = "Drupal\\$this->source_theme_name\\StarterKit";
     if (class_exists($generator_classname)) {
       if (is_a($generator_classname, StarterKitInterface::class, TRUE)) {
-        $generator_classname::postProcess($this->tmpDir, $this->destination_theme, $this->destination_theme_label);
+        $generator_classname::postProcess($this->tmpDir, $destination_theme, $theme_label);
       }
       else {
         $this->io->getErrorStyle()->error("The $generator_classname does not implement \Drupal\Core\Theme\StarterKitInterface and cannot perform post-processing.");
