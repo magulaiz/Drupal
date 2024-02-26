@@ -12,9 +12,8 @@
   font-weight: 400;
   line-height: 1.2;
 }
-/* Large */
+/* Large - 960px */
 @media screen and (min-width: 60rem) {
-  /* 960px */
   .field--name-field-recipe-instruction .field__label {
     margin: 0 0 1.5em 0;
     font-size: 1.77rem;
@@ -31,7 +30,7 @@
   list-style: none;
   counter-increment: step-counter;
 }
-[dir=rtl] .field--name-field-recipe-instruction ol > li {
+[dir="rtl"] .field--name-field-recipe-instruction ol > li {
   padding: 0 2.5em 0.6em 0;
 }
 .field--name-field-recipe-instruction ol > li::before {
@@ -42,7 +41,7 @@
   color: #cc2a00;
   font-size: 1.5rem;
 }
-[dir=rtl] .field--name-field-recipe-instruction ol > li::before {
+[dir="rtl"] .field--name-field-recipe-instruction ol > li::before {
   right: 0;
   left: auto;
 }

@@ -11,8 +11,8 @@
   font-size: 1.5rem;
   line-height: 1.2;
 }
-/* Large */
-@media screen and (min-width: 60em) { /* 960px */
+/* Large - 960px */
+@media screen and (min-width: 60em) {
   .view-frontpage .view-header {
     margin-bottom: 3rem;
     padding-right: 2.37rem;

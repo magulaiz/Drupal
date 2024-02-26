@@ -10,8 +10,8 @@
 .region-tabs {
   padding: 0 4%;
 }
-/* Extra large + side margins */
-@media screen and (min-width: 80rem) { /* 1200px (large) + 80px (side margins) = 1280px */
+/* Extra large + side margins 1200px (large) + 80px (side margins) = 1280px */
+@media screen and (min-width: 80rem) {
   .region-tabs {
     padding: 0;
   }

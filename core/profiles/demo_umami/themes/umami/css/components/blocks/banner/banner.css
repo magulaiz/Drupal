@@ -40,8 +40,8 @@
   outline-offset: 2px;
   background-color: #fcece7;
 }
-/* Medium */
-@media screen and (min-width: 48rem) { /* 768px */
+/* Medium - 768px */
+@media screen and (min-width: 48rem) {
   .banner-block {
     position: relative; /* Anchor absolutely positioned background image. */
     background-color: #464646;
@@ -75,8 +75,8 @@
     object-fit: cover;
   }
 }
-/* Large */
-@media screen and (min-width: 60rem) { /* 960px */
+/* Large - 960px */
+@media screen and (min-width: 60rem) {
   .banner-block__content {
     max-width: 41%;
   }
@@ -84,8 +84,8 @@
     min-height: 43vw;
   }
 }
-/* Extra large + side margins */
-@media screen and (min-width: 80rem) { /* 1200px (large) + 80px (side margins) = 1280px */
+/* Extra large + side margins 1200px (large) + 80px (side margins) = 1280px */
+@media screen and (min-width: 80rem) {
   .banner-block__inner {
     padding: 0;
   }

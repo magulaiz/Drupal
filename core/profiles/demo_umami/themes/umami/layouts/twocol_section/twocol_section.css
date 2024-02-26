@@ -11,8 +11,8 @@
 .layout--twocol-section > .layout__region {
   flex: 0 1 100%;
 }
-/* Medium */
-@media screen and (min-width: 48em) { /* 768px */
+/* Medium - 768px */
+@media screen and (min-width: 48em) {
   .layout--twocol-section {
     margin-right: -1.5%;
     margin-left: -1.5%;
