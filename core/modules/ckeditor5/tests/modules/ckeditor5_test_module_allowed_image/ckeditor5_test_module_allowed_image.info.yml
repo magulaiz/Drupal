@@ -1,6 +1,6 @@
 name: CKEditor 5 Module Allowed Image
 type: module
-description: "Tests CKEditor 5's ability to handle images that need to be specially allowed by a module that controls its security."
+description: Alters the allowed image types.
 package: Testing
 dependencies:
   - drupal:ckeditor5
