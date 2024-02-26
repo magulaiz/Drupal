@@ -505,30 +505,6 @@ class AjaxCommandsTest extends UnitTestCase {
   }
 
   /**
-   * @covers \Drupal\Core\Ajax\OpenModalDialogWithUrl
-   */
-  public function testOpenModalDialogWithUrl() {
-    $command = new OpenModalDialogWithUrl('http://example.com',
-      [
-        'url' => 'example',
-        'width' => 500,
-        'title' => 'Title',
-        'modal' => TRUE,
-      ]);
-    $expected = [
-      'command' => 'openModalDialogWithUrl',
-      'url' => 'http://example.com',
-      'dialogOptions' => [
-        'url' => 'example',
-        'width' => 500,
-        'title' => 'Title',
-        'modal' => TRUE,
-      ],
-    ];
-    $this->assertEquals($expected, $command->render());
-  }
-
-  /**
    * @covers \Drupal\Core\Ajax\CloseModalDialogCommand
    */
   public function testCloseModalDialogCommand() {

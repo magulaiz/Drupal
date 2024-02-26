@@ -129,6 +129,15 @@ class DialogTest extends WebDriverTestBase {
     // Use a link to close the panel opened by button 2.
     $this->getSession()->getPage()->clickLink('Link 4 (close non-modal if open)');
 
+    // Test dialogs opened using OpenModalDialogWithUrl.
+    $this->getSession()->getPage()->findButton('Button 3 (modal from url)')->press();
+    $this->assertSession()->assertNoElementAfterWait('css', '.ajax-progress-throbber');
+    // Check that title was fetched properly.
+    // @see \Drupal\ajax_test\Form\AjaxTestDialogForm::dialog.
+    $form_dialog_title = $button1_dialog->find('css', "span.ui-dialog-title:contains('Ajax Form contents')");
+    $this->assertNotNull($form_dialog_title, 'Dialog form has the expected title.');
+    $button1_dialog->findButton('Close')->press();
+
     // Form modal.
     $this->clickLink('Link 5 (form)');
     // Two links have been clicked in succession - This time wait for a change
