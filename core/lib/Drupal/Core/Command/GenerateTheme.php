@@ -37,25 +37,6 @@ class GenerateTheme extends Command {
   private $root;
 
   /**
-   * The Symfony output decorator.
-   *
-   * @var \Symfony\Component\Console\Style\SymfonyStyle
-   */
-  private SymfonyStyle $io;
-
-  /**
-   * The temporary directory files are stored during operations.
-   *
-   * @var string
-   */
-  private string $tmpDir;
-
-  /**
-   * @var \Symfony\Component\Filesystem\Filesystem
-   */
-  private Filesystem $filesystem;
-
-  /**
    * {@inheritdoc}
    */
   public function __construct(string $name = NULL, ?string $root = NULL) {
@@ -80,10 +61,6 @@ class GenerateTheme extends Command {
   }
 
   protected function initialize(InputInterface $input, OutputInterface $output): void {
-    $this->io = new SymfonyStyle($input, $output);
-    $this->filesystem = new Filesystem();
-    $this->tmpDir = $this->getUniqueTmpDirPath();
-
     if ($input->getOption('name') === NULL) {
       $input->setOption('name', $input->getArgument('machine-name'));
     }
@@ -96,29 +73,33 @@ class GenerateTheme extends Command {
    * {@inheritdoc}
    */
   protected function execute(InputInterface $input, OutputInterface $output): int {
+    $io = new SymfonyStyle($input, $output);
+    $filesystem = new Filesystem();
+    $tmpDir = $this->getUniqueTmpDirPath();
+
     $destination_theme = $input->getArgument('machine-name');
 
     $destination = trim($input->getOption('path'), '/') . '/' . $destination_theme;
     if (is_dir($destination)) {
-      $this->io->getErrorStyle()->error("Theme could not be generated because the destination directory $destination exists already.");
+      $io->getErrorStyle()->error("Theme could not be generated because the destination directory $destination exists already.");
       return 1;
     }
 
     $starterkit_id = $input->getOption('starterkit');
     $starterkit = $this->getThemeInfo($starterkit_id);
     if ($starterkit === NULL) {
-      $this->io->getErrorStyle()->error("Theme source theme $starterkit_id cannot be found.");
+      $io->getErrorStyle()->error("Theme source theme $starterkit_id cannot be found.");
       return 1;
     }
 
     try {
       $starterkit_version = self::getStarterKitVersion(
         $starterkit,
-        $this->io
+        $io
       );
     }
     catch (\Exception $e) {
-      $this->io->getErrorStyle()->error($e->getMessage());
+      $io->getErrorStyle()->error($e->getMessage());
       return 1;
     }
 
@@ -132,11 +113,11 @@ class GenerateTheme extends Command {
       );
     }
     catch (\Exception $e) {
-      $this->io->getErrorStyle()->error($e->getMessage());
+      $io->getErrorStyle()->error($e->getMessage());
       return 1;
     }
 
-    $this->filesystem->mkdir($this->tmpDir);
+    $filesystem->mkdir($tmpDir);
 
     $mirror_iterator = (new Finder)
       ->in($starterkit->getPath())
@@ -144,24 +125,24 @@ class GenerateTheme extends Command {
       ->notName($starterkit_config['ignore'])
       ->notPath($starterkit_config['ignore']);
 
-    $this->filesystem->mirror($starterkit->getPath(), $this->tmpDir, $mirror_iterator);
+    $filesystem->mirror($starterkit->getPath(), $tmpDir, $mirror_iterator);
 
     // verify files match the patterns
     // @todo could this go into loading of the config logic
     if (count($starterkit_config['no_edit']) > 0) {
-      $files = self::createFilesFinder($this->tmpDir)->path($starterkit_config['no_edit']);
+      $files = self::createFilesFinder($tmpDir)->path($starterkit_config['no_edit']);
       $starterkit_config['no_edit'] = array_map(static fn ($file) => $file->getRelativePathname(), iterator_to_array($files));
       if (count($starterkit_config['no_edit']) === 0) {
-        $this->io->warning('Paths were defined `no_edit` but no files found.');
+        $io->warning('Paths were defined `no_edit` but no files found.');
       }
     }
     // verify files match the patterns
     // @todo could this go into loading of the config logic
     if (count($starterkit_config['no_rename']) > 0) {
-      $files = self::createFilesFinder($this->tmpDir)->path($starterkit_config['no_rename']);
+      $files = self::createFilesFinder($tmpDir)->path($starterkit_config['no_rename']);
       $starterkit_config['no_rename'] = array_map(static fn ($file) => $file->getRelativePathname(), iterator_to_array($files));
       if (count($starterkit_config['no_rename']) === 0) {
-        $this->io->warning('Paths were defined `no_rename` but no files found.');
+        $io->warning('Paths were defined `no_rename` but no files found.');
       }
     }
 
@@ -179,7 +160,7 @@ class GenerateTheme extends Command {
         'label_class_name' => (string) u($theme_label)->camel()->title(),
       ],
     ];
-    $filesToEdit = self::createFilesFinder($this->tmpDir)
+    $filesToEdit = self::createFilesFinder($tmpDir)
       ->contains(array_values($patterns['old']))
       ->notPath($starterkit_config['no_edit']);
     foreach ($filesToEdit as $file) {
@@ -188,7 +169,7 @@ class GenerateTheme extends Command {
       file_put_contents($file->getRealPath(), $contents);
     }
 
-    $filesToRename = self::createFilesFinder($this->tmpDir)
+    $filesToRename = self::createFilesFinder($tmpDir)
       ->name(array_map(static fn (string $pattern) => "*$pattern*", array_values($patterns['old'])))
       ->notPath($starterkit_config['no_rename']);
     foreach ($filesToRename as $file) {
@@ -196,10 +177,10 @@ class GenerateTheme extends Command {
       $filename = array_pop($filepath_segments);
       $filename = str_replace($patterns['old'], $patterns['new'], $filename);
       $filepath_segments[] = $filename;
-      $this->filesystem->rename($file->getRealPath(), implode('/', $filepath_segments));
+      $filesystem->rename($file->getRealPath(), implode('/', $filepath_segments));
     }
 
-    $info_file = "$this->tmpDir/$destination_theme.info.yml";
+    $info_file = "$tmpDir/$destination_theme.info.yml";
     $info = Yaml::decode(file_get_contents($info_file));
     $info = array_filter(array_merge($info, $starterkit_config['info']));
     file_put_contents($info_file, Yaml::encode($info));
@@ -211,18 +192,18 @@ class GenerateTheme extends Command {
     $generator_classname = "Drupal\\{$starterkit->getName()}\\StarterKit";
     if (class_exists($generator_classname)) {
       if (is_a($generator_classname, StarterKitInterface::class, TRUE)) {
-        $generator_classname::postProcess($this->tmpDir, $destination_theme, $theme_label);
+        $generator_classname::postProcess($tmpDir, $destination_theme, $theme_label);
       }
       else {
-        $this->io->getErrorStyle()->error("The $generator_classname does not implement \Drupal\Core\Theme\StarterKitInterface and cannot perform post-processing.");
+        $io->getErrorStyle()->error("The $generator_classname does not implement \Drupal\Core\Theme\StarterKitInterface and cannot perform post-processing.");
         return 1;
       }
     }
 
     // Move altered theme to final destination.
-    $this->filesystem->mirror($this->tmpDir, $destination);
+    $filesystem->mirror($tmpDir, $destination);
 
-    $this->io->writeln(sprintf('Theme generated successfully to %s', $destination));
+    $io->writeln(sprintf('Theme generated successfully to %s', $destination));
 
     return 0;
   }
