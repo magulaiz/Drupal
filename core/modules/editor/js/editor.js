@@ -239,7 +239,7 @@
           $this.on('change.editorAttach', { field }, onTextFormatChange);
         }
         // Detach any editor when the containing form is submitted.
-        $this.parents('form').on('submit', (event) => {
+        $this[0].closest('form').on('submit', (event) => {
           // Do not detach if the event was canceled.
           if (event.isDefaultPrevented()) {
             return;
