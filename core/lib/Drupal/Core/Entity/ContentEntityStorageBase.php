@@ -194,7 +194,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
     $entity_class = parent::getEntityClass();
 
     // If no bundle is set, use the entity type ID as the bundle ID.
-    $bundle = $bundle ?? $this->getEntityTypeId();
+    $bundle ??= $this->getEntityTypeId();
 
     // Return the bundle class if it has been defined for this bundle.
     $bundle_info = $this->entityTypeBundleInfo->getBundleInfo($this->entityTypeId);
