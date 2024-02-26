@@ -60,7 +60,7 @@ class SystemAdminMenuBlockAccessCheck implements AccessInterface {
     // the menu link using all specified parameters.
     $links = $this->menuLinkManager->loadLinksByRoute($route_match->getRouteName(), $parameters, 'admin');
     // If the menu link was not found, try finding it without the parameters
-    // that matches the route defaults. Depending on whether the parameter is
+    // that match the route defaults. Depending on whether the parameter is
     // specified in the menu item with a value matching the default or not
     // specified at all will change how it is stored in the menu_tree table. In
     // both cases the route match parameters will always include the default
