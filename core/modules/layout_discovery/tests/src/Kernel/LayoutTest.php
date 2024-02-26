@@ -9,6 +9,7 @@ use Drupal\KernelTests\KernelTestBase;
  * Tests Layout functionality.
  *
  * @group Layout
+ * @group #slow
  */
 class LayoutTest extends KernelTestBase {
 
@@ -90,7 +91,7 @@ class LayoutTest extends KernelTestBase {
   /**
    * Data provider for testRenderLayout().
    */
-  public function renderLayoutData() {
+  public static function renderLayoutData() {
     $html = [];
     $html[] = '<div data-drupal-selector="edit-layout" class="layout layout--onecol">';
     $html[] = '<div data-drupal-selector="edit-content" class="layout__region layout__region--content">';

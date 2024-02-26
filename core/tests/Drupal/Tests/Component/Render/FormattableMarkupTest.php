@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Component\Render;
 
 use Drupal\Component\Render\FormattableMarkup;
@@ -67,7 +69,7 @@ class FormattableMarkupTest extends TestCase {
    *
    * @return array
    */
-  public function providerTestNullPlaceholder() {
+  public static function providerTestNullPlaceholder() {
     return [
       ['', '@empty', ['@empty' => NULL], 'Deprecated NULL placeholder value for key (@empty) in: "@empty". This will throw a PHP error in drupal:11.0.0. See https://www.drupal.org/node/3318826'],
       ['', ':empty', [':empty' => NULL], 'Deprecated NULL placeholder value for key (:empty) in: ":empty". This will throw a PHP error in drupal:11.0.0. See https://www.drupal.org/node/3318826'],
@@ -115,7 +117,7 @@ class FormattableMarkupTest extends TestCase {
    *
    * @return array
    */
-  public function providerTestUnexpectedPlaceholder() {
+  public static function providerTestUnexpectedPlaceholder() {
     return [
       ['Non alpha, non-allowed starting character: ~placeholder', ['~placeholder' => 'replaced'], E_USER_WARNING, 'Placeholders must begin with one of the following "@", ":" or "%", invalid placeholder (~placeholder) with string: "Non alpha, non-allowed starting character: ~placeholder"'],
       ['Alpha starting character: placeholder', ['placeholder' => 'replaced'], NULL, ''],

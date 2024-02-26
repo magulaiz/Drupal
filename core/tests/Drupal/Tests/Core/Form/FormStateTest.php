@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Form;
 
 use Drupal\Core\Form\FormInterface;
@@ -35,7 +37,7 @@ class FormStateTest extends UnitTestCase {
    * @return array
    *   Returns some test data.
    */
-  public function providerTestGetRedirect() {
+  public static function providerTestGetRedirect() {
     $data = [];
     $data[] = [[], NULL];
 
@@ -78,7 +80,7 @@ class FormStateTest extends UnitTestCase {
     $this->assertSame($error, $form_state->getError($element));
   }
 
-  public function providerTestGetError() {
+  public static function providerTestGetError() {
     return [
       [[], ['foo']],
       [['foo][bar' => 'Fail'], []],
@@ -111,7 +113,7 @@ class FormStateTest extends UnitTestCase {
     $this->assertSame($expected_errors, $form_state->getErrors());
   }
 
-  public function providerTestSetErrorByName() {
+  public static function providerTestSetErrorByName() {
     return [
       // Only validate the 'options' element.
       [[['options']], ['options' => '']],
@@ -262,7 +264,7 @@ class FormStateTest extends UnitTestCase {
   /**
    * Provides test data for testIsCached().
    */
-  public function providerTestIsCached() {
+  public static function providerTestIsCached() {
     $data = [];
     $data[] = [
       TRUE,
@@ -333,7 +335,7 @@ class FormStateTest extends UnitTestCase {
   /**
    * Provides test data for testIsMethodType().
    */
-  public function providerTestIsMethodType() {
+  public static function providerTestIsMethodType() {
     $data = [];
     $data[] = [
       'get',

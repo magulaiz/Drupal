@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Menu;
 
 use Drupal\Core\Menu\MenuTreeParameters;
@@ -17,7 +19,7 @@ class MenuTreeParametersTest extends UnitTestCase {
   /**
    * Provides test data for testSetMinDepth().
    */
-  public function providerTestSetMinDepth() {
+  public static function providerTestSetMinDepth() {
     $data = [];
 
     // Valid values at the extremes and in the middle.

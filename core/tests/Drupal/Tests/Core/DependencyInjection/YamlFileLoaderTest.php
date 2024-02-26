@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\DependencyInjection;
 
 use Drupal\Component\FileCache\FileCacheFactory;
@@ -78,7 +80,7 @@ YAML;
     $yaml_file_loader->load('vfs://drupal/modules/example/example.yml');
   }
 
-  public function providerTestExceptions() {
+  public static function providerTestExceptions() {
     return [
       '_defaults must be an array' => [<<<YAML
 services:

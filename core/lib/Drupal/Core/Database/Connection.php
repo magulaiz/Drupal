@@ -293,6 +293,31 @@ abstract class Connection {
   }
 
   /**
+   * Commits all the open transactions.
+   *
+   * @internal
+   *   This method exists only to work around a bug caused by Drupal incorrectly
+   *   relying on object destruction order to commit transactions. Xdebug 3.3.0
+   *   changes the order of object destruction when the develop mode is enabled.
+   */
+  public function commitAll() {
+    $manager = $this->transactionManager();
+    if ($manager && $manager->inTransaction() && method_exists($manager, 'commitAll')) {
+      $this->transactionManager()->commitAll();
+    }
+
+    // BC layer.
+    // @phpstan-ignore-next-line
+    if (!empty($this->transactionLayers)) {
+      // Make all transactions committable.
+      // @phpstan-ignore-next-line
+      $this->transactionLayers = array_fill_keys(array_keys($this->transactionLayers), FALSE);
+      // @phpstan-ignore-next-line
+      $this->popCommittableTransactions();
+    }
+  }
+
+  /**
    * Returns the client-level database connection object.
    *
    * This method should normally be used only within database driver code. Not
@@ -886,7 +911,7 @@ abstract class Connection {
     // If the placeholder indicated the value to use is an array,  we need to
     // expand it out into a comma-delimited set of placeholders.
     foreach ($args as $key => $data) {
-      $is_bracket_placeholder = substr($key, -2) === '[]';
+      $is_bracket_placeholder = str_ends_with($key, '[]');
       $is_array_data = is_array($data);
       if ($is_bracket_placeholder && !$is_array_data) {
         throw new \InvalidArgumentException('Placeholders with a trailing [] can only be expanded with an array of values.');
@@ -2205,7 +2230,9 @@ abstract class Connection {
    *   The debug backtrace.
    */
   protected function getDebugBacktrace(): array {
-    return debug_backtrace();
+    // @todo: allow a backtrace including all arguments as an option.
+    // See https://www.drupal.org/project/drupal/issues/3401906
+    return debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
   }
 
 }

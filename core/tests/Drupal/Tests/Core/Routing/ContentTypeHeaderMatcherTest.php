@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Routing;
 
 use Drupal\Core\Routing\ContentTypeHeaderMatcher;
@@ -55,7 +57,7 @@ class ContentTypeHeaderMatcherTest extends UnitTestCase {
     $this->assertCount(7, $routes, 'The correct number of routes was found.');
   }
 
-  public function providerTestSafeRequestFilter() {
+  public static function providerTestSafeRequestFilter() {
     return [
       ['GET'],
       ['HEAD'],
