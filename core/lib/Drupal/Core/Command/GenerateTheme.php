@@ -220,7 +220,7 @@ class GenerateTheme extends Command {
   /**
    * Gets theme info using the theme name.
    *
-   * @param string $theme
+   * @param string $theme_name
    *   The machine name of the theme.
    *
    * @return \Drupal\Core\Extension\Extension|null
