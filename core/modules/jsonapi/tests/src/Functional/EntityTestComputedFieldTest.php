@@ -11,6 +11,7 @@ use Drupal\user\Entity\User;
  * JSON:API integration test for the "EntityTestComputedField" content entity type.
  *
  * @group jsonapi
+ * @group #slow
  */
 class EntityTestComputedFieldTest extends ResourceTestBase {
 
@@ -108,11 +109,12 @@ class EntityTestComputedFieldTest extends ResourceTestBase {
           'self' => ['href' => $self_url],
         ],
         'attributes' => [
-          'created' => (new \DateTime())->setTimestamp($this->entity->get('created')->value)->setTimezone(new \DateTimeZone('UTC'))->format(\DateTime::RFC3339),
+          'created' => (new \DateTime())->setTimestamp((int) $this->entity->get('created')->value)->setTimezone(new \DateTimeZone('UTC'))->format(\DateTime::RFC3339),
           'name' => 'Llama',
           'drupal_internal__id' => 1,
           'computed_string_field' => NULL,
           'computed_test_cacheable_string_field' => 'computed test cacheable string field',
+          'computed_test_cacheable_integer_field' => 0,
         ],
         'relationships' => [
           'computed_reference_field' => [
