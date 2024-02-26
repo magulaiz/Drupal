@@ -6,9 +6,9 @@
  */
 
 use Drupal\Core\Batch\BatchBuilder;
-use Drupal\Core\Url;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Url;
 use Drupal\file\FileInterface;
 use Drupal\locale\Gettext;
 use Drupal\locale\Locale;
@@ -467,7 +467,7 @@ function locale_translate_file_attach_properties($file, array $options = []) {
   }
 
   // Extract project, version and language code from the file name. Supported:
-  // {project}-{version}.{langcode}.po, {prefix}.{langcode}.po or {langcode}.po
+  // {project}-{version}.{langcode}.po, {prefix}.{langcode}.po or {langcode}.po.
   preg_match('!
     (                       # project OR project and version OR empty (group 1)
       ([a-z_]+)             # project name (group 2)
@@ -586,7 +586,8 @@ function locale_config_batch_build(array $names, array $langcodes, array $option
     $batch_builder->addOperation('locale_config_batch_set_config_langcodes');
   }
 
-  $batch_names_chunks = array_chunk($names, 20); // Chunk $names array into chunks of 20
+  // Chunk $names array into chunks of 20.
+  $batch_names_chunks = array_chunk($names, 20);
 
   foreach ($batch_names_chunks as $chunk) {
     $batch_builder->addOperation('locale_config_batch_refresh_name', [$chunk, $langcodes]);
