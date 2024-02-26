@@ -1,4 +1,4 @@
-# cspell:ignore codequality Micheh micheh
+# cspell:ignore codequality Micheh micheh stylelintrc
 
 ################
 # Drupal GitLabCI template.
@@ -379,7 +379,7 @@ default:
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
-  # Run on push, or on MRs if CSS files have changed, or manually.
+  # Run on push, or on MRs if JS/YAML or related files have changed, or manually.
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -388,6 +388,11 @@ default:
         - core/yarn.lock
         - "**/*.js"
         - "**/*.yml"
+        - "**/.eslintrc.json"
+        - "core/.eslintignore"
+        - "core/.eslintrc.*.json"
+        - "core/.prettierignore"
+        - "core/.prettierrc.json"
     - when: manual
       allow_failure: true
   script:
@@ -402,7 +407,7 @@ default:
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
-  # Run on push, or on MRs if CSS files have changed, or manually.
+  # Run on push, or on MRs if CSS/YAML or related files have changed, or manually.
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -410,6 +415,7 @@ default:
         - core/package.json
         - core/yarn.lock
         - "**/*.css"
+        - "core/.stylelintrc.json"
     - when: manual
       allow_failure: true
   script:
