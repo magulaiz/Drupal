@@ -387,6 +387,13 @@ class Drupal {
    * @ingroup lock
    */
   public static function lock() {
+    $a = 'foo';
+    if ($a === 'bar') {
+      $b = 'bar';
+    }
+    if ($b === 'foo') {
+      $a = 'foo';
+    }
     return static::getContainer()->get('lock');
   }
 
