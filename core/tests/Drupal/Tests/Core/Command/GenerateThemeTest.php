@@ -404,12 +404,32 @@ SH;
     self::assertDirectoryDoesNotExist($theme_path_absolute . '/src');
   }
 
-  public function testNoEditNoRenameMissingFilesWarning(): void {
+  public function testNoEditMissingFilesWarning(): void {
     $starterkit_yml = $this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/starterkit_theme.starterkit.yml';
     $info = Yaml::decode(file_get_contents($starterkit_yml));
     $info['no_edit'] = [
       '/js/starterkit_theme.js',
     ];
+    file_put_contents($starterkit_yml, Yaml::encode($info));
+
+    $tester = $this->runCommand(
+      ['machine-name' => 'test_custom_theme'],
+      [
+        'name' => 'Test custom starterkit theme',
+        'description' => 'Custom theme generated from a starterkit theme',
+        'capture_stderr_separately' => TRUE,
+      ]
+    );
+
+    self::assertEquals('', trim($tester->getDisplay()));
+    self::assertEquals('[ERROR] Paths were defined `no_edit` but no files found.', trim($tester->getErrorOutput()));
+    $theme_path_absolute = $this->getWorkspaceDirectory() . '/themes/test_custom_theme';
+    self::assertDirectoryDoesNotExist($theme_path_absolute);
+  }
+
+  public function testNoRenameMissingFilesWarning(): void {
+    $starterkit_yml = $this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/starterkit_theme.starterkit.yml';
+    $info = Yaml::decode(file_get_contents($starterkit_yml));
     $info['no_rename'] = [
       '/js/starterkit_theme.js',
     ];
@@ -424,11 +444,10 @@ SH;
       ]
     );
 
-    $output = $tester->getDisplay();
-    self::assertStringContainsString('[WARNING] Paths were defined `no_edit` but no files found.', $output);
-    self::assertStringContainsString('[WARNING] Paths were defined `no_rename` but no files found.', $output);
-    self::assertStringContainsString('Theme generated successfully to themes/test_custom_theme', $output);
-    $this->assertThemeExists('themes/test_custom_theme');
+    self::assertEquals('', trim($tester->getDisplay()));
+    self::assertEquals('[ERROR] Paths were defined `no_rename` but no files found.', trim($tester->getErrorOutput()));
+    $theme_path_absolute = $this->getWorkspaceDirectory() . '/themes/test_custom_theme';
+    self::assertDirectoryDoesNotExist($theme_path_absolute);
   }
 
   public function testNoRename(): void {

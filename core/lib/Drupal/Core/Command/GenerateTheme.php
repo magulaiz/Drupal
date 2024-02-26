@@ -127,25 +127,6 @@ class GenerateTheme extends Command {
 
     $filesystem->mirror($starterkit->getPath(), $tmpDir, $mirror_iterator);
 
-    // verify files match the patterns
-    // @todo could this go into loading of the config logic
-    if (count($starterkit_config['no_edit']) > 0) {
-      $files = self::createFilesFinder($tmpDir)->path($starterkit_config['no_edit']);
-      $starterkit_config['no_edit'] = array_map(static fn ($file) => $file->getRelativePathname(), iterator_to_array($files));
-      if (count($starterkit_config['no_edit']) === 0) {
-        $io->warning('Paths were defined `no_edit` but no files found.');
-      }
-    }
-    // verify files match the patterns
-    // @todo could this go into loading of the config logic
-    if (count($starterkit_config['no_rename']) > 0) {
-      $files = self::createFilesFinder($tmpDir)->path($starterkit_config['no_rename']);
-      $starterkit_config['no_rename'] = array_map(static fn ($file) => $file->getRelativePathname(), iterator_to_array($files));
-      if (count($starterkit_config['no_rename']) === 0) {
-        $io->warning('Paths were defined `no_rename` but no files found.');
-      }
-    }
-
     $patterns = [
       'old' => [
         'machine_name' => $starterkit->getName(),
@@ -237,10 +218,6 @@ class GenerateTheme extends Command {
     return $theme;
   }
 
-  private static function processPaths(string $path): string {
-    return Glob::toRegex(trim($path, '/'));
-  }
-
   private static function createFilesFinder(string $dir): Finder {
     return (new Finder)->in($dir)->files();
   }
@@ -288,7 +265,25 @@ class GenerateTheme extends Command {
       if (!is_array($starterkit_config[$key])) {
         throw new \RuntimeException("$key in starterkit.yml must be an array");
       }
-      $starterkit_config[$key] = array_map([self::class, 'processPaths'], $starterkit_config[$key]);
+      $starterkit_config[$key] = array_map(
+        static fn (string $path) => Glob::toRegex(trim($path, '/')),
+        $starterkit_config[$key]
+      );
+    }
+
+    if (count($starterkit_config['no_edit']) > 0) {
+      $files = self::createFilesFinder($theme->getPath())->path($starterkit_config['no_edit']);
+      $starterkit_config['no_edit'] = array_map(static fn ($file) => $file->getRelativePathname(), iterator_to_array($files));
+      if (count($starterkit_config['no_edit']) === 0) {
+        throw new \RuntimeException('Paths were defined `no_edit` but no files found.');
+      }
+    }
+    if (count($starterkit_config['no_rename']) > 0) {
+      $files = self::createFilesFinder($theme->getPath())->path($starterkit_config['no_rename']);
+      $starterkit_config['no_rename'] = array_map(static fn ($file) => $file->getRelativePathname(), iterator_to_array($files));
+      if (count($starterkit_config['no_rename']) === 0) {
+        throw new \RuntimeException('Paths were defined `no_rename` but no files found.');
+      }
     }
 
     return $starterkit_config;
