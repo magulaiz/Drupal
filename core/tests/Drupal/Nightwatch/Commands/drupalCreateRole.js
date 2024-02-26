@@ -40,9 +40,17 @@ exports.command = function drupalCreateRole(
 
     await Promise.all(
       permissions.map(async (permission) =>
-        this.resizeWindow(1920, 1080).click(
-          `input[name="${machineName}[${permission}]"]`,
-        ),
+        this
+          // Use JavaScript to click the permission to avoid page chroma such as
+          // sticky headers and the toolbar intercepting the click.
+          .executeScript(
+            `document.querySelector('input[name="${machineName}[${permission}]"]').click()`,
+          )
+          .assert.attributeEquals(
+            `input[name="${machineName}[${permission}]`,
+            'checked',
+            'true',
+          ),
       ),
     );
 
