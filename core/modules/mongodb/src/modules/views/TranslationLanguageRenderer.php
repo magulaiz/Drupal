@@ -34,18 +34,18 @@ class TranslationLanguageRenderer extends CoreTranslationLanguageRenderer {
         // Do this if the base table is part of a revisionable entity.
         if ($this->view->storage->get('mongodb_base_table') != $this->view->storage->get('original_base_table')) {
           if (!empty($this->view->storage->get('all_revisions_table'))) {
-            $langcode_key = $storage->getAllRevisionsTable() . '.' . $langcode_key;
+            $langcode_key = $storage->getJsonStorageAllRevisionsTable() . '.' . $langcode_key;
           }
           elseif (!empty($this->view->storage->get('current_revision_table'))) {
-            $langcode_key = $storage->getCurrentRevisionTable() . '.' . $langcode_key;
+            $langcode_key = $storage->getJsonStorageCurrentRevisionTable() . '.' . $langcode_key;
           }
         }
         else {
-          $langcode_key = $storage->getCurrentRevisionTable() . '.' . $langcode_key;
+          $langcode_key = $storage->getJsonStorageCurrentRevisionTable() . '.' . $langcode_key;
         }
       }
       elseif ($this->entityType->isTranslatable()) {
-        $langcode_key = $storage->getTranslationsTable() . '.' . $langcode_key;
+        $langcode_key = $storage->getJsonStorageTranslationsTable() . '.' . $langcode_key;
       }
 
       $this->langcodeAlias = $query->addField($table_alias, $langcode_key);

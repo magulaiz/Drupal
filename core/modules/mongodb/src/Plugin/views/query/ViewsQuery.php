@@ -632,7 +632,7 @@ class ViewsQuery extends Sql {
                 $clause['value'] = (string) $clause['value'];
               }
             }
-            elseif (is_int($clause['value']) || ctype_digit($clause['value'])) {
+            elseif (!is_array($clause['value']) && (is_int($clause['value']) || ctype_digit($clause['value']))) {
               $clause['value'] = (int) $clause['value'];
             }
             elseif (is_array($clause['value'])) {

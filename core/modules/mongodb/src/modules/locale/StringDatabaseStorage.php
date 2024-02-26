@@ -168,15 +168,13 @@ class StringDatabaseStorage extends CoreStringDatabaseStorage {
     }
 
     if ($join_type) {
-      $join_extra = [];
+      $join_condition = $query->joinCondition()->compare('t.lid', 's.lid');
       if (isset($conditions['language'])) {
         // If we've got a language condition, we use it for the join.
-        $join_extra[] = ['field' => 'language', 'value' => $conditions['language']];
+        $join_condition->condition('t.language', $conditions['language']);
         unset($conditions['language']);
       }
-
-      $query->addMongodbJoin($join_type, 'locales_target', 'lid', 'locales_source', 'lid', '=', 't', $join_extra);
-
+      $query->addJoin($join_type, 'locales_target', 't', $join_condition);
       if (!empty($options['translation'])) {
         // We cannot just add all fields because 'lid' may get null values.
         $query->fields('t', ['language', 'translation', 'customized']);
@@ -190,21 +188,21 @@ class StringDatabaseStorage extends CoreStringDatabaseStorage {
     if (isset($conditions['type']) || isset($conditions['name'])) {
       $query->fields('l', ['sid']);
 
-      $join_extra = [];
+      $join_condition = $query->joinCondition()->compare('s.lid', 'l.lid');
       foreach (['type', 'name'] as $field) {
         if (isset($conditions[$field])) {
           if (is_array($conditions[$field])) {
-            $join_extra[] = ['field' => $field, 'value' => $conditions[$field], 'operator' => 'IN'];
+            $join_condition->condition($field, $conditions[$field], 'IN');
           }
           else {
-            $join_extra[] = ['field' => $field, 'value' => $conditions[$field]];
+            $join_condition->condition($field, $conditions[$field]);
           }
 
           unset($conditions[$field]);
         }
       }
 
-      $query->addMongodbJoin('INNER', 'locales_location', 'sid', 'locales_source', 'lid', '=', 'l', $join_extra);
+      $query->addJoin('INNER', 'locales_location', 'l', $join_condition);
     }
 
     // Add conditions for both tables.

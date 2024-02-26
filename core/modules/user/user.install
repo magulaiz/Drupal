@@ -5,6 +5,7 @@
  * Install, update and uninstall functions for the user module.
  */
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 
 /**
@@ -64,6 +65,14 @@ function user_schema() {
     ],
   ];
 
+  if (Database::getConnection()->databaseType() == 'mongodb') {
+    $schema['users_data']['fields']['serialized'] = [
+      'description' => 'Whether value is serialized.',
+      'type' => 'bool',
+      'default' => FALSE,
+    ];
+  }
+
   return $schema;
 }
 
@@ -76,7 +85,7 @@ function user_install() {
   $storage
     ->create([
       'uid' => 0,
-      'status' => 0,
+      'status' => FALSE,
       'name' => '',
     ])
     ->save();
