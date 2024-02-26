@@ -337,7 +337,7 @@ class FileSystem implements FileSystemInterface {
    */
   public function deleteRecursive($path, callable $callback = NULL) {
     if ($callback) {
-      call_user_func($callback, $path);
+      $callback($path);
     }
 
     if (!file_exists($path)) {

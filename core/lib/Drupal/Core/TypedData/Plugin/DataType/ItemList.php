@@ -272,7 +272,7 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
       $removed = FALSE;
       // Apply the filter, detecting if some items were actually removed.
       $this->list = array_filter($this->list, function ($item) use ($callback, &$removed) {
-        if (call_user_func($callback, $item)) {
+        if ($callback($item)) {
           return TRUE;
         }
         else {

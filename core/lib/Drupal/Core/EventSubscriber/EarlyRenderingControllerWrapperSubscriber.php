@@ -120,7 +120,7 @@ class EarlyRenderingControllerWrapperSubscriber implements EventSubscriberInterf
 
     $response = $this->renderer->executeInRenderContext($context, function () use ($controller, $arguments) {
       // Now call the actual controller, just like HttpKernel does.
-      return call_user_func_array($controller, $arguments);
+      return $controller(...$arguments);
     });
 
     // If early rendering happened, i.e. if code in the controller called

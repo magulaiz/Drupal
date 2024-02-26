@@ -118,7 +118,7 @@ class TestSiteTearDownCommand extends Command {
    */
   protected function fileUnmanagedDeleteRecursive($path, $callback = NULL) {
     if (isset($callback)) {
-      call_user_func($callback, $path);
+      $callback($path);
     }
     if (is_dir($path)) {
       $dir = dir($path);

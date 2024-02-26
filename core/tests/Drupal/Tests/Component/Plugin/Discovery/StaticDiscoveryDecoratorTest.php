@@ -217,7 +217,7 @@ class StaticDiscoveryDecoratorTest extends TestCase {
     // Exercise __call.
     $this->assertEquals(
       $args,
-      \call_user_func_array([$mock_decorated, $method], $args)
+      $mock_decorated->$method(...$args)
     );
   }
 

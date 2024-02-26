@@ -649,7 +649,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // @see _drupal_shutdown_function()
     $callbacks = &drupal_register_shutdown_function();
     while ($callback = array_shift($callbacks)) {
-      call_user_func_array($callback['callback'], $callback['arguments']);
+      $callback['callback'](...$callback['arguments']);
     }
 
     // Shut down the kernel (if bootKernel() was called).
@@ -1023,7 +1023,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // defined by base classes should be sorted first. Then, merge the results
     // together.
     $modules = array_values(array_reverse($modules));
-    return call_user_func_array('array_merge_recursive', $modules);
+    return array_merge_recursive(...$modules);
   }
 
   /**

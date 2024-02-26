@@ -205,7 +205,7 @@ abstract class EntityBase implements EntityInterface {
       // Invoke the callback to get the URI. If there is no callback, use the
       // default URI format.
       if (isset($uri_callback) && is_callable($uri_callback)) {
-        $uri = call_user_func($uri_callback, $this);
+        $uri = $uri_callback($this);
       }
       else {
         throw new UndefinedLinkTemplateException($exception_message);

@@ -45,7 +45,7 @@ function locale_translation_batch_update_build($projects = [], $langcodes = [], 
   // Download and import translations.
   $operations = array_merge($operations, _locale_translation_fetch_operations($projects, $langcodes, $options));
   array_walk($operations, function ($operation) use ($batch_builder) {
-    call_user_func_array([$batch_builder, 'addOperation'], $operation);
+    $batch_builder->addOperation(...$operation);
   });
 
   return $batch_builder->toArray();
@@ -76,7 +76,7 @@ function locale_translation_batch_fetch_build($projects = [], $langcodes = [], $
     ->setFinishCallback('locale_translation_batch_fetch_finished');
   $operations = _locale_translation_fetch_operations($projects, $langcodes, $options);
   array_walk($operations, function ($operation) use ($batch_builder) {
-    call_user_func_array([$batch_builder, 'addOperation'], $operation);
+    $batch_builder->addOperation(...$operation);
   });
   return $batch_builder->toArray();
 }

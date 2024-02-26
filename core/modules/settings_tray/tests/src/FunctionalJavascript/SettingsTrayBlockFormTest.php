@@ -52,7 +52,7 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
    */
   public function testBlocks() {
     foreach ($this->getBlockTests() as $test) {
-      call_user_func_array([$this, 'doTestBlocks'], array_values($test));
+      $this->doTestBlocks(...array_values($test));
     }
   }
 

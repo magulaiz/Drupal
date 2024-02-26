@@ -69,7 +69,7 @@ class AnnotationBridgeDecorator implements DiscoveryInterface {
    *   The method result.
    */
   public function __call($method, $args) {
-    return call_user_func_array([$this->decorated, $method], $args);
+    return $this->decorated->$method(...$args);
   }
 
 }

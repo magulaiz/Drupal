@@ -100,9 +100,9 @@ class Callback extends ProcessPluginBase {
       if (!is_array($value)) {
         throw new MigrateException(sprintf("When 'unpack_source' is set, the source must be an array. Instead it was of type '%s'", gettype($value)));
       }
-      return call_user_func($this->configuration['callable'], ...$value);
+      return $this->configuration['callable'](...$value);
     }
-    return call_user_func($this->configuration['callable'], $value);
+    return $this->configuration['callable']($value);
   }
 
 }

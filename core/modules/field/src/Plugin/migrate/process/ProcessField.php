@@ -132,7 +132,7 @@ class ProcessField extends ProcessPluginBase implements ContainerFactoryPluginIn
     if (!is_callable([$plugin_instance, $method])) {
       throw new MigrateException('The specified method does not exist or is not callable.');
     }
-    return call_user_func_array([$plugin_instance, $method], [$row]);
+    return $plugin_instance->$method($row);
   }
 
 }

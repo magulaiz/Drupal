@@ -31,10 +31,10 @@ class MachineName extends FieldPluginBase {
 
     if (isset($this->definition['options callback']) && is_callable($this->definition['options callback'])) {
       if (isset($this->definition['options arguments']) && is_array($this->definition['options arguments'])) {
-        $this->valueOptions = call_user_func_array($this->definition['options callback'], $this->definition['options arguments']);
+        $this->valueOptions = $this->definition['options callback'](...$this->definition['options arguments']);
       }
       else {
-        $this->valueOptions = call_user_func($this->definition['options callback']);
+        $this->valueOptions = $this->definition['options callback']();
       }
     }
     else {

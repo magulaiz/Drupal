@@ -237,7 +237,7 @@ class BooleanOperator extends FilterPluginBase {
 
     $info = $this->operators();
     if (!empty($info[$this->operator]['method'])) {
-      call_user_func([$this, $info[$this->operator]['method']], $field, $info[$this->operator]['query_operator']);
+      $this->{$info[$this->operator]['method']}($field, $info[$this->operator]['query_operator']);
     }
   }
 

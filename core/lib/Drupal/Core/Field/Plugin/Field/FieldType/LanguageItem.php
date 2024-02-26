@@ -113,7 +113,7 @@ class LanguageItem extends FieldItemBase implements OptionsProviderInterface {
     // Defer to the callback in the item definition as it can be overridden.
     $constraint = $field_definition->getItemDefinition()->getConstraint('ComplexData');
     if (isset($constraint['value']['AllowedValues']['callback'])) {
-      $languages = call_user_func($constraint['value']['AllowedValues']['callback']);
+      $languages = $constraint['value']['AllowedValues']['callback']();
     }
     else {
       $languages = array_keys(\Drupal::languageManager()->getLanguages(LanguageInterface::STATE_ALL));

@@ -209,7 +209,7 @@ class FieldDefinition extends ListDataDefinition implements FieldDefinitionInter
   public function getDefaultValue(FieldableEntityInterface $entity) {
     // Allow custom default values function.
     if ($callback = $this->getDefaultValueCallback()) {
-      $value = call_user_func($callback, $entity, $this);
+      $value = $callback($entity, $this);
     }
     else {
       $value = $this->getDefaultValueLiteral();

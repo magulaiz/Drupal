@@ -397,7 +397,7 @@ class ModuleHandler implements ModuleHandlerInterface {
       return;
     }
     $hookInvoker = \Closure::fromCallable($module . '_' . $hook);
-    return call_user_func_array($hookInvoker, $args);
+    return $hookInvoker(...$args);
   }
 
   /**
@@ -406,7 +406,7 @@ class ModuleHandler implements ModuleHandlerInterface {
   public function invokeAll($hook, array $args = []) {
     $return = [];
     $this->invokeAllWith($hook, function (callable $hook, string $module) use ($args, &$return) {
-      $result = call_user_func_array($hook, $args);
+      $result = $hook(...$args);
       if (isset($result) && is_array($result)) {
         $return = NestedArray::mergeDeep($return, $result);
       }

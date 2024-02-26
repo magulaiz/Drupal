@@ -49,7 +49,7 @@ class FileValidator implements FileValidatorInterface {
         array_unshift($options, $file);
         // Call the validation function.
         // Options are a list of function args.
-        $errors = array_merge($errors, call_user_func_array($validator, $options));
+        $errors = array_merge($errors, $validator(...$options));
       }
       else {
         // Create the constraint.

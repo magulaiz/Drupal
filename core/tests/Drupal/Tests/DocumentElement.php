@@ -98,7 +98,7 @@ class DocumentElement extends TraversableElement {
     $wrapper = function (Element $element) use ($callback, &$count) {
       $count++;
       try {
-        return call_user_func($callback, $element);
+        return $callback($element);
       }
       catch (Exception $e) {
         return NULL;
@@ -109,7 +109,7 @@ class DocumentElement extends TraversableElement {
       // If the callback or the system is really slow, then it might have only
       // fired once. In this case it is better to trigger it once more as the
       // page state has probably changed while the callback is running.
-      return call_user_func($callback, $this);
+      return $callback($this);
     }
     WebDriverCurlService::enableRetry();
     return $result;

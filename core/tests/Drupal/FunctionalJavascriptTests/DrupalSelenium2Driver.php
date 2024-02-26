@@ -207,7 +207,7 @@ JS);
     $end = $start + $timeout;
 
     do {
-      $result = call_user_func($callback, $this);
+      $result = $callback($this);
 
       if ($result) {
         break;

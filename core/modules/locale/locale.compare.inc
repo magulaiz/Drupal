@@ -243,7 +243,7 @@ function locale_translation_batch_status_build($projects = [], $langcodes = []) 
     ->setFinishCallback('locale_translation_batch_status_finished');
 
   array_walk($operations, function ($operation) use ($batch_builder) {
-    call_user_func_array([$batch_builder, 'addOperation'], $operation);
+    $batch_builder->addOperation(...$operation);
   });
 
   return $batch_builder->toArray();

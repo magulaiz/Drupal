@@ -156,7 +156,7 @@ class PermissionHandler implements PermissionHandlerInterface {
       if (isset($permissions['permission_callbacks'])) {
         foreach ($permissions['permission_callbacks'] as $permission_callback) {
           $callback = $this->callableResolver->getCallableFromDefinition($permission_callback);
-          if ($callback_permissions = call_user_func($callback)) {
+          if ($callback_permissions = $callback()) {
             // Add any callback permissions to the array of permissions. Any
             // defaults can then get processed below.
             foreach ($callback_permissions as $name => $callback_permission) {

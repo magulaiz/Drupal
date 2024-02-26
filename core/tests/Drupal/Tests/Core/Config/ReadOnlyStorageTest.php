@@ -56,8 +56,8 @@ class ReadOnlyStorageTest extends UnitTestCase {
   public function testReadOperations($method, $arguments, $fixture) {
     $this->setRandomFixtureConfig($fixture);
 
-    $expected = call_user_func_array([$this->memory, $method], $arguments);
-    $actual = call_user_func_array([$this->storage, $method], $arguments);
+    $expected = $this->memory->$method(...$arguments);
+    $actual = $this->storage->$method(...$arguments);
     $this->assertEquals($expected, $actual);
   }
 
@@ -101,7 +101,7 @@ class ReadOnlyStorageTest extends UnitTestCase {
     static::replaceStorageContents($this->memory, $backup);
 
     try {
-      call_user_func_array([$this->storage, $method], $arguments);
+      $this->storage->$method(...$arguments);
       $this->fail("exception not thrown");
     }
     catch (\BadMethodCallException $exception) {

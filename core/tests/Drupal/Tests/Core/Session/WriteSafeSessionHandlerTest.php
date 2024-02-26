@@ -142,17 +142,17 @@ class WriteSafeSessionHandlerTest extends UnitTestCase {
       ->willReturn($expected_result);
 
     // Set the parameter matcher.
-    call_user_func_array([$invocation, 'with'], $args);
+    $invocation->with(...$args);
 
     // Test with writable session.
     $this->assertTrue($this->sessionHandler->isSessionWritable());
-    $actual_result = call_user_func_array([$this->sessionHandler, $method], $args);
+    $actual_result = $this->sessionHandler->$method(...$args);
     $this->assertSame($expected_result, $actual_result);
 
     // Test with non-writable session.
     $this->sessionHandler->setSessionWritable(FALSE);
     $this->assertFalse($this->sessionHandler->isSessionWritable());
-    $actual_result = call_user_func_array([$this->sessionHandler, $method], $args);
+    $actual_result = $this->sessionHandler->$method(...$args);
     $this->assertSame($expected_result, $actual_result);
   }
 

@@ -83,7 +83,7 @@ class Random {
       if (!$continue && is_callable($validator)) {
         // If the validator callback returns FALSE generate another random
         // string.
-        $continue = !call_user_func($validator, $str);
+        $continue = !$validator($str);
       }
     } while ($continue);
 

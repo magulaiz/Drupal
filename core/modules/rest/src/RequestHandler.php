@@ -216,7 +216,7 @@ class RequestHandler implements ContainerInjectionInterface {
     $arguments = $argument_resolver->getArguments([$resource, $method]);
 
     // Invoke the operation on the resource plugin.
-    return call_user_func_array([$resource, $method], $arguments);
+    return $resource->$method(...$arguments);
   }
 
   /**

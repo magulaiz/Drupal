@@ -76,7 +76,7 @@ class PhpArrayContainer extends Container {
         throw new RuntimeException(sprintf('Cannot create service "%s" because of invalid factory', $id));
       }
 
-      $service = call_user_func_array($factory, $arguments);
+      $service = $factory(...$arguments);
     }
     else {
       $class = $this->frozen ? $definition['class'] : current($this->resolveServicesAndParameters([$definition['class']]));
@@ -95,7 +95,7 @@ class PhpArrayContainer extends Container {
           $arguments = $call[1];
           $arguments = $this->resolveServicesAndParameters($arguments);
         }
-        call_user_func_array([$service, $method], $arguments);
+        $service->$method(...$arguments);
       }
     }
 
@@ -116,7 +116,7 @@ class PhpArrayContainer extends Container {
         throw new InvalidArgumentException(sprintf('The configurator for class "%s" is not a callable.', get_class($service)));
       }
 
-      call_user_func($callable, $service);
+      $callable($service);
     }
 
     return $service;

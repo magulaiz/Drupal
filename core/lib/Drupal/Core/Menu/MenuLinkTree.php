@@ -146,11 +146,10 @@ class MenuLinkTree implements MenuLinkTreeInterface {
       // Prepare the arguments for the menu tree manipulator callable; the first
       // argument is always the menu link tree.
       if (isset($manipulator['args'])) {
-        array_unshift($manipulator['args'], $tree);
-        $tree = call_user_func_array($callable, $manipulator['args']);
+        $tree = $callable($tree, ...$manipulator['args']);
       }
       else {
-        $tree = call_user_func($callable, $tree);
+        $tree = $callable($tree);
       }
     }
     return $tree;

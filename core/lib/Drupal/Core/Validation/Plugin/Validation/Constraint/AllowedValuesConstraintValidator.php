@@ -91,7 +91,7 @@ class AllowedValuesConstraintValidator extends ChoiceValidator implements Contai
       ) {
         throw new ConstraintDefinitionException('The AllowedValuesConstraint constraint expects a valid callback');
       }
-      $allowed_values = \call_user_func($choices);
+      $allowed_values = $choices();
       $constraint->choices = $allowed_values;
       // parent::validate() does not need to invoke the callback again.
       $constraint->callback = NULL;
