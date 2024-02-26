@@ -157,8 +157,8 @@ class GenerateTheme extends Command {
     $mirror_iterator = (new Finder)
       ->in($this->source_theme->getPath())
       ->files()
-      ->notName($starterkit_config['delete'])
-      ->notPath($starterkit_config['delete']);
+      ->notName($starterkit_config['ignore'])
+      ->notPath($starterkit_config['ignore']);
 
     $this->filesystem->mirror($this->source_theme->getPath(), $this->tmpDir, $mirror_iterator);
 
@@ -299,7 +299,7 @@ class GenerateTheme extends Command {
         'version' => '1.0.0',
         'generator' => "{$theme->getName()}:$version",
       ],
-      'delete' => [
+      'ignore' => [
         '/src/StarterKit.php',
         '/*.starterkit.yml',
       ],
@@ -315,7 +315,7 @@ class GenerateTheme extends Command {
     }
     $starterkit_config['info'] = array_merge($starterkit_config_defaults['info'], $starterkit_config['info']);
 
-    foreach (['delete', 'no_edit', 'no_rename'] as $key) {
+    foreach (['ignore', 'no_edit', 'no_rename'] as $key) {
       if (!isset($starterkit_config[$key])) {
         $starterkit_config[$key] = $starterkit_config_defaults[$key];
       }

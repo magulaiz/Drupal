@@ -383,7 +383,7 @@ SH;
   public function testDeleteDirectory(): void {
     $starterkit_yml = $this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/starterkit_theme.starterkit.yml';
     $info = Yaml::decode(file_get_contents($starterkit_yml));
-    $info['delete'] = [
+    $info['ignore'] = [
       '/src/*',
       '/starterkit_theme.starterkit.yml',
     ];
