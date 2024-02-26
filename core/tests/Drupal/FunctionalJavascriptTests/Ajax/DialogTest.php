@@ -131,10 +131,9 @@ class DialogTest extends WebDriverTestBase {
 
     // Test dialogs opened using OpenModalDialogWithUrl.
     $this->getSession()->getPage()->findButton('Button 3 (modal from url)')->press();
-    $this->assertSession()->assertNoElementAfterWait('css', '.ajax-progress-throbber');
     // Check that title was fetched properly.
     // @see \Drupal\ajax_test\Form\AjaxTestDialogForm::dialog.
-    $form_dialog_title = $button1_dialog->find('css', "span.ui-dialog-title:contains('Ajax Form contents')");
+    $form_dialog_title = $this->assertSession()->waitForElement('css', "span.ui-dialog-title:contains('Ajax Form contents')");
     $this->assertNotNull($form_dialog_title, 'Dialog form has the expected title.');
     $button1_dialog->findButton('Close')->press();
 

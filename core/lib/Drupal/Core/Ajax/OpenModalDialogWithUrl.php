@@ -17,12 +17,11 @@ class OpenModalDialogWithUrl implements CommandInterface {
    * @param array $settings
    *   The dialog settings.
    *
-   * @see OpenDialogCommand
-   * A similar class which deals with opening modals, but we don't want to
-   * inherit any of its public methods except render() hence not extending
-   * it. For usage examples and better understanding the difference between
-   * the two look at their tests.
-   * @see AjaxCommandsTest
+   * @see \Drupal\Core\Ajax\OpenDialogCommand
+   *
+   *   OpenDialogCommand is a similar class which opens modals but works
+   *   differently such as title doesn't need to be provided as a dialog
+   *   option, for a better understanding see implementations.
    */
   public function __construct(
     protected string $url,
