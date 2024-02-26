@@ -4,6 +4,7 @@ namespace Drupal\Core\File;
 
 use Drupal\Component\FileSystem\FileSystem as FileSystemComponent;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\File\Exception\DirectoryNotReadyException;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\Exception\FileExistsException;
@@ -15,12 +16,20 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Provides helpers to operate on files and stream wrappers.
  */
 class FileSystem implements FileSystemInterface {
+
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected array $deprecatedProperties = [
+    'logger' => 'logger.channel.file',
+  ];
 
   /**
    * Default mode for new directories. See self::chmod().
@@ -53,15 +62,10 @@ class FileSystem implements FileSystemInterface {
    *   The stream wrapper manager.
    * @param \Drupal\Core\Site\Settings $settings
    *   The site settings.
-   * @param \Psr\Log\LoggerInterface|null $logger
-   *   (optional) The file logger channel.
    */
-  public function __construct(StreamWrapperManagerInterface $stream_wrapper_manager, Settings $settings, LoggerInterface $logger = NULL) {
+  public function __construct(StreamWrapperManagerInterface $stream_wrapper_manager, Settings $settings) {
     $this->streamWrapperManager = $stream_wrapper_manager;
     $this->settings = $settings;
-    if ($logger) {
-      @trigger_error('Calling FileSystem::__construct() with the $logger argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3071798', E_USER_DEPRECATED);
-    }
   }
 
   /**
