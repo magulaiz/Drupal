@@ -236,6 +236,8 @@ system.theme:
       constraints:
         ExtensionName: []
         ExtensionExists: theme
+      # @see \Drupal\user\Theme\AdminNegotiator::determineActiveTheme()
+      requiredKey: false
     default:
       type: string
       label: 'Default theme'
