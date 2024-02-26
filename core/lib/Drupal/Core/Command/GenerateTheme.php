@@ -9,6 +9,7 @@ use Composer\Semver\VersionParser;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\Extension\InfoParser;
 use Drupal\Core\Theme\StarterKitInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Filesystem\Filesystem;
@@ -48,20 +49,6 @@ class GenerateTheme extends Command {
    * @var string
    */
   private string $tmpDir;
-
-  /**
-   * The machine name of the source theme.
-   *
-   * @var String
-   */
-  private $source_theme_name;
-
-  /**
-   * The theme to be duplicated.
-   *
-   * @var \Drupal\Core\Extension\Extension|null
-   */
-  private ?Extension $source_theme;
 
   /**
    * @var \Symfony\Component\Filesystem\Filesystem
@@ -109,28 +96,24 @@ class GenerateTheme extends Command {
    * {@inheritdoc}
    */
   protected function execute(InputInterface $input, OutputInterface $output): int {
-
-    // Get all command args & options.
     $destination_theme = $input->getArgument('machine-name');
 
     $destination = trim($input->getOption('path'), '/') . '/' . $destination_theme;
-    $this->source_theme_name = $input->getOption('starterkit');
-    $theme_label = $input->getOption('name');
-
     if (is_dir($destination)) {
       $this->io->getErrorStyle()->error("Theme could not be generated because the destination directory $destination exists already.");
       return 1;
     }
 
-    $this->source_theme = $this->getThemeInfo($this->source_theme_name);
-    if ($this->source_theme === NULL) {
-      $this->io->getErrorStyle()->error("Theme source theme $this->source_theme_name cannot be found.");
+    $starterkit_id = $input->getOption('starterkit');
+    $starterkit = $this->getThemeInfo($starterkit_id);
+    if ($starterkit === NULL) {
+      $this->io->getErrorStyle()->error("Theme source theme $starterkit_id cannot be found.");
       return 1;
     }
 
     try {
-      $source_version = self::determineSourceVersion(
-        $this->source_theme,
+      $starterkit_version = self::getStarterKitVersion(
+        $starterkit,
         $this->io
       );
     }
@@ -139,10 +122,11 @@ class GenerateTheme extends Command {
       return 1;
     }
 
+    $theme_label = $input->getOption('name');
     try {
       $starterkit_config = self::loadStarterKitConfig(
-        $this->source_theme,
-        $source_version,
+        $starterkit,
+        $starterkit_version,
         $theme_label,
         $input->getOption('description')
       );
@@ -155,12 +139,12 @@ class GenerateTheme extends Command {
     $this->filesystem->mkdir($this->tmpDir);
 
     $mirror_iterator = (new Finder)
-      ->in($this->source_theme->getPath())
+      ->in($starterkit->getPath())
       ->files()
       ->notName($starterkit_config['ignore'])
       ->notPath($starterkit_config['ignore']);
 
-    $this->filesystem->mirror($this->source_theme->getPath(), $this->tmpDir, $mirror_iterator);
+    $this->filesystem->mirror($starterkit->getPath(), $this->tmpDir, $mirror_iterator);
 
     // verify files match the patterns
     // @todo could this go into loading of the config logic
@@ -183,10 +167,10 @@ class GenerateTheme extends Command {
 
     $patterns = [
       'old' => [
-        'machine_name' => $this->source_theme_name,
-        'label' => $this->source_theme->getName(),
-        'machine_class_name' => (string) u($this->source_theme_name)->camel()->title(),
-        'label_class_name' => (string) u($this->source_theme->getName())->camel()->title(),
+        'machine_name' => $starterkit->getName(),
+        'label' => $starterkit->info['name'],
+        'machine_class_name' => (string) u($starterkit->getName())->camel()->title(),
+        'label_class_name' => (string) u($starterkit->info['name'])->camel()->title(),
       ],
       'new' => [
         'machine_name' => $destination_theme,
@@ -221,10 +205,10 @@ class GenerateTheme extends Command {
     file_put_contents($info_file, Yaml::encode($info));
 
     $loader = new ClassLoader();
-    $loader->addPsr4("Drupal\\$this->source_theme_name\\", "{$this->source_theme->getPath()}/src");
+    $loader->addPsr4("Drupal\\{$starterkit->getName()}\\", "{$starterkit->getPath()}/src");
     $loader->register();
 
-    $generator_classname = "Drupal\\$this->source_theme_name\\StarterKit";
+    $generator_classname = "Drupal\\{$starterkit->getName()}\\StarterKit";
     if (class_exists($generator_classname)) {
       if (is_a($generator_classname, StarterKitInterface::class, TRUE)) {
         $generator_classname::postProcess($this->tmpDir, $destination_theme, $theme_label);
@@ -260,15 +244,16 @@ class GenerateTheme extends Command {
    *
    * @return \Drupal\Core\Extension\Extension|null
    */
-  private function getThemeInfo(string $theme): ? Extension {
+  private function getThemeInfo(string $theme_name): ? Extension {
     $extension_discovery = new ExtensionDiscovery($this->root, FALSE, []);
     $themes = $extension_discovery->scan('theme');
 
-    if (!isset($themes[$theme])) {
-      return NULL;
+    $theme = $themes[$theme_name] ?? NULL;
+    if ($theme !== NULL) {
+      $theme->info = (new InfoParser($this->root))->parse($theme->getPathname());
     }
 
-    return $themes[$theme];
+    return $theme;
   }
 
   private static function processPaths(string $path): string {
@@ -328,12 +313,11 @@ class GenerateTheme extends Command {
     return $starterkit_config;
   }
 
-  private static function determineSourceVersion(
+  private static function getStarterKitVersion(
     Extension $theme,
     SymfonyStyle $io
   ): string {
-    $info = Yaml::decode(file_get_contents($theme->getPathname()));
-    $source_version = $info['version'] ?? '';
+    $source_version = $theme->info['version'] ?? '';
     if ($source_version === '') {
       $confirm = new ConfirmationQuestion(sprintf(
         'The source theme %s does not have a version specified. This makes tracking changes in the source theme difficult. Are you sure you want to continue?',
