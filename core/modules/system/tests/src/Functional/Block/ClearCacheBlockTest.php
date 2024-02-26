@@ -59,6 +59,7 @@ class ClearCacheBlockTest extends BrowserTestBase {
     $this->assertSession()->statusMessageContains('Caches cleared.');
 
     // Confirm that access is not allowed for non-authorized users.
+    $this->drupalLogout();
     $this->drupalGet('<front>');
     $this->assertSession()->pageTextNotContains('Clear cache block');
   }
