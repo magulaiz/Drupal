@@ -187,7 +187,7 @@ class TranslateSql {
       'projection' => ['name' => 1, 'path' => 1, 'pattern_outline' => 1, 'fit' => 1, 'route' => 1],
     ],
     [
-      'pattern' => '/^SELECT expire, value FROM {(.*)} WHERE name = :name$/',
+      'pattern' => '/^SELECT \[expire\], \[value\] FROM {(.*)} WHERE \[name\] = :name$/',
       'filter' => ['name' => ':name'],
       'projection' => ['expire' => 1, 'value' => 1],
     ],

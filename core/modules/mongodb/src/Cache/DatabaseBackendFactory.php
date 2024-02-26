@@ -13,8 +13,9 @@ class DatabaseBackendFactory extends CoreDatabaseBackendFactory {
    * {@inheritdoc}
    */
   public function get($bin) {
+    $max_rows = $this->getMaxRowsForBin($bin);
     // MongoDB needs it own version of \Drupal\mongodb\Cache\DatabaseBackend.
-    return new DatabaseBackend($this->connection, $this->checksumProvider, $bin);
+    return new DatabaseBackend($this->connection, $this->checksumProvider, $bin, $this->serializer, $this->time, $max_rows);
   }
 
 }

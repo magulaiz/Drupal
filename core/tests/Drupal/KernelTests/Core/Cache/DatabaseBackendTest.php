@@ -4,6 +4,8 @@ namespace Drupal\KernelTests\Core\Cache;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\DatabaseBackend;
+use Drupal\Core\Database\Database;
+use Drupal\mongodb\Cache\DatabaseBackend as MongodbDatabaseBackend;
 
 /**
  * Unit test of the database backend using the generic cache unit test base.
@@ -33,14 +35,26 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
    *   A new DatabaseBackend object.
    */
   protected function createCacheBackend($bin) {
-    return new DatabaseBackend(
-      $this->container->get('database'),
-      $this->container->get('cache_tags.invalidator.checksum'),
-      $bin,
-      $this->container->get('serialization.phpserialize'),
-      \Drupal::service(TimeInterface::class),
-      static::$maxRows,
-    );
+    if (Database::getConnection()->databaseType() == 'mongodb') {
+      return new MongodbDatabaseBackend(
+        $this->container->get('database'),
+        $this->container->get('cache_tags.invalidator.checksum'),
+        $bin,
+        $this->container->get('serialization.phpserialize'),
+        \Drupal::service(TimeInterface::class),
+        static::$maxRows,
+      );
+    }
+    else {
+      return new DatabaseBackend(
+        $this->container->get('database'),
+        $this->container->get('cache_tags.invalidator.checksum'),
+        $bin,
+        $this->container->get('serialization.phpserialize'),
+        \Drupal::service(TimeInterface::class),
+        static::$maxRows,
+      );
+    }
   }
 
   /**
@@ -124,7 +138,12 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
    * Test that the service "cache_tags.invalidator.checksum" is backend overridable.
    */
   public function testCacheTagsInvalidatorChecksumIsBackendOverridable() {
-    $definition = $this->container->getDefinition('cache_tags.invalidator.checksum');
+    if (Database::getConnection()->databaseType() == 'mongodb') {
+      $definition = $this->container->getDefinition('mongodb.cache_tags.invalidator.checksum');
+    }
+    else {
+      $definition = $this->container->getDefinition('cache_tags.invalidator.checksum');
+    }
     $this->assertTrue($definition->hasTag('backend_overridable'));
   }
 
@@ -132,7 +151,12 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
    * Test that the service "cache.backend.database" is backend overridable.
    */
   public function testCacheBackendDatabaseIsBackendOverridable() {
-    $definition = $this->container->getDefinition('cache.backend.database');
+    if (Database::getConnection()->databaseType() == 'mongodb') {
+      $definition = $this->container->getDefinition('mongodb.cache.backend.database');
+    }
+    else {
+      $definition = $this->container->getDefinition('cache.backend.database');
+    }
     $this->assertTrue($definition->hasTag('backend_overridable'));
   }
 

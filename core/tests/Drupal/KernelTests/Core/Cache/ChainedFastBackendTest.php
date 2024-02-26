@@ -6,6 +6,8 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\ChainedFastBackend;
 use Drupal\Core\Cache\DatabaseBackend;
 use Drupal\Core\Cache\PhpBackend;
+use Drupal\Core\Database\Database;
+use Drupal\mongodb\Cache\DatabaseBackend as MongodbDatabaseBackend;
 
 /**
  * Unit test of the fast chained backend using the generic cache unit test base.
@@ -21,7 +23,12 @@ class ChainedFastBackendTest extends GenericCacheBackendUnitTestBase {
    *   A new ChainedFastBackend object.
    */
   protected function createCacheBackend($bin) {
-    $consistent_backend = new DatabaseBackend(\Drupal::service('database'), \Drupal::service('cache_tags.invalidator.checksum'), $bin, \Drupal::service('serialization.phpserialize'), \Drupal::service(TimeInterface::class), 100);
+    if (Database::getConnection()->databaseType() == 'mongodb') {
+      $consistent_backend = new MongodbDatabaseBackend(\Drupal::service('database'), \Drupal::service('cache_tags.invalidator.checksum'), $bin, \Drupal::service('serialization.phpserialize'), \Drupal::service(TimeInterface::class), 100);
+    }
+    else {
+      $consistent_backend = new DatabaseBackend(\Drupal::service('database'), \Drupal::service('cache_tags.invalidator.checksum'), $bin, \Drupal::service('serialization.phpserialize'), \Drupal::service(TimeInterface::class), 100);
+    }
     $fast_backend = new PhpBackend($bin, \Drupal::service('cache_tags.invalidator.checksum'), \Drupal::service(TimeInterface::class));
     $backend = new ChainedFastBackend($consistent_backend, $fast_backend, $bin);
     // Explicitly register the cache bin as it can not work through the
