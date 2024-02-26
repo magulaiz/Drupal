@@ -7,6 +7,9 @@ namespace Drupal\Tests\Component\Utility;
 use Drupal\Component\Utility\Bytes;
 use Drupal\TestTools\Trait\ExpectDeprecationTrait;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Tests bytes size parsing helper methods.
@@ -18,6 +21,7 @@ use PHPUnit\Framework\TestCase;
 class BytesTest extends TestCase {
 
   use ExpectDeprecationTrait;
+  use ProphecyTrait;
 
   /**
    * Tests \Drupal\Component\Utility\Bytes::toNumber().
@@ -88,6 +92,17 @@ class BytesTest extends TestCase {
    */
   public function testValidate($string, bool $expected_result): void {
     $this->assertSame($expected_result, Bytes::validate($string));
+
+    $execution_context = $this->prophesize(ExecutionContextInterface::class);
+    if ($expected_result) {
+      $execution_context->addViolation(Argument::cetera())
+        ->shouldNotBeCalled();
+    }
+    else {
+      $execution_context->addViolation(Argument::cetera())
+        ->shouldBeCalledTimes(1);
+    }
+    Bytes::validateConstraint($string, $execution_context->reveal());
   }
 
   /**
