@@ -60,7 +60,7 @@ class TextFormatterTest extends EntityKernelTestBase {
   /**
    * Tests the default text field formatter functionality.
    */
-  public function testDefaultFormatter() {
+  public function testDefaultFormatter(): void {
     $autop_filter = FilterFormat::create([
       'format' => 'my_text_format',
       'name' => 'My text format',
@@ -84,7 +84,7 @@ class TextFormatterTest extends EntityKernelTestBase {
   /**
    * Tests the functionality of field formatters that allow trimming.
    */
-  public function testTrimmedFormatters() {
+  public function testTrimmedFormatters(): void {
     $formatters = [
       'text_trimmed',
       'text_summary_or_trimmed',
