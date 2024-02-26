@@ -6,9 +6,9 @@
  */
 
 use Drupal\Core\Batch\BatchBuilder;
+use Drupal\Core\Url;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\Core\Url;
 use Drupal\file\FileInterface;
 use Drupal\locale\Gettext;
 use Drupal\locale\Locale;
@@ -586,10 +586,14 @@ function locale_config_batch_build(array $names, array $langcodes, array $option
     $batch_builder->addOperation('locale_config_batch_set_config_langcodes');
   }
 
-  // Chunk $names array into chunks of 20.
-  $batch_names_chunks = array_chunk($names, 20);
+  // Chunking the array of names into batches of 20 for better performance.
+  $name_chunks = array_chunk($names, 20);
 
-  foreach ($batch_names_chunks as $chunk) {
+  foreach ($name_chunks as $chunk) {
+    // During installation the caching of configuration objects is disabled so
+    // it is very expensive to initialize the \Drupal::config() object on each
+    // request. We batch a small number of configuration object upgrades
+    // together to improve the overall performance of the process.
     $batch_builder->addOperation('locale_config_batch_refresh_name', [$chunk, $langcodes]);
   }
 
