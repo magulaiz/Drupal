@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Ajax;
 
 use Drupal\Core\Ajax\AnnounceCommand;
-use Drupal\Core\Ajax\OpenModalDialogWithUrl;
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Ajax\AddCssCommand;
