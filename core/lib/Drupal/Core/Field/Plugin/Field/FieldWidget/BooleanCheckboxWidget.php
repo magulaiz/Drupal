@@ -102,4 +102,5 @@ class BooleanCheckboxWidget extends WidgetBase {
       }
     }
   }
+
 }
