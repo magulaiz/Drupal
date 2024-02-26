@@ -131,12 +131,12 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
       // deleted.
       if ($this->entityType->isRevisionable()) {
         // For MongoDB: All embedded table data needs to be renamed.
-        $all_revisions_table = $this->storage->getAllRevisionsTable();
+        $all_revisions_table = $this->storage->getJsonStorageAllRevisionsTable();
         $dedicated_all_revisions_table = $table_mapping->getMongodbDedicatedTableName($storage_definition, $all_revisions_table);
         $dedicated_all_revisions_new_table = $table_mapping->getMongodbDedicatedTableName($storage_definition, $all_revisions_table, TRUE);
         $this->database->schema()->createEmbeddedTable($all_revisions_table, $dedicated_all_revisions_new_table, $schema[$dedicated_all_revisions_table]);
 
-        $current_revision_table = $this->storage->getCurrentRevisionTable();
+        $current_revision_table = $this->storage->getJsonStorageCurrentRevisionTable();
         $dedicated_current_revision_table = $table_mapping->getMongodbDedicatedTableName($storage_definition, $current_revision_table);
         $dedicated_current_revision_new_table = $table_mapping->getMongodbDedicatedTableName($storage_definition, $current_revision_table, TRUE);
         // Check if there already exists a table with that name. If so, then delete it.
@@ -145,7 +145,7 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
         }
         $this->database->schema()->createEmbeddedTable($current_revision_table, $dedicated_current_revision_new_table, $schema[$dedicated_current_revision_table]);
 
-        $latest_revision_table = $this->storage->getLatestRevisionTable();
+        $latest_revision_table = $this->storage->getJsonStorageLatestRevisionTable();
         $dedicated_latest_revision_table = $table_mapping->getMongodbDedicatedTableName($storage_definition, $latest_revision_table);
         $dedicated_latest_revision_new_table = $table_mapping->getMongodbDedicatedTableName($storage_definition, $latest_revision_table, TRUE);
         // Check if there already exists a table with that name. If so, then delete it.
@@ -215,7 +215,7 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
       }
       elseif ($this->entityType->isTranslatable()) {
         // For MongoDB: All embedded table data needs to be renamed.
-        $translations_table = $this->storage->getTranslationsTable();
+        $translations_table = $this->storage->getJsonStorageTranslationsTable();
         $dedicated_translations_table = $table_mapping->getMongodbDedicatedTableName($storage_definition, $translations_table);
         $dedicated_translations_new_table = $table_mapping->getMongodbDedicatedTableName($storage_definition, $translations_table, TRUE);
         $this->database->schema()->createEmbeddedTable($translations_table, $dedicated_translations_new_table, $schema[$dedicated_translations_table]);
@@ -265,21 +265,21 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
       $shared_table_field_columns = $table_mapping->getColumnNames($storage_definition->getName());
       foreach ($shared_table_field_columns as $shared_table_field_column) {
         if ($this->entityType->isRevisionable()) {
-          $all_revisions_table = $table_mapping->getAllRevisionsTable();
+          $all_revisions_table = $table_mapping->getJsonStorageAllRevisionsTable();
           if ($this->database->schema()->fieldExists($all_revisions_table, $shared_table_field_column)) {
             $this->database->schema()->dropField($all_revisions_table, $shared_table_field_column);
           }
-          $current_revision_table = $table_mapping->getCurrentRevisionTable();
+          $current_revision_table = $table_mapping->getJsonStorageCurrentRevisionTable();
           if ($this->database->schema()->fieldExists($current_revision_table, $shared_table_field_column)) {
             $this->database->schema()->dropField($current_revision_table, $shared_table_field_column);
           }
-          $latest_revision_table = $table_mapping->getLatestRevisionTable();
+          $latest_revision_table = $table_mapping->getJsonStorageLatestRevisionTable();
           if ($this->database->schema()->fieldExists($latest_revision_table, $shared_table_field_column)) {
             $this->database->schema()->dropField($latest_revision_table, $shared_table_field_column);
           }
         }
         elseif ($this->entityType->isTranslatable()) {
-          $translations_table = $table_mapping->getTranslationsTable();
+          $translations_table = $table_mapping->getJsonStorageTranslationsTable();
           if ($this->database->schema()->fieldExists($translations_table, $shared_table_field_column)) {
             $this->database->schema()->dropField($translations_table, $shared_table_field_column);
           }
@@ -371,10 +371,10 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
   protected function getEntitySchemaTables(TableMappingInterface $table_mapping) {
     return array_filter([
       'base_table' => $table_mapping->getBaseTable(),
-      'all_revisions_table' => $table_mapping->getAllRevisionsTable(),
-      'current_revision_table' => $table_mapping->getCurrentRevisionTable(),
-      'latest_revision_table' => $table_mapping->getLatestRevisionTable(),
-      'translations_table' => $table_mapping->getTranslationsTable(),
+      'all_revisions_table' => $table_mapping->getJsonStorageAllRevisionsTable(),
+      'current_revision_table' => $table_mapping->getJsonStorageCurrentRevisionTable(),
+      'latest_revision_table' => $table_mapping->getJsonStorageLatestRevisionTable(),
+      'translations_table' => $table_mapping->getJsonStorageTranslationsTable(),
     ]);
   }
 
@@ -497,28 +497,28 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
     // to delete the field tables with their regular names. When this happens
     // original definitions will be defined.
     $table_mapping = $this->getTableMapping($this->entityType, [$storage_definition]);
-    if ($all_revisions_table = $table_mapping->getAllRevisionsTable()) {
+    if ($all_revisions_table = $table_mapping->getJsonStorageAllRevisionsTable()) {
       $dedicated_all_revisions_table = $table_mapping->getMongodbDedicatedTableName($storage_definition, $all_revisions_table, $storage_definition->isDeleted());
       if ($this->database->schema()->tableExists($dedicated_all_revisions_table)) {
         $this->database->schema()->dropTable($dedicated_all_revisions_table);
       }
     }
 
-    if ($current_revision_table = $table_mapping->getCurrentRevisionTable()) {
+    if ($current_revision_table = $table_mapping->getJsonStorageCurrentRevisionTable()) {
       $dedicated_current_revision_table = $table_mapping->getMongodbDedicatedTableName($storage_definition, $current_revision_table, $storage_definition->isDeleted());
       if ($this->database->schema()->tableExists($dedicated_current_revision_table)) {
         $this->database->schema()->dropTable($dedicated_current_revision_table);
       }
     }
 
-    if ($latest_revision_table = $table_mapping->getLatestRevisionTable()) {
+    if ($latest_revision_table = $table_mapping->getJsonStorageLatestRevisionTable()) {
       $dedicated_latest_revision_table = $table_mapping->getMongodbDedicatedTableName($storage_definition, $latest_revision_table, $storage_definition->isDeleted());
       if ($this->database->schema()->tableExists($dedicated_latest_revision_table)) {
         $this->database->schema()->dropTable($dedicated_latest_revision_table);
       }
     }
 
-    if ($translations_table = $table_mapping->getTranslationsTable()) {
+    if ($translations_table = $table_mapping->getJsonStorageTranslationsTable()) {
       $dedicated_translations_table = $table_mapping->getMongodbDedicatedTableName($storage_definition, $translations_table, $storage_definition->isDeleted());
       if ($this->database->schema()->tableExists($dedicated_translations_table)) {
         $this->database->schema()->dropTable($dedicated_translations_table);
@@ -618,12 +618,12 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
       // exist unchanged.
       $table_mapping = $this->getTableMapping($this->entityType, [$storage_definition]);
       if ($this->entityType->isRevisionable()) {
-        $dedicated_all_revisions_table = $table_mapping->getMongodbDedicatedTableName($original, $this->storage->getAllRevisionsTable());
-        $dedicated_current_revision_table = $table_mapping->getMongodbDedicatedTableName($original, $this->storage->getCurrentRevisionTable());
-        $dedicated_latest_revision_table = $table_mapping->getMongodbDedicatedTableName($original, $this->storage->getLatestRevisionTable());
+        $dedicated_all_revisions_table = $table_mapping->getMongodbDedicatedTableName($original, $this->storage->getJsonStorageAllRevisionsTable());
+        $dedicated_current_revision_table = $table_mapping->getMongodbDedicatedTableName($original, $this->storage->getJsonStorageCurrentRevisionTable());
+        $dedicated_latest_revision_table = $table_mapping->getMongodbDedicatedTableName($original, $this->storage->getJsonStorageLatestRevisionTable());
       }
       elseif ($this->entityType->isTranslatable()) {
-        $dedicated_translations_table = $table_mapping->getMongodbDedicatedTableName($original, $this->storage->getTranslationsTable());
+        $dedicated_translations_table = $table_mapping->getMongodbDedicatedTableName($original, $this->storage->getJsonStorageTranslationsTable());
       }
       else {
         $dedicated_base_table = $table_mapping->getMongodbDedicatedTableName($original, $this->storage->getBaseTable());
@@ -654,12 +654,12 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
       }
 
       if ($this->entityType->isRevisionable()) {
-        $dedicated_all_revisions_table = $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->storage->getAllRevisionsTable());
-        $dedicated_current_revision_table = $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->storage->getCurrentRevisionTable());
-        $dedicated_latest_revision_table = $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->storage->getLatestRevisionTable());
+        $dedicated_all_revisions_table = $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->storage->getJsonStorageAllRevisionsTable());
+        $dedicated_current_revision_table = $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->storage->getJsonStorageCurrentRevisionTable());
+        $dedicated_latest_revision_table = $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->storage->getJsonStorageLatestRevisionTable());
       }
       elseif ($this->entityType->isTranslatable()) {
-        $dedicated_translations_table = $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->storage->getTranslationsTable());
+        $dedicated_translations_table = $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->storage->getJsonStorageTranslationsTable());
       }
       else {
         $dedicated_base_table = $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->storage->getBaseTable());
@@ -865,9 +865,9 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
       $dedicated_latest_revision_schema['description'] = "Latest revision storage for {$storage_definition->getTargetEntityTypeId()} field {$storage_definition->getName()}.";
 
       return [
-        $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->storage->getAllRevisionsTable()) => $dedicated_all_revisions_schema,
-        $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->storage->getCurrentRevisionTable()) => $dedicated_current_revision_schema,
-        $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->storage->getLatestRevisionTable()) => $dedicated_latest_revision_schema,
+        $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->storage->getJsonStorageAllRevisionsTable()) => $dedicated_all_revisions_schema,
+        $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->storage->getJsonStorageCurrentRevisionTable()) => $dedicated_current_revision_schema,
+        $table_mapping->getMongodbDedicatedTableName($storage_definition, $this->storage->getJsonStorageLatestRevisionTable()) => $dedicated_latest_revision_schema,
       ];
     }
     elseif ($entity_type->isTranslatable()) {
@@ -876,7 +876,7 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
       // $dedicated_schema['indexes']['primary_key'] = ['entity_id', 'deleted', 'delta', 'langcode'];
       $dedicated_schema['description'] = "Translations storage for {$storage_definition->getTargetEntityTypeId()} field {$storage_definition->getName()}.";
 
-      return [$table_mapping->getMongodbDedicatedTableName($storage_definition, $this->storage->getTranslationsTable()) => $dedicated_schema];
+      return [$table_mapping->getMongodbDedicatedTableName($storage_definition, $this->storage->getJsonStorageTranslationsTable()) => $dedicated_schema];
     }
     else {
       // Adding an index for every field can create too many indexes on a single

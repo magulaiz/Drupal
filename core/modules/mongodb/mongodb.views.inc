@@ -140,7 +140,7 @@ function mongodb_field_views_data_alter(array &$data, FieldStorageConfigInterfac
   // Override for the module "datetime".
   $column_name = $field_storage->getName() . '_' . $field_storage->getMainPropertyName();
   foreach ($data as $table_name => $table_data) {
-    if ($data[$table_name][$column_name]['real field']) {
+    if (!empty($data[$table_name][$column_name]['real field'])) {
       $real_field = $data[$table_name][$column_name]['real field'];
       foreach (['year', 'month', 'day', 'week', 'year_month', 'full_date'] as $date_type) {
         if (isset($data[$table_name][$column_name . '_' . $date_type]['argument'])) {
