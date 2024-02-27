@@ -91,7 +91,7 @@ function announcements_feed_get_all_announcements() {
  */
 function announcements_feed_fetch($force = FALSE) {
   $announcements = cache_get('announcements_feed');
-  if (empty($announcements)) {
+  if ($force || empty($announcements)) {
     $announcements_feed_json_url = variable_get('announcements_feed_json_url', ANNOUNCEMENTS_FEED_DEFAULT_JSON_URL);
     $response = drupal_http_request($announcements_feed_json_url);
     if ($response->code == 200) {
