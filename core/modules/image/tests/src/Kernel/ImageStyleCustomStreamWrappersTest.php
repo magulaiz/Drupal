@@ -47,7 +47,10 @@ class ImageStyleCustomStreamWrappersTest extends KernelTestBase {
     parent::setUp();
     $this->fileSystem = $this->container->get('file_system');
     $this->config('system.file')->set('default_scheme', 'public')->save();
-    $this->imageStyle = ImageStyle::create(['name' => 'test']);
+    $this->imageStyle = ImageStyle::create([
+      'name' => 'test',
+      'label' => 'Test',
+    ]);
     $this->imageStyle->save();
   }
 
@@ -99,7 +102,7 @@ class ImageStyleCustomStreamWrappersTest extends KernelTestBase {
    *   - The derivative expected stream wrapper scheme.
    *   - The stream wrapper service class.
    */
-  public function providerTestCustomStreamWrappers() {
+  public static function providerTestCustomStreamWrappers() {
     return [
       ['public', 'public', PublicStream::class],
       ['private', 'private', PrivateStream::class],

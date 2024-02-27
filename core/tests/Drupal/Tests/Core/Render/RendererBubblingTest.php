@@ -1,12 +1,10 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Render\RendererBubblingTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Render;
 
+use Drupal\Component\Datetime\Time;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Cache\VariationCache;
@@ -83,8 +81,8 @@ class RendererBubblingTest extends RendererTestBase {
     $bin = $this->randomMachineName();
 
     $this->setUpRequest();
-    $this->memoryCache = new VariationCache($this->requestStack, new MemoryBackend(), $this->cacheContextsManager);
-    $custom_cache = new VariationCache($this->requestStack, new MemoryBackend(), $this->cacheContextsManager);
+    $this->memoryCache = new VariationCache($this->requestStack, new MemoryBackend(new Time($this->requestStack)), $this->cacheContextsManager);
+    $custom_cache = new VariationCache($this->requestStack, new MemoryBackend(new Time($this->requestStack)), $this->cacheContextsManager);
 
     $this->cacheFactory->expects($this->atLeastOnce())
       ->method('get')
@@ -148,7 +146,7 @@ class RendererBubblingTest extends RendererTestBase {
     $this->assertRenderCacheItem($element['#cache']['keys'], $expected_cache_item);
   }
 
-  public function providerTestContextBubblingEdgeCases() {
+  public static function providerTestContextBubblingEdgeCases() {
     $data = [];
 
     // Cache contexts of inaccessible children aren't bubbled (because those
@@ -342,7 +340,7 @@ class RendererBubblingTest extends RendererTestBase {
             // A lower max-age; the redirecting cache item should be updated.
             'max-age' => 1800,
           ],
-          'grandgrandchild' => [
+          'great grandchild' => [
             '#access_callback' => function () use (&$current_user_role) {
               // Only role C can access this subtree.
               return $current_user_role === 'C';
@@ -400,7 +398,7 @@ class RendererBubblingTest extends RendererTestBase {
       '#markup' => 'parent',
     ]);
 
-    // Request 3: role C, both the grandchild and the grandgrandchild are
+    // Request 3: role C, both the grandchild and the great grandchild are
     // accessible => bubbled cache contexts: foo, bar, user.roles + merged
     // max-age: 300.
     $element = $test_element;
@@ -452,9 +450,6 @@ class RendererBubblingTest extends RendererTestBase {
     // Mock the State service.
     $memory_state = new State(new KeyValueMemoryFactory());
     \Drupal::getContainer()->set('state', $memory_state);
-    $this->controllerResolver->expects($this->any())
-      ->method('getControllerFromDefinition')
-      ->willReturnArgument(0);
 
     // Simulate the theme system/Twig: a recursive call to Renderer::render(),
     // just like the theme system or a Twig template would have done.
@@ -479,7 +474,7 @@ class RendererBubblingTest extends RendererTestBase {
     );
 
     // Simulate the rendering of an entire response (i.e. a root call).
-    $output = $this->renderer->renderRoot($test_element);
+    $output = (string) $this->renderer->renderRoot($test_element);
 
     // First, assert the render array is of the expected form.
     $this->assertEquals('Cache context!Cache tag!Asset!Placeholder!barquxNested!Cached nested!', trim($output), 'Expected HTML generated.');
@@ -503,7 +498,7 @@ class RendererBubblingTest extends RendererTestBase {
    *
    * @return array
    */
-  public function providerTestBubblingWithPrerender() {
+  public static function providerTestBubblingWithPrerender() {
     $data = [];
 
     // Test element without theme.

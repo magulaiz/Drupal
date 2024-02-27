@@ -9,6 +9,7 @@ use Drupal\update\UpdateManagerInterface;
  * Tests how the Update Manager handles contributed modules and themes.
  *
  * @group update
+ * @group #slow
  */
 class UpdateContribTest extends UpdateTestBase {
   use UpdateTestTrait;
@@ -642,7 +643,7 @@ class UpdateContribTest extends UpdateTestBase {
    *   - 8.x-1.1
    *   - 8.x-1.0
    */
-  public function securityUpdateAvailabilityProvider() {
+  public static function securityUpdateAvailabilityProvider() {
     return [
       // Security releases available for module major release 1.
       // No releases for next major.

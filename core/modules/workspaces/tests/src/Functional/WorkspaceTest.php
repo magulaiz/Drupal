@@ -11,6 +11,7 @@ use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
  * Test the workspace entity.
  *
  * @group workspaces
+ * @group #slow
  */
 class WorkspaceTest extends BrowserTestBase {
 
@@ -226,7 +227,7 @@ class WorkspaceTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Create a new filed.
-    $field_name = mb_strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     $field_label = $this->randomMachineName();
     $this->fieldUIAddNewField('admin/config/workflow/workspaces', $field_name, $field_label, 'string');
 

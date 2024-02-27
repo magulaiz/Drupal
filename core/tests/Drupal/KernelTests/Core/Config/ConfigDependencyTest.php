@@ -21,7 +21,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['config_test', 'entity_test', 'user'];
+  protected static $modules = ['config_test', 'entity_test', 'user', 'node', 'views'];
 
   /**
    * Tests that calculating dependencies for system module.
@@ -227,7 +227,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
   /**
    * Data provider for self::testConfigEntityUninstallComplex().
    */
-  public function providerConfigEntityUninstallComplex() {
+  public static function providerConfigEntityUninstallComplex() {
     // Ensure that alphabetical order has no influence on dependency fixing and
     // removal.
     return [

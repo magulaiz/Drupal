@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Unit;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -385,7 +387,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * @return array
    *   An array of data values.
    */
-  public function lookupDestinationIdMappingDataProvider() {
+  public static function lookupDestinationIdMappingDataProvider() {
     return [
       [1, 1],
       [2, 2],
@@ -603,7 +605,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * @return array
    *   An array of data values.
    */
-  public function lookupSourceIdMappingDataProvider() {
+  public static function lookupSourceIdMappingDataProvider() {
     return [
       [1, 1],
       [2, 2],
@@ -760,7 +762,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * @return array
    *   An array of data values.
    */
-  public function updateCountDataProvider() {
+  public static function updateCountDataProvider() {
     return [
       [0],
       [1],
@@ -808,7 +810,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * @return array
    *   An array of data values.
    */
-  public function errorCountDataProvider() {
+  public static function errorCountDataProvider() {
     return [
       [0],
       [1],
@@ -1094,7 +1096,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * @return array
    *   An array of data values.
    */
-  public function getHighestIdDataProvider() {
+  public static function getHighestIdDataProvider() {
     return [
       'Destination ID type integer' => [
         'dest_ids' => [
@@ -1159,7 +1161,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * @return array
    *   An array of data values.
    */
-  public function getHighestIdInvalidDataProvider() {
+  public static function getHighestIdInvalidDataProvider() {
     return [
       'Destination ID type string' => [
         'ids' => [
@@ -1192,7 +1194,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     $container->set('plugin.manager.migration', $migration_plugin_manager);
     \Drupal::setContainer($container);
 
-    $this->expectDeprecation('deprecated in drupal:9.5.0 and is removed from drupal:11.0.0. Use $this->migrationPluginManager instead. See https://www.drupal.org/node/3277306');
+    $this->expectDeprecation('Drupal\migrate\Plugin\migrate\id_map\Sql::getMigrationPluginManager() is deprecated in drupal:9.5.0 and is removed from drupal:11.0.0. Use $this->migrationPluginManager instead. See https://www.drupal.org/node/3277306');
     $id_map = $this->getIdMap();
     $id_map->getMigrationPluginManager();
   }

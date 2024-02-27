@@ -77,13 +77,11 @@ global-styling:
     # attached, therefore it is always attached.
     - core/drupal.touchevents-test
 
-node-form:
+form-two-columns:
   version: VERSION
   css:
     layout:
-      css/layout/node-add.css: {}
-  dependencies:
-    - node/form
+      css/layout/form-two-columns.css: {}
 
 maintenance-page:
   version: VERSION
@@ -127,11 +125,19 @@ claro.drupal.dialog:
   css:
     theme:
       css/components/dialog.css: {}
+  dependencies:
+    - claro/claro.jquery.ui
 
 claro.tabledrag:
   version: VERSION
   js:
     js/tabledrag.js: {}
+
+drupal.node.preview:
+  version: VERSION
+  css:
+    theme:
+      css/components/node-preview.css: {}
 
 tour-styling:
   version: VERSION
@@ -192,6 +198,7 @@ autocomplete:
     js/autocomplete.js: {}
   dependencies:
     - core/once
+    - claro/claro.jquery.ui
 
 drupal.shortcut:
   version: VERSION
@@ -273,6 +280,11 @@ progress:
   css:
     component:
       css/components/progress.css: {}
+
+tabbingmanager:
+  version: VERSION
+  dependencies:
+    - claro/claro.jquery.ui
 
 filter:
   version: VERSION

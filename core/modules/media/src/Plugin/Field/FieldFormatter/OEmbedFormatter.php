@@ -177,7 +177,11 @@ class OEmbedFormatter extends FormatterBase {
         $resource = $this->resourceFetcher->fetchResource($resource_url);
       }
       catch (ResourceException $exception) {
-        $this->logger->error("Could not retrieve the remote URL (@url).", ['@url' => $value]);
+        $this->logger->error("Could not retrieve the remote URL (@url): %error", [
+          '@url' => $value,
+          '%error' => $exception->getPrevious() ? $exception->getPrevious()->getMessage() : $exception->getMessage(),
+          'exception' => $exception,
+        ]);
         continue;
       }
 
@@ -201,6 +205,7 @@ class OEmbedFormatter extends FormatterBase {
       }
       else {
         $url = Url::fromRoute('media.oembed_iframe', [], [
+          'absolute' => TRUE,
           'query' => [
             'url' => $value,
             'max_width' => $max_width,

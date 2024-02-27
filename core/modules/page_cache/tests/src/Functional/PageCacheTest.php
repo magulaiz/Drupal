@@ -15,6 +15,7 @@ use Drupal\user\RoleInterface;
  * Enables the page cache and tests it with various HTTP requests.
  *
  * @group page_cache
+ * @group #slow
  */
 class PageCacheTest extends BrowserTestBase {
 
@@ -267,7 +268,7 @@ class PageCacheTest extends BrowserTestBase {
     // Until bubbling of max-age up to the response is supported, verify that
     // a custom #cache max-age set on an element does not affect page max-age.
     $this->drupalLogout();
-    $this->drupalGet('system-test/cache_maxage_page');
+    $this->drupalGet('system-test/cache_max_age_page');
     $this->assertSession()->responseHeaderEquals('Cache-Control', 'max-age=300, public');
   }
 

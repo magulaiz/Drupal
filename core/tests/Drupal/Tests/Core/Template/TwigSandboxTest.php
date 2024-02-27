@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Template\TwigSandboxTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Template;
 
@@ -60,7 +57,7 @@ class TwigSandboxTest extends UnitTestCase {
    *
    * @return array
    */
-  public function getTwigEntityDangerousMethods() {
+  public static function getTwigEntityDangerousMethods() {
     return [
       ['{{ entity.delete }}'],
       ['{{ entity.save }}'],

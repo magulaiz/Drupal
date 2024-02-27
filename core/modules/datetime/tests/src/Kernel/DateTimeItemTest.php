@@ -272,7 +272,7 @@ class DateTimeItemTest extends FieldKernelTestBase {
   /**
    * Provider for testDatetimeValidation().
    */
-  public function datetimeValidationProvider() {
+  public static function datetimeValidationProvider() {
     return [
       // Valid ISO 8601 dates, but unsupported by DateTimeItem.
       ['2014-01-01T20:00:00Z'],
@@ -316,9 +316,9 @@ class DateTimeItemTest extends FieldKernelTestBase {
   /**
    * Tests the constraint validations for fields with date only.
    *
-   * @dataProvider dateonlyValidationProvider
+   * @dataProvider dateOnlyValidationProvider
    */
-  public function testDateonlyValidation($value) {
+  public function testDateOnlyValidation($value) {
     $this->expectException(AssertionFailedError::class);
 
     $this->fieldStorage->setSetting('datetime_type', DateTimeItem::DATETIME_TYPE_DATE);
@@ -332,7 +332,7 @@ class DateTimeItemTest extends FieldKernelTestBase {
   /**
    * Provider for testDatetimeValidation().
    */
-  public function dateonlyValidationProvider() {
+  public static function dateOnlyValidationProvider() {
     return [
       // Valid date strings, but unsupported by DateTimeItem.
       ['Thu, 03 Nov 2014'],

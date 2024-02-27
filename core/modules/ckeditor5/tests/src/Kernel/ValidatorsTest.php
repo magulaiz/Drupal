@@ -95,11 +95,8 @@ class ValidatorsTest extends KernelTestBase {
     );
     $violations = $typed_config->validate();
 
-    $actual_violations = [];
-    foreach ($violations as $violation) {
-      $actual_violations[$violation->getPropertyPath()] = (string) $violation->getMessage();
-    }
-    $this->assertSame($expected_violations, $actual_violations);
+    $actual_violations = self::violationsToArray($violations);
+    $this->assertSame($expected_violations, self::violationsToArray($violations));
 
     if (empty($expected_violations)) {
       $this->assertConfigSchema(
@@ -113,7 +110,7 @@ class ValidatorsTest extends KernelTestBase {
   /**
    * Provides a list of Text Editor config entities using CKEditor 5 to test.
    */
-  public function provider(): array {
+  public static function provider(): array {
     $data = [];
     $data['CKEditor5::getDefaultSettings()'] = [
       // @see ::test()
@@ -134,8 +131,11 @@ class ValidatorsTest extends KernelTestBase {
         ],
         'plugins' => [
           'ckeditor5_list' => [
-            'reversed' => FALSE,
-            'startIndex' => FALSE,
+            'properties' => [
+              'reversed' => FALSE,
+              'startIndex' => FALSE,
+            ],
+            'multiBlock' => TRUE,
           ],
         ],
       ],
@@ -457,6 +457,40 @@ class ValidatorsTest extends KernelTestBase {
         'settings.plugins.ckeditor5_style.styles.0.element' => 'A style must only specify classes not supported by other plugins. The <code>text-align-justify</code> classes on <code>&lt;p&gt;</code> are already supported by the enabled <em class="placeholder">Alignment</em> plugin.',
       ],
     ];
+    $data['INVALID: Style plugin configured to add class to plugin-supported tag known to not work with Style … yet'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'drupalInsertImage',
+            'style',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_imageResize' => [
+            'allow_resize' => FALSE,
+          ],
+          'ckeditor5_style' => [
+            'styles' => [
+              // @see https://github.com/ckeditor/ckeditor5/issues/13778
+              [
+                'label' => 'Featured image',
+                'element' => '<img class="featured">',
+              ],
+              // @see https://www.drupal.org/project/drupal/issues/3398223
+              // @see https://github.com/ckeditor/ckeditor5/blob/39ad30090ead9dd2d54c3ac53d7f446ade9fd8ce/packages/ckeditor5-html-support/src/schemadefinitions.ts#L12-L50
+              [
+                'label' => 'Fancy linebreak',
+                'element' => '<br class="fancy">',
+              ],
+            ],
+          ],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_style.styles.0.element' => 'The <code>&lt;img&gt;</code> tag is not yet supported by the Style plugin.',
+        'settings.plugins.ckeditor5_style.styles.1.element' => 'The <code>&lt;br&gt;</code> tag is not yet supported by the Style plugin.',
+      ],
+    ];
     $data['INVALID: Style plugin has multiple styles with same label'] = [
       'settings' => [
         'toolbar' => [
@@ -509,7 +543,10 @@ class ValidatorsTest extends KernelTestBase {
       ],
       'violations' => [
         'settings.plugins.ckeditor5_style.styles.0.element' => 'The following tag is missing the required attribute <code>class</code>: <code>&lt;p&gt;</code>.',
-        'settings.plugins.ckeditor5_style.styles.1.element' => 'The following tag does not have the minimum of 1 allowed values for the required attribute <code>class</code>: <code>&lt;blockquote class=&quot;&quot;&gt;</code>.',
+        'settings.plugins.ckeditor5_style.styles.1.element' => [
+          'The following tag is not valid HTML: <em class="placeholder">&lt;blockquote class=&quot;&quot;&gt;</em>.',
+          'The following tag does not have the minimum of 1 allowed values for the required attribute <code>class</code>: <code>&lt;blockquote class=&quot;&quot;&gt;</code>.',
+        ],
       ],
     ];
     $data['VALID: Style plugin has multiple styles with different labels'] = [
@@ -540,6 +577,60 @@ class ValidatorsTest extends KernelTestBase {
         ],
       ],
       'violations' => [],
+    ];
+    $data['INVALID: SourceEditing plugin configuration: <ol start type> must not be allowed because List can generate <ol reversed start>'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'numberedList',
+            'sourceEditing',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_list' => [
+            'properties' => [
+              'reversed' => TRUE,
+              'startIndex' => TRUE,
+            ],
+            'multiBlock' => TRUE,
+          ],
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => [
+              '<ol start type>',
+            ],
+          ],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_sourceEditing.allowed_tags.0' => 'The following attribute(s) are already supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: <em class="placeholder">List (&lt;ol start&gt;)</em>.',
+      ],
+    ];
+    $data['INVALID: SourceEditing plugin configuration: <ol start type> must not be allowed because List can generate <ol start>'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'numberedList',
+            'sourceEditing',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_list' => [
+            'properties' => [
+              'reversed' => FALSE,
+              'startIndex' => FALSE,
+            ],
+            'multiBlock' => TRUE,
+          ],
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => [
+              '<ol start type>',
+            ],
+          ],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_sourceEditing.allowed_tags.0' => 'The following attribute(s) can optionally be supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: <em class="placeholder">List (&lt;ol start&gt;)</em>.',
+      ],
     ];
 
     return $data;
@@ -612,7 +703,7 @@ class ValidatorsTest extends KernelTestBase {
   /**
    * Provides a list of Text Editor + Text Format pairs to test.
    */
-  public function providerPair(): array {
+  public static function providerPair(): array {
     // cspell:ignore donk
     $data = [];
     $data['INVALID: allow_view_mode_override condition not met: filter must be configured to allow 2 or more view modes'] = [

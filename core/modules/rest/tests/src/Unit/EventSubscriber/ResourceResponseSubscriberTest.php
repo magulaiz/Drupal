@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\rest\Unit\EventSubscriber;
 
 use Drupal\Component\Serialization\Json;
@@ -51,7 +53,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
     $this->assertEquals($expected_response !== FALSE ? $expected_response : Json::encode($data), $event->getResponse()->getContent());
   }
 
-  public function providerTestSerialization() {
+  public static function providerTestSerialization() {
     return [
       // The default data for \Drupal\rest\ResourceResponse.
       'default' => [NULL, ''],
@@ -216,14 +218,13 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
    *   6. expected response content type
    *   7. expected response body
    */
-  public function providerTestResponseFormat() {
+  public static function providerTestResponseFormat() {
     $json_encoded = Json::encode(['REST' => 'Drupal']);
     $xml_encoded = "<?xml version=\"1.0\"?>\n<response><REST>Drupal</REST></response>\n";
 
     $safe_method_test_cases = [
       'safe methods: client requested format (JSON)' => [
-        // @todo add 'HEAD' in https://www.drupal.org/node/2752325
-        ['GET'],
+        ['GET', 'HEAD'],
         ['xml', 'json'],
         [],
         'json',
@@ -234,8 +235,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
         $json_encoded,
       ],
       'safe methods: client requested format (XML)' => [
-        // @todo add 'HEAD' in https://www.drupal.org/node/2752325
-        ['GET'],
+        ['GET', 'HEAD'],
         ['xml', 'json'],
         [],
         'xml',
@@ -246,8 +246,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
         $xml_encoded,
       ],
       'safe methods: client requested no format: response should use the first configured format (JSON)' => [
-        // @todo add 'HEAD' in https://www.drupal.org/node/2752325
-        ['GET'],
+        ['GET', 'HEAD'],
         ['json', 'xml'],
         [],
         FALSE,
@@ -258,8 +257,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
         $json_encoded,
       ],
       'safe methods: client requested no format: response should use the first configured format (XML)' => [
-        // @todo add 'HEAD' in https://www.drupal.org/node/2752325
-        ['GET'],
+        ['GET', 'HEAD'],
         ['xml', 'json'],
         [],
         FALSE,

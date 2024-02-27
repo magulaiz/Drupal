@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Unit\Pager;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -88,7 +90,94 @@ class PreprocessPagerTest extends UnitTestCase {
     /** @var \Drupal\Core\Template\AttributeString $attribute */
     $attribute = $variables['items']['pages']['2']['attributes']->offsetGet('aria-current');
     $this->assertInstanceOf(AttributeString::class, $attribute);
-    $this->assertEquals('Current page', $attribute->value());
+    $this->assertEquals('page', $attribute->value());
+  }
+
+  /**
+   * Tests template_preprocess_pager() when an empty #pagination_heading_level value is passed.
+   *
+   * @covers ::template_preprocess_pager
+   */
+  public function testEmptyPaginationHeadingLevelSet() {
+    require_once $this->root . '/core/includes/theme.inc';
+    $variables = [
+      'pager' => [
+        '#element' => '2',
+        '#pagination_heading_level' => '',
+        '#parameters' => [],
+        '#quantity' => '2',
+        '#route_name' => '',
+        '#tags' => '',
+      ],
+    ];
+    template_preprocess_pager($variables);
+
+    $this->assertEquals('h4', $variables['pagination_heading_level']);
+  }
+
+  /**
+   * Tests template_preprocess_pager() when no #pagination_heading_level is passed.
+   *
+   * @covers ::template_preprocess_pager
+   */
+  public function testPaginationHeadingLevelNotSet() {
+    require_once $this->root . '/core/includes/theme.inc';
+    $variables = [
+      'pager' => [
+        '#element' => '',
+        '#parameters' => [],
+        '#quantity' => '',
+        '#route_name' => '',
+        '#tags' => '',
+      ],
+    ];
+    template_preprocess_pager($variables);
+
+    $this->assertEquals('h4', $variables['pagination_heading_level']);
+  }
+
+  /**
+   * Tests template_preprocess_pager() when a #pagination_heading_level value is passed.
+   *
+   * @covers ::template_preprocess_pager
+   */
+  public function testPaginationHeadingLevelSet() {
+    require_once $this->root . '/core/includes/theme.inc';
+    $variables = [
+      'pager' => [
+        '#element' => '2',
+        '#pagination_heading_level' => 'h5',
+        '#parameters' => [],
+        '#quantity' => '2',
+        '#route_name' => '',
+        '#tags' => '',
+      ],
+    ];
+    template_preprocess_pager($variables);
+
+    $this->assertEquals('h5', $variables['pagination_heading_level']);
+  }
+
+  /**
+   * Test template_preprocess_pager() with an invalid #pagination_heading_level.
+   *
+   * @covers ::template_preprocess_pager
+   */
+  public function testPaginationHeadingLevelInvalid() {
+    require_once $this->root . '/core/includes/theme.inc';
+    $variables = [
+      'pager' => [
+        '#element' => '2',
+        '#pagination_heading_level' => 'not-a-heading-element',
+        '#parameters' => [],
+        '#quantity' => '2',
+        '#route_name' => '',
+        '#tags' => '',
+      ],
+    ];
+    template_preprocess_pager($variables);
+
+    $this->assertEquals('h4', $variables['pagination_heading_level']);
   }
 
 }

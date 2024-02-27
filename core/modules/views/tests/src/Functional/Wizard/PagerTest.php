@@ -22,7 +22,7 @@ class PagerTest extends WizardTestBase {
     // conditions that are meaningful for the use of a pager.
     $this->drupalCreateContentType(['type' => 'page']);
     for ($i = 0; $i < 12; $i++) {
-      $this->drupalCreateNode(['created' => REQUEST_TIME - $i]);
+      $this->drupalCreateNode(['created' => \Drupal::time()->getRequestTime() - $i]);
     }
 
     // Make a View that uses a pager.
@@ -52,7 +52,7 @@ class PagerTest extends WizardTestBase {
   protected function createViewAtPath($path, $pager = TRUE) {
     $view = [];
     $view['label'] = $this->randomMachineName(16);
-    $view['id'] = strtolower($this->randomMachineName(16));
+    $view['id'] = $this->randomMachineName(16);
     $view['show[sort]'] = 'node_field_data-created:ASC';
     $view['page[create]'] = 1;
     $view['page[title]'] = $this->randomMachineName(16);

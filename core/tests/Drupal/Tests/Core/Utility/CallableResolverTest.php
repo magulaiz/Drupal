@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Utility;
 
 use Drupal\Core\DependencyInjection\ClassResolver;
@@ -33,8 +35,7 @@ class CallableResolverTest extends UnitTestCase {
     $container = new ContainerBuilder();
     $container->set('test_service', $this);
 
-    $class_resolver = new ClassResolver();
-    $class_resolver->setContainer($container);
+    $class_resolver = new ClassResolver($container);
 
     $this->resolver = new CallableResolver($class_resolver);
   }
@@ -127,7 +128,7 @@ class CallableResolverTest extends UnitTestCase {
   /**
    * Test cases for ::testCallbackResolverExceptionHandling.
    */
-  public function callableResolverExceptionHandlingTestCases() {
+  public static function callableResolverExceptionHandlingTestCases() {
     return [
       'String function' => [
         'not_a_callable',

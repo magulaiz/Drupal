@@ -176,7 +176,7 @@ for FILE in $FILES; do
     CKEDITOR5_PLUGINS_CHANGED=1;
   fi;
 
-  if [[ $FILE == "core/misc/cspell/dictionary.txt" ]]; then
+  if [[ $FILE == "core/misc/cspell/dictionary.txt" || $FILE == "core/misc/cspell/drupal-dictionary.txt" ]]; then
     CSPELL_DICTIONARY_FILE_CHANGED=1;
   fi
 done
@@ -215,13 +215,15 @@ if [ $DEPENDENCIES_NEED_INSTALLING -ne 0 ]; then
   exit 1;
 fi
 
-# Run spellcheck:core when cspell files are changed.
 # Check all files for spelling in one go for better performance.
 if [[ $CSPELL_DICTIONARY_FILE_CHANGED == "1" ]] ; then
   printf "\nRunning spellcheck on *all* files.\n"
-  yarn run -s spellcheck:core --no-must-find-files --root $TOP_LEVEL $ABS_FILES
+  yarn run -s spellcheck:core --no-must-find-files --no-progress
 else
-  yarn run -s spellcheck --no-must-find-files --root $TOP_LEVEL $ABS_FILES
+  # Check all files for spelling in one go for better performance. We pipe the
+  # list files in so we obey the globs set on the spellcheck:core command in
+  # core/package.json.
+  echo "${ABS_FILES}" | tr ' ' '\n' | yarn run -s spellcheck:core --no-must-find-files --file-list stdin
 fi
 
 if [ "$?" -ne "0" ]; then
@@ -265,7 +267,7 @@ printf "\n"
 # Run PHPCS on all files on DrupalCI or when phpcs files are changed.
 if [[ $PHPCS_XML_DIST_FILE_CHANGED == "1" ]] || [[ "$DRUPALCI" == "1" ]]; then
   # Test all files with phpcs rules.
-  vendor/bin/phpcs -ps --parallel=$(nproc) --standard="$TOP_LEVEL/core/phpcs.xml.dist"
+  vendor/bin/phpcs -ps --parallel="$( (nproc || sysctl -n hw.logicalcpu || echo 4) 2>/dev/null)" --standard="$TOP_LEVEL/core/phpcs.xml.dist"
   PHPCS=$?
   if [ "$PHPCS" -ne "0" ]; then
     # If there are failures set the status to a number other than 0.
@@ -366,13 +368,8 @@ for FILE in $FILES; do
   # Ensure the file still exists (i.e. is not being deleted).
   if [ -a $FILE ]; then
     if [ ${FILE: -3} != ".sh" ]; then
-      # Ensure the file has the correct mode.
-      STAT="$(stat -f "%A" $FILE 2>/dev/null)"
-      if [ $? -ne 0 ]; then
-        STAT="$(stat -c "%a" $FILE 2>/dev/null)"
-      fi
-      if [ "$STAT" -ne "644" ]; then
-        printf "${red}check failed:${reset} file $FILE should be 644 not $STAT\n"
+      if [ -x $FILE ]; then
+        printf "${red}check failed:${reset} file $FILE should not be executable\n"
         STATUS=1
       fi
     fi
