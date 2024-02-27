@@ -66,10 +66,7 @@ class RenderCache implements RenderCacheInterface {
     $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'render';
     if (($cache_bin = $this->cacheFactory->get($bin)) && $cache = $cache_bin->get($elements['#cache']['keys'], CacheableMetadata::createFromRenderArray($elements))) {
       if (!$this->requestStack->getCurrentRequest()->isMethodCacheable()) {
-        // @todo: should this be a configurable deny list as a container
-        // parameter?
-        // @see https://www.drupal.org/project/drupal/issues/3423127
-        if (in_array('render_cache_form', $cache->tags, TRUE)) {
+        if (!empty(array_filter($cache->tags, fn (string $tag) => str_starts_with('CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:')))) {
           return FALSE;
         }
       }
