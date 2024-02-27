@@ -1546,14 +1546,14 @@ class DrupalGotoTest extends DrupalWebTestCase {
   function testDrupalGoto() {
     $this->drupalGet('common-test/drupal_goto/redirect');
     $headers = $this->drupalGetHeaders(TRUE);
-    [, $status] = explode(' ', $headers[0][':status'], 3);
+    list(, $status) = explode(' ', $headers[0][':status'], 3);
     $this->assertEqual($status, 302, 'Expected response code was sent.');
     $this->assertText('drupal_goto', 'Drupal goto redirect succeeded.');
     $this->assertEqual($this->getUrl(), url('common-test/drupal_goto', array('absolute' => TRUE)), 'Drupal goto redirected to expected URL.');
 
     $this->drupalGet('common-test/drupal_goto/redirect_advanced');
     $headers = $this->drupalGetHeaders(TRUE);
-    [, $status] = explode(' ', $headers[0][':status'], 3);
+    list(, $status) = explode(' ', $headers[0][':status'], 3);
     $this->assertEqual($status, 301, 'Expected response code was sent.');
     $this->assertText('drupal_goto', 'Drupal goto redirect succeeded.');
     $this->assertEqual($this->getUrl(), url('common-test/drupal_goto', array('query' => array('foo' => '123'), 'absolute' => TRUE)), 'Drupal goto redirected to expected URL.');
@@ -1562,7 +1562,7 @@ class DrupalGotoTest extends DrupalWebTestCase {
     variable_set('common_test_redirect_current_path', TRUE);
     $this->drupalGet('', array('query' => array('q' => 'http://www.example.com/')));
     $headers = $this->drupalGetHeaders(TRUE);
-    [, $status] = explode(' ', $headers[0][':status'], 3);
+    list(, $status) = explode(' ', $headers[0][':status'], 3);
     $this->assertEqual($status, 302, 'Expected response code was sent.');
     $this->assertNotEqual($this->getUrl(), 'http://www.example.com/', 'Drupal goto did not redirect to external URL.');
     $this->assertTrue(strpos($this->getUrl(), url('<front>', array('absolute' => TRUE))) === 0, 'Drupal redirected to itself.');
