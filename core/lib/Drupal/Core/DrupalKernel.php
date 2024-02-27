@@ -552,20 +552,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   /**
    * {@inheritdoc}
    */
-  public function setContainer(ContainerInterface $container = NULL): void {
-    if (isset($this->container)) {
-      throw new \Exception('The container should not override an existing container.');
-    }
-    if ($this->booted) {
-      throw new \Exception('The container cannot be set after a booted kernel.');
-    }
-
-    $this->container = $container;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getCachedContainerDefinition() {
     $cache = $this->bootstrapContainer->get('cache.container')->get($this->getContainerCacheKey());
 
