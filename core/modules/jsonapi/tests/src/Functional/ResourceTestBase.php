@@ -1087,8 +1087,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $expected_cacheability = $expected_response->getCacheableMetadata();
     $response = $this->request('HEAD', $collection_url, $request_options);
     // MISS or UNCACHEABLE depends on the collection data. It must not be HIT.
-    $dynamic_cache = $expected_cacheability->getCacheMaxAge() === 0 || !empty(array_intersect(['user', 'session'], $expected_cacheability->getCacheContexts())) ? 'UNCACHEABLE (poor cacheability)' : 'MISS';
-    $this->assertResourceResponse(200, $expected_document, $response, $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), 'UNCACHEABLE (request policy)', $dynamic_cache);
+    $dynamic_cache = $expected_cacheability->getCacheMaxAge() === 0 ? 'UNCACHEABLE (poor cacheability)' : 'MISS';
+    $this->assertResourceResponse(200, NULL, $response, $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), 'UNCACHEABLE (request policy)', $dynamic_cache);
 
     // Different databases have different sort orders, so a sort is required so
     // test expectations do not need to vary per database.
