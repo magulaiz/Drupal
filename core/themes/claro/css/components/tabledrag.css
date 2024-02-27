@@ -271,7 +271,7 @@ body.drag-y {
 
 .tabledrag-cell-content > * {
   display: table-cell;
-  vertical-align: middle;
+  vertical-align: text-top;
 }
 
 .tabledrag-cell-content__item {
@@ -316,7 +316,7 @@ body.drag-y {
 }
 
 .tabledrag-cell-content .tabledrag-handle::after {
-  vertical-align: middle;
+  vertical-align: text-top;
 }
 
 /**
