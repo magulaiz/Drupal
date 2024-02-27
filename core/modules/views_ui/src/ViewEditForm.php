@@ -772,7 +772,7 @@ class ViewEditForm extends ViewFormBase {
     if (!$view->status() && $view->access('enable')) {
       $element['extra_actions']['#links']['status'] = [
         'title' => $this->t('Enable view'),
-        'url' => Url::fromRoute('entity.view.enable_display', ['js' => 'nojs','view' => $view->id(), 'display_id' => $display_id]),
+        'url' => Url::fromRoute('entity.view.enable_display', ['js' => 'nojs', 'view' => $view->id(), 'display_id' => $display_id]),
         'attributes' => ['class' => ['views-ajax-link', 'view-status']],
       ];
     }
@@ -783,7 +783,6 @@ class ViewEditForm extends ViewFormBase {
         'attributes' => ['class' => ['views-ajax-link', 'view-status']],
       ];
     }
-
 
     // Let other modules add additional links here.
     $this->moduleHandler->alter('views_ui_display_top_links', $element['extra_actions']['#links'], $view, $display_id);

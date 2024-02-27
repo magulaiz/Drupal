@@ -163,7 +163,6 @@ class ViewsUIController extends ControllerBase {
     return $this->redirect('entity.view.collection');
   }
 
-
   /**
    * Calls a method on a view and reloads the listing page.
    *
@@ -261,13 +260,13 @@ class ViewsUIController extends ControllerBase {
    *   The view label with Datasource and indication that view is disabled.
    */
   private function pageTitle(ViewEntityInterface $view) {
-     $name = $view->label();
-     $data = $this->viewsData->get($view->get('base_table'));
-     if (isset($data['table']['base']['title'])) {
+    $name = $view->label();
+    $data = $this->viewsData->get($view->get('base_table'));
+    if (isset($data['table']['base']['title'])) {
       $name .= ' (' . $data['table']['base']['title'] . ')';
     }
     if (!$view->status()) {
-      $name .= ' '. $this->t('disabled');
+      $name .= ' ' . $this->t('disabled');
     }
     return $name;
   }
