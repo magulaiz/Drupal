@@ -5,22 +5,24 @@ namespace Drupal\editor_test\Plugin\Editor;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\editor\Entity\Editor;
 use Drupal\editor\Plugin\EditorBase;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines a Unicorn-powered text editor for Drupal (for testing purposes).
  *
- * @Editor(
- *   id = "unicorn",
- *   label = @Translation("Unicorn Editor"),
- *   supports_content_filtering = TRUE,
- *   supports_inline_editing = TRUE,
- *   is_xss_safe = FALSE,
- *   supported_element_types = {
- *     "textarea",
- *     "textfield",
- *   }
- * )
  */
+
+#[Editor(
+  id: 'unicorn',
+  label: new TranslatableMarkup('Unicorn Editor'),
+  supports_content_filtering: true,
+  supports_inline_editing: true,
+  is_xss_safe: false,
+  supported_element_types: [
+    "textarea",
+    "textfield",
+  ]
+)]
 class UnicornEditor extends EditorBase {
 
   /**

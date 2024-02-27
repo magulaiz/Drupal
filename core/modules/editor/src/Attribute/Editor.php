@@ -1,0 +1,40 @@
+<?php
+
+namespace Drupal\editor\Attribute;
+
+use Drupal\Component\Plugin\Attribute\Plugin;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
+/**
+ * Defines an Editor attribute object.
+ */
+#[\Attribute(\Attribute::TARGET_CLASS)]
+class Editor extends Plugin
+{
+
+  /**
+   * Constructs an EditorManager object.
+   *
+   * @param string $id
+   *   The plugin ID.
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $label
+   *   The human-readable name of the text editor, translated
+   * @param bool $supports_content_filtering
+   *   Whether the editor supports "allowed content only" filtering.
+   * @param bool $supports_inline_editing
+   *   Whether the editor supports the inline editing provided by the Edit module.
+   * @param bool $is_xss_safe
+   *   Whether this text editor is not vulnerable to XSS attacks.
+   * @param string[] $supported_element_types
+   *   On which form element #types this text editor is capable of working.
+   */
+  public function __construct(
+    public readonly string $id,
+    public readonly ?TranslatableMarkup $label = NULL,
+    public readonly bool $supports_content_filtering = FALSE,
+    public readonly bool $supports_inline_editing = FALSE,
+    public readonly bool $is_xss_safe = FALSE,
+    public readonly ?string $supported_element_types_ui = NULL
+  ) {}
+
+}
