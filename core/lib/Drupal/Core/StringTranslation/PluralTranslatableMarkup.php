@@ -113,7 +113,7 @@ class PluralTranslatableMarkup extends TranslatableMarkup {
       $return = $translated_array[0];
     }
     else {
-      // N-th plural form, fallback to second plural form.
+      // Nth plural form, fallback to second plural form.
       $return = $translated_array[$index] ?? $translated_array[1];
     }
     return $this->placeholderFormat($return, $arguments);
