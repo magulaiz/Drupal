@@ -12,12 +12,15 @@ status: experimental
 props:
   type: object
   properties:
-    a11y:
-      type: string
-      title: Read More screen reader text
-    text:
-      type: string
-      title: Read More text
-    url:
-      type: string
-      title: Read More url
+    attributes:
+      type: Drupal\Core\Template\Attribute
+      title: Attributes
+      description: Link attributes.
+
+slots:
+  a11y:
+    type: string
+    title: Read More screen reader text
+  text:
+    type: string
+    title: Read More text
