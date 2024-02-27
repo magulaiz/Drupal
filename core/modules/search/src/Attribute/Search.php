@@ -16,7 +16,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @ingroup search
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class SearchPlugin extends Plugin {
+class Search extends Plugin {
 
   /**
    * Constructs a SearchPlugin attribute.

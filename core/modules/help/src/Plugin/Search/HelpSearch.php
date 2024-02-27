@@ -16,7 +16,7 @@ use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\help\HelpSectionManager;
 use Drupal\help\SearchableHelpInterface;
-use Drupal\search\Attribute\SearchPlugin;
+use Drupal\search\Attribute\Search;
 use Drupal\search\Plugin\SearchIndexingInterface;
 use Drupal\search\Plugin\SearchPluginBase;
 use Drupal\search\SearchIndexInterface;
@@ -35,7 +35,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  *   Plugin classes are internal.
  */
-#[SearchPlugin(
+#[Search(
   id: 'help_search',
   title: new TranslatableMarkup('Help'),
   use_admin_theme: TRUE,
