@@ -379,20 +379,18 @@ SH;
   }
 
   public function testDeleteDirectory(): void {
-    $starterkit_yml = $this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/starterkit_theme.starterkit.yml';
-    $info = Yaml::decode(file_get_contents($starterkit_yml));
-    $info['ignore'] = [
-      '/src/*',
-      '/starterkit_theme.starterkit.yml',
-    ];
-    file_put_contents($starterkit_yml, Yaml::encode($info));
+    $this->writeStarterkitConfig([
+      'ignore' => [
+        '/src/*',
+        '/starterkit_theme.starterkit.yml',
+      ],
+    ]);
 
     $tester = $this->runCommand(
-      ['machine-name' => 'test_custom_theme'],
       [
-        'name' => 'Test custom starterkit theme',
-        'description' => 'Custom theme generated from a starterkit theme',
-        'capture_stderr_separately' => TRUE,
+        'machine-name' => 'test_custom_theme',
+        '--name' => 'Test custom starterkit theme',
+        '--description' => 'Custom theme generated from a starterkit theme',
       ]
     );
 
@@ -405,19 +403,17 @@ SH;
   }
 
   public function testNoEditMissingFilesWarning(): void {
-    $starterkit_yml = $this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/starterkit_theme.starterkit.yml';
-    $info = Yaml::decode(file_get_contents($starterkit_yml));
-    $info['no_edit'] = [
-      '/js/starterkit_theme.js',
-    ];
-    file_put_contents($starterkit_yml, Yaml::encode($info));
+    $this->writeStarterkitConfig([
+      'no_edit' => [
+        '/js/starterkit_theme.js',
+      ],
+    ]);
 
     $tester = $this->runCommand(
-      ['machine-name' => 'test_custom_theme'],
       [
-        'name' => 'Test custom starterkit theme',
-        'description' => 'Custom theme generated from a starterkit theme',
-        'capture_stderr_separately' => TRUE,
+        'machine-name' => 'test_custom_theme',
+        '--name' => 'Test custom starterkit theme',
+        '--description' => 'Custom theme generated from a starterkit theme',
       ]
     );
 
@@ -428,19 +424,17 @@ SH;
   }
 
   public function testNoRenameMissingFilesWarning(): void {
-    $starterkit_yml = $this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/starterkit_theme.starterkit.yml';
-    $info = Yaml::decode(file_get_contents($starterkit_yml));
-    $info['no_rename'] = [
-      '/js/starterkit_theme.js',
-    ];
-    file_put_contents($starterkit_yml, Yaml::encode($info));
+    $this->writeStarterkitConfig([
+      'no_rename' => [
+        '/js/starterkit_theme.js',
+      ],
+    ]);
 
     $tester = $this->runCommand(
-      ['machine-name' => 'test_custom_theme'],
       [
-        'name' => 'Test custom starterkit theme',
-        'description' => 'Custom theme generated from a starterkit theme',
-        'capture_stderr_separately' => TRUE,
+        'machine-name' => 'test_custom_theme',
+        '--name' => 'Test custom starterkit theme',
+        '--description' => 'Custom theme generated from a starterkit theme',
       ]
     );
 
@@ -451,14 +445,13 @@ SH;
   }
 
   public function testNoRename(): void {
-    $starterkit_yml = $this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/starterkit_theme.starterkit.yml';
-    $info = Yaml::decode(file_get_contents($starterkit_yml));
-    $info['no_rename'] = [
-      'js/starterkit_theme.js',
-      '**/js/*.js',
-      'js/**/*.js',
-    ];
-    file_put_contents($starterkit_yml, Yaml::encode($info));
+    $this->writeStarterkitConfig([
+      'no_rename' => [
+        'js/starterkit_theme.js',
+        '**/js/*.js',
+        'js/**/*.js',
+      ],
+    ]);
 
     mkdir($this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/js');
     mkdir($this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/js/baz');
@@ -467,11 +460,10 @@ SH;
     file_put_contents($this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/js/baz/starterkit_theme.bar.js', '');
 
     $tester = $this->runCommand(
-      ['machine-name' => 'test_custom_theme'],
       [
-        'name' => 'Test custom starterkit theme',
-        'description' => 'Custom theme generated from a starterkit theme',
-        'capture_stderr_separately' => TRUE,
+        'machine-name' => 'test_custom_theme',
+        '--name' => 'Test custom starterkit theme',
+        '--description' => 'Custom theme generated from a starterkit theme',
       ]
     );
 
@@ -484,12 +476,97 @@ SH;
   }
 
   public function testNoEdit(): void {
-    $this->markTestIncomplete('needs to be written');
+    $this->writeStarterkitConfig([
+      'no_edit' => [
+        '*no_edit_*',
+      ],
+    ]);
+    $fixture = <<<FIXTURE
+# machine_name
+starterkit_theme
+# label
+Starterkit theme
+# machine_class_name
+StarterkitTheme
+# label_class_name
+StarterkitTheme
+FIXTURE;
+
+    file_put_contents($this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/edit_fixture.txt', $fixture);
+    file_put_contents($this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/no_edit_fixture.txt', $fixture);
+    file_put_contents($this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/src/StarterkitThemePreRender.php', <<<PHP
+<?php
+
+namespace Drupal\starterkit_theme;
+
+use Drupal\Core\Security\TrustedCallbackInterface;
+
+/**
+ * Implements trusted prerender callbacks for the Starterkit theme.
+ *
+ * @internal
+ */
+class StarterkitThemePreRender implements TrustedCallbackInterface {
+
+}
+PHP);
+
+    $tester = $this->runCommand(
+      [
+        'machine-name' => 'test_custom_theme',
+        '--name' => 'Test custom starterkit theme',
+        '--description' => 'Custom theme generated from a starterkit theme',
+      ]
+    );
+
+    $this->assertEquals('Theme generated successfully to themes/test_custom_theme', trim($tester->getDisplay()), $tester->getErrorOutput());
+    $this->assertThemeExists('themes/test_custom_theme');
+    $theme_path_absolute = $this->getWorkspaceDirectory() . '/themes/test_custom_theme';
+
+    self::assertFileExists($theme_path_absolute . '/no_edit_fixture.txt');
+    self::assertEquals($fixture, file_get_contents($theme_path_absolute . '/no_edit_fixture.txt'));
+    self::assertFileExists($theme_path_absolute . '/edit_fixture.txt');
+    self::assertEquals(<<<EDITED
+# machine_name
+test_custom_theme
+# label
+Test custom starterkit theme
+# machine_class_name
+TestCustomTheme
+# label_class_name
+TestCustomTheme
+EDITED, file_get_contents($theme_path_absolute . '/edit_fixture.txt'));
+
+    self::assertEquals(<<<EDITED
+<?php
+
+namespace Drupal\\test_custom_theme;
+
+use Drupal\Core\Security\TrustedCallbackInterface;
+
+/**
+ * Implements trusted prerender callbacks for the Test custom starterkit theme.
+ *
+ * @internal
+ */
+class TestCustomThemePreRender implements TrustedCallbackInterface {
+
+}
+EDITED, file_get_contents($theme_path_absolute . '/src/TestCustomThemePreRender.php'));
   }
 
-  private function runCommand(array $input, array $options = []): CommandTester {
+  private function writeStarterkitConfig(array $config): void {
+    $starterkit_yml = $this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/starterkit_theme.starterkit.yml';
+    $starterkit_config = Yaml::decode(file_get_contents($starterkit_yml));
+    $starterkit_config = array_replace_recursive($starterkit_config, $config);
+    file_put_contents($starterkit_yml, Yaml::encode($starterkit_config));
+  }
+
+  private function runCommand(array $input): CommandTester {
     $tester = new CommandTester(new GenerateTheme(NULL, $this->getWorkspaceDirectory()));
-    $tester->execute($input, $options);
+    $tester->execute($input, [
+      'capture_stderr_separately' => TRUE,
+    ]);
     return $tester;
   }
 
