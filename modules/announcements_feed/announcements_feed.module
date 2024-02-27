@@ -115,8 +115,8 @@ function template_preprocess_announcements_feed(&$variables) {
       _announcements_feed_preprocess_item($announcement);
     }
   }
-  if (isset($variables['$feed_link'])) {
-    $variables['$feed_link'] = check_url($variables['feed_link']);
+  if (isset($variables['feed_link'])) {
+    $variables['feed_link'] = check_url($variables['feed_link']);
   }
 }
 
