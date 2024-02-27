@@ -66,7 +66,7 @@ class RenderCache implements RenderCacheInterface {
     $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'render';
     if (($cache_bin = $this->cacheFactory->get($bin)) && $cache = $cache_bin->get($elements['#cache']['keys'], CacheableMetadata::createFromRenderArray($elements))) {
       if (!$this->requestStack->getCurrentRequest()->isMethodCacheable()) {
-        if (!empty(array_filter($cache->tags, fn (string $tag) => str_starts_with('CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:')))) {
+        if (!empty(array_filter($cache->tags, fn (string $tag) => str_starts_with($tag, 'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:')))) {
           return FALSE;
         }
       }
