@@ -932,9 +932,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $container_definition = $this->getCachedContainerDefinition();
     }
 
-    // If there is no container and no cached container definition, build a new
-    // one from scratch.
-    if (!isset($container) && !isset($container_definition)) {
+    // If there is no cached container definition, build a new container from
+    // scratch.
+    if (!isset($container_definition)) {
       $container = $this->compileContainer();
 
       // Only dump the container if dumping is allowed. This is useful for
@@ -945,12 +945,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         $container_definition = $dumper->getArray();
       }
     }
-
-    // The container was rebuilt successfully.
-    $this->containerNeedsRebuild = FALSE;
-
-    // Only create a new class if we have a container definition.
-    if (isset($container_definition)) {
+    else {
       // Drupal provides two dynamic parameters to access specific paths that
       // are determined from the request.
       $container_definition['parameters']['app.root'] = $this->getAppRoot();
@@ -958,6 +953,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $class = Settings::get('container_base_class', '\Drupal\Core\DependencyInjection\Container');
       $container = new $class($container_definition);
     }
+
+    // The container was rebuilt successfully.
+    $this->containerNeedsRebuild = FALSE;
 
     $this->attachSynthetic($container);
 
