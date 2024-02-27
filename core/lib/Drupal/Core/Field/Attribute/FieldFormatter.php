@@ -28,10 +28,10 @@ class FieldFormatter extends Plugin {
    * Constructs a FieldFormatter attribute.
    *
    * @param string $id
-   *    The plugin ID.
-   * @param TranslatableMarkup|null $label
+   *   The plugin ID.
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $label
    *   (optional) The human-readable name of the formatter type.
-   * @param TranslatableMarkup|null $description
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $description
    *   (optional) A short description of the formatter type.
    * @param string[] $field_types
    *   (optional) An array of field types the formatter supports.
