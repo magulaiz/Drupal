@@ -36,6 +36,9 @@ class ViewsAccess extends Plugin {
    * @param bool $no_ui
    *   Whether the plugin should be not selectable in the UI.
    *   If set to TRUE, you can still use it via the API in config files.
+   * @param bool $register_theme
+   *   Whether to register a theme function automatically.
+   *   This property is optional and it does not need to be declared.
    */
   public function __construct(
     public readonly string $id,
@@ -45,6 +48,7 @@ class ViewsAccess extends Plugin {
     public readonly ?array $display_types = NULL,
     public readonly array $base = [],
     public readonly ?bool $no_ui = NULL,
+    public readonly bool $register_theme = TRUE,
   ) {}
 
 }
