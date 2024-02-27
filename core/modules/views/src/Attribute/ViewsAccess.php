@@ -26,8 +26,8 @@ class ViewsAccess extends Plugin {
    *   (optional) The short title used in the views UI.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $help
    *   (optional) A short help string; this is displayed in the views UI.
-   * @param array $display_types
-   *   The types of the display this plugin can be used with.
+   * @param array|null $display_types
+   *   (optional) The types of the display this plugin can be used with.
    *   For example the Feed display defines the type 'feed', so only rss style
    *   and row plugins can be used in the views UI.
    * @param array $base
@@ -42,7 +42,7 @@ class ViewsAccess extends Plugin {
     public readonly ?TranslatableMarkup $title = NULL,
     public readonly ?TranslatableMarkup $short_title = NULL,
     public readonly ?TranslatableMarkup $help = NULL,
-    public readonly array $display_types = [],
+    public readonly ?array $display_types = NULL,
     public readonly array $base = [],
     public readonly ?bool $no_ui = NULL,
   ) {}
