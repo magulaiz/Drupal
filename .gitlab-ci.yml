@@ -24,8 +24,8 @@
 ################
 
 include:
-  - project: $_GITLAB_TEMPLATES_REPO
-    ref: $_GITLAB_TEMPLATES_REF
+  - project: issue/gitlab_templates-3419993
+    ref: 3419993-no-tags-runs-for-core
     file:
       - '/includes/include.drupalci.variables.yml'
       - '/includes/include.drupalci.workflows.yml'
