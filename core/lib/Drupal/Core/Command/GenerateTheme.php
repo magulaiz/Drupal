@@ -128,26 +128,8 @@ class GenerateTheme extends Command {
     $filesystem->mirror($starterkit->getPath(), $tmpDir, $mirror_iterator);
 
     $patterns = [
-      'old' => [
-        'machine_name' => $starterkit->getName(),
-        'machine_name_camel' => u($starterkit->getName())->camel(),
-        'machine_name_pascal' => u($starterkit->getName())->camel()->title(),
-        'machine_name_title' => u($starterkit->getName())->title(),
-        'label' => $starterkit->info['name'],
-        'label_camel' => u($starterkit->info['name'])->camel(),
-        'label_pascal' => u($starterkit->info['name'])->camel()->title(),
-        'label_title' => u($starterkit->info['name'])->title(),
-      ],
-      'new' => [
-        'machine_name' => $destination_theme,
-        'machine_name_camel' => u($destination_theme)->camel(),
-        'machine_name_pascal' => u($destination_theme)->camel()->title(),
-        'machine_name_title' => u($destination_theme)->title(),
-        'label' => $theme_label,
-        'label_camel' => u($theme_label)->camel(),
-        'label_pascal' => u($theme_label)->camel()->title(),
-        'label_title' => u($theme_label)->title(),
-      ],
+      'old' => self::namePatterns($starterkit->getName(), $starterkit->info['name']),
+      'new' => self::namePatterns($destination_theme, $theme_label),
     ];
     $filesToEdit = self::createFilesFinder($tmpDir)
       ->contains(array_values($patterns['old']))
@@ -350,6 +332,19 @@ class GenerateTheme extends Command {
       }
     }
     return $source_version;
+  }
+
+  private static function namePatterns(string $machine_name, string $label): array {
+    return [
+      'machine_name' => $machine_name,
+      'machine_name_camel' => u($machine_name)->camel(),
+      'machine_name_pascal' => u($machine_name)->camel()->title(),
+      'machine_name_title' => u($machine_name)->title(),
+      'label' => $label,
+      'label_camel' => u($label)->camel(),
+      'label_pascal' => u($label)->camel()->title(),
+      'label_title' => u($label)->title(),
+    ];
   }
 
 }
