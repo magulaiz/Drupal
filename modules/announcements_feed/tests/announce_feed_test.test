@@ -45,9 +45,6 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
    */
   protected $removed;
 
-  /**
-   * {@inheritdoc}
-   */
   public static function getInfo() {
     return array(
       'name' => 'JSON feeds validation / processing',
@@ -129,9 +126,6 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
  */
 class AnnounceFeedTestValidateUrl extends DrupalUnitTestCase {
 
-  /**
-   * {@inheritdoc}
-   */
   public static function getInfo() {
     return array(
       'name' => 'JSON feed URLs validation',
@@ -182,9 +176,6 @@ class AnnounceFeedTestValidateUrl extends DrupalUnitTestCase {
  */
 class AnnounceFeedTestRelevantVersion extends DrupalUnitTestCase {
 
-  /**
-   * {@inheritdoc}
-   */
   public static function getInfo() {
     return array(
       'name' => 'Version-specific logic validation',
@@ -232,9 +223,6 @@ class AnnounceFeedTestRelevantVersion extends DrupalUnitTestCase {
  */
 class AnnounceFeedTestValidatePermissions extends DrupalWebTestCase {
 
-  /**
-   * {@inheritdoc}
-   */
   public static function getInfo() {
     return array(
       'name' => 'Permissions validation',
@@ -321,9 +309,6 @@ class AnnounceFeedTestInvalidJsonTestCase extends DrupalWebTestCase {
    */
   protected $removed;
 
-  /**
-   * {@inheritdoc}
-   */
   public static function getInfo() {
     return array(
       'name' => 'Invalid / unknown JSON feed URL',
