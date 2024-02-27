@@ -65,7 +65,7 @@ function user_schema() {
     ],
   ];
 
-  if (Database::getConnection()->databaseType() == 'mongodb') {
+  if (Database::getConnection()->driver() == 'mongodb') {
     $schema['users_data']['fields']['serialized'] = [
       'description' => 'Whether value is serialized.',
       'type' => 'bool',

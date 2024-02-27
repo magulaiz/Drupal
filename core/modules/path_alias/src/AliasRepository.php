@@ -116,7 +116,7 @@ class AliasRepository implements AliasRepositoryInterface {
    */
   protected function getBaseQuery() {
     $query = $this->connection->select('path_alias', 'base_table');
-    $query->condition('base_table.status', 1);
+    $query->condition('base_table.status', TRUE);
 
     return $query;
   }

@@ -35,7 +35,7 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
    *   A new DatabaseBackend object.
    */
   protected function createCacheBackend($bin) {
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       return new MongodbDatabaseBackend(
         $this->container->get('database'),
         $this->container->get('cache_tags.invalidator.checksum'),
@@ -138,7 +138,7 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
    * Test that the service "cache_tags.invalidator.checksum" is backend overridable.
    */
   public function testCacheTagsInvalidatorChecksumIsBackendOverridable() {
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       $definition = $this->container->getDefinition('mongodb.cache_tags.invalidator.checksum');
     }
     else {
@@ -151,7 +151,7 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
    * Test that the service "cache.backend.database" is backend overridable.
    */
   public function testCacheBackendDatabaseIsBackendOverridable() {
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       $definition = $this->container->getDefinition('mongodb.cache.backend.database');
     }
     else {

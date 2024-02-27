@@ -5,6 +5,7 @@
  * Install, update, and uninstall functions for the Locale module.
  */
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Link;
@@ -248,6 +249,14 @@ function locale_schema() {
     ],
     'primary key' => ['project', 'langcode'],
   ];
+
+  if (Database::getConnection()->driver() == 'mongodb') {
+    $schema['locales_target']['fields']['customized']['type'] = 'bool';
+    $schema['locales_target']['fields']['customized']['default'] = FALSE;
+
+    $schema['locale_file']['fields']['timestamp']['type'] = 'date';
+  }
+
   return $schema;
 }
 

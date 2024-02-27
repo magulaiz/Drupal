@@ -5,6 +5,8 @@
  * Install and update functions for the Statistics module.
  */
 
+use Drupal\Core\Database\Database;
+
 // cspell:ignore daycount totalcount
 
 /**
@@ -57,6 +59,10 @@ function statistics_schema() {
     ],
     'primary key' => ['nid'],
   ];
+
+  if (Database::getConnection()->databaseType() == 'mongodb') {
+    $schema['node_counter']['fields']['timestamp']['type'] = 'date';
+  }
 
   return $schema;
 }

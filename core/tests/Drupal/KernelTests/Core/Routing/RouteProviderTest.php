@@ -180,7 +180,7 @@ class RouteProviderTest extends KernelTestBase {
     $connection = Database::getConnection();
 
     // MongoDB has its own RouteProvider.
-    if ($connection->databaseType() == 'mongodb') {
+    if ($connection->driver() == 'mongodb') {
       $provider = new MongodbRouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
     }
     else {
@@ -240,7 +240,7 @@ class RouteProviderTest extends KernelTestBase {
     $connection = Database::getConnection();
 
     // MongoDB has its own RouteProvider.
-    if ($connection->databaseType() == 'mongodb') {
+    if ($connection->driver() == 'mongodb') {
       $provider = new MongodbRouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
     }
     else {
@@ -291,7 +291,7 @@ class RouteProviderTest extends KernelTestBase {
     $connection = Database::getConnection();
 
     // MongoDB has its own RouteProvider.
-    if ($connection->databaseType() == 'mongodb') {
+    if ($connection->driver() == 'mongodb') {
       $provider = new MongodbRouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
     }
     else {
@@ -320,7 +320,7 @@ class RouteProviderTest extends KernelTestBase {
     $connection = Database::getConnection();
 
     // MongoDB has its own RouteProvider.
-    if ($connection->databaseType() == 'mongodb') {
+    if ($connection->driver() == 'mongodb') {
       $provider = new MongodbRouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
     }
     else {
@@ -353,7 +353,7 @@ class RouteProviderTest extends KernelTestBase {
     $connection = Database::getConnection();
 
     // MongoDB has its own RouteProvider.
-    if ($connection->databaseType() == 'mongodb') {
+    if ($connection->driver() == 'mongodb') {
       $provider = new MongodbRouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
     }
     else {
@@ -389,7 +389,7 @@ class RouteProviderTest extends KernelTestBase {
     $connection = Database::getConnection();
 
     // MongoDB has its own RouteProvider.
-    if ($connection->databaseType() == 'mongodb') {
+    if ($connection->driver() == 'mongodb') {
       $provider = new MongodbRouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
     }
     else {
@@ -434,7 +434,7 @@ class RouteProviderTest extends KernelTestBase {
     $connection = Database::getConnection();
 
     // MongoDB has its own RouteProvider.
-    if ($connection->databaseType() == 'mongodb') {
+    if ($connection->driver() == 'mongodb') {
       $provider = new MongodbRouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
     }
     else {
@@ -480,7 +480,7 @@ class RouteProviderTest extends KernelTestBase {
     $connection = Database::getConnection();
 
     // MongoDB has its own RouteProvider.
-    if ($connection->databaseType() == 'mongodb') {
+    if ($connection->driver() == 'mongodb') {
       $provider = new MongodbRouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
     }
     else {
@@ -526,7 +526,7 @@ class RouteProviderTest extends KernelTestBase {
     $connection = Database::getConnection();
 
     // MongoDB has its own RouteProvider.
-    if ($connection->databaseType() == 'mongodb') {
+    if ($connection->driver() == 'mongodb') {
       $provider = new MongodbRouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
     }
     else {
@@ -572,7 +572,7 @@ class RouteProviderTest extends KernelTestBase {
     $connection = Database::getConnection();
 
     // MongoDB has its own RouteProvider.
-    if ($connection->databaseType() == 'mongodb') {
+    if ($connection->driver() == 'mongodb') {
       $provider = new MongodbRouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
     }
     else {
@@ -614,7 +614,7 @@ class RouteProviderTest extends KernelTestBase {
     $connection = Database::getConnection();
 
     // MongoDB has its own RouteProvider.
-    if ($connection->databaseType() == 'mongodb') {
+    if ($connection->driver() == 'mongodb') {
       $provider = new MongodbRouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
     }
     else {
@@ -646,7 +646,7 @@ class RouteProviderTest extends KernelTestBase {
     $language_manager = \Drupal::languageManager();
 
     // MongoDB has its own RouteProvider.
-    if ($connection->databaseType() == 'mongodb') {
+    if ($connection->driver() == 'mongodb') {
       $provider = new MongodbRouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes', $language_manager);
     }
     else {
@@ -728,7 +728,7 @@ class RouteProviderTest extends KernelTestBase {
     $connection = Database::getConnection();
 
     // MongoDB has its own RouteProvider.
-    if ($connection->databaseType() == 'mongodb') {
+    if ($connection->driver() == 'mongodb') {
       $provider = new MongodbRouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
     }
     else {
@@ -770,7 +770,7 @@ class RouteProviderTest extends KernelTestBase {
     $connection = Database::getConnection();
 
     // MongoDB has its own RouteProvider.
-    if ($connection->databaseType() == 'mongodb') {
+    if ($connection->driver() == 'mongodb') {
       $provider = new MongodbTestRouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes');
     }
     else {

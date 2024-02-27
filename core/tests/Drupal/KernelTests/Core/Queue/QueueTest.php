@@ -19,7 +19,7 @@ class QueueTest extends KernelTestBase {
    * Tests the System queue.
    */
   public function testSystemQueue() {
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       // Create two queues.
       $queue1 = new MongodbDatabaseQueue($this->randomMachineName(), Database::getConnection());
       $queue1->createQueue();

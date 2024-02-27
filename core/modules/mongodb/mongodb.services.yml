@@ -158,11 +158,11 @@ services:
   # alias: mongodb.node.grant_storage
 
   # MongoDB overrides module path_alias.
-  mongodb.path_alias.repository:
-    class: Drupal\mongodb\modules\path_alias\AliasRepository
-    arguments: ['@database']
-  path_alias.repository:
-    alias: mongodb.path_alias.repository
+  # mongodb.path_alias.repository:
+  # class: Drupal\mongodb\modules\path_alias\AliasRepository
+  # arguments: ['@database']
+  # path_alias.repository:
+  # alias: mongodb.path_alias.repository
 
   # MongoDB overrides module statistics.
   mongodb.statistics.storage.node:

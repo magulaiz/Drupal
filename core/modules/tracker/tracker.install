@@ -5,6 +5,8 @@
  * Install, update, and uninstall functions for tracker.module.
  */
 
+use Drupal\Core\Database\Database;
+
 /**
  * Implements hook_uninstall().
  */
@@ -115,6 +117,20 @@ function tracker_schema() {
       ],
     ],
   ];
+
+  if (Database::getConnection()->driver() == 'mongodb') {
+    $schema['tracker_node']['fields']['published']['type'] = 'bool';
+    $schema['tracker_node']['fields']['published']['default'] = FALSE;
+    unset($schema['tracker_node']['fields']['published']['size']);
+
+    $schema['tracker_node']['fields']['published']['type'] = 'date';
+
+    $schema['tracker_user']['fields']['published']['type'] = 'bool';
+    $schema['tracker_user']['fields']['published']['default'] = FALSE;
+    unset($schema['tracker_user']['fields']['published']['size']);
+
+    $schema['tracker_user']['fields']['published']['type'] = 'date';
+  }
 
   return $schema;
 }

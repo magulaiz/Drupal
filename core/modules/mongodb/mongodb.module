@@ -72,7 +72,7 @@ function mongodb_entity_type_alter(array &$entity_types) {
     }
 
     if (!empty($entity_types['path_alias'])) {
-      $entity_types['path_alias']->setStorageClass('Drupal\mongodb\EntityStorage\PathAliasStorage');
+      // $entity_types['path_alias']->setStorageClass('Drupal\mongodb\EntityStorage\PathAliasStorage');
       $entity_types['path_alias']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\PathAliasStorageSchema');
     }
 

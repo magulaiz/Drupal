@@ -1680,6 +1680,10 @@ function system_schema() {
     ],
   ];
 
+  if (Database::getConnection()->driver() == 'mongodb') {
+    $schema['sessions']['fields']['timestamp']['type'] = 'date';
+  }
+
   return $schema;
 }
 

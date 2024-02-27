@@ -42,7 +42,7 @@ class MenuTreeStorageTest extends KernelTestBase {
     $this->connection = $this->container->get('database');
 
     // MongoDB has its own implementation of MenuTreeStorage.
-    if ($this->connection->databaseType() == 'mongodb') {
+    if ($this->connection->driver() == 'mongodb') {
       $this->treeStorage = new MongodbMenuTreeStorage($this->container->get('database'), $this->container->get('cache.menu'), $this->container->get('cache_tags.invalidator'), 'menu_tree');
     }
     else {
@@ -73,7 +73,7 @@ class MenuTreeStorageTest extends KernelTestBase {
     // that selecting from the storage creates the table.
 
     // MongoDB has its own implementation of MenuTreeStorage.
-    if ($this->connection->databaseType() == 'mongodb') {
+    if ($this->connection->driver() == 'mongodb') {
       $tree_storage = new MongodbMenuTreeStorage($this->container->get('database'), $this->container->get('cache.menu'), $this->container->get('cache_tags.invalidator'), 'test_menu_tree');
     }
     else {

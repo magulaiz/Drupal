@@ -23,7 +23,7 @@ class ChainedFastBackendTest extends GenericCacheBackendUnitTestBase {
    *   A new ChainedFastBackend object.
    */
   protected function createCacheBackend($bin) {
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       $consistent_backend = new MongodbDatabaseBackend(\Drupal::service('database'), \Drupal::service('cache_tags.invalidator.checksum'), $bin, \Drupal::service('serialization.phpserialize'), \Drupal::service(TimeInterface::class), 100);
     }
     else {
