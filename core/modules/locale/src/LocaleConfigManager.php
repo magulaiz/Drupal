@@ -660,8 +660,8 @@ class LocaleConfigManager {
     if ($default_langcode != 'en') {
       // Update active configuration copies of all prior shipped configuration if
       // they are still English. It is not enough to change configuration shipped
-      // with the components just installed, because installing a component such
-      // as views may bring in default configuration from prior components.
+      // with the configuration objects just installed, because installing a configuration object such
+      // as views may bring in default configuration from prior configuration objects.
       $names = $this->getComponentNames();
       foreach ($names as $name) {
         $config = $this->configFactory->reset($name)->getEditable($name);
