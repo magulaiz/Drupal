@@ -93,10 +93,41 @@ function announcements_feed_theme() {
         'feed_link' => NULL,
         'count' => 0,
       ),
-      'template' => 'announcements_feed',
+      'template' => 'announcements-feed',
       'path' => drupal_get_path('module', 'announcements_feed'),
     ),
   );
+}
+
+/**
+ * Processes variables for announcements-feed.tpl.php.
+ *
+ * @see announcements-feed.tpl.php
+ */
+function template_preprocess_announcements_feed(&$variables) {
+  if (isset($variables['featured'])) {
+    foreach($variables['featured'] as &$announcement) {
+      $announcement['title'] = filter_xss($announcement['title']);
+      $announcement['teaser'] = filter_xss($announcement['teaser']);
+      $announcement['link'] = check_url($announcement['link']);
+      $announcement['date_modified'] = check_plain($announcement['date_modified']);
+      $announcement['date_published'] = check_plain($announcement['date_published']);
+      $announcement['version'] = check_plain($announcement['version']);
+    }
+  }
+  if (isset($variables['standard'])) {
+    foreach($variables['standard'] as &$announcement) {
+      $announcement['title'] = filter_xss($announcement['title']);
+      $announcement['teaser'] = filter_xss($announcement['teaser']);
+      $announcement['link'] = check_url($announcement['link']);
+      $announcement['date_modified'] = check_plain($announcement['date_modified']);
+      $announcement['date_published'] = check_plain($announcement['date_published']);
+      $announcement['version'] = check_plain($announcement['version']);
+    }
+  }
+  if (isset($variables['$feed_link'])) {
+    $variables['$feed_link'] = check_url($variables['feed_link']);
+  }
 }
 
 /**
