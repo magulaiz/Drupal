@@ -244,13 +244,7 @@ class ViewsUIController extends ControllerBase {
    *   An array containing the Views edit and preview forms.
    */
   public function edit(ViewUI $view, $display_id = NULL) {
-    $name = $view->label();
-    $data = $this->viewsData->get($view->get('base_table'));
-
-    if (isset($data['table']['base']['title'])) {
-      $name .= ' (' . $data['table']['base']['title'] . ')';
-    }
-    $build['#title'] = $name;
+    $build['#title'] = $this->pageTitle($view);
 
     $build['edit'] = $this->entityFormBuilder()->getForm($view, 'edit', ['display_id' => $display_id]);
     $build['preview'] = $this->entityFormBuilder()->getForm($view, 'preview', ['display_id' => $display_id]);
