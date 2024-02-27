@@ -467,8 +467,7 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
    * @param string $langcode
    *   The language code.
    * @param bool $customized
-   *   (optional) If TRUE/FALSE, asserts that the translation
-   *   is customized or not.
+   *   (optional) Asserts if the translation is customized or not.
    *
    * @internal
    */
