@@ -60,7 +60,7 @@ function statistics_schema() {
     'primary key' => ['nid'],
   ];
 
-  if (Database::getConnection()->databaseType() == 'mongodb') {
+  if (Database::getConnection()->driver() == 'mongodb') {
     $schema['node_counter']['fields']['timestamp']['type'] = 'date';
   }
 

@@ -194,8 +194,8 @@ class NodeRevisionsTest extends NodeTestBase {
     $nids = \Drupal::entityQuery('node')
       ->accessCheck(FALSE)
       ->allRevisions()
-      ->condition('nid', $node->id())
-      ->condition('vid', $nodes[1]->getRevisionId())
+      ->condition('nid', (int) $node->id())
+      ->condition('vid', (int) $nodes[1]->getRevisionId())
       ->execute();
     $this->assertCount(0, $nids);
 

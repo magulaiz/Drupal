@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Database\Database;
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -28,6 +29,7 @@ use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\file\IconMimeTypes;
 use Drupal\file\Upload\FormUploadedFile;
+use MongoDB\BSON\UTCDateTime;
 
 // cspell:ignore widthx
 
@@ -453,10 +455,14 @@ function file_cron() {
   // Only delete temporary files if older than $age. Note that automatic cleanup
   // is disabled if $age set to 0.
   if ($age) {
+    $timestamp = \Drupal::time()->getRequestTime() - $age;
+    if (Database::getConnection()->driver() == 'mongodb') {
+      $timestamp = new UTCDateTime($timestamp * 1000);
+    }
     $fids = Drupal::entityQuery('file')
       ->accessCheck(FALSE)
-      ->condition('status', FileInterface::STATUS_PERMANENT, '<>')
-      ->condition('changed', \Drupal::time()->getRequestTime() - $age, '<')
+      ->condition('status', (bool) FileInterface::STATUS_PERMANENT, '<>')
+      ->condition('changed', $timestamp, '<')
       ->range(0, 100)
       ->execute();
     $files = $file_storage->loadMultiple($fids);

@@ -676,8 +676,8 @@ class ForumTest extends BrowserTestBase {
         ->get('database')
         ->select('forum', 'f')
         ->fields('f', ['tid'])
-        ->condition('nid', $node->id())
-        ->condition('vid', $node->getRevisionId())
+        ->condition('nid', (int) $node->id())
+        ->condition('vid', (int) $node->getRevisionId())
         ->execute()
         ->fetchField();
       $this->assertSame($this->rootForum['tid'], $forum_tid, 'The forum topic is linked to a different forum');

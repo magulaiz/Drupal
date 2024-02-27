@@ -64,10 +64,10 @@ function tracker_cron() {
 
       // Remove existing data for this node.
       $connection->delete('tracker_node')
-        ->condition('nid', $nid)
+        ->condition('nid', (int) $nid)
         ->execute();
       $connection->delete('tracker_user')
-        ->condition('nid', $nid)
+        ->condition('nid', (int) $nid)
         ->execute();
 
       // Insert the node-level data.
@@ -98,9 +98,9 @@ function tracker_cron() {
       $result = \Drupal::entityQueryAggregate('comment')
         ->accessCheck(FALSE)
         ->condition('entity_type', 'node')
-        ->condition('entity_id', $node->id())
-        ->condition('uid', $node->getOwnerId(), '<>')
-        ->condition('status', CommentInterface::PUBLISHED)
+        ->condition('entity_id', (int) $node->id())
+        ->condition('uid', (int) $node->getOwnerId(), '<>')
+        ->condition('status', (bool) CommentInterface::PUBLISHED)
         ->groupBy('uid')
         ->execute();
       if ($result) {
@@ -161,10 +161,10 @@ function tracker_node_update(NodeInterface $node, $arg = 0) {
 function tracker_node_predelete(EntityInterface $node, $arg = 0) {
   $connection = \Drupal::database();
   $connection->delete('tracker_node')
-    ->condition('nid', $node->id())
+    ->condition('nid', (int) $node->id())
     ->execute();
   $connection->delete('tracker_user')
-    ->condition('nid', $node->id())
+    ->condition('nid', (int) $node->id())
     ->execute();
 }
 
@@ -222,7 +222,7 @@ function _tracker_add($nid, $uid, $changed) {
 
   // Update the node-level data.
   $connection->merge('tracker_node')
-    ->key('nid', $nid)
+    ->key('nid', (int) $nid)
     ->fields([
       'changed' => $changed,
       'published' => $node->status,
@@ -242,7 +242,7 @@ function _tracker_add($nid, $uid, $changed) {
     ->execute();
   // Update the times for all the other users tracking the post.
   $connection->update('tracker_user')
-    ->condition('nid', $nid)
+    ->condition('nid', (int) $nid)
     ->fields([
       'changed' => $changed,
       'published' => $node->status,
@@ -297,9 +297,9 @@ function _tracker_remove($nid, $uid = NULL, $changed = NULL) {
       $keep_subscription = \Drupal::entityQuery('comment')
         ->accessCheck(FALSE)
         ->condition('entity_type', 'node')
-        ->condition('entity_id', $nid)
-        ->condition('uid', $uid)
-        ->condition('status', CommentInterface::PUBLISHED)
+        ->condition('entity_id', (int) $nid)
+        ->condition('uid', (int) $uid)
+        ->condition('status', (bool) CommentInterface::PUBLISHED)
         ->range(0, 1)
         ->count()
         ->execute();
@@ -308,8 +308,8 @@ function _tracker_remove($nid, $uid = NULL, $changed = NULL) {
     // If we haven't found a reason to keep the user's subscription, delete it.
     if (!$keep_subscription) {
       $connection->delete('tracker_user')
-        ->condition('nid', $nid)
-        ->condition('uid', $uid)
+        ->condition('nid', (int) $nid)
+        ->condition('uid', (int) $uid)
         ->execute();
     }
 
@@ -332,24 +332,24 @@ function _tracker_remove($nid, $uid = NULL, $changed = NULL) {
           'changed' => $changed,
           'published' => $node->isPublished(),
         ])
-        ->condition('nid', $nid)
+        ->condition('nid', (int) $nid)
         ->execute();
       $connection->update('tracker_node')
         ->fields([
           'changed' => $changed,
           'published' => $node->isPublished(),
         ])
-        ->condition('nid', $nid)
+        ->condition('nid', (int) $nid)
         ->execute();
     }
   }
   else {
     // If the node doesn't exist, remove everything.
     $connection->delete('tracker_node')
-      ->condition('nid', $nid)
+      ->condition('nid', (int) $nid)
       ->execute();
     $connection->delete('tracker_user')
-      ->condition('nid', $nid)
+      ->condition('nid', (int) $nid)
       ->execute();
   }
 }

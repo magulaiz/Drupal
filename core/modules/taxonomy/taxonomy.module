@@ -262,7 +262,7 @@ function taxonomy_node_predelete(EntityInterface $node) {
  */
 function taxonomy_delete_node_index(EntityInterface $node) {
   if (\Drupal::config('taxonomy.settings')->get('maintain_index_table')) {
-    \Drupal::database()->delete('taxonomy_index')->condition('nid', $node->id())->execute();
+    \Drupal::database()->delete('taxonomy_index')->condition('nid', (int) $node->id())->execute();
   }
 }
 

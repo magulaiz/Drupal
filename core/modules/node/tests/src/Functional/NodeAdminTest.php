@@ -93,7 +93,7 @@ class NodeAdminTest extends NodeTestBase {
       $node = $this->drupalCreateNode(['title' => $prefix . $this->randomMachineName(6)]);
       $connection->update('node_field_data')
         ->fields(['changed' => $changed])
-        ->condition('nid', $node->id())
+        ->condition('nid', (int) $node->id())
         ->execute();
     }
 

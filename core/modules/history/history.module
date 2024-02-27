@@ -159,7 +159,7 @@ function history_node_view_alter(array &$build, EntityInterface $node, EntityVie
  */
 function history_node_delete(EntityInterface $node) {
   \Drupal::database()->delete('history')
-    ->condition('nid', $node->id())
+    ->condition('nid', (int) $node->id())
     ->execute();
 }
 

@@ -63,7 +63,7 @@ class ForumIndexStorage implements ForumIndexStorageInterface {
    */
   public function delete(NodeInterface $node) {
     $this->database->delete('forum')
-      ->condition('nid', $node->id())
+      ->condition('nid', (int) $node->id())
       ->execute();
   }
 
@@ -72,8 +72,8 @@ class ForumIndexStorage implements ForumIndexStorageInterface {
    */
   public function deleteRevision(NodeInterface $node) {
     $this->database->delete('forum')
-      ->condition('nid', $node->id())
-      ->condition('vid', $node->getRevisionId())
+      ->condition('nid', (int) $node->id())
+      ->condition('vid', (int) $node->getRevisionId())
       ->execute();
   }
 
