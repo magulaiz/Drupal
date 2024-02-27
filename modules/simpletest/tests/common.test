@@ -1286,6 +1286,93 @@ class DrupalHTTPRequestTestCase extends DrupalWebTestCase {
 }
 
 /**
+ * Tests normalizing of the HTTP response headers lines.
+ */
+class DrupalHTTPResponseHeadersNormalizeTest extends DrupalUnitTestCase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Drupal HTTP response headers normalize',
+      'description' => 'Perform unit tests on _drupal_http_response_headers_normalize().',
+      'group' => 'System',
+    );
+  }
+
+  /**
+   * Checks _drupal_http_response_headers_normalize().
+   */
+  public function testResponseHeadersNormalize() {
+    // Grab the big array of test data from responseHeaderNormalizeData().
+    $data = $this->responseHeaderNormalizeData();
+    foreach($data as $test_name => $test_data) {
+      $normalized_raw_headers = _drupal_http_response_headers_normalize($test_data['raw']);
+      $expected_normalized_headers = $test_data['normalized'];
+      $this->assertIdentical($expected_normalized_headers, $normalized_raw_headers, "$test_name normalized headers are identical.");
+    }
+  }
+
+  /**
+   * Data provider for testResponseHeadersNormalize().
+   *
+   * @return array
+   *   Test data.
+   */
+  protected function responseHeaderNormalizeData() {
+    return array(
+      // Simple test.
+      'simple data' => array(
+        'raw' => array(
+          'Cache-Control: no-cache'
+        ),
+        'normalized' => array(
+          'Cache-Control: no-cache',
+        ),
+      ),
+      // Test with multi-line header with spaces.
+      'multi-line with string' => array(
+        'raw' => array(
+          "Content-Security-Policy: default-src 'self' example.com;",
+          "                         img-src 'self' data: example.com;"
+        ),
+        'normalized' => array(
+          "Content-Security-Policy: default-src 'self' example.com; img-src 'self' data: example.com;",
+        ),
+      ),
+      // Test with multi-line header with tabulation.
+      'multi-line with tabulation' => array(
+        'raw' => array(
+          "Content-Security-Policy: default-src 'self' example.com;",
+          "                       \timg-src 'self' data: example.com;"
+        ),
+        'normalized' => array(
+          "Content-Security-Policy: default-src 'self' example.com; img-src 'self' data: example.com;",
+        ),
+      ),
+      // Test with multi-line header with spaces and tabulation.
+      'multi-line mixed' => array(
+        'raw' => array(
+          "Content-Security-Policy1: default-src 'self' example.com;",
+          "                          img-src 'self' data: example.com;",
+          "Content-Security-Policy2: default-src 'self' example.com;",
+          "                        \timg-src 'self' data: example.com;",
+          "Content-Security-Policy3: default-src 'self' example.com;",
+          "                          img-src 'self' data: example.com;",
+          "                        \tchild-src 'self' example.com;",
+        ),
+        'normalized' => array(
+          "Content-Security-Policy1: default-src 'self' example.com; img-src 'self' data: example.com;",
+          "Content-Security-Policy2: default-src 'self' example.com; img-src 'self' data: example.com;",
+          "Content-Security-Policy3: default-src 'self' example.com; img-src 'self' data: example.com; child-src 'self' example.com;",
+        ),
+      ),
+    );
+  }
+}
+
+/**
  * Unit tests for processing of http redirects.
  */
 class DrupalHTTPRedirectTest extends DrupalUnitTestCase {
@@ -1459,14 +1546,14 @@ class DrupalGotoTest extends DrupalWebTestCase {
   function testDrupalGoto() {
     $this->drupalGet('common-test/drupal_goto/redirect');
     $headers = $this->drupalGetHeaders(TRUE);
-    list(, $status) = explode(' ', $headers[0][':status'], 3);
+    [, $status] = explode(' ', $headers[0][':status'], 3);
     $this->assertEqual($status, 302, 'Expected response code was sent.');
     $this->assertText('drupal_goto', 'Drupal goto redirect succeeded.');
     $this->assertEqual($this->getUrl(), url('common-test/drupal_goto', array('absolute' => TRUE)), 'Drupal goto redirected to expected URL.');
 
     $this->drupalGet('common-test/drupal_goto/redirect_advanced');
     $headers = $this->drupalGetHeaders(TRUE);
-    list(, $status) = explode(' ', $headers[0][':status'], 3);
+    [, $status] = explode(' ', $headers[0][':status'], 3);
     $this->assertEqual($status, 301, 'Expected response code was sent.');
     $this->assertText('drupal_goto', 'Drupal goto redirect succeeded.');
     $this->assertEqual($this->getUrl(), url('common-test/drupal_goto', array('query' => array('foo' => '123'), 'absolute' => TRUE)), 'Drupal goto redirected to expected URL.');
@@ -1475,7 +1562,7 @@ class DrupalGotoTest extends DrupalWebTestCase {
     variable_set('common_test_redirect_current_path', TRUE);
     $this->drupalGet('', array('query' => array('q' => 'http://www.example.com/')));
     $headers = $this->drupalGetHeaders(TRUE);
-    list(, $status) = explode(' ', $headers[0][':status'], 3);
+    [, $status] = explode(' ', $headers[0][':status'], 3);
     $this->assertEqual($status, 302, 'Expected response code was sent.');
     $this->assertNotEqual($this->getUrl(), 'http://www.example.com/', 'Drupal goto did not redirect to external URL.');
     $this->assertTrue(strpos($this->getUrl(), url('<front>', array('absolute' => TRUE))) === 0, 'Drupal redirected to itself.');

@@ -1018,8 +1018,12 @@ function drupal_http_request($url, array $options = array()) {
 
   $result->headers = array();
 
+  // Normalize response headers as header values with line breaks
+  // are allowed per RFC 2616.
+  $headers = _drupal_http_response_headers_normalize($response);
+
   // Parse the response headers.
-  while ($line = trim((string) array_shift($response))) {
+  while ($line = trim((string) array_shift($headers))) {
     list($name, $value) = explode(':', $line, 2);
     $name = strtolower($name);
     if (isset($result->headers[$name]) && $name == 'set-cookie') {
@@ -1128,6 +1132,45 @@ function drupal_http_request($url, array $options = array()) {
   }
 
   return $result;
+}
+
+/**
+ * Helper function to normalize response HTTP headers.
+ *
+ * Converts multi-line header values to one line.
+ * Used in drupal_http_request().
+ *
+ * @param array $raw_headers
+ *   Headers to process.
+ *
+ * @return array
+ *   Normalized headers.
+ */
+function _drupal_http_response_headers_normalize(array $raw_headers) {
+  // Normalize response headers.
+  $headers = array();
+  $current_header = '';
+  foreach ($raw_headers as $line) {
+    // Skip empty lines.
+    if ($line === '') {
+      continue;
+    }
+    // Check if the line is a continuation of the previous header.
+    if (preg_match('/^\s/', $line)) {
+      $current_header .= ' ' . trim($line);
+    }
+    else {
+      if (!empty($current_header)) {
+        $headers[] = $current_header;
+      }
+      $current_header = trim($line);
+    }
+  }
+  // Add the last header if there's one.
+  if (!empty($current_header)) {
+    $headers[] = $current_header;
+  }
+  return $headers;
 }
 
 /**
