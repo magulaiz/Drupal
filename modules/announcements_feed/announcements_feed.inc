@@ -12,7 +12,7 @@
  *   A build array with announcements.
  */
 function announcements_feed_get_announcements() {
-  drupal_set_title('Community announcements');
+  drupal_set_title(t('Community announcements'));
   drupal_add_css(drupal_get_path('module', 'announcements_feed')
     . '/announcements_feed.css', array(
       'group' => CSS_DEFAULT,
