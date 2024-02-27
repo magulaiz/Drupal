@@ -6,7 +6,7 @@ use Drupal\Component\Plugin\Attribute\Plugin;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
- * Defines a SearchPlugin type annotation object.
+ * Defines a SearchPlugin type attribute for plugin discovery.
  *
  * SearchPlugin classes define search types for the core Search module. Each
  * search type can be used to create search pages from the Search settings page.
