@@ -24,7 +24,7 @@ class SearchPlugin extends Plugin {
    * @param string $id
    *   The plugin ID.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $title
-   *   The label of the action.
+   *   The title for the search page tab.
    * @param bool $use_admin_theme
    *   Whether search results should be displayed in admin theme or not.
    */
