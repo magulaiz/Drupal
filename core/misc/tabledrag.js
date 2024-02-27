@@ -200,6 +200,16 @@
     });
     this.dragOrientation = this.indentEnabled ? 'drag' : 'drag-y';
     if (this.indentEnabled) {
+      // If a tabledrag has indents but only has leaf rows are present, it's not
+      // hierarchical from an end-user point of view.
+      const countNestableRows = $table
+        .find('> tr.draggable, > tbody > tr.draggable')
+        .not('.tabledrag-leaf').length;
+      // There are no rows that accept nesting in this table, show a vertical
+      // drag icon.
+      if (countNestableRows === 0) {
+        this.dragOrientation = 'drag-y';
+      }
       /**
        * Total width of indents, set in makeDraggable.
        *
@@ -301,7 +311,7 @@
    * 'Drupal.tableDrag.showWeight' localStorage value.
    */
   Drupal.tableDrag.prototype.initColumns = function () {
-    const $table = this.$table;
+    const { $table } = this;
     let hidden;
     let cell;
     let columnIndex;
@@ -1244,7 +1254,7 @@
       scrollY = window.pageYOffset ? window.pageYOffset : window.scrollY;
     }
     this.scrollY = scrollY;
-    const trigger = this.scrollSettings.trigger;
+    const { trigger } = this.scrollSettings;
     let delta = 0;
 
     // Return a scroll speed relative to the edge of the screen.
