@@ -749,8 +749,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $this->assertTrue($response->hasHeader('X-Drupal-Cache'));
       $this->assertSame($expected_page_cache_header_value, $response->getHeader('X-Drupal-Cache')[0]);
     }
-    else {
-      $this->assertFalse($response->hasHeader('X-Drupal-Cache'));
+    elseif ($response->hasHeader('X-Drupal-Cache')) {
+      $this->assertMatchesRegularExpression('#^UNCACHEABLE \((no cacheability|(request|response) policy)\)$#', $response->getHeader('X-Drupal-Cache')[0]);
     }
 
     // Expected Dynamic Page Cache header value: X-Drupal-Dynamic-Cache header.
@@ -758,8 +758,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $this->assertTrue($response->hasHeader('X-Drupal-Dynamic-Cache'));
       $this->assertSame($expected_dynamic_page_cache_header_value, $response->getHeader('X-Drupal-Dynamic-Cache')[0]);
     }
-    else {
-      $this->assertFalse($response->hasHeader('X-Drupal-Dynamic-Cache'));
+    elseif ($response->hasHeader('X-Drupal-Dynamic-Cache')) {
+      $this->assertMatchesRegularExpression('#^UNCACHEABLE \(((no|poor) cacheability|(request|response) policy)\)$#', $response->getHeader('X-Drupal-Dynamic-Cache')[0]);
     }
   }
 
@@ -1087,8 +1087,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $expected_cacheability = $expected_response->getCacheableMetadata();
     $response = $this->request('HEAD', $collection_url, $request_options);
     // MISS or UNCACHEABLE depends on the collection data. It must not be HIT.
-    $dynamic_cache = $expected_cacheability->getCacheMaxAge() === 0 || !empty(array_intersect(['user', 'session'], $expected_cacheability->getCacheContexts())) ? 'UNCACHEABLE' : 'MISS';
-    $this->assertResourceResponse(200, NULL, $response, $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), 'UNCACHEABLE (request policy)', $dynamic_cache);
+    $dynamic_cache = $expected_cacheability->getCacheMaxAge() === 0 || !empty(array_intersect(['user', 'session'], $expected_cacheability->getCacheContexts())) ? 'UNCACHEABLE (poor cacheability)' : 'MISS';
+    $this->assertResourceResponse(200, $expected_document, $response, $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), 'UNCACHEABLE (request policy)', $dynamic_cache);
 
     // Different databases have different sort orders, so a sort is required so
     // test expectations do not need to vary per database.
@@ -1122,7 +1122,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $expected_document = $expected_response->getResponseData();
     $response = $this->request('GET', $collection_url, $request_options);
     // Dynamic Page Cache HIT unless the HEAD request was UNCACHEABLE.
-    $dynamic_cache = $expected_cacheability->getCacheMaxAge() === 0 || !empty(array_intersect(['user', 'session'], $expected_cacheability->getCacheContexts())) ? 'UNCACHEABLE (poor cacheability)' : 'MISS';
+    $dynamic_cache = $dynamic_cache === 'UNCACHEABLE (poor cacheability)' ? 'UNCACHEABLE (poor cacheability)' : 'HIT';
     $this->assertResourceResponse(200, $expected_document, $response, $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), 'UNCACHEABLE (request policy)', $dynamic_cache);
 
     if ($this->entity instanceof FieldableEntityInterface) {
@@ -1230,7 +1230,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $expected_document = $expected_response->getResponseData();
     $response = $this->request('GET', $sorted_collection_include_url, $request_options);
     // MISS or UNCACHEABLE depends on the included data. It must not be HIT.
-    $dynamic_cache = $expected_cacheability->getCacheMaxAge() === 0 || !empty(array_intersect(['user', 'session'], $expected_cacheability->getCacheContexts())) ? 'UNCACHEABLE (poor cacheability)' : 'MISS';
+    $dynamic_cache = $expected_cacheability->getCacheMaxAge() === 0 ? 'UNCACHEABLE (poor cacheability)' : 'MISS';
     $this->assertResourceResponse(200, $expected_document, $response, $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), 'UNCACHEABLE (request policy)', $dynamic_cache);
   }
 
