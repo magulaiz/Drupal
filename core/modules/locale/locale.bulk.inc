@@ -6,9 +6,9 @@
  */
 
 use Drupal\Core\Batch\BatchBuilder;
-use Drupal\Core\Url;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Url;
 use Drupal\file\FileInterface;
 use Drupal\locale\Gettext;
 use Drupal\locale\Locale;
@@ -467,7 +467,7 @@ function locale_translate_file_attach_properties($file, array $options = []) {
   }
 
   // Extract project, version and language code from the file name. Supported:
-  // {project}-{version}.{langcode}.po, {prefix}.{langcode}.po or {langcode}.po
+  // {project}-{version}.{langcode}.po, {prefix}.{langcode}.po or {langcode}.po.
   preg_match('!
     (                       # project OR project and version OR empty (group 1)
       ([a-z_]+)             # project name (group 2)
@@ -536,8 +536,8 @@ function locale_translate_delete_translation_files(array $projects = [], array $
  * @param array $langcodes
  *   (optional) Array of language codes. Defaults to all translatable languages.
  * @param array $components
- *   (optional) Array of component lists indexed by type. If not present or it
- *   is an empty array, it will update all components.
+ *   (optional) Array of configuration objects lists indexed by type. If not present or it
+ *   is an empty array, it will update all configuration objects.
  * @param bool $update_default_config_langcodes
  *   Determines whether default configuration langcodes should be updated. This
  *   Should only happen during site and extension install.
