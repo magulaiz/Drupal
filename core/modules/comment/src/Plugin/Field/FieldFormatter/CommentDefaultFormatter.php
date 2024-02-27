@@ -24,7 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
   id: 'comment_default',
   label: new TranslatableMarkup('Comment list'),
   field_types: [
-    'comment'
+    'comment',
   ],
 )]
 class CommentDefaultFormatter extends FormatterBase {
