@@ -270,7 +270,7 @@ interface DisplayPluginInterface {
    * @param string $type
    *   The type of the plugin.
    *
-   * @return \Drupal\views\Plugin\views\ViewsPluginInterface
+   * @return \Drupal\views\Plugin\views\ViewsPluginInterface|null
    */
   public function getPlugin($type);
 
