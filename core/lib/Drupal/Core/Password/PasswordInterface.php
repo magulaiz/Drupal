@@ -4,6 +4,14 @@ namespace Drupal\Core\Password;
 
 /**
  * Secure password hashing functions for user authentication.
+ *
+ * @deprecated Scheduled for removal in Drupal 10.3.x. Constants and properties
+ *   will me moved in \Drupal\Core\Password\PasswordHashInterface. Use
+ *   \Drupal\Core\Password\PasswordHashInterface instead.
+ *
+ * @see \Drupal\Core\Password\PasswordHashInterface
+ *
+ * @todo Merge this interface into PasswordHashInterface in Drupal 11.0.x.
  */
 interface PasswordInterface {
 
@@ -33,6 +41,12 @@ interface PasswordInterface {
    *
    * @return bool
    *   TRUE if the password is valid, FALSE if not.
+   *
+   * @deprecated Scheduled for removal in Drupal 11.0.x. Implement interface
+   *   PasswordHashInterface instead of PasswordInterface and use
+   *   \Drupal\Core\Password\PasswordHashInterface::verify().
+   *
+   * @see \Drupal\Core\Password\PasswordHashInterface::verify()
    */
   public function check(#[\SensitiveParameter] $password, #[\SensitiveParameter] $hash);
 

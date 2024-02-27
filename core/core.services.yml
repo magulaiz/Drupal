@@ -1134,7 +1134,7 @@ services:
   Drupal\Core\Path\PathValidatorInterface: '@path.validator'
   password:
     class: Drupal\Core\Password\PhpPassword
-  Drupal\Core\Password\PasswordInterface: '@password'
+  Drupal\Core\Password\PasswordHashInterface: '@password'
   password_generator:
     class: Drupal\Core\Password\DefaultPasswordGenerator
   Drupal\Core\Password\PasswordGeneratorInterface: '@password_generator'

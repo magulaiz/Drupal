@@ -7,7 +7,7 @@ namespace Drupal\Core\Password;
  *
  * @see https://www.php.net/manual/en/book.password.php
  */
-class PhpPassword implements PasswordInterface {
+class PhpPassword extends PhpassHashedPasswordBase {
 
   /**
    * Constructs a new password hashing instance.
@@ -40,7 +40,7 @@ class PhpPassword implements PasswordInterface {
   /**
    * {@inheritdoc}
    */
-  public function check(#[\SensitiveParameter] $password, #[\SensitiveParameter] $hash) {
+  public function verify(#[\SensitiveParameter] $password, #[\SensitiveParameter] $hash) {
     // Prevent DoS attacks by refusing to check large passwords.
     if (strlen($password) > static::PASSWORD_MAX_LENGTH) {
       return FALSE;

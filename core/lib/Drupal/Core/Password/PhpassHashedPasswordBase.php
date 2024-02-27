@@ -9,7 +9,7 @@ namespace Drupal\Core\Password;
  *
  * @see https://www.drupal.org/node/3322420
  */
-abstract class PhpassHashedPasswordBase implements PasswordInterface {
+abstract class PhpassHashedPasswordBase implements PasswordHashInterface {
 
   /**
    * The minimum allowed log2 number of iterations for password stretching.
@@ -47,16 +47,16 @@ abstract class PhpassHashedPasswordBase implements PasswordInterface {
   /**
    * The core PHP password interface.
    */
-  protected ?PasswordInterface $corePassword;
+  protected ?PasswordHashInterface $corePassword;
 
   /**
    * Constructs a new password hashing instance.
    *
-   * @param \Drupal\Core\Password\PasswordInterface|int $corePassword
+   * @param \Drupal\Core\Password\PasswordHashInterface|int $corePassword
    *   The core PHP password interface (or the countLog2 value for BC).
    */
-  public function __construct(PasswordInterface|int $corePassword) {
-    if ($corePassword instanceof PasswordInterface) {
+  public function __construct(PasswordHashInterface|int $corePassword) {
+    if ($corePassword instanceof PasswordHashInterface) {
       // Note: If $corePassword is set, $countLog2 isn't used anywhere in the
       // code path of this class. Still, set it to the default value for BC
       // reasons.
@@ -174,7 +174,7 @@ abstract class PhpassHashedPasswordBase implements PasswordInterface {
    */
   protected function crypt($algo, #[\SensitiveParameter] $password, $setting) {
     // Prevent DoS attacks by refusing to hash large passwords.
-    if (strlen($password) > PasswordInterface::PASSWORD_MAX_LENGTH) {
+    if (strlen($password) > PasswordHashInterface::PASSWORD_MAX_LENGTH) {
       return FALSE;
     }
 

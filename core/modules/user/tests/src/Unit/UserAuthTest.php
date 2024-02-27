@@ -7,6 +7,7 @@ namespace Drupal\Tests\user\Unit;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\Routing\TrustedRedirectResponse;
+use Drupal\Core\Password\PasswordHashInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Authentication\Provider\Cookie;
 use Drupal\user\UserAuth;
@@ -32,7 +33,7 @@ class UserAuthTest extends UnitTestCase {
   /**
    * The mocked password service.
    *
-   * @var \Drupal\Core\Password\PasswordInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\Password\PasswordHashInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $passwordService;
 
@@ -79,7 +80,7 @@ class UserAuthTest extends UnitTestCase {
       ->with('user')
       ->willReturn($this->userStorage);
 
-    $this->passwordService = $this->createMock('Drupal\Core\Password\PasswordInterface');
+    $this->passwordService = $this->createMock('Drupal\Core\Password\PasswordHashInterface');
 
     $this->testUser = $this->getMockBuilder('Drupal\user\Entity\User')
       ->disableOriginalConstructor()
