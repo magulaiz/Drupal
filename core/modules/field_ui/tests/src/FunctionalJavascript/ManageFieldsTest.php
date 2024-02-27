@@ -226,7 +226,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     $default_value->check();
     $assert_session->waitForElementVisible('xpath', $default_value->getXpath());
     $default_input_1->setValue('There can be only one!');
-    $default_input_2_name = "default_value_input[field_test_field_1][1][value]";
+    $default_input_2_name = 'default_value_input[field_test_field_1][1][value]';
     $assert_session->fieldNotExists($default_input_2_name);
     $cardinality = $assert_session->fieldExists('field_storage[subform][cardinality_number]');
     $cardinality->setValue(2);
@@ -279,11 +279,10 @@ class ManageFieldsTest extends WebDriverTestBase {
     $test_field->click();
     $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="test_field"]')->isSelected());
     $page->pressButton('Continue');
-    $assert_session->pageTextNotContains('Choose an option below');
     $field_name = 'test_field_2';
     $page->fillField('label', $field_name);
-    $page->findField('description')->focus();
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $assert_session->pageTextNotContains('Choose an option below');
+    $this->assertSession()->assertNoElementAfterWait('css', '.ajax-progress-throbber');
     $page->pressButton('Save settings');
     $assert_session->pageTextContains('Saved ' . $field_name . ' configuration.');
     $this->assertNotNull($field_storage = FieldStorageConfig::loadByName('node', "field_$field_name"));

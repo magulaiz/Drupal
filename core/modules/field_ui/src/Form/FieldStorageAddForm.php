@@ -249,6 +249,7 @@ class FieldStorageAddForm extends FormBase {
       '#value' => $this->t('Back'),
       '#submit' => ['::startOver'],
     ];
+    // Using the validate method to run this before submit.
     $form['actions']['back']['#validate'][] = '::UnsetStorageType';
     $field_type_options = $form_state->get('field_type_options');
     $new_storage_type = $form_state->getValue('new_storage_type');
@@ -329,9 +330,11 @@ class FieldStorageAddForm extends FormBase {
   }
 
   /**
-   * Unsets the storage type.
+   * Unsets the storage type to let the form rebuild as new.
+   *
+   * @see \Drupal\field_ui\Form\FieldStorageAddForm::startOver
    */
-  public static function UnsetStorageType(array &$form, FormStateInterface $form_state) {
+  public static function unsetStorageType(array &$form, FormStateInterface $form_state) {
     $form_state->unsetValue('new_storage_type');
   }
 

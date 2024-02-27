@@ -115,7 +115,7 @@ trait FieldUiJSTestTrait {
     $assert_session = $this->assertSession();
     $page->fillField('edit-label', $label);
     $page->findField('description')->focus();
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertNoElementAfterWait('css', '.ajax-progress-throbber');
     $page->pressButton('Save settings');
     $this->assertTrue($assert_session->waitForText("Saved $label configuration."));
 
