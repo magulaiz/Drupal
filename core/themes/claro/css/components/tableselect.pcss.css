@@ -67,12 +67,6 @@ tr.selected td {
       box-shadow: none;
     }
   }
-  & .button--primary:not(:disabled, .is-disabled) {
-    background: var(--color-blue-400);
-    &:hover {
-      background: var(--color-blue-500);
-    }
-  }
   & .form-item__label {
     display: inline;
     padding-inline-end: var(--space-xs);

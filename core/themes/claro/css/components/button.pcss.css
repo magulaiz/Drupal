@@ -102,6 +102,17 @@
   }
 }
 
+/* Primary button style.s */
+.button--primary-light {
+  color: var(--button-fg-color--primary);
+  background-color: var(--color-blue-400);
+
+  &:is(:hover, :active) {
+    color: var(--button-fg-color--primary);
+    background-color: var(--color-blue-500);
+  }
+}
+
 /* Danger button styles */
 .button--danger {
   color: var(--button-fg-color--danger);

@@ -451,7 +451,7 @@ function claro_form_alter(array &$form, FormStateInterface $form_state, $form_id
 
         $form['bulk_actions_container']['#attributes']['data-drupal-views-bulk-actions'] = '';
         $form['bulk_actions_container']['#attributes']['class'][] = 'views-bulk-actions';
-        $form['bulk_actions_container']['actions']['submit']['#button_type'] = 'primary';
+        $form['bulk_actions_container']['actions']['submit']['#button_type'] = 'primary-light';
         $form['bulk_actions_container']['actions']['submit']['#attributes']['class'][] = 'button--small';
         $label = t('Perform actions on the selected items in the %view_title view', ['%view_title' => $view_title]);
         $label_id = $key . '_group_label';

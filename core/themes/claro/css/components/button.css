@@ -116,6 +116,18 @@
   background-color: var(--button--hover-bg-color--primary);
 }
 
+/* Primary button style.s */
+
+.button--primary-light {
+  color: var(--button-fg-color--primary);
+  background-color: var(--color-blue-400);
+}
+
+.button--primary-light:is(:hover, :active) {
+  color: var(--button-fg-color--primary);
+  background-color: var(--color-blue-500);
+}
+
 /* Danger button styles */
 
 .button--danger {
