@@ -86,8 +86,7 @@ class DbLogResourceTest extends ResourceTestBase {
       $response,
       ['4xx-response', 'http_response'],
       ['user.permissions'],
-      'UNCACHEABLE (request policy)',
-      FALSE
+      'UNCACHEABLE (request policy)'
     );
 
     // Create a user account that has the required permissions to read
