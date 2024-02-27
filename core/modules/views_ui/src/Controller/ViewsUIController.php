@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Tags;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
+use Drupal\views\Ajax\ReplaceTitleCommand;
 use Drupal\views\ViewExecutable;
 use Drupal\views\ViewEntityInterface;
 use Drupal\views\Views;
@@ -15,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Component\Utility\Html;
 
 /**
@@ -162,6 +164,51 @@ class ViewsUIController extends ControllerBase {
     return $this->redirect('entity.view.collection');
   }
 
+
+  /**
+   * Calls a method on a view and reloads the listing page.
+   *
+   * @param \Drupal\views_ui\ViewUI $view
+   *   The view to be edited.
+   * @param string|null $display_id
+   *   (optional) The display ID being edited. Defaults to NULL, which will load
+   * @param string $op
+   *   The operation to perform, e.g., 'enable' or 'disable'.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The route match.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse|\Symfony\Component\HttpFoundation\RedirectResponse
+   *   Either returns a rebuilt listing page as an AJAX response, or redirects
+   *   back to the listing page.
+   */
+  public function ajaxDisplayOperation(ViewEntityInterface $view, $display_id, $op, Request $request, RouteMatchInterface $route_match) {
+    // Perform the operation.
+    $view->$op()->save();
+
+    // If the request is via AJAX, return the rendered list as JSON.
+    if ($request->request->get('js')) {
+      $response = new AjaxResponse();
+
+      $toggle = $op=='enable'? 'disable' : 'enable';
+      $title = $op=='enable'? $this->t('Disable view') : $this->t('Enable view');
+      $class = $op=='enable'? 'disabled' : 'enabled';
+      $js = $route_match->getParameters()->get('js');
+      $route = "entity.view." . $toggle . "_display";
+      $replace_link =  Link::createFromRoute($title, $route, ['js'=>$js, 'view'=>$view->id(), 'display_id'=>$display_id],  ['attributes' => ['class' => ['views-ajax-link', 'view-status']]])->toString();
+
+      // Update Document Title and h1.page-title.
+      $response->addCommand(new ReplaceTitleCommand($this->pageTitle($view)));
+      $view_edit_form = $this->entityFormBuilder()->getForm($view, 'edit', ['display_id' => $display_id]);
+      $response->addCommand(new ReplaceCommand('.views-edit-view', $view_edit_form));
+      return $response;
+    }
+
+    // Otherwise, redirect back to the page.
+    return $this->redirect('entity.view.edit_display_form', ['view' => $view->id(), 'display_id'=> $display_id]);
+  }
+
   /**
    * Menu callback for Views tag autocompletion.
    *
@@ -220,6 +267,27 @@ class ViewsUIController extends ControllerBase {
     $build['edit'] = $this->entityFormBuilder()->getForm($view, 'edit', ['display_id' => $display_id]);
     $build['preview'] = $this->entityFormBuilder()->getForm($view, 'preview', ['display_id' => $display_id]);
     return $build;
+  }
+
+  /**
+   * Returns the views Page Title.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The view being acted upon.
+   *
+   * @return string
+   *   The view label with Datasource and notice if view is disabled.
+   */
+  private function pageTitle(ViewEntityInterface $view) {
+     $name = $view->label();
+     $data = $this->viewsData->get($view->get('base_table'));
+     if (isset($data['table']['base']['title'])) {
+      $name .= ' (' . $data['table']['base']['title'] . ')';
+    }
+    if (!$view->status()) {
+      $name .= ' '. $this->t('disabled');
+    }
+    return $name;
   }
 
 }
