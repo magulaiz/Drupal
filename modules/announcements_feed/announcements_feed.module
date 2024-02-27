@@ -105,29 +105,31 @@ function announcements_feed_theme() {
  * @see announcements-feed.tpl.php
  */
 function template_preprocess_announcements_feed(&$variables) {
-  if (isset($variables['featured'])) {
+  if (!empty($variables['featured'])) {
     foreach($variables['featured'] as &$announcement) {
-      $announcement['title'] = filter_xss($announcement['title']);
-      $announcement['teaser'] = filter_xss($announcement['teaser']);
-      $announcement['link'] = check_url($announcement['link']);
-      $announcement['date_modified'] = check_plain($announcement['date_modified']);
-      $announcement['date_published'] = check_plain($announcement['date_published']);
-      $announcement['version'] = check_plain($announcement['version']);
+      _announcements_feed_preprocess_item($announcement);
     }
   }
-  if (isset($variables['standard'])) {
+  if (!empty($variables['standard'])) {
     foreach($variables['standard'] as &$announcement) {
-      $announcement['title'] = filter_xss($announcement['title']);
-      $announcement['teaser'] = filter_xss($announcement['teaser']);
-      $announcement['link'] = check_url($announcement['link']);
-      $announcement['date_modified'] = check_plain($announcement['date_modified']);
-      $announcement['date_published'] = check_plain($announcement['date_published']);
-      $announcement['version'] = check_plain($announcement['version']);
+      _announcements_feed_preprocess_item($announcement);
     }
   }
   if (isset($variables['$feed_link'])) {
     $variables['$feed_link'] = check_url($variables['feed_link']);
   }
+}
+
+/**
+ * Helper to preprocess individual announcement items.
+ */
+function _announcements_feed_preprocess_item(&$item) {
+  $item['title'] = filter_xss($item['title']);
+  $item['teaser'] = filter_xss($item['teaser']);
+  $item['link'] = check_url($item['link']);
+  $item['date_modified'] = check_plain($item['date_modified']);
+  $item['date_published'] = check_plain($item['date_published']);
+  $item['version'] = check_plain($item['version']);
 }
 
 /**

