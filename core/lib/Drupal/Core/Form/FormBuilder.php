@@ -831,9 +831,9 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       }
     }
 
-    // Add the 'render_cache_form' cache tag to identify this render array as
-    // a form to the render cache.
-    $form['#cache']['tags'][] = 'render_cache_form';
+    // Add the 'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form' cache tag to
+    // identify this render array as a form to the render cache.
+    $form['#cache']['tags'][] = 'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form';
 
     // Invoke hook_form_alter(), hook_form_BASE_FORM_ID_alter(), and
     // hook_form_FORM_ID_alter() implementations.
