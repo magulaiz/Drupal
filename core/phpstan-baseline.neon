@@ -447,6 +447,11 @@ parameters:
 			path: lib/Drupal/Core/DrupalKernel.php
 
 		-
+			message: "#^Variable \\$container might not be defined\\.$#"
+			count: 2
+			path: lib/Drupal/Core/DrupalKernel.php
+
+		-
 			message: "#^Variable \\$container_definition might not be defined\\.$#"
 			count: 1
 			path: lib/Drupal/Core/DrupalKernel.php
