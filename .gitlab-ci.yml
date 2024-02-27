@@ -49,6 +49,8 @@ variables:
   GIT_DEPTH: "50"
   PARENT_PIPELINE_ID: $CI_PIPELINE_ID
   _TARGET_PHP: "8.2"
+  # Adding extra CPU to run containers hosting chrome and chromedriver.
+  KUBERNETES_SERVICE_CPU_REQUEST: 2
 
 #############
 # Stages    #
