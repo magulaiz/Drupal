@@ -130,15 +130,23 @@ class GenerateTheme extends Command {
     $patterns = [
       'old' => [
         'machine_name' => $starterkit->getName(),
+        'machine_name_camel' => u($starterkit->getName())->camel(),
+        'machine_name_pascal' => u($starterkit->getName())->camel()->title(),
+        'machine_name_title' => u($starterkit->getName())->title(),
         'label' => $starterkit->info['name'],
-        'machine_class_name' => (string) u($starterkit->getName())->camel()->title(),
-        'label_class_name' => (string) u($starterkit->info['name'])->camel()->title(),
+        'label_camel' => u($starterkit->info['name'])->camel(),
+        'label_pascal' => u($starterkit->info['name'])->camel()->title(),
+        'label_title' => u($starterkit->info['name'])->title(),
       ],
       'new' => [
         'machine_name' => $destination_theme,
+        'machine_name_camel' => u($destination_theme)->camel(),
+        'machine_name_pascal' => u($destination_theme)->camel()->title(),
+        'machine_name_title' => u($destination_theme)->title(),
         'label' => $theme_label,
-        'machine_class_name' => (string) u($destination_theme)->camel()->title(),
-        'label_class_name' => (string) u($theme_label)->camel()->title(),
+        'label_camel' => u($theme_label)->camel(),
+        'label_pascal' => u($theme_label)->camel()->title(),
+        'label_title' => u($theme_label)->title(),
       ],
     ];
     $filesToEdit = self::createFilesFinder($tmpDir)
