@@ -76,7 +76,6 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
    * Testing the feed with Updated and Removed JSON feeds.
    */
   public function testAnnounceFeedUpdatedAndRemoved() {
-    module_load_include('inc', 'announce_feed_test', 'announce_feed_test');
     $this->drupalLogin($this->user);
     $this->drupalGet('');
     $this->clickLink('Announcements');
@@ -331,7 +330,6 @@ class AnnounceFeedTestInvalidJsonTestCase extends DrupalWebTestCase {
    */
   public function testInvalidFeedResponse() {
     // Test when the JSON URL is not found.
-    module_load_include('inc', 'announce_feed_test', 'announce_feed_test');
     $this->drupalLogin($this->user);
     $this->drupalGet('');
     $this->clickLink('Announcements');
@@ -401,7 +399,6 @@ class AnnounceFeedTestSanitizationTestCase extends DrupalWebTestCase {
    * Test the announcements feed with malicious content.
    */
   public function testSanitizedFeedResponse() {
-    module_load_include('inc', 'announce_feed_test', 'announce_feed_test');
     $this->drupalLogin($this->user);
     $this->drupalGet('');
     $this->clickLink('Announcements');
