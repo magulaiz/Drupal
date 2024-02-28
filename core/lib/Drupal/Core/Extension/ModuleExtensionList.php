@@ -168,7 +168,7 @@ class ModuleExtensionList extends ExtensionList {
     }
     $extensions = $this->moduleHandler->buildModuleDependencies($extensions);
 
-    if (!empty($this->installProfile) && $extensions[$this->installProfile]) {
+    if ($this->installProfile && $extensions[$this->installProfile]) {
       $active_profile = $extensions[$this->installProfile];
 
       // Installation profile hooks are always executed last.
