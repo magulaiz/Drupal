@@ -72,7 +72,7 @@ class InstallProfileUninstallTest extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains("The install profile 'Testing config import' is providing the following module(s): testing_config_import_module");
     $this->assertSession()->fieldEnabled('uninstall[testing_config_import]')->check();
     $this->getSession()->getPage()->pressButton('Uninstall');
-    $this->assertSession()->pageTextContains('Uninstalling Testing config import is irreversible.');
+    $this->assertSession()->pageTextContains('Once uninstalled, the Testing config import profile cannot be reinstalled.');
     $this->getSession()->getPage()->pressButton('Uninstall');
     $this->assertSession()->pageTextContains('The selected modules have been uninstalled.');
     $this->assertSession()->fieldNotExists('uninstall[testing_config_import]');

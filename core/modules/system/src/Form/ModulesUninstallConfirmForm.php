@@ -168,7 +168,7 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase {
     ];
 
     if (!empty($this->installProfile) && in_array($this->installProfile, $this->modules, TRUE)) {
-      $form['profile']['#markup'] = '<p>' . $this->t('Uninstalling %install_profile is irreversible.', ['%install_profile' => $data[$this->installProfile]->info['name']]) . '</p>';
+      $form['profile']['#markup'] = '<p>' . $this->t('Once uninstalled, the %install_profile profile cannot be reinstalled.', ['%install_profile' => $data[$this->installProfile]->info['name']]) . '</p>';
     }
 
     // List the dependent entities.
