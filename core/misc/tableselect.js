@@ -50,8 +50,6 @@
         .find('th.select-all input[type="checkbox"]')
         .each(function () {
           const $checkbox = $(this);
-          const stateChanged = this.checked !== state;
-
           $checkbox.attr(
             'title',
             state ? strings.selectNone : strings.selectAll,
@@ -60,7 +58,7 @@
           /**
            * @checkbox {HTMLElement}
            */
-          if (stateChanged) {
+          if (this.checked !== state) {
             this.checked = state;
             $checkbox.trigger('change');
           }
@@ -77,12 +75,11 @@
           // checkbox' state.
           checkboxes.each(function () {
             const $checkbox = $(this);
-            const stateChanged = this.checked !== event.target.checked;
 
             /**
              * @checkbox {HTMLElement}
              */
-            if (stateChanged) {
+            if (this.checked !== event.target.checked) {
               this.checked = event.target.checked;
               $checkbox.trigger('change');
             }
