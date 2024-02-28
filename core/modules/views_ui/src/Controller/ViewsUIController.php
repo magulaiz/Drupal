@@ -158,7 +158,7 @@ class ViewsUIController extends ControllerBase {
       $response->addCommand(new ReplaceCommand('#views-entity-list', $list));
       return $response;
     }
-ddl('non-');
+
     // Otherwise, redirect back to the page.
     return $this->redirect('entity.view.collection');
   }
