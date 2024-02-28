@@ -547,7 +547,7 @@ function locale_translate_delete_translation_files(array $projects = [], array $
  */
 function locale_config_batch_update_components(array $options, array $langcodes = [], array $components = [], bool $update_default_config_langcodes = FALSE) {
   $langcodes = $langcodes ? $langcodes : array_keys(\Drupal::languageManager()->getLanguages());
-  if ($langcodes && $names = Locale::config()->getComponentNames($components)) {
+  if ($langcodes && $names = Locale::config()->getConfigurationNames($components)) {
     // If the component list is empty we need to ensure that all configuration
     // in the default collection is using the site's default langcode.
     return locale_config_batch_build($names, $langcodes, $options, $update_default_config_langcodes);

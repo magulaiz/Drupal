@@ -126,11 +126,11 @@ class LocaleDefaultConfigStorage {
    *   module this list is extended with configured languages that have
    *   predefined names as well.
    */
-  public function getComponentNames($type, array $list) {
+  public function getConfigurationNames($type, array $list) {
     $names = array_unique(
       array_merge(
-        array_keys($this->requiredInstallStorage->getComponentNames($list)),
-        array_keys($this->optionalInstallStorage->getComponentNames($list))
+        array_keys($this->requiredInstallStorage->getConfigurationNames($list)),
+        array_keys($this->optionalInstallStorage->getConfigurationNames($list))
       )
     );
     if ($type == 'module' && in_array('language', $list)) {

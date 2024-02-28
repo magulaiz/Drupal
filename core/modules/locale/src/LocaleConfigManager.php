@@ -294,14 +294,14 @@ class LocaleConfigManager {
    * @return array
    *   Array of configuration object names.
    */
-  public function getComponentNames(array $components = []) {
+  public function getConfigurationNames(array $components = []) {
     $components = array_filter($components);
     if ($components) {
       $names = [];
       foreach ($components as $type => $list) {
-        // InstallStorage::getComponentNames returns a list of folders keyed by
+        // InstallStorage::getConfigurationNames returns a list of folders keyed by
         // config name.
-        $names = array_merge($names, $this->defaultConfigStorage->getComponentNames($type, $list));
+        $names = array_merge($names, $this->defaultConfigStorage->getConfigurationNames($type, $list));
       }
       return $names;
     }
@@ -662,7 +662,7 @@ class LocaleConfigManager {
       // they are still English. It is not enough to change configuration shipped
       // with the configuration objects just installed, because installing a configuration object such
       // as views may bring in default configuration from prior configuration objects.
-      $names = $this->getComponentNames();
+      $names = $this->getConfigurationNames();
       foreach ($names as $name) {
         $config = $this->configFactory->reset($name)->getEditable($name);
         // Should only update if still exists in active configuration. If locale
