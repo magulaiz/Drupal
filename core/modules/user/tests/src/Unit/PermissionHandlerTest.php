@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Unit;
 
+use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -13,6 +14,7 @@ use Drupal\user\PermissionHandler;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStreamWrapper;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests the permission handler.
@@ -52,6 +54,11 @@ class PermissionHandlerTest extends UnitTestCase {
   protected $callableResolver;
 
   /**
+   * The mocked memory cache.
+   */
+  protected MemoryCacheInterface | MockObject $memoryCache;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -59,6 +66,8 @@ class PermissionHandlerTest extends UnitTestCase {
 
     $this->stringTranslation = new TestTranslationManager();
     $this->callableResolver = $this->createMock('Drupal\Core\Utility\CallableResolver');
+    $this->memoryCache = $this->createMock(MemoryCacheInterface::class);
+    $this->memoryCache->method('get')->willReturn(FALSE);
   }
 
   /**
@@ -130,7 +139,12 @@ EOF
     $this->callableResolver->expects($this->never())
       ->method('getCallableFromDefinition');
 
-    $this->permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->callableResolver);
+    $this->permissionHandler = new PermissionHandler(
+      $this->moduleHandler,
+      $this->stringTranslation,
+      $this->callableResolver,
+      $this->memoryCache,
+    );
 
     $actual_permissions = $this->permissionHandler->getPermissions();
     $this->assertPermissions($actual_permissions);
@@ -191,7 +205,12 @@ EOF
       ->method('getModuleList')
       ->willReturn(array_flip($modules));
 
-    $permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->callableResolver);
+    $permissionHandler = new PermissionHandler(
+      $this->moduleHandler,
+      $this->stringTranslation,
+      $this->callableResolver,
+      $this->memoryCache,
+    );
     $actual_permissions = $permissionHandler->getPermissions();
     $this->assertEquals(['access_module_a4', 'access_module_a1', 'access_module_a2', 'access_module_a3'],
       array_keys($actual_permissions));
@@ -254,7 +273,12 @@ EOF
         ['Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescriptionRestrictAccess', [new TestPermissionCallbacks(), 'titleDescriptionRestrictAccess']],
       ]);
 
-    $this->permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->callableResolver);
+    $this->permissionHandler = new PermissionHandler(
+      $this->moduleHandler,
+      $this->stringTranslation,
+      $this->callableResolver,
+      $this->memoryCache,
+    );
 
     $actual_permissions = $this->permissionHandler->getPermissions();
     $this->assertPermissions($actual_permissions);
@@ -297,7 +321,12 @@ EOF
       ->with('Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescription')
       ->willReturn([new TestPermissionCallbacks(), 'titleDescription']);
 
-    $this->permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->callableResolver);
+    $this->permissionHandler = new PermissionHandler(
+      $this->moduleHandler,
+      $this->stringTranslation,
+      $this->callableResolver,
+      $this->memoryCache,
+    );
 
     $actual_permissions = $this->permissionHandler->getPermissions();
 
