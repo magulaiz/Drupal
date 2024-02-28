@@ -70,11 +70,14 @@ class TermTranslationViewsTest extends TaxonomyTestBase {
   /**
    * Ensure that proper translation is returned when contextual filter.
    *
-   * Content: Has taxonomy term ID (with depth) is enabled.
+   * Taxonomy term: Term ID & Content: Has taxonomy term ID (with depth)
+   * contextual filters are enabled for two seperate view modes.
    */
   public function testTermsTranslationWithContextualFilter() {
     $this->drupalLogin($this->rootUser);
+
     foreach ($this->terms as $term) {
+      // Test with "Content: Has taxonomy term ID (with depth)" contextual filter.
       // Generate base language url and send request.
       $url = Url::fromRoute('view.taxonomy_translated_term_name_test.page_1', ['arg_0' => $term->id()])->toString();
       $this->drupalGet($url);
@@ -82,6 +85,17 @@ class TermTranslationViewsTest extends TaxonomyTestBase {
 
       // Generate translation URL and send request.
       $url = Url::fromRoute('view.taxonomy_translated_term_name_test.page_1', ['arg_0' => $term->id()], ['language' => $this->translationLanguage])->toString();
+      $this->drupalGet($url);
+      $this->assertSession()->pageTextContains($this->termTranslationMap[$term->label()]);
+
+      // Test with "Taxonomy term: Term ID" contextual filter.
+      // Generate base language url and send request.
+      $url = Url::fromRoute('view.taxonomy_translated_term_name_test.page_2', ['arg_0' => $term->id()])->toString();
+      $this->drupalGet($url);
+      $this->assertSession()->pageTextContains($term->label());
+
+      // Generate translation URL and send request.
+      $url = Url::fromRoute('view.taxonomy_translated_term_name_test.page_2', ['arg_0' => $term->id()], ['language' => $this->translationLanguage])->toString();
       $this->drupalGet($url);
       $this->assertSession()->pageTextContains($this->termTranslationMap[$term->label()]);
     }
