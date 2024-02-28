@@ -24,6 +24,9 @@ class OpenModalDialogWithUrl implements CommandInterface {
    *   OpenDialogCommand is a similar class which opens modals but works
    *   differently as it needs all data to be passed through dialogOptions while
    *   OpenModalDialogWithUrl fetches the data from routing info of the URL.
+   *
+   *   Only Internal URLs or URLs with the same domain and base path are
+   *   allowed.
    */
   public function __construct(
     protected string $url,
@@ -47,7 +50,7 @@ class OpenModalDialogWithUrl implements CommandInterface {
   /**
    * Gets the complete base URL.
    */
-  public function getBaseUrl() {
+  private function getBaseUrl() {
     $requestContext = \Drupal::service('router.request_context');
     return $requestContext->getCompleteBaseUrl();
   }
