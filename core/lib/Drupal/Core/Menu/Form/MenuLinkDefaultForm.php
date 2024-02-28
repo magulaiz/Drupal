@@ -147,7 +147,7 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
     $form['menu_parent_wrapper']['menu_parent'] = $this->menuParentSelector->parentSelectElement($form_state->getValue('menu') ?: $menu_parent, $this->menuLink->getPluginId(), $form_state->getValue('menus') ?: [$default_menu_id => $default_menu->label()]);
     $form['menu_parent_wrapper']['menu_parent']['#title'] = $this->t('Parent link');
     $form['menu_parent_wrapper']['menu_parent']['#weight'] = 10;
-    $form['menu_parent_wrapper']['menu_parent']['#description'] = $this->t('Links located in a menu\'s maximum depth will not be available.');
+    $form['menu_parent_wrapper']['menu_parent']['#description'] = $this->t("Links located in a menu's maximum depth will not be available.");
     $form['menu_parent_wrapper']['menu_parent']['#attributes']['class'][] = 'menu-title-select';
 
     $delta = max(abs($this->menuLink->getWeight()), 50);
