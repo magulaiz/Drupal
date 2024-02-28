@@ -2419,7 +2419,10 @@ function install_config_download_translations(&$install_state) {
 function install_config_revert_install_changes() {
   global $install_state;
 
-  $storage_comparer = new StorageComparer(\Drupal::service('config.storage.sync'), \Drupal::service('config.storage'));
+  $import_transformer = \Drupal::service('config.import_transformer');
+  assert($import_transformer instanceof ImportStorageTransformer);
+  $sync = $import_transformer->transform(\Drupal::service('config.storage.sync'));
+  $storage_comparer = new StorageComparer($sync, \Drupal::service('config.storage'));
   $storage_comparer->createChangelist();
   if ($storage_comparer->hasChanges()) {
     $config_importer = new ConfigImporter(
