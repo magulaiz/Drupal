@@ -9,9 +9,9 @@ use Drupal\Core\Entity\Plugin\DataType\ConfigEntityAdapter;
 use Drupal\Core\TypedData\PrimitiveInterface;
 use Drupal\Core\TypedData\TraversableTypedDataInterface;
 use Drupal\Core\TypedData\Type\BooleanInterface;
-use Drupal\Core\TypedData\Type\StringInterface;
 use Drupal\Core\TypedData\Type\FloatInterface;
 use Drupal\Core\TypedData\Type\IntegerInterface;
+use Drupal\Core\TypedData\Type\StringInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 
 /**
@@ -68,8 +68,8 @@ trait SchemaCheckTrait {
    *   validation errors will be added to the errors found.
    *
    * @return array|bool
-   *   FALSE if no schema found. Associative array with a text key and error message if any errors found. TRUE if fully
-   *   valid.
+   *   FALSE if no schema found. Associative array with a text key
+   *   and error message if any errors found. TRUE if fully valid.
    */
   public function checkConfigSchema(TypedConfigManagerInterface $typed_config, $config_name, $config_data, bool $validate_constraints = FALSE) {
     // We'd like to verify that the top-level type is either config_base,
@@ -118,6 +118,8 @@ trait SchemaCheckTrait {
    *   A validation constraint violation for a Config object.
    *
    * @return bool
+   *   FALSE if it doesn't determine whether this violation
+   *   is for an ignored Config property path, TRUE if fully valid.
    */
   protected static function isViolationForIgnoredPropertyPath(ConstraintViolation $v): bool {
     // When the validated object is a config entity wrapped in a
@@ -182,7 +184,8 @@ trait SchemaCheckTrait {
    *   Value of given key.
    *
    * @return array
-   *   Associative array with a text key and error message for each error found while checking with the corresponding schema.
+   *   Associative array with a text key and error message
+   *   for each error found while checking with the corresponding schema.
    */
   protected function checkValue($key, $value) {
     $error_key = $this->configName . ':' . $key;
