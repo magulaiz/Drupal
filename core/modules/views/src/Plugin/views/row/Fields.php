@@ -16,8 +16,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   id = "fields",
  *   title = @Translation("Fields"),
  *   help = @Translation("Displays the fields with an optional template."),
- *   theme = "views_view_fields",
- *   display_types = {"normal"}
+ *   theme = "views_view_fields"
  * )
  */
 class Fields extends RowPluginBase {

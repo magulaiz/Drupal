@@ -21,7 +21,7 @@ class ViewsPluginManager extends DefaultPluginManager {
    *   The plugin type, for example filter.
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
-   *   keyed by the corresponding namespace to look for plugin implementations,
+   *   keyed by the corresponding namespace to look for plugin implementations.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   Cache backend instance to use.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -39,6 +39,19 @@ class ViewsPluginManager extends DefaultPluginManager {
 
     $this->alterInfo('views_plugins_' . $type);
     $this->setCacheBackend($cache_backend, "views:$type");
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function processDefinition(&$definition, $plugin_id) {
+    parent::processDefinition($definition, $plugin_id);
+
+    // Only set 'display_types' after merging if no key exists. Otherwise the
+    // deep array merge will concatenate the two array values if it does exist.
+    if (!array_key_exists('display_types', $definition)) {
+      $definition['display_types'] = ['normal'];
+    }
   }
 
 }

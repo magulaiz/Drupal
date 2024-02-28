@@ -17,8 +17,7 @@ use Drupal\views\Plugin\views\wizard\WizardInterface;
  *   id = "table",
  *   title = @Translation("Table"),
  *   help = @Translation("Displays rows in a table."),
- *   theme = "views_view_table",
- *   display_types = {"normal"}
+ *   theme = "views_view_table"
  * )
  */
 class Table extends StylePluginBase implements CacheableDependencyInterface {

@@ -13,8 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   id = "html_list",
  *   title = @Translation("HTML List"),
  *   help = @Translation("Displays rows as HTML list."),
- *   theme = "views_view_list",
- *   display_types = {"normal"}
+ *   theme = "views_view_list"
  * )
  */
 class HtmlList extends StylePluginBase {
