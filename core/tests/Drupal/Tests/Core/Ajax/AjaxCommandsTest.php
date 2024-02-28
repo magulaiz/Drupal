@@ -4,32 +4,32 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Ajax;
 
+use Drupal\Core\Ajax\AnnounceCommand;
+use Drupal\Core\Asset\AttachedAssets;
+use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Ajax\AddCssCommand;
 use Drupal\Core\Ajax\AfterCommand;
 use Drupal\Core\Ajax\AlertCommand;
-use Drupal\Core\Ajax\AnnounceCommand;
 use Drupal\Core\Ajax\AppendCommand;
 use Drupal\Core\Ajax\BeforeCommand;
 use Drupal\Core\Ajax\ChangedCommand;
-use Drupal\Core\Ajax\CloseDialogCommand;
-use Drupal\Core\Ajax\CloseModalDialogCommand;
 use Drupal\Core\Ajax\CssCommand;
 use Drupal\Core\Ajax\DataCommand;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Ajax\InsertCommand;
 use Drupal\Core\Ajax\InvokeCommand;
-use Drupal\Core\Ajax\OpenDialogCommand;
 use Drupal\Core\Ajax\PrependCommand;
-use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Ajax\RemoveCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Ajax\RestripeCommand;
+use Drupal\Core\Ajax\SettingsCommand;
+use Drupal\Core\Ajax\CloseDialogCommand;
+use Drupal\Core\Ajax\CloseModalDialogCommand;
 use Drupal\Core\Ajax\SetDialogOptionCommand;
 use Drupal\Core\Ajax\SetDialogTitleCommand;
-use Drupal\Core\Ajax\SettingsCommand;
+use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Ajax\UpdateBuildIdCommand;
-use Drupal\Core\Asset\AttachedAssets;
-use Drupal\Tests\UnitTestCase;
+use Drupal\Core\Ajax\OpenDialogCommand;
 
 /**
  * Test coverage for various classes in the \Drupal\Core\Ajax namespace.
