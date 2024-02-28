@@ -426,7 +426,7 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
 
           // Permission has changed, update record.
           $this->database->update('help_search_items')
-            ->condition('sid', $old_item->sid)
+            ->condition('sid', (int) $old_item->sid)
             ->fields(['permission' => $permission])
             ->execute();
           unset($sids_to_remove[$old_item->sid]);
@@ -515,6 +515,9 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
     // Remove items from our table in batches of 100, to avoid problems
     // with having too many placeholders in database queries.
     foreach (array_chunk($sids, 100) as $this_list) {
+      foreach ($this_list as @$item) {
+        $item = (int) $item;
+      }
       $this->database->delete('help_search_items')
         ->condition('sid', $this_list, 'IN')
         ->execute();

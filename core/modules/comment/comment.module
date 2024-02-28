@@ -484,7 +484,7 @@ function comment_user_cancel($edit, UserInterface $account, $method) {
  */
 function comment_user_predelete($account) {
   $entity_query = \Drupal::entityQuery('comment')->accessCheck(FALSE);
-  $entity_query->condition('uid', $account->id());
+  $entity_query->condition('uid', (int) $account->id());
   $cids = $entity_query->execute();
   $comment_storage = \Drupal::entityTypeManager()->getStorage('comment');
   $comments = $comment_storage->loadMultiple($cids);

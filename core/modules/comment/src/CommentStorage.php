@@ -482,7 +482,8 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
           $query->element($pager_id);
         }
 
-        $query->setCountQueryMethod($this, 'countQueryThread', [$entity, $field_name, $comments_per_page]);
+        // @todo Start using $query->setCountQuery($count_query);
+        // $query->setCountQueryMethod($this, 'countQueryThread', [$entity, $field_name, $comments_per_page]);
       }
 
       if (!$this->currentUser->hasPermission('administer comments')) {

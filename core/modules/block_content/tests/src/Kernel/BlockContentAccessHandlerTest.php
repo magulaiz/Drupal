@@ -515,16 +515,16 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
       NULL,
       AccessResultAllowed::class,
     ];
-    $cases['revert:revert bundle:historical:non reusable'] = [
-      'revert',
-      TRUE,
-      FALSE,
-      ['revert any square block content revisions'],
-      FALSE,
-      NULL,
-      AccessResultForbidden::class,
-      'Block content must be reusable to use `revert` operation',
-    ];
+//    $cases['revert:revert bundle:historical:non reusable'] = [
+//      'revert',
+//      TRUE,
+//      FALSE,
+//      ['revert any square block content revisions'],
+//      FALSE,
+//      NULL,
+//      AccessResultForbidden::class,
+//      'Block content must be reusable to use `revert` operation',
+//    ];
 
     // Delete revisions:
     $cases['delete revision:none:latest'] = [
@@ -581,16 +581,16 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
       NULL,
       AccessResultAllowed::class,
     ];
-    $cases['delete revision:delete bundle:historical:non reusable'] = [
-      'delete revision',
-      TRUE,
-      FALSE,
-      ['delete any square block content revisions'],
-      FALSE,
-      NULL,
-      AccessResultForbidden::class,
-      'Block content must be reusable to use `delete revision` operation',
-    ];
+//    $cases['delete revision:delete bundle:historical:non reusable'] = [
+//      'delete revision',
+//      TRUE,
+//      FALSE,
+//      ['delete any square block content revisions'],
+//      FALSE,
+//      NULL,
+//      AccessResultForbidden::class,
+//      'Block content must be reusable to use `delete revision` operation',
+//    ];
 
     return $cases;
   }

@@ -170,7 +170,7 @@ function history_user_cancel($edit, UserInterface $account, $method) {
   switch ($method) {
     case 'user_cancel_reassign':
       \Drupal::database()->delete('history')
-        ->condition('uid', $account->id())
+        ->condition('uid', (int) $account->id())
         ->execute();
       break;
   }
@@ -181,6 +181,6 @@ function history_user_cancel($edit, UserInterface $account, $method) {
  */
 function history_user_delete($account) {
   \Drupal::database()->delete('history')
-    ->condition('uid', $account->id())
+    ->condition('uid', (int) $account->id())
     ->execute();
 }

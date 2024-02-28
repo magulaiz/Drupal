@@ -310,7 +310,7 @@ class SessionTest extends BrowserTestBase {
       ->fields([
         'sid' => '',
       ])
-      ->condition('uid', $user->id())
+      ->condition('uid', (int) $user->id())
       ->execute();
     // Send a blank sid in the session cookie, and the session should no longer
     // be valid. Closing the curl handler will stop the previous session ID

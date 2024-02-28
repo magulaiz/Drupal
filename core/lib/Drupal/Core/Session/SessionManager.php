@@ -235,7 +235,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
       return;
     }
     $this->connection->delete('sessions')
-      ->condition('uid', $uid)
+      ->condition('uid', (int) $uid)
       ->execute();
   }
 

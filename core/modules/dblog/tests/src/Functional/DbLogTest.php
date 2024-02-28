@@ -483,7 +483,7 @@ class DbLogTest extends BrowserTestBase {
     // Log out user.
     $this->drupalLogout();
     // Fetch the row IDs in watchdog that relate to the user.
-    $result = Database::getConnection()->select('watchdog', 'w')->fields('w', ['wid'])->condition('uid', $user->id())->execute();
+    $result = Database::getConnection()->select('watchdog', 'w')->fields('w', ['wid'])->condition('uid', (int) $user->id())->execute();
     foreach ($result as $row) {
       $ids[] = $row->wid;
     }

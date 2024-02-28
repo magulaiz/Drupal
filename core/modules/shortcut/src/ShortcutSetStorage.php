@@ -89,7 +89,7 @@ class ShortcutSetStorage extends ConfigEntityStorage implements ShortcutSetStora
    */
   public function assignUser(ShortcutSetInterface $shortcut_set, $account) {
     $this->connection->merge('shortcut_set_users')
-      ->key('uid', $account->id())
+      ->key('uid', (int) $account->id())
       ->fields(['set_name' => $shortcut_set->id()])
       ->execute();
     drupal_static_reset('shortcut_current_displayed_set');
@@ -100,7 +100,7 @@ class ShortcutSetStorage extends ConfigEntityStorage implements ShortcutSetStora
    */
   public function unassignUser($account) {
     $deleted = $this->connection->delete('shortcut_set_users')
-      ->condition('uid', $account->id())
+      ->condition('uid', (int) $account->id())
       ->execute();
     return (bool) $deleted;
   }
@@ -111,7 +111,7 @@ class ShortcutSetStorage extends ConfigEntityStorage implements ShortcutSetStora
   public function getAssignedToUser($account) {
     $query = $this->connection->select('shortcut_set_users', 'ssu');
     $query->fields('ssu', ['set_name']);
-    $query->condition('ssu.uid', $account->id());
+    $query->condition('ssu.uid', (int) $account->id());
     return $query->execute()->fetchField();
   }
 

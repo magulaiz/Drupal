@@ -336,7 +336,7 @@ class ForumManager implements ForumManagerInterface {
     if (empty($this->history[$nid])) {
       $result = $this->connection->select('history', 'h')
         ->fields('h', ['nid', 'timestamp'])
-        ->condition('uid', $account->id())
+        ->condition('uid', (int) $account->id())
         ->execute();
       foreach ($result as $t) {
         $this->history[$t->nid] = $t->timestamp > HISTORY_READ_LIMIT ? $t->timestamp : HISTORY_READ_LIMIT;

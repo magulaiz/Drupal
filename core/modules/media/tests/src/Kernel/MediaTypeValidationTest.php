@@ -24,6 +24,7 @@ class MediaTypeValidationTest extends ConfigEntityValidationTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->installEntitySchema('media');
     $this->entity = $this->createMediaType('test', ['id' => 'test_media']);
   }
 
