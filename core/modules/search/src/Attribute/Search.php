@@ -19,7 +19,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 class Search extends Plugin {
 
   /**
-   * Constructs a SearchPlugin attribute.
+   * Constructs a Search attribute.
    *
    * @param string $id
    *   The plugin ID.
