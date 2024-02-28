@@ -312,7 +312,10 @@
      *
      * @see toolbar_subtrees_jsonp().
      */
-    setSubtrees: new Promise((resolve, reject) => {}),
+    setSubtrees: new Promise((resolve, reject) => {
+      Drupal.toolbar.setSubtrees.resolve = resolve;
+      Drupal.toolbar.setSubtrees.reject = reject;
+    }),
 
     /**
      * Respond to configured narrow media query changes.
