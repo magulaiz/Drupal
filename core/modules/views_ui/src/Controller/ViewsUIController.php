@@ -164,7 +164,7 @@ class ViewsUIController extends ControllerBase {
   }
 
   /**
-   * Calls a method on a view and reloads the listing page.
+   * Calls a method on a view edit and reloads the form and title.
    *
    * @param \Drupal\views_ui\ViewUI $view
    *   The view to be edited.
@@ -183,7 +183,7 @@ class ViewsUIController extends ControllerBase {
     // Perform the operation.
     $view->$op()->save();
 
-    // If the request is via AJAX, return the rendered list as JSON.
+    // If the request is via AJAX, return the rendered form and title as JSON.
     if ($request->request->get('js')) {
       $response = new AjaxResponse();
       $response->addCommand(new ReplaceTitleCommand($this->pageTitle($view)));
