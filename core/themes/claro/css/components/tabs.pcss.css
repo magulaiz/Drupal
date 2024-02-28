@@ -198,11 +198,11 @@
     }
     & .tabs__tab {
       display: block;
+      height: 100%;
       border-top: none;
       border-bottom: none;
       background: none;
       font-size: var(--font-size-base);
-      height: 100%;
       &.is-active {
         order: 0;
         background: none;
@@ -218,10 +218,10 @@
       }
     }
     & .tabs__link {
+      height: 100%;
       padding-right: 2rem;
       padding-left: 2rem;
       border-radius: var(--tabs-border-radius-size) var(--tabs-border-radius-size) 0 0;
-      height: 100%;
       &:focus {
         min-height: var(--tabs-link-height);
         margin: 0;
@@ -255,8 +255,6 @@
       display: none;
     }
     & .tabs--primary {
-      align-items: center;
-      padding-block-end: 8px;
       
       & .tabs__link {
         &:focus {

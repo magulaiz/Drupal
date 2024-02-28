@@ -216,11 +216,11 @@
   }
   .is-horizontal .tabs__tab {
     display: block;
+    height: 100%;
     border-top: none;
     border-bottom: none;
     background: none;
     font-size: var(--font-size-base);
-    height: 100%;
   }
   .is-horizontal .tabs__tab.is-active {
     order: 0;
@@ -234,10 +234,10 @@
     border-radius: 0;
   }
   .is-horizontal .tabs__link {
+    height: 100%;
     padding-right: 2rem;
     padding-left: 2rem;
     border-radius: var(--tabs-border-radius-size) var(--tabs-border-radius-size) 0 0;
-    height: 100%;
   }
   .is-horizontal .tabs__link:focus {
     min-height: var(--tabs-link-height);
@@ -269,10 +269,6 @@
   }
   .is-horizontal .tabs__trigger {
     display: none;
-  }
-  .is-horizontal .tabs--primary {
-    align-items: center;
-    padding-block-end: 0.5rem;
   }
   .is-horizontal .tabs--primary .tabs__link:focus {
     box-shadow:
