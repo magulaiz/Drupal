@@ -257,7 +257,7 @@ class ViewsUIController extends ControllerBase {
    *   The view being acted upon.
    *
    * @return string
-   *   The view label with data dource and indication that view is disabled.
+   *   The view label with data source and indication that view is disabled.
    */
   private function pageTitle(ViewEntityInterface $view) {
     $name = $view->label();
