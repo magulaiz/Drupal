@@ -312,10 +312,7 @@
      *
      * @see toolbar_subtrees_jsonp().
      */
-    setSubtrees: new Promise((resolve, reject) => {
-      setSubtrees.resolve = resolve;
-      setSubtrees.reject = reject;
-    }),
+    setSubtrees: new Promise((resolve, reject) => {}),
 
     /**
      * Respond to configured narrow media query changes.
