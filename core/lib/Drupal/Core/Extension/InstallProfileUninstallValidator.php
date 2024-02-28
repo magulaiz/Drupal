@@ -40,7 +40,7 @@ class InstallProfileUninstallValidator implements ModuleUninstallValidatorInterf
     protected string $root,
     protected string $sitePath
   ) {
-    $this->stringTranslation = $string_translation;
+    $this->setStringTranslation($string_translation);
   }
 
   /**
@@ -82,7 +82,7 @@ class InstallProfileUninstallValidator implements ModuleUninstallValidatorInterf
    *   An extension discovery object to look for extensions not in a profile
    *   directory.
    */
-  protected function getExtensionDiscovery() {
+  protected function getExtensionDiscovery(): ExtensionDiscovery {
     if (!isset($this->noProfileExtensionDiscovery)) {
       // cspell:ignore CNKDSIUSYFUISEFCB
       $this->noProfileExtensionDiscovery = new ExtensionDiscovery($this->root, TRUE, ['_does_not_exist_profile_CNKDSIUSYFUISEFCB'], $this->sitePath);
