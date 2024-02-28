@@ -6,7 +6,7 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 
 /**
- * Registers services in the container.
+ * Service provider for media library services.
  */
 class MediaLibraryServiceProvider implements ServiceProviderInterface {
 
