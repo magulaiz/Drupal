@@ -1356,8 +1356,8 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    *   Cache ID that can be passed to the cache backend.
    */
   protected function buildCacheId($id, $revision = FALSE) {
-      return $revision ? "values:{$this->entityTypeId}:revision:$id" : parent::buildCacheId($id);
-    }
+    return $revision ? "values:{$this->entityTypeId}:revision:$id" : parent::buildCacheId($id);
+  }
 
   /**
    * Gets entities from the static cache.
