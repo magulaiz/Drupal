@@ -5,14 +5,11 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Test;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * @group Test
  */
 class TestSuiteBaseTest extends TestCase {
-
-  use ExpectDeprecationTrait;
 
   /**
    * Tests the assumption that local time is in 'Australia/Sydney'.
