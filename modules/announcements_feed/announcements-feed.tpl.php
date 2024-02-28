@@ -49,14 +49,16 @@
           <?php endforeach; ?>
         </div>
       <?php endif; ?>
-      <?php foreach ($standard as $key => $announcement): ?>
-        <li class="leaf">
-          <a target="_blank" href="<?php print $announcement['link']; ?>"><?php print $announcement['title']; ?></a>
-          <div class="description">
-            <?php print format_date(strtotime($announcement['date_published']), 'short'); ?>
-          </div>
-        </li>
-      <?php endforeach; ?>
+      <?php if ($standard): ?>
+        <?php foreach ($standard as $key => $announcement): ?>
+          <li class="leaf">
+            <a target="_blank" href="<?php print $announcement['link']; ?>"><?php print $announcement['title']; ?></a>
+            <div class="description">
+              <?php print format_date(strtotime($announcement['date_published']), 'short'); ?>
+            </div>
+          </li>
+        <?php endforeach; ?>
+      <?php endif; ?>
     </ul>
     <?php if ($feed_link): ?>
       <div class="announcements--view-all">
