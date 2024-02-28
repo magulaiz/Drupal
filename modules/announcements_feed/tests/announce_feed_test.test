@@ -410,4 +410,3 @@ class AnnounceFeedTestSanitizationTestCase extends DrupalWebTestCase {
     $this->drupalLogout();
   }
 }
-
