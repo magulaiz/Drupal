@@ -36,7 +36,7 @@ class DependencySerializationTest extends UnitTestCase {
     $dependencySerialization = unserialize($string);
 
     $this->assertTrue($container->has(ReverseContainer::class));
-    $this->assertSame($service, $dependencySerialization->service);
+    $this->assertSame($service, $dependencySerialization->getService());
     $this->assertSame($container, $dependencySerialization->container);
     $this->assertEmpty($dependencySerialization->getServiceIds());
   }
@@ -44,18 +44,11 @@ class DependencySerializationTest extends UnitTestCase {
 }
 
 /**
- * Defines a test class which has a single service as dependency.
+ * Defines a base test class for dependency serialization testing.
  */
-class DependencySerializationTestDummy implements ContainerAwareInterface {
+abstract class DependencySerializationTestDummyBase implements ContainerAwareInterface {
 
   use DependencySerializationTrait;
-
-  /**
-   * A test service.
-   *
-   * @var object
-   */
-  public $service;
 
   /**
    * The container.
@@ -63,16 +56,6 @@ class DependencySerializationTestDummy implements ContainerAwareInterface {
    * @var \Symfony\Component\DependencyInjection\ContainerInterface
    */
   public $container;
-
-  /**
-   * Constructs a new TestClass object.
-   *
-   * @param object $service
-   *   A test service.
-   */
-  public function __construct(\stdClass $service) {
-    $this->service = $service;
-  }
 
   /**
    * {@inheritdoc}
@@ -86,6 +69,40 @@ class DependencySerializationTestDummy implements ContainerAwareInterface {
    */
   public function getServiceIds() {
     return $this->_serviceIds;
+  }
+
+}
+
+/**
+ * Defines a test class which has a single service as dependency.
+ */
+class DependencySerializationTestDummy extends DependencySerializationTestDummyBase {
+
+  /**
+   * A test service.
+   *
+   * @var object
+   */
+  private $service;
+
+  /**
+   * Constructs a new TestClass object.
+   *
+   * @param object $service
+   *   A test service.
+   */
+  public function __construct(\stdClass $service) {
+    $this->service = $service;
+  }
+
+  /**
+   * Returns the service.
+   *
+   * @return object
+   *   The service.
+   */
+  public function getService() {
+    return $this->service;
   }
 
 }

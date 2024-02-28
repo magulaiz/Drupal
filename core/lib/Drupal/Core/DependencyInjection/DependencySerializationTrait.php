@@ -31,7 +31,11 @@ trait DependencySerializationTrait {
    * {@inheritdoc}
    */
   public function __sleep() {
-    $vars = get_object_vars($this);
+    $closure = \Closure::bind(static function ($class) {
+      return get_object_vars($class);
+    }, NULL, $this);
+
+    $vars = $closure($this);
     try {
       $container = \Drupal::getContainer();
       $reverse_container = $container->get(ReverseContainer::class);
@@ -78,6 +82,7 @@ trait DependencySerializationTrait {
       return;
     }
     $container = \Drupal::getContainer();
+    $reflector = new \ReflectionObject($this);
     foreach ($this->_serviceIds as $key => $service_id) {
       // In rare cases, when test data is serialized in the parent process,
       // there is a service container but it doesn't contain all expected
@@ -86,7 +91,9 @@ trait DependencySerializationTrait {
       if ($phpunit_bootstrap && !$container->has($service_id)) {
         continue;
       }
-      $this->$key = $container->get($service_id);
+      $reflector
+        ->getProperty($key)
+        ->setValue($this, $container->get($service_id));
     }
     $this->_serviceIds = [];
 
@@ -98,7 +105,9 @@ trait DependencySerializationTrait {
       /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
       $entity_type_manager = $container->get('entity_type.manager');
       foreach ($this->_entityStorages as $key => $entity_type_id) {
-        $this->$key = $entity_type_manager->getStorage($entity_type_id);
+        $reflector
+          ->getProperty($key)
+          ->setValue($this, $entity_type_manager->getStorage($entity_type_id));
       }
     }
     $this->_entityStorages = [];
