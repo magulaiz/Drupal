@@ -71,7 +71,7 @@
       $toggle
         .find('.action')
         .toArray()
-        .forEach((element, index) => {
+        .forEach((element) => {
           // Expand Structure, Collapse Structure.
           element.textContent = switcher ? ui.handleClose : ui.handleOpen;
         });
@@ -136,7 +136,7 @@
       $menu
         .find('li')
         .toArray()
-        .forEach((element, index) => {
+        .forEach((element) => {
           const $item = $(element);
           if ($item.children('ul.toolbar-menu').length) {
             const $box = $item.children('.toolbar-box');

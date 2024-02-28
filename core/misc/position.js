@@ -554,7 +554,6 @@
         marginTop,
       };
 
-      // eslint-disable-next-line func-names
       ['left', 'top'].forEach((dir, i) => {
         if (collisions[collision[i]]) {
           collisions[collision[i]][dir](position, {

@@ -158,7 +158,7 @@
         let tabbableElements = [];
         $(elements)
           .toArray()
-          .forEach((rootElement, index) => {
+          .forEach((rootElement) => {
             tabbableElements = [...tabbableElements, ...tabbable(rootElement)];
             if (isTabbable(rootElement)) {
               tabbableElements = [...tabbableElements, rootElement];

@@ -28,7 +28,7 @@
     $target
       .parents('.vertical-tabs__pane')
       .toArray()
-      .forEach((pane, index) => {
+      .forEach((pane) => {
         $(pane).data('verticalTab').focus();
       });
   };
