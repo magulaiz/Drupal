@@ -638,8 +638,6 @@ trait FunctionalTestSetupTrait {
     $this->classLoader = require $app_root . '/autoload.php';
     $request = Request::createFromGlobals();
     $kernel = TestRunnerKernel::createFromRequest($request, $this->classLoader);
-    // TestRunnerKernel expects the working directory to be the app root.
-    chdir($app_root);
     $kernel->boot();
     $kernel->preHandle($request);
     $this->prepareDatabasePrefix();
