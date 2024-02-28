@@ -158,7 +158,7 @@ class ViewsUIController extends ControllerBase {
       $response->addCommand(new ReplaceCommand('#views-entity-list', $list));
       return $response;
     }
-
+ddl('non-');
     // Otherwise, redirect back to the page.
     return $this->redirect('entity.view.collection');
   }
@@ -257,7 +257,7 @@ class ViewsUIController extends ControllerBase {
    *   The view being acted upon.
    *
    * @return string
-   *   The view label with Datasource and indication that view is disabled.
+   *   The view label with data dource and indication that view is disabled.
    */
   private function pageTitle(ViewEntityInterface $view) {
     $name = $view->label();
