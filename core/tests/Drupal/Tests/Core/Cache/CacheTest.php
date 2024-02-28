@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Cache;
 
 use Drupal\Core\Cache\Cache;
@@ -51,7 +53,7 @@ class CacheTest extends UnitTestCase {
    *
    * @return array
    */
-  public function mergeTagsProvider() {
+  public static function mergeTagsProvider() {
     return [
       [[], [], []],
       [['bar', 'foo'], ['bar'], ['foo']],
@@ -78,7 +80,7 @@ class CacheTest extends UnitTestCase {
    *
    * @return array
    */
-  public function mergeMaxAgesProvider() {
+  public static function mergeMaxAgesProvider() {
     return [
       [Cache::PERMANENT, Cache::PERMANENT, Cache::PERMANENT],
       [60, 60, 60],
@@ -117,7 +119,7 @@ class CacheTest extends UnitTestCase {
    *
    * @return array
    */
-  public function mergeCacheContextsProvide() {
+  public static function mergeCacheContextsProvide() {
     return [
       [[], [], []],
       [['foo'], [], ['foo']],
@@ -156,7 +158,7 @@ class CacheTest extends UnitTestCase {
    *
    * @return array
    */
-  public function buildTagsProvider() {
+  public static function buildTagsProvider() {
     return [
       ['node', [1], ['node:1']],
       ['node', [1, 2, 3], ['node:1', 'node:2', 'node:3']],
@@ -192,7 +194,7 @@ class CacheTest extends UnitTestCase {
    * @group legacy
    */
   public function testKeyFromQuery() {
-    $this->expectDeprecation('Drupal\Core\Cache\Cache::keyFromQuery is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. No replacement provided. https://www.drupal.org/node/3322044');
+    $this->expectDeprecation('Drupal\Core\Cache\Cache::keyFromQuery is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. No replacement provided. See https://www.drupal.org/node/3322044');
     $query = new Select(new StubConnection(new StubPDO(), []), 'dne');
     Cache::keyFromQuery($query);
   }

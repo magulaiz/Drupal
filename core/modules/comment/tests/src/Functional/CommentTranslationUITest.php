@@ -71,6 +71,7 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
     $this->testLanguageSelector = FALSE;
     $this->subject = $this->randomMachineName();
     parent::setUp();
+    $this->doSetup();
   }
 
   /**
@@ -176,7 +177,7 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
       $user = $this->drupalCreateUser();
       $values[$langcode] = [
         'uid' => $user->id(),
-        'created' => REQUEST_TIME - mt_rand(0, 1000),
+        'created' => \Drupal::time()->getRequestTime() - mt_rand(0, 1000),
       ];
       /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
       $date_formatter = $this->container->get('date.formatter');

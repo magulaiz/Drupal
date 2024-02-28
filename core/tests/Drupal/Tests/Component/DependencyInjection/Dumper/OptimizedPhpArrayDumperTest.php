@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Component\DependencyInjection\Dumper\OptimizedPhpArrayDumperTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\Component\DependencyInjection\Dumper {
 
@@ -12,6 +9,8 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
   use Prophecy\PhpUnit\ProphecyTrait;
   use Prophecy\Prophet;
   use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+  use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
+  use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
   use Symfony\Component\DependencyInjection\Definition;
   use Symfony\Component\DependencyInjection\Reference;
   use Symfony\Component\DependencyInjection\Parameter;
@@ -122,7 +121,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
      *     - aliases as returned by ContainerBuilder.
      *     - aliases as expected in the container definition.
      */
-    public function getAliasesDataProvider() {
+    public static function getAliasesDataProvider() {
       return [
         [[], []],
         [
@@ -167,7 +166,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
      *     - parameters as expected in the container definition.
      *     - frozen value
      */
-    public function getParametersDataProvider() {
+    public static function getParametersDataProvider() {
       return [
         [[], [], TRUE],
         [
@@ -205,6 +204,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
      * @covers ::getPrivateServiceCall
      * @covers ::getReferenceCall
      * @covers ::getServiceCall
+     * @covers ::getServiceClosureCall
      * @covers ::getParameterCall
      *
      * @dataProvider getDefinitionsDataProvider
@@ -305,6 +305,25 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
         ]),
       ] + $base_service_definition;
 
+      // Test a service closure.
+      $service_definitions[] = [
+        'arguments' => [
+          'foo',
+          [
+            'alias-1' => new ServiceClosureArgument(new Reference('bar', ContainerInterface::NULL_ON_INVALID_REFERENCE)),
+            'alias-2' => new ServiceClosureArgument(new Reference('bar', ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE)),
+          ],
+        ],
+        'arguments_count' => 2,
+        'arguments_expected' => static::getCollection([
+          'foo',
+          static::getCollection([
+            'alias-1' => static::getServiceClosureCall('bar', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+            'alias-2' => static::getServiceClosureCall('bar', ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE),
+          ]),
+        ]),
+      ] + $base_service_definition;
+
       // Test a private non-shared service, denoted by having a Definition.
       $private_definition_object = new Definition('\stdClass');
       $private_definition_object->setPublic(FALSE);
@@ -327,6 +346,13 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       // Test a deep collection with a reference to resolve.
       $service_definitions[] = [
         'arguments' => [[new Reference('bar')]],
+        'arguments_count' => 1,
+        'arguments_expected' => static::getCollection([static::getCollection([static::getServiceCall('bar')])]),
+      ] + $base_service_definition;
+
+      // Test an IteratorArgument collection with a reference to resolve.
+      $service_definitions[] = [
+        'arguments' => [new IteratorArgument([new Reference('bar')])],
         'arguments_count' => 1,
         'arguments_expected' => static::getCollection([static::getCollection([static::getServiceCall('bar')])]),
       ] + $base_service_definition;
@@ -459,6 +485,17 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
     }
 
     /**
+     * Helper function to return a service closure definition.
+     */
+    protected static function getServiceClosureCall($id, $invalid_behavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
+      return (object) [
+        'type' => 'service_closure',
+        'id' => $id,
+        'invalidBehavior' => $invalid_behavior,
+      ];
+    }
+
+    /**
      * Tests that references to aliases work correctly.
      *
      * @covers ::getReferenceCall
@@ -509,7 +546,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $this->assertEquals(static::serializeDefinition($data), $dump['services']['foo'], 'Expected definition matches dump.');
     }
 
-    public function publicPrivateDataProvider() {
+    public static function publicPrivateDataProvider() {
       return [
         [TRUE],
         [FALSE],
@@ -527,7 +564,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
     public function testGetServiceDefinitionForDecoratedService() {
       $bar_definition = new Definition('\stdClass');
       $bar_definition->setPublic(TRUE);
-      $bar_definition->setDecoratedService(new Reference('foo'));
+      $bar_definition->setDecoratedService((string) new Reference('foo'));
       $services['bar'] = $bar_definition;
 
       $this->containerBuilder->getDefinitions()->willReturn($services);
@@ -651,7 +688,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
      *     - expected final value.
      *     - escaped value in service definition.
      */
-    public function percentsEscapeProvider() {
+    public static function percentsEscapeProvider() {
       return [
         ['%foo%', '%%foo%%'],
         ['foo%bar%', 'foo%%bar%%'],

@@ -3,7 +3,6 @@
 namespace Drupal\Tests\node\Kernel;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
@@ -49,7 +48,6 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
     /** @var \Drupal\node\NodeInterface $node */
     $node = Node::create([
       'type' => 'article',
-      'tnid' => 0,
       'uid' => $account->id(),
       'title' => '<blink>Blinking Text</blink>',
       'body' => [['value' => 'Regular NODE body for the test.', 'summary' => 'Fancy NODE summary.', 'format' => 'plain_text']],
@@ -127,7 +125,7 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
 
     foreach ($tests as $input => $expected) {
       $output = $this->tokenService->replace($input, ['node' => $node], ['language' => $this->interfaceLanguage]);
-      $this->assertEquals($output, $expected, new FormattableMarkup('Node token %token replaced for unpublished node.', ['%token' => $input]));
+      $this->assertEquals($output, $expected, "Node token $input replaced for unpublished node.");
     }
 
     // Repeat for a node without a summary.

@@ -65,6 +65,7 @@ class EntityCrudHookTest extends EntityKernelTestBase {
     $this->installSchema('node', ['node_access']);
     $this->installSchema('comment', ['comment_entity_statistics']);
     $this->installConfig(['node', 'comment']);
+    $this->container->get('theme_installer')->install(['stark']);
   }
 
   /**
@@ -167,8 +168,8 @@ class EntityCrudHookTest extends EntityKernelTestBase {
       'promote' => 0,
       'sticky' => 0,
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-      'created' => REQUEST_TIME,
-      'changed' => REQUEST_TIME,
+      'created' => \Drupal::time()->getRequestTime(),
+      'changed' => \Drupal::time()->getRequestTime(),
     ]);
     $node->save();
     $nid = $node->id();
@@ -182,8 +183,8 @@ class EntityCrudHookTest extends EntityKernelTestBase {
       'field_name' => 'comment',
       'uid' => $account->id(),
       'subject' => 'Test comment',
-      'created' => REQUEST_TIME,
-      'changed' => REQUEST_TIME,
+      'created' => \Drupal::time()->getRequestTime(),
+      'changed' => \Drupal::time()->getRequestTime(),
       'status' => 1,
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ]);
@@ -249,8 +250,8 @@ class EntityCrudHookTest extends EntityKernelTestBase {
       'filemime' => 'text/plain',
       'filesize' => filesize($url),
       'status' => 1,
-      'created' => REQUEST_TIME,
-      'changed' => REQUEST_TIME,
+      'created' => \Drupal::time()->getRequestTime(),
+      'changed' => \Drupal::time()->getRequestTime(),
     ]);
 
     $this->assertHookMessageOrder([
@@ -312,8 +313,8 @@ class EntityCrudHookTest extends EntityKernelTestBase {
       'promote' => 0,
       'sticky' => 0,
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-      'created' => REQUEST_TIME,
-      'changed' => REQUEST_TIME,
+      'created' => \Drupal::time()->getRequestTime(),
+      'changed' => \Drupal::time()->getRequestTime(),
     ]);
 
     $this->assertHookMessageOrder([
@@ -497,7 +498,7 @@ class EntityCrudHookTest extends EntityKernelTestBase {
     $account = User::create([
       'name' => 'Test user',
       'mail' => 'test@example.com',
-      'created' => REQUEST_TIME,
+      'created' => \Drupal::time()->getRequestTime(),
       'status' => 1,
       'language' => 'en',
     ]);

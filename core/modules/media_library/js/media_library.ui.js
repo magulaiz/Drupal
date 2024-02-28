@@ -58,7 +58,7 @@
       $(once('media-library-menu-item', $menu.find('a')))
         .on('keypress', (e) => {
           // The AJAX link has the button role, so we need to make sure the link
-          // is also triggered when pressing the spacebar.
+          // is also triggered when pressing the space bar.
           if (e.which === 32) {
             e.preventDefault();
             e.stopPropagation();
@@ -76,7 +76,7 @@
             dialogType: 'ajax',
             progress: {
               type: 'fullscreen',
-              message: Drupal.t('Please wait...'),
+              message: Drupal.t('Processing...'),
             },
           });
 
@@ -193,7 +193,7 @@
           dialogType: 'ajax',
           progress: {
             type: 'fullscreen',
-            message: loadingAnnouncement || Drupal.t('Please wait...'),
+            message: loadingAnnouncement || Drupal.t('Processing...'),
           },
         });
 

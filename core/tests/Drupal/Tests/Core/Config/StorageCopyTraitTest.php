@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Config;
 
 use Drupal\Core\Config\MemoryStorage;
@@ -66,7 +68,7 @@ class StorageCopyTraitTest extends UnitTestCase {
   /**
    * Provides data for testCheckRequirements().
    */
-  public function providerTestReplaceStorageContents() {
+  public static function providerTestReplaceStorageContents() {
     $data = [];
     $data[] = [TRUE, TRUE];
     $data[] = [TRUE, FALSE];
@@ -87,7 +89,6 @@ class StorageCopyTraitTest extends UnitTestCase {
   protected static function toArray(MemoryStorage $storage) {
     $reflection = new \ReflectionObject($storage);
     $property = $reflection->getProperty('config');
-    $property->setAccessible(TRUE);
 
     return $property->getValue($storage)->getArrayCopy();
   }
@@ -173,7 +174,7 @@ class StorageCopyTraitTest extends UnitTestCase {
 class TestStorage extends MemoryStorage {
 
   /**
-   * Provides a setter to bypass the array typehint on ::write().
+   * Provides a setter to bypass the array type hint on ::write().
    *
    * This method allows us to create invalid configurations. The method
    * ::write() only allows values of the type array.

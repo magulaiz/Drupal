@@ -6,6 +6,7 @@ namespace Drupal\Tests\views_ui\Functional;
  * Tests that displays can be correctly overridden via the user interface.
  *
  * @group views_ui
+ * @group #slow
  */
 class OverrideDisplaysTest extends UITestBase {
 
@@ -30,7 +31,7 @@ class OverrideDisplaysTest extends UITestBase {
     // Create a basic view that shows all content, with a page and a block
     // display.
     $view['label'] = $this->randomMachineName(16);
-    $view['id'] = strtolower($this->randomMachineName(16));
+    $view['id'] = $this->randomMachineName(16);
     $view['page[create]'] = 1;
     $view['page[path]'] = $this->randomMachineName(16);
     $view['block[create]'] = 1;
@@ -66,6 +67,7 @@ class OverrideDisplaysTest extends UITestBase {
     $this->assertSession()->pageTextContains($view['label']);
 
     // Place the block.
+    $this->container->get('plugin.manager.block')->clearCachedDefinitions();
     $this->drupalPlaceBlock("views_block:{$view['id']}-block_1");
 
     // Make sure the title appears in the block.
@@ -96,7 +98,7 @@ class OverrideDisplaysTest extends UITestBase {
     // page and feed to inherit their titles from the default display, but the
     // block to override it.
     $view['label'] = $this->randomMachineName(16);
-    $view['id'] = strtolower($this->randomMachineName(16));
+    $view['id'] = $this->randomMachineName(16);
     $view['page[create]'] = 1;
     $view['page[title]'] = $this->randomMachineName(16);
     $view['page[path]'] = $this->randomMachineName(16);
@@ -131,6 +133,7 @@ class OverrideDisplaysTest extends UITestBase {
     // Put the block into the first sidebar region, and make sure it will not
     // display on the view's page display (since we will be searching for the
     // presence/absence of the view's title in both the page and the block).
+    $this->container->get('plugin.manager.block')->clearCachedDefinitions();
     $this->drupalPlaceBlock("views_block:{$view['id']}-block_1", [
       'visibility' => [
         'request_path' => [
@@ -195,7 +198,7 @@ class OverrideDisplaysTest extends UITestBase {
     // Because there is both a title on page and block we expect the title on
     // the block be overridden.
     $view['label'] = $this->randomMachineName(16);
-    $view['id'] = strtolower($this->randomMachineName(16));
+    $view['id'] = $this->randomMachineName(16);
     $view['page[create]'] = 1;
     $view['page[title]'] = $this->randomMachineName(16);
     $view['page[path]'] = $this->randomMachineName(16);

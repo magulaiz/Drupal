@@ -83,6 +83,16 @@ class CKEditor5PluginManagerTest extends KernelTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function enableModules(array $modules) {
+    parent::enableModules($modules);
+    // Ensure the CKEditor 5 plugin manager instance on the test reflects the
+    // status after the module is installed.
+    $this->manager = $this->container->get('plugin.manager.ckeditor5.plugin');
+  }
+
+  /**
    * Mocks a module providing a CKEditor 5 plugin in VFS.
    *
    * @param string $module_name
@@ -191,7 +201,7 @@ YAML,
    * @return \Generator
    *   Test scenarios.
    */
-  public function providerTestInvalidPluginDefinitions(): \Generator {
+  public static function providerTestInvalidPluginDefinitions(): \Generator {
     yield 'invalid plugin ID with everything else okay' => [
       <<<YAML
 foo_bar:
@@ -1082,6 +1092,7 @@ PHP,
       'ckeditor5_globalAttributeDir',
       'ckeditor5_globalAttributeLang',
       'ckeditor5_heading',
+      'ckeditor5_htmlComments',
       'ckeditor5_paragraph',
       'ckeditor5_pasteFromOffice',
     ];
@@ -1204,6 +1215,7 @@ PHP,
       'ckeditor5_emphasis',
       'ckeditor5_essentials',
       'ckeditor5_heading',
+      'ckeditor5_htmlComments',
       'ckeditor5_paragraph',
       'ckeditor5_pasteFromOffice',
     ];
@@ -1270,7 +1282,7 @@ PHP,
   /**
    * Provides uses cases enabling different elements and the expected results.
    */
-  public function providerTestProvidedElements(): array {
+  public static function providerTestProvidedElements(): array {
     $text_align_classes = [
       'text-align-left' => TRUE,
       'text-align-center' => TRUE,
@@ -1495,7 +1507,7 @@ PHP,
   /**
    * Provides use cases for findPluginSupportingElement().
    */
-  public function providerTestPluginSupportingElement() {
+  public static function providerTestPluginSupportingElement() {
     return [
       'tag that belongs to a superset' => [
         'tag' => 'h2',

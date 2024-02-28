@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Form;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\EventSubscriber\RedirectResponseSubscriber;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
@@ -36,12 +39,18 @@ class FormSubmitterTest extends UnitTestCase {
   protected $unroutedUrlAssembler;
 
   /**
+   * @var \PHPUnit\Framework\MockObject\MockObject|\Drupal\Core\EventSubscriber\RedirectResponseSubscriber
+   */
+  protected $redirectResponseSubscriber;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
     $this->urlGenerator = $this->createMock(UrlGeneratorInterface::class);
     $this->unroutedUrlAssembler = $this->createMock(UnroutedUrlAssemblerInterface::class);
+    $this->redirectResponseSubscriber = $this->createMock(RedirectResponseSubscriber::class);
   }
 
   /**
@@ -96,7 +105,7 @@ class FormSubmitterTest extends UnitTestCase {
     $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $return);
   }
 
-  public function providerTestHandleFormSubmissionWithResponses() {
+  public static function providerTestHandleFormSubmissionWithResponses() {
     return [
       ['Symfony\Component\HttpFoundation\Response', 'response'],
       ['Symfony\Component\HttpFoundation\RedirectResponse', 'redirect'],
@@ -169,7 +178,7 @@ class FormSubmitterTest extends UnitTestCase {
    * @return array
    *   Returns some test data.
    */
-  public function providerTestRedirectWithUrl() {
+  public static function providerTestRedirectWithUrl() {
     return [
       [new Url('test_route_a', [], ['absolute' => TRUE]), 'test-route'],
       [new Url('test_route_b', ['key' => 'value'], ['absolute' => TRUE]), 'test-route/value'],
@@ -258,7 +267,7 @@ class FormSubmitterTest extends UnitTestCase {
     $request_stack = new RequestStack();
     $request_stack->push(Request::create('/test-path'));
     return $this->getMockBuilder('Drupal\Core\Form\FormSubmitter')
-      ->setConstructorArgs([$request_stack, $this->urlGenerator])
+      ->setConstructorArgs([$request_stack, $this->urlGenerator, $this->redirectResponseSubscriber])
       ->onlyMethods(['batchGet'])
       ->getMock();
   }

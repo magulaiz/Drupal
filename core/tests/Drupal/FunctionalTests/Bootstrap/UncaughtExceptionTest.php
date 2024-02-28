@@ -9,6 +9,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests kernel panic when things are really messed up.
  *
  * @group system
+ * @group #slow
  */
 class UncaughtExceptionTest extends BrowserTestBase {
 
@@ -71,7 +72,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
 
     $this->drupalGet('');
     $this->assertSession()->statusCodeEquals(500);
-    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Please try again later.');
+    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Try again later.');
     $this->assertSession()->pageTextNotContains($this->expectedExceptionMessage);
 
     $settings = [];
@@ -83,7 +84,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
 
     $this->drupalGet('');
     $this->assertSession()->statusCodeEquals(500);
-    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Please try again later.');
+    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Try again later.');
     $this->assertSession()->pageTextContains($this->expectedExceptionMessage);
     $this->assertErrorLogged($this->expectedExceptionMessage);
   }
@@ -97,7 +98,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
       '@message' => 'Drupal\error_test\Controller\ErrorTestController::Drupal\error_test\Controller\{closure}(): Argument #1 ($test) must be of type array, string given, called in ' . \Drupal::root() . '/core/modules/system/tests/modules/error_test/src/Controller/ErrorTestController.php on line 65',
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->Drupal\error_test\Controller\{closure}()',
     ];
-    $this->drupalGet('error-test/generate-fatals');
+    $this->drupalGet('error-test/generate-fatal-errors');
     $this->assertSession()->statusCodeEquals(500);
     $message = new FormattableMarkup('%type: @message in %function (line ', $fatal_error);
     $this->assertSession()->responseContains((string) $message);
@@ -125,7 +126,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
 
     $this->drupalGet('');
     $this->assertSession()->statusCodeEquals(418);
-    $this->assertSession()->pageTextNotContains('The website encountered an unexpected error. Please try again later.');
+    $this->assertSession()->pageTextNotContains('The website encountered an unexpected error. Try again later.');
     $this->assertSession()->pageTextNotContains('Oh oh, bananas in the instruments');
     $this->assertSession()->pageTextContains('Oh oh, flying teapots');
   }
@@ -231,12 +232,12 @@ class UncaughtExceptionTest extends BrowserTestBase {
 
     $this->drupalGet('');
     $this->assertSession()->statusCodeEquals(500);
-    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Please try again later.');
+    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Try again later.');
     $this->assertSession()->pageTextContains($this->expectedExceptionMessage);
 
     // Find fatal error logged to the error.log
     $errors = file(\Drupal::root() . '/' . $this->siteDirectory . '/error.log');
-    $this->assertCount(8, $errors, 'The error + the error that the logging service is broken has been written to the error log.');
+    $this->assertCount(10, $errors, 'The error + the error that the logging service is broken has been written to the error log.');
     $this->assertStringContainsString('Failed to log error', $errors[0], 'The error handling logs when an error could not be logged to the logger.');
 
     $expected_path = \Drupal::root() . '/core/modules/system/tests/modules/error_service_test/src/MonkeysInTheControlRoom.php';

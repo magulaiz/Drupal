@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\update\Unit;
 
 use ColinODell\PsrTestLogger\TestLogger;
@@ -115,7 +117,7 @@ class UpdateFetcherTest extends UnitTestCase {
    *   - 'site_key' - An arbitrary site key.
    *   - 'expected' - The expected URL from UpdateFetcher::buildFetchUrl().
    */
-  public function providerTestUpdateBuildFetchUrl() {
+  public static function providerTestUpdateBuildFetchUrl() {
     $data = [];
 
     // First test that we didn't break the trivial case.
@@ -178,7 +180,7 @@ class UpdateFetcherTest extends UnitTestCase {
     // First, try without the HTTP fallback setting, and HTTPS mocked to fail.
     $settings = new Settings([]);
     $this->mockClient(
-      new Response('500', [], 'HTTPS failed'),
+      new Response(500, [], 'HTTPS failed'),
     );
     $update_fetcher = new UpdateFetcher($this->mockConfigFactory, $this->mockHttpClient, $settings, $this->logger);
 
@@ -206,8 +208,8 @@ class UpdateFetcherTest extends UnitTestCase {
   public function testUpdateFetcherHttpFallback() {
     $settings = new Settings(['update_fetch_with_http_fallback' => TRUE]);
     $this->mockClient(
-      new Response('500', [], 'HTTPS failed'),
-      new Response('200', [], 'HTTP worked'),
+      new Response(500, [], 'HTTPS failed'),
+      new Response(200, [], 'HTTP worked'),
     );
     $update_fetcher = new UpdateFetcher($this->mockConfigFactory, $this->mockHttpClient, $settings, $this->logger);
 

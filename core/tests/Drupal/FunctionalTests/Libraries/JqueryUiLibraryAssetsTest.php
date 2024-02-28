@@ -56,6 +56,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
 
     // All the core libraries that use jQuery UI assets.
     $libraries_to_check = [
+      'internal.jquery_ui',
       'drupal.autocomplete',
       'drupal.dialog',
     ];
@@ -343,7 +344,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
    *     library prior to the change from jQuery UI library dependencies to
    *     direct file inclusion.
    */
-  public function providerTestAssetLoading() {
+  public static function providerTestAssetLoading() {
     return [
       'drupal.autocomplete' => [
         'library' => 'drupal.autocomplete',

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Site;
 
 use Composer\Autoload\ClassLoader;
@@ -99,7 +101,7 @@ class SettingsTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerTestGetHashSaltEmpty() {
+  public static function providerTestGetHashSaltEmpty() {
     return [
       [[]],
       [['hash_salt' => '']],
@@ -146,8 +148,7 @@ class SettingsTest extends UnitTestCase {
 
     $class = new \ReflectionClass(Settings::class);
     $instance_property = $class->getProperty("instance");
-    $instance_property->setAccessible(TRUE);
-    $instance_property->setValue(NULL);
+    $instance_property->setValue(NULL, NULL);
 
     $this->expectException(\BadMethodCallException::class);
     $settings->getInstance();
@@ -200,10 +201,9 @@ class SettingsTest extends UnitTestCase {
 
     $class = new \ReflectionClass(Settings::class);
     $instance_property = $class->getProperty('deprecatedSettings');
-    $instance_property->setAccessible(TRUE);
     $deprecated_settings = $instance_property->getValue();
     $deprecated_settings['deprecated_legacy'] = $deprecated_setting;
-    $instance_property->setValue($deprecated_settings);
+    $instance_property->setValue(NULL, $deprecated_settings);
 
     if ($expect_deprecation_message) {
       $this->expectDeprecation($deprecated_setting['message']);
@@ -220,7 +220,7 @@ class SettingsTest extends UnitTestCase {
    *
    * @see self::providerTestRealDeprecatedSettings()
    */
-  public function providerTestFakeDeprecatedSettings(): array {
+  public static function providerTestFakeDeprecatedSettings(): array {
 
     $only_legacy = [
       'deprecated_legacy' => 'old',
@@ -306,7 +306,7 @@ class SettingsTest extends UnitTestCase {
   /**
    * Provides data for testRealDeprecatedSettings().
    */
-  public function providerTestRealDeprecatedSettings(): array {
+  public static function providerTestRealDeprecatedSettings(): array {
     return [
       [
         'block_interest_cohort',
@@ -368,7 +368,7 @@ class SettingsTest extends UnitTestCase {
   /**
    * Provides data for testDatabaseInfoInitialization().
    */
-  public function providerTestDatabaseInfoInitialization(): array {
+  public static function providerTestDatabaseInfoInitialization(): array {
     return [
       ['mysql', NULL, NULL, 'Drupal\\mysql\\Driver\\Database\\mysql', 'core/modules/mysql/src/Driver/Database/mysql/'],
       ['mysql', '', NULL, 'Drupal\\mysql\\Driver\\Database\\mysql', 'core/modules/mysql/src/Driver/Database/mysql/'],

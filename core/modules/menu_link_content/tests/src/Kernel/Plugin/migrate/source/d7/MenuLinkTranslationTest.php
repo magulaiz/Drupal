@@ -4,6 +4,8 @@ namespace Drupal\Tests\menu_link_content\Kernel\Plugin\migrate\source\d7;
 
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
+// cspell:ignore mlid objectid objectindex plid tsid textgroup
+
 /**
  * Tests menu link localized translation source plugin.
  *
@@ -20,7 +22,7 @@ class MenuLinkTranslationTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function providerSource() {
+  public static function providerSource() {
     $test = [];
     $test[0]['source_data']['menu_links'] = [
       [

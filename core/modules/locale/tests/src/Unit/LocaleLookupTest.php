@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\locale\Unit;
 
 use Drupal\Component\Gettext\PoItem;
@@ -193,7 +195,7 @@ class LocaleLookupTest extends UnitTestCase {
   /**
    * Provides test data for testResolveCacheMissWithFallback().
    */
-  public function resolveCacheMissWithFallbackProvider() {
+  public static function resolveCacheMissWithFallbackProvider() {
     // cSpell:disable
     return [
       ['cs', 'test', 'irrelevant', 'test v české'],
@@ -323,7 +325,7 @@ class LocaleLookupTest extends UnitTestCase {
   /**
    * Provides test data for testResolveCacheMissWithFallback().
    */
-  public function providerFixOldPluralTranslationProvider() {
+  public static function providerFixOldPluralTranslationProvider() {
     $translations = [
       'by' => [
         'word1' => '@count[2] word-by',
@@ -363,7 +365,6 @@ class LocaleLookupTest extends UnitTestCase {
 
     $o = new \ReflectionObject($locale_lookup);
     $method = $o->getMethod('getCid');
-    $method->setAccessible(TRUE);
     $cid = $method->invoke($locale_lookup, 'getCid');
 
     $this->assertEquals($expected, $cid);
@@ -372,7 +373,7 @@ class LocaleLookupTest extends UnitTestCase {
   /**
    * Provides test data for testGetCid().
    */
-  public function getCidProvider() {
+  public static function getCidProvider() {
     return [
       [
         ['a'], 'locale:en:irrelevant:a',

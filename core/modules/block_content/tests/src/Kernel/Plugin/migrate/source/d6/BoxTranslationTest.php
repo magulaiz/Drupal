@@ -4,6 +4,8 @@ namespace Drupal\Tests\block_content\Kernel\Plugin\migrate\source\d6;
 
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
+// cspell:ignore objectid objectindex plid
+
 /**
  * Tests i18n content block translations source plugin.
  *
@@ -21,7 +23,7 @@ class BoxTranslationTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function providerSource() {
+  public static function providerSource() {
     $tests = [];
 
     // The source data.

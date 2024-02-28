@@ -9,6 +9,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
  * JSON:API integration test for the "vocabulary" config entity type.
  *
  * @group jsonapi
+ * @group #slow
  */
 class VocabularyTest extends ConfigEntityResourceTestBase {
 
@@ -87,6 +88,7 @@ class VocabularyTest extends ConfigEntityResourceTestBase {
           'status' => TRUE,
           'dependencies' => [],
           'name' => 'Llama',
+          'new_revision' => FALSE,
           'description' => NULL,
           'weight' => 0,
           'drupal_internal__vid' => 'llama',

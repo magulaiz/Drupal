@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Component\Plugin\Discovery;
 
 use PHPUnit\Framework\TestCase;
@@ -42,7 +44,7 @@ class StaticDiscoveryDecoratorTest extends TestCase {
    *   - A plugin definition.
    *   - Base plugin ID.
    */
-  public function providerGetDefinition() {
+  public static function providerGetDefinition() {
     return [
       ['is_defined', TRUE, FALSE, ['plugin-definition' => 'is_defined'], 'plugin-definition'],
       // Make sure we don't call the decorated method if we shouldn't.
@@ -67,7 +69,6 @@ class StaticDiscoveryDecoratorTest extends TestCase {
 
     // Set up the ::$registerDefinitions property.
     $ref_register_definitions = new \ReflectionProperty($mock_decorator, 'registerDefinitions');
-    $ref_register_definitions->setAccessible(TRUE);
     if ($has_register_definitions) {
       // Set the callback object on the mocked decorator.
       $ref_register_definitions->setValue(
@@ -82,7 +83,6 @@ class StaticDiscoveryDecoratorTest extends TestCase {
 
     // Set up ::$definitions to an empty array.
     $ref_definitions = new \ReflectionProperty($mock_decorator, 'definitions');
-    $ref_definitions->setAccessible(TRUE);
     $ref_definitions->setValue($mock_decorator, []);
 
     // Mock a decorated object.
@@ -96,7 +96,6 @@ class StaticDiscoveryDecoratorTest extends TestCase {
 
     // Set up ::$decorated to our mocked decorated object.
     $ref_decorated = new \ReflectionProperty($mock_decorator, 'decorated');
-    $ref_decorated->setAccessible(TRUE);
     $ref_decorated->setValue($mock_decorator, $mock_decorated);
 
     if ($exception_on_invalid) {
@@ -117,7 +116,7 @@ class StaticDiscoveryDecoratorTest extends TestCase {
    *   - bool Whether the test mock has a callback.
    *   - array Plugin definitions.
    */
-  public function providerGetDefinitions() {
+  public static function providerGetDefinitions() {
     return [
       [TRUE, ['definition' => 'is_fake']],
       [FALSE, ['definition' => 'array_of_stuff']],
@@ -137,7 +136,6 @@ class StaticDiscoveryDecoratorTest extends TestCase {
 
     // Set up the ::$registerDefinitions property.
     $ref_register_definitions = new \ReflectionProperty($mock_decorator, 'registerDefinitions');
-    $ref_register_definitions->setAccessible(TRUE);
     if ($has_register_definitions) {
       // Set the callback object on the mocked decorator.
       $ref_register_definitions->setValue(
@@ -152,7 +150,6 @@ class StaticDiscoveryDecoratorTest extends TestCase {
 
     // Set up ::$definitions to an empty array.
     $ref_definitions = new \ReflectionProperty($mock_decorator, 'definitions');
-    $ref_definitions->setAccessible(TRUE);
     $ref_definitions->setValue($mock_decorator, []);
 
     // Mock a decorated object.
@@ -166,7 +163,6 @@ class StaticDiscoveryDecoratorTest extends TestCase {
 
     // Set up ::$decorated to our mocked decorated object.
     $ref_decorated = new \ReflectionProperty($mock_decorator, 'decorated');
-    $ref_decorated->setAccessible(TRUE);
     $ref_decorated->setValue($mock_decorator, $mock_decorated);
 
     // Exercise getDefinitions(). It calls parent::getDefinitions() but in this
@@ -185,7 +181,7 @@ class StaticDiscoveryDecoratorTest extends TestCase {
    *   - Array of arguments to pass to the method, with the expectation that our
    *     mocked __call() will return them.
    */
-  public function providerCall() {
+  public static function providerCall() {
     return [
       ['complexArguments', ['1', 2.0, 3, ['4' => 'five']]],
       ['noArguments', []],
@@ -216,7 +212,6 @@ class StaticDiscoveryDecoratorTest extends TestCase {
       ->getMock();
     // Poke the decorated object into our decorator.
     $ref_decorated = new \ReflectionProperty($mock_decorator, 'decorated');
-    $ref_decorated->setAccessible(TRUE);
     $ref_decorated->setValue($mock_decorator, $mock_decorated);
 
     // Exercise __call.

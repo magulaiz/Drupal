@@ -4,6 +4,8 @@ namespace Drupal\Tests\node\Kernel\Plugin\migrate\source\d7;
 
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
+// cspell:ignore tnid
+
 /**
  * Tests D7 node source plugin.
  *
@@ -21,7 +23,7 @@ class NodeTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function providerSource() {
+  public static function providerSource() {
     $tests = [];
 
     // Test retrieval of article and page content types when configuration

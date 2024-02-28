@@ -4,6 +4,8 @@ namespace Drupal\Tests\user\Kernel\Plugin\migrate\source\d6;
 
 use Drupal\Tests\user\Kernel\Plugin\migrate\source\ProfileFieldTest;
 
+// cspell:ignore objectid
+
 /**
  * Tests the field option translation source plugin.
  *
@@ -20,7 +22,7 @@ class ProfileFieldOptionTranslationTest extends ProfileFieldTest {
   /**
    * {@inheritdoc}
    */
-  public function providerSource() {
+  public static function providerSource() {
 
     $test = parent::providerSource();
     // The source data.

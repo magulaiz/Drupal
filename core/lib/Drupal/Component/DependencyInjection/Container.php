@@ -304,11 +304,8 @@ class Container implements ContainerInterface, ResetInterface {
 
   /**
    * {@inheritdoc}
-   *
-   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
-   * @return void
    */
-  public function set($id, $service) {
+  public function set($id, $service): void {
     $this->services[$id] = $service;
   }
 
@@ -343,11 +340,8 @@ class Container implements ContainerInterface, ResetInterface {
 
   /**
    * {@inheritdoc}
-   *
-   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
-   * @return void
    */
-  public function setParameter($name, $value) {
+  public function setParameter($name, $value): void {
     if ($this->frozen) {
       throw new LogicException('Impossible to call set() on a frozen ParameterBag.');
     }
@@ -456,6 +450,13 @@ class Container implements ContainerInterface, ResetInterface {
           if ($argument->shared) {
             $this->privateServices[$id] = $arguments[$key];
           }
+
+          continue;
+        }
+        elseif ($type == 'service_closure') {
+          $arguments[$key] = function () use ($argument) {
+            return $this->get($argument->id, $argument->invalidBehavior);
+          };
 
           continue;
         }

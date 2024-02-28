@@ -44,7 +44,7 @@ class TextItemBaseTest extends KernelTestBase {
   /**
    * Data provider for testTextFieldSampleValue.
    */
-  public function providerTextFieldSampleValue() {
+  public static function providerTextFieldSampleValue() {
     return [
       [
         1,
@@ -69,7 +69,8 @@ class TextItemBaseTest extends KernelTestBase {
       'format' => 'test_format',
       'name' => 'Test format',
     ]);
-    $fieldName = mb_strtolower($this->randomMachineName());
+    $format->save();
+    $fieldName = $this->randomMachineName();
     $field_storage = FieldStorageConfig::create([
       'field_name' => $fieldName,
       'entity_type' => 'entity_test',

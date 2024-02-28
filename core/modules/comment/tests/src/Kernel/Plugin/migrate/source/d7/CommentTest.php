@@ -4,6 +4,8 @@ namespace Drupal\Tests\comment\Kernel\Plugin\migrate\source\d7;
 
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
+// cspell:ignore tnid
+
 /**
  * Tests D7 comment source plugin.
  *
@@ -20,7 +22,7 @@ class CommentTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function providerSource() {
+  public static function providerSource() {
     $tests = [];
 
     // The source data.

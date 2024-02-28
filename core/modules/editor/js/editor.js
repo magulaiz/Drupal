@@ -187,6 +187,8 @@
               // change event is only triggered after the change has already
               // been accepted.
               select.value = activeFormatID;
+              const eventChange = new Event('change');
+              select.dispatchEvent(eventChange);
               confirmationDialog.close();
             },
           },

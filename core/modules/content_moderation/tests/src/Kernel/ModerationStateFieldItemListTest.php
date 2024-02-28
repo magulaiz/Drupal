@@ -51,10 +51,12 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
 
     NodeType::create([
       'type' => 'unmoderated',
+      'name' => 'Unmoderated',
     ])->save();
 
     $node_type = NodeType::create([
       'type' => 'example',
+      'name' => 'Example',
     ]);
     $node_type->save();
     $workflow = $this->createEditorialWorkflow();
@@ -211,7 +213,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
   /**
    * Data provider for ::testModerationStateChanges.
    */
-  public function moderationStateChangesTestCases() {
+  public static function moderationStateChangesTestCases() {
     return [
       'Draft to draft' => [
         'draft',
@@ -254,6 +256,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
   public function testEntityWithNoWorkflow() {
     $node_type = NodeType::create([
       'type' => 'example_no_workflow',
+      'name' => 'No-Workflow example',
     ]);
     $node_type->save();
     $test_node = Node::create([
@@ -295,7 +298,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
   /**
    * Test cases for ::testEntityUnserialize.
    */
-  public function entityUnserializeTestCases() {
+  public static function entityUnserializeTestCases() {
     return [
       'Default draft state' => [
         'draft',
@@ -329,7 +332,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
   /**
    * Tests cases for ::testModeratedEntityWithExistingId.
    */
-  public function moderatedEntityWithExistingIdTestCases() {
+  public static function moderatedEntityWithExistingIdTestCases() {
     return [
       'Draft non-default state' => [
         'draft',

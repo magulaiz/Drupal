@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Component\Plugin\Context;
 
 use Drupal\Component\Plugin\Context\Context;
@@ -14,7 +16,7 @@ class ContextTest extends TestCase {
   /**
    * Data provider for testGetContextValue.
    */
-  public function providerGetContextValue() {
+  public static function providerGetContextValue() {
     return [
       ['context_value', 'context_value', FALSE, 'data_type'],
       [NULL, NULL, FALSE, 'data_type'],
@@ -38,7 +40,6 @@ class ContextTest extends TestCase {
     if ($context_value) {
       // Set visibility of contextValue.
       $ref_context_value = new \ReflectionProperty($mock_context, 'contextValue');
-      $ref_context_value->setAccessible(TRUE);
       // Set contextValue to a testable state.
       $ref_context_value->setValue($mock_context, $context_value);
       // Exercise getContextValue().
@@ -83,7 +84,7 @@ class ContextTest extends TestCase {
   /**
    * Data provider for testHasContextValue.
    */
-  public function providerHasContextValue() {
+  public static function providerHasContextValue() {
     return [
       [TRUE, FALSE],
       [TRUE, 0],

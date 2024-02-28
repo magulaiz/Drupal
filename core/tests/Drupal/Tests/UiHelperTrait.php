@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests;
 
 use Behat\Mink\Driver\BrowserKitDriver;
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Session\AccountInterface;
@@ -83,14 +84,16 @@ trait UiHelperTrait {
     foreach ($edit as $name => $value) {
       $field = $assert_session->fieldExists($name, $form);
 
-      // Provide support for the values '1' and '0' for checkboxes instead of
-      // TRUE and FALSE.
-      // @todo Get rid of supporting 1/0 by converting all tests cases using
-      // this to boolean values.
-      $field_type = $field->getAttribute('type');
-      if ($field_type === 'checkbox') {
-        $value = (bool) $value;
-      }
+      $value = match ($field->getAttribute('type')) {
+        // Provide support for the values '1' and '0' for checkboxes instead of
+        // TRUE and FALSE.
+        // @todo Get rid of supporting 1/0 by converting all tests cases using
+        // this to boolean values.
+        'checkbox' => (bool) $value,
+        // Mink only allows strings for text, number and radio button values.
+        'text', 'number', 'radio' => (string) $value,
+        default => $value,
+      };
 
       $field->setValue($value);
     }
@@ -127,7 +130,7 @@ trait UiHelperTrait {
    * If a user is already logged in, then the current user is logged out before
    * logging in the specified user.
    *
-   * Please note that neither the current user nor the passed-in user object is
+   * Note that neither the current user nor the passed-in user object is
    * populated with data of the logged in user. If you need full access to the
    * user object after logging in, it must be updated manually. If you also need
    * access to the plain-text password of the user (set by drupalCreateUser()),
@@ -161,7 +164,7 @@ trait UiHelperTrait {
 
     // @see ::drupalUserIsLoggedIn()
     $account->sessionId = $this->getSession()->getCookie(\Drupal::service('session_configuration')->getOptions(\Drupal::request())['name']);
-    $this->assertTrue($this->drupalUserIsLoggedIn($account), new FormattableMarkup('User %name successfully logged in.', ['%name' => $account->getAccountName()]));
+    $this->assertTrue($this->drupalUserIsLoggedIn($account), "User {$account->getAccountName()} successfully logged in.");
 
     $this->loggedInUser = $account;
     $this->container->get('current_user')->setAccount($account);
@@ -231,6 +234,16 @@ trait UiHelperTrait {
 
     $this->prepareRequest();
     foreach ($headers as $header_name => $header_value) {
+      if (is_int($header_name)) {
+        // @todo Trigger deprecation in
+        //   https://www.drupal.org/project/drupal/issues/3421105.
+        [$header_name, $header_value] = explode(':', $header_value);
+      }
+      if (is_null($header_value)) {
+        // @todo Trigger deprecation in
+        //   https://www.drupal.org/project/drupal/issues/3421105.
+        $header_value = '';
+      }
       $session->setRequestHeader($header_name, $header_value);
     }
 
@@ -272,6 +285,8 @@ trait UiHelperTrait {
    *   An absolute URL string.
    */
   protected function buildUrl($path, array $options = []) {
+    global $base_path;
+
     if ($path instanceof Url) {
       $url_options = $path->getOptions();
       $options = $url_options + $options;
@@ -281,6 +296,12 @@ trait UiHelperTrait {
     // The URL generator service is not necessarily available yet; e.g., in
     // interactive installer tests.
     elseif (\Drupal::hasService('url_generator')) {
+      // Strip $base_path, if existent.
+      $length = strlen($base_path);
+      if (substr($path, 0, $length) === $base_path) {
+        $path = substr($path, $length);
+      }
+
       $force_internal = isset($options['external']) && $options['external'] == FALSE;
       if (!$force_internal && UrlHelper::isExternal($path)) {
         return Url::fromUri($path, $options)->toString();

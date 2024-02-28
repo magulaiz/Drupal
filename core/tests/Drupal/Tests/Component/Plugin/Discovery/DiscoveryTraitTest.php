@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Component\Plugin\Discovery;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
@@ -19,7 +21,7 @@ class DiscoveryTraitTest extends TestCase {
    *   - Plugin definition array, to pass to doGetDefinition().
    *   - Plugin ID to get, passed to doGetDefinition().
    */
-  public function providerDoGetDefinition() {
+  public static function providerDoGetDefinition() {
     return [
       ['definition', ['plugin_name' => 'definition'], 'plugin_name'],
       [NULL, ['plugin_name' => 'definition'], 'bad_plugin_name'],
@@ -35,7 +37,6 @@ class DiscoveryTraitTest extends TestCase {
     $trait = $this->getMockForTrait('Drupal\Component\Plugin\Discovery\DiscoveryTrait');
     // Un-protect the method using reflection.
     $method_ref = new \ReflectionMethod($trait, 'doGetDefinition');
-    $method_ref->setAccessible(TRUE);
     // Call doGetDefinition, with $exception_on_invalid always FALSE.
     $this->assertSame(
       $expected,
@@ -51,7 +52,7 @@ class DiscoveryTraitTest extends TestCase {
    *   - Plugin definition array, to pass to doGetDefinition().
    *   - Plugin ID to get, passed to doGetDefinition().
    */
-  public function providerDoGetDefinitionException() {
+  public static function providerDoGetDefinitionException() {
     return [
       [FALSE, ['plugin_name' => 'definition'], 'bad_plugin_name'],
     ];
@@ -67,7 +68,6 @@ class DiscoveryTraitTest extends TestCase {
     $trait = $this->getMockForTrait('Drupal\Component\Plugin\Discovery\DiscoveryTrait');
     // Un-protect the method using reflection.
     $method_ref = new \ReflectionMethod($trait, 'doGetDefinition');
-    $method_ref->setAccessible(TRUE);
     // Call doGetDefinition, with $exception_on_invalid always TRUE.
     $this->expectException(PluginNotFoundException::class);
     $method_ref->invoke($trait, $definitions, $plugin_id, TRUE);
@@ -117,7 +117,7 @@ class DiscoveryTraitTest extends TestCase {
    *   - Expected TRUE or FALSE.
    *   - Plugin ID to look for.
    */
-  public function providerHasDefinition() {
+  public static function providerHasDefinition() {
     return [
       [TRUE, 'valid'],
       [FALSE, 'not_valid'],

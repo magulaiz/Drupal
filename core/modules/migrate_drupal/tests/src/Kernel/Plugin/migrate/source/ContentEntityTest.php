@@ -14,7 +14,7 @@ use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
-use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
+use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\user\Entity\User;
 
@@ -25,7 +25,7 @@ use Drupal\user\Entity\User;
  */
 class ContentEntityTest extends KernelTestBase {
 
-  use EntityReferenceTestTrait;
+  use EntityReferenceFieldCreationTrait;
   use MediaTypeCreationTrait;
 
   /**
@@ -170,7 +170,7 @@ class ContentEntityTest extends KernelTestBase {
     ]);
     $node->save();
     $node->addTranslation('fr', [
-      'title' => 'Pommes',
+      'title' => 'fr - Apples',
       $this->fieldName => $term->id(),
     ])->save();
 
@@ -320,7 +320,7 @@ class ContentEntityTest extends KernelTestBase {
       }
       $this->assertEquals('fr', $values['langcode']);
       $this->assertEquals(1, $values['status'][0]['value']);
-      $this->assertEquals('Pommes', $values['title'][0]['value']);
+      $this->assertEquals('fr - Apples', $values['title'][0]['value']);
       $this->assertEquals(0, $values['default_langcode'][0]['value']);
       $this->assertEquals(1, $values['field_entity_reference'][0]['target_id']);
     }
@@ -431,7 +431,7 @@ class ContentEntityTest extends KernelTestBase {
    * @see \Drupal\Tests\migrate_drupal\Kernel\Plugin\migrate\source\ContentEntityTest::testMediaSource
    * @see \Drupal\Tests\migrate_drupal\Kernel\Plugin\migrate\source\ContentEntityTest::testTermSource
    */
-  public function migrationConfigurationProvider() {
+  public static function migrationConfigurationProvider() {
     $data = [];
     foreach ([FALSE, TRUE] as $include_translations) {
       foreach ([FALSE, TRUE] as $add_revision_id) {

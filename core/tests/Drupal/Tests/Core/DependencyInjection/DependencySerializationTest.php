@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\DependencyInjection\DependencySerializationTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\Core\DependencyInjection;
 
@@ -79,11 +76,8 @@ class DependencySerializationTestDummy implements ContainerAwareInterface {
 
   /**
    * {@inheritdoc}
-   *
-   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
-   * @return void
    */
-  public function setContainer(ContainerInterface $container = NULL) {
+  public function setContainer(?ContainerInterface $container): void {
     $this->container = $container;
   }
 
