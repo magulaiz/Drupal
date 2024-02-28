@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\update\Functional;
 
 /**
@@ -93,7 +95,7 @@ class UpdateManagerUpdateTest extends UpdateTestBase {
    * @return array[]
    *   Test data.
    */
-  public function incompatibleUpdatesTableProvider() {
+  public static function incompatibleUpdatesTableProvider() {
     return [
       'only one compatible' => [
         'core_fixture' => '1.1-core_compatibility',

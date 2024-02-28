@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\forum\Functional\migrate_drupal\d7;
 
 use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
@@ -11,6 +13,7 @@ use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
  *
  * @group forum
  * @group #slow
+ * @group legacy
  */
 class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
 

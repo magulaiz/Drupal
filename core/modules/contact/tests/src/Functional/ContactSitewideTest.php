@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\contact\Functional;
 
 use Drupal\Core\Url;
@@ -532,6 +534,10 @@ class ContactSitewideTest extends BrowserTestBase {
     $edit += $third_party_settings;
     $this->drupalGet('admin/structure/contact/add');
     $this->submitForm($edit, 'Save');
+
+    // Ensure the statically cached bundle info is aware of the contact form
+    // that was just created in the UI.
+    $this->container->get('entity_type.bundle.info')->clearCachedBundles();
   }
 
   /**
