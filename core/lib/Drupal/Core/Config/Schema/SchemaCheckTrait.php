@@ -68,7 +68,7 @@ trait SchemaCheckTrait {
    *   validation errors will be added to the errors found.
    *
    * @return array|bool
-   *   FALSE if no schema found. List of errors if any found. TRUE if fully
+   *   FALSE if no schema found. Associative array with a text key and error message if any errors found. TRUE if fully
    *   valid.
    */
   public function checkConfigSchema(TypedConfigManagerInterface $typed_config, $config_name, $config_data, bool $validate_constraints = FALSE) {
@@ -182,7 +182,7 @@ trait SchemaCheckTrait {
    *   Value of given key.
    *
    * @return array
-   *   List of errors found while checking with the corresponding schema.
+   *   Associative array with a text key and error message for each error found while checking with the corresponding schema.
    */
   protected function checkValue($key, $value) {
     $error_key = $this->configName . ':' . $key;
