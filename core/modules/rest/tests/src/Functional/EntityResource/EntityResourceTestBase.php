@@ -506,7 +506,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     }
     else {
       $this->assertSame(406, $response->getStatusCode());
-      $this->assertSame(['UNCACHEABLE'], $response->getHeader('X-Drupal-Dynamic-Cache'));
+      $this->assertSame(['UNCACHEABLE (poor cacheability)'], $response->getHeader('X-Drupal-Dynamic-Cache'));
     }
     $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
     $this->assertSame(static::$auth ? ['UNCACHEABLE (request policy)'] : ['MISS'], $response->getHeader('X-Drupal-Cache'));
