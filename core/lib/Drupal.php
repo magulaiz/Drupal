@@ -223,7 +223,7 @@ class Drupal {
   /**
    * Gets the active install profile.
    *
-   * @return string|null|false
+   * @return string|false|null
    *   The name of the active install profile. FALSE indicates that the site is
    *   not using an install profile. NULL indicates that the site has not yet
    *   been installed.

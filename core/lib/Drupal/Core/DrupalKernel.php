@@ -1653,7 +1653,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   /**
    * Gets the active install profile.
    *
-   * @return string|null|false
+   * @return string|false|null
    *   The name of the active install profile or distribution, FALSE if there is
    *   no install profile or NULL if Drupal is being installed.
    */
