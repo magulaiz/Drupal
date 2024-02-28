@@ -76,10 +76,6 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
    * Testing the feed with Updated and Removed JSON feeds.
    */
   public function testAnnounceFeedUpdatedAndRemoved() {
-    $this->user = $this->drupalCreateUser(array(
-      'access toolbar',
-      'access announcements',
-    ));
     module_load_include('inc', 'announce_feed_test', 'announce_feed_test');
     $this->drupalLogin($this->user);
     $this->drupalGet('');
@@ -106,12 +102,7 @@ class AnnounceFeedTestValidateJsonFeed extends DrupalWebTestCase {
    * Check the status of the feed with an empty JSON feed.
    */
   public function testAnnounceFeedEmpty() {
-    $this->user = $this->drupalCreateUser(array(
-      'access toolbar',
-      'access announcements',
-    ));
     // Change the feed URL to empty JSON file.
-    // For resetting temp storage.
     variable_set('announcements_feed_json_url', $this->emptyJson);
     cache_clear_all('announcements_feed', 'cache', TRUE);
     $this->drupalLogin($this->user);
@@ -340,10 +331,6 @@ class AnnounceFeedTestInvalidJsonTestCase extends DrupalWebTestCase {
    */
   public function testInvalidFeedResponse() {
     // Test when the JSON URL is not found.
-    $this->user = $this->drupalCreateUser(array(
-      'access toolbar',
-      'access announcements',
-    ));
     module_load_include('inc', 'announce_feed_test', 'announce_feed_test');
     $this->drupalLogin($this->user);
     $this->drupalGet('');
@@ -414,10 +401,6 @@ class AnnounceFeedTestSanitizationTestCase extends DrupalWebTestCase {
    * Test the announcements feed with malicious content.
    */
   public function testSanitizedFeedResponse() {
-    $this->user = $this->drupalCreateUser(array(
-      'access toolbar',
-      'access announcements',
-    ));
     module_load_include('inc', 'announce_feed_test', 'announce_feed_test');
     $this->drupalLogin($this->user);
     $this->drupalGet('');
