@@ -49,6 +49,14 @@ class KeyValueContentEntityStorage extends KeyValueEntityStorage implements Cont
   /**
    * {@inheritdoc}
    */
+  public function loadRevisionUnchanged($revision_id) {
+    // @todo Complete the content entity storage implementation in
+    //   https://www.drupal.org/node/2618436.
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getLatestRevisionId($entity_id) {
     return NULL;
   }
@@ -73,5 +81,7 @@ class KeyValueContentEntityStorage extends KeyValueEntityStorage implements Cont
   public function deleteRevision($revision_id) {
     return NULL;
   }
+
+  public function resetRevisionCache(array $revision_ids) {}
 
 }

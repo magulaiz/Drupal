@@ -9,6 +9,8 @@ use Drupal\Core\Cache\MemoryCache\MemoryCache;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityFieldManager;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\Query\QueryFactoryInterface;
@@ -1109,7 +1111,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->method('id')
       ->willReturn('foo');
 
-    $this->assertInstanceOf(EntityInterface::class, $entity);
+    $this->assertInstanceOf(ContentEntityInterface::class, $entity);
     $this->assertSame('foo', $entity->id());
     $this->assertTrue($entity->isNew());
   }
@@ -1289,6 +1291,10 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->method('id')
       ->willReturn($id);
 
+      $entity->expects($this->any())
+        ->method('isDefaultRevision')
+        ->willReturn(TRUE);
+
     $this->entityType->expects($this->any())
       ->method('isPersistentlyCacheable')
       ->willReturn(TRUE);
@@ -1466,3 +1472,19 @@ class SqlContentEntityStorageTest extends UnitTestCase {
   }
 
 }
+<<<<<<< HEAD
+=======
+
+/**
+ * Provides an entity with dummy implementations of static methods.
+ */
+abstract class SqlContentEntityStorageTestEntityInterface implements \IteratorAggregate, ContentEntityInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function postLoad(EntityStorageInterface $storage, array &$entities) {
+  }
+
+}
+>>>>>>> fd1c0e66bb2 (Use static and persistent entity cache for ContentEntityStorageBase::loadRevision.)
