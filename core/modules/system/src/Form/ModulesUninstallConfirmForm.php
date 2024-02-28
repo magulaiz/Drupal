@@ -86,7 +86,7 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase {
    * @param string|false|null $install_profile
    *   The install profile.
    */
-  public function __construct(ModuleInstallerInterface $module_installer, KeyValueStoreExpirableInterface $key_value_expirable, ConfigManagerInterface $config_manager, EntityTypeManagerInterface $entity_type_manager, ModuleExtensionList $extension_list_module, $install_profile) {
+  public function __construct(ModuleInstallerInterface $module_installer, KeyValueStoreExpirableInterface $key_value_expirable, ConfigManagerInterface $config_manager, EntityTypeManagerInterface $entity_type_manager, ModuleExtensionList $extension_list_module, string|false|null $install_profile) {
     $this->moduleInstaller = $module_installer;
     $this->keyValueExpirable = $key_value_expirable;
     $this->configManager = $config_manager;

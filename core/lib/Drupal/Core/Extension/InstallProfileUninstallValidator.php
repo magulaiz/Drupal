@@ -36,7 +36,7 @@ class InstallProfileUninstallValidator implements ModuleUninstallValidatorInterf
   public function __construct(
     TranslationInterface $string_translation,
     protected ModuleExtensionList $moduleExtensionList,
-    protected string|FALSE|NULL $installProfile,
+    protected string|false|null $installProfile,
     protected string $root,
     protected string $sitePath
   ) {

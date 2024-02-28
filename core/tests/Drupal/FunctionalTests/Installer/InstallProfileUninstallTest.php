@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Tests\BrowserTestBase;
@@ -35,7 +37,7 @@ class InstallProfileUninstallTest extends BrowserTestBase {
   /**
    * Tests a user can uninstall install profiles.
    */
-  public function testUninstallInstallProfile() {
+  public function testUninstallInstallProfile(): void {
     $this->drupalLogin($this->drupalCreateUser(admin: TRUE));
 
     // Ensure that the installation profile is present on the status report.
