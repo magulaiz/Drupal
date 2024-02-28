@@ -143,18 +143,22 @@
         );
 
         // Handle the resolution of Drupal.toolbar.setSubtrees.
-        // This is handled with a deferred so that the function may be invoked
+        // This is handled with a promise so that the function may be invoked
         // asynchronously.
-        Drupal.toolbar.setSubtrees.done((subtrees) => {
-          menuModel.set('subtrees', subtrees);
-          const theme = drupalSettings.ajaxPageState.theme;
-          localStorage.setItem(
-            `Drupal.toolbar.subtrees.${theme}`,
-            JSON.stringify(subtrees),
-          );
-          // Indicate on the toolbarModel that subtrees are now loaded.
-          model.set('areSubtreesLoaded', true);
-        });
+        Drupal.toolbar.setSubtrees
+          .then((subtrees) => {
+            menuModel.set('subtrees', subtrees);
+            const theme = drupalSettings.ajaxPageState.theme;
+            localStorage.setItem(
+              `Drupal.toolbar.subtrees.${theme}`,
+              JSON.stringify(subtrees),
+            );
+            // Indicate on the toolbarModel that subtrees are now loaded.
+            model.set('areSubtreesLoaded', true);
+          })
+          .catch((error) => {
+            console.error('Error resolving setSubtrees:', error);
+          });
 
         // Trigger an initial attempt to load menu subitems. This first attempt
         // is made after the media query handlers have had an opportunity to
@@ -302,13 +306,13 @@
     /**
      * Accepts a list of subtree menu elements.
      *
-     * A deferred object that is resolved by an inlined JavaScript callback.
+     * A Promise object that is resolved by an inlined JavaScript callback.
      *
-     * @type {jQuery.Deferred}
+     * @type {Promise}
      *
      * @see toolbar_subtrees_jsonp().
      */
-    setSubtrees: new $.Deferred(),
+    setSubtrees: new Promise(),
 
     /**
      * Respond to configured narrow media query changes.

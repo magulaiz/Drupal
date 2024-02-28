@@ -13,7 +13,7 @@
     "jquery/no-closest": 0,
     "jquery/no-css": 2,
     "jquery/no-data": 0,
-    "jquery/no-deferred": 0,
+    "jquery/no-deferred": 2,
     "jquery/no-delegate": 2,
     "jquery/no-each": 0,
     "jquery/no-extend": 0,
