@@ -1,5 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-import { isDrupalMedia } from '../utils';
+import { isDrupalMedia } from '../utils.js';
 
 /**
  * Returns the Media caption model element for a model selection.

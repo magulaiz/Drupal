@@ -1,7 +1,25 @@
 /* eslint-disable import/no-extraneous-dependencies */
 // cspell:ignore datafilter eventinfo downcastdispatcher generalhtmlsupport
 import { Plugin } from 'ckeditor5/src/core';
-import { setViewAttributes } from '@ckeditor/ckeditor5-html-support/src/utils';
+// import { setViewAttributes } from '@ckeditor/ckeditor5-html-support/src/utils';
+
+// Copy of what previously came from @ckeditor/ckeditor5-html-support/src/utils
+// as it is not clear how to get this from the CKEditor 5 browser build object
+// used in the new install method.
+const setViewAttributes = (writer, viewAttributes, viewElement) => {
+  if (viewAttributes.attributes) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const [key, value] of Object.entries(viewAttributes.attributes)) {
+      writer.setAttribute(key, value, viewElement);
+    }
+  }
+  if (viewAttributes.styles) {
+    writer.setStyle(viewAttributes.styles, viewElement);
+  }
+  if (viewAttributes.classes) {
+    writer.addClass(viewAttributes.classes, viewElement);
+  }
+};
 
 /**
  * View-to-model conversion helper for Drupal Media.

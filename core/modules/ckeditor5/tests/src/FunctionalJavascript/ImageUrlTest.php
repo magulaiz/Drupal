@@ -104,7 +104,8 @@ class ImageUrlTest extends ImageTestBase {
 
     $this->drupalGet($this->host->toUrl('edit-form'));
     $this->waitForEditor();
-
+    $this->getSession()->executeScript('document.body.style.backgroundColor = "yellow"');
+    $this->assertSession()->waitForElementVisible('css', ".test-go", 50000000);
     $this->pressEditorButton('Insert image via URL');
     $panel = $page->find('css', '.ck-dropdown__panel .ck-image-insert-url');
     $src_input = $panel->find('css', 'input[type=text]');

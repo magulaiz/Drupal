@@ -18,9 +18,9 @@ internal.ckeditor5.language:
 internal.drupal.ckeditor5.htmlEngine:
   js:
     js/build/drupalHtmlEngine.js: { minified: true }
-  dependencies:
-    - core/ckeditor5
-    - core/ckeditor5.essentials
+#  dependencies:
+#    - core/ckeditor5
+#    - core/ckeditor5.essentials
 
 internal.drupal.ckeditor5:
   js:
@@ -28,15 +28,13 @@ internal.drupal.ckeditor5:
   css:
     theme:
       css/editor.css: { }
+      /core/assets/vendor/ckeditor5/build/ckeditor.css: {}
   dependencies:
     - core/jquery
     - core/once
     - core/drupal
     - core/drupal.ajax
     - core/drupal.debounce
-    - core/ckeditor5.editorClassic
-    - core/ckeditor5.editorDecoupled
-    - core/ckeditor5
     - editor/drupal.editor
     - ckeditor5/internal.drupal.ckeditor5.stylesheets
     - core/drupalSettings
@@ -49,10 +47,10 @@ internal.drupal.ckeditor5.stylesheets:
   version: VERSION
   css: []
 
-internal.drupal.ckeditor5.codeBlock:
-  dependencies:
-    - core/ckeditor5.codeBlock
-    - core/ckeditor5.htmlSupport
+#internal.drupal.ckeditor5.codeBlock:
+#  dependencies:
+#    - core/ckeditor5.codeBlock
+#    - core/ckeditor5.htmlSupport
 
 internal.drupal.ckeditor5.image:
   js:
@@ -159,8 +157,8 @@ internal.admin.heading:
   css:
     theme:
       css/heading.admin.css: { }
-  dependencies:
-    - core/ckeditor5.essentials
+#  dependencies:
+#    - core/ckeditor5.essentials
 
 internal.admin.horizontalLine:
   css:

@@ -24,13 +24,6 @@ ckeditor5:
     name: GNU-GPL-2.0-or-later
     url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v40.2.0/LICENSE.md
     gpl-compatible: true
-  js:
-    # This file is not aggregated to force the creation of a new aggregate file
-    # containing all files between this one and the next non-aggregated file
-    # (if it exists). The files loaded after this one will include CKEditor 5
-    # translations, enabled plugins, and the rest of the JavaScript needed on
-    # the page.
-    assets/vendor/ckeditor5/ckeditor5-dll/ckeditor5-dll.js: { preprocess: false, minified: true }
   dependencies:
     - core/ckeditor5.translations
 
@@ -41,8 +34,6 @@ ckeditor5.editorClassic:
     name: GNU-GPL-2.0-or-later
     url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v40.2.0/LICENSE.md
     gpl-compatible: true
-  js:
-    assets/vendor/ckeditor5/editor-classic/editor-classic.js: { minified: true }
   dependencies:
     - core/ckeditor5
 
@@ -53,8 +44,6 @@ ckeditor5.editorDecoupled:
     name: GNU-GPL-2.0-or-later
     url: https://raw.githubusercontent.com/ckeditor/ckeditor5/v40.2.0/LICENSE.md
     gpl-compatible: true
-  js:
-    assets/vendor/ckeditor5/editor-decoupled/editor-decoupled.js: { minified: true }
   dependencies:
     - core/ckeditor5
     - core/ckeditor5.htmlSupport

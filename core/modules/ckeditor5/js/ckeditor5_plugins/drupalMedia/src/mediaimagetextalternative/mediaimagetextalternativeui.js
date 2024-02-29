@@ -8,13 +8,16 @@ import {
   clickOutsideHandler,
 } from 'ckeditor5/src/ui';
 
-import { getClosestSelectedDrupalMediaWidget, isDrupalMedia } from '../utils';
+import {
+  getClosestSelectedDrupalMediaWidget,
+  isDrupalMedia,
+} from '../utils.js';
 import {
   getBalloonPositionData,
   repositionContextualBalloon,
-} from '../ui/utils';
+} from '../ui/utils.js';
 
-import TextAlternativeFormView from './ui/textalternativeformview';
+import TextAlternativeFormView from './ui/textalternativeformview.js';
 
 /**
  * The media image text alternative UI plugin.

@@ -1,8 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* cspell:ignore drupalelementstyleediting splitbutton imagestyle componentfactory buttonview */
 import { Plugin } from 'ckeditor5/src/core';
-import { Collection, toMap } from 'ckeditor5/src/utils';
-import utils from '@ckeditor/ckeditor5-image/src/imagestyle/utils';
+import { Collection, logWarning, toMap } from 'ckeditor5/src/utils';
+// import utils from '@ckeditor/ckeditor5-image/src/imagestyle/utils';
 import {
   addToolbarToDropdown,
   addListToDropdown,
@@ -12,9 +12,9 @@ import {
   Model,
   SplitButtonView,
 } from 'ckeditor5/src/ui';
-import DrupalElementStyleEditing from './drupalelementstyleediting';
-import { isObject } from '../utils';
-import { getClosestElementWithElementStyleAttribute } from './utils';
+import DrupalElementStyleEditing from './drupalelementstyleediting.js';
+import { isObject } from '../utils.js';
+import { getClosestElementWithElementStyleAttribute } from './utils.js';
 
 /**
  * @module drupalMedia/drupalelementstyle/drupalelementstyleui
@@ -297,7 +297,10 @@ export default class DrupalElementStyleUi extends Plugin {
         });
 
       if (items.length !== buttonViews.length) {
-        utils.warnInvalidStyle({ dropdown: dropdownConfig });
+        // Could not get to the image style utils in the browser object, so using logWarning.
+        logWarning('image-style-configuration-definition-invalid', {
+          dropdown: dropdownConfig,
+        });
       }
 
       const dropdownView = createDropdown(locale, SplitButtonView);
@@ -483,7 +486,12 @@ export default class DrupalElementStyleUi extends Plugin {
         });
 
       if (items.length !== buttonViews.length) {
-        utils.warnInvalidStyle({ dropdown: dropdownConfig });
+        // Could not get to the image style utils in the browser object, so using logWarning
+        // directly.
+        // utils.warnInvalidStyle({ dropdown: dropdownConfig });
+        logWarning('image-style-configuration-definition-invalid', {
+          dropdown: dropdownConfig,
+        });
       }
 
       const dropdownView = createDropdown(locale, DropdownButtonView);

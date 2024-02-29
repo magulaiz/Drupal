@@ -9,6 +9,7 @@ declare(strict_types = 1);
 
 use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\InvokeCommand;
@@ -24,7 +25,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\editor\EditorInterface;
 
-// cspell:ignore multiblock
+// cspell:ignore multiblock imageloadobserver imagetextalternativecommand importmap
 
 /**
  * Implements hook_help().
@@ -408,8 +409,80 @@ function _ckeditor5_get_langcode_mapping($lang = FALSE) {
 
 /**
  * Implements hook_library_info_alter().
+ *
+ * @throws \Exception
  */
 function ckeditor5_library_info_alter(&$libraries, $extension) {
+  static $definitions = NULL;
+  static $ck_libraries_key = [];
+
+  if (is_null($definitions)) {
+    $plugin_manager = \Drupal::service('plugin.manager.ckeditor5.plugin');
+    $definitions = $plugin_manager->getDefinitions();
+    foreach ($definitions as $definition) {
+      $definition_array = $definition->toArray();
+      if (!empty($definition_array['drupal']['library'])) {
+        $ck_libraries_key[$definition_array['drupal']['library']] = $definition_array;
+      }
+    }
+  }
+
+  $module_handler = \Drupal::service('module_handler');
+  foreach ($libraries as $library_name => &$library_data) {
+    $full_library_name = "$extension/$library_name";
+    if (isset($ck_libraries_key[$full_library_name])) {
+      if (isset($library_data['dependencies'])) {
+        foreach ($library_data['dependencies'] as $key => $dependency) {
+          if (str_contains($dependency, 'core/ckeditor5')) {
+            unset($library_data['dependencies'][$key]);
+          }
+        }
+      }
+      // Re-key to avoid skipped numeric indexes.
+      if (count($library_data['dependencies']) === 0) {
+        unset($library_data['dependencies']);
+      }
+      else {
+        $library_data['dependencies'] = array_values($library_data['dependencies']);
+      }
+      if (isset($library_data['js'])) {
+        $extension_path = '';
+        if ($module_handler->moduleExists($extension)) {
+          $extension_path = $module_handler->getModule($extension)->getPath();
+        }
+
+        foreach ($library_data['js'] as $path => $settings) {
+          if (str_contains($path, 'build/')) {
+            $new_path = str_replace(['build/', '.js'], ['ckeditor5_plugins/', '/src/index.js'], $path);
+            $import_path = "$extension_path/$new_path";
+            $dr_path = DRUPAL_ROOT . '/' . $import_path;
+            $contents = file_get_contents($dr_path);
+            if (!is_string($contents)) {
+              throw new Exception("COULD NOT GET FILE FROM $dr_path");
+            }
+            assert(is_string($contents), "Need to get contents from file $dr_path");
+            $import_file_contents = str_replace("\n", '', $contents);
+            preg_match('/export\s*default\s*\{\s*(.*)\}/', $import_file_contents, $results);
+            $exports = explode(',', $results[1]);
+            foreach ($exports as $export) {
+              $trimmed = trim($export);
+              if (!empty($export)) {
+                $library_data['drupalSettings']['ckPluginMap'][lcfirst($trimmed)] = base_path() . $import_path;
+              }
+            }
+            unset($library_data['js'][$path]);
+          }
+        }
+        if (empty($library_data['js'])) {
+          unset($library_data['js']);
+        }
+      }
+    }
+    if (count($library_data) === 0) {
+      unset($libraries[$library_name]);
+    }
+  }
+
   if ($extension === 'filter') {
     $libraries['drupal.filter.admin']['dependencies'][] = 'ckeditor5/internal.drupal.ckeditor5.filter.admin';
   }
@@ -699,4 +772,35 @@ function ckeditor5_editor_presave(EditorInterface $editor) {
 
     $editor->setSettings($settings);
   }
+}
+
+function ckeditor5_preprocess_html(&$variables) {
+  $import_map_contents = Json::encode([
+    'imports' => [
+      'ckeditor5' => base_path() . 'core/assets/vendor/ckeditor5/build/ckeditor.browser.js',
+      'ckeditor5/src/core' => base_path() . 'core/assets/vendor/ckeditor5/build/ckeditor.browser.js',
+      'ckeditor5/src/widget' => base_path() . 'core/assets/vendor/ckeditor5/build/ckeditor.browser.js',
+      'ckeditor5/src/utils' => base_path() . 'core/assets/vendor/ckeditor5/build/ckeditor.browser.js',
+      'ckeditor5/src/ui' => base_path() . 'core/assets/vendor/ckeditor5/build/ckeditor.browser.js',
+      'ckeditor5/src/watchdog' => base_path() . 'core/assets/vendor/ckeditor5/build/ckeditor.browser.js',
+      'ckeditor5/src/upload' => base_path() . 'core/assets/vendor/ckeditor5/build/ckeditor.browser.js',
+      'ckeditor5/src/undo' => base_path() . 'core/assets/vendor/ckeditor5/build/ckeditor.browser.js',
+      'ckeditor5/src/typing' => base_path() . 'core/assets/vendor/ckeditor5/build/ckeditor.browser.js',
+      'ckeditor5/src/select-all' => base_path() . 'core/assets/vendor/ckeditor5/build/ckeditor.browser.js',
+      'ckeditor5/src/paragraph' => base_path() . 'core/assets/vendor/ckeditor5/build/ckeditor.browser.js',
+      'ckeditor5/src/enter' => base_path() . 'core/assets/vendor/ckeditor5/build/ckeditor.browser.js',
+      'ckeditor5/src/engine' => base_path() . 'core/assets/vendor/ckeditor5/build/ckeditor.browser.js',
+      'ckeditor5/src/clipboard' => base_path() . 'core/assets/vendor/ckeditor5/build/ckeditor.browser.js',
+      '@ckeditor/ckeditor5-image/src/image/imageloadobserver' => base_path() . 'core/assets/vendor/ckeditor5/build/ckeditor.browser.js',
+      '@ckeditor/ckeditor5-image/src/imagetextalternative/imagetextalternativecommand' => base_path() . 'core/assets/vendor/ckeditor5/build/ckeditor.browser.js',
+      'cktranslations/' => base_path() . 'core/assets/vendor/ckeditor5/ckeditor5-dll/translations/',
+
+    ],
+  ]);
+  $importmap = [
+    '#tag' => 'script',
+    '#attributes' => ['type' => 'importmap'],
+    'content' => ['#markup' => $import_map_contents],
+  ];
+  $variables['page']['#attached']['html_head'][] = [$importmap, 'core_import_map'];
 }

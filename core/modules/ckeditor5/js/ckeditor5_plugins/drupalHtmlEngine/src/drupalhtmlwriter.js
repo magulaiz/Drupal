@@ -1,5 +1,5 @@
 // cspell:ignore drupalhtmlbuilder dataprocessor basichtmlwriter htmlwriter
-import DrupalHtmlBuilder from './drupalhtmlbuilder';
+import DrupalHtmlBuilder from './drupalhtmlbuilder.js';
 
 /**
  * Custom HTML writer. It creates HTML by traversing DOM nodes.

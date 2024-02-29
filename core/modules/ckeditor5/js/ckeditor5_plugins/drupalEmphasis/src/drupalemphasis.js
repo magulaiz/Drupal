@@ -2,7 +2,7 @@
 // cspell:ignore drupalemphasisediting
 
 import { Plugin } from 'ckeditor5/src/core';
-import DrupalEmphasisEditing from './drupalemphasisediting';
+import DrupalEmphasisEditing from './drupalemphasisediting.js';
 
 /**
  * Drupal-specific plugin to alter the CKEditor 5 italic command.

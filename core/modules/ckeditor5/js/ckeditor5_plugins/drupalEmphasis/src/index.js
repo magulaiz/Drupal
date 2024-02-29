@@ -1,6 +1,6 @@
 // cspell:ignore drupalemphasis
 
-import DrupalEmphasis from './drupalemphasis';
+import DrupalEmphasis from './drupalemphasis.js';
 
 /**
  * @private

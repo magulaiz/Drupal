@@ -59,6 +59,7 @@ class CKEditor5ReadOnlyModeTest extends CKEditor5TestBase {
 
     // Check that both CKEditor 5 fields are editable.
     $this->drupalGet('node/add');
+    $this->assertSession()->waitForElement('css', '.field--name-body .ck-editor .ck-content[contenteditable]');
     $assert_session->elementAttributeContains('css', '.field--name-body .ck-editor .ck-content', 'contenteditable', 'true');
     $assert_session->elementAttributeContains('css', '.field--name-field-second-ckeditor5-field .ck-editor .ck-content', 'contenteditable', 'true');
 

@@ -1,5 +1,5 @@
 // cspell:ignore drupalhtmlengine
-import DrupalHtmlEngine from './drupalhtmlengine';
+import DrupalHtmlEngine from './drupalhtmlengine.js';
 
 /**
  * @private

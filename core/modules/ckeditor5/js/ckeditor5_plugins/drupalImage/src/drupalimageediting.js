@@ -1,8 +1,27 @@
 /* eslint-disable import/no-extraneous-dependencies */
 // cspell:ignore datafilter downcasted linkimageediting emptyelement downcastdispatcher imageloadobserver
 import { Plugin } from 'ckeditor5/src/core';
-import { setViewAttributes } from '@ckeditor/ckeditor5-html-support/src/utils';
-import ImageLoadObserver from '@ckeditor/ckeditor5-image/src/image/imageloadobserver';
+// import { setViewAttributes } from '@ckeditor/ckeditor5-html-support/src/utils';
+import { ImageLoadObserver } from '@ckeditor/ckeditor5-image/src/image/imageloadobserver';
+
+// Copy of what previously came from @ckeditor/ckeditor5-html-support/src/utils
+// as it is not clear how to get this from the CKEditor 5 browser build object
+// used in the new install method.
+const setViewAttributes = (writer, viewAttributes, viewElement) => {
+  if (viewAttributes.attributes) {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const [key, value] of Object.entries(viewAttributes.attributes)) {
+      writer.setAttribute(key, value, viewElement);
+    }
+  }
+  if (viewAttributes.styles) {
+    writer.setStyle(viewAttributes.styles, viewElement);
+  }
+  if (viewAttributes.classes) {
+    writer.addClass(viewAttributes.classes, viewElement);
+  }
+};
+
 /**
  * @typedef {function} converterHandler
  *
@@ -572,8 +591,11 @@ function downcastBlockImageLink() {
   }
 
   return (dispatcher) => {
+    // to avoid a view-writer-cannot-break-empty-element error after switching
+    // to using the no-DLL version of CKEditor 5, the priority needed to change
+    // from 'high' to 'highest'
     dispatcher.on('attribute:linkHref:imageBlock', converter, {
-      priority: 'high',
+      priority: 'highest',
     });
   };
 }

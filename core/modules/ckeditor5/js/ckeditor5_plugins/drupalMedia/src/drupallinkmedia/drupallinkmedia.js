@@ -2,8 +2,8 @@
 /* cspell:ignore drupallinkmediaediting drupallinkmediaui */
 
 import { Plugin } from 'ckeditor5/src/core';
-import DrupalLinkMediaEditing from './drupallinkmediaediting';
-import DrupalLinkMediaUI from './drupallinkmediaui';
+import DrupalLinkMediaEditing from './drupallinkmediaediting.js';
+import DrupalLinkMediaUI from './drupallinkmediaui.js';
 
 /**
  * @private

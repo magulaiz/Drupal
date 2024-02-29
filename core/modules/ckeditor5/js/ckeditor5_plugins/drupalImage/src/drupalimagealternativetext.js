@@ -6,8 +6,8 @@
  */
 
 import { Plugin } from 'ckeditor5/src/core';
-import DrupalImageAlternativeTextEditing from './imagealternativetext/drupalimagealternativetextediting';
-import DrupalImageAlternativeTextUi from './imagealternativetext/drupalimagealternativetextui';
+import DrupalImageAlternativeTextEditing from './imagealternativetext/drupalimagealternativetextediting.js';
+import DrupalImageAlternativeTextUi from './imagealternativetext/drupalimagealternativetextui.js';
 
 /**
  * The Drupal-specific image text alternative plugin.

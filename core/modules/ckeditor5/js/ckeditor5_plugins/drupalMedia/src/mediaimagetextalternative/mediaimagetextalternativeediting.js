@@ -3,9 +3,9 @@
 
 import { Plugin } from 'ckeditor5/src/core';
 import { Template } from 'ckeditor5/src/ui';
-import MediaImageTextAlternativeCommand from './mediaimagetextalternativecommand';
-import DrupalMediaMetadataRepository from '../drupalmediametadatarepository';
-import { METADATA_ERROR } from './utils';
+import MediaImageTextAlternativeCommand from './mediaimagetextalternativecommand.js';
+import DrupalMediaMetadataRepository from '../drupalmediametadatarepository.js';
+import { METADATA_ERROR } from './utils.js';
 
 /**
  * @module drupalMedia/mediaimagetextalternative/mediaimagetextalternativeediting
