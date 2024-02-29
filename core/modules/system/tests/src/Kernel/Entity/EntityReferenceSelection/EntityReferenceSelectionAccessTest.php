@@ -829,6 +829,12 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
         'title' => 'Node unpublished1 (<&>)',
         'uid' => $normal_user1->id(),
       ],
+      'unpublished2' => [
+        'type' => 'article',
+        'status' => NodeInterface::NOT_PUBLISHED,
+        'title' => 'Node unpublished-2 (<&>)',
+        'uid' => 0,
+      ],
     ];
 
     $nodes = [];
@@ -850,6 +856,7 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
         'result' => [
           'article' => [
             $nodes['unpublished1']->id() => $node_labels['unpublished1'],
+            $nodes['unpublished2']->id() => $node_labels['unpublished2'],
             $nodes['published2']->id() => $node_labels['published2'],
           ],
         ],
@@ -862,6 +869,7 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
           'article' => [
             $nodes['published2']->id() => $node_labels['published2'],
             $nodes['unpublished1']->id() => $node_labels['unpublished1'],
+            $nodes['unpublished2']->id() => $node_labels['unpublished2'],
           ],
         ],
       ],
@@ -872,6 +880,7 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
         'result' => [
           'article' => [
             $nodes['unpublished1']->id() => $node_labels['unpublished1'],
+            $nodes['unpublished2']->id() => $node_labels['unpublished2'],
           ],
         ],
       ],
@@ -899,6 +908,7 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
         'result' => [
           'article' => [
             $nodes['unpublished1']->id() => $node_labels['unpublished1'],
+            $nodes['unpublished2']->id() => $node_labels['unpublished2'],
           ],
         ],
       ],
@@ -919,6 +929,7 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
           'article' => [
             $nodes['unpublished']->id() => $node_labels['unpublished'],
             $nodes['unpublished1']->id() => $node_labels['unpublished1'],
+            $nodes['unpublished2']->id() => $node_labels['unpublished2'],
             $nodes['published2']->id() => $node_labels['published2'],
           ],
         ],
@@ -930,8 +941,9 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
         'result' => [
           'article' => [
             $nodes['published2']->id() => $node_labels['published2'],
-            $nodes['unpublished1']->id() => $node_labels['unpublished1'],
             $nodes['unpublished']->id() => $node_labels['unpublished'],
+            $nodes['unpublished1']->id() => $node_labels['unpublished1'],
+            $nodes['unpublished2']->id() => $node_labels['unpublished2'],
           ],
         ],
       ],
@@ -943,6 +955,7 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
           'article' => [
             $nodes['unpublished']->id() => $node_labels['unpublished'],
             $nodes['unpublished1']->id() => $node_labels['unpublished1'],
+            $nodes['unpublished2']->id() => $node_labels['unpublished2'],
           ],
         ],
       ],
@@ -971,6 +984,7 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
           'article' => [
             $nodes['unpublished']->id() => $node_labels['unpublished'],
             $nodes['unpublished1']->id() => $node_labels['unpublished1'],
+            $nodes['unpublished2']->id() => $node_labels['unpublished2'],
           ],
         ],
       ],
@@ -990,6 +1004,7 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
             $nodes['published2']->id() => $node_labels['published2'],
             $nodes['unpublished']->id() => $node_labels['unpublished'],
             $nodes['unpublished1']->id() => $node_labels['unpublished1'],
+            $nodes['unpublished2']->id() => $node_labels['unpublished2'],
           ],
         ],
       ],
@@ -1001,6 +1016,7 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
           'article' => [
             $nodes['unpublished']->id() => $node_labels['unpublished'],
             $nodes['unpublished1']->id() => $node_labels['unpublished1'],
+            $nodes['unpublished2']->id() => $node_labels['unpublished2'],
           ],
         ],
       ],
