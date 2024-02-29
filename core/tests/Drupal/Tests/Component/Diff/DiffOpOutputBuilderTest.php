@@ -85,6 +85,13 @@ class DiffOpOutputBuilderTest extends TestCase {
         ['a', 'bb', 'd', 'ee'],
         ['a', 'b', 'c', 'd', 'e'],
       ],
+      'line end warning' => [
+        [
+          new DiffOpChange(["foo\r\n"], ["foo\n"]),
+        ],
+        ["foo\r\n"],
+        ["foo\n"],
+      ],
     ];
   }
 

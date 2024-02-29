@@ -43,6 +43,11 @@ final class DiffOpOutputBuilder implements DiffOutputBuilderInterface {
     $hunkTarget = [];
 
     for ($i = 0; $i < count($diff); $i++) {
+      // Ignore line end warnings.
+      if ($diff[$i][1] === Differ::DIFF_LINE_END_WARNING) {
+        // @todo maybe we can log them or report them somehow.
+        continue;
+      }
 
       // Handle a sequence of removals + additions as a sequence of changes, and
       // manages the tail if required.

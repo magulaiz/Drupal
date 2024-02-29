@@ -90,6 +90,13 @@ class DiffEngineTest extends TestCase {
         ['a', 'bb', 'd', 'ee'],
         ['a', 'b', 'c', 'd', 'e'],
       ],
+      'line end warning' => [
+        [
+          DiffOpChange::class,
+        ],
+        ["foo\r\n"],
+        ["foo\n"],
+      ],
     ];
   }
 
