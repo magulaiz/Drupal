@@ -145,7 +145,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
       '#attributes' => [
         'class' => ['block-element-filter', 'block-filter-region-text'],
         'title' => $this->t('Enter a part of the block name to filter by.'),
-        'tabindex' => 1,
+        'tabindex' => 0,
       ],
     ];
 
