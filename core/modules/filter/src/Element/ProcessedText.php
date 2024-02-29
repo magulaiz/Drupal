@@ -35,19 +35,6 @@ class ProcessedText extends RenderElement {
   }
 
   /**
-   * Wraps a logger channel.
-   *
-   * @param string $channel
-   *   The name of the channel.
-   *
-   * @return \Psr\Log\LoggerInterface
-   *   The logger for this channel.
-   */
-  protected static function logger($channel) {
-    return \Drupal::logger($channel);
-  }
-
-  /**
    * Pre-render callback: Renders a processed text element into #markup.
    *
    * Runs all the enabled filters on a piece of text.
@@ -148,6 +135,19 @@ class ProcessedText extends RenderElement {
     $element['#cache']['tags'] = Cache::mergeTags($element['#cache']['tags'], $format->getCacheTags());
 
     return $element;
+  }
+
+  /**
+   * Wraps a logger channel.
+   *
+   * @param string $channel
+   *   The name of the channel.
+   *
+   * @return \Psr\Log\LoggerInterface
+   *   The logger for this channel.
+   */
+  protected static function logger($channel) {
+    return \Drupal::logger($channel);
   }
 
   /**
