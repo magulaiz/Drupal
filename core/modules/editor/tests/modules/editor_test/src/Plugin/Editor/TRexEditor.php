@@ -12,13 +12,13 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  */
 #[Editor(
   id: 'trex',
-  label: new TranslatableMarkup('TRex Edito'),
-  supports_content_filtering: true,
-  supports_inline_editing: true,
-  is_xss_safe: false,
+  label: new TranslatableMarkup('TRex Editor'),
+  supports_content_filtering: TRUE,
+  supports_inline_editing: TRUE,
+  is_xss_safe: FALSE,
   supported_element_types: [
-    "textarea",
-    "textfield",
+    'textarea',
+    'textfield',
   ]
 )]
 class TRexEditor extends EditorBase {
