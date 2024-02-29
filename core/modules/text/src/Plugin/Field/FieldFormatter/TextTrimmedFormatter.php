@@ -6,6 +6,7 @@ use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\filter\Render\FilteredMarkup;
 
 /**
  * Plugin implementation of the 'text_trimmed' formatter.
@@ -118,7 +119,15 @@ class TextTrimmedFormatter extends FormatterBase implements TrustedCallbackInter
    * @see text_summary()
    */
   public static function preRenderSummary(array $element) {
+    $is_filtered = $element['#markup'] instanceof FilteredMarkup;
     $element['#markup'] = text_summary($element['#markup'], $element['#format'], $element['#text_summary_trim_length']);
+    // The markup could already have been filtered before getting here, but
+    // if text_summary() trimmed it, it will be converted into a string
+    // that will get autoescaped later, possibly removing markup allowed by the
+    // text format. So, we make sure to convert it back into FilteredMarkup.
+    if ($is_filtered) {
+      $element['#markup'] = FilteredMarkup::create($element['#markup']);
+    }
     return $element;
   }
 
