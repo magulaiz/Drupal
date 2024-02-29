@@ -8,7 +8,7 @@ use Drupal\block\BlockInterface;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests clear cache block behavior.
+ * Tests cron status block behavior.
  *
  * @group Block
  *
@@ -29,7 +29,7 @@ class CronStatusBlockTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * The clear cache block instance.
+   * The cron status block instance.
    *
    * @var \Drupal\block\BlockInterface
    */
@@ -51,7 +51,7 @@ class CronStatusBlockTest extends BrowserTestBase {
   /**
    * Tests block access based on permissions.
    */
-  public function testCacheClearBlockAccess(): void {
+  public function testCronStatusBlockAccess(): void {
     $this->drupalGet('<front>');
     $this->assertSession()->pageTextContains('Cron status block');
     $this->drupalLogout();
@@ -62,7 +62,7 @@ class CronStatusBlockTest extends BrowserTestBase {
   /**
    * Tests block behavior.
    */
-  public function testCacheClearBlock(): void {
+  public function testCronStatusBlock(): void {
     $this->drupalGet('<front>');
     $this->assertSession()->pageTextContains('Cron status block');
     $page = $this->getSession()->getPage();
