@@ -8,7 +8,6 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
@@ -73,16 +72,6 @@ class CronStatusBlock extends BlockBase implements ContainerFactoryPluginInterfa
    */
   public function blockAccess(AccountInterface $account): AccessResultInterface {
     return AccessResult::allowedIfHasPermission($account, 'administer site configuration');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getCacheTags(): array {
-    return Cache::mergeTags(
-      parent::getCacheTags(),
-      $this->configFactory->get('system.cron')->getCacheTags()
-    );
   }
 
   /**
