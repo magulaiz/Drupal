@@ -21,7 +21,7 @@
     $target
       .parents('details')
       .not('[open]')
-      .find('> summary')[0]
+      .find('> summary')
       .dispatchEvent(new Event('click'));
   };
 
