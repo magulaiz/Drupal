@@ -4,24 +4,15 @@ namespace Drupal\config\Form;
 
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Config\ConfigImporterException;
-use Drupal\Core\Config\ConfigImporter;
+use Drupal\Core\Config\ConfigImporterFactory;
 use Drupal\Core\Config\Importer\ConfigImporterBatch;
 use Drupal\Core\Config\ImportStorageTransformer;
-use Drupal\Core\Config\TypedConfigManagerInterface;
-use Drupal\Core\Extension\ModuleExtensionList;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Extension\ModuleInstallerInterface;
-use Drupal\Core\Extension\ThemeExtensionList;
-use Drupal\Core\Extension\ThemeHandlerInterface;
-use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Config\StorageComparer;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -60,60 +51,11 @@ class ConfigSync extends FormBase {
   protected $snapshotStorage;
 
   /**
-   * Event dispatcher.
-   *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
-
-  /**
-   * The configuration manager.
-   *
-   * @var \Drupal\Core\Config\ConfigManagerInterface
-   */
-  protected $configManager;
-
-  /**
-   * The typed config manager.
-   *
-   * @var \Drupal\Core\Config\TypedConfigManagerInterface
-   */
-  protected $typedConfigManager;
-
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The theme handler.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
-
-  /**
-   * The module installer.
-   *
-   * @var \Drupal\Core\Extension\ModuleInstallerInterface
-   */
-  protected $moduleInstaller;
-
-  /**
    * The renderer.
    *
    * @var \Drupal\Core\Render\RendererInterface
    */
   protected $renderer;
-
-  /**
-   * The module extension list.
-   *
-   * @var \Drupal\Core\Extension\ModuleExtensionList
-   */
-  protected $moduleExtensionList;
 
   /**
    * The import transformer service.
@@ -123,11 +65,11 @@ class ConfigSync extends FormBase {
   protected $importTransformer;
 
   /**
-   * The theme extension list.
+   * The config importer factory.
    *
-   * @var \Drupal\Core\Extension\ThemeExtensionList
+   * @var \Drupal\Core\Config\ConfigImporterFactory
    */
-  protected $themeExtensionList;
+  protected ConfigImporterFactory $configImporterFactory;
 
   /**
    * Constructs the object.
@@ -138,48 +80,20 @@ class ConfigSync extends FormBase {
    *   The target storage.
    * @param \Drupal\Core\Config\StorageInterface $snapshot_storage
    *   The snapshot storage.
-   * @param \Drupal\Core\Lock\LockBackendInterface $lock
-   *   The lock object.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
-   *   Event dispatcher.
-   * @param \Drupal\Core\Config\ConfigManagerInterface $config_manager
-   *   Configuration manager.
-   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
-   *   The typed configuration manager.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   * @param \Drupal\Core\Extension\ModuleInstallerInterface $module_installer
-   *   The module installer.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
-   *   The theme handler.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
-   * @param \Drupal\Core\Extension\ModuleExtensionList $extension_list_module
-   *   The module extension list
    * @param \Drupal\Core\Config\ImportStorageTransformer $import_transformer
    *   The import transformer service.
-   * @param \Drupal\Core\Extension\ThemeExtensionList $extension_list_theme
-   *   The theme extension list.
+   * @param \Drupal\Core\Config\ConfigImporterFactory $config_importer_factory
+   *   The config importer factory.
    */
-  public function __construct(StorageInterface $sync_storage, StorageInterface $active_storage, StorageInterface $snapshot_storage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, RendererInterface $renderer, ModuleExtensionList $extension_list_module, ImportStorageTransformer $import_transformer, ThemeExtensionList $extension_list_theme = NULL) {
+  public function __construct(StorageInterface $sync_storage, StorageInterface $active_storage, StorageInterface $snapshot_storage, RendererInterface $renderer, ImportStorageTransformer $import_transformer, ConfigImporterFactory $config_importer_factory) {
     $this->syncStorage = $sync_storage;
     $this->activeStorage = $active_storage;
     $this->snapshotStorage = $snapshot_storage;
-    $this->lock = $lock;
-    $this->eventDispatcher = $event_dispatcher;
-    $this->configManager = $config_manager;
-    $this->typedConfigManager = $typed_config;
-    $this->moduleHandler = $module_handler;
-    $this->moduleInstaller = $module_installer;
-    $this->themeHandler = $theme_handler;
     $this->renderer = $renderer;
-    $this->moduleExtensionList = $extension_list_module;
     $this->importTransformer = $import_transformer;
-    if ($extension_list_theme === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $extension_list_theme argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3284397', E_USER_DEPRECATED);
-      $extension_list_theme = \Drupal::service('extension.list.theme');
-    }
-    $this->themeExtensionList = $extension_list_theme;
+    $this->configImporterFactory = $config_importer_factory;
   }
 
   /**
@@ -190,17 +104,9 @@ class ConfigSync extends FormBase {
       $container->get('config.storage.sync'),
       $container->get('config.storage'),
       $container->get('config.storage.snapshot'),
-      $container->get('lock.persistent'),
-      $container->get('event_dispatcher'),
-      $container->get('config.manager'),
-      $container->get('config.typed'),
-      $container->get('module_handler'),
-      $container->get('module_installer'),
-      $container->get('theme_handler'),
       $container->get('renderer'),
-      $container->get('extension.list.module'),
       $container->get('config.import_transformer'),
-      $container->get('extension.list.theme')
+      $container->get('config.importer.factory'),
     );
   }
 
@@ -363,19 +269,7 @@ class ConfigSync extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $config_importer = new ConfigImporter(
-      $form_state->get('storage_comparer'),
-      $this->eventDispatcher,
-      $this->configManager,
-      $this->lock,
-      $this->typedConfigManager,
-      $this->moduleHandler,
-      $this->moduleInstaller,
-      $this->themeHandler,
-      $this->getStringTranslation(),
-      $this->moduleExtensionList,
-      $this->themeExtensionList
-    );
+    $config_importer = $this->configImporterFactory->createConfigImporter($form_state->get('storage_comparer'));
     if ($config_importer->alreadyImporting()) {
       $this->messenger()->addStatus($this->t('Another request may be synchronizing configuration already.'));
     }

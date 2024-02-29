@@ -367,6 +367,10 @@ services:
       - { name: service_collector, tag: 'config.factory.override', call: addOverride }
     arguments: ['@config.storage', '@event_dispatcher', '@config.typed']
   Drupal\Core\Config\ConfigFactoryInterface: '@config.factory'
+  config.importer.factory:
+    class: Drupal\Core\Config\ConfigImporterFactory
+    arguments: ['@event_dispatcher', '@config.manager', '@lock.persistent', '@config.typed', '@module_handler', '@module_installer', '@theme_handler', '@string_translation', '@extension.list.module', '@extension.list.theme']
+  Drupal\Core\Config\ConfigImporterFactory: '@config.importer.factory'
   config.importer_subscriber:
     class: Drupal\Core\Config\Importer\FinalMissingContentSubscriber
   config.installer:
