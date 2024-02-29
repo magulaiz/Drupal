@@ -116,9 +116,8 @@ class TestDiscovery {
       $this->classLoader->addPsr4($prefix, $paths);
     }
 
-    $loader = require __DIR__ . '/../../../../../autoload.php';
     // Ensure we have a valid TestCase class.
-    ClassWriter::mutateTestBase($loader);
+    ClassWriter::mutateTestBase($this->classLoader);
 
     return $this->testNamespaces;
   }

@@ -34,6 +34,12 @@
      directly and view the output. -->
     <env name="BROWSERTEST_OUTPUT_BASE_URL" value=""/>
 
+    <!-- To run tests in a nonstandard installation structure, uncomment the next two settings. -->
+    <!-- Example PROJECT_ROOT value: /path/to/project -->
+    <!-- <env name="PROJECT_ROOT" value=""/> -->
+    <!-- Example DRUPAL_APP_ROOT value: /path/to/project/web -->
+    <!-- <env name="DRUPAL_APP_ROOT" value=""/> -->
+
     <!-- Deprecation testing is managed through Symfony's PHPUnit Bridge.
       The environment variable SYMFONY_DEPRECATIONS_HELPER is used to configure
       the behavior of the deprecation tests.

@@ -17,6 +17,7 @@
     "require": {
         "composer/installers": "^2.0",
         "drupal/core-composer-scaffold": "^11",
+        "drupal/core-drupal-locations": "^11",
         "drupal/core-project-message": "^11",
         "drupal/core-recommended": "^11",
         "drupal/core-vendor-hardening": "^11"
@@ -29,10 +30,16 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Drupal\\Locations\\": ""
+        }
+    },
     "config": {
         "allow-plugins": {
             "composer/installers": true,
             "drupal/core-composer-scaffold": true,
+            "drupal/core-drupal-locations": true,
             "drupal/core-project-message": true,
             "drupal/core-vendor-hardening": true,
             "phpstan/extension-installer": true,

@@ -46,7 +46,8 @@
         "pear/archive_tar": "^1.4.14",
         "psr/log": "^3.0",
         "mck89/peast": "^1.14",
-        "sebastian/diff": "^4"
+        "sebastian/diff": "^4",
+        "drupal/core-drupal-locations": "self.version"
     },
     "conflict": {
         "drush/drush": "<12.4.3"

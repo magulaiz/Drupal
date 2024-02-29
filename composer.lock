@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9103791a18c3a090bfd3335ff65a404a",
+    "content-hash": "f397b88b4935fa5a7cee1cc365c51f1d",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -495,13 +495,14 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "52e04d4f59d5d77f898e4a3d2a63c1d809f139f7"
+                "reference": "e4a927ec92a2e9eed6f69782a520f3d7173b66d1"
             },
             "require": {
                 "asm89/stack-cors": "^2.1",
                 "composer-runtime-api": "^2.1",
                 "composer/semver": "^3.3",
                 "doctrine/annotations": "^1.14",
+                "drupal/core-drupal-locations": "self.version",
                 "egulias/email-validator": "^3.2.1|^4.0",
                 "ext-date": "*",
                 "ext-dom": "*",
@@ -646,6 +647,45 @@
                 "GPL-2.0-or-later"
             ],
             "description": "Drupal is an open source content management platform powering millions of websites and applications.",
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "drupal/core-drupal-locations",
+            "version": "11.x-dev",
+            "dist": {
+                "type": "path",
+                "url": "composer/Plugin/Locations",
+                "reference": "b9c68bfa01fd1d2f424f1692f6435effda496694"
+            },
+            "require": {
+                "composer-plugin-api": "^1 || ^2",
+                "php": ">=7.3.0"
+            },
+            "require-dev": {
+                "composer/composer": "^1.8@stable"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Drupal\\Composer\\Plugin\\Locations\\LocationWriterPlugin",
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Drupal\\Composer\\Plugin\\Locations\\": ""
+                }
+            },
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "description": "Writes a class defining Drupal's install location.",
+            "homepage": "https://www.drupal.org/project/drupal",
+            "keywords": [
+                "drupal"
+            ],
             "transport-options": {
                 "relative": true
             }
@@ -9631,6 +9671,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "drupal/core": 20,
+        "drupal/core-drupal-locations": 20,
         "drupal/core-project-message": 20,
         "drupal/core-vendor-hardening": 20
     },
