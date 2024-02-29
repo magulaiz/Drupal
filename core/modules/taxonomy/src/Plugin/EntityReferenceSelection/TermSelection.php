@@ -2,7 +2,6 @@
 
 namespace Drupal\taxonomy\Plugin\EntityReferenceSelection;
 
-use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\Plugin\EntityReferenceSelection\DefaultSelection;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -70,7 +69,7 @@ class TermSelection extends DefaultSelection {
               $unpublished_terms[] = $term->id();
               continue;
             }
-            $options[$vocabulary->id()][$term->id()] = str_repeat('-', $term->depth) . Html::escape($this->entityRepository->getTranslationFromContext($term)->label());
+            $options[$vocabulary->id()][$term->id()] = str_repeat('-', $term->depth) . $this->entityRepository->getTranslationFromContext($term)->label();
           }
         }
       }
