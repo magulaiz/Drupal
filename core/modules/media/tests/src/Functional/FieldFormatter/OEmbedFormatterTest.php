@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\media\Functional\FieldFormatter;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
@@ -55,7 +57,7 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
    *
    * @return array
    */
-  public function providerRender() {
+  public static function providerRender() {
     return [
       'Vimeo video' => [
         'https://vimeo.com/7073899',

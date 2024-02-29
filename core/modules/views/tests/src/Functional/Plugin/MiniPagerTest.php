@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Functional\Plugin;
 
 use Drupal\Tests\views\Functional\ViewTestBase;
@@ -144,6 +146,41 @@ class MiniPagerTest extends ViewTestBase {
     $this->assertSession()->pageTextNotContains('‹‹ test');
     $this->assertSession()->pageTextNotContains('Page 1');
     $this->assertSession()->pageTextNotContains('‹‹ test');
+  }
+
+  /**
+   * Tests changing the heading level.
+   */
+  public function testPagerHeadingLevel() {
+    // Set "Pager Heading" to h3 and check that it is correct.
+    $view = Views::getView('test_mini_pager');
+    $view->setDisplay();
+    $pager = [
+      'type' => 'mini',
+      'options' => [
+        'pagination_heading_level' => 'h3',
+        'items_per_page' => 5,
+      ],
+    ];
+    $view->display_handler->setOption('pager', $pager);
+    $view->save();
+
+    // Stark is handled below.
+    // Stable9 will be addressed in https://www.drupal.org/project/drupal/issues/3333418
+    $themes = ['olivero', 'claro', 'starterkit_theme'];
+    $this->container->get('theme_installer')->install($themes);
+
+    foreach ($themes as $theme) {
+      $this->config('system.theme')->set('default', $theme)->save();
+      $this->drupalGet('test_mini_pager');
+      $this->assertEquals('h3', $this->assertSession()->elementExists('css', ".pager .visually-hidden")->getTagName());
+    }
+
+    // The core views template uses a different class structure than core themes.
+    $this->container->get('theme_installer')->install(['stark']);
+    $this->config('system.theme')->set('default', 'stark')->save();
+    $this->drupalGet('test_mini_pager');
+    $this->assertEquals('h3', $this->assertSession()->elementExists('css', "#pagination-heading")->getTagName());
   }
 
 }

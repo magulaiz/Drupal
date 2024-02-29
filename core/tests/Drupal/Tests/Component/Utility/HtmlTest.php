@@ -64,7 +64,7 @@ class HtmlTest extends TestCase {
    * @return array
    *   Test data.
    */
-  public function providerTestCleanCssIdentifier() {
+  public static function providerTestCleanCssIdentifier() {
     $id1 = 'abcdefghijklmnopqrstuvwxyz_ABCDEFGHIJKLMNOPQRSTUVWXYZ-0123456789';
     $id2 = '¡¢£¤¥';
     $id3 = 'css__identifier__with__double__underscores';
@@ -79,14 +79,14 @@ class HtmlTest extends TestCase {
       // stripped from the identifier.
       ['invalididentifier', 'invalid !"#$%&\'()*+,./:;<=>?@[\\]^`{|}~ identifier', []],
       // Verify that an identifier starting with a digit is replaced.
-      ['_cssidentifier', '1cssidentifier', []],
+      ['_css_identifier', '1css_identifier', []],
       // Verify that an identifier starting with a hyphen followed by a digit is
       // replaced.
-      ['__cssidentifier', '-1cssidentifier', []],
+      ['__css_identifier', '-1css_identifier', []],
       // Verify that an identifier starting with two hyphens is replaced.
-      ['__cssidentifier', '--cssidentifier', []],
+      ['__css_identifier', '--css_identifier', []],
       // Verify that passing double underscores as a filter is processed.
-      ['_cssidentifier', '__cssidentifier', ['__' => '_']],
+      ['_css_identifier', '__css_identifier', ['__' => '_']],
     ];
   }
 
@@ -132,7 +132,7 @@ class HtmlTest extends TestCase {
    * @return array
    *   Test data.
    */
-  public function providerTestHtmlGetUniqueId() {
+  public static function providerTestHtmlGetUniqueId() {
     // cSpell:disable
     $id = 'abcdefghijklmnopqrstuvwxyz-0123456789';
     return [
@@ -184,7 +184,7 @@ class HtmlTest extends TestCase {
    * @return array
    *   Test data.
    */
-  public function providerTestHtmlGetUniqueIdWithAjaxIds() {
+  public static function providerTestHtmlGetUniqueIdWithAjaxIds() {
     return [
       ['test-unique-id1--', 'test-unique-id1'],
       // Note, we truncate two hyphens at the end.
@@ -217,7 +217,7 @@ class HtmlTest extends TestCase {
    * @return array
    *   Test data.
    */
-  public function providerTestHtmlGetId() {
+  public static function providerTestHtmlGetId() {
     // cSpell:disable
     $id = 'abcdefghijklmnopqrstuvwxyz-0123456789';
     return [
@@ -249,7 +249,7 @@ class HtmlTest extends TestCase {
    *
    * @see testDecodeEntities()
    */
-  public function providerDecodeEntities() {
+  public static function providerDecodeEntities() {
     return [
       ['Drupal', 'Drupal'],
       ['<script>', '<script>'],
@@ -290,7 +290,7 @@ class HtmlTest extends TestCase {
    *
    * @see testEscape()
    */
-  public function providerEscape() {
+  public static function providerEscape() {
     return [
       ['Drupal', 'Drupal'],
       ['&lt;script&gt;', '<script>'],
@@ -364,7 +364,7 @@ class HtmlTest extends TestCase {
    * @return array
    *   Test data.
    */
-  public function providerTestTransformRootRelativeUrlsToAbsolute() {
+  public static function providerTestTransformRootRelativeUrlsToAbsolute() {
     $data = [];
 
     // Random generator.
@@ -409,7 +409,7 @@ class HtmlTest extends TestCase {
    * @return array
    *   Test data.
    */
-  public function providerTestTransformRootRelativeUrlsToAbsoluteAssertion() {
+  public static function providerTestTransformRootRelativeUrlsToAbsoluteAssertion() {
     return [
       'only relative path' => ['llama'],
       'only root-relative path' => ['/llama'],

@@ -7,6 +7,8 @@ use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Menu\MenuTreeStorage;
 use Drupal\KernelTests\KernelTestBase;
 
+// cspell:ignore mlid
+
 /**
  * Tests the menu tree storage.
  *
@@ -435,7 +437,7 @@ class MenuTreeStorageTest extends KernelTestBase {
     $found_parents = $query->execute()->fetchAllKeyed(0, 1);
 
     $this->assertSameSize($parents, $found_parents, 'Found expected number of parents');
-    $this->assertCount($raw['depth'], $found_parents, 'Number of parents is the same as the depth');
+    $this->assertCount((int) $raw['depth'], $found_parents, 'Number of parents is the same as the depth');
 
     $materialized_path = $this->treeStorage->getRootPathIds($id);
     $this->assertEquals(array_values($parents), array_values($materialized_path), 'Parents match the materialized path');
