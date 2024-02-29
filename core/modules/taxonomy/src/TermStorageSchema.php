@@ -132,16 +132,8 @@ class TermStorageSchema extends SqlContentEntityStorageSchema {
       /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
       $table_mapping = $this->storage->getTableMapping();
 
-      $dedicated_table_names = [];
-      if ($this->database->driver() == 'mongodb') {
-        $dedicated_table_names[] = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $table_mapping->getJsonStorageAllRevisionsTable());
-        $dedicated_table_names[] = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $table_mapping->getJsonStorageCurrentRevisionTable());
-        $dedicated_table_names[] = $table_mapping->getJsonStorageDedicatedTableName($storage_definition, $table_mapping->getJsonStorageLatestRevisionTable());
-      }
-      else {
-        $dedicated_table_names[] = $table_mapping->getDedicatedDataTableName($storage_definition);
-      }
-      foreach ($dedicated_table_names as $dedicated_table_name) {
+      if ($this->database->driver() != 'mongodb') {
+        $dedicated_table_name = $table_mapping->getDedicatedDataTableName($storage_definition);
         unset($dedicated_table_schema[$dedicated_table_name]['indexes']['bundle']);
         $dedicated_table_schema[$dedicated_table_name]['indexes']['bundle_delta_target_id'] = [
           'bundle',
