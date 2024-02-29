@@ -46,6 +46,8 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
     'taxonomy',
     'text',
     'user',
+    'content_moderation',
+    'workflows',
   ];
 
   /**
@@ -63,8 +65,10 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
     $this->installEntitySchema('node');
     $this->installEntitySchema('taxonomy_term');
     $this->installEntitySchema('user');
+    $this->installEntitySchema('content_moderation_state');
+    $this->installEntitySchema('workflow');
 
-    $this->installConfig(['comment', 'field', 'media', 'node', 'taxonomy', 'user']);
+    $this->installConfig(['comment', 'field', 'media', 'node', 'taxonomy', 'user', 'content_moderation']);
 
     // Create the anonymous and the admin users.
     $anonymous_user = User::create([
@@ -206,6 +210,7 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
         'arguments' => [
           ['Node unpublished', 'CONTAINS'],
         ],
+        'result' => [],
       ],
     ];
     $this->assertReferenceable($selection_options, $referenceable_tests, 'Node handler');
@@ -893,6 +898,78 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
         ],
         'result' => [
           'article' => [
+            $nodes['unpublished1']->id() => $node_labels['unpublished1'],
+          ],
+        ],
+      ],
+    ];
+    $this->assertReferenceable($selection_options, $referenceable_tests, 'Node handler');
+
+    // Test as a non-admin user with "view any unpublished content" permission.
+    $user = $this->createUser([
+      'view any unpublished content',
+    ]);
+    $this->setCurrentUser($user);
+    $referenceable_tests = [
+      [
+        'arguments' => [
+          [NULL, 'CONTAINS'],
+        ],
+        'result' => [
+          'article' => [
+            $nodes['unpublished']->id() => $node_labels['unpublished'],
+            $nodes['unpublished1']->id() => $node_labels['unpublished1'],
+            $nodes['published2']->id() => $node_labels['published2'],
+          ],
+        ],
+      ],
+      [
+        'arguments' => [
+          ['published', 'CONTAINS'],
+        ],
+        'result' => [
+          'article' => [
+            $nodes['published2']->id() => $node_labels['published2'],
+            $nodes['unpublished1']->id() => $node_labels['unpublished1'],
+            $nodes['unpublished']->id() => $node_labels['unpublished'],
+          ],
+        ],
+      ],
+      [
+        'arguments' => [
+          ['unpublished', 'CONTAINS'],
+        ],
+        'result' => [
+          'article' => [
+            $nodes['unpublished']->id() => $node_labels['unpublished'],
+            $nodes['unpublished1']->id() => $node_labels['unpublished1'],
+          ],
+        ],
+      ],
+      [
+        'arguments' => [
+          ['published2', 'CONTAINS'],
+          ['Published2', 'CONTAINS'],
+        ],
+        'result' => [
+          'article' => [
+            $nodes['published2']->id() => $node_labels['published2'],
+          ],
+        ],
+      ],
+      [
+        'arguments' => [
+          ['invalid node', 'CONTAINS'],
+        ],
+        'result' => [],
+      ],
+      [
+        'arguments' => [
+          ['Node unpublished', 'CONTAINS'],
+        ],
+        'result' => [
+          'article' => [
+            $nodes['unpublished']->id() => $node_labels['unpublished'],
             $nodes['unpublished1']->id() => $node_labels['unpublished1'],
           ],
         ],
