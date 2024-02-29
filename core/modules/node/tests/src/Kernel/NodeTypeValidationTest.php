@@ -32,6 +32,7 @@ class NodeTypeValidationTest extends ConfigEntityValidationTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->installEntitySchema('node');
     $this->installConfig('node');
     $this->entity = $this->createContentType();
   }

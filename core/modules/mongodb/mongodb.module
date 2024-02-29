@@ -87,7 +87,7 @@ function mongodb_entity_type_alter(array &$entity_types) {
     }
 
     if (!empty($entity_types['taxonomy_vocabulary'])) {
-      $entity_types['taxonomy_vocabulary']->setStorageClass('Drupal\mongodb\EntityStorage\VocabularyStorage');
+      // $entity_types['taxonomy_vocabulary']->setStorageClass('Drupal\mongodb\EntityStorage\VocabularyStorage');
     }
 
     if (!empty($entity_types['user'])) {

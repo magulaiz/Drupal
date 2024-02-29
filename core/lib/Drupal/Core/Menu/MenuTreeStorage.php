@@ -783,9 +783,9 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       $query = $this->connection->select($this->table, NULL, $this->options);
       $query->fields($this->table, ['id']);
       $query->condition('menu_name', $menu_name);
-      $query->condition('expanded', 1);
-      $query->condition('has_children', 1);
-      $query->condition('enabled', 1);
+      $query->condition('expanded', TRUE);
+      $query->condition('has_children', TRUE);
+      $query->condition('enabled', TRUE);
       $query->condition('parent', $parents, 'IN');
       $query->condition('id', $parents, 'NOT IN');
       $result = $this->safeExecuteSelect($query)->fetchAllKeyed(0, 0);

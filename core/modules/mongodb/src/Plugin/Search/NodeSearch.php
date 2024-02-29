@@ -24,7 +24,7 @@ class NodeSearch extends CoreNodeSearch {
       ->select('search_index', 'i', ['target' => 'replica'])
       ->extend(SearchQuery::class)
       ->extend(PagerSelectExtender::class);
-    $query->addMongodbJoin('LEFT', 'node', 'nid', 'search_index', 'sid', '=', 'n', [['field' => 'node_current_revision.langcode', 'left_field' => 'langcode'], ['field' => 'node_current_revision.status', 'value' => TRUE]]);
+    $query->addJoin('LEFT', 'node', 'n', $query->joinCondition()->compare('s.sid', 'n.nid')->compare('node_current_revision.langcode', 'n.langcode')->condition('node_current_revision.status', TRUE));
     $query->addTag('node_access')
       ->searchExpression($keys, $this->getPluginId());
 
@@ -188,13 +188,13 @@ class NodeSearch extends CoreNodeSearch {
 
     $query = $this->database->select('node', 'n', ['target' => 'replica']);
     $query->fields('n', ['nid']);
-    $query->addMongodbJoin('LEFT', 'search_dataset', 'sid', 'node', 'nid', '=', 'sd', [['field' => 'type', 'value' => $this->getPluginId()]]);
+    $query->addJoin('LEFT', 'search_dataset', 'sd', $query->joinCondition()->compare('n.nid', 'sd.sid')->condition('sd.type', $this->getPluginId()));
     $query->fields('sd', ['sid', 'reindex']);
     $query->condition(
-    $query->orConditionGroup()
-      ->condition('sd.sid', NULL, 'IS NULL')
-      ->condition('sd.reindex', 0, '<>')
-     );
+      $query->orConditionGroup()
+        ->condition('sd.sid', NULL, 'IS NULL')
+        ->condition('sd.reindex', 0, '<>')
+    );
     $query->orderBy('sd.reindex', 'DESC')
       ->orderBy('nid')
       ->range(0, $limit);
@@ -231,7 +231,7 @@ class NodeSearch extends CoreNodeSearch {
       ->fetchField();
     $query = $this->database->select('node', 'n')
       ->fields('n', ['nid']);
-    $query->addMongodbJoin('LEFT', 'search_dataset', 'sid', 'node', 'nid', '=', 'sd', [['field' => 'type', 'value' => $this->getPluginId()]]);
+    $query->addJoin('LEFT', 'search_dataset', 'sd', $query->joinCondition()->compare('n.nid', 'sd.sid')->condition('sd.type', $this->getPluginId()));
     $condition = $this->database->condition('OR');
     $condition->condition('sd.sid', NULL, 'IS NULL');
     $condition->condition('sd.reindex', 0, '<>');

@@ -96,11 +96,17 @@ services:
   mongodb.menu.tree_storage:
     class: Drupal\mongodb\Menu\MenuTreeStorage
     arguments: ['@database', '@cache.menu', '@cache_tags.invalidator', 'menu_tree']
-    public: false  # Private to plugin.manager.menu.link and menu.link_tree
+    public: false
   menu.tree_storage:
     alias: mongodb.menu.tree_storage
 
   # MongoDB overrides Queue.
+  mongodb.queue:
+    class: Drupal\mongodb\Queue\QueueFactory
+    arguments: ['@settings']
+    calls:
+      - [setContainer, ['@service_container']]
+  Drupal\mongodb\Queue\QueueFactory: '@mongodb.queue'
   mongodb.queue.database:
     class: Drupal\mongodb\Queue\QueueDatabaseFactory
     arguments: ['@database']

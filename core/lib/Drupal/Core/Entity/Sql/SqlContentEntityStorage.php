@@ -1286,7 +1286,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     }
 
     try {
-      $transaction = $this->database->startTransaction();
+      // @todo Get transactions to work with MongoDB.
+      if ($this->database->driver() != 'mongodb') {
+        $transaction = $this->database->startTransaction();
+      }
       parent::delete($entities);
 
       // Ignore replica server temporarily.

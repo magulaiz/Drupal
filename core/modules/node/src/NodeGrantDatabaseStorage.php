@@ -85,7 +85,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
     // Check for grants for this node and the correct langcode. New translations
     // do not yet have a langcode and must check the fallback node record.
     $nids = $query->andConditionGroup()
-      ->condition('nid', $node->id());
+      ->condition('nid', (int) $node->id());
     if (!$node->isNewTranslation()) {
       $nids->condition('langcode', $node->language()->getId());
     }
@@ -176,7 +176,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
             $query->condition($grant_conditions);
           }
 
-          $query->condition('grant_' . $op, TRUE);
+          $query->condition('grant_' . $operation, TRUE);
 
           if ($is_multilingual) {
             // If no specific langcode to check for is given, use the grant entry
@@ -190,8 +190,8 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
             }
           }
 
-          $query->addMongodbJoin('INNER', 'node_access', 'nid', $base_table, 'nid', '=', 'na');
-          $query->unwindJoinAndAddFields('na', ['nid', 'langcode', 'fallback', 'gid', 'realm', 'grant_' . $op]);
+          $query->addJoin('INNER', 'node_access', 'na', $query->joinCondition()->compare('na.nid', "$base_table.nid"));
+          $query->unwindJoinAndAddFields('na', ['nid', 'langcode', 'fallback', 'gid', 'realm', 'grant_' . $operation]);
         }
         else {
           // Set the subquery.
@@ -350,50 +350,17 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
    * @see node_access_grants()
    */
   protected function buildGrantsQueryCondition(array $node_access_grants) {
-    if ($this->database->driver() == 'mongodb') {
-      if ($is_subquery) {
-        $conditions = [];
-      }
-      else {
-        $grants = $this->database->condition("OR");
-      }
-      foreach ($node_access_grants as $realm => $gids) {
-        if (!empty($gids)) {
-          foreach ($gids as &$gid) {
-            $gid = (int) $gid;
-          }
-          if ($is_subquery) {
-            $conditions[] = [
-              '$and' => [
-                ['$in' => ['$gid', $gids]],
-                ['$eq' => ['$realm', $realm]],
-              ],
-            ];
-          }
-          else {
-            $and = $this->database->condition('AND');
-            $grants->condition($and
-              ->condition('gid', $gids, 'IN')
-              ->condition('realm', $realm)
-            );
-          }
+    $grants = $this->database->condition('OR');
+    foreach ($node_access_grants as $realm => $gids) {
+      if (!empty($gids)) {
+        foreach ($gids as &$gid) {
+          $gid = (int) $gid;
         }
-      }
-
-      if ($is_subquery) {
-        return $conditions;
-      }
-    }
-    else {
-      $grants = $this->database->condition('OR');
-      foreach ($node_access_grants as $realm => $gids) {
-        if (!empty($gids)) {
-          $and = $this->database->condition('AND');
-          $grants->condition($and
-            ->condition('gid', $gids, 'IN')
-            ->condition('realm', $realm)
-          );
-        }
+        $and = $this->database->condition('AND');
+        $grants->condition($and
+          ->condition('gid', $gids, 'IN')
+          ->condition('realm', $realm)
+        );
       }
     }
 

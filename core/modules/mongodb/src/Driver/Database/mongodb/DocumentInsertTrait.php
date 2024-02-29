@@ -101,7 +101,6 @@ trait DocumentInsertTrait {
     if (!$this->tableInformation) {
       $this->tableInformation = $this->connection->tableInformation();
     }
-
     $insert_document = array_combine($insert_fields, $insert_values);
 
     // The default fields values must be added because MongoDB does not know

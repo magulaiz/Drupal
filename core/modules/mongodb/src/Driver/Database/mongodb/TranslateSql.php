@@ -442,6 +442,28 @@ class TranslateSql {
         $statement->execute(NULL, $query_options);
         return $statement;
       }
+      elseif (preg_match("/^SELECT \[data\], \[created\], \[item_id\] FROM {queue} q WHERE \[expire\] = 0 AND \[name\] = :name ORDER BY \[created\], \[item_id\] ASC$/", $query, $matches)) {
+        $prefixed_table = $connection->getMongodbPrefixedTable('queue');
+        $name = $args[':name'];
+
+        $startEvent = $this->startEvent($connection, $query, $args);
+
+        $cursor = $connection->getConnection()->{$prefixed_table}->find(
+          ['expire' => ['$eq' => 0], 'name' => ['$eq' => $name]],
+          [
+            'projection' => ['data' => 1, 'created' => 1, 'item_id' => 1, '_id' => 0],
+            'sort' => ['created' => 1, 'item_id' => 1],
+            'skip' => isset($options['skip']) ? $options['skip'] : 0,
+            'limit' => isset($options['limit']) ? $options['limit'] : 0,
+          ]
+        );
+
+        $this->endEvent($connection, $startEvent);
+
+        $statement = new Statement($connection, $cursor, ['tid']);
+        $statement->execute(NULL, $query_options);
+        return $statement;
+      }
       elseif (preg_match('/^SELECT MAX\(\[test_serial\]\) FROM {(.*)}$/', $query, $matches)) {
         $prefixed_table = $connection->getMongodbPrefixedTable($matches[1]);
 

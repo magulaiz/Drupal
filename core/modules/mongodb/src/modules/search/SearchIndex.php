@@ -260,7 +260,7 @@ class SearchIndex extends CoreSearchIndex {
       // $result = $this->replica->query("SELECT [t].[word] AS [realword], [i].[word] FROM {search_total} [t] LEFT JOIN {search_index} [i] ON [t].[word] = [i].[word] WHERE [i].[word] IS NULL");
       $query = $this->replica->select('search_total', 't');
       $query->addField('t', 'word', 'realword');
-      $query->addMongodbJoin('LEFT', 'search_index', 'word', 'search_total', 'word', '=', 'i');
+      $query->addJoin('LEFT', 'search_index', 'i', $query->joinCondition()->compare('t.word', 'i.word'));
       $result = $query->isNull('i.word')
         ->execute()
         ->fetchAll();

@@ -83,9 +83,9 @@ class Statement extends StatementPrefetchIterator {
     $this->queryString = isset($options['query_string']) ? $options['query_string'] : '';
 
     // Change the database connection for the database query logger.
-    if (isset($options['target']) && $options['target'] != $this->connection->getTarget()) {
-      $this->connection = Database::getConnection($options['target']);
-    }
+    // if (isset($options['target']) && $options['target'] != $this->connection->getTarget()) {
+    // $this->connection = Database::getConnection($options['target']);
+    // }
 
     foreach ($this->data as &$data) {
       if (isset($data['_id']) && $data['_id'] instanceof ObjectID) {

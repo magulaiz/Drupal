@@ -255,17 +255,6 @@ class MenuTreeStorage extends CoreMenuTreeStorage {
     return [];
   }
 
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getExpanded($menu_name, array $parents) {
-    foreach ($parents as &$parent) {
-      $parent = (int) $parent;
-    }
-    return parent::getExpanded($menu_name, $parents);
-  }
-
   /**
    * {@inheritdoc}
    */

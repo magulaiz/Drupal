@@ -14,6 +14,7 @@ use Drupal\cron_queue_test\Plugin\QueueWorker\CronQueueTestSuspendQueue;
 use Drupal\Core\Queue\QueueWorkerManagerInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\cron_queue_test\Plugin\QueueWorker\CronQueueTestDatabaseDelayException;
+use Drupal\mongodb\Queue\DatabaseQueue as MongodbDatabaseQueue;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
 
@@ -97,7 +98,14 @@ class CronQueueTest extends KernelTestBase {
    * Tests that DelayedRequeueException behaves as expected when running cron.
    */
   public function testDelayException() {
-    $database = $this->container->get('queue')->get('cron_queue_test_database_delay_exception');
+    if ($this->connection->driver() == 'mongodb') {
+      $queue = 'mongodb.queue';
+    }
+    else {
+      $queue = 'queue';
+    }
+
+    $database = $this->container->get($queue)->get('cron_queue_test_database_delay_exception');
     $memory = $this->container->get('queue')->get('cron_queue_test_memory_delay_exception');
 
     // Ensure that the queues are of the correct type for this test.
@@ -281,11 +289,20 @@ class CronQueueTest extends KernelTestBase {
    * Tests that database queue implementation complies with interfaces specs.
    */
   public function testDatabaseQueueReturnTypes(): void {
+    if ($this->connection->driver() == 'mongodb') {
+      $queue_service = 'mongodb.queue';
+      $queue_class = MongodbDatabaseQueue::class;
+    }
+    else {
+      $queue_service = 'queue';
+      $queue_class = DatabaseQueue::class;
+    }
+
     /** @var \Drupal\Core\Queue\DatabaseQueue $queue */
     $queue = $this->container
-      ->get('queue')
+      ->get($queue_service)
       ->get('cron_queue_test_database_delay_exception');
-    static::assertInstanceOf(DatabaseQueue::class, $queue);
+    static::assertInstanceOf($queue_class, $queue);
 
     $queue->createItem(12);
     $item = $queue->claimItem();

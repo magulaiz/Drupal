@@ -20,7 +20,7 @@ class DatabaseQueue extends CoreDatabaseQueue {
    * {@inheritdoc}
    */
   public function createItem($data) {
-    // For MongoDB the table need to exists. Otherwise MongoDB creates one
+    // For MongoDB the table needs to exist. Otherwise MongoDB creates one
     // without the correct validation.
     if (!$this->tableExists) {
       $this->tableExists = $this->ensureTableExists();
@@ -82,7 +82,7 @@ class DatabaseQueue extends CoreDatabaseQueue {
         // should really expire.
         $update = $this->connection->update(static::TABLE_NAME)
           ->fields([
-            'expire' => time() + $lease_time,
+            'expire' => \Drupal::time()->getCurrentTime() + $lease_time,
           ])
           // For MongoDB the item_id must be an integer.
           ->condition('item_id', (int) $item->item_id)
