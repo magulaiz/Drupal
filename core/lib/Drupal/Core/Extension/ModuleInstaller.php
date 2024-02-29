@@ -404,15 +404,6 @@ class ModuleInstaller implements ModuleInstallerInterface {
       // things like \Drupal\views\ViewsData() from having stale data.
       // @todo This fixes \Drupal\Tests\views\Functional\ViewsFormAlterTest().
       Cache::invalidateTags(['config:core.extension']);
-
-      // Rebuilding the container above means the loaded flag is not properly
-      // set.
-      // @todo consider replacing the loaded flag with something determined from
-      //   the keys in ModuleHandler. This fixes
-      //   \Drupal\Tests\search\Functional\SearchAdvancedSearchFormTest::testNodeType().
-      //   Note, previously this flag is set due to calling hook_install() and
-      //   rebuilding all the module handler statics above.
-      $this->moduleHandler->loadAll();
     }
 
     if (!InstallerKernel::installationAttempted()) {
