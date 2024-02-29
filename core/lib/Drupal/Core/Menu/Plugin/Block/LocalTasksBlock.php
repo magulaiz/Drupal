@@ -4,8 +4,8 @@ namespace Drupal\Core\Menu\Plugin\Block;
 
 use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Menu\LocalTaskManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -92,7 +92,7 @@ class LocalTasksBlock extends BlockBase implements ContainerFactoryPluginInterfa
     // entity as well.
     $route_parameters = $this->routeMatch->getParameters()->all();
     foreach ($route_parameters as $parameter) {
-      if ($parameter instanceof EntityInterface) {
+      if ($parameter instanceof CacheableDependencyInterface) {
         $cacheability->addCacheableDependency($parameter);
       }
     }
