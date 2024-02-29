@@ -28,7 +28,7 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  * 4. The HTML restrictions of all TYPE_HTML_RESTRICTOR filters allow the
  *    configured CKEditor 5 plugins to work.
  *
- * @see \Drupal\filter\Plugin\FilterType::HtmlRestrictor
+ * @see \Drupal\filter\FilterType::HtmlRestrictor
  *
  * @internal
  */

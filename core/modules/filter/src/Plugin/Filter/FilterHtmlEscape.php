@@ -13,7 +13,7 @@ use Drupal\filter\Plugin\FilterBase;
 #[Filter(
   id: "filter_html_escape",
   title: new TranslatableMarkup("Display any HTML as plain text"),
-  type: Drupal\filter\Plugin\FilterType::HtmlRestrictor,
+  type: Drupal\filter\FilterType::HtmlRestrictor,
   weight: -10
 )]
 class FilterHtmlEscape extends FilterBase {

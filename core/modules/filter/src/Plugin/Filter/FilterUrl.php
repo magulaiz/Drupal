@@ -14,7 +14,7 @@ use Drupal\filter\Plugin\FilterBase;
 #[Filter(
   id: "filter_url",
   title: new TranslatableMarkup("Convert URLs into links"),
-  type: Drupal\filter\Plugin\FilterType::MarkupLanguage,
+  type: Drupal\filter\FilterType::MarkupLanguage,
   settings: [
     "filter_url_length" => 72,
   ]
