@@ -19,7 +19,7 @@ class OpenerResolver implements OpenerResolverInterface {
   /**
    * @var \Drupal\media_library\MediaLibraryOpenerInterface[]
    */
-  protected array $openers;
+  protected array $openers = [];
 
   /**
    * Registers an opener.
