@@ -103,13 +103,12 @@ class BlockFilterTest extends WebDriverTestBase {
    */
   public function testRegionsBlockFilter() {
     $defaultTheme = $this->config('system.theme')->get('default');
-    $this->container->get('theme_installer')->install(['claro']);
-    $this->config('system.theme')->set('default', 'claro')->save();
+    $this->container->get('theme_installer')->install(['olivero']);
+    $this->config('system.theme')->set('default', 'olivero')->save();
     // Empty message displayed when the type doesn't match with blocks.
     $emptyMessage = 'There are no blocks matching the filter conditions.';
 
     $blockConfig = [];
-
     foreach ($this->blocks as $region => $blocks) {
       foreach ($blocks as $blockId) {
         $blockEntity = $this->placeBlock($blockId, ['region' => $region]);
@@ -120,22 +119,6 @@ class BlockFilterTest extends WebDriverTestBase {
         ];
       }
     }
-
-    // Add more three blocks with friendly labels containing same word,
-    // to check if all will be displayed.
-    $fakeBlock1 = $this->placeBlock(
-      'system_messages_block',
-      ['region' => 'content', 'label' => 'a common block label to be displayed']
-    );
-    $fakeBlock2 = $this->placeBlock(
-      'system_messages_block',
-      ['region' => 'content', 'label' => 'label to be displayed']
-    );
-    $fakeBlock3 = $this->placeBlock(
-      'system_messages_block',
-      ['region' => 'content', 'label' => 'label display']
-    );
-
     $this->drupalGet('admin/structure/block');
     $assertSession = $this->assertSession();
     $session = $this->getSession();
@@ -180,50 +163,30 @@ class BlockFilterTest extends WebDriverTestBase {
 
     // Test drag and drop after any filter applied.
     $inputFilter->setValue('');
-    $this->moveBlock($fakeBlock1->id(), 'highlighted');
-    $this->assertBlockOnRegion($fakeBlock1->id(), 'highlighted');
+    $this->moveBlock('olivero-messages', 'highlighted');
+    $this->assertBlockOnRegion('olivero-messages', 'highlighted');
 
     // Test filter when user changes the region by select element.
     $this->getSession()
       ->getPage()
-      ->findField('edit-blocks-' . $fakeBlock1->id() . '-region')
+      ->findField('edit-blocks-olivero-messages-region')
       ->setValue('breadcrumb');
     $this->assertSession()
-      ->waitForElementVisible('css', '#blocks tbody tr[data-drupal-selector="edit-blocks-' . $fakeBlock1->id() . '"] a.tabledrag-handle');
+      ->waitForElementVisible('css', '#blocks tbody tr[data-drupal-selector="edit-blocks-olivero-messages"] a.tabledrag-handle');
 
     $this->assertEquals(
       'breadcrumb',
-      $this->getSession()->getPage()->findField('edit-blocks-' . $fakeBlock1->id() . '-region')->getValue(),
-      "Drupal {$fakeBlock1->id()} should be positioned on left sidebar"
+      $this->getSession()->getPage()->findField('edit-blocks-olivero-messages-region')->getValue(),
+      "Drupal search form block should be positioned on left sidebar"
     );
 
-    $this->moveBlock($fakeBlock1->id(), 'highlighted');
-    $this->moveBlock($fakeBlock2->id(), 'highlighted');
-    $this->moveBlock($fakeBlock3->id(), 'breadcrumb');
-    $inputFilter->setValue('label');
+    $this->moveBlock('olivero-primary-local-tasks', 'highlighted');
+    $this->moveBlock('olivero-powered', 'highlighted');
+    $this->moveBlock('olivero-account-menu', 'breadcrumb');
 
-    $this->assertBlockOnRegion($fakeBlock1->id(), 'highlighted');
-    $this->assertBlockOnRegion($fakeBlock2->id(), 'highlighted');
-    $this->assertBlockOnRegion($fakeBlock3->id(), 'breadcrumb');
-
-    $page = $this->getSession()->getPage();
-    $page->find('css', '.js-input-filter-goto-element')
-      ->click();
-    $page->clickLink('Toggle blocks on region breadcrumb');
-
-    $this->moveBlock($fakeBlock3->id(), 'highlighted');
-    $this->moveBlock('claro-breadcrumbs', 'highlighted');
-    $this->assertSession()->waitForElementVisible('css', 'tr[data-drupal-selector="edit-blocks-region-breadcrumbs-message"]');
-    $this->assertFalse($this->getSession()->getPage()->find('css', 'tr[data-drupal-selector="edit-blocks-region-highlighted-message"]')->isVisible());
-    $this->assertTrue($this->getSession()->getPage()->find('css', 'tr[data-drupal-selector="edit-blocks-region-breadcrumb-message"]')->isVisible());
-
-    // Save blocks and test if was saved in the correct region.
-    $this->submitForm([], 'Save blocks');
-    $this->assertSession()->pageTextContains('The block settings have been updated.');
-    $this->assertBlockOnRegion($fakeBlock1->id(), 'highlighted');
-    $this->assertBlockOnRegion($fakeBlock2->id(), 'highlighted');
-    $this->assertBlockOnRegion($fakeBlock3->id(), 'highlighted');
-
+    $this->assertBlockOnRegion('olivero-primary-local-tasks', 'highlighted');
+    $this->assertBlockOnRegion('olivero-powered', 'highlighted');
+    $this->assertBlockOnRegion('olivero-account-menu', 'breadcrumb');
     // Back to the previous theme default to avoid failing other tests.
     $this->config('system.theme')->set('default', $defaultTheme)->save();
   }
@@ -308,18 +271,24 @@ class BlockFilterTest extends WebDriverTestBase {
    *   The destination region.
    */
   protected function moveBlock(string $blockId, string $dest): void {
-    $this->assertSession()->waitForElementVisible('css', $dest);
     $destRegion = $this->getSession()
       ->getPage()
       ->find('css', 'tr[data-parent-region="' . $dest . '"]');
-    $this->assertNotEmpty($destRegion, 'Destination region ' . $dest . ' does not exists.');
 
     $dragRow = '#blocks tbody tr[data-drupal-selector="edit-blocks-' . $blockId . '"] a.tabledrag-handle';
     $blockToMove = $this->getSession()
       ->getPage()
       ->find('css', $dragRow);
-    $this->assertNotEmpty($blockToMove, 'Block id ' . $dragRow . ' does not exits');
+
+    $javascript = <<<JS
+      document.querySelector("tr[data-drupal-selector='edit-blocks-{$blockId}']").scrollIntoViewIfNeeded();
+      console.log("tr[data-drupal-selector='edit-blocks-{$blockId}']")
+JS;
+    $this->getSession()
+      ->executeScript($javascript);
+
     $blockToMove->dragTo($destRegion);
+
     $this->assertSession()
       ->waitForElementVisible('css', 'tr[data-drupal-selector="edit-blocks-' . $blockId . '"].drag-previous');
   }

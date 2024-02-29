@@ -86,6 +86,57 @@
       }
 
       /**
+       * When dragging a row that display the quantity of item filtered.
+       *
+       * Make sure to jump this row to be not draggable.
+       *
+       * @param {Drupal.tableDrag.row} rowObject
+       *   Drupal table drag row dropped.
+       */
+      function swapFilterRow(rowObject) {
+        // Prevent swap recursion when we manually drag the filter quantity row.
+        if (
+          rowObject.filterRowSwapped === true ||
+          rowObject.element.classList.contains('draggable')
+        ) {
+          return;
+        }
+
+        // if (rowObject.alreadySwapped !== true) {
+        let direction = 'before';
+        // Move the element after or before the region that display the quantity of filtered.
+        const previousElement =
+          rowObject.element.previousElementSibling || null;
+        const nextElement = rowObject.element.nextElementSibling || null;
+
+        // Prevent the swap of the first row of the table.
+        if (
+          rowObject.direction === 'up' &&
+          previousElement?.previousElementSibling === null
+        ) {
+          rowObject.swap('after', previousElement);
+          return;
+        }
+
+        // Swap only the filtered blocks quantity row.
+        if (
+          (nextElement &&
+            nextElement.classList.contains('js-region-filter-quantity')) ||
+          (previousElement &&
+            previousElement.classList.contains('js-region-filter-quantity'))
+        ) {
+          let el = previousElement;
+          if (rowObject.direction === 'down') {
+            direction = 'after';
+            el = nextElement;
+          }
+          rowObject.filterRowSwapped = true;
+          rowObject.swap(direction, el);
+          rowObject.filterRowSwapped = false;
+        }
+      }
+
+      /**
        * Function to check empty regions and toggle classes based on this.
        *
        * @param {jQuery} table
@@ -94,31 +145,6 @@
        *   Drupal table drag row dropped.
        */
       function checkEmptyRegions(table, rowObject) {
-        // let direction = 'before';
-        // // Move the element after or before the region that display the quantity of filtered.
-        // const previousElement =
-        //   rowObject.element.previousElementSibling || null;
-        // const nextElement = rowObject.element.nextElementSibling || null;
-        // if (
-        //   rowObject.direction === 'up' &&
-        //   previousElement?.previousElementSibling === null
-        // ) {
-        //   rowObject.swap('after', previousElement);
-        // }
-        // if (
-        //   (nextElement &&
-        //     nextElement.classList.contains('js-region-filter-quantity')) ||
-        //   (previousElement &&
-        //     previousElement.classList.contains('js-region-filter-quantity'))
-        // ) {
-        //   let el = previousElement;
-        //   if (rowObject.direction === 'down') {
-        //     direction = 'after';
-        //     el = nextElement;
-        //   }
-        //   rowObject.swap(direction, el);
-        // }
-
         table.find('tr.region-message').each(function () {
           const $this = $(this);
           // If the dragged row is in this region, but above the message row,
@@ -212,9 +238,10 @@
       const tableDrag = Drupal.tableDrag.blocks;
       // Add a handler for when a row is swapped, update empty regions.
       tableDrag.row.prototype.onSwap = function (swappedRow) {
-        updateParentRegionName(this);
+        swapFilterRow(this);
         checkEmptyRegions(table, this);
         updateLastPlaced(table, this);
+        updateParentRegionName(this);
       };
 
       // Add a handler so when a row is dropped, update fields dropped into
@@ -261,7 +288,6 @@
             .addClass(`block-weight-${regionName}`);
           regionField[0].value = regionName;
         }
-
         updateBlockWeights(table, regionName);
         const params = {
           detail: {
@@ -297,6 +323,7 @@
           }
           updateParentRegionName(tableDrag.rowObject, false);
           updateBlockWeights(table, select[0].value);
+          swapFilterRow(tableDrag.rowObject);
           // Modify empty regions with added or removed fields.
           checkEmptyRegions(table, tableDrag.rowObject);
           // Update last placed block indication.

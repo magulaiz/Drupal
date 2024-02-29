@@ -141,10 +141,11 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
       '#type' => 'search',
       '#title' => $this->t('Filter'),
       '#placeholder' => $this->t('Filter by block name or block category'),
-      '#description' => "<a class='js-input-filter-goto-element' id='goto-filtered'>go to next element</a>",
+      '#description' => "<a tabindex='0' class='js-input-filter-goto-element' id='goto-filtered'>go to next element</a>",
       '#attributes' => [
         'class' => ['block-element-filter', 'block-filter-region-text'],
         'title' => $this->t('Enter a part of the block name to filter by.'),
+        'tabindex' => 1,
       ],
     ];
 

@@ -143,13 +143,13 @@
         const blocks = document.querySelectorAll(
           `tr[data-parent-region="${regionName}"]`,
         );
-        const visible = Array.from(blocks).filter(
+        const blocksVisible = Array.from(blocks).filter(
           (tr) => tr.style.display !== 'none',
         ).length;
         return {
-          total: blocks.length,
-          visible,
-          invisible: blocks.length - visible,
+          blocksAmount: blocks.length,
+          blocksVisible,
+          blocksInvisible: blocks.length - blocksVisible,
         };
       };
 
@@ -157,6 +157,10 @@
         if (e.key === 'Enter') {
           e.preventDefault();
           e.stopPropagation();
+        }
+        if (e.key === 'Tab') {
+          e.preventDefault();
+          gotoFiltered.focus();
         }
       };
 
@@ -192,17 +196,18 @@
         const regionHeaders = table.querySelectorAll('.region-title');
         regionHeaders.forEach((el) => {
           const currentRegionName = el.dataset.region;
-          const { total, visible, invisible } =
-            getRegionBlocksStatus(currentRegionName);
-
           // Update the region filter status.
           const filteredRegionStatus = document.querySelector(
             `[data-drupal-selector="region-filtered-quantity-${currentRegionName}"]`,
           );
           const linkButton = el.querySelector('.region-filter-control');
-          if (total > 0) {
+
+          const { blocksAmount, blocksVisible, blocksInvisible } =
+            getRegionBlocksStatus(currentRegionName);
+
+          if (blocksAmount > 0) {
             linkButton.ariaHidden = query === '';
-            if (query !== '' && total !== visible) {
+            if (query !== '' && blocksAmount !== blocksVisible) {
               filteredRegionStatus.parentElement.parentElement.classList.add(
                 'js-show-filtered-quantity',
               );
@@ -212,20 +217,50 @@
               filteredRegionStatus.parentElement.parentElement.classList.remove(
                 'js-show-filtered-quantity',
               );
+              if (query === '') {
+                linkButton.classList.remove('region-filtered');
+                linkButton.ariaHidden = true;
+              }
             }
             filteredRegionStatus.textContent = Drupal.t('@invisible filtered', {
-              '@invisible': invisible,
+              '@invisible': blocksInvisible,
             });
           }
 
           const regionEmptyMessage = el.nextElementSibling.nextElementSibling;
           let showEmptyRegion = false;
-          if (total === 0) {
+          if (blocksAmount === 0) {
             linkButton.classList.remove('region-filter-control-opened');
             linkButton.classList.remove('region-filtered');
             showEmptyRegion = true;
           }
           regionEmptyMessage.style.display = showEmptyRegion ? '' : 'none';
+        });
+      };
+
+      const gotoElement = (e) => {
+        if (!gotoFiltered.classList.contains('has-block-results')) {
+          return;
+        }
+        let firstVisibleRegion = null;
+        // Highlight blocks matched filter before go to.
+        document.querySelectorAll('.js-filter-block-visible').forEach((el) => {
+          if (!firstVisibleRegion) {
+            firstVisibleRegion = el;
+          }
+          el.classList.add('color-success');
+        });
+
+        e.preventDefault();
+        let offset = 0;
+        const regionHeight = firstVisibleRegion.offsetHeight;
+        let region = firstVisibleRegion;
+        while (region) {
+          offset += region.offsetTop;
+          region = region.offsetParent;
+        }
+        window.scrollTo({
+          top: offset - fieldsetInput.offsetTop - regionHeight,
         });
       };
 
@@ -306,30 +341,11 @@
       // In some cases the blocks searched are on the bottom of page,
       // to help users get there faster they can click on the link
       // below the input filter.
-      gotoFiltered.addEventListener('click', (e) => {
-        if (!gotoFiltered.classList.contains('has-block-results')) {
-          return;
+      gotoFiltered.addEventListener('click', gotoElement);
+      gotoFiltered.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          gotoElement(e);
         }
-        let firstVisibleRegion = null;
-        // Highlight blocks matched filter before go to.
-        document.querySelectorAll('.js-filter-block-visible').forEach((el) => {
-          if (!firstVisibleRegion) {
-            firstVisibleRegion = el;
-          }
-          el.classList.add('color-success');
-        });
-
-        e.preventDefault();
-        let offset = 0;
-        const regionHeight = firstVisibleRegion.offsetHeight;
-        let region = firstVisibleRegion;
-        while (region) {
-          offset += region.offsetTop;
-          region = region.offsetParent;
-        }
-        window.scrollTo({
-          top: offset - fieldsetInput.offsetTop - regionHeight,
-        });
       });
 
       // Update all blocks by regions showing or hiding them based on the action value.
@@ -362,6 +378,11 @@
             )
               ? 'remove'
               : 'add';
+            if (action === 'add') {
+              element.textContent = Drupal.t('Hide filtered');
+            } else {
+              element.textContent = Drupal.t('Show filtered');
+            }
             toggleBlocksByRegion(element.dataset.toggleRegion, action);
             filterCallback();
             e.preventDefault();
