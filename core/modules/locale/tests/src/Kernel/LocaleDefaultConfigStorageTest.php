@@ -20,7 +20,7 @@ class LocaleDefaultConfigStorageTest extends KernelTestBase {
     'locale_test_translate',
   ];
 
-  public function testGetConfigurationNames(): void {
+  public function testGetComponentNames(): void {
     $storage = new LocaleDefaultConfigStorage(
       new NullStorage(),
       \Drupal::languageManager(),
