@@ -5,7 +5,7 @@ import { Plugin } from 'ckeditor5/src/core';
 import { toWidget, Widget } from 'ckeditor5/src/widget';
 
 import InsertDrupalMediaCommand from './insertdrupalmedia';
-import { getPreviewContainer, isDrupalMedia } from './utils';
+import { getPreviewContainer, isDrupalMedia, groupNameToModelAttributeKey } from './utils';
 import { METADATA_ERROR } from './mediaimagetextalternative/utils';
 
 /**
@@ -35,12 +35,15 @@ export default class DrupalMediaEditing extends Plugin {
       drupalMediaEntityType: 'data-entity-type',
       drupalMediaEntityUuid: 'data-entity-uuid',
     };
+
+    const contributedConverterAttributes = this._getContributedConverterAttributes(editor);
     this.converterAttributes = [
       'drupalMediaEntityUuid',
       'drupalElementStyleViewMode',
       'drupalMediaEntityType',
       'drupalMediaAlt',
-    ];
+      ...contributedConverterAttributes
+    ]
   }
 
   /**
@@ -492,6 +495,33 @@ export default class DrupalMediaEditing extends Plugin {
     });
 
     return this.editor.data.stringify(modelDocumentFragment);
+  }
+
+  /**
+   * Gets all converter attributes provided by other modules.
+   *
+   * @param {module:core/editor/editor~Editor} editor
+   *   The editor instance to use.
+   * @return {array}
+   *   The model element converted into HTML.
+   */
+  _getContributedConverterAttributes(editor) {
+    const stylesConfig = editor.config.get('drupalElementStyles');
+    const contributedConverterAttributes = [];
+    Object.keys(stylesConfig).forEach((group) => {
+      const groupValues = stylesConfig[group];
+      const hasRerenderedElementStyle = groupValues.some(elementStyle => {
+        const affectsDrupalMedia = elementStyle.hasOwnProperty('modelElements') && elementStyle.modelElements.includes('drupalMedia');
+        const needsRerendering = elementStyle.hasOwnProperty('rerender') && elementStyle.rerender === true;
+        return affectsDrupalMedia && needsRerendering;
+      })
+
+      if (hasRerenderedElementStyle) {
+        contributedConverterAttributes.push(groupNameToModelAttributeKey(group));
+      }
+    });
+
+    return contributedConverterAttributes;
   }
 
   /**

@@ -167,6 +167,7 @@ function viewToModelStyleAttribute(styles, modelAttribute) {
  *            attributeName: 'class'
  *            attributeValue: 'image-side'
  *            modelElements: ['drupalMedia']
+ *            rerender: true
  *        align:
  *           - name: 'right'
  *             title: 'Right aligned media'
@@ -227,6 +228,9 @@ export default class DrupalElementStyleEditing extends Plugin {
      * @prop {string} [icon]
      *   An icon for the style button. This needs to either refer to an icon in
      *   the CKEditor 5 core icons, or this can be the XML content of the icon.
+     * @prop {boolean} rerender
+     *   Wether any change on the style should trigger a re-render of the
+     *   element.
      *
      * @type {Drupal.CKEditor5~DrupalElementStyleDefinition}
      */
