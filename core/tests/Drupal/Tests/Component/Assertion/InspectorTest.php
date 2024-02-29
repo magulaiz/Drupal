@@ -6,7 +6,7 @@ namespace Drupal\Tests\Component\Assertion;
 
 use PHPUnit\Framework\TestCase;
 use Drupal\Component\Assertion\Inspector;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Drupal\TestTools\Trait\ExpectDeprecationTrait;
 
 /**
  * @coversDefaultClass \Drupal\Component\Assertion\Inspector
