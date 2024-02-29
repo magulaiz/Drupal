@@ -433,14 +433,6 @@ parameters:
 			path: lib/Drupal/Core/DrupalKernel.php
 
 		-
-			message: """
-				#^Interface Drupal\\\\Core\\\\DrupalKernelInterface extends deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/DrupalKernelInterface.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\Entity\\\\ContentEntityConfirmFormBase\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Entity/ContentEntityConfirmFormBase.php
@@ -798,14 +790,6 @@ parameters:
 			message: "#^Variable \\$index might not be defined\\.$#"
 			count: 3
 			path: lib/Drupal/Core/Site/SettingsEditor.php
-
-		-
-			message: """
-				#^Usage of deprecated trait Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareTrait in class Drupal\\\\Core\\\\StackMiddleware\\\\Session\\:
-				since Symfony 6\\.4, use dependency injection instead$#
-			"""
-			count: 1
-			path: lib/Drupal/Core/StackMiddleware/Session.php
 
 		-
 			message: "#^Method Drupal\\\\Core\\\\Template\\\\AttributeValueBase\\:\\:render\\(\\) should return string but return statement is missing\\.$#"
