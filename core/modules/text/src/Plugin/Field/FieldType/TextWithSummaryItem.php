@@ -106,11 +106,35 @@ class TextWithSummaryItem extends TextItemBase {
     $element['required_summary'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Require summary'),
-      '#description' => $this->t('The summary will also be visible when marked as required.'),
+      '#description' => $this->t('Enable "Summary input" and "Require summary" to make the summary required.'),
+      '#element_validate' => [[static::class, 'validateRequiredSummary']],
       '#default_value' => $settings['required_summary'],
+      '#states' => [
+        'visible' => [
+          ':input[name="settings[display_summary]"]' => ['checked' => TRUE],
+        ],
+        'enabled' => [
+          ':input[name="settings[display_summary]"]' => ['checked' => TRUE],
+        ],
+        'unchecked' => [
+          ':input[name="settings[required_summary]"]' => ['checked' => FALSE],
+        ],
+      ],
     ];
 
     return $element;
+  }
+
+  /**
+   * Ensures display summary field is checked if summary field is required.
+   *
+   * This function is assigned as an #element_validate callback in
+   * fieldSettingsForm().
+   */
+  public static function validateRequiredSummary($element, FormStateInterface $form_state) {
+    if (!empty($element['#value']) && empty($form_state->getValue(['settings', 'display_summary']))) {
+      $form_state->setError($element, t('If "Require summary" is checked "Summary input" has to be checked as well.'));
+    }
   }
 
   /**
@@ -118,7 +142,7 @@ class TextWithSummaryItem extends TextItemBase {
    */
   public function getConstraints() {
     $constraints = parent::getConstraints();
-    if ($this->getSetting('required_summary')) {
+    if ($this->getSetting('required_summary') && $this->getSetting('display_summary')) {
       $manager = $this->getTypedDataManager()->getValidationConstraintManager();
       $constraints[] = $manager->create('ComplexData', [
         'summary' => [
