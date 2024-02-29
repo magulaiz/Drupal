@@ -58,7 +58,7 @@ a.block-demo-backlink:hover {
 /* Make the fieldset of the input filter stick */
 .block-filter-fields {
   position: sticky;
-  z-index: 500;
+  z-index: 100;
   top: var(--drupal-displace-offset-top, 0);
   height: 132px;
 }
@@ -68,7 +68,7 @@ a.block-demo-backlink:hover {
  */
 .list-blocks thead {
   position: sticky;
-  z-index: 500;
+  z-index: 100;
   top: calc(var(--drupal-displace-offset-top, 0) + 134px);
   box-shadow: var(--details-box-shadow);
 }
