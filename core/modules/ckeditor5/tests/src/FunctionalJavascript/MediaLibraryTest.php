@@ -177,7 +177,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->pageTextContains('1 of 1 item selected');
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', $media_preview_selector, 1000));
-    $xpath = new \DOMXPath($this->getEditorDataAsDom());
+    $xpath = new \DOMXPath($this->getEditorDataAsDom(0));
     $drupal_media = $xpath->query('//drupal-media')[0];
     $expected_attributes = [
       'data-entity-type' => 'media',
@@ -205,7 +205,7 @@ class MediaLibraryTest extends WebDriverTestBase {
     $assert_session->elementExists('css', '.js-media-library-item')->click();
     $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', $media_preview_selector, 1000));
-    $xpath = new \DOMXPath($this->getEditorDataAsDom());
+    $xpath = new \DOMXPath($this->getEditorDataAsDom(0));
     $drupal_media = $xpath->query('//drupal-media')[0];
     $expected_attributes = [
       'data-entity-type' => 'media',
@@ -242,9 +242,11 @@ class MediaLibraryTest extends WebDriverTestBase {
           ],
         ])->save();
 
+
       // Now test opening the media library from the CKEditor plugin, and
       // verify the expected behavior.
       $this->drupalGet('/node/add/blog');
+
       $this->waitForEditor();
       $this->pressEditorButton('Insert Media');
 
@@ -279,6 +281,7 @@ class MediaLibraryTest extends WebDriverTestBase {
 
     $this->drupalGet('/node/add/blog');
     $this->waitForEditor();
+    $assert_session->waitForElementVisible('css', self::BODY_VALUE_FIELD_SELECTOR . '.ck-editor button');
     $this->pressEditorButton('Insert Media');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-modal #media-library-content'));
     $assert_session->elementExists('css', '.js-media-library-item')->click();

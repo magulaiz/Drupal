@@ -87,7 +87,7 @@ class FormErrorHandlerCKEditor5Test extends WebDriverTestBase {
   public function testFragmentLink() {
     $session = $this->getSession();
     $web_assert = $this->assertSession();
-    $ckeditor_class = '.ck-editor';
+    $ckeditor_class = '.form-item-body-0-value .ck-editor';
     $ckeditor_id = '#cke_edit-body-0-value';
 
     $this->drupalGet('node/add/page');

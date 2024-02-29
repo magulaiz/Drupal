@@ -17,12 +17,23 @@ use Drupal\Component\Utility\Html;
 trait CKEditor5TestTrait {
 
   /**
+   * Body field selector for the value element.
+   *
+   * It helps for "text_with_summary" fields testing.
+   *
+   * @var string
+   */
+  protected const BODY_VALUE_FIELD_SELECTOR = '.form-item-body-0-value ';
+
+  /**
    * Gets CKEditor 5 instance data as a PHP DOMDocument.
    *
    * @return \DOMDocument
    *   The result of parsing CKEditor 5's data into a PHP DOMDocument.
    */
-  protected function getEditorDataAsDom(int $index = 0): \DOMDocument {
+  protected function getEditorDataAsDom(int $index = 1): \DOMDocument {
+    // $index default is 1, as most of the cases are for "text_with_summary"
+    // field type, and the visible Editor is the second (index 1).
     return Html::load($this->getEditorDataAsHtmlString($index));
   }
 
@@ -34,7 +45,7 @@ trait CKEditor5TestTrait {
    *
    * @see https://ckeditor.com/docs/ckeditor5/latest/api/module_editor-classic_classiceditor-ClassicEditor.html#function-getData
    */
-  protected function getEditorDataAsHtmlString(int $index = 0): string {
+  protected function getEditorDataAsHtmlString(int $index = 1): string {
     // We cannot trust on CKEditor updating the textarea every time model
     // changes. Therefore, the most reliable way to get downcasted data is to
     // use the CKEditor API.
@@ -77,7 +88,8 @@ JS;
    *   The page element node if found, NULL if not.
    */
   protected function getEditorButton($name) {
-    $button = $this->assertSession()->waitForElementVisible('xpath', "//button[span[text()='$name']]");
+    $button_xpath = self::BODY_VALUE_FIELD_SELECTOR . "[data-cke-tooltip-text='$name']";
+    $button = $this->assertSession()->waitForElementVisible('css', $button_xpath);
     $this->assertNotEmpty($button);
     return $button;
   }
@@ -144,11 +156,13 @@ JS;
    *
    * @param string $selector
    *   A CSS selector for the element which contents should be selected.
+   * @param string $parent_selector
+   *   A CSS selector for the element which contents should be selected.
    */
-  protected function selectTextInsideElement(string $selector): void {
+  protected function selectTextInsideElement(string $selector, string $parent_selector = ''): void {
     $javascript = <<<JS
 (function() {
-  const el = document.querySelector(".ck-editor__main $selector");
+  const el = document.querySelector("$parent_selector .ck-editor__main $selector");
   const range = document.createRange();
   range.selectNodeContents(el);
   const sel = window.getSelection();

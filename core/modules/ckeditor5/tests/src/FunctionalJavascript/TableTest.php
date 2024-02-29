@@ -158,7 +158,7 @@ class TableTest extends WebDriverTestBase {
     $this->waitForEditor();
 
     // Add a table via the editor buttons.
-    $table_button = $page->find('css', '.ck-dropdown button');
+    $table_button = $page->find('css', self::BODY_VALUE_FIELD_SELECTOR . '.ck-dropdown button');
     $table_button->click();
 
     // Add a single table cell.

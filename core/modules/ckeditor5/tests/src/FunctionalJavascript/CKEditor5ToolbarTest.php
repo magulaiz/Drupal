@@ -8,6 +8,7 @@ use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Drupal\user\Entity\User;
 use Symfony\Component\Validator\ConstraintViolation;
 
@@ -18,6 +19,8 @@ use Symfony\Component\Validator\ConstraintViolation;
  * @internal
  */
 class CKEditor5ToolbarTest extends WebDriverTestBase {
+
+  use CKEditor5TestTrait;
 
   /**
    * {@inheritdoc}
@@ -108,9 +111,9 @@ class CKEditor5ToolbarTest extends WebDriverTestBase {
 JS;
     $this->getSession()->evaluateScript($javascript);
 
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-sticky-panel__placeholder'));
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', self::BODY_VALUE_FIELD_SELECTOR . '.ck-sticky-panel__placeholder'));
     $toolbar_height = (int) $this->getSession()->evaluateScript('document.getElementById("toolbar-bar").offsetHeight');
-    $ckeditor5_toolbar_position = (int) $this->getSession()->evaluateScript("document.querySelector('.ck-toolbar').getBoundingClientRect().top");
+    $ckeditor5_toolbar_position = (int) $this->getSession()->evaluateScript("document.querySelector('" . self::BODY_VALUE_FIELD_SELECTOR . ".ck-toolbar').getBoundingClientRect().top");
     $this->assertEqualsWithDelta($toolbar_height, $ckeditor5_toolbar_position, 2);
   }
 

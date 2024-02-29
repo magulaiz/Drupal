@@ -90,12 +90,12 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $src = $this->imageAttributes()['src'];
     $this->waitForEditor();
     $this->pressEditorButton('Insert image via URL');
-    $panel = $page->find('css', '.ck-dropdown__panel  .ck-image-insert-url');
+    $panel = $page->find('css', self::BODY_VALUE_FIELD_SELECTOR . '.ck-dropdown__panel  .ck-image-insert-url');
     $src_input = $panel->find('css', 'input[type=text]');
     $src_input->setValue($src);
     $panel->find('xpath', "//button[span[text()='Insert']]")->click();
     // Wait for the image to be uploaded and rendered by CKEditor 5.
-    $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', '.ck-widget.image > img[src="' . $src . '"]'));
+    $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', self::BODY_VALUE_FIELD_SELECTOR . '.ck-widget.image > img[src="' . $src . '"]'));
   }
 
   /**
@@ -250,13 +250,13 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $this->assertEmpty($xpath->query('//a'));
 
     // Assert the link button is present and not pressed.
-    $link_button = $this->getEditorButton('Link');
+    $link_button = $this->getEditorButton('Link (Ctrl+K)');
     $this->assertSame('false', $link_button->getAttribute('aria-pressed'));
 
     // Tests linking images.
     $drupalimage->click();
     $this->assertTrue($drupalimage->hasClass('ck-widget_selected'));
-    $this->assertEditorButtonEnabled('Link');
+    $this->assertEditorButtonEnabled('Link (Ctrl+K)');
     // Assert structure of image toolbar balloon.
     $this->assertVisibleBalloon('.ck-toolbar[aria-label="Image toolbar"]');
     $link_image_button = $this->getBalloonButton('Link image');
@@ -289,7 +289,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $this->assertEmpty($xpath->query('//a[@href="http://www.drupal.org/association" and @class="trusted"]'));
 
     // Add `class="trusted"` to the link.
-    $xpath = new \DOMXPath($this->getEditorDataAsDom());
+    $xpath = new \DOMXPath($this->getEditorDataAsDom(0));
     $this->assertEmpty($xpath->query('//a[@href="http://www.drupal.org/association" and @class="trusted"]'));
     $this->pressEditorButton('Source');
     $source_text_area = $assert_session->waitForElement('css', '.ck-source-editing-area textarea');
@@ -326,8 +326,8 @@ abstract class ImageTestBase extends CKEditor5TestBase {
 
     // Tests unlinking images.
     $drupalimage->click();
-    $this->assertEditorButtonEnabled('Link');
-    $this->assertSame('true', $this->getEditorButton('Link')->getAttribute('aria-pressed'));
+    $this->assertEditorButtonEnabled('Link (Ctrl+K)');
+    $this->assertSame('true', $this->getEditorButton('Link (Ctrl+K)')->getAttribute('aria-pressed'));
     // Assert structure of image toolbar balloon.
     $this->assertVisibleBalloon('.ck-toolbar[aria-label="Image toolbar"]');
     $link_image_button = $this->getBalloonButton('Link image');
@@ -338,7 +338,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $unlink_image_button = $this->getBalloonButton('Unlink');
     // Click the "Unlink" button.
     $unlink_image_button->click();
-    $this->assertSame('false', $this->getEditorButton('Link')->getAttribute('aria-pressed'));
+    $this->assertSame('false', $this->getEditorButton('Link (Ctrl+K)')->getAttribute('aria-pressed'));
 
     // Assert the "editingDowncast" HTML after making changes. Assert the
     // widget exists but not the link, or *any* link for that matter. Then
@@ -394,7 +394,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
 
     // Add alt text to the block image.
     $image_block->find('css', '.image-alternative-text-missing button')->click();
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-balloon-panel'));
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-balloon-panel_visible'));
     $this->assertVisibleBalloon('.ck-text-alternative-form');
 
     // Ensure that the missing alt text warning is hidden when the alternative
@@ -597,10 +597,10 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $this->drupalGet($this->host->toUrl('edit-form'));
     $this->waitForEditor();
 
-    $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-editor'));
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', self::BODY_VALUE_FIELD_SELECTOR . '.ck-editor'));
     $this->assertNotEmpty($figcaption = $assert_session->waitForElement('css', '.image figcaption'));
     $this->assertSame('Alpacas <em>are</em> cute<br>really!', $figcaption->getHtml());
-    $page->pressButton('Source');
+    $this->pressEditorButton('Source');
     $editor_dom = $this->getEditorDataAsDom();
     $data_caption = $editor_dom->getElementsByTagName('img')->item(0)->getAttribute('data-caption');
     $this->assertSame('Alpacas <em>are</em> cute<br>really!', $data_caption);

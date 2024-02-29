@@ -119,7 +119,7 @@ class MediaTest extends MediaTestBase {
     $this->host->save();
     $this->drupalGet($this->host->toUrl('edit-form'));
 
-    $this->assertNotEmpty($upcasted_media = $assert_session->waitForElementVisible('css', '.ck-widget.drupal-media'));
+    $this->assertNotEmpty($upcasted_media = $assert_session->waitForElementVisible('css', self::BODY_VALUE_FIELD_SELECTOR . '.ck-widget.drupal-media'));
 
     // Confirm the media is wrapped by the list item on the editing view.
     $assert_session->elementExists('css', 'li > .drupal-media');
@@ -276,7 +276,7 @@ class MediaTest extends MediaTestBase {
     $this->assertNotEmpty($figcaption = $assert_session->waitForElement('css', '.drupal-media figcaption'));
     $this->selectTextInsideElement('.drupal-media figcaption');
     $this->assertNotEmpty($assert_session->waitForElement('css', '.drupal-media figcaption.ck-editor__nested-editable'));
-    $this->pressEditorButton('Bold');
+    $this->pressEditorButton('Bold (Ctrl+B)');
     $this->assertNotEmpty($assert_session->waitForElement('css', '.drupal-media figcaption > strong'));
     $this->assertEquals('<strong>Llamas are the most awesome ever</strong>', $figcaption->getHtml());
     $editor_dom = $this->getEditorDataAsDom();
@@ -286,7 +286,7 @@ class MediaTest extends MediaTestBase {
     $this->assertNotEmpty($assert_session->waitForElement('css', '.drupal-media figcaption > strong'));
     $this->selectTextInsideElement('.drupal-media figcaption > strong');
     $this->assertNotEmpty($assert_session->waitForElement('css', '.drupal-media figcaption.ck-editor__nested-editable'));
-    $this->pressEditorButton('Bold');
+    $this->pressEditorButton('Bold (Ctrl+B)');
     $this->assertTrue($assert_session->waitForElementRemoved('css', '.drupal-media figcaption > strong'));
     $this->assertNotEmpty($figcaption = $assert_session->waitForElement('css', '.drupal-media figcaption'));
     $this->assertEquals('Llamas are the most awesome ever', $figcaption->getHtml());
@@ -317,7 +317,7 @@ class MediaTest extends MediaTestBase {
     $figcaption->click();
     $this->selectTextInsideElement('.drupal-media figcaption');
     $this->assertNotEmpty($assert_session->waitForElement('css', '.drupal-media figcaption.ck-editor__nested-editable'));
-    $this->pressEditorButton('Link');
+    $this->pressEditorButton('Link (Ctrl+K)');
     $this->assertVisibleBalloon('.ck-link-form');
     $link_input = $page->find('css', '.ck-balloon-panel .ck-link-form input[type=text]');
     $link_input->setValue('https://example.com');
@@ -709,7 +709,7 @@ class MediaTest extends MediaTestBase {
     $this->drupalGet($this->host->toUrl('edit-form'));
     $this->waitForEditor();
 
-    $page->pressButton('Source');
+    $this->pressEditorButton('Source');
     $editor_dom = $this->getEditorDataAsDom();
     $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')->item(0);
 
@@ -718,7 +718,7 @@ class MediaTest extends MediaTestBase {
     $drupal_media_element->setAttribute('class', 'layercake-side arbitrary-class');
     $textarea = $page->find('css', '.ck-source-editing-area > textarea');
     $textarea->setValue($editor_dom->C14N());
-    $page->pressButton('Source');
+    $this->pressEditorButton('Source');
 
     // Ensure that the `layercake-side` class is retained.
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-widget.drupal-media.layercake-side'));

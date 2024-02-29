@@ -67,11 +67,11 @@ class CKEditor5DialogTest extends CKEditor5TestBase {
     $assert_session->waitForElementVisible('css', '[role="dialog"]');
     $assert_session->assertWaitOnAjaxRequest();
 
-    $content_area = $assert_session->waitForElementVisible('css', '.ck-editor__editable');
+    $content_area = $assert_session->waitForElementVisible('css', self::BODY_VALUE_FIELD_SELECTOR . '.ck-editor__editable');
     // Focus the editable area first.
     $content_area->click();
     // Then press the button to add a link.
-    $this->pressEditorButton('Link');
+    $this->pressEditorButton('Link (Ctrl+K)');
 
     $link_url = '/ckeditor5_test/dialog';
     $input = $assert_session->waitForElementVisible('css', '.ck-balloon-panel input.ck-input-text');
