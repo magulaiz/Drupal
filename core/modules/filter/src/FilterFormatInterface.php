@@ -56,7 +56,7 @@ interface FilterFormatInterface extends ConfigEntityInterface {
   /**
    * Retrieves all filter types that are used in the text format.
    *
-   * @return array
+   * @return \Drupal\filter\FilterType[]
    *   All filter types used by filters of the text format.
    */
   public function getFilterTypes();

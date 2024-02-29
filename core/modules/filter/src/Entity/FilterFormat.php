@@ -272,13 +272,15 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
     $filter_types = [];
 
     $filters = $this->filters();
+    /** @var \Drupal\filter\Plugin\FilterInterface $filter */
     foreach ($filters as $filter) {
       if ($filter->status) {
-        $filter_types[] = $filter->getType();
+        $filter_type = $filter->getType();
+        $filter_types[$filter_type->name] = $filter_type;
       }
     }
 
-    return array_unique($filter_types);
+    return array_values($filter_types);
   }
 
   /**
