@@ -102,7 +102,6 @@
           return;
         }
 
-        // if (rowObject.alreadySwapped !== true) {
         let direction = 'before';
         // Move the element after or before the region that display the quantity of filtered.
         const previousElement =

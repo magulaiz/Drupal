@@ -119,6 +119,7 @@ class BlockFilterTest extends WebDriverTestBase {
         ];
       }
     }
+
     $this->drupalGet('admin/structure/block');
     $assertSession = $this->assertSession();
     $session = $this->getSession();
