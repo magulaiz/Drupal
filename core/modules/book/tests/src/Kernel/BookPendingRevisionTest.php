@@ -47,7 +47,7 @@ class BookPendingRevisionTest extends KernelTestBase {
   public function testBookWithPendingRevisions() {
     $content_type = NodeType::create([
       'type' => $this->randomMachineName(),
-      'name' => $this->randomString(),
+      'name' => $this->randomName(),
     ]);
     $content_type->save();
     $book_config = $this->config('book.settings');

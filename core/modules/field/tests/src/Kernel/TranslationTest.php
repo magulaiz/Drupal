@@ -98,7 +98,7 @@ class TranslationTest extends FieldKernelTestBase {
     for ($i = 0; $i < 3; ++$i) {
       ConfigurableLanguage::create([
         'id' => 'l' . $i,
-        'label' => $this->randomString(),
+        'label' => $this->randomName(),
       ])->save();
     }
   }

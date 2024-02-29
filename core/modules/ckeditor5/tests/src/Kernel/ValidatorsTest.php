@@ -683,7 +683,7 @@ class ValidatorsTest extends KernelTestBase {
     // @todo Remove this work-around in https://www.drupal.org/project/drupal/issues/3231354
     $text_format
       ->set('format', $text_editor->id())
-      ->set('name', $this->randomString())
+      ->set('name', 'Test Pair')
       ->save();
 
     // TRICKY: only assert config schema (and validation constraints) if we
@@ -1577,7 +1577,7 @@ class ValidatorsTest extends KernelTestBase {
 
     $text_format = FilterFormat::create([
       'format' => 'very_restricted',
-      'name' => $this->randomMachineName(),
+      'name' => 'Very restricted text format',
       'filters' => [
         // The first filter of type TYPE_HTML_RESTRICTOR.
         'filter_html' => [

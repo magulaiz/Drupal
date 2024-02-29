@@ -99,4 +99,19 @@ trait RandomGeneratorTrait {
     return Random::getGenerator();
   }
 
+  /**
+   * Generates a random string containing letters and numbers.
+   *
+   * @param int $length
+   *   Length of random string to generate.
+   *
+   * @return string
+   *   Randomly generated name.
+   *
+   * @see \Drupal\Component\Utility\Random::name()
+   */
+  protected function randomName($length = 8) {
+    return Random::name($length);
+  }
+
 }

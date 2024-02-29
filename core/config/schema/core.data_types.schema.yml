@@ -73,6 +73,7 @@ label:
       pattern: '/([^\PC])/u'
       match: false
       message: 'Labels are not allowed to span multiple lines or contain control characters.'
+    NoMarkup: {}
 
 required_label:
   type: label

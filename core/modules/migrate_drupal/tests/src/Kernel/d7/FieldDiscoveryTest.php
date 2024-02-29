@@ -86,12 +86,12 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
     foreach ($node_types as $node_type => $comment_type) {
       NodeType::create([
         'type' => $node_type,
-        'name' => $this->randomString(),
+        'name' => $this->randomName(),
       ])->save();
 
       CommentType::create([
         'id' => $comment_type,
-        'label' => $this->randomString(),
+        'label' => $this->randomName(),
         'target_entity_type_id' => 'node',
       ])->save();
     }

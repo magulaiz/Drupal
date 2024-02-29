@@ -201,7 +201,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
     foreach (['foo', 'bar'] as $langcode) {
       ConfigurableLanguage::create([
         'id' => $langcode,
-        'label' => $this->randomString(),
+        'label' => $this->randomName(),
       ])->save();
     }
 

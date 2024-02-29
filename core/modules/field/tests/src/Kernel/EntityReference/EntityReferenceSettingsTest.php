@@ -73,7 +73,7 @@ class EntityReferenceSettingsTest extends KernelTestBase {
 
     $this->nodeType = NodeType::create([
       'type' => $this->randomMachineName(),
-      'name' => $this->randomString(),
+      'name' => $this->randomName(),
     ]);
     $this->nodeType->save();
 
@@ -95,7 +95,7 @@ class EntityReferenceSettingsTest extends KernelTestBase {
     for ($i = 0; $i < 2; $i++) {
       $vid = $this->randomMachineName();
       $vocabularies[$i] = Vocabulary::create([
-        'name' => $this->randomString(),
+        'name' => $this->randomName(),
         'vid' => $vid,
       ]);
       $vocabularies[$i]->save();
@@ -151,7 +151,7 @@ class EntityReferenceSettingsTest extends KernelTestBase {
   public function testCustomTargetBundleDeletion() {
     // Attach an entity reference field to $this->nodeType.
     $name = $this->randomMachineName();
-    $label = $this->randomString();
+    $label = $this->randomName();
     $handler_settings = ['target_bundles' => [$this->customBundle => $this->customBundle]];
     $this->createEntityReferenceField('node', $this->nodeType->id(), $name, $label, 'entity_test', 'default', $handler_settings);
 

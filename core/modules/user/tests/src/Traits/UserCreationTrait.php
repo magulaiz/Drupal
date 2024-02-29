@@ -246,7 +246,7 @@ trait UserCreationTrait {
     if (!isset($name)) {
       // In the role UI role names are trimmed and random string can start or
       // end with a space.
-      $name = trim($this->randomString(8));
+      $name = trim($this->randomName());
     }
 
     // Check the all the permissions strings are valid.

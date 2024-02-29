@@ -36,7 +36,7 @@ trait MediaTypeCreationTrait {
   protected function createMediaType($source_plugin_id, array $values = []) {
     $values += [
       'id' => $this->randomMachineName(),
-      'label' => $this->randomString(),
+      'label' => $this->randomName(),
       'source' => $source_plugin_id,
     ];
 
