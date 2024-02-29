@@ -61,14 +61,11 @@ class DialogRenderer implements MainContentRendererInterface {
     // otherwise get it from the routing information.
     $title = NULL;
     if (array_key_exists('#title', $main_content)) {
-      if ($main_content['#title'] instanceof TranslatableMarkup) {
-        $title = $main_content['#title']->render();
-      }
-      elseif (is_array($main_content['#title'])) {
+      if (is_array($main_content['#title'])) {
         $title = \Drupal::service('renderer')->renderPlain($main_content['#title']);
       }
       else {
-        $title = $main_content['#title'];
+        $title = (string) $main_content['#title'];
       }
     }
     elseif ($this->titleResolver->getTitle($request, $route_match->getRouteObject())) {
