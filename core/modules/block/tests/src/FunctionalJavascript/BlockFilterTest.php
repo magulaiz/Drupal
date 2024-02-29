@@ -137,7 +137,7 @@ class BlockFilterTest extends WebDriverTestBase {
     );
 
     // Resize window to work around https://github.com/bitovi/syn/issues/164.
-    $this->getSession()->resizeWindow(1024, 2048);
+    $this->getSession()->resizeWindow(1024, 3072);
     $this->drupalGet('admin/structure/block');
     $assertSession = $this->assertSession();
     $session = $this->getSession();
