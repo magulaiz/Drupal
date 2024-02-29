@@ -163,7 +163,7 @@ class TestDiscovery {
     // Prevent expensive class loader lookups for each reflected test class by
     // registering the complete classmap of test classes to the class loader.
     // This also ensures that test classes are loaded from the discovered
-    // pathnames; a namespace/classname mismatch will throw an exception.
+    // path names; a namespace/classname mismatch will throw an exception.
     $this->classLoader->addClassMap($classmap);
 
     foreach ($classmap as $classname => $pathname) {
@@ -174,7 +174,7 @@ class TestDiscovery {
       }
       catch (MissingGroupException $e) {
         // If the class name ends in Test and is not a migrate table dump.
-        if (preg_match('/Test$/', $classname) && !str_contains($classname, 'migrate_drupal\Tests\Table')) {
+        if (str_ends_with($classname, 'Test') && !str_contains($classname, 'migrate_drupal\Tests\Table')) {
           throw $e;
         }
         // If the class is @group annotation just skip it. Most likely it is an
@@ -213,7 +213,7 @@ class TestDiscovery {
    *
    * @return array
    *   A classmap containing all discovered class files; i.e., a map of
-   *   fully-qualified classnames to pathnames.
+   *   fully-qualified classnames to path names.
    */
   public function findAllClassFiles($extension = NULL) {
     $classmap = [];
@@ -247,7 +247,7 @@ class TestDiscovery {
    *
    * @return array
    *   An associative array whose keys are fully-qualified class names and whose
-   *   values are corresponding filesystem pathnames.
+   *   values are corresponding filesystem path names.
    *
    * @throws \InvalidArgumentException
    *   If $namespace_prefix does not end in a namespace separator (backslash).
@@ -273,10 +273,10 @@ class TestDiscovery {
       // We don't want to discover abstract TestBase classes, traits or
       // interfaces. They can be deprecated and will call @trigger_error()
       // during discovery.
-      return substr($file_name, -4) === '.php' &&
-        substr($file_name, -12) !== 'TestBase.php' &&
-        substr($file_name, -9) !== 'Trait.php' &&
-        substr($file_name, -13) !== 'Interface.php';
+      return str_ends_with($file_name, '.php') &&
+        !str_ends_with($file_name, 'TestBase.php') &&
+        !str_ends_with($file_name, 'Trait.php') &&
+        !str_ends_with($file_name, 'Interface.php');
     });
     $files = new \RecursiveIteratorIterator($filter);
     $classes = [];

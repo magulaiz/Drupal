@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate_drupal\Unit;
 
 use Drupal\Core\Database\DatabaseExceptionWrapper;
@@ -55,7 +57,7 @@ class MigrationConfigurationTraitTest extends UnitTestCase {
   /**
    * Provides data for testGetLegacyDrupalVersion.
    */
-  public function providerTestGetLegacyDrupalVersion() {
+  public static function providerTestGetLegacyDrupalVersion() {
     return [
       'D5' => [
         'expected_version_string' => '5',

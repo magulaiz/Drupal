@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\phpass\Unit;
 
 use Drupal\phpass\Password\PhpassHashedPassword;
@@ -141,7 +143,7 @@ class PasswordVerifyTest extends UnitTestCase {
   /**
    * Provides the test matrix for testLongPassword().
    */
-  public function providerLongPasswords() {
+  public static function providerLongPasswords() {
     // '512 byte long password is allowed.'
     $passwords['allowed'] = [str_repeat('x', PasswordInterface::PASSWORD_MAX_LENGTH), TRUE];
     // 513 byte long password is not allowed.

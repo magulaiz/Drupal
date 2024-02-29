@@ -324,6 +324,8 @@ class ModuleHandlerTest extends KernelTestBase {
     file_exists('dummy://');
     $stream_wrappers = \Drupal::service('stream_wrapper_manager')->getWrappers();
     $this->assertTrue(isset($stream_wrappers['dummy']));
+    $this->assertTrue(isset($stream_wrappers['dummy1']));
+    $this->assertTrue(isset($stream_wrappers['dummy2']));
   }
 
   /**
@@ -331,7 +333,7 @@ class ModuleHandlerTest extends KernelTestBase {
    */
   public function testThemeMetaData() {
     // Generate the list of available themes.
-    $themes = \Drupal::service('theme_handler')->rebuildThemeData();
+    $themes = \Drupal::service('extension.list.theme')->reset()->getList();
     // Check that the mtime field exists for the olivero theme.
     $this->assertNotEmpty($themes['olivero']->info['mtime'], 'The olivero.info.yml file modification time field is present.');
     // Use 0 if mtime isn't present, to avoid an array index notice.

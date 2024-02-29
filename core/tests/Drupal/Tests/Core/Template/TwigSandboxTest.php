@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Template;
 
 use Drupal\Core\Template\Attribute;
@@ -55,7 +57,7 @@ class TwigSandboxTest extends UnitTestCase {
    *
    * @return array
    */
-  public function getTwigEntityDangerousMethods() {
+  public static function getTwigEntityDangerousMethods() {
     return [
       ['{{ entity.delete }}'],
       ['{{ entity.save }}'],

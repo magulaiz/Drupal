@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Composer\Plugin\ProjectMessage;
 
 use Composer\Package\RootPackageInterface;
@@ -22,7 +24,7 @@ class ConfigTest extends TestCase {
     ]);
   }
 
-  public function provideGetMessageText() {
+  public static function provideGetMessageText() {
     return [
       [[], []],
       [
