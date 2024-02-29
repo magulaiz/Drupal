@@ -20,9 +20,11 @@ use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\editor\EditorInterface;
+use Drupal\filter\Plugin\FilterInterface;
 
 // cspell:ignore multiblock
 
@@ -176,7 +178,24 @@ function ckeditor5_form_filter_format_form_alter(array &$form, FormStateInterfac
     'ckeditor5_only' => 'true',
   ];
 
+  $filters = $editor->getFilterFormat()->filters();
   foreach (Element::children($form['filters']['status']) as $filter_type) {
+    $filter_plugin_instance = $filters->get($filter_type);
+    // Only filter_url is a markup filter with truly zero side effects. Even
+    // filter_autop has side effects.
+    // @see https://www.drupal.org/project/drupal/issues/3337684
+    // @see \Drupal\ckeditor5\Plugin\Validation\Constraint\FundamentalCompatibilityConstraintValidator::checkNoMarkupFilters()
+    if ($filter_plugin_instance->getType() === FilterInterface::TYPE_MARKUP_LANGUAGE && $filter_type !== 'filter_url') {
+      // If the filter is already enabled, warn & inform the user.
+      if ($filter_plugin_instance->status) {
+        $form['filters']['status'][$filter_type]['#description'] = Markup::create('⚠️&nbsp;' . t('CKEditor 5 only works with HTML-based text formats. This filter is enabled for legacy reasons, it is recommended to disable this filter.') . '<br><s>' . $form['filters']['status'][$filter_type]['#description'] . '</s>');
+      }
+      // Otherwise, simply forbid it.
+      else {
+        $form['filters']['status'][$filter_type]['#description'] = '⚠️&nbsp;' . t('CKEditor 5 only works with HTML-based text formats. Enabling this filter would cause this text format to not store HTML anymore.');
+        $form['filters']['status'][$filter_type]['#disabled'] = TRUE;
+      }
+    }
     $form['filters']['status'][$filter_type]['#ajax'] = [
       'callback' => '_update_ckeditor5_html_filter',
       'trigger_as' => ['name' => 'editor_configure'],
