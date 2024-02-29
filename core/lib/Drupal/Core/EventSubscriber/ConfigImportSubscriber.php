@@ -124,16 +124,16 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
         // If this error has occurred the other checks are irrelevant.
         return;
       }
-      elseif (!empty($core_extension['profile'])) {
+      elseif ($new_install_profile) {
         $config_importer->logError($this->t('Cannot change the install profile from %profile to %new_profile once Drupal is installed.', [
           '%profile' => $install_profile,
-          '%new_profile' => $core_extension['profile'],
+          '%new_profile' => $new_install_profile,
         ]));
       }
     }
-    elseif (!empty($core_extension['profile']) && !isset($core_extension['module'][$core_extension['profile']])) {
+    elseif ($new_install_profile && !isset($core_extension['module'][$new_install_profile])) {
       $config_importer->logError($this->t('The install profile %profile is not in the list of installed modules.', [
-        '%profile' => $core_extension['profile'],
+        '%profile' => $new_install_profile,
       ]));
     }
 
