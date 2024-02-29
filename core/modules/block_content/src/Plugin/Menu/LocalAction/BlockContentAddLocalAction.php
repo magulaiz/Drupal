@@ -33,7 +33,8 @@ class BlockContentAddLocalAction extends LocalActionDefault {
     $plugin_id,
     $plugin_definition,
     RouteProviderInterface $routeProvider,
-    protected RequestStack $requestStack) {
+    protected RequestStack $requestStack,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $routeProvider);
   }
 
