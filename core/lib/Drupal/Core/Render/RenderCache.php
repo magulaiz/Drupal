@@ -79,10 +79,9 @@ class RenderCache implements RenderCacheInterface {
    * {@inheritdoc}
    */
   public function set(array &$elements, array $pre_bubbling_elements) {
-    // Form submissions rely on the form being built during the POST request,
-    // and render caching of forms prevents this from happening.
-    // @todo remove the isMethodCacheable() check when
-    //   https://www.drupal.org/node/2367555 lands.
+    // Avoid setting cache items on POST requests, this ensures that cache items
+    // with a very low hit rate won't enter the cache. All render elements
+    // except forms will still be retrieved from cache when available.
     if (!$this->requestStack->getCurrentRequest()->isMethodCacheable() || !$this->isElementCacheable($elements)) {
       return FALSE;
     }
