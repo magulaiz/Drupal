@@ -274,14 +274,15 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
       case 'ckeditor5_list':
         $restrictions = $text_format->getHtmlRestrictions();
         if ($restrictions === FALSE) {
-          // The default is to allow a reversed list and a start index, which makes sense when there
-          // are no restrictions.
-          // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\ListPlugin::default_configuration()
+          // The default is to allow a reversed list, a start index and the list
+          // style type which makes sense when there are no restrictions.
+          // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\ListPlugin::defaultConfiguration()
           return NULL;
         }
         $configuration = [];
         $configuration['properties']['reversed'] = !empty($restrictions['allowed']['ol']['reversed']);
         $configuration['properties']['startIndex'] = !empty($restrictions['allowed']['ol']['start']);
+        $configuration['properties']['styles'] = !empty($restrictions['allowed']['ol']['type']) || !empty($restrictions['allowed']['ul']['type']);
         return $configuration;
 
       case 'media_media':
