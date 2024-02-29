@@ -6,7 +6,6 @@ use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\filter\FilterType;
-use Drupal\filter\Plugin\FilterInterface;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Plugin\migrate\process\StaticMap;
 use Drupal\migrate\Plugin\MigrationInterface;

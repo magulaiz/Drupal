@@ -82,7 +82,9 @@ interface FilterInterface extends ConfigurableInterface, DependentPluginInterfac
    * Non-HTML markup language filters that generate HTML.
    *
    * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use
-   * \Drupal\filter\FilterType::MarkupLanguage instead.
+   *   \Drupal\filter\FilterType::MarkupLanguage instead.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/3424769
    */
   const TYPE_MARKUP_LANGUAGE = 0;
 
@@ -90,7 +92,9 @@ interface FilterInterface extends ConfigurableInterface, DependentPluginInterfac
    * HTML tag and attribute restricting filters to prevent XSS attacks.
    *
    * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use
-   *  \Drupal\filter\FilterType::HtmlRestrictor instead.
+   *   \Drupal\filter\FilterType::HtmlRestrictor instead.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/3424769
    */
   const TYPE_HTML_RESTRICTOR = 1;
 
@@ -98,7 +102,9 @@ interface FilterInterface extends ConfigurableInterface, DependentPluginInterfac
    * Reversible transformation filters.
    *
    * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use
-   * *  \Drupal\filter\FilterType::TransformReversible instead.
+   *   \Drupal\filter\FilterType::TransformReversible instead.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/3424769
    */
   const TYPE_TRANSFORM_REVERSIBLE = 2;
 
@@ -106,7 +112,9 @@ interface FilterInterface extends ConfigurableInterface, DependentPluginInterfac
    * Irreversible transformation filters.
    *
    * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use
-   * *  \Drupal\filter\FilterType::TransformIrreversible instead.
+   *   \Drupal\filter\FilterType::TransformIrreversible instead.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/3424769
    */
   const TYPE_TRANSFORM_IRREVERSIBLE = 3;
 

@@ -7,7 +7,6 @@ namespace Drupal\Tests\editor\Unit\EditorXssFilter;
 use Drupal\editor\EditorXssFilter\Standard;
 use Drupal\filter\FilterType;
 use Drupal\Tests\UnitTestCase;
-use Drupal\filter\Plugin\FilterInterface;
 
 // cspell:ignore ascript attributename bgsound bscript ckers cript datafld
 // cspell:ignore dataformatas datasrc dynsrc ession livescript msgbox nmouseover

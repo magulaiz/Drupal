@@ -9,7 +9,6 @@ use Drupal\Core\TypedData\DataDefinition;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\filter\FilterType;
 use Drupal\filter\Plugin\DataType\FilterFormat as FilterFormatDataType;
-use Drupal\filter\Plugin\FilterInterface;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 

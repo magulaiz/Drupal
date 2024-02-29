@@ -9,7 +9,6 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\filter\FilterPluginCollection;
 use Drupal\filter\FilterType;
-use Drupal\filter\Plugin\FilterInterface;
 use Drupal\user\Entity\Role;
 
 /**
