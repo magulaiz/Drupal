@@ -305,11 +305,8 @@ class Container implements ContainerInterface, ResetInterface {
 
   /**
    * {@inheritdoc}
-   *
-   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
-   * @return void
    */
-  public function set($id, $service) {
+  public function set($id, $service): void {
     $this->services[$id] = $service;
   }
 
@@ -344,11 +341,8 @@ class Container implements ContainerInterface, ResetInterface {
 
   /**
    * {@inheritdoc}
-   *
-   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
-   * @return void
    */
-  public function setParameter($name, $value) {
+  public function setParameter($name, $value): void {
     if ($this->frozen) {
       throw new LogicException('Impossible to call set() on a frozen ParameterBag.');
     }

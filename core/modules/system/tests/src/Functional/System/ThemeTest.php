@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Core\StreamWrapper\PublicStream;
@@ -259,6 +261,48 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalGet('admin/appearance/settings');
     $this->assertSession()->pageTextNotContains('Logo image settings');
     $this->assertSession()->pageTextNotContains('Shortcut icon settings');
+  }
+
+  /**
+   * Tests the theme settings color input.
+   */
+  public function testThemeSettingsColorHexCode() : void {
+    // Install the Olivero theme.
+    $this->container->get('theme_installer')->install(['olivero']);
+
+    // Define invalid and valid hex color codes.
+    $invalid_hex_codes = [
+      'xyz',
+      '#xyz',
+      '#ffff',
+      '#00000',
+      '#FFFFF ',
+      '00#000',
+    ];
+    $valid_hex_codes = [
+      '0F0',
+      '#F0F',
+      '#2ecc71',
+      '0074cc',
+    ];
+
+    // Visit Olivero's theme settings page.
+    $this->drupalGet('admin/appearance/settings/olivero');
+
+    // Test invalid hex color codes.
+    foreach ($invalid_hex_codes as $invalid_hex) {
+      $this->submitForm(['base_primary_color' => $invalid_hex], 'Save configuration');
+      // Invalid hex codes should throw error.
+      $this->assertSession()->statusMessageContains('"' . $invalid_hex . '" is not a valid hexadecimal color.', 'error');
+      $this->assertTrue($this->getSession()->getPage()->findField('base_primary_color')->hasClass('error'));
+    }
+
+    // Test valid hex color codes.
+    foreach ($valid_hex_codes as $valid_hex) {
+      $this->submitForm(['base_primary_color' => $valid_hex], 'Save configuration');
+      $this->assertSession()->statusMessageContains('The configuration options have been saved.', 'status');
+      $this->assertSame($valid_hex, $this->config('olivero.settings')->get('base_primary_color'));
+    }
   }
 
   /**

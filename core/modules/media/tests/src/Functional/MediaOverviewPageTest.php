@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\media\Functional;
 
 use Drupal\media\Entity\Media;
@@ -86,6 +88,9 @@ class MediaOverviewPageTest extends MediaFunctionalTestBase {
     ]);
     $media3->save();
 
+    // Make sure the role save below properly invalidates cache tags.
+    $this->refreshVariables();
+
     // Verify the view is now correctly populated. The non-admin user can only
     // view published media.
     $this->grantPermissions($role, [
@@ -137,6 +142,9 @@ class MediaOverviewPageTest extends MediaFunctionalTestBase {
     $assert_session->linkByHrefExists('/media/' . $media1->id() . '/edit');
     $assert_session->elementExists('css', 'td.views-field-operations li a:contains("Delete")', $row1);
     $assert_session->linkByHrefExists('/media/' . $media1->id() . '/delete');
+
+    // Make sure the role save below properly invalidates cache tags.
+    $this->refreshVariables();
 
     // Make the user the owner of the unpublished media item and assert the
     // media item is only visible with the 'view own unpublished media'
