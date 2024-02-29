@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\filter\FilterPluginCollection;
+use Drupal\filter\FilterType;
 use Drupal\filter\Plugin\FilterInterface;
 use Drupal\user\Entity\Role;
 
@@ -290,7 +291,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
       if (!$filter->status) {
         return FALSE;
       }
-      if ($filter->getType() === FilterInterface::TYPE_HTML_RESTRICTOR && $filter->getHTMLRestrictions() !== FALSE) {
+      if ($filter->getType() === FilterType::HtmlRestrictor && $filter->getHTMLRestrictions() !== FALSE) {
         return TRUE;
       }
       return FALSE;

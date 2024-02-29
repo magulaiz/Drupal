@@ -2,9 +2,9 @@
 
 namespace Drupal\filter\Plugin;
 
-use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\DependentPluginInterface;
+use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -80,33 +80,45 @@ interface FilterInterface extends ConfigurableInterface, DependentPluginInterfac
 
   /**
    * Non-HTML markup language filters that generate HTML.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use
+   * \Drupal\filter\FilterType::MarkupLanguage instead.
    */
   const TYPE_MARKUP_LANGUAGE = 0;
 
   /**
    * HTML tag and attribute restricting filters to prevent XSS attacks.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use
+   *  \Drupal\filter\FilterType::HtmlRestrictor instead.
    */
   const TYPE_HTML_RESTRICTOR = 1;
 
   /**
    * Reversible transformation filters.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use
+   * *  \Drupal\filter\FilterType::TransformReversible instead.
    */
   const TYPE_TRANSFORM_REVERSIBLE = 2;
 
   /**
    * Irreversible transformation filters.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use
+   * *  \Drupal\filter\FilterType::TransformIrreversible instead.
    */
   const TYPE_TRANSFORM_IRREVERSIBLE = 3;
 
   /**
    * Returns the processing type of this filter plugin.
    *
-   * @return int
+   * @return \Drupal\filter\FilterType
    *   One of:
-   *   - FilterInterface::TYPE_MARKUP_LANGUAGE
-   *   - FilterInterface::TYPE_HTML_RESTRICTOR
-   *   - FilterInterface::TYPE_TRANSFORM_REVERSIBLE
-   *   - FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE
+   *   - FilterType::MarkupLanguage
+   *   - FilterType::HtmlRestrictor
+   *   - FilterType::TransformReversible
+   *   - FilterType::TransformIrreversible
    */
   public function getType();
 

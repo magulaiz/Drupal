@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\filter\Functional;
 
 use Drupal\filter\Entity\FilterFormat;
+use Drupal\filter\FilterType;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\filter\Plugin\FilterInterface;
 use Drupal\user\RoleInterface;
@@ -99,7 +100,7 @@ class FilterSecurityTest extends BrowserTestBase {
     $text = "Text with some disallowed tags: <script />, <p><object>unicorn</object></p>, <i><table></i>.";
     $expected_filtered_text = "Text with some disallowed tags: , <p>unicorn</p>, .";
     $this->assertSame($expected_filtered_text, (string) check_markup($text, 'filtered_html', '', []), 'Expected filter result.');
-    $this->assertSame($expected_filtered_text, (string) check_markup($text, 'filtered_html', '', [FilterInterface::TYPE_HTML_RESTRICTOR]), 'Expected filter result, even when trying to disable filters of the FilterInterface::TYPE_HTML_RESTRICTOR type.');
+    $this->assertSame($expected_filtered_text, (string) check_markup($text, 'filtered_html', '', [FilterType::HtmlRestrictor]), 'Expected filter result, even when trying to disable filters of the FilterInterface::TYPE_HTML_RESTRICTOR type.');
   }
 
 }

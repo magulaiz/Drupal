@@ -10,6 +10,7 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginElementsSubsetInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\editor\EditorInterface;
 use Drupal\filter\FilterFormatInterface;
+use Drupal\filter\FilterType;
 use Drupal\filter\Plugin\Filter\FilterAutoP;
 use Drupal\filter\Plugin\Filter\FilterUrl;
 use Drupal\filter\Plugin\FilterInterface;
@@ -27,7 +28,7 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  * 4. The HTML restrictions of all TYPE_HTML_RESTRICTOR filters allow the
  *    configured CKEditor 5 plugins to work.
  *
- * @see \Drupal\filter\Plugin\FilterInterface::TYPE_HTML_RESTRICTOR
+ * @see \Drupal\filter\Plugin\FilterType::HtmlRestrictor
  *
  * @internal
  */
@@ -97,7 +98,7 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
   private function checkNoMarkupFilters(FilterFormatInterface $text_format, FundamentalCompatibilityConstraint $constraint): void {
     $markup_filters = static::getFiltersInFormatOfType(
       $text_format,
-      FilterInterface::TYPE_MARKUP_LANGUAGE
+      FilterType::MarkupLanguage,
     );
     foreach ($markup_filters as $markup_filter) {
       if ($markup_filter instanceof FilterAutoP || $markup_filter instanceof FilterUrl) {
@@ -145,7 +146,7 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
   private function checkHtmlRestrictionsMatch(EditorInterface $text_editor, FundamentalCompatibilityConstraint $constraint): void {
     $html_restrictor_filters = static::getFiltersInFormatOfType(
       $text_editor->getFilterFormat(),
-      FilterInterface::TYPE_HTML_RESTRICTOR
+      FilterType::HtmlRestrictor,
     );
 
     $enabled_plugins = array_keys($this->pluginManager->getEnabledDefinitions($text_editor));
@@ -249,8 +250,8 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
    *
    * @param \Drupal\filter\FilterFormatInterface $text_format
    *   A text format whose filters to get.
-   * @param int $filter_type
-   *   One of FilterInterface::TYPE_*.
+   * @param \Drupal\filter\FilterType|int $filter_type
+   *   The filter type, or one of FilterInterface::TYPE_*.
    * @param callable|null $extra_requirements
    *   An optional callable that can check a filter of this type for additional
    *   conditions to be met. Must return TRUE when it meets the conditions,
@@ -259,13 +260,10 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
    * @return iterable|\Drupal\filter\Plugin\FilterInterface[]
    *   An iterable of matched filter plugins.
    */
-  private static function getFiltersInFormatOfType(FilterFormatInterface $text_format, int $filter_type, callable $extra_requirements = NULL): iterable {
-    assert(in_array($filter_type, [
-      FilterInterface::TYPE_MARKUP_LANGUAGE,
-      FilterInterface::TYPE_HTML_RESTRICTOR,
-      FilterInterface::TYPE_TRANSFORM_REVERSIBLE,
-      FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE,
-    ]));
+  private static function getFiltersInFormatOfType(FilterFormatInterface $text_format, FilterType|int $filter_type, callable $extra_requirements = NULL): iterable {
+    if (is_int($filter_type)) {
+      $filter_type = FilterType::fromLegacyInt($filter_type);
+    }
     foreach ($text_format->filters() as $id => $filter) {
       if ($filter->status && $filter->getType() === $filter_type && ($extra_requirements === NULL || $extra_requirements($filter))) {
         yield $id => $filter;
@@ -290,7 +288,7 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
     // Get HTML restrictor filters that actually restrict HTML.
     $filters = static::getFiltersInFormatOfType(
       $text_format,
-      FilterInterface::TYPE_HTML_RESTRICTOR,
+      FilterType::HtmlRestrictor,
       function (FilterInterface $filter) {
         return $filter->getHTMLRestrictions() !== FALSE;
       }

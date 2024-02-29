@@ -7,6 +7,7 @@ use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\TypedData\OptionsProviderInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\filter\Entity\FilterFormat;
+use Drupal\filter\FilterType;
 use Drupal\filter\Plugin\DataType\FilterFormat as FilterFormatDataType;
 use Drupal\filter\Plugin\FilterInterface;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
@@ -71,13 +72,13 @@ class FilterAPITest extends EntityKernelTestBase {
 
     $actual_filtered_text = check_markup($text, 'filtered_html', '', []);
     $this->assertSame($expected_filtered_text, (string) $actual_filtered_text, 'Expected filter result.');
-    $actual_filtered_text_without_html_generators = check_markup($text, 'filtered_html', '', [FilterInterface::TYPE_MARKUP_LANGUAGE]);
+    $actual_filtered_text_without_html_generators = check_markup($text, 'filtered_html', '', [FilterType::MarkupLanguage]);
     $this->assertSame($expected_filter_text_without_html_generators, (string) $actual_filtered_text_without_html_generators, 'Expected filter result when skipping FilterInterface::TYPE_MARKUP_LANGUAGE filters.');
     // Related to @see FilterSecurityTest.php/testSkipSecurityFilters(), but
     // this check focuses on the ability to filter multiple filter types at once.
     // Drupal core only ships with these two types of filters, so this is the
     // most extensive test possible.
-    $actual_filtered_text_without_html_generators = check_markup($text, 'filtered_html', '', [FilterInterface::TYPE_HTML_RESTRICTOR, FilterInterface::TYPE_MARKUP_LANGUAGE]);
+    $actual_filtered_text_without_html_generators = check_markup($text, 'filtered_html', '', [FilterType::HtmlRestrictor, FilterType::MarkupLanguage]);
     $this->assertSame($expected_filter_text_without_html_generators, (string) $actual_filtered_text_without_html_generators, 'Expected filter result when skipping FilterInterface::TYPE_MARKUP_LANGUAGE filters, even when trying to disable filters of the FilterInterface::TYPE_HTML_RESTRICTOR type.');
   }
 
@@ -105,7 +106,7 @@ class FilterAPITest extends EntityKernelTestBase {
     );
     $this->assertSame(
       $filtered_html_format->getFilterTypes(),
-      [FilterInterface::TYPE_HTML_RESTRICTOR, FilterInterface::TYPE_MARKUP_LANGUAGE],
+      [FilterType::HtmlRestrictor, FilterType::MarkupLanguage],
       'FilterFormatInterface::getFilterTypes() works as expected for the filtered_html format.'
     );
 
@@ -149,7 +150,7 @@ class FilterAPITest extends EntityKernelTestBase {
     );
     $this->assertSame(
       $stupid_filtered_html_format->getFilterTypes(),
-      [FilterInterface::TYPE_HTML_RESTRICTOR],
+      [FilterType::HtmlRestrictor],
       'FilterFormatInterface::getFilterTypes() works as expected for the stupid_filtered_html format.'
     );
 
@@ -195,7 +196,7 @@ class FilterAPITest extends EntityKernelTestBase {
     );
     $this->assertSame(
       $very_restricted_html_format->getFilterTypes(),
-      [FilterInterface::TYPE_HTML_RESTRICTOR],
+      [FilterType::HtmlRestrictor],
       'FilterFormatInterface::getFilterTypes() works as expected for the very_restricted_html format.'
     );
 
@@ -231,7 +232,7 @@ class FilterAPITest extends EntityKernelTestBase {
     );
     $this->assertSame(
       $very_restricted_html_format->getFilterTypes(),
-      [FilterInterface::TYPE_HTML_RESTRICTOR],
+      [FilterType::HtmlRestrictor],
       'FilterFormatInterface::getFilterTypes() works as expected for the very_restricted_html format.'
     );
   }

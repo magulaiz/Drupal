@@ -7,6 +7,7 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element\RenderElement;
 use Drupal\filter\Entity\FilterFormat;
+use Drupal\filter\FilterType;
 use Drupal\filter\Plugin\FilterInterface;
 use Drupal\filter\Render\FilteredMarkup;
 
@@ -34,6 +35,19 @@ class ProcessedText extends RenderElement {
   }
 
   /**
+   * Wraps a logger channel.
+   *
+   * @param string $channel
+   *   The name of the channel.
+   *
+   * @return \Psr\Log\LoggerInterface
+   *   The logger for this channel.
+   */
+  protected static function logger($channel) {
+    return \Drupal::logger($channel);
+  }
+
+  /**
    * Pre-render callback: Renders a processed text element into #markup.
    *
    * Runs all the enabled filters on a piece of text.
@@ -55,8 +69,8 @@ class ProcessedText extends RenderElement {
    *   - #filter_types_to_skip: an array of filter types to skip, or an empty
    *     array (default) to skip no filter types. All of the format's filters
    *     will be applied, except for filters of the types that are marked to be
-   *     skipped. FilterInterface::TYPE_HTML_RESTRICTOR is the only type that
-   *     cannot be skipped.
+   *     skipped. FilterType::HtmlRestrictor is the only type that cannot be
+   *     skipped.
    *
    * @return array
    *   The passed-in element with the filtered text in '#markup'.
@@ -91,8 +105,8 @@ class ProcessedText extends RenderElement {
     $filter_must_be_applied = function (FilterInterface $filter) use ($filter_types_to_skip) {
       $enabled = $filter->status === TRUE;
       $type = $filter->getType();
-      // Prevent FilterInterface::TYPE_HTML_RESTRICTOR from being skipped.
-      $filter_type_must_be_applied = $type == FilterInterface::TYPE_HTML_RESTRICTOR || !in_array($type, $filter_types_to_skip);
+      // Prevent FilterType::HtmlRestrictor from being skipped.
+      $filter_type_must_be_applied = $type == FilterType::HtmlRestrictor || !in_array($type, $filter_types_to_skip);
       return $enabled && $filter_type_must_be_applied;
     };
 
@@ -134,19 +148,6 @@ class ProcessedText extends RenderElement {
     $element['#cache']['tags'] = Cache::mergeTags($element['#cache']['tags'], $format->getCacheTags());
 
     return $element;
-  }
-
-  /**
-   * Wraps a logger channel.
-   *
-   * @param string $channel
-   *   The name of the channel.
-   *
-   * @return \Psr\Log\LoggerInterface
-   *   The logger for this channel.
-   */
-  protected static function logger($channel) {
-    return \Drupal::logger($channel);
   }
 
   /**

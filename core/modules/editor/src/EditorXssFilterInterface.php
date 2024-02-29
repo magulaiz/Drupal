@@ -16,7 +16,7 @@ interface EditorXssFilterInterface {
    *
    * Is only called when:
    * - loading a non-XSS-safe text editor for a $format that contains a filter
-   *   preventing XSS attacks (a FilterInterface::TYPE_HTML_RESTRICTOR filter):
+   *   preventing XSS attacks (a FilterType::HtmlRestrictor filter):
    *   if the output is safe, it should also be safe to edit.
    * - loading a non-XSS-safe text editor for a $format that doesn't contain a
    *   filter preventing XSS attacks, but we're switching from a previous text
