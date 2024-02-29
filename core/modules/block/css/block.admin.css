@@ -133,10 +133,10 @@ a.region-filter-control {
   display: none;
   margin: 0;
   padding: 0;
+  color: #55565c;
   font-size: 0.875rem;
   font-weight: 400;
   font-style: italic;
-  color: #55565c;
 }
 
 .js-input-filter-goto-element:hover {
