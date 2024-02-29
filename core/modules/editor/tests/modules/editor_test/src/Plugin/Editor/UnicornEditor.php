@@ -11,7 +11,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * Defines a Unicorn-powered text editor for Drupal (for testing purposes).
  *
  */
-
 #[Editor(
   id: 'unicorn',
   label: new TranslatableMarkup('Unicorn Editor'),
