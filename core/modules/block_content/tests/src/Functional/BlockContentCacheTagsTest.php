@@ -10,7 +10,6 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Tests\system\Functional\Entity\EntityCacheTagsTestBase;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests the Content Block entity's cache tags.
