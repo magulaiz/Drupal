@@ -15,12 +15,12 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 #[Editor(
   id: 'unicorn',
   label: new TranslatableMarkup('Unicorn Editor'),
-  supports_content_filtering: true,
-  supports_inline_editing: true,
-  is_xss_safe: false,
+  supports_content_filtering: TRUE,
+  supports_inline_editing: TRUE,
+  is_xss_safe: FALSE,
   supported_element_types: [
-    "textarea",
-    "textfield",
+    'textarea',
+    'textfield',
   ]
 )]
 class UnicornEditor extends EditorBase {

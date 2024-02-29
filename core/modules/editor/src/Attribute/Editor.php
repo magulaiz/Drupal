@@ -9,8 +9,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * Defines an Editor attribute object.
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class Editor extends Plugin
-{
+class Editor extends Plugin {
 
   /**
    * Constructs an EditorManager object.
@@ -34,7 +33,7 @@ class Editor extends Plugin
     public readonly bool $supports_content_filtering = FALSE,
     public readonly bool $supports_inline_editing = FALSE,
     public readonly bool $is_xss_safe = FALSE,
-    public readonly ?string $supported_element_types_ui = NULL
+    public readonly array $supported_element_types = [],
   ) {}
 
 }
