@@ -9,7 +9,6 @@ use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterPluginManager;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
-use Drupal\filter\Plugin\FilterInterface;
 use Drupal\filter\Render\FilteredMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -22,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
   id: "filter_caption",
   title: new TranslatableMarkup("Caption images"),
   description: new TranslatableMarkup("Uses a <code>data-caption</code> attribute on <code>&lt;img&gt;</code> tags to caption images."),
-  type: FilterInterface::TYPE_TRANSFORM_REVERSIBLE
+  type: Drupal\filter\FilterType::TransformReversible
 )]
 class FilterCaption extends FilterBase implements ContainerFactoryPluginInterface {
 

@@ -9,7 +9,6 @@ use Drupal\Component\Utility\Html;
 use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
-use Drupal\filter\Plugin\FilterInterface;
 use Masterminds\HTML5\Parser\DOMTreeBuilder;
 use Masterminds\HTML5\Parser\Scanner;
 use Masterminds\HTML5\Parser\Tokenizer;
@@ -24,7 +23,7 @@ use Masterminds\HTML5\Parser\Tokenizer;
 #[Filter(
   id: "filter_html",
   title: new TranslatableMarkup("Limit allowed HTML tags and correct faulty HTML"),
-  type: FilterInterface::TYPE_HTML_RESTRICTOR,
+  type: Drupal\filter\FilterType::HtmlRestrictor,
   weight: -10,
   settings: [
     "allowed_html" => "<a href hreflang> <em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type='1 A I'> <li> <dl> <dt> <dd> <h2 id='jump-*'> <h3 id> <h4 id> <h5 id> <h6 id>",

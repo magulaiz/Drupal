@@ -6,7 +6,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
-use Drupal\filter\Plugin\FilterInterface;
 
 /**
  * Provides a filter to limit allowed HTML tags.
@@ -19,7 +18,7 @@ use Drupal\filter\Plugin\FilterInterface;
 #[Filter(
   id: "filter_sparkles",
   title: new TranslatableMarkup("Sparkles filter"),
-  type: FilterInterface::TYPE_HTML_RESTRICTOR,
+  type: Drupal\filter\FilterType::HtmlRestrictor,
   weight: -10,
   settings: [],
 )]

@@ -6,7 +6,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
-use Drupal\filter\Plugin\FilterInterface;
 
 /**
  * Provides a test filter to replace all content.
@@ -15,7 +14,7 @@ use Drupal\filter\Plugin\FilterInterface;
   id: "filter_test_replace",
   title: new TranslatableMarkup("Testing filter"),
   description: new TranslatableMarkup("Replaces all content with filter and text format information."),
-  type: FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE
+  type: Drupal\filter\FilterType::TransformIrreversible
 )]
 class FilterTestReplace extends FilterBase {
 

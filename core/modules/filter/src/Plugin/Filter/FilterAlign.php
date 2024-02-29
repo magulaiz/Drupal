@@ -7,7 +7,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
-use Drupal\filter\Plugin\FilterInterface;
 
 /**
  * Provides a filter to align elements.
@@ -16,7 +15,7 @@ use Drupal\filter\Plugin\FilterInterface;
   id: "filter_align",
   title: new TranslatableMarkup("Align images"),
   description: new TranslatableMarkup("Uses a <code>data-align</code> attribute on <code>&lt;img&gt;</code> tags to align images."),
-  type: FilterInterface::TYPE_TRANSFORM_REVERSIBLE,
+  type: Drupal\filter\FilterType::TransformReversible,
 )]
 class FilterAlign extends FilterBase {
 

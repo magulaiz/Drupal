@@ -6,7 +6,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
-use Drupal\filter\Plugin\FilterInterface;
 
 /**
  * Provides a filter that returns the same static text.
@@ -14,7 +13,7 @@ use Drupal\filter\Plugin\FilterInterface;
 #[Filter(
   id: "filter_static_text",
   title: new TranslatableMarkup("Static filter"),
-  type: FilterInterface::TYPE_HTML_RESTRICTOR,
+  type: Drupal\filter\FilterType::HtmlRestrictor,
   settings: [],
 )]
 class FilterTestStatic extends FilterBase {
