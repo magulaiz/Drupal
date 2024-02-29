@@ -195,8 +195,10 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
 
     // Add access check parameters to the route.
     $access_plugin = $this->getPlugin('access');
-    // @todo Do we want to support a default plugin in getPlugin itself?
-    $access_plugin ??= Views::pluginManager('access')->createInstance('none');
+    if (!isset($access_plugin)) {
+      // @todo Do we want to support a default plugin in getPlugin itself?
+      $access_plugin = Views::pluginManager('access')->createInstance('none');
+    }
     $access_plugin->alterRouteDefinition($route);
 
     // Set the argument map, in order to support named parameters.
