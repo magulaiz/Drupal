@@ -97,7 +97,7 @@ class CKEditor5FragmentLinkTest extends WebDriverTestBase {
   public function testFragmentLink() {
     $session = $this->getSession();
     $web_assert = $this->assertSession();
-    $ckeditor_class = self::BODY_VALUE_FIELD_SELECTOR . '.ck-editor';
+    $ckeditor_class = self::$bodyValueFieldSelector . '.ck-editor';
     $ckeditor_id = '#cke_edit-body-0-value';
 
     $this->drupalGet('node/add/page');

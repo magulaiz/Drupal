@@ -242,7 +242,6 @@ class MediaLibraryTest extends WebDriverTestBase {
           ],
         ])->save();
 
-
       // Now test opening the media library from the CKEditor plugin, and
       // verify the expected behavior.
       $this->drupalGet('/node/add/blog');
@@ -281,7 +280,7 @@ class MediaLibraryTest extends WebDriverTestBase {
 
     $this->drupalGet('/node/add/blog');
     $this->waitForEditor();
-    $assert_session->waitForElementVisible('css', self::BODY_VALUE_FIELD_SELECTOR . '.ck-editor button');
+    $assert_session->waitForElementVisible('css', self::$bodyValueFieldSelector . '.ck-editor button');
     $this->pressEditorButton('Insert Media');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-modal #media-library-content'));
     $assert_session->elementExists('css', '.js-media-library-item')->click();

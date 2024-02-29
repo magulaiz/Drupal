@@ -119,7 +119,7 @@ class MediaTest extends MediaTestBase {
     $this->host->save();
     $this->drupalGet($this->host->toUrl('edit-form'));
 
-    $this->assertNotEmpty($upcasted_media = $assert_session->waitForElementVisible('css', self::BODY_VALUE_FIELD_SELECTOR . '.ck-widget.drupal-media'));
+    $this->assertNotEmpty($upcasted_media = $assert_session->waitForElementVisible('css', self::$bodyValueFieldSelector . '.ck-widget.drupal-media'));
 
     // Confirm the media is wrapped by the list item on the editing view.
     $assert_session->elementExists('css', 'li > .drupal-media');

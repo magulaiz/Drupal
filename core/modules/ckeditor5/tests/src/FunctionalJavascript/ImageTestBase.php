@@ -90,12 +90,12 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $src = $this->imageAttributes()['src'];
     $this->waitForEditor();
     $this->pressEditorButton('Insert image via URL');
-    $panel = $page->find('css', self::BODY_VALUE_FIELD_SELECTOR . '.ck-dropdown__panel  .ck-image-insert-url');
+    $panel = $page->find('css', self::$bodyValueFieldSelector . '.ck-dropdown__panel  .ck-image-insert-url');
     $src_input = $panel->find('css', 'input[type=text]');
     $src_input->setValue($src);
     $panel->find('xpath', "//button[span[text()='Insert']]")->click();
     // Wait for the image to be uploaded and rendered by CKEditor 5.
-    $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', self::BODY_VALUE_FIELD_SELECTOR . '.ck-widget.image > img[src="' . $src . '"]'));
+    $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', self::$bodyValueFieldSelector . '.ck-widget.image > img[src="' . $src . '"]'));
   }
 
   /**
@@ -597,7 +597,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $this->drupalGet($this->host->toUrl('edit-form'));
     $this->waitForEditor();
 
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', self::BODY_VALUE_FIELD_SELECTOR . '.ck-editor'));
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', self::$bodyValueFieldSelector . '.ck-editor'));
     $this->assertNotEmpty($figcaption = $assert_session->waitForElement('css', '.image figcaption'));
     $this->assertSame('Alpacas <em>are</em> cute<br>really!', $figcaption->getHtml());
     $this->pressEditorButton('Source');

@@ -282,7 +282,7 @@ JS;
     // Select the <h2>, assert that no style is active currently.
     $this->selectTextInsideElement('h2');
     $assert_session = $this->assertSession();
-    $style_dropdown = $assert_session->elementExists('css', self::BODY_VALUE_FIELD_SELECTOR . '.ck-style-dropdown');
+    $style_dropdown = $assert_session->elementExists('css', self::$bodyValueFieldSelector . '.ck-style-dropdown');
     $this->assertSame('Styles', $style_dropdown->getText());
 
     // Click the dropdown, check the available styles.
@@ -347,7 +347,7 @@ JS;
     // Select the first paragraph and observe changes in:
     // - styles dropdown label
     // - button states
-    $this->selectTextInsideElement('p', self::BODY_VALUE_FIELD_SELECTOR);
+    $this->selectTextInsideElement('p', self::$bodyValueFieldSelector);
     $this->assertSame('Styles', $style_dropdown->getText());
     $style_dropdown->click();
     $this->assertTrue($buttons[0]->hasClass('ck-off'));

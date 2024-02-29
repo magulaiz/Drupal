@@ -20,10 +20,11 @@ trait CKEditor5TestTrait {
    * Body field selector for the value element.
    *
    * It helps for "text_with_summary" fields testing.
+   * @todo: replace static with const BODY_VALUE_FIELD_SELECTOR, for newer PHP.
    *
    * @var string
    */
-  protected const BODY_VALUE_FIELD_SELECTOR = '.form-item-body-0-value ';
+  protected static $bodyValueFieldSelector = '.form-item-body-0-value ';
 
   /**
    * Gets CKEditor 5 instance data as a PHP DOMDocument.
@@ -88,7 +89,7 @@ JS;
    *   The page element node if found, NULL if not.
    */
   protected function getEditorButton($name) {
-    $button_xpath = self::BODY_VALUE_FIELD_SELECTOR . "[data-cke-tooltip-text='$name']";
+    $button_xpath = self::$bodyValueFieldSelector . "[data-cke-tooltip-text='$name']";
     $button = $this->assertSession()->waitForElementVisible('css', $button_xpath);
     $this->assertNotEmpty($button);
     return $button;

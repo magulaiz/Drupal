@@ -126,11 +126,11 @@ class ImageTest extends ImageTestBase {
 
   protected function addImage() {
     $page = $this->getSession()->getPage();
-    $this->assertNotEmpty($image_upload_field = $page->find('css', self::BODY_VALUE_FIELD_SELECTOR . '.ck-file-dialog-button input[type="file"]'));
+    $this->assertNotEmpty($image_upload_field = $page->find('css', self::$bodyValueFieldSelector . '.ck-file-dialog-button input[type="file"]'));
     $image = $this->getTestFiles('image')[0];
     $image_upload_field->attachFile($this->container->get('file_system')->realpath($image->uri));
     // Wait for the image to be uploaded and rendered by CKEditor 5.
-    $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', self::BODY_VALUE_FIELD_SELECTOR . '.ck-widget.image > img[src*="' . $image->filename . '"]'));
+    $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', self::$bodyValueFieldSelector . '.ck-widget.image > img[src*="' . $image->filename . '"]'));
   }
 
   /**
