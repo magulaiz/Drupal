@@ -28,7 +28,12 @@ class BlockContentAddLocalAction extends LocalActionDefault {
    * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
    *   The current request.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, RouteProviderInterface $routeProvider, protected RequestStack $requestStack) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    RouteProviderInterface $routeProvider,
+    protected RequestStack $requestStack) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $routeProvider);
   }
 

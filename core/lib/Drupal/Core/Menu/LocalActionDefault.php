@@ -59,7 +59,7 @@ class LocalActionDefault extends PluginBase implements LocalActionInterface, Con
   /**
    * {@inheritdoc}
    */
-  public function getRouteName(): string {
+  public function getRouteName() {
     return $this->pluginDefinition['route_name'];
   }
 
