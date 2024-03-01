@@ -162,7 +162,7 @@
   }
 
   .is-horizontal {
-    & .tabs {
+    & .tabs__link {
       flex-direction: row;
       align-items: end;
       width: auto;

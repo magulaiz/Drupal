@@ -180,7 +180,7 @@
   .tabs-wrapper--secondary {
     position: relative;
   }
-  .is-horizontal .tabs {
+  .is-horizontal .tabs__link {
     flex-direction: row;
     align-items: end;
     width: auto;
