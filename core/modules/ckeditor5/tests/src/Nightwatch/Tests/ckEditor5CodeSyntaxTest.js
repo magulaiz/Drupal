@@ -75,7 +75,7 @@ module.exports = {
 
         // Navigate to create new content.
         .drupalRelativeURL('/node/add/test')
-        .waitForElementVisible(bodyValueFieldSelector + '.ck-editor__editable')
+        .waitForElementVisible(`${bodyValueFieldSelector} .ck-editor__editable`)
 
         // Open code block dropdown, and verify that correct languages are present.
         .click(
@@ -99,7 +99,7 @@ module.exports = {
             '.ck-code-block-dropdown .ck-dropdown__panel .ck-list__item:nth-child(1) button',
         )
         .waitForElementVisible(
-          bodyValueFieldSelector + '.ck-editor__main pre[data-language="Twig"]',
+          `${bodyValueFieldSelector} .ck-editor__main pre[data-language="Twig"]`,
         )
         // Press 'X' to ensure there's data in CKEditor before switching to source view.
         .perform(function () {
@@ -108,19 +108,19 @@ module.exports = {
         .pause(50)
 
         // Go into source editing and verify that correct CSS class is added.
-        .click(bodyValueFieldSelector + '.ck-source-editing-button')
+        .click(`${bodyValueFieldSelector} .ck-source-editing-button`)
         .waitForElementVisible(
-          bodyValueFieldSelector + '.ck-source-editing-area',
+          `${bodyValueFieldSelector} .ck-source-editing-area`,
         )
         .assert.valueContains(
-          bodyValueFieldSelector + '.ck-source-editing-area textarea',
+          `${bodyValueFieldSelector} .ck-source-editing-area textarea`,
           '<pre><code class="language-twig">',
         )
 
         // Go back into WYSIWYG mode and hit enter three times to break out of code block.
-        .click(bodyValueFieldSelector + '.ck-source-editing-button') // Disable source editing.
+        .click(`${bodyValueFieldSelector} .ck-source-editing-button`) // Disable source editing.
         .waitForElementVisible(
-          bodyValueFieldSelector + '.ck-editor__editable:not(.ck-hidden)',
+          `${bodyValueFieldSelector} .ck-editor__editable:not(.ck-hidden)`,
         )
         // Go to end of line.
         .perform(function () {
@@ -157,12 +157,12 @@ module.exports = {
         })
 
         // Go into source editing and verify that correct CSS class is added.
-        .click(bodyValueFieldSelector + '.ck-source-editing-button')
+        .click(`${bodyValueFieldSelector} .ck-source-editing-button`)
         .waitForElementVisible(
-          bodyValueFieldSelector + '.ck-source-editing-area',
+          `${bodyValueFieldSelector} .ck-source-editing-area`,
         )
         .assert.valueContains(
-          bodyValueFieldSelector + '.ck-source-editing-area textarea',
+          `${bodyValueFieldSelector} .ck-source-editing-area textarea`,
           '<pre><code class="language-yml">',
         );
     });
