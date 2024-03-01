@@ -262,6 +262,7 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
    */
   private static function getFiltersInFormatOfType(FilterFormatInterface $text_format, FilterType|int $filter_type, callable $extra_requirements = NULL): iterable {
     if (is_int($filter_type)) {
+      // @todo trigger deprecation warning.
       $filter_type = FilterType::fromLegacyInt($filter_type);
     }
     foreach ($text_format->filters() as $id => $filter) {

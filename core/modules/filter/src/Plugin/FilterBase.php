@@ -106,6 +106,7 @@ abstract class FilterBase extends PluginBase implements FilterInterface {
    * {@inheritdoc}
    */
   public function getType() {
+    // @todo reconcile ints with enum and trigger deprecation warning.
     return $this->pluginDefinition['type'];
   }
 
