@@ -116,7 +116,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
    *
    * @covers ::buildCommentedEntityLinks
    */
-  public function testCommentLinkBuilder(NodeInterface $node, $context, $has_access_comments, $history_exists, $has_post_comments, $is_anonymous, $expected) {
+  public function testCommentLinkBuilder(NodeInterface $node, $context, bool $has_access_comments, $history_exists, bool $has_post_comments, $is_anonymous, $expected) {
     $this->moduleHandler->expects($this->any())
       ->method('moduleExists')
       ->with('history')
@@ -189,9 +189,9 @@ class CommentLinkBuilderTest extends UnitTestCase {
     $combinations = [
       'is_anonymous' => [FALSE, TRUE],
       'comment_count' => [0, 1],
-      'has_access_comments' => [0, 1],
+      'has_access_comments' => [FALSE, TRUE],
       'history_exists' => [FALSE, TRUE],
-      'has_post_comments'   => [0, 1],
+      'has_post_comments'   => [FALSE, TRUE],
       'form_location'            => [CommentItemInterface::FORM_BELOW, CommentItemInterface::FORM_SEPARATE_PAGE],
       'comments'        => [
         CommentItemInterface::OPEN,
