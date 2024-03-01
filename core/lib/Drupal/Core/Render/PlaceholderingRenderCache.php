@@ -126,9 +126,9 @@ class PlaceholderingRenderCache extends RenderCache {
   public function set(array &$elements, array $pre_bubbling_elements) {
     $result = parent::set($elements, $pre_bubbling_elements);
 
-    // Don't set the render cache on uncacheable HTTP methods, this prevents
-    // very low hit rate items from being written, while already-cached items
-    // can still be retrieved.
+    // Writes to the render cache are disabled on uncacheable HTTP requests, to
+    // prevent very low hit rate items from being written. If we're not writing
+    // to the cache, there's also no benefit to placeholdering either.
     if (!$this->requestStack->getCurrentRequest()->isMethodCacheable()) {
       return FALSE;
     }
