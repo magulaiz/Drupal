@@ -68,7 +68,7 @@ class AdminUiTest extends CKEditor5TestBase {
     $page->selectFieldOption('editor[editor]', 'ckeditor5');
     $assert_session->assertExpectedAjaxRequest(1);
 
-    $filter_warning = 'CKEditor 5 only works with HTML-based text formats. The "A TYPE_MARKUP_LANGUAGE filter incompatible with CKEditor 5" (filter_incompatible) filter implies this text format is not HTML anymore.';
+    $filter_warning = 'CKEditor 5 only works with HTML-based text formats. The "A MarkupLanguage filter incompatible with CKEditor 5" (filter_incompatible) filter implies this text format is not HTML anymore.';
 
     // The presence of this validation error message confirms the AJAX callback
     // was invoked.

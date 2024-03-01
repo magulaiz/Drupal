@@ -12,7 +12,7 @@ use Drupal\filter\Plugin\FilterBase;
  */
 #[Filter(
   id: "filter_incompatible",
-  title: new TranslatableMarkup("A TYPE_MARKUP_LANGUAGE filter incompatible with CKEditor 5"),
+  title: new TranslatableMarkup("A MarkupLanguage filter incompatible with CKEditor 5"),
   type: Drupal\filter\FilterType::MarkupLanguage
 )]
 class FilterIsIncompatible extends FilterBase {

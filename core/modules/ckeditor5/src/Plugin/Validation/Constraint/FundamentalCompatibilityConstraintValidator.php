@@ -22,10 +22,10 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  * Validates fundamental compatibility of CKEditor 5 with the given text format.
  *
  * Fundamental requirements:
- * 1. No TYPE_MARKUP_LANGUAGE filters allowed.
+ * 1. No FilterType::MarkupLanguage filters allowed.
  * 2. Fundamental CKEditor 5 plugins' HTML tags are allowed.
  * 3. All tags are actually creatable.
- * 4. The HTML restrictions of all TYPE_HTML_RESTRICTOR filters allow the
+ * 4. The HTML restrictions of all FilterType::HtmlRestrictor filters allow the
  *    configured CKEditor 5 plugins to work.
  *
  * @see \Drupal\filter\FilterType::HtmlRestrictor
@@ -81,9 +81,9 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
   }
 
   /**
-   * Checks no TYPE_MARKUP_LANGUAGE filters are present.
+   * Checks no MarkupLanguage filters are present.
    *
-   * Two TYPE_MARKUP_LANGUAGE filters are exempted:
+   * Two MarkupLanguage filters are exempted:
    * - filter_autop: pointless but harmless to have enabled
    * - filter_url: not recommended but also harmless to have enabled
    *
