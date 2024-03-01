@@ -1386,7 +1386,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
         $expected_cacheability->getCacheContexts(),
         FALSE,
         $actual_response->getStatusCode() === 200
-          ? ($expected_cacheability->getCacheMaxAge() === 0 ? 'UNCACHEABLE' : 'MISS')
+          ? ($expected_cacheability->getCacheMaxAge() === 0 ? 'UNCACHEABLE (poor cacheability)' : 'MISS')
           : (!empty(array_intersect(['user', 'session'], $expected_cacheability->getCacheContexts())) ? 'UNCACHEABLE' : FALSE)
       );
     }
