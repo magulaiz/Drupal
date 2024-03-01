@@ -8,6 +8,8 @@ module.exports = {
   },
   'Verify code block configured languages are respected': (browser) => {
     browser.drupalLoginAsAdmin(() => {
+      // Selectors prefix selector for text_with_summary value editor elements.
+      const bodyValueFieldSelector = '.form-item-body-0-value ';
       browser
         // Enable required modules.
         .drupalRelativeURL('/admin/modules')
@@ -73,26 +75,32 @@ module.exports = {
 
         // Navigate to create new content.
         .drupalRelativeURL('/node/add/test')
-        .waitForElementVisible('.ck-editor__editable')
+        .waitForElementVisible(bodyValueFieldSelector + '.ck-editor__editable')
 
         // Open code block dropdown, and verify that correct languages are present.
         .click(
-          '.ck-code-block-dropdown .ck-dropdown__button .ck-splitbutton__arrow',
+          bodyValueFieldSelector +
+            '.ck-code-block-dropdown .ck-dropdown__button .ck-splitbutton__arrow',
         )
         .assert.textContains(
-          '.ck-code-block-dropdown .ck-dropdown__panel .ck-list__item:nth-child(1) .ck-button__label',
+          bodyValueFieldSelector +
+            '.ck-code-block-dropdown .ck-dropdown__panel .ck-list__item:nth-child(1) .ck-button__label',
           'Twig',
         )
         .assert.textContains(
-          '.ck-code-block-dropdown .ck-dropdown__panel .ck-list__item:nth-child(2) .ck-button__label',
+          bodyValueFieldSelector +
+            '.ck-code-block-dropdown .ck-dropdown__panel .ck-list__item:nth-child(2) .ck-button__label',
           'YML',
         )
 
         // Click the first language (which should be 'Twig').
         .click(
-          '.ck-code-block-dropdown .ck-dropdown__panel .ck-list__item:nth-child(1) button',
+          bodyValueFieldSelector +
+            '.ck-code-block-dropdown .ck-dropdown__panel .ck-list__item:nth-child(1) button',
         )
-        .waitForElementVisible('.ck-editor__main pre[data-language="Twig"]')
+        .waitForElementVisible(
+          bodyValueFieldSelector + '.ck-editor__main pre[data-language="Twig"]',
+        )
         // Press 'X' to ensure there's data in CKEditor before switching to source view.
         .perform(function () {
           return this.actions().sendKeys('x');
@@ -100,16 +108,20 @@ module.exports = {
         .pause(50)
 
         // Go into source editing and verify that correct CSS class is added.
-        .click('.ck-source-editing-button')
-        .waitForElementVisible('.ck-source-editing-area')
+        .click(bodyValueFieldSelector + '.ck-source-editing-button')
+        .waitForElementVisible(
+          bodyValueFieldSelector + '.ck-source-editing-area',
+        )
         .assert.valueContains(
-          '.ck-source-editing-area textarea',
+          bodyValueFieldSelector + '.ck-source-editing-area textarea',
           '<pre><code class="language-twig">',
         )
 
         // Go back into WYSIWYG mode and hit enter three times to break out of code block.
-        .click('.ck-source-editing-button') // Disable source editing.
-        .waitForElementVisible('.ck-editor__editable:not(.ck-hidden)')
+        .click(bodyValueFieldSelector + '.ck-source-editing-button') // Disable source editing.
+        .waitForElementVisible(
+          bodyValueFieldSelector + '.ck-editor__editable:not(.ck-hidden)',
+        )
         // Go to end of line.
         .perform(function () {
           return this.actions().sendKeys(browser.Keys.ARROW_RIGHT);
@@ -132,10 +144,12 @@ module.exports = {
 
         // Open up the code syntax dropdown, and click the 2nd item (which should be 'YML').
         .click(
-          '.ck-code-block-dropdown .ck-dropdown__button .ck-splitbutton__arrow',
+          bodyValueFieldSelector +
+            '.ck-code-block-dropdown .ck-dropdown__button .ck-splitbutton__arrow',
         )
         .click(
-          '.ck-code-block-dropdown .ck-dropdown__panel .ck-list__item:nth-child(2) button',
+          bodyValueFieldSelector +
+            '.ck-code-block-dropdown .ck-dropdown__panel .ck-list__item:nth-child(2) button',
         )
         // Press 'X' to ensure there's data in CKEditor before switching to source view.
         .perform(function () {
@@ -143,10 +157,12 @@ module.exports = {
         })
 
         // Go into source editing and verify that correct CSS class is added.
-        .click('.ck-source-editing-button')
-        .waitForElementVisible('.ck-source-editing-area')
+        .click(bodyValueFieldSelector + '.ck-source-editing-button')
+        .waitForElementVisible(
+          bodyValueFieldSelector + '.ck-source-editing-area',
+        )
         .assert.valueContains(
-          '.ck-source-editing-area textarea',
+          bodyValueFieldSelector + '.ck-source-editing-area textarea',
           '<pre><code class="language-yml">',
         );
     });
