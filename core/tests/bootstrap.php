@@ -185,13 +185,12 @@ if (getenv('SYMFONY_DEPRECATIONS_HELPER') === FALSE) {
 
 // Bootstrap the IgnoreDeprecation extension and the DebugClassloader to report
 // deprecations in PHPUnit 10+.
-parse_str(getenv('SYMFONY_DEPRECATIONS_HELPER'), $xxoutput);
-dump($xxoutput);
 if (RunnerVersion::getMajor() >= 10 && getenv('SYMFONY_DEPRECATIONS_HELPER') !== 'disabled') {
-  // @todo Force the ignore file for now.
-  $deprecation_ignore_filename = realpath(__DIR__ . "/../.deprecation-ignore.txt");
+  parse_str(getenv('SYMFONY_DEPRECATIONS_HELPER'), $deprecationHelperConfiguration);
 
-  IgnoreDeprecation::init($deprecation_ignore_filename);
+  if (isset($deprecationHelperConfiguration['ignoreFile'])) {
+    IgnoreDeprecation::init($deprecationHelperConfiguration['ignoreFile']);
+  }
 
   // Need to have an early error handler to manage deprecations triggered by
   // DebugClassLoader, that can occur before tests' set up.
