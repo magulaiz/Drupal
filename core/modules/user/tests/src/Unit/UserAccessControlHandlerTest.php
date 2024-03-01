@@ -92,7 +92,8 @@ class UserAccessControlHandlerTest extends UnitTestCase {
       ->willReturnMap([
         ['administer users', FALSE],
         ['change own username', TRUE],
-      ]);
+      ])
+      ->willReturn(FALSE);
 
     $this->owner
       ->expects($this->any())
@@ -111,7 +112,8 @@ class UserAccessControlHandlerTest extends UnitTestCase {
       ->method('hasPermission')
       ->willReturnMap([
         ['view user email addresses', TRUE],
-      ]);
+      ])
+      ->willReturn(FALSE);
     $this->emailViewer
       ->expects($this->any())
       ->method('id')
