@@ -19,7 +19,7 @@ class ViewUIObjectTest extends UnitTestCase {
   /**
    * Tests entity method decoration.
    */
-  public function testEntityDecoration() {
+  public function testEntityDecoration(): void {
     $method_args = [];
     $method_args['setOriginalId'] = [12];
     $method_args['setStatus'] = [TRUE];
@@ -76,7 +76,7 @@ class ViewUIObjectTest extends UnitTestCase {
    *
    * @runInSeparateProcess
    */
-  public function testIsLocked() {
+  public function testIsLocked(): void {
     $storage = $this->getMockBuilder('Drupal\views\Entity\View')
       ->setConstructorArgs([[], 'view'])
       ->getMock();

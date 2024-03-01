@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views_ui\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -22,7 +24,7 @@ class ViewsUiObjectTest extends KernelTestBase {
   /**
    * Tests serialization of the ViewUI object.
    */
-  public function testSerialization() {
+  public function testSerialization(): void {
     $storage = new View([], 'view');
     $executable = $this->getMockBuilder(ViewExecutable::class)
       ->disableOriginalConstructor()
