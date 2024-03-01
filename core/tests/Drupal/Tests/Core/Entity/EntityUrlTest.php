@@ -120,6 +120,7 @@ class EntityUrlTest extends UnitTestCase {
   public function testToUrlDefaultException(): void {
     $values = ['id' => $this->entityId];
     $entity = $this->getEntity(UrlTestEntity::class, $values);
+    $this->entityType->getUriCallback()->willReturn(NULL);
 
     $this->expectException(UndefinedLinkTemplateException::class);
     $this->expectExceptionMessage("Cannot generate default URL because no link template 'canonical' or 'edit-form' was found for the '" . $this->entityTypeId . "' entity type");
@@ -189,7 +190,7 @@ class EntityUrlTest extends UnitTestCase {
    * @return array
    *   An array of test cases for testToUrlLinkTemplates().
    */
-  public function providerTestToUrlLinkTemplates() {
+  public static function providerTestToUrlLinkTemplates() {
     $test_cases = [];
 
     $test_cases['canonical'] = ['canonical', 'entity.test_entity.canonical'];
@@ -284,7 +285,7 @@ class EntityUrlTest extends UnitTestCase {
    * @return array
    *   An array of test cases for testToUrlLinkTemplateNoId().
    */
-  public function providerTestToUrlLinkTemplateNoId() {
+  public static function providerTestToUrlLinkTemplateNoId() {
     $test_cases = [];
 
     $test_cases['collection'] = ['collection', 'entity.test_entity.collection'];
@@ -377,7 +378,7 @@ class EntityUrlTest extends UnitTestCase {
    * @return array
    *   An array of test cases for testToUrlUriCallbackUndefined().
    */
-  public function providerTestToUrlUriCallbackUndefined() {
+  public static function providerTestToUrlUriCallbackUndefined() {
     $test_cases = [];
 
     $test_cases['no_callback'] = [[], NULL];
@@ -408,6 +409,9 @@ class EntityUrlTest extends UnitTestCase {
 
     /** @var \Drupal\Core\Url $url */
     $url = $entity->toUrl('canonical');
+    $this->assertUrl('<none>', [], $entity, TRUE, $url);
+
+    $url = $entity->toUrl();
     $this->assertUrl('<none>', [], $entity, TRUE, $url);
   }
 

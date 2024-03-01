@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\media\Functional;
 
 use Drupal\Tests\media\Traits\OEmbedTestTrait;
@@ -37,7 +39,7 @@ class UrlResolverTest extends MediaFunctionalTestBase {
    *
    * @return array
    */
-  public function providerEndpointMatching() {
+  public static function providerEndpointMatching() {
     return [
       'match by endpoint: Twitter' => [
         'https://twitter.com/Dries/status/999985431595880448',
@@ -99,7 +101,7 @@ class UrlResolverTest extends MediaFunctionalTestBase {
    *
    * @return array
    */
-  public function providerUrlDiscovery() {
+  public static function providerUrlDiscovery() {
     return [
       'JSON resource' => [
         'video_vimeo.html',
