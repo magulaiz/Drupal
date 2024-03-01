@@ -50,17 +50,18 @@
    *   The placeholder element passed in as a parameter.
    */
   function show($placeholder) {
-    return (
-      $placeholder
-        // Find the parent <li>.
-        .closest('.comment-new-comments')
-        // Find the preceding <li>, if any, and remove its 'last' class, if any.
-        .prev()
-        .removeClass('last')
-        // Go back to the parent <li> and show it.
-        .end()
-        .show()
-    );
+    const placeholder = document.querySelector($placeholder);
+    if (placeholder) {
+      let parentLi = placeholder.closest('.comment-new-comments');
+      let precedingLi = parentLi.previousElementSibling;
+      // Remove the 'last' class from the preceding <li> if it exists
+      if (precedingLi && precedingLi.classList.contains('last')) {
+        precedingLi.classList.remove('last');
+      }
+      // Show the parent <li>
+      parentLi.style.display = 'block';
+      return parentLi;
+    } else return;
   }
 
   /**
