@@ -183,9 +183,8 @@ interface FilterInterface extends ConfigurableInterface, DependentPluginInterfac
   /**
    * Returns HTML allowed by this filter's configuration.
    *
-   * May be implemented by filters of the FilterInterface::TYPE_HTML_RESTRICTOR
-   * type, this won't be used for filters of other types; they should just
-   * return FALSE.
+   * May be implemented by filters of the FilterType::HtmlRestrictor type, this
+   * won't be used for filters of other types; they should just return FALSE.
    *
    * This callback function is only necessary for filters that strip away HTML
    * tags (and possibly attributes) and allows other modules to gain insight in

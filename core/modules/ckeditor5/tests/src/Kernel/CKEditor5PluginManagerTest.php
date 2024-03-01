@@ -1204,7 +1204,7 @@ PHP,
     $this->assertSame($expected_libraries, $this->manager->getEnabledLibraries($editor));
 
     // Case 8: GHS is enabled for Full HTML (or any other text format that has
-    // no TYPE_HTML_RESTRICTOR filters).
+    // no HtmlRestrictor filters).
     $editor = Editor::load('full_html');
     $definitions = array_keys($this->manager->getEnabledDefinitions($editor));
     $default_plugins = [

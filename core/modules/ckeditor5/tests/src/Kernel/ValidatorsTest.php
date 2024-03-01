@@ -1591,7 +1591,7 @@ class ValidatorsTest extends KernelTestBase {
       'format' => 'very_restricted',
       'name' => $this->randomMachineName(),
       'filters' => [
-        // The first filter of type TYPE_HTML_RESTRICTOR.
+        // The first filter of type HtmlRestrictor.
         'filter_html' => [
           'id' => 'filter_html',
           'provider' => 'filter',
@@ -1603,7 +1603,7 @@ class ValidatorsTest extends KernelTestBase {
             'filter_html_nofollow' => TRUE,
           ],
         ],
-        // The second filter of type TYPE_HTML_RESTRICTOR. Configure this to
+        // The second filter of type HtmlRestrictor. Configure this to
         // allow exactly what the first filter allows.
         'filter_test_restrict_tags_and_attributes' => [
           'id' => 'filter_test_restrict_tags_and_attributes',
