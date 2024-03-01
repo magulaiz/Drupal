@@ -51,12 +51,7 @@ use Drupal\Core\Form\FormStateInterface;
  * definition properties:
  * - title: (required) An administrative summary of what the filter does.
  * - type: (required) A classification of the filter's purpose. This is one of
- *   the following:
- *   - FilterType::HtmlRestrictor: HTML tag and attribute restricting filters.
- *   - FilterType::MarkupLanguage: Non-HTML markup language filters that
- *     generate HTML.
- *   - FilterType::TransformIrreversible: Irreversible transformation filters.
- *   - FilterType::TransformReversible: Reversible transformation filters.
+ *   the \Drupal\filter\FilterType cases.
  * - description: Additional administrative information about the filter's
  *   behavior, if needed for clarification.
  * - status: The default status for new instances of the filter. Defaults to
@@ -70,6 +65,7 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @see \Drupal\filter\Annotation\Filter
  * @see \Drupal\filter\FilterPluginManager
+ * @see \Drupal\filter\FilterType
  * @see \Drupal\filter\Plugin\FilterBase
  * @see plugin_api
  */
@@ -119,11 +115,7 @@ interface FilterInterface extends ConfigurableInterface, DependentPluginInterfac
    * Returns the processing type of this filter plugin.
    *
    * @return \Drupal\filter\FilterType
-   *   One of:
-   *   - FilterType::MarkupLanguage
-   *   - FilterType::HtmlRestrictor
-   *   - FilterType::TransformReversible
-   *   - FilterType::TransformIrreversible
+   *   The filter type.
    */
   public function getType();
 
