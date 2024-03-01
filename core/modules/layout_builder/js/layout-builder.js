@@ -99,17 +99,12 @@
             .removeAttr('open')
             .removeAttr('remember-closed');
           // Show all categories since filter is turned off.
-          [].forEach.call(
-            $categories.find('.js-layout-builder-category'),
-            (el) => {
-              el.style.display = 'block';
-            },
+          const builderCategory = $categories.find(
+            '.js-layout-builder-category',
           );
-          $categories
-            .querySelectorAll('.js-layout-builder-category')
-            .forEach((el) => {
-              el.style.display = 'block';
-            });
+          Array.from(builderCategory).forEach((el) => {
+            el.style.display = 'block';
+          });
           // Show all li tags since filter is turned off.
           Array.from($filterLinks).forEach((el) => {
             el.parentNode.style.display = 'block';
