@@ -105,9 +105,11 @@
               el.style.display = 'block';
             },
           );
-          $categories.querySelectorAll('.js-layout-builder-category').forEach((el) => {
-            el.style.display = 'block';
-          });
+          $categories
+            .querySelectorAll('.js-layout-builder-category')
+            .forEach((el) => {
+              el.style.display = 'block';
+            });
           // Show all li tags since filter is turned off.
           Array.from($filterLinks).forEach((el) => {
             el.parentNode.style.display = 'block';
@@ -419,7 +421,7 @@
         // Iterate over all blocks.
         $('[data-layout-content-preview-placeholder-label]').each(
           (i, element) => {
-            Array.from(element.children).forEach((child) => { 
+            Array.from(element.children).forEach((child) => {
               child.style.display = 'block';
             });
           },

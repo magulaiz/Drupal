@@ -44,7 +44,7 @@
         if (query.length >= 2) {
           $rows.each(showViewRow);
         } else {
-          Array.from($rows).forEach((el) => { 
+          Array.from($rows).forEach((el) => {
             el.style.display = 'block';
           });
         }
