@@ -27,7 +27,7 @@ function mongodb_entity_type_alter(array &$entity_types) {
         // Change the views data class to the MongoDB version if the
         // ContentEntityType uses SQL views data class.
         if ($entity_type->getHandlerClass('views_data') == 'Drupal\views\EntityViewsData') {
-          $entity_type->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityViewsData');
+          // $entity_type->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityViewsData');
         }
       }
     }
@@ -36,13 +36,13 @@ function mongodb_entity_type_alter(array &$entity_types) {
     // ContentEntityStorage, ContentEntityStorageSchema and/or EntityViewsData.
     // Override those with the MongoDB version of those subclassed versions.
     if (!empty($entity_types['block_content'])) {
-      $entity_types['block_content']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\BlockContentViewsData');
+      // $entity_types['block_content']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\BlockContentViewsData');
     }
 
     if (!empty($entity_types['comment'])) {
       // $entity_types['comment']->setStorageClass('Drupal\mongodb\EntityStorage\CommentStorage');
       // $entity_types['comment']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentEntityStorageSchema');
-      $entity_types['comment']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\CommentViewsData');
+      // $entity_types['comment']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\CommentViewsData');
     }
 
     if (!empty($entity_types['content_moderation_state'])) {
@@ -52,12 +52,12 @@ function mongodb_entity_type_alter(array &$entity_types) {
     if (!empty($entity_types['file'])) {
       // $entity_types['file']->setStorageClass('Drupal\mongodb\EntityStorage\FileStorage');
       // $entity_types['file']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentEntityStorageSchema');
-      $entity_types['file']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\FileViewsData');
+      // $entity_types['file']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\FileViewsData');
     }
 
     if (!empty($entity_types['media'])) {
       // $entity_types['media']->setStorageClass('Drupal\mongodb\EntityStorage\MediaStorage');
-      $entity_types['media']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\MediaViewsData');
+      // $entity_types['media']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\MediaViewsData');
     }
 
     if (!empty($entity_types['menu_link_content'])) {
@@ -68,7 +68,7 @@ function mongodb_entity_type_alter(array &$entity_types) {
     if (!empty($entity_types['node'])) {
       // $entity_types['node']->setStorageClass('Drupal\mongodb\EntityStorage\NodeStorage');
       // $entity_types['node']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentEntityStorageSchema');
-      $entity_types['node']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\NodeViewsData');
+      // $entity_types['node']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\NodeViewsData');
     }
 
     if (!empty($entity_types['path_alias'])) {
@@ -83,7 +83,7 @@ function mongodb_entity_type_alter(array &$entity_types) {
     if (!empty($entity_types['taxonomy_term'])) {
       // $entity_types['taxonomy_term']->setStorageClass('Drupal\mongodb\EntityStorage\TermStorage');
       // $entity_types['taxonomy_term']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\TermStorageSchema');
-      $entity_types['taxonomy_term']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\TermViewsData');
+      // $entity_types['taxonomy_term']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\TermViewsData');
     }
 
     if (!empty($entity_types['taxonomy_vocabulary'])) {
@@ -93,7 +93,7 @@ function mongodb_entity_type_alter(array &$entity_types) {
     if (!empty($entity_types['user'])) {
       $entity_types['user']->setStorageClass('Drupal\mongodb\EntityStorage\UserStorage');
       // $entity_types['user']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\UserStorageSchema');
-      $entity_types['user']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\UserViewsData');
+      // $entity_types['user']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\UserViewsData');
     }
 
     if (!empty($entity_types['view'])) {
@@ -107,18 +107,18 @@ function mongodb_entity_type_alter(array &$entity_types) {
 
     // Testing content entity types.
     if (!empty($entity_types['entity_test'])) {
-      $entity_types['entity_test']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityTestViewsData');
+      // $entity_types['entity_test']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityTestViewsData');
     }
     if (!empty($entity_types['entity_test_update'])) {
       // $entity_types['entity_test_update']->setStorageClass('Drupal\mongodb\EntityStorage\EntityTestUpdateStorage');
       // $entity_types['entity_test_update']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\EntityTestUpdateStorageSchema');
-      $entity_types['entity_test_update']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityViewsData');
+      // $entity_types['entity_test_update']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityViewsData');
     }
     if (!empty($entity_types['no_language_entity_test'])) {
-      $entity_types['no_language_entity_test']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityTestViewsData');
+      // $entity_types['no_language_entity_test']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityTestViewsData');
     }
     if (!empty($entity_types['entity_test_multivalue_basefield'])) {
-      $entity_types['entity_test_multivalue_basefield']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityTestViewsData');
+      // $entity_types['entity_test_multivalue_basefield']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityTestViewsData');
     }
   }
 }

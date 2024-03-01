@@ -208,7 +208,7 @@ class NodeViewsData extends EntityViewsData {
     $data[$data_table]['uid_revision']['filter']['id'] = 'node_uid_revision';
     $data[$data_table]['uid_revision']['argument']['id'] = 'node_uid_revision';
 
-    if ($this->connection->driver() == 'mongodb') {
+    if ($this->connection->driver() != 'mongodb') {
       $data['node_field_revision']['table']['wizard_id'] = 'node_revision';
 
       // Advertise this table as a possible base table.
