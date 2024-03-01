@@ -59,7 +59,7 @@ module.exports = {
           // eslint-disable-next-line func-names, prefer-arrow-callback, no-shadow
           function () {
             const height = document.querySelector(
-              `${bodyValueFieldSelector} .ck-editor__editable`,
+              '.form-item-body-0-value .ck-editor__editable',
             ).clientHeight;
 
             // We expect height to be 320, but test to ensure that it's greater
@@ -84,7 +84,7 @@ module.exports = {
           // eslint-disable-next-line func-names, prefer-arrow-callback, no-shadow
           function () {
             const height = document.querySelector(
-              `${bodyValueFieldSelector} .ck-source-editing-area`,
+              '.form-item-body-0-value .ck-source-editing-area',
             ).clientHeight;
 
             // We expect height to be 320, but test to ensure that it's greater
@@ -112,7 +112,7 @@ module.exports = {
             });
 
             const height = document.querySelector(
-              `${bodyValueFieldSelector} .ck-editor__editable`,
+              '.form-item-body-0-value .ck-editor__editable',
             ).clientHeight;
 
             return height < window.innerHeight;
@@ -157,7 +157,7 @@ module.exports = {
 
             return isScrollableY(
               document.querySelector(
-                `${bodyValueFieldSelector} .ck-source-editing-area textarea`,
+                '.form-item-body-0-value .ck-source-editing-area textarea',
               ),
             );
           },
@@ -204,7 +204,7 @@ module.exports = {
           // eslint-disable-next-line func-names, prefer-arrow-callback, no-shadow
           function () {
             const height = document.querySelector(
-              '.ck-editor__editable',
+              '.form-item-body-0-value .ck-editor__editable',
             ).clientHeight;
 
             // We expect height to be 640, but test to ensure that it's greater
@@ -226,7 +226,7 @@ module.exports = {
           // eslint-disable-next-line func-names, prefer-arrow-callback, no-shadow
           function () {
             const height = document.querySelector(
-              `${bodyValueFieldSelector} .ck-source-editing-area`,
+              '.form-item-body-0-value .ck-source-editing-area',
             ).clientHeight;
 
             // We expect height to be 640, but test to ensure that it's greater
