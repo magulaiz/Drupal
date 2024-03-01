@@ -38,12 +38,15 @@ class SectionStorage extends Plugin {
    *   will be required during routing access. If TRUE, Layout Builder will
    *   not enforce any access restrictions for the storage, so the section
    *   storage's implementation of access() must perform the access checking itself.
+   * @param string|null $deriver
+   *   (optional) The deriver class.
    */
   public function __construct(
     public readonly string $id,
     public readonly int $weight = 0,
     public readonly array $context_definitions = [],
     public readonly bool $handles_permission_check = FALSE,
+    public readonly ?string $deriver = NULL,
   ) {}
 
   /**
