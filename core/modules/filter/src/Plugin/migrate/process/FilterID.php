@@ -104,445 +104,122 @@ class FilterID extends StaticMap implements ContainerFactoryPluginInterface {
    * @param string $filter_id
    *   A Drupal 7 filter ID.
    *
-   * @return \Drupal\filter\FilterType
+   * @return \Drupal\filter\FilterType|null
    *   The filter type.
    *
    * @see \Drupal\filter\Plugin\FilterInterface::getType()
    */
   protected static function getSourceFilterType($filter_id) {
-    // @todo convert to match.
-    switch ($filter_id) {
-      // Drupal 7 core filters.
-      // - https://git.drupalcode.org/project/drupal/blob/7.69/modules/filter/filter.module#L1229
-      // - https://git.drupalcode.org/project/drupal/blob/7.69/modules/php/php.module#L139
-      case 'filter_html':
-        return FilterType::HtmlRestrictor;
+    return match ($filter_id) {
+      'filter_html' => FilterType::HtmlRestrictor,
+      'filter_url' => FilterType::MarkupLanguage,
+      'filter_autop' => FilterType::MarkupLanguage,
+      'filter_htmlcorrector' => FilterType::TransformIrreversible,
+      'filter_html_escape' => FilterType::HtmlRestrictor,
+      'php_code' => FilterType::MarkupLanguage,
+      'abbrfilter' => FilterType::TransformIrreversible,
+      'ace_editor' => FilterType::TransformIrreversible,
+      'adsense' => FilterType::TransformIrreversible,
+      'api_filter' => FilterType::TransformIrreversible,
+      'api_tokens' => FilterType::TransformIrreversible,
+      'filter_autofloat' => FilterType::TransformIrreversible,
+      'bbcode' => FilterType::MarkupLanguage,
+      'biblio_filter_reference', 'biblio_filter_inline_reference' => FilterType::TransformIrreversible,
+      'caption' => FilterType::TransformReversible,
+      'caption_filter' => FilterType::TransformIrreversible,
+      'filter_cincopa' => FilterType::TransformIrreversible,
+      'ckeditor_blocks' => FilterType::TransformIrreversible,
+      'ckeditor_filter' => FilterType::HtmlRestrictor,
+      'ckeditor_link_filter' => FilterType::TransformIrreversible,
+      'ckeditor_swf_filter' => FilterType::TransformIrreversible,
+      'codefilter' => FilterType::TransformIrreversible,
+      'collapse_text_filter' => FilterType::TransformReversible,
+      'columns_filter' => FilterType::TransformIrreversible,
+      'commonmark' => FilterType::MarkupLanguage,
+      'filter_hashtags' => FilterType::TransformIrreversible,
+      'deepzoom' => FilterType::TransformIrreversible,
+      'editor_align', 'editor_caption' => FilterType::TransformReversible,
+      'elf' => FilterType::TransformReversible,
+      'filter_emogrifier' => FilterType::TransformIrreversible,
+      'emptyparagraphkiller' => FilterType::HtmlRestrictor,
+      'entity_embed' => FilterType::TransformIrreversible,
+      'filter_align' => FilterType::TransformReversible,
+      'ext_link_page' => FilterType::TransformIrreversible,
+      'filter_html_image_secure' => FilterType::HtmlRestrictor,
+      'filter_transliteration' => FilterType::TransformIrreversible,
+      'flickr_filter' => FilterType::TransformIrreversible,
+      'float_filter' => FilterType::TransformReversible,
+      'filter_footnotes' => FilterType::TransformIrreversible,
+      'forena_report' => FilterType::TransformIrreversible,
+      'filter_g2' => FilterType::TransformIrreversible,
+      'geo_filter_filter' => FilterType::TransformIrreversible,
+      'filter_google_analytics_counter' => FilterType::TransformIrreversible,
+      'filter_google_analytics_referrer' => FilterType::TransformIrreversible,
+      'gotwo_link' => FilterType::TransformIrreversible,
+      'h5p_content' => FilterType::TransformIrreversible,
+      'highlight_js' => FilterType::TransformIrreversible,
+      'htmLawed' => FilterType::HtmlRestrictor,
+      'htmlpurifier_basic', 'htmlpurifier_advanced' => FilterType::HtmlRestrictor,
+      'htmltidy' => FilterType::HtmlRestrictor,
+      'icon_filter' => FilterType::TransformIrreversible,
+      'iframe' => FilterType::TransformIrreversible,
+      'image_resize_filter' => FilterType::TransformReversible,
+      'insert_view' => FilterType::TransformIrreversible,
+      'intlinks title', 'intlinks hide bad' => FilterType::TransformIrreversible,
+      'accordion', 'dialog', 'tabs' => FilterType::MarkupLanguage,
+      'language_sections' => FilterType::MarkupLanguage,
+      'lazy_filter' => FilterType::TransformIrreversible,
+      'lazyloader_filter' => FilterType::TransformIrreversible,
+      'filter_link_node' => FilterType::TransformIrreversible,
+      'linktitle' => FilterType::TransformIrreversible,
+      'filter_markdown' => FilterType::MarkupLanguage,
+      'media_filter', 'media_filter_paragraph_fix' => FilterType::TransformIrreversible,
+      'filter_mentions' => FilterType::TransformIrreversible,
+      'menu_filter' => FilterType::TransformIrreversible,
+      'mobile_codes' => FilterType::TransformIrreversible,
+      'multicolumn' => FilterType::TransformIrreversible,
+      'multilink_filter' => FilterType::TransformIrreversible,
+      'mytube' => FilterType::TransformIrreversible,
+      'node_embed' => FilterType::TransformIrreversible,
+      'node_field_embed' => FilterType::TransformIrreversible,
+      'external_links' => FilterType::TransformIrreversible,
+      'noreferrer' => FilterType::TransformIrreversible,
+      'oembed', 'oembed_legacy' => FilterType::TransformIrreversible,
+      'office_html_strip' => FilterType::HtmlRestrictor,
+      'office_html_convert' => FilterType::TransformIrreversible,
+      'openlayers' => FilterType::TransformIrreversible,
+      'opengraph_filter' => FilterType::TransformReversible,
+      'pathologic' => FilterType::TransformIrreversible,
+      'popup_tags' => FilterType::TransformIrreversible,
+      'prettify' => FilterType::TransformIrreversible,
+      'rel_to_abs' => FilterType::TransformReversible,
+      'rollover_filter' => FilterType::TransformIrreversible,
+      'sanitizable' => FilterType::TransformIrreversible,
+      'smart_paging_filter', 'smart_paging_filter_autop' => FilterType::TransformIrreversible,
+      'spamspan' => FilterType::TransformIrreversible,
+      'mee_scald_widgets' => FilterType::TransformReversible,
+      'script_filter' => FilterType::TransformReversible,
+      'shortcode' => FilterType::MarkupLanguage,
+      'shortcode_text_corrector' => FilterType::TransformIrreversible,
+      'smiley' => FilterType::TransformReversible,
+      'filter_svg_embed' => FilterType::TransformIrreversible,
+      'spoiler' => FilterType::TransformIrreversible,
+      'filter_toc' => FilterType::TransformIrreversible,
+      'filter_tables' => FilterType::TransformIrreversible,
+      'target_filter_url' => FilterType::TransformIrreversible,
+      'textile' => FilterType::MarkupLanguage,
+      'theme_filter' => FilterType::TransformIrreversible,
+      'filter_tokens' => FilterType::TransformIrreversible,
+      'transliteration' => FilterType::TransformIrreversible,
+      'typogrify' => FilterType::TransformIrreversible,
+      'uuid_link_filter' => FilterType::TransformIrreversible,
+      'wysiwyg', 'wysiwyg_template_cleanup' => FilterType::HtmlRestrictor,
+      'word_link' => FilterType::TransformReversible,
+      'wordfilter' => FilterType::TransformIrreversible,
+      'xbbcode' => FilterType::MarkupLanguage,
+      default => NULL,
+    };
 
-      case 'filter_url':
-        return FilterType::MarkupLanguage;
-
-      case 'filter_autop':
-        return FilterType::MarkupLanguage;
-
-      case 'filter_htmlcorrector':
-        return FilterType::TransformIrreversible;
-
-      case 'filter_html_escape':
-        return FilterType::HtmlRestrictor;
-
-      case 'php_code':
-        return FilterType::MarkupLanguage;
-
-      // Drupal 7 contrib filters.
-      // https://www.drupal.org/project/abbrfilter
-      case 'abbrfilter':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/ace_editor
-      case 'ace_editor':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/adsense
-      case 'adsense':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/api
-      case 'api_filter':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/api_tokens
-      case 'api_tokens':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/autofloat
-      case 'filter_autofloat':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/bbcode
-      case 'bbcode':
-        return FilterType::MarkupLanguage;
-
-      // https://www.drupal.org/project/biblio
-      case 'biblio_filter_reference':
-      case 'biblio_filter_inline_reference':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/caption
-      case 'caption':
-        return FilterType::TransformReversible;
-
-      // https://www.drupal.org/project/caption_filter
-      case 'caption_filter':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/cincopa
-      case 'filter_cincopa':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/ckeditor_blocks
-      case 'ckeditor_blocks':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/ckeditor_filter
-      case 'ckeditor_filter':
-        return FilterType::HtmlRestrictor;
-
-      // https://www.drupal.org/project/ckeditor_link
-      case 'ckeditor_link_filter':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/ckeditor_swf
-      case 'ckeditor_swf_filter':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/codefilter
-      case 'codefilter':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/collapse_text
-      case 'collapse_text_filter':
-        return FilterType::TransformReversible;
-
-      // https://www.drupal.org/project/columns_filter
-      case 'columns_filter':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/commonmark
-      case 'commonmark':
-        return FilterType::MarkupLanguage;
-
-      // https://www.drupal.org/project/commons_hashtags
-      case 'filter_hashtags':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/deepzoom
-      case 'deepzoom':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/editor
-      case 'editor_align':
-      case 'editor_caption':
-        return FilterType::TransformReversible;
-
-      // https://www.drupal.org/project/elf
-      case 'elf':
-        return FilterType::TransformReversible;
-
-      // https://www.drupal.org/project/emogrifier
-      case 'filter_emogrifier':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/emptyparagraphkiller
-      case 'emptyparagraphkiller':
-        return FilterType::HtmlRestrictor;
-
-      // https://www.drupal.org/project/entity_embed
-      case 'entity_embed':
-        return FilterType::TransformIrreversible;
-
-      case 'filter_align':
-        return FilterType::TransformReversible;
-
-      // https://www.drupal.org/project/ext_link_page
-      case 'ext_link_page':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/filter_html_image_secure
-      case 'filter_html_image_secure':
-        return FilterType::HtmlRestrictor;
-
-      // https://www.drupal.org/project/filter_transliteration
-      case 'filter_transliteration':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/flickr
-      case 'flickr_filter':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/float_filter
-      case 'float_filter':
-        return FilterType::TransformReversible;
-
-      // https://www.drupal.org/project/footnotes
-      case 'filter_footnotes':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/forena
-      case 'forena_report':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/g2
-      case 'filter_g2':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/geo_filter
-      case 'geo_filter_filter':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/google_analytics_counter
-      case 'filter_google_analytics_counter':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/google_analytics_referrer
-      case 'filter_google_analytics_referrer':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/gotwo
-      case 'gotwo_link':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/h5p
-      case 'h5p_content':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/highlightjs
-      case 'highlight_js':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/htmLawed
-      case 'htmLawed':
-        return FilterType::HtmlRestrictor;
-
-      // https://www.drupal.org/project/htmlpurifier
-      case 'htmlpurifier_basic':
-      case 'htmlpurifier_advanced':
-        return FilterType::HtmlRestrictor;
-
-      // https://www.drupal.org/project/htmltidy
-      case 'htmltidy':
-        return FilterType::HtmlRestrictor;
-
-      // https://www.drupal.org/project/icon
-      case 'icon_filter':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/iframe_filter
-      case 'iframe':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/image_resize_filter
-      case 'image_resize_filter':
-        return FilterType::TransformReversible;
-
-      // https://www.drupal.org/project/insert_view
-      case 'insert_view':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/intlinks
-      case 'intlinks title':
-      case 'intlinks hide bad':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/jquery_ui_filter
-      case 'accordion':
-      case 'dialog':
-      case 'tabs':
-        return FilterType::MarkupLanguage;
-
-      // https://www.drupal.org/project/language_sections
-      case 'language_sections':
-        return FilterType::MarkupLanguage;
-
-      // https://www.drupal.org/project/lazy
-      case 'lazy_filter':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/lazyloader_filter
-      case 'lazyloader_filter':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/link_node
-      case 'filter_link_node':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/linktitle
-      case 'linktitle':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/markdown
-      case 'filter_markdown':
-        return FilterType::MarkupLanguage;
-
-      // https://www.drupal.org/project/media_wysiwyg
-      case 'media_filter':
-      case 'media_filter_paragraph_fix':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/mentions
-      case 'filter_mentions':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/menu_filter
-      case 'menu_filter':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/mobile_codes
-      case 'mobile_codes':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/multicolumn
-      case 'multicolumn':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/multilink
-      case 'multilink_filter':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/mytube
-      case 'mytube':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/node_embed
-      case 'node_embed':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/node_field_embed
-      case 'node_field_embed':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/noindex_external_links
-      case 'external_links':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/noreferrer
-      case 'noreferrer':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/oembed
-      case 'oembed':
-      case 'oembed_legacy':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/office_html
-      case 'office_html_strip':
-        return FilterType::HtmlRestrictor;
-
-      case 'office_html_convert':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/openlayers_filters
-      case 'openlayers':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/opengraph_filter
-      case 'opengraph_filter':
-        return FilterType::TransformReversible;
-
-      // https://www.drupal.org/project/pathologic
-      case 'pathologic':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/popup
-      case 'popup_tags':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/prettify
-      case 'prettify':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/rel_to_abs
-      case 'rel_to_abs':
-        return FilterType::TransformReversible;
-
-      // https://www.drupal.org/project/rollover_filter
-      case 'rollover_filter':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/sanitizable
-      case 'sanitizable':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/smart_paging
-      case 'smart_paging_filter':
-      case 'smart_paging_filter_autop':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/spamspan
-      case 'spamspan':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/scald
-      case 'mee_scald_widgets':
-        return FilterType::TransformReversible;
-
-      // https://www.drupal.org/project/script_filter
-      case 'script_filter':
-        return FilterType::TransformReversible;
-
-      // https://www.drupal.org/project/shortcode
-      case 'shortcode':
-        return FilterType::MarkupLanguage;
-
-      case 'shortcode_text_corrector':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/smiley
-      case 'smiley':
-        return FilterType::TransformReversible;
-
-      // https://www.drupal.org/project/svg_embed
-      case 'filter_svg_embed':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/spoiler
-      case 'spoiler':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/tableofcontents
-      case 'filter_toc':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/tables
-      case 'filter_tables':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/target_filter_url
-      case 'target_filter_url':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/textile
-      case 'textile':
-        return FilterType::MarkupLanguage;
-
-      // https://www.drupal.org/project/theme_filter
-      case 'theme_filter':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/token_filter
-      case 'filter_tokens':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/transliteration
-      case 'transliteration':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/typogrify
-      case 'typogrify':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/uuid_link
-      case 'uuid_link_filter':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/wysiwyg
-      case 'wysiwyg':
-      case 'wysiwyg_template_cleanup':
-        return FilterType::HtmlRestrictor;
-
-      // https://www.drupal.org/project/word_link
-      case 'word_link':
-        return FilterType::TransformReversible;
-
-      // https://www.drupal.org/project/wordfilter
-      case 'wordfilter':
-        return FilterType::TransformIrreversible;
-
-      // https://www.drupal.org/project/xbbcode
-      case 'xbbcode':
-        return FilterType::MarkupLanguage;
-    }
-
-    return NULL;
   }
 
 }
