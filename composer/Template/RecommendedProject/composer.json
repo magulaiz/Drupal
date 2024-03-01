@@ -44,8 +44,10 @@
             "locations": {
                 "web-root": "web/"
             },
-            "file-mapping": {
-                ".gitignore": false
+            ".gitignore": {
+                "path": "composer/Template/RecommendedProject/.gitignore",
+                "mode": "replace",
+                "overwrite": false
             }
         },
         "installer-paths": {
