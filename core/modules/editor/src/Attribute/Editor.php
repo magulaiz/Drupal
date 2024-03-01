@@ -7,6 +7,16 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines an Editor attribute object.
+ *
+ * Plugin Namespace: Plugin\Editor
+ *
+ * For a working example, see \Drupal\ckeditor5\Plugin\Editor\CKEditor5
+ *
+ * @see \Drupal\editor\Plugin\EditorPluginInterface
+ * @see \Drupal\editor\Plugin\EditorBase
+ * @see \Drupal\editor\Plugin\EditorManager
+ * @see hook_editor_info_alter()
+ * @see plugin_api
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class Editor extends Plugin {
