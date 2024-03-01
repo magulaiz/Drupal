@@ -800,16 +800,38 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
                 // Do not key single-column fields by property name.
                 if (count($columns) == 1) {
-                  $values[$id][$field_name][$langcode] = (is_null($table_row[reset($columns)]) ? NULL : (string) $table_row[reset($columns)]);
+                  if (is_null($table_row[reset($columns)])) {
+                    $values[$id][$field_name][$langcode] = NULL;
+                  }
+                  elseif ($table_row[reset($columns)] === FALSE) {
+                    // Drupal expects boolean values with the value FALSE to
+                    // have the string value of zero.
+                    $values[$id][$field_name][$langcode] = '0';
+                  }
+                  else {
+                    $values[$id][$field_name][$langcode] = (string) $table_row[reset($columns)];
+                  }
+
                   if ($langcode_is_default_langcode) {
-                    $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT] = (is_null($table_row[reset($columns)]) ? NULL : (string) $table_row[reset($columns)]);
+                    $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT] = $values[$id][$field_name][$langcode];
                   }
                 }
                 else {
-                  foreach ($columns as $property_name => $column_name) {
-                    $values[$id][$field_name][$langcode][$property_name] = (is_null($table_row[$column_name]) ? NULL : (string) $table_row[$column_name]);
+                  foreach ($columns as $column_name) {
+                    if (is_null($table_row[$column_name])) {
+                      $values[$id][$field_name][$langcode] = NULL;
+                    }
+                    elseif ($table_row[$column_name] === FALSE) {
+                      // Drupal expects boolean values with the value FALSE to
+                      // have the string value of zero.
+                      $values[$id][$field_name][$langcode] = '0';
+                    }
+                    else {
+                      $values[$id][$field_name][$langcode] = (string) $table_row[$column_name];
+                    }
+
                     if ($langcode_is_default_langcode) {
-                      $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT][$property_name] = (is_null($table_row[$column_name]) ? NULL : (string) $table_row[$column_name]);
+                      $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT] = $values[$id][$field_name][$langcode];
                     }
                   }
                 }

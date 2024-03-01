@@ -12,6 +12,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
+use MongoDB\BSON\UTCDateTime;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
@@ -1318,6 +1319,10 @@ class EntityQueryTest extends EntityKernelTestBase {
       $revision_created_field_name => $revision_created_timestamp,
     ]);
     $entity->save();
+
+    if (Database::getConnection()->driver() == 'mongodb') {
+      $revision_created_timestamp = new UTCDateTime($revision_created_timestamp * 1000);
+    }
 
     // Query only the default revision.
     $result = $storage->getQuery()

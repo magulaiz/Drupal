@@ -691,9 +691,9 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     if ($original_prefix != $test_prefix) {
       $tables = Database::getConnection()->schema()->findTables('%');
       foreach ($tables as $table) {
-//        if (Database::getConnection()->schema()->dropTable($table)) {
-//          unset($tables[$table]);
-//        }
+        if (Database::getConnection()->schema()->dropTable($table)) {
+          unset($tables[$table]);
+        }
       }
     }
 
