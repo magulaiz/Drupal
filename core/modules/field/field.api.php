@@ -332,7 +332,7 @@ function hook_field_widget_complete_WIDGET_TYPE_form_alter(&$field_widget_comple
  *
  * Formatters are Plugins managed by the
  * \Drupal\Core\Field\FormatterPluginManager class. A formatter is a plugin
- * annotated with class \Drupal\Core\Field\Annotation\FieldFormatter that
+ * attributed with class \Drupal\Core\Field\Attribute\FieldFormatter that
  * implements \Drupal\Core\Field\FormatterInterface (in most cases, by
  * subclassing \Drupal\Core\Field\FormatterBase). Formatter plugins need to be
  * in the namespace \Drupal\{your_module}\Plugin\Field\FieldFormatter.
