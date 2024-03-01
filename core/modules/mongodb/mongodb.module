@@ -135,6 +135,14 @@ function mongodb_field_info_alter(array &$info) {
     $info['timestamp']['class'] = 'Drupal\mongodb\Plugin\Field\FieldType\TimestampItem';
     $info['timestamp']['provider'] = 'mongodb';
   }
+  if (isset($info['created']['class'])) {
+    $info['created']['class'] = 'Drupal\mongodb\Plugin\Field\FieldType\CreatedItem';
+    $info['created']['provider'] = 'mongodb';
+  }
+  if (isset($info['changed']['class'])) {
+    $info['changed']['class'] = 'Drupal\mongodb\Plugin\Field\FieldType\ChangedItem';
+    $info['changed']['provider'] = 'mongodb';
+  }
 }
 
 /**

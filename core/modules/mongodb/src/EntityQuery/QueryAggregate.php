@@ -113,6 +113,14 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
           unset($row->{$mongodb_field});
         }
 
+        $aliased_field = str_replace('.', '_', $field);
+        if (($field != $aliased_field) && isset($row->{$aliased_field})) {
+          // Drupal expects group by results keyed by their original name not
+          // by their full embedded name.
+          $row->{$field} = $row->{$aliased_field};
+          unset($row->{$aliased_field});
+        }
+
         if (!isset($row->{$field})) {
           // MongoDB does not allow aliases to have dots in them. The select
           // query changes them to underscore characters.
@@ -122,7 +130,7 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
           }
         }
 
-        if (is_array($row->{$field}) && count($row->{$field}) == 1) {
+        if (isset($row->{$field}) && is_array($row->{$field}) && count($row->{$field}) == 1) {
           // Embedded table row values are return as an array.
           $row->{$field} = reset($row->{$field});
         }

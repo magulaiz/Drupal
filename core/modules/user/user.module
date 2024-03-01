@@ -288,7 +288,7 @@ function user_is_blocked($name) {
   return (bool) \Drupal::entityQuery('user')
     ->accessCheck(FALSE)
     ->condition('name', $name)
-    ->condition('status', 0)
+    ->condition('status', TRUE)
     ->execute();
 }
 
@@ -465,7 +465,7 @@ function user_login_finalize(UserInterface $account) {
   /** @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session */
   $session = \Drupal::service('session');
   $session->migrate();
-  $session->set('uid', $account->id());
+  $session->set('uid', (int) $account->id());
   $session->set('check_logged_in', TRUE);
   \Drupal::moduleHandler()->invokeAll('user_login', [$account]);
 }
