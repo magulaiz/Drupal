@@ -62,7 +62,7 @@ class WideModalRenderer extends ModalRenderer {
         $title = \Drupal::service('renderer')->renderPlain($main_content['#title']);
       }
       else {
-        $title = (string) $main_content['#title'];
+        $title = $main_content['#title'];
       }
     }
     elseif ($this->titleResolver->getTitle($request, $route_match->getRouteObject())) {
