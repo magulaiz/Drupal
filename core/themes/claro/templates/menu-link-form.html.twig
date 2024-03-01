@@ -17,7 +17,7 @@
 #}
 {% extends '@claro/form/form-two-columns.html.twig' %}
 {% block main %}
-  {{ form|without('advanced', 'menu_parent_wrapper', 'actions') }}
+  {{ form|without('advanced','menu_parent_fieldset', 'actions') }}
 {% endblock %}
 
 {% block secondary %}
