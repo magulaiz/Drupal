@@ -6,7 +6,7 @@ use Drupal\Component\Plugin\Attribute\Plugin;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
- * Defines a tour item annotation object.
+ * Defines a tour tip attribute object.
  *
  * Plugin Namespace: Plugin\tour\tip
  *
@@ -26,7 +26,7 @@ class Tip extends Plugin {
    * @param string $id
    *   The plugin ID.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $title
-   *   The label of the action.
+   *   The label of the tip.
    */
   public function __construct(
     public readonly string $id,
