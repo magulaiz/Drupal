@@ -58,7 +58,10 @@ class UniqueFieldValueValidator extends ConstraintValidator implements Container
     $is_multiple = $field_storage_definitions[$field_name]->isMultiple();
     $is_new = $entity->isNew();
     $item_values = array_column($items->getValue(), $property_name);
-
+//if ($field_name == 'name' && $item_values === [0 => 'existing']) {
+//  dump('$field_name: ' . $field_name);
+//  dump($item_values);
+//}
     // Check if any item values for this field already exist in other entities.
     $query = $this->entityTypeManager
       ->getStorage($entity_type_id)
@@ -68,10 +71,17 @@ class UniqueFieldValueValidator extends ConstraintValidator implements Container
       ->groupBy("$field_name.$property_name");
     if (!$is_new) {
       $entity_id = $entity->id();
+//dump('$entity_id: ' . $entity_id);
       $query->condition($id_key, $entity_id, '<>');
     }
+//if ($field_name == 'name' && $item_values === [0 => 'existing']) {
+//  dump($query);
+//}
     $results = $query->execute();
-
+//if ($field_name == 'name' && $item_values === [0 => 'existing']) {
+//  dump('$results');
+//  dump($results);
+//}
     if (!empty($results)) {
       // The results array is a single-column multidimensional array. The
       // column key includes the field name but may or may not include the
