@@ -31,11 +31,6 @@ class PhpUnitCliTest extends UnitTestCase {
       '--list-tests',
     ];
 
-    // PHPUnit 10 dropped the --verbose command line option.
-    if (RunnerVersion::getMajor() < 10) {
-      $command[] = '--verbose';
-    }
-
     $process = new Process($command, $this->root);
     $process
       ->setTimeout(300)

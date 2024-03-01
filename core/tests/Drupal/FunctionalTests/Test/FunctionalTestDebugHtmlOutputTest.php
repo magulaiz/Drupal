@@ -27,7 +27,7 @@ class FunctionalTestDebugHtmlOutputTest extends BrowserTestBase {
    */
   public function testFunctionalTestDebugHtmlOutput(): void {
     // Test with the specified output directory.
-    $process = Process::fromShellCommandline('vendor/bin/phpunit --configuration core --verbose core/tests/Drupal/FunctionalTests/Test/FunctionalTestDebugHtmlOutputHelperTest.php');
+    $process = Process::fromShellCommandline('vendor/bin/phpunit --configuration core core/tests/Drupal/FunctionalTests/Test/FunctionalTestDebugHtmlOutputHelperTest.php');
     $process->setWorkingDirectory($this->root)
       ->setTimeout(300)
       ->setIdleTimeout(300);
@@ -40,7 +40,7 @@ class FunctionalTestDebugHtmlOutputTest extends BrowserTestBase {
     $this->assertStringContainsString('Drupal_FunctionalTests_Test_FunctionalTestDebugHtmlOutputHelperTest', $process->getOutput());
 
     // Test with a wrong output directory.
-    $process = Process::fromShellCommandline('vendor/bin/phpunit --configuration core --verbose core/tests/Drupal/FunctionalTests/Test/FunctionalTestDebugHtmlOutputHelperTest.php');
+    $process = Process::fromShellCommandline('vendor/bin/phpunit --configuration core core/tests/Drupal/FunctionalTests/Test/FunctionalTestDebugHtmlOutputHelperTest.php');
     $process->setWorkingDirectory($this->root)
       ->setTimeout(300)
       ->setIdleTimeout(300);
