@@ -31,6 +31,13 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   protected $connection;
 
   /**
+   * A query to execute on close that updates the timestamp.
+   *
+   * @var \Drupal\Core\Database\Query\Update
+   */
+  protected $executeUpdateOnClose = NULL;
+
+  /**
    * Constructs a new SessionHandler instance.
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
@@ -62,6 +69,9 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   public function read(#[\SensitiveParameter] string $sid): string|false {
     $data = '';
     if (!empty($sid)) {
+      $this->executeUpdateOnClose = $this->connection->update('sessions')
+        ->condition('sid', Crypt::hashBase64($sid))
+        ->fields(['timestamp' => $this->time->getRequestTime()]);
       // Read the session data from the database.
       $query = $this->connection
         ->queryRange('SELECT [session] FROM {sessions} WHERE [sid] = :sid', 0, 1, [':sid' => Crypt::hashBase64($sid)]);
@@ -92,6 +102,9 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
    * {@inheritdoc}
    */
   public function close(): bool {
+    if (!empty($this->executeUpdateOnClose)) {
+      $this->executeUpdateOnClose->execute();
+    }
     return TRUE;
   }
 
