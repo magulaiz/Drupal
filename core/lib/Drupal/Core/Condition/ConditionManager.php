@@ -17,7 +17,6 @@ use Drupal\Core\Plugin\FilteredPluginManagerTrait;
 /**
  * A plugin manager for condition plugins.
  *
- * @see \Drupal\Core\Condition\Annotation\Condition
  * @see \Drupal\Core\Condition\Attribute\Condition
  * @see \Drupal\Core\Condition\ConditionInterface
  * @see \Drupal\Core\Condition\ConditionPluginBase
