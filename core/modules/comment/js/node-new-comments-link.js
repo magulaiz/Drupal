@@ -52,8 +52,8 @@
   function show($placeholder) {
     const placeholder = document.querySelector($placeholder);
     if (placeholder) {
-      let parentLi = placeholder.closest('.comment-new-comments');
-      let precedingLi = parentLi.previousElementSibling;
+      const parentLi = placeholder.closest('.comment-new-comments');
+      const precedingLi = parentLi.previousElementSibling;
       // Remove the 'last' class from the preceding <li> if it exists
       if (precedingLi && precedingLi.classList.contains('last')) {
         precedingLi.classList.remove('last');
@@ -61,7 +61,7 @@
       // Show the parent <li>
       parentLi.style.display = 'block';
       return parentLi;
-    } else return;
+    }
   }
 
   /**
