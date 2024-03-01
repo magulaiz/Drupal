@@ -2622,6 +2622,11 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Database/DriverSpecificKernelTestBase.php
 
 		-
+			message: "#^Caught class PHPUnit\\\\Framework\\\\Error\\\\Warning not found\\.$#"
+			count: 1
+			path: tests/Drupal/KernelTests/Core/Database/DriverSpecificTransactionTestBase.php
+
+		-
 			message: "#^Variable \\$title might not be defined\\.$#"
 			count: 2
 			path: tests/Drupal/KernelTests/Core/Entity/CreateSampleEntityTest.php
@@ -2721,11 +2726,6 @@ parameters:
 			message: "#^Constructor of class Symfony\\\\Component\\\\ExpressionLanguage\\\\Expression has an unused parameter \\$expression\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Component/DependencyInjection/Dumper/OptimizedPhpArrayDumperTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Component\\\\Diff\\\\Engine\\\\DiffOpTest\\:\\:expectError\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/Diff/Engine/DiffOpTest.php
 
 		-
 			message: "#^@dataProvider \\\\Drupal\\\\Tests\\\\Component\\\\DrupalComponentTest\\:\\:getComponents related method must be static in PHPUnit 10 and newer\\.$#"
@@ -2954,6 +2954,11 @@ parameters:
 			path: tests/Drupal/Tests/Core/Config/Entity/ConfigEntityBaseUnitTest.php
 
 		-
+			message: "#^@dataProvider providerTestSetAndPreSaveWithPluginCollections related method must be static in PHPUnit 10 and newer\\.$#"
+			count: 2
+			path: tests/Drupal/Tests/Core/Config/Entity/ConfigEntityBaseUnitTest.php
+
+		-
 			message: "#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#"
 			count: 3
 			path: tests/Drupal/Tests/Core/Config/Entity/ConfigEntityBaseUnitTest.php
@@ -3021,9 +3026,17 @@ parameters:
 			path: tests/Drupal/Tests/Core/Database/ConditionTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Database\\\\ConnectionTest\\:\\:expectError\\(\\)\\.$#"
+			message: """
+				#^Call to deprecated method returnValue\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
+				Use \\<code\\>\\$double\\-\\>willReturn\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>returnValue\\(\\)\\)\\</code\\>$#
+			"""
+			count: 2
+			path: tests/Drupal/Tests/Core/Datetime/DateHelperTest.php
+
+		-
+			message: "#^@dataProvider providerTestProcess related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
-			path: tests/Drupal/Tests/Core/Database/ConnectionTest.php
+			path: tests/Drupal/Tests/Core/DependencyInjection/Compiler/BackendCompilerPassTest.php
 
 		-
 			message: """
