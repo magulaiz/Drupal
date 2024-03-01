@@ -1118,7 +1118,7 @@
             '.js-form-type-checkbox:not(.js-form-item-options-value-all) input[type="checkbox"]',
           );
         // Show the select all checkbox.
-        [].forEach.call($selectAll, (element) => {
+        Array.from($selectAll).forEach((element) => { 
           element.style.display = 'block';
         });
         $selectAllCheckbox.on('click', function () {

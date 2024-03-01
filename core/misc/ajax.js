@@ -1208,7 +1208,7 @@
     }
     // Undo hide.
     const $wrapperContainer = $(this.wrapper);
-    document.querySelectorAll($wrapperContainer).forEach((wrap) => {
+    Array.from($wrapperContainer).forEach((wrap) => {
       wrap.style.display = 'block';
     });
     // Re-enable the element.

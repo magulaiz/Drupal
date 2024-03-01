@@ -105,8 +105,11 @@
               el.style.display = 'block';
             },
           );
+          $categories.querySelectorAll('.js-layout-builder-category').forEach((el) => {
+            el.style.display = 'block';
+          });
           // Show all li tags since filter is turned off.
-          [].forEach.call($filterLinks, (el) => {
+          Array.from($filterLinks).forEach((el) => {
             el.parentNode.style.display = 'block';
           });
           announce(Drupal.t('All available blocks are listed.'));
@@ -416,10 +419,9 @@
         // Iterate over all blocks.
         $('[data-layout-content-preview-placeholder-label]').each(
           (i, element) => {
-            const child = element.children;
-            for (let key = 0; key < child.length; key++) {
-              child[key].style.display = 'block';
-            }
+            Array.from(element.children).forEach((child) => { 
+              child.style.display = 'block';
+            });
           },
         );
       };

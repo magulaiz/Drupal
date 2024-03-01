@@ -37,14 +37,14 @@
         // the filter's tableDrag row and vertical tab pane.
         $checkbox.on('click.filterUpdate', () => {
           if (checkbox.checked) {
-            [].forEach.call($row, (element) => {
+            Array.from($row).forEach((element) => {
               element.style.display = 'block';
             });
             if (filterSettingsTab) {
               filterSettingsTab.tabShow().updateSummary();
             } else {
               // On very narrow viewports, Vertical Tabs are disabled.
-              [].forEach.call($filterSettings, (el) => {
+              Array.from($filterSettings).forEach((el) => {
                 el.style.display = 'block';
               });
             }
