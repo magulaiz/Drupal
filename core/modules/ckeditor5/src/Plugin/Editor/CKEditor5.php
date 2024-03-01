@@ -20,6 +20,7 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\ckeditor5\SmartDefaultSettings;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Plugin\Validation\Constraint\PrimitiveTypeConstraint;
 use Drupal\editor\EditorInterface;
 use Drupal\editor\Entity\Editor;
@@ -33,20 +34,19 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 /**
  * Defines a CKEditor 5-based text editor for Drupal.
  *
- * @Editor(
- *   id = "ckeditor5",
- *   label = @Translation("CKEditor 5"),
- *   supports_content_filtering = TRUE,
- *   supports_inline_editing = TRUE,
- *   is_xss_safe = FALSE,
- *   supported_element_types = {
- *     "textarea"
- *   }
- * )
- *
  * @internal
  *   Plugin classes are internal.
  */
+#[Editor(
+id: 'ckeditor5',
+  label: new TranslatableMarkup('CKEditor 5'),
+  supports_content_filtering: TRUE,
+  supports_inline_editing: TRUE,
+  is_xss_safe: FALSE,
+  supported_element_types: [
+  'textarea',
+]
+)]
 class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
 
   /**
