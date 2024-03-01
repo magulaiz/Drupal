@@ -32,7 +32,7 @@ class SqlModeTest extends DriverSpecificDatabaseTestBase {
     // based on databaseType() rather than 'driver', but here all we have to go
     // on is 'driver'.
     if ($info['default']['driver'] === 'mysql') {
-      $info['default']['init_commands']['sql_mode'] = "SET sql_mode = ''";
+      $info['default']['init_commands']['sql_mode_options']['ANSI'] = FALSE;
     }
 
     return $info;

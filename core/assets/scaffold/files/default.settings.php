@@ -179,6 +179,20 @@ $databases = [];
  * ];
  * @endcode
  *
+ * To set the SQL mode, set the sql_mode_options key in the init_commands array
+ * with an array whose keys are mode names, where values are TRUE to set the
+ * mode, and FALSE to unset one of Drupal core's default modes:
+ * @code
+ * $databases['default']['default'] = [
+ *   'init_commands' => [
+ *     'sql_mode_options' => [
+ *       'ANSI' => FALSE,
+ *       'NO_ZERO_IN_DATE' => TRUE,
+ *     ],
+ *   ],
+ * ];
+ * @endcode
+ *
  * WARNING: The above defaults are designed for database portability. Changing
  * them may cause unexpected behavior, including potential data loss. See
  * https://www.drupal.org/developing/api/database/configuration for more
