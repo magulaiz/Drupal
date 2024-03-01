@@ -180,6 +180,9 @@ abstract class EntityBase implements EntityInterface {
       elseif (isset($link_templates['edit-form'])) {
         $rel = 'edit-form';
       }
+      elseif (isset($link_templates['delete-form'])) {
+        $rel = 'delete-form';
+      }
       else {
         $exception_message = "Cannot generate default URL because no link template 'canonical' or 'edit-form' was found for the '{$this->getEntityTypeId()}' entity type";
       }
