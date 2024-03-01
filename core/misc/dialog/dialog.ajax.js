@@ -14,7 +14,6 @@
    */
   Drupal.behaviors.dialog = {
     attach(context, settings) {
-      const contextElement = $(context);
       // Provide a known 'drupal-modal' DOM element for Drupal-based modal
       // dialogs. Non-modal dialogs are responsible for creating their own
       // elements, since there can be multiple non-modal dialogs at a time.
@@ -27,9 +26,11 @@
           .appendTo('body');
       }
 
+      const closestDialog =
+        context !== document && context.closest('.ui-dialog-content');
       // Special behaviors specific when attaching content within a dialog.
       // These behaviors usually fire after a validation error inside a dialog.
-      const $dialog = contextElement.closest('.ui-dialog-content');
+      const $dialog = $(closestDialog);
       if ($dialog.length) {
         // Remove and replace the dialog buttons with those from the new form.
         if ($dialog.dialog('option', 'drupalAutoButtons')) {
@@ -55,16 +56,13 @@
         originalClose.apply(settings.dialog, [event, ...args]);
         // Check if the opener element is inside an AJAX container.
         const $element = $(event.target);
-        const openerEl = $element.data('uiDialog')
-          ? $element.data('uiDialog').opener[0]
-          : null;
-        if (openerEl) {
-          const closestContainer = openerEl.closest(
+        const dataDialog = $element.data('uiDialog');
+        const openerElement = dataDialog && dataDialog.opener[0];
+        if (openerElement) {
+          const closestContainer = openerElement.closest(
             '[data-drupal-ajax-container]',
           );
-          const ajaxContainer = $element.data('uiDialog')
-            ? $(closestContainer)
-            : [];
+          const ajaxContainer = $(closestContainer);
 
           // If the opener element was in an ajax container, and focus is on the
           // body element, we can assume focus was lost. To recover, focus is
