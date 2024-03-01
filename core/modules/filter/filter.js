@@ -32,14 +32,6 @@
         if (filteredElement) {
           filteredElement.style.display = 'block';
         }
-        // const $this = $(event.target);
-        // const { value } = event.target;
-        // $this
-        //   .closest('.js-filter-wrapper')
-        //   .find('[data-drupal-format-id]')
-        //   .hide()
-        //   .filter(`[data-drupal-format-id="${value}"]`)
-        //   .show();
       }
 
       $(once('filter-guidelines', '.js-filter-guidelines', context))

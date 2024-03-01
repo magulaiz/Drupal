@@ -1207,7 +1207,6 @@
       this.progress.object.stopMonitoring();
     }
     // Undo hide.
-    // $(this.wrapper).show();
     const $wrapperContainer = $(this.wrapper);
     [].forEach.call($wrapperContainer, (wrap) => {
       wrap.style.display = 'block';
@@ -1375,7 +1374,6 @@
       const $ajaxNewContent = $newContent.find('.ajax-new-content');
       if ($ajaxNewContent.length) {
         $ajaxNewContent.hide();
-        // $newContent.show();
         $newContent[0].style.display = 'block';
         $ajaxNewContent[effect.showEffect](effect.showSpeed);
       } else if (effect.showEffect !== 'show') {

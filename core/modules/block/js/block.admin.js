@@ -62,18 +62,9 @@
         } else {
           $filterRows.each(function (index) {
             const element = this;
-
-            // if (parentElement) {
-            //   const grandParentElement = parentElement.parentElement;
-
-            //   if (grandParentElement) {
-            //     grandParentElement.style.display = 'block';
-            //   }
-            // }
             if (element.parentNode && element.parentNode.parentNode) {
               element.parentNode.parentNode.style.display = 'block';
             }
-            // $(this).parent().parent().show();
           });
         }
       }

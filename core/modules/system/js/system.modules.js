@@ -53,7 +53,6 @@
           $(row).closest('tr').toggle(textMatch);
         }
         // Search over all rows and packages.
-        // $rowsAndDetails.show();
         $rowsAndDetails[0].style.display = 'block';
 
         // Filter if the length of the query is at least 2 characters.
@@ -81,7 +80,6 @@
           );
         } else if (searching) {
           searching = false;
-          // $rowsAndDetails.show();
           $rowsAndDetails[0].style.display = 'block';
           // Return <details> elements that had been closed before filtering
           // to a closed state.

@@ -318,7 +318,6 @@
     const label = $target.closest('td').next().html().trim();
     // Add/remove the checked item to the list.
     if (event.target.checked) {
-      // this.$selected_div.show();
       this.$selected_div[0].style.display = 'block';
       this.checkedItems.push(label);
     } else {
@@ -617,7 +616,6 @@
         '.views-display-setting a',
       );
       if ($contextualFilters.length) {
-        // $('#preview-args').parent().show();
         const previewArgs = document.querySelector('#preview-args');
         if (previewArgs) {
           const parentEl = previewArgs.parentElement;
@@ -1120,7 +1118,6 @@
             '.js-form-type-checkbox:not(.js-form-item-options-value-all) input[type="checkbox"]',
           );
         // Show the select all checkbox.
-        // $selectAll.show();
         [].forEach.call($selectAll, (element) => {
           element.style.display = 'block';
         });
@@ -1189,7 +1186,6 @@
         if ($(event.target).prop('checked')) {
           $context.find('input.default-radios').parent().hide();
           $context.find('td.any-default-radios-row').parent().hide();
-          // $context.find('input.default-checkboxes').parent().show();
           const checkboxes = $context.querySelectorAll(
             'input.default-checkboxes',
           );
@@ -1198,8 +1194,6 @@
           });
         } else {
           $context.find('input.default-checkboxes').parent().hide();
-          // $context.find('td.any-default-radios-row').parent().show();
-          // $context.find('input.default-radios').parent().show();
           [].forEach.call($context.find('td.any-default-radios-row'), (el) => {
             el.parentNode.style.display = 'block';
           });
