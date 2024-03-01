@@ -8,7 +8,7 @@ use Drupal\Core\Layout\LayoutDefault;
 use Drupal\Core\Layout\LayoutDefinition;
 
 /**
- * Defines an Layout attribute object.
+ * Defines a Layout attribute object.
  *
  * Layouts are used to define a list of regions and then output render arrays
  * in each of the regions, usually using a template.
@@ -26,16 +26,16 @@ use Drupal\Core\Layout\LayoutDefinition;
 class Layout extends Plugin {
 
   /**
-   * Constructs an Action attribute.
+   * Constructs a Layout attribute.
    *
    * @param string $id
    *   The plugin ID.
-   * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $label
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup $label
    *   The human-readable name.
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup $category
+   *   The human-readable category.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $description
    *   (optional) The description for advanced layouts.
-   * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $category
-   *   The human-readable category.
    * @param string|null $template
    *   (optional) The template file to render the layout.
    * @param string $theme_hook
@@ -57,9 +57,9 @@ class Layout extends Plugin {
    */
   public function __construct(
     public readonly string $id,
-    public readonly TranslatableMarkup $label = NULL,
+    public readonly TranslatableMarkup $label,
+    public readonly TranslatableMarkup $category,
     public readonly ?TranslatableMarkup $description = NULL,
-    public readonly TranslatableMarkup $category = NULL,
     public readonly ?string $template = NULL,
     public readonly string $theme_hook = 'layout',
     public readonly ?string $path = NULL,
@@ -67,7 +67,7 @@ class Layout extends Plugin {
     public readonly ?string $icon = NULL,
     public readonly ?string $icon_map = NULL,
     public readonly array $regions = [],
-    public readonly string $default_region = NULL,
+    public readonly ?string $default_region = NULL,
     public readonly string $class = LayoutDefault::class,
   ) {}
 

@@ -12,7 +12,7 @@ use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 use Drupal\Core\Plugin\Discovery\YamlDiscoveryDecorator;
 use Drupal\Core\Layout\Annotation\Layout;
-use Drupal\Core\Layout\Attribute\Layout as AttributeLayout;
+use Drupal\Core\Layout\Attribute\Layout as LayoutAttribute;
 use Drupal\Core\Plugin\FilteredPluginManagerTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
@@ -44,7 +44,7 @@ class LayoutPluginManager extends DefaultPluginManager implements LayoutPluginMa
    *   The theme handler to invoke the alter hook with.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler) {
-    parent::__construct('Plugin/Layout', $namespaces, $module_handler, LayoutInterface::class, AttributeLayout::class, Layout::class);
+    parent::__construct('Plugin/Layout', $namespaces, $module_handler, LayoutInterface::class, LayoutAttribute::class, Layout::class);
     $this->themeHandler = $theme_handler;
 
     $type = $this->getType();
