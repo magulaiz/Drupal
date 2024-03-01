@@ -214,7 +214,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
   public function getChildren(TermInterface $term) {
     $query = \Drupal::entityQuery('taxonomy_term')
       ->accessCheck(TRUE)
-      ->condition('parent', $term->id());
+      ->condition('parent', (int) $term->id());
     return static::loadMultiple($query->execute());
   }
 
@@ -279,71 +279,71 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
             $this->treeTerms[$vid][$term->tid] = $term;
           }
         }
+      }
 
-        // Load full entities, if necessary. The entity controller statically
-        // caches the results.
-        $term_entities = [];
-        if ($load_entities) {
-          $term_entities = $this->loadMultiple(array_keys($this->treeTerms[$vid]));
-        }
+      // Load full entities, if necessary. The entity controller statically
+      // caches the results.
+      $term_entities = [];
+      if ($load_entities) {
+        $term_entities = $this->loadMultiple(array_keys($this->treeTerms[$vid]));
+      }
 
-        $max_depth = (!isset($max_depth)) ? count($this->treeChildren[$vid]) : $max_depth;
-        $tree = [];
+      $max_depth = (!isset($max_depth)) ? count($this->treeChildren[$vid]) : $max_depth;
+      $tree = [];
 
-        // Keeps track of the parents we have to process, the last entry is used
-        // for the next processing step.
-        $process_parents = [];
-        $process_parents[] = $parent;
+      // Keeps track of the parents we have to process, the last entry is used
+      // for the next processing step.
+      $process_parents = [];
+      $process_parents[] = $parent;
 
-        // Loops over the parent terms and adds its children to the tree array.
-        // Uses a loop instead of a recursion, because it's more efficient.
-        while (count($process_parents)) {
-          $parent = array_pop($process_parents);
-          // The number of parents determines the current depth.
-          $depth = count($process_parents);
-          if ($max_depth > $depth && !empty($this->treeChildren[$vid][$parent])) {
-            $has_children = FALSE;
-            $child = current($this->treeChildren[$vid][$parent]);
-            do {
-              if (empty($child)) {
-                break;
-              }
-              $term = $load_entities ? $term_entities[$child] : $this->treeTerms[$vid][$child];
-              if (isset($this->treeParents[$vid][$load_entities ? $term->id() : $term->tid])) {
-                // Clone the term so that the depth attribute remains correct
-                // in the event of multiple parents.
-                $term = clone $term;
-              }
-              $term->depth = $depth;
-              if (!$load_entities) {
-                unset($term->parent);
-              }
-              $tid = $load_entities ? $term->id() : $term->tid;
-              $term->parents = $this->treeParents[$vid][$tid];
-              $tree[] = $term;
-              if (!empty($this->treeChildren[$vid][$tid])) {
-                $has_children = TRUE;
-
-                // We have to continue with this parent later.
-                $process_parents[] = $parent;
-                // Use the current term as parent for the next iteration.
-                $process_parents[] = $tid;
-
-                // Reset pointers for child lists because we step in there more
-                // often with multi parents.
-                reset($this->treeChildren[$vid][$tid]);
-                // Move pointer so that we get the correct term the next time.
-                next($this->treeChildren[$vid][$parent]);
-                break;
-              }
+      // Loops over the parent terms and adds its children to the tree array.
+      // Uses a loop instead of a recursion, because it's more efficient.
+      while (count($process_parents)) {
+        $parent = array_pop($process_parents);
+        // The number of parents determines the current depth.
+        $depth = count($process_parents);
+        if ($max_depth > $depth && !empty($this->treeChildren[$vid][$parent])) {
+          $has_children = FALSE;
+          $child = current($this->treeChildren[$vid][$parent]);
+          do {
+            if (empty($child)) {
+              break;
             }
-            while ($child = next($this->treeChildren[$vid][$parent]));
-
-            if (!$has_children) {
-              // We processed all terms in this hierarchy-level, reset pointer
-              // so that this function works the next time it gets called.
-              reset($this->treeChildren[$vid][$parent]);
+            $term = $load_entities ? $term_entities[$child] : $this->treeTerms[$vid][$child];
+            if (isset($this->treeParents[$vid][$load_entities ? $term->id() : $term->tid])) {
+              // Clone the term so that the depth attribute remains correct
+              // in the event of multiple parents.
+              $term = clone $term;
             }
+            $term->depth = $depth;
+            if (!$load_entities) {
+              unset($term->parent);
+            }
+            $tid = $load_entities ? $term->id() : $term->tid;
+            $term->parents = $this->treeParents[$vid][$tid];
+            $tree[] = $term;
+            if (!empty($this->treeChildren[$vid][$tid])) {
+              $has_children = TRUE;
+
+              // We have to continue with this parent later.
+              $process_parents[] = $parent;
+              // Use the current term as parent for the next iteration.
+              $process_parents[] = $tid;
+
+              // Reset pointers for child lists because we step in there more
+              // often with multi parents.
+              reset($this->treeChildren[$vid][$tid]);
+              // Move pointer so that we get the correct term the next time.
+              next($this->treeChildren[$vid][$parent]);
+              break;
+            }
+          }
+          while ($child = next($this->treeChildren[$vid][$parent]));
+
+          if (!$has_children) {
+            // We processed all terms in this hierarchy-level, reset pointer
+            // so that this function works the next time it gets called.
+            reset($this->treeChildren[$vid][$parent]);
           }
         }
       }
@@ -362,7 +362,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
       // query.
       // @see \Drupal\Tests\taxonomy\Functional\TokenReplaceTest.
       $query = $this->database->select('taxonomy_index', 'ti');
-      $query->addMongodbJoin('LEFT', 'taxonomy_term_data', 'tid', 'taxonomy_index', 'tid', '=', 'td', [['field' => 'taxonomy_term_translations.vid', 'value' => $vid]]);
+      $query->addJoin('LEFT', 'taxonomy_term_data', 'td', $query->joinCondition()->compare('ti.tid', 'td.tid')->condition('taxonomy_term_translations.vid', $vid));
       $query->addTag('vocabulary_node_count');
       $results = $query->execute()->fetchAll();
       $nids = [];
