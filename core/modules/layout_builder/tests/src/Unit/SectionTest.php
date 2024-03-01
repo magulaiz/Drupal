@@ -231,7 +231,7 @@ class SectionTest extends UnitTestCase {
    * @covers ::getThirdPartySetting
    * @dataProvider providerTestGetThirdPartySetting
    */
-  public function testGetThirdPartySetting(string $provider, string $key, string $expected, mixed $default = FALSE): void {
+  public function testGetThirdPartySetting(string $provider, string $key, ?string $expected, mixed $default = FALSE): void {
     if ($default) {
       $this->assertSame($expected, $this->section->getThirdPartySetting($provider, $key, $default));
     }
