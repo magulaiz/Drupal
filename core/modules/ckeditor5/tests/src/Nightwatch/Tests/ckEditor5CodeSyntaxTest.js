@@ -9,7 +9,7 @@ module.exports = {
   'Verify code block configured languages are respected': (browser) => {
     browser.drupalLoginAsAdmin(() => {
       // Selectors prefix selector for text_with_summary value editor elements.
-      const bodyValueFieldSelector = '.form-item-body-0-value ';
+      const bodyValueFieldSelector = '.form-item-body-0-value';
       browser
         // Enable required modules.
         .drupalRelativeURL('/admin/modules')
@@ -79,24 +79,20 @@ module.exports = {
 
         // Open code block dropdown, and verify that correct languages are present.
         .click(
-          bodyValueFieldSelector +
-            '.ck-code-block-dropdown .ck-dropdown__button .ck-splitbutton__arrow',
+          `${bodyValueFieldSelector} .ck-code-block-dropdown .ck-dropdown__button .ck-splitbutton__arrow`,
         )
         .assert.textContains(
-          bodyValueFieldSelector +
-            '.ck-code-block-dropdown .ck-dropdown__panel .ck-list__item:nth-child(1) .ck-button__label',
+          `${bodyValueFieldSelector} .ck-code-block-dropdown .ck-dropdown__panel .ck-list__item:nth-child(1) .ck-button__label`,
           'Twig',
         )
         .assert.textContains(
-          bodyValueFieldSelector +
-            '.ck-code-block-dropdown .ck-dropdown__panel .ck-list__item:nth-child(2) .ck-button__label',
+          `${bodyValueFieldSelector} .ck-code-block-dropdown .ck-dropdown__panel .ck-list__item:nth-child(2) .ck-button__label`,
           'YML',
         )
 
         // Click the first language (which should be 'Twig').
         .click(
-          bodyValueFieldSelector +
-            '.ck-code-block-dropdown .ck-dropdown__panel .ck-list__item:nth-child(1) button',
+          `${bodyValueFieldSelector} .ck-code-block-dropdown .ck-dropdown__panel .ck-list__item:nth-child(1) button`,
         )
         .waitForElementVisible(
           `${bodyValueFieldSelector} .ck-editor__main pre[data-language="Twig"]`,
@@ -144,12 +140,10 @@ module.exports = {
 
         // Open up the code syntax dropdown, and click the 2nd item (which should be 'YML').
         .click(
-          bodyValueFieldSelector +
-            '.ck-code-block-dropdown .ck-dropdown__button .ck-splitbutton__arrow',
+          `${bodyValueFieldSelector} .ck-code-block-dropdown .ck-dropdown__button .ck-splitbutton__arrow`,
         )
         .click(
-          bodyValueFieldSelector +
-            '.ck-code-block-dropdown .ck-dropdown__panel .ck-list__item:nth-child(2) button',
+          `${bodyValueFieldSelector} .ck-code-block-dropdown .ck-dropdown__panel .ck-list__item:nth-child(2) button`,
         )
         // Press 'X' to ensure there's data in CKEditor before switching to source view.
         .perform(function () {

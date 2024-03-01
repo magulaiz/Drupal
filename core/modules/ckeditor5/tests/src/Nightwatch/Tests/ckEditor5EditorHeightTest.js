@@ -15,7 +15,7 @@ module.exports = {
   'Ensure CKEditor respects field widget row value': (browser) => {
     browser.drupalLoginAsAdmin(() => {
       // Selectors prefix selector for text_with_summary value editor elements.
-      const bodyValueFieldSelector = '.form-item-body-0-value ';
+      const bodyValueFieldSelector = '.form-item-body-0-value';
       browser
         // Create new input format.
         .drupalRelativeURL('/admin/config/content/formats/add')
