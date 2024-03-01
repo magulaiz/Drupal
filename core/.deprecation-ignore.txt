@@ -30,12 +30,6 @@
 %Drupal\\Core\\Form\\FormBuilder::getForm\(\).* will require a new "mixed \.\.\. \$args" argument in the next major version of its interface%
 %Drupal\\Core\\Form\\FormBuilder::submitForm\(\).* will require a new "mixed \.\.\. \$args" argument in the next major version of its interface%
 
-# Skip deprecations for EditorMediaDialog, EditorImageDialog and EditorLinkDialog triggered by
-# \Drupal\Core\Entity\EntityResolverManager::setRouteOptions().
-%Drupal\\media\\Form\\EditorMediaDialog is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3291493%
-%Drupal\\editor\\Form\\EditorImageDialog is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3291493%
-%Drupal\\editor\\Form\\EditorLinkDialog is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3291493%
-
 # Symfony 7.
 %Method "Symfony\\Component\\DependencyInjection\\Compiler\\CompilerPassInterface::process\(\)" might add "void" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message.%
 %Method "Symfony\\Component\\EventDispatcher\\EventSubscriberInterface::.*" might add ".*" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message.%
