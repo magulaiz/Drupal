@@ -74,7 +74,7 @@ use Symfony\Component\Mime\MimeTypes;
   description: new TranslatableMarkup("Use oEmbed URL for reusable media."),
   allowed_field_types: ["string"],
   default_thumbnail_filename: "no-thumbnail.png",
-  deriver: "Drupal\media\Plugin\media\Source\OEmbedDeriver",
+  deriver: OEmbedDeriver::class,
   providers: [],
 )]
 class OEmbed extends MediaSourceBase implements OEmbedInterface {
