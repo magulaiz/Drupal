@@ -117,7 +117,7 @@ class AccountProxy implements AccountProxyInterface {
   /**
    * {@inheritdoc}
    */
-  public function hasPermission($permission) {
+  public function hasPermission(string $permission): bool {
     return $this->getAccount()->hasPermission($permission);
   }
 
