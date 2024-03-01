@@ -394,7 +394,7 @@ class Condition extends CoreCondition {
         elseif ($field_type == 'boolean') {
           if (is_array($condition['value'])) {
             foreach ($condition['value'] as &$condition_value) {
-              if ($field_schema['type'] == 'int') {
+              if (isset($field_schema['type']) && ($field_schema['type'] == 'int')) {
                 $condition_value = $condition_value ? 1 : 0;
               }
               else {
@@ -404,7 +404,7 @@ class Condition extends CoreCondition {
             unset($condition_value);
           }
           else {
-            if ($field_schema['type'] == 'int') {
+            if (isset($field_schema['type']) && ($field_schema['type'] == 'int')) {
               $condition['value'] = $condition['value'] ? 1 : 0;
             }
             else {
