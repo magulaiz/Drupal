@@ -40,6 +40,8 @@ class HelpSection extends Plugin {
    *   page itself.
    * @param int|null $weight
    *   (optional) The weight of the help page section.
+   * @param string|null $deriver
+   *   (optional) The deriver class.
    *
    *   The sections will be ordered by this weight on the help page.
    */
@@ -48,7 +50,8 @@ class HelpSection extends Plugin {
     public readonly TranslatableMarkup $title,
     public readonly ?TranslatableMarkup $description = NULL,
     public readonly ?string $permission = NULL,
-    public readonly ?int $weight = NULL
+    public readonly ?int $weight = NULL,
+    public readonly ?string $deriver = NULL,
   ) {}
 
 }
