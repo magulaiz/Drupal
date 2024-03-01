@@ -741,7 +741,7 @@ function hook_theme_suggestions_alter(array &$suggestions, array &$variables, $h
  * In the following example, we provide an alternative template suggestion to
  * node templates based on the user being logged in.
  * @code
- * function MYMODULE_theme_suggestions_node_alter(array &$suggestions, array $variables) {
+ * function MY_MODULE_theme_suggestions_node_alter(array &$suggestions, array $variables) {
  *   if (\Drupal::currentUser()->isAuthenticated()) {
  *     $suggestions[] = 'node__logged_in';
  *   }
