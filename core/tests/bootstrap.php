@@ -183,7 +183,10 @@ if (getenv('SYMFONY_DEPRECATIONS_HELPER') === FALSE) {
   putenv("SYMFONY_DEPRECATIONS_HELPER=ignoreFile=$deprecation_ignore_filename");
 }
 
-if (RunnerVersion::getMajor() >= 10) {
+// Bootstrap the IgnoreDeprecation extension and the DebugClassloader to report
+// deprecations in PHPUnit 10+.
+dump(getenv('SYMFONY_DEPRECATIONS_HELPER'));
+if (RunnerVersion::getMajor() >= 10 && getenv('SYMFONY_DEPRECATIONS_HELPER') !== 'disabled') {
   // @todo Force the ignore file for now.
   $deprecation_ignore_filename = realpath(__DIR__ . "/../.deprecation-ignore.txt");
 
