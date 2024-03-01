@@ -68,6 +68,10 @@
   background-color: #eff6fc;
 }
 
+.layout-builder__link--configure {
+  margin-inline: 0 0.375rem;
+}
+
 .layout-builder__link--remove {
   position: relative;
   z-index: 2;
@@ -175,6 +179,7 @@
  * @todo create issue for todo.
  */
 
-.layout-builder-components-table .tabledrag-changed-warning {
+.layout-builder-components-table .tabledrag-changed-warning,
+.layout-builder-sections-table .tabledrag-changed-warning {
   display: none !important;
 }

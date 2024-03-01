@@ -182,6 +182,7 @@ class DefaultsEntityForm extends EntityForm {
       '#submit' => ['::redirectOnSubmit'],
       '#redirect' => 'discard_changes',
     ];
+
     $actions['preview_toggle'] = $this->buildContentPreviewToggle();
     return $actions;
   }
