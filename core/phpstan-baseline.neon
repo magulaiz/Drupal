@@ -888,11 +888,6 @@ parameters:
 			path: modules/datetime_range/src/Plugin/Field/FieldType/DateRangeItem.php
 
 		-
-			message: "#^@dataProvider fromToSettingDataProvider related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: modules/datetime_range/tests/src/Functional/DateRangeFieldTest.php
-
-		-
 			message: "#^Variable \\$view in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: modules/dblog/dblog.module
