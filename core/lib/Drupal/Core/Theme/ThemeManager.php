@@ -188,6 +188,10 @@ class ThemeManager implements ThemeManagerInterface {
       return FALSE;
     }
 
+    if (isset($info['deprecated'])) {
+      @trigger_error($info['deprecated'], E_USER_DEPRECATED);
+    }
+
     // If a renderable array is passed as $variables, then set $variables to
     // the arguments expected by the theme function.
     if (isset($variables['#theme']) || isset($variables['#theme_wrappers'])) {
