@@ -1,8 +1,9 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Drupal\TestTools\Extension\HtmlLogging;
 
-use Drupal\Component\Utility\Html;
 use PHPUnit\Event\Facade;
 use PHPUnit\Event\TestRunner\Finished as TestRunnerFinished;
 use PHPUnit\Event\TestRunner\Started as TestRunnerStarted;
@@ -81,12 +82,9 @@ final class HtmlOutputLogger {
   public function testRunnerFinished(TestRunnerFinished $event): void {
     if (self::$links) {
       print "\n";
+      // @todo decide whether to go verbose or not, or configurable.
       print "HTML output was generated, " . count(self::$links) . " page(s).\n";
       print "\n";
-      // @todo decide whether to go verbose or not, or configurable
-      //      foreach (self::$links as $link) {
-      //        print $link;
-      //      }
     }
   }
 

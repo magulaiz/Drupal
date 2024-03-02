@@ -7,8 +7,7 @@ namespace Drupal\TestTools\Extension\HtmlLogging;
 /**
  * @internal
  */
-abstract class SubscriberBase
-{
+abstract class SubscriberBase {
 
   public function __construct(
     private readonly HtmlOutputLogger $logger,
