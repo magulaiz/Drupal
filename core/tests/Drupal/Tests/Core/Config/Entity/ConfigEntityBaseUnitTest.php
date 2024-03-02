@@ -63,10 +63,8 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
 
   /**
    * The provider of the entity type.
-   *
-   * @var string
    */
-  protected $provider = 'the_provider_of_the_entity_type';
+  const PROVIDER = 'the_provider_of_the_entity_type';
 
   /**
    * The language manager.
@@ -126,7 +124,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     $this->entityType = $this->createMock('\Drupal\Core\Config\Entity\ConfigEntityTypeInterface');
     $this->entityType->expects($this->any())
       ->method('getProvider')
-      ->willReturn($this->provider);
+      ->willReturn(static::PROVIDER);
     $this->entityType->expects($this->any())
       ->method('getConfigPrefix')
       ->willReturn('test_provider.' . $this->entityTypeId);
@@ -226,11 +224,11 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    */
   public function testAddDependency() {
     $method = new \ReflectionMethod('\Drupal\Core\Config\Entity\ConfigEntityBase', 'addDependency');
-    $method->invoke($this->entity, 'module', $this->provider);
+    $method->invoke($this->entity, 'module', static::PROVIDER);
     $method->invoke($this->entity, 'module', 'core');
     $method->invoke($this->entity, 'module', 'node');
     $dependencies = $this->entity->getDependencies();
-    $this->assertNotContains($this->provider, $dependencies['module']);
+    $this->assertNotContains(static::PROVIDER, $dependencies['module']);
     $this->assertNotContains('core', $dependencies['module']);
     $this->assertContains('node', $dependencies['module']);
 
@@ -251,7 +249,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    *
    * @dataProvider providerCalculateDependenciesWithPluginCollections
    */
-  public function testCalculateDependenciesWithPluginCollections($definition, $expected_dependencies) {
+  public function testCalculateDependenciesWithPluginCollections(array $definition, array $expected_dependencies): void {
     $this->moduleHandler->moduleExists('the_provider_of_the_entity_type')->willReturn(TRUE);
     $this->moduleHandler->moduleExists('test')->willReturn(TRUE);
     $this->moduleHandler->moduleExists('test_theme')->willReturn(FALSE);
@@ -292,7 +290,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerCalculateDependenciesWithPluginCollections() {
+  public static function providerCalculateDependenciesWithPluginCollections(): array {
     // Start with 'a' so that order of the dependency array is fixed.
     $instance_dependency_1 = 'a' . Random::machineName(10);
     $instance_dependency_2 = 'a' . Random::machineName(11);
@@ -311,7 +309,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
       // Tests that a plugin that is provided by the same module as the config
       // entity is not added to the dependencies array.
       [
-        ['provider' => $this->provider],
+        ['provider' => static::PROVIDER],
         [],
       ],
       // Tests that a config entity that has a plugin which provides config
@@ -341,7 +339,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     $this->entity = $this->getMockForAbstractClass('\Drupal\Core\Config\Entity\ConfigEntityBase', [[], $this->entityTypeId]);
     $this->entity->setThirdPartySetting('test_provider', 'test', 'test');
     $this->entity->setThirdPartySetting('test_provider2', 'test', 'test');
-    $this->entity->setThirdPartySetting($this->provider, 'test', 'test');
+    $this->entity->setThirdPartySetting(static::PROVIDER, 'test', 'test');
 
     $this->assertEquals(['test_provider', 'test_provider2'], $this->entity->calculateDependencies()->getDependencies()['module']);
     $changed = $this->entity->onDependencyRemoval(['module' => ['test_provider2']]);
@@ -646,7 +644,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    * @covers ::set
    * @dataProvider providerTestSetAndPreSaveWithPluginCollections
    */
-  public function testSetWithPluginCollections(bool $syncing, string $expected_value) {
+  public function testSetWithPluginCollections(bool $syncing, string $expected_value): void {
     $instance_id = 'the_instance_id';
     $instance = new TestConfigurablePlugin(['foo' => 'original_value'], $instance_id, []);
 
@@ -673,7 +671,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
    * @covers ::preSave
    * @dataProvider providerTestSetAndPreSaveWithPluginCollections
    */
-  public function testPreSaveWithPluginCollections(bool $syncing, string $expected_value) {
+  public function testPreSaveWithPluginCollections(bool $syncing, string $expected_value): void {
     $instance_id = 'the_instance_id';
     $instance = new TestConfigurablePlugin(['foo' => 'original_value'], $instance_id, ['provider' => 'core']);
 
@@ -714,7 +712,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     $this->assertSame($expected_value, $entity->get('the_plugin_collection_config')[$instance_id]['foo']);
   }
 
-  public function providerTestSetAndPreSaveWithPluginCollections(): array {
+  public static function providerTestSetAndPreSaveWithPluginCollections(): array {
     return [
       'Not syncing' => [FALSE, 'new_value'],
       'Syncing' => [TRUE, 'original_value'],
