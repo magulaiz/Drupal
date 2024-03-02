@@ -11,6 +11,7 @@ use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
  * The test method is provided by the MigrateUpgradeTestBase class.
  *
  * @group migrate_drupal_ui
+ * @group #slow
  */
 class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
 
@@ -77,8 +78,8 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'contact_message' => 0,
       'configurable_language' => 5,
       'editor' => 2,
-      'field_config' => 102,
-      'field_storage_config' => 70,
+      'field_config' => 103,
+      'field_storage_config' => 71,
       'file' => 7,
       'filter_format' => 7,
       'image_style' => 6,
@@ -150,6 +151,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'Menu translation',
       'Node',
       'Node Reference',
+      'Node Reference URL Widget',
       'Option Widgets',
       'Path',
       'Profile translation',

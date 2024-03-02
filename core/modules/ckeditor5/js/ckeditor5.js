@@ -319,10 +319,9 @@
       // prefixed versions of existing css in `existingCss`.
       const addedCss = [
         `${prefix} .ck.ck-content {display:block;min-height:5rem;}`,
-        `${prefix} .ck.ck-content * {display:initial;background:initial;color:initial;padding:initial;}`,
+        `${prefix} .ck.ck-content * {display:revert;background:revert;color:initial;padding:revert;}`,
         `${prefix} .ck.ck-content li {display:list-item}`,
         `${prefix} .ck.ck-content ol li {list-style-type: decimal}`,
-        `${prefix} .ck[contenteditable], ${prefix} .ck[contenteditable] * {-webkit-user-modify: read-write;-moz-user-modify: read-write;}`,
       ];
 
       const prefixedCss = [...addedCss].join('\n');
@@ -424,6 +423,11 @@
           if (element.hasAttribute('required')) {
             required.add(id);
             element.removeAttribute('required');
+          }
+
+          // If the textarea is disabled, enable CKEditor's read-only mode.
+          if (element.hasAttribute('disabled')) {
+            editor.enableReadOnlyMode('ckeditor5_disabled');
           }
 
           // Integrate CKEditor 5 viewport offset with Drupal displace.

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Asset\AssetResolverTest.
- */
-
 namespace Drupal\Tests\Core\Asset;
 
 use Drupal\Core\Asset\AssetResolver;
@@ -91,6 +86,9 @@ class AssetResolverTest extends UnitTestCase {
     $this->libraryDependencyResolver = $this->createMock('\Drupal\Core\Asset\LibraryDependencyResolverInterface');
     $this->libraryDependencyResolver->expects($this->any())
       ->method('getLibrariesWithDependencies')
+      ->willReturnArgument(0);
+    $this->libraryDependencyResolver->expects($this->any())
+      ->method('getMinimalRepresentativeSubset')
       ->willReturnArgument(0);
     $this->moduleHandler = $this->createMock('\Drupal\Core\Extension\ModuleHandlerInterface');
     $this->themeManager = $this->createMock('\Drupal\Core\Theme\ThemeManagerInterface');

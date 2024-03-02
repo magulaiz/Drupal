@@ -35,6 +35,8 @@ class BlockContentCreationTest extends BlockContentTestBase {
   protected $permissions = [
     'administer blocks',
     'administer block_content display',
+    'access block library',
+    'administer block content',
   ];
 
   /**
@@ -46,7 +48,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
   }
 
   /**
-   * Creates a "Basic page" block and verifies its consistency in the database.
+   * Creates a "Basic block" block and verifies its consistency in the database.
    */
   public function testBlockContentCreation() {
     $this->drupalLogin($this->adminUser);
@@ -69,7 +71,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
       ->getStorage('block_content')
       ->loadByProperties(['info' => $edit['info[0][value]']]);
     $block = reset($blocks);
-    $this->assertNotEmpty($block, 'Custom Block found in database.');
+    $this->assertNotEmpty($block, 'Content Block found in database.');
   }
 
   /**
@@ -109,7 +111,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->submitForm($custom_view_mode, 'Save');
 
     // Go to the configure page and change the view mode.
-    $this->drupalGet('admin/structure/block/manage/testblock');
+    $this->drupalGet('admin/structure/block/manage/stark_testblock');
 
     // Test the available view mode options.
     // Verify that the default view mode is available.
@@ -121,7 +123,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->submitForm($view_mode, 'Save block');
 
     // Check that the view mode setting is shown because more than one exists.
-    $this->drupalGet('admin/structure/block/manage/testblock');
+    $this->drupalGet('admin/structure/block/manage/stark_testblock');
     $this->assertSession()->fieldExists('settings[view_mode]');
 
     // Change the view mode.
@@ -130,7 +132,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->submitForm($view_mode, 'Save block');
 
     // Go to the configure page and verify the view mode has changed.
-    $this->drupalGet('admin/structure/block/manage/testblock');
+    $this->drupalGet('admin/structure/block/manage/stark_testblock');
     $this->assertSession()->fieldValueEquals('settings[view_mode]', 'test_view_mode');
 
     // Check that the block exists in the database.
@@ -138,20 +140,20 @@ class BlockContentCreationTest extends BlockContentTestBase {
       ->getStorage('block_content')
       ->loadByProperties(['info' => $edit['info[0][value]']]);
     $block = reset($blocks);
-    $this->assertNotEmpty($block, 'Custom Block found in database.');
+    $this->assertNotEmpty($block, 'Content Block found in database.');
   }
 
   /**
-   * Create a default custom block.
+   * Create a default content block.
    *
-   * Creates a custom block from defaults and ensures that the 'basic block'
+   * Creates a content block from defaults and ensures that the 'basic block'
    * type is being used.
    */
   public function testDefaultBlockContentCreation() {
     $edit = [];
     $edit['info[0][value]'] = $this->randomMachineName(8);
     $edit['body[0][value]'] = $this->randomMachineName(16);
-    // Don't pass the custom block type in the URL so the default is forced.
+    // Don't pass the content block type in the URL so the default is forced.
     $this->drupalGet('block/add');
     $this->submitForm($edit, 'Save');
 
@@ -163,7 +165,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
       ->getStorage('block_content')
       ->loadByProperties(['info' => $edit['info[0][value]']]);
     $block = reset($blocks);
-    $this->assertNotEmpty($block, 'Default Custom Block found in database.');
+    $this->assertNotEmpty($block, 'Default Content Block found in database.');
   }
 
   /**
@@ -223,11 +225,11 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->assertSession()->pageTextContains($body);
 
     // Delete the block.
-    $this->drupalGet('block/1/delete');
+    $this->drupalGet('admin/content/block/1/delete');
     $this->assertSession()->pageTextContains('This will also remove 1 placed block instance.');
 
     $this->submitForm([], 'Delete');
-    $this->assertSession()->pageTextContains('The custom block ' . $edit['info[0][value]'] . ' has been deleted.');
+    $this->assertSession()->pageTextContains('The content block ' . $edit['info[0][value]'] . ' has been deleted.');
 
     // Create another block and force the plugin cache to flush.
     $edit2 = [];
@@ -249,7 +251,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->submitForm($edit3, 'Save');
 
     // Show the delete confirm form.
-    $this->drupalGet('block/3/delete');
+    $this->drupalGet('admin/content/block/3/delete');
     $this->assertSession()->pageTextNotContains('This will also remove');
   }
 
