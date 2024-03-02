@@ -735,11 +735,6 @@ parameters:
 			path: modules/ckeditor5/tests/src/FunctionalJavascript/CKEditorStylesheetsWarningTest.php
 
 		-
-			message: "#^@dataProvider providerTestDerivedPluginDefinitions related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: modules/ckeditor5/tests/src/Kernel/CKEditor5PluginManagerTest.php
-
-		-
 			message: "#^Method Drupal\\\\comment\\\\CommentForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/comment/src/CommentForm.php
@@ -891,6 +886,11 @@ parameters:
 			message: "#^Access to an undefined property Drupal\\\\datetime_range\\\\Plugin\\\\Field\\\\FieldType\\\\DateRangeItem\\:\\:\\$start_date\\.$#"
 			count: 1
 			path: modules/datetime_range/src/Plugin/Field/FieldType/DateRangeItem.php
+
+		-
+			message: "#^@dataProvider fromToSettingDataProvider related method must be static in PHPUnit 10 and newer\\.$#"
+			count: 1
+			path: modules/datetime_range/tests/src/Functional/DateRangeFieldTest.php
 
 		-
 			message: "#^Variable \\$view in isset\\(\\) always exists and is not nullable\\.$#"
@@ -1204,11 +1204,6 @@ parameters:
 			path: modules/language/tests/src/Unit/Plugin/LanguageNegotiation/LanguageNegotiationContentEntityTest.php
 
 		-
-			message: "#^@dataProvider providerTestGetThirdPartySetting related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: modules/layout_builder/tests/src/Unit/SectionTest.php
-
-		-
 			message: "#^Constructor of class Drupal\\\\link\\\\Plugin\\\\migrate\\\\process\\\\FieldLink has an unused parameter \\$migration\\.$#"
 			count: 1
 			path: modules/link/src/Plugin/migrate/process/FieldLink.php
@@ -1298,11 +1293,6 @@ parameters:
 			message: "#^Variable \\$resource_url on left side of \\?\\? always exists and is not nullable\\.$#"
 			count: 1
 			path: modules/media/src/OEmbed/UrlResolver.php
-
-		-
-			message: "#^@dataProvider providerMediaTypeCreationForm related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: modules/media/tests/src/Functional/MediaTypeCreationTest.php
 
 		-
 			message: "#^@dataProvider providerTestValidations related method must be static in PHPUnit 10 and newer\\.$#"
@@ -1396,11 +1386,6 @@ parameters:
 			message: "#^Call to an undefined static method static\\(Drupal\\\\Tests\\\\migrate\\\\Kernel\\\\MigrateTestBase\\)\\:\\:migrateDumpAlter\\(\\)\\.$#"
 			count: 1
 			path: modules/migrate/tests/src/Kernel/MigrateTestBase.php
-
-		-
-			message: "#^@dataProvider providerTestSubProcessSkip related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: modules/migrate/tests/src/Kernel/process/SubProcessWithSkipTest.php
 
 		-
 			message: "#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#"
@@ -3102,17 +3087,7 @@ parameters:
 			path: tests/Drupal/Tests/Core/Entity/EntityUnitTest.php
 
 		-
-			message: "#^@dataProvider providerTestToUrlLinkTemplateAddForm related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Entity/EntityUrlTest.php
-
-		-
 			message: "#^@dataProvider providerTestToUrlLinkTemplateRevision related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Entity/EntityUrlTest.php
-
-		-
-			message: "#^@dataProvider providerTestToUrlUriCallback related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Entity/EntityUrlTest.php
 
