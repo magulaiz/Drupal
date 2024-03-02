@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Datetime;
 
+use Drupal\Component\DependencyInjection\ReverseContainer;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
@@ -23,6 +24,7 @@ class DrupalDateTimeTest extends UnitTestCase {
     parent::setUp();
 
     $container = new ContainerBuilder();
+    $this->container->set('Drupal\Component\DependencyInjection\ReverseContainer', new ReverseContainer($this->container));
     \Drupal::setContainer($container);
   }
 
