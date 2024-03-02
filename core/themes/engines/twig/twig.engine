@@ -60,10 +60,10 @@ function twig_render_template($template_file, array $variables) {
 
       foreach ($suggestions as &$suggestion) {
         if ($suggestion === $variables['template_suggestion']) {
-          $suggestion = 'x ' . $current_template;
+          $suggestion = '✅ ' . $current_template;
         }
         else {
-          $suggestion = '* ' . strtr($suggestion, '_', '-') . $extension;
+          $suggestion = '▪️ ' . strtr($suggestion, '_', '-') . $extension;
         }
       }
       $output['debug_info'] .= "\n<!-- FILE NAME SUGGESTIONS:\n   " . Html::escape(implode("\n   ", $suggestions)) . "\n-->";
