@@ -7,10 +7,12 @@
  * @see phpunit.xml.dist
  */
 
+use Drupal\TestTools\Extension\HtmlLogging\HtmlOutputLogger;
 use Drupal\TestTools\PhpUnitCompatibility\IgnoreDeprecation;
 use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
 use Symfony\Component\ErrorHandler\DebugClassLoader;
 use PHPUnit\Runner\ErrorHandler;
+use PHPUnit\Util\Filesystem;
 
 // cspell:ignore errno errstr errfile errline
 
@@ -212,6 +214,14 @@ if (RunnerVersion::getMajor() >= 10 && getenv('SYMFONY_DEPRECATIONS_HELPER') !==
   );
 
   DebugClassLoader::enable();
+}
+
+// Functional tests HTML output logging.
+$browserTestOutputDirectory = getenv('BROWSERTEST_OUTPUT_DIRECTORY');
+if ($browserTestOutputDirectory !== FALSE) {
+  if (Filesystem::createDirectory($browserTestOutputDirectory)) {
+    HtmlOutputLogger::init();
+  }
 }
 
 // Drupal expects to be run from its root directory. This ensures all test types
