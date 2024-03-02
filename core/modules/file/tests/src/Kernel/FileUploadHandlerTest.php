@@ -70,4 +70,79 @@ class FileUploadHandlerTest extends KernelTestBase {
     $this->assertEquals(['txt'], $subscriber->getAllowedExtensions());
   }
 
+  /**
+   * Tests handleExtensionValidation() with different validators.
+   *
+   * @dataProvider validatorsProvider
+   * @group legacy
+   */
+  public function testHandleExtensionValidation(array $validators, array $expectedValidators, string $message, bool $deprecation): void {
+    $method = new \ReflectionMethod(
+      FileUploadHandler::class,
+      'handleExtensionValidation'
+    );
+    $method->setAccessible(TRUE);
+
+    if ($deprecation) {
+      $this->expectDeprecation(
+        '\'file_validate_extensions\' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the \'FileExtension\' constraint instead. See https://www.drupal.org/node/3363700'
+      );
+    }
+    $method->invokeArgs($this->fileUploadHandler, [&$validators]);
+
+    $this->assertEquals($expectedValidators, $validators, $message);
+  }
+
+  /**
+   * Provides data for testHandleExtensionValidation().
+   */
+  public static function validatorsProvider(): array {
+    return [
+      // Legacy extension validator.
+      'valid_legacy' => [
+        ['file_validate_extensions' => ['txt']],
+        ['FileExtension' => ['extensions' => 'txt']],
+        'Legacy extension validator is converted to the new constraint.',
+        TRUE,
+      ],
+      'non_default_legacy' => [
+        ['file_validate_extensions' => ['foo']],
+        ['FileExtension' => ['extensions' => 'foo']],
+        'Legacy extension validator is converted to the new constraint.',
+        TRUE,
+      ],
+      'empty_legacy' => [
+        ['file_validate_extensions' => ''],
+        [],
+        'Legacy extension validator is removed.',
+        TRUE,
+      ],
+      // Plugin extension validator.
+      'valid_extension' => [
+        ['FileExtension' => ['extensions' => 'txt']],
+        ['FileExtension' => ['extensions' => 'txt']],
+        'Extension constraint is preserved.',
+        FALSE,
+      ],
+      'non_default_extension' => [
+        ['FileExtension' => ['extensions' => 'foo']],
+        ['FileExtension' => ['extensions' => 'foo']],
+        'Extension constraint is preserved.',
+        FALSE,
+      ],
+      'empty_extensions' => [
+        ['FileExtension' => []],
+        [],
+        'Extension constraint is removed.',
+        FALSE,
+      ],
+      'undefined' => [
+        [],
+        ['FileExtension' => ['extensions' => FileUploadHandler::DEFAULT_EXTENSIONS]],
+        'Extension constraint is added with default extensions.',
+        FALSE,
+      ],
+    ];
+  }
+
 }
