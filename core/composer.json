@@ -32,7 +32,7 @@
         "symfony/validator": "^6.4",
         "symfony/process": "^6.4",
         "symfony/polyfill-iconv": "^1.26",
-        "symfony/polyfill-intl-icu": "^1.28",
+        "symfony/polyfill-intl-icu": "^1.26",
         "symfony/yaml": "^6.4",
         "twig/twig": "^3.5.0",
         "doctrine/annotations": "^2.0",
