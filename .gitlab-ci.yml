@@ -408,6 +408,14 @@ default:
     reports:
       codequality: phpcs-quality-report.json
 
+'🧹 PHP Refactoring (rector)':
+  <<: [ *with-composer, *default-job-settings-lint ]
+  stage: 🪄 Lint
+  variables:
+    KUBERNETES_CPU_REQUEST: "16"
+  script:
+    - php vendor/bin/rector process --config ./core/rector.php --dry-run --ansi
+
 '🧹 JavaScript linting (eslint)':
   <<: [ *with-yarn ]
   stage: 🪄 Lint
