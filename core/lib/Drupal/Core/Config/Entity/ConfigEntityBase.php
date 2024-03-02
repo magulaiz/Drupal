@@ -234,7 +234,8 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
     if ($a_weight == $b_weight) {
       $a_label = $a->label() ?? '';
       $b_label = $b->label() ?? '';
-      return strnatcasecmp($a_label, $b_label);
+      $collator = \Collator::create((!extension_loaded('intl')) ? ('en') : (\Drupal::service('language_manager')->getCurrentLanguage()->getId()));
+      return $collator->compare($a_label, $b_label);
     }
     return $a_weight <=> $b_weight;
   }

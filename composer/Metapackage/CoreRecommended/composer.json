@@ -46,6 +46,7 @@
         "symfony/polyfill-ctype": "~v1.28.0",
         "symfony/polyfill-iconv": "~v1.28.0",
         "symfony/polyfill-intl-grapheme": "~v1.28.0",
+        "symfony/polyfill-intl-icu": "~v1.28.0",
         "symfony/polyfill-intl-idn": "~v1.28.0",
         "symfony/polyfill-intl-normalizer": "~v1.28.0",
         "symfony/polyfill-mbstring": "~v1.28.0",

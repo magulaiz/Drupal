@@ -144,6 +144,10 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
       ->method('getLanguage')
       ->with('en')
       ->willReturn(new Language(['id' => 'en']));
+    $this->languageManager->expects($this->any())
+      ->method('getCurrentLanguage')
+      ->with()
+      ->willReturn(new Language(['id' => 'en']));
 
     $this->cacheTagsInvalidator = $this->createMock('Drupal\Core\Cache\CacheTagsInvalidatorInterface');
 
@@ -525,7 +529,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     $entity_b = $this->createMock(ConfigEntityBase::class);
     $entity_b->expects($this->atLeastOnce())
       ->method('label')
-      ->willReturn('bar');
+      ->willReturn('åwesome');
 
     // Test sorting by label.
     $list = [$entity_a, $entity_b];
