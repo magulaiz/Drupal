@@ -67,10 +67,10 @@ class TwigDebugMarkupTest extends KernelTestBase {
     $expected = "\n<!-- THEME HOOK: '$hook' -->";
     $this->assertStringContainsString($expected, $output, 'Theme hook comment found.');
 
-    $expected = "\n<!-- BEGIN OUTPUT from '" . Html::escape($template_filename) . "' -->\n";
-    $this->assertStringContainsString($expected, $output, 'Full path to current template file found in BEGIN OUTPUT comment.');
-    $expected = "\n<!-- END OUTPUT from '" . Html::escape($template_filename) . "' -->\n";
-    $this->assertStringContainsString($expected, $output, 'Full path to current template file found in END OUTPUT comment.');
+    $expected = "\n<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from '" . Html::escape($template_filename) . "' -->\n";
+    $this->assertStringContainsString($expected, $output, 'Full path to current template file found in 💡 BEGIN CUSTOM TEMPLATE OUTPUT comment.');
+    $expected = "\n<!-- END CUSTOM TEMPLATE OUTPUT from '" . Html::escape($template_filename) . "' -->\n";
+    $this->assertStringContainsString($expected, $output, 'Full path to current template file found in END CUSTOM TEMPLATE OUTPUT comment.');
   }
 
   /**
@@ -101,8 +101,8 @@ class TwigDebugMarkupTest extends KernelTestBase {
     $expected = "\n<!-- THEME HOOK: 'theme_test_specific_suggestions__variant' -->";
     $this->assertStringContainsString($expected, $output, 'Theme hook comment found.');
     $expected = '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
-      . '   * theme-test-specific-suggestions--variant' . $extension . PHP_EOL
-      . '   x theme-test-specific-suggestions' . $extension . PHP_EOL
+      . '   ▪️ theme-test-specific-suggestions--variant' . $extension . PHP_EOL
+      . '   ✅ theme-test-specific-suggestions' . $extension . PHP_EOL
       . '-->';
     $this->assertStringContainsString($expected, $output, 'Multiple suggestions should have file name suggestions listed.');
   }
@@ -130,13 +130,13 @@ class TwigDebugMarkupTest extends KernelTestBase {
     $this->assertStringContainsString($expected, $output, 'Theme hook comment found.');
 
     $expected = '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
-      . '   * theme-test-template-test--variant' . $extension . PHP_EOL
-      . '   x theme_test.template_test' . $extension . PHP_EOL
+      . '   ▪️ theme-test-template-test--variant' . $extension . PHP_EOL
+      . '   ✅ theme_test.template_test' . $extension . PHP_EOL
       . '-->';
     $this->assertStringContainsString($expected, $output, 'The actual template file name should be used when it does not match the suggestion.');
 
-    $expected = "\n<!-- BEGIN OUTPUT from '" . Html::escape($template_filename) . "' -->\n";
-    $this->assertStringContainsString($expected, $output, 'Full path to current template file found in BEGIN OUTPUT comment.');
+    $expected = "\n<!-- 💡 BEGIN CUSTOM TEMPLATE OUTPUT from '" . Html::escape($template_filename) . "' -->\n";
+    $this->assertStringContainsString($expected, $output, 'Full path to current template file found in 💡 BEGIN CUSTOM TEMPLATE OUTPUT comment.');
   }
 
   /**
@@ -157,8 +157,8 @@ class TwigDebugMarkupTest extends KernelTestBase {
     $xss_suggestion = Html::escape('theme-test-xss-suggestion--<script type="text/javascript">alert(\'yo\');</script>') . $extension;
 
     $expected = '<!-- FILE NAME SUGGESTIONS:' . PHP_EOL
-      . '   * ' . $xss_suggestion . PHP_EOL
-      . '   x theme-test-xss-suggestion' . $extension . PHP_EOL
+      . '   ▪️ ' . $xss_suggestion . PHP_EOL
+      . '   ✅ theme-test-xss-suggestion' . $extension . PHP_EOL
       . '-->';
     $this->assertStringContainsString($expected, $output, 'XSS suggestion successfully escaped in Twig debug comments.');
     $this->assertStringContainsString('Template for testing XSS in theme hook suggestions.', $output, 'Base hook suggestion used instead of XSS suggestion.');
