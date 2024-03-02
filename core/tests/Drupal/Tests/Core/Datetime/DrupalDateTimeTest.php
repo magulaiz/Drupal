@@ -24,7 +24,7 @@ class DrupalDateTimeTest extends UnitTestCase {
     parent::setUp();
 
     $container = new ContainerBuilder();
-    $this->container->set('Drupal\Component\DependencyInjection\ReverseContainer', new ReverseContainer($this->container));
+    $container->set('Drupal\Component\DependencyInjection\ReverseContainer', new ReverseContainer($container));
     \Drupal::setContainer($container);
   }
 
