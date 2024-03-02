@@ -17,6 +17,16 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class DrupalDateTimeTest extends UnitTestCase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    
+    $container = new ContainerBuilder();
+    \Drupal::setContainer($container);
+  }
+
+  /**
    * Tests date diffs.
    *
    * @param mixed $input1
