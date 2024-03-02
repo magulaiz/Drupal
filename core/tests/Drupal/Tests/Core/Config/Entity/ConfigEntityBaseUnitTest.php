@@ -527,6 +527,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
       ->method('label')
       ->willReturn('foo');
     $entity_b = $this->createMock(ConfigEntityBase::class);
+    // cSpell:disable-next-line
     $entity_b->expects($this->atLeastOnce())
       ->method('label')
       ->willReturn('åwesome');
