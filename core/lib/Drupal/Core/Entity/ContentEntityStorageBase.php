@@ -92,7 +92,6 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
     }
 
     $entity = $this->doCreate($values);
-    $entity->enforceIsNew();
 
     $entity->postCreate($this);
 
@@ -126,6 +125,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
     }
     $entity_class = $this->getEntityClass($bundle);
     $entity = new $entity_class([], $this->entityTypeId, $bundle);
+    $entity->enforceIsNew();
     $this->initFieldValues($entity, $values);
     return $entity;
   }
