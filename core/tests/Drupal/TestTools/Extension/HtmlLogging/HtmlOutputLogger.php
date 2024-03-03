@@ -47,8 +47,9 @@ final class HtmlOutputLogger {
    * @throws \RuntimeException
    */
   public static function init(string $outputDirectory, bool $outputVerbose): void {
-    dump([__METHOD__, self::$instance, $outputDirectory, $outputVerbose]);
     if (self::$instance === NULL) {
+      dump([__METHOD__, 'is_dir', is_dir($outputDirectory)]);
+      dump([__METHOD__, 'is_writable', is_writable($outputDirectory)]);
       if (!is_dir($outputDirectory) || !is_writable($outputDirectory)) {
         dump([__METHOD__, 'not writable']);
         throw new \RuntimeException("HTML output directory {$outputDirectory} is not a writable directory.");
