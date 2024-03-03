@@ -20,6 +20,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Url;
+use Drupal\entity_test\CustomStringItemList;
 
 /**
  * Filter that limits test entity list to revisable ones.
@@ -826,6 +827,6 @@ function entity_test_query_entity_test_access_alter(AlterableInterface $query) {
 function entity_test_field_info_alter(array &$info): void {
   // @see \Drupal\KernelTests\Core\Entity\ContentEntityStorageBaseTest::testCreateWithIdSet()
   if (\Drupal::state()->get('ContentEntityStorageBaseTest__testCreateWithIdSet', FALSE)) {
-    $info['string']['list_class'] = \Drupal\entity_test\CustomStringItemList::class;
+    $info['string']['list_class'] = CustomStringItemList::class;
   }
 }

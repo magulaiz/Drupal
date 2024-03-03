@@ -64,14 +64,17 @@ class ContentEntityStorageBaseTest extends KernelTestBase {
   /**
    * @covers ::create
    * @covers ::doCreate
+   *
+   * @see https://www.drupal.org/project/drupal/issues/3425226
    */
   public function testCreateWithIdSet(): void {
     \Drupal::state()->set('ContentEntityStorageBaseTest__testCreateWithIdSet', TRUE);
+    // Clear cache to refresh field type definitions.
     drupal_flush_all_caches();
 
     $entity = EntityTest::create([
       'id' => 123,
-      'name' => 'The Name'
+      'name' => 'The Name',
     ]);
     $this->assertSame('The Name (new)', $entity->label());
   }
