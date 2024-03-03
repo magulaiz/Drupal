@@ -83,15 +83,15 @@ final class HtmlOutputLogger {
    */
   public function testRunnerFinished(TestRunnerFinished $event): void {
     if (self::$links) {
-      print "\n\n";
+      print "\n\n (outputVerbose) " . $this->outputVerbose . " ";
       if ($this->outputVerbose) {
-        print "HTML output was generated.\n";
+        print "HTML output was generated.";
         foreach (self::$links as $link) {
           print $link;
         }
       }
       else {
-        print "HTML output was generated, " . count(self::$links) . " page(s).\n";
+        print "HTML output was generated, " . count(self::$links) . " page(s).";
       }
     }
   }
