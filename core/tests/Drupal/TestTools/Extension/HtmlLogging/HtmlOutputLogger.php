@@ -30,6 +30,8 @@ final class HtmlOutputLogger {
    * @throws \RuntimeException
    */
   private function __construct(
+    public readonly string $outputDirectory,
+    private readonly bool $outputVerbose,
     private readonly Facade $facade,
   ) {
     $this->facade->registerSubscriber(new TestRunnerStartedSubscriber($this));
@@ -44,9 +46,9 @@ final class HtmlOutputLogger {
    * @throws \PHPUnit\Event\UnknownSubscriberTypeException
    * @throws \RuntimeException
    */
-  public static function init(): void {
+  public static function init(string $outputDirectory, bool $outputVerbose): void {
     if (self::$instance === NULL) {
-      self::$instance = new self(Facade::instance());
+      self::$instance = new self($outputDirectory, $outputVerbose, Facade::instance());
     }
   }
 
@@ -81,10 +83,16 @@ final class HtmlOutputLogger {
    */
   public function testRunnerFinished(TestRunnerFinished $event): void {
     if (self::$links) {
-      print "\n";
-      // @todo decide whether to go verbose or not, or configurable.
-      print "HTML output was generated, " . count(self::$links) . " page(s).\n";
-      print "\n";
+      print "\n\n";
+      if ($this->outputVerbose) {
+        print "HTML output was generated.\n";
+        foreach (self::$links as $link) {
+          print $link;
+        }
+      }
+      else {
+        print "HTML output was generated, " . count(self::$links) . " page(s).\n";
+      }
     }
   }
 

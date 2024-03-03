@@ -220,7 +220,7 @@ if (RunnerVersion::getMajor() >= 10 && getenv('SYMFONY_DEPRECATIONS_HELPER') !==
 $browserTestOutputDirectory = getenv('BROWSERTEST_OUTPUT_DIRECTORY');
 if ($browserTestOutputDirectory !== FALSE) {
   if (Filesystem::createDirectory($browserTestOutputDirectory)) {
-    HtmlOutputLogger::init();
+    HtmlOutputLogger::init($browserTestOutputDirectory, (bool) getenv('BROWSERTEST_OUTPUT_VERBOSE') ?? FALSE);
   }
 }
 
