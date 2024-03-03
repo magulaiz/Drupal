@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Entity;
 
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -58,6 +59,21 @@ class ContentEntityStorageBaseTest extends KernelTestBase {
     $values = $storage->create(['type' => 'test_bundle'])->toArray();
     $entity = $storage->create($values);
     $this->assertEquals('test_bundle', $entity->bundle());
+  }
+
+  /**
+   * @covers ::create
+   * @covers ::doCreate
+   */
+  public function testCreateWithIdSet(): void {
+    \Drupal::state()->set('ContentEntityStorageBaseTest__testCreateWithIdSet', TRUE);
+    drupal_flush_all_caches();
+
+    $entity = EntityTest::create([
+      'id' => 123,
+      'name' => 'The Name'
+    ]);
+    $this->assertSame('The Name (new)', $entity->label());
   }
 
 }
