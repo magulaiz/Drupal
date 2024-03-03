@@ -110,7 +110,8 @@
             "lib/Drupal/Component/Datetime/Time.php"
         ],
         "files": [
-            "includes/bootstrap.inc"
+            "includes/bootstrap.inc",
+            "lib/Drupal/Core/Async/functions.php"
         ]
     },
     "config": {

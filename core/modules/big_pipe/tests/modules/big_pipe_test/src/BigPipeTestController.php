@@ -5,6 +5,7 @@ namespace Drupal\big_pipe_test;
 use Drupal\big_pipe\Render\BigPipeMarkup;
 use Drupal\big_pipe_test\EventSubscriber\BigPipeTestSubscriber;
 use Drupal\Core\Security\TrustedCallbackInterface;
+use Revolt\EventLoop;
 
 // cspell:ignore yarhar
 
@@ -136,21 +137,21 @@ class BigPipeTestController implements TrustedCallbackInterface {
   }
 
   /**
-   * #lazy_builder callback; suspends its own execution then returns markup.
+   * #lazy_builder callback; defers its own execution then returns markup.
    *
    * @return array
    */
   public static function piggy(): array {
-    // Immediately call Fiber::suspend(), so that other placeholders are
-    // executed next. When this is resumed, it will immediately return the
+    // Defer the generation of our markup, so that other placeholders are
+    // executed next. When this is executed, it will immediately return the
     // render array.
-    if (\Fiber::getCurrent() !== NULL) {
-      \Fiber::suspend();
-    }
-    return [
+    $suspension = EventLoop::getSuspension();
+    EventLoop::defer(fn () => $suspension->resume([
       '#markup' => '<span>This 🐷 little 🐽 piggy 🐖 stayed 🐽 at 🐷 home.</span>',
       '#cache' => ['max-age' => 0],
-    ];
+    ]));
+
+    return $suspension->suspend();
   }
 
   /**
