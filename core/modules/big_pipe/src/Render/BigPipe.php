@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
+use function Drupal\Core\Async\stream;
 
 /**
  * Service for sending an HTML response in chunks (to get faster page loads).
@@ -515,99 +516,80 @@ class BigPipe {
     $fake_request->headers->set('Accept', 'application/vnd.drupal-ajax');
 
     // Create a Fiber for each placeholder.
-    $fibers = [];
+    $placeholder_operations = [];
     foreach ($placeholder_order as $placeholder_id) {
       if (!isset($placeholders[$placeholder_id])) {
         continue;
       }
-      $placeholder_render_array = $placeholders[$placeholder_id];
-      $fibers[$placeholder_id] = new \Fiber(fn() => $this->renderPlaceholder($placeholder_id, $placeholder_render_array));
+      $placeholder_operations[$placeholder_id] = fn () => $this->renderPlaceholder($placeholder_id, $placeholders[$placeholder_id]);
     }
-    $iterations = 0;
-    while (count($fibers) > 0) {
-      foreach ($fibers as $placeholder_id => $fiber) {
-        try {
-          if (!$fiber->isStarted()) {
-            $fiber->start();
-          }
-          elseif ($fiber->isSuspended()) {
-            $fiber->resume();
-          }
-          // If the Fiber hasn't terminated by this point, move onto the next
-          // placeholder, we'll resume this Fiber again when we get back here.
-          if (!$fiber->isTerminated()) {
-            // If we've gone through the placeholders once already, and they're
-            // still not finished, then start to allow code higher up the stack
-            // to get on with something else.
-            if ($iterations) {
-              $fiber = \Fiber::getCurrent();
-              if ($fiber !== NULL) {
-                $fiber->suspend();
-              }
-            }
-            continue;
-          }
-          $elements = $fiber->getReturn();
-          unset($fibers[$placeholder_id]);
-          // Create a new AjaxResponse.
-          $ajax_response = new AjaxResponse();
-          // JavaScript's querySelector automatically decodes HTML entities in
-          // attributes, so we must decode the entities of the current BigPipe
-          // placeholder ID (which has HTML entities encoded since we use it to
-          // find the placeholders).
-          $big_pipe_js_placeholder_id = Html::decodeEntities($placeholder_id);
-          $ajax_response->addCommand(new ReplaceCommand(sprintf('[data-big-pipe-placeholder-id="%s"]', $big_pipe_js_placeholder_id), $elements['#markup']));
-          $ajax_response->setAttachments($elements['#attached']);
 
-          // Delete all messages that were generated during the rendering of this
-          // placeholder, to render them in a BigPipe-optimized way.
-          $messages = $this->messenger->deleteAll();
-          foreach ($messages as $type => $type_messages) {
-            foreach ($type_messages as $message) {
-              $ajax_response->addCommand(new MessageCommand($message, NULL, ['type' => $type], FALSE));
-            }
-          }
+    foreach (stream($placeholder_operations) as $placeholder_id => $result) {
+      try {
+        // Errors are handled differently depending on configuration so throw
+        // a failed operation into our generic catch block.
+        if ($result->isError()) {
+          throw $result->getValue();
+        }
 
-          // Push a fake request with the asset libraries loaded so far and
-          // dispatch KernelEvents::RESPONSE event. This results in the
-          // attachments for the AJAX response being processed by
-          // AjaxResponseAttachmentsProcessor and hence:
-          // - the necessary AJAX commands to load the necessary missing asset
-          //   libraries and updated AJAX page state are added to the AJAX
-          //   response
-          // - the attachments associated with the response are finalized,
-          // which allows us to track the total set of asset libraries sent in
-          // the initial HTML response plus all embedded AJAX responses sent so
-          // far.
-          $fake_request->query->set('ajax_page_state', ['libraries' => implode(',', $cumulative_assets->getAlreadyLoadedLibraries())] + $cumulative_assets->getSettings()['ajaxPageState']);
-          $ajax_response = $this->filterEmbeddedResponse($fake_request, $ajax_response);
-          // Send this embedded AJAX response.
-          $json = $ajax_response->getContent();
-          $output = <<<EOF
+        $elements = $result->getValue();
+
+        // Create a new AjaxResponse.
+        $ajax_response = new AjaxResponse();
+        // JavaScript's querySelector automatically decodes HTML entities in
+        // attributes, so we must decode the entities of the current BigPipe
+        // placeholder ID (which has HTML entities encoded since we use it to
+        // find the placeholders).
+        $big_pipe_js_placeholder_id = Html::decodeEntities($placeholder_id);
+        $ajax_response->addCommand(new ReplaceCommand(sprintf('[data-big-pipe-placeholder-id="%s"]', $big_pipe_js_placeholder_id), $elements['#markup']));
+        $ajax_response->setAttachments($elements['#attached']);
+
+        // Delete all messages that were generated during the rendering of this
+        // placeholder, to render them in a BigPipe-optimized way.
+        $messages = $this->messenger->deleteAll();
+        foreach ($messages as $type => $type_messages) {
+          foreach ($type_messages as $message) {
+            $ajax_response->addCommand(new MessageCommand($message, NULL, ['type' => $type], FALSE));
+          }
+        }
+
+        // Push a fake request with the asset libraries loaded so far and
+        // dispatch KernelEvents::RESPONSE event. This results in the
+        // attachments for the AJAX response being processed by
+        // AjaxResponseAttachmentsProcessor and hence:
+        // - the necessary AJAX commands to load the necessary missing asset
+        //   libraries and updated AJAX page state are added to the AJAX
+        //   response
+        // - the attachments associated with the response are finalized,
+        // which allows us to track the total set of asset libraries sent in
+        // the initial HTML response plus all embedded AJAX responses sent so
+        // far.
+        $fake_request->query->set('ajax_page_state', ['libraries' => implode(',', $cumulative_assets->getAlreadyLoadedLibraries())] + $cumulative_assets->getSettings()['ajaxPageState']);
+        $ajax_response = $this->filterEmbeddedResponse($fake_request, $ajax_response);
+        // Send this embedded AJAX response.
+        $json = $ajax_response->getContent();
+        $output = <<<EOF
 <script type="application/vnd.drupal-ajax" data-big-pipe-replacement-for-placeholder-with-id="$placeholder_id">
 $json
 </script>
 EOF;
-          $this->sendChunk($output);
+        $this->sendChunk($output);
 
-          // Another placeholder was rendered and sent, track the set of asset
-          // libraries sent so far. Any new settings are already sent; we
-          // don't need to track those.
-          if (isset($ajax_response->getAttachments()['drupalSettings']['ajaxPageState']['libraries'])) {
-            $cumulative_assets->setAlreadyLoadedLibraries(explode(',', $ajax_response->getAttachments()['drupalSettings']['ajaxPageState']['libraries']));
-          }
-        }
-        catch (\Exception $e) {
-          unset($fibers[$placeholder_id]);
-          if ($this->configFactory->get('system.logging')->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE) {
-            throw $e;
-          }
-          else {
-            trigger_error($e, E_USER_ERROR);
-          }
+        // Another placeholder was rendered and sent, track the set of asset
+        // libraries sent so far. Any new settings are already sent; we
+        // don't need to track those.
+        if (isset($ajax_response->getAttachments()['drupalSettings']['ajaxPageState']['libraries'])) {
+          $cumulative_assets->setAlreadyLoadedLibraries(explode(',', $ajax_response->getAttachments()['drupalSettings']['ajaxPageState']['libraries']));
         }
       }
-      $iterations++;
+      catch (\Exception $e) {
+        if ($this->configFactory->get('system.logging')->get('error_level') === ERROR_REPORTING_DISPLAY_VERBOSE) {
+          throw $e;
+        }
+        else {
+          trigger_error($e, E_USER_ERROR);
+        }
+      }
     }
 
     // Send the stop signal.
