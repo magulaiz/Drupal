@@ -997,6 +997,21 @@ function system_get_module_admin_tasks($module, string|array $module_name) {
 }
 
 /**
+ * Implements hook_local_tasks_alter().
+ */
+function system_local_tasks_alter(&$local_tasks) {
+  $tasks = array_filter($local_tasks, static fn (array $task): bool => str_ends_with($task['route_name'], '.version_history'));
+  $duplicates = [];
+  foreach ($tasks as $key => $task) {
+    if (array_key_exists($task['base_route'], $duplicates)) {
+      @trigger_error('Setting a "version_history" local task is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3160443', E_USER_DEPRECATED);
+      unset($local_tasks[$key]);
+    }
+    $duplicates[$task['base_route']] = $key;
+  }
+}
+
+/**
  * Implements hook_cron().
  *
  * Remove older rows from flood, batch cache and expirable keyvalue tables. Also
