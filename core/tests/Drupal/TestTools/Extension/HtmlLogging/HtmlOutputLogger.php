@@ -34,6 +34,7 @@ final class HtmlOutputLogger {
     private readonly bool $outputVerbose,
     private readonly Facade $facade,
   ) {
+    dump([__METHOD__, $this->outputDirectory, $this->outputVerbose]);
     $this->facade->registerSubscriber(new TestRunnerStartedSubscriber($this));
     $this->facade->registerSubscriber(new TestRunnerFinishedSubscriber($this));
   }
@@ -82,8 +83,9 @@ final class HtmlOutputLogger {
    * Prints the list of HTML output generated during the test.
    */
   public function testRunnerFinished(TestRunnerFinished $event): void {
+    dump([__METHOD__, $this->outputDirectory, $this->outputVerbose, self::$links]);
     if (self::$links) {
-      print "\n\n (outputVerbose) " . $this->outputVerbose . " ";
+      print "\n\n";
       if ($this->outputVerbose) {
         print "HTML output was generated.";
         foreach (self::$links as $link) {
