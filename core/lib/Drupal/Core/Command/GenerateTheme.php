@@ -262,20 +262,13 @@ class GenerateTheme extends Command {
         static fn (string $path) => Glob::toRegex(trim($path, '/')),
         $starterkit_config[$key]
       );
-    }
 
-    if (count($starterkit_config['no_edit']) > 0) {
-      $files = self::createFilesFinder($theme->getPath())->path($starterkit_config['no_edit']);
-      $starterkit_config['no_edit'] = array_map(static fn ($file) => $file->getRelativePathname(), iterator_to_array($files));
-      if (count($starterkit_config['no_edit']) === 0) {
-        throw new \RuntimeException('Paths were defined `no_edit` but no files found.');
-      }
-    }
-    if (count($starterkit_config['no_rename']) > 0) {
-      $files = self::createFilesFinder($theme->getPath())->path($starterkit_config['no_rename']);
-      $starterkit_config['no_rename'] = array_map(static fn ($file) => $file->getRelativePathname(), iterator_to_array($files));
-      if (count($starterkit_config['no_rename']) === 0) {
-        throw new \RuntimeException('Paths were defined `no_rename` but no files found.');
+      if (count($starterkit_config[$key]) > 0) {
+        $files = self::createFilesFinder($theme->getPath())->path($starterkit_config[$key]);
+        $starterkit_config[$key] = array_map(static fn ($file) => $file->getRelativePathname(), iterator_to_array($files));
+        if (count($starterkit_config[$key]) === 0) {
+          throw new \RuntimeException("Paths were defined `$key` but no files found.");
+        }
       }
     }
 
