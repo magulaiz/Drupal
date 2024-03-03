@@ -78,6 +78,10 @@ class GenerateTheme extends Command {
     $tmpDir = $this->getUniqueTmpDirPath();
 
     $destination_theme = $input->getArgument('machine-name');
+    $starterkit_id = $input->getOption('starterkit');
+    $theme_label = $input->getOption('name');
+
+    $io->writeln("<info>Generating theme $theme_label ($destination_theme) from $starterkit_id starterkit.</info>");
 
     $destination = trim($input->getOption('path'), '/') . '/' . $destination_theme;
     if (is_dir($destination)) {
@@ -85,13 +89,13 @@ class GenerateTheme extends Command {
       return 1;
     }
 
-    $starterkit_id = $input->getOption('starterkit');
     $starterkit = $this->getThemeInfo($starterkit_id);
     if ($starterkit === NULL) {
       $io->getErrorStyle()->error("Theme source theme $starterkit_id cannot be found.");
       return 1;
     }
 
+    $io->writeln("Trying to parse version for $starterkit_id starterkit.", OutputInterface::VERBOSITY_DEBUG);
     try {
       $starterkit_version = self::getStarterKitVersion(
         $starterkit,
@@ -102,8 +106,9 @@ class GenerateTheme extends Command {
       $io->getErrorStyle()->error($e->getMessage());
       return 1;
     }
+    $io->writeln("Using version $starterkit_version for $starterkit_id starterkit.", OutputInterface::VERBOSITY_DEBUG);
 
-    $theme_label = $input->getOption('name');
+    $io->writeln("Loading starterkit config from $starterkit_id.starterkit.yml.", OutputInterface::VERBOSITY_DEBUG);
     try {
       $starterkit_config = self::loadStarterKitConfig(
         $starterkit,
@@ -119,6 +124,7 @@ class GenerateTheme extends Command {
 
     $filesystem->mkdir($tmpDir);
 
+    $io->writeln("Copying starterkit to temporary directory for processing.", OutputInterface::VERBOSITY_DEBUG);
     $mirror_iterator = (new Finder)
       ->in($starterkit->getPath())
       ->files()
@@ -127,6 +133,7 @@ class GenerateTheme extends Command {
 
     $filesystem->mirror($starterkit->getPath(), $tmpDir, $mirror_iterator);
 
+    $io->writeln("Modifying and renaming files from starterkit.", OutputInterface::VERBOSITY_DEBUG);
     $patterns = [
       'old' => self::namePatterns($starterkit->getName(), $starterkit->info['name']),
       'new' => self::namePatterns($destination_theme, $theme_label),
@@ -151,6 +158,7 @@ class GenerateTheme extends Command {
       $filesystem->rename($file->getRealPath(), implode('/', $filepath_segments));
     }
 
+    $io->writeln("Updating $destination_theme.info.yml.", OutputInterface::VERBOSITY_DEBUG);
     $info_file = "$tmpDir/$destination_theme.info.yml";
     $info = Yaml::decode(file_get_contents($info_file));
     $info = array_filter(
@@ -166,6 +174,7 @@ class GenerateTheme extends Command {
     $generator_classname = "Drupal\\{$starterkit->getName()}\\StarterKit";
     if (class_exists($generator_classname)) {
       if (is_a($generator_classname, StarterKitInterface::class, TRUE)) {
+        $io->writeln("Running post processing.", OutputInterface::VERBOSITY_DEBUG);
         $generator_classname::postProcess($tmpDir, $destination_theme, $theme_label);
       }
       else {
@@ -173,8 +182,12 @@ class GenerateTheme extends Command {
         return 1;
       }
     }
+    else {
+      $io->writeln("Skipping post processing, $generator_classname not defined.", OutputInterface::VERBOSITY_DEBUG);
+    }
 
     // Move altered theme to final destination.
+    $io->writeln("Copying $destination_theme to $destination.", OutputInterface::VERBOSITY_DEBUG);
     $filesystem->mirror($tmpDir, $destination);
 
     $io->writeln(sprintf('Theme generated successfully to %s', $destination));
