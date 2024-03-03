@@ -217,7 +217,7 @@ if (RunnerVersion::getMajor() >= 10 && getenv('SYMFONY_DEPRECATIONS_HELPER') !==
 }
 
 // Functional tests HTML output logging.
-dump(array_filter(getenv(), function($key) {
+dump(array_filter(getenv(), function ($key) {
   return strpos($key, 'BROWSERTEST') === 0;
 }, ARRAY_FILTER_USE_KEY));
 $browserTestOutputDirectory = getenv('BROWSERTEST_OUTPUT_DIRECTORY');
