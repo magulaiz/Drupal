@@ -30,11 +30,10 @@ final class HtmlOutputLogger {
    * @throws \RuntimeException
    */
   private function __construct(
-    public readonly string $outputDirectory,
+    private readonly string $outputDirectory,
     private readonly bool $outputVerbose,
     private readonly Facade $facade,
   ) {
-    dump([__METHOD__, $this->outputDirectory, $this->outputVerbose]);
     $this->facade->registerSubscriber(new TestRunnerStartedSubscriber($this));
     $this->facade->registerSubscriber(new TestRunnerFinishedSubscriber($this));
   }
@@ -49,6 +48,10 @@ final class HtmlOutputLogger {
    */
   public static function init(string $outputDirectory, bool $outputVerbose): void {
     if (self::$instance === NULL) {
+      if (!is_dir($outputDirectory) || !is_writable($outputDirectory)) {
+        print "HTML output directory $html_output_directory is not a writable directory.\n\n";
+        return;
+      }
       self::$instance = new self($outputDirectory, $outputVerbose, Facade::instance());
     }
   }
@@ -83,11 +86,10 @@ final class HtmlOutputLogger {
    * Prints the list of HTML output generated during the test.
    */
   public function testRunnerFinished(TestRunnerFinished $event): void {
-    dump([__METHOD__, $this->outputDirectory, $this->outputVerbose, self::$links]);
     if (self::$links) {
       print "\n\n";
       if ($this->outputVerbose) {
-        print "HTML output was generated.";
+        print "HTML output was generated.\n\n";
         foreach (self::$links as $link) {
           print $link;
         }
