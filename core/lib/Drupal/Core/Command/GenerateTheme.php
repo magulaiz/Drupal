@@ -153,7 +153,10 @@ class GenerateTheme extends Command {
 
     $info_file = "$tmpDir/$destination_theme.info.yml";
     $info = Yaml::decode(file_get_contents($info_file));
-    $info = array_filter(array_merge($info, $starterkit_config['info']));
+    $info = array_filter(
+      array_merge($info, $starterkit_config['info']),
+      static fn (mixed $value) => $value !== NULL,
+    );
     file_put_contents($info_file, Yaml::encode($info));
 
     $loader = new ClassLoader();

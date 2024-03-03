@@ -555,6 +555,36 @@ class TestCustomThemePreRender implements TrustedCallbackInterface {
 EDITED, file_get_contents($theme_path_absolute . '/src/TestCustomThemePreRender.php'));
   }
 
+  public function testInfoOverrides(): void {
+    // Force `base theme` to be `false.
+    $starterkit_info_yml = $this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/starterkit_theme.info.yml';
+    $info = Yaml::decode(file_get_contents($starterkit_info_yml));
+    $info['base theme'] = FALSE;
+    file_put_contents($starterkit_info_yml, Yaml::encode($info));
+    $this->writeStarterkitConfig([
+      'info' => [
+        'libraries' => [
+          'core/jquery',
+        ],
+      ],
+    ]);
+
+    $tester = $this->runCommand(
+      [
+        'machine-name' => 'test_custom_theme',
+        '--name' => 'Test custom starterkit theme',
+        '--description' => 'Custom theme generated from a starterkit theme',
+      ]
+    );
+
+    $this->assertEquals('Theme generated successfully to themes/test_custom_theme', trim($tester->getDisplay()), $tester->getErrorOutput());
+    $info = $this->assertThemeExists('themes/test_custom_theme');
+    self::assertArrayHasKey('base theme', $info);
+    self::assertFalse($info['base theme']);
+    self::assertArrayHasKey('libraries', $info);
+    self::assertEquals(['core/jquery'], $info['libraries']);
+  }
+
   private function writeStarterkitConfig(array $config): void {
     $starterkit_yml = $this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/starterkit_theme.starterkit.yml';
     $starterkit_config = Yaml::decode(file_get_contents($starterkit_yml));
