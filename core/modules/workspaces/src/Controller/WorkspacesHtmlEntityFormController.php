@@ -22,7 +22,7 @@ class WorkspacesHtmlEntityFormController extends FormController {
     protected readonly FormController $entityFormController,
     protected readonly WorkspaceManagerInterface $workspaceManager,
     protected readonly WorkspaceInformationInterface $workspaceInfo
-  ) { }
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -44,7 +44,6 @@ class WorkspacesHtmlEntityFormController extends FormController {
         return $build;
       }
     }
-
 
     return $this->entityFormController->getContentResult($request, $route_match);
   }
