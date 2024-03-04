@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit;
 
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\ViewExecutableFactory;
 use Symfony\Component\HttpFoundation\Request;
@@ -82,23 +81,6 @@ class ViewExecutableFactoryTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
     $this->viewExecutableFactory = new ViewExecutableFactory($this->user, $this->requestStack, $this->viewsData, $this->routeProvider, $this->displayPluginManager);
-  }
-
-  /**
-   * @group legacy
-   */
-  public function testDeprecateProperty() {
-    \Drupal::unsetContainer();
-    $container = new ContainerBuilder();
-    $display_plugin_manager = $this->getMockBuilder('\Drupal\views\Plugin\ViewsPluginManager')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $container->set('plugin.manager.views.display', $display_plugin_manager);
-    \Drupal::setContainer($container);
-
-    $this->expectDeprecation('Calling Drupal\views\ViewExecutableFactory::__construct without the $display_plugin_manager argument is deprecated in drupal:10.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3410349');
-    $viewExecutableFactory = new ViewExecutableFactory($this->user, $this->requestStack, $this->viewsData, $this->routeProvider);
-
   }
 
   /**
