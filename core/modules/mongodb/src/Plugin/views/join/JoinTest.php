@@ -100,6 +100,7 @@ class JoinTest extends CoreJoinTest {
       $this->extra = [];
     }
 
+    $join_condition = $select_query->joinCondition()->compare($table['alias'] . '.' . $right_field, $left_table['alias'] . '.' . $left_field);
     if (isset($this->extra) && is_array($this->extra)) {
       $substitutions = \Drupal::moduleHandler()->invokeAll('views_query_substitutions', [$view_query->view]);
       foreach ($this->extra as &$extra) {
@@ -110,10 +111,12 @@ class JoinTest extends CoreJoinTest {
             }
           }
         }
+        $join_condition->condition($left_table['alias'] . '.' . $extra['left_field'], $extra['value'], $extra['operator'] ?? '=');
       }
     }
 
-    $select_query->addMongodbJoin($this->type, $right_table, $right_field, $left_table, $left_field, '=', $table['alias'], $this->extra);
+    $select_query->addJoin($this->type, $right_table, $table['alias'], $join_condition);
+//    $select_query->addMongodbJoin($this->type, $right_table, $right_field, $left_table, $left_field, '=', $table['alias'], $this->extra);
     if (isset($this->configuration['one_to_many']) && $this->configuration['one_to_many']) {
       $select_query->addFilterUnwindPath($table['alias']);
     }

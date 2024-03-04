@@ -51,4 +51,19 @@ class JoinTest extends JoinPluginBase {
     parent::buildJoin($select_query, $table, $view_query);
   }
 
+  /**
+   * The temporary join build method for MongoDB.
+   */
+  public function buildMongodbJoin($select_query, $table, $view_query) {
+    // Add an additional hardcoded condition to the query.
+    $this->extra = [
+      [
+        'left_field' => 'uid',
+        'value' => $this->getJoinValue(),
+        'operator' => '='
+      ]
+    ];
+    parent::buildMongodbJoin($select_query, $table, $view_query);
+  }
+
 }

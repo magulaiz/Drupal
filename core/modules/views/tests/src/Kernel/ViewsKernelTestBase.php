@@ -29,6 +29,7 @@ abstract class ViewsKernelTestBase extends KernelTestBase {
    */
   protected static $modules = [
     'system',
+    'node',
     'views',
     'views_test_config',
     'views_test_data',

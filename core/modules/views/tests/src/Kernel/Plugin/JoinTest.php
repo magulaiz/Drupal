@@ -65,13 +65,48 @@ class JoinTest extends RelationshipJoinTestBase {
     $connection = Database::getConnection();
     $query = $connection->select('views_test_data');
     $table = ['alias' => 'users_field_data'];
-    $join->buildJoin($query, $table, $view->query);
+    if (\Drupal::database()->driver() == 'mongodb') {
+      $join->buildMongodbJoin($query, $table, $view->query);
+      $mongodb_joins = $query->getMongodbJoins();
+      $join_info = $mongodb_joins['users_field_data'];
 
-    $tables = $query->getTables();
-    $join_info = $tables['users_field_data'];
-    $condition = $join_info['condition'];
-    $condition->compile($connection, $query);
-    $this->assertStringContainsString('"views_test_data"."uid" = :db_condition_placeholder_1', $condition->__toString(), 'Make sure that the custom join plugin can extend the join base and alter the result.');
+      $this->assertSame($join_info['field'], 'uid');
+      $this->assertSame($join_info['left field'], 'uid');
+      $this->assertSame('views_test_data', $join_info['left table']);
+      $this->assertSame($join_info['operator'], '=');
+
+      $condition = $join_info['condition'];
+      $condition->compile($connection, $query);
+      $expected_condition = [
+        '$and' => [
+          [
+            '$expr' => [
+              '$eq' => [
+                '$users_field_data.uid',
+                '$views_test_data.uid',
+              ],
+            ],
+          ],
+          [
+            'views_test_data.uid' => [
+              '$eq' => $rand_int,
+            ],
+          ],
+        ],
+      ];
+      $this->assertSame($condition->toMongoAggregateArray(), $expected_condition);
+      $this->assertSame($join_info['arguments'], []);
+    }
+    else {
+      $join->buildJoin($query, $table, $view->query);
+
+      $tables = $query->getTables();
+      $join_info = $tables['users_field_data'];
+      $condition = $join_info['condition'];
+      $condition->compile($connection, $query);
+      $this->assertStringContainsString('"views_test_data"."uid" = :db_condition_placeholder_1', $condition->__toString(), 'Make sure that the custom join plugin can extend the join base and alter the result.');
+
+    }
   }
 
   /**
