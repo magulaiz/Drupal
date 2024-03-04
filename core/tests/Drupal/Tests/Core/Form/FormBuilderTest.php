@@ -175,7 +175,7 @@ class FormBuilderTest extends FormTestBase {
   /**
    * Provides test data for testHandleFormStateResponse().
    */
-  public function formStateResponseProvider() {
+  public static function formStateResponseProvider() {
     return [
       ['Symfony\Component\HttpFoundation\Response', 'response'],
       ['Symfony\Component\HttpFoundation\RedirectResponse', 'redirect'],
@@ -335,7 +335,7 @@ class FormBuilderTest extends FormTestBase {
   /**
    * Data provider for ::testBuildFormWithTriggeringElement().
    */
-  public function providerTestBuildFormWithTriggeringElement() {
+  public static function providerTestBuildFormWithTriggeringElement() {
     $plain_text = 'Other submit value';
     $markup = 'Other submit <input> value';
     return [
@@ -595,9 +595,33 @@ class FormBuilderTest extends FormTestBase {
   /**
    * @covers ::buildForm
    */
-  public function testGetPostAjaxRequest() {
+  public function testPostAjaxRequest(): void {
     $request = new Request([FormBuilderInterface::AJAX_FORM_REQUEST => TRUE], ['form_id' => 'different_form_id']);
     $request->setMethod('POST');
+    $this->requestStack->push($request);
+
+    $form_state = (new FormState())
+      ->setUserInput([FormBuilderInterface::AJAX_FORM_REQUEST => TRUE])
+      ->setMethod('get')
+      ->setAlwaysProcess()
+      ->disableRedirect()
+      ->set('ajax', TRUE);
+
+    $form_id = '\Drupal\Tests\Core\Form\TestForm';
+    $expected_form = (new TestForm())->buildForm([], $form_state);
+
+    $form = $this->formBuilder->buildForm($form_id, $form_state);
+    $this->assertFormElement($expected_form, $form, 'test');
+    $this->assertSame('test-form', $form['#id']);
+  }
+
+  /**
+   * @covers ::buildForm
+   */
+  public function testGetAjaxRequest(): void {
+    $request = new Request([FormBuilderInterface::AJAX_FORM_REQUEST => TRUE]);
+    $request->query->set('form_id', 'different_form_id');
+    $request->setMethod('GET');
     $this->requestStack->push($request);
 
     $form_state = (new FormState())
@@ -649,7 +673,7 @@ class FormBuilderTest extends FormTestBase {
    *
    * @return array
    */
-  public function providerTestChildAccessInheritance() {
+  public static function providerTestChildAccessInheritance() {
     $data = [];
 
     $element = [
@@ -789,7 +813,7 @@ class FormBuilderTest extends FormTestBase {
     $this->assertSame($expected, $is_safe);
   }
 
-  public function providerTestValueCallableIsSafe() {
+  public static function providerTestValueCallableIsSafe() {
     $data = [];
     $data['string_no_slash'] = [
       'Drupal\Core\Render\Element\Token::valueCallback',
@@ -866,7 +890,7 @@ class FormBuilderTest extends FormTestBase {
     }
   }
 
-  public function providerTestInvalidToken() {
+  public static function providerTestInvalidToken() {
     $data = [];
     $data['authenticated_invalid'] = [TRUE, FALSE, TRUE];
     $data['authenticated_valid'] = [FALSE, TRUE, TRUE];
@@ -926,7 +950,7 @@ class FormBuilderTest extends FormTestBase {
    *
    * @return array
    */
-  public function providerTestFormTokenCacheability() {
+  public static function providerTestFormTokenCacheability() {
     return [
       'token:none,authenticated:true' => [NULL, TRUE, ['contexts' => ['user.roles:authenticated']], ['max-age' => 0], 'post'],
       'token:none,authenticated:false' => [NULL, FALSE, ['contexts' => ['user.roles:authenticated']], NULL, 'post'],

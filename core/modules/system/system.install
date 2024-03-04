@@ -28,7 +28,7 @@ use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\Error;
-use GuzzleHttp\Exception\TransferException;
+use Psr\Http\Client\ClientExceptionInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 // cspell:ignore quickedit
@@ -157,14 +157,6 @@ function system_requirements($phase) {
         elseif ($info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::OBSOLETE) {
           $obsolete_extensions[$theme] = ['name' => $info['name'], 'lifecycle_link' => $info['lifecycle_link']];
         }
-      }
-      // Currently, we check for both the key/value pairs 'experimental: true'
-      // and 'lifecycle: experimental' to determine if an extension is marked as
-      // experimental.
-      // @todo Remove the check for 'experimental: true' as part of
-      // https://www.drupal.org/node/3250342
-      if (isset($data->info['experimental']) && $data->info['experimental']) {
-        $experimental_themes[$theme] = $data->info['name'];
       }
     }
 
@@ -971,7 +963,7 @@ function system_requirements($phase) {
         ];
       }
 
-      $entity_update_issues = \Drupal::service('renderer')->renderPlain($build);
+      $entity_update_issues = \Drupal::service('renderer')->renderInIsolation($build);
       $requirements['entity_update']['severity'] = REQUIREMENT_ERROR;
       $requirements['entity_update']['value'] = t('Mismatched entity and/or field definitions');
       $requirements['entity_update']['description'] = t('The following changes were detected in the entity type and field definitions. @updates', ['@updates' => $entity_update_issues]);
@@ -1312,7 +1304,7 @@ function system_requirements($phase) {
       $requirements['update status'] = [
         'value' => t('Not enabled'),
         'severity' => REQUIREMENT_WARNING,
-        'description' => t('Update notifications are not enabled. It is <strong>highly recommended</strong> that you enable the Update Manager module from the <a href=":module">module administration page</a> in order to stay up-to-date on new releases. For more information, <a href=":update">Update status handbook page</a>.', [
+        'description' => t('Update notifications are not enabled. It is <strong>highly recommended</strong> that you install the Update Manager module from the <a href=":module">module administration page</a> in order to stay up-to-date on new releases. For more information, <a href=":update">Update status handbook page</a>.', [
           ':update' => 'https://www.drupal.org/documentation/modules/update',
           ':module' => Url::fromRoute('system.modules_list')->toString(),
         ]),
@@ -1357,7 +1349,7 @@ function system_requirements($phase) {
     ];
   }
 
-  // See if trusted hostnames have been configured, and warn the user if they
+  // See if trusted host names have been configured, and warn the user if they
   // are not set.
   if ($phase == 'runtime') {
     $trusted_host_patterns = Settings::get('trusted_host_patterns');
@@ -1706,7 +1698,7 @@ function _system_advisories_requirements(array &$requirements): void {
   try {
     $advisories = $fetcher->getSecurityAdvisories(TRUE, 5);
   }
-  catch (TransferException $exception) {
+  catch (ClientExceptionInterface $exception) {
     $requirements['system_advisories']['title'] = t('Critical security announcements');
     $requirements['system_advisories']['severity'] = REQUIREMENT_WARNING;
     $requirements['system_advisories']['description'] = ['#theme' => 'system_security_advisories_fetch_error_message'];

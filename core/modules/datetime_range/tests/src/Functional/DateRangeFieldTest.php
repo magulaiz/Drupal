@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\datetime_range\Functional;
 
 use Drupal\Core\Datetime\DrupalDateTime;
@@ -16,6 +18,7 @@ use Drupal\node\Entity\Node;
  * Tests Daterange field functionality.
  *
  * @group datetime
+ * @group #slow
  */
 class DateRangeFieldTest extends DateTestBase {
 
