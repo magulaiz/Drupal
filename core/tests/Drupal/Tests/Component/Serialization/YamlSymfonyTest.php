@@ -6,7 +6,7 @@ namespace Drupal\Tests\Component\Serialization;
 
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Component\Serialization\YamlSymfony;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Drupal\TestTools\Trait\ExpectDeprecationTrait;
 use Symfony\Component\Yaml\Tag\TaggedValue;
 
 /**
@@ -130,7 +130,7 @@ class YamlSymfonyTest extends YamlTestBase {
    * @return array
    *   A list of test data.
    */
-  public function taggedValuesProvider() {
+  public static function taggedValuesProvider(): array {
     return [
       'sequences' => [
         [

@@ -2865,14 +2865,6 @@ parameters:
 			path: tests/Drupal/Tests/Component/Serialization/YamlSymfonyTest.php
 
 		-
-			message: """
-				#^Call to deprecated method addMethods\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\:
-				https\\://github\\.com/sebastianbergmann/phpunit/issues/5320$#
-			"""
-			count: 1
-			path: tests/Drupal/Tests/Component/Serialization/YamlTest.php
-
-		-
 			message: "#^Result of static method Drupal\\\\Composer\\\\Composer\\:\\:ensureComposerVersion\\(\\) \\(void\\) is used\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Composer/ComposerTest.php

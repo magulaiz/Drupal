@@ -14,7 +14,7 @@ abstract class YamlTestBase extends TestCase {
   /**
    * Some data that should be able to be serialized.
    */
-  public function providerEncodeDecodeTests() {
+  public static function providerEncodeDecodeTests() {
     return [
       [
         'foo' => 'bar',
@@ -46,7 +46,7 @@ abstract class YamlTestBase extends TestCase {
   /**
    * Some data that should be able to be deserialized.
    */
-  public function providerDecodeTests() {
+  public static function providerDecodeTests() {
     $data = [
       // NULL files.
       ['', NULL],
@@ -85,7 +85,7 @@ jquery.ui.accordion:
   /**
    * Tests different boolean serialization and deserialization.
    */
-  public function providerBoolTest() {
+  public static function providerBoolTest() {
     return [
       ['true', TRUE],
       ['TRUE', TRUE],
