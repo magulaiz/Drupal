@@ -20,7 +20,6 @@ use Symfony\Component\Yaml\Yaml;
  * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemConstraintValidator
  * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemDependencyConstraintValidator
  * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\EnabledConfigurablePluginsConstraintValidator
- * @covers \Drupal\ckeditor5\Plugin\Editor\CKEditor5::validatePair
  * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\FundamentalCompatibilityConstraintValidator
  * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\CKEditor5MediaAndFilterSettingsInSyncConstraintValidator
  * @group ckeditor5
@@ -702,7 +701,7 @@ class ValidatorsTest extends KernelTestBase {
       );
     }
 
-    $this->assertSame($expected_violations, $this->validatePairToViolationsArray($text_editor, $text_format, TRUE));
+    $this->assertSame($expected_violations, self::violationsToArray($text_editor->getTypedData()->validate()));
   }
 
   /**
@@ -1635,7 +1634,7 @@ class ValidatorsTest extends KernelTestBase {
       ],
     ]);
 
-    $this->assertSame([], $this->validatePairToViolationsArray($text_editor, $text_format, TRUE));
+    $this->assertSame([], self::violationsToArray($text_editor->getTypedData()->validate()));
   }
 
 }
