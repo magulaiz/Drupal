@@ -12,6 +12,7 @@ use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 
 // cspell:ignore datedate datestring substringed
+// cspell:ignore datedate datestring substringed
 
 /**
  * The MongoDB implementation of the views query plugin Sql.
