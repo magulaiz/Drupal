@@ -212,8 +212,8 @@ class ConfigImporter {
     $this->moduleInstaller = $module_installer;
     $this->themeHandler = $theme_handler;
     $this->stringTranslation = $string_translation;
-    if ($storage_comparer instanceof StorageComparerInterface){
-      @trigger_error('The "StorageComparerInterface" has been deprecated in Drupal 11.0.0 and will be removed before Drupal 12.0.0. Use the "StorageComparer" instead.', E_USER_DEPRECATED);
+    if ($storage_comparer instanceof StorageComparerInterface) {
+      @trigger_error('The "StorageComparerInterface" has been deprecated in Drupal 11.0.0 and will be removed before Drupal 12.0.0. Use the "StorageComparer" instead. See https://www.drupal.org/project/drupal/issues/3410037', E_USER_DEPRECATED);
     }
     if ($extension_list_theme === NULL) {
       @trigger_error('Calling ' . __METHOD__ . ' without the $extension_list_theme argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3284397', E_USER_DEPRECATED);
