@@ -970,6 +970,8 @@ function template_preprocess_table(&$variables) {
           $header_columns++;
         }
         $cell_content = '';
+        // Check if row attributes are set.
+        $row_attributes = isset($cell['row_attributes']) ? $cell['row_attributes'] : [];
         if (isset($cell['data'])) {
           $cell_content = $cell['data'];
           unset($cell['data']);
@@ -1001,6 +1003,8 @@ function template_preprocess_table(&$variables) {
           $variables['header'][$col_key]['row_attributes'] = new Attribute($cell['row_attributes']);
         }
       }
+      // Add row attributes if present.
+      $cell_attributes->merge(new Attribute($row_attributes));
       $variables['header'][$col_key] = [];
       $variables['header'][$col_key]['tag'] = $is_header ? 'th' : 'td';
       $variables['header'][$col_key]['attributes'] = $cell_attributes;
