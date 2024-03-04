@@ -106,6 +106,10 @@ trait FieldUiTestTrait {
       $this->submitForm($prefixed_storage_edit, 'Update settings');
 
       // Third step: 'Field settings' form.
+      // We add a field_prefix in FieldConfigEditForm by default which is 'field_'
+      // which is what we search for here. The purpose for this is to accommodate the
+      // default value input field settings whose identifiers change on entering the
+      // label and field_name.
       $uses_field_name = FALSE;
       foreach (array_keys($field_edit) as $key) {
         if (str_contains($key, 'field_')) {
