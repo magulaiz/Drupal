@@ -2,7 +2,9 @@
 
 namespace Drupal\Core\Entity\Plugin\DataType;
 
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\TypedData\Exception\MissingDataException;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 
@@ -140,8 +142,29 @@ class ConfigEntityAdapter extends EntityAdapter {
    * @return \Drupal\Core\TypedData\ComplexDataInterface
    *   The typed data.
    */
-  protected function getConfigTypedData() {
+  public function getConfigTypedData() {
     return $this->getTypedConfigManager()->createFromNameAndData($this->entity->getConfigDependencyName(), $this->entity->toArray());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createFromEntity(EntityInterface $entity) {
+    assert($entity instanceof ConfigEntityInterface);
+    $instance = parent::createFromEntity($entity);
+
+    // The ConfigEntityType definition may have validation constraints defined,
+    // but so may the corresponding config schema type. Both are needed.
+    $typed_config = \Drupal::service('config.typed');
+    assert($typed_config instanceof TypedConfigManagerInterface);
+    $config_schema_type = $typed_config->findFallback($entity->getConfigDependencyName());
+    $schema_defined_constraints = $typed_config->getDefinition($config_schema_type)['constraints'] ?? [];
+    $definition = $instance->getDataDefinition();
+    $definition->setConstraints($definition->getConstraints() + $schema_defined_constraints);
+
+    $instance = new static($definition);
+    $instance->setValue($entity);
+    return $instance;
   }
 
 }
