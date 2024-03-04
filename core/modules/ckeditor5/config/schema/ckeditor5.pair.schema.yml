@@ -1,5 +1,6 @@
 # @see ckeditor5_config_schema_info_alter()
 ckeditor5_valid_pair__format_and_editor:
+  deprecated: 'The ckeditor5_valid_pair__format_and_editor type is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/0'
   type: mapping
   label: 'Text Format plus Text Editor pair using CKEditor 5'
   constraints:
