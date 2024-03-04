@@ -74,10 +74,10 @@ jquery.ui.accordion:
     ];
 
     // 1.2 Bool values.
-    foreach ($this->providerBoolTest() as $test) {
+    foreach (static::providerBoolTest() as $test) {
       $data[] = ['bool: ' . $test[0], ['bool' => $test[1]]];
     }
-    $data = array_merge($data, $this->providerBoolTest());
+    $data = array_merge($data, static::providerBoolTest());
 
     return $data;
   }
