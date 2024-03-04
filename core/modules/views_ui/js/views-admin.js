@@ -1186,7 +1186,7 @@
         if ($(event.target).prop('checked')) {
           $context.find('input.default-radios').parent().hide();
           $context.find('td.any-default-radios-row').parent().hide();
-          const checkboxes = $context.querySelectorAll(
+          const checkboxes = context.querySelectorAll(
             'input.default-checkboxes',
           );
           checkboxes.forEach(function (input) {
@@ -1194,10 +1194,10 @@
           });
         } else {
           $context.find('input.default-checkboxes').parent().hide();
-          const defaultRadios = $context.querySelectorAll(
+          const defaultRadios = context.querySelectorAll(
             'td.any-default-radios-row',
           );
-          const inoutDefaultRadios = $context.querySelectorAll(
+          const inoutDefaultRadios = context.querySelectorAll(
             'input.default-radios',
           );
           defaultRadios.forEach(function (defaultRadio) {
