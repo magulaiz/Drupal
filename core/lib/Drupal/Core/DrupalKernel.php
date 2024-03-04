@@ -1115,9 +1115,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     $all_messages = $this->container->get('messenger')->all();
 
-    $persist = $this->getServicesToPersist($this->container);
     $this->container->reset();
-    $this->persistServices($this->container, $persist);
 
     $this->container->set('kernel', $this);
 
