@@ -22,7 +22,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 class Editor extends Plugin {
 
   /**
-   * Constructs an EditorManager object.
+   * Constructs an Editor object.
    *
    * @param string $id
    *   The plugin ID.
