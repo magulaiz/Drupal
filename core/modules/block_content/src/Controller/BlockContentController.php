@@ -210,4 +210,5 @@ class BlockContentController extends ControllerBase {
     CacheableMetadata::createFromObject($block_content)->applyTo($build);
     return $build;
   }
+
 }
