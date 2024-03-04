@@ -5,6 +5,20 @@
 
 ((Drupal, once) => {
   /**
+   * Removes duplicate close buttons from the message.
+   */
+  const removeDuplicateCloseButtons = () => {
+    // Select all elements with class 'messages__button'.
+    const messageCloseButton = document.querySelectorAll('.messages__button');
+    if (messageCloseButton != null) {
+      // Remove all elements except the first one.
+      for (let i = 1; i < messageCloseButton.length; i++) {
+        messageCloseButton[i].parentNode.removeChild(messageCloseButton[i]);
+      }
+    }
+  };
+
+  /**
    * Adds a close button to the message.
    *
    * @param {object} message
@@ -29,6 +43,7 @@
     messageContainer.appendChild(closeBtnWrapper);
     closeBtnWrapper.appendChild(closeBtn);
     closeBtn.appendChild(closeBtnText);
+    removeDuplicateCloseButtons();
 
     closeBtn.addEventListener('click', () => {
       message.classList.add('hidden');
