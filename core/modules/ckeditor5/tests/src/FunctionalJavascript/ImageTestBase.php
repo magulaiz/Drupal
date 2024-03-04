@@ -167,7 +167,10 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $editor = Editor::load('test_format');
     $settings = $editor->getSettings();
 
-    // Allow the data-foo attribute in img via GHS.
+    // Allow the data-foo attribute in img via GHS (keep text format in sync).
+    $editor->getFilterFormat()
+      ->setFilterConfig('filter_html', ['settings' => ['allowed_html' => '<p> <br> <img data-foo>']])
+      ->save();
     $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = ['<img data-foo>'];
     $editor->setSettings($settings);
     $editor->save();
@@ -643,6 +646,11 @@ abstract class ImageTestBase extends CKEditor5TestBase {
    * @dataProvider providerResize
    */
   public function testResize(bool $is_resize_enabled): void {
+    // For this test, whether `filter_html` is enabled or not is irrelevant.
+    FilterFormat::load('test_format')
+      ->setFilterConfig('filter_html', ['status' => FALSE])
+      ->save();
+
     // Disable resize plugin because it is enabled by default.
     if (!$is_resize_enabled) {
       Editor::load('test_format')->setSettings([

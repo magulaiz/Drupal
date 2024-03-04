@@ -133,7 +133,10 @@ class EmphasisTest extends WebDriverTestBase {
     $editor = Editor::load('test_format');
     $settings = $editor->getSettings();
 
-    // Allow the data-foo attribute in img via GHS.
+    // Allow the data-foo attribute in img via GHS (keep text format in sync).
+    $editor->getFilterFormat()
+      ->setFilterConfig('filter_html', ['settings' => ['allowed_html' => '<p> <br> <em data-foo>']])
+      ->save();
     $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = ['<em data-foo>'];
     $editor->setSettings($settings);
     $editor->save();

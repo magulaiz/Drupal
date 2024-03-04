@@ -89,7 +89,6 @@ class MediaTest extends MediaTestBase {
     ];
     $settings['toolbar']['items'] = array_merge($settings['toolbar']['items'], ['bulletedList', 'numberedList']);
     $editor->setSettings($settings);
-    $editor->save();
 
     // Add lists to the filter.
     $filter_format = $editor->getFilterFormat();
@@ -99,7 +98,11 @@ class MediaTest extends MediaTestBase {
         'allowed_html' => '<p> <br> <strong> <em> <a href> <drupal-media data-entity-type data-entity-uuid data-align data-caption alt data-view-mode> <ol> <ul> <li>',
       ],
     ]);
+
+    // First save the text format, then the text editor.
+    // @see ckeditor5_config_schema_info_alter()
     $filter_format->save();
+    $editor->save();
 
     // Wrap the media with a list item.
     $original_value = $this->host->body->value;
@@ -135,7 +138,6 @@ class MediaTest extends MediaTestBase {
     // can be wrapped with other block elements.
     $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = ['<drupal-media data-foo>', '<div data-bar>'];
     $editor->setSettings($settings);
-    $editor->save();
 
     $filter_format = $editor->getFilterFormat();
     $filter_format->setFilterConfig('filter_html', [
@@ -144,7 +146,11 @@ class MediaTest extends MediaTestBase {
         'allowed_html' => '<p> <br> <strong> <em> <a href> <drupal-media data-entity-type data-entity-uuid data-align data-caption alt data-foo data-view-mode> <div data-bar>',
       ],
     ]);
+
+    // First save the text format, then the text editor.
+    // @see ckeditor5_config_schema_info_alter()
     $filter_format->save();
+    $editor->save();
 
     // Add data-foo use to an existing drupal-media tag.
     $original_value = $this->host->body->value;

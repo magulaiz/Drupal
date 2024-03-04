@@ -43,8 +43,10 @@ class MediaLinkabilityTest extends MediaTestBase {
         ],
       ]);
     }
-    $editor->save();
+    // First save the text format, then the text editor.
+    // @see ckeditor5_config_schema_info_alter()
     $filter_format->save();
+    $editor->save();
 
     // Wrap the existing drupal-media tag with a div and an a that include
     // attributes allowed via GHS.
