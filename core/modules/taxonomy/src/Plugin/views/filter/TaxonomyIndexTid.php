@@ -100,7 +100,7 @@ class TaxonomyIndexTid extends ManyToOne {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function hasExtraOptions() {
     return TRUE;
@@ -114,7 +114,7 @@ class TaxonomyIndexTid extends ManyToOne {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
@@ -129,7 +129,7 @@ class TaxonomyIndexTid extends ManyToOne {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function buildExtraOptionsForm(&$form, FormStateInterface $form_state) {
     $vocabularies = $this->vocabularyStorage->loadMultiple();
@@ -176,7 +176,7 @@ class TaxonomyIndexTid extends ManyToOne {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   protected function valueForm(&$form, FormStateInterface $form_state) {
     $vocabulary = $this->vocabularyStorage->load($this->options['vid']);
@@ -305,7 +305,7 @@ class TaxonomyIndexTid extends ManyToOne {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   protected function valueValidate($form, FormStateInterface $form_state) {
     // We only validate if they've chosen the text field style.
@@ -323,7 +323,7 @@ class TaxonomyIndexTid extends ManyToOne {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function acceptExposedInput($input) {
     if (empty($this->options['exposed'])) {
@@ -365,7 +365,7 @@ class TaxonomyIndexTid extends ManyToOne {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function validateExposed(&$form, FormStateInterface $form_state) {
     if (empty($this->options['exposed'])) {
@@ -400,14 +400,14 @@ class TaxonomyIndexTid extends ManyToOne {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   protected function valueSubmit($form, FormStateInterface $form_state) {
     // Prevent array_filter from messing up our arrays in parent submit.
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function buildExposeForm(&$form, FormStateInterface $form_state) {
     parent::buildExposeForm($form, $form_state);
@@ -422,7 +422,7 @@ class TaxonomyIndexTid extends ManyToOne {
   }
 
   /**
-   *
+   * {@inheritdoc}
    */
   public function adminSummary() {
     // Set up $this->valueOptions for the parent summary.
