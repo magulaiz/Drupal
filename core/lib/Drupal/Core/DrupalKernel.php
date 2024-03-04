@@ -1215,6 +1215,16 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       return;
     }
 
+    // If a session was started, close and save it and then start it again.
+    $new_session = $container->get('session');
+    if ($this->container->initialized('session')) {
+      $session = $this->container->get('session');
+      if ($session->isStarted()) {
+        $session->save();
+        $new_session->start();
+      }
+    }
+
     // Restore request stack and request context.
     $requests = [];
     if ($this->container->initialized('request_stack')) {
@@ -1225,28 +1235,13 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
       // Rebuild the request stack bottom up.
       $new_request_stack = $container->get('request_stack');
-      $request_context = $container->get('router.request_context');
       foreach ($requests as $request) {
+        if ($request->hasSession()) {
+          $request->setSession($new_session);
+        }
         $original_request_stack->push($request);
         $new_request_stack->push($request);
-        $request_context->fromRequest($request);
-      }
-    }
-
-    // If a session was started, close and save it and then start it again.
-    if ($this->container->initialized('session')) {
-      $session = $this->container->get('session');
-      if ($session->isStarted()) {
-        $session->save();
-        $container->get('session')->start();
-      }
-    }
-
-    // Refresh references to the session on all requests.
-    $new_session = $container->get('session');
-    foreach ($requests as $request) {
-      if ($request->hasSession()) {
-        $request->setSession($new_session);
+        $container->get('router.request_context')->fromRequest($request);
       }
     }
 
