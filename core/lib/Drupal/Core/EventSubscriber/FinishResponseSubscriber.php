@@ -201,6 +201,10 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
       // header declaring the response as not cacheable.
       $this->setResponseNotCacheable($response, $request);
     }
+
+    // Always vary by the 'Origin' response header until the asm89/stack-cors
+    // library is fixed.
+    $response->setVary(array_merge($response->getVary(), ['Origin']));
   }
 
   /**
