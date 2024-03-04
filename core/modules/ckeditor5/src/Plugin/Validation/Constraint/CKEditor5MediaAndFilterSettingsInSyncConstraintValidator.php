@@ -73,6 +73,12 @@ class CKEditor5MediaAndFilterSettingsInSyncConstraintValidator extends Constrain
     }
     $text_editor = $this->createTextEditorObjectFromContext();
 
+    // Nothing to validate if the text editor in use is not CKEditor 5.
+    // @see ckeditor5_config_schema_info_alter()
+    if ($text_editor->getEditor() !== 'ckeditor5') {
+      return;
+    }
+
     if (isset($text_editor->getSettings()['plugins']['media_media'])) {
       $cke5_plugin_overrides_allowed = $text_editor->getSettings()['plugins']['media_media']['allow_view_mode_override'];
       $filter_allowed_view_modes = $text_editor->getFilterFormat()->filters('media_embed')->getConfiguration()['settings']['allowed_view_modes'];
