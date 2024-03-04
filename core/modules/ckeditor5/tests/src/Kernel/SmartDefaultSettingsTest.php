@@ -515,8 +515,20 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'format' => $format_id,
       'editor' => 'ckeditor5',
       'settings' => ['toolbar' => ['items' => []]],
-    ]);
-    $pre_ck5_validation_errors = $this->validatePairToViolationsArray($minimal_valid_cke5_text_editor, $text_format, FALSE);
+      // TRICKY: specify dependencies because this does not call ::save().
+      'dependencies' => [
+        'config' => [
+          "filter.format.$format_id",
+        ],
+      ],
+    ])
+      ->setImageUploadSettings(
+        isset($text_editor)
+          ? $text_editor->getImageUploadSettings()
+          : ['status' => FALSE]
+      );
+    $violations = self::violationsToArray($minimal_valid_cke5_text_editor->getTypedData()->validate());
+    $pre_ck5_validation_errors = array_intersect_key($violations, ['' => TRUE]);
     $this->assertSame($expected_fundamental_compatibility_violations, $pre_ck5_validation_errors);
 
     if (!empty($filters_to_drop)) {
@@ -533,7 +545,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       // after dropping those filters from the text format. This allows us to be
       // confident that we have caught all fundamental compatibility problems.
       if (!empty(array_filter($filters_to_drop))) {
-        $post_filter_drop_validation_errors = $this->validatePairToViolationsArray($minimal_valid_cke5_text_editor, $text_format, FALSE);
+        $post_filter_drop_validation_errors = array_intersect_key(self::violationsToArray($minimal_valid_cke5_text_editor->getTypedData()->validate()), ['' => TRUE]);
         $this->assertSame($expected_post_filter_drop_fundamental_compatibility_violations, $post_filter_drop_validation_errors);
       }
     }
@@ -572,7 +584,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     }
 
     // The resulting Editor config entity should be valid.
-    $violations = $this->validatePairToViolationsArray($updated_text_editor, $text_format, FALSE);
+    $violations = array_intersect_key(self::violationsToArray($updated_text_editor->getTypedData()->validate()), ['' => TRUE]);
     // At this point, the fundamental compatibility errors do not matter, they
     // have been checked above; whatever remains is expected.
     if (isset($violations[''])) {
@@ -604,7 +616,8 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       $updated_text_format = $text_format;
     }
 
-    $updated_validation_errors = $this->validatePairToViolationsArray($updated_text_editor, $updated_text_format, TRUE);
+    $updated_text_format->save();
+    $updated_validation_errors = self::violationsToArray($updated_text_editor->getTypedData()->validate());
     if (is_null($expected_post_update_text_editor_violations)) {
       // If a violation is not expected, it should be compared against an empty array.
       $this->assertSame([], $updated_validation_errors);
