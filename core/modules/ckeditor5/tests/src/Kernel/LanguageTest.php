@@ -9,7 +9,6 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\TestTools\Random;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * Tests language resolving for CKEditor 5.
@@ -46,11 +45,12 @@ class LanguageTest extends KernelTestBase {
     parent::setUp();
     $this->ckeditor5 = $this->container->get('plugin.manager.editor')->createInstance('ckeditor5');
 
-    FilterFormat::create(
-      Yaml::parseFile('core/profiles/standard/config/install/filter.format.basic_html.yml')
-    )->save();
+    FilterFormat::create([
+      'format' => 'test',
+      'name' => 'Test format',
+    ])->save();
     Editor::create([
-      'format' => 'basic_html',
+      'format' => 'test',
       'editor' => 'ckeditor5',
     ])->save();
 
@@ -70,7 +70,7 @@ class LanguageTest extends KernelTestBase {
    * @dataProvider provider
    */
   public function test(string $drupal_langcode, string $cke5_langcode, bool $is_missing_mapping = FALSE): void {
-    $editor = Editor::load('basic_html');
+    $editor = Editor::load('test');
 
     ConfigurableLanguage::createFromLangcode($drupal_langcode)->save();
     $this->config('system.site')->set('default_langcode', $drupal_langcode)->save();
