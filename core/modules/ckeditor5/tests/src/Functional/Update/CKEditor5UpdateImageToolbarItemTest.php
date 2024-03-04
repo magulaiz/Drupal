@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\ckeditor5\Functional\Update;
 
 use Drupal\ckeditor5\HTMLRestrictions;
-use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\EditorInterface;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
@@ -143,7 +142,7 @@ class CKEditor5UpdateImageToolbarItemTest extends UpdatePathTestBase {
       //   array_filter().
       // @see \Drupal\Core\Config\Schema\SchemaCheckTrait::$ignoredPropertyPaths
       array_filter(
-        iterator_to_array(CKEditor5::validatePair($editor_after, $filter_format_after)),
+        iterator_to_array($editor_after->getTypedData()->validate()),
         fn(ConstraintViolation $v) => $v->getMessage() != 'The file storage you selected is not a visible, readable and writable stream wrapper. Possible choices: <em class="placeholder"></em>.',
       )
     ));
