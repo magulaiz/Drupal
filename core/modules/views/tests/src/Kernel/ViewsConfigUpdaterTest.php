@@ -27,6 +27,7 @@ class ViewsConfigUpdaterTest extends ViewsKernelTestBase {
     'field',
     'file',
     'image',
+    'node',
     'responsive_image',
     'responsive_image_test_module',
   ];
@@ -40,6 +41,7 @@ class ViewsConfigUpdaterTest extends ViewsKernelTestBase {
       ->getInstanceFromDefinition(ViewsConfigUpdater::class);
     assert($config_updater instanceof ViewsConfigUpdater);
 
+    $this->installEntitySchema('user');
     FieldStorageConfig::create([
       'field_name' => 'user_picture',
       'entity_type' => 'user',
@@ -59,6 +61,7 @@ class ViewsConfigUpdaterTest extends ViewsKernelTestBase {
       'breakpoint_group' => 'responsive_image_test_module',
     ]);
     // Create an image field to be used with a responsive image formatter.
+    $this->installEntitySchema('entity_test');
     FieldStorageConfig::create([
       'type' => 'image',
       'entity_type' => 'entity_test',

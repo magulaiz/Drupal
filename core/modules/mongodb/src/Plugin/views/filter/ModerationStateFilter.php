@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\content_moderation\Plugin\views\filter;
+namespace Drupal\mongodb\Plugin\views\filter;
 
 use Drupal\content_moderation\Plugin\views\ModerationStateJoinViewsHandlerTrait;
 use Drupal\Core\Cache\Cache;
@@ -13,11 +13,7 @@ use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides a filter for the moderation state of an entity.
- *
- * @ingroup views_filter_handlers
- *
- * @ViewsFilter("moderation_state_filter")
+ * Overriding the views filter plugin "moderation_state_filter".
  */
 class ModerationStateFilter extends InOperator implements DependentWithRemovalPluginInterface {
 

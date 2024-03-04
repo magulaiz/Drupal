@@ -109,9 +109,9 @@ class ViewsQuery extends Sql {
   /**
    * Get the latest translation affected revision from the query.
    *
-   * @var array|false
+   * @var array|bool
    */
-  protected array $mongodbLatestTranslationAffectedRevision = [];
+  protected array|bool $mongodbLatestTranslationAffectedRevision = [];
 
   /**
    * Set the latest translation affected revision value for the query.
@@ -632,7 +632,7 @@ class ViewsQuery extends Sql {
                 $clause['value'] = (string) $clause['value'];
               }
             }
-            elseif (!is_array($clause['value']) && (is_int($clause['value']) || ctype_digit($clause['value']))) {
+            elseif (!is_array($clause['value']) && (is_int($clause['value']) || (is_string($clause['value']) && ctype_digit($clause['value'])))) {
               $clause['value'] = (int) $clause['value'];
             }
             elseif (is_array($clause['value'])) {

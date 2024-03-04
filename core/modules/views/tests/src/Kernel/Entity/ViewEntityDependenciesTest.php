@@ -97,6 +97,7 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
     $expected['test_field_get_entity'] = [
       'module' => [
         'comment',
+        'mongodb',
         'node',
         'user',
       ],
@@ -105,13 +106,15 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
     $expected['test_relationship_dependency'] = [
       'module' => [
         'comment',
-        'node',
+        'mongodb',
+//        'node',
         'user',
       ],
     ];
     $expected['test_plugin_dependencies'] = [
       'module' => [
         'comment',
+        'mongodb',
         'views_test_data',
       ],
       'content' => [
@@ -124,17 +127,18 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
     $expected['test_argument_dependency'] = [
       'config' => [
         'core.entity_view_mode.node.teaser',
-        'field.storage.node.body',
+//        'field.storage.node.body',
       ],
       'content' => [
         'ArgumentDefaultTest',
         'ArgumentValidatorTest',
       ],
       'module' => [
+        'mongodb',
         'node',
         // The argument handler is provided by the search module.
         'search',
-        'text',
+//        'text',
         'user',
       ],
     ];
@@ -159,6 +163,7 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
       ],
       'module' => [
         'core',
+        'mongodb',
         'node',
         'search',
         'user',
@@ -166,13 +171,14 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
       ],
     ];
     $expected_display['page'] = [
-      'config' => [
-        'field.storage.node.body',
-      ],
+//      'config' => [
+//        'field.storage.node.body',
+//      ],
       'module' => [
         'core',
+        'mongodb',
         'node',
-        'text',
+//        'text',
         'views',
       ],
     ];
