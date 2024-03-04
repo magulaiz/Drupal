@@ -195,11 +195,7 @@ class ImageUploadTest extends BrowserTestBase {
   protected function createBasicFormat() {
     $basic_html_format = FilterFormat::create([
       'format' => 'basic_html',
-      'name' => 'Basic HTML',
-      'weight' => 1,
-      'filters' => [
-        'filter_html_escape' => ['status' => 1],
-      ],
+      'name' => 'Test format allowing arbitrary HTML',
       'roles' => [RoleInterface::AUTHENTICATED_ID],
     ]);
     $basic_html_format->save();

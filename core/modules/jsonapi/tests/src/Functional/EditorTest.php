@@ -66,7 +66,7 @@ class EditorTest extends ConfigEntityResourceTestBase {
         'filter_html' => [
           'status' => TRUE,
           'settings' => [
-            'allowed_html' => '<p> <a> <b> <lo>',
+            'allowed_html' => '<p> <br> <strong> <em> <h2> <h3> <h4> <h5> <h6>',
           ],
         ],
       ],
@@ -78,6 +78,15 @@ class EditorTest extends ConfigEntityResourceTestBase {
     $camelids = Editor::create([
       'format' => 'llama',
       'editor' => 'ckeditor5',
+      // @see \Drupal\ckeditor5\Plugin\Editor\CKEditor5::getDefaultSettings()
+      'settings' => [
+        'toolbar' => [
+          'items' => ['heading', 'bold', 'italic'],
+        ],
+        'plugins' => [
+          'ckeditor5_heading' => Heading::DEFAULT_CONFIGURATION,
+        ],
+      ],
     ]);
     $camelids
       ->setImageUploadSettings([
@@ -181,7 +190,7 @@ class EditorTest extends ConfigEntityResourceTestBase {
         'filter_html' => [
           'status' => TRUE,
           'settings' => [
-            'allowed_html' => '<p> <a> <b> <lo>',
+            'allowed_html' => '<p> <br> <strong> <em> <h2> <h3> <h4> <h5> <h6>',
           ],
         ],
       ],
@@ -190,6 +199,15 @@ class EditorTest extends ConfigEntityResourceTestBase {
     $entity = Editor::create([
       'format' => 'pachyderm',
       'editor' => 'ckeditor5',
+      // @see \Drupal\ckeditor5\Plugin\Editor\CKEditor5::getDefaultSettings()
+      'settings' => [
+        'toolbar' => [
+          'items' => ['heading', 'bold', 'italic'],
+        ],
+        'plugins' => [
+          'ckeditor5_heading' => Heading::DEFAULT_CONFIGURATION,
+        ],
+      ],
     ]);
 
     $entity->setImageUploadSettings([
