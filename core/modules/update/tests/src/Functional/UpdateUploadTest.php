@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\update\Functional;
 
 use Drupal\Core\Extension\InfoParserDynamic;
@@ -100,7 +102,7 @@ class UpdateUploadTest extends UpdateUploaderTestBase {
     // core/authorize.php.
     $this->assertSession()->linkExists('Add another module');
     $this->assertSession()->linkByHrefExists(Url::fromRoute('update.module_install')->toString());
-    $this->assertSession()->linkExists('Enable newly added modules');
+    $this->assertSession()->linkExists('Install newly added modules');
     $this->assertSession()->linkByHrefExists(Url::fromRoute('system.modules_list')->toString());
     $this->assertSession()->linkExists('Administration pages');
     $this->assertSession()->linkByHrefExists(Url::fromRoute('system.admin')->toString());

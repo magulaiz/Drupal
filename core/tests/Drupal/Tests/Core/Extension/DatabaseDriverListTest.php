@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Extension;
 
 use Drupal\Core\Database\Database;
@@ -57,7 +59,7 @@ class DatabaseDriverListTest extends UnitTestCase {
   /**
    * Data provider for testLegacyGetFromDriverName().
    */
-  public function providerDatabaseDrivers(): array {
+  public static function providerDatabaseDrivers(): array {
     return [
       ['mysql', 'mysql', 'Drupal\\mysql\\Driver\\Database\\mysql'],
       ['pgsql', 'pgsql', 'Drupal\\pgsql\\Driver\\Database\\pgsql'],

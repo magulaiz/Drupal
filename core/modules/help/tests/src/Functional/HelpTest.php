@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\help\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
@@ -21,19 +23,20 @@ class HelpTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['help_test', 'help_page_test'];
+  protected static $modules = [
+    'block_content',
+    'breakpoint',
+    'editor',
+    'help',
+    'help_page_test',
+    'help_test',
+    'history',
+  ];
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'stark';
-
-  /**
-   * Use the Standard profile to test help implementations of many core modules.
-   *
-   * @var string
-   */
-  protected $profile = 'standard';
+  protected $defaultTheme = 'claro';
 
   /**
    * The admin user that will be created.

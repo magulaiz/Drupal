@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\shortcut\Functional;
 
 use Drupal\shortcut\Entity\ShortcutSet;
@@ -172,7 +174,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
   }
 
   /**
-   * Tests unassigning a shortcut set.
+   * Tests un-assigning a shortcut set.
    */
   public function testShortcutSetUnassign() {
     $new_set = $this->generateShortcutSet($this->randomMachineName());
