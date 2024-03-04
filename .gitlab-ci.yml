@@ -1,4 +1,4 @@
-# cspell:ignore codequality Micheh micheh webide
+# cspell:ignore codequality Micheh micheh webide stylelintrc
 
 ################
 # Drupal GitLabCI template.
@@ -422,6 +422,12 @@ default:
         - core/yarn.lock
         - "**/*.js"
         - "**/*.yml"
+        - core/.eslintignore
+        - core/.eslint.jquery.json
+        - core/.eslint.json
+        - core/.eslint.passing.json
+        - core/.prettierignore
+        - core/.prettierrc.json
     - when: manual
       allow_failure: true
   script:
@@ -444,6 +450,7 @@ default:
         - core/package.json
         - core/yarn.lock
         - "**/*.css"
+        - core/.stylelintrc.json
     - when: manual
       allow_failure: true
   script:
