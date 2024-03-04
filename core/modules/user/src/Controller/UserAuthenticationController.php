@@ -178,28 +178,28 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
 
     $this->floodControl($request, $credentials['name']);
 
-    $users = $this->userStorage->loadByProperties(['name' => $credentials['name']]);
-    if (!empty($users)) {
-      /** @var \Drupal\user\UserInterface $user */
-      $user = reset($users);
-      if ($user->isBlocked()) {
+    $accounts = $this->userStorage->loadByProperties(['name' => $credentials['name']]);
+    if (!empty($accounts)) {
+      /** @var \Drupal\user\UserInterface $account */
+      $account = reset($accounts);
+      if ($account->isBlocked()) {
         throw new BadRequestHttpException('The user has not been activated or is blocked.');
       }
 
-      if ($this->userAuth->authenticateAccount($user, $credentials['pass'])) {
+      if ($this->userAuth->authenticateAccount($account, $credentials['pass'])) {
         $this->userFloodControl->clear('user.http_login', $this->getLoginFloodIdentifier($request, $credentials['name']));
-        $this->userLoginFinalize($user);
+        $this->userLoginFinalize($account);
 
         // Send basic metadata about the logged in user.
         $response_data = [];
-        if ($user->get('uid')->access('view', $user)) {
-          $response_data['current_user']['uid'] = $user->id();
+        if ($account->get('uid')->access('view', $account)) {
+          $response_data['current_user']['uid'] = $account->id();
         }
-        if ($user->get('roles')->access('view', $user)) {
-          $response_data['current_user']['roles'] = $user->getRoles();
+        if ($account->get('roles')->access('view', $account)) {
+          $response_data['current_user']['roles'] = $account->getRoles();
         }
-        if ($user->get('name')->access('view', $user)) {
-          $response_data['current_user']['name'] = $user->getAccountName();
+        if ($account->get('name')->access('view', $account)) {
+          $response_data['current_user']['name'] = $account->getAccountName();
         }
         $response_data['csrf_token'] = $this->csrfToken->get('rest');
 
