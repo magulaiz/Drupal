@@ -7,4 +7,18 @@ namespace Drupal\Core\TypedData;
  */
 abstract class PrimitiveBase extends TypedData implements PrimitiveInterface {
 
+  /**
+   * The data value.
+   *
+   * @var mixed
+   */
+  protected $value;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getValue() {
+    return $this->value;
+  }
+
 }
