@@ -178,36 +178,39 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
 
     $this->floodControl($request, $credentials['name']);
 
-    if ($this->userIsBlocked($credentials['name'])) {
-      throw new BadRequestHttpException('The user has not been activated or is blocked.');
-    }
-
-    if ($uid = $this->userAuth->authenticate($credentials['name'], $credentials['pass'])) {
-      $this->userFloodControl->clear('user.http_login', $this->getLoginFloodIdentifier($request, $credentials['name']));
+    $users = $this->userStorage->loadByProperties(['name' => $credentials['name']]);
+    if (!empty($users)) {
       /** @var \Drupal\user\UserInterface $user */
-      $user = $this->userStorage->load($uid);
-      $this->userLoginFinalize($user);
-
-      // Send basic metadata about the logged in user.
-      $response_data = [];
-      if ($user->get('uid')->access('view', $user)) {
-        $response_data['current_user']['uid'] = $user->id();
+      $user = reset($users);
+      if ($user->isBlocked()) {
+        throw new BadRequestHttpException('The user has not been activated or is blocked.');
       }
-      if ($user->get('roles')->access('view', $user)) {
-        $response_data['current_user']['roles'] = $user->getRoles();
-      }
-      if ($user->get('name')->access('view', $user)) {
-        $response_data['current_user']['name'] = $user->getAccountName();
-      }
-      $response_data['csrf_token'] = $this->csrfToken->get('rest');
 
-      $logout_route = $this->routeProvider->getRouteByName('user.logout.http');
-      // Trim '/' off path to match \Drupal\Core\Access\CsrfAccessCheck.
-      $logout_path = ltrim($logout_route->getPath(), '/');
-      $response_data['logout_token'] = $this->csrfToken->get($logout_path);
+      if ($this->userAuth->authenticateAccount($user, $credentials['pass'])) {
+        $this->userFloodControl->clear('user.http_login', $this->getLoginFloodIdentifier($request, $credentials['name']));
+        $this->userLoginFinalize($user);
 
-      $encoded_response_data = $this->serializer->encode($response_data, $format);
-      return new Response($encoded_response_data);
+        // Send basic metadata about the logged in user.
+        $response_data = [];
+        if ($user->get('uid')->access('view', $user)) {
+          $response_data['current_user']['uid'] = $user->id();
+        }
+        if ($user->get('roles')->access('view', $user)) {
+          $response_data['current_user']['roles'] = $user->getRoles();
+        }
+        if ($user->get('name')->access('view', $user)) {
+          $response_data['current_user']['name'] = $user->getAccountName();
+        }
+        $response_data['csrf_token'] = $this->csrfToken->get('rest');
+
+        $logout_route = $this->routeProvider->getRouteByName('user.logout.http');
+        // Trim '/' off path to match \Drupal\Core\Access\CsrfAccessCheck.
+        $logout_path = ltrim($logout_route->getPath(), '/');
+        $response_data['logout_token'] = $this->csrfToken->get($logout_path);
+
+        $encoded_response_data = $this->serializer->encode($response_data, $format);
+        return new Response($encoded_response_data);
+      }
     }
 
     $flood_config = $this->config('user.flood');
@@ -288,6 +291,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    *   TRUE if the user is blocked, otherwise FALSE.
    */
   protected function userIsBlocked($name) {
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3425340', E_USER_DEPRECATED);
     return user_is_blocked($name);
   }
 
