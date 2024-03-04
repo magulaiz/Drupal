@@ -97,7 +97,7 @@
         if ( event.keyCode !== $.ui.keyCode.TAB || event.isDefaultPrevented() ) {
           return;
         }
-        var tabbables = tabbable.tabble(this.uiDialog),
+        var tabbables = tabbable.tabbable(this.uiDialog),
           first = tabbables.first(),
           last = tabbables.last();
 
