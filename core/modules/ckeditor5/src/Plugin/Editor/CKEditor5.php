@@ -38,14 +38,14 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  *   Plugin classes are internal.
  */
 #[Editor(
-id: 'ckeditor5',
+  id: 'ckeditor5',
   label: new TranslatableMarkup('CKEditor 5'),
   supports_content_filtering: TRUE,
   supports_inline_editing: TRUE,
   is_xss_safe: FALSE,
   supported_element_types: [
-  'textarea',
-]
+    'textarea',
+  ]
 )]
 class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
 
