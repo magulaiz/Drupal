@@ -6,7 +6,6 @@ namespace Drupal\Tests\block_content\Functional;
 
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Database\Database;
-use Drupal\Core\Url;
 
 /**
  * Create a block and test saving it.
@@ -78,15 +77,16 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $block = reset($blocks);
     $this->assertNotEmpty($block, 'Content Block found in database.');
 
-    // Check that the view mode isn't accessible without standalone_url enabled.
-    $this->drupalGet(Url::fromRoute('entity.block_content.canonical', ['block_content' => $block->id()]));
+    // Check that the canonical route is the edit page without
+    // standalone_url enabled.
+    $this->drupalGet($block->toUrl());
     $this->assertSession()->addressEquals('/admin/content/block/' . $block->id() . '/edit');
 
     // Enable standalone_url setting.
     $this->drupalGet('/admin/config/block-content/block-content-settings');
     $this->submitForm(['standalone_url' => TRUE], 'Save');
 
-    $this->drupalGet(Url::fromRoute('entity.block_content.canonical', ['block_content' => $block->id()]));
+    $this->drupalGet($block->toUrl());
     $this->assertSession()->linkByHrefExists('/admin/content/block/' . $block->id());
     $this->assertSession()->pageTextContains('Test Block');
     $this->assertSession()->pageTextContains($body);

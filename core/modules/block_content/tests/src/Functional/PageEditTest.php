@@ -55,7 +55,7 @@ class PageEditTest extends BlockContentTestBase {
     $this->assertNotEmpty($block, 'Content block found in database.');
 
     // Load the edit page.
-    $this->drupalGet('admin/content/block/' . $block->id() . '/edit');
+    $this->drupalGet($block->toUrl());
     $this->assertSession()->fieldValueEquals($title_key, $edit[$title_key]);
     $this->assertSession()->fieldValueEquals($body_key, $edit[$body_key]);
 

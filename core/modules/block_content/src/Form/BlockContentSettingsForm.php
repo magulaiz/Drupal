@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\block_content\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -14,19 +16,16 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @internal
  */
-class BlockContentSettingsForm extends ConfigFormBase {
+final class BlockContentSettingsForm extends ConfigFormBase {
 
   /**
-   * BlockContentSettingsForm constructor.
-   *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The config factory service.
-   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typedConfigManager
-   *   The typed config manager.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
-   *   The entity type manager.
+   * {@inheritdoc}
    */
-  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, protected EntityTypeManagerInterface $entityTypeManager) {
+  public function __construct(
+    ConfigFactoryInterface $config_factory,
+    TypedConfigManagerInterface $typedConfigManager,
+    protected EntityTypeManagerInterface $entityTypeManager
+  ) {
     parent::__construct($config_factory, $typedConfigManager);
   }
 

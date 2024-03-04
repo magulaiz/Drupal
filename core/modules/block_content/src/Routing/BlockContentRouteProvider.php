@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\block_content\Routing;
 
 use Drupal\Core\Config\ImmutableConfig;
@@ -20,7 +22,11 @@ class BlockContentRouteProvider extends AdminHtmlRouteProvider {
   /**
    * {@inheritdoc}
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, protected ImmutableConfig $config) {
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    EntityFieldManagerInterface $entity_field_manager,
+    protected ImmutableConfig $config
+  ) {
     parent::__construct($entity_type_manager, $entity_field_manager);
   }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\block_content\EventSubscriber;
 
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
@@ -12,7 +14,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Listens to the config save event for block_content.settings.
  */
-class BlockContentConfigSubscriber implements EventSubscriberInterface {
+final class BlockContentConfigSubscriber implements EventSubscriberInterface {
 
   /**
    * Constructs the BlockContentConfigSubscriber.
@@ -24,7 +26,11 @@ class BlockContentConfigSubscriber implements EventSubscriberInterface {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    */
-  public function __construct(protected RouteBuilderInterface $router_builder, protected CacheTagsInvalidatorInterface $cache_tags_invalidator, protected EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(
+    protected RouteBuilderInterface $router_builder,
+    protected CacheTagsInvalidatorInterface $cache_tags_invalidator,
+    protected EntityTypeManagerInterface $entity_type_manager
+  ) {
   }
 
   /**
