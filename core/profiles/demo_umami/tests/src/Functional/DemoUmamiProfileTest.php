@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\demo_umami\Functional;
 
-use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\StorageInterface;
-use Drupal\editor\Entity\Editor;
 use Drupal\KernelTests\AssertConfigTrait;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\SchemaCheckTestTrait;
-use Symfony\Component\Validator\ConstraintViolation;
 
 /**
  * Tests demo_umami profile.
@@ -87,25 +84,6 @@ class DemoUmamiProfileTest extends BrowserTestBase {
     foreach ($names as $name) {
       $config = $this->config($name);
       $this->assertConfigSchema($typed_config, $name, $config->get());
-    }
-
-    // Validate all configuration.
-    // @todo Generalize in https://www.drupal.org/project/drupal/issues/2164373
-    foreach (Editor::loadMultiple() as $editor) {
-      // Currently only text editors using CKEditor 5 can be validated.
-      if ($editor->getEditor() !== 'ckeditor5') {
-        continue;
-      }
-
-      $this->assertSame([], array_map(
-        function (ConstraintViolation $v) {
-          return (string) $v->getMessage();
-        },
-        iterator_to_array(CKEditor5::validatePair(
-          $editor,
-          $editor->getFilterFormat()
-        ))
-      ));
     }
   }
 

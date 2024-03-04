@@ -7,8 +7,6 @@ namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 use Drupal\editor\Entity\Editor;
 use Drupal\file\Entity\File;
 use Drupal\filter\Entity\FilterFormat;
-use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
-use Symfony\Component\Validator\ConstraintViolation;
 
 // cspell:ignore imageresize imageupload
 
@@ -76,15 +74,6 @@ class ImageTest extends ImageTestBase {
         'max_dimensions' => ['width' => 100, 'height' => 100],
       ],
     ])->save();
-    $this->assertSame([], array_map(
-      function (ConstraintViolation $v) {
-        return (string) $v->getMessage();
-      },
-      iterator_to_array(CKEditor5::validatePair(
-        Editor::load('test_format'),
-        FilterFormat::load('test_format')
-      ))
-    ));
     $this->adminUser = $this->drupalCreateUser([
       'use text format test_format',
       'bypass node access',

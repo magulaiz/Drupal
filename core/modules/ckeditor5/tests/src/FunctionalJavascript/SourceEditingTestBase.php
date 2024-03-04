@@ -7,8 +7,6 @@ namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
-use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
-use Symfony\Component\Validator\ConstraintViolation;
 
 // cspell:ignore sourceediting
 
@@ -96,15 +94,6 @@ abstract class SourceEditingTestBase extends CKEditor5TestBase {
         'status' => FALSE,
       ],
     ])->save();
-    $this->assertSame([], array_map(
-      function (ConstraintViolation $v) {
-        return (string) $v->getMessage();
-      },
-      iterator_to_array(CKEditor5::validatePair(
-        Editor::load('test_format'),
-        FilterFormat::load('test_format')
-      ))
-    ));
     $this->adminUser = $this->drupalCreateUser([
       'use text format test_format',
       'bypass node access',

@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\standard\Functional;
 
-use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\Component\Utility\Html;
-use Drupal\editor\Entity\Editor;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\media\Entity\MediaType;
 use Drupal\media\Plugin\media\Source\Image;
@@ -18,7 +16,6 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\RequirementsPageTrait;
 use Drupal\user\Entity\Role;
-use Symfony\Component\Validator\ConstraintViolation;
 
 /**
  * Tests Standard installation profile expectations.
@@ -111,25 +108,6 @@ class StandardTest extends BrowserTestBase {
     foreach ($names as $name) {
       $config = $this->config($name);
       $this->assertConfigSchema($typed_config, $name, $config->get());
-    }
-
-    // Validate all configuration.
-    // @todo Generalize in https://www.drupal.org/project/drupal/issues/2164373
-    foreach (Editor::loadMultiple() as $editor) {
-      // Currently only text editors using CKEditor 5 can be validated.
-      if ($editor->getEditor() !== 'ckeditor5') {
-        continue;
-      }
-
-      $this->assertSame([], array_map(
-        function (ConstraintViolation $v) {
-          return (string) $v->getMessage();
-        },
-        iterator_to_array(CKEditor5::validatePair(
-          $editor,
-          $editor->getFilterFormat()
-        ))
-      ));
     }
 
     // Ensure that configuration from the Standard profile is not reused when

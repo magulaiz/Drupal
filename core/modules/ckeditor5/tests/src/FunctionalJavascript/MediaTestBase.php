@@ -14,8 +14,6 @@ use Drupal\media\Entity\Media;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
-use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
-use Symfony\Component\Validator\ConstraintViolation;
 
 /**
  * Base class for CKEditor 5 Media integration tests.
@@ -144,15 +142,6 @@ abstract class MediaTestBase extends WebDriverTestBase {
         'status' => FALSE,
       ],
     ])->save();
-    $this->assertSame([], array_map(
-      function (ConstraintViolation $v) {
-        return (string) $v->getMessage();
-      },
-      iterator_to_array(CKEditor5::validatePair(
-        Editor::load('test_format'),
-        FilterFormat::load('test_format')
-      ))
-    ));
 
     // Note that media_install() grants 'view media' to all users by default.
     $this->adminUser = $this->drupalCreateUser([

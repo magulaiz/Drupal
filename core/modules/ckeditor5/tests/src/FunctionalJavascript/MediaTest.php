@@ -6,7 +6,6 @@ namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\Entity\EntityViewMode;
-use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\filter\Entity\FilterFormat;
@@ -15,7 +14,6 @@ use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\media\Entity\Media;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
-use Symfony\Component\Validator\ConstraintViolation;
 
 // cspell:ignore hurlant layercake tatou
 
@@ -103,16 +101,6 @@ class MediaTest extends MediaTestBase {
     ]);
     $filter_format->save();
 
-    $this->assertSame([], array_map(
-      function (ConstraintViolation $v) {
-        return (string) $v->getMessage();
-      },
-      iterator_to_array(CKEditor5::validatePair(
-        Editor::load('test_format'),
-        FilterFormat::load('test_format')
-      ))
-    ));
-
     // Wrap the media with a list item.
     $original_value = $this->host->body->value;
     $this->host->body->value = '<ol><li>' . $original_value . '</li></ol>';
@@ -157,15 +145,6 @@ class MediaTest extends MediaTestBase {
       ],
     ]);
     $filter_format->save();
-    $this->assertSame([], array_map(
-      function (ConstraintViolation $v) {
-        return (string) $v->getMessage();
-      },
-      iterator_to_array(CKEditor5::validatePair(
-        Editor::load('test_format'),
-        FilterFormat::load('test_format')
-      ))
-    ));
 
     // Add data-foo use to an existing drupal-media tag.
     $original_value = $this->host->body->value;
@@ -693,16 +672,6 @@ class MediaTest extends MediaTestBase {
     ]);
     $filter_format->save();
     $editor->save();
-
-    $this->assertSame([], array_map(
-      function (ConstraintViolation $v) {
-        return (string) $v->getMessage();
-      },
-      iterator_to_array(CKEditor5::validatePair(
-        Editor::load('test_format'),
-        FilterFormat::load('test_format')
-      ))
-    ));
 
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
