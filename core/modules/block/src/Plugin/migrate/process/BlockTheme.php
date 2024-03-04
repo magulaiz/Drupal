@@ -45,11 +45,6 @@ class BlockTheme extends ProcessPluginBase implements ContainerFactoryPluginInte
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, Config|MigrationInterface $theme_config, array|Config $themes) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    if ($theme_config instanceof MigrationInterface) {
-      @trigger_error('Calling ' . __CLASS__ . '::__construct() with the $migration argument is deprecated in drupal:10.1.0 and is removed in drupal:11.0.0. See https://www.drupal.org/node/3323212', E_USER_DEPRECATED);
-      $theme_config = func_get_arg(4);
-      $themes = func_get_arg(5);
-    }
     $this->themeConfig = $theme_config;
     $this->themes = $themes;
   }
