@@ -69,3 +69,10 @@ function layout_builder_post_update_timestamp_formatter(array &$sandbox = NULL):
     return $update;
   });
 }
+
+/**
+ * Clear caches to re-render operation links.
+ */
+function layout_builder_post_update_rerender_operation_links() {
+  // No-op.
+}
