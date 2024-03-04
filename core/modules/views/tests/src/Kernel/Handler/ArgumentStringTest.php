@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views\Kernel\Handler;
 
+use Drupal\Core\Database\Database;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
@@ -51,7 +52,12 @@ class ArgumentStringTest extends ViewsKernelTestBase {
     $view = Views::getView('test_glossary');
     $this->executeView($view);
 
-    $count_field = 'nid';
+    if (Database::getConnection()->databaseType() == 'mongodb') {
+      $count_field = 'vid';
+    }
+    else {
+      $count_field = 'nid';
+    }
     foreach ($view->result as &$row) {
       if (str_starts_with($view->field['title']->getValue($row), 'a')) {
         $this->assertEquals(1, $row->{$count_field});

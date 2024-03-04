@@ -593,7 +593,7 @@ class ViewsQuery extends Sql {
    * {@inheritdoc}
    */
   protected function removeCurrentRevisionTableForNonRelationalDatabases($field) {
-    if (!empty($this->getCurrentRevisionTable())) {
+    if (!empty($this->getCurrentRevisionTable()) && is_string($field)) {
       $search_needle = $this->getCurrentRevisionTable() . '.';
       $field = str_replace($search_needle, '', $field);
     }
