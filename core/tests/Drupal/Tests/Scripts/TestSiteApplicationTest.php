@@ -102,7 +102,6 @@ class TestSiteApplicationTest extends UnitTestCase {
     $process->run();
 
     $this->assertSame(0, $process->getExitCode());
-    dump([$process->getOutput(), json_decode($process->getOutput(), TRUE), $process->getErrorOutput()]);
     $result = json_decode($process->getOutput(), TRUE);
     $db_prefix = $result['db_prefix'];
     $this->assertStringStartsWith('simpletest' . substr($db_prefix, 4) . ':', $result['user_agent']);
