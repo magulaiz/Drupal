@@ -106,7 +106,7 @@
           ) {
             return;
           }
-          const tabbableElements = tabbable.tabbable(this.uiDialog);
+          const tabbableElements = tabbable.tabbable(this.uiDialog[0);
           const first = tabbableElements.first();
           const last = tabbableElements.last();
 
