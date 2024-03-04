@@ -22,8 +22,9 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\ckeditor5\SmartDefaultSettings;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Plugin\Validation\Constraint\PrimitiveTypeConstraint;
+use Drupal\editor\Attribute\Editor;
 use Drupal\editor\EditorInterface;
-use Drupal\editor\Entity\Editor;
+use Drupal\editor\Entity\Editor as EditorEntity;
 use Drupal\editor\Plugin\EditorBase;
 use Drupal\filter\FilterFormatInterface;
 use Psr\Log\LoggerInterface;
@@ -532,7 +533,7 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
    */
   public static function validateSwitchingToCKEditor5(array $form, FormStateInterface $form_state): void {
     if (!$form_state->get('ckeditor5_is_active') && $form_state->get('ckeditor5_is_selected')) {
-      $minimal_ckeditor5_editor = Editor::create([
+      $minimal_ckeditor5_editor = EditorEntity::create([
         'format' => NULL,
         'editor' => 'ckeditor5',
       ]);
@@ -943,7 +944,7 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function getJSSettings(Editor $editor) {
+  public function getJSSettings(EditorEntity $editor) {
     $toolbar_items = $editor->getSettings()['toolbar']['items'];
     $plugin_config = $this->ckeditor5PluginManager->getCKEditor5PluginConfig($editor);
 
@@ -965,7 +966,7 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function getLibraries(Editor $editor) {
+  public function getLibraries(EditorEntity $editor) {
     $plugin_libraries = $this->ckeditor5PluginManager->getEnabledLibraries($editor);
 
     if ($this->moduleHandler->moduleExists('locale')) {

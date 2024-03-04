@@ -3,7 +3,8 @@
 namespace Drupal\editor_test\Plugin\Editor;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\editor\Entity\Editor;
+use Drupal\editor\Attribute\Editor;
+use Drupal\editor\Entity\Editor as EditorEntity;
 use Drupal\editor\Plugin\EditorBase;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
@@ -45,7 +46,7 @@ class TRexEditor extends EditorBase {
   /**
    * {@inheritdoc}
    */
-  public function getJSSettings(Editor $editor) {
+  public function getJSSettings(EditorEntity $editor) {
     $js_settings = [];
     $settings = $editor->getSettings();
     if ($settings['stumpy_arms']) {
@@ -57,7 +58,7 @@ class TRexEditor extends EditorBase {
   /**
    * {@inheritdoc}
    */
-  public function getLibraries(Editor $editor) {
+  public function getLibraries(EditorEntity $editor) {
     return [
       'editor_test/trex',
     ];
