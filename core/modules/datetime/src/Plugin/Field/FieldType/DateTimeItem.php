@@ -26,6 +26,8 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  *   list_class = "\Drupal\datetime\Plugin\Field\FieldType\DateTimeFieldItemList",
  *   constraints = {"DateTimeFormat" = {}}
  * )
+ * 
+ * @property \Drupal\Core\Datetime\DrupalDateTime $date
  */
 class DateTimeItem extends FieldItemBase implements DateTimeItemInterface {
 
