@@ -659,6 +659,12 @@ class ValidatorsTest extends KernelTestBase {
       'editor' => 'ckeditor5',
       'settings' => $ckeditor5_settings,
       'image_upload' => $editor_image_upload_settings,
+      // TRICKY: specify dependencies because this does not call ::save().
+      'dependencies' => [
+        'config' => [
+          'filter.format.dummy',
+        ],
+      ],
     ]);
     EntityViewMode::create([
       'id' => 'media.view_mode_1',
@@ -1586,7 +1592,7 @@ class ValidatorsTest extends KernelTestBase {
   public function testMultipleHtmlRestrictingFilters(): void {
     $this->container->get('module_installer')->install(['filter_test']);
 
-    $text_format = FilterFormat::create([
+    FilterFormat::create([
       'format' => 'very_restricted',
       'name' => $this->randomMachineName(),
       'filters' => [
@@ -1622,7 +1628,7 @@ class ValidatorsTest extends KernelTestBase {
           ],
         ],
       ],
-    ]);
+    ])->save();
     $text_editor = Editor::create([
       'format' => 'very_restricted',
       'editor' => 'ckeditor5',
@@ -1631,6 +1637,13 @@ class ValidatorsTest extends KernelTestBase {
           'items' => [],
         ],
         'plugins' => [],
+      ],
+      'image_upload' => ['status' => FALSE],
+      // TRICKY: specify dependencies because this does not call ::save().
+      'dependencies' => [
+        'config' => [
+          'filter.format.very_restricted',
+        ],
       ],
     ]);
 
