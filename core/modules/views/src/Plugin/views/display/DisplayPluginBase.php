@@ -260,7 +260,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         }
       }
       $pager = $this->getPlugin('pager');
-      if (isset($pager) && $pager->usesExposed()) {
+      if (($pager !== NULL) && $pager->usesExposed()) {
         $this->has_exposed = TRUE;
         return TRUE;
       }
@@ -2505,7 +2505,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
 
     // Validate style plugin.
     $style = $this->getPlugin('style');
-    if (empty($style)) {
+    if (!$style) {
       $errors[] = $this->t('Display "@display" has an invalid style plugin.', ['@display' => $this->display['display_title']]);
     }
     else {
