@@ -174,22 +174,6 @@ class ViewExecutableTest extends UnitTestCase {
   }
 
   /**
-   * @group legacy
-   */
-  public function testDeprecateProperty() {
-    \Drupal::unsetContainer();
-    $container = new ContainerBuilder();
-    $display_plugin_manager = $this->getMockBuilder('\Drupal\views\Plugin\ViewsPluginManager')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $container->set('plugin.manager.views.display', $display_plugin_manager);
-    \Drupal::setContainer($container);
-
-    $this->expectDeprecation('Calling Drupal\views\ViewExecutable::__construct without the $display_plugin_manager argument is deprecated in drupal:10.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3410349');
-    $executable = new ViewExecutable($this->view, $this->user, $this->viewsData, $this->routeProvider);
-  }
-
-  /**
    * @covers ::getUrl
    */
   public function testGetUrlWithOverriddenUrl() {
