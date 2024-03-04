@@ -108,7 +108,8 @@ class BlockContentForm extends ContentEntityForm {
     if ($block->id()) {
       $form_state->setValue('id', $block->id());
       $form_state->set('id', $block->id());
-      if ($insert && $theme = $block->getTheme()) {
+      $theme = $block->getTheme();
+      if ($insert && $theme) {
         $form_state->setRedirect(
           'block.admin_add',
           [
