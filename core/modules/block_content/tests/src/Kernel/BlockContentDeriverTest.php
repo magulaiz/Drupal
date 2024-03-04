@@ -93,18 +93,18 @@ class BlockContentDeriverTest extends KernelTestBase {
   }
 
   /**
-   * Tests derivate definitions admin labels.
+   * Tests the admin labels of derivative definitions.
    */
   public function testGetDerivativeDefinitionsAdminLabels() {
     $block_content_entities = $this->getTestBlockContentEntities();
 
-    foreach ($block_content_entities as $entity) {
+    foreach ($block_content_entities as $block_content) {
+      $entity = $block_content['entity'];
       $plugin = \Drupal::service('plugin.manager.block')->createInstance('block_content:' . $entity->uuid());
       $plugin_definition = $plugin->getPluginDefinition();
 
       // Check the plugin definition admin label.
-      $expected_label = $entity->label() ?? sprintf('%s %s', $entity->type->entity->label(), $entity->id());
-      $this->assertEquals($expected_label, $plugin_definition['admin_label']);
+      $this->assertEquals($block_content['expected_label'], $plugin_definition['admin_label']);
       $this->assertNotNull($plugin_definition['admin_label']);
 
       // Check the deprecation notice is no longer triggered.
@@ -119,7 +119,7 @@ class BlockContentDeriverTest extends KernelTestBase {
       });
 
       try {
-        $expected_suggestion = str_replace(' ', '', strtolower($expected_label));
+        $expected_suggestion = str_replace(' ', '', strtolower($block_content['expected_label']));
         $this->assertEquals($expected_suggestion, $plugin->getMachineNameSuggestion());
       }
       catch (\ErrorException $e) {
@@ -134,27 +134,32 @@ class BlockContentDeriverTest extends KernelTestBase {
   protected function getTestBlockContentEntities() {
     // Create a block content type.
     $block_content_type = BlockContentType::create([
-      'id' => 'spiffy',
-      'label' => 'Mucho spiffy',
-      'description' => "Provides a block type that increases your site's spiffiness by up to 11%",
+      'id' => 'basic',
+      'label' => 'Basic Block',
     ]);
     $block_content_type->save();
     // Create a block content entity with a label.
     $block_content_label = BlockContent::create([
-      'info' => 'Spiffy prototype',
-      'type' => 'spiffy',
+      'info' => 'Basic prototype',
+      'type' => 'basic',
     ]);
     $block_content_label->save();
     // Create a block content entity without a label.
     $block_content_no_label = BlockContent::create([
-      'type' => 'spiffy',
+      'type' => 'basic',
     ]);
     $block_content_no_label->save();
 
     // Created entities keyed by their id.
     return [
-      $block_content_label->id() => $block_content_label,
-      $block_content_no_label->id() => $block_content_no_label,
+      $block_content_label->id() => [
+        'entity' => $block_content_label,
+        'expected_label' => 'Basic prototype',
+      ],
+      $block_content_no_label->id() => [
+        'entity' => $block_content_no_label,
+        'expected_label' => 'Basic Block ' . $block_content_no_label->id(),
+      ],
     ];
   }
 
