@@ -1090,7 +1090,7 @@ PHP,
    * Tests the enabling of plugins.
    */
   public function testEnabledPlugins() {
-    $editor = Editor::load('test');
+    $editor = Editor::load('restricted');
 
     // Case 1: no extra CKEditor 5 plugins.
     $definitions = array_keys($this->manager->getEnabledDefinitions($editor));
