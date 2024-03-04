@@ -348,7 +348,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * Returns the application root directory.
    *
    * This uses the constant written in \Drupal\Locations\DrupalLocation by the
-   * drupal/core-drupal-locations Composer plugin.
+   * drupal/core-composer-scaffold Composer plugin.
    *
    * For backwards compatibility with installations that do not use Composer,
    * the fallback is to determine the app root from this file's location, which

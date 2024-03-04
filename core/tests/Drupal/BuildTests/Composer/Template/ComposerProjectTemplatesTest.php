@@ -112,7 +112,6 @@ class ComposerProjectTemplatesTest extends ComposerBuildTestBase {
       'drupal/core',
       'drupal/core-project-message',
       'drupal/core-vendor-hardening',
-      'drupal/core-drupal-locations',
     ];
     foreach ($installed['installed'] as $project) {
       // Exclude dependencies that are required with "self.version", since

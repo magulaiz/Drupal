@@ -42,7 +42,7 @@ const DRUPAL_EXTENSION_NAME_MAX_LENGTH = 50;
  * Defines the root directory of the Drupal installation.
  *
  * This uses the constant written in \Drupal\Locations\DrupalLocation by the
- * drupal/core-drupal-locations Composer plugin.
+ * drupal/core-composer-scaffold Composer plugin.
  *
  * For backwards compatibility with installations that do not use Composer,
  * the fallback is to assume the app root is two directory levels above this
