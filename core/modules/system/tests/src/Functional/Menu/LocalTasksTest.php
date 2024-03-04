@@ -355,7 +355,8 @@ class LocalTasksTest extends BrowserTestBase {
     $page = $this->getSession()->getPage();
     // Assert that the href attribute of the 'View' link contains the expected
     // alias.
-    $this->assertStringContainsString($alias, $page->findLink('View')->getAttribute('href'));
+    $link = $this->assertSession()->elementExists('xpath', '//a[text()="View"]');
+    $this->assertStringContainsString($alias, $link->getAttribute('href'));
   }
 
 }
