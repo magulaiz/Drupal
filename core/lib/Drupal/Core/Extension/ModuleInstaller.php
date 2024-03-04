@@ -219,7 +219,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
         // different from the configured list of enabled modules. For all active
         // modules not contained in the configured enabled modules, we assume a
         // weight of 0.
-        $current_module_filenames = $this->moduleHandler->getModuleList();
+        $current_module_filenames = \Drupal::service('extension.list.module')->getInstalled();
         $current_modules = array_fill_keys(array_keys($current_module_filenames), 0);
         $current_modules = module_config_sort(array_merge($current_modules, $extension_config->get('module')));
         $module_filenames = [];
@@ -505,7 +505,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       // Update the module handler to remove the module.
       // The current ModuleHandler instance is obsolete with the kernel rebuild
       // below.
-      $module_filenames = $this->moduleHandler->getModuleList();
+      $module_filenames = \Drupal::service('extension.list.module')->getInstalled();
       unset($module_filenames[$module]);
       $this->moduleHandler->setModuleList($module_filenames);
 

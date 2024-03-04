@@ -99,7 +99,8 @@ class ConfigMapperManager extends DefaultPluginManager implements ConfigMapperMa
       //   this service only happens to get instantiated with the updated list
       //   of installed themes.
       $directories = [];
-      foreach ($this->moduleHandler->getModuleList() as $name => $module) {
+      $modules = \Drupal::service('extension.list.module')->getInstalled();
+      foreach ($modules as $name => $module) {
         $directories[$name] = $module->getPath();
       }
       foreach ($this->themeHandler->listInfo() as $theme) {

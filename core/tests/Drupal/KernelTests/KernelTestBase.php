@@ -866,7 +866,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $active_storage->write('core.extension', $extension_config);
 
     // Update the kernel to make their services available.
-    $extensions = $module_handler->getModuleList();
+    $extensions = \Drupal::service('extension.list.module')->getInstalled();
     $this->container->get('kernel')->updateModules($extensions, $extensions);
 
     // Ensure isLoaded() is TRUE in order to make
@@ -899,7 +899,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   protected function disableModules(array $modules) {
     // Unset the list of modules in the extension handler.
     $module_handler = $this->container->get('module_handler');
-    $module_filenames = $module_handler->getModuleList();
+    $module_filenames = \Drupal::service('extension.list.module')->getInstalled();
     $extension_config = $this->config('core.extension');
     foreach ($modules as $module) {
       if (!$module_handler->moduleExists($module)) {

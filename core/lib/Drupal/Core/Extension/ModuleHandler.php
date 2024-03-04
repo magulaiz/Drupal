@@ -163,6 +163,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function getModuleList() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use ModuleExtensionList::getInstalled() instead. See https://www.drupal.org/node/3284195', E_USER_DEPRECATED);
     return $this->moduleList;
   }
 
@@ -707,7 +708,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    */
   public function getModuleDirectories() {
     $dirs = [];
-    foreach ($this->getModuleList() as $name => $module) {
+    foreach ($this->moduleList as $name => $module) {
       $dirs[$name] = $this->root . '/' . $module->getPath();
     }
     return $dirs;

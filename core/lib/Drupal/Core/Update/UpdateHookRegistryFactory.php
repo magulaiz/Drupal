@@ -20,7 +20,7 @@ class UpdateHookRegistryFactory implements ContainerAwareInterface {
    */
   public function create() {
     return new UpdateHookRegistry(
-      array_keys($this->container->get('module_handler')->getModuleList()),
+      array_keys($this->container->get('extension.list.module')->getInstalled()),
       $this->container->get('keyvalue')->get('system.schema')
     );
   }

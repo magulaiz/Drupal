@@ -239,7 +239,8 @@ class PermissionHandler implements PermissionHandlerInterface {
    */
   protected function getModuleNames() {
     $modules = [];
-    foreach (array_keys($this->moduleHandler->getModuleList()) as $module) {
+    $enabled_modules = array_keys($this->moduleExtensionList->getInstalled());
+    foreach ($enabled_modules as $module) {
       $modules[$module] = $this->moduleExtensionList->getName($module);
     }
     asort($modules);

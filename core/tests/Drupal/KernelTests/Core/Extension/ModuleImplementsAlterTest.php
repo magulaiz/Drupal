@@ -40,7 +40,7 @@ class ModuleImplementsAlterTest extends KernelTestBase {
     $this->assertTrue(function_exists('module_test_modules_installed'),
       'The file module_test.module was successfully included.');
 
-    $this->assertArrayHasKey('module_test', \Drupal::moduleHandler()->getModuleList());
+    $this->assertArrayHasKey('module_test', \Drupal::service('extension.list.module')->getInstalled());
 
     $this->assertTrue(\Drupal::moduleHandler()->hasImplementations('modules_installed', 'module_test'),
       'module_test implements hook_modules_installed().');

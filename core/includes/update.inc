@@ -73,7 +73,7 @@ function _update_fix_missing_schema() {
   $update_registry = \Drupal::service('update.update_hook_registry');
   $versions = $update_registry->getAllInstalledVersions();
   $module_handler = \Drupal::moduleHandler();
-  $enabled_modules = $module_handler->getModuleList();
+  $enabled_modules = \Drupal::service('extension.list.module')->getInstalled();
 
   foreach (array_keys($enabled_modules) as $module) {
     // All modules should have a recorded schema version, but when they

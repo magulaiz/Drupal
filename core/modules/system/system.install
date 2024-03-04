@@ -103,7 +103,7 @@ function system_requirements($phase) {
     $obsolete_extensions = [];
     $deprecated_modules = [];
     $experimental_modules = [];
-    $enabled_modules = \Drupal::moduleHandler()->getModuleList();
+    $enabled_modules = \Drupal::service('extension.list.module')->getInstalled();
     foreach ($enabled_modules as $module => $data) {
       $info = $module_extension_list->getExtensionInfo($module);
       if (isset($info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER])) {
@@ -922,7 +922,7 @@ function system_requirements($phase) {
     $has_pending_updates = FALSE;
     /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_hook_registry');
-    foreach (\Drupal::moduleHandler()->getModuleList() as $module => $filename) {
+    foreach (\Drupal::service('extension.list.module')->getInstalled() as $module => $filename) {
       $updates = $update_registry->getAvailableUpdates($module);
       if ($updates) {
         $default = $update_registry->getInstalledVersion($module);
@@ -1522,7 +1522,7 @@ function system_requirements($phase) {
     if (empty($module_list)) {
       $existing_updates = \Drupal::service('keyvalue')->get('post_update')->get('existing_updates', []);
       $post_update_registry = \Drupal::service('update.post_update_registry');
-      $modules = \Drupal::moduleHandler()->getModuleList();
+      $modules = \Drupal::service('extension.list.module')->getInstalled();
       foreach ($modules as $module => $extension) {
         $module_info = $module_extension_list->get($module);
         $removed_post_updates = $post_update_registry->getRemovedPostUpdates($module);

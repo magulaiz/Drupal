@@ -47,6 +47,13 @@ class ModuleExtensionList extends ExtensionList {
   protected $profileList;
 
   /**
+   * List of installed modules.
+   *
+   * @var \Drupal\Core\Extension\Extension[]
+   */
+  protected $moduleList = [];
+
+  /**
    * Constructs a new ModuleExtensionList instance.
    *
    * @param string $root
@@ -79,6 +86,7 @@ class ModuleExtensionList extends ExtensionList {
     // Use the information from the container. This is an optimization.
     foreach ($container_modules_info as $module_name => $info) {
       $this->setPathname($module_name, $info['pathname']);
+      $this->moduleList[$module_name] = new Extension($this->root, $info['type'], $info['pathname'], $info['filename']);
     }
   }
 
@@ -197,7 +205,18 @@ class ModuleExtensionList extends ExtensionList {
    * {@inheritdoc}
    */
   protected function getInstalledExtensionNames() {
-    return array_keys($this->moduleHandler->getModuleList());
+    return array_keys($this->moduleList);
+  }
+
+  /**
+   * Returns the list of currently active modules.
+   *
+   * @return \Drupal\Core\Extension\Extension[]
+   *   An associative array whose keys are the names of the modules and whose
+   *   values are Extension objects.
+   */
+  public function getInstalled(): array {
+    return $this->moduleList;
   }
 
   /**

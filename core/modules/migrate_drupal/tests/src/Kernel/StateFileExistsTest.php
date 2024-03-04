@@ -87,7 +87,7 @@ class StateFileExistsTest extends MigrateDrupalTestBase {
     // Install all available modules.
     $module_handler = $this->container->get('module_handler');
     $all_modules = $this->coreModuleListDataProvider();
-    $modules_enabled = $module_handler->getModuleList();
+    $modules_enabled = $this->container->get('extension.list.module')->getInstalled();
     $modules_to_enable = array_keys(array_diff_key($all_modules, $modules_enabled));
     $this->enableModules($modules_to_enable);
 

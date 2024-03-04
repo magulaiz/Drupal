@@ -40,7 +40,8 @@ class FilesystemLoader extends TwigFilesystemLoader {
 
     // Add namespaced paths for modules and themes.
     $namespaces = [];
-    foreach ($module_handler->getModuleList() as $name => $extension) {
+    $modules = \Drupal::service('extension.list.module')->getInstalled();
+    foreach ($modules as $name => $extension) {
       $namespaces[$name] = $extension->getPath();
     }
     foreach ($theme_handler->listInfo() as $name => $extension) {

@@ -29,7 +29,7 @@ class AdminController extends ControllerBase {
    *   A render array containing the listing.
    */
   public function index() {
-    $extensions = array_intersect_key($this->moduleExtensionList->getList(), $this->moduleHandler()->getModuleList());
+    $extensions = array_intersect_key($this->moduleExtensionList->getList(), $this->moduleExtensionList->getInstalled());
 
     uasort($extensions, [ModuleExtensionList::class, 'sortByName']);
     $menu_items = [];

@@ -118,7 +118,7 @@ abstract class StableLibraryOverrideTestBase extends KernelTestBase {
    *   name, then by asset type.
    */
   protected function getAllLibraries() {
-    $modules = \Drupal::moduleHandler()->getModuleList();
+    $modules = \Drupal::service('extension.list.module')->getInstalled();
     $module_list = array_keys($modules);
     sort($module_list);
     $this->assertEquals($this->allModules, $module_list, 'All core modules are installed.');
