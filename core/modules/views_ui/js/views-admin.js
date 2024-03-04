@@ -1194,12 +1194,17 @@
           });
         } else {
           $context.find('input.default-checkboxes').parent().hide();
-          [].forEach.call($context.find('td.any-default-radios-row'), (el) => {
-            el.parentNode.style.display = 'block';
+          const defaultRadios = $context.querySelectorAll(
+            'td.any-default-radios-row',
+          );
+          const inoutDefaultRadios = $context.querySelectorAll(
+            'input.default-radios',
+          );
+          defaultRadios.forEach(function (defaultRadio) {
+            defaultRadio.parentNode.style.display = 'block';
           });
-
-          [].forEach.call($context.find('input.default-radios'), (element) => {
-            element.parentNode.style.display = 'block';
+          inoutDefaultRadios.forEach(function (inoutDefaultRadio) {
+            inoutDefaultRadio.parentNode.style.display = 'block';
           });
         }
       }

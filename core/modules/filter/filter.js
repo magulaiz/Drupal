@@ -22,9 +22,9 @@
           '[data-drupal-format-id]',
         );
 
-        for (let i = 0; i < formatElements.length; i++) {
-          formatElements[i].style.display = 'none';
-        }
+        Array.from(formatElements).forEach((element) => {
+          element.style.display = 'none';
+        });
 
         const filteredElement = filterWrapper.querySelector(
           `[data-drupal-format-id="${value}"]`,
