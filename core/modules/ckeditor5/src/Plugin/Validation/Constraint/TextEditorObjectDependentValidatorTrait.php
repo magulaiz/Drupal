@@ -24,12 +24,14 @@ trait TextEditorObjectDependentValidatorTrait {
    */
   private function createTextEditorObjectFromContext(): EditorInterface {
     if ($this->context->getRoot()->getDataDefinition()->getDataType() === 'ckeditor5_valid_pair__format_and_editor') {
+      $editor_plugin_id = 'ckeditor5';
       $text_format = FilterFormat::create([
         'filters' => $this->context->getRoot()->get('filters')->toArray(),
       ]);
     }
     else {
       assert(in_array($this->context->getRoot()->getDataDefinition()->getDataType(), ['editor.editor.*', 'entity:editor'], TRUE));
+      $editor_plugin_id = $this->context->getRoot()->get('editor')->getValue();
       $text_format = FilterFormat::load($this->context->getRoot()->get('format')->getValue());
       // This validator must not complain about a missing text format.
       // @see \Drupal\Tests\editor\Kernel\EditorValidationTest::testInvalidFormat()
@@ -40,7 +42,7 @@ trait TextEditorObjectDependentValidatorTrait {
     assert($text_format instanceof FilterFormatInterface);
 
     $text_editor = Editor::create([
-      'editor' => 'ckeditor5',
+      'editor' => $editor_plugin_id,
       'settings' => $this->context->getRoot()->get('settings')->toArray(),
       'image_upload' => $this->context->getRoot()->get('image_upload')->toArray(),
       // Specify `filterFormat` to ensure that the generated Editor config
