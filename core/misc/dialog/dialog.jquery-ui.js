@@ -97,9 +97,9 @@
         if ( event.keyCode !== $.ui.keyCode.TAB || event.isDefaultPrevented() ) {
           return;
         }
-        var tabbables = tabbable.tabbable(this.uiDialog),
-          first = tabbables.first(),
-          last = tabbables.last();
+        var tabbableElements = tabbable.tabbable(this.uiDialog),
+          first = tabbableElements.first(),
+          last = tabbableElements.last();
 
         if ( ( event.target === last[ 0 ] || event.target === this.uiDialog[ 0 ] ) &&
             !event.shiftKey ) {
