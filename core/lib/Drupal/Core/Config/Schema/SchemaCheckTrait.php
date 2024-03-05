@@ -63,6 +63,10 @@ trait SchemaCheckTrait {
         "Theme 'olivero' is not installed.",
         // @see core/profiles/demo_umami/config/install/system.theme.yml
         "Theme 'umami' is not installed.",
+        // @see \Drupal\Tests\system\Functional\Theme\MaintenanceThemeUpdateRegistryTest::prepareEnvironment()
+        "Theme 'test_theme_updates' is not installed.",
+        // @see \Drupal\Tests\config\Functional\ConfigImportInstallProfileTest::testInstallProfileValidation()
+        "Theme 'test_theme_theme' is not installed.",
       ],
       'admin' => [
         // @see core/profiles/standard/config/install/system.theme.yml
