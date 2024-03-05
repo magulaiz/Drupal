@@ -620,6 +620,21 @@ function locale_config_batch_update_default_config_langcodes(&$context) {
 /**
  * Implements callback_batch_operation().
  *
+ * Updates default configuration when new modules or themes are installed.
+ *
+ * @param array|\ArrayAccess $context
+ *   The batch context.
+ *
+ * @deprecated in drupal:10.2.3 and is removed from drupal:11.0.0.
+ */
+function locale_config_batch_set_config_langcodes(&$context) {
+  @trigger_error( __METHOD__ . '() is deprecated in drupal:10.2.3 and is removed from drupal:11.0.0. Use locale_config_batch_update_default_config_langcodes() instead.', E_USER_DEPRECATED);
+  locale_config_batch_update_default_config_langcodes(&$context);
+}
+
+/**
+ * Implements callback_batch_operation().
+ *
  * Performs configuration translation refresh.
  *
  * @param array $names
@@ -642,6 +657,26 @@ function locale_config_batch_update_config_translations(array $names, array $lan
   }
   $context['results']['langcodes'] = $langcodes;
   $context['finished'] = 1;
+}
+
+/**
+ * Implements callback_batch_operation().
+ *
+ * Performs configuration translation refresh.
+ *
+ * @param array $names
+ *   An array of names of configuration objects to update.
+ * @param array $langcodes
+ *   (optional) Array of language codes to update. Defaults to all languages.
+ * @param array|\ArrayAccess $context
+ *   Contains a list of files imported.
+ *
+ * @deprecated in drupal:10.2.3 and is removed from drupal:11.0.0.
+ * @see locale_config_batch_build()
+ */
+function locale_config_batch_refresh_name(array $names, array $langcodes, &$context) {
+  @trigger_error( __METHOD__ . '() is deprecated in drupal:10.2.3 and is removed from drupal:11.0.0. Use locale_config_batch_update_config_translations() instead.', E_USER_DEPRECATED);
+  locale_config_batch_update_config_translations($names, $langcodes, $context);
 }
 
 /**
