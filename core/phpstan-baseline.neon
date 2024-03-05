@@ -2477,57 +2477,6 @@ parameters:
 			path: tests/Drupal/BuildTests/Framework/Tests/BuildTestTest.php
 
 		-
-			message: "#^Call to an undefined static method PHPUnit\\\\Util\\\\Test\\:\\:parseTestMethodAnnotations\\(\\)\\.$#"
-			count: 8
-			path: tests/Drupal/BuildTests/Framework/Tests/ExternalCommandRequirementTest.php
-
-		-
-			message: "#^Caught class PHPUnit\\\\Framework\\\\SkippedTestError not found\\.$#"
-			count: 6
-			path: tests/Drupal/BuildTests/Framework/Tests/ExternalCommandRequirementTest.php
-
-		-
-			message: "#^Instantiated class PHPUnit\\\\Framework\\\\SkippedTestError not found\\.$#"
-			count: 4
-			path: tests/Drupal/BuildTests/Framework/Tests/ExternalCommandRequirementTest.php
-
-		-
-			message: """
-				#^Usage of deprecated trait Drupal\\\\BuildTests\\\\Framework\\\\ExternalCommandRequirementsTrait in class Drupal\\\\BuildTests\\\\Framework\\\\Tests\\\\ClassRequiresAvailable\\:
-				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				Drupal\\\\\\\\TestTools\\\\\\\\Extension\\\\\\\\RequiresComposerTrait instead\\.$#
-			"""
-			count: 1
-			path: tests/Drupal/BuildTests/Framework/Tests/ExternalCommandRequirementTest.php
-
-		-
-			message: """
-				#^Usage of deprecated trait Drupal\\\\BuildTests\\\\Framework\\\\ExternalCommandRequirementsTrait in class Drupal\\\\BuildTests\\\\Framework\\\\Tests\\\\ClassRequiresUnavailable\\:
-				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				Drupal\\\\\\\\TestTools\\\\\\\\Extension\\\\\\\\RequiresComposerTrait instead\\.$#
-			"""
-			count: 1
-			path: tests/Drupal/BuildTests/Framework/Tests/ExternalCommandRequirementTest.php
-
-		-
-			message: """
-				#^Usage of deprecated trait Drupal\\\\BuildTests\\\\Framework\\\\ExternalCommandRequirementsTrait in class Drupal\\\\BuildTests\\\\Framework\\\\Tests\\\\MethodRequires\\:
-				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				Drupal\\\\\\\\TestTools\\\\\\\\Extension\\\\\\\\RequiresComposerTrait instead\\.$#
-			"""
-			count: 1
-			path: tests/Drupal/BuildTests/Framework/Tests/ExternalCommandRequirementTest.php
-
-		-
-			message: """
-				#^Usage of deprecated trait Drupal\\\\BuildTests\\\\Framework\\\\ExternalCommandRequirementsTrait in class Drupal\\\\BuildTests\\\\Framework\\\\Tests\\\\UsesCommandRequirements\\:
-				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				Drupal\\\\\\\\TestTools\\\\\\\\Extension\\\\\\\\RequiresComposerTrait instead\\.$#
-			"""
-			count: 1
-			path: tests/Drupal/BuildTests/Framework/Tests/ExternalCommandRequirementTest.php
-
-		-
 			message: "#^Access to constant STATUS_ERROR on an unknown class PHPUnit\\\\Runner\\\\BaseTestRunner\\.$#"
 			count: 1
 			path: tests/Drupal/FunctionalJavascriptTests/WebDriverTestBase.php
