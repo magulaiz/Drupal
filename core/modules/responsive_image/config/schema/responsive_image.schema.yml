@@ -83,3 +83,6 @@ field.widget.settings.responsive_image_image:
     preview_responsive_image_style:
       type: string
       label: 'Preview responsive image style'
+      constraints:
+        ConfigExists:
+          prefix: 'responsive_image.styles.'
