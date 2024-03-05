@@ -597,6 +597,7 @@ function locale_config_batch_build(array $names, array $langcodes, array $option
     // together to improve the overall performance of the process.
     $batch_builder->addOperation('locale_config_batch_update_config_translations', [$batch_names, $langcodes]);
   }
+
   if (!empty($options['finish_feedback'])) {
     $batch_builder->setFinishCallback('locale_config_batch_finished');
   }
