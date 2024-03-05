@@ -16,13 +16,12 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class ViewsArgumentValidator extends Plugin {
+
   /**
    * Constructs a ViewsArgumentValidator attribute.
    *
    * @param string $id
    *   The plugin ID.
-   * @param string|null $deriver
-   *   (optional) The deriver class.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $title
    *   The plugin title used in the views UI.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $short_title
@@ -30,16 +29,17 @@ class ViewsArgumentValidator extends Plugin {
    * @param string $entity_type
    *   (optional) Entity type.
    * @param bool $no_ui
-   *   Whether the plugin should be not selectable in the UI.
-   *   If set to TRUE, you can still use it via the API in config files.
+   *   Whether the plugin is selectable in the UI.
+   * @param class-string|null $deriver
+   *   (optional) The deriver class.
    */
   public function __construct(
     public readonly string $id,
-    public readonly ?string $deriver = NULL,
     public readonly ?TranslatableMarkup $title = NULL,
     public readonly ?TranslatableMarkup $short_title = NULL,
-    public readonly ?string $entity_type,
-    public readonly ?bool $no_ui = NULL,
+    public readonly ?string $entity_type = NULL,
+    public readonly bool $no_ui = FALSE,
+    public readonly ?string $deriver = NULL
   ) {}
 
 }

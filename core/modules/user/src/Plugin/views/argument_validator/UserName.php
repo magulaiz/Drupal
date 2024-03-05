@@ -12,7 +12,7 @@ use Drupal\views\Attribute\ViewsArgumentValidator;
 #[ViewsArgumentValidator(
   id: 'user_name',
   title: new TranslatableMarkup('User name'),
-  entity_type: 'user',
+  entity_type: 'user'
 )]
 class UserName extends User {
 

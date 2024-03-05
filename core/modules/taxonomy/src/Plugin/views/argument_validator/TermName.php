@@ -15,7 +15,7 @@ use Drupal\views\Plugin\views\argument_validator\Entity;
 #[ViewsArgumentValidator(
   id: 'taxonomy_term_name',
   title: new TranslatableMarkup('Taxonomy term name'),
-  entity_type: 'taxonomy_term',
+  entity_type: 'taxonomy_term'
 )]
 class TermName extends Entity {
 

@@ -11,7 +11,7 @@ use Drupal\views\Attribute\ViewsArgumentValidator;
  */
 #[ViewsArgumentValidator(
   id: 'argument_validator_test',
-  title: new TranslatableMarkup('Argument validator test'),
+  title: new TranslatableMarkup('Argument validator test')
 )]
 class ArgumentValidatorTest extends ArgumentValidatorPluginBase {
 

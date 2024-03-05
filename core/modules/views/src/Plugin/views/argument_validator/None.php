@@ -12,7 +12,7 @@ use Drupal\views\Attribute\ViewsArgumentValidator;
  */
 #[ViewsArgumentValidator(
   id: 'none',
-  title: new TranslatableMarkup(' - Basic validation - '),
+  title: new TranslatableMarkup('- Basic validation -')
 )]
 class None extends ArgumentValidatorPluginBase {
 

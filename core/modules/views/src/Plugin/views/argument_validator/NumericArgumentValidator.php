@@ -13,7 +13,7 @@ use Drupal\views\Attribute\ViewsArgumentValidator;
  */
 #[ViewsArgumentValidator(
   id: 'numeric',
-  title: new TranslatableMarkup('Numeric'),
+  title: new TranslatableMarkup('Numeric')
 )]
 class NumericArgumentValidator extends ArgumentValidatorPluginBase {
 
