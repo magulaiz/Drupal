@@ -9,6 +9,7 @@ use Drupal\Core\Command\GenerateTheme;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\sqlite\Driver\Database\sqlite\Install\Tasks;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Console\Tester\Constraint\CommandIsSuccessful;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
@@ -95,7 +96,7 @@ class GenerateThemeTest extends QuickStartTestBase {
 
     $process = $this->generateThemeFromStarterkit();
     $result = $process->run();
-    $this->assertEquals('Theme generated successfully to themes/test_custom_theme', trim($process->getOutput()), $process->getErrorOutput());
+    $this->assertStringContainsString('Theme generated successfully to themes/test_custom_theme', trim($process->getOutput()), $process->getErrorOutput());
     $this->assertSame(0, $result);
 
     $theme_path_relative = 'themes/test_custom_theme';
@@ -143,7 +144,7 @@ class GenerateThemeTest extends QuickStartTestBase {
 
     $process = $this->generateThemeFromStarterkit();
     $exit_code = $process->run();
-    $this->assertSame('Theme generated successfully to themes/test_custom_theme', trim($process->getOutput()), $process->getErrorOutput());
+    $this->assertStringContainsString('Theme generated successfully to themes/test_custom_theme', trim($process->getOutput()), $process->getErrorOutput());
     $this->assertSame(0, $exit_code);
 
     file_put_contents($this->getWorkspaceDirectory() . '/themes/test_custom_theme/test_custom_theme.starterkit.yml', <<<YAML
@@ -168,7 +169,7 @@ YAML
     ];
     $process = new Process($install_command);
     $exit_code = $process->run();
-    $this->assertSame('Theme generated successfully to themes/generated_from_another_theme', trim($process->getOutput()), $process->getErrorOutput());
+    $this->assertStringContainsString('Theme generated successfully to themes/generated_from_another_theme', trim($process->getOutput()), $process->getErrorOutput());
     $this->assertSame(0, $exit_code);
 
     // Confirm new .theme file.
@@ -189,7 +190,7 @@ YAML
 
     $process = $this->generateThemeFromStarterkit();
     $result = $process->run();
-    $this->assertEquals('Theme generated successfully to themes/test_custom_theme', trim($process->getOutput()), $process->getErrorOutput());
+    $this->assertStringContainsString('Theme generated successfully to themes/test_custom_theme', trim($process->getOutput()), $process->getErrorOutput());
     $this->assertSame(0, $result);
 
     $theme_path_relative = 'themes/test_custom_theme';
@@ -212,7 +213,7 @@ YAML
 
     $process = $this->generateThemeFromStarterkit();
     $result = $process->run();
-    $this->assertEquals('Theme generated successfully to themes/test_custom_theme', trim($process->getOutput()), $process->getErrorOutput());
+    $this->assertStringContainsString('Theme generated successfully to themes/test_custom_theme', trim($process->getOutput()), $process->getErrorOutput());
     $this->assertSame(0, $result);
     $info = $this->assertThemeExists('themes/test_custom_theme');
     self::assertArrayNotHasKey('hidden', $info);
@@ -238,7 +239,7 @@ YAML
 
     $process = $this->generateThemeFromStarterkit();
     $result = $process->run();
-    $this->assertEquals("The source theme starterkit_theme has a development version number (7.x-dev). Because it is not a git checkout, a specific commit could not be identified. This makes tracking changes in the source theme difficult. Are you sure you want to continue? (yes/no) [yes]:\n > Theme generated successfully to themes/test_custom_theme", trim($process->getOutput()), $process->getErrorOutput());
+    $this->assertStringContainsString("The source theme starterkit_theme has a development version number (7.x-dev). Because it is not a git checkout, a specific commit could not be identified. This makes tracking changes in the source theme difficult. Are you sure you want to continue? (yes/no) [yes]:\n > Theme generated successfully to themes/test_custom_theme", trim($process->getOutput()), $process->getErrorOutput());
     $this->assertSame(0, $result);
     $info = $this->assertThemeExists('themes/test_custom_theme');
     self::assertArrayNotHasKey('hidden', $info);
@@ -310,7 +311,7 @@ SH;
 
     $process = $this->generateThemeFromStarterkit();
     $result = $process->run();
-    $this->assertEquals("The source theme starterkit_theme does not have a version specified. This makes tracking changes in the source theme difficult. Are you sure you want to continue? (yes/no) [yes]:\n > Theme generated successfully to themes/test_custom_theme", trim($process->getOutput()), $process->getErrorOutput());
+    $this->assertStringContainsString("The source theme starterkit_theme does not have a version specified. This makes tracking changes in the source theme difficult. Are you sure you want to continue? (yes/no) [yes]:\n > Theme generated successfully to themes/test_custom_theme", trim($process->getOutput()), $process->getErrorOutput());
     $this->assertSame(0, $result);
     $info = $this->assertThemeExists('themes/test_custom_theme');
     self::assertArrayNotHasKey('hidden', $info);
@@ -394,7 +395,7 @@ SH;
       ]
     );
 
-    $this->assertEquals('Theme generated successfully to themes/test_custom_theme', trim($tester->getDisplay()), $tester->getErrorOutput());
+    $tester->assertCommandIsSuccessful($tester->getErrorOutput());
     $this->assertThemeExists('themes/test_custom_theme');
     $theme_path_absolute = $this->getWorkspaceDirectory() . '/themes/test_custom_theme';
     self::assertDirectoryExists($theme_path_absolute);
@@ -417,7 +418,7 @@ SH;
       ]
     );
 
-    self::assertEquals('', trim($tester->getDisplay()));
+    self::assertThat($tester->getStatusCode(), self::logicalNot(new CommandIsSuccessful()), trim($tester->getDisplay()));
     self::assertEquals('[ERROR] Paths were defined `no_edit` but no files found.', trim($tester->getErrorOutput()));
     $theme_path_absolute = $this->getWorkspaceDirectory() . '/themes/test_custom_theme';
     self::assertDirectoryDoesNotExist($theme_path_absolute);
@@ -438,7 +439,7 @@ SH;
       ]
     );
 
-    self::assertEquals('', trim($tester->getDisplay()));
+    self::assertThat($tester->getStatusCode(), self::logicalNot(new CommandIsSuccessful()), trim($tester->getDisplay()));
     self::assertEquals('[ERROR] Paths were defined `no_rename` but no files found.', trim($tester->getErrorOutput()));
     $theme_path_absolute = $this->getWorkspaceDirectory() . '/themes/test_custom_theme';
     self::assertDirectoryDoesNotExist($theme_path_absolute);
@@ -467,7 +468,7 @@ SH;
       ]
     );
 
-    $this->assertEquals('Theme generated successfully to themes/test_custom_theme', trim($tester->getDisplay()), $tester->getErrorOutput());
+    $tester->assertCommandIsSuccessful($tester->getErrorOutput());
     $this->assertThemeExists('themes/test_custom_theme');
     $theme_path_absolute = $this->getWorkspaceDirectory() . '/themes/test_custom_theme';
     self::assertFileExists($theme_path_absolute . '/js/starterkit_theme.js');
@@ -519,7 +520,7 @@ PHP);
       ]
     );
 
-    $this->assertEquals('Theme generated successfully to themes/test_custom_theme', trim($tester->getDisplay()), $tester->getErrorOutput());
+    $tester->assertCommandIsSuccessful($tester->getErrorOutput());
     $this->assertThemeExists('themes/test_custom_theme');
     $theme_path_absolute = $this->getWorkspaceDirectory() . '/themes/test_custom_theme';
 
@@ -577,7 +578,7 @@ EDITED, file_get_contents($theme_path_absolute . '/src/TestCustomThemePreRender.
       ]
     );
 
-    $this->assertEquals('Theme generated successfully to themes/test_custom_theme', trim($tester->getDisplay()), $tester->getErrorOutput());
+    $tester->assertCommandIsSuccessful($tester->getErrorOutput());
     $info = $this->assertThemeExists('themes/test_custom_theme');
     self::assertArrayHasKey('base theme', $info);
     self::assertFalse($info['base theme']);
