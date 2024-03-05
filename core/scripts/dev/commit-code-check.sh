@@ -218,14 +218,19 @@ fi
 # Check all files for spelling in one go for better performance.
 if [[ $CSPELL_DICTIONARY_FILE_CHANGED == "1" ]] ; then
   printf "\nRebuilding the dictionary.\n"
-  yarn run -s spellcheck:core --no-must-find-files --no-progress
-  CHANGED=$($GIT ls-files --other --modified --exclude-standard --exclude=vendor misc/cspell/dictionary.txt)
-  if [[ "$CHANGED" == "" ]]; then
-    printf "\nRunning spellcheck on *all* files.\n"
-    yarn run -s spellcheck:core --no-must-find-files --no-progress
-  else
+  rm -f misc/cspell/dictionary.txt && touch misc/cspell/dictionary.txt && yarn -s spellcheck:core --no-progress --unique --words-only | perl -Mopen=locale -pe '$_=lc$_' | LC_ALL=en_US.UTF-8 tr -d \\\\\\\\ | LC_ALL=C sort -u -o misc/cspell/dictionary.txt
+  CHANGED_DICT=$($GIT diff --name-only)
+  if [[ "$CHANGED_DICT" != "" ]]; then
     printf "\nThe dictionary changed.\n"
     false
+  else
+    printf "\nRebuilding the Drupal dictionary.\n"
+    rm -f misc/cspell/drupal-dictionary.txt && touch misc/cspell/drupal-dictionary.txt && yarn -s spellcheck:core --no-progress --unique --words-only | perl -Mopen=locale -pe '$_=lc$_' | LC_ALL=en_US.UTF-8 tr -d \\\\\\\\ | LC_ALL=C sort -u -o misc/cspell/drupal-dictionary.txt
+    CHANGED_DRUPAL_DICT=$($GIT diff --name-only)
+    if [[ "$CHANGED_DRUPAL_DICT" != "" ]]; then
+      printf "\nThe Drupal dictionary changed.\n"
+      false
+    fi
   fi
 else
   # Check all files for spelling in one go for better performance. We pipe the
