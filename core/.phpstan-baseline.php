@@ -209,6 +209,11 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Database/Query/Upsert.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Class Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface not found\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/DependencyInjection/ClassResolver.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Usage of deprecated trait Drupal\\\\Component\\\\DependencyInjection\\\\ServiceIdHashTrait in class Drupal\\\\Core\\\\DependencyInjection\\\\ContainerBuilder\\:
 in drupal\\:9\\.5\\.1 and is removed from drupal\\:11\\.0\\.0\\. Use the
   \'Drupal\\\\Component\\\\DependencyInjection\\\\ReverseContainer\' service instead\\.$#',
@@ -339,6 +344,11 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$initial_storage_value in empty\\(\\) always exists and is not falsy\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\EventSubscriber\\\\KernelDestructionSubscriber\\:\\:\\$container\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/lib/Drupal/Core/EventSubscriber/KernelDestructionSubscriber.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getFromDriverName\\(\\) of class Drupal\\\\Core\\\\Extension\\\\DatabaseDriverList\\:
@@ -473,14 +483,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Lock/NullLockBackend.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Class Drupal\\\\Core\\\\Logger\\\\LoggerChannelFactory implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
-since Symfony 6\\.4, use dependency injection instead$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Logger/LoggerChannelFactory.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Usage of deprecated trait Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareTrait in class Drupal\\\\Core\\\\Logger\\\\LoggerChannelFactory\\:
-since Symfony 6\\.4, use dependency injection instead$#',
+	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Logger\\\\LoggerChannelFactory\\:\\:\\$container\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Logger/LoggerChannelFactory.php',
 ];
@@ -520,14 +523,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Queue/Memory.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Class Drupal\\\\Core\\\\Queue\\\\QueueFactory implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
-since Symfony 6\\.4, use dependency injection instead$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Queue/QueueFactory.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Usage of deprecated trait Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareTrait in class Drupal\\\\Core\\\\Queue\\\\QueueFactory\\:
-since Symfony 6\\.4, use dependency injection instead$#',
+	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Queue\\\\QueueFactory\\:\\:\\$container\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Queue/QueueFactory.php',
 ];
@@ -617,9 +613,19 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/TypedData/Validation/RecursiveContextualValidator.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Update\\\\UpdateHookRegistryFactory\\:\\:\\$container\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/lib/Drupal/Core/Update/UpdateHookRegistryFactory.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Update\\\\UpdateKernel\\:\\:discoverServiceProviders\\(\\) should return array but return statement is missing\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Update/UpdateKernel.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Update\\\\UpdateRegistryFactory\\:\\:\\$container\\.$#',
+	'count' => 5,
+	'path' => __DIR__ . '/lib/Drupal/Core/Update/UpdateRegistryFactory.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Updater\\\\Module\\:\\:postUpdateTasks\\(\\) should return array but return statement is missing\\.$#',
@@ -2282,22 +2288,10 @@ https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#',
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Config/ConfigTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Class Drupal\\\\Tests\\\\Core\\\\Controller\\\\MockContainerAware implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
-since Symfony 6\\.4, use dependency injection instead$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Controller/ControllerResolverTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to deprecated method expectError\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
 https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Database/ConditionTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Drupal\\\\Tests\\\\Core\\\\DependencyInjection\\\\DependencySerializationTestDummy implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
-since Symfony 6\\.4, use dependency injection instead$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/DependencyInjection/DependencySerializationTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Trying to mock an undefined method getRevisionId\\(\\) on class Drupal\\\\Tests\\\\Core\\\\Entity\\\\UrlTestEntity\\.$#',
@@ -2390,12 +2384,6 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Drupal\\\\Tests\\\\Core\\\\Utility\\\\MockContainerAware implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
-since Symfony 6\\.4, use dependency injection instead$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Utility/CallableResolverTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getConfig\\(\\) of class GuzzleHttp\\\\ClientInterface\\:
