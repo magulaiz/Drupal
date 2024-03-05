@@ -321,7 +321,6 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
 
   $driver = Database::getConnection()->driver();
 
-
   $field_name = $field_storage->getName();
   $field_columns = $field_storage->getColumns();
 
@@ -335,7 +334,7 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
     return $data;
   }
   if ($driver == 'mongodb') {
-    $entity_storage = \Drupal::entityManager()->getStorage($entity_type_id);
+    $entity_storage = \Drupal::entityTypeManager()->getStorage($entity_type_id);
   }
   else {
     $entity_tables = [$base_table => $entity_type_id];
