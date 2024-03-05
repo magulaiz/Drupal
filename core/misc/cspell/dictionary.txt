@@ -1,7 +1,4 @@
-abcdefghijkmnopqrstuvwxyz
-abcdefghjklmnpqrstuvwxyz
 absolutezero
-accesslog
 adamson
 addedline
 addtogroup
@@ -103,8 +100,6 @@ buttonset
 buttontext
 buytaert
 bytea
-cachebackend
-cachebackends
 cachetag
 cachetags
 cafr
@@ -171,7 +166,6 @@ csslintrc
 csstools
 curle
 curlopt
-customevent
 customrequest
 cweagans
 dailymotion
@@ -322,7 +316,6 @@ hateoas
 hexcode
 hilited
 hinode
-hippopotamidae
 hmac
 hoglet
 hookname
@@ -354,7 +347,6 @@ invalididentifier
 invokable
 isam
 isinstallable
-itoa
 itok
 ized
 javascripts
@@ -484,7 +476,6 @@ nntp
 noadd
 nocache
 nocase
-nodelist
 nodir
 nofields
 nojs
@@ -543,11 +534,9 @@ phpcbf
 phpcodesniffer
 phpcs
 phpdocumentor
-phpfile
 phpserialize
 phpspec
 pickable
-picturefill
 pingback
 pjpeg
 placeholdered
@@ -580,8 +569,6 @@ prerender
 prerendered
 presave
 presentationml
-presetid
-presetname
 pretransaction
 preuninstall
 processlist
@@ -664,7 +651,6 @@ schipulcon
 scorewords
 scriptable
 scrollbars
-sebastianbergmann
 seld
 selectbox
 sess
@@ -811,7 +797,6 @@ titlebar
 tlds
 tmpfs
 toggleable
-togglewrap
 tongatapu
 toolkits
 toolongdomainexampledomainexampledomainexampledomainexampledomain
@@ -824,7 +809,6 @@ transferthick
 translatables
 trayblock
 trgm
-trid
 troopal
 truecolor
 twistie
