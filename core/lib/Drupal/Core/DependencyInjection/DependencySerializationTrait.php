@@ -73,7 +73,7 @@ trait DependencySerializationTrait {
   #[\ReturnTypeWillChange]
   public function __wakeup() {
     // Avoid trying to wakeup if there's nothing to do.
-    if (empty($this->_serviceIds) && empty($this->_entityStorage)) {
+    if (empty($this->_serviceIds) && empty($this->_entityStorages)) {
       return;
     }
     $container = \Drupal::getContainer();
