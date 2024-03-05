@@ -1290,6 +1290,16 @@ parameters:
 			path: modules/media/src/OEmbed/UrlResolver.php
 
 		-
+			message: "#^@dataProvider providerTestValidations related method must be static in PHPUnit 10 and newer\\.$#"
+			count: 1
+			path: modules/media/tests/src/FunctionalJavascript/MediaEmbedFilterConfigurationUiAddTest.php
+
+		-
+			message: "#^@dataProvider providerTestValidations related method must be static in PHPUnit 10 and newer\\.$#"
+			count: 1
+			path: modules/media/tests/src/FunctionalJavascript/MediaEmbedFilterConfigurationUiEditTest.php
+
+		-
 			message: "#^Variable \\$jpg_image might not be defined\\.$#"
 			count: 1
 			path: modules/media_library/tests/src/FunctionalJavascript/EmbeddedFormWidgetTest.php
@@ -2896,10 +2906,12 @@ parameters:
 			path: tests/Drupal/Tests/Core/Controller/ControllerResolverTest.php
 
 		-
-			message: """
-				#^Call to deprecated method expectError\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-				https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#
-			"""
+			message: "#^@dataProvider providerTestStaticTitleWithParameter related method must be static in PHPUnit 10 and newer\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Core/Controller/TitleResolverTest.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Database\\\\ConditionTest\\:\\:expectError\\(\\)\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Database/ConditionTest.php
 
@@ -3249,6 +3261,14 @@ parameters:
 			"""
 			count: 1
 			path: tests/Drupal/Tests/Core/Utility/CallableResolverTest.php
+
+		-
+			message: """
+				#^Call to deprecated method returnArgument\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
+				Use \\<code\\>\\$double\\-\\>willReturnArgument\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>returnArgument\\(\\)\\)\\</code\\>$#
+			"""
+			count: 1
+			path: tests/Drupal/Tests/Core/Utility/LinkGeneratorTest.php
 
 		-
 			message: """
