@@ -2,8 +2,10 @@
 
 namespace Drupal\datetime_range\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\Attribute\FieldFormatter;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\datetime\Plugin\Field\FieldFormatter\DateTimeCustomFormatter;
 use Drupal\datetime_range\DateTimeRangeTrait;
 
@@ -12,15 +14,14 @@ use Drupal\datetime_range\DateTimeRangeTrait;
  *
  * This formatter renders the data range as plain text, with a fully
  * configurable date format using the PHP date syntax and separator.
- *
- * @FieldFormatter(
- *   id = "daterange_custom",
- *   label = @Translation("Custom"),
- *   field_types = {
- *     "daterange"
- *   }
- * )
  */
+#[FieldFormatter(
+  id: 'daterange_custom',
+  label: new TranslatableMarkup('Custom'),
+  field_types: [
+    'daterange',
+  ],
+)]
 class DateRangeCustomFormatter extends DateTimeCustomFormatter {
 
   use DateTimeRangeTrait;
@@ -29,7 +30,9 @@ class DateRangeCustomFormatter extends DateTimeCustomFormatter {
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return static::dateTimeRangeDefaultSettings() + parent::defaultSettings();
+    return [
+      'separator' => '-',
+    ] + parent::defaultSettings();
   }
 
   /**
@@ -50,7 +53,11 @@ class DateRangeCustomFormatter extends DateTimeCustomFormatter {
         $end_date = $item->end_date;
 
         if ($start_date->getTimestamp() !== $end_date->getTimestamp()) {
-          $elements[$delta] = $this->renderStartEnd($start_date, $separator, $end_date);
+          $elements[$delta] = [
+            'start_date' => $this->buildDate($start_date),
+            'separator' => ['#plain_text' => ' ' . $separator . ' '],
+            'end_date' => $this->buildDate($end_date),
+          ];
         }
         else {
           $elements[$delta] = $this->buildDate($start_date);
@@ -66,7 +73,14 @@ class DateRangeCustomFormatter extends DateTimeCustomFormatter {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $form = parent::settingsForm($form, $form_state);
-    $form = $this->dateTimeRangeSettingsForm($form);
+
+    $form['separator'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Date separator'),
+      '#description' => $this->t('The string to separate the start and end dates'),
+      '#default_value' => $this->getSetting('separator'),
+    ];
+
     return $form;
   }
 
@@ -74,7 +88,13 @@ class DateRangeCustomFormatter extends DateTimeCustomFormatter {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    return array_merge(parent::settingsSummary(), $this->dateTimeRangeSettingsSummary());
+    $summary = parent::settingsSummary();
+
+    if ($separator = $this->getSetting('separator')) {
+      $summary[] = $this->t('Separator: %separator', ['%separator' => $separator]);
+    }
+
+    return $summary;
   }
 
 }
