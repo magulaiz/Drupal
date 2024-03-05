@@ -260,6 +260,7 @@
      *   Data attached to the event.
      */
     bodyPadding(event) {
+      if (!Drupal.offCanvas.$mainCanvasWrapper.length) return;
       const position = event.data.settings.drupalOffCanvasPosition;
       if (
         position === 'side' &&
@@ -320,6 +321,7 @@
      * Resets main canvas wrapper and toolbar padding / margin.
      */
     resetPadding() {
+      if (!Drupal.offCanvas.$mainCanvasWrapper.length) return;
       Drupal.offCanvas.$mainCanvasWrapper[0].style[
         `padding-${Drupal.offCanvas.getEdge()}`
       ] = 0;
