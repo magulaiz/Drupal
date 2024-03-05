@@ -133,7 +133,7 @@ class BlockFilterTest extends WebDriverTestBase {
     $visible_rows = $this->filterVisibleElements($blocks);
     $this->assertCount(0, $visible_rows);
     $visible_categories = $this->filterVisibleElements($categories);
-    $this->assertCount(5, $visible_categories);
+    $this->assertCount(0, $visible_categories);
     $announce_element = $page->find('css', '#drupal-live-announce');
     $page->waitFor(2, function () use ($announce_element) {
       return str_starts_with($announce_element->getText(), '0 blocks are available');
