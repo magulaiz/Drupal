@@ -60,7 +60,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
     // Enable saving the logs and set the post migration admin user name.
     $this->outputLogs = TRUE;
     $this->migratedAdminUserName = 'admin';
-    $this->expectedLoggedErrors = 27;
+    $this->expectedLoggedErrors = 29;
   }
 
   /**
