@@ -268,7 +268,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
           'role' => 'switch',
           'aria-checked' => FALSE,
           'aria-label' => $this->t("make blocks on @region filtered visible", ['@region' => $title]),
-        ]
+        ],
       ];
 
       $form['region-' . $region]['title'] = [
