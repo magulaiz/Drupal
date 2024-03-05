@@ -14,6 +14,10 @@ class OpenModalDialogWithUrl implements CommandInterface {
   /**
    * Constructs a OpenModalDialogWithUrl object.
    *
+   * OpenDialogCommand is a similar class which opens modals but works
+   * differently as it needs all data to be passed through dialogOptions while
+   * OpenModalDialogWithUrl fetches the data from routing info of the URL.
+   *
    * @param string $url
    *   Only Internal URLs or URLs with the same domain and base path are
    *   allowed.
@@ -21,10 +25,6 @@ class OpenModalDialogWithUrl implements CommandInterface {
    *   The dialog settings.
    *
    * @see \Drupal\Core\Ajax\OpenDialogCommand
-   *
-   *   OpenDialogCommand is a similar class which opens modals but works
-   *   differently as it needs all data to be passed through dialogOptions while
-   *   OpenModalDialogWithUrl fetches the data from routing info of the URL.
    */
   public function __construct(
     protected string $url,
