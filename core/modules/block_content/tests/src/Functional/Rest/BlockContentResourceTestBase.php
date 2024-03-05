@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\block_content\Functional\Rest;
 
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Core\Cache\Cache;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+use Drupal\user\Entity\User;
 
 /**
  * ResourceTestBase for BlockContent entity.
@@ -90,6 +93,7 @@ abstract class BlockContentResourceTestBase extends EntityResourceTestBase {
    * {@inheritdoc}
    */
   protected function getExpectedNormalizedEntity() {
+    $author = User::load($this->entity->getOwnerId());
     return [
       'id' => [
         [
@@ -167,6 +171,14 @@ abstract class BlockContentResourceTestBase extends EntityResourceTestBase {
       'status' => [
         [
           'value' => FALSE,
+        ],
+      ],
+      'uid' => [
+        [
+          'target_id' => (int) $author->id(),
+          'target_type' => 'user',
+          'target_uuid' => $author->uuid(),
+          'url' => base_path() . 'user/' . $author->id(),
         ],
       ],
     ];

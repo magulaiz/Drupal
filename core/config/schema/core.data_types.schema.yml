@@ -160,6 +160,14 @@ langcode:
     Choice:
       callback: 'Drupal\Core\TypedData\Plugin\DataType\LanguageReference::getAllValidLangcodes'
 
+# A number of bytes; either a plain number or with a size indication such as "MB".
+# @see \Drupal\Component\Utility\Bytes
+bytes:
+  type: string
+  label: 'Bytes'
+  constraints:
+    Callback: ['\Drupal\Component\Utility\Bytes', 'validateConstraint']
+
 # Complex extended data types:
 
 # Root of a configuration object.
@@ -561,7 +569,7 @@ core.date_format.*:
   label: 'Date format'
   mapping:
     id:
-      type: string
+      type: machine_name
       label: 'ID'
     label:
       type: required_label
@@ -572,6 +580,15 @@ core.date_format.*:
     pattern:
       type: core_date_format_pattern.[%parent.locked]
       label: 'PHP date format'
+      constraints:
+        NotBlank: []
+        # A valid date format character must appear somewhere in the value.
+        # See https://www.php.net/manual/en/datetime.format.php
+        Regex:
+          pattern: '/[aABcdDeFgGhHiIjlLmMnNoOpPrsStTuUvwWxXyYzZ]/'
+          message: 'This is not a valid date format.'
+  constraints:
+    FullyValidatable: ~
 
 # Unlocked date formats should use the translatable type.
 core_date_format_pattern.0:

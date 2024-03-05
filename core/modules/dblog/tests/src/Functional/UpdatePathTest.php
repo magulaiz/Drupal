@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\dblog\Functional;
 
 use Drupal\Core\Database\Database;
@@ -20,6 +22,18 @@ class UpdatePathTest extends UpdatePathTestBase {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../system/tests/fixtures/update/drupal-9.4.0.bare.standard.php.gz',
     ];
+  }
+
+  /**
+   * Tests that updating adds a langcode to the dblog.settings config.
+   */
+  public function testAddLangcodeToSettings(): void {
+    $this->assertEmpty($this->config('dblog.settings')->get('langcode'));
+    $this->runUpdates();
+    $default_langcode = $this->container->get('language_manager')
+      ->getDefaultLanguage()
+      ->getId();
+    $this->assertSame($default_langcode, $this->config('dblog.settings')->get('langcode'));
   }
 
   /**
