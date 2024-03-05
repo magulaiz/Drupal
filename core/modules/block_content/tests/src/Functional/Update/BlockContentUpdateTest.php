@@ -35,12 +35,14 @@ class BlockContentUpdateTest extends UpdatePathTestBase {
       'label' => 'Does not create new revisions',
       'revision' => 0,
     ]);
+    // @phpstan-ignore-next-line
     $no_new_revisions->trustData()->save();
     $new_revisions = BlockContentType::create([
       'id' => 'new_revisions',
       'label' => 'Creates new revisions',
       'revision' => 1,
     ]);
+    // @phpstan-ignore-next-line
     $new_revisions->trustData()->save();
     // Ensure that an integer was stored, so we can be sure that the update
     // path converts it to a boolean.
