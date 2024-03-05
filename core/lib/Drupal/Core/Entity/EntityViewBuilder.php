@@ -3,7 +3,6 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Component\Utility\Random;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
@@ -604,15 +603,14 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
   protected function getRenderRecursionKey(array $build): string {
     /** @var \Drupal\Core\Entity\EntityInterface $entity */
     $entity = $build['#' . $this->entityTypeId];
-    // If entity is new and has no ID, generate a unique random string.
+    // If entity is new and has no ID, generate unique ID from entity object.
+    // This is to prevent false positives, for example when previewing a new
+    // node that is referencing a new node without either node yet being saved.
     if ($entity->id()) {
       $entity_id = $entity->id();
     }
     else {
-      if (!$entity->_tempRecursionRenderId) {
-        $entity->_tempRecursionRenderId = (new Random())->string(8, TRUE);
-      }
-      $entity_id = $entity->_tempRecursionRenderId;
+      $entity_id = spl_object_id($entity);
     }
     // It seems very unlikely that the same entity displayed in the same view
     // mode would be recursively nested and meant to be displayed differently,

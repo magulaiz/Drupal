@@ -13,9 +13,6 @@ use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Drupal\entity_test\Entity\EntityTestLabel;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
  * Tests the formatters functionality.
@@ -234,12 +231,9 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
   }
 
   /**
-   * Tests recursive rendering protection failing over single entity N times.
+   * Tests that iterative rendering is allowed by recursive render protection.
    */
-  public function testEntityFormatterRecursiveRenderingFailing(): void {
-    $request = Request::create('http://example.com', 'POST');
-    $request->setSession(new Session(new MockArraySessionStorage()));
-    \Drupal::requestStack()->push($request);
+  public function testEntityFormatterIterativeRendering(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
     $formatter = 'entity_reference_entity_view';
@@ -263,12 +257,15 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
     ]);
     $referencing_entity->save();
 
+    // Set count to higher than the previous render protection limit of 20.
     $count = 21;
+    // Render the same entity multiple times to check that iterative rendering
+    // is allowed as long as the entity is not being recursively rendered.
     $build = $view_builder->viewMultiple(array_fill(0, $count, $referencing_entity), 'default');
     $output = $renderer->renderRoot($build);
     // The title of entity_test entities is printed twice by default, so we have
     // to multiply our count by 2.
-    $this->assertSame($count * 2, substr_count($output, $entity->name->value));
+    $this->assertSame($count * 2, substr_count($output, $entity->get('name')->value));
   }
 
   /**
@@ -303,7 +300,7 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
     // 2 occurrences of the entity title per entity.
     $expected_occurrences = 4;
 
-    $actual_occurrences = substr_count($output, $referencing_entity_1->name->value);
+    $actual_occurrences = substr_count($output, $referencing_entity_1->get('name')->value);
     $this->assertEquals($expected_occurrences, $actual_occurrences);
 
     // Self-references should not be rendered.
@@ -311,10 +308,9 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
     $build = $view_builder->view($referencing_entity_1, 'default');
     $output = $renderer->renderRoot($build);
     $expected_occurrences = 2;
-    $actual_occurrences = substr_count($output, $referencing_entity_1->name->value);
+    $actual_occurrences = substr_count($output, $referencing_entity_1->get('name')->value);
     $this->assertEquals($expected_occurrences, $actual_occurrences);
     $build = $view_builder->view($referencing_entity_1, 'default');
-    $output = (string) $renderer->renderRoot($build);
 
     // Repetition is not wrongly detected as recursion.
     // entity_1 -> entity_1
@@ -329,21 +325,23 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
     $referencing_entity_2->{$this->fieldName}->entity = $referencing_entity_1;
     $referencing_entity_2->save();
     $build = $view_builder->view($referencing_entity_2, 'default');
-    $output = (string) $renderer->renderRoot($build);
+    $output = $renderer->renderRoot($build);
 
-    $actual_occurrences = substr_count($output, $referencing_entity_1->name->value);
+    $actual_occurrences = substr_count($output, $referencing_entity_1->get('name')->value);
     $this->assertEquals($expected_occurrences, $actual_occurrences);
 
     // Referencing from multiple is fine.
     // entity_1 -> entity_1
     // entity_2 -> entity_1
     $build = $view_builder->viewMultiple([$referencing_entity_1, $referencing_entity_2], 'default');
-    $output = (string) $renderer->renderRoot($build);
+    $output = $renderer->renderRoot($build);
     // entity_1 should be seen once as a parent and once as a child of entity_2.
     $expected_occurrences = 4;
+    $actual_occurrences = substr_count($output, $referencing_entity_1->get('name')->value);
+    $this->assertEquals($expected_occurrences, $actual_occurrences);
     // entity_2 is seen only once, as a parent.
     $expected_occurrences = 2;
-    $actual_occurrences = substr_count($output, $referencing_entity_2->name->value);
+    $actual_occurrences = substr_count($output, $referencing_entity_2->get('name')->value);
     $this->assertEquals($expected_occurrences, $actual_occurrences);
     // Indirect recursion is not ok.
     // entity_2 -> entity_1 -> entity_2
@@ -407,9 +405,6 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
    * Tests multiple renderings of an entity that references another.
    */
   public function testEntityReferenceRecursionProtectionWithRepeatedReferencingEntity(): void {
-    $request = Request::create('http://example.com', 'POST');
-    $request->setSession(new Session(new MockArraySessionStorage()));
-    \Drupal::requestStack()->push($request);
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
     $formatter = 'entity_reference_entity_view';
@@ -439,14 +434,14 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
     $output = $renderer->renderRoot($build);
     // The title of entity_test entities is printed twice by default, so we have
     // to multiply our count by 2.
-    $this->assertSame($count * 2, substr_count($output, $entity->name->value));
+    $this->assertSame($count * 2, substr_count($output, $entity->get('name')->value));
 
     // Large-scale repetition across render roots is not recursion.
     for ($i = 0; $i < $count; $i++) {
       $build = $view_builder->view($referencing_entity, 'default');
       $output = $renderer->renderRoot($build);
       // The title of entity_test entities is printed twice by default.
-      $this->assertSame(2, substr_count($output, $entity->name->value));
+      $this->assertSame(2, substr_count($output, $entity->get('name')->value));
     }
   }
 
