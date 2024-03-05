@@ -6,6 +6,7 @@ namespace Drupal\Tests;
 
 use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\Mink\Element\Element;
+use Behat\Mink\Exception\Exception as MinkException;
 use Behat\Mink\Mink;
 use Behat\Mink\Selector\SelectorsHandler;
 use Behat\Mink\Session;
@@ -367,7 +368,9 @@ abstract class BrowserTestBase extends TestCase {
     $this->prepareEnvironment();
     $this->installDrupal();
 
-    // Setup Mink.
+    // Setup Mink. Register Mink exceptions to cause test failures instead of
+    // errors.
+    $this->registerFailureType(MinkException::class);
     $this->initMink();
 
     // Set up the browser test output file.
