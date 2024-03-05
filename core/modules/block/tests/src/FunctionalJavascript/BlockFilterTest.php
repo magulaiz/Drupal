@@ -120,6 +120,7 @@ class BlockFilterTest extends WebDriverTestBase {
       }
     }
 
+    $this->getSession()->resizeWindow(1024, 2048);
     $this->drupalGet('admin/structure/block');
     $assertSession = $this->assertSession();
     $session = $this->getSession();
@@ -188,6 +189,19 @@ class BlockFilterTest extends WebDriverTestBase {
     $this->assertBlockOnRegion('olivero-primary-local-tasks', 'highlighted');
     $this->assertBlockOnRegion('olivero-powered', 'highlighted');
     $this->assertBlockOnRegion('olivero-account-menu', 'breadcrumb');
+
+    // Test toggle blocks region.
+    $inputFilter->setValue('account');
+    $toggleHighlightedBlocks = $this->getSession()
+      ->getPage()
+      ->findById('edit-blocks-region-highlighted-title-filter');
+    $this->assertEquals($toggleHighlightedBlocks->getValue(), 'Show filtered');
+    $toggleHighlightedBlocks->focus();
+    $toggleHighlightedBlocks->click();
+    $this->assertEquals($toggleHighlightedBlocks->getValue(), 'Hide filtered');
+    $this->assertFalse($page->find('css', 'tr[data-drupal-selector="edit-blocks-region-highlighted-filter"]')
+      ->isVisible());
+
     // Back to the previous theme default to avoid failing other tests.
     $this->config('system.theme')->set('default', $defaultTheme)->save();
   }
@@ -283,7 +297,6 @@ class BlockFilterTest extends WebDriverTestBase {
 
     $javascript = <<<JS
       document.querySelector("tr[data-drupal-selector='edit-blocks-{$blockId}']").scrollIntoViewIfNeeded();
-      console.log("tr[data-drupal-selector='edit-blocks-{$blockId}']")
 JS;
     $this->getSession()
       ->executeScript($javascript);

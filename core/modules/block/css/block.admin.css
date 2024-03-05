@@ -1,6 +1,7 @@
 /* Block listing page */
 .region-title__action {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   margin-left: 1em; /* LTR */
 }
 [dir="rtl"] .region-title__action {
@@ -80,23 +81,16 @@ a.block-demo-backlink:hover {
 }
 
 /* Control visibility of the eye button blocks visibility control */
-a.region-filter-control {
+.wrap-toggle-blocks-filtered {
   display: none;
 }
-a.region-filter-control:active {
-  background-color: #adaeb2;
-}
-a.region-filter-control.region-filtered {
-  display: inline-block;
-}
-
-/* Eye button that controls blocks visibility */
-.region-filter-control::before {
+.wrap-toggle-blocks-filtered::before {
   display: inline-block;
   width: var(--space-s);
   height: var(--space-s);
   margin-top: calc(var(--space-m) / -2);
   margin-right: var(--space-xs);
+  margin-left: var(--space-xs);
   content: "";
   cursor: pointer;
   transition: transform var(--details-transform-transition-duration) ease-in 0s;
@@ -104,10 +98,26 @@ a.region-filter-control.region-filtered {
   background: url(../images/eye-open.svg) no-repeat center;
   background-size: contain;
 }
+.wrap-toggle-blocks-filtered-opened::before {
+  background: url(../images/eye-close.svg) no-repeat center;
+}
+.wrap-toggle-blocks-filtered .toggle-blocks-filtered-input.button {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  box-shadow: none;
+  font-size: var(--font-size-xs);
+}
 
-a.region-filter-control {
-  text-decoration: none;
-  color: #55565c;
+.wrap-toggle-blocks-filtered .toggle-blocks-filtered-input.button:focus {
+  outline: var(--focus-outline);
+  box-shadow: var(--focus-box-shadow);
+}
+.wrap-toggle-blocks-filtered.region-filtered {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
 }
 
 .js-form-item-search-blocks.form-item--search-blocks {
@@ -122,10 +132,6 @@ a.region-filter-control {
 
 .block-filter-region-text {
   margin-right: 10px;
-}
-
-.region-filter-control-opened::before {
-  background: url(../images/eye-close.svg) no-repeat center;
 }
 
 /* Goto to element appears when any value type */

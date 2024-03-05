@@ -94,14 +94,14 @@
        *   Drupal table drag row dropped.
        */
       function swapFilterRow(rowObject) {
-        // Prevent swap recursion when we manually drag the filter quantity row.
+        // Prevent swap recursion after row filtered quantity swapped.
         if (
-          rowObject.filterRowSwapped === true ||
-          rowObject.element.classList.contains('draggable')
+          rowObject.filterRowSwapped === true &&
+          rowObject.direction === 'up'
         ) {
           return;
         }
-
+        rowObject.filterRowSwapped = false;
         let direction = 'before';
         // Move the element after or before the region that display the quantity of filtered.
         const previousElement =
@@ -113,6 +113,7 @@
           rowObject.direction === 'up' &&
           previousElement?.previousElementSibling === null
         ) {
+          rowObject.filterRowSwapped = true;
           rowObject.swap('after', previousElement);
           return;
         }
@@ -129,9 +130,7 @@
             direction = 'after';
             el = nextElement;
           }
-          rowObject.filterRowSwapped = true;
           rowObject.swap(direction, el);
-          rowObject.filterRowSwapped = false;
         }
       }
 
@@ -237,10 +236,10 @@
       const tableDrag = Drupal.tableDrag.blocks;
       // Add a handler for when a row is swapped, update empty regions.
       tableDrag.row.prototype.onSwap = function (swappedRow) {
-        swapFilterRow(this);
         checkEmptyRegions(table, this);
         updateLastPlaced(table, this);
         updateParentRegionName(this);
+        swapFilterRow(this);
       };
 
       // Add a handler so when a row is dropped, update fields dropped into

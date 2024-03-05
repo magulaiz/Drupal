@@ -120,7 +120,6 @@
   Drupal.behaviors.blockFilterRegionText = {
     attach(context) {
       const gotoFiltered = document.getElementById('goto-filtered');
-      const fieldsetInput = document.getElementById('edit-filters');
       const $inputFilter = once(
         'block-filter-region-text',
         '[data-drupal-selector="edit-search-blocks"]',
@@ -177,8 +176,10 @@
             el.classList.remove('js-override-filter-visibility'),
           );
         document
-          .querySelectorAll('.region-filter-control')
-          .forEach((el) => el.classList.remove('region-filter-control-opened'));
+          .querySelectorAll('.wrap-toggle-blocks-filtered')
+          .forEach((el) =>
+            el.classList.remove('wrap-toggle-blocks-filtered-opened'),
+          );
       };
 
       /**
@@ -192,34 +193,32 @@
        * @param {Node} table
        *   The updated dom element block with all regions.
        */
-      const updateRegions = (query, table) => {
-        const regionHeaders = table.querySelectorAll('.region-title');
-        regionHeaders.forEach((el) => {
+      const updateBlocksFilteredStatus = (query, table) => {
+        table.querySelectorAll('.region-title').forEach((el) => {
           const currentRegionName = el.dataset.region;
           // Update the region filter status.
           const filteredRegionStatus = document.querySelector(
             `[data-drupal-selector="region-filtered-quantity-${currentRegionName}"]`,
           );
-          const linkButton = el.querySelector('.region-filter-control');
+          const wrapToggleBLocks = el.querySelector(
+            '.wrap-toggle-blocks-filtered',
+          );
 
           const { blocksAmount, blocksVisible, blocksInvisible } =
             getRegionBlocksStatus(currentRegionName);
 
           if (blocksAmount > 0) {
-            linkButton.ariaHidden = query === '';
             if (query !== '' && blocksAmount !== blocksVisible) {
               filteredRegionStatus.parentElement.parentElement.classList.add(
                 'js-show-filtered-quantity',
               );
-              linkButton.classList.add('region-filtered');
-              linkButton.ariaHidden = false;
+              wrapToggleBLocks.classList.add('region-filtered');
             } else {
               filteredRegionStatus.parentElement.parentElement.classList.remove(
                 'js-show-filtered-quantity',
               );
               if (query === '') {
-                linkButton.classList.remove('region-filtered');
-                linkButton.ariaHidden = true;
+                wrapToggleBLocks.classList.remove('region-filtered');
               }
             }
             filteredRegionStatus.textContent = Drupal.t('@invisible filtered', {
@@ -230,15 +229,20 @@
           const regionEmptyMessage = el.nextElementSibling.nextElementSibling;
           let showEmptyRegion = false;
           if (blocksAmount === 0) {
-            linkButton.classList.remove('region-filter-control-opened');
-            linkButton.classList.remove('region-filtered');
+            wrapToggleBLocks.classList.remove(
+              'wrap-toggle-blocks-filtered-opened',
+            );
+            wrapToggleBLocks.classList.remove('region-filtered');
             showEmptyRegion = true;
           }
           regionEmptyMessage.style.display = showEmptyRegion ? '' : 'none';
         });
       };
 
-      const gotoElement = (e) => {
+      /**
+       * Highlight and focus the first region with a block found.
+       */
+      const highlightBlocksFound = (e) => {
         if (!gotoFiltered.classList.contains('has-block-results')) {
           return;
         }
@@ -247,20 +251,9 @@
         document.querySelectorAll('.js-filter-block-visible').forEach((el) => {
           if (!firstVisibleRegion) {
             firstVisibleRegion = el;
+            el.querySelector('.js-tabledrag-handle').focus();
           }
           el.classList.add('color-success');
-        });
-
-        e.preventDefault();
-        let offset = 0;
-        const regionHeight = firstVisibleRegion.offsetHeight;
-        let region = firstVisibleRegion;
-        while (region) {
-          offset += region.offsetTop;
-          region = region.offsetParent;
-        }
-        window.scrollTo({
-          top: offset - fieldsetInput.offsetTop - regionHeight,
         });
       };
 
@@ -315,7 +308,7 @@
         });
 
         // Update all regions status after update blocks visibility.
-        updateRegions(query, table);
+        updateBlocksFilteredStatus(query, table);
 
         // Update goto element.
         const visibleItems = Array.from(listItems).filter(
@@ -341,10 +334,10 @@
       // In some cases the blocks searched are on the bottom of page,
       // to help users get there faster they can click on the link
       // below the input filter.
-      gotoFiltered.addEventListener('click', gotoElement);
+      gotoFiltered.addEventListener('click', highlightBlocksFound);
       gotoFiltered.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
-          gotoElement(e);
+          highlightBlocksFound(e);
         }
       });
 
@@ -354,8 +347,13 @@
           return;
         }
         document
-          .querySelector(`a[data-toggle-region="${region}"]`)
-          .classList[action]('region-filter-control-opened');
+          .querySelector(
+            `#edit-blocks-region-${region.replace(
+              '_',
+              '-',
+            )}-title .wrap-toggle-blocks-filtered`,
+          )
+          .classList[action]('wrap-toggle-blocks-filtered-opened');
         document
           .querySelectorAll(`tr[data-parent-region="${region}"]`)
           .forEach((tr) => {
@@ -368,22 +366,25 @@
       // no matters if filter applied.
       // When the filter is cleaned this button back to hidden states.
       document
-        .querySelectorAll('.region-filter-control:not(.built)')
-        .forEach((element) => {
-          element.classList.add('built');
-          element.addEventListener('click', (e) => {
-            element.ariaPressed = element.ariaPressed !== 'true';
-            const action = element.classList.contains(
-              'region-filter-control-opened',
+        .querySelectorAll('.wrap-toggle-blocks-filtered:not(.built)')
+        .forEach((row) => {
+          const toggleButton = row.querySelector(
+            '.toggle-blocks-filtered-input',
+          );
+          row.classList.add('built');
+          toggleButton.addEventListener('click', (e) => {
+            // element.ariaPressed = element.ariaPressed !== 'true';
+            const action = row.classList.contains(
+              'wrap-toggle-blocks-filtered-opened',
             )
               ? 'remove'
               : 'add';
             if (action === 'add') {
-              element.textContent = Drupal.t('Hide filtered');
+              toggleButton.value = Drupal.t('Hide filtered');
             } else {
-              element.textContent = Drupal.t('Show filtered');
+              toggleButton.value = Drupal.t('Show filtered');
             }
-            toggleBlocksByRegion(element.dataset.toggleRegion, action);
+            toggleBlocksByRegion(row.dataset.toggleRegion, action);
             filterCallback();
             e.preventDefault();
           });

@@ -256,16 +256,19 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
         ],
       ];
 
-      $titleLink = $this->t('Toggle blocks on region @region', ['@region' => $region]);
-      $showFiltered = $this->t('Show filtered');
-      $filter = [
-        '#markup' => '<a
-          aria-hidden="true"
-          title="' . $titleLink . '"
-          aria-pressed="false"
-          href="#"
-          data-toggle-region="' . $region . '"
-          class="button--small region-filter-control">' . $showFiltered . '</a>',
+      $showFilteredContainer = [
+        '#type' => "button",
+        '#value' => $this->t('Show filtered'),
+        '#prefix' => "<div class='wrap-toggle-blocks-filtered' data-toggle-region='{$region}'>",
+        '#suffix' => "</div>",
+        '#attributes' => [
+          'class' => [
+            'toggle-blocks-filtered-input',
+          ],
+          'role' => 'switch',
+          'aria-checked' => FALSE,
+          'aria-label' => $this->t("make blocks on @region filtered visible", ['@region' => $title]),
+        ]
       ];
 
       $form['region-' . $region]['title'] = [
@@ -276,7 +279,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
         ],
         '#prefix' => $title,
         'link' => $link,
-        'filter' => $filter,
+        'filter' => $showFilteredContainer,
         '#wrapper_attributes' => [
           'colspan' => 5,
         ],
