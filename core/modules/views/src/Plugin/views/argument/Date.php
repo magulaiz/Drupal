@@ -42,6 +42,13 @@ class Date extends Formula implements ContainerFactoryPluginInterface {
    */
   protected $argFormat = 'Y-m-d';
 
+  /**
+   * The MongoDB condition operator.
+   *
+   * @var string
+   */
+  protected $mongodbOperator = 'DATEDATE';
+
   public $option_name = 'default_argument_date';
 
   /**

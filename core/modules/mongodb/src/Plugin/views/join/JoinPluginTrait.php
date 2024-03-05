@@ -69,7 +69,6 @@ trait JoinPluginTrait {
     if (isset($this->extra) && is_array($this->extra)) {
       $substitutions = \Drupal::moduleHandler()->invokeAll('views_query_substitutions', [$view_query->view]);
       foreach ($this->extra as &$extra) {
-dump($extra);
         foreach ($extra as &$value) {
           foreach ($substitutions as $substitute_key => $substitute_value) {
             if ($value === $substitute_key) {
