@@ -155,6 +155,16 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
       ->countQuery()
       ->execute()
       ->fetchField();
+    $db = \Drupal::service('database');
+    $all_errors = $db->select('watchdog', 'w')
+      ->fields('w', ['message'])
+      ->condition('type', 'migrate_drupal_ui')
+      ->condition('severity', RfcLogLevel::ERROR)
+      ->execute()
+      ->fetchCol();
+    if ($this->expectedLoggedErrors !== (int) $num_errors) {
+      print_r($all_errors);
+    }
     $this->assertSame($this->expectedLoggedErrors, (int) $num_errors);
   }
 
