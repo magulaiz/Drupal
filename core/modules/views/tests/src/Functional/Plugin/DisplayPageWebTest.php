@@ -107,7 +107,7 @@ class DisplayPageWebTest extends ViewTestBase {
     $this->drupalGet('test_page_display_menu/local');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->elementTextEquals('xpath', "//ul[contains(@class, 'tabs primary')]//a[contains(@class, 'is-active')]/child::text()", 'Test local tab');
-    $this->assertSession()->titleEquals('Test local page | Test default page | Drupal');
+    $this->assertSession()->titleEquals('Test local page | Drupal');
 
     // Check an ordinary menu link.
     $admin_user = $this->drupalCreateUser(['administer menu']);
