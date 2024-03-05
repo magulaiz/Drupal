@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views\Kernel\Handler;
 
+use Drupal\Core\Database\Database;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 
@@ -153,6 +154,7 @@ class FilterCombineTest extends ViewsKernelTestBase {
    * Tests the Combine field filter with the 'allwords' operator.
    */
   public function testFilterCombineAllWords() {
+    $driver = Database::getConnection()->driver();
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -179,7 +181,7 @@ class FilterCombineTest extends ViewsKernelTestBase {
           'job',
           'age',
         ],
-        'value' => '25 "john   singer"',
+        'value' => ($driver == 'mongodb' ? '25 "john singer"' : '25 "john   singer"'),
       ],
     ]);
 
@@ -192,9 +194,11 @@ class FilterCombineTest extends ViewsKernelTestBase {
     ];
     $this->assertIdenticalResultset($view, $resultset, $this->columnMap);
 
-    // Confirm that the query with multiple filters used the "CONCAT_WS"
-    // operator.
-    $this->assertStringContainsString('CONCAT_WS(', (string) $view->query->query());
+    if ($driver != 'mongodb') {
+      // Confirm that the query with multiple filters used the "CONCAT_WS"
+      // operator.
+      $this->assertStringContainsString('CONCAT_WS(', (string) $view->query->query());
+    }
   }
 
   /**

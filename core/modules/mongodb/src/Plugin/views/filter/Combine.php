@@ -73,73 +73,91 @@ class Combine extends CoreCombine {
    * {@inheritdoc}
    */
   public function opEqual($expression) {
-    $placeholder = $this->placeholder();
-    $operator = $this->getConditionOperator('LIKE');
-    $separated_fields = $expression['separated fields'];
+    if ($this->view->getDatabaseDriver() == 'mongodb') {
+      $placeholder = $this->placeholder();
+      $operator = $this->getConditionOperator($this->operator());
+      $separated_fields = $expression['separated fields'];
 
-    $this->query->addConcatField($placeholder, $separated_fields);
-    $condition = $this->query->getConnection()->condition('AND');
-    $condition->condition($placeholder, $this->connection->escapeLike($this->value), $operator);
-    $this->query->addCondition($this->options['group'], $condition);
+      $this->query->addConcatField($placeholder, $separated_fields);
+      $condition = $this->query->getConnection()->condition('AND');
+      foreach ($separated_fields as $field) {
+        $condition->condition($field, NULL, 'IS NOT NULL');
+      }
+      $condition->condition($placeholder, $this->connection->escapeLike($this->value), $operator);
+      $this->query->addCondition($this->options['group'], $condition);
+    }
+    else {
+      parent::opEqual($expression);
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   protected function opContains($expression) {
-    $separated_fields = [];
-    foreach ($expression['separated fields'] as $separated_field) {
-      if (strpos($separated_field, '.') !== FALSE) {
-        $placeholder = $this->placeholder();
-        $this->query->addConditionField($placeholder, substr($separated_field, 1));
-        $separated_fields[] = '$' . $placeholder;
+    if ($this->view->getDatabaseDriver() == 'mongodb') {
+      $separated_fields = [];
+      foreach ($expression['separated fields'] as $separated_field) {
+        if (strpos($separated_field, '.') !== FALSE) {
+          $placeholder = $this->placeholder();
+          $this->query->addConditionField($placeholder, substr($separated_field, 1));
+          $separated_fields[] = '$' . $placeholder;
+        }
+        else {
+          $separated_fields[] = $separated_field;
+        }
       }
-      else {
-        $separated_fields[] = $separated_field;
-      }
-    }
 
-    $placeholder = $this->placeholder();
-    $this->query->addConcatField($placeholder, $separated_fields);
-    $condition = $this->query->getConnection()->condition('AND');
-    $condition->condition($placeholder, '%' . $this->connection->escapeLike($this->value) . '%', 'LIKE');
-    $this->query->addCondition($this->options['group'], $condition);
+      $placeholder = $this->placeholder();
+      $this->query->addConcatField($placeholder, $separated_fields);
+      $condition = $this->query->getConnection()->condition('AND');
+      $condition->condition($placeholder, '%' . $this->connection->escapeLike($this->value) . '%', 'LIKE');
+      $this->query->addCondition($this->options['group'], $condition);
+    }
+    else {
+      parent::opContains($expression);
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   protected function opContainsWord($expression) {
-    $placeholder = $this->placeholder();
+    if ($this->view->getDatabaseDriver() == 'mongodb') {
+      $placeholder = $this->placeholder();
 
-    // Don't filter on empty strings.
-    if (empty($this->value)) {
-      return;
+      // Don't filter on empty strings.
+      if (empty($this->value)) {
+        return;
+      }
+
+      // Match all words separated by spaces or sentences encapsulated by double
+      // quotes.
+      preg_match_all(static::WORDS_PATTERN, ' ' . $this->value, $matches, PREG_SET_ORDER);
+
+      // Switch between the 'word' and 'allwords' operator.
+      $type = $this->operator == 'word' ? 'OR' : 'AND';
+      $group = $this->query->setWhereGroup($type);
+      $operator = $this->getConditionOperator('LIKE');
+
+      if (!empty($matches)) {
+        $separated_fields = $expression['separated fields'];
+        $this->query->addConcatField($placeholder, $separated_fields, $expression['integer fields']);
+        $condition = $this->query->getConnection()->condition($type);
+      }
+
+      foreach ($matches as $match) {
+        // Clean up the user input and remove the sentence delimiters.
+        $word = trim($match[2], ',?!();:-"');
+        $condition->condition($placeholder, '%' . $this->connection->escapeLike($word) . '%', $operator);
+      }
+
+      if (!empty($matches)) {
+        $this->query->addCondition($group, $condition);
+      }
     }
-
-    // Match all words separated by spaces or sentences encapsulated by double
-    // quotes.
-    preg_match_all(static::WORDS_PATTERN, ' ' . $this->value, $matches, PREG_SET_ORDER);
-
-    // Switch between the 'word' and 'allwords' operator.
-    $type = $this->operator == 'word' ? 'OR' : 'AND';
-    $group = $this->query->setWhereGroup($type);
-    $operator = $this->getConditionOperator('LIKE');
-
-    if (!empty($matches)) {
-      $separated_fields = $expression['separated fields'];
-      $this->query->addConcatField($placeholder, $separated_fields, $expression['integer fields']);
-      $condition = $this->query->getConnection()->condition($type);
-    }
-
-    foreach ($matches as $match) {
-      // Clean up the user input and remove the sentence delimiters.
-      $word = trim($match[2], ',?!();:-"');
-      $condition->condition($placeholder, '%' . $this->connection->escapeLike($word) . '%', $operator);
-    }
-
-    if (!empty($matches)) {
-      $this->query->addCondition($group, $condition);
+    else {
+      parent::opContainsWord($expression);
     }
   }
 
@@ -147,113 +165,148 @@ class Combine extends CoreCombine {
    * {@inheritdoc}
    */
   protected function opStartsWith($expression) {
-    $placeholder = $this->placeholder();
-    $operator = $this->getConditionOperator('LIKE');
-    $separated_fields = $expression['separated fields'];
+    if ($this->view->getDatabaseDriver() == 'mongodb') {
+      $placeholder = $this->placeholder();
+      $operator = $this->getConditionOperator('LIKE');
+      $separated_fields = $expression['separated fields'];
 
-    $this->query->addConcatField($placeholder, $separated_fields);
-    $condition = $this->query->getConnection()->condition('AND');
-    $condition->condition($placeholder, $this->connection->escapeLike($this->value) . '%', $operator);
-    $this->query->addCondition($this->options['group'], $condition);
+      $this->query->addConcatField($placeholder, $separated_fields);
+      $condition = $this->query->getConnection()->condition('AND');
+      $condition->condition($placeholder, $this->connection->escapeLike($this->value) . '%', $operator);
+      $this->query->addCondition($this->options['group'], $condition);
+    }
+    else {
+      parent::opStartsWith($expression);
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   protected function opNotStartsWith($expression) {
-    $placeholder = $this->placeholder();
-    $operator = $this->getConditionOperator('NOT LIKE');
-    $separated_fields = $expression['separated fields'];
+    if ($this->view->getDatabaseDriver() == 'mongodb') {
+      $placeholder = $this->placeholder();
+      $operator = $this->getConditionOperator('NOT LIKE');
+      $separated_fields = $expression['separated fields'];
 
-    $this->query->addConcatField($placeholder, $separated_fields);
-    $condition = $this->query->getConnection()->condition('AND');
-    // The function addConcatField() creates an empty string when there is no
-    // value in the concatenated fields.
-    $condition->condition($placeholder, '', '<>');
-    $condition->condition($placeholder, $this->connection->escapeLike($this->value) . '%', $operator);
-    $this->query->addCondition($this->options['group'], $condition);
+      $this->query->addConcatField($placeholder, $separated_fields);
+      $condition = $this->query->getConnection()->condition('AND');
+      // The function addConcatField() creates an empty string when there is no
+      // value in the concatenated fields.
+      $condition->condition($placeholder, '', '<>');
+      $condition->condition($placeholder, $this->connection->escapeLike($this->value) . '%', $operator);
+      $this->query->addCondition($this->options['group'], $condition);
+    }
+    else {
+      parent::opNotStartsWith($expression);
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   protected function opEndsWith($expression) {
-    $placeholder = $this->placeholder();
-    $operator = $this->getConditionOperator('LIKE');
-    $separated_fields = $expression['separated fields'];
+    if ($this->view->getDatabaseDriver() == 'mongodb') {
+      $placeholder = $this->placeholder();
+      $operator = $this->getConditionOperator('LIKE');
+      $separated_fields = $expression['separated fields'];
 
-    $this->query->addConcatField($placeholder, $separated_fields);
-    $condition = $this->query->getConnection()->condition('AND');
-    $condition->condition($placeholder, '%' . $this->connection->escapeLike($this->value), $operator);
-    $this->query->addCondition($this->options['group'], $condition);
+      $this->query->addConcatField($placeholder, $separated_fields);
+      $condition = $this->query->getConnection()->condition('AND');
+      $condition->condition($placeholder, '%' . $this->connection->escapeLike($this->value), $operator);
+      $this->query->addCondition($this->options['group'], $condition);
+    }
+    else {
+      parent::opEndsWith($expression);
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   protected function opNotEndsWith($expression) {
-    $placeholder = $this->placeholder();
-    $operator = $this->getConditionOperator('NOT LIKE');
-    $separated_fields = $expression['separated fields'];
+    if ($this->view->getDatabaseDriver() == 'mongodb') {
+      $placeholder = $this->placeholder();
+      $operator = $this->getConditionOperator('NOT LIKE');
+      $separated_fields = $expression['separated fields'];
 
-    $this->query->addConcatField($placeholder, $separated_fields);
-    $condition = $this->query->getConnection()->condition('AND');
-    // The function addConcatField() creates an empty string when there is no
-    // value in the concatenated fields.
-    $condition->condition($placeholder, '', '<>');
-    $condition->condition($placeholder, '%' . $this->connection->escapeLike($this->value), $operator);
-    $this->query->addCondition($this->options['group'], $condition);
+      $this->query->addConcatField($placeholder, $separated_fields);
+      $condition = $this->query->getConnection()->condition('AND');
+      // The function addConcatField() creates an empty string when there is no
+      // value in the concatenated fields.
+      $condition->condition($placeholder, '', '<>');
+      $condition->condition($placeholder, '%' . $this->connection->escapeLike($this->value), $operator);
+      $this->query->addCondition($this->options['group'], $condition);
+    }
+    else {
+      parent::opNotEndsWith($expression);
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   protected function opNotLike($expression) {
-    $placeholder = $this->placeholder();
-    $operator = $this->getConditionOperator('NOT LIKE');
-    $separated_fields = $expression['separated fields'];
+    if ($this->view->getDatabaseDriver() == 'mongodb') {
+      $placeholder = $this->placeholder();
+      $operator = $this->getConditionOperator('NOT LIKE');
+      $separated_fields = $expression['separated fields'];
 
-    $this->query->addConcatField($placeholder, $separated_fields);
-    $condition = $this->query->getConnection()->condition('AND');
-    // The function addConcatField() creates an empty string when there is no
-    // value in the concatenated fields.
-    $condition->condition($placeholder, '', '<>');
-    $condition->condition($placeholder, '%' . $this->connection->escapeLike($this->value) . '%', $operator);
-    $this->query->addCondition($this->options['group'], $condition);
+      $this->query->addConcatField($placeholder, $separated_fields);
+      $condition = $this->query->getConnection()->condition('AND');
+      // The function addConcatField() creates an empty string when there is no
+      // value in the concatenated fields.
+      $condition->condition($placeholder, '', '<>');
+      $condition->condition($placeholder, '%' . $this->connection->escapeLike($this->value) . '%', $operator);
+      $this->query->addCondition($this->options['group'], $condition);
+    }
+    else {
+      parent::opNotLike($expression);
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   protected function opRegex($expression) {
-    $placeholder = $this->placeholder();
-    $separated_fields = $expression['separated fields'];
+    if ($this->view->getDatabaseDriver() == 'mongodb') {
+      $placeholder = $this->placeholder();
+      $separated_fields = $expression['separated fields'];
 
-    $this->query->addConcatField($placeholder, $separated_fields);
-    $condition = $this->query->getConnection()->condition('AND');
-    $condition->condition($placeholder, $this->value, 'REGEXP');
-    $this->query->addCondition($this->options['group'], $condition);
+      $this->query->addConcatField($placeholder, $separated_fields);
+      $condition = $this->query->getConnection()->condition('AND');
+      $condition->condition($placeholder, $this->value, 'REGEXP');
+      $this->query->addCondition($this->options['group'], $condition);
+    }
+    else {
+      parent::opRegex($expression);
+    }
   }
 
   /**
    * {@inheritdoc}
    */
   protected function opEmpty($expression) {
-    if ($this->operator == 'empty') {
-      $operator = "IS NULL";
+    if ($this->view->getDatabaseDriver() == 'mongodb') {
+      if ($this->operator == 'empty') {
+        $operator = "IS NULL";
+      }
+      else {
+        $operator = "IS NOT NULL";
+      }
+
+      $separated_fields = $expression['separated fields'];
+
+      $this->query->addConcatField($placeholder, $separated_fields);
+      $condition = $this->query->getConnection()->condition('AND');
+      // MongoDB: this is not going to work needs testing. Spaces between fields
+      // are by definition not null.
+      $condition->condition($placeholder, $operator);
+      $this->query->addCondition($this->options['group'], $condition);
     }
     else {
-      $operator = "IS NOT NULL";
+      parent::opEmpty($expression);
     }
-
-    $separated_fields = $expression['separated fields'];
-
-    $this->query->addConcatField($placeholder, $separated_fields);
-    $condition = $this->query->getConnection()->condition('AND');
-    // MongoDB: this is not going to work needs testing. Spaces between fields
-    // are by definition not null.
-    $condition->condition($placeholder, $operator);
-    $this->query->addCondition($this->options['group'], $condition);
   }
 
 }

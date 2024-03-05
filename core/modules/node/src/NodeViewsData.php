@@ -208,7 +208,13 @@ class NodeViewsData extends EntityViewsData {
     $data[$data_table]['uid_revision']['filter']['id'] = 'node_uid_revision';
     $data[$data_table]['uid_revision']['argument']['id'] = 'node_uid_revision';
 
-    if ($this->connection->driver() != 'mongodb') {
+    if ($this->connection->driver() == 'mongodb') {
+      // @todo Find out if this is still needed.
+      $data['node']['revision_uid']['help'] = t('The user who created the revision.');
+      $data['node']['revision_uid']['relationship']['label'] = t('revision user');
+      $data['node']['revision_uid']['filter']['id'] = 'user_name';
+    }
+    else {
       $data['node_field_revision']['table']['wizard_id'] = 'node_revision';
 
       // Advertise this table as a possible base table.
@@ -242,12 +248,6 @@ class NodeViewsData extends EntityViewsData {
       $data['node_field_revision']['sticky']['help'] = $this->t('A boolean indicating whether the node should sort to the top of content lists.');
 
       $data['node_field_revision']['langcode']['help'] = $this->t('The language of the content or translation.');
-    }
-    else {
-      // @todo Find out if this is still needed.
-      $data['node']['revision_uid']['help'] = t('The user who created the revision.');
-      $data['node']['revision_uid']['relationship']['label'] = t('revision user');
-      $data['node']['revision_uid']['filter']['id'] = 'user_name';
     }
 
     $data[$revision_table]['link_to_revision'] = [

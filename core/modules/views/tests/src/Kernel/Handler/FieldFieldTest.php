@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views\Kernel\Handler;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestRev;
@@ -76,8 +77,6 @@ class FieldFieldTest extends ViewsKernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('entity_test_rev');
-
-    ViewTestData::createTestViews(static::class, ['views_test_config']);
 
     // Bypass any field access.
     $this->adminUser = User::create(['name' => $this->randomString()]);
@@ -168,6 +167,8 @@ class FieldFieldTest extends ViewsKernelTestBase {
       'bundle' => 'entity_test_rev',
     ]);
     $field_multiple->save();
+
+    ViewTestData::createTestViews(static::class, ['views_test_config']);
 
     $this->entityRevision = [];
     $this->entityRevision[0] = $entity = EntityTestRev::create([
@@ -452,6 +453,15 @@ class FieldFieldTest extends ViewsKernelTestBase {
     $this->assertInstanceOf(EntityField::class, $executable->field['name']);
     $this->assertInstanceOf(EntityField::class, $executable->field['field_test']);
 
+    if (Database::getConnection()->databaseType() == 'mongodb') {
+      // For MongoDB get the value for the field "id" from the entity and not
+      // from the query.
+      $id_key = 'id';
+    }
+    else {
+      $id_key = 'entity_test_rev_revision_id';
+    }
+
     $this->assertIdenticalResultset($executable,
       [
         ['id' => 1, 'field_test' => 1, 'revision_id' => 1, 'name' => 'base value'],
@@ -459,7 +469,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
         ['id' => 1, 'field_test' => 3, 'revision_id' => 3, 'name' => 'revision value2'],
         ['id' => 2, 'field_test' => 4, 'revision_id' => 4, 'name' => 'next entity value'],
       ],
-      ['entity_test_rev_revision_id' => 'id', 'revision_id' => 'revision_id', 'name' => 'name', 'field_test' => 'field_test']
+      [$id_key => 'id', 'revision_id' => 'revision_id', 'name' => 'name', 'field_test' => 'field_test']
     );
   }
 
@@ -523,6 +533,18 @@ class FieldFieldTest extends ViewsKernelTestBase {
     $this->assertInstanceOf(EntityField::class, $executable->field['field_test_multiple_1']);
     $this->assertInstanceOf(EntityField::class, $executable->field['field_test_multiple_2']);
 
+    if (Database::getConnection()->databaseType() == 'mongodb') {
+      // For MongoDB get the value for the field "id" from the entity and not
+      // from the query. The field "uid" is located in a different table for
+      // MongoDB.
+      $id_key = 'id';
+      $uid_key = 'users_entity_test_rev_uid';
+    }
+    else {
+      $id_key = 'entity_test_rev_revision_id';
+      $uid_key = 'users_field_data_entity_test_rev_revision_uid';
+    }
+
     $this->assertIdenticalResultset($executable,
       [
         ['id' => 1, 'field_test' => 1, 'revision_id' => 1, 'uid' => $this->testUsers[0]->id(), 'timezone' => $timezones[0], 'field_test_multiple' => [1, 3, 7], 'field_test_multiple_1' => [1, 3, 7], 'field_test_multiple_2' => [1, 3, 7]],
@@ -530,7 +552,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
         ['id' => 1, 'field_test' => 3, 'revision_id' => 3, 'uid' => $this->testUsers[2]->id(), 'timezone' => $timezones[2], 'field_test_multiple' => [9, 9, 9], 'field_test_multiple_1' => [9, 9, 9], 'field_test_multiple_2' => [9, 9, 9]],
         ['id' => 2, 'field_test' => 4, 'revision_id' => 4, 'uid' => $this->testUsers[3]->id(), 'timezone' => $timezones[3], 'field_test_multiple' => [2, 9, 9], 'field_test_multiple_1' => [2, 9, 9], 'field_test_multiple_2' => [2, 9, 9]],
       ],
-      ['entity_test_rev_revision_id' => 'id', 'revision_id' => 'revision_id', 'users_field_data_entity_test_rev_revision_uid' => 'uid', 'timezone' => 'timezone', 'field_test_multiple' => 'field_test_multiple', 'field_test_multiple_1' => 'field_test_multiple_1', 'field_test_multiple_2' => 'field_test_multiple_2']
+      [$id_key => 'id', 'revision_id' => 'revision_id', $uid_key => 'uid', 'timezone' => 'timezone', 'field_test_multiple' => 'field_test_multiple', 'field_test_multiple_1' => 'field_test_multiple_1', 'field_test_multiple_2' => 'field_test_multiple_2']
     );
   }
 

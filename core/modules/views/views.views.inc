@@ -361,7 +361,7 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
   if ($driver == 'mongodb') {
     $field_tables = [
       EntityStorageInterface::FIELD_LOAD_CURRENT => [
-        'table' => $table_mapping->getMongodbDedicatedTableName($field_storage, $base_table),
+        'table' => $table_mapping->getJsonStorageDedicatedTableName($field_storage, $base_table),
         'alias' => "{$entity_type_id}__{$field_name}",
       ],
     ];
@@ -632,15 +632,15 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
     if ($driver == 'mongodb') {
       $real_field = $field_alias . '_' . $real_field;
       if ($entity_type->isRevisionable()) {
-        $current_revision_table = $entity_storage->getCurrentRevisionTable();
-        $real_field = $current_revision_table . '.' . $table_mapping->getMongodbDedicatedTableName($field_storage, $current_revision_table) . '.' . $real_field;
+        $current_revision_table = $entity_storage->getJsonStorageCurrentRevisionTable();
+        $real_field = $current_revision_table . '.' . $table_mapping->getJsonStorageDedicatedTableName($field_storage, $current_revision_table) . '.' . $real_field;
       }
       elseif ($entity_type->isTranslatable()) {
-        $translations_table = $entity_storage->getTranslationsTable();
-        $real_field = $translations_table . '.' . $table_mapping->getMongodbDedicatedTableName($field_storage, $translations_table) . '.' . $real_field;
+        $translations_table = $entity_storage->getJsonStorageTranslationsTable();
+        $real_field = $translations_table . '.' . $table_mapping->getJsonStorageDedicatedTableName($field_storage, $translations_table) . '.' . $real_field;
       }
       else {
-        $real_field = $table_mapping->getMongodbDedicatedTableName($field_storage, $base_table) . '.' . $real_field;
+        $real_field = $table_mapping->getJsonStorageDedicatedTableName($field_storage, $base_table) . '.' . $real_field;
       }
 
       $data[$base_table][$field_alias]['field'] = [
@@ -697,8 +697,7 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
         $allow_sort = FALSE;
       case 'bool':
       default:
-        if (Database::getConnection()
-            ->driver() == 'mongodb' && $attributes['type'] == 'bool') {
+        if (Database::getConnection()->driver() == 'mongodb' && $attributes['type'] == 'bool') {
           $filter = 'boolean';
           $argument = 'numeric';
           $sort = 'standard';
@@ -741,16 +740,17 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
         $additional_fields = $table_mapping->getAllColumns($base_table);
 
         if ($entity_type->isRevisionable()) {
-          $current_revision_table = $entity_storage->getCurrentRevisionTable();
-          $real_field = $current_revision_table . '.' . $table_mapping->getMongodbDedicatedTableName($field_storage, $current_revision_table) . '.' . $column_real_name;
+          $current_revision_table = $entity_storage->getJsonStorageCurrentRevisionTable();
+          $real_field = $current_revision_table . '.' . $table_mapping->getJsonStorageDedicatedTableName($field_storage, $current_revision_table) . '.' . $column_real_name;
         }
         elseif ($entity_type->isTranslatable()) {
-          $translations_table = $entity_storage->getTranslationsTable();
-          $real_field = $translations_table . '.' . $table_mapping->getMongodbDedicatedTableName($field_storage, $translations_table) . '.' . $column_real_name;
+          $translations_table = $entity_storage->getJsonStorageTranslationsTable();
+          $real_field = $translations_table . '.' . $table_mapping->getJsonStorageDedicatedTableName($field_storage, $translations_table) . '.' . $column_real_name;
         }
         else {
-          $real_field = $table_mapping->getMongodbDedicatedTableName($field_storage, $base_table) . '.' . $column_real_name;
+          $real_field = $table_mapping->getJsonStorageDedicatedTableName($field_storage, $base_table) . '.' . $column_real_name;
         }
+
 
         $data[$base_table][$column_real_name] = [
           'field' => ['id' => 'field'],

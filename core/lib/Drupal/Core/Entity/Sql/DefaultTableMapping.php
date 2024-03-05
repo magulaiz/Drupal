@@ -622,9 +622,7 @@ class DefaultTableMapping implements TableMappingInterface {
    * {@inheritdoc}
    */
   public function getFieldColumnName(FieldStorageDefinitionInterface $storage_definition, $property_name) {
-//dump('$property_name: ' . $property_name);
     $field_name = $storage_definition->getName();
-//dump('$field_name: ' . $field_name);
     if ($this->allowsSharedTableStorage($storage_definition)) {
       $column_name = count($storage_definition->getColumns()) == 1 ? $field_name : $field_name . '__' . $property_name;
     }
@@ -639,7 +637,7 @@ class DefaultTableMapping implements TableMappingInterface {
     else {
       throw new SqlContentEntityStorageException("Column information not available for the '$field_name' field.");
     }
-//dump('$column_name: ' . $column_name);
+
     return $column_name;
   }
 

@@ -22,6 +22,8 @@ class BooleanOperator extends CoreBooleanOperator {
     }
 
     $info = $this->operators();
+//dump('$info');
+//dump($info);
     if (!empty($info[$this->operator]['method'])) {
       call_user_func([$this, $info[$this->operator]['method']], $field, $info[$this->operator]['query_operator']);
     }

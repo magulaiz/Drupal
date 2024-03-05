@@ -71,6 +71,9 @@ class TranslateViews {
     'node__field_views_testing_group_rows' => [
       'base table' => 'node',
     ],
+    'node__field_test_boolean_field' => [
+      'base table' => 'node',
+    ],
     'entity_test__field_test' => [
       'base table' => 'entity_test',
     ],

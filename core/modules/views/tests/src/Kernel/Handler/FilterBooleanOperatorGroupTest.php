@@ -6,10 +6,12 @@ namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
+use Drupal\views\Tests\ViewTestData;
 
 /**
  * Tests the core Drupal\views\Plugin\views\filter\BooleanOperator handler.
@@ -44,7 +46,9 @@ class FilterBooleanOperatorGroupTest extends ViewsKernelTestBase {
    * {@inheritdoc}
    */
   public function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+    KernelTestBase::setUp();
+
+    $this->setUpFixtures();
 
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
@@ -82,6 +86,11 @@ class FilterBooleanOperatorGroupTest extends ViewsKernelTestBase {
       'field_test_boolean_field' => 0,
       'status' => TRUE,
     ])->save();
+
+    // For MongoDB the views need to be loaded after the fields are created.
+    // When importing the view the field tables are changed for their MongoDB
+    // version.
+    ViewTestData::createTestViews(static::class, ['views_test_config']);
   }
 
   /**
