@@ -59,7 +59,7 @@ class WideModalRenderer extends ModalRenderer {
     $title = NULL;
     if (array_key_exists('#title', $main_content)) {
       if (is_array($main_content['#title'])) {
-        $title = \Drupal::service('renderer')->renderPlain($main_content['#title']);
+        $title = \Drupal::service('renderer')->renderInIsolation($main_content['#title']);
       }
       else {
         $title = $main_content['#title'];
