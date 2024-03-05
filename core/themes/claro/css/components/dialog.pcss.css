@@ -77,7 +77,8 @@
     color: var(--color-text);
     background: var(--color-white);
 
-    & .form-actions { /* Form action buttons are moved in dialogs. Remove empty space. */
+    & .form-actions,
+    & .field-actions { /* Form action buttons are moved in dialogs. Remove empty space. */
       margin: 0;
       padding: 0;
     }
@@ -106,8 +107,23 @@
     }
   }
 
+  @nest [dir="rtl"] & {
+    .ui-dialog-titlebar {
+      padding-inline: var(--jui-dialog-close-button-reserved-space) var(--space-l);
+    }
+
+    .ui-dialog-titlebar-close {
+      inset-inline-end: auto;
+      inset-inline-start: 0;
+    }
+  }
+
   @media (forced-colors: active) {
     border: 1px solid transparent;
+
+    & .ui-icon.ui-icon-closethick {
+      background: url(../../images/icons/buttonText/ex.svg) no-repeat 50%;
+    }
   }
 }
 
