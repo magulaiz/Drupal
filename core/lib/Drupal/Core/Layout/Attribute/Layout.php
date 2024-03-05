@@ -33,7 +33,7 @@ class Layout extends Plugin {
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup $label
    *   The human-readable name.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup $category
-   *   The human-readable category.
+   *   (optional) The human-readable category.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $description
    *   (optional) The description for advanced layouts.
    * @param string|null $template
@@ -52,13 +52,15 @@ class Layout extends Plugin {
    *   An associative array of regions in this layout.
    * @param string|null $default_region
    *   The default region.
+   * @param class-string|null $deriver
+   *   (optional) The deriver class.
    * @param string $class
    *   The layout plugin class.
    */
   public function __construct(
     public readonly string $id,
-    public readonly TranslatableMarkup $label,
-    public readonly TranslatableMarkup $category,
+    public readonly TranslatableMarkup $label = NULL,
+    public readonly ?TranslatableMarkup $category = NULL,
     public readonly ?TranslatableMarkup $description = NULL,
     public readonly ?string $template = NULL,
     public readonly string $theme_hook = 'layout',
@@ -68,6 +70,7 @@ class Layout extends Plugin {
     public readonly ?string $icon_map = NULL,
     public readonly array $regions = [],
     public readonly ?string $default_region = NULL,
+    public readonly ?string $deriver = NULL,
     public readonly string $class = LayoutDefault::class,
   ) {}
 
