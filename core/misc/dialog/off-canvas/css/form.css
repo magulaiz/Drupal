@@ -71,18 +71,6 @@
   background-color: var(--drupal-off-canvas-fieldset-background-color);
 }
 
-#drupal-off-canvas-wrapper legend,
-#drupal-off-canvas-wrapper .fieldset__legend {
-  display: contents;
-  font-weight: bold;
-}
-
-/* Bartik uses the .field-multiple-table CSS class on its tabledrag tables. */
-
-#drupal-off-canvas-wrapper :is(.fieldset, fieldset, .draggable-table, .field-multiple-table) input:where(:not([type="submit"], [type="checkbox"], [type="radio"])) {
-  width: 100%; /* Prevent text fields from breaking out of tables and fieldsets at narrow widths. */
-}
-
 #drupal-off-canvas-wrapper input,
 #drupal-off-canvas-wrapper textarea {
   font-family: inherit;
