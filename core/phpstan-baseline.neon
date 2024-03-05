@@ -1020,11 +1020,6 @@ parameters:
 			path: modules/datetime/src/Plugin/Field/FieldType/DateTimeFieldItemList.php
 
 		-
-			message: "#^Access to an undefined property Drupal\\\\datetime\\\\Plugin\\\\Field\\\\FieldType\\\\DateTimeItem\\:\\:\\$date\\.$#"
-			count: 1
-			path: modules/datetime/src/Plugin/Field/FieldType/DateTimeItem.php
-
-		-
 			message: "#^Variable \\$date_part_order might not be defined\\.$#"
 			count: 3
 			path: modules/datetime/src/Plugin/Field/FieldWidget/DateTimeDatelistWidget.php
