@@ -95,7 +95,7 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
   /**
    * {@inheritdoc}
    */
-  public function getEditable($name, ?string $class = NULL) {
+  public function getEditable(/* string */$name, ?string $class = NULL) {
     return $this->doGet($name, $class ?? $this->mutableConfigClass);
   }
 
@@ -111,13 +111,13 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    *
    * @param string $name
    *   The name of the configuration object to construct.
-   * @param string $class
+   * @param string|null|bool $class
    *   (optional) Create an immutable configuration object. Defaults to TRUE.
    *
    * @return \Drupal\Core\Config\Config|\Drupal\Core\Config\ImmutableConfig
    *   A configuration object.
    */
-  protected function doGet($name, $class = TRUE) {
+  protected function doGet(/* string */$name, /* string */$class = TRUE) {
     if (is_bool($class)) {
       @trigger_error('Calling ' . __METHOD__ . '() with a boolean in the $class argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. This argument should be class that is used for creating config objects. See https://www.drupal.org/node/3348180', E_USER_DEPRECATED);
       $class = $class ? ImmutableConfig::class : $this->mutableConfigClass;
@@ -162,13 +162,13 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    *
    * @param array $names
    *   List of names of configuration objects.
-   * @param string $class
+   * @param string|null|bool $class
    *   (optional) Create an immutable configuration objects. Defaults to TRUE.
    *
    * @return \Drupal\Core\Config\Config[]|\Drupal\Core\Config\ImmutableConfig[]
    *   List of successfully loaded configuration objects, keyed by name.
    */
-  protected function doLoadMultiple(array $names, $class = TRUE) {
+  protected function doLoadMultiple(array $names, /* string */$class = TRUE) {
     if (is_bool($class)) {
       @trigger_error('Calling ' . __METHOD__ . '() with a boolean in the $class argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. This argument should be class that is used for creating config objects. See https://www.drupal.org/node/3348180', E_USER_DEPRECATED);
       $class = $class ? ImmutableConfig::class : $this->mutableConfigClass;
@@ -309,13 +309,13 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    *
    * @param string $name
    *   The name of the configuration object.
-   * @param string $class
+   * @param string|bool $class
    *   The class used to create the config.
    *
    * @return string
    *   The cache key.
    */
-  protected function getConfigCacheKey($name, $class) {
+  protected function getConfigCacheKey(/* string */$name, /* string */$class) {
     if (is_bool($class)) {
       @trigger_error('Calling ' . __METHOD__ . '() with a boolean in the $class argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. This argument should be class that is used for creating config objects. See https://www.drupal.org/node/3348180', E_USER_DEPRECATED);
       $class = $class ? ImmutableConfig::class : $this->mutableConfigClass;
@@ -432,13 +432,13 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    *
    * @param string $name
    *   Configuration object name.
-   * @param bool $class
+   * @param string|bool $class
    *   Determines whether a mutable or immutable config object is returned.
    *
    * @return \Drupal\Core\Config\Config|\Drupal\Core\Config\ImmutableConfig
    *   The configuration object.
    */
-  protected function createConfigObject($name, $class) {
+  protected function createConfigObject(/* string */$name, /* string */$class) {
     if (is_bool($class)) {
       @trigger_error('Calling ' . __METHOD__ . '() with a boolean in the $class argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. This argument should be class that is used for creating config objects. See https://www.drupal.org/node/3348180', E_USER_DEPRECATED);
       $class = $class ? ImmutableConfig::class : $this->mutableConfigClass;

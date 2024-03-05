@@ -34,7 +34,7 @@ interface ConfigFactoryInterface {
    * @return \Drupal\Core\Config\Config
    *   A configuration object.
    */
-  public function getEditable($name, ?string $class = NULL);
+  public function getEditable(/* string */$name, ?string $class = NULL);
 
   /**
    * Returns a list of configuration objects for the given names.
