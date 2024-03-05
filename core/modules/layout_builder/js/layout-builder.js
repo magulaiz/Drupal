@@ -69,7 +69,6 @@
           $categories.find('.js-layout-builder-category').attr('open', '');
           // Toggle visibility of links based on query.
           $filterLinks.each(toggleBlockEntry);
-
           // Only display categories containing visible links.
           // eslint-disable-next-line jquery/no-sizzle
           $categories
