@@ -429,4 +429,8 @@ function standard_install() {
     ->execute();
   variable_set('admin_theme', 'seven');
   variable_set('node_admin_theme', '1');
+
+  if (!variable_get('announcements_feed_enable_by_default_opt_out', FALSE)) {
+    module_enable(array('announcements_feed'), FALSE);
+  }
 }
