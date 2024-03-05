@@ -82,6 +82,7 @@ field.widget.settings.responsive_image_image:
   mapping:
     preview_responsive_image_style:
       type: string
+      nullable: true
       label: 'Preview responsive image style'
       constraints:
         ConfigExists:

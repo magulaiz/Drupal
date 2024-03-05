@@ -62,7 +62,7 @@ class ResponsiveImageWidget extends ImageWidget {
   public static function defaultSettings() {
     $settings = parent::defaultSettings();
     unset($settings['preview_image_style']);
-    $settings['preview_responsive_image_style'] = '';
+    $settings['preview_responsive_image_style'] = NULL;
     return $settings;
   }
 
