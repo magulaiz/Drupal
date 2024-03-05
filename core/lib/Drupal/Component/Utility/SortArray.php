@@ -126,10 +126,10 @@ class SortArray {
   }
 
   /**
-   * Sorts an associative array by numeric value then key.
+   * Sorts an associative array by numeric value and then key.
    *
    * @param int[] $array
-   *   An associative array containing:
+   *   An associative array of integers, keyed by string keys.
    *   - key: A string.
    *   - value: A numeric value. Recommended to use integer values, floats will
    *     work but are not supported.

@@ -316,9 +316,9 @@ class SortArrayTest extends TestCase {
   }
 
   /**
-   * Data provider for SortArray::ortByNumericValueAndKey.
+   * Data provider for SortArray::sortByNumericValueAndKey().
    *
-   * @return array
+   * @return int[][]
    *   An array of test data:
    *      - Associative array with string keys and numeric values.
    *      - Expected result.

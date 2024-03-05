@@ -24,7 +24,7 @@ class ModuleLegacyTest extends KernelTestBase {
   }
 
   /**
-   * Test deprecation of module_config_sort() function.
+   * Tests the deprecation of module_config_sort().
    */
   public function testModuleConfigSort(): void {
     $modules = $this->config('core.extension')->get('module');
