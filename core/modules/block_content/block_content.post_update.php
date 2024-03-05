@@ -132,10 +132,10 @@ function block_content_post_update_set_owner(&$sandbox = NULL): TranslatableMark
     // as the author.
     $query = $database->select('block_content_revision', 'bcr')
       ->condition('id', $blockContent->id());
-    $query->addField('bcr', 'revision_user', 'uid');
-    $query->addExpression('MIN(revision_id)', 'revision_id');
-    $result = $query->execute()->fetchObject();
-    $uid = $result->uid;
+    $query->addField('bcr', 'revision_user');
+    $query->orderBy('revision_id', 'ASC');
+    $query->range(0, 1);
+    $uid = $query->execute()->fetchField();
     $blockContent->setOwnerId($uid ?? 0)
       ->setSyncing(TRUE)
       ->save();
