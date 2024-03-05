@@ -27,11 +27,14 @@ class Search extends Plugin {
    *   The title for the search page tab.
    * @param bool $use_admin_theme
    *   Whether search results should be displayed in admin theme or not.
+   * @param class-string|null $deriver
+   *   (optional) The deriver class.
    */
   public function __construct(
     public readonly string $id,
     public readonly ?TranslatableMarkup $title = NULL,
     public readonly bool $use_admin_theme = FALSE,
+    public readonly ?string $deriver = NULL
   ) {}
 
 }
