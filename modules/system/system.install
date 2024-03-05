@@ -3412,7 +3412,7 @@ function system_update_7086() {
 }
 
 /**
- * Enable the Announcements Feed module - see Release Notes for opt-out details.
+ * Enable the Announcements module; see 7.100 Release Notes for opt-out details.
  */
 function system_update_7087() {
   if (!variable_get('announcements_feed_enable_by_default_opt_out', FALSE)) {
