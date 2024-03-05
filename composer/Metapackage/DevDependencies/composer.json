@@ -14,6 +14,7 @@
         "composer/composer": "^2.7",
         "drupal/coder": "^8.3.10",
         "instaclick/php-webdriver": "^1.4.1",
+        "jangregor/phpstan-prophecy": "*",
         "justinrainbow/json-schema": "^5.2",
         "mglaman/phpstan-drupal": "^1.2.1",
         "micheh/phpcs-gitlab": "^1.1",
