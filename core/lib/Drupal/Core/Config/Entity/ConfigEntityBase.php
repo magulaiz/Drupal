@@ -100,7 +100,7 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
    *
    * @var bool
    *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no
    *   replacement.
    *
    * @see https://www.drupal.org/node/3348180
@@ -596,7 +596,7 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
    * {@inheritdoc}
    */
   public function trustData() {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3348180', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3348180', E_USER_DEPRECATED);
     $this->trustedData = TRUE;
     return $this;
   }
@@ -605,7 +605,7 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
    * {@inheritdoc}
    */
   public function hasTrustedData() {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3348180', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3348180', E_USER_DEPRECATED);
     return $this->trustedData;
   }
 

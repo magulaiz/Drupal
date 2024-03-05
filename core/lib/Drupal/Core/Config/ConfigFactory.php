@@ -119,7 +119,7 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    */
   protected function doGet($name, $class = TRUE) {
     if (is_bool($class)) {
-      @trigger_error('Calling ' . __METHOD__ . '() with a boolean in the $class argument is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. This argument should be class that is used for creating config objects. See https://www.drupal.org/node/3348180', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() with a boolean in the $class argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. This argument should be class that is used for creating config objects. See https://www.drupal.org/node/3348180', E_USER_DEPRECATED);
       $class = $class ? ImmutableConfig::class : $this->mutableConfigClass;
     }
     if ($config = $this->doLoadMultiple([$name], $class)) {
@@ -170,7 +170,7 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    */
   protected function doLoadMultiple(array $names, $class = TRUE) {
     if (is_bool($class)) {
-      @trigger_error('Calling ' . __METHOD__ . '() with a boolean in the $class argument is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. This argument should be class that is used for creating config objects. See https://www.drupal.org/node/3348180', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() with a boolean in the $class argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. This argument should be class that is used for creating config objects. See https://www.drupal.org/node/3348180', E_USER_DEPRECATED);
       $class = $class ? ImmutableConfig::class : $this->mutableConfigClass;
     }
     $immutable = is_subclass_of($class, ImmutableConfig::class);
@@ -317,7 +317,7 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    */
   protected function getConfigCacheKey($name, $class) {
     if (is_bool($class)) {
-      @trigger_error('Calling ' . __METHOD__ . '() with a boolean in the $class argument is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. This argument should be class that is used for creating config objects. See https://www.drupal.org/node/3348180', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() with a boolean in the $class argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. This argument should be class that is used for creating config objects. See https://www.drupal.org/node/3348180', E_USER_DEPRECATED);
       $class = $class ? ImmutableConfig::class : $this->mutableConfigClass;
     }
     $immutable = is_subclass_of($class, ImmutableConfig::class);
@@ -440,7 +440,7 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    */
   protected function createConfigObject($name, $class) {
     if (is_bool($class)) {
-      @trigger_error('Calling ' . __METHOD__ . '() with a boolean in the $class argument is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. This argument should be class that is used for creating config objects. See https://www.drupal.org/node/3348180', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() with a boolean in the $class argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. This argument should be class that is used for creating config objects. See https://www.drupal.org/node/3348180', E_USER_DEPRECATED);
       $class = $class ? ImmutableConfig::class : $this->mutableConfigClass;
     }
     return new $class($name, $this->storage, $this->eventDispatcher, $this->typedConfigManager);
