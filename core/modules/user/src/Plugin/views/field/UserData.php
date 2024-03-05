@@ -81,7 +81,7 @@ class UserData extends FieldPluginBase {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     parent::buildOptionsForm($form, $form_state);
 
-    $modules = $this->moduleHandler->getModuleList();
+    $modules = \Drupal::service('extension.list.module')->getInstalled();
     $names = [];
     foreach (array_keys($modules) as $name) {
       $names[$name] = $this->moduleExtensionList->getName($name);

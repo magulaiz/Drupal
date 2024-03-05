@@ -76,7 +76,7 @@ class DrupalKernelTest extends KernelTestBase {
     $this->assertTrue($is_compiled_container);
     // Verify that the list of modules is the same for the initial and the
     // compiled container.
-    $module_list = array_keys($container->get('module_handler')->getModuleList());
+    $module_list = array_keys($container->get('extension.list.module')->getInstalled());
     $this->assertEquals(array_values($modules_enabled), $module_list);
 
     // Get the container another time, simulating a "production" environment.
@@ -89,7 +89,7 @@ class DrupalKernelTest extends KernelTestBase {
 
     // Verify that the list of modules is the same for the initial and the
     // compiled container.
-    $module_list = array_keys($container->get('module_handler')->getModuleList());
+    $module_list = array_keys($container->get('extension.list.module')->getInstalled());
     $this->assertEquals(array_values($modules_enabled), $module_list);
 
     // Test that our synthetic services are there.

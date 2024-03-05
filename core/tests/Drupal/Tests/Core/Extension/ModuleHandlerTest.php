@@ -148,8 +148,11 @@ class ModuleHandlerTest extends UnitTestCase {
    * Confirm we get back the modules set in the constructor.
    *
    * @covers ::getModuleList
+   *
+   * @group legacy
    */
   public function testGetModuleList() {
+    $this->expectDeprecation('Drupal\Core\Extension\ModuleHandler::getModuleList() is deprecated in drupal:9.5.0 and is removed from drupal:10.0.0. Use ModuleExtensionList::getInstalled() instead. See https://www.drupal.org/node/3284195');
     $this->assertEquals($this->getModuleHandler()->getModuleList(), [
       'module_handler_test' => new Extension($this->root, 'module', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test/module_handler_test.info.yml', 'module_handler_test.module'),
     ]);
@@ -176,8 +179,11 @@ class ModuleHandlerTest extends UnitTestCase {
    * Ensure setting the module list replaces the module list and resets internal structures.
    *
    * @covers ::setModuleList
+   *
+   * @group legacy
    */
   public function testSetModuleList() {
+    $this->expectDeprecation('Drupal\Core\Extension\ModuleHandler::getModuleList() is deprecated in drupal:9.5.0 and is removed from drupal:10.0.0. Use ModuleExtensionList::getInstalled() instead. See https://www.drupal.org/node/3284195');
     $fixture_module_handler = $this->getModuleHandler();
     $module_handler = $this->getMockBuilder(ModuleHandler::class)
       ->setConstructorArgs([

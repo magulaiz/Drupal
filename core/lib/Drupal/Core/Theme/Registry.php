@@ -470,7 +470,7 @@ class Registry implements DestructableInterface {
       'base hook' => TRUE,
     ];
 
-    $module_list = array_keys($this->moduleHandler->getModuleList());
+    $module_list = array_keys(\Drupal::service('extension.list.module')->getInstalled());
 
     // Invoke the hook_theme() implementation, preprocess what is returned, and
     // merge it into $cache.
@@ -695,7 +695,7 @@ class Registry implements DestructableInterface {
   protected function postProcessExtension(array &$cache, ActiveTheme $theme) {
     // Gather prefixes. This will be used to limit the found functions to the
     // expected naming conventions.
-    $prefixes = array_keys((array) $this->moduleHandler->getModuleList());
+    $prefixes = array_keys(\Drupal::service('extension.list.module')->getInstalled());
     foreach (array_reverse($theme->getBaseThemeExtensions()) as $base) {
       $prefixes[] = $base->getName();
     }

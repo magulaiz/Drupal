@@ -54,7 +54,7 @@ class LinkRelationTypeManager extends DefaultPluginManager {
       $directories = ['core' => $this->root . '/core'];
       $directories += array_map(function (Extension $extension) {
         return $this->root . '/' . $extension->getPath();
-      }, $this->moduleHandler->getModuleList());
+      }, \Drupal::service('extension.list.module')->getInstalled());
       $this->discovery = new YamlDiscovery('link_relation_types', $directories);
     }
     return $this->discovery;

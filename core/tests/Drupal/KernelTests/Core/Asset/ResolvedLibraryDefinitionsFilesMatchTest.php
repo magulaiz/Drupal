@@ -203,7 +203,7 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
    * @return \Drupal\Core\Extension\Extension[]
    */
   protected function getAllLibraries() {
-    $modules = \Drupal::moduleHandler()->getModuleList();
+    $modules = \Drupal::service('extension.list.module')->getInstalled();
     $extensions = $modules;
     $module_list = array_keys($modules);
     sort($module_list);

@@ -66,9 +66,7 @@ class ContentTranslationEntityBundleInfoTest extends KernelTestBase {
 
     // Verify that the test module comes first in the module list, which would
     // normally make its hook implementation to be invoked first.
-    /** @var \Drupal\Core\Extension\ModuleHandlerInterface $module_handler */
-    $module_handler = $this->container->get('module_handler');
-    $module_list = $module_handler->getModuleList();
+    $module_list = $this->container->get('extension.list.module')->getInstalled();
     $expected_modules = [
       'content_translation_test',
       'content_translation',

@@ -132,7 +132,7 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
     $this->assertArrayHasKey('page_cache', $extension_config['module']);
     $this->assertArrayNotHasKey('module_test', $extension_config['module']);
 
-    $module_list = \Drupal::moduleHandler()->getModuleList();
+    $module_list = \Drupal::service('extension.list.module')->getInstalled();
     $this->assertArrayHasKey('page_cache', $module_list);
     $this->assertArrayNotHasKey('module_test', $module_list);
 
@@ -151,7 +151,7 @@ class UpdatePathTestBaseTest extends UpdatePathTestBase {
     $this->assertArrayNotHasKey('page_cache', $extension_config['module']);
     $this->assertArrayHasKey('module_test', $extension_config['module']);
 
-    $module_list = \Drupal::moduleHandler()->getModuleList();
+    $module_list = \Drupal::service('extension.list.module')->getInstalled();
     $this->assertArrayNotHasKey('page_cache', $module_list);
     $this->assertArrayHasKey('module_test', $module_list);
 

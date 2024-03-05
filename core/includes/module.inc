@@ -79,8 +79,7 @@ function module_set_weight($module, $weight) {
 
     // Prepare the new module list, sorted by weight, including filenames.
     // @see \Drupal\Core\Extension\ModuleInstaller::install()
-    $module_handler = \Drupal::moduleHandler();
-    $current_module_filenames = $module_handler->getModuleList();
+    $current_module_filenames = \Drupal::service('extension.list.module')->getInstalled();
     $current_modules = array_fill_keys(array_keys($current_module_filenames), 0);
     $current_modules = module_config_sort(array_merge($current_modules, $extension_config->get('module')));
     $module_filenames = [];
@@ -88,7 +87,7 @@ function module_set_weight($module, $weight) {
       $module_filenames[$name] = $current_module_filenames[$name];
     }
     // Update the module list in the extension handler.
-    $module_handler->setModuleList($module_filenames);
+    \Drupal::moduleHandler()->setModuleList($module_filenames);
     return;
   }
 }
