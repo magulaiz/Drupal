@@ -162,7 +162,7 @@ class CommentPreviewTest extends CommentTestBase {
     $this->submitForm($edit, 'Preview');
 
     // Check that the preview is displaying the subject, comment, author and date correctly.
-    $this->assertSession()->titleEquals('Preview comment | ' . $edit['comment_body[0][value]'] . ' | Drupal');
+    $this->assertSession()->titleEquals('Preview comment | Drupal');
     $this->assertSession()->pageTextContains($edit['subject[0][value]']);
     $this->assertSession()->pageTextContains($edit['comment_body[0][value]']);
     $this->assertSession()->pageTextContains($web_user->getAccountName());

@@ -659,8 +659,7 @@ class ForumTest extends BrowserTestBase {
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertSession()->statusCodeEquals($response);
     if ($response == 200) {
-      $node_label = $node->label();
-      $this->assertSession()->titleEquals("Edit Forum topic $node_label | $node_label | Drupal");
+      $this->assertSession()->titleEquals('Edit Forum topic ' . $node->label() . ' | Drupal');
     }
 
     if ($response == 200) {
