@@ -39,6 +39,8 @@ class ViewsAccess extends Plugin {
    * @param bool $register_theme
    *   Whether to register a theme function automatically.
    *   This property is optional and it does not need to be declared.
+   * @param class-string|null $deriver
+   *   (optional) The deriver class.
    */
   public function __construct(
     public readonly string $id,
@@ -47,8 +49,9 @@ class ViewsAccess extends Plugin {
     public readonly ?TranslatableMarkup $help = NULL,
     public readonly ?array $display_types = NULL,
     public readonly array $base = [],
-    public readonly ?bool $no_ui = NULL,
-    public readonly bool $register_theme = TRUE,
+    public readonly bool $no_ui = FALSE,
+    public readonly bool $register_theme = FALSE,
+    public readonly ?string $deriver = NULL
   ) {}
 
 }
