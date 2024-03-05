@@ -1905,6 +1905,10 @@ function template_preprocess_menu_local_task(&$variables) {
   ];
   $link_text = $link['title'];
 
+  if (!empty($variables['element']['#active'])) {
+    $variables['is_active'] = TRUE;
+  }
+
   $link['localized_options']['set_active_class'] = TRUE;
 
   $variables['link'] = [
