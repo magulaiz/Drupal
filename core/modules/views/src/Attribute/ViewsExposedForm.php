@@ -40,7 +40,7 @@ class ViewsExposedForm extends ViewsPluginAttributeBase {
    *   If it's set to TRUE, you can still use it via the API in config files.
    * @param bool $register_theme
    *   (optional) Whether or not to register a theme function automatically.
-   * @param string|null $deriver
+   * @param class-string|null $deriver
    *   (optional) The deriver class.
    */
   public function __construct(
