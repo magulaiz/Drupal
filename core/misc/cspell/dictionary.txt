@@ -349,6 +349,7 @@ isam
 isinstallable
 itok
 ized
+jangregor
 javascripts
 jessebeach
 johansson
