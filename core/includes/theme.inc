@@ -1327,7 +1327,7 @@ function template_preprocess_html(&$variables) {
 
     $maintenance_mode = defined('MAINTENANCE_MODE') || \Drupal::state()->get('system.maintenance_mode');
     $is_admin_route = (bool) \Drupal::routeMatch()->getRouteObject()?->getOption('_admin_route');
-      if (!$maintenance_mode && $is_admin_route) {
+    if (!$maintenance_mode && $is_admin_route) {
       $base_route_title = \Drupal::service('base_route_title_resolver')->getTitle(\Drupal::requestStack()->getCurrentRequest(), \Drupal::routeMatch()->getRouteObject());
       if (is_array($base_route_title)) {
         $base_route_title = (string) \Drupal::service('renderer')->render($base_route_title);
