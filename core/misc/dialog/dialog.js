@@ -5,6 +5,14 @@
  * @see http://www.whatwg.org/specs/web-apps/current-work/multipage/commands.html#the-dialog-element
  */
 
+class DialogEvent extends Event {
+  constructor(type, dialog, settings = null) {
+    super(`dialog:${type}`, { bubbles: true });
+    this.dialog = dialog;
+    this.settings = settings;
+  }
+}
+
 (function ($, Drupal, drupalSettings, bodyScrollLock) {
   /**
    * Default dialog options.
@@ -62,6 +70,7 @@
   Drupal.dialog = function (element, options) {
     let undef;
     const $element = $(element);
+    const elementInDom = $element.get(0);
     const dialog = {
       open: false,
       returnValue: undef,
@@ -70,10 +79,12 @@
     function openDialog(settings) {
       settings = $.extend({}, drupalSettings.dialog, options, settings);
       // Trigger a global event to allow scripts to bind events to the dialog.
-      const dialogBeforeCreateEvent = new CustomEvent('dialog:beforecreate', {
-        detail: { dialog, $element: $element.get(0), settings },
-      });
-      window.dispatchEvent(dialogBeforeCreateEvent);
+      const dialogBeforeCreateEvent = new DialogEvent(
+        'beforecreate',
+        dialog,
+        settings,
+      );
+      elementInDom.dispatchEvent(dialogBeforeCreateEvent);
       $element.dialog(settings);
       dialog.open = true;
 
@@ -82,27 +93,23 @@
         // Locks the body when the dialog opens.
         bodyScrollLock.lock($element.get(0));
       }
-      const dialogAfterCreateEvent = new CustomEvent('dialog:aftercreate', {
-        detail: { dialog, $element: $element.get(0), settings },
-      });
-      $element.get(0).dispatchEvent(dialogAfterCreateEvent);
+
+      elementInDom.dispatchEvent(
+        new DialogEvent('aftercreate', dialog, settings),
+      );
     }
 
     function closeDialog(value) {
-      const dialogBeforeCloseEvent = new CustomEvent('dialog:beforeclose', {
-        detail: { dialog, $element: $element.get(0) },
-      });
-      window.dispatchEvent(dialogBeforeCloseEvent);
+      const dialogBeforeCloseEvent = new DialogEvent('beforeclose', dialog);
+      elementInDom.dispatchEvent(dialogBeforeCloseEvent);
       // Unlocks the body when the dialog closes.
       bodyScrollLock.clearBodyLocks();
 
       $element.dialog('close');
       dialog.returnValue = value;
       dialog.open = false;
-      const dialogAfterCloseEvent = new CustomEvent('dialog:afterclose', {
-        detail: { dialog, $element: $element.get(0) },
-      });
-      window.dispatchEvent(dialogAfterCloseEvent);
+      const dialogAfterCloseEvent = new DialogEvent('afterclose', dialog);
+      elementInDom.dispatchEvent(dialogAfterCloseEvent);
     }
 
     dialog.show = () => {
