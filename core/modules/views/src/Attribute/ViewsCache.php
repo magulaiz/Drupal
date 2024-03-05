@@ -36,6 +36,8 @@ class ViewsCache extends Plugin {
    * @param bool $no_ui
    *   Whether the plugin should be not selectable in the UI.
    *   If set to TRUE, you can still use it via the API in config files.
+   * @param string|null $deriver
+   *   (optional) The deriver class.
    */
   public function __construct(
     public readonly string $id,
@@ -45,6 +47,7 @@ class ViewsCache extends Plugin {
     public readonly ?array $display_types = NULL,
     public readonly array $base = [],
     public readonly ?bool $no_ui = NULL,
+    public readonly ?string $deriver = NULL
   ) {}
 
 }
