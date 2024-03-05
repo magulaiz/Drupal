@@ -352,7 +352,6 @@ class LocalTasksTest extends BrowserTestBase {
    *   The expected path alias.
    */
   protected function assertSameLocalTaskUrl(string $alias): void {
-    $page = $this->getSession()->getPage();
     // Assert that the href attribute of the 'View' link contains the expected
     // alias.
     $link = $this->assertSession()->elementExists('xpath', '//a[text()="View"]');
