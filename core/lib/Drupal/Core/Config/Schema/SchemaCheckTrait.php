@@ -54,9 +54,20 @@ trait SchemaCheckTrait {
     ],
     'system.theme' => [
       // TRICKY: chicken vs egg: `system` module must be installed before the
-      // `stark` theme can be installed!
+      // `stark` theme can be installed! Stark is the default theme unless an
+      // install profile specifies a different default theme.
       'default' => [
+        // @see core/modules/system/config/install/system.theme.yml
         "Theme 'stark' is not installed.",
+        // @see core/profiles/standard/config/install/system.theme.yml
+        "Theme 'olivero' is not installed.",
+        // @see core/profiles/demo_umami/config/install/system.theme.yml
+        "Theme 'umami' is not installed.",
+      ],
+      'admin' => [
+        // @see core/profiles/standard/config/install/system.theme.yml
+        // @see core/profiles/demo_umami/config/install/system.theme.yml
+        "Theme 'claro' is not installed.",
       ],
     ],
     'editor.editor.*' => [
