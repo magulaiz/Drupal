@@ -248,7 +248,7 @@
         if ($hasFocus.length === 0) {
           $hasFocus = $set.eq(0);
         }
-        $hasFocus.dispatchEvent(new FocusEvent('focus'));
+        $hasFocus.focus();
 
         // Trap focus within the set.
         if ($set.length && tabbingContext.trapFocus) {

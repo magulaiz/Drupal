@@ -71,7 +71,7 @@
       settings = $.extend({}, drupalSettings.dialog, options, settings);
       // Trigger a global event to allow scripts to bind events to the dialog.
       const dialogBeforeCreateEvent = new CustomEvent('dialog:beforecreate', {
-        detail: { dialog, $element, settings },
+        detail: { dialog, $element: $element.get(0), settings },
       });
       window.dispatchEvent(dialogBeforeCreateEvent);
       $element.dialog(settings);
@@ -82,16 +82,15 @@
         // Locks the body when the dialog opens.
         bodyScrollLock.lock($element.get(0));
       }
-
       const dialogAfterCreateEvent = new CustomEvent('dialog:aftercreate', {
-        detail: { dialog, $element, settings },
+        detail: { dialog, $element: $element.get(0), settings },
       });
-      window.dispatchEvent(dialogAfterCreateEvent);
+      $element.get(0).dispatchEvent(dialogAfterCreateEvent);
     }
 
     function closeDialog(value) {
       const dialogBeforeCloseEvent = new CustomEvent('dialog:beforeclose', {
-        detail: { dialog, $element },
+        detail: { dialog, $element: $element.get(0) },
       });
       window.dispatchEvent(dialogBeforeCloseEvent);
       // Unlocks the body when the dialog closes.
@@ -101,7 +100,7 @@
       dialog.returnValue = value;
       dialog.open = false;
       const dialogAfterCloseEvent = new CustomEvent('dialog:afterclose', {
-        detail: { dialog, $element },
+        detail: { dialog, $element: $element.get(0) },
       });
       window.dispatchEvent(dialogAfterCloseEvent);
     }
