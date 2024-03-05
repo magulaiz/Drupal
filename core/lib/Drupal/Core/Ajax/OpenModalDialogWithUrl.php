@@ -15,7 +15,8 @@ class OpenModalDialogWithUrl implements CommandInterface {
    * Constructs a OpenModalDialogWithUrl object.
    *
    * @param string $url
-   *   The URL of the page.
+   *   Only Internal URLs or URLs with the same domain and base path are
+   *   allowed.
    * @param array $settings
    *   The dialog settings.
    *
@@ -24,9 +25,6 @@ class OpenModalDialogWithUrl implements CommandInterface {
    *   OpenDialogCommand is a similar class which opens modals but works
    *   differently as it needs all data to be passed through dialogOptions while
    *   OpenModalDialogWithUrl fetches the data from routing info of the URL.
-   *
-   *   Only Internal URLs or URLs with the same domain and base path are
-   *   allowed.
    */
   public function __construct(
     protected string $url,
