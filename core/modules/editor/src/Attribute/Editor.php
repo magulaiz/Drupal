@@ -36,6 +36,8 @@ class Editor extends Plugin {
    *   Whether this text editor is not vulnerable to XSS attacks.
    * @param string[] $supported_element_types
    *   On which form element #types this text editor is capable of working.
+   * @param class-string|null $deriver
+   *   (optional) The deriver class.
    */
   public function __construct(
     public readonly string $id,
@@ -44,6 +46,7 @@ class Editor extends Plugin {
     public readonly bool $supports_inline_editing = FALSE,
     public readonly bool $is_xss_safe = FALSE,
     public readonly array $supported_element_types = [],
+    public readonly ?string $deriver = NULL
   ) {}
 
 }
