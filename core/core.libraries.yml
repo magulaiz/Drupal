@@ -338,11 +338,6 @@ ckeditor5.autoformat:
   dependencies:
     - core/ckeditor5
 
-css.escape:
-  version: VERSION
-  drupalSettings: {}
-  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
-
 drupal:
   version: VERSION
   js:
@@ -471,16 +466,6 @@ drupal.autocomplete:
     - core/tabbable.jquery.shim
     - core/drupal.jquery.position
 
-drupal.array.find:
-  version: VERSION
-  drupalSettings: {}
-  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
-
-drupal.array.includes:
-  version: VERSION
-  drupalSettings: {}
-  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
-
 drupal.batch:
   version: VERSION
   js:
@@ -511,11 +496,6 @@ drupal.collapse:
     - core/drupal
     - core/drupal.form
     - core/once
-
-drupal.customevent:
-  version: VERSION
-  drupalSettings: {}
-  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
 
 drupal.debounce:
   version: VERSION
@@ -597,16 +577,6 @@ drupal.dropbutton:
     - core/drupalSettings
     - core/once
 
-drupal.element.closest:
-  version: VERSION
-  drupalSettings: {}
-  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
-
-drupal.element.matches:
-  version: VERSION
-  drupalSettings: {}
-  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
-
 drupal.entity-form:
   version: VERSION
   js:
@@ -644,16 +614,6 @@ drupal.message:
     - core/drupal
     - core/drupal.announce
 
-drupal.nodelist.foreach:
-  version: VERSION
-  drupalSettings: {}
-  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
-
-drupal.object.assign:
-  version: VERSION
-  drupalSettings: {}
-  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
-
 drupal.progress:
   version: VERSION
   js:
@@ -672,11 +632,6 @@ drupal.states:
     - core/drupal
     - core/drupalSettings
     - core/once
-
-drupal.string.includes:
-  version: VERSION
-  drupalSettings: {}
-  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
 
 drupal.tabbingmanager:
   version: VERSION
@@ -757,8 +712,6 @@ drupal.touchevents-test:
   header: true
   version: VERSION
   js:
-    # Set weight to -21 so it loads alongside Modernizr, the library previously
-    # responsible for this detection.
     misc/touchevents-test.js: { weight: -21 }
 
 drupal.vertical-tabs:
@@ -775,11 +728,6 @@ drupal.vertical-tabs:
     - core/drupal
     - core/drupalSettings
     - core/drupal.form
-
-es6-promise:
-  version: VERSION
-  drupalSettings: {}
-  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
 
 jquery:
   remote: https://github.com/jquery/jquery
@@ -824,19 +772,6 @@ drupal.jquery.position:
   dependencies:
     - core/jquery
 
-modernizr:
-  # Block the page from being loaded until Modernizr is initialized.
-  header: true
-  remote: https://github.com/Modernizr/Modernizr
-  license:
-    name: MIT
-    url: https://modernizr.com/license/
-    gpl-compatible: true
-  version: "3.11.7"
-  js:
-    assets/vendor/modernizr/modernizr.min.js: { preprocess: 0, weight: -21, minified: true }
-  deprecated: The %library_id% asset library is deprecated in Drupal 10.1.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3333253
-
 normalize:
   remote: https://github.com/necolas/normalize.css
   version: "8.0.1"
@@ -857,11 +792,6 @@ once:
     gpl-compatible: true
   js:
     assets/vendor/once/once.min.js: { weight: -19, minified: true }
-
-picturefill:
-  version: VERSION
-  drupalSettings: {}
-  deprecated: The %library_id% asset library is deprecated in Drupal 10.0.0 and will be removed in Drupal 11.0.0. See https://www.drupal.org/node/3280410
 
 sortable:
   remote: https://github.com/SortableJS/Sortable
