@@ -4,6 +4,7 @@ namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Config\ConfigCollectionEvents;
 use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Config\ConfigImporter;
@@ -841,7 +842,7 @@ class ConfigImporterTest extends KernelTestBase {
     // uninstalled.
     $extensions['module']['module_test'] = 0;
     $extensions['module']['system_test'] = 0;
-    $extensions['module'] = module_config_sort($extensions['module']);
+    SortArray::sortByNumericValueAndKey($extensions['module']);
     $sync->write('core.extension', $extensions);
     $this->configImporter()->import();
 
