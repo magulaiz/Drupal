@@ -117,7 +117,12 @@ search.page.*:
 block.settings.search_form_block:
   type: block_settings
   label: 'Search block'
+  constraints:
+    FullyValidatable: ~
   mapping:
     page_id:
       type: string
       label: 'Search page'
+      constraints:
+        ConfigExists:
+          prefix: search.page.
