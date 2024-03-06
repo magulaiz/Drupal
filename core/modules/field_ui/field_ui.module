@@ -82,7 +82,7 @@ function field_ui_theme() {
 /**
  * Implements hook_config_schema_info_alter().
  */
-function field_ui_config_schema_info_alter(&$definitions) {
+function field_ui_config_schema_info_alter(&$definitions): void {
   $map = [
     'core.entity_form_display.*.*.*' => EntityDisplayElement::class,
     'core.entity_view_display.*.*.*' => EntityDisplayElement::class,
@@ -325,7 +325,7 @@ function field_ui_form_field_config_edit_form_alter(&$form, FormStateInterface $
 /**
  * Implements hook_config_translation_info().
  */
-function field_ui_config_translation_info(&$info) {
+function field_ui_config_translation_info(&$info): void {
   $entity_type_manager = \Drupal::entityTypeManager();
 
   // Add fields entity mappers to all fieldable entity types defined.

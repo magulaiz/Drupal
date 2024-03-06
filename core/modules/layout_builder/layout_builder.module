@@ -420,7 +420,7 @@ function layout_builder_theme_suggestions_field_alter(&$suggestions, array $vari
 /**
  * Implements hook_config_schema_info_alter().
  */
-function layout_builder_config_schema_info_alter(&$definitions) {
+function layout_builder_config_schema_info_alter(&$definitions): void {
   $map = [
     'core.entity_view_display.*.*.*.third_party.layout_builder' => LayoutBuilderDisplayElement::class,
     'core.entity_form_display.*.*.*' => LayoutBuilderEntityDisplayElement::class,

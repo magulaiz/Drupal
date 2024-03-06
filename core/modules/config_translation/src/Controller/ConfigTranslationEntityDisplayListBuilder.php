@@ -3,10 +3,10 @@
 namespace Drupal\config_translation\Controller;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -22,13 +22,6 @@ class ConfigTranslationEntityDisplayListBuilder extends ConfigTranslationFieldLi
    * @var string
    */
   protected $displayContext;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
 
   /**
    * {@inheritdoc}
@@ -56,15 +49,14 @@ class ConfigTranslationEntityDisplayListBuilder extends ConfigTranslationFieldLi
    *   The entity type manager.
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
    *   The entity type bundle info.
-   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   * @param \Drupal\Core\Session\AccountProxyInterface $currentUser
    *   The current user service.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, AccountInterface $current_user) {
+  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, protected AccountInterface $currentUser) {
     parent::__construct($entity_type, $storage, $entity_type_manager, $entity_type_bundle_info);
     // Property displayContext from $this->entityType is protected,
     // so recreate it from its ID.
     $this->displayContext = preg_replace('/^entity_(.+)_display$/', '\1', $this->entityType->id());
-    $this->currentUser = $current_user;
   }
 
   /**
