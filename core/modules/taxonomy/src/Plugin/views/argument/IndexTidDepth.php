@@ -36,7 +36,7 @@ class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPlugin
 
     $this->termStorage = $termStorage;
     if ($this->entityRepository === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $entityRepository argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/project/drupal/issues/2765297', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __CLASS__ . '::__construct() without the $entityRepository argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/project/drupal/issues/2765297', E_USER_DEPRECATED);
       $this->entityRepository = \Drupal::service('entity.repository');
     }
   }
