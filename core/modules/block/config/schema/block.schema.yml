@@ -48,10 +48,8 @@ block.block.*:
           # to consider the fallback plugin ID as valid.
           allowFallback: true
     settings:
-      # @todo
       type: block.settings.[%parent.plugin]
     visibility:
-      # @todo
       type: sequence
       label: 'Visibility Conditions'
       sequence:
