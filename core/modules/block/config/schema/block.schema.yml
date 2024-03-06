@@ -33,6 +33,7 @@ block.block.*:
       nullable: true
     provider:
       deprecated: "The 'block.block.*:provider' config property path is deprecated in drupal:10.3.0 and is removed from drupal 11.0.0. It was unused, there is no replacement. See https://www.drupal.org/node/1234567."
+      nullable: true
       type: string
       label: 'Provider'
     plugin:
