@@ -79,7 +79,7 @@ final class FieldStorageAddController extends ControllerBase {
     $this->entityTypeId = $entity_type_id;
     $this->bundle = $bundle;
     $ui_definitions = $this->fieldTypePluginManager->getUiDefinitions();
-    $this->moduleHandler()->invokeAll('field_ui_field_type_ui_definitions_alter', [&$ui_definitions, $entity_type_id]);
+    $this->moduleHandler()->invokeAll('field_info_entity_type_ui_definitions_alter', [&$ui_definitions, $entity_type_id]);
     $field_type_options = $unique_definitions = [];
     $grouped_definitions = $this->fieldTypePluginManager->getGroupedDefinitions($ui_definitions, 'label', 'id');
     $category_definitions = $this->fieldTypeCategoryManager->getDefinitions();
@@ -117,9 +117,7 @@ final class FieldStorageAddController extends ControllerBase {
       $entity_type = $this->entityTypeManager()->getDefinition($this->entityTypeId);
       $display_as_group = !($category_info instanceof FallbackFieldTypeCategory);
       $route_parameters = [
-        'entity_type' => $this->entityTypeId,
         'bundle' => $this->bundle,
-        'display_as_group' => $display_as_group ? 'true' : 'false',
         'new_storage_type' => $category_info->getPluginId(),
       ] + FieldUI::getRouteBundleParameter($entity_type, $this->bundle);
       $cleaned_class_name = Html::getClass($field_type['unique_identifier']);
