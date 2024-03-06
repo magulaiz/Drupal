@@ -32,7 +32,11 @@ class StandardPerformanceTest extends PerformanceTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-
+    // Create a node to be shown on the front page.
+    $this->drupalCreateNode([
+      'type' => 'article',
+      'promote' => NodeInterface::PROMOTED,
+    ]);
     // Grant the anonymous user the permission to look at user profiles.
     user_role_grant_permissions('anonymous', ['access user profiles']);
   }
@@ -41,11 +45,6 @@ class StandardPerformanceTest extends PerformanceTestBase {
    * Tests performance for anonymous users.
    */
   public function testAnonymous() {
-    // Create two nodes to be shown on the front page.
-    $this->drupalCreateNode([
-      'type' => 'article',
-      'promote' => NodeInterface::PROMOTED,
-    ]);
     // Request a page that we're not otherwise explicitly testing to warm some
     // caches.
     $this->drupalGet('search');
@@ -286,11 +285,11 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
     $this->assertSame(27, $performance_data->getQueryCount());
-    $this->assertSame(101, $performance_data->getCacheGetCount());
+    $this->assertSame(108, $performance_data->getCacheGetCount());
     $this->assertSame(1, $performance_data->getCacheSetCount());
     $this->assertSame(1, $performance_data->getCacheDeleteCount());
     $this->assertSame(1, $performance_data->getCacheTagChecksumCount());
-    $this->assertSame(39, $performance_data->getCacheTagIsValidCount());
+    $this->assertSame(44, $performance_data->getCacheTagIsValidCount());
     $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
   }
 
