@@ -35,7 +35,10 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static array $propertiesWithOptionalValues = ['weight'];
+  protected static array $propertiesWithOptionalValues = [
+    'provider',
+    'weight',
+  ];
 
   /**
    * {@inheritdoc}
