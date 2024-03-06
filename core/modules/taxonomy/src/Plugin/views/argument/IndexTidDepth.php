@@ -122,9 +122,9 @@ class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPlugin
   }
 
   public function title() {
-    $term = $this->termStorage->load($this->argument);
+    $term = $this->entityRepository->getCanonical('taxonomy_term', $this->argument);
     if (!empty($term)) {
-      return $this->entityRepository->getTranslationFromContext($term)->label();
+      return $term->label();
     }
     // TODO review text
     return $this->t('No name');
