@@ -1594,7 +1594,10 @@
      *   The XMLHttpRequest status.
      */
     data(ajax, response, status) {
-      response.selector.setAttribute('data-' + response.name, response.value);
+      $(response.selector).setAttribute(
+        `data-${response.name}`,
+        response.value,
+      );
     },
 
     /**
