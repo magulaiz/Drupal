@@ -29,13 +29,6 @@ block.block.*:
     weight:
       type: weight
       label: 'Weight'
-    provider:
-      type: string
-      label: 'Provider'
-      constraints:
-        NotBlank: []
-        ExtensionName: []
-        ExtensionExists: module
     plugin:
       type: string
       label: 'Plugin'

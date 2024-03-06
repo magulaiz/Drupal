@@ -433,6 +433,8 @@ block.settings.*:
 block_settings:
   type: mapping
   label: 'Block settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     id:
       type: string
@@ -441,21 +443,23 @@ block_settings:
       type: label
       label: 'Description'
     label_display:
-      type: string
+      type: label
       label: 'Display title'
     provider:
       type: string
-      label: 'Provider'
+      label: 'Provider of this block plugin'
+      constraints:
+        NotBlank: []
+        ExtensionName: []
+        ExtensionExists: module
     status:
       type: boolean
       label: 'Status'
     info:
       type: label
       label: 'Admin info'
-    view_mode:
-      type: string
-      label: 'View mode'
     context_mapping:
+      requiredKey: false
       type: sequence
       label: 'Context assignments'
       sequence:
