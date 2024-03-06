@@ -13,21 +13,6 @@
    */
   Drupal.behaviors.ClickToSelect = {
     attach(context) {
-      function trigger(el, eventType) {
-        if (
-          typeof eventType === 'string' &&
-          typeof el[eventType] === 'function'
-        ) {
-          el[eventType]();
-        } else {
-          const event =
-            typeof eventType === 'string'
-              ? new Event(eventType, { bubbles: true })
-              : eventType;
-          el.dispatchEvent(event);
-        }
-      }
-
       $(
         once(
           'media-library-click-to-select',
@@ -42,7 +27,7 @@
           .closest('.js-click-to-select')
           .find('.js-click-to-select-checkbox input');
         $input[0].checked = !$input[0].checked;
-        trigger($input[0], 'change');
+        $input.trigger('change');
       });
 
       $(

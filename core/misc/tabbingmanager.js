@@ -236,7 +236,7 @@
         // unreachable.
         $disabledSet.each(function () {
           this.tabIndex = -1;
-          this.setAttribute('autofocus', false);
+          this.autofocus = false;
         });
 
         // Set focus on an element in the tabbingContext's set of tabbable
