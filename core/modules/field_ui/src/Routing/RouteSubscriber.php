@@ -105,7 +105,7 @@ class RouteSubscriber extends RouteSubscriberBase {
 
         $route = new Route(
           "$path/fields/add-field/{new_storage_type}",
-          [s
+          [
             '_form' => '\Drupal\field_ui\Form\FieldStorageAddForm',
             '_title' => 'Add field',
           ] + $defaults,

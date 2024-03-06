@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\field_ui\Controller;
 
-use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Ajax\AjaxHelperTrait;
@@ -121,21 +120,14 @@ final class FieldStorageAddController extends ControllerBase {
         'entity_type' => $this->entityTypeId,
         'bundle' => $this->bundle,
         'display_as_group' => $display_as_group ? 'true' : 'false',
-        'selected_field_type' => $category_info->getPluginId(),
+        'new_storage_type' => $category_info->getPluginId(),
       ] + FieldUI::getRouteBundleParameter($entity_type, $this->bundle);
       $cleaned_class_name = Html::getClass($field_type['unique_identifier']);
       $field_type_options_radios[$id] = [
         '#type' => 'html_tag',
         '#tag' => 'a',
         '#attributes' => [
-          'class' => ['field-option', 'use-ajax'],
-          'role' => 'button',
-          'tabindex' => '0',
-          'data-dialog-type' => 'modal',
-          'data-dialog-options' => Json::encode([
-            'width' => 1100,
-            'title' => $this->t('Add field: @type', ['@type' => $category_info->getLabel()]),
-          ]),
+          'class' => ['field-option', 'js-click-to-select'],
           'href' => Url::fromRoute("field_ui.field_storage_config_add_sub_{$this->entityTypeId}", $route_parameters)->toString(),
         ],
         '#weight' => $category_info->getWeight(),
@@ -179,7 +171,6 @@ final class FieldStorageAddController extends ControllerBase {
           ],
         ],
       ];
-
       if ($libraries = $category_info->getLibraries()) {
         $field_type_options_radios[$id]['#attached']['library'] = $libraries;
       }
