@@ -452,10 +452,8 @@ block_settings:
         NotBlank: []
         ExtensionName: []
         ExtensionExists: module
-    status:
-      type: boolean
-      label: 'Status'
     info:
+      requiredKey: false
       type: label
       label: 'Admin info'
     context_mapping:

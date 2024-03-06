@@ -49,7 +49,6 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *     "theme",
  *     "region",
  *     "weight",
- *     "provider",
  *     "plugin",
  *     "settings",
  *     "visibility",
