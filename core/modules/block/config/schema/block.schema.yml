@@ -3,6 +3,8 @@
 block.block.*:
   type: config_entity
   label: 'Block'
+  constraints:
+    FullyValidatable: ~
   mapping:
     id:
       type: machine_name
@@ -17,6 +19,10 @@ block.block.*:
     theme:
       type: string
       label: 'Theme'
+      constraints:
+        NotBlank: []
+        ExtensionName: []
+        ExtensionExists: theme
     region:
       type: string
       label: 'Region'
@@ -26,6 +32,10 @@ block.block.*:
     provider:
       type: string
       label: 'Provider'
+      constraints:
+        NotBlank: []
+        ExtensionName: []
+        ExtensionExists: module
     plugin:
       type: string
       label: 'Plugin'
@@ -38,8 +48,10 @@ block.block.*:
           # to consider the fallback plugin ID as valid.
           allowFallback: true
     settings:
+      # @todo
       type: block.settings.[%parent.plugin]
     visibility:
+      # @todo
       type: sequence
       label: 'Visibility Conditions'
       sequence:
