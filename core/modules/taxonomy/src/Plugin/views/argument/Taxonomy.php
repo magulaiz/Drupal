@@ -23,18 +23,16 @@ class Taxonomy extends NumericArgument implements ContainerFactoryPluginInterfac
   protected $termStorage;
 
   /**
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface
-   */
-  protected $entityRepository;
-
-  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $term_storage, EntityRepositoryInterface $entityRepository) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $term_storage, protected ?EntityRepositoryInterface $entityRepository = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->termStorage = $term_storage;
-    $this->entityRepository = $entityRepository;
+    if ($this->entityRepository === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $entityRepository argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/project/drupal/issues/2765297', E_USER_DEPRECATED);
+      $this->entityRepository = \Drupal::service('entity.repository');
+    }
   }
 
   /**
@@ -56,9 +54,9 @@ class Taxonomy extends NumericArgument implements ContainerFactoryPluginInterfac
   public function title() {
     // There might be no valid argument.
     if ($this->argument) {
-    $term = $this->entityRepository->getCanonical('taxonomy_term', $this->argument);
-    if (!empty($term)) {
-      return $term->label();
+      $term = $this->entityRepository->getCanonical('taxonomy_term', $this->argument);
+      if (!empty($term)) {
+        return $term->label();
       }
     }
     // TODO review text
