@@ -88,7 +88,7 @@ class SearchBlock extends BlockBase implements ContainerFactoryPluginInterface {
    */
   public function defaultConfiguration() {
     return [
-      'page_id' => '',
+      'page_id' => NULL,
     ];
   }
 
