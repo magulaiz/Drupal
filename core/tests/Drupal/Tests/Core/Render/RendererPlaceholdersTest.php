@@ -763,7 +763,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
    * @dataProvider providerPlaceholders
    */
   public function testPlaceholderingDisabledForPostRequests(array $test_element, array $args, array $expected_placeholder_render_array, array|false $placeholder_cache_keys): void {
-    if ($placeholder_cache_keys) {
+    if ($placeholder_cache_keys && !empty($test_element['placeholder']['#cache']['keys'])) {
       $this->setUpMemoryCache();
     }
     else {
