@@ -378,7 +378,7 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
     // We need to render the embedded entity:
     // - without replacing placeholders, so that the placeholders are
     //   only replaced at the last possible moment. Hence we cannot use
-    //   either renderPlain() or renderRoot(), so we must use render().
+    //   either renderInIsolation() or renderRoot(), so we must use render().
     // - without bubbling beyond this filter, because filters must
     //   ensure that the bubbleable metadata for the changes they make
     //   when filtering text makes it onto the FilterProcessResult
@@ -456,11 +456,10 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
 
       if (!empty($settings['alt_field']) && $node->hasAttribute('alt')) {
         // Allow the display of the image without an alt tag in special cases.
-        // Since setting the value in the EditorMediaDialog to an empty string
-        // restores the default value, this allows special cases where the alt
-        // text should not be set to the default value, but should be
-        // explicitly empty instead so it can be ignored by assistive
-        // technologies, such as screen readers.
+        // Since setting the value to an empty string restores the default
+        // value, this allows special cases where the alt text should not be set
+        // to the default value, but should be explicitly empty instead, so it
+        // can be ignored by assistive technologies, such as screen readers.
         if ($node->getAttribute('alt') === '""') {
           $node->setAttribute('alt', '');
         }
