@@ -22,8 +22,10 @@ class CacheabilityMetadataConfigOverrideTest extends KernelTestBase {
     'block_content',
     'config',
     'config_override_test',
+    'field',
     'path_alias',
     'system',
+    'text',
     'user',
   ];
 
@@ -34,7 +36,12 @@ class CacheabilityMetadataConfigOverrideTest extends KernelTestBase {
     parent::setUp();
     $this->container->get('theme_installer')->install(['stark']);
     $this->installEntitySchema('block_content');
-    $this->installConfig(['config_override_test']);
+    $this->installEntitySchema('field_storage_config');
+    $this->installConfig([
+      // @see core/modules/block_content/config/install/core.entity_view_mode.block_content.full.yml
+      'block_content',
+      'config_override_test',
+    ]);
   }
 
   /**
