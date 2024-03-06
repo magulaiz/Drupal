@@ -132,6 +132,8 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
    */
   public function defaultConfiguration() {
     return [
+      'status' => TRUE,
+      'info' => '',
       'view_mode' => 'full',
     ];
   }
