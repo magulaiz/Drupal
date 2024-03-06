@@ -96,8 +96,9 @@ class Element {
         // @see https://www.drupal.org/node/1283892
         elseif (isset($value)) {
           trigger_error(new FormattableMarkup(
-            'Expected an array but got a @type',
+            '"@key" is an invalid render array key. Value should be an array but got a @type',
             [
+              '@key' => $key,
               '@type' => gettype($value),
             ]
           ), E_USER_ERROR);
