@@ -465,3 +465,11 @@ default:
         echo "HEAD is $(git rev-parse HEAD). \$CI_MERGE_REQUEST_DIFF_BASE_SHA is ${CI_MERGE_REQUEST_DIFF_BASE_SHA}";
       fi;
     - git diff ${CI_MERGE_REQUEST_TARGET_BRANCH_SHA:-$CI_MERGE_REQUEST_DIFF_BASE_SHA} --name-only | sed "s_^_../_" | yarn --cwd=./core run -s spellcheck:core --no-must-find-files --file-list stdin
+
+'🩺 Commit code checks':
+  <<: [ *with-yarn, *default-job-settings-lint ]
+  stage: 🪄 Lint
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
+  script:
+    - $CI_PROJECT_DIR/core/scripts/dev/commit-code-check.sh
