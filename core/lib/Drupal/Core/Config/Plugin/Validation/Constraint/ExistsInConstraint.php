@@ -35,7 +35,7 @@ class ExistsInConstraint extends Constraint {
    *
    * @var string
    */
-  public string|array $which;
+  public string $which;
 
   /**
    * {@inheritdoc}
