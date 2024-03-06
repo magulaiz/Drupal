@@ -45,7 +45,7 @@ class ResponsiveImageFieldWidgetTest extends ImageFieldTestBase {
       ->save();
 
     $this->drupalGet('node/add/article');
-    // Verify that the responsive image field widget is found on add/node page.
+    // Verify that the responsive image field widget is found on node/add page.
     $this->assertSession()->elementExists('xpath', '//div[contains(@class, "field--widget-responsive-image-image")]');
   }
 
