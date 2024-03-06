@@ -60,9 +60,7 @@ namespace Drupal\Core\ProxyClass\Batch {
          */
         protected function lazyLoadItself()
         {
-            if (!isset($this->service)) {
-                $this->service = $this->container->get($this->drupalProxyOriginalServiceId);
-            }
+            $this->service ??= $this->container->get($this->drupalProxyOriginalServiceId);
 
             return $this->service;
         }
