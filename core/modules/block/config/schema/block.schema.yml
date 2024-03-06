@@ -32,7 +32,7 @@ block.block.*:
       # @todo Figure out when/why this is sensible. Seems unintentional: BlockInterface::getWeight() has `int` return type, implementation does not cast from NULL to int.
       nullable: true
     provider:
-      deprecated: "The 'block.block.*:provider' config property path is deprecated in drupal:10.3.0 and is removed from drupal 11.0.0. It was unused, there is no replacement. See https://www.drupal.org/node/1234567."
+      # @todo Deprecate this from config schema and remove it from the `config_export` definition in a follow-up issue.
       nullable: true
       type: string
       label: 'Provider'
