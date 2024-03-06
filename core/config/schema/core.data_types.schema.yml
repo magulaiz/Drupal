@@ -427,8 +427,11 @@ config_entity:
       requiredKey: false
       type: _core_config_info
 
+# This applies to all blocks that have no additional settings of their own.
 block.settings.*:
   type: block_settings
+  constraints:
+    FullyValidatable: ~
 
 block_settings:
   type: mapping
