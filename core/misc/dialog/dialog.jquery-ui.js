@@ -70,7 +70,7 @@
         hasFocus = this.uiDialog.get(0);
       }
       if (hasFocus) {
-        hasFocus.dispatchEvent(new FocusEvent('focus'));
+        hasFocus.focus();
       }
     },
   });
