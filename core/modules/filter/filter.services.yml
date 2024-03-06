@@ -9,3 +9,10 @@ services:
       - { name: module_install.uninstall_validator }
     arguments: ['@plugin.manager.filter', '@entity_type.manager', '@string_translation']
     lazy: true
+
+  filter.permissions:
+    class: Drupal\filter\FilterPermissions
+    autowire: true
+    tags:
+      - { name: 'user.permission_provider', method: 'permissions', provider: 'filter' }
+  Drupal\filter\FilterPermissions: '@filter.permissions'

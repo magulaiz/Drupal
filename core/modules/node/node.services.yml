@@ -40,3 +40,9 @@ services:
     arguments: ['@current_route_match']
     tags:
       - { name: 'context_provider' }
+  node.permissions:
+    class: Drupal\node\NodePermissions
+    autowire: true
+    tags:
+      - { name: 'user.permission_provider', method: 'nodeTypePermissions', provider: 'node' }
+  Drupal\node\NodePermissions: '@node.permissions'

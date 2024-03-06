@@ -9,3 +9,9 @@ services:
     arguments: ['@current_route_match']
     tags:
       - { name: 'context_provider' }
+  taxonomy.permissions:
+    class: Drupal\taxonomy\TaxonomyPermissions
+    autowire: true
+    tags:
+      - { name: 'user.permission_provider', method: 'permissions', provider: 'taxonomy' }
+  Drupal\taxonomy\TaxonomyPermissions: '@taxonomy.permissions'

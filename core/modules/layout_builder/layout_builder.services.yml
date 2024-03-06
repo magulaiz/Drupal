@@ -68,3 +68,9 @@ services:
   layout_builder.element.prepare_layout:
     class: Drupal\layout_builder\EventSubscriber\PrepareLayout
     arguments: ['@layout_builder.tempstore_repository', '@messenger']
+  layout_builder.permissions:
+    class: Drupal\layout_builder\LayoutBuilderOverridesPermissions
+    autowire: true
+    tags:
+      - { name: 'user.permission_provider', method: 'permissions', provider: 'layout_builder' }
+  Drupal\layout_builder\LayoutBuilderOverridesPermissions: '@layout_builder.permissions'

@@ -1,0 +1,5 @@
+name: 'User permission provider tests'
+type: module
+description: 'Support module for user permission provider testing.'
+package: Testing
+version: VERSION

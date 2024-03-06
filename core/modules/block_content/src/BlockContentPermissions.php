@@ -3,38 +3,24 @@
 namespace Drupal\block_content;
 
 use Drupal\block_content\Entity\BlockContentType;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\BundlePermissionHandlerTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provide dynamic permissions for blocks of different types.
  */
-class BlockContentPermissions implements ContainerInjectionInterface {
+class BlockContentPermissions {
 
   use StringTranslationTrait;
   use BundlePermissionHandlerTrait;
 
   /**
    * Constructs a BlockContentPermissions instance.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
-   *   Entity type manager.
    */
   public function __construct(
     protected EntityTypeManagerInterface $entityTypeManager,
   ) {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('entity_type.manager'),
-    );
   }
 
   /**

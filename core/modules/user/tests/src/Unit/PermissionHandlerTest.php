@@ -5,63 +5,29 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\Unit;
 
 use Drupal\Core\Extension\Extension;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\PermissionHandler;
+use Drupal\user\PermissionProvidersLocator;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStreamWrapper;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Tests the permission handler.
  *
  * @group user
+ * @group legacy
  *
  * @coversDefaultClass \Drupal\user\PermissionHandler
  * @runTestsInSeparateProcesses
  */
 class PermissionHandlerTest extends UnitTestCase {
-
-  /**
-   * The tested permission handler.
-   *
-   * @var \Drupal\user\PermissionHandler
-   */
-  protected $permissionHandler;
-
-  /**
-   * The mocked module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
-   */
-  protected $moduleHandler;
-
-  /**
-   * The mocked string translation.
-   *
-   * @var \Drupal\Tests\user\Unit\TestTranslationManager
-   */
-  protected $stringTranslation;
-
-  /**
-   * The mocked callable resolver.
-   *
-   * @var \Drupal\Core\Utility\CallableResolver|\PHPUnit\Framework\MockObject\MockObject
-   */
-  protected $callableResolver;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-
-    $this->stringTranslation = new TestTranslationManager();
-    $this->callableResolver = $this->createMock('Drupal\Core\Utility\CallableResolver');
-  }
 
   /**
    * Provides an extension object for a given module with a human name.
@@ -93,8 +59,8 @@ class PermissionHandlerTest extends UnitTestCase {
     $root = new vfsStreamDirectory('modules');
     vfsStreamWrapper::setRoot($root);
 
-    $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
-    $this->moduleHandler->expects($this->once())
+    $moduleHandler = $this->createMock(ModuleHandlerInterface::class);
+    $moduleHandler->expects($this->once())
       ->method('getModuleDirectories')
       ->willReturn([
         'module_a' => vfsStream::url('modules/module_a'),
@@ -125,24 +91,21 @@ EOF
     );
     $modules = ['module_a', 'module_b', 'module_c'];
 
-    $this->moduleHandler->expects($this->any())
+    $moduleHandler->expects($this->any())
       ->method('getModuleList')
       ->willReturn(array_flip($modules));
+    $moduleExtensionList = $this->createMock(ModuleExtensionList::class);
 
-    $this->callableResolver->expects($this->never())
-      ->method('getCallableFromDefinition');
+    $permissionProvidersLocator = new PermissionProvidersLocator([], new ContainerBuilder());
+    $permissionHandler = new PermissionHandler($moduleHandler, new TestTranslationManager(), NULL, $moduleExtensionList, $permissionProvidersLocator);
 
-    $module_extension_list = $this->createMock(ModuleExtensionList::class);
-
-    $this->permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->callableResolver, $module_extension_list);
-
-    $actual_permissions = $this->permissionHandler->getPermissions();
+    $actual_permissions = $permissionHandler->getPermissions();
     $this->assertPermissions($actual_permissions);
 
-    $this->assertTrue($this->permissionHandler->moduleProvidesPermissions('module_a'));
-    $this->assertTrue($this->permissionHandler->moduleProvidesPermissions('module_b'));
-    $this->assertTrue($this->permissionHandler->moduleProvidesPermissions('module_c'));
-    $this->assertFalse($this->permissionHandler->moduleProvidesPermissions('module_d'));
+    $this->assertTrue($permissionHandler->moduleProvidesPermissions('module_a'));
+    $this->assertTrue($permissionHandler->moduleProvidesPermissions('module_b'));
+    $this->assertTrue($permissionHandler->moduleProvidesPermissions('module_c'));
+    $this->assertFalse($permissionHandler->moduleProvidesPermissions('module_d'));
   }
 
   /**
@@ -158,16 +121,17 @@ EOF
     $root = new vfsStreamDirectory('modules');
     vfsStreamWrapper::setRoot($root);
 
-    $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
-    $this->moduleHandler->expects($this->once())
+    $moduleHandler = $this->createMock(ModuleHandlerInterface::class);
+    $moduleHandler->expects($this->once())
       ->method('getModuleDirectories')
       ->willReturn([
         'module_a' => vfsStream::url('modules/module_a'),
         'module_b' => vfsStream::url('modules/module_b'),
         'module_c' => vfsStream::url('modules/module_c'),
       ]);
-    $module_extension_list = $this->createMock(ModuleExtensionList::class);
-    $module_extension_list->expects($this->exactly(3))
+
+    $moduleExtensionList = $this->createMock(ModuleExtensionList::class);
+    $moduleExtensionList->expects($this->exactly(3))
       ->method('getName')
       ->willReturnMap([
         ['module_a', 'Module a'],
@@ -192,11 +156,12 @@ EOF
     );
 
     $modules = ['module_a', 'module_b', 'module_c'];
-    $this->moduleHandler->expects($this->once())
+    $moduleHandler->expects($this->once())
       ->method('getModuleList')
       ->willReturn(array_flip($modules));
 
-    $permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->callableResolver, $module_extension_list);
+    $permissionProvidersLocator = new PermissionProvidersLocator([], new ContainerBuilder());
+    $permissionHandler = new PermissionHandler($moduleHandler, new TestTranslationManager(), NULL, $moduleExtensionList, $permissionProvidersLocator);
     $actual_permissions = $permissionHandler->getPermissions();
     $this->assertEquals(['access_module_a4', 'access_module_a1', 'access_module_a2', 'access_module_a3'],
       array_keys($actual_permissions));
@@ -214,8 +179,8 @@ EOF
     $root = new vfsStreamDirectory('modules');
     vfsStreamWrapper::setRoot($root);
 
-    $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
-    $this->moduleHandler->expects($this->once())
+    $moduleHandler = $this->createMock(ModuleHandlerInterface::class);
+    $moduleHandler->expects($this->once())
       ->method('getModuleDirectories')
       ->willReturn([
         'module_a' => vfsStream::url('modules/module_a'),
@@ -223,60 +188,62 @@ EOF
         'module_c' => vfsStream::url('modules/module_c'),
       ]);
 
-    $url = vfsStream::url('modules');
-    mkdir($url . '/module_a');
-    file_put_contents($url . '/module_a/module_a.permissions.yml', <<<EOF
-permission_callbacks:
-  - 'Drupal\\user\\Tests\\TestPermissionCallbacks::singleDescription'
-EOF
-    );
-    mkdir($url . '/module_b');
-    file_put_contents($url . '/module_b/module_b.permissions.yml', <<<EOF
-permission_callbacks:
-  - 'Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescription'
-  - 'Drupal\\user\\Tests\\TestPermissionCallbacks::titleProvider'
-EOF
-    );
-    mkdir($url . '/module_c');
-    file_put_contents($url . '/module_c/module_c.permissions.yml', <<<EOF
-permission_callbacks:
-  - 'Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescriptionRestrictAccess'
-EOF
-    );
-
     $modules = ['module_a', 'module_b', 'module_c'];
 
-    $this->moduleHandler->expects($this->any())
+    $moduleHandler->expects($this->any())
       ->method('getModuleList')
       ->willReturn(array_flip($modules));
 
-    $this->callableResolver->expects($this->exactly(4))
-      ->method('getCallableFromDefinition')
-      ->willReturnMap([
-        ['Drupal\\user\\Tests\\TestPermissionCallbacks::singleDescription', [new TestPermissionCallbacks(), 'singleDescription']],
-        ['Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescription', [new TestPermissionCallbacks(), 'titleDescription']],
-        ['Drupal\\user\\Tests\\TestPermissionCallbacks::titleProvider', [new TestPermissionCallbacks(), 'titleProvider']],
-        ['Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescriptionRestrictAccess', [new TestPermissionCallbacks(), 'titleDescriptionRestrictAccess']],
-      ]);
+    $moduleExtensionList = $this->createMock(ModuleExtensionList::class);
 
-    $module_extension_list = $this->createMock(ModuleExtensionList::class);
+    $permissionProvidersLocator = new ContainerBuilder();
+    $permissionProvidersLocator->set('service1', new TestPermissionCallbacks());
+    $permissionProvidersLocator->set('service2', new TestPermissionCallbacks());
+    $permissionProvidersLocator->set('service3', new TestPermissionCallbacks());
 
-    $this->permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->callableResolver, $module_extension_list);
+    $permissionProvidersMapping = [
+      'service1' => [
+        'methods' => [
+          'singleDescription',
+        ],
+        'provider' => 'module_a',
+      ],
+      'service2' => [
+        'methods' => [
+          'titleDescription',
+          'titleProvider',
+        ],
+        'provider' => 'module_b',
+      ],
+      'service3' => [
+        'methods' => [
+          'titleDescriptionRestrictAccess',
+        ],
+        'provider' => 'module_c',
+      ],
+    ];
 
-    $actual_permissions = $this->permissionHandler->getPermissions();
+    $permissionProvidersLocator = new PermissionProvidersLocator($permissionProvidersMapping, $permissionProvidersLocator);
+    $permissionHandler = new PermissionHandler($moduleHandler, new TestTranslationManager(), NULL, $moduleExtensionList, $permissionProvidersLocator);
+
+    $actual_permissions = $permissionHandler->getPermissions();
     $this->assertPermissions($actual_permissions);
   }
 
   /**
    * Tests a YAML file containing both static permissions and a callback.
+   *
+   * @legacy
    */
   public function testPermissionsYamlStaticAndCallback() {
+    $this->expectDeprecation('permission_callbacks in module_a.permissions.yml is deprecated in drupal:10.3.0 and must be converted to permission providers in drupal:11.0.0. See https://www.drupal.org/node/3421580');
+
     vfsStreamWrapper::register();
     $root = new vfsStreamDirectory('modules');
     vfsStreamWrapper::setRoot($root);
 
-    $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
-    $this->moduleHandler->expects($this->once())
+    $moduleHandler = $this->createMock(ModuleHandlerInterface::class);
+    $moduleHandler->expects($this->once())
       ->method('getModuleDirectories')
       ->willReturn([
         'module_a' => vfsStream::url('modules/module_a'),
@@ -284,31 +251,38 @@ EOF
 
     $url = vfsStream::url('modules');
     mkdir($url . '/module_a');
-    file_put_contents($url . '/module_a/module_a.permissions.yml', <<<EOF
-'access module a':
-  title: 'Access A'
-  description: 'bla bla'
-permission_callbacks:
-  - 'Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescription'
-EOF
-    );
+    file_put_contents($url . '/module_a/module_a.permissions.yml', <<<PERMISSIONS
+      'access module a':
+        title: 'Access A'
+        description: 'bla bla'
+      permission_callbacks:
+        - 'Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescription'
+      PERMISSIONS);
 
     $modules = ['module_a'];
 
-    $this->moduleHandler->expects($this->any())
+    $moduleHandler->expects($this->any())
       ->method('getModuleList')
       ->willReturn(array_flip($modules));
 
-    $this->callableResolver->expects($this->once())
-      ->method('getCallableFromDefinition')
-      ->with('Drupal\\user\\Tests\\TestPermissionCallbacks::titleDescription')
-      ->willReturn([new TestPermissionCallbacks(), 'titleDescription']);
+    $moduleExtensionList = $this->createMock(ModuleExtensionList::class);
 
-    $module_extension_list = $this->createMock(ModuleExtensionList::class);
+    $permissionProvidersLocator = new ContainerBuilder();
+    $permissionProvidersLocator->set('service1', new TestPermissionCallbacks());
 
-    $this->permissionHandler = new PermissionHandler($this->moduleHandler, $this->stringTranslation, $this->callableResolver, $module_extension_list);
+    $permissionProvidersMapping = [
+      'service1' => [
+        'methods' => [
+          'titleDescription',
+        ],
+        'provider' => 'module_a',
+      ],
+    ];
 
-    $actual_permissions = $this->permissionHandler->getPermissions();
+    $permissionProvidersLocator = new PermissionProvidersLocator($permissionProvidersMapping, $permissionProvidersLocator);
+    $permissionHandler = new PermissionHandler($moduleHandler, new TestTranslationManager(), NULL, $moduleExtensionList, $permissionProvidersLocator);
+
+    $actual_permissions = $permissionHandler->getPermissions();
 
     $this->assertCount(2, $actual_permissions);
     $this->assertEquals('Access A', $actual_permissions['access module a']['title']);

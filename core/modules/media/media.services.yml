@@ -23,3 +23,9 @@ services:
   media.config_subscriber:
     class: Drupal\media\EventSubscriber\MediaConfigSubscriber
     arguments: ['@router.builder', '@cache_tags.invalidator', '@entity_type.manager']
+  media.permissions:
+    class: Drupal\media\MediaPermissions
+    autowire: true
+    tags:
+      - { name: 'user.permission_provider', method: 'mediaTypePermissions', provider: 'media' }
+  Drupal\media\MediaPermissions: '@media.permissions'

@@ -23,6 +23,3 @@ revert all revisions:
 delete all revisions:
   title: 'Delete all revisions'
   description: 'To delete a revision, you also need permission to delete the content item.'
-
-permission_callbacks:
-  - \Drupal\node\NodePermissions::nodeTypePermissions

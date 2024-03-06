@@ -1,0 +1,11 @@
+services:
+  test_permission_provider:
+    class: Drupal\user_permission_provider_test\TestPermissionProvider
+    autowire: true
+    tags:
+      - { name: 'user.permission_provider', method: 'permissionsMultiple', provider: 'user_permission_provider_test' }
+      - { name: 'user.permission_provider', method: 'permissionsSingle', provider: 'user_permission_provider_test' }
+
+  test_existing_permission_service:
+    class: Drupal\user_permission_provider_test\PermissionCallbacksFromExistingService
+    autowire: true
