@@ -58,11 +58,6 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
         'use_site_name' => TRUE,
         'use_site_slogan' => TRUE,
         'label_display' => FALSE,
-        // TRICKY: these 4 are inherited from `type: block_settings`.
-        'status' => TRUE,
-        'info' => '',
-        'view_mode' => 'full',
-        'context_mapping' => [],
       ],
     ]);
     $block->save();
