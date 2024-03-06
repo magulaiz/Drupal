@@ -118,7 +118,7 @@ function block_content_post_update_set_owner(&$sandbox = NULL): TranslatableMark
     }
   }
 
-  $ids = \array_slice($sandbox['ids'], 0, (int) Settings::get('entity_update_batch_size', 50));
+  $ids = \array_splice($sandbox['ids'], 0, (int) Settings::get('entity_update_batch_size', 50));
   $tableMapping = $blockContentStorage->getTableMapping();
 
   $database = \Drupal::database();
