@@ -6,6 +6,7 @@ namespace Drupal\Tests\user\Unit;
 
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -24,6 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  * @group legacy
  *
  * @coversDefaultClass \Drupal\user\PermissionHandler
+ * @runTestsInSeparateProcesses
  */
 class PermissionHandlerTest extends UnitTestCase {
 
@@ -92,9 +94,10 @@ EOF
     $moduleHandler->expects($this->any())
       ->method('getModuleList')
       ->willReturn(array_flip($modules));
+    $moduleExtensionList = $this->createMock(ModuleExtensionList::class);
 
     $permissionProvidersLocator = new PermissionProvidersLocator([], new ContainerBuilder());
-    $permissionHandler = new PermissionHandler($moduleHandler, new TestTranslationManager(), NULL, $permissionProvidersLocator);
+    $permissionHandler = new PermissionHandler($moduleHandler, new TestTranslationManager(), NULL, $moduleExtensionList, $permissionProvidersLocator);
 
     $actual_permissions = $permissionHandler->getPermissions();
     $this->assertPermissions($actual_permissions);
@@ -126,7 +129,9 @@ EOF
         'module_b' => vfsStream::url('modules/module_b'),
         'module_c' => vfsStream::url('modules/module_c'),
       ]);
-    $moduleHandler->expects($this->exactly(3))
+
+    $moduleExtensionList = $this->createMock(ModuleExtensionList::class);
+    $moduleExtensionList->expects($this->exactly(3))
       ->method('getName')
       ->willReturnMap([
         ['module_a', 'Module a'],
@@ -156,7 +161,7 @@ EOF
       ->willReturn(array_flip($modules));
 
     $permissionProvidersLocator = new PermissionProvidersLocator([], new ContainerBuilder());
-    $permissionHandler = new PermissionHandler($moduleHandler, new TestTranslationManager(), NULL, $permissionProvidersLocator);
+    $permissionHandler = new PermissionHandler($moduleHandler, new TestTranslationManager(), NULL, $moduleExtensionList, $permissionProvidersLocator);
     $actual_permissions = $permissionHandler->getPermissions();
     $this->assertEquals(['access_module_a4', 'access_module_a1', 'access_module_a2', 'access_module_a3'],
       array_keys($actual_permissions));
@@ -189,6 +194,8 @@ EOF
       ->method('getModuleList')
       ->willReturn(array_flip($modules));
 
+    $moduleExtensionList = $this->createMock(ModuleExtensionList::class);
+
     $permissionProvidersLocator = new ContainerBuilder();
     $permissionProvidersLocator->set('service1', new TestPermissionCallbacks());
     $permissionProvidersLocator->set('service2', new TestPermissionCallbacks());
@@ -217,7 +224,7 @@ EOF
     ];
 
     $permissionProvidersLocator = new PermissionProvidersLocator($permissionProvidersMapping, $permissionProvidersLocator);
-    $permissionHandler = new PermissionHandler($moduleHandler, new TestTranslationManager(), NULL, $permissionProvidersLocator);
+    $permissionHandler = new PermissionHandler($moduleHandler, new TestTranslationManager(), NULL, $moduleExtensionList, $permissionProvidersLocator);
 
     $actual_permissions = $permissionHandler->getPermissions();
     $this->assertPermissions($actual_permissions);
@@ -258,6 +265,8 @@ EOF
       ->method('getModuleList')
       ->willReturn(array_flip($modules));
 
+    $moduleExtensionList = $this->createMock(ModuleExtensionList::class);
+
     $permissionProvidersLocator = new ContainerBuilder();
     $permissionProvidersLocator->set('service1', new TestPermissionCallbacks());
 
@@ -271,7 +280,7 @@ EOF
     ];
 
     $permissionProvidersLocator = new PermissionProvidersLocator($permissionProvidersMapping, $permissionProvidersLocator);
-    $permissionHandler = new PermissionHandler($moduleHandler, new TestTranslationManager(), NULL, $permissionProvidersLocator);
+    $permissionHandler = new PermissionHandler($moduleHandler, new TestTranslationManager(), NULL, $moduleExtensionList, $permissionProvidersLocator);
 
     $actual_permissions = $permissionHandler->getPermissions();
 

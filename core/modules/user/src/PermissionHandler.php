@@ -4,6 +4,7 @@ namespace Drupal\user;
 
 use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Discovery\YamlDiscovery;
+use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -64,6 +65,8 @@ class PermissionHandler implements PermissionHandlerInterface {
    *   The string translation.
    * @param \Drupal\Core\Utility\CallableResolver|\Drupal\Core\Controller\ControllerResolverInterface|null $controllerResolver
    *   The callable resolver.
+   * @param \Drupal\Core\Extension\ModuleExtensionList|null $moduleExtensionList
+   *    The module extension list.
    * @param \Drupal\user\PermissionProvidersLocator $permissionProvidersLocator
    *   Permission handler locator.
    */
@@ -71,6 +74,7 @@ class PermissionHandler implements PermissionHandlerInterface {
     protected readonly ModuleHandlerInterface $moduleHandler,
     TranslationInterface $stringTranslation,
     ?ControllerResolverInterface $controllerResolver,
+    protected ?ModuleExtensionList $moduleExtensionList = NULL,
     protected ?PermissionProvidersLocator $permissionProvidersLocator = NULL,
   ) {
     if ($controllerResolver !== NULL) {
@@ -81,6 +85,10 @@ class PermissionHandler implements PermissionHandlerInterface {
       $this->permissionProvidersLocator = \Drupal::service(PermissionProvidersLocator::class);
     }
     $this->setStringTranslation($stringTranslation);
+    if ($this->moduleExtensionList === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $moduleExtensionList argument is deprecated in drupal:10.3.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3310017', E_USER_DEPRECATED);
+      $this->moduleExtensionList = \Drupal::service('extension.list.module');
+    }
   }
 
   /**
@@ -199,7 +207,7 @@ class PermissionHandler implements PermissionHandlerInterface {
   protected function getModuleNames() {
     $modules = [];
     foreach (array_keys($this->moduleHandler->getModuleList()) as $module) {
-      $modules[$module] = $this->moduleHandler->getName($module);
+      $modules[$module] = $this->moduleExtensionList->getName($module);
     }
     asort($modules);
     return $modules;
