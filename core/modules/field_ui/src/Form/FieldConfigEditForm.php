@@ -422,7 +422,8 @@ class FieldConfigEditForm extends EntityForm {
     parent::submitForm($form, $form_state);
 
     if ($this->entity->isNew()) {
-      // @see FieldStorageAddForm::submitForm for context of retrieval.
+      // See \Drupal\field_ui\Form\FieldStorageAddForm::submitForm() for context
+      // of retrieval.
       $existing_values = $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->tempStore->get('temp_name'))['field_config_values'] ?: $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName())['field_config_values'];
       $new_entity_values = $existing_values;
       $new_entity_values['field_name'] = $form_state->getValue('field_name');
