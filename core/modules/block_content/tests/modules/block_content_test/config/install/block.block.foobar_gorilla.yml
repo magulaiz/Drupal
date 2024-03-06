@@ -18,7 +18,7 @@ settings:
   provider: block_content
   status: true
   info: ''
-  view_mode: default
+  view_mode: full
 visibility:
   request_path:
     id: request_path
