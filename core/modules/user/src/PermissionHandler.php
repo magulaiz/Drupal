@@ -66,7 +66,7 @@ class PermissionHandler implements PermissionHandlerInterface {
    * @param \Drupal\Core\Utility\CallableResolver|\Drupal\Core\Controller\ControllerResolverInterface|null $controllerResolver
    *   The callable resolver.
    * @param \Drupal\Core\Extension\ModuleExtensionList|null $moduleExtensionList
-   *    The module extension list.
+   *   The module extension list.
    * @param \Drupal\user\PermissionProvidersLocator $permissionProvidersLocator
    *   Permission handler locator.
    */
