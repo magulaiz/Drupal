@@ -23,8 +23,27 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
   /**
    * {@inheritdoc}
    */
+  protected static array $propertiesWithRequiredKeys = [
+    'settings' => [
+      "'id' is a required key.",
+      "'label' is a required key.",
+      "'label_display' is a required key.",
+      "'provider' is a required key.",
+    ],
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static array $propertiesWithOptionalValues = ['weight'];
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
+
+    $this->container->get('theme_installer')->install(['stark']);
 
     $this->entity = Block::create([
       'id' => 'test_block',
