@@ -433,8 +433,9 @@ block.settings.*:
 block_settings:
   type: mapping
   label: 'Block settings'
-  constraints:
-    FullyValidatable: ~
+  # TRICKY: this is intentionally not marked as fully validatable: each `type: block.settings.SOMETHING` must do that!
+  # constraints:
+  #  FullyValidatable: ~
   mapping:
     id:
       type: string
