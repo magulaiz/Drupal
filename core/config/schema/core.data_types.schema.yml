@@ -452,10 +452,18 @@ block_settings:
         NotBlank: []
         ExtensionName: []
         ExtensionExists: module
+    status:
+      deprecated: "The 'block_settings:status' config property path is deprecated in drupal:10.3.0 and is removed from drupal 11.0.0. See https://www.drupal.org/node/1234567."
+      type: boolean
+      label: 'Status'
     info:
       requiredKey: false
       type: label
       label: 'Admin info'
+    view_mode:
+      deprecated: "The 'block_settings:view_mode' config property path is deprecated in drupal:10.3.0 and is removed from drupal 11.0.0. See https://www.drupal.org/node/1234567."
+      type: string
+      label: 'View mode'
     context_mapping:
       requiredKey: false
       type: sequence
