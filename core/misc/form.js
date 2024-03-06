@@ -153,7 +153,7 @@
    * @fires event:formUpdated
    */
   function triggerFormUpdated(element) {
-    const formUpdateEvent = new CustomEvent('formUpdated');
+    const formUpdateEvent = new CustomEvent('formUpdated', { bubbles: true });
     element.dispatchEvent(formUpdateEvent);
   }
 
@@ -308,7 +308,7 @@
        * Clicking a fragment link or a hash change should focus the target
        * element, but event timing issues in multiple browsers require a timeout.
        */
-      setTimeout(() => target.dispatchEvent(new FocusEvent('focus')), 300);
+      setTimeout(() => target.dispatchEvent(new FocusEvent('focus')), 600);
     }
   };
 

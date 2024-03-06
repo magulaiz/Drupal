@@ -1130,7 +1130,7 @@
               }
             }
             if (target) {
-              target.dispatchEvent(new FocusEvent('focus'));
+              target.focus();
             }
           }
           // Reattach behaviors, if they were detached in beforeSerialize(). The
