@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\big_pipe\Functional;
 
 use Behat\Mink\Element\NodeElement;
@@ -175,14 +177,12 @@ class BigPipeTest extends BrowserTestBase {
       $cases['exception__lazy_builder']->bigPipePlaceholderId          => NULL,
       $cases['exception__embedded_response']->bigPipePlaceholderId     => NULL,
     ], [
-      0 => $cases['edge_case__html_non_lazy_builder']->bigPipePlaceholderId,
+      0 => $cases['html']->bigPipePlaceholderId,
+      1 => $cases['edge_case__html_non_lazy_builder']->bigPipePlaceholderId,
       // The suspended placeholder is replaced after the non-suspended
       // placeholder even though it appears first in the page.
       // @see Drupal\big_pipe\Render\BigPipe\Render::sendPlaceholders()
-      1 => $cases['edge_case__html_non_lazy_builder_suspend']->bigPipePlaceholderId,
-       // The 'html' case contains the 'status messages' placeholder, which is
-      // always rendered last.
-      2 => $cases['html']->bigPipePlaceholderId,
+      2 => $cases['edge_case__html_non_lazy_builder_suspend']->bigPipePlaceholderId,
     ]);
 
     $this->assertSession()->responseContains('</body>');
