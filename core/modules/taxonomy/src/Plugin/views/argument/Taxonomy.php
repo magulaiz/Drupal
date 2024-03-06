@@ -56,9 +56,9 @@ class Taxonomy extends NumericArgument implements ContainerFactoryPluginInterfac
   public function title() {
     // There might be no valid argument.
     if ($this->argument) {
-      $term = $this->termStorage->load($this->argument);
-      if (!empty($term)) {
-        return $this->entityRepository->getTranslationFromContext($term)->label();
+    $term = $this->entityRepository->getCanonical('taxonomy_term', $this->argument);
+    if (!empty($term)) {
+      return $term->label();
       }
     }
     // TODO review text
