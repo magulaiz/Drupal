@@ -3,25 +3,24 @@
 namespace Drupal\responsive_image\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Image\ImageFactory;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\ElementInfoManagerInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\image\Plugin\Field\FieldWidget\ImageWidget;
 use Drupal\responsive_image\Entity\ResponsiveImageStyle;
 
 /**
  * Plugin implementation of the 'responsive_image_image' widget.
- *
- * @FieldWidget(
- *   id = "responsive_image_image",
- *   label = @Translation("Responsive Image"),
- *   field_types = {
- *     "image"
- *   }
- * )
  */
+#[FieldWidget(
+  id: 'responsive_image_image',
+  label: new TranslatableMarkup('Responsive Image'),
+  field_types: ['image'],
+)]
 class ResponsiveImageWidget extends ImageWidget {
 
   /**
