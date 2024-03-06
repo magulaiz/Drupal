@@ -121,7 +121,13 @@ class SearchBlock extends BlockBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
-    $this->configuration['page_id'] = $form_state->getValue('page_id');
+    $page_id = $form_state->getValue('page_id');
+    // Handle the #empty_value: using the default requires specifying `null` in
+    // the config.
+    // @see search.schema.yml
+    $this->configuration['page_id'] = $page_id === ''
+      ? $this->searchPageRepository->getDefaultSearchPage()
+      : $page_id;
   }
 
 }
