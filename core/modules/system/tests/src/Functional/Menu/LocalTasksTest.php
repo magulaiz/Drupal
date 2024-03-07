@@ -1,10 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Menu;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
+
+// cspell:ignore ragdoll
 
 /**
  * Tests local tasks derived from router and added/altered via hooks.
