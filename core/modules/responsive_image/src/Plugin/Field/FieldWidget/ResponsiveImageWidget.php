@@ -53,7 +53,7 @@ class ResponsiveImageWidget extends ImageWidget {
    * @param \Drupal\Core\Entity\EntityStorageInterface $responsive_image_style_storage
    *   The responsive image style storage.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, ElementInfoManagerInterface $element_info, ImageFactory $image_factory = NULL, EntityStorageInterface $responsive_image_style_storage = NULL) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, ElementInfoManagerInterface $element_info, ImageFactory $image_factory, EntityStorageInterface $responsive_image_style_storage) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings, $element_info, $image_factory);
     $this->responsiveImageStyleStorage = $responsive_image_style_storage;
   }
@@ -62,10 +62,16 @@ class ResponsiveImageWidget extends ImageWidget {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
-    $instance->imageFactory = $container->get('image.factory');
-    $instance->responsiveImageStyleStorage = $container->get('entity_type.manager')->getStorage('responsive_image_style');
-    return $instance;
+    return new static(
+      $plugin_id,
+      $plugin_definition,
+      $configuration['field_definition'],
+      $configuration['settings'],
+      $configuration['third_party_settings'],
+      $container->get('element_info'),
+      $container->get('image.factory'),
+      $container->get('entity_type.manager')->getStorage('responsive_image_style')
+    );
   }
 
   /**
