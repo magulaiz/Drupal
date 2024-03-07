@@ -428,9 +428,11 @@ block_settings:
       type: string
       label: 'Provider'
     status:
+      deprecated: "The 'status' setting for content blocks is deprecated in drupal:10.3.0 and is removed from drupal 11.0.0. It was unused, so there is no replacement. See https://www.drupal.org/node/1234567."
       type: boolean
       label: 'Status'
     info:
+      deprecated: "The 'info' setting for content blocks is deprecated in drupal:10.3.0 and is removed from drupal 11.0.0. It was unused, so there is no replacement. See https://www.drupal.org/node/1234567."
       type: label
       label: 'Admin info'
     view_mode:
