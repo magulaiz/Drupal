@@ -60,6 +60,7 @@ trait SchemaCheckTrait {
       ],
       'child_type' => [
         "The 'book' bundle does not exist on the 'node' entity type.",
+      ],
     ],
     'editor.editor.*' => [
       // @todo Fix stream wrappers not being available early enough in
