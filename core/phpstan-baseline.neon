@@ -2981,11 +2981,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/Error/DrupalLogErrorTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\EventSubscriber\\\\RedirectResponseSubscriberTest\\:\\:expectError\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Core/EventSubscriber/RedirectResponseSubscriberTest.php
-
-		-
 			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\EventSubscriber\\\\SpecialAttributesRouteSubscriberTest\\:\\:expectWarning\\(\\)\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/EventSubscriber/SpecialAttributesRouteSubscriberTest.php
@@ -3184,6 +3179,11 @@ parameters:
 			"""
 			count: 1
 			path: tests/Drupal/Tests/Core/Test/TestSetupTraitTest.php
+
+		-
+			message: "#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Core/Test/WebDriverTestBaseTest.php
 
 		-
 			message: "#^@dataProvider providerTestValidatePropertyWithInvalidObjects related method must be static in PHPUnit 10 and newer\\.$#"
