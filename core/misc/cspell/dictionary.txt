@@ -407,7 +407,6 @@ lowline
 lrdd
 lstitle
 ltitle
-lullabot
 lzma
 lzop
 macbinary
