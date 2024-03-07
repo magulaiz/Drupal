@@ -157,7 +157,7 @@ class ConfigSchemaTest extends KernelTestBase {
     ];
     $expected['mapping']['weight'] = [
       'label' => 'Weight',
-      'type' => 'integer',
+      'type' => 'weight',
     ];
     $expected['type'] = 'config_schema_test.ignore';
     $expected['unwrap_for_canonical_representation'] = TRUE;
