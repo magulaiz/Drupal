@@ -76,8 +76,8 @@ class ConfigImportInstallProfileTest extends BrowserTestBase {
     unset($core['module']['syslog']);
     unset($core['module']['testing_config_import_module']);
     unset($core['theme']['stark']);
-    $core['theme']['test_theme_theme'] = 0;
     $core['module']['testing_config_import'] = 0;
+    $core['theme']['test_theme_theme'] = 0;
     $sync->write('core.extension', $core);
     $sync->deleteAll('syslog.');
     $theme = $sync->read('system.theme');

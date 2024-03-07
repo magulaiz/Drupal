@@ -21,20 +21,6 @@ class InstallProfileUninstallValidator implements ModuleUninstallValidatorInterf
    */
   protected ExtensionDiscovery $noProfileExtensionDiscovery;
 
-  /**
-   * Constructs a new InstallProfileUninstallValidator.
-   *
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
-   *   The string translation service.
-   * @param \Drupal\Core\Extension\ModuleExtensionList $moduleExtensionList
-   *   The module extension list.
-   * @param string|false|null $installProfile
-   *   The install profile.
-   * @param string $root
-   *   The Drupal root directory.
-   * @param string $sitePath
-   *   The site path.
-   */
   public function __construct(
     TranslationInterface $string_translation,
     protected ModuleExtensionList $moduleExtensionList,
@@ -48,7 +34,7 @@ class InstallProfileUninstallValidator implements ModuleUninstallValidatorInterf
   /**
    * {@inheritdoc}
    */
-  public function validate($module) {
+  public function validate($module): array {
     $reasons = [];
 
     // When there are modules installed that only exist in the install profile's
