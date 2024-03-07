@@ -290,13 +290,11 @@ fulldate
 fulltext
 funic
 gabilondo
-garcía
 gids
 gloop
 gnumeric
 googleapis
 greeking
-gregorio
 gripsmall
 groupable
 groupby
@@ -390,7 +388,6 @@ macbinary
 mainpage
 mank
 maryjane
-maría
 matchout
 mathematica
 maximumred
@@ -718,7 +715,6 @@ supercede
 svgz
 synchronizable
 syrop
-sánchez
 tabbingmanager
 tabledrag
 tableheader

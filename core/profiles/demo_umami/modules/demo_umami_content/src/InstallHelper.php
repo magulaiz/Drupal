@@ -308,6 +308,7 @@ class InstallHelper implements ContainerInjectionInterface {
   protected function importUsers() {
     $user_storage = $this->entityTypeManager->getStorage('user');
     $users = [
+      // cspell:ignore
       'Gregorio Sánchez' => [
         'preferred_language' => 'es',
         'roles' => ['author'],
@@ -320,6 +321,7 @@ class InstallHelper implements ContainerInjectionInterface {
         'preferred_language' => 'en',
         'roles' => ['editor'],
       ],
+      // cspell:ignore
       'María García' => [
         'preferred_language' => 'es',
         'roles' => ['editor'],
