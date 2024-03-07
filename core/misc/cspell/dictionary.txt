@@ -290,11 +290,13 @@ fulldate
 fulltext
 funic
 gabilondo
+garcía
 gids
 gloop
 gnumeric
 googleapis
 greeking
+gregorio
 gripsmall
 groupable
 groupby
@@ -387,6 +389,7 @@ lzop
 macbinary
 mainpage
 mank
+maría
 maryjane
 matchout
 mathematica
@@ -623,6 +626,7 @@ sameline
 samename
 sameorigin
 samesite
+sánchez
 savepoints
 sayre
 schemaapi
