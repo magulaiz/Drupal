@@ -96,7 +96,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
       'body[0][value]' => $updated_body,
       'moderation_state[0][state]' => 'draft',
     ];
-    $this->drupalGet('admin/content/block/' . $block->id() . '/edit');
+    $this->drupalGet($block->toUrl());
     $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('basic Moderated block has been updated.');
 
@@ -116,7 +116,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
       'body[0][value]' => $pending_revision_body,
       'moderation_state[0][state]' => 'draft',
     ];
-    $this->drupalGet('admin/content/block/' . $block->id() . '/edit');
+    $this->drupalGet($block->toUrl());
     $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('basic Moderated block has been updated.');
 

@@ -67,7 +67,7 @@ class PageEditTest extends BlockContentTestBase {
     $this->submitForm($edit, 'Save');
 
     // Edit the same block, creating a new revision.
-    $this->drupalGet("admin/content/block/" . $block->id() . '/edit');
+    $this->drupalGet($block->toUrl());
     $edit = [];
     $edit['info[0][value]'] = $this->randomMachineName(8);
     $edit[$body_key] = $this->randomMachineName(16);
@@ -80,7 +80,7 @@ class PageEditTest extends BlockContentTestBase {
     $this->assertNotSame($block->getRevisionId(), $revised_block->getRevisionId(), 'A new revision has been created.');
 
     // Test deleting the block.
-    $this->drupalGet("admin/content/block/" . $revised_block->id() . '/edit');
+    $this->drupalGet($block->toUrl());
     $this->clickLink('Delete');
     $this->assertSession()->pageTextContains('Are you sure you want to delete the content block ' . $revised_block->label() . '?');
 
