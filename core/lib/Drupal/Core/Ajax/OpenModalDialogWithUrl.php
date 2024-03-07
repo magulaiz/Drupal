@@ -8,23 +8,23 @@ use Drupal\Component\Utility\UrlHelper;
 
 /**
  * Provides an AJAX command for opening a modal with URL.
+ *
+ * OpenDialogCommand is a similar class which opens modals but works
+ * differently as it needs all data to be passed through dialogOptions while
+ * OpenModalDialogWithUrl fetches the data from routing info of the URL.
+ *
+ * @see \Drupal\Core\Ajax\OpenDialogCommand
  */
 class OpenModalDialogWithUrl implements CommandInterface {
 
   /**
    * Constructs a OpenModalDialogWithUrl object.
    *
-   * OpenDialogCommand is a similar class which opens modals but works
-   * differently as it needs all data to be passed through dialogOptions while
-   * OpenModalDialogWithUrl fetches the data from routing info of the URL.
-   *
    * @param string $url
    *   Only Internal URLs or URLs with the same domain and base path are
    *   allowed.
    * @param array $settings
    *   The dialog settings.
-   *
-   * @see \Drupal\Core\Ajax\OpenDialogCommand
    */
   public function __construct(
     protected string $url,
@@ -35,6 +35,7 @@ class OpenModalDialogWithUrl implements CommandInterface {
    * {@inheritdoc}
    */
   public function render() {
+    // @see \Drupal\Core\Routing\LocalAwareRedirectResponseTrait::isLocal()
     if (!UrlHelper::isExternal($this->url) || UrlHelper::externalIsLocal($this->url, $this->getBaseURL())) {
       return [
         'command' => 'openModalDialogWithUrl',
