@@ -457,11 +457,10 @@ abstract class UpdateSemverTestBase extends UpdateTestBase {
     // Test XML files for Drupal core use '-' in the version number for the
     // download link.
     $download_version = str_replace('.', '-', $version);
-    parent::assertVersionUpdateLinks($label, $version, $download_version);
+    parent::assertVersionUpdateLinks($label, $version);
   }
 
   /**
->>>>>>> d8fbfbabcf (added test coverage for current major next major both supported)
    * {@inheritdoc}
    */
   protected function refreshUpdateStatus($xml_map, $url = 'update-test') {
