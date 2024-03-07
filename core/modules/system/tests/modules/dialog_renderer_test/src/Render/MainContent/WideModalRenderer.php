@@ -55,19 +55,8 @@ class WideModalRenderer extends ModalRenderer {
     $main_content['#attached']['library'][] = 'core/drupal.dialog.ajax';
     $response->setAttachments($main_content['#attached']);
 
-    // If the main content doesn't provide a title, use the title resolver.
-    $title = NULL;
-    if (array_key_exists('#title', $main_content)) {
-      if (is_array($main_content['#title'])) {
-        $title = \Drupal::service('renderer')->renderInIsolation($main_content['#title']);
-      }
-      else {
-        $title = $main_content['#title'];
-      }
-    }
-    elseif ($this->titleResolver->getTitle($request, $route_match->getRouteObject())) {
-      $title = $this->titleResolver->getTitle($request, $route_match->getRouteObject())->render();
-    }
+    // Determine the title.
+    $title = $this->getTitleAsStringable($main_content, $request, $route_match);
 
     // Determine the title: use the title provided by the main content if any,
     // otherwise get it from the routing information.
