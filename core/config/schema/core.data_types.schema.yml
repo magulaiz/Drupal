@@ -240,7 +240,7 @@ filter:
       type: boolean
       label: 'Status'
     weight:
-      type: integer
+      type: weight
       label: 'Weight'
     settings:
       type: filter_settings.[%parent.id]
@@ -494,7 +494,7 @@ display_variant.plugin:
       type: required_label
       label: 'Label'
     weight:
-      type: integer
+      type: weight
       label: 'Weight'
     uuid:
       type: uuid
