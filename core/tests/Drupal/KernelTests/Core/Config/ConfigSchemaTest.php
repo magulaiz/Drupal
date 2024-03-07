@@ -206,7 +206,7 @@ class ConfigSchemaTest extends KernelTestBase {
       ],
     ];
     $expected['mapping']['effects']['sequence']['mapping']['data']['type'] = 'image.effect.[%parent.id]';
-    $expected['mapping']['effects']['sequence']['mapping']['weight']['type'] = 'integer';
+    $expected['mapping']['effects']['sequence']['mapping']['weight']['type'] = 'weight';
     $expected['mapping']['effects']['sequence']['mapping']['uuid']['type'] = 'uuid';
     $expected['mapping']['third_party_settings']['type'] = 'sequence';
     $expected['mapping']['third_party_settings']['label'] = 'Third party settings';
