@@ -210,7 +210,7 @@ class ModuleHandlerTest extends KernelTestBase {
     }
 
     // Try uninstalling the install profile.
-    $this->assertEquals('testing_install_profile_dependencies', $this->container->getParameter('install_profile'));
+    $this->assertSame('testing_install_profile_dependencies', $this->container->getParameter('install_profile'));
     $result = $this->moduleInstaller()->uninstall([$profile]);
     $this->assertTrue($result, 'ModuleInstaller::uninstall() returns TRUE.');
     $this->assertFalse($this->moduleHandler()->moduleExists($profile));

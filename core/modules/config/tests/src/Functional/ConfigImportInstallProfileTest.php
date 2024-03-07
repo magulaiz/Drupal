@@ -70,7 +70,7 @@ class ConfigImportInstallProfileTest extends BrowserTestBase {
     $this->drupalGet('admin/config/development/configuration');
     $this->submitForm([], 'Import all');
     $this->assertSession()->pageTextContains('The configuration cannot be imported because it failed validation for the following reasons:');
-    $this->assertSession()->pageTextContains('The install profile \'Testing config import\' is providing the following module(s): testing_config_import_module');
+    $this->assertSession()->pageTextContains("The install profile 'Testing config import' is providing the following module(s): testing_config_import_module");
 
     // Uninstall dependencies of testing_config_import.
     unset($core['module']['syslog']);
