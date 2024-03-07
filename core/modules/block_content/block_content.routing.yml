@@ -29,6 +29,17 @@ entity.block_content.canonical:
     _entity_access: 'block_content.update'
     block_content: \d+
 
+entity.block_content.canonical.bc:
+  path: '/admin/content/block/{block_content}'
+  defaults:
+    _controller: '\Drupal\block_content\Controller\BlockContentController::canonicalRedirect'
+    _title_callback: '\Drupal\Core\Entity\Controller\EntityController::title'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _entity_access: 'block_content.update'
+    block_content: \d+
+
 entity.block_content.edit_form:
   path: '/admin/content/block/{block_content}/edit'
   defaults:
