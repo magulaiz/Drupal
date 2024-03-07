@@ -103,12 +103,12 @@ function block_content_post_update_set_owner(&$sandbox = NULL): TranslatableMark
     ->getStorage('block_content');
 
   if (!isset($sandbox['total'])) {
-    $sandbox['total'] = $blockContentStorage
+    $query = $blockContentStorage
       ->getQuery()
       ->accessCheck(FALSE)
-      ->condition('uid', NULL, 'IS NULL')
-      ->count()
-      ->execute();
+      ->condition('uid', NULL, 'IS NULL');
+    $sandbox['total'] = (clone $query)->count()->execute();
+    $sandbox['ids'] = $query->execute();
     $sandbox['progress'] = 0;
 
     // Handle the case of 0 block to process.
@@ -118,28 +118,25 @@ function block_content_post_update_set_owner(&$sandbox = NULL): TranslatableMark
     }
   }
 
-  $ids = $blockContentStorage
-    ->getQuery()
-    ->accessCheck(FALSE)
-    ->condition('uid', NULL, 'IS NULL')
-    ->range(0, (int) Settings::get('entity_update_batch_size', 50))
-    ->execute();
+  $ids = \array_splice($sandbox['ids'], 0, (int) Settings::get('entity_update_batch_size', 50));
+  $tableMapping = $blockContentStorage->getTableMapping();
 
   $database = \Drupal::database();
-  /** @var \Drupal\block_content\BlockContentInterface $blockContent */
-  foreach ($blockContentStorage->loadMultiple($ids) as $blockContent) {
+  foreach ($ids as $id) {
     // Get the revision_user from the first revision of this block to use
     // as the author.
     $query = $database->select('block_content_revision', 'bcr')
-      ->condition('id', $blockContent->id());
-    $query->addExpression('MIN(revision_id)', 'revision_id');
-    $revisionId = $query->execute()->fetchField();
-    /** @var \Drupal\block_content\BlockContentInterface $revision */
-    $revision = $blockContentStorage->loadRevision($revisionId);
-
-    $blockContent->setOwnerId($revision->getRevisionUserId() ?? 0)
-      ->setSyncing(TRUE)
-      ->save();
+      ->condition('id', $id);
+    $query->addField('bcr', 'revision_user');
+    $query->orderBy('revision_id', 'ASC');
+    $query->range(0, 1);
+    $uid = $query->execute()->fetchField();
+    foreach ($tableMapping->getAllFieldTableNames('uid') as $tableName) {
+      $database->update($tableName)
+        ->fields(['uid' => $uid])
+        ->condition('id', $id)
+        ->execute();
+    }
     $sandbox['progress'] += 1;
   }
 
