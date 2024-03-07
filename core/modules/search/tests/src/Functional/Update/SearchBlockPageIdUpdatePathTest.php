@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\node\Functional\Update;
+namespace Drupal\Tests\search\Functional\Update;
 
 use Drupal\block\Entity\Block;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
