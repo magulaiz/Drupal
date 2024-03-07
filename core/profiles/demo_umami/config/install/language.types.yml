@@ -1,10 +1,10 @@
 all:
-    - language_interface
-    - language_content
-    - language_url
+  - language_interface
+  - language_content
+  - language_url
 configurable:
-    - language_interface
-    - language_content
+  - language_interface
+  - language_content
 negotiation:
   language_content:
     enabled:
