@@ -626,7 +626,6 @@ sameline
 samename
 sameorigin
 samesite
-sánchez
 savepoints
 sayre
 schemaapi
@@ -719,6 +718,7 @@ supercede
 svgz
 synchronizable
 syrop
+sánchez
 tabbingmanager
 tabledrag
 tableheader
