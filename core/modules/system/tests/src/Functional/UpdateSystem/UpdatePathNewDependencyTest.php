@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\UpdateSystem;
 
+use Drupal\Component\Utility\SortArray;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\UpdatePathTestTrait;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
@@ -29,9 +30,11 @@ class UpdatePathNewDependencyTest extends BrowserTestBase {
     // The code of the new_dependency_test module is after the update and
     // contains the dependency on the new_dependency_test_with_service module.
     $extension_config = $this->container->get('config.factory')->getEditable('core.extension');
+    $modules = $extension_config->get('module');
+    $modules['new_dependency_test'] = 0;
+    SortArray::sortByNumericValueAndKey($modules);
     $extension_config
-      ->set('module.new_dependency_test', 0)
-      ->set('module', module_config_sort($extension_config->get('module')))
+      ->set('module', $modules)
       ->save(TRUE);
     \Drupal::service('update.update_hook_registry')->setInstalledVersion('new_dependency_test', \Drupal::CORE_MINIMUM_SCHEMA_VERSION);
 

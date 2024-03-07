@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Extension;
 
+use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\Connection;
@@ -204,9 +205,11 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
         // Save this data without checking schema. This is a performance
         // improvement for module installation.
+        $modules = $extension_config->get('module');
+        $modules[$module] = 0;
+        SortArray::sortByNumericValueAndKey($modules);
         $extension_config
-          ->set("module.$module", 0)
-          ->set('module', module_config_sort($extension_config->get('module')))
+          ->set('module', $modules)
           ->save(TRUE);
 
         // Prepare the new module list, sorted by weight, including filenames.
@@ -221,7 +224,8 @@ class ModuleInstaller implements ModuleInstallerInterface {
         // weight of 0.
         $current_module_filenames = $this->moduleHandler->getModuleList();
         $current_modules = array_fill_keys(array_keys($current_module_filenames), 0);
-        $current_modules = module_config_sort(array_merge($current_modules, $extension_config->get('module')));
+        $current_modules = array_merge($current_modules, $extension_config->get('module'));
+        SortArray::sortByNumericValueAndKey($current_modules);
         $module_filenames = [];
         foreach ($current_modules as $name => $weight) {
           if (isset($current_module_filenames[$name])) {

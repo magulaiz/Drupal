@@ -125,4 +125,17 @@ class SortArray {
     return $a_weight <=> $b_weight;
   }
 
+  /**
+   * Sorts an associative array by numeric value and then key.
+   *
+   * @param int[] $array
+   *   An associative array of integers, keyed by string keys.
+   *   - key: A string.
+   *   - value: A numeric value. Recommended to use integer values, floats will
+   *     work but are not supported.
+   */
+  public static function sortByNumericValueAndKey(array &$array): void {
+    array_multisort(array_values($array), SORT_ASC, SORT_NUMERIC, array_keys($array), SORT_ASC, SORT_NATURAL, $array);
+  }
+
 }

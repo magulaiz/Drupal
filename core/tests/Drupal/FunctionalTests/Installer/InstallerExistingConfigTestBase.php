@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Component\Serialization\Yaml;
+use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Archiver\ArchiveTar;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Installer\Form\SelectProfileForm;
@@ -80,7 +81,7 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
       $module = Database::getConnection()->getProvider();
       if ($module !== 'core') {
         $core_extension['module'][$module] = 0;
-        $core_extension['module'] = module_config_sort($core_extension['module']);
+        SortArray::sortByNumericValueAndKey($core_extension['module']);
         file_put_contents($config_sync_directory . '/core.extension.yml', Yaml::encode($core_extension));
       }
     }

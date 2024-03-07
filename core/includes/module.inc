@@ -5,6 +5,8 @@
  * API for loading and interacting with Drupal modules.
  */
 
+use Drupal\Component\Utility\SortArray;
+
 /**
  * Loads a module include file.
  *
@@ -72,9 +74,11 @@ function module_set_weight($module, $weight) {
   if ($extension_config->get("module.$module") !== NULL) {
     // Pre-cast the $weight to an integer so that we can save this without using
     // schema. This is a performance improvement for module installation.
+    $modules = $extension_config->get('module');
+    $modules[$module] = (int) $weight;
+    SortArray::sortByNumericValueAndKey($modules);
     $extension_config
-      ->set("module.$module", (int) $weight)
-      ->set('module', module_config_sort($extension_config->get('module')))
+      ->set('module', $modules)
       ->save(TRUE);
 
     // Prepare the new module list, sorted by weight, including filenames.
@@ -82,7 +86,8 @@ function module_set_weight($module, $weight) {
     $module_handler = \Drupal::moduleHandler();
     $current_module_filenames = $module_handler->getModuleList();
     $current_modules = array_fill_keys(array_keys($current_module_filenames), 0);
-    $current_modules = module_config_sort(array_merge($current_modules, $extension_config->get('module')));
+    $current_modules = array_merge($current_modules, $extension_config->get('module'));
+    SortArray::sortByNumericValueAndKey($current_modules);
     $module_filenames = [];
     foreach ($current_modules as $name => $weight) {
       $module_filenames[$name] = $current_module_filenames[$name];
@@ -104,8 +109,14 @@ function module_set_weight($module, $weight) {
  *
  * @return array
  *   An array of module configuration data sorted by weight and name.
+ *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\Component\Utility\SortArray::sortByNumericValueAndKey() instead.
+ *
+ * @see https://www.drupal.org/node/3262814
  */
 function module_config_sort($data) {
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Component\Utility\SortArray::sortByNumericValueAndKey() instead. See https://www.drupal.org/node/3262814', E_USER_DEPRECATED);
   // PHP array sorting functions such as uasort() do not work with both keys and
   // values at the same time, so we achieve weight and name sorting by computing
   // strings with both information concatenated (weight first, name second) and

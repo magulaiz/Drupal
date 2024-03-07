@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Common;
 
+use Drupal\Component\Utility\SortArray;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -29,9 +30,10 @@ class DrupalFlushAllCachesTest extends KernelTestBase {
   public function testDrupalFlushAllCachesModuleList() {
     $this->assertFalse(function_exists('system_test_help'));
     $core_extension = \Drupal::configFactory()->getEditable('core.extension');
-    $module = $core_extension->get('module');
-    $module['system_test'] = -10;
-    $core_extension->set('module', module_config_sort($module))->save();
+    $modules = $core_extension->get('module');
+    $modules['system_test'] = -10;
+    SortArray::sortByNumericValueAndKey($modules);
+    $core_extension->set('module', $modules)->save();
     $this->containerBuilds = 0;
     drupal_flush_all_caches();
     $module_list = ['system_test', 'system'];

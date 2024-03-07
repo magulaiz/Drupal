@@ -307,6 +307,114 @@ class SortArrayTest extends TestCase {
   }
 
   /**
+   * @covers ::sortByNumericValueAndKey
+   * @dataProvider providerSortByNumericValueAndKey
+   */
+  public function testSortByNumericValueAndKey(array $a, array $expected): void {
+    SortArray::sortByNumericValueAndKey($a);
+    $this->assertSame($expected, $a);
+  }
+
+  /**
+   * Data provider for SortArray::sortByNumericValueAndKey().
+   *
+   * @return int[][]
+   *   An array of test data:
+   *      - Associative array with string keys and numeric values.
+   *      - Expected result.
+   *
+   * @see \Drupal\Tests\Component\Utility\SortArrayTest::testSortByNumericValueAndKey()
+   */
+  public function providerSortByNumericValueAndKey(): array {
+    $tests = [];
+    $tests['same_weights'] = [
+      [
+        'ccc' => 0,
+        'bbb' => 0,
+        'aaa' => 0,
+      ],
+      [
+        'aaa' => 0,
+        'bbb' => 0,
+        'ccc' => 0,
+      ],
+    ];
+    $tests['positive_weights'] = [
+      [
+        'aaa' => 2,
+        'bbb' => 1,
+        'ccc' => 0,
+      ],
+      [
+        'ccc' => 0,
+        'bbb' => 1,
+        'aaa' => 2,
+      ],
+    ];
+    $tests['negative_positive_weights'] = [
+      [
+        'aaa' => 2,
+        'bbb' => -1,
+        'ccc' => 0,
+      ],
+      [
+        'bbb' => -1,
+        'ccc' => 0,
+        'aaa' => 2,
+      ],
+    ];
+    $tests['negative_weights'] = [
+      [
+        'aaa' => -2,
+        'bbb' => -1,
+        'ccc' => -3,
+      ],
+      [
+        'ccc' => -3,
+        'aaa' => -2,
+        'bbb' => -1,
+      ],
+    ];
+    $tests['negative_weights_with_equal'] = [
+      [
+        'bbb' => -1,
+        'aaa' => -1,
+        'ccc' => -3,
+      ],
+      [
+        'ccc' => -3,
+        'aaa' => -1,
+        'bbb' => -1,
+      ],
+    ];
+    $tests['non_numeric_weights'] = [
+      [
+        'bbb' => '-1',
+        'aaa' => '-2',
+        'ccc' => -3,
+      ],
+      [
+        'ccc' => -3,
+        'aaa' => '-2',
+        'bbb' => '-1',
+      ],
+    ];
+    $tests['alphanumeric keys'] = [
+      [
+        'aaa10' => 2,
+        'aaa1' => 3,
+        'ccc' => 0,
+      ],
+      [
+        'ccc' => 0,
+        'aaa10' => 2,
+        'aaa1' => 3,
+      ],
+    ];
+    return $tests;
+  }
+
+  /**
    * Asserts that numbers are either both negative, both positive or both zero.
    *
    * The exact values returned by comparison functions differ between PHP
