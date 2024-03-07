@@ -682,7 +682,7 @@ services:
     class: Drupal\Core\Extension\InstallProfileUninstallValidator
     tags:
       - { name: module_install.uninstall_validator }
-    arguments: ['@string_translation', '@extension.list.module', '%install_profile%', '%app.root%', '%site.path%']
+    arguments: ['@string_translation', '@extension.list.module', '@extension.list.theme', '%install_profile%', '%app.root%', '%site.path%']
     lazy: true
   theme_handler:
     class: Drupal\Core\Extension\ThemeHandler

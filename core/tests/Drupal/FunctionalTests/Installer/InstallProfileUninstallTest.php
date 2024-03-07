@@ -61,15 +61,26 @@ class InstallProfileUninstallTest extends BrowserTestBase {
     $this->getSession()->getPage()->pressButton('Install');
     $this->assertSession()->pageTextContains('Module Testing config import module has been installed.');
 
+    // Install a theme provided by the module.
+    $this->drupalGet('admin/appearance');
+    $this->clickLink("Install Testing config import theme theme");
+    $this->assertSession()->pageTextContains("The Testing config import theme theme has been installed.");
+
     // Test that uninstalling the module and then the profile works.
     $this->drupalGet('admin/modules/uninstall');
     $this->assertSession()->pageTextContains("The install profile 'Testing config import' is providing the following module(s): testing_config_import_module");
+    $this->assertSession()->pageTextContains("The install profile 'Testing config import' is providing the following theme(s): testing_config_import_theme");
     $this->assertSession()->fieldEnabled('uninstall[testing_config_import_module]')->check();
     $this->getSession()->getPage()->pressButton('Uninstall');
     $this->getSession()->getPage()->pressButton('Uninstall');
     $this->assertSession()->pageTextContains('The selected modules have been uninstalled.');
     $this->assertSession()->fieldNotExists('uninstall[testing_config_import_module]');
+    $this->drupalGet('admin/appearance');
+    $this->clickLink("Uninstall Testing config import theme theme");
+    $this->assertSession()->pageTextContains("The Testing config import theme theme has been uninstalled.");
+    $this->drupalGet('admin/modules/uninstall');
     $this->assertSession()->pageTextNotContains("The install profile 'Testing config import' is providing the following module(s): testing_config_import_module");
+    $this->assertSession()->pageTextNotContains("The install profile 'Testing config import' is providing the following theme(s): testing_config_import_theme");
     $this->assertSession()->fieldEnabled('uninstall[testing_config_import]')->check();
     $this->getSession()->getPage()->pressButton('Uninstall');
     $this->assertSession()->pageTextContains('Once uninstalled, the Testing config import profile cannot be reinstalled.');
