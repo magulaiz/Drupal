@@ -344,7 +344,7 @@ class FieldStorageAddForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValues();
     $values['label'] = 'New field';
-    $values['field_name'] = $this->config('field_ui.settings')->get('field_prefix') . (new Random)->machineName(16, TRUE);
+    $values['field_name'] = (new Random)->machineName(16, TRUE);
     $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
 
     $field_storage_type = $values['group_field_options_wrapper'] ?? $values['new_storage_type'];
