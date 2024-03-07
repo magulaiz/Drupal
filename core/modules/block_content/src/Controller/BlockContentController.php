@@ -148,39 +148,6 @@ class BlockContentController extends ControllerBase {
    *   A route match object, used for the route name and the parameters.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The current request object.
-   * @param Drupal\block_content\BlockContentInterface $block_content
-   *   The block to be edited.
-   *
-   * @return \Symfony\Component\HttpFoundation\RedirectResponse
-   *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
-   *   /admin/content/block/{block_content} directly instead of
-   *   /block/{block_content}.
-   *
-   * @see https://www.drupal.org/node/3320855
-   */
-  public function editRedirect(RouteMatchInterface $route_match, Request $request, BlockContentInterface $block_content): RedirectResponse {
-    @trigger_error('The path /block/{block_content} is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use /admin/content/block/{block_content}. See https://www.drupal.org/node/3320855', E_USER_DEPRECATED);
-    $helper = new PathChangedHelper($route_match, $request);
-    $params = [
-      '%old_path' => $helper->oldPath(),
-      '%new_path' => $helper->newPath(),
-      '%change_record' => 'https://www.drupal.org/node/3320855',
-    ];
-    $warning_message = $this->t('You have been redirected from %old_path. Update links, shortcuts, and bookmarks to use %new_path.', $params);
-    $this->messenger()->addWarning($warning_message);
-    $this->getLogger('block_content')->warning('A user was redirected from %old_path to %new_path. This redirect will be removed in a future version of Drupal. Update links, shortcuts, and bookmarks to use %new_path. See %change_record for more information.', $params);
-
-    return $helper->redirect();
-  }
-
-  /**
-   * Provides a redirect to block edit page.
-   *
-   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
-   *   A route match object, used for the route name and the parameters.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request object.
    * @param \Drupal\block_content\BlockContentInterface $block_content
    *   The block to be edited.
    *
