@@ -65,7 +65,7 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler;
    * @param \Drupal\Core\Extension\ModuleExtensionList|null $moduleExtensionList
-   * The module extension list.
+   *   The module extension list.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface|null $entityTypeManager
    *   The entity type manager service.
    */
