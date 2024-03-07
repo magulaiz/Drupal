@@ -11,6 +11,8 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+// cSpell:ignore María García Gregorio Sánchez
+
 /**
  * Defines a helper class for importing default content.
  *
@@ -308,7 +310,6 @@ class InstallHelper implements ContainerInjectionInterface {
   protected function importUsers() {
     $user_storage = $this->entityTypeManager->getStorage('user');
     $users = [
-      // cspell:ignore
       'Gregorio Sánchez' => [
         'preferred_language' => 'es',
         'roles' => ['author'],
@@ -321,7 +322,6 @@ class InstallHelper implements ContainerInjectionInterface {
         'preferred_language' => 'en',
         'roles' => ['editor'],
       ],
-      // cspell:ignore
       'María García' => [
         'preferred_language' => 'es',
         'roles' => ['editor'],
