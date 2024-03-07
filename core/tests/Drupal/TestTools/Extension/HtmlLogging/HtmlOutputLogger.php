@@ -94,7 +94,7 @@ final class HtmlOutputLogger {
         }
       }
       else {
-        print "HTML output was generated, " . count(self::$links) . " page(s).";
+        print "HTML output was generated, " . count(self::$links) . " page(s).\n\n";
       }
     }
   }

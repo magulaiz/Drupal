@@ -11,6 +11,7 @@ use Drupal\TestTools\Extension\HtmlLogging\HtmlOutputLogger;
 use Drupal\TestTools\PhpUnitCompatibility\IgnoreDeprecation;
 use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
 use Symfony\Component\ErrorHandler\DebugClassLoader;
+use PHPUnit\Event\Code\NoTestCaseObjectOnCallStackException;
 use PHPUnit\Runner\ErrorHandler;
 
 // cspell:ignore errno errstr errfile errline
@@ -193,7 +194,14 @@ if (RunnerVersion::getMajor() >= 10 && getenv('SYMFONY_DEPRECATIONS_HELPER') !==
       else {
         // Fallback to PHPUnit's error handler if no other processing.
         // dump(['Bootstrap level fallback to PHPUnit', $errno, $errstr, $errfile, $errline]);
-        call_user_func($phpUnitErrorHandler, $errno, $errstr, $errfile, $errline);
+        try {
+          call_user_func($phpUnitErrorHandler, $errno, $errstr, $errfile, $errline);
+        }
+        catch (NoTestCaseObjectOnCallStackException $e) {
+          // If we end up here, it's likely because the test processing has
+          // finished already and we are processing an error that occurred
+          // while dealing with STDOUT rewinding or truncating. Do nothing.
+        }
       }
       return TRUE;
     }
