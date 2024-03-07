@@ -4,7 +4,6 @@ namespace Drupal\block\Plugin\migrate\process;
 
 use Drupal\Core\Config\Config;
 use Drupal\migrate\MigrateExecutableInterface;
-use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -38,12 +37,12 @@ class BlockTheme extends ProcessPluginBase implements ContainerFactoryPluginInte
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Config\Config|\Drupal\migrate\Plugin\MigrationInterface $theme_config
+   * @param \Drupal\Core\Config\Config $theme_config
    *   The system.theme configuration factory object.
-   * @param string[]|\Drupal\Core\Config\Config $themes
+   * @param array $themes
    *   The list of themes available on the destination.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, Config|MigrationInterface $theme_config, array|Config $themes) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, Config $theme_config, array $themes) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->themeConfig = $theme_config;
     $this->themes = $themes;
