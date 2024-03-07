@@ -1000,6 +1000,10 @@ function template_preprocess_table(&$variables) {
         // TableSort::header() removes the 'sort', 'initial_click_sort' and
         // 'field' keys.
         $cell_attributes = new Attribute($cell);
+        // Check if there are row attributes for the header.
+        if (!empty($cell['row_attributes'])) {
+          $cell_attributes->addClass($cell['row_attributes']);
+        }
         // Add row_attributes to header cells.
         if (!empty($cell['row_attributes'])) {
           $variables['header'][$col_key]['row_attributes'] = new Attribute($cell['row_attributes']);
