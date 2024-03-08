@@ -176,16 +176,12 @@ class ModuleExtensionList extends ExtensionList {
 
       // Installation profiles are hidden by default, unless explicitly
       // specified otherwise in the .info.yml file.
-      if (!isset($active_profile->info['hidden'])) {
-        $active_profile->info['hidden'] = TRUE;
-      }
+      $active_profile->info['hidden'] ??= TRUE;
 
       // Add a default distribution name if the profile did not provide one.
       // @see install_profile_info()
       // @see drupal_install_profile_distribution_name()
-      if (!isset($active_profile->info['distribution']['name'])) {
-        $active_profile->info['distribution']['name'] = 'Drupal';
-      }
+      $active_profile->info['distribution']['name'] ??= 'Drupal';
     }
 
     return $extensions;

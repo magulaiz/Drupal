@@ -122,9 +122,7 @@ class AssetResolver implements AssetResolverInterface {
    * {@inheritdoc}
    */
   public function getCssAssets(AttachedAssetsInterface $assets, $optimize, LanguageInterface $language = NULL) {
-    if (!isset($language)) {
-      $language = $this->languageManager->getCurrentLanguage();
-    }
+    $language ??= $this->languageManager->getCurrentLanguage();
     $theme_info = $this->themeManager->getActiveTheme();
     // Add the theme name to the cache key since themes may implement
     // hook_library_info_alter().
@@ -214,9 +212,7 @@ class AssetResolver implements AssetResolverInterface {
    * {@inheritdoc}
    */
   public function getJsAssets(AttachedAssetsInterface $assets, $optimize, LanguageInterface $language = NULL) {
-    if (!isset($language)) {
-      $language = $this->languageManager->getCurrentLanguage();
-    }
+    $language ??= $this->languageManager->getCurrentLanguage();
     $theme_info = $this->themeManager->getActiveTheme();
     // Add the theme name to the cache key since themes may implement
     // hook_library_info_alter(). Additionally add the current language to

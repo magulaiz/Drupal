@@ -163,9 +163,7 @@ class ConfigManager implements ConfigManagerInterface {
       $source_storage = $source_storage->createCollection($collection);
       $target_storage = $target_storage->createCollection($collection);
     }
-    if (!isset($target_name)) {
-      $target_name = $source_name;
-    }
+    $target_name ??= $source_name;
     // The output should show configuration object differences formatted as YAML.
     // But the configuration is not necessarily stored in files. Therefore, they
     // need to be read and parsed, and lastly, dumped into YAML strings.

@@ -194,16 +194,12 @@ class ExtensionDiscovery {
     // in a test environment, in which case test extensions must be included.
     // Test extensions can also be included for debugging purposes by setting a
     // variable in settings.php.
-    if (!isset($include_tests)) {
-      $include_tests = Settings::get('extension_discovery_scan_tests') || drupal_valid_test_ua();
-    }
+    $include_tests ??= Settings::get('extension_discovery_scan_tests') || drupal_valid_test_ua();
 
     $files = [];
     foreach ($search_dirs as $dir) {
       // Discover all extensions in the directory, unless we did already.
-      if (!isset(static::$files[$this->root][$dir][$include_tests])) {
-        static::$files[$this->root][$dir][$include_tests] = $this->scanDirectory($dir, $include_tests);
-      }
+      static::$files[$this->root][$dir][$include_tests] ??= $this->scanDirectory($dir, $include_tests);
       // Only return extensions of the requested type.
       if (isset(static::$files[$this->root][$dir][$include_tests][$type])) {
         $files += static::$files[$this->root][$dir][$include_tests][$type];

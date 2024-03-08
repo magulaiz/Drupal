@@ -22,9 +22,7 @@ abstract class AbstractOperation implements OperationInterface {
    * {@inheritdoc}
    */
   final public function contents() {
-    if (!isset($this->contents)) {
-      $this->contents = $this->generateContents();
-    }
+    $this->contents ??= $this->generateContents();
     return $this->contents;
   }
 

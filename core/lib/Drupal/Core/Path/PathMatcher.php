@@ -110,10 +110,8 @@ class PathMatcher implements PathMatcherInterface {
    */
   protected function getFrontPagePath() {
     // Lazy-load front page config.
-    if (!isset($this->frontPage)) {
-      $this->frontPage = $this->configFactory->get('system.site')
-        ->get('page.front');
-    }
+    $this->frontPage ??= $this->configFactory->get('system.site')
+      ->get('page.front');
     return $this->frontPage;
   }
 

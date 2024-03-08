@@ -83,9 +83,7 @@ abstract class LocalStream implements StreamWrapperInterface {
    *   or FALSE if unable to write to the file such as with read-only streams.
    */
   protected function getTarget($uri = NULL) {
-    if (!isset($uri)) {
-      $uri = $this->uri;
-    }
+    $uri ??= $this->uri;
 
     [, $target] = explode('://', $uri, 2);
 
@@ -116,9 +114,7 @@ abstract class LocalStream implements StreamWrapperInterface {
    *   valid, returns FALSE.
    */
   protected function getLocalPath($uri = NULL) {
-    if (!isset($uri)) {
-      $uri = $this->uri;
-    }
+    $uri ??= $this->uri;
     $path = $this->getDirectoryPath() . '/' . $this->getTarget($uri);
 
     // In PHPUnit tests, the base path for local streams may be a virtual

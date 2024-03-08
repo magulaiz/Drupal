@@ -501,9 +501,7 @@ abstract class Connection {
    *   (optional) The target this connection is for.
    */
   public function setTarget($target = NULL) {
-    if (!isset($this->target)) {
-      $this->target = $target;
-    }
+    $this->target ??= $target;
   }
 
   /**
@@ -523,9 +521,7 @@ abstract class Connection {
    *   The key this connection is for.
    */
   public function setKey($key) {
-    if (!isset($this->key)) {
-      $this->key = $key;
-    }
+    $this->key ??= $key;
   }
 
   /**
@@ -1053,9 +1049,7 @@ abstract class Connection {
    * @see \Drupal\Core\Database\Connection::setPrefix()
    */
   public function escapeTable($table) {
-    if (!isset($this->escapedTables[$table])) {
-      $this->escapedTables[$table] = preg_replace('/[^A-Za-z0-9_.]+/', '', $table);
-    }
+    $this->escapedTables[$table] ??= preg_replace('/[^A-Za-z0-9_.]+/', '', $table);
     return $this->escapedTables[$table];
   }
 

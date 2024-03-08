@@ -308,9 +308,7 @@ class SelectExtender implements SelectInterface {
    */
   public function preExecute(SelectInterface $query = NULL) {
     // If no query object is passed in, use $this.
-    if (!isset($query)) {
-      $query = $this;
-    }
+    $query ??= $this;
 
     return $this->query->preExecute($query);
   }

@@ -117,9 +117,7 @@ class AccessManager implements AccessManagerInterface {
    * {@inheritdoc}
    */
   public function check(RouteMatchInterface $route_match, AccountInterface $account = NULL, Request $request = NULL, $return_as_object = FALSE) {
-    if (!isset($account)) {
-      $account = $this->currentUser;
-    }
+    $account ??= $this->currentUser;
     $route = $route_match->getRouteObject();
     $checks = $route->getOption('_access_checks') ?: [];
 

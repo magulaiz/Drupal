@@ -96,9 +96,7 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
    */
   public function processDefinition(&$definition, $plugin_id) {
     parent::processDefinition($definition, $plugin_id);
-    if (!isset($definition['list_class'])) {
-      $definition['list_class'] = '\Drupal\Core\Field\FieldItemList';
-    }
+    $definition['list_class'] ??= '\Drupal\Core\Field\FieldItemList';
 
     if ($definition['category'] instanceof TranslatableMarkup) {
       @trigger_error('Using a translatable string as a category for field type is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3375748', E_USER_DEPRECATED);

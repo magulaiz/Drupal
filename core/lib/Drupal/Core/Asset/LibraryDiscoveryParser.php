@@ -167,13 +167,11 @@ class LibraryDiscoveryParser {
       }
 
       // Assign Drupal's license to libraries that don't have license info.
-      if (!isset($library['license'])) {
-        $library['license'] = [
-          'name' => 'GNU-GPL-2.0-or-later',
-          'url' => 'https://www.drupal.org/licensing/faq',
-          'gpl-compatible' => TRUE,
-        ];
-      }
+      $library['license'] ??= [
+        'name' => 'GNU-GPL-2.0-or-later',
+        'url' => 'https://www.drupal.org/licensing/faq',
+        'gpl-compatible' => TRUE,
+      ];
 
       foreach (['js', 'css'] as $type) {
         // Prepare (flatten) the SMACSS-categorized definitions.
@@ -187,9 +185,7 @@ class LibraryDiscoveryParser {
             $category_weight = 'CSS_' . strtoupper($category);
             assert(defined($category_weight), 'Invalid CSS category: ' . $category . '. See https://www.drupal.org/node/2274843.');
             foreach ($files as $source => $options) {
-              if (!isset($options['weight'])) {
-                $options['weight'] = 0;
-              }
+              $options['weight'] ??= 0;
               // Apply the corresponding weight defined by CSS_* constants.
               $options['weight'] += constant($category_weight);
               $library[$type][$source] = $options;
@@ -217,9 +213,7 @@ class LibraryDiscoveryParser {
             $options['group'] = $extension_type == 'theme' ? CSS_AGGREGATE_THEME : CSS_AGGREGATE_DEFAULT;
           }
           // By default, all library assets are files.
-          if (!isset($options['type'])) {
-            $options['type'] = 'file';
-          }
+          $options['type'] ??= 'file';
           if ($options['type'] == 'external') {
             $options['data'] = $source;
           }

@@ -142,9 +142,7 @@ final class ManagedStorage implements StorageInterface {
    */
   protected function getStorage() {
     // Get the storage from the manager the first time it is needed.
-    if (!isset($this->storage)) {
-      $this->storage = $this->manager->getStorage();
-    }
+    $this->storage ??= $this->manager->getStorage();
 
     return $this->storage;
   }

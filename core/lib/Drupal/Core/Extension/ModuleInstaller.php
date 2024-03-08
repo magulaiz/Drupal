@@ -640,9 +640,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       foreach ($this->uninstallValidators as $validator) {
         $validation_reasons = $validator->validate($module);
         if (!empty($validation_reasons)) {
-          if (!isset($reasons[$module])) {
-            $reasons[$module] = [];
-          }
+          $reasons[$module] ??= [];
           $reasons[$module] = array_merge($reasons[$module], $validation_reasons);
         }
       }

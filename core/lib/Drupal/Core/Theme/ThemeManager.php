@@ -315,9 +315,7 @@ class ThemeManager implements ThemeManagerInterface {
       template_preprocess($default_template_variables, $hook, $info);
       $variables += $default_template_variables;
     }
-    if (!isset($default_attributes)) {
-      $default_attributes = new Attribute();
-    }
+    $default_attributes ??= new Attribute();
     foreach (['attributes', 'title_attributes', 'content_attributes'] as $key) {
       if (isset($variables[$key]) && !($variables[$key] instanceof Attribute)) {
         if ($variables[$key]) {

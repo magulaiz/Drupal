@@ -55,9 +55,7 @@ class OpenOffCanvasDialogCommand extends OpenDialogCommand {
     // If no width option is provided then use the default width to avoid the
     // dialog staying at the width of the previous instance when opened
     // more than once, with different widths, on a single page.
-    if (!isset($this->dialogOptions['width'])) {
-      $this->dialogOptions['width'] = static::DEFAULT_DIALOG_WIDTH;
-    }
+    $this->dialogOptions['width'] ??= static::DEFAULT_DIALOG_WIDTH;
   }
 
   /**

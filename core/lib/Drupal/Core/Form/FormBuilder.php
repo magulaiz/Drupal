@@ -551,12 +551,8 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // With GET, these forms are always submitted if requested.
     if ($form_state->isMethodType('get') && $form_state->getAlwaysProcess()) {
       $input = $form_state->getUserInput();
-      if (!isset($input['form_build_id'])) {
-        $input['form_build_id'] = $form['#build_id'];
-      }
-      if (!isset($input['form_id'])) {
-        $input['form_id'] = $form_id;
-      }
+      $input['form_build_id'] ??= $form['#build_id'];
+      $input['form_id'] ??= $form_id;
       if (!isset($input['form_token']) && isset($form['#token'])) {
         $input['form_token'] = $this->csrfToken->get($form['#token']);
       }
@@ -717,9 +713,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // build, make changes, and re-submit.
     // @see self::buildForm()
     // @see self::rebuildForm()
-    if (!isset($form['#build_id'])) {
-      $form['#build_id'] = 'form-' . Crypt::randomBytesBase64();
-    }
+    $form['#build_id'] ??= 'form-' . Crypt::randomBytesBase64();
     $form['form_build_id'] = [
       '#type' => 'hidden',
       '#value' => $form['#build_id'],
@@ -1021,9 +1015,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       }
 
       // Don't squash an existing tree value.
-      if (!isset($element[$key]['#tree'])) {
-        $element[$key]['#tree'] = $element['#tree'];
-      }
+      $element[$key]['#tree'] ??= $element['#tree'];
 
       // Children inherit #access from parent.
       if (isset($inherited_access)) {
@@ -1039,11 +1031,9 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       }
 
       // Don't squash existing parents value.
-      if (!isset($element[$key]['#parents'])) {
-        // Check to see if a tree of child elements is present. If so,
-        // continue down the tree if required.
-        $element[$key]['#parents'] = $element[$key]['#tree'] && $element['#tree'] ? array_merge($element['#parents'], [$key]) : [$key];
-      }
+      // Check to see if a tree of child elements is present. If so,
+      // continue down the tree if required.
+      $element[$key]['#parents'] ??= $element[$key]['#tree'] && $element['#tree'] ? array_merge($element['#parents'], [$key]) : [$key];
       // Ensure #array_parents follows the actual form structure.
       $array_parents = $element['#array_parents'];
       $array_parents[] = $key;

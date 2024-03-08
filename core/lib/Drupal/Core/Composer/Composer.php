@@ -34,9 +34,7 @@ class Composer {
     // composer.json file. We need one so we can optimize lookup for some of our
     // dependencies.
     $autoload = $package->getAutoload();
-    if (!isset($autoload['classmap'])) {
-      $autoload['classmap'] = [];
-    }
+    $autoload['classmap'] ??= [];
     // Check for packages used prior to the default classloader being able to
     // use APCu and optimize them if they're present.
     // @see \Drupal\Core\DrupalKernel::boot()

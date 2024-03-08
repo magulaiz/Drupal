@@ -264,9 +264,7 @@ class ThemeInitialization implements ThemeInitializationInterface {
    * @return array
    */
   protected function getExtensions() {
-    if (!isset($this->extensions)) {
-      $this->extensions = array_merge($this->moduleHandler->getModuleList(), $this->themeHandler->listInfo());
-    }
+    $this->extensions ??= array_merge($this->moduleHandler->getModuleList(), $this->themeHandler->listInfo());
     return $this->extensions;
   }
 
