@@ -226,9 +226,7 @@ class UpdateRegistry implements EventSubscriberInterface {
       $func = new \ReflectionFunction($function);
       $description = trim(str_replace(["\n", '*', '/'], '', $func->getDocComment()), ' ');
       $ret[$extension]['pending'][$update] = $description;
-      if (!isset($ret[$extension]['start'])) {
-        $ret[$extension]['start'] = $update;
-      }
+      $ret[$extension]['start'] ??= $update;
     }
     return $ret;
   }

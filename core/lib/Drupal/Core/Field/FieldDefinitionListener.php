@@ -72,14 +72,12 @@ class FieldDefinitionListener implements FieldDefinitionListenerInterface {
 
     // Update the bundle field map key value collection, add the new field.
     $bundle_field_map = $this->keyValueFactory->get('entity.definitions.bundle_field_map')->get($entity_type_id);
-    if (!isset($bundle_field_map[$field_name])) {
-      // This field did not exist yet, initialize it with the type and empty
-      // bundle list.
-      $bundle_field_map[$field_name] = [
-        'type' => $field_definition->getType(),
-        'bundles' => [],
-      ];
-    }
+    // This field did not exist yet, initialize it with the type and empty
+    // bundle list.
+    $bundle_field_map[$field_name] ??= [
+      'type' => $field_definition->getType(),
+      'bundles' => [],
+    ];
     $bundle_field_map[$field_name]['bundles'][$bundle] = $bundle;
     $this->keyValueFactory->get('entity.definitions.bundle_field_map')->set($entity_type_id, $bundle_field_map);
 
@@ -89,14 +87,12 @@ class FieldDefinitionListener implements FieldDefinitionListenerInterface {
     // If the field map is initialized, update it as well, so that calls to it
     // do not have to rebuild it again.
     if ($field_map = $this->entityFieldManager->getFieldMap()) {
-      if (!isset($field_map[$entity_type_id][$field_name])) {
-        // This field did not exist yet, initialize it with the type and empty
-        // bundle list.
-        $field_map[$entity_type_id][$field_name] = [
-          'type' => $field_definition->getType(),
-          'bundles' => [],
-        ];
-      }
+      // This field did not exist yet, initialize it with the type and empty
+      // bundle list.
+      $field_map[$entity_type_id][$field_name] ??= [
+        'type' => $field_definition->getType(),
+        'bundles' => [],
+      ];
       $field_map[$entity_type_id][$field_name]['bundles'][$bundle] = $bundle;
       $this->entityFieldManager->setFieldMap($field_map);
     }

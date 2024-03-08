@@ -173,9 +173,7 @@ abstract class StorableConfigBase extends ConfigBase {
    * @return \Drupal\Core\Config\Schema\Element
    */
   protected function getSchemaWrapper() {
-    if (!isset($this->schemaWrapper)) {
-      $this->schemaWrapper = $this->typedConfigManager->createFromNameAndData($this->name, $this->data);
-    }
+    $this->schemaWrapper ??= $this->typedConfigManager->createFromNameAndData($this->name, $this->data);
     return $this->schemaWrapper;
   }
 

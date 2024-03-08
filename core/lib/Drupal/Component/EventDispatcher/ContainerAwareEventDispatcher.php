@@ -101,9 +101,7 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
       // Invoke listeners and resolve callables if necessary.
       foreach ($this->listeners[$event_name] as &$definitions) {
         foreach ($definitions as &$definition) {
-          if (!isset($definition['callable'])) {
-            $definition['callable'] = [$this->container->get($definition['service'][0]), $definition['service'][1]];
-          }
+          $definition['callable'] ??= [$this->container->get($definition['service'][0]), $definition['service'][1]];
           if (is_array($definition['callable']) && isset($definition['callable'][0]) && $definition['callable'][0] instanceof \Closure) {
             $definition['callable'][0] = $definition['callable'][0]();
           }
@@ -144,9 +142,7 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
       // Collect listeners and resolve callables if necessary.
       foreach ($this->listeners[$event_name] as &$definitions) {
         foreach ($definitions as &$definition) {
-          if (!isset($definition['callable'])) {
-            $definition['callable'] = [$this->container->get($definition['service'][0]), $definition['service'][1]];
-          }
+          $definition['callable'] ??= [$this->container->get($definition['service'][0]), $definition['service'][1]];
           if (is_array($definition['callable']) && isset($definition['callable'][0]) && $definition['callable'][0] instanceof \Closure) {
             $definition['callable'][0] = $definition['callable'][0]();
           }
@@ -172,14 +168,12 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
     // Resolve service definitions if the listener has not been found so far.
     foreach ($this->listeners[$event_name] as $priority => &$definitions) {
       foreach ($definitions as &$definition) {
-        if (!isset($definition['callable'])) {
-          // Once the callable is retrieved we keep it for subsequent method
-          // invocations on this class.
-          $definition['callable'] = [
-            $this->container->get($definition['service'][0]),
-            $definition['service'][1],
-          ];
-        }
+        // Once the callable is retrieved we keep it for subsequent method
+        // invocations on this class.
+        $definition['callable'] ??= [
+          $this->container->get($definition['service'][0]),
+          $definition['service'][1],
+        ];
         if (is_array($definition['callable']) && isset($definition['callable'][0]) && $definition['callable'][0] instanceof \Closure) {
           $definition['callable'][0] = $definition['callable'][0]();
         }

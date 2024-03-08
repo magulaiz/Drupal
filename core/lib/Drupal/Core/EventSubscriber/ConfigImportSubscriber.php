@@ -352,9 +352,7 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
    * @return \Drupal\Core\Extension\Extension[]
    */
   protected function getThemeData() {
-    if (!isset($this->themeData)) {
-      $this->themeData = $this->themeList->reset()->getList();
-    }
+    $this->themeData ??= $this->themeList->reset()->getList();
     return $this->themeData;
   }
 

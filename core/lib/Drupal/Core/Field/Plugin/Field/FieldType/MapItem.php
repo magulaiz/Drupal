@@ -80,9 +80,7 @@ class MapItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public function __get($name) {
-    if (!isset($this->values[$name])) {
-      $this->values[$name] = [];
-    }
+    $this->values[$name] ??= [];
 
     return $this->values[$name];
   }

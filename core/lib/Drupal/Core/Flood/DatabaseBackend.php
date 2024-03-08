@@ -55,9 +55,7 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
    * {@inheritdoc}
    */
   public function register($name, $window = 3600, $identifier = NULL) {
-    if (!isset($identifier)) {
-      $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
-    }
+    $identifier ??= $this->requestStack->getCurrentRequest()->getClientIp();
     $try_again = FALSE;
     try {
       $this->doInsert($name, $window, $identifier);
@@ -100,9 +98,7 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
    * {@inheritdoc}
    */
   public function clear($name, $identifier = NULL) {
-    if (!isset($identifier)) {
-      $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
-    }
+    $identifier ??= $this->requestStack->getCurrentRequest()->getClientIp();
     try {
       $this->connection->delete(static::TABLE_NAME)
         ->condition('event', $name)
@@ -133,9 +129,7 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
    * {@inheritdoc}
    */
   public function isAllowed($name, $threshold, $window = 3600, $identifier = NULL) {
-    if (!isset($identifier)) {
-      $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
-    }
+    $identifier ??= $this->requestStack->getCurrentRequest()->getClientIp();
     try {
       $number = $this->connection->select(static::TABLE_NAME, 'f')
         ->condition('event', $name)

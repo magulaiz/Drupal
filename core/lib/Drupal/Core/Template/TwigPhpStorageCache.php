@@ -64,9 +64,7 @@ class TwigPhpStorageCache implements CacheInterface {
    * @return \Drupal\Component\PhpStorage\PhpStorageInterface
    */
   protected function storage() {
-    if (!isset($this->storage)) {
-      $this->storage = PhpStorageFactory::get('twig');
-    }
+    $this->storage ??= PhpStorageFactory::get('twig');
     return $this->storage;
   }
 
