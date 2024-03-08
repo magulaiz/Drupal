@@ -473,27 +473,25 @@
               const parentCell = element.closest('td');
               const parentRow = element.closest('tr');
 
-              parentCell.setAttribute('data-drupal-ckeditor5-cell', '');
-              isInsideTabledrag.setAttribute('data-drupal-calibrate-width', '');
-              let widths = 0;
-              let sibling = parentCell.parentNode.firstChild;
-              do {
-                if (sibling.nodeType === 1 && sibling.tagName === 'TD') {
-                  widths += sibling.getBoundingClientRect().width;
-                }
-                sibling = sibling.nextSibling;
-              } while (sibling);
+              parentCell.dataset.drupalCkeditor5Cell = '';
+              isInsideTabledrag.dataset.drupalCalibrateWidth = '';
+
+              const widths = [].reduce.call(
+                parentRow.cells,
+                (width, cell) => width + cell.getBoundingClientRect().width,
+                0,
+              );
               const maxWidth = parentRow.getBoundingClientRect().width - widths;
               if (maxWidth === 0) {
                 parentCell.style['max-width'] = `100%`;
               } else {
                 parentCell.style['max-width'] = `calc(${maxWidth}px)`;
               }
-              isInsideTabledrag.removeAttribute('data-drupal-calibrate-width');
-              parentCell.removeAttribute('data-drupal-ckeditor5-cell');
+              delete isInsideTabledrag.dataset.drupalCalibrateWidth;
+              delete parentCell.dataset.drupalCkeditor5Cell;
             };
             editorFitInTable();
-            window.addEventListener('resize', editorFitInTable);
+            window.addEventListener('resize', debounce(editorFitInTable, 100));
           }
         })
         .catch((error) => {
