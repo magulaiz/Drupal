@@ -149,8 +149,8 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
           ],
         ];
         $elements['menu_parent'] = [];
-        $elements_wrapper = [
-          'menu_parent_fieldset' => [
+        $menu_parent_element = [
+          'menu_parent_element' => [
             '#type' => 'fieldset',
             '#title' => '<span class="visually-hidden">Select menu and parent link.</span>',
             'menu_parent_wrapper' => [
@@ -166,7 +166,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
             ],
           ],
         ];
-        return $elements_wrapper;
+        return $menu_parent_element;
       }
     }
     return [];
@@ -176,7 +176,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
    * AJAX callback for updating menu parent options.
    */
   public function updateParentLinks(array $form, FormStateInterface $form_state) : array {
-    return $form['menu_parent_fieldset']['menu_parent_wrapper'];
+    return $form['menu_parent_element']['menu_parent_wrapper'];
   }
 
   /**
