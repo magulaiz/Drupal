@@ -3,15 +3,13 @@
 namespace Drupal\Core\Queue;
 
 use Drupal\Core\Site\Settings;
-use Drupal\Core\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
 
 /**
  * Defines the queue factory.
  */
-class QueueFactory implements ContainerAwareInterface {
-
-  use ContainerAwareTrait;
+class QueueFactory {
 
   /**
    * Instantiated queues, keyed by name.
@@ -32,29 +30,15 @@ class QueueFactory implements ContainerAwareInterface {
    *
    * @param \Drupal\Core\Site\Settings $settings
    *   The site settings.
-   * @param \Symfony\Component\DependencyInjection\ContainerInterface|array|null $container
+   * @param \Psr\Container\ContainerInterface $container
    *   The service container.
    */
-  public function __construct(Settings $settings, protected ContainerInterface|array|null $container = NULL) {
+  public function __construct(
+    Settings $settings,
+    #[AutowireLocator('queue_factory')]
+    protected ContainerInterface $container,
+  ) {
     $this->settings = $settings;
-    if (is_array($this->container) || $this->container === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $container argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3402611', E_USER_DEPRECATED);
-      $this->container = \Drupal::getContainer();
-    }
-  }
-
-  /**
-   * Sets the service container.
-   *
-   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0.
-   *    Instead, you should pass the container as an argument in the
-   *    __construct() method.
-   *
-   * @see https://www.drupal.org/node/123123
-   */
-  public function setContainer(?ContainerInterface $container): void {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Instead, you should pass the container as an argument in the __construct() method. See https://www.drupal.org/node/3402611', E_USER_DEPRECATED);
-    $this->container = $container;
   }
 
   /**
@@ -82,9 +66,6 @@ class QueueFactory implements ContainerAwareInterface {
         $service_name = $this->settings->get('queue_service_' . $name, $this->settings->get('queue_default', 'queue.database'));
       }
       $factory = $this->container->get($service_name);
-      if (!$factory instanceof QueueFactoryInterface) {
-        @trigger_error(sprintf('Not implementing %s in %s is deprecated in drupal:10.3.0 and the factory will not be discovered in drupal:11.0.0. Implement the interface in your factory class. See https://www.drupal.org/node/3417034', QueueFactoryInterface::class, $factory::class), E_USER_DEPRECATED);
-      }
       $this->queues[$name] = $factory->get($name);
     }
     return $this->queues[$name];
