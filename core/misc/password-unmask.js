@@ -54,7 +54,7 @@
       element.getAttribute('type') === 'password' ? 'true' : 'false',
     );
     wrapperButton.textContent = showPass;
-    wrapperButton.setAttribute('aria-label', Drupal.t('make password visible'));
+    wrapperButton.setAttribute('aria-label', Drupal.t('Password invisible'));
     wrapperButton.setAttribute('role', 'switch');
     return wrapperButton;
   };
