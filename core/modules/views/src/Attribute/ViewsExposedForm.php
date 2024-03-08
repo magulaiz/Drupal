@@ -28,18 +28,18 @@ class ViewsExposedForm extends ViewsPluginAttributeBase {
    *   (optional) The short title used in the views UI.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $help
    *   A short help string; this is displayed in the views UI.
-   * @param array|null $display_types
+   * @param string[]|null $display_types
    *   The types of the display this plugin can be used with.
    *   For example the Feed display defines the type 'feed', so only rss style
    *   and row plugins can be used in the views UI.
-   * @param array|null $base
+   * @param string[] $base
    *   The base tables on which this exposed form plugin can be used.
    *   If no base table is specified the plugin can be used with all tables.
    * @param bool $no_ui
    *   Whether the plugin should be not selectable in the UI.
    *   If it's set to TRUE, you can still use it via the API in config files.
    * @param bool $register_theme
-   *   (optional) Whether or not to register a theme function automatically.
+   *   (optional) Whether or not to register a theme function automatically. Defaults to TRUE.
    * @param class-string|null $deriver
    *   (optional) The deriver class.
    */
@@ -49,7 +49,7 @@ class ViewsExposedForm extends ViewsPluginAttributeBase {
     public readonly ?TranslatableMarkup $short_title = NULL,
     public readonly ?TranslatableMarkup $help = NULL,
     public readonly ?array $display_types = NULL,
-    public readonly ?array $base = NULL,
+    public readonly array $base = [],
     public readonly bool $no_ui = FALSE,
     public readonly bool $register_theme = TRUE,
     public readonly ?string $deriver = NULL
