@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 use Drupal\user\Entity\User;
 use Drupal\workspaces\Entity\Workspace;
@@ -65,7 +69,7 @@ class WorkspaceTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     switch ($method) {
       case 'GET':
         $this->grantPermissionsToTestedRole(['view any workspace']);
@@ -88,7 +92,7 @@ class WorkspaceTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function createEntity() {
+  protected function createEntity(): EntityInterface {
     $entity = Workspace::create([
       'id' => 'campaign',
       'label' => 'Campaign',
@@ -102,7 +106,7 @@ class WorkspaceTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument() {
+  protected function getExpectedDocument(): array {
     $author = User::load($this->entity->getOwnerId());
     $base_url = Url::fromUri('base:/jsonapi/workspace/workspace/' . $this->entity->uuid())->setAbsolute();
     return [
@@ -164,7 +168,7 @@ class WorkspaceTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument() {
+  protected function getPostDocument(): array {
     return [
       'data' => [
         'type' => static::$resourceTypeName,
@@ -179,7 +183,7 @@ class WorkspaceTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPatchDocument() {
+  protected function getPatchDocument(): array {
     $patch_document = parent::getPatchDocument();
     unset($patch_document['data']['attributes']['drupal_internal__id']);
     return $patch_document;
@@ -188,7 +192,7 @@ class WorkspaceTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedUnauthorizedAccessCacheability() {
+  protected function getExpectedUnauthorizedAccessCacheability(): CacheableMetadata {
     // @see \Drupal\workspaces\WorkspaceAccessControlHandler::checkAccess()
     return parent::getExpectedUnauthorizedAccessCacheability()
       ->addCacheTags(['workspace:campaign'])
@@ -200,7 +204,7 @@ class WorkspaceTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedUnauthorizedAccessMessage($method) {
+  protected function getExpectedUnauthorizedAccessMessage($method): string {
     switch ($method) {
       case 'GET':
         return "The 'view own workspace' permission is required.";
@@ -219,7 +223,7 @@ class WorkspaceTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getSparseFieldSets() {
+  protected function getSparseFieldSets(): array {
     // Workspace's resource type name ('workspace') comes after the 'uid' field,
     // which breaks nested sparse fieldset tests.
     return array_diff_key(parent::getSparseFieldSets(), array_flip([
