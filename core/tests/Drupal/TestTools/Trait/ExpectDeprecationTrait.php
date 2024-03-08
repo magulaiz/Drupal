@@ -57,7 +57,7 @@ trait ExpectDeprecationTrait {
   /**
    * @todo for debugging. Remove eventually.
    */
-  public static function dumpz($msg): void {
+  public static function dumpErrorHandler($msg): void {
     $handler = Collector::currentErrorHandler();
     dump([$msg, (is_object($handler) ? get_class($handler) : $handler)]);
   }
