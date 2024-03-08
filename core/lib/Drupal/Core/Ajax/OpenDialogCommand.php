@@ -59,7 +59,7 @@ class OpenDialogCommand implements CommandInterface, CommandWithAttachedAssetsIn
    *
    * @param string $selector
    *   The selector of the dialog.
-   * @param string $title
+   * @param string|\Stringable|null $title
    *   The title of the dialog.
    * @param string|array $content
    *   The content that will be placed in the dialog, either a render array
@@ -72,11 +72,7 @@ class OpenDialogCommand implements CommandInterface, CommandWithAttachedAssetsIn
    *   on the content of the dialog. If left empty, the settings will be
    *   populated automatically from the current request.
    */
-  public function __construct($selector, $title, $content, array $dialog_options = [], $settings = NULL) {
-    if (is_array($title)) {
-      @trigger_error('Calling OpenDialogCommand::__construct() with $title as an array is deprecated in drupal:10.4.0 and will trigger an error in drupal:11.0.0. See https://www.drupal.org/node/2663316', E_USER_DEPRECATED);
-      $title = \Drupal::service('renderer')->renderInIsolation($title);
-    }
+  public function __construct($selector, string|\Stringable|null $title, $content, array $dialog_options = [], $settings = NULL) {
     $title = PlainTextOutput::renderFromHtml($title);
 
     $dialog_options += ['title' => $title];
