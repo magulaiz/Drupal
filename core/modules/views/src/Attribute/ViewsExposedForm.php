@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\views\Attribute;
 
+use Drupal\Component\Plugin\Attribute\Plugin;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
@@ -15,7 +16,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @ingroup views_exposed_form_plugins
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class ViewsExposedForm extends ViewsPluginAttributeBase {
+class ViewsExposedForm extends Plugin {
 
   /**
    * Constructs a views exposed form attribute object.
