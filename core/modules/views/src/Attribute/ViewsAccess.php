@@ -26,11 +26,11 @@ class ViewsAccess extends Plugin {
    *   (optional) The short title used in the views UI.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $help
    *   (optional) A short help string; this is displayed in the views UI.
-   * @param array|null $display_types
+   * @param string[]|null $display_types
    *   (optional) The types of the display this plugin can be used with.
    *   For example the Feed display defines the type 'feed', so only rss style
    *   and row plugins can be used in the views UI.
-   * @param array $base
+   * @param string[] $base
    *   The base tables on which this access plugin can be used.
    *   If no base table is specified the plugin can be used with all tables.
    * @param bool $no_ui
