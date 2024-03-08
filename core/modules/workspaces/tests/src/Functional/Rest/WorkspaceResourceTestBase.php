@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\workspaces\Functional\EntityResource;
+namespace Drupal\Tests\workspaces\Functional\Rest;
 
-use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Drupal\user\Entity\User;
 use Drupal\workspaces\Entity\Workspace;
 
 /**
  * Base class for workspace EntityResource tests.
  */
-abstract class WorkspaceResourceTestBase extends ConfigEntityResourceTestBase {
+abstract class WorkspaceResourceTestBase extends EntityResourceTestBase {
 
   /**
    * {@inheritdoc}
@@ -165,13 +165,7 @@ abstract class WorkspaceResourceTestBase extends ConfigEntityResourceTestBase {
    * {@inheritdoc}
    */
   protected function getNormalizedPatchEntity() {
-    return [
-      'label' => [
-        [
-          'value' => 'Running on faith',
-        ],
-      ],
-    ];
+    return array_diff_key($this->getNormalizedPostEntity(), ['id' => TRUE]);
   }
 
   /**
