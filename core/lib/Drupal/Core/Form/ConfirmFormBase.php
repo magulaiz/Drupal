@@ -55,9 +55,7 @@ abstract class ConfirmFormBase extends FormBase implements ConfirmFormInterface 
     $form['actions']['cancel'] = ConfirmFormHelper::buildCancelLink($this, $this->getRequest());
 
     // By default, render the form using theme_confirm_form().
-    if (!isset($form['#theme'])) {
-      $form['#theme'] = 'confirm_form';
-    }
+    $form['#theme'] ??= 'confirm_form';
     return $form;
   }
 

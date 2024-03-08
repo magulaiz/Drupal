@@ -42,9 +42,7 @@ class UpdateCacheBackendFactory implements CacheFactoryInterface {
    * {@inheritdoc}
    */
   public function get($bin) {
-    if (!isset($this->bins[$bin])) {
-      $this->bins[$bin] = new UpdateBackend($this->cacheFactory->get($bin));
-    }
+    $this->bins[$bin] ??= new UpdateBackend($this->cacheFactory->get($bin));
     return $this->bins[$bin];
   }
 

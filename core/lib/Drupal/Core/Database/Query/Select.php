@@ -442,9 +442,7 @@ class Select extends Query implements SelectInterface {
    * {@inheritdoc}
    */
   public function getArguments(PlaceholderInterface $queryPlaceholder = NULL) {
-    if (!isset($queryPlaceholder)) {
-      $queryPlaceholder = $this;
-    }
+    $queryPlaceholder ??= $this;
     $this->compile($this->connection, $queryPlaceholder);
     return $this->arguments();
   }
@@ -461,9 +459,7 @@ class Select extends Query implements SelectInterface {
    */
   public function preExecute(SelectInterface $query = NULL) {
     // If no query object is passed in, use $this.
-    if (!isset($query)) {
-      $query = $this;
-    }
+    $query ??= $this;
 
     // Only execute this once.
     if ($query->isPrepared()) {

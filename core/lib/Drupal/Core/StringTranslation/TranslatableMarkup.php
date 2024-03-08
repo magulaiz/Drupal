@@ -186,9 +186,7 @@ class TranslatableMarkup extends FormattableMarkup {
    *   The translated string.
    */
   public function render() {
-    if (!isset($this->translatedMarkup)) {
-      $this->translatedMarkup = $this->getStringTranslation()->translateString($this);
-    }
+    $this->translatedMarkup ??= $this->getStringTranslation()->translateString($this);
 
     // Handle any replacements.
     if ($args = $this->getArguments()) {

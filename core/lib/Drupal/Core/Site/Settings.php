@@ -221,9 +221,7 @@ final class Settings {
       if (!empty($settings[$legacy])) {
         @trigger_error($deprecation['message'], E_USER_DEPRECATED);
         // Set the new key if needed.
-        if (!isset($settings[$deprecation['replacement']])) {
-          $settings[$deprecation['replacement']] = $settings[$legacy];
-        }
+        $settings[$deprecation['replacement']] ??= $settings[$legacy];
       }
       // Ensure that both keys have the same value.
       if (isset($settings[$deprecation['replacement']])) {

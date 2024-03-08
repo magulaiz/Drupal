@@ -887,9 +887,7 @@ class FormState implements FormStateInterface {
    * {@inheritdoc}
    */
   public function loadInclude($module, $type, $name = NULL) {
-    if (!isset($name)) {
-      $name = $module;
-    }
+    $name ??= $module;
     $build_info = $this->getBuildInfo();
     if (!isset($build_info['files']["$module:$name.$type"])) {
       // Only add successfully included files to the form state.

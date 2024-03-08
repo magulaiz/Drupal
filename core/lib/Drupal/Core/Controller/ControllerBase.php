@@ -110,9 +110,7 @@ abstract class ControllerBase implements ContainerInjectionInterface {
    *   The entity type manager.
    */
   protected function entityTypeManager() {
-    if (!isset($this->entityTypeManager)) {
-      $this->entityTypeManager = $this->container()->get('entity_type.manager');
-    }
+    $this->entityTypeManager ??= $this->container()->get('entity_type.manager');
     return $this->entityTypeManager;
   }
 

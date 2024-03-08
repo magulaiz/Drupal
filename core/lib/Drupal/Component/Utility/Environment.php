@@ -25,9 +25,7 @@ class Environment {
    *   otherwise.
    */
   public static function checkMemoryLimit($required, $memory_limit = NULL) {
-    if (!isset($memory_limit)) {
-      $memory_limit = ini_get('memory_limit');
-    }
+    $memory_limit ??= ini_get('memory_limit');
 
     // There is sufficient memory if:
     // - No memory limit is set.

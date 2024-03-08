@@ -67,9 +67,7 @@ class FinalExceptionSubscriber implements EventSubscriberInterface {
    * @return string
    */
   protected function getErrorLevel() {
-    if (!isset($this->errorLevel)) {
-      $this->errorLevel = $this->configFactory->get('system.logging')->get('error_level');
-    }
+    $this->errorLevel ??= $this->configFactory->get('system.logging')->get('error_level');
     return $this->errorLevel;
   }
 

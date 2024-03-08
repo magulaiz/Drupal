@@ -180,9 +180,7 @@ class Extension {
    * @see https://www.php.net/manual/class.splfileinfo.php
    */
   public function getFileInfo(): \SplFileInfo {
-    if (!isset($this->splFileInfo)) {
-      $this->splFileInfo = new \SplFileInfo($this->root . '/' . $this->pathname);
-    }
+    $this->splFileInfo ??= new \SplFileInfo($this->root . '/' . $this->pathname);
     return $this->splFileInfo;
   }
 

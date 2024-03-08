@@ -173,10 +173,8 @@ abstract class Database {
    *   The corresponding connection object.
    */
   final public static function getConnection($target = 'default', $key = NULL) {
-    if (!isset($key)) {
-      // By default, we want the active connection, set in setActiveConnection.
-      $key = self::$activeKey;
-    }
+    // By default, we want the active connection, set in setActiveConnection.
+    $key ??= self::$activeKey;
     // If the requested target does not exist, or if it is ignored, we fall back
     // to the default target. The target is typically either "default" or
     // "replica", indicating to use a replica SQL server if one is available. If
@@ -186,10 +184,8 @@ abstract class Database {
       $target = 'default';
     }
 
-    if (!isset(self::$connections[$key][$target])) {
-      // If necessary, a new connection is opened.
-      self::$connections[$key][$target] = self::openConnection($key, $target);
-    }
+    // If necessary, a new connection is opened.
+    self::$connections[$key][$target] ??= self::openConnection($key, $target);
     return self::$connections[$key][$target];
   }
 
@@ -483,9 +479,7 @@ abstract class Database {
    */
   public static function closeConnection($target = NULL, $key = NULL) {
     // Gets the active connection by default.
-    if (!isset($key)) {
-      $key = self::$activeKey;
-    }
+    $key ??= self::$activeKey;
     if (isset($target) && isset(self::$connections[$key][$target])) {
       if (self::$connections[$key][$target] instanceof Connection) {
         self::$connections[$key][$target]->commitAll();

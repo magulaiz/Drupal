@@ -70,9 +70,7 @@ class JUnitConverter {
    * @internal
    */
   public static function findTestCases(\SimpleXMLElement $element, \SimpleXMLElement $parent = NULL) {
-    if (!isset($parent)) {
-      $parent = $element;
-    }
+    $parent ??= $element;
 
     if ($element->getName() === 'testcase' && (int) $parent->attributes()->tests > 0) {
       // Add the class attribute if the test case does not have one. This is the

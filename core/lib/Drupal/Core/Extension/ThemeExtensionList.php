@@ -292,9 +292,7 @@ class ThemeExtensionList extends ExtensionList {
    */
   protected function getInstalledExtensionNames() {
     // Cache the installed themes to avoid multiple calls to the config system.
-    if (!isset($this->installedThemes)) {
-      $this->installedThemes = $this->configFactory->get('core.extension')->get('theme') ?: [];
-    }
+    $this->installedThemes ??= $this->configFactory->get('core.extension')->get('theme') ?: [];
     return array_keys($this->installedThemes);
   }
 

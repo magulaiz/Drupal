@@ -23,16 +23,12 @@ class ConfigImporterBatch {
    *   The batch context.
    */
   public static function process(ConfigImporter $config_importer, $sync_step, &$context) {
-    if (!isset($context['sandbox']['config_importer'])) {
-      $context['sandbox']['config_importer'] = $config_importer;
-    }
+    $context['sandbox']['config_importer'] ??= $config_importer;
 
     $config_importer = $context['sandbox']['config_importer'];
     $config_importer->doSyncStep($sync_step, $context);
     if ($errors = $config_importer->getErrors()) {
-      if (!isset($context['results']['errors'])) {
-        $context['results']['errors'] = [];
-      }
+      $context['results']['errors'] ??= [];
       $context['results']['errors'] = array_merge($errors, $context['results']['errors']);
     }
   }

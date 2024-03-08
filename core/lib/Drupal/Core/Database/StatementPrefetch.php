@@ -340,9 +340,7 @@ class StatementPrefetch implements \Iterator, StatementInterface {
           $class_name = array_shift($this->currentRow);
           // Deliberate no break.
         case \PDO::FETCH_CLASS:
-          if (!isset($class_name)) {
-            $class_name = $this->fetchOptions['class'];
-          }
+          $class_name ??= $this->fetchOptions['class'];
           if (count($this->fetchOptions['constructor_args'])) {
             $reflector = new \ReflectionClass($class_name);
             $result = $reflector->newInstanceArgs($this->fetchOptions['constructor_args']);
