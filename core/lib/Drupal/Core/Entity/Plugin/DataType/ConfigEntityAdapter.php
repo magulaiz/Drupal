@@ -157,7 +157,21 @@ class ConfigEntityAdapter extends EntityAdapter {
     // but so may the corresponding config schema type. Both are needed.
     $typed_config = \Drupal::service('config.typed');
     assert($typed_config instanceof TypedConfigManagerInterface);
-    $config_schema_type = $typed_config->findFallback($entity->getConfigDependencyName());
+
+    // The config name for a config entity always uses the config prefix. This
+    // allows determining how many parts the ID consists of. Most consist
+    // only one, but some consist of multiple, up to 3 in Drupal core.
+    // @see \Drupal\Core\Field\FieldConfigBase::id()
+    $config_name = $entity->getConfigDependencyName();
+    $prefix = $entity->getEntityType()->getConfigPrefix() . '.';
+    $suffix = str_replace($prefix, '', $config_name);
+    // Determine the ID parts (separated by periods) in the config dependency
+    // name.
+    $id_parts = explode('.', $suffix);
+    // The config schema type is then: `<prefix>` followed by one `.*` for every
+    // ID part.
+    $config_schema_type = $prefix . str_repeat('.*', count($id_parts));
+
     $schema_defined_constraints = $typed_config->getDefinition($config_schema_type)['constraints'] ?? [];
     $definition = $instance->getDataDefinition();
     $definition->setConstraints($definition->getConstraints() + $schema_defined_constraints);
