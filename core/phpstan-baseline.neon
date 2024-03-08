@@ -1917,11 +1917,6 @@ parameters:
 			path: modules/views/src/Plugin/views/filter/Broken.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\views\\\\Plugin\\\\views\\\\filter\\\\FilterPluginBase\\:\\:operators\\(\\)\\.$#"
-			count: 2
-			path: modules/views/src/Plugin/views/filter/FilterPluginBase.php
-
-		-
 			message: "#^Variable \\$groups might not be defined\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/filter/FilterPluginBase.php
@@ -2157,42 +2152,6 @@ parameters:
 			path: tests/Drupal/BuildTests/Composer/Template/ComposerProjectTemplatesTest.php
 
 		-
-			message: """
-				#^Usage of deprecated trait Drupal\\\\BuildTests\\\\Framework\\\\ExternalCommandRequirementsTrait in class Drupal\\\\BuildTests\\\\Framework\\\\Tests\\\\ClassRequiresAvailable\\:
-				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				Drupal\\\\\\\\TestTools\\\\\\\\Extension\\\\\\\\RequiresComposerTrait instead\\.$#
-			"""
-			count: 1
-			path: tests/Drupal/BuildTests/Framework/Tests/ExternalCommandRequirementTest.php
-
-		-
-			message: """
-				#^Usage of deprecated trait Drupal\\\\BuildTests\\\\Framework\\\\ExternalCommandRequirementsTrait in class Drupal\\\\BuildTests\\\\Framework\\\\Tests\\\\ClassRequiresUnavailable\\:
-				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				Drupal\\\\\\\\TestTools\\\\\\\\Extension\\\\\\\\RequiresComposerTrait instead\\.$#
-			"""
-			count: 1
-			path: tests/Drupal/BuildTests/Framework/Tests/ExternalCommandRequirementTest.php
-
-		-
-			message: """
-				#^Usage of deprecated trait Drupal\\\\BuildTests\\\\Framework\\\\ExternalCommandRequirementsTrait in class Drupal\\\\BuildTests\\\\Framework\\\\Tests\\\\MethodRequires\\:
-				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				Drupal\\\\\\\\TestTools\\\\\\\\Extension\\\\\\\\RequiresComposerTrait instead\\.$#
-			"""
-			count: 1
-			path: tests/Drupal/BuildTests/Framework/Tests/ExternalCommandRequirementTest.php
-
-		-
-			message: """
-				#^Usage of deprecated trait Drupal\\\\BuildTests\\\\Framework\\\\ExternalCommandRequirementsTrait in class Drupal\\\\BuildTests\\\\Framework\\\\Tests\\\\UsesCommandRequirements\\:
-				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				Drupal\\\\\\\\TestTools\\\\\\\\Extension\\\\\\\\RequiresComposerTrait instead\\.$#
-			"""
-			count: 1
-			path: tests/Drupal/BuildTests/Framework/Tests/ExternalCommandRequirementTest.php
-
-		-
 			message: "#^Variable \\$found might not be defined\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Cache/ApcuBackendTest.php
@@ -2424,14 +2383,6 @@ parameters:
 			message: "#^Trying to mock an undefined method isDefaultRevision\\(\\) on class Drupal\\\\Tests\\\\Core\\\\Entity\\\\UrlTestEntity\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Entity/EntityUrlTest.php
-
-		-
-			message: """
-				#^Call to deprecated method expectError\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-				https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#
-			"""
-			count: 2
-			path: tests/Drupal/Tests/Core/EventSubscriber/RedirectResponseSubscriberTest.php
 
 		-
 			message: """
