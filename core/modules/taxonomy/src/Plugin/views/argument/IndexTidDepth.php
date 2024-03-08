@@ -2,6 +2,7 @@
 
 namespace Drupal\taxonomy\Plugin\views\argument;
 
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -22,6 +23,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPluginInterface {
   use TaxonomyIndexDepthQueryTrait;
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * The deprecated properties and services on this class.
+   */
+  protected array $deprecatedProperties = ['termStorage' => 'termStorage'];
 
   /**
    * @var \Drupal\Core\Entity\EntityStorageInterface
@@ -31,12 +38,12 @@ class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPlugin
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $termStorage, protected ?EntityRepositoryInterface $entityRepository = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected EntityStorageInterface|EntityRepositoryInterface $entityRepository) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    $this->termStorage = $termStorage;
-    if ($this->entityRepository === NULL) {
-      @trigger_error('Calling ' . __CLASS__ . '::__construct() without the $entityRepository argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/project/drupal/issues/2765297', E_USER_DEPRECATED);
+    if ($entityRepository instanceof EntityStorageInterface) {
+      $this->termStorage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+      @trigger_error('Calling ' . __CLASS__ . '::__construct() with the $termStorage argument as \Drupal\Core\Entity\EntityStorageInterface is deprecated in drupal:10.3.0 and it will require Drupal\Core\Entity\EntityRepositoryInterface in drupal:11.0.0. See https://www.drupal.org/node/2765297', E_USER_DEPRECATED);
       $this->entityRepository = \Drupal::service('entity.repository');
     }
   }
@@ -49,7 +56,6 @@ class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPlugin
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity_type.manager')->getStorage('taxonomy_term'),
       $container->get('entity.repository')
     );
   }

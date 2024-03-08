@@ -33,7 +33,7 @@ class ViewsArgumentDeprecationTest extends KernelTestBase {
    * @group legacy
    */
   public function testDeprecation(): void {
-    $this->expectDeprecation('Calling Drupal\taxonomy\Plugin\views\argument\Taxonomy::__construct() without the $entityRepository argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/project/drupal/issues/2765297');
+    $this->expectDeprecation('Calling Drupal\taxonomy\Plugin\views\argument\Taxonomy::__construct() with the $termStorage argument as \Drupal\Core\Entity\EntityStorageInterface is deprecated in drupal:10.3.0 and it will require Drupal\Core\Entity\EntityRepositoryInterface in drupal:11.0.0. See https://www.drupal.org/node/2765297');
     $plugin = \Drupal::service('plugin.manager.views.argument')->createInstance('taxonomy_views_argument_test', []);
     $this->assertInstanceOf(TaxonomyViewsArgumentTest::class, $plugin);
   }
