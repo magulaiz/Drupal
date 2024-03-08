@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\TestTools\Trait;
 
+use Drupal\TestTools\Extension\DeprecationHandler\TestErrorHandler;
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\Before;
-
-// cspell:ignore errno errstr errfile errline
 
 /**
  * Manage expected deprecations.
@@ -16,49 +15,19 @@ use PHPUnit\Framework\Attributes\Before;
  */
 trait ExpectDeprecationTrait {
 
-  /**
-   * The previous error handler.
-   *
-   * @var callable|null
-   */
-  protected $previouslyDefinedErrorHandler;
-
   protected array $expectedDeprecations = [];
-  protected array $collectedDeprecations = [];
+  public array $collectedDeprecations = [];
 
   #[Before]
   public function setUpErrorHandler(): void {
-    if ($this->previouslyDefinedErrorHandler === NULL) {
-      // Get current handler.
-      $handler = set_error_handler('var_dump');
-      restore_error_handler();
-
-      $this->previouslyDefinedErrorHandler = set_error_handler(
-        function (int $errno, string $errstr, string $errfile = NULL, int $errline = NULL) use ($handler): bool {
-          // Collect deprecations regardless of whether they are ignored or not.
-          if (E_USER_DEPRECATED === $errno || E_DEPRECATED === $errno) {
-            $this->collectedDeprecations[] = $errstr;
-          }
-
-          if ((E_USER_DEPRECATED === $errno || E_DEPRECATED === $errno) && $this->isTestInLegacyGroup()) {
-            // dump(['Test level legacy', $errno, $errstr, $errfile, $errline]);
-            return TRUE;
-          }
-          else {
-            // dump(['Test level fallback', $errno, $errstr, $errfile, $errline]);
-            call_user_func($handler, $errno, $errstr, $errfile, $errline);
-          }
-          return TRUE;
-        }
-      );
-    }
+    $handler = set_error_handler('var_dump');
+    restore_error_handler();
+    set_error_handler(new TestErrorHandler($handler, $this));
   }
 
   #[After]
   public function tearDownErrorHandler(): void {
-    if ($this->previouslyDefinedErrorHandler !== NULL) {
-      restore_error_handler();
-    }
+    restore_error_handler();
 
     // Checks if collected deprecations match the expectations.
     if ($this->expectedDeprecations) {
@@ -76,7 +45,7 @@ trait ExpectDeprecationTrait {
     $this->expectedDeprecations[] = $message;
   }
 
-  protected function isTestInLegacyGroup(): bool {
+  public function isTestInLegacyGroup(): bool {
     $groups = [];
     foreach ($this->valueObjectForEvents()->metadata()->isGroup() as $metadata) {
       $groups[] = $metadata->groupName();

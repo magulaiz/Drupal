@@ -7,14 +7,11 @@
  * @see phpunit.xml.dist
  */
 
+use Drupal\TestTools\Extension\DeprecationHandler\BootstrapErrorHandler;
 use Drupal\TestTools\Extension\HtmlLogging\HtmlOutputLogger;
 use Drupal\TestTools\PhpUnitCompatibility\IgnoreDeprecation;
 use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
 use Symfony\Component\ErrorHandler\DebugClassLoader;
-use PHPUnit\Event\Code\NoTestCaseObjectOnCallStackException;
-use PHPUnit\Runner\ErrorHandler;
-
-// cspell:ignore errno errstr errfile errline
 
 /**
  * Finds all valid extension directories recursively within a given directory.
@@ -183,29 +180,7 @@ if (RunnerVersion::getMajor() >= 10 && getenv('SYMFONY_DEPRECATIONS_HELPER') !==
 
   // Need to have an early error handler to manage deprecations triggered by
   // DebugClassLoader, that can occur before tests' set up.
-  $phpUnitErrorHandler = new ErrorHandler();
-  set_error_handler(
-    function (int $errno, string $errstr, string $errfile = NULL, int $errline = NULL) use ($phpUnitErrorHandler): bool {
-      if ((E_USER_DEPRECATED === $errno || E_DEPRECATED === $errno) && IgnoreDeprecation::isIgnoredDeprecation($errstr)) {
-        // Deprecation handled is one of those in the ignore list.
-        // dump(['Bootstrap ignore', $errno, $errstr, $errfile, $errline]);
-        return TRUE;
-      }
-      else {
-        // Fallback to PHPUnit's error handler if no other processing.
-        // dump(['Bootstrap level fallback to PHPUnit', $errno, $errstr, $errfile, $errline]);
-        try {
-          call_user_func($phpUnitErrorHandler, $errno, $errstr, $errfile, $errline);
-        }
-        catch (NoTestCaseObjectOnCallStackException $e) {
-          // If we end up here, it's likely because the test processing has
-          // finished already and we are processing an error that occurred
-          // while dealing with STDOUT rewinding or truncating. Do nothing.
-        }
-      }
-      return TRUE;
-    }
-  );
+  set_error_handler(new BootstrapErrorHandler());
 
   DebugClassLoader::enable();
 }
