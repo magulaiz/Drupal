@@ -1,3 +1,4 @@
+# Comment to trigger yaml linter if exists.
 global-styling:
   version: VERSION
   css:
