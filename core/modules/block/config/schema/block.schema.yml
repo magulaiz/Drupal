@@ -29,10 +29,10 @@ block.block.*:
     weight:
       type: weight
       label: 'Weight'
-      # @todo Figure out when/why this is sensible. Seems unintentional: BlockInterface::getWeight() has `int` return type, implementation does not cast from NULL to int.
+      # @todo Remove `nullable: true` in https://www.drupal.org/project/drupal/issues/3426279
       nullable: true
     provider:
-      # @todo Deprecate this from config schema and remove it from the `config_export` definition in a follow-up issue.
+      # @todo Deprecate this from config schema and remove it from the `config_export` definition in https://www.drupal.org/project/drupal/issues/3426278
       nullable: true
       type: string
       label: 'Provider'
