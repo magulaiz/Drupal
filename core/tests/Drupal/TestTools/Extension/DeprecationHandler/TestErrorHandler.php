@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\TestTools\Extension\DeprecationHandler;
 
-use Drupal\TestTools\PhpUnitCompatibility\IgnoreDeprecation;
-use PHPUnit\Event\Code\NoTestCaseObjectOnCallStackException;
-use PHPUnit\Runner\ErrorHandler;
-
 /**
  * @todo
  *
