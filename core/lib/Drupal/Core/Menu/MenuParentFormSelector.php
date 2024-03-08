@@ -166,7 +166,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
             ],
           ],
         ];
-        return $elements_wrapper;
+        return $elements_wrapper['menu_parent_fieldset'];
       }
     }
     return [];
@@ -176,7 +176,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
    * AJAX callback for updating menu parent options.
    */
   public function updateParentLinks(array $form, FormStateInterface $form_state) : array {
-    return $form['menu_parent_fieldset']['menu_parent_wrapper'];
+    return $form['menu_parent_wrapper'];
   }
 
   /**
