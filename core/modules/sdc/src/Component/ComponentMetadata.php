@@ -122,6 +122,7 @@ final class ComponentMetadata {
     $this->status = ExtensionLifecycle::isValid($metadata_info['status'] ?? '')
       ? $metadata_info['status']
       : ExtensionLifecycle::STABLE;
+    $this->thumbnailPath = $metadata_info['thumbnail'] ?? '';
     $this->documentation = $metadata_info['documentation'] ?? '';
 
     $this->group = $metadata_info['group'] ?? $this->t('All Components');
@@ -172,14 +173,21 @@ final class ComponentMetadata {
   /**
    * Gets the thumbnail path.
    *
-   * @return string
-   *   The path.
+   * @return string|null
+   *   The thumbnail path; otherwise null.
    */
-  public function getThumbnailPath(): string {
-    if (!isset($this->thumbnailPath)) {
-      $thumbnail_path = sprintf('%s/thumbnail.png', $this->path);
-      $this->thumbnailPath = file_exists($thumbnail_path) ? $thumbnail_path : '';
+  public function getThumbnailPath(): ?string {
+    if ($this->thumbnailPath !== '') {
+      if (file_exists($this->thumbnailPath)) {
+        return $this->thumbnailPath;
+      }
+
+      return implode(DIRECTORY_SEPARATOR, [
+        $this->path,
+        $this->thumbnailPath,
+      ]);
     }
+
     return $this->thumbnailPath;
   }
 
