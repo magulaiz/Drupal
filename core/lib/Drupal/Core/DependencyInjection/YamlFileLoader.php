@@ -472,25 +472,25 @@ class YamlFileLoader
         if ($value instanceof TaggedValue) {
             $argument = $value->getValue();
             if (\in_array($value->getTag(), ['tagged', 'tagged_iterator', 'tagged_locator'], true)) {
-               $forLocator = 'tagged_locator' === $value->getTag();
+                $forLocator = 'tagged_locator' === $value->getTag();
 
-              if (\is_array($argument) && isset($argument['tag']) && $argument['tag']) {
-                 if ($diff = array_diff(array_keys($argument), $supportedKeys = ['tag', 'index_by', 'default_index_method', 'default_priority_method', 'exclude', 'exclude_self'])) {
-                   throw new InvalidArgumentException(sprintf('"!%s" tag contains unsupported key "%s"; supported ones are "%s".', $value->getTag(), implode('", "', $diff), implode('", "', $supportedKeys)));
-                 }
+                if (\is_array($argument) && isset($argument['tag']) && $argument['tag']) {
+                    if ($diff = array_diff(array_keys($argument), $supportedKeys = ['tag', 'index_by', 'default_index_method', 'default_priority_method', 'exclude', 'exclude_self'])) {
+                        throw new InvalidArgumentException(sprintf('"!%s" tag contains unsupported key "%s"; supported ones are "%s".', $value->getTag(), implode('", "', $diff), implode('", "', $supportedKeys)));
+                    }
 
-                 $argument = new TaggedIteratorArgument($argument['tag'], $argument['index_by'] ?? null, $argument['default_index_method'] ?? null, $forLocator, $argument['default_priority_method'] ?? null, (array) ($argument['exclude'] ?? null), $argument['exclude_self'] ?? true);
-              } elseif (\is_string($argument) && $argument) {
-                 $argument = new TaggedIteratorArgument($argument, null, null, $forLocator);
-              } else {
-                 throw new InvalidArgumentException(sprintf('"!%s" tags only accept a non empty string or an array with a key "tag"".', $value->getTag()));
-              }
+                    $argument = new TaggedIteratorArgument($argument['tag'], $argument['index_by'] ?? null, $argument['default_index_method'] ?? null, $forLocator, $argument['default_priority_method'] ?? null, (array) ($argument['exclude'] ?? null), $argument['exclude_self'] ?? true);
+                } elseif (\is_string($argument) && $argument) {
+                    $argument = new TaggedIteratorArgument($argument, null, null, $forLocator);
+                } else {
+                    throw new InvalidArgumentException(sprintf('"!%s" tags only accept a non empty string or an array with a key "tag".', $value->getTag()));
+                }
 
-              if ($forLocator) {
-                 $argument = new ServiceLocatorArgument($argument);
-              }
+                if ($forLocator) {
+                    $argument = new ServiceLocatorArgument($argument);
+                }
 
-              return $argument;
+                return $argument;
             }
         }
         if (is_array($value)) {
