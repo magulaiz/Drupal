@@ -152,7 +152,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
         $elements_wrapper = [
           'menu_parent_fieldset' => [
             '#type' => 'fieldset',
-            '#title' => '<span class="visually-hidden">Title</span>',
+            '#title' => '<span class="visually-hidden">Select menu and parent link.</span>',
             'menu_parent_wrapper' => [
               '#type' => 'container',
               '#attributes' => ['id' => $menu_parent_wrapper],
