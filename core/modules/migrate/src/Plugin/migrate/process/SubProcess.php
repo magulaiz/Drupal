@@ -3,6 +3,7 @@
 namespace Drupal\migrate\Plugin\migrate\process;
 
 use Drupal\migrate\MigrateException;
+use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
@@ -202,21 +203,25 @@ class SubProcess extends ProcessPluginBase {
       $source[$key] = $row->getSource();
     }
 
-    if (is_array($value) || $value instanceof \Traversable) {
+    if (is_iterable($value)) {
       foreach ($value as $key => $new_value) {
         if (!is_array($new_value)) {
           throw new MigrateException(sprintf("Input array should hold elements of type array, instead element was of type '%s'", gettype($new_value)));
         }
         $new_row = new Row($new_value + $source);
-        $migrate_executable->processRow($new_row, $this->configuration['process']);
+        try {
+          $migrate_executable->processRow($new_row, $this->configuration['process']);
+        }
+        catch (MigrateSkipRowException $e) {
+          continue;
+        }
         $destination = $new_row->getDestination();
         if (array_key_exists('key', $this->configuration)) {
           $key = $this->transformKey($key, $migrate_executable, $new_row);
         }
         // Do not save the result if the key is NULL. The configured process
-        // pipeline used in transformKey() will return NULL if a
-        // MigrateSkipProcessException is thrown.
-        // @see \Drupal\filter\Plugin\migrate\process\FilterID
+        // pipeline used in transformKey() will return NULL if the key can not
+        // be transformed.
         if ($key !== NULL) {
           $return[$key] = $destination;
         }

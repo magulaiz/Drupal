@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Render;
 
+use Drupal\Component\Datetime\Time;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Cache\VariationCache;
@@ -34,7 +35,7 @@ class RendererBubblingTest extends RendererTestBase {
    */
   public function testBubblingWithoutPreRender() {
     $this->setUpRequest();
-    $this->setupMemoryCache();
+    $this->setUpMemoryCache();
 
     $this->cacheContextsManager->expects($this->any())
       ->method('convertTokensToKeys')
@@ -80,8 +81,8 @@ class RendererBubblingTest extends RendererTestBase {
     $bin = $this->randomMachineName();
 
     $this->setUpRequest();
-    $this->memoryCache = new VariationCache($this->requestStack, new MemoryBackend(), $this->cacheContextsManager);
-    $custom_cache = new VariationCache($this->requestStack, new MemoryBackend(), $this->cacheContextsManager);
+    $this->memoryCache = new VariationCache($this->requestStack, new MemoryBackend(new Time($this->requestStack)), $this->cacheContextsManager);
+    $custom_cache = new VariationCache($this->requestStack, new MemoryBackend(new Time($this->requestStack)), $this->cacheContextsManager);
 
     $this->cacheFactory->expects($this->atLeastOnce())
       ->method('get')
@@ -134,7 +135,7 @@ class RendererBubblingTest extends RendererTestBase {
    */
   public function testContextBubblingEdgeCases(array $element, array $expected_top_level_contexts, $expected_cache_item) {
     $this->setUpRequest();
-    $this->setupMemoryCache();
+    $this->setUpMemoryCache();
     $this->cacheContextsManager->expects($this->any())
       ->method('convertTokensToKeys')
       ->willReturnArgument(0);
@@ -145,7 +146,7 @@ class RendererBubblingTest extends RendererTestBase {
     $this->assertRenderCacheItem($element['#cache']['keys'], $expected_cache_item);
   }
 
-  public function providerTestContextBubblingEdgeCases() {
+  public static function providerTestContextBubblingEdgeCases() {
     $data = [];
 
     // Cache contexts of inaccessible children aren't bubbled (because those
@@ -315,7 +316,7 @@ class RendererBubblingTest extends RendererTestBase {
     $current_user_role = &$this->currentUserRole;
 
     $this->setUpRequest();
-    $this->setupMemoryCache();
+    $this->setUpMemoryCache();
 
     $test_element = [
       '#cache' => [
@@ -444,7 +445,7 @@ class RendererBubblingTest extends RendererTestBase {
    */
   public function testBubblingWithPrerender($test_element) {
     $this->setUpRequest();
-    $this->setupMemoryCache();
+    $this->setUpMemoryCache();
 
     // Mock the State service.
     $memory_state = new State(new KeyValueMemoryFactory());
@@ -497,7 +498,7 @@ class RendererBubblingTest extends RendererTestBase {
    *
    * @return array
    */
-  public function providerTestBubblingWithPrerender() {
+  public static function providerTestBubblingWithPrerender() {
     $data = [];
 
     // Test element without theme.
@@ -527,7 +528,7 @@ class RendererBubblingTest extends RendererTestBase {
    */
   public function testOverWriteCacheKeys() {
     $this->setUpRequest();
-    $this->setupMemoryCache();
+    $this->setUpMemoryCache();
 
     // Ensure a logic exception
     $data = [
