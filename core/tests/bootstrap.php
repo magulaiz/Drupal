@@ -179,7 +179,7 @@ if (RunnerVersion::getMajor() >= 10 && getenv('SYMFONY_DEPRECATIONS_HELPER') !==
   }
 
   // Need to have an early error handler to manage deprecations triggered by
-  // DebugClassLoader, that can occur before tests' set up.
+  // DebugClassLoader, that occur before tests' setUp() methods are called.
   set_error_handler(new BootstrapErrorHandler());
 
   DebugClassLoader::enable();

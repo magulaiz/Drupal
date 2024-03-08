@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\TestTools\Trait;
 
+use Drupal\TestTools\Extension\DeprecationHandler\Collector;
 use Drupal\TestTools\Extension\DeprecationHandler\TestErrorHandler;
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\Before;
@@ -20,14 +21,14 @@ trait ExpectDeprecationTrait {
 
   #[Before]
   public function setUpErrorHandler(): void {
-    $handler = set_error_handler('var_dump');
-    restore_error_handler();
-    set_error_handler(new TestErrorHandler($handler, $this));
+    set_error_handler(new TestErrorHandler(Collector::currentErrorHandler(), $this));
   }
 
   #[After]
   public function tearDownErrorHandler(): void {
-    restore_error_handler();
+    if (Collector::currentErrorHandler() instanceof TestErrorHandler) {
+      restore_error_handler();
+    }
 
     // Checks if collected deprecations match the expectations.
     if ($this->expectedDeprecations) {
@@ -51,6 +52,14 @@ trait ExpectDeprecationTrait {
       $groups[] = $metadata->groupName();
     }
     return in_array('legacy', $groups, TRUE);
+  }
+
+  /**
+   * @todo for debugging. Remove eventually.
+   */
+  public static function dumpz($msg): void {
+    $handler = Collector::currentErrorHandler();
+    dump([$msg, (is_object($handler) ? get_class($handler) : $handler)]);
   }
 
 }
