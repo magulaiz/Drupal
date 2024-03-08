@@ -217,6 +217,9 @@ class WorkspaceTest extends ResourceTestBase {
 
       case 'DELETE':
         return "The 'delete own workspace' permission is required.";
+
+      default:
+        return parent::getExpectedUnauthorizedAccessMessage($method);
     }
   }
 
