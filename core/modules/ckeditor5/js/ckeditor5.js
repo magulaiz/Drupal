@@ -440,6 +440,21 @@
             },
           );
 
+          // Update aria-label with the value from default textarea label.
+          // @see https://www.drupal.org/project/drupal/issues/3426798
+          const selector = editor.sourceElement.getAttribute('data-drupal-selector');
+          const label = !!selector ? document.querySelector('label[for=' + selector + ']').innerText : false;
+          if (!!label) {
+            editor.sourceElement.parentNode.querySelector('label').innerText = label;
+            editor.ui.view.editable.element.closest('.ck-content').ariaLabel = label;
+
+            editor.ui.focusTracker.on('change:isFocused', (evt, name, isFocused) => {
+              // Because CKEditor5 re-renders aria-label every time on focus/blur,
+              // overwrite the label to appropriate field label value.
+              editor.ui.view.editable.element.closest('.ck-content').ariaLabel = label;
+            });
+          }
+
           editor.model.document.on('change:data', () => {
             const callback = callbacks.get(id);
             if (callback) {
