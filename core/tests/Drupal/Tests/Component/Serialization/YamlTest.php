@@ -164,12 +164,9 @@ foo: !php/enum Drupal\Tests\Component\Serialization\EnumValue::Yes
 bar: !php/const Drupal\Tests\Component\Serialization\BackedEnumValue::Maybe->value
 
 YAML;
-    $symfony = YamlSymfony::decode($yaml_alternative);
-    $yaml = YamlPecl::decode($yaml_alternative);
-    $this->assertSame($symfony['foo'], EnumValue::Yes);
-    $this->assertSame($symfony['bar'], BackedEnumValue::Maybe->value);
-    $this->assertSame($yaml['foo'], EnumValue::Yes);
-    $this->assertSame($yaml['bar'], BackedEnumValue::Maybe->value);
+    $decoded = Yaml::decode($yaml_alternative);
+    $this->assertSame($decoded['foo'], EnumValue::Yes);
+    $this->assertSame($decoded['bar'], BackedEnumValue::Maybe->value);
   }
 
 }
