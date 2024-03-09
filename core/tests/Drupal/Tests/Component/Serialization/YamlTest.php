@@ -96,9 +96,7 @@ class YamlTest extends YamlTestBase {
    }
 
   /**
-   * Tests decoding PHP constants in PECL and Symfony.
-   *
-   * @requires extension yaml
+   * Tests decoding PHP constants.
    *
    * @see \Drupal\Tests\Component\Serialization\YamlTest::testObjectSupportDisabledPecl()
    */
@@ -114,12 +112,7 @@ class YamlTest extends YamlTestBase {
   }
 
   /**
-   * Tests that missing constants cause the same exception in PECL and Symfony.
-   *
-   * @testWith ["\\Drupal\\Component\\Serialization\\YamlSymfony::decode"]
-   *           ["\\Drupal\\Component\\Serialization\\YamlPecl::decode"]
-   *
-   * @requires extension yaml
+   * Tests that missing constants cause exception.
    */
   public function testUnDefinedConstant($function) {
     $this->expectExceptionMessage('The constant "DOES_NOT_EXIST" is not defined');
@@ -131,9 +124,7 @@ class YamlTest extends YamlTestBase {
   }
 
   /**
-   * Tests that enums can be encoded by Symfony and parsed by PECL and Symfony.
-   *
-   * @requires extension yaml
+   * Tests that enums can be encoded and parsed.
    */
   public function testEnums() {
     $data = [
@@ -161,7 +152,7 @@ YAML, $yaml);
     // Test both PECL and Symfony can decode the `!php/enum` encoding of enums.
     $yaml_alternative = <<<YAML
 foo: !php/enum Drupal\Tests\Component\Serialization\EnumValue::Yes
-bar: !php/const Drupal\Tests\Component\Serialization\BackedEnumValue::Maybe->value
+bar: !php/enum Drupal\Tests\Component\Serialization\BackedEnumValue::Maybe->value
 
 YAML;
     $decoded = Yaml::decode($yaml_alternative);
