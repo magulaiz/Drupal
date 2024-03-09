@@ -444,7 +444,7 @@ class LinkFieldTest extends BrowserTestBase {
     $url1 = 'http://www.example.com/content/articles/archive?author=John&year=2012#com';
     $url2 = 'http://www.example.org/content/articles/archive?author=John&year=2012#org';
     $url3 = '#net';
-    $url4 = 'http://www.example.com/content/articles/archive?author=John&year=2012&month=feburary#com';
+    $url4 = 'http://www.example.com/content/articles/archive?author=John&year=2012&month=february#com';
     $title1 = $url1;
     // Intentionally contains an ampersand that needs sanitization on output.
     $title2 = 'A very long & strange example title that could break the nice layout of the site';
