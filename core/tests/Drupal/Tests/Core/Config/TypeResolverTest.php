@@ -14,31 +14,14 @@ use Drupal\Tests\UnitTestCase;
 class TypeResolverTest extends UnitTestCase {
 
   /**
-   * @dataProvider providerInvalidTypes
+   * @testWith ["[foo.%bar.qux]", "`foo.%bar.qux` is not a valid dynamic type expression. Dynamic type expressions must contain at least `%parent`, `%key`, or `%type`.`", {"foo": "foo"}]
+   *           ["[%paren.field_type]", "`%paren.field_type` is not a valid dynamic type expression. Dynamic type expressions must contain at least `%parent`, `%key`, or `%type`."]
+   *           ["[something.%type]", "`%type` can only used when immediately proceeded by `%parent` in `something.%type`", {"something": "something"}]
    */
-  public function testInvalidType($name, $message, $data = []): void {
+  public function testInvalidType(string $name, string $message, array $data = []): void {
     $this->expectException(\LogicException::class);
     $this->expectExceptionMessage($message);
     TypeResolver::resolveDynamicTypeName($name, $data);
-  }
-
-  public function providerInvalidTypes() {
-    return [
-      'invalid %variable' => [
-        '[foo.%bar.qux]',
-        '`foo.%bar.qux` is not a valid dynamic type expression. Dynamic type expressions must contain at least `%parent`, `%key`, or `%type`.`',
-        ['foo' => 'foo'],
-      ],
-      'misspelling' => [
-        '[%paren.field_type]',
-        '`%paren.field_type` is not a valid dynamic type expression. Dynamic type expressions must contain at least `%parent`, `%key`, or `%type`.`',
-      ],
-      'type without parent' => [
-        '[something.%type]',
-        '`%type` can only used when immediately proceeded by `%parent` in `something.%type`',
-        ['something' => 'something'],
-      ],
-    ];
   }
 
 }
