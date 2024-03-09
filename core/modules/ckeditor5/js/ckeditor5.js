@@ -472,21 +472,40 @@
             const editorFitInTable = () => {
               const parentCell = element.closest('td');
               const parentRow = element.closest('tr');
+              const parentTable = element.closest('table');
+              let maxWidth = parentTable.dataset.containerMaxWidth;
+
+              const isFirstRow = parentRow.rowIndex === 1;
+
+              const setContainerMaxWidth = (width, element) => {
+                if (width === 0) {
+                  element.style['max-width'] = `100%`;
+                } else {
+                  element.style['max-width'] = `${width}px`;
+                }
+              };
+
+              if (maxWidth && !isFirstRow) {
+                setContainerMaxWidth(maxWidth, parentCell);
+                return;
+              }
 
               parentCell.dataset.drupalCkeditor5Cell = '';
               isInsideTabledrag.dataset.drupalCalibrateWidth = '';
 
-              const widths = [].reduce.call(
+              const widths = Array.from(
                 parentRow.cells,
-                (width, cell) => width + cell.getBoundingClientRect().width,
-                0,
+                (cell) => cell.getBoundingClientRect().width,
+              ).reduce((width, cellWidth) => width + cellWidth);
+
+              maxWidth = Math.trunc(
+                parentRow.getBoundingClientRect().width - widths,
               );
-              const maxWidth = parentRow.getBoundingClientRect().width - widths;
-              if (maxWidth === 0) {
-                parentCell.style['max-width'] = `100%`;
-              } else {
-                parentCell.style['max-width'] = `calc(${maxWidth}px)`;
-              }
+
+              parentTable.dataset.containerMaxWidth = maxWidth;
+
+              setContainerMaxWidth(maxWidth, parentCell);
+
               delete isInsideTabledrag.dataset.drupalCalibrateWidth;
               delete parentCell.dataset.drupalCkeditor5Cell;
             };
