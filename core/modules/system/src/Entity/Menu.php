@@ -2,40 +2,15 @@
 
 namespace Drupal\system\Entity;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\system\MenuInterface;
 
 /**
  * Defines the Menu configuration entity class.
- *
- * @ConfigEntityType(
- *   id = "menu",
- *   label = @Translation("Menu"),
- *   label_collection = @Translation("Menus"),
- *   label_singular = @Translation("menu"),
- *   label_plural = @Translation("menus"),
- *   label_count = @PluralTranslation(
- *     singular = "@count menu",
- *     plural = "@count menus",
- *   ),
- *   handlers = {
- *     "access" = "Drupal\system\MenuAccessControlHandler",
- *     "storage" = "Drupal\system\MenuStorage",
- *   },
- *   admin_permission = "administer menu",
- *   entity_keys = {
- *     "id" = "id",
- *     "label" = "label"
- *   },
- *   config_export = {
- *     "id",
- *     "label",
- *     "description",
- *     "locked",
- *   }
- * )
  */
+#[\Drupal\Core\Entity\Attribute\ConfigEntityType(id: 'menu', label: new TranslatableMarkup('Menu'), label_collection: new TranslatableMarkup('Menus'), label_singular: new TranslatableMarkup('menu'), label_plural: new TranslatableMarkup('menus'), label_count: ['singular' => '@count menu', 'plural' => '@count menus'], handlers: ['access' => 'Drupal\system\MenuAccessControlHandler', 'storage' => 'Drupal\system\MenuStorage'], admin_permission: 'administer menu', entity_keys: ['id' => 'id', 'label' => 'label'], config_export: ['id', 'label', 'description', 'locked'])]
 class Menu extends ConfigEntityBase implements MenuInterface {
 
   /**

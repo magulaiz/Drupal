@@ -16,23 +16,8 @@ use Drupal\entity_test\Plugin\Field\ComputedTestFieldItemList;
 
 /**
  * An entity used for testing computed bundle field values.
- *
- * @ContentEntityType(
- *   id = "entity_test_comp_bund_fld",
- *   label = @Translation("Entity Test computed bundle field"),
- *   base_table = "entity_test_comp_bund_fld",
- *   handlers = {
- *     "views_data" = "Drupal\entity_test\EntityTestViewsData"
- *   },
- *   entity_keys = {
- *     "id" = "id",
- *     "uuid" = "uuid",
- *     "label" = "name",
- *     "bundle" = "type",
- *   },
- *   admin_permission = "administer entity_test content",
- * )
  */
+#[\Drupal\Core\Entity\Attribute\ContentEntityType(id: 'entity_test_comp_bund_fld', label: new TranslatableMarkup('Entity Test computed bundle field'), base_table: 'entity_test_comp_bund_fld', handlers: ['views_data' => 'Drupal\entity_test\EntityTestViewsData'], entity_keys: ['id' => 'id', 'uuid' => 'uuid', 'label' => 'name', 'bundle' => 'type'], admin_permission: 'administer entity_test content')]
 class EntityTestComputedBundleField extends EntityTest {
 
   /**

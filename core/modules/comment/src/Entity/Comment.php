@@ -2,6 +2,7 @@
 
 namespace Drupal\comment\Entity;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Component\Utility\Number;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\ContentEntityBase;
@@ -17,57 +18,8 @@ use Drupal\user\EntityOwnerTrait;
 
 /**
  * Defines the comment entity class.
- *
- * @ContentEntityType(
- *   id = "comment",
- *   label = @Translation("Comment"),
- *   label_singular = @Translation("comment"),
- *   label_plural = @Translation("comments"),
- *   label_count = @PluralTranslation(
- *     singular = "@count comment",
- *     plural = "@count comments",
- *   ),
- *   bundle_label = @Translation("Comment type"),
- *   handlers = {
- *     "storage" = "Drupal\comment\CommentStorage",
- *     "storage_schema" = "Drupal\comment\CommentStorageSchema",
- *     "access" = "Drupal\comment\CommentAccessControlHandler",
- *     "list_builder" = "Drupal\Core\Entity\EntityListBuilder",
- *     "view_builder" = "Drupal\comment\CommentViewBuilder",
- *     "views_data" = "Drupal\comment\CommentViewsData",
- *     "form" = {
- *       "default" = "Drupal\comment\CommentForm",
- *       "delete" = "Drupal\comment\Form\DeleteForm"
- *     },
- *     "translation" = "Drupal\comment\CommentTranslationHandler"
- *   },
- *   base_table = "comment",
- *   data_table = "comment_field_data",
- *   uri_callback = "comment_uri",
- *   translatable = TRUE,
- *   entity_keys = {
- *     "id" = "cid",
- *     "bundle" = "comment_type",
- *     "label" = "subject",
- *     "langcode" = "langcode",
- *     "uuid" = "uuid",
- *     "published" = "status",
- *     "owner" = "uid",
- *   },
- *   links = {
- *     "canonical" = "/comment/{comment}",
- *     "delete-form" = "/comment/{comment}/delete",
- *     "delete-multiple-form" = "/admin/content/comment/delete",
- *     "edit-form" = "/comment/{comment}/edit",
- *     "create" = "/comment",
- *   },
- *   bundle_entity_type = "comment_type",
- *   field_ui_base_route  = "entity.comment_type.edit_form",
- *   constraints = {
- *     "CommentName" = {}
- *   }
- * )
  */
+#[\Drupal\Core\Entity\Attribute\ContentEntityType(id: 'comment', label: new TranslatableMarkup('Comment'), label_singular: new TranslatableMarkup('comment'), label_plural: new TranslatableMarkup('comments'), label_count: ['singular' => '@count comment', 'plural' => '@count comments'], bundle_label: new TranslatableMarkup('Comment type'), handlers: ['storage' => 'Drupal\comment\CommentStorage', 'storage_schema' => 'Drupal\comment\CommentStorageSchema', 'access' => 'Drupal\comment\CommentAccessControlHandler', 'list_builder' => 'Drupal\Core\Entity\EntityListBuilder', 'view_builder' => 'Drupal\comment\CommentViewBuilder', 'views_data' => 'Drupal\comment\CommentViewsData', 'form' => ['default' => 'Drupal\comment\CommentForm', 'delete' => 'Drupal\comment\Form\DeleteForm'], 'translation' => 'Drupal\comment\CommentTranslationHandler'], base_table: 'comment', data_table: 'comment_field_data', uri_callback: 'comment_uri', translatable: TRUE, entity_keys: ['id' => 'cid', 'bundle' => 'comment_type', 'label' => 'subject', 'langcode' => 'langcode', 'uuid' => 'uuid', 'published' => 'status', 'owner' => 'uid'], links: ['canonical' => '/comment/{comment}', 'delete-form' => '/comment/{comment}/delete', 'delete-multiple-form' => '/admin/content/comment/delete', 'edit-form' => '/comment/{comment}/edit', 'create' => '/comment'], bundle_entity_type: 'comment_type', field_ui_base_route: 'entity.comment_type.edit_form', constraints: ['CommentName' => []])]
 class Comment extends ContentEntityBase implements CommentInterface {
 
   use EntityChangedTrait;

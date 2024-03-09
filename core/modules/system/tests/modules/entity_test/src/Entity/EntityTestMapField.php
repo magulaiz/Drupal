@@ -4,25 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\entity_test\Entity;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 
 /**
  * An entity used for testing map base field values.
- *
- * @ContentEntityType(
- *   id = "entity_test_map_field",
- *   label = @Translation("Entity Test map field"),
- *   base_table = "entity_test_map_field",
- *   entity_keys = {
- *     "uuid" = "uuid",
- *     "id" = "id",
- *     "label" = "name",
- *     "langcode" = "langcode",
- *   },
- *   admin_permission = "administer entity_test content",
- * )
  */
+#[\Drupal\Core\Entity\Attribute\ContentEntityType(id: 'entity_test_map_field', label: new TranslatableMarkup('Entity Test map field'), base_table: 'entity_test_map_field', entity_keys: ['uuid' => 'uuid', 'id' => 'id', 'label' => 'name', 'langcode' => 'langcode'], admin_permission: 'administer entity_test content')]
 class EntityTestMapField extends EntityTest {
 
   /**

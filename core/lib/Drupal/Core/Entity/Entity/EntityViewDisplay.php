@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Entity\Entity;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityDisplayPluginCollection;
@@ -16,30 +17,8 @@ use Drupal\Core\TypedData\TranslatableInterface as TranslatableDataInterface;
  *
  * Contains display options for all components of a rendered entity in a given
  * view mode.
- *
- * @ConfigEntityType(
- *   id = "entity_view_display",
- *   label = @Translation("Entity view display"),
- *   entity_keys = {
- *     "id" = "id",
- *     "status" = "status"
- *   },
- *   handlers = {
- *     "access" = "\Drupal\Core\Entity\Entity\Access\EntityViewDisplayAccessControlHandler",
- *   },
- *   config_export = {
- *     "id",
- *     "targetEntityType",
- *     "bundle",
- *     "mode",
- *     "content",
- *     "hidden",
- *   },
- *   constraints = {
- *     "ImmutableProperties" = {"id", "targetEntityType", "bundle", "mode"},
- *   }
- * )
  */
+#[\Drupal\Core\Entity\Attribute\ConfigEntityType(id: 'entity_view_display', label: new TranslatableMarkup('Entity view display'), entity_keys: ['id' => 'id', 'status' => 'status'], handlers: ['access' => '\Drupal\Core\Entity\Entity\Access\EntityViewDisplayAccessControlHandler'], config_export: ['id', 'targetEntityType', 'bundle', 'mode', 'content', 'hidden'], constraints: ['ImmutableProperties' => ['id', 'targetEntityType', 'bundle', 'mode']])]
 class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayInterface {
 
   /**

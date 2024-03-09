@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Field\Entity;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldConfigBase;
@@ -11,38 +12,8 @@ use Drupal\Core\Field\FieldException;
  * Defines the base field override entity.
  *
  * Allows base fields to be overridden on the bundle level.
- *
- * @ConfigEntityType(
- *   id = "base_field_override",
- *   label = @Translation("Base field override"),
- *   handlers = {
- *     "storage" = "Drupal\Core\Field\BaseFieldOverrideStorage",
- *     "access" = "Drupal\Core\Field\BaseFieldOverrideAccessControlHandler",
- *   },
- *   config_prefix = "base_field_override",
- *   entity_keys = {
- *     "id" = "id",
- *     "label" = "label"
- *   },
- *   config_export = {
- *     "id",
- *     "field_name",
- *     "entity_type",
- *     "bundle",
- *     "label",
- *     "description",
- *     "required",
- *     "translatable",
- *     "default_value",
- *     "default_value_callback",
- *     "settings",
- *     "field_type",
- *   },
- *   constraints = {
- *     "ImmutableProperties" = {"id", "entity_type", "bundle", "field_name", "field_type"},
- *   }
- * )
  */
+#[\Drupal\Core\Entity\Attribute\ConfigEntityType(id: 'base_field_override', label: new TranslatableMarkup('Base field override'), handlers: ['storage' => 'Drupal\Core\Field\BaseFieldOverrideStorage', 'access' => 'Drupal\Core\Field\BaseFieldOverrideAccessControlHandler'], config_prefix: 'base_field_override', entity_keys: ['id' => 'id', 'label' => 'label'], config_export: ['id', 'field_name', 'entity_type', 'bundle', 'label', 'description', 'required', 'translatable', 'default_value', 'default_value_callback', 'settings', 'field_type'], constraints: ['ImmutableProperties' => ['id', 'entity_type', 'bundle', 'field_name', 'field_type']])]
 class BaseFieldOverride extends FieldConfigBase {
 
   /**

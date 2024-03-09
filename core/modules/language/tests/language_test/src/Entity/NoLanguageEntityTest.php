@@ -4,27 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\language_test\Entity;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 
 /**
  * Defines the test entity class.
- *
- * @ContentEntityType(
- *   id = "no_language_entity_test",
- *   label = @Translation("Test entity without language support"),
- *   handlers = {
- *     "views_data" = "Drupal\entity_test\EntityTestViewsData"
- *   },
- *   base_table = "no_language_entity_test",
- *   persistent_cache = FALSE,
- *   entity_keys = {
- *     "id" = "id",
- *     "uuid" = "uuid",
- *   },
- * )
  */
+#[\Drupal\Core\Entity\Attribute\ContentEntityType(id: 'no_language_entity_test', label: new TranslatableMarkup('Test entity without language support'), handlers: ['views_data' => 'Drupal\entity_test\EntityTestViewsData'], base_table: 'no_language_entity_test', persistent_cache: FALSE, entity_keys: ['id' => 'id', 'uuid' => 'uuid'])]
 class NoLanguageEntityTest extends ContentEntityBase {
 
   /**

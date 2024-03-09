@@ -4,22 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\entity_test\Entity;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EntityTypeInterface;
 
 /**
  * Defines a test entity class for testing default values.
- *
- * @ContentEntityType(
- *   id = "entity_test_field_override",
- *   label = @Translation("Test entity field overrides"),
- *   base_table = "entity_test_field_override",
- *   entity_keys = {
- *     "id" = "id",
- *     "uuid" = "uuid",
- *     "bundle" = "type"
- *   }
- * )
  */
+#[\Drupal\Core\Entity\Attribute\ContentEntityType(id: 'entity_test_field_override', label: new TranslatableMarkup('Test entity field overrides'), base_table: 'entity_test_field_override', entity_keys: ['id' => 'id', 'uuid' => 'uuid', 'bundle' => 'type'])]
 class EntityTestFieldOverride extends EntityTest {
 
   /**

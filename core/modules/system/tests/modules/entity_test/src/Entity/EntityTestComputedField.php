@@ -14,25 +14,8 @@ use Drupal\entity_test\Plugin\Field\ComputedTestFieldItemList;
 
 /**
  * An entity used for testing computed field values.
- *
- * @ContentEntityType(
- *   id = "entity_test_computed_field",
- *   label = @Translation("Entity Test computed field"),
- *   base_table = "entity_test_computed_field",
- *   handlers = {
- *     "views_data" = "Drupal\entity_test\EntityTestViewsData"
- *   },
- *   entity_keys = {
- *     "id" = "id",
- *     "uuid" = "uuid",
- *     "label" = "name",
- *   },
- *   admin_permission = "administer entity_test content",
- *   links = {
- *     "canonical" = "/entity_test_computed_field/{entity_test_computed_field}",
- *   },
- * )
  */
+#[\Drupal\Core\Entity\Attribute\ContentEntityType(id: 'entity_test_computed_field', label: new TranslatableMarkup('Entity Test computed field'), base_table: 'entity_test_computed_field', handlers: ['views_data' => 'Drupal\entity_test\EntityTestViewsData'], entity_keys: ['id' => 'id', 'uuid' => 'uuid', 'label' => 'name'], admin_permission: 'administer entity_test content', links: ['canonical' => '/entity_test_computed_field/{entity_test_computed_field}'])]
 class EntityTestComputedField extends EntityTest {
 
   /**

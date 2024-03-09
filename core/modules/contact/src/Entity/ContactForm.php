@@ -10,54 +10,8 @@ use Drupal\Core\Url;
 
 /**
  * Defines the contact form entity.
- *
- * @ConfigEntityType(
- *   id = "contact_form",
- *   label = @Translation("Contact form"),
- *   label_collection = @Translation("Contact forms"),
- *   label_singular = @Translation("contact form"),
- *   label_plural = @Translation("contact forms"),
- *   label_count = @PluralTranslation(
- *     singular = "@count contact form",
- *     plural = "@count contact forms",
- *   ),
- *   handlers = {
- *     "access" = "Drupal\contact\ContactFormAccessControlHandler",
- *     "list_builder" = "Drupal\contact\ContactFormListBuilder",
- *     "form" = {
- *       "add" = "Drupal\contact\ContactFormEditForm",
- *       "edit" = "Drupal\contact\ContactFormEditForm",
- *       "delete" = "Drupal\Core\Entity\EntityDeleteForm"
- *     },
- *     "route_provider" = {
- *       "permissions" = "Drupal\user\Entity\EntityPermissionsRouteProvider",
- *     }
- *   },
- *   config_prefix = "form",
- *   admin_permission = "administer contact forms",
- *   bundle_of = "contact_message",
- *   entity_keys = {
- *     "id" = "id",
- *     "label" = "label"
- *   },
- *   links = {
- *     "delete-form" = "/admin/structure/contact/manage/{contact_form}/delete",
- *     "edit-form" = "/admin/structure/contact/manage/{contact_form}",
- *     "entity-permissions-form" = "/admin/structure/contact/manage/{contact_form}/permissions",
- *     "collection" = "/admin/structure/contact",
- *     "canonical" = "/contact/{contact_form}",
- *   },
- *   config_export = {
- *     "id",
- *     "label",
- *     "recipients",
- *     "reply",
- *     "weight",
- *     "message",
- *     "redirect",
- *   }
- * )
  */
+#[\Drupal\Core\Entity\Attribute\ConfigEntityType(id: 'contact_form', label: new TranslatableMarkup('Contact form'), label_collection: new TranslatableMarkup('Contact forms'), label_singular: new TranslatableMarkup('contact form'), label_plural: new TranslatableMarkup('contact forms'), label_count: ['singular' => '@count contact form', 'plural' => '@count contact forms'], handlers: ['access' => 'Drupal\contact\ContactFormAccessControlHandler', 'list_builder' => 'Drupal\contact\ContactFormListBuilder', 'form' => ['add' => 'Drupal\contact\ContactFormEditForm', 'edit' => 'Drupal\contact\ContactFormEditForm', 'delete' => 'Drupal\Core\Entity\EntityDeleteForm'], 'route_provider' => ['permissions' => 'Drupal\user\Entity\EntityPermissionsRouteProvider']], config_prefix: 'form', admin_permission: 'administer contact forms', bundle_of: 'contact_message', entity_keys: ['id' => 'id', 'label' => 'label'], links: ['delete-form' => '/admin/structure/contact/manage/{contact_form}/delete', 'edit-form' => '/admin/structure/contact/manage/{contact_form}', 'entity-permissions-form' => '/admin/structure/contact/manage/{contact_form}/permissions', 'collection' => '/admin/structure/contact', 'canonical' => '/contact/{contact_form}'], config_export: ['id', 'label', 'recipients', 'reply', 'weight', 'message', 'redirect'])]
 class ContactForm extends ConfigEntityBundleBase implements ContactFormInterface {
 
   /**
