@@ -19,7 +19,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 class ConfigEntityType extends EntityType {
 
   public function __construct(
-    public readonly string $config_prefix,
+    public readonly ?string $config_prefix = NULL,
     public readonly array $lookup_keys = [],
     public readonly array $config_export = [],
     ...$base
