@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-
 namespace Drupal\entity_test\Entity;
+
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines a test entity type with administrative routes.

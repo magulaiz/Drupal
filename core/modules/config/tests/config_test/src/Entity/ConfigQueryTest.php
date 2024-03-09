@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-
 namespace Drupal\config_test\Entity;
+
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines the ConfigQueryTest configuration entity used by the query test.

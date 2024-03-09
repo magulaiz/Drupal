@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Drupal\entity_test_revlog\Entity;
+
 use Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider;
 use Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider;
 use Drupal\Core\Entity\Form\RevisionRevertForm;
@@ -9,8 +11,6 @@ use Drupal\Core\Entity\Form\RevisionDeleteForm;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\entity_test_revlog\EntityTestRevlogAccessControlHandler;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-
-namespace Drupal\entity_test_revlog\Entity;
 
 /**
  * Defines the test entity class.
