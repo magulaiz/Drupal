@@ -74,6 +74,9 @@ class TypeResolver {
    * @return string
    *   The value the expression resolves to, or the given expression if it
    *   cannot be resolved.
+   *
+   * @throws \LogicException
+   *    Exception thrown if $expression is not a valid dynamic type expression.
    */
   public static function resolveExpression(string $expression, array|TypedDataInterface $data): string {
     if ($data instanceof TypedDataInterface) {
