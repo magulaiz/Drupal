@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\TestTools\Extension\DeprecationBridge;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * @todo
  *
@@ -11,30 +13,28 @@ namespace Drupal\TestTools\Extension\DeprecationBridge;
  */
 final class DeprecationHandler {
 
-  /**
-   * The singleton instance.
-   */
-  private static ?self $instance = NULL;
+  private static bool $enabled = FALSE;
 
   /**
    * @var list<string>
    */
-  private static array $ignoreDeprecationPatterns = [];
+  private static array $deprecationIgnorePatterns = [];
 
+  /**
+   * @var list<string>
+   */
   private static array $expectedDeprecations = [];
+
+  /**
+   * @var list<string>
+   */
   private static array $collectedDeprecations = [];
 
   /**
-   * @todo
+   * This class should not be instantiated.
    */
   private function __construct() {
-  }
-
-  /**
-   * @todo
-   */
-  public static function isEnabled(): bool {
-    return self::$instance !== NULL;
+    throw new \LogicException(__CLASS__ . ' should not be instantiated');
   }
 
   /**
@@ -62,61 +62,96 @@ final class DeprecationHandler {
   /**
    * @todo
    */
+  public static function isEnabled(): bool {
+    return self::$enabled;
+  }
+
+  /**
+   * @todo
+   */
   public static function init(?string $ignoreFile = NULL): void {
-    if (self::$instance === NULL) {
-      if ($ignoreFile && !self::$ignoreDeprecationPatterns) {
-        if (!is_file($ignoreFile)) {
-          throw new \InvalidArgumentException(sprintf('The ignoreFile "%s" does not exist.', $ignoreFile));
-        }
-        set_error_handler(static function ($t, $m) use ($ignoreFile, &$line) {
-          throw new \RuntimeException(sprintf('Invalid pattern found in "%s" on line "%d"', $ignoreFile, 1 + $line) . substr($m, 12));
-        });
-        try {
-          foreach (file($ignoreFile) as $line => $pattern) {
-            if ((trim($pattern)[0] ?? '#') !== '#') {
-              preg_match($pattern, '');
-              self::$ignoreDeprecationPatterns[] = $pattern;
-            }
+    if (self::isEnabled()) {
+      throw new \LogicException(__CLASS__ . ' is already initialized');
+    }
+
+    // Load the deprecation ignore patterns from the specified file.
+    if ($ignoreFile && !self::$deprecationIgnorePatterns) {
+      if (!is_file($ignoreFile)) {
+        throw new \InvalidArgumentException(sprintf('The ignoreFile "%s" does not exist.', $ignoreFile));
+      }
+      set_error_handler(static function ($t, $m) use ($ignoreFile, &$line) {
+        throw new \RuntimeException(sprintf('Invalid pattern found in "%s" on line "%d"', $ignoreFile, 1 + $line) . substr($m, 12));
+      });
+      try {
+        foreach (file($ignoreFile) as $line => $pattern) {
+          if ((trim($pattern)[0] ?? '#') !== '#') {
+            preg_match($pattern, '');
+            self::$deprecationIgnorePatterns[] = $pattern;
           }
         }
-        finally {
-          restore_error_handler();
-        }
       }
-      self::$instance = new self();
+      finally {
+        restore_error_handler();
+      }
     }
+
+    // Mark the extension as enabled.
+    self::$enabled = TRUE;
   }
 
   public static function reset(): void {
+    if (!self::isEnabled()) {
+      return;
+    }
     self::$expectedDeprecations = [];
     self::$collectedDeprecations = [];
   }
 
   public static function expectDeprecation(string $message): void {
+    if (!self::isEnabled()) {
+      return;
+    }
     self::$expectedDeprecations[] = $message;
   }
 
   public static function getExpectedDeprecations(): array {
+    if (!self::isEnabled()) {
+      throw new \LogicException(__CLASS__ . ' is not initialized');
+    }
     return self::$expectedDeprecations;
   }
 
   public static function collectActualDeprecation(string $message): void {
+    if (!self::isEnabled()) {
+      return;
+    }
     self::$collectedDeprecations[] = $message;
   }
 
   public static function getCollectedDeprecations(): array {
+    if (!self::isEnabled()) {
+      throw new \LogicException(__CLASS__ . ' is not initialized');
+    }
     return self::$collectedDeprecations;
   }
 
   public static function isIgnoredDeprecation(string $deprecationMessage): bool {
-    if (!self::$ignoreDeprecationPatterns) {
+    if (!self::$deprecationIgnorePatterns) {
       return FALSE;
     }
-    $result = @preg_filter(self::$ignoreDeprecationPatterns, '$0', $deprecationMessage);
+    $result = @preg_filter(self::$deprecationIgnorePatterns, '$0', $deprecationMessage);
     if (preg_last_error() !== \PREG_NO_ERROR) {
       throw new \RuntimeException(preg_last_error_msg());
     }
     return (bool) $result;
+  }
+
+  public static function isTestInLegacyGroup(TestCase $testCase): bool {
+    $groups = [];
+    foreach ($testCase->valueObjectForEvents()->metadata()->isGroup() as $metadata) {
+      $groups[] = $metadata->groupName();
+    }
+    return in_array('legacy', $groups, TRUE);
   }
 
   /**

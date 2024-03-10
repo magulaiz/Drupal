@@ -16,12 +16,20 @@ trait ExpectDeprecationTrait {
 
   #[Before]
   public function setUpErrorHandler(): void {
+    if (!DeprecationHandler::isEnabled()) {
+      return;
+    }
+
     DeprecationHandler::reset();
     set_error_handler(new TestErrorHandler(DeprecationHandler::currentErrorHandler(), $this));
   }
 
   #[After]
   public function tearDownErrorHandler(): void {
+    if (!DeprecationHandler::isEnabled()) {
+      return;
+    }
+
     if (DeprecationHandler::currentErrorHandler() instanceof TestErrorHandler) {
       restore_error_handler();
     }
@@ -36,18 +44,14 @@ trait ExpectDeprecationTrait {
   }
 
   public function expectDeprecation(string $message): void {
-    if (!$this->valueObjectForEvents()->metadata()->isIgnoreDeprecations()->isNotEmpty() && !$this->isTestInLegacyGroup()) {
+    if (!DeprecationHandler::isEnabled()) {
+      return;
+    }
+
+    if (!$this->valueObjectForEvents()->metadata()->isIgnoreDeprecations()->isNotEmpty() && !DeprecationHandler::isTestInLegacyGroup($this)) {
       throw new \RuntimeException('expectDeprecation() can only be called from tests marked with #[IgnoreDeprecations] or \'@group legacy\'');
     }
     DeprecationHandler::expectDeprecation($message);
-  }
-
-  public function isTestInLegacyGroup(): bool {
-    $groups = [];
-    foreach ($this->valueObjectForEvents()->metadata()->isGroup() as $metadata) {
-      $groups[] = $metadata->groupName();
-    }
-    return in_array('legacy', $groups, TRUE);
   }
 
 }
