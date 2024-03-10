@@ -53,7 +53,7 @@ final class DeprecationHandler {
       if (empty($deprecationIgnoreFilename)) {
         throw new \InvalidArgumentException(sprintf('The ignoreFile "%s" does not exist.', $relativeFilePath));
       }
-    $environmentVariable = "ignoreFile=$deprecationIgnoreFilename";
+      $environmentVariable = "ignoreFile=$deprecationIgnoreFilename";
     }
     parse_str($environmentVariable, $configuration);
     return $configuration;
