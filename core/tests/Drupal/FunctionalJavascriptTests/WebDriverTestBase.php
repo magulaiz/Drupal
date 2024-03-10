@@ -97,13 +97,6 @@ abstract class WebDriverTestBase extends BrowserTestBase {
    */
   protected function tearDown(): void {
     if ($this->mink) {
-      if (RunnerVersion::getMajor() < 10) {
-        $status = $this->getStatus();
-        if ($status === BaseTestRunner::STATUS_ERROR || $status === BaseTestRunner::STATUS_WARNING || $status === BaseTestRunner::STATUS_FAILURE) {
-          // Ensure we capture the output at point of failure.
-          @$this->htmlOutput();
-        }
-      }
       // Wait for all requests to finish. It is possible that an AJAX request is
       // still on-going.
       $result = $this->getSession()->wait(5000, 'window.drupalActiveXhrCount === 0 || typeof window.drupalActiveXhrCount === "undefined"');
