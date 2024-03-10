@@ -40,6 +40,28 @@ final class DeprecationHandler {
   /**
    * @todo
    */
+  public static function getConfiguration(): array|FALSE {
+    $environmentVariable = getenv('SYMFONY_DEPRECATIONS_HELPER');
+    if ($environmentVariable === 'disabled') {
+      return FALSE;
+    }
+    if ($environmentVariable === FALSE) {
+      // Ensure ignored deprecation patterns listed in .deprecation-ignore.txt
+      // are considered in testing.
+      $relativeFilePath = __DIR__ . "/../../../../../.deprecation-ignore.txt";
+      $deprecationIgnoreFilename = realpath($relativeFilePath);
+      if (empty($deprecationIgnoreFilename)) {
+        throw new \InvalidArgumentException(sprintf('The ignoreFile "%s" does not exist.', $relativeFilePath));
+      }
+    $environmentVariable = "ignoreFile=$deprecationIgnoreFilename";
+    }
+    parse_str($environmentVariable, $configuration);
+    return $configuration;
+  }
+
+  /**
+   * @todo
+   */
   public static function init(?string $ignoreFile = NULL): void {
     if (self::$instance === NULL) {
       if ($ignoreFile && !self::$ignoreDeprecationPatterns) {

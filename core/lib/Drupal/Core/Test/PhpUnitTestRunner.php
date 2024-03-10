@@ -136,7 +136,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
       '--log-junit',
     ];
 
-    if (DeprecationHandler::isEnabled()) {
+    if (DeprecationHandler::getConfiguration() !== FALSE) {
       $command += [
         '--display-deprecations',
         '--fail-on-deprecation',

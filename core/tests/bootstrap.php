@@ -161,24 +161,17 @@ mb_language('uni');
 // reduce the fragility of the testing system in general.
 date_default_timezone_set('Australia/Sydney');
 
-// Ensure ignored deprecation patterns listed in .deprecation-ignore.txt are
-// considered in testing.
-if (getenv('SYMFONY_DEPRECATIONS_HELPER') === FALSE) {
-  $deprecation_ignore_filename = realpath(__DIR__ . "/../.deprecation-ignore.txt");
-  putenv("SYMFONY_DEPRECATIONS_HELPER=ignoreFile=$deprecation_ignore_filename");
-}
-
 // Bootstrap the DeprecationHandler extension and the DebugClassloader to report
 // deprecations in PHPUnit 10+.
-if (getenv('SYMFONY_DEPRECATIONS_HELPER') !== 'disabled') {
-  parse_str(getenv('SYMFONY_DEPRECATIONS_HELPER'), $deprecationBridgeConfiguration);
-
+if ($deprecationBridgeConfiguration = DeprecationHandler::getConfiguration()) {
   DeprecationHandler::init($deprecationBridgeConfiguration['ignoreFile'] ?? NULL);
 
   // Need to have an early error handler to manage deprecations triggered by
   // DebugClassLoader, that occur before tests' setUp() methods are called.
   set_error_handler(new BootstrapErrorHandler());
 
+  // Enable the DebugClassLoader to get deprecations for methods' signature
+  // changes.
   DebugClassLoader::enable();
 }
 
