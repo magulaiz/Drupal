@@ -14,7 +14,7 @@ use PHPUnit\Runner\ErrorHandler;
  */
 final class BootstrapErrorHandler {
 
-  private $phpUnitErrorHandler;
+  private ErrorHandler $phpUnitErrorHandler;
 
   /**
    * @todo
@@ -27,7 +27,7 @@ final class BootstrapErrorHandler {
    * @todo
    */
   public function __invoke(int $errorNumber, string $errorString, string $errorFile, int $errorLine): bool {
-    if ((E_USER_DEPRECATED === $errorNumber || E_DEPRECATED === $errorNumber) && IgnoreDeprecation::isIgnoredDeprecation($errorString)) {
+    if ((E_USER_DEPRECATED === $errorNumber || E_DEPRECATED === $errorNumber) && DeprecationHandler::isIgnoredDeprecation($errorString)) {
       // Deprecation handled is one of those in the ignore list.
       // dump(['Bootstrap ignore', $errorNumber, $errorString, $errorFile, $errorLine]);
       return TRUE;

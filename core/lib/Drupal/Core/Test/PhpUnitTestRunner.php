@@ -4,6 +4,7 @@ namespace Drupal\Core\Test;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\TestTools\Extension\DeprecationBridge\DeprecationHandler;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
@@ -131,12 +132,18 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
       $phpunit_bin,
       '--display-errors',
       '--display-warnings',
-      '--display-deprecations',
       '--fail-on-warning',
-      '--fail-on-deprecation',
       '--log-junit',
-      $phpunit_file,
     ];
+
+    if (DeprecationHandler::isEnabled()) {
+      $command += [
+        '--display-deprecations',
+        '--fail-on-deprecation',
+      ];
+    }
+
+    $command[] = $phpunit_file;
 
     // Optimized for running a single test.
     if (count($unescaped_test_classnames) == 1) {

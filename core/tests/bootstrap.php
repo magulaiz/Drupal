@@ -8,7 +8,7 @@
  */
 
 use Drupal\TestTools\Extension\DeprecationBridge\BootstrapErrorHandler;
-use Drupal\TestTools\Extension\DeprecationBridge\IgnoreDeprecation;
+use Drupal\TestTools\Extension\DeprecationBridge\DeprecationHandler;
 use Drupal\TestTools\Extension\HtmlLogging\HtmlOutputLogger;
 use Symfony\Component\ErrorHandler\DebugClassLoader;
 
@@ -168,14 +168,12 @@ if (getenv('SYMFONY_DEPRECATIONS_HELPER') === FALSE) {
   putenv("SYMFONY_DEPRECATIONS_HELPER=ignoreFile=$deprecation_ignore_filename");
 }
 
-// Bootstrap the IgnoreDeprecation extension and the DebugClassloader to report
+// Bootstrap the DeprecationHandler extension and the DebugClassloader to report
 // deprecations in PHPUnit 10+.
 if (getenv('SYMFONY_DEPRECATIONS_HELPER') !== 'disabled') {
   parse_str(getenv('SYMFONY_DEPRECATIONS_HELPER'), $deprecationBridgeConfiguration);
 
-  if (isset($deprecationBridgeConfiguration['ignoreFile'])) {
-    IgnoreDeprecation::init($deprecationBridgeConfiguration['ignoreFile']);
-  }
+  DeprecationHandler::init($deprecationBridgeConfiguration['ignoreFile'] ?? NULL);
 
   // Need to have an early error handler to manage deprecations triggered by
   // DebugClassLoader, that occur before tests' setUp() methods are called.
