@@ -107,8 +107,6 @@ class TestDiscovery {
       $this->classLoader->addPsr4($prefix, $paths);
     }
 
-    require __DIR__ . '/../../../../../autoload.php';
-
     return $this->testNamespaces;
   }
 

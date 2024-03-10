@@ -2477,26 +2477,6 @@ parameters:
 			path: tests/Drupal/BuildTests/Framework/Tests/BuildTestTest.php
 
 		-
-			message: "#^Access to constant STATUS_ERROR on an unknown class PHPUnit\\\\Runner\\\\BaseTestRunner\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalJavascriptTests/WebDriverTestBase.php
-
-		-
-			message: "#^Access to constant STATUS_FAILURE on an unknown class PHPUnit\\\\Runner\\\\BaseTestRunner\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalJavascriptTests/WebDriverTestBase.php
-
-		-
-			message: "#^Access to constant STATUS_WARNING on an unknown class PHPUnit\\\\Runner\\\\BaseTestRunner\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalJavascriptTests/WebDriverTestBase.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\FunctionalJavascriptTests\\\\WebDriverTestBase\\:\\:getStatus\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalJavascriptTests/WebDriverTestBase.php
-
-		-
 			message: "#^Caught class PHPUnit\\\\Framework\\\\Error\\\\Error not found\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Config/TypedConfigTest.php
@@ -2626,11 +2606,6 @@ parameters:
 			message: "#^Constructor of class Symfony\\\\Component\\\\ExpressionLanguage\\\\Expression has an unused parameter \\$expression\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Component/DependencyInjection/Dumper/OptimizedPhpArrayDumperTest.php
-
-		-
-			message: "#^@dataProvider \\\\Drupal\\\\Tests\\\\Component\\\\DrupalComponentTest\\:\\:getComponents related method must be static in PHPUnit 10 and newer\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Component/DrupalComponentTest.php
 
 		-
 			message: "#^@dataProvider configurationDataProvider related method must be static in PHPUnit 10 and newer\\.$#"
@@ -3181,7 +3156,7 @@ parameters:
 			path: tests/Drupal/Tests/Core/Test/TestSetupTraitTest.php
 
 		-
-			message: "#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#"
+			message: "#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Test/WebDriverTestBaseTest.php
 

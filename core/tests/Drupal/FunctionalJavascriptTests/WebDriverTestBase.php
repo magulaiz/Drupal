@@ -7,8 +7,6 @@ namespace Drupal\FunctionalJavascriptTests;
 use Behat\Mink\Exception\DriverException;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
-use PHPUnit\Runner\BaseTestRunner;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
