@@ -5,6 +5,7 @@ namespace Drupal\ckeditor5_incompatible_filter_test\Plugin\Filter;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
+use Drupal\filter\FilterType;
 use Drupal\filter\Plugin\FilterBase;
 
 /**
@@ -13,7 +14,7 @@ use Drupal\filter\Plugin\FilterBase;
 #[Filter(
   id: "filter_incompatible",
   title: new TranslatableMarkup("A MarkupLanguage filter incompatible with CKEditor 5"),
-  type: Drupal\filter\FilterType::MarkupLanguage
+  type: FilterType::MarkupLanguage
 )]
 class FilterIsIncompatible extends FilterBase {
 

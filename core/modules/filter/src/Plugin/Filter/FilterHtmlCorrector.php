@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
+use Drupal\filter\FilterType;
 use Drupal\filter\Plugin\FilterBase;
 
 /**
@@ -14,7 +15,7 @@ use Drupal\filter\Plugin\FilterBase;
 #[Filter(
   id: "filter_htmlcorrector",
   title: new TranslatableMarkup("Correct faulty and chopped off HTML"),
-  type: Drupal\filter\FilterType::TransformIrreversible,
+  type: FilterType::TransformIrreversible,
   weight: 10
 )]
 class FilterHtmlCorrector extends FilterBase {

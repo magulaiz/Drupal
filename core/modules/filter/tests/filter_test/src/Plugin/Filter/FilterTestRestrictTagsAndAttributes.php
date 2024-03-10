@@ -5,6 +5,7 @@ namespace Drupal\filter_test\Plugin\Filter;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
+use Drupal\filter\FilterType;
 use Drupal\filter\Plugin\FilterBase;
 use Drupal\Component\Utility\Xss;
 
@@ -14,8 +15,8 @@ use Drupal\Component\Utility\Xss;
 #[Filter(
   id: "filter_test_restrict_tags_and_attributes",
   title: new TranslatableMarkup("Tag and attribute restricting filter"),
-  description: new TranslatableMarkup("Used for testing \Drupal\filter\Entity\FilterFormatInterface::getHtmlRestrictions()."),
-  type: Drupal\filter\FilterType::HtmlRestrictor
+  type: FilterType::HtmlRestrictor,
+  description: new TranslatableMarkup("Used for testing \Drupal\filter\Entity\FilterFormatInterface::getHtmlRestrictions().")
 )]
 class FilterTestRestrictTagsAndAttributes extends FilterBase {
 

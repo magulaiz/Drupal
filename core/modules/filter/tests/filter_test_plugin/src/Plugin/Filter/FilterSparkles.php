@@ -5,6 +5,7 @@ namespace Drupal\filter_test_plugin\Plugin\Filter;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
+use Drupal\filter\FilterType;
 use Drupal\filter\Plugin\FilterBase;
 
 /**
@@ -18,7 +19,7 @@ use Drupal\filter\Plugin\FilterBase;
 #[Filter(
   id: "filter_sparkles",
   title: new TranslatableMarkup("Sparkles filter"),
-  type: Drupal\filter\FilterType::HtmlRestrictor,
+  type: FilterType::HtmlRestrictor,
   weight: -10,
   settings: [],
 )]

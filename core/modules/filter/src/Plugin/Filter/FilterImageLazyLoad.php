@@ -8,6 +8,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
+use Drupal\filter\FilterType;
 use Drupal\filter\Plugin\FilterBase;
 
 /**
@@ -16,8 +17,8 @@ use Drupal\filter\Plugin\FilterBase;
 #[Filter(
   id: "filter_image_lazy_load",
   title: new TranslatableMarkup("Lazy load images"),
+  type: FilterType::TransformReversible,
   description: new TranslatableMarkup("Instruct browsers to lazy load images if dimensions are specified. Use in conjunction with and place after the 'Track images uploaded via a Text Editor' filter that adds image dimensions required for lazy loading. Results can be overridden by <code>&lt;img loading=&quot;eager&quot;&gt;</code>."),
-  type: Drupal\filter\FilterType::TransformReversible,
   weight: 15
 )]
 final class FilterImageLazyLoad extends FilterBase {

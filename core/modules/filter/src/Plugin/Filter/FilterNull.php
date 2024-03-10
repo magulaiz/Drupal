@@ -5,6 +5,7 @@ namespace Drupal\filter\Plugin\Filter;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
+use Drupal\filter\FilterType;
 use Drupal\filter\Plugin\FilterBase;
 
 /**
@@ -17,7 +18,7 @@ use Drupal\filter\Plugin\FilterBase;
 #[Filter(
   id: "filter_null",
   title: new TranslatableMarkup("Provides a fallback for missing filters. Do not use."),
-  type: Drupal\filter\FilterType::HtmlRestrictor,
+  type: FilterType::HtmlRestrictor,
   weight: -10
 )]
 class FilterNull extends FilterBase {

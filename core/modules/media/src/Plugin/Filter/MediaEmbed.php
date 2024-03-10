@@ -18,6 +18,7 @@ use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
+use Drupal\filter\FilterType;
 use Drupal\filter\Plugin\FilterBase;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\media\MediaInterface;
@@ -31,8 +32,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 #[Filter(
   id: "media_embed",
   title: new TranslatableMarkup("Embed media"),
+  type: FilterType::TransformReversible,
   description: new TranslatableMarkup("Embeds media items using a custom tag, <code>&lt;drupal-media&gt;</code>. If used in conjunction with the 'Align/Caption' filters, make sure this filter is configured to run after them."),
-  type: Drupal\filter\FilterType::TransformReversible,
   weight: 100,
   settings: [
     "default_view_mode" => "default",

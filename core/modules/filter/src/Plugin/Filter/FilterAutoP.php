@@ -5,6 +5,7 @@ namespace Drupal\filter\Plugin\Filter;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
+use Drupal\filter\FilterType;
 use Drupal\filter\Plugin\FilterBase;
 
 /**
@@ -13,7 +14,7 @@ use Drupal\filter\Plugin\FilterBase;
 #[Filter(
   id: "filter_autop",
   title: new TranslatableMarkup("Convert line breaks into HTML (i.e. <code>&lt;br&gt;</code> and <code>&lt;p&gt;</code>)"),
-  type: Drupal\filter\FilterType::MarkupLanguage
+  type: FilterType::MarkupLanguage,
 )]
 class FilterAutoP extends FilterBase {
 
