@@ -21,8 +21,8 @@ final class DeprecationHandler {
    */
   private static array $ignoreDeprecationPatterns = [];
 
-  private array $expectedDeprecations = [];
-  private array $collectedDeprecations = [];
+  private static array $expectedDeprecations = [];
+  private static array $collectedDeprecations = [];
 
   /**
    * @todo
@@ -66,24 +66,24 @@ final class DeprecationHandler {
   }
 
   public static function reset(): void {
-    self::$instance->expectedDeprecations = [];
-    self::$instance->collectedDeprecations = [];
+    self::$expectedDeprecations = [];
+    self::$collectedDeprecations = [];
   }
 
-  public static function addExpectedDeprecation(string $message): void {
-    self::$instance->expectedDeprecations[] = $message;
+  public static function expectDeprecation(string $message): void {
+    self::$expectedDeprecations[] = $message;
   }
 
-  public static function expectedDeprecations(): array {
-    return self::$instance->expectedDeprecations;
+  public static function getExpectedDeprecations(): array {
+    return self::$expectedDeprecations;
   }
 
-  public static function addCollectedDeprecation(string $message): void {
-    self::$instance->collectedDeprecations[] = $message;
+  public static function collectActualDeprecation(string $message): void {
+    self::$collectedDeprecations[] = $message;
   }
 
-  public static function collectedDeprecations(): array {
-    return self::$instance->collectedDeprecations;
+  public static function getCollectedDeprecations(): array {
+    return self::$collectedDeprecations;
   }
 
   public static function isIgnoredDeprecation(string $deprecationMessage): bool {

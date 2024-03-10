@@ -27,10 +27,10 @@ trait ExpectDeprecationTrait {
     }
 
     // Checks if collected deprecations match the expectations.
-    if (DeprecationHandler::expectedDeprecations()) {
+    if (DeprecationHandler::getExpectedDeprecations()) {
       $prefix = "@expectedDeprecation:\n";
-      $expDep = $prefix . '%A  ' . implode("\n%A  ", DeprecationHandler::expectedDeprecations()) . "\n%A";
-      $actDep = $prefix . '  ' . implode("\n  ", DeprecationHandler::collectedDeprecations()) . "\n";
+      $expDep = $prefix . '%A  ' . implode("\n%A  ", DeprecationHandler::getExpectedDeprecations()) . "\n%A";
+      $actDep = $prefix . '  ' . implode("\n  ", DeprecationHandler::getCollectedDeprecations()) . "\n";
       $this->assertStringMatchesFormat($expDep, $actDep);
     }
   }
@@ -39,7 +39,7 @@ trait ExpectDeprecationTrait {
     if (!$this->valueObjectForEvents()->metadata()->isIgnoreDeprecations()->isNotEmpty() && !$this->isTestInLegacyGroup()) {
       throw new \RuntimeException('expectDeprecation() can only be called from tests marked with #[IgnoreDeprecations] or \'@group legacy\'');
     }
-    DeprecationHandler::addExpectedDeprecation($message);
+    DeprecationHandler::expectDeprecation($message);
   }
 
   public function isTestInLegacyGroup(): bool {
