@@ -102,7 +102,7 @@ class CKEditor5ImageController extends ControllerBase {
     }
     $this->lock = $mime_type_guesser;
     if ($pluginManager instanceof LockBackendInterface) {
-      @trigger_error('Calling ' . __METHOD__ . '() with the $lock argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3384728', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() with the $lock argument in position 4 is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3384728', E_USER_DEPRECATED);
       $pluginManager = \Drupal::service('plugin.manager.ckeditor5.plugin');
     }
     $this->pluginManager = $pluginManager;
