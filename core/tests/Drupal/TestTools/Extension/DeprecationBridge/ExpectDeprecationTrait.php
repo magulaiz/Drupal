@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Drupal\TestTools\Trait;
+namespace Drupal\TestTools\Extension\DeprecationBridge;
 
-use Drupal\TestTools\Extension\DeprecationHandler\Collector;
-use Drupal\TestTools\Extension\DeprecationHandler\TestErrorHandler;
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\Before;
 
@@ -21,12 +19,12 @@ trait ExpectDeprecationTrait {
 
   #[Before]
   public function setUpErrorHandler(): void {
-    set_error_handler(new TestErrorHandler(Collector::currentErrorHandler(), $this));
+    set_error_handler(new TestErrorHandler(DeprecationHandler::currentErrorHandler(), $this));
   }
 
   #[After]
   public function tearDownErrorHandler(): void {
-    if (Collector::currentErrorHandler() instanceof TestErrorHandler) {
+    if (DeprecationHandler::currentErrorHandler() instanceof TestErrorHandler) {
       restore_error_handler();
     }
 
@@ -52,14 +50,6 @@ trait ExpectDeprecationTrait {
       $groups[] = $metadata->groupName();
     }
     return in_array('legacy', $groups, TRUE);
-  }
-
-  /**
-   * @todo for debugging. Remove eventually.
-   */
-  public static function dumpErrorHandler($msg): void {
-    $handler = Collector::currentErrorHandler();
-    dump([$msg, (is_object($handler) ? get_class($handler) : $handler)]);
   }
 
 }

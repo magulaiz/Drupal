@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\EventDispatcher;
 
 use Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher;
-use Drupal\TestTools\Trait\ExpectDeprecationTrait;
+use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

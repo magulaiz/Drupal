@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\TestTools\PhpUnitCompatibility;
+namespace Drupal\TestTools\Extension\DeprecationBridge;
 
 /**
  * Helper class to manage ignoring deprecations.

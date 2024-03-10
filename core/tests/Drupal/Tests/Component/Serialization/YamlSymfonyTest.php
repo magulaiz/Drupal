@@ -6,7 +6,7 @@ namespace Drupal\Tests\Component\Serialization;
 
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Component\Serialization\YamlSymfony;
-use Drupal\TestTools\Trait\ExpectDeprecationTrait;
+use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use Symfony\Component\Yaml\Tag\TaggedValue;
 
 /**

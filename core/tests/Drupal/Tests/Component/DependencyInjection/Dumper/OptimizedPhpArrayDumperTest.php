@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\DependencyInjection\Dumper {
 
   use Drupal\Component\Utility\Crypt;
-  use Drupal\TestTools\Trait\ExpectDeprecationTrait;
+  use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
   use PHPUnit\Framework\TestCase;
   use Prophecy\PhpUnit\ProphecyTrait;
   use Prophecy\Prophet;

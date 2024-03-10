@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Unicode;
-use Drupal\TestTools\Trait\ExpectDeprecationTrait;
+use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use PHPUnit\Framework\TestCase;
 
 /**

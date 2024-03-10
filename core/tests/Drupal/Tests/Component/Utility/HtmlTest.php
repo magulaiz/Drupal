@@ -8,7 +8,7 @@ use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Render\MarkupTrait;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Random;
-use Drupal\TestTools\Trait\ExpectDeprecationTrait;
+use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use PHPUnit\Framework\TestCase;
 
 // cspell:ignore répét répété

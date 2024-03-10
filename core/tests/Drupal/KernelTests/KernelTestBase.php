@@ -22,7 +22,7 @@ use Drupal\Tests\RandomGeneratorTrait;
 use Drupal\Tests\PhpUnitCompatibilityTrait;
 use Drupal\Tests\TestRequirementsTrait;
 use Drupal\TestTools\Comparator\MarkupInterfaceComparator;
-use Drupal\TestTools\Trait\ExpectDeprecationTrait;
+use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use Drupal\TestTools\Extension\SchemaInspector;
 use Drupal\TestTools\TestVarDumper;
 use PHPUnit\Framework\Exception;

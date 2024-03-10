@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Drupal\TestTools\Extension\DeprecationHandler;
+namespace Drupal\TestTools\Extension\DeprecationBridge;
 
-use Drupal\TestTools\PhpUnitCompatibility\IgnoreDeprecation;
 use PHPUnit\Event\Code\NoTestCaseObjectOnCallStackException;
 use PHPUnit\Runner\ErrorHandler;
 

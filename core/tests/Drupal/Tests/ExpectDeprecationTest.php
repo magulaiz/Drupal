@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests;
 
-use Drupal\TestTools\Trait\ExpectDeprecationTrait;
+use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use PHPUnit\Framework\TestCase;
 
 /**

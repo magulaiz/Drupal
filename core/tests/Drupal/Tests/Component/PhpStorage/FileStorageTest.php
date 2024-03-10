@@ -6,7 +6,7 @@ namespace Drupal\Tests\Component\PhpStorage;
 
 use Drupal\Component\PhpStorage\FileStorage;
 use Drupal\Component\Utility\Random;
-use Drupal\TestTools\Trait\ExpectDeprecationTrait;
+use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use org\bovigo\vfs\vfsStreamDirectory;
 
 /**

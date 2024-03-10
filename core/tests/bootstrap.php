@@ -7,10 +7,9 @@
  * @see phpunit.xml.dist
  */
 
-use Drupal\TestTools\Extension\DeprecationHandler\BootstrapErrorHandler;
+use Drupal\TestTools\Extension\DeprecationBridge\BootstrapErrorHandler;
+use Drupal\TestTools\Extension\DeprecationBridge\IgnoreDeprecation;
 use Drupal\TestTools\Extension\HtmlLogging\HtmlOutputLogger;
-use Drupal\TestTools\PhpUnitCompatibility\IgnoreDeprecation;
-use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
 use Symfony\Component\ErrorHandler\DebugClassLoader;
 
 /**
@@ -171,11 +170,11 @@ if (getenv('SYMFONY_DEPRECATIONS_HELPER') === FALSE) {
 
 // Bootstrap the IgnoreDeprecation extension and the DebugClassloader to report
 // deprecations in PHPUnit 10+.
-if (RunnerVersion::getMajor() >= 10 && getenv('SYMFONY_DEPRECATIONS_HELPER') !== 'disabled') {
-  parse_str(getenv('SYMFONY_DEPRECATIONS_HELPER'), $deprecationHelperConfiguration);
+if (getenv('SYMFONY_DEPRECATIONS_HELPER') !== 'disabled') {
+  parse_str(getenv('SYMFONY_DEPRECATIONS_HELPER'), $deprecationBridgeConfiguration);
 
-  if (isset($deprecationHelperConfiguration['ignoreFile'])) {
-    IgnoreDeprecation::init($deprecationHelperConfiguration['ignoreFile']);
+  if (isset($deprecationBridgeConfiguration['ignoreFile'])) {
+    IgnoreDeprecation::init($deprecationBridgeConfiguration['ignoreFile']);
   }
 
   // Need to have an early error handler to manage deprecations triggered by

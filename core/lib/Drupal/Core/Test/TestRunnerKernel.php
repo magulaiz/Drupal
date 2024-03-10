@@ -5,7 +5,7 @@ namespace Drupal\Core\Test;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Site\Settings;
-use Drupal\TestTools\Extension\DeprecationHandler\Collector;
+use Drupal\TestTools\Extension\DeprecationBridge\DeprecationHandler;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -61,7 +61,7 @@ class TestRunnerKernel extends DrupalKernel {
 
     // Remove Drupal's error/exception handlers; they are designed for HTML
     // and there is no storage nor a (watchdog) logger here.
-    $currentErrorHandler = Collector::currentErrorHandler();
+    $currentErrorHandler = DeprecationHandler::currentErrorHandler();
     if (is_string($currentErrorHandler) && $currentErrorHandler === '_drupal_error_handler') {
       restore_error_handler();
     }
