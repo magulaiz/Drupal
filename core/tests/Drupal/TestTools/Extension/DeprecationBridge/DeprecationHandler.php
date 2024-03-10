@@ -21,11 +21,13 @@ final class DeprecationHandler {
    */
   private static array $ignoreDeprecationPatterns = [];
 
+  private array $expectedDeprecations = [];
+  private array $collectedDeprecations = [];
+
   /**
    * @todo
    */
-  private function __construct(
-  ) {
+  private function __construct() {
   }
 
   /**
@@ -61,6 +63,27 @@ final class DeprecationHandler {
       }
       self::$instance = new self();
     }
+  }
+
+  public static function reset(): void {
+    self::$instance->expectedDeprecations = [];
+    self::$instance->collectedDeprecations = [];
+  }
+
+  public static function addExpectedDeprecation(string $message): void {
+    self::$instance->expectedDeprecations[] = $message;
+  }
+
+  public static function expectedDeprecations(): array {
+    return self::$instance->expectedDeprecations;
+  }
+
+  public static function addCollectedDeprecation(string $message): void {
+    self::$instance->collectedDeprecations[] = $message;
+  }
+
+  public static function collectedDeprecations(): array {
+    return self::$instance->collectedDeprecations;
   }
 
   public static function isIgnoredDeprecation(string $deprecationMessage): bool {

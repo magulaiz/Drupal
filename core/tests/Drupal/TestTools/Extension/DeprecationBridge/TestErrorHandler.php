@@ -26,7 +26,7 @@ final class TestErrorHandler {
   public function __invoke(int $errorNumber, string $errorString, string $errorFile, int $errorLine): bool {
     // Collect deprecations regardless of whether they are ignored or not.
     if (E_USER_DEPRECATED === $errorNumber || E_DEPRECATED === $errorNumber) {
-      $this->testCase->collectedDeprecations[] = $errorString;
+      DeprecationHandler::addCollectedDeprecation($errorString);
     }
 
     if ((E_USER_DEPRECATED === $errorNumber || E_DEPRECATED === $errorNumber) && $this->testCase->isTestInLegacyGroup()) {
