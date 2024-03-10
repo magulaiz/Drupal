@@ -6,6 +6,7 @@ namespace Drupal\filter\Attribute;
 
 use Drupal\Component\Plugin\Attribute\Plugin;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\filter\FilterType;
 
 /**
  * Defines a filter attribute for plugin discovery.
@@ -30,9 +31,8 @@ class Filter extends Plugin {
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup $title
    *   The human-readable name of the filter. This is used as an administrative
    *   summary of what the filter does.
-   * @param int $type
-   *   The filter type. Values are defined in
-   *   \Drupal\filter\Plugin\FilterInterface.
+   * @param \Drupal\filter\FilterType $type
+   *   The filter type. Values are defined in Drupal\filter\FilterType.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $description
    *   (optional) Additional administrative information about the filter's
    *   behavior.
@@ -46,7 +46,7 @@ class Filter extends Plugin {
   public function __construct(
     public readonly string $id,
     public readonly TranslatableMarkup $title,
-    public readonly int $type,
+    public readonly FilterType $type,
     public readonly ?TranslatableMarkup $description = NULL,
     public readonly int $weight = 0,
     public readonly bool $status = FALSE,
