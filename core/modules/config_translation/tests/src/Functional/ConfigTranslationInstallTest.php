@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\config_translation\Functional;
 
 use Drupal\FunctionalTests\Installer\InstallerTestBase;
@@ -47,7 +49,7 @@ class ConfigTranslationInstallTest extends InstallerTestBase {
    *   Contents for the test .po file.
    */
   protected function getPo($langcode) {
-    return <<<ENDPO
+    return <<<PO
 msgid ""
 msgstr ""
 
@@ -59,7 +61,7 @@ msgstr "Anonymous $langcode"
 
 msgid "Language"
 msgstr "Language $langcode"
-ENDPO;
+PO;
   }
 
   public function testConfigTranslation() {

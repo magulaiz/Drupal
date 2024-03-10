@@ -57,9 +57,7 @@ class MigrationTest extends KernelTestBase {
       'id' => 'foo',
       'process' => $process,
     ];
-
-    reset($process);
-    $destination = key(($process));
+    $destination = array_key_first(($process));
 
     $migration = \Drupal::service('plugin.manager.migration')
       ->createStubMigration($plugin_definition);
@@ -71,7 +69,7 @@ class MigrationTest extends KernelTestBase {
   /**
    * Provides data for testing invalid process pipeline.
    */
-  public function getProcessPluginsExceptionMessageProvider() {
+  public static function getProcessPluginsExceptionMessageProvider() {
     return [
       [
         'Null' =>

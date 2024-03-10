@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Controller;
 
 use Drupal\Core\Controller\ControllerResolver;
@@ -10,7 +12,6 @@ use Drupal\Core\Utility\CallableResolver;
 use Drupal\Tests\UnitTestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,8 +43,7 @@ class ControllerResolverTest extends UnitTestCase {
     parent::setUp();
 
     $this->container = new ContainerBuilder();
-    $class_resolver = new ClassResolver();
-    $class_resolver->setContainer($this->container);
+    $class_resolver = new ClassResolver($this->container);
     $callable_resolver = new CallableResolver($class_resolver);
     $this->controllerResolver = new ControllerResolver($callable_resolver);
   }
@@ -62,7 +62,7 @@ class ControllerResolverTest extends UnitTestCase {
   /**
    * Provides test data for testCreateController().
    */
-  public function providerTestCreateController() {
+  public static function providerTestCreateController() {
     return [
       // Tests class::method.
       ['Drupal\Tests\Core\Controller\MockController::getResult', 'Drupal\Tests\Core\Controller\MockController', 'This is a regular controller.'],
@@ -110,7 +110,7 @@ class ControllerResolverTest extends UnitTestCase {
   /**
    * Provides test data for testGetController().
    */
-  public function providerTestGetController() {
+  public static function providerTestGetController() {
     return [
       // Tests passing a controller via the request.
       [['_controller' => 'Drupal\Tests\Core\Controller\MockContainerAware::getResult'], 'Drupal\Tests\Core\Controller\MockContainerAware', 'This is container aware.'],
@@ -133,7 +133,7 @@ class ControllerResolverTest extends UnitTestCase {
   /**
    * Provides test data for testGetControllerFromDefinition().
    */
-  public function providerTestGetControllerFromDefinition() {
+  public static function providerTestGetControllerFromDefinition() {
     return [
       // Tests a method on an object.
       [[new MockController(), 'getResult'], 'This is a regular controller.'],
@@ -220,9 +220,23 @@ class MockContainerInjection implements ContainerInjectionInterface {
 
 }
 class MockContainerAware implements ContainerAwareInterface {
-  use ContainerAwareTrait;
+
+  /**
+   * The service container.
+   */
+  protected ContainerInterface $container;
+
+  /**
+   * Sets the service container.
+   */
+  public function setContainer(?ContainerInterface $container): void {
+    $this->container = $container;
+  }
 
   public function getResult() {
+    if (empty($this->container)) {
+      throw new \Exception('Container was not injected.');
+    }
     return 'This is container aware.';
   }
 

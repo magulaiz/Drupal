@@ -132,7 +132,6 @@ class UserLoginForm extends FormBase {
     $form['actions'] = ['#type' => 'actions'];
     $form['actions']['submit'] = ['#type' => 'submit', '#value' => $this->t('Log in')];
 
-    $form['#validate'][] = '::validateName';
     $form['#validate'][] = '::validateAuthentication';
     $form['#validate'][] = '::validateFinal';
 
@@ -145,8 +144,8 @@ class UserLoginForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-
-    if (empty($uid = $form_state->get('uid'))) {
+    $uid = $form_state->get('uid');
+    if (!$uid) {
       return;
     }
     $account = $this->userStorage->load($uid);
@@ -167,8 +166,12 @@ class UserLoginForm extends FormBase {
 
   /**
    * Sets an error if supplied username has been blocked.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement.
+   * @see https://www.drupal.org/node/3410706
    */
   public function validateName(array &$form, FormStateInterface $form_state) {
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3410706', E_USER_DEPRECATED);
     if (!$form_state->isValueEmpty('name') && user_is_blocked($form_state->getValue('name'))) {
       // Blocked in user administration.
       $form_state->setErrorByName('name', $this->t('The username %name has not been activated or is blocked.', ['%name' => $form_state->getValue('name')]));
@@ -183,6 +186,7 @@ class UserLoginForm extends FormBase {
   public function validateAuthentication(array &$form, FormStateInterface $form_state) {
     $password = trim($form_state->getValue('pass'));
     $flood_config = $this->config('user.flood');
+    $account = FALSE;
     if (!$form_state->isValueEmpty('name') && strlen($password) > 0) {
       // Do not allow any login from the current user's IP if the limit has been
       // reached. Default is 50 failed attempts allowed in one hour. This is
@@ -193,9 +197,12 @@ class UserLoginForm extends FormBase {
         $form_state->set('flood_control_triggered', 'ip');
         return;
       }
-      $accounts = $this->userStorage->loadByProperties(['name' => $form_state->getValue('name'), 'status' => 1]);
+      $accounts = $this->userStorage->loadByProperties(['name' => $form_state->getValue('name')]);
       $account = reset($accounts);
-      if ($account) {
+      if ($account && $account->isBlocked()) {
+        $form_state->setErrorByName('name', $this->t('The username %name has not been activated or is blocked.', ['%name' => $form_state->getValue('name')]));
+      }
+      elseif ($account && $account->isActive()) {
         if ($flood_config->get('uid_only')) {
           // Register flood events based on the uid only, so they apply for any
           // IP address. This is the most secure option.
@@ -209,17 +216,29 @@ class UserLoginForm extends FormBase {
         }
         $form_state->set('flood_control_user_identifier', $identifier);
 
-        // Don't allow login if the limit for this user has been reached.
-        // Default is to allow 5 failed attempts every 6 hours.
-        if (!$this->userFloodControl->isAllowed('user.failed_login_user', $flood_config->get('user_limit'), $flood_config->get('user_window'), $identifier)) {
-          $form_state->set('flood_control_triggered', 'user');
-          return;
+        // If there are zero flood records for this user, then we don't need to
+        // clear any failed login attempts after a successful login, so check
+        // for this case first before checking the actual flood limit and store
+        // the result in form state.
+        if (!$this->userFloodControl->isAllowed('user.failed_login_user', 1, $flood_config->get('user_window'), $identifier)) {
+          // Now check the actual limit for the user. Default is to allow 5
+          // failed attempts every 6 hours. This means we check the flood table
+          // twice if flood control has already been triggered by a previous
+          // login attempt, but this should be the less common case.
+          if (!$this->userFloodControl->isAllowed('user.failed_login_user', $flood_config->get('user_limit'), $flood_config->get('user_window'), $identifier)) {
+            $form_state->set('flood_control_triggered', 'user');
+            return;
+          }
+        }
+        else {
+          $form_state->set('flood_control_skip_clear', 'user');
+        }
+        // We are not limited by flood control, so try to authenticate.
+        // Store the user ID in form state as a flag for self::validateFinal().
+        if ($this->userAuth->authenticateAccount($account, $password)) {
+          $form_state->set('uid', $account->id());
         }
       }
-      // We are not limited by flood control, so try to authenticate.
-      // Store $uid in form state as a flag for self::validateFinal().
-      $uid = $this->userAuth->authenticate($form_state->getValue('name'), $password);
-      $form_state->set('uid', $uid);
     }
   }
 
@@ -263,7 +282,7 @@ class UserLoginForm extends FormBase {
         }
       }
     }
-    elseif ($flood_control_user_identifier = $form_state->get('flood_control_user_identifier')) {
+    elseif (!$form_state->get('flood_control_skip_clear') && $flood_control_user_identifier = $form_state->get('flood_control_user_identifier')) {
       // Clear past failures for this user so as not to block a user who might
       // log in and out more than once in an hour.
       $this->userFloodControl->clear('user.failed_login_user', $flood_control_user_identifier);

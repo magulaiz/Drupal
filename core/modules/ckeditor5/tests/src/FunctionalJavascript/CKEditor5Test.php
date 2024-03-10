@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
@@ -93,6 +95,10 @@ class CKEditor5Test extends CKEditor5TestBase {
         'scheme' => 'public',
         'directory' => 'inline-images',
         'max_size' => '',
+        'max_dimensions' => [
+          'width' => NULL,
+          'height' => NULL,
+        ],
       ],
     ])->save();
     $this->assertSame([], array_map(
@@ -641,6 +647,7 @@ JS;
               'reversed' => FALSE,
               'startIndex' => FALSE,
             ],
+            'multiBlock' => TRUE,
           ],
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => [],

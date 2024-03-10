@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\update\Unit;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -179,7 +181,7 @@ class UpdateMailTest extends UnitTestCase {
    *   - TRUE if the user is authorized.
    *   - An array of message body strings.
    */
-  public function providerTestUpdateEmail(): array {
+  public static function providerTestUpdateEmail(): array {
     return [
       'all' => [
         'all',
