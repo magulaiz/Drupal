@@ -99,7 +99,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
    * @param string[] $unescaped_test_classnames
    *   An array of test class names, including full namespaces, to be passed as
    *   a regular expression to PHPUnit's --filter option.
-   * @param string $phpunit_file
+   * @param string $log_junit_file_path
    *   A filepath to use for PHPUnit's --log-junit option.
    * @param int $status
    *   (optional) The exit status code of the PHPUnit process will be assigned
@@ -110,7 +110,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
    *
    * @internal
    */
-  public function runCommand(array $unescaped_test_classnames, string $phpunit_file, int &$status = NULL, array &$output = NULL): void {
+  public function runCommand(array $unescaped_test_classnames, string $log_junit_file_path, int &$status = NULL, array &$output = NULL): void {
     global $base_url;
     // Setup an environment variable containing the database connection so that
     // functional tests can connect to the database.
@@ -134,16 +134,15 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
       '--display-warnings',
       '--fail-on-warning',
       '--log-junit',
+      $log_junit_file_path,
     ];
 
     if (DeprecationHandler::getConfiguration() !== FALSE) {
-      $command += [
+      $command = array_merge($command, [
         '--display-deprecations',
         '--fail-on-deprecation',
-      ];
+      ]);
     }
-
-    $command[] = $phpunit_file;
 
     // Optimized for running a single test.
     if (count($unescaped_test_classnames) == 1) {
