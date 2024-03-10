@@ -29,12 +29,10 @@ final class BootstrapErrorHandler {
   public function __invoke(int $errorNumber, string $errorString, string $errorFile, int $errorLine): bool {
     if ((E_USER_DEPRECATED === $errorNumber || E_DEPRECATED === $errorNumber) && DeprecationHandler::isIgnoredDeprecation($errorString)) {
       // Deprecation handled is one of those in the ignore list.
-      // dump(['Bootstrap ignore', $errorNumber, $errorString, $errorFile, $errorLine]);
       return TRUE;
     }
     else {
       // Fallback to PHPUnit's error handler if no other processing.
-      // dump(['Bootstrap level fallback to PHPUnit', $errorNumber, $errorString, $errorFile, $errorLine]);
       try {
         call_user_func($this->phpUnitErrorHandler, $errorNumber, $errorString, $errorFile, $errorLine);
       }

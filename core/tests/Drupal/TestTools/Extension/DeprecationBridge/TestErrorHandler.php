@@ -29,12 +29,10 @@ final class TestErrorHandler {
       DeprecationHandler::collectActualDeprecation($errorString);
     }
 
-    if ((E_USER_DEPRECATED === $errorNumber || E_DEPRECATED === $errorNumber) && $this->testCase->isTestInLegacyGroup()) {
-      // dump(['Test level legacy', $errorNumber, $errorString, $errorFile, $errorLine]);
+    if ((E_USER_DEPRECATED === $errorNumber || E_DEPRECATED === $errorNumber) && DeprecationHandler::isTestInLegacyGroup($this->testCase)) {
       return TRUE;
     }
     else {
-      // dump(['Test level fallback', $errorNumber, $errorString, $errorFile, $errorLine]);
       call_user_func($this->parentHandler, $errorNumber, $errorString, $errorFile, $errorLine);
     }
     return TRUE;
