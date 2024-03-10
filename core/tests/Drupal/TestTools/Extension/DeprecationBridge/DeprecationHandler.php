@@ -146,7 +146,11 @@ final class DeprecationHandler {
     return (bool) $result;
   }
 
-  public static function isTestInLegacyGroup(TestCase $testCase): bool {
+  public static function isDeprecationTest(TestCase $testCase): bool {
+    return $testCase->valueObjectForEvents()->metadata()->isIgnoreDeprecations()->isNotEmpty() || self::isTestInLegacyGroup($testCase);
+  }
+
+  private static function isTestInLegacyGroup(TestCase $testCase): bool {
     $groups = [];
     foreach ($testCase->valueObjectForEvents()->metadata()->isGroup() as $metadata) {
       $groups[] = $metadata->groupName();

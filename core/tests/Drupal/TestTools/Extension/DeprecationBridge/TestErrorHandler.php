@@ -29,7 +29,7 @@ final class TestErrorHandler {
       DeprecationHandler::collectActualDeprecation($errorString);
     }
 
-    if ((E_USER_DEPRECATED === $errorNumber || E_DEPRECATED === $errorNumber) && DeprecationHandler::isTestInLegacyGroup($this->testCase)) {
+    if ((E_USER_DEPRECATED === $errorNumber || E_DEPRECATED === $errorNumber) && DeprecationHandler::isDeprecationTest($this->testCase)) {
       return TRUE;
     }
     else {

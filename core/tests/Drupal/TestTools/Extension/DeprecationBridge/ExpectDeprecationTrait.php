@@ -44,13 +44,14 @@ trait ExpectDeprecationTrait {
   }
 
   public function expectDeprecation(string $message): void {
+    if (!DeprecationHandler::isDeprecationTest($this)) {
+      throw new \RuntimeException('expectDeprecation() can only be called from tests marked with #[IgnoreDeprecations] or \'@group legacy\'');
+    }
+
     if (!DeprecationHandler::isEnabled()) {
       return;
     }
 
-    if (!$this->valueObjectForEvents()->metadata()->isIgnoreDeprecations()->isNotEmpty() && !DeprecationHandler::isTestInLegacyGroup($this)) {
-      throw new \RuntimeException('expectDeprecation() can only be called from tests marked with #[IgnoreDeprecations] or \'@group legacy\'');
-    }
     DeprecationHandler::expectDeprecation($message);
   }
 
