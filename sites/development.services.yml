@@ -1,50 +1,17 @@
 # Local development services.
 #
+# The development.services.yml file, allows the developer to override
+# container parameters for debugging.
+#
 # To activate this feature, follow the instructions at the top of the
 # 'example.settings.local.php' file, which sits next to this file.
-# 
-# The development.services.yml file, allows the developer to override
-# container parameters for debugging. In Drupal's configuration system,
-# all the files that provide container definitions are merged using a Shallow
-# Merge approach within \Drupal\Core\DependencyInjection\YamlFileLoader.
-# This means that with a Shallow Merge, nested structures within the YAML
-# files are not recursively merged as they would be with a Deep Merge.
 #
-# For example, consider the following configuration snippet from
-# default.services.yml:
-#
-# renderer.config:
-#   required_cache_contexts: ['languages:language_interface', 'theme', 'user.permissions']
-#   auto_placeholder_conditions:
-#     max-age: 0
-#     contexts: ['session', 'user']
-#     tags: []
-#   debug: false
-#
-# Suppose you want to override the value of the 'debug' key within the
-# 'renderer.config' parameter to true. In this case, you would specify all
-# the other keys and their default values from the default.services.yml
-# file in your development.services.yml file, like so:
-#
-# renderer.config:
-#   required_cache_contexts: ['languages:language_interface', 'theme', 'user.permissions']
-#   auto_placeholder_conditions:
-#     max-age: 0
-#     contexts: ['session', 'user']
-#     tags: []
-#   debug: true
-#
-# It's crucial to include all the parameter's keys because certain parameters
-# may have dependencies or requirements. For instance, in the provided
-# example, the 'renderer.config' parameter requires the
-# 'required_cache_contexts' key to be defined. If you were to override just
-# the 'debug' key without including the other necessary keys like this:
-#
-# renderer.config:
-#    debug: true
-#
-# the site would crash because the renderer requires the
-# 'required_cache_contexts' key to function properly.
+# Be aware that in Drupal's configuration system, all the files that
+# provide container definitions are merged using a shallow merge approach
+# within \Drupal\Core\DependencyInjection\YamlFileLoader.
+# This means that if you want to override any value of a parameter, the
+# whole parameter array needs to be copied from 
+# sites/default/default.services.yml or from core/core.services.yml file.
 parameters:
   http.response.debug_cacheability_headers: true
 services:
