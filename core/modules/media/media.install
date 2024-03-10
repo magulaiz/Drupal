@@ -73,7 +73,7 @@ function media_requirements($phase) {
       if (!empty($error)) {
         $description = $error . ' ' . $description;
         $requirements['media']['description'] = $description;
-        $requirements['media']['severity'] = RequirementSeverity::ERROR;
+        $requirements['media']['severity'] = RequirementSeverity::Error;
       }
     }
   }
@@ -102,7 +102,7 @@ function media_requirements($phase) {
           'description' => t('It is potentially insecure to display oEmbed content in a frame that is served from the same domain as your main Drupal site, as this may allow execution of third-party code. <a href=":url">You can specify a different domain for serving oEmbed content here</a>.', [
             ':url' => Url::fromRoute('media.settings')->setAbsolute()->toString(),
           ]),
-          'severity' => RequirementSeverity::WARNING,
+          'severity' => RequirementSeverity::Warning,
         ];
       }
     }
@@ -123,7 +123,7 @@ function media_requirements($phase) {
               '%type' => $type->label(),
             ]
           ),
-          'severity' => RequirementSeverity::ERROR,
+          'severity' => RequirementSeverity::Error,
         ];
         continue;
       }
@@ -166,7 +166,7 @@ function media_requirements($phase) {
             '%type' => $type->label(),
           ]
         ),
-        'severity' => RequirementSeverity::WARNING,
+        'severity' => RequirementSeverity::Warning,
       ];
     }
 

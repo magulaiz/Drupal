@@ -150,7 +150,7 @@ function search_requirements($phase) {
     $requirements['search_status'] = [
       'title' => t('Search index progress'),
       'value' => t('@percent% (@remaining remaining)', ['@percent' => $percent, '@remaining' => $remaining]),
-      'severity' => RequirementSeverity::INFO,
+      'severity' => RequirementSeverity::Info,
     ];
   }
 

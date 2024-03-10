@@ -100,10 +100,10 @@ function update_page_top() {
       }
       if (!empty($verbose)) {
         if (isset($status[$type]['severity'])) {
-          if ($status[$type]['severity'] == RequirementSeverity::ERROR) {
+          if ($status[$type]['severity'] == RequirementSeverity::Error) {
             \Drupal::messenger()->addError($status[$type]['description']);
           }
-          elseif ($status[$type]['severity'] == RequirementSeverity::WARNING) {
+          elseif ($status[$type]['severity'] == RequirementSeverity::Warning) {
             \Drupal::messenger()->addWarning($status[$type]['description']);
           }
         }

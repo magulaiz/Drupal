@@ -141,10 +141,10 @@ class SecurityAdvisoryTest extends BrowserTestBase {
 
     // If both PSA and non-PSA advisories are displayed they should be displayed
     // as errors.
-    $this->assertStatusReportLinks($mixed_advisory_links, RequirementSeverity::ERROR);
+    $this->assertStatusReportLinks($mixed_advisory_links, RequirementSeverity::Error);
     // The advisories will be displayed on admin pages if the response was
     // stored from the status report request.
-    $this->assertAdminPageLinks($mixed_advisory_links, RequirementSeverity::ERROR);
+    $this->assertAdminPageLinks($mixed_advisory_links, RequirementSeverity::Error);
 
     // Confirm that a user without the correct permission will not see the
     // advisories on admin pages.
@@ -160,8 +160,8 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     $this->drupalLogin($this->user);
     // Test cache.
     AdvisoryTestClientMiddleware::setTestEndpoint($this->nonWorkingEndpoint);
-    $this->assertAdminPageLinks($mixed_advisory_links, RequirementSeverity::ERROR);
-    $this->assertStatusReportLinks($mixed_advisory_links, RequirementSeverity::ERROR);
+    $this->assertAdminPageLinks($mixed_advisory_links, RequirementSeverity::Error);
+    $this->assertStatusReportLinks($mixed_advisory_links, RequirementSeverity::Error);
 
     // Tests transmit errors with a JSON endpoint.
     $this->tempStore->delete('advisories_response');
@@ -196,8 +196,8 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     $this->assertAdvisoriesNotDisplayed($psa_advisory_links, ['system.admin']);
     // If only PSA advisories are displayed they should be displayed as
     // warnings.
-    $this->assertStatusReportLinks($psa_advisory_links, RequirementSeverity::WARNING);
-    $this->assertAdminPageLinks($psa_advisory_links, RequirementSeverity::WARNING);
+    $this->assertStatusReportLinks($psa_advisory_links, RequirementSeverity::Warning);
+    $this->assertAdminPageLinks($psa_advisory_links, RequirementSeverity::Warning);
 
     AdvisoryTestClientMiddleware::setTestEndpoint($this->workingEndpointNonPsaOnly, TRUE);
     $non_psa_advisory_links = [
@@ -206,8 +206,8 @@ class SecurityAdvisoryTest extends BrowserTestBase {
     ];
     // If only non-PSA advisories are displayed they should be displayed as
     // errors.
-    $this->assertStatusReportLinks($non_psa_advisory_links, RequirementSeverity::ERROR);
-    $this->assertAdminPageLinks($non_psa_advisory_links, RequirementSeverity::ERROR);
+    $this->assertStatusReportLinks($non_psa_advisory_links, RequirementSeverity::Error);
+    $this->assertAdminPageLinks($non_psa_advisory_links, RequirementSeverity::Error);
 
     // Confirm that advisory fetching can be disabled after enabled.
     $this->config('system.advisories')->set('enabled', FALSE)->save();
@@ -229,7 +229,7 @@ class SecurityAdvisoryTest extends BrowserTestBase {
   private function assertAdminPageLinks(array $expected_link_texts, RequirementSeverity $error_or_warning): void {
     $assert = $this->assertSession();
     $this->drupalGet(Url::fromRoute('system.admin'));
-    if ($error_or_warning === RequirementSeverity::ERROR) {
+    if ($error_or_warning === RequirementSeverity::Error) {
       $assert->pageTextContainsOnce('Error message');
       $assert->pageTextNotContains('Warning message');
     }

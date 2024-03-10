@@ -14,32 +14,32 @@ enum RequirementSeverity: int {
   /*
    * Informational message only.
    */
-  case INFO = -1;
+  case Info = -1;
 
   /*
    * Requirement successfully met.
    */
-  case OK = 0;
+  case Ok = 0;
 
   /*
    * Warning condition; proceed but flag warning.
    */
-  case WARNING = 1;
+  case Warning = 1;
 
   /*
    * Error condition; abort installation.
    */
-  case ERROR = 2;
+  case Error = 2;
 
   /**
    * Returns the translated title of the severity.
    */
   public function title(): TranslatableMarkup {
     return match ($this) {
-      self::INFO => new TranslatableMarkup('Checked'),
-      self::OK => new TranslatableMarkup('OK'),
-      self::WARNING => new TranslatableMarkup('Warnings found'),
-      self::ERROR => new TranslatableMarkup('Errors found'),
+      self::Info => new TranslatableMarkup('Checked'),
+      self::Ok => new TranslatableMarkup('OK'),
+      self::Warning => new TranslatableMarkup('Warnings found'),
+      self::Error => new TranslatableMarkup('Errors found'),
     };
   }
 
@@ -48,10 +48,10 @@ enum RequirementSeverity: int {
    */
   public function status(): string {
     return match ($this) {
-      self::INFO => 'checked',
-      self::OK => 'ok',
-      self::WARNING => 'warning',
-      self::ERROR => 'error',
+      self::Info => 'checked',
+      self::Ok => 'ok',
+      self::Warning => 'warning',
+      self::Error => 'error',
     };
 
   }
@@ -71,10 +71,10 @@ enum RequirementSeverity: int {
     return array_reduce(
       $requirements,
       function (RequirementSeverity $severity, $requirement) {
-        $requirementSeverity = $requirement['severity'] ?? RequirementSeverity::OK;
+        $requirementSeverity = $requirement['severity'] ?? RequirementSeverity::Ok;
         return RequirementSeverity::from(max($severity->value, $requirementSeverity->value));
       },
-      RequirementSeverity::OK
+      RequirementSeverity::Ok
     );
   }
 

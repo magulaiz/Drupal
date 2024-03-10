@@ -14,7 +14,7 @@ function requirements1_test_requirements_alter(array &$requirements): void {
   // Change the title.
   $requirements['requirements1_test_alterable']['title'] = t('Requirements 1 Test - Changed');
   // Decrease the severity.
-  $requirements['requirements1_test_alterable']['severity'] = RequirementSeverity::WARNING;
+  $requirements['requirements1_test_alterable']['severity'] = RequirementSeverity::Warning;
   // Delete 'requirements1_test_deletable',
   unset($requirements['requirements1_test_deletable']);
 }

@@ -38,13 +38,13 @@ class StatusReport extends RenderElementBase {
     RequirementSeverity::convertLegacyIntSeveritiesToEnums($element['#requirements'], __METHOD__);
     /** @var array{title: \Drupal\Core\StringTranslation\TranslatableMarkup, value: mixed, description: \Drupal\Core\StringTranslation\TranslatableMarkup, severity: \Drupal\Core\Extension\Requirement\RequirementSeverity} $requirement */
     foreach ($element['#requirements'] as $key => $requirement) {
-      $severity = RequirementSeverity::INFO;
+      $severity = RequirementSeverity::Info;
       if (isset($requirement['severity'])) {
-        $requirement_severity = $requirement['severity'] === RequirementSeverity::OK ? RequirementSeverity::INFO : $requirement['severity'];
+        $requirement_severity = $requirement['severity'] === RequirementSeverity::Ok ? RequirementSeverity::Info : $requirement['severity'];
         $severity = $requirement_severity;
       }
       elseif (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'install') {
-        $severity = RequirementSeverity::OK;
+        $severity = RequirementSeverity::Ok;
       }
 
       $grouped_requirements[$severity->status()]['title'] = $severity->title();
@@ -76,19 +76,19 @@ class StatusReport extends RenderElementBase {
   public static function getSeverities() {
     @\trigger_error('Calling ' . __METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from in drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3410939', \E_USER_DEPRECATED);
     return [
-      RequirementSeverity::INFO->value => [
+      RequirementSeverity::Info->value => [
         'title' => t('Checked', [], ['context' => 'Examined']),
         'status' => 'checked',
       ],
-      RequirementSeverity::OK->value => [
+      RequirementSeverity::Ok->value => [
         'title' => t('OK'),
         'status' => 'ok',
       ],
-      RequirementSeverity::WARNING->value => [
+      RequirementSeverity::Warning->value => [
         'title' => t('Warnings found'),
         'status' => 'warning',
       ],
-      RequirementSeverity::ERROR->value => [
+      RequirementSeverity::Error->value => [
         'title' => t('Errors found'),
         'status' => 'error',
       ],

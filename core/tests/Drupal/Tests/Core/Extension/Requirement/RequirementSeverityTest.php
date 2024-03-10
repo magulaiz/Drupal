@@ -35,11 +35,11 @@ class RequirementSeverityTest extends UnitTestCase {
     );
     RequirementSeverity::convertLegacyIntSeveritiesToEnums($requirements, __METHOD__);
     $this->assertEquals(
-      RequirementSeverity::INFO,
+      RequirementSeverity::Info,
       $requirements['foo']['severity']
     );
     $this->assertEquals(
-      RequirementSeverity::ERROR,
+      RequirementSeverity::Error,
       $requirements['bar']['severity']
     );
   }
@@ -59,19 +59,19 @@ class RequirementSeverityTest extends UnitTestCase {
   public static function requirementProvider(): array {
     $info = [
       'title' => 'Foo',
-      'severity' => RequirementSeverity::INFO,
+      'severity' => RequirementSeverity::Info,
     ];
     $warning = [
       'title' => 'Baz',
-      'severity' => RequirementSeverity::WARNING,
+      'severity' => RequirementSeverity::Warning,
     ];
     $error = [
       'title' => 'Wiz',
-      'severity' => RequirementSeverity::ERROR,
+      'severity' => RequirementSeverity::Error,
     ];
     $ok = [
       'title' => 'Bar',
-      'severity' => RequirementSeverity::OK,
+      'severity' => RequirementSeverity::Ok,
     ];
 
     return [
@@ -81,14 +81,14 @@ class RequirementSeverityTest extends UnitTestCase {
           $error,
           $ok,
         ],
-        RequirementSeverity::ERROR,
+        RequirementSeverity::Error,
       ],
       'ok is most severe' => [
         [
           $info,
           $ok,
         ],
-        RequirementSeverity::OK,
+        RequirementSeverity::Ok,
       ],
       'warning is most severe' => [
         [
@@ -96,7 +96,7 @@ class RequirementSeverityTest extends UnitTestCase {
           $info,
           $ok,
         ],
-        RequirementSeverity::WARNING,
+        RequirementSeverity::Warning,
       ],
     ];
   }

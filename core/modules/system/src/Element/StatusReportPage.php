@@ -60,8 +60,8 @@ class StatusReportPage extends RenderElementBase {
         case 'php_memory_limit':
           $element['#general_info']['#' . $key] = $requirement;
           if (isset($requirement['severity']) &&
-            in_array($requirement['severity'], [RequirementSeverity::INFO, RequirementSeverity::OK], TRUE) &&
-            ($requirement['severity'] !== RequirementSeverity::INFO)
+            in_array($requirement['severity'], [RequirementSeverity::Info, RequirementSeverity::Ok], TRUE) &&
+            ($requirement['severity'] !== RequirementSeverity::Info)
           ) {
             unset($element['#requirements'][$key]);
           }
@@ -97,12 +97,12 @@ class StatusReportPage extends RenderElementBase {
 
     RequirementSeverity::convertLegacyIntSeveritiesToEnums($element['#requirements'], __METHOD__);
     foreach ($element['#requirements'] as $key => &$requirement) {
-      $severity = RequirementSeverity::INFO;
+      $severity = RequirementSeverity::Info;
       if (isset($requirement['severity'])) {
         $severity = $requirement['severity'];
       }
       elseif (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'install') {
-        $severity = RequirementSeverity::OK;
+        $severity = RequirementSeverity::Ok;
       }
 
       if (isset($counters[$severity->status()])) {

@@ -990,7 +990,7 @@ function hook_updater_info_alter(&$updaters) {
  * As a consequence, install-time requirements must be checked without access
  * to the full Drupal API, because it is not available during install.php.
  * If a requirement has a severity of
- * \Drupal\Core\Extension\Requirement\RequirementSeverity::ERROR, install.php
+ * \Drupal\Core\Extension\Requirement\RequirementSeverity::Error, install.php
  * will abort or at least the module will not install.
  * Other severity levels have no effect on the installation.
  * Module dependencies do not belong to these installation requirements,
@@ -1005,7 +1005,7 @@ function hook_updater_info_alter(&$updaters) {
  * The returned 'requirements' will be listed on the status report in the
  * administration section, with indication of the severity level.
  * Moreover, any requirement with a severity of
- * \Drupal\Core\Extension\Requirement\RequirementSeverity::ERROR severity will
+ * \Drupal\Core\Extension\Requirement\RequirementSeverity::Error severity will
  * result in a notice on the administration configuration page.
  *
  * @param $phase
@@ -1035,7 +1035,7 @@ function hook_requirements($phase) {
     $requirements['drupal'] = [
       'title' => t('Drupal'),
       'value' => \Drupal::VERSION,
-      'severity' => RequirementSeverity::INFO,
+      'severity' => RequirementSeverity::Info,
     ];
   }
 
@@ -1046,7 +1046,7 @@ function hook_requirements($phase) {
   ];
   if (version_compare(phpversion(), \Drupal::MINIMUM_PHP) < 0) {
     $requirements['php']['description'] = t('Your PHP installation is too old. Drupal requires at least PHP %version.', ['%version' => \Drupal::MINIMUM_PHP]);
-    $requirements['php']['severity'] = RequirementSeverity::ERROR;
+    $requirements['php']['severity'] = RequirementSeverity::Error;
   }
 
   // Report cron status
@@ -1059,7 +1059,7 @@ function hook_requirements($phase) {
     else {
       $requirements['cron'] = [
         'description' => t('Cron has not run. It appears cron jobs have not been setup on your system. Check the help pages for <a href=":url">configuring cron jobs</a>.', [':url' => 'https://www.drupal.org/docs/administering-a-drupal-site/cron-automated-tasks/cron-automated-tasks-overview']),
-        'severity' => RequirementSeverity::ERROR,
+        'severity' => RequirementSeverity::Error,
         'value' => t('Never run'),
       ];
     }
@@ -1089,7 +1089,7 @@ function hook_requirements_alter(array &$requirements): void {
   $requirements['php']['title'] = t('PHP version');
 
   // Decrease the 'update status' requirement severity from warning to info.
-  $requirements['update status']['severity'] = RequirementSeverity::INFO;
+  $requirements['update status']['severity'] = RequirementSeverity::Info;
 
   // Remove a requirements entry.
   unset($requirements['foo']);

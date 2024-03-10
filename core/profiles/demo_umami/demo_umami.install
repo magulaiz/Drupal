@@ -21,7 +21,7 @@ function demo_umami_requirements($phase) {
       'title' => t('Experimental installation profile used'),
       'value' => $info['name'],
       'description' => t('Experimental profiles are provided for testing purposes only. Use at your own risk. To start building a new site, reinstall Drupal and choose a non-experimental profile.'),
-      'severity' => RequirementSeverity::WARNING,
+      'severity' => RequirementSeverity::Warning,
     ];
   }
   return $requirements;

@@ -54,7 +54,7 @@ class SystemManager {
    * Requirement severity -- Requirement successfully met.
    *
    * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
-   *    \Drupal\Core\Extension\Requirement\RequirementSeverity::OK instead.
+   *    \Drupal\Core\Extension\Requirement\RequirementSeverity::Ok instead.
    *
    * @see https://www.drupal.org/node/3410821
    */
@@ -64,7 +64,7 @@ class SystemManager {
    * Requirement severity -- Warning condition; proceed but flag warning.
    *
    * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
-   *   \Drupal\Core\Extension\Requirement\RequirementSeverity::WARNING instead.
+   *   \Drupal\Core\Extension\Requirement\RequirementSeverity::Warning instead.
    *
    * @see https://www.drupal.org/node/3410939
    */
@@ -74,7 +74,7 @@ class SystemManager {
    * Requirement severity -- Error condition; abort installation.
    *
    * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
-   *  \Drupal\Core\Extension\Requirement\RequirementSeverity::ERROR instead.
+   *  \Drupal\Core\Extension\Requirement\RequirementSeverity::Error instead.
    *
    * @see https://www.drupal.org/node/3410939
    */
@@ -107,7 +107,7 @@ class SystemManager {
    */
   public function checkRequirements() {
     $requirements = $this->listRequirements();
-    return RequirementSeverity::maxSeverityFromRequirements($requirements) === RequirementSeverity::ERROR;
+    return RequirementSeverity::maxSeverityFromRequirements($requirements) === RequirementSeverity::Error;
   }
 
   /**

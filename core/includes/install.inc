@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * Requirement severity -- Informational message only.
  *
  * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
- * \Drupal\Core\Extension\RequirementSeverity::INFO instead.
+ * \Drupal\Core\Extension\RequirementSeverity::Info instead.
  *
  * @see https://www.drupal.org/node/3409874
  */
@@ -28,7 +28,7 @@ const REQUIREMENT_INFO = -1;
  * Requirement severity -- Requirement successfully met.
  *
  * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
- *   \Drupal\Core\Extension\RequirementSeverity::OK instead.
+ *   \Drupal\Core\Extension\RequirementSeverity::Ok instead.
  *
  * @see https://www.drupal.org/node/3409874
  */
@@ -38,7 +38,7 @@ const REQUIREMENT_OK = 0;
  * Requirement severity -- Warning condition; proceed but flag warning.
  *
  * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
- * \Drupal\Core\Extension\RequirementSeverity::WARNING instead.
+ * \Drupal\Core\Extension\RequirementSeverity::Warning instead.
  *
  * @see https://www.drupal.org/node/3409874
  */
@@ -48,7 +48,7 @@ const REQUIREMENT_WARNING = 1;
  * Requirement severity -- Error condition; abort installation.
  *
  * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
- * \Drupal\Core\Extension\RequirementSeverity::ERROR instead.
+ * \Drupal\Core\Extension\RequirementSeverity::Error instead.
  *
  * @see https://www.drupal.org/node/3409874
  */
@@ -209,7 +209,7 @@ function drupal_verify_profile($install_state) {
     $requirements['required_modules'] = [
       'title' => t('Required modules'),
       'value' => t('Required modules not found.'),
-      'severity' => RequirementSeverity::ERROR,
+      'severity' => RequirementSeverity::Error,
       'description' => t('The following modules are required but were not found. Move them into the appropriate modules subdirectory, such as <em>/modules</em>. Missing modules: @modules', ['@modules' => $modules_list]),
     ];
   }
@@ -600,7 +600,7 @@ function drupal_requirements_url(int|RequirementSeverity $severity): string {
   $query = [];
   // If there are no errors, only warnings, append 'continue=1' to the URL so
   // the user can bypass this screen on the next page load.
-  if ($severity == RequirementSeverity::WARNING) {
+  if ($severity == RequirementSeverity::Warning) {
     $query['continue'] = 1;
   }
   return drupal_current_script_url($query);
@@ -694,10 +694,10 @@ function drupal_check_module($module) {
   }
   // Check requirements
   $requirements = \Drupal::moduleHandler()->invoke($module, 'requirements', ['install']);
-  if (is_array($requirements) && RequirementSeverity::maxSeverityFromRequirements($requirements) == RequirementSeverity::ERROR) {
+  if (is_array($requirements) && RequirementSeverity::maxSeverityFromRequirements($requirements) == RequirementSeverity::Error) {
     // Print any error messages
     foreach ($requirements as $requirement) {
-      if (isset($requirement['severity']) && $requirement['severity'] == RequirementSeverity::ERROR) {
+      if (isset($requirement['severity']) && $requirement['severity'] == RequirementSeverity::Error) {
         $message = $requirement['description'];
         if (isset($requirement['value']) && $requirement['value']) {
           $message = t('@requirements_message (Currently using @item version @version)', ['@requirements_message' => $requirement['description'], '@item' => $requirement['title'], '@version' => $requirement['value']]);

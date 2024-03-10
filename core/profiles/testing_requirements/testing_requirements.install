@@ -16,7 +16,7 @@ function testing_requirements_requirements($phase) {
   if ($phase === 'install') {
     $requirements['testing_requirements'] = [
       'title' => t('Testing requirements'),
-      'severity' => RequirementSeverity::ERROR,
+      'severity' => RequirementSeverity::Error,
       'description' => t('Testing requirements failed requirements.'),
     ];
   }

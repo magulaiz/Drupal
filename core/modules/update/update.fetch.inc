@@ -26,7 +26,7 @@ function _update_cron_notify() {
   foreach (['core', 'contrib'] as $report_type) {
     $type = 'update_' . $report_type;
     if (isset($status[$type]['severity'])
-        && ($status[$type]['severity'] == RequirementSeverity::ERROR || ($notify_all && $status[$type]['reason'] == UpdateManagerInterface::NOT_CURRENT))) {
+        && ($status[$type]['severity'] == RequirementSeverity::Error || ($notify_all && $status[$type]['reason'] == UpdateManagerInterface::NOT_CURRENT))) {
       $params[$report_type] = $status[$type]['reason'];
     }
   }

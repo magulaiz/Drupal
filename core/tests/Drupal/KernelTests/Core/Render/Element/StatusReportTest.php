@@ -32,19 +32,19 @@ class StatusReportTest extends KernelTestBase {
       '#requirements' => [
         'foo' => [
           'title' => 'Foo',
-          'severity' => RequirementSeverity::INFO,
+          'severity' => RequirementSeverity::Info,
         ],
         'baz' => [
           'title' => 'Baz',
-          'severity' => RequirementSeverity::WARNING,
+          'severity' => RequirementSeverity::Warning,
         ],
         'wiz' => [
           'title' => 'Wiz',
-          'severity' => RequirementSeverity::ERROR,
+          'severity' => RequirementSeverity::Error,
         ],
         'bar' => [
           'title' => 'Bar',
-          'severity' => RequirementSeverity::OK,
+          'severity' => RequirementSeverity::Ok,
         ],
         'legacy' => [
           'title' => 'Legacy',

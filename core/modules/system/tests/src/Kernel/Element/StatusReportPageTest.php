@@ -30,11 +30,11 @@ class StatusReportPageTest extends KernelTestBase {
         ],
         'baz' => [
           'title' => 'Baz',
-          'severity' => RequirementSeverity::WARNING,
+          'severity' => RequirementSeverity::Warning,
         ],
         'wiz' => [
           'title' => 'Wiz',
-          'severity' => RequirementSeverity::ERROR,
+          'severity' => RequirementSeverity::Error,
         ],
       ],
     ];

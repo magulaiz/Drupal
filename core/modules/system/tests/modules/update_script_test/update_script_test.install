@@ -18,21 +18,21 @@ function update_script_test_requirements($phase) {
     $requirement_type = \Drupal::config('update_script_test.settings')->get('requirement_type');
     $severity = RequirementSeverity::from($requirement_type);
     switch ($severity) {
-      case RequirementSeverity::WARNING:
+      case RequirementSeverity::Warning:
         $requirements['update_script_test'] = [
           'title' => 'Update script test',
           'value' => 'Warning',
           'description' => 'This is a requirements warning provided by the update_script_test module.',
-          'severity' => RequirementSeverity::WARNING,
+          'severity' => RequirementSeverity::Warning,
         ];
         break;
 
-      case RequirementSeverity::ERROR:
+      case RequirementSeverity::Error:
         $requirements['update_script_test'] = [
           'title' => 'Update script test',
           'value' => 'Error',
           'description' => 'This is a (buggy description fixed in update_script_test_requirements_alter()) requirements error provided by the update_script_test module.',
-          'severity' => RequirementSeverity::ERROR,
+          'severity' => RequirementSeverity::Error,
         ];
         break;
     }
@@ -45,7 +45,7 @@ function update_script_test_requirements($phase) {
  * Implements hook_requirements_alter().
  */
 function update_script_test_requirements_alter(array &$requirements): void {
-  if ($requirements['update_script_test']['severity'] ?? NULL === RequirementSeverity::ERROR) {
+  if ($requirements['update_script_test']['severity'] ?? NULL === RequirementSeverity::Error) {
     $requirements['update_script_test']['description'] = 'This is a requirements error provided by the update_script_test module.';
   }
 }
