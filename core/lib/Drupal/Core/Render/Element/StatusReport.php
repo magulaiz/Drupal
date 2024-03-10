@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\Render\Attribute\RenderElement;
 
 /**
@@ -36,13 +37,13 @@ class StatusReport extends RenderElementBase {
     $severities = static::getSeverities();
     $grouped_requirements = [];
     foreach ($element['#requirements'] as $key => $requirement) {
-      $severity = $severities[REQUIREMENT_INFO];
+      $severity = $severities[RequirementSeverity::INFO->value];
       if (isset($requirement['severity'])) {
-        $requirement_severity = (int) $requirement['severity'] === REQUIREMENT_OK ? REQUIREMENT_INFO : (int) $requirement['severity'];
+        $requirement_severity = (int) $requirement['severity'] === RequirementSeverity::OK ? RequirementSeverity::INFO : (int) $requirement['severity'];
         $severity = $severities[$requirement_severity];
       }
       elseif (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'install') {
-        $severity = $severities[REQUIREMENT_OK];
+        $severity = $severities[RequirementSeverity::OK->value];
       }
 
       $grouped_requirements[$severity['status']]['title'] = $severity['title'];
@@ -68,19 +69,19 @@ class StatusReport extends RenderElementBase {
    */
   public static function getSeverities() {
     return [
-      REQUIREMENT_INFO => [
+      RequirementSeverity::INFO->value => [
         'title' => t('Checked', [], ['context' => 'Examined']),
         'status' => 'checked',
       ],
-      REQUIREMENT_OK => [
+      RequirementSeverity::OK->value => [
         'title' => t('OK'),
         'status' => 'ok',
       ],
-      REQUIREMENT_WARNING => [
+      RequirementSeverity::WARNING->value => [
         'title' => t('Warnings found'),
         'status' => 'warning',
       ],
-      REQUIREMENT_ERROR => [
+      RequirementSeverity::ERROR->value => [
         'title' => t('Errors found'),
         'status' => 'error',
       ],

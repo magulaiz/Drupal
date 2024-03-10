@@ -2,6 +2,7 @@
 
 namespace Drupal\system\Element;
 
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Element\RenderElementBase;
 use Drupal\Core\Render\Element\StatusReport;
@@ -58,8 +59,8 @@ class StatusReportPage extends RenderElementBase {
         case 'php':
         case 'php_memory_limit':
           $element['#general_info']['#' . $key] = $requirement;
-          if (isset($requirement['severity']) && $requirement['severity'] < REQUIREMENT_WARNING) {
-            if (empty($requirement['severity']) || $requirement['severity'] == REQUIREMENT_OK) {
+          if (isset($requirement['severity']) && $requirement['severity']->value < RequirementSeverity::WARNING->value) {
+            if (empty($requirement['severity']) || $requirement['severity'] == RequirementSeverity::OK) {
               unset($element['#requirements'][$key]);
             }
           }
@@ -95,12 +96,12 @@ class StatusReportPage extends RenderElementBase {
 
     $severities = StatusReport::getSeverities();
     foreach ($element['#requirements'] as $key => &$requirement) {
-      $severity = $severities[REQUIREMENT_INFO];
+      $severity = $severities[RequirementSeverity::INFO->value];
       if (isset($requirement['severity'])) {
         $severity = $severities[(int) $requirement['severity']];
       }
       elseif (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'install') {
-        $severity = $severities[REQUIREMENT_OK];
+        $severity = $severities[RequirementSeverity::OK->value];
       }
 
       if (isset($counters[$severity['status']])) {

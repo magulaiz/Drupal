@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\Render\Markup;
 
 /**
@@ -46,18 +47,18 @@ function mysql_requirements($phase) {
       $description = [];
       if ($isolation_level == 'READ-COMMITTED') {
         if (empty($tables_missing_primary_key)) {
-          $severity_level = REQUIREMENT_OK;
+          $severity_level = RequirementSeverity::OK;
         }
         else {
-          $severity_level = REQUIREMENT_ERROR;
+          $severity_level = RequirementSeverity::ERROR;
         }
       }
       else {
         if ($isolation_level == 'REPEATABLE-READ') {
-          $severity_level = REQUIREMENT_WARNING;
+          $severity_level = RequirementSeverity::WARNING;
         }
         else {
-          $severity_level = REQUIREMENT_ERROR;
+          $severity_level = RequirementSeverity::ERROR;
           $description[] = t('This is not supported by Drupal.');
         }
         $description[] = t('The recommended level for Drupal is "READ COMMITTED".');

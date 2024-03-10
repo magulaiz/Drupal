@@ -5,6 +5,8 @@
  * Install, update, and uninstall functions for the Search module.
  */
 
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
+
 /**
  * Implements hook_schema().
  */
@@ -148,7 +150,7 @@ function search_requirements($phase) {
     $requirements['search_status'] = [
       'title' => t('Search index progress'),
       'value' => t('@percent% (@remaining remaining)', ['@percent' => $percent, '@remaining' => $remaining]),
-      'severity' => REQUIREMENT_INFO,
+      'severity' => RequirementSeverity::INFO,
     ];
   }
 

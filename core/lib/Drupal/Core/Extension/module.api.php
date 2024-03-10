@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\UpdateException;
@@ -988,7 +989,7 @@ function hook_updater_info_alter(&$updaters) {
  * Drupal itself (by install.php) with an installation profile or later by hand.
  * As a consequence, install-time requirements must be checked without access
  * to the full Drupal API, because it is not available during install.php.
- * If a requirement has a severity of REQUIREMENT_ERROR, install.php will abort
+ * If a requirement has a severity of RequirementSeverity::ERROR, install.php will abort
  * or at least the module will not install.
  * Other severity levels have no effect on the installation.
  * Module dependencies do not belong to these installation requirements,
@@ -1002,7 +1003,7 @@ function hook_updater_info_alter(&$updaters) {
  * tasks and security issues.
  * The returned 'requirements' will be listed on the status report in the
  * administration section, with indication of the severity level.
- * Moreover, any requirement with a severity of REQUIREMENT_ERROR severity will
+ * Moreover, any requirement with a severity of RequirementSeverity::ERROR severity will
  * result in a notice on the administration configuration page.
  *
  * @param $phase
@@ -1022,10 +1023,10 @@ function hook_updater_info_alter(&$updaters) {
  *     it if not applicable.
  *   - description: The description of the requirement/status.
  *   - severity: The requirement's result/severity level, one of:
- *     - REQUIREMENT_INFO: For info only.
- *     - REQUIREMENT_OK: The requirement is satisfied.
- *     - REQUIREMENT_WARNING: The requirement failed with a warning.
- *     - REQUIREMENT_ERROR: The requirement failed with an error.
+ *     - RequirementSeverity::INFO: For info only.
+ *     - RequirementSeverity::OK: The requirement is satisfied.
+ *     - RequirementSeverity::WARNING: The requirement failed with a warning.
+ *     - RequirementSeverity::ERROR: The requirement failed with an error.
  */
 function hook_requirements($phase) {
   $requirements = [];
@@ -1035,7 +1036,7 @@ function hook_requirements($phase) {
     $requirements['drupal'] = [
       'title' => t('Drupal'),
       'value' => \Drupal::VERSION,
-      'severity' => REQUIREMENT_INFO,
+      'severity' => RequirementSeverity::INFO,
     ];
   }
 
@@ -1046,7 +1047,7 @@ function hook_requirements($phase) {
   ];
   if (version_compare(phpversion(), \Drupal::MINIMUM_PHP) < 0) {
     $requirements['php']['description'] = t('Your PHP installation is too old. Drupal requires at least PHP %version.', ['%version' => \Drupal::MINIMUM_PHP]);
-    $requirements['php']['severity'] = REQUIREMENT_ERROR;
+    $requirements['php']['severity'] = RequirementSeverity::ERROR;
   }
 
   // Report cron status
@@ -1059,7 +1060,7 @@ function hook_requirements($phase) {
     else {
       $requirements['cron'] = [
         'description' => t('Cron has not run. It appears cron jobs have not been setup on your system. Check the help pages for <a href=":url">configuring cron jobs</a>.', [':url' => 'https://www.drupal.org/docs/administering-a-drupal-site/cron-automated-tasks/cron-automated-tasks-overview']),
-        'severity' => REQUIREMENT_ERROR,
+        'severity' => RequirementSeverity::ERROR,
         'value' => t('Never run'),
       ];
     }
@@ -1089,7 +1090,7 @@ function hook_requirements_alter(array &$requirements): void {
   $requirements['php']['title'] = t('PHP version');
 
   // Decrease the 'update status' requirement severity from warning to info.
-  $requirements['update status']['severity'] = REQUIREMENT_INFO;
+  $requirements['update status']['severity'] = RequirementSeverity::INFO;
 
   // Remove a requirements entry.
   unset($requirements['foo']);

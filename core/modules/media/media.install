@@ -5,6 +5,7 @@
  * Install, uninstall and update hooks for Media module.
  */
 
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Url;
@@ -72,7 +73,7 @@ function media_requirements($phase) {
       if (!empty($error)) {
         $description = $error . ' ' . $description;
         $requirements['media']['description'] = $description;
-        $requirements['media']['severity'] = REQUIREMENT_ERROR;
+        $requirements['media']['severity'] = RequirementSeverity::ERROR;
       }
     }
   }
@@ -101,7 +102,7 @@ function media_requirements($phase) {
           'description' => t('It is potentially insecure to display oEmbed content in a frame that is served from the same domain as your main Drupal site, as this may allow execution of third-party code. <a href=":url">You can specify a different domain for serving oEmbed content here</a>.', [
             ':url' => Url::fromRoute('media.settings')->setAbsolute()->toString(),
           ]),
-          'severity' => REQUIREMENT_WARNING,
+          'severity' => RequirementSeverity::WARNING,
         ];
       }
     }
@@ -122,7 +123,7 @@ function media_requirements($phase) {
               '%type' => $type->label(),
             ]
           ),
-          'severity' => REQUIREMENT_ERROR,
+          'severity' => RequirementSeverity::ERROR,
         ];
         continue;
       }
@@ -165,7 +166,7 @@ function media_requirements($phase) {
             '%type' => $type->label(),
           ]
         ),
-        'severity' => REQUIREMENT_WARNING,
+        'severity' => RequirementSeverity::WARNING,
       ];
     }
 
