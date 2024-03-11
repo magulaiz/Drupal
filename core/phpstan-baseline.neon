@@ -2565,11 +2565,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Installer/InstallerRedirectTraitTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Render\\\\Element\\\\MachineNameTest\\:\\:expectErrorMessage\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Render/Element/MachineNameTest.php
-
-		-
 			message: "#^Class PHPUnit\\\\Framework\\\\Error\\\\Warning not found\\.$#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Test/Comparator/MarkupInterfaceComparatorTest.php
