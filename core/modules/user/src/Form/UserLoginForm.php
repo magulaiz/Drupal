@@ -8,6 +8,7 @@ use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Render\BareHtmlPageRendererInterface;
 use Drupal\Core\Url;
 use Drupal\user\UserAuthInterface;
+use Drupal\user\UserAuthenticationInterface;
 use Drupal\user\UserInterface;
 use Drupal\user\UserStorageInterface;
 use Drupal\user\UserFloodControlInterface;
@@ -197,8 +198,13 @@ class UserLoginForm extends FormBase {
         $form_state->set('flood_control_triggered', 'ip');
         return;
       }
-      $accounts = $this->userStorage->loadByProperties(['name' => $form_state->getValue('name')]);
-      $account = reset($accounts);
+      if ($this->userAuth instanceof UserAuthenticationInterface) {
+        $account = $this->userAuth->lookupAccount($form_state->getValue('name'));
+      }
+      else {
+        $accounts = $this->userStorage->loadByProperties(['name' => $form_state->getValue('name')]);
+        $account = reset($accounts);
+      }
       if ($account && $account->isBlocked()) {
         $form_state->setErrorByName('name', $this->t('The username %name has not been activated or is blocked.', ['%name' => $form_state->getValue('name')]));
       }
@@ -235,8 +241,14 @@ class UserLoginForm extends FormBase {
         }
         // We are not limited by flood control, so try to authenticate.
         // Store the user ID in form state as a flag for self::validateFinal().
-        if ($this->userAuth->authenticateAccount($account, $password)) {
-          $form_state->set('uid', $account->id());
+        if ($this->userAuth instanceof UserAuthenticationInterface) {
+          if ($this->userAuth->authenticateAccount($account, $password)) {
+            $form_state->set('uid', $account->id());
+          }
+        }
+        else {
+          $uid = $this->userAuth->authenticate($form_state->getValue('name'), $password);
+          $form_state->set('uid', $uid);
         }
       }
     }

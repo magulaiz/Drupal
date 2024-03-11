@@ -8,7 +8,7 @@ use Drupal\Core\Password\PasswordInterface;
 /**
  * Validates user authentication credentials.
  */
-class UserAuth implements UserAuthInterface {
+class UserAuth implements UserAuthInterface, UserAuthenticationInterface {
 
   /**
    * The entity type manager.
@@ -53,6 +53,20 @@ class UserAuth implements UserAuthInterface {
       }
     }
     return $uid;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function lookupAccount($identifier): UserInterface|false {
+    if (!empty($identifier)) {
+      $account_search = $this->entityTypeManager->getStorage('user')->loadByProperties(['name' => $identifier]);
+
+      if ($account = reset($account_search)) {
+        return $account;
+      }
+    }
+    return FALSE;
   }
 
   /**
