@@ -8,7 +8,7 @@ use Drupal\Core\Password\PasswordInterface;
 /**
  * Validates user authentication credentials.
  */
-class UserAuth implements UserAuthenticationInterface {
+class UserAuth implements UserAuthInterface, UserAuthenticationInterface {
 
   /**
    * The entity type manager.
@@ -41,6 +41,7 @@ class UserAuth implements UserAuthenticationInterface {
    * {@inheritdoc}
    */
   public function authenticate($username, #[\SensitiveParameter] $password) {
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.3.0 and will be removed from drupal 12.0.0. Implement \Drupal\user\UserAuthenticationInterface instead. See https://www.drupal.org/node/3411040');
     $uid = FALSE;
 
     if (!empty($username) && strlen($password) > 0) {
