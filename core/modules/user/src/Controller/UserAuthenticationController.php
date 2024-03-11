@@ -7,6 +7,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\user\UserAuthenticationInterface;
+use Drupal\user\UserAuthInterface;
 use Drupal\user\UserFloodControlInterface;
 use Drupal\user\UserInterface;
 use Drupal\user\UserStorageInterface;
@@ -300,6 +301,10 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    *
    * @return bool
    *   TRUE if the user is blocked, otherwise FALSE.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. There
+   * is no replacement.
+   * @see https://www.drupal.org/node/3425340
    */
   protected function userIsBlocked($name) {
     @trigger_error(__METHOD__ . ' is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3425340', E_USER_DEPRECATED);
