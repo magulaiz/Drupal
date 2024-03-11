@@ -95,7 +95,7 @@ class TypeResolver {
         throw new \LogicException('`' . $expression . '` is not a valid dynamic type expression. Dynamic type expressions must contain at least `%parent`, `%key`, or `%type`.`');
       }
       if ($name === '%type' && $previous_name !== '%parent') {
-        throw new \LogicException('`%type` can only used when immediately proceeded by `%parent` in `' . $expression . '`');
+        throw new \LogicException('`%type` can only used when immediately preceded by `%parent` in `' . $expression . '`');
       }
       $previous_name = $name;
       if (!is_array($data) || !isset($data[$name])) {
