@@ -94,7 +94,7 @@ class BasicAuth implements AuthenticationProviderInterface, AuthenticationProvid
       $account = FALSE;
       if ($this->userAuth instanceof UserAuthenticationInterface) {
         $lookup = $this->userAuth->lookupAccount($username);
-        if (!$lookup->isBlocked()) {
+        if ($lookup && !$lookup->isBlocked()) {
           $account = $lookup;
         }
       }
@@ -119,7 +119,7 @@ class BasicAuth implements AuthenticationProviderInterface, AuthenticationProvid
         if ($this->flood->isAllowed('basic_auth.failed_login_user', $flood_config->get('user_limit'), $flood_config->get('user_window'), $identifier)) {
           $uid = FALSE;
           if ($this->userAuth instanceof UserAuthenticationInterface && $this->userAuth->authenticateAccount($account, $password)) {
-            $uid = $account->uid();
+            $uid = $account->id();
           }
           else {
             $uid = $this->userAuth->authenticate($username, $password);
