@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\media\Attribute;
 
 use Drupal\Component\Plugin\Attribute\Plugin;
@@ -28,10 +30,14 @@ class MediaSource extends Plugin {
   /**
    * Constructs a new MediaSource attribute.
    *
+   * @param string $id
+   *   The attribute class ID.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup $label
    *   The human-readable name of the media source.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $description
    *   (optional) A brief description of the media source.
+   * @param class-string|null $deriver
+   *   (optional) The deriver class.
    * @param string[] $allowed_field_types
    *   (optional) The field types that can be used as a source field for this
    *   media source.
@@ -64,12 +70,12 @@ class MediaSource extends Plugin {
    *   provided.
    * @param string $default_name_metadata_attribute
    *   (optional) The metadata attribute name to provide the default name.
-   * @param string ...$base
-   *   Plugin ID and deriver class.
    */
   public function __construct(
+    public readonly string $id,
     public readonly TranslatableMarkup $label,
     public readonly ?TranslatableMarkup $description = NULL,
+    public readonly ?string $deriver = NULL,
     public readonly array $allowed_field_types = [],
     public readonly array $forms = [],
     public readonly array $providers = [],
@@ -79,10 +85,7 @@ class MediaSource extends Plugin {
     public readonly string $thumbnail_height_metadata_attribute = 'thumbnail_height',
     public readonly ?string $thumbnail_alt_metadata_attribute = NULL,
     public readonly ?string $thumbnail_title_metadata_attribute = NULL,
-    public readonly string $default_name_metadata_attribute = 'default_name',
-    ...$base,
-  ) {
-    parent::__construct(...$base);
-  }
+    public readonly string $default_name_metadata_attribute = 'default_name'
+  ) {}
 
 }

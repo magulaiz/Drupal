@@ -65,6 +65,9 @@
  *   label: new TranslatableMarkup("File"),
  *   description: new TranslatableMarkup("Use local files for reusable media."),
  *   allowed_field_types: ["file"],
+ *   forms = [
+ *     "media_library_add" = "\Drupal\media_library\Form\FileUploadForm",
+ *   ]
  * )]
  * @endcode
  *
