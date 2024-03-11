@@ -15,6 +15,7 @@ use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\Validation\Plugin\Validation\Constraint\FullyValidatableConstraint;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 // cspell:ignore kthxbai
 
@@ -390,25 +391,23 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
     $definition = $typed_data->createDataDefinition('entity:' . $this->entity->getEntityTypeId());
     $violations = $typed_data->create($definition, $this->entity)->validate();
 
-    $actual_messages = [];
-    foreach ($violations as $violation) {
-      $property_path = $violation->getPropertyPath();
-
-      if (!isset($actual_messages[$property_path])) {
-        $actual_messages[$property_path] = (string) $violation->getMessage();
-      }
-      else {
-        // Transform value from string to array.
-        if (is_string($actual_messages[$property_path])) {
-          $actual_messages[$property_path] = (array) $actual_messages[$violation->getPropertyPath()];
-        }
-        // And append.
-        $actual_messages[$property_path][] = (string) $violation->getMessage();
-      }
-    }
+    $actual_messages = self::violationsToArray($violations);
     ksort($expected_messages);
     ksort($actual_messages);
     $this->assertSame($expected_messages, $actual_messages);
+
+    // Ensure that the exact same validation error are found when using the
+    // "plain config object" rather than the config entity wrapped in its Typed
+    // Data wrapper (ConfigEntityAdapter).
+    $typed_config = $this->container->get('config.typed');
+    assert($typed_config instanceof TypedConfigManagerInterface);
+    $config_object_violations = $typed_config->createFromNameAndData(
+      $this->entity->getConfigDependencyName(),
+      $this->entity->toArray()
+    )->validate();
+    $config_object_messages = self::violationsToArray($config_object_violations);
+    ksort($config_object_messages);
+    $this->assertSame($actual_messages, $config_object_messages);
   }
 
   /**
@@ -725,6 +724,33 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
     }
 
     return $optional_properties;
+  }
+
+  /**
+   * Transforms a constraint violation list object to an assertable array.
+   *
+   * @param \Symfony\Component\Validator\ConstraintViolationListInterface $violations
+   *   Validation constraint violations.
+   *
+   * @return array
+   *   An array with property paths as keys and violation messages as values.
+   */
+  private static function violationsToArray(ConstraintViolationListInterface $violations): array {
+    $actual_violations = [];
+    foreach ($violations as $violation) {
+      if (!isset($actual_violations[$violation->getPropertyPath()])) {
+        $actual_violations[$violation->getPropertyPath()] = (string) $violation->getMessage();
+      }
+      else {
+        // Transform value from string to array.
+        if (is_string($actual_violations[$violation->getPropertyPath()])) {
+          $actual_violations[$violation->getPropertyPath()] = (array) $actual_violations[$violation->getPropertyPath()];
+        }
+        // And append.
+        $actual_violations[$violation->getPropertyPath()][] = (string) $violation->getMessage();
+      }
+    }
+    return $actual_violations;
   }
 
 }
