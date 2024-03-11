@@ -70,4 +70,15 @@ class MigrationPluginManagerTest extends MigrateTestBase {
 
   }
 
+  /**
+   * Tests error is triggered when creating a deprecated migration.
+   *
+   * @group legacy
+   */
+  public function testMigrationDeprecation(): void {
+    $this->enableModules(['migrate_deprecate_test']);
+    $this->expectDeprecation('some deprecation message');
+    $this->migrationPluginManager->createInstance('deprecated');
+  }
+
 }
