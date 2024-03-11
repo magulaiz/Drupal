@@ -402,7 +402,7 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
     $typed_config = $this->container->get('config.typed');
     assert($typed_config instanceof TypedConfigManagerInterface);
     $config_object_violations = $typed_config->createFromNameAndData(
-      $this->entity->getConfigDependencyName(),
+      $this->entity->getEntityType()->getConfigPrefix() . '.' . $this->entity->getOriginalId(),
       $this->entity->toArray()
     )->validate();
     $config_object_messages = self::violationsToArray($config_object_violations);
