@@ -28,7 +28,7 @@ class MigrateRowSkippedEvent extends EventBase {
    * @param \Drupal\migrate\Row $row
    *   The row object.
    * @param \Throwable $exception
-   *    The exception that was thrown.
+   *   The exception that was thrown.
    */
   public function __construct(MigrationInterface $migration, MigrateMessageInterface $message, Row $row, protected \Throwable $exception) {
     parent::__construct($migration, $message);
