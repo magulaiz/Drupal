@@ -179,10 +179,19 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
 
     $this->floodControl($request, $credentials['name']);
 
-    $accounts = $this->userStorage->loadByProperties(['name' => $credentials['name']]);
-    if (!empty($accounts)) {
-      /** @var \Drupal\user\UserInterface $account */
-      $account = reset($accounts);
+    $account = FALSE;
+
+    if ($this->userAuth instanceof UserAuthenticationInterface) {
+      $account = $this->userAuth->lookupAccount($credentials['name']);
+    }
+    else {
+      $accounts = $this->userStorage->loadByProperties(['name' => $credentials['name']]);
+      if ($accounts) {
+        $account = reset($accounts);
+      }
+    }
+
+    if ($account)) {
       if ($account->isBlocked()) {
         throw new BadRequestHttpException('The user has not been activated or is blocked.');
       }

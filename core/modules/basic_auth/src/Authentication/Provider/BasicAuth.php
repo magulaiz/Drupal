@@ -91,8 +91,16 @@ class BasicAuth implements AuthenticationProviderInterface, AuthenticationProvid
     // in to many different user accounts.  We have a reasonably high limit
     // since there may be only one apparent IP for all users at an institution.
     if ($this->flood->isAllowed('basic_auth.failed_login_ip', $flood_config->get('ip_limit'), $flood_config->get('ip_window'))) {
-      $accounts = $this->entityTypeManager->getStorage('user')->loadByProperties(['name' => $username, 'status' => 1]);
-      $account = reset($accounts);
+      if ($this->userAuth instanceof (UserAuthenticationInterface) {
+        $lookup = $this->userAuth->lookupAccount($username);
+        if (!$lookup->isBlocked()) {
+          $account = $lookup;
+        }
+      }
+      else {
+        $accounts = $this->entityTypeManager->getStorage('user')->loadByProperties(['name' => $username, 'status' => 1]);
+        $account = reset($accounts);
+      }
       if ($account) {
         if ($flood_config->get('uid_only')) {
           // Register flood events based on the uid only, so they apply for any
@@ -108,7 +116,13 @@ class BasicAuth implements AuthenticationProviderInterface, AuthenticationProvid
         // Don't allow login if the limit for this user has been reached.
         // Default is to allow 5 failed attempts every 6 hours.
         if ($this->flood->isAllowed('basic_auth.failed_login_user', $flood_config->get('user_limit'), $flood_config->get('user_window'), $identifier)) {
-          $uid = $this->userAuth->authenticateAccount($account, $password);
+          $uid = FALSE;
+          if ($this->userAuth instanceof UserAuthenticationInterface && $this->userAuth->authenticateAccount($account, $password) {
+            $uid = $account->uid();
+          }
+          else {
+            $uid = $this->userAuth->authenticate($username, $password);
+          }
           if ($uid) {
             $this->flood->clear('basic_auth.failed_login_user', $identifier);
             return $account;
