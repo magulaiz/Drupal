@@ -96,7 +96,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
     $this->assertSame(35, $performance_data->getQueryCount());
-    $this->assertSame(137, $performance_data->getCacheGetCount());
+    $this->assertSame(138, $performance_data->getCacheGetCount());
     $this->assertSame(47, $performance_data->getCacheSetCount());
     $this->assertSame(0, $performance_data->getCacheDeleteCount());
     $this->assertCountBetween(40, 43, $performance_data->getCacheTagChecksumCount());
@@ -127,7 +127,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
     $this->assertSame(13, $performance_data->getQueryCount());
-    $this->assertSame(95, $performance_data->getCacheGetCount());
+    $this->assertSame(96, $performance_data->getCacheGetCount());
     $this->assertSame(16, $performance_data->getCacheSetCount());
     $this->assertSame(0, $performance_data->getCacheDeleteCount());
     $this->assertCountBetween(24, 25, $performance_data->getCacheTagChecksumCount());
