@@ -2,6 +2,8 @@
 
 namespace Drupal\mysql\Driver\Database\mysql;
 
+
+use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Event\SchemaIndexDefinitionEvent;
 use Drupal\Core\Database\Event\SchemaPrimaryKeyDefinitionEvent;
 use Drupal\Core\Database\SchemaException;
@@ -15,6 +17,8 @@ use Drupal\Core\Database\SchemaDefinition\Index as IndexDefinition;
 use Drupal\Core\Database\SchemaDefinition\KeyColumn as KeyColumnDefinition;
 use Drupal\Core\Database\SchemaDefinition\PrimaryKey as PrimaryKeyDefinition;
 use Drupal\Component\Utility\Unicode;
+
+// cspell:ignore gipk
 
 /**
  * @addtogroup schemaapi
@@ -448,7 +452,21 @@ class Schema extends DatabaseSchema {
 
       $query .= ', ADD ' . implode(', ADD ', $keys_sql);
     }
-    $this->connection->query($query);
+    try {
+      $this->connection->query($query);
+    }
+    catch (DatabaseExceptionWrapper $e) {
+      // MySQL error number 4111 (ER_DROP_PK_COLUMN_TO_DROP_GIPK) indicates that
+      // when dropping and adding a primary key, the generated invisible primary
+      // key (GIPK) column must also be dropped.
+      if (isset($e->getPrevious()->errorInfo[1]) && $e->getPrevious()->errorInfo[1] === 4111 && isset($keys_new['primary key']) && $this->indexExists($table, 'PRIMARY') && $this->findPrimaryKeyColumns($table) === ['my_row_id']) {
+        $this->connection->query($query . ', DROP COLUMN [my_row_id]');
+      }
+      else {
+        throw $e;
+      }
+    }
+
     if (isset($spec['initial_from_field'])) {
       if (isset($spec['initial'])) {
         $expression = 'COALESCE(' . $spec['initial_from_field'] . ', :default_initial_value)';

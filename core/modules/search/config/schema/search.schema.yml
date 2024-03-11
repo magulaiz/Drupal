@@ -81,11 +81,15 @@ search.page.*:
       type: string
       label: 'Search page path'
     weight:
-      type: integer
+      type: weight
       label: 'Weight'
     plugin:
       type: string
       label: 'Plugin'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.search
+          interface: 'Drupal\search\Plugin\SearchInterface'
     configuration:
       type: search.plugin.[%parent.plugin]
 
