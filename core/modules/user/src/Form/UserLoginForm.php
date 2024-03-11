@@ -7,7 +7,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Render\BareHtmlPageRendererInterface;
 use Drupal\Core\Url;
-use Drupal\user\UserAuthInterface;
 use Drupal\user\UserAuthenticationInterface;
 use Drupal\user\UserInterface;
 use Drupal\user\UserStorageInterface;
@@ -38,7 +37,7 @@ class UserLoginForm extends FormBase {
   /**
    * The user authentication object.
    *
-   * @var \Drupal\user\UserAuthInterface
+   * @var \Drupal\user\UserAuthenticationInterface
    */
   protected $userAuth;
 
@@ -63,16 +62,19 @@ class UserLoginForm extends FormBase {
    *   The user flood control service.
    * @param \Drupal\user\UserStorageInterface $user_storage
    *   The user storage.
-   * @param \Drupal\user\UserAuthInterface $user_auth
+   * @param $user_auth
    *   The user authentication object.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
    * @param \Drupal\Core\Render\BareHtmlPageRendererInterface $bare_html_renderer
    *   The renderer.
    */
-  public function __construct(UserFloodControlInterface $user_flood_control, UserStorageInterface $user_storage, UserAuthInterface|UserAuthenticationInterface $user_auth, RendererInterface $renderer, BareHtmlPageRendererInterface $bare_html_renderer) {
+  public function __construct(UserFloodControlInterface $user_flood_control, UserStorageInterface $user_storage, $user_auth, RendererInterface $renderer, BareHtmlPageRendererInterface $bare_html_renderer) {
     $this->userFloodControl = $user_flood_control;
     $this->userStorage = $user_storage;
+    if (!$user_auth instanceof UserAuthenticationInterface) {
+      @trigger_error('The $user_auth parameter implementing UserAuthInterface is deprecated in drupal:10.3.0 and will be removed in drupal:11.0.0. Implement UserAuthenticationInterface instead. See https://www.drupal.org/node/3411040');
+    }
     $this->userAuth = $user_auth;
     $this->renderer = $renderer;
     $this->bareHtmlPageRenderer = $bare_html_renderer;
