@@ -178,7 +178,7 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
   /**
    * {@inheritdoc}
    */
-  public function testContentModerationStateDataRemoval($entity_type_id = NULL) {
+  public function testContentModerationStateDataRemoval($entity_type_id = NULL): void {
     // This test creates published default revisions in Live, which can not be
     // deleted in a workspace. A test scenario for the case when Content
     // Moderation and Workspaces are used together is covered in

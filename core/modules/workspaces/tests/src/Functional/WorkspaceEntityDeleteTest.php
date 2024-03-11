@@ -39,7 +39,7 @@ class WorkspaceEntityDeleteTest extends BrowserTestBase {
   /**
    * Test entity deletion with workspaces.
    */
-  public function testEntityDelete() {
+  public function testEntityDelete(): void {
     $assert_session = $this->assertSession();
 
     $permissions = [
@@ -126,7 +126,7 @@ class WorkspaceEntityDeleteTest extends BrowserTestBase {
   /**
    * Test node deletion with workspaces and the 'bypass node access' permission.
    */
-  public function testNodeDeleteWithBypassAccessPermission() {
+  public function testNodeDeleteWithBypassAccessPermission(): void {
     $assert_session = $this->assertSession();
 
     $permissions = [
