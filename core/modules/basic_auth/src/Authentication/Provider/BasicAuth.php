@@ -91,7 +91,7 @@ class BasicAuth implements AuthenticationProviderInterface, AuthenticationProvid
     // in to many different user accounts.  We have a reasonably high limit
     // since there may be only one apparent IP for all users at an institution.
     if ($this->flood->isAllowed('basic_auth.failed_login_ip', $flood_config->get('ip_limit'), $flood_config->get('ip_window'))) {
-      if ($this->userAuth instanceof (UserAuthenticationInterface) {
+      if ($this->userAuth instanceof UserAuthenticationInterface) {
         $lookup = $this->userAuth->lookupAccount($username);
         if (!$lookup->isBlocked()) {
           $account = $lookup;
@@ -117,7 +117,7 @@ class BasicAuth implements AuthenticationProviderInterface, AuthenticationProvid
         // Default is to allow 5 failed attempts every 6 hours.
         if ($this->flood->isAllowed('basic_auth.failed_login_user', $flood_config->get('user_limit'), $flood_config->get('user_window'), $identifier)) {
           $uid = FALSE;
-          if ($this->userAuth instanceof UserAuthenticationInterface && $this->userAuth->authenticateAccount($account, $password) {
+          if ($this->userAuth instanceof UserAuthenticationInterface && $this->userAuth->authenticateAccount($account, $password)) {
             $uid = $account->uid();
           }
           else {
