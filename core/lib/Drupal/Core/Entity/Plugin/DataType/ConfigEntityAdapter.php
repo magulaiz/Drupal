@@ -163,14 +163,14 @@ class ConfigEntityAdapter extends EntityAdapter {
     // only one, but some consist of multiple, up to 3 in Drupal core.
     // @see \Drupal\Core\Field\FieldConfigBase::id()
     $config_name = $entity->getConfigDependencyName();
-    $prefix = $entity->getEntityType()->getConfigPrefix() . '.';
+    $prefix = $entity->getEntityType()->getConfigPrefix();
     $suffix = str_replace($prefix, '', $config_name);
     // Determine the ID parts (separated by periods) in the config dependency
     // name.
-    $id_parts = explode('.', $suffix);
+    $id_part_count = substr_count($suffix, '.');
     // The config schema type is then: `<prefix>` followed by one `.*` for every
     // ID part.
-    $config_schema_type = $prefix . str_repeat('.*', count($id_parts));
+    $config_schema_type = $prefix . str_repeat('.*', $id_part_count);
 
     $schema_defined_constraints = $typed_config->getDefinition($config_schema_type)['constraints'] ?? [];
     $definition = $instance->getDataDefinition();
