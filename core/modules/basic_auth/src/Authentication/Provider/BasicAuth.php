@@ -91,6 +91,7 @@ class BasicAuth implements AuthenticationProviderInterface, AuthenticationProvid
     // in to many different user accounts.  We have a reasonably high limit
     // since there may be only one apparent IP for all users at an institution.
     if ($this->flood->isAllowed('basic_auth.failed_login_ip', $flood_config->get('ip_limit'), $flood_config->get('ip_window'))) {
+      $account = FALSE;
       if ($this->userAuth instanceof UserAuthenticationInterface) {
         $lookup = $this->userAuth->lookupAccount($username);
         if (!$lookup->isBlocked()) {
