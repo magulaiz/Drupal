@@ -10,7 +10,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\Core\Http\Exception\CacheableUnauthorizedHttpException;
-use Drupal\user\UserAuthInterface;
+use Drupal\user\UserAuthenticationInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
@@ -28,8 +28,6 @@ class BasicAuth implements AuthenticationProviderInterface, AuthenticationProvid
 
   /**
    * The user auth service.
-   *
-   * @var \Drupal\user\UserAuthInterface
    */
   protected $userAuth;
 
@@ -52,15 +50,18 @@ class BasicAuth implements AuthenticationProviderInterface, AuthenticationProvid
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
-   * @param \Drupal\user\UserAuthInterface $user_auth
+   * @param $user_auth
    *   The user authentication service.
    * @param \Drupal\Core\Flood\FloodInterface $flood
    *   The flood service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, UserAuthInterface $user_auth, FloodInterface $flood, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(ConfigFactoryInterface $config_factory, $user_auth, FloodInterface $flood, EntityTypeManagerInterface $entity_type_manager) {
     $this->configFactory = $config_factory;
+    if (!$user_auth instanceof UserAuthenticationInterface) {
+      @trigger_error('The $user_auth parameter implementing UserAuthInterface is deprecated in drupal:10.3.0 and will be removed in drupal:11.0.0. Implement UserAuthenticationInterface instead. See https://www.drupal.org/node/3411040');
+    }
     $this->userAuth = $user_auth;
     $this->flood = $flood;
     $this->entityTypeManager = $entity_type_manager;
