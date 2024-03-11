@@ -116,7 +116,7 @@
       });
     }
 
-    return Object.entries(config).reduce((processed, [key, value]) => {
+    return config === null ? null : Object.entries(config).reduce((processed, [key, value]) => {
       if (typeof value === 'object') {
         // Check for null values.
         if (!value) {
