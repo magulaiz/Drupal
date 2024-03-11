@@ -208,7 +208,7 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
   /**
    * Tests visibility and cacheability of shortcuts in the block.
    */
-  public function testBlock() {
+  public function testBlock(): void {
     $this->drupalPlaceBlock('page_title_block', ['id' => 'title']);
     $this->drupalPlaceBlock('shortcuts', [
       'id' => 'shortcuts',
