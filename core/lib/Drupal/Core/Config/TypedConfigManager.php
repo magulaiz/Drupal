@@ -5,6 +5,7 @@ namespace Drupal\Core\Config;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
 use Drupal\Core\Config\Schema\ConfigSchemaAlterException;
 use Drupal\Core\Config\Schema\ConfigSchemaDiscovery;
 use Drupal\Core\Config\Schema\TypeResolver;
@@ -60,6 +61,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
   public function __construct(StorageInterface $configStorage, StorageInterface $schemaStorage, CacheBackendInterface $cache, ModuleHandlerInterface $module_handler, ClassResolverInterface $class_resolver = NULL) {
     $this->configStorage = $configStorage;
     $this->schemaStorage = $schemaStorage;
+    // @todo associate `entity_Types` cache tag, see ::processDefinition()
     $this->setCacheBackend($cache, 'typed_config_definitions');
     $this->alterInfo('config_schema_info');
     $this->moduleHandler = $module_handler;
@@ -445,6 +447,42 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
     // The schema system falls back on the Undefined class for unknown types.
     $definition = $this->getDefinition($name);
     return is_array($definition) && ($definition['class'] != Undefined::class);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function processDefinition(&$definition, $plugin_id) {
+    parent::processDefinition($definition, $plugin_id);
+
+    // The config schema type for a config entity type may have validation
+    // constraints defined, but so may the ConfigEntityType definition. Both are
+    // needed.
+    // @see \Drupal\Core\Entity\Plugin\DataType\ConfigEntityAdapter::createFromEntity()
+    if (array_key_exists('type', $definition) && $definition['type'] === 'config_entity') {
+      // First, find the matching ConfigEntityType definition.
+      // @see \Drupal\Core\Config\ConfigManager::getEntityTypeIdByName()
+      $entity_type_definitions = \Drupal::service('entity_type.manager')->getDefinitions();
+      $matching_entity_type = FALSE;
+      foreach ($entity_type_definitions as $entity_type) {
+        if ($entity_type instanceof ConfigEntityTypeInterface && str_starts_with($plugin_id, $entity_type->getConfigPrefix() . '.*')) {
+          $matching_entity_type = $entity_type;
+          break;
+        }
+      }
+      if ($matching_entity_type === FALSE) {
+        // Nothing to do here. This may occur when an intermediary config schema
+        // type is created, intended to be used by multiple config entity types.
+        // For example: `type: field_config_base`.
+        // @todo Correctly handle subtypes of such intermediary types
+      }
+      else {
+        if (!array_key_exists('constraints', $definition)) {
+          $definition['constraints'] = [];
+        }
+        $definition['constraints'] += $matching_entity_type->getConstraints();
+      }
+    }
   }
 
   /**
