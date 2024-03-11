@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Drupal\Core\Config\Plugin\Validation\Constraint;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
@@ -52,6 +53,13 @@ class RequiredConfigDependenciesConstraintValidator extends ConstraintValidator 
     $config_dependencies = $entity instanceof ConfigEntityInterface
       ? ($entity->getDependencies()['config'] ?? [])
       : ($entity['dependencies']['config'] ?? []);
+    // When not validating a Config entity object, ensure to respect enforced
+    // dependencies.
+    // @see \Drupal\Core\Config\Entity\ConfigEntityBase::getDependencies()
+    if (!$entity instanceof ConfigEntityInterface && isset($entity['dependencies']['enforced']['config'])) {
+      // Merge the enforced config dependencies into the list of dependencies.
+      $config_dependencies = NestedArray::mergeDeep($config_dependencies, $entity['dependencies']['enforced']['config']);
+    }
 
     $validated_entity_type_id = $entity instanceof ConfigEntityInterface
       ? $entity->getEntityTypeId()
