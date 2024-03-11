@@ -191,7 +191,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
       }
     }
 
-    if ($account)) {
+    if ($account) {
       if ($account->isBlocked()) {
         throw new BadRequestHttpException('The user has not been activated or is blocked.');
       }
