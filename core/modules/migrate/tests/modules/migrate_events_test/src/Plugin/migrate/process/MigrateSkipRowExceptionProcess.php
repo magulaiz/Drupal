@@ -1,0 +1,27 @@
+<?php
+
+namespace Drupal\migrate_events_test\Plugin\migrate\process;
+
+use Drupal\migrate\MigrateSkipRowException;
+use Drupal\migrate\ProcessPluginBase;
+use Drupal\migrate\MigrateExecutableInterface;
+use Drupal\migrate\Row;
+
+/**
+ * Process plugin to throw a MigrateSkipRowException.
+ *
+ * @MigrateProcessPlugin(
+ *   id = "migrate_skip_row_exception",
+ *   handle_multiples = FALSE
+ * )
+ */
+class MigrateSkipRowExceptionProcess extends ProcessPluginBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
+    throw new MigrateSkipRowException();
+  }
+
+}
