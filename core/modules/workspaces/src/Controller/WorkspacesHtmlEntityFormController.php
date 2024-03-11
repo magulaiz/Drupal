@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\workspaces\Controller;
 
 use Drupal\Core\Controller\FormController;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
+use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\workspaces\WorkspaceInformationInterface;
@@ -27,7 +30,7 @@ class WorkspacesHtmlEntityFormController extends FormController {
   /**
    * {@inheritdoc}
    */
-  public function getContentResult(Request $request, RouteMatchInterface $route_match) {
+  public function getContentResult(Request $request, RouteMatchInterface $route_match): array {
     $form_arg = $this->getFormArgument($route_match);
     $form_object = $this->getFormObject($route_match, $form_arg);
 
@@ -51,14 +54,14 @@ class WorkspacesHtmlEntityFormController extends FormController {
   /**
    * {@inheritdoc}
    */
-  protected function getFormArgument(RouteMatchInterface $route_match) {
+  protected function getFormArgument(RouteMatchInterface $route_match): string {
     return $this->entityFormController->getFormArgument($route_match);
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getFormObject(RouteMatchInterface $route_match, $form_arg) {
+  protected function getFormObject(RouteMatchInterface $route_match, $form_arg): FormInterface {
     return $this->entityFormController->getFormObject($route_match, $form_arg);
   }
 
