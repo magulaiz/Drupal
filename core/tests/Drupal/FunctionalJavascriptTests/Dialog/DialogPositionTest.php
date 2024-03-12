@@ -112,6 +112,7 @@ class DialogPositionTest extends WebDriverTestBase {
     $this->assertSession()->assertWaitOnAjaxRequest();
     $width_before = $this->getSession()->getDriver()->evaluateScript($script);
     $this->assertEquals('806', $width_before);
+
     // Resize the window near to the breaking point.
     $this->getSession()->resizeWindow(780, 805);
     $width_after = $this->getSession()->getDriver()->evaluateScript($script);
@@ -122,7 +123,6 @@ class DialogPositionTest extends WebDriverTestBase {
     $width_after_resize = $this->getSession()->getDriver()->evaluateScript($script);
     // Assert that the width is restored to full size.
     $this->assertEquals('806', $width_after_resize);
-
   }
 
 }
