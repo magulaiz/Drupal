@@ -141,7 +141,7 @@ class ConfigEntityAdapter extends EntityAdapter {
    * @return \Drupal\Core\TypedData\ComplexDataInterface
    *   The typed data.
    */
-  protected function getConfigTypedData() {
+  public function getConfigTypedData() {
     return $this->getTypedConfigManager()->createFromNameAndData($this->entity->getConfigDependencyName(), $this->entity->toArray());
   }
 

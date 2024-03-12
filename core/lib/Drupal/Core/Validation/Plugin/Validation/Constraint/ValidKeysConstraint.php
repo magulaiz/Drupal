@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
 use Drupal\Core\Config\Schema\Mapping;
+use Drupal\Core\Entity\Plugin\DataType\ConfigEntityAdapter;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
@@ -99,8 +100,12 @@ class ValidKeysConstraint extends SymfonyConstraint {
    *   The keys that will be considered valid.
    */
   public function getAllowedKeys(ExecutionContextInterface $context): array {
-    $mapping = $context->getObject();
-    assert($mapping instanceof Mapping);
+    $object = $context->getObject();
+    // Every config entity is represented as a `type: mapping` at the root.
+    $mapping = match (TRUE) {
+      $object instanceof Mapping => $object,
+      $object instanceof ConfigEntityAdapter => $object->getConfigTypedData(),
+    };
     $resolved_type = $mapping->getDataDefinition()->getDataType();
     $valid_keys = $mapping->getValidKeys();
 
