@@ -23,17 +23,17 @@
   .password-parent .toggle-password {
     height: 2.5em;
     margin: 0 0 0 10px;
-    font-size: inherit;
+    text-decoration: underline;
+    color: #55565b;
     border: none;
     border-radius: 5px;
-    color: #55565b;
-    text-decoration: underline;
-    font-weight: bold;
     background-color: transparent;
+    font-size: inherit;
+    font-weight: bold;
 
     &:hover {
-       color: #0036b1;
        text-decoration: none;
+       color: #0036b1;
        background-color: #e5edff;
      }
   }
