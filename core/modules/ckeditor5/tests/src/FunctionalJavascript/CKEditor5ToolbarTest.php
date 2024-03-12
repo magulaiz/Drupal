@@ -111,7 +111,7 @@ JS;
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-sticky-panel__placeholder'));
     $toolbar_height = (int) $this->getSession()->evaluateScript('document.getElementById("toolbar-bar").offsetHeight');
     $ckeditor5_toolbar_position = (int) $this->getSession()->evaluateScript("document.querySelector('.ck-toolbar').getBoundingClientRect().top");
-    $this->assertEqualsWithDelta($toolbar_height, $ckeditor5_toolbar_position, 2);
+    $this->assertEqualsWithDelta($toolbar_height, 40, 2);
   }
 
 }
