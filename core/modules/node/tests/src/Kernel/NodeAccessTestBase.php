@@ -59,6 +59,7 @@ abstract class NodeAccessTestBase extends KernelTestBase {
     $this->installEntitySchema('node');
     $this->installConfig('filter');
     $this->installConfig('node');
+    $this->installConfig('user');
 
     $this->accessHandler = \Drupal::entityTypeManager()->getAccessControlHandler('node');
 
