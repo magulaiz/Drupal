@@ -50,7 +50,7 @@ class Button extends FormElement {
       '#pre_render' => [
         [$class, 'preRenderButton'],
       ],
-      '#theme' => 'button__submit',
+      '#theme_wrappers' => ['button__submit'],
     ];
   }
 
