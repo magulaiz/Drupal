@@ -2011,16 +2011,6 @@ parameters:
 			path: modules/user/tests/src/Functional/UserRegistrationRestTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\user\\\\Kernel\\\\Views\\\\HandlerFilterRolesTest\\:\\:expectWarning\\(\\)\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/HandlerFilterRolesTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\user\\\\Kernel\\\\Views\\\\HandlerFilterRolesTest\\:\\:expectWarningMessage\\(\\)\\.$#"
-			count: 1
-			path: modules/user/tests/src/Kernel/Views/HandlerFilterRolesTest.php
-
-		-
 			message: "#^@dataProvider providerTestValidate related method must be static in PHPUnit 10 and newer\\.$#"
 			count: 1
 			path: modules/user/tests/src/Unit/Plugin/Validation/Constraint/ProtectedUserFieldConstraintValidatorTest.php
