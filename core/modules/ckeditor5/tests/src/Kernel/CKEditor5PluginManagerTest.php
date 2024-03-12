@@ -1259,6 +1259,8 @@ PHP,
       'image_upload' => [
         'status' => FALSE,
       ],
+      // TRICKY: specify dependencies because this does not call ::save().
+      'dependencies' => ['config' => ['filter.format.dummy']],
     ]);
     FilterFormat::create([
       'format' => 'dummy',

@@ -215,7 +215,10 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['mapping']['_core']['type'] = '_core_config_info';
     $expected['mapping']['_core']['requiredKey'] = FALSE;
     $expected['type'] = 'image.style.*';
-    $expected['constraints'] = ['ValidKeys' => '<infer>'];
+    $expected['constraints'] = [
+      'ValidKeys' => '<infer>',
+      'ImmutableProperties' => ['name'],
+    ];
 
     $this->assertEquals($expected, $definition);
 
