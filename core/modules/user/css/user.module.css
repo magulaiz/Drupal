@@ -22,19 +22,19 @@
 @media all and (min-width: 600px) {
   .password-parent .toggle-password {
     height: 2.5em;
-    font-size: inherit;
     margin: 0 0 0 10px;
-    border-radius: 5px;
+    font-size: inherit;
     border: none;
+    border-radius: 5px;
     color: #55565b;
-    font-weight: bold;
     text-decoration: underline;
+    font-weight: bold;
     background-color: transparent;
 
     &:hover {
        color: #0036b1;
-       background-color: #e5edff;
        text-decoration: none;
+       background-color: #e5edff;
      }
   }
 }
