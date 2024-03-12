@@ -6,6 +6,7 @@ use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
+use Drupal\node\Entity\NodeType;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
@@ -154,13 +155,18 @@ class FieldConfigValidationTest extends ConfigEntityValidationTestBase {
    * Tests that the field type plugin's existence is validated.
    */
   public function testFieldTypePluginIsValidated(): void {
+    NodeType::create(['type' => 'yet_another', 'name' => $this->randomString()])->save();
+
     // The `field_type` property is immutable, so we need to clone the entity in
     // order to cleanly change its immutable properties.
     $this->entity = $this->entity->createDuplicate()
       // We need to clear the current settings, or we will get validation errors
       // because the old settings are not supported by the new field type.
       ->set('settings', [])
-      ->set('field_type', 'invalid');
+      ->set('field_type', 'invalid')
+      // It must be set on a different bundle than the current one to avoid
+      // triggering a `ImmutableProperties` violation.
+      ->set('bundle', 'yet_another');
 
     $this->assertValidationErrors([
       'field_type' => "The 'invalid' plugin does not exist.",
@@ -174,12 +180,16 @@ class FieldConfigValidationTest extends ConfigEntityValidationTestBase {
     $this->container->get('state')
       ->set('field_test_disable_broken_entity_reference_handler', TRUE);
     $this->enableModules(['field_test']);
+    NodeType::create(['type' => 'yet_another', 'name' => $this->randomString()])->save();
 
     // The `field_type` property is immutable, so we need to clone the entity in
     // order to cleanly change its immutable properties.
     $this->entity = $this->entity->createDuplicate()
       ->set('field_type', 'entity_reference')
-      ->set('settings', ['handler' => 'non_existent']);
+      ->set('settings', ['handler' => 'non_existent'])
+      // It must be set on a different bundle than the current one to avoid
+      // triggering a `ImmutableProperties` violation.
+      ->set('bundle', 'yet_another');
 
     $this->assertValidationErrors([
       'settings.handler' => "The 'non_existent' plugin does not exist.",

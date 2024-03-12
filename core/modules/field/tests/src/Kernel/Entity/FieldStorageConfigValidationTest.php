@@ -45,10 +45,15 @@ class FieldStorageConfigValidationTest extends ConfigEntityValidationTestBase {
    * Tests that the field type plugin's existence is validated.
    */
   public function testFieldTypePluginIsValidated(): void {
+    $this->enableModules(['entity_test']);
+
     // The `type` property is immutable, so we need to clone the entity in
     // order to cleanly change its immutable properties.
     $this->entity = $this->entity->createDuplicate()
-      ->set('type', 'invalid');
+      ->set('type', 'invalid')
+      // It must be set on a different entity type than the current one to avoid
+      // triggering a `ImmutableProperties` violation.
+      ->set('entity_type', 'entity_test_bundle');
 
     $this->assertValidationErrors([
       'type' => "The 'invalid' plugin does not exist.",
