@@ -24,9 +24,11 @@ props:
       description: Wrapper attributes.
     site_logo:
       type: string
+      format: iri-reference
     url:
       type: string
       title: Branding url
+      format: iri-reference
 
 slots:
   site_name:

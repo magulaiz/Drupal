@@ -111,9 +111,10 @@
       {{ content }}
     </div>
     {% embed "umami:read-more" with {
-      attributes: create_attribute({'class': ['umami-card__read-more'], 'href': url}),
+      attributes: create_attribute({'class': ['umami-card__read-more']}),
       read_more,
       label,
+      url,
     } only %}
       {% block a11y %}
         {{ label }}

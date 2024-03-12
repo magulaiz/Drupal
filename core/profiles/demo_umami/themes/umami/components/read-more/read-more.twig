@@ -1,4 +1,4 @@
-<a{{ attributes.addClass('read-more') }}>
+<a{{ attributes.addClass('read-more').setAttribute('href', url) }}>
   {% block text %}{% endblock %}
   <span class="visually-hidden">
     - {% block a11y %}{% endblock %}
