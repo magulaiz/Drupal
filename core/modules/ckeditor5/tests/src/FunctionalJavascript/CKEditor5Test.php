@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
-use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\editor\Entity\Editor;
 use Drupal\file\Entity\File;
@@ -14,7 +13,6 @@ use Drupal\node\Entity\Node;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\RoleInterface;
-use Symfony\Component\Validator\ConstraintViolation;
 
 // cspell:ignore esque māori sourceediting splitbutton upcasted
 
@@ -101,15 +99,6 @@ class CKEditor5Test extends CKEditor5TestBase {
         ],
       ],
     ])->save();
-    $this->assertSame([], array_map(
-      function (ConstraintViolation $v) {
-        return (string) $v->getMessage();
-      },
-      iterator_to_array(CKEditor5::validatePair(
-        Editor::load('ckeditor5'),
-        FilterFormat::load('ckeditor5')
-      ))
-    ));
 
     $this->drupalGet('node/add/page');
     $this->waitForEditor();
@@ -655,15 +644,6 @@ JS;
         ],
       ],
     ])->save();
-    $this->assertSame([], array_map(
-      function (ConstraintViolation $v) {
-        return (string) $v->getMessage();
-      },
-      iterator_to_array(CKEditor5::validatePair(
-        Editor::load('test_format'),
-        FilterFormat::load('test_format')
-      ))
-    ));
     $ordered_list_html = '<ol><li>apple</li><li>banana</li><li>cantaloupe</li></ol>';
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
@@ -776,15 +756,6 @@ JS;
       'format' => 'ckeditor5',
       'editor' => 'ckeditor5',
     ])->save();
-    $this->assertSame([], array_map(
-      function (ConstraintViolation $v) {
-        return (string) $v->getMessage();
-      },
-      iterator_to_array(CKEditor5::validatePair(
-        Editor::load('ckeditor5'),
-        FilterFormat::load('ckeditor5')
-      ))
-    ));
 
     $this->drupalGet('node/1/edit');
     $page->selectFieldOption('body[0][format]', 'ckeditor5');

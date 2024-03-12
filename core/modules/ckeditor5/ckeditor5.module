@@ -573,6 +573,11 @@ function ckeditor5_js_alter(&$javascript, AttachedAssetsInterface $assets, Langu
  * Implements hook_config_schema_info_alter().
  */
 function ckeditor5_config_schema_info_alter(&$definitions) {
+  // Ensure the associated Text Format is in sync.
+  $definitions['editor.editor.*']['constraints']['CKEditor5FundamentalCompatibility'] = [];
+  $definitions['editor.editor.*']['constraints']['CKEditor5MediaAndFilterSettingsInSync'] = [];
+
+  // @todo Remove in …
   // In \Drupal\Tests\config\Functional\ConfigImportAllTest, this hook may be
   // called without ckeditor5.pair.schema.yml being active.
   if (!isset($definitions['ckeditor5_valid_pair__format_and_editor'])) {

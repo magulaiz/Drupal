@@ -2,11 +2,9 @@
 
 namespace Drupal\Tests\ckeditor5\Kernel;
 
-use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\KernelTests\KernelTestBase;
-use Symfony\Component\Validator\ConstraintViolation;
 
 /**
  * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getCKEditor5PluginConfig
@@ -81,15 +79,6 @@ class WildcardHtmlSupportTest extends KernelTestBase {
 
     $editor = Editor::create($editor_config);
     $editor->save();
-    $this->assertSame([], array_map(
-      function (ConstraintViolation $v) {
-        return (string) $v->getMessage();
-      },
-      iterator_to_array(CKEditor5::validatePair(
-        Editor::load('test_format'),
-        FilterFormat::load('test_format')
-      ))
-    ));
     $config = $this->manager->getCKEditor5PluginConfig($editor);
     $ghs_configuration = $config['config']['htmlSupport']['allow'];
     // The first two entries in the GHS configuration are from the

@@ -20,7 +20,6 @@ use Symfony\Component\Yaml\Yaml;
  * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemConstraintValidator
  * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemDependencyConstraintValidator
  * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\EnabledConfigurablePluginsConstraintValidator
- * @covers \Drupal\ckeditor5\Plugin\Editor\CKEditor5::validatePair
  * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\FundamentalCompatibilityConstraintValidator
  * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\CKEditor5MediaAndFilterSettingsInSyncConstraintValidator
  * @group ckeditor5
@@ -660,6 +659,12 @@ class ValidatorsTest extends KernelTestBase {
       'editor' => 'ckeditor5',
       'settings' => $ckeditor5_settings,
       'image_upload' => $editor_image_upload_settings,
+      // TRICKY: specify dependencies because this does not call ::save().
+      'dependencies' => [
+        'config' => [
+          'filter.format.dummy',
+        ],
+      ],
     ]);
     EntityViewMode::create([
       'id' => 'media.view_mode_1',
@@ -702,7 +707,7 @@ class ValidatorsTest extends KernelTestBase {
       );
     }
 
-    $this->assertSame($expected_violations, $this->validatePairToViolationsArray($text_editor, $text_format, TRUE));
+    $this->assertSame($expected_violations, self::violationsToArray($text_editor->getTypedData()->validate()));
   }
 
   /**
@@ -1587,7 +1592,7 @@ class ValidatorsTest extends KernelTestBase {
   public function testMultipleHtmlRestrictingFilters(): void {
     $this->container->get('module_installer')->install(['filter_test']);
 
-    $text_format = FilterFormat::create([
+    FilterFormat::create([
       'format' => 'very_restricted',
       'name' => $this->randomMachineName(),
       'filters' => [
@@ -1623,7 +1628,7 @@ class ValidatorsTest extends KernelTestBase {
           ],
         ],
       ],
-    ]);
+    ])->save();
     $text_editor = Editor::create([
       'format' => 'very_restricted',
       'editor' => 'ckeditor5',
@@ -1633,9 +1638,16 @@ class ValidatorsTest extends KernelTestBase {
         ],
         'plugins' => [],
       ],
+      'image_upload' => ['status' => FALSE],
+      // TRICKY: specify dependencies because this does not call ::save().
+      'dependencies' => [
+        'config' => [
+          'filter.format.very_restricted',
+        ],
+      ],
     ]);
 
-    $this->assertSame([], $this->validatePairToViolationsArray($text_editor, $text_format, TRUE));
+    $this->assertSame([], self::violationsToArray($text_editor->getTypedData()->validate()));
   }
 
 }

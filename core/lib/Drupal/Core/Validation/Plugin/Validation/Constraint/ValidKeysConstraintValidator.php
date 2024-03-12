@@ -4,9 +4,11 @@ declare(strict_types = 1);
 
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Config\Schema\Mapping;
 use Drupal\Core\Config\Schema\SequenceDataDefinition;
 use Drupal\Core\Config\TypedConfigManager;
+use Drupal\Core\Entity\Plugin\DataType\ConfigEntityAdapter;
 use Drupal\Core\TypedData\MapDataDefinition;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -22,6 +24,14 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
    */
   public function validate(mixed $value, Constraint $constraint) {
     assert($constraint instanceof ValidKeysConstraint);
+
+    // Every config entity is represented as a `type: mapping` at the root. That
+    // means this constraint can be applied just fine.
+    // @see `type: config_entity`
+    // @see core/config/schema/core.data_types.schema.yml
+    if ($value instanceof ConfigEntityInterface) {
+      $value = $value->toArray();
+    }
 
     if (!is_array($value)) {
       // If the value is NULL, then the `NotNull` constraint validator will
@@ -40,8 +50,12 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
       return;
     }
 
-    $mapping = $this->context->getObject();
-    assert($mapping instanceof Mapping);
+    $object = $this->context->getObject();
+    // Every config entity is represented as a `type: mapping` at the root.
+    $mapping = match (TRUE) {
+      $object instanceof Mapping => $object,
+      $object instanceof ConfigEntityAdapter => $object->getConfigTypedData(),
+    };
     $resolved_type = $mapping->getDataDefinition()->getDataType();
 
     $valid_keys = $constraint->getAllowedKeys($this->context);

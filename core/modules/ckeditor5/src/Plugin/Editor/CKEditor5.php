@@ -205,8 +205,14 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
    *
    * @see \Drupal\editor\EditorInterface::getFilterFormat()
    * @see ckeditor5.pair.schema.yml
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no
+   *   replacement: only validating the Editor config entity is now sufficient.
+   *
+   * @see https://www.drupal.org/node/0
    */
   public static function validatePair(EditorInterface $text_editor, FilterFormatInterface $text_format, bool $all_compatibility_problems = TRUE): ConstraintViolationListInterface {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement: only validating the Editor config entity is now sufficient. See https://www.drupal.org/node/0', E_USER_DEPRECATED);
     if ($text_editor->getEditor() !== 'ckeditor5') {
       throw new \InvalidArgumentException('This text editor is not configured to use CKEditor 5.');
     }

@@ -6,11 +6,9 @@ namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 // cspell:ignore sourceediting
 
-use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
-use Symfony\Component\Validator\ConstraintViolation;
 
 /**
  * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Style
@@ -244,15 +242,6 @@ JS;
         'status' => FALSE,
       ],
     ])->save();
-    $this->assertSame([], array_map(
-      function (ConstraintViolation $v) {
-        return (string) $v->getMessage();
-      },
-      iterator_to_array(CKEditor5::validatePair(
-        Editor::load('test_format'),
-        FilterFormat::load('test_format')
-      ))
-    ));
 
     // Create a sample entity to test CKEditor 5.
     $node = $this->createNode([

@@ -409,6 +409,17 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
     ksort($expected_messages);
     ksort($actual_messages);
     $this->assertSame($expected_messages, $actual_messages);
+
+    // Ensure that the exact same validation error are found when using the
+    // "plain config object" rather than the config entity wrapped in its Typed
+    // Data wrapper (ConfigEntityAdapter).
+    $typed_config = $this->container->get('config.typed');
+    assert($typed_config instanceof TypedConfigManagerInterface);
+    $config_object_violations = $typed_config->createFromNameAndData(
+      $this->entity->getConfigDependencyName(),
+      $this->entity->toArray()
+    )->validate();
+    $this->assertEquals($config_object_violations, $violations);
   }
 
   /**

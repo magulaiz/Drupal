@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\Functional;
 
-use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\editor\Entity\Editor;
 use Drupal\field\Entity\FieldConfig;
@@ -19,7 +18,6 @@ use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\RoleInterface;
 use Drupal\user\Entity\User;
-use Symfony\Component\Validator\ConstraintViolation;
 
 /**
  * Tests the media entity metadata API.
@@ -162,13 +160,6 @@ class MediaEntityMetadataApiTest extends BrowserTestBase {
         ],
       ],
     ])->save();
-
-    $this->assertSame([], array_map(
-      function (ConstraintViolation $v) {
-        return (string) $v->getMessage();
-      },
-      iterator_to_array(CKEditor5::validatePair($this->editor, $filtered_html_format))
-    ));
 
     // Create a sample media entity to be embedded.
     $this->createMediaType('image', ['id' => 'image']);

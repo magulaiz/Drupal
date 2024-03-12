@@ -6,7 +6,6 @@ namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\Entity\EntityViewMode;
-use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\filter\Entity\FilterFormat;
@@ -15,7 +14,6 @@ use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\media\Entity\Media;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
-use Symfony\Component\Validator\ConstraintViolation;
 
 // cspell:ignore alternatif hurlant layercake tatou texte zartan
 
@@ -91,7 +89,6 @@ class MediaTest extends MediaTestBase {
     ];
     $settings['toolbar']['items'] = array_merge($settings['toolbar']['items'], ['bulletedList', 'numberedList']);
     $editor->setSettings($settings);
-    $editor->save();
 
     // Add lists to the filter.
     $filter_format = $editor->getFilterFormat();
@@ -101,17 +98,11 @@ class MediaTest extends MediaTestBase {
         'allowed_html' => '<p> <br> <strong> <em> <a href> <drupal-media data-entity-type data-entity-uuid data-align data-caption alt data-view-mode> <ol> <ul> <li>',
       ],
     ]);
-    $filter_format->save();
 
-    $this->assertSame([], array_map(
-      function (ConstraintViolation $v) {
-        return (string) $v->getMessage();
-      },
-      iterator_to_array(CKEditor5::validatePair(
-        Editor::load('test_format'),
-        FilterFormat::load('test_format')
-      ))
-    ));
+    // First save the text format, then the text editor.
+    // @see ckeditor5_config_schema_info_alter()
+    $filter_format->save();
+    $editor->save();
 
     // Wrap the media with a list item.
     $original_value = $this->host->body->value;
@@ -147,7 +138,6 @@ class MediaTest extends MediaTestBase {
     // can be wrapped with other block elements.
     $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = ['<drupal-media data-foo>', '<div data-bar>'];
     $editor->setSettings($settings);
-    $editor->save();
 
     $filter_format = $editor->getFilterFormat();
     $filter_format->setFilterConfig('filter_html', [
@@ -156,16 +146,11 @@ class MediaTest extends MediaTestBase {
         'allowed_html' => '<p> <br> <strong> <em> <a href> <drupal-media data-entity-type data-entity-uuid data-align data-caption alt data-foo data-view-mode> <div data-bar>',
       ],
     ]);
+
+    // First save the text format, then the text editor.
+    // @see ckeditor5_config_schema_info_alter()
     $filter_format->save();
-    $this->assertSame([], array_map(
-      function (ConstraintViolation $v) {
-        return (string) $v->getMessage();
-      },
-      iterator_to_array(CKEditor5::validatePair(
-        Editor::load('test_format'),
-        FilterFormat::load('test_format')
-      ))
-    ));
+    $editor->save();
 
     // Add data-foo use to an existing drupal-media tag.
     $original_value = $this->host->body->value;
@@ -693,16 +678,6 @@ class MediaTest extends MediaTestBase {
     ]);
     $filter_format->save();
     $editor->save();
-
-    $this->assertSame([], array_map(
-      function (ConstraintViolation $v) {
-        return (string) $v->getMessage();
-      },
-      iterator_to_array(CKEditor5::validatePair(
-        Editor::load('test_format'),
-        FilterFormat::load('test_format')
-      ))
-    ));
 
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();

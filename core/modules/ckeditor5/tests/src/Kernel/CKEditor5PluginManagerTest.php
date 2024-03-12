@@ -64,18 +64,29 @@ class CKEditor5PluginManagerTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    FilterFormat::create(
-      Yaml::parseFile('core/profiles/standard/config/install/filter.format.basic_html.yml')
-    )->save();
-    Editor::create([
-      'format' => 'basic_html',
-      'editor' => 'ckeditor5',
+    FilterFormat::create([
+      'format' => 'restricted',
+      'name' => 'Test format with HTML restrictions',
+      'filters' => [
+        'filter_html' => [
+          'status' => TRUE,
+          'settings' => [
+            'allowed_html' => '<p> <br> <em> <strong> <h2> <h3> <h4> <h5> <h6>',
+          ],
+        ],
+      ],
     ])->save();
-    FilterFormat::create(
-      Yaml::parseFile('core/profiles/standard/config/install/filter.format.full_html.yml')
-    )->save();
     Editor::create([
-      'format' => 'full_html',
+      'format' => 'restricted',
+      'editor' => 'ckeditor5',
+      // @see \Drupal\ckeditor5\Plugin\Editor\CKEditor5::getDefaultSettings()
+    ])->save();
+    FilterFormat::create([
+      'format' => 'unrestricted',
+      'name' => 'Test format allowing arbitrary HTML',
+    ])->save();
+    Editor::create([
+      'format' => 'unrestricted',
       'editor' => 'ckeditor5',
     ])->save();
     $this->manager = $this->container->get('plugin.manager.ckeditor5.plugin');
@@ -1079,7 +1090,7 @@ PHP,
    * Tests the enabling of plugins.
    */
   public function testEnabledPlugins() {
-    $editor = Editor::load('basic_html');
+    $editor = Editor::load('restricted');
 
     // Case 1: no extra CKEditor 5 plugins.
     $definitions = array_keys($this->manager->getEnabledDefinitions($editor));
@@ -1141,16 +1152,13 @@ PHP,
     // should be available now that the media_embed is enabled.
     $plugin_ids = array_keys($this->manager->getEnabledDefinitions($editor));
     $expected_plugins = array_merge($default_plugins, [
-      'ckeditor5_drupalMediaCaption',
       'ckeditor5_test_layercake',
       'media_media',
-      'media_mediaAlign',
     ]);
     sort($expected_plugins);
     $this->assertSame($expected_plugins, $plugin_ids);
     $expected_libraries = array_merge($default_libraries, [
       'ckeditor5/internal.drupal.ckeditor5.media',
-      'ckeditor5/internal.drupal.ckeditor5.mediaAlign',
       'ckeditor5_test/layercake',
     ]);
     sort($expected_libraries);
@@ -1179,7 +1187,6 @@ PHP,
     $this->assertSame(array_values($expected_plugins), $plugin_ids);
     $expected_libraries = array_merge($default_libraries, [
       'ckeditor5/internal.drupal.ckeditor5.media',
-      'ckeditor5/internal.drupal.ckeditor5.mediaAlign',
       'ckeditor5_test/layercake',
       'core/ckeditor5.table',
     ]);
@@ -1205,7 +1212,7 @@ PHP,
 
     // Case 8: GHS is enabled for Full HTML (or any other text format that has
     // no TYPE_HTML_RESTRICTOR filters).
-    $editor = Editor::load('full_html');
+    $editor = Editor::load('unrestricted');
     $definitions = array_keys($this->manager->getEnabledDefinitions($editor));
     $default_plugins = [
       'ckeditor5_arbitraryHtmlSupport',

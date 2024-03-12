@@ -59,6 +59,12 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
 
     $text_editor = $this->createTextEditorObjectFromContext();
 
+    // Nothing to validate if the text editor in use is not CKEditor 5.
+    // @see ckeditor5_config_schema_info_alter()
+    if ($text_editor->getEditor() !== 'ckeditor5') {
+      return;
+    }
+
     // First: the two fundamental checks against the text format. If any of
     // them adds a constraint violation, return early, because it is a
     // fundamental compatibility problem.
