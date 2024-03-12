@@ -7,7 +7,9 @@ use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
+use Drupal\Core\Plugin\PreWarmablePluginManagerTrait;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\Core\PreWarm\PreWarmableInterface;
 use Drupal\Core\Render\Element\FormElementInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 
@@ -22,9 +24,10 @@ use Drupal\Core\Theme\ThemeManagerInterface;
  * @see \Drupal\Core\Render\Element\FormElementInterface
  * @see plugin_api
  */
-class ElementInfoManager extends DefaultPluginManager implements ElementInfoManagerInterface {
+class ElementInfoManager extends DefaultPluginManager implements ElementInfoManagerInterface, PreWarmableInterface {
 
   use DeprecatedServicePropertyTrait;
+  use PreWarmablePluginManagerTrait;
 
   /**
    * Defines deprecated injected properties.
