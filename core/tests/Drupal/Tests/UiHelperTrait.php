@@ -181,10 +181,18 @@ trait UiHelperTrait {
     // screen.
     $assert_session = $this->assertSession();
     $destination = Url::fromRoute('user.page')->toString();
-    $this->drupalGet(Url::fromRoute('user.logout', [], ['query' => ['destination' => $destination]]));
+    $this->drupalGet('user/logout');
+    $this->submitForm([], 'Log out', ['query' => ['destination' => $destination]]);
     $assert_session->fieldExists('name');
     $assert_session->fieldExists('pass');
 
+    $this->drupalResetSession();
+  }
+
+  /**
+   * Resets the current active session back to Anonymous session.
+   */
+  protected function drupalResetSession() {
     // @see BrowserTestBase::drupalUserIsLoggedIn()
     unset($this->loggedInUser->sessionId);
     $this->loggedInUser = FALSE;

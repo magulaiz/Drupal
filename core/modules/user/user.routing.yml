@@ -12,6 +12,8 @@ user.logout:
     _controller: '\Drupal\user\Controller\UserController::logout'
   requirements:
     _user_is_logged_in: 'TRUE'
+  options:
+    _csrf_token_or_confirm: 'TRUE'
 
 user.admin_index:
   path: '/admin/config/people'
