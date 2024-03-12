@@ -2,6 +2,7 @@
 
 namespace Drupal\views\Plugin\views\sort;
 
+use Drupal\views\Attribute\ViewsSort;
 use Drupal\views\Plugin\views\BrokenHandlerTrait;
 
 /**
@@ -11,6 +12,7 @@ use Drupal\views\Plugin\views\BrokenHandlerTrait;
  *
  * @ViewsSort("broken")
  */
+#[ViewsSort("broken")]
 class Broken extends SortPluginBase {
   use BrokenHandlerTrait;
 
