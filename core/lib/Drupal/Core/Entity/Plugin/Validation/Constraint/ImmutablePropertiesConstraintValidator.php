@@ -76,15 +76,15 @@ class ImmutablePropertiesConstraintValidator extends ConstraintValidator impleme
       throw new RuntimeException('The original entity could not be loaded.');
     }
 
-    $values = is_array($value) ? $value : $value->toArray();
-    $original = is_array($original) ? $original : $original->toArray();
     foreach ($constraint->properties as $name) {
       // The property must be concretely defined in the class.
-      if (!array_key_exists($name, $values)) {
+      if ((is_object($value) && !property_exists($value, $name))|| (is_array($value) && !array_key_exists($name, $value))) {
         throw new LogicException("The entity does not have a '$name' property.");
       }
 
-      if ($original[$name] !== $values[$name]) {
+      $original_value = is_array($original) ? $original[$name] : $original->get($name);
+      $current_value = is_array($value) ? $value[$name] : $value->get($name);
+      if ($original_value !== $current_value) {
         $this->context->addViolation($constraint->message, ['@name' => $name]);
       }
     }

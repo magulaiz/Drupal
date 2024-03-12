@@ -401,9 +401,14 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
     // Data wrapper (ConfigEntityAdapter).
     $typed_config = $this->container->get('config.typed');
     assert($typed_config instanceof TypedConfigManagerInterface);
+    $id_key = $this->entity->getEntityType()->getKey('id');
     $config_object_violations = $typed_config->createFromNameAndData(
       $this->entity->getEntityType()->getConfigPrefix() . '.' . $this->entity->getOriginalId(),
-      $this->entity->toArray()
+      // Avoid ::toArray()'s special handling for IDs. The only reason this
+      // complexity is needed here is because using an entity object rather than
+      // a plain array provides a better DX everywhere else.
+      // @see \Drupal\Core\Config\Entity\ConfigEntityBase::toArray()
+      [$id_key => $this->entity->get($id_key)] + $this->entity->toArray(),
     )->validate();
     $config_object_messages = self::violationsToArray($config_object_violations);
     ksort($config_object_messages);
