@@ -62,13 +62,6 @@ class UserController extends ControllerBase {
   protected $flood;
 
   /**
-   * The csrf token generator.
-   *
-   * @var \Drupal\Core\Access\CsrfTokenGenerator
-   */
-  protected $csrfToken;
-
-  /**
    * Constructs a UserController object.
    *
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
@@ -81,10 +74,10 @@ class UserController extends ControllerBase {
    *   A logger instance.
    * @param \Drupal\Core\Flood\FloodInterface $flood
    *   The flood service.
-   * @param \Drupal\Core\Access\CsrfTokenGenerator $token_generator
-   *   The csrf token generator.
    * @param \Drupal\Component\Datetime\TimeInterface|null $time
    *   The time service.
+   * @param \Drupal\Core\Access\CsrfTokenGenerator|null $csrfToken
+   *   The CSRF token generator.
    */
   public function __construct(
     DateFormatterInterface $date_formatter,
@@ -93,7 +86,7 @@ class UserController extends ControllerBase {
     LoggerInterface $logger,
     FloodInterface $flood,
     protected ?TimeInterface $time = NULL,
-    CsrfTokenGenerator $token_generator = NULL,
+    protected ?CsrfTokenGenerator $csrfToken = NULL,
   ) {
     $this->dateFormatter = $date_formatter;
     $this->userStorage = $user_storage;
@@ -104,11 +97,10 @@ class UserController extends ControllerBase {
       @trigger_error('Calling ' . __METHOD__ . ' without the $time argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3112298', E_USER_DEPRECATED);
       $this->time = \Drupal::service('datetime.time');
     }
-    if (!$token_generator) {
+    if ($this->csrfToken === NULL) {
       @trigger_error('Calling ' . __METHOD__ . ' without the $token_generator parameter is deprecated in drupal:9.2.0 and is required in drupal:10.0.0. See https://www.drupal.org/node/1681832', E_USER_DEPRECATED);
-      $token_generator = \Drupal::service('csrf_token');
+      $this->csrfToken = \Drupal::service('csrf_token');
     }
-    $this->csrfToken = $token_generator;
   }
 
   /**
