@@ -1837,21 +1837,6 @@ parameters:
 			path: modules/views/src/Plugin/views/display/DisplayPluginBase.php
 
 		-
-			message: "#^Variable \\$pager in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/display/DisplayPluginBase.php
-
-		-
-			message: "#^Variable \\$style in empty\\(\\) always exists and is not falsy\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/display/DisplayPluginBase.php
-
-		-
-			message: "#^Variable \\$access_plugin in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/display/PathPluginBase.php
-
-		-
 			message: "#^Variable \\$options might not be defined\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/field/Boolean.php
@@ -1972,11 +1957,6 @@ parameters:
 			path: modules/views/src/Plugin/views/sort/Broken.php
 
 		-
-			message: "#^Variable \\$plugin in empty\\(\\) always exists and is not falsy\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/style/StylePluginBase.php
-
-		-
 			message: "#^Variable \\$created_column in isset\\(\\) always exists and is not nullable\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/wizard/WizardPluginBase.php
@@ -2065,11 +2045,6 @@ parameters:
 			message: "#^Method Drupal\\\\views_ui\\\\ViewUI\\:\\:setSyncing\\(\\) should return \\$this\\(Drupal\\\\views_ui\\\\ViewUI\\) but return statement is missing\\.$#"
 			count: 1
 			path: modules/views_ui/src/ViewUI.php
-
-		-
-			message: "#^Variable \\$message in isset\\(\\) always exists and is not nullable\\.$#"
-			count: 1
-			path: modules/views_ui/tests/src/FunctionalJavascript/PreviewTest.php
 
 		-
 			message: "#^Method Drupal\\\\workflows\\\\Form\\\\WorkflowEditForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
