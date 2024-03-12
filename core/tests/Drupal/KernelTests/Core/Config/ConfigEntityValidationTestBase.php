@@ -403,7 +403,9 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
     assert($typed_config instanceof TypedConfigManagerInterface);
     $id_key = $this->entity->getEntityType()->getKey('id');
     $config_object_violations = $typed_config->createFromNameAndData(
-      $this->entity->getEntityType()->getConfigPrefix() . '.' . $this->entity->getOriginalId(),
+      // Use the original ID when available: this implies an update. Fall back
+      // to the current ID otherwise: this implies a creation.
+      $this->entity->getEntityType()->getConfigPrefix() . '.' . ($this->entity->getOriginalId() ?? $this->entity->id()),
       // Avoid ::toArray()'s special handling for IDs. The only reason this
       // complexity is needed here is because using an entity object rather than
       // a plain array provides a better DX everywhere else.
