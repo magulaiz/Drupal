@@ -15,10 +15,15 @@ class ClassResolver implements ClassResolverInterface {
   /**
    * Constructs a new ClassResolver object.
    *
+   * @param \Drupal\Core\DependencyInjection\DependencyAutowire $dependencyAutowire
+   *   The dependency auto-wire service.
    * @param \Symfony\Component\DependencyInjection\ContainerInterface|null $container
    *   The service container.
    */
-  public function __construct(protected ?ContainerInterface $container = NULL) {
+  public function __construct(
+    protected DependencyAutowire $dependencyAutowire,
+    protected ?ContainerInterface $container = NULL,
+  ) {
     if ($this->container === NULL) {
       @trigger_error('Calling ' . __METHOD__ . ' without the $container argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3419963', E_USER_DEPRECATED);
       $this->container = \Drupal::getContainer();
@@ -41,7 +46,7 @@ class ClassResolver implements ClassResolverInterface {
         $instance = $definition::create($this->container);
       }
       else {
-        $instance = new $definition();
+        $instance = $this->dependencyAutowire->autowireClass(new \ReflectionClass($definition));
       }
     }
 

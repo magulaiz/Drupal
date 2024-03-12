@@ -6,6 +6,7 @@ namespace Drupal\Tests\Core\Theme;
 
 use Drupal\Core\DependencyInjection\ClassResolver;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\DependencyInjection\DependencyAutowire;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Theme\ThemeNegotiator;
 use Drupal\Tests\UnitTestCase;
@@ -220,7 +221,7 @@ class ThemeNegotiatorTest extends UnitTestCase {
    * @return \Drupal\Core\Theme\ThemeNegotiator
    */
   protected function createThemeNegotiator(array $negotiators) {
-    $resolver = new ClassResolver($this->container);
+    $resolver = new ClassResolver(new DependencyAutowire($this->container), $this->container);
     $theme_negotiator = new ThemeNegotiator($this->themeAccessCheck, $resolver, $negotiators);
     return $theme_negotiator;
   }

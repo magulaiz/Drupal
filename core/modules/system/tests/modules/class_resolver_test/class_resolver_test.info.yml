@@ -1,0 +1,5 @@
+name: 'Class Resolver Test'
+type: module
+description: 'Support module for class resolver tests'
+package: Testing
+version: VERSION

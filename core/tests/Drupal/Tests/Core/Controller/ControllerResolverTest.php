@@ -7,6 +7,7 @@ namespace Drupal\Tests\Core\Controller;
 use Drupal\Core\Controller\ControllerResolver;
 use Drupal\Core\DependencyInjection\ClassResolver;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\DependencyInjection\DependencyAutowire;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Utility\CallableResolver;
 use Drupal\Tests\UnitTestCase;
@@ -43,7 +44,7 @@ class ControllerResolverTest extends UnitTestCase {
     parent::setUp();
 
     $this->container = new ContainerBuilder();
-    $class_resolver = new ClassResolver($this->container);
+    $class_resolver = new ClassResolver(new DependencyAutowire($this->container), $this->container);
     $callable_resolver = new CallableResolver($class_resolver);
     $this->controllerResolver = new ControllerResolver($callable_resolver);
   }

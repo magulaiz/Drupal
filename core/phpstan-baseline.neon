@@ -1568,6 +1568,14 @@ parameters:
 
 		-
 			message: """
+				#^Class Drupal\\\\class_resolver_test\\\\NoConstructor implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
+				since Symfony 6\\.4, use dependency injection instead$#
+			"""
+			count: 1
+			path: modules/system/tests/modules/class_resolver_test/src/NoConstructor.php
+
+		-
+			message: """
 				#^Call to deprecated function deprecation_test_function\\(\\)\\:
 				in drupal\\:8\\.4\\.0 and is removed from drupal\\:9\\.0\\.0\\. This is
 				  the deprecation message for deprecated_test_function\\(\\)\\.$#

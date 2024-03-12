@@ -876,8 +876,12 @@ services:
   Symfony\Component\HttpKernel\Controller\ControllerResolverInterface: '@controller_resolver'
   class_resolver:
     class: Drupal\Core\DependencyInjection\ClassResolver
-    arguments: ['@service_container']
+    arguments: ['@dependency_autowire', '@service_container']
   Drupal\Core\DependencyInjection\ClassResolverInterface: '@class_resolver'
+  dependency_autowire:
+    class: Drupal\Core\DependencyInjection\DependencyAutowire
+    arguments: ['@service_container']
+  Drupal\Core\DependencyInjection\DependencyAutowire: '@dependency_autowire'
   callable_resolver:
     class: Drupal\Core\Utility\CallableResolver
     arguments: ['@class_resolver']
