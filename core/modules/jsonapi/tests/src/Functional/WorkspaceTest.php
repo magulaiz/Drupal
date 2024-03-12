@@ -14,6 +14,7 @@ use Drupal\workspaces\Entity\Workspace;
  * JSON:API integration test for the "Workspace" content entity type.
  *
  * @group jsonapi
+ * @group #slow
  */
 class WorkspaceTest extends ResourceTestBase {
 
@@ -36,6 +37,11 @@ class WorkspaceTest extends ResourceTestBase {
    * {@inheritdoc}
    */
   protected static $resourceTypeName = 'workspace--workspace';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $resourceTypeIsVersionable = TRUE;
 
   /**
    * {@inheritdoc}
@@ -109,6 +115,10 @@ class WorkspaceTest extends ResourceTestBase {
   protected function getExpectedDocument(): array {
     $author = User::load($this->entity->getOwnerId());
     $base_url = Url::fromUri('base:/jsonapi/workspace/workspace/' . $this->entity->uuid())->setAbsolute();
+    $self_url = clone $base_url;
+    $version_identifier = 'id:' . $this->entity->getRevisionId();
+    $self_url = $self_url->setOption('query', ['resourceVersion' => $version_identifier]);
+    $version_query_string = '?resourceVersion=' . urlencode($version_identifier);
     return [
       'jsonapi' => [
         'meta' => [
@@ -125,7 +135,7 @@ class WorkspaceTest extends ResourceTestBase {
         'id' => $this->entity->uuid(),
         'type' => static::$resourceTypeName,
         'links' => [
-          'self' => ['href' => $base_url->toString()],
+          'self' => ['href' => $self_url->toString()],
         ],
         'attributes' => [
           'created' => '1973-11-29T21:33:09+00:00',
@@ -139,24 +149,27 @@ class WorkspaceTest extends ResourceTestBase {
             'data' => NULL,
             'links' => [
               'related' => [
-                'href' => $base_url->toString() . '/parent',
+                'href' => $base_url->toString() . '/parent' . $version_query_string,
               ],
               'self' => [
-                'href' => $base_url->toString() . '/relationships/parent',
+                'href' => $base_url->toString() . '/relationships/parent' . $version_query_string,
               ],
             ],
           ],
           'uid' => [
             'data' => [
               'id' => $author->uuid(),
+              'meta' => [
+                'drupal_internal__target_id' => (int) $author->id(),
+              ],
               'type' => 'user--user',
             ],
             'links' => [
               'related' => [
-                'href' => $base_url->toString() . '/uid',
+                'href' => $base_url->toString() . '/uid' . $version_query_string,
               ],
               'self' => [
-                'href' => $base_url->toString() . '/relationships/uid',
+                'href' => $base_url->toString() . '/relationships/uid' . $version_query_string,
               ],
             ],
           ],
@@ -178,6 +191,19 @@ class WorkspaceTest extends ResourceTestBase {
         ],
       ],
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getModifiedEntityForPostTesting() {
+    $modified = parent::getModifiedEntityForPostTesting();
+    // Even though the field type of the workspace ID is 'string', it acts as a
+    // machine name through a custom constraint, so we have to ensure that we
+    // generate a proper random value for it.
+    // @see \Drupal\workspaces\Entity\Workspace::baseFieldDefinitions()
+    $modified['data']['attributes']['id'] = $this->randomMachineName();
+    return $modified;
   }
 
   /**
