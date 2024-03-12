@@ -396,6 +396,7 @@ class ModuleHandler implements ModuleHandlerInterface {
     if (!$this->hasImplementations($hook, $module)) {
       return;
     }
+    $this->loadAll();
     $hookInvoker = \Closure::fromCallable($module . '_' . $hook);
     return call_user_func_array($hookInvoker, $args);
   }
@@ -586,9 +587,11 @@ class ModuleHandler implements ModuleHandlerInterface {
       $this->verified = [];
       if ($cache = $this->cacheBackend->get('module_implements')) {
         $this->implementations = $cache->data;
+        $this->loadAll();
       }
     }
     if (!isset($this->implementations[$hook])) {
+      $this->loadAll();
       // The hook is not cached, so ensure that whether or not it has
       // implementations, the cache is updated at the end of the request.
       $this->cacheNeedsWriting = TRUE;
@@ -598,6 +601,7 @@ class ModuleHandler implements ModuleHandlerInterface {
       $this->verified[$hook] = TRUE;
     }
     elseif (!isset($this->verified[$hook])) {
+      $this->loadAll();
       if (!$this->verifyImplementations($this->implementations[$hook], $hook)) {
         // One or more of the implementations did not exist and need to be
         // removed in the cache.

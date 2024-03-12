@@ -56,6 +56,7 @@ class ViewPageController {
       return $class::buildResponse($view_id, $display_id, $args);
     }
     else {
+      \Drupal::moduleHandler()->load('views');
       /** @var \Drupal\views\Plugin\views\display\Page $class */
       $build = $class::buildBasicRenderable($view_id, $display_id, $args, $route);
       Page::setPageRenderArray($build);

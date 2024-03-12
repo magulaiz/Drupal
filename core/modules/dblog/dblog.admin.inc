@@ -21,7 +21,7 @@ use Drupal\Core\Logger\RfcLogLevel;
 function dblog_filters() {
   $filters = [];
 
-  foreach (_dblog_get_message_types() as $type) {
+  foreach (_dblog_get_unique_message_types() as $type) {
     $types[$type] = t($type);
   }
 
@@ -40,4 +40,17 @@ function dblog_filters() {
   ];
 
   return $filters;
+}
+
+/**
+ * Gathers a list of uniquely defined database log message types.
+ *
+ * Same as _dblog_get_message_types in dblog.module file.
+ *
+ * @return array
+ *   List of uniquely defined database log message types.
+ */
+function _dblog_get_unique_message_types() {
+  return \Drupal::database()->query('SELECT DISTINCT([type]) FROM {watchdog} ORDER BY [type]')
+    ->fetchAllKeyed(0, 0);
 }

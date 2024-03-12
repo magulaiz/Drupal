@@ -7,6 +7,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\FormElement;
@@ -73,7 +74,7 @@ class ManagedFile extends FormElement {
       $return = $input;
 
       // Uploads take priority over all other values.
-      if ($files = file_managed_file_save_upload($element, $form_state)) {
+      if ($files = static::saveUpload($element, $form_state)) {
         if ($element['#multiple']) {
           $fids = array_merge($fids, array_keys($files));
         }
@@ -203,6 +204,55 @@ class ManagedFile extends FormElement {
     $response->setAttachments($form['#attached']);
 
     return $response->addCommand(new ReplaceCommand(NULL, $output));
+  }
+
+  /**
+   * Saves any files that have been uploaded into a managed_file element.
+   *
+   * @param $element
+   *   The FAPI element whose values are being saved.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @return array|false
+   *   An array of file entities for each file that was saved, keyed by its file
+   *   ID, or FALSE if no files were saved.
+   */
+  public static function saveUpload($element, FormStateInterface $form_state) {
+    \Drupal::moduleHandler()->load('file');
+    $upload_name = implode('_', $element['#parents']);
+    $all_files = \Drupal::request()->files->get('files', []);
+    if (empty($all_files[$upload_name])) {
+      return FALSE;
+    }
+    $file_upload = $all_files[$upload_name];
+
+    $destination = $element['#upload_location'] ?? NULL;
+    if (isset($destination) && !\Drupal::service('file_system')->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY)) {
+      \Drupal::logger('file')->notice('The upload directory %directory for the file field %name could not be created or is not accessible. A newly uploaded file could not be saved in this directory as a consequence, and the upload was canceled.', ['%directory' => $destination, '%name' => $element['#field_name']]);
+      $form_state->setError($element, t('The file could not be uploaded.'));
+      return FALSE;
+    }
+
+    // Save attached files to the database.
+    $files_uploaded = $element['#multiple'] && count(array_filter($file_upload)) > 0;
+    $files_uploaded |= !$element['#multiple'] && !empty($file_upload);
+    if ($files_uploaded) {
+      if (!$files = _file_save_upload_from_form($element, $form_state)) {
+        \Drupal::logger('file')->notice('The file upload failed. %upload', ['%upload' => $upload_name]);
+        return [];
+      }
+
+      // Value callback expects FIDs to be keys.
+      $files = array_filter($files);
+      $fids = array_map(function ($file) {
+        return $file->id();
+      }, $files);
+
+      return empty($files) ? [] : array_combine($fids, $files);
+    }
+
+    return [];
   }
 
   /**

@@ -70,7 +70,7 @@ class ExportForm extends FormBase {
     $languages = $this->languageManager->getLanguages();
     $language_options = [];
     foreach ($languages as $langcode => $language) {
-      if (locale_is_translatable($langcode)) {
+      if ($langcode != 'en' || \Drupal::config('locale.settings')->get('translate_english')) {
         $language_options[$langcode] = $language->getName();
       }
     }

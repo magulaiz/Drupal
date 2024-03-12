@@ -1,0 +1,4 @@
+services:
+  batch_test.batch_test_stack:
+    class: Drupal\batch_test\BatchTestStackService
+    arguments: ['@state']

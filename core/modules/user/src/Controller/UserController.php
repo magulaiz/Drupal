@@ -127,6 +127,7 @@ class UserController extends ControllerBase {
    *   The redirect response.
    */
   public function resetPass(Request $request, $uid, $timestamp, $hash) {
+    \Drupal::moduleHandler()->load('user');
     $account = $this->currentUser();
     // When processing the one-time login link, we have to make sure that a user
     // isn't already logged in.
@@ -398,6 +399,7 @@ class UserController extends ControllerBase {
    *   A redirection to home page.
    */
   public function logout() {
+    \Drupal::moduleHandler()->load('user');
     if ($this->currentUser()->isAuthenticated()) {
       user_logout();
     }

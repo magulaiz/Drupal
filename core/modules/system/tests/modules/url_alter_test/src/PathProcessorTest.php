@@ -17,6 +17,7 @@ class PathProcessorTest implements InboundPathProcessorInterface, OutboundPathPr
    * {@inheritdoc}
    */
   public function processInbound($path, Request $request) {
+    \Drupal::moduleHandler()->load('user');
     // Rewrite user/username to user/uid.
     if (preg_match('!^/user/([^/]+)(/.*)?!', $path, $matches)) {
       if ($account = user_load_by_name($matches[1])) {

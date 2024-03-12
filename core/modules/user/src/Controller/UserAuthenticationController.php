@@ -316,6 +316,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    * Logs the user out.
    */
   protected function userLogout() {
+    \Drupal::moduleHandler()->load('user');
     user_logout();
   }
 

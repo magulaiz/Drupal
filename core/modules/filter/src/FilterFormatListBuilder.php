@@ -100,6 +100,8 @@ class FilterFormatListBuilder extends DraggableListBuilder {
   public function buildRow(EntityInterface $entity) {
     // Check whether this is the fallback text format. This format is available
     // to all roles and cannot be disabled via the admin interface.
+    \Drupal::moduleHandler()->load('user');
+    \Drupal::moduleHandler()->load('filter');
     $row['label'] = $entity->label();
     $row['roles'] = [];
     if ($entity->isFallbackFormat()) {

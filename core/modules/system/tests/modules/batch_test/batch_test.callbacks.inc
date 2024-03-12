@@ -6,6 +6,8 @@
  */
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Batch\BatchBuilder;
+use Drupal\Core\Form\FormState;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -20,7 +22,7 @@ function _batch_test_callback_1($id, $sleep, &$context) {
   usleep($sleep);
   // Track execution, and store some result for post-processing in the
   // 'finished' callback.
-  batch_test_stack("op 1 id $id");
+  \Drupal::service('batch_test.batch_test_stack')->batchTestStack("op 1 id $id");
   $context['results'][1][] = $id;
 }
 
@@ -45,7 +47,7 @@ function _batch_test_callback_2($start, $total, $sleep, &$context) {
     // Track execution, and store some result for post-processing in the
     // 'finished' callback.
     $id = $context['sandbox']['current'] + $i;
-    batch_test_stack("op 2 id $id");
+    \Drupal::service('batch_test.batch_test_stack')->batchTestStack("op 2 id $id");
     $context['results'][2][] = $id;
 
     // Update progress information.
@@ -68,7 +70,7 @@ function _batch_test_callback_5($id, $sleep, &$context) {
   usleep($sleep);
   // Track execution, and store some result for post-processing in the
   // 'finished' callback.
-  batch_test_stack("op 5 id $id");
+  \Drupal::service('batch_test.batch_test_stack')->batchTestStack("op 5 id $id");
   $context['results'][5][] = $id;
   // This test is to test finished > 1
   $context['finished'] = 3.14;
@@ -85,7 +87,7 @@ function _batch_test_callback_6($id, $sleep, &$context) {
   usleep($sleep);
   // Track execution, and store some result for post-processing in the
   // 'finished' callback.
-  batch_test_stack("op 6 id $id");
+  \Drupal::service('batch_test.batch_test_stack')->batchTestStack("op 6 id $id");
   $context['results'][6][] = $id;
 }
 
@@ -100,7 +102,7 @@ function _batch_test_callback_7($id, $sleep, &$context) {
   usleep($sleep);
   // Track execution, and store some result for post-processing in the
   // 'finished' callback.
-  batch_test_stack("op 7 id $id");
+  \Drupal::service('batch_test.batch_test_stack')->batchTestStack("op 7 id $id");
   $context['results'][7][] = $id;
 }
 
@@ -123,7 +125,7 @@ function _batch_test_callback_8(bool $throw_exception): void {
  */
 function _batch_test_nested_batch_callback(array $batches = []) {
   foreach ($batches as $batch) {
-    batch_test_stack("setting up batch $batch");
+    \Drupal::service('batch_test.batch_test_stack')->batchTestStack("setting up batch $batch");
     $function = '_batch_test_batch_' . $batch;
     batch_set($function());
   }
@@ -249,4 +251,186 @@ function _batch_test_finished_6($success, $results, $operations, $elapsed) {
  */
 function _batch_test_finished_7($success, $results, $operations, $elapsed) {
   _batch_test_finished_helper(7, $success, $results, $operations, $elapsed);
+}
+
+/**
+ * Batch operation: Submits form_test_mock_form().
+ */
+function _batch_test_nested_drupal_form_submit_callback($value) {
+  $form_state = (new FormState())
+    ->setValue('test_value', $value);
+  \Drupal::formBuilder()->submitForm('Drupal\batch_test\Form\BatchTestMockForm', $form_state);
+}
+
+/**
+ * Batch 0: Does nothing.
+ */
+function _batch_test_batch_0() {
+  $batch_builder = (new BatchBuilder())
+    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
+    ->setFinishCallback('_batch_test_finished_0');
+  return $batch_builder->toArray() + ['batch_test_id' => 'batch_0'];
+}
+
+/**
+ * Batch 1: Repeats a simple operation.
+ *
+ * Operations: op 1 from 1 to 10.
+ */
+function _batch_test_batch_1() {
+  // Ensure the batch takes at least two iterations.
+  $total = 10;
+  $sleep = (1000000 / $total) * 2;
+
+  $batch_builder = (new BatchBuilder())
+    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
+    ->setFinishCallback('_batch_test_finished_1');
+
+  for ($i = 1; $i <= $total; $i++) {
+    $batch_builder->addOperation('_batch_test_callback_1', [$i, $sleep]);
+  }
+
+  return $batch_builder->toArray() + ['batch_test_id' => 'batch_1'];
+}
+
+/**
+ * Batch 2: Performs a single multistep operation.
+ *
+ * Operations: op 2 from 1 to 10.
+ */
+function _batch_test_batch_2() {
+  // Ensure the batch takes at least two iterations.
+  $total = 10;
+  $sleep = (1000000 / $total) * 2;
+
+  $batch_builder = (new BatchBuilder())
+    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
+    ->addOperation('_batch_test_callback_2', [1, $total, $sleep])
+    ->setFinishCallback('_batch_test_finished_2');
+
+  return $batch_builder->toArray() + ['batch_test_id' => 'batch_2'];
+}
+
+/**
+ * Batch 3: Performs both single and multistep operations.
+ *
+ * Operations:
+ * - op 1 from 1 to 5,
+ * - op 2 from 1 to 5,
+ * - op 1 from 6 to 10,
+ * - op 2 from 6 to 10.
+ */
+function _batch_test_batch_3() {
+  // Ensure the batch takes at least two iterations.
+  $total = 10;
+  $sleep = (1000000 / $total) * 2;
+
+  $batch_builder = (new BatchBuilder())
+    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
+    ->setFinishCallback('_batch_test_finished_3');
+  for ($i = 1; $i <= round($total / 2); $i++) {
+    $batch_builder->addOperation('_batch_test_callback_1', [$i, $sleep]);
+  }
+  $batch_builder->addOperation('_batch_test_callback_2', [1, $total / 2, $sleep]);
+  for ($i = round($total / 2) + 1; $i <= $total; $i++) {
+    $batch_builder->addOperation('_batch_test_callback_1', [$i, $sleep]);
+  }
+  $batch_builder->addOperation('_batch_test_callback_2', [6, $total / 2, $sleep]);
+
+  return $batch_builder->toArray() + ['batch_test_id' => 'batch_3'];
+}
+
+/**
+ * Batch 4: Performs a batch within a batch.
+ *
+ * Operations:
+ * - op 1 from 1 to 5,
+ * - set batch 2 (op 2 from 1 to 10, should run at the end)
+ * - op 1 from 6 to 10,
+ */
+function _batch_test_batch_4() {
+  // Ensure the batch takes at least two iterations.
+  $total = 10;
+  $sleep = (1000000 / $total) * 2;
+
+  $batch_builder = (new BatchBuilder())
+    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
+    ->setFinishCallback('_batch_test_finished_4');
+  for ($i = 1; $i <= round($total / 2); $i++) {
+    $batch_builder->addOperation('_batch_test_callback_1', [$i, $sleep]);
+  }
+  $batch_builder->addOperation('_batch_test_nested_batch_callback', [[2]]);
+  for ($i = round($total / 2) + 1; $i <= $total; $i++) {
+    $batch_builder->addOperation('_batch_test_callback_1', [$i, $sleep]);
+  }
+
+  return $batch_builder->toArray() + ['batch_test_id' => 'batch_4'];
+}
+
+/**
+ * Batch 5: Repeats a simple operation.
+ *
+ * Operations: op 1 from 1 to 10.
+ */
+function _batch_test_batch_5() {
+  // Ensure the batch takes at least two iterations.
+  $total = 10;
+  $sleep = (1000000 / $total) * 2;
+
+  $batch_builder = (new BatchBuilder())
+    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
+    ->setFinishCallback('_batch_test_finished_5');
+  for ($i = 1; $i <= $total; $i++) {
+    $batch_builder->addOperation('_batch_test_callback_5', [$i, $sleep]);
+  }
+
+  return $batch_builder->toArray() + ['batch_test_id' => 'batch_5'];
+}
+
+/**
+ * Batch 6: Repeats a simple operation.
+ *
+ * Operations: op 6 from 1 to 10.
+ */
+function _batch_test_batch_6() {
+  // Ensure the batch takes at least two iterations.
+  $total = 10;
+  $sleep = (1000000 / $total) * 2;
+
+  $batch_builder = (new BatchBuilder())
+    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
+    ->setFinishCallback('_batch_test_finished_6');
+  for ($i = 1; $i <= $total; $i++) {
+    $batch_builder->addOperation('_batch_test_callback_6', [$i, $sleep]);
+  }
+
+  return $batch_builder->toArray() + ['batch_test_id' => 'batch_6'];
+}
+
+/**
+ * Batch 7: Performs two batches within a batch.
+ *
+ * Operations:
+ * - op 7 from 1 to 5,
+ * - set batch 5 (op 5 from 1 to 10, should run at the end before batch 2)
+ * - set batch 6 (op 6 from 1 to 10, should run at the end after batch 1)
+ * - op 7 from 6 to 10,
+ */
+function _batch_test_batch_7() {
+  // Ensure the batch takes at least two iterations.
+  $total = 10;
+  $sleep = (1000000 / $total) * 2;
+
+  $batch_builder = (new BatchBuilder())
+    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
+    ->setFinishCallback('_batch_test_finished_7');
+  for ($i = 1; $i <= $total / 2; $i++) {
+    $batch_builder->addOperation('_batch_test_callback_7', [$i, $sleep]);
+  }
+  $batch_builder->addOperation('_batch_test_nested_batch_callback', [[6, 5]]);
+  for ($i = ($total / 2) + 1; $i <= $total; $i++) {
+    $batch_builder->addOperation('_batch_test_callback_7', [$i, $sleep]);
+  }
+
+  return $batch_builder->toArray() + ['batch_test_id' => 'batch_7'];
 }

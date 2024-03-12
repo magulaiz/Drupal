@@ -3,6 +3,7 @@
 namespace Drupal\Tests\contextual\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\contextual\ContextualController;
 
 /**
  * Tests edge cases for converting between contextual links and IDs.
@@ -104,12 +105,12 @@ class ContextualUnitTest extends KernelTestBase {
    * @param string $id
    *   The serialized representation of the passed links.
    *
-   * @covers ::_contextual_links_to_id
+   * @covers \Drupal\contextual\ContextualController::_contextual_links_to_id
    *
    * @dataProvider contextualLinksDataProvider
    */
   public function testContextualLinksToId(array $links, string $id) {
-    $this->assertSame($id, _contextual_links_to_id($links));
+    $this->assertSame($id, ContextualController::_contextual_links_to_id($links));
   }
 
   /**
@@ -120,12 +121,12 @@ class ContextualUnitTest extends KernelTestBase {
    * @param string $id
    *   The serialized representation of the passed links.
    *
-   * @covers ::_contextual_id_to_links
+   * @covers \Drupal\contextual\ContextualController::_contextual_id_to_links
    *
    * @dataProvider contextualLinksDataProvider
    */
   public function testContextualIdToLinks(array $links, string $id) {
-    $this->assertSame($links, _contextual_id_to_links($id));
+    $this->assertSame($links, ContextualController::_contextual_id_to_links($id));
   }
 
 }

@@ -152,6 +152,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
    * @return array
    */
   protected function buildBlocksForm() {
+    \Drupal::moduleHandler()->load('system');
     // Build blocks first for each region.
     $blocks = [];
     $entities = $this->load();

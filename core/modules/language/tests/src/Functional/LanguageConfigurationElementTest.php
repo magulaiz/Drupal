@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\language\Functional;
 
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\language\DefaultLanguageItem;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -97,7 +98,7 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that the language_get_default_langcode() returns the correct values.
+   * Tests that the DefaultLanguageItem::language_get_default_langcode() returns the correct values.
    */
   public function testDefaultLangcode() {
     // Add some custom languages.
@@ -118,7 +119,7 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
       ->setDefaultLangcode('bb')
       ->save();
 
-    $langcode = language_get_default_langcode('entity_test', 'custom_bundle');
+    $langcode = DefaultLanguageItem::language_get_default_langcode('entity_test', 'custom_bundle');
     $this->assertEquals('bb', $langcode);
 
     // Current interface.
@@ -127,7 +128,7 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
       ->setDefaultLangcode('current_interface')
       ->save();
 
-    $langcode = language_get_default_langcode('entity_test', 'custom_bundle');
+    $langcode = DefaultLanguageItem::language_get_default_langcode('entity_test', 'custom_bundle');
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
     $this->assertEquals($langcode, $language_interface->getId());
 
@@ -142,7 +143,7 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
       ->setLanguageAlterable(TRUE)
       ->setDefaultLangcode(LanguageInterface::LANGCODE_SITE_DEFAULT)
       ->save();
-    $langcode = language_get_default_langcode('entity_test', 'custom_bundle');
+    $langcode = DefaultLanguageItem::language_get_default_langcode('entity_test', 'custom_bundle');
     $this->assertEquals('cc', $langcode);
 
     // Ensure the language entity default value is correct.

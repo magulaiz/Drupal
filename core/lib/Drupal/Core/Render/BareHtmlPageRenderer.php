@@ -38,6 +38,7 @@ class BareHtmlPageRenderer implements BareHtmlPageRendererInterface {
    * {@inheritdoc}
    */
   public function renderBarePage(array $content, $title, $page_theme_property, array $page_additions = []) {
+    \Drupal::moduleHandler()->load('system');
     $attributes = [
       'class' => [
         str_replace('_', '-', $page_theme_property),

@@ -4,6 +4,7 @@ namespace Drupal\language_elements_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\language\DefaultLanguageItem;
 
 /**
  * A form containing a language select element.
@@ -26,7 +27,7 @@ class LanguageConfigurationElementTest extends FormBase {
     $form['langcode'] = [
       '#title' => t('Language select'),
       '#type' => 'language_select',
-      '#default_value' => language_get_default_langcode('entity_test', 'some_bundle'),
+      '#default_value' => DefaultLanguageItem::language_get_default_langcode('entity_test', 'some_bundle'),
     ];
     return $form;
   }
