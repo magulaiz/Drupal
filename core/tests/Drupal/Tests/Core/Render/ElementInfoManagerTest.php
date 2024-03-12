@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Render\ElementInfoManagerTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Render;
 
@@ -117,7 +114,7 @@ class ElementInfoManagerTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerTestGetInfoElementPlugin() {
+  public static function providerTestGetInfoElementPlugin() {
     $data = [];
     $data[] = [
       'Drupal\Core\Render\Element\ElementInterface',

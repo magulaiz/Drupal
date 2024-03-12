@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Component\Utility\NestedArray;
@@ -99,7 +101,7 @@ class MessageTest extends ResourceTestBase {
       'data' => [
         'type' => 'contact_message--camelids',
         'attributes' => [
-          'subject' => 'Dramallama',
+          'subject' => 'Drama llama',
           'message' => 'http://www.urbandictionary.com/define.php?term=drama%20llama',
         ],
       ],

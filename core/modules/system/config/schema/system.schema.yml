@@ -48,6 +48,8 @@ system.site:
 system.maintenance:
   type: config_object
   label: 'Maintenance mode'
+  constraints:
+    FullyValidatable: ~
   mapping:
     message:
       type: text
@@ -226,9 +228,16 @@ system.menu.*:
     description:
       type: label
       label: 'Menu description'
+      # @see \Drupal\menu_ui\MenuForm::form()
+      nullable: true
+      constraints:
+        Length:
+          max: 512
     locked:
       type: boolean
-      label: ''
+      label: 'Locked'
+  constraints:
+    FullyValidatable: ~
 
 system.action.*:
   type: config_entity
@@ -252,6 +261,10 @@ system.action.*:
     plugin:
       type: string
       label: 'Plugin'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.action
+          interface: 'Drupal\Core\Action\ActionInterface'
     configuration:
       type: action.configuration.[%parent.plugin]
 
@@ -270,6 +283,7 @@ system.file:
       label: 'Path settings'
       mapping:
         temporary:
+          deprecated: "The 'system.file:path.temporary' config property path is deprecated in drupal:8.8.0 and is removed from drupal 11.0.0. Use settings.php instead. See https://www.drupal.org/node/3039255."
           type: string
           label: 'Temporary directory'
     temporary_maximum_age:
@@ -302,9 +316,50 @@ system.mail:
       sequence:
         type: string
         label: 'Interface'
+        constraints:
+          PluginExists:
+            manager: plugin.manager.mail
+            interface: 'Drupal\Core\Mail\MailInterface'
     mailer_dsn:
-      type: string
+      type: mapping
       label: 'Symfony mailer transport DSN'
+      mapping:
+        scheme:
+          type: string
+          label: 'Scheme'
+          constraints:
+            NotBlank:
+              message: 'The mailer DSN must contain a scheme.'
+        host:
+          type: string
+          label: 'Host'
+          constraints:
+            NotBlank:
+              message: 'The mailer DSN must contain a host (use "default" by default).'
+        user:
+          type: string
+          nullable: true
+          label: 'User'
+        password:
+          type: string
+          nullable: true
+          label: 'Password'
+        port:
+          type: integer
+          nullable: true
+          label: 'Port'
+          constraints:
+            Range:
+              min: 0
+              max: 65535
+        options:
+          type: sequence
+          label: 'Options'
+          sequence:
+            type: string
+            label: Option
+            constraints:
+              NotNull: []
 
 system.theme.global:
   type: theme_settings
@@ -324,6 +379,8 @@ system.advisories:
 block.settings.system_branding_block:
   type: block_settings
   label: 'Branding block'
+  constraints:
+    FullyValidatable: ~
   mapping:
     use_site_logo:
       type: boolean
@@ -352,6 +409,8 @@ block.settings.system_menu_block:*:
 block.settings.local_tasks_block:
   type: block_settings
   label: 'Tabs block'
+  constraints:
+    FullyValidatable: ~
   mapping:
     primary:
       type: boolean
@@ -377,6 +436,8 @@ condition.plugin.response_status:
 system.feature_flags:
   type: config_object
   label: 'System Feature Flags'
+  constraints:
+    FullyValidatable: ~
   mapping:
     linkset_endpoint:
       type: boolean

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\update\Functional;
 
 /**
@@ -93,7 +95,7 @@ class UpdateManagerUpdateTest extends UpdateTestBase {
    * @return array[]
    *   Test data.
    */
-  public function incompatibleUpdatesTableProvider() {
+  public static function incompatibleUpdatesTableProvider() {
     return [
       'only one compatible' => [
         'core_fixture' => '1.1-core_compatibility',
@@ -242,9 +244,7 @@ class UpdateManagerUpdateTest extends UpdateTestBase {
   public function testUninstalledUpdatesTable() {
     $assert_session = $this->assertSession();
     $compatible_table_locator = '[data-drupal-selector="edit-projects"]';
-    // @todo In https://www.drupal.org/project/drupal/issues/3121870 change this
-    //   selector when the implementation details catch up with the UI strings.
-    $uninstalled_table_locator = '[data-drupal-selector="edit-disabled-projects"]';
+    $uninstalled_table_locator = '[data-drupal-selector="edit-uninstalled-projects"]';
 
     $fixtures = [
       'drupal' => '1.1-core_compatibility',

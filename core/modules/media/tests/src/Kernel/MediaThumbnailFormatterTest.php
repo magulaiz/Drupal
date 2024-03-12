@@ -3,7 +3,7 @@
 namespace Drupal\Tests\media\Kernel;
 
 use Drupal\entity_test\Entity\EntityTestBundle;
-use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
+use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 
 /**
  * @coversDefaultClass \Drupal\media\Plugin\Field\FieldFormatter\MediaThumbnailFormatter
@@ -11,7 +11,7 @@ use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
  */
 class MediaThumbnailFormatterTest extends MediaKernelTestBase {
 
-  use EntityReferenceTestTrait;
+  use EntityReferenceFieldCreationTrait;
 
   /**
    * Modules to install.
@@ -91,7 +91,7 @@ class MediaThumbnailFormatterTest extends MediaKernelTestBase {
    *
    * @return array[]
    */
-  public function providerTestSettingsSummary(): array {
+  public static function providerTestSettingsSummary(): array {
     return [
       'link to content' => [
         [

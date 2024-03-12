@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\sdc\Unit;
 
 use Drupal\sdc\Component\ComponentMetadata;
@@ -52,7 +54,7 @@ final class ComponentMetadataTest extends UnitTestCaseTest {
    * @return array[]
    *   The batches of data.
    */
-  public function dataProviderMetadata(): array {
+  public static function dataProviderMetadata(): array {
     return [
       'minimal example without schemas' => [
         [

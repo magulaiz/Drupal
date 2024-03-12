@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\workspaces\Functional;
 
 use Drupal\Tests\block\Traits\BlockCreationTrait;
@@ -78,7 +80,7 @@ trait WorkspaceTestUtilities {
   protected function setupWorkspaceSwitcherBlock() {
     // Add the block to the sidebar.
     $this->placeBlock('workspace_switcher', [
-      'id' => 'workspaceswitcher',
+      'id' => 'workspace_switcher',
       'region' => 'sidebar_first',
       'label' => 'Workspace switcher',
     ]);
