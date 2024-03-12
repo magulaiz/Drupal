@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field_ui\Functional;
 
 use Drupal\field\Entity\FieldConfig;
@@ -135,6 +137,16 @@ class ManageFieldsTest extends BrowserTestBase {
       'name' => 'Article',
       'type' => 'article',
     ]);
+
+    // Make sure field descriptions appear, both 1 line and multiple lines.
+    $this->drupalGet('/admin/structure/types/manage/' . $type->id() . '/fields/add-field');
+    $edit = [
+      'new_storage_type' => 'field_test_descriptions',
+    ];
+    $this->submitForm($edit, 'Continue');
+    $this->assertSession()->pageTextContains('This one-line field description is important for testing');
+    $this->assertSession()->pageTextContains('This multiple line description needs to use an array');
+    $this->assertSession()->pageTextContains('This second line contains important information');
 
     // Create a new field without actually saving it.
     $this->fieldUIAddNewField('admin/structure/types/manage/' . $type->id(), 'test_field', 'Test field', 'test_field', [], [], FALSE);
@@ -369,6 +381,20 @@ class ManageFieldsTest extends BrowserTestBase {
     $this->drupalLogin($user);
     $this->drupalGet('/admin/structure/types/manage/' . $node_type->id() . '/fields/add-field');
     $this->assertSession()->pageTextContains('Boolean (overridden by alter)');
+  }
+
+  /**
+   * Ensure field category fallback works for field types without a description.
+   */
+  public function testFieldCategoryFallbackWithoutDescription() {
+    $user = $this->drupalCreateUser(['administer node fields']);
+    $node_type = $this->drupalCreateContentType();
+    $this->drupalLogin($user);
+    $this->drupalGet('/admin/structure/types/manage/' . $node_type->id() . '/fields/add-field');
+    $field_type = $this->assertSession()->elementExists('xpath', '//label[text()="Test field"]');
+    $description_container = $field_type->getParent()->find('css', '.field-option__description');
+    $this->assertNotNull($description_container);
+    $this->assertEquals('', $description_container->getText());
   }
 
 }
