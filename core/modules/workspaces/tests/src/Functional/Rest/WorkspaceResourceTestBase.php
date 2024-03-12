@@ -189,4 +189,17 @@ abstract class WorkspaceResourceTestBase extends EntityResourceTestBase {
     return parent::getExpectedUnauthorizedAccessMessage($method);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getModifiedEntityForPostTesting() {
+    $modified = parent::getModifiedEntityForPostTesting();
+    // Even though the field type of the workspace ID is 'string', it acts as a
+    // machine name through a custom constraint, so we need to ensure that we
+    // generate a proper random value for it.
+    // @see \Drupal\workspaces\Entity\Workspace::baseFieldDefinitions()
+    $modified['id'] = [$this->randomMachineName()];
+    return $modified;
+  }
+
 }
