@@ -498,10 +498,6 @@ class ModuleInstaller implements ModuleInstallerInterface {
       // Remove the schema.
       $this->uninstallSchema($module);
 
-      // Remove the module's entry from the config. Don't check schema when
-      // uninstalling a module since we are only clearing a key.
-      \Drupal::configFactory()->getEditable('core.extension')->clear("module.$module")->save(TRUE);
-
       // Update the module handler to remove the module.
       // The current ModuleHandler instance is obsolete with the kernel rebuild
       // below.
@@ -531,6 +527,12 @@ class ModuleInstaller implements ModuleInstallerInterface {
       //   causes a circular service dependency.
       // @see https://www.drupal.org/node/2208429
       \Drupal::service('theme_handler')->refreshInfo();
+
+      // Remove the module's entry from the config. Don't check schema when
+      // uninstalling a module since we are only clearing a key. This must
+      // happen *after* hooks and event subscribers respect the updated list of
+      // modules.
+      \Drupal::configFactory()->getEditable('core.extension')->clear("module.$module")->save(TRUE);
 
       \Drupal::logger('system')->info('%module module uninstalled.', ['%module' => $module]);
 
