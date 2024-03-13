@@ -104,8 +104,10 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface,
    *   The configuration factory.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typedConfigManager
+   *   The typed config manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, ConfigFactoryInterface $config_factory, LanguageManagerInterface $language_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, ConfigFactoryInterface $config_factory, LanguageManagerInterface $language_manager, protected readonly TypedConfigManagerInterface $typedConfigManager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
     $this->config = $config_factory->getEditable($configuration['config_name']);
     $this->language_manager = $language_manager;
@@ -124,7 +126,8 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface,
       $plugin_definition,
       $migration,
       $container->get('config.factory'),
-      $container->get('language_manager')
+      $container->get('language_manager'),
+      $container->get('config.typed')
     );
   }
 
@@ -141,17 +144,15 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface,
         $this->config->set(str_replace(Row::PROPERTY_SEPARATOR, '.', $key), $value);
       }
     }
-    $typed_config = \Drupal::service('config.typed');
-    assert($typed_config instanceof TypedConfigManagerInterface);
-    $name = $this->config->getName();
 
+    $name = $this->config->getName();
     // Ensure that translatable config has `langcode` specified.
     // @see \Drupal\Core\Validation\Plugin\Validation\Constraint\LangcodeRequiredIfTranslatableValuesConstraint
-    if ($typed_config->hasConfigSchema($name)
-      && self::containsTranslatableValue($typed_config->createFromNameAndData($name, $this->config->getRawData()))
+    if ($this->typedConfigManager->hasConfigSchema($name)
+      && self::containsTranslatableValue($this->typedConfigManager->createFromNameAndData($name, $this->config->getRawData()))
       && !$this->config->get('langcode')
     ) {
-      $this->config->set('langcode', \Drupal::service('language.default')->get()->getId());
+      $this->config->set('langcode', $this->language_manager->getDefaultLanguage()->getId());
     }
     $this->config->save();
     $ids[] = $this->config->getName();
