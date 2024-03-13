@@ -98,7 +98,7 @@ class UserController extends ControllerBase {
       $this->time = \Drupal::service('datetime.time');
     }
     if ($this->csrfToken === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $token_generator parameter is deprecated in drupal:9.2.0 and is required in drupal:10.0.0. See https://www.drupal.org/node/1681832', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . ' without the $csrfToken parameter is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/144538', E_USER_DEPRECATED);
       $this->csrfToken = \Drupal::service('csrf_token');
     }
   }
