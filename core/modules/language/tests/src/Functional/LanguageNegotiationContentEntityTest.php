@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\language\Functional;
 
 use Drupal\Core\Language\LanguageInterface;
@@ -10,6 +12,8 @@ use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -185,6 +189,7 @@ class LanguageNegotiationContentEntityTest extends BrowserTestBase {
     $request = Request::create($path);
     $request->attributes->set(RouteObjectInterface::ROUTE_NAME, $route_name);
     $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route($path));
+    $request->setSession(new Session(new MockArraySessionStorage()));
     $this->container->get('request_stack')->push($request);
   }
 

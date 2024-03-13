@@ -1,13 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\DrupalKernel;
 
+use Composer\Autoload\ClassLoader;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Test\TestKernel;
 use Drupal\Tests\Core\DependencyInjection\Fixture\BarClass;
 use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @coversDefaultClass \Drupal\Core\DrupalKernel
@@ -51,7 +55,7 @@ class DrupalKernelTest extends UnitTestCase {
   /**
    * Provides test data for testTrustedHosts().
    */
-  public function providerTestTrustedHosts() {
+  public static function providerTestTrustedHosts() {
     $data = [];
 
     // Tests canonical URL.
@@ -133,8 +137,8 @@ EOD;
     $request->server->set('SERVER_NAME', 'www.example.org');
     $request->server->set('SERVER_PORT', '8888');
     $request->server->set('SCRIPT_NAME', '/index.php');
-    $this->assertEquals('sites/example', DrupalKernel::findSitePath($request, TRUE, $vfs_root->url('drupal_root')));
-    $this->assertEquals('sites/example', DrupalKernel::findSitePath($request, FALSE, $vfs_root->url('drupal_root')));
+    $this->assertEquals('sites/example', DrupalKernel::findSitePath($request, TRUE, $vfs_root->url()));
+    $this->assertEquals('sites/example', DrupalKernel::findSitePath($request, FALSE, $vfs_root->url()));
   }
 
   /**
@@ -148,6 +152,16 @@ EOD;
     $container = TestKernel::setContainerWithKernel();
     $container->set('bar', $service);
     $this->assertEquals($container->get('kernel')->getServiceIdMapping()[$container->generateServiceIdHash($service)], 'bar');
+  }
+
+  /**
+   * @covers ::terminate
+   * @runInSeparateProcess
+   */
+  public function testUnBootedTerminate() {
+    $kernel = new DrupalKernel('test', new ClassLoader());
+    $kernel->terminate(new Request(), new Response());
+    $this->assertTrue(TRUE, "\Drupal\Core\DrupalKernel::terminate() called without error on kernel which has not booted");
   }
 
 }
@@ -168,7 +182,7 @@ class FakeAutoloader {
   }
 
   /**
-   * Unregisters this instance as an autoloader.
+   * Deregisters this instance as an autoloader.
    */
   public function unregister() {
     spl_autoload_unregister([$this, 'loadClass']);
@@ -177,8 +191,7 @@ class FakeAutoloader {
   /**
    * Loads the given class or interface.
    *
-   * @return null
-   *   This class never loads.
+   * This class never loads.
    */
   public function loadClass() {
     return NULL;
@@ -187,8 +200,7 @@ class FakeAutoloader {
   /**
    * Finds a file by class name while caching lookups to APC.
    *
-   * @return null
-   *   This class never finds.
+   * This class never finds.
    */
   public function findFile() {
     return NULL;

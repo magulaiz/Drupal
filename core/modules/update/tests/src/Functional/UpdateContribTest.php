@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\update\Functional;
 
 use Drupal\Core\Utility\ProjectInfo;
@@ -9,6 +11,7 @@ use Drupal\update\UpdateManagerInterface;
  * Tests how the Update Manager handles contributed modules and themes.
  *
  * @group update
+ * @group #slow
  */
 class UpdateContribTest extends UpdateTestBase {
   use UpdateTestTrait;
@@ -334,17 +337,17 @@ class UpdateContribTest extends UpdateTestBase {
   }
 
   /**
-   * Tests that disabled themes are only shown when desired.
+   * Tests that uninstalled themes are only shown when desired.
    *
    * @todo https://www.drupal.org/node/2338175 extensions can not be hidden and
    *   base themes have to be installed.
    */
   public function testUpdateShowDisabledThemes() {
     $update_settings = $this->config('update.settings');
-    // Make sure all the update_test_* themes are disabled.
+    // Make sure all the update_test_* themes are uninstalled.
     $extension_config = $this->config('core.extension');
     foreach ($extension_config->get('theme') as $theme => $weight) {
-      if (preg_match('/^update_test_/', $theme)) {
+      if (str_starts_with($theme, 'update_test_')) {
         $extension_config->clear("theme.$theme");
       }
     }
@@ -422,7 +425,7 @@ class UpdateContribTest extends UpdateTestBase {
       ],
     ]);
     $projects = \Drupal::service('update.manager')->getProjects();
-    $theme_data = \Drupal::service('theme_handler')->rebuildThemeData();
+    $theme_data = \Drupal::service('extension.list.theme')->reset()->getList();
     $project_info = new ProjectInfo();
     $project_info->processInfoList($projects, $theme_data, 'theme', TRUE);
 
@@ -642,7 +645,7 @@ class UpdateContribTest extends UpdateTestBase {
    *   - 8.x-1.1
    *   - 8.x-1.0
    */
-  public function securityUpdateAvailabilityProvider() {
+  public static function securityUpdateAvailabilityProvider() {
     return [
       // Security releases available for module major release 1.
       // No releases for next major.

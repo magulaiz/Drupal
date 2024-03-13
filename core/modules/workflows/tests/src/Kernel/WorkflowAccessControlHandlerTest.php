@@ -13,6 +13,7 @@ use Prophecy\Prophet;
 /**
  * @coversDefaultClass \Drupal\workflows\WorkflowAccessControlHandler
  * @group workflows
+ * @group #slow
  */
 class WorkflowAccessControlHandlerTest extends KernelTestBase {
 
@@ -118,7 +119,7 @@ class WorkflowAccessControlHandlerTest extends KernelTestBase {
    *
    * @return array
    */
-  public function checkAccessProvider() {
+  public static function checkAccessProvider() {
     $container = new ContainerBuilder();
     $cache_contexts_manager = (new Prophet())->prophesize(CacheContextsManager::class);
     $cache_contexts_manager->assertValidTokens()->willReturn(TRUE);

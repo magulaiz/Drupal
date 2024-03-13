@@ -28,7 +28,34 @@ class MediaLibrarySelectForm extends FieldPluginBase {
    * {@inheritdoc}
    */
   public function getValue(ResultRow $row, $field = NULL) {
-    return '<!--form-item-' . $this->options['id'] . '--' . $row->index . '-->';
+    return '<!--form-item-' . $this->options['id'] . '--' . $row->mid . '-->';
+  }
+
+  /**
+   * Return the name of a form field.
+   *
+   * @see \Drupal\views\Form\ViewsFormMainForm
+   *
+   * @return string
+   *   The form field name.
+   */
+  public function form_element_name(): string {
+    return $this->field;
+  }
+
+  /**
+   * Return a media entity ID from a views result row.
+   *
+   * @see \Drupal\views\Form\ViewsFormMainForm
+   *
+   * @param int $row_id
+   *   The index of a views result row.
+   *
+   * @return string
+   *   The ID of a media entity.
+   */
+  public function form_element_row_id(int $row_id): string {
+    return $this->view->result[$row_id]->mid;
   }
 
   /**
@@ -70,7 +97,7 @@ class MediaLibrarySelectForm extends FieldPluginBase {
         $form[$this->options['id']][$row_index] = [];
         continue;
       }
-      $form[$this->options['id']][$row_index] = [
+      $form[$this->options['id']][$row->mid] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Select @label', [
           '@label' => $entity->label(),
@@ -104,9 +131,6 @@ class MediaLibrarySelectForm extends FieldPluginBase {
         'query' => $query,
       ],
       'callback' => [static::class, 'updateWidget'],
-      // The AJAX system automatically moves focus to the first tabbable
-      // element of the modal, so we need to disable refocus on the button.
-      'disable-refocus' => TRUE,
     ];
 
     $form['actions']['submit']['#value'] = $this->t('Insert selected');

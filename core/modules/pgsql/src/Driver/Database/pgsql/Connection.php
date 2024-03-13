@@ -7,7 +7,6 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseAccessDeniedException;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\ExceptionHandler;
-use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\StatementWrapperIterator;
 use Drupal\Core\Database\SupportsTemporaryTablesInterface;
@@ -286,22 +285,34 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   public function createDatabase($database) {
     // Escape the database name.
     $database = Database::getConnection()->escapeDatabase($database);
+    $db_created = FALSE;
 
-    // If the PECL intl extension is installed, use it to determine the proper
-    // locale.  Otherwise, fall back to en_US.
-    if (class_exists('Locale')) {
-      $locale = \Locale::getDefault();
-    }
-    else {
-      $locale = 'en_US';
+    // Try to determine the proper locales for character classification and
+    // collation. If we could determine locales other than 'en_US', try creating
+    // the database with these first.
+    $ctype = setlocale(LC_CTYPE, 0);
+    $collate = setlocale(LC_COLLATE, 0);
+    if ($ctype && $collate) {
+      try {
+        $this->connection->exec("CREATE DATABASE $database WITH TEMPLATE template0 ENCODING='UTF8' LC_CTYPE='$ctype.UTF-8' LC_COLLATE='$collate.UTF-8'");
+        $db_created = TRUE;
+      }
+      catch (\Exception $e) {
+        // It might be that the server is remote and does not support the
+        // locale and collation of the webserver, so we will try again.
+      }
     }
 
-    try {
-      // Create the database and set it as active.
-      $this->connection->exec("CREATE DATABASE $database WITH TEMPLATE template0 ENCODING='utf8' LC_CTYPE='$locale.utf8' LC_COLLATE='$locale.utf8'");
-    }
-    catch (\Exception $e) {
-      throw new DatabaseNotFoundException($e->getMessage());
+    // Otherwise fall back to creating the database using the 'en_US' locales.
+    if (!$db_created) {
+      try {
+        $this->connection->exec("CREATE DATABASE $database WITH TEMPLATE template0 ENCODING='UTF8' LC_CTYPE='en_US.UTF-8' LC_COLLATE='en_US.UTF-8'");
+      }
+      catch (\Exception $e) {
+        // If the database can't be created with the 'en_US' locale either,
+        // we're finally throwing an exception.
+        throw new DatabaseNotFoundException($e->getMessage());
+      }
     }
   }
 
@@ -329,49 +340,6 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     // Remove identifier quotes as we are constructing a new name from a
     // prefixed and quoted table name.
     return str_replace($this->identifierQuotes, '', $sequence_name);
-  }
-
-  /**
-   * Retrieve a the next id in a sequence.
-   *
-   * PostgreSQL has built in sequences. We'll use these instead of inserting
-   * and updating a sequences table.
-   */
-  public function nextId($existing = 0) {
-    @trigger_error('Drupal\Core\Database\Connection::nextId() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Modules should use instead the keyvalue storage for the last used id. See https://www.drupal.org/node/3349345', E_USER_DEPRECATED);
-    // Retrieve the name of the sequence. This information cannot be cached
-    // because the prefix may change, for example, like it does in tests.
-    $sequence_name = $this->makeSequenceName('sequences', 'value');
-
-    // When PostgreSQL gets a value too small then it will lock the table,
-    // retry the INSERT and if it's still too small then alter the sequence.
-    $id = $this->query("SELECT nextval('" . $sequence_name . "')")->fetchField();
-    if ($id > $existing) {
-      return $id;
-    }
-
-    // PostgreSQL advisory locks are simply locks to be used by an
-    // application such as Drupal. This will prevent other Drupal processes
-    // from altering the sequence while we are.
-    $this->query("SELECT pg_advisory_lock(" . self::POSTGRESQL_NEXTID_LOCK . ")");
-
-    // While waiting to obtain the lock, the sequence may have been altered
-    // so lets try again to obtain an adequate value.
-    $id = $this->query("SELECT nextval('" . $sequence_name . "')")->fetchField();
-    if ($id > $existing) {
-      $this->query("SELECT pg_advisory_unlock(" . self::POSTGRESQL_NEXTID_LOCK . ")");
-      return $id;
-    }
-
-    // Reset the sequence to a higher value than the existing id.
-    $this->query("ALTER SEQUENCE " . $sequence_name . " RESTART WITH " . ($existing + 1));
-
-    // Retrieve the next id. We know this will be as high as we want it.
-    $id = $this->query("SELECT nextval('" . $sequence_name . "')")->fetchField();
-
-    $this->query("SELECT pg_advisory_unlock(" . self::POSTGRESQL_NEXTID_LOCK . ")");
-
-    return $id;
   }
 
   /**
@@ -465,13 +433,6 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   /**
    * {@inheritdoc}
    */
-  public function merge($table, array $options = []) {
-    return new Merge($this, $table, $options);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function upsert($table, array $options = []) {
     return new Upsert($this, $table, $options);
   }
@@ -510,22 +471,8 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
   /**
    * {@inheritdoc}
    */
-  public function condition($conjunction) {
-    return new Condition($conjunction);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function driverTransactionManager(): TransactionManagerInterface {
     return new TransactionManager($this);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function startTransaction($name = '') {
-    return $this->transactionManager()->push($name);
   }
 
 }

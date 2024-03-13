@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Url;
 use Drupal\jsonapi\Normalizer\HttpExceptionNormalizer;
 use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
@@ -19,6 +22,7 @@ use GuzzleHttp\RequestOptions;
  * JSON:API integration test for the "Node" content entity type.
  *
  * @group jsonapi
+ * @group #slow
  */
 class NodeTest extends ResourceTestBase {
 
@@ -175,7 +179,6 @@ class NodeTest extends ResourceTestBase {
             'langcode' => 'en',
           ],
           'promote' => TRUE,
-          'revision_log' => NULL,
           'revision_timestamp' => '1973-11-29T21:33:09+00:00',
           // @todo Attempt to remove this in https://www.drupal.org/project/drupal/issues/2933518.
           'revision_translation_affected' => TRUE,
@@ -250,7 +253,7 @@ class NodeTest extends ResourceTestBase {
       'data' => [
         'type' => 'node--camelids',
         'attributes' => [
-          'title' => 'Dramallama',
+          'title' => 'Drama llama',
         ],
       ],
     ];
@@ -386,12 +389,7 @@ class NodeTest extends ResourceTestBase {
     $this->entity->save();
     $uuid = $this->entity->uuid();
     $language = $this->entity->language()->getId();
-    $cache = \Drupal::service('render_cache')->get([
-      '#cache' => [
-        'keys' => ['node--camelids', $uuid, $language],
-        'bin' => 'jsonapi_normalizations',
-      ],
-    ]);
+    $cache = \Drupal::service('variation_cache.jsonapi_normalizations')->get(['node--camelids', $uuid, $language], new CacheableMetadata());
     // After saving the entity the normalization should not be cached.
     $this->assertFalse($cache);
     // @todo Remove line below in favor of commented line in https://www.drupal.org/project/drupal/issues/2878463.
@@ -422,13 +420,8 @@ class NodeTest extends ResourceTestBase {
    * @internal
    */
   protected function assertNormalizedFieldsAreCached(array $field_names): void {
-    $cache = \Drupal::service('render_cache')->get([
-      '#cache' => [
-        'keys' => ['node--camelids', $this->entity->uuid(), $this->entity->language()->getId()],
-        'bin' => 'jsonapi_normalizations',
-      ],
-    ]);
-    $cached_fields = $cache['#data']['fields'];
+    $cache = \Drupal::service('variation_cache.jsonapi_normalizations')->get(['node--camelids', $this->entity->uuid(), $this->entity->language()->getId()], new CacheableMetadata());
+    $cached_fields = $cache->data['fields'];
     $this->assertSameSize($field_names, $cached_fields);
     array_walk($field_names, function ($field_name) use ($cached_fields) {
       $this->assertInstanceOf(

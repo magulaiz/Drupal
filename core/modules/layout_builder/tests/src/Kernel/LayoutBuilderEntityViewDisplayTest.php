@@ -9,6 +9,7 @@ use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
  * @coversDefaultClass \Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay
  *
  * @group layout_builder
+ * @group #slow
  */
 class LayoutBuilderEntityViewDisplayTest extends SectionListTestBase {
 
@@ -63,7 +64,7 @@ class LayoutBuilderEntityViewDisplayTest extends SectionListTestBase {
   /**
    * Provides test data for ::testIsLayoutBuilderEnabled().
    */
-  public function providerTestIsLayoutBuilderEnabled() {
+  public static function providerTestIsLayoutBuilderEnabled() {
     $data = [];
     $data['default enabled'] = [TRUE, 'default', TRUE];
     $data['default disabled'] = [FALSE, 'default', FALSE];

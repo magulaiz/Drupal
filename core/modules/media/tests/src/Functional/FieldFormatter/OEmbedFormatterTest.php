@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\media\Functional\FieldFormatter;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
@@ -9,10 +11,13 @@ use Drupal\media_test_oembed\UrlResolver;
 use Drupal\Tests\media\Functional\MediaFunctionalTestBase;
 use Drupal\Tests\media\Traits\OEmbedTestTrait;
 
+// cspell:ignore Schipulcon
+
 /**
  * @covers \Drupal\media\Plugin\Field\FieldFormatter\OEmbedFormatter
  *
  * @group media
+ * @group #slow
  */
 class OEmbedFormatterTest extends MediaFunctionalTestBase {
 
@@ -54,7 +59,7 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
    *
    * @return array
    */
-  public function providerRender() {
+  public static function providerRender() {
     return [
       'Vimeo video' => [
         'https://vimeo.com/7073899',

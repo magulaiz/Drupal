@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\system\Kernel\Extension;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Extension\MissingDependencyException;
 use Drupal\Core\Extension\ModuleUninstallValidatorException;
@@ -71,7 +70,7 @@ class ModuleHandlerTest extends KernelTestBase {
   protected function assertModuleList(array $expected_values, string $condition): void {
     $expected_values = array_values(array_unique($expected_values));
     $enabled_modules = array_keys($this->container->get('module_handler')->getModuleList());
-    $this->assertEquals($expected_values, $enabled_modules, new FormattableMarkup('@condition: extension handler returns correct results', ['@condition' => $condition]));
+    $this->assertEquals($expected_values, $enabled_modules, "$condition: extension handler returns correct results");
   }
 
   /**
@@ -325,6 +324,8 @@ class ModuleHandlerTest extends KernelTestBase {
     file_exists('dummy://');
     $stream_wrappers = \Drupal::service('stream_wrapper_manager')->getWrappers();
     $this->assertTrue(isset($stream_wrappers['dummy']));
+    $this->assertTrue(isset($stream_wrappers['dummy1']));
+    $this->assertTrue(isset($stream_wrappers['dummy2']));
   }
 
   /**
@@ -332,7 +333,7 @@ class ModuleHandlerTest extends KernelTestBase {
    */
   public function testThemeMetaData() {
     // Generate the list of available themes.
-    $themes = \Drupal::service('theme_handler')->rebuildThemeData();
+    $themes = \Drupal::service('extension.list.theme')->reset()->getList();
     // Check that the mtime field exists for the olivero theme.
     $this->assertNotEmpty($themes['olivero']->info['mtime'], 'The olivero.info.yml file modification time field is present.');
     // Use 0 if mtime isn't present, to avoid an array index notice.

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Theme\ThemeRenderAndAutoescapeTest.
- */
-
 namespace Drupal\KernelTests\Core\Theme;
 
 use Drupal\Component\Utility\Html;
@@ -20,6 +15,7 @@ use Drupal\KernelTests\KernelTestBase;
  *
  * @group Theme
  * @group legacy
+ * @group #slow
  */
 class ThemeRenderAndAutoescapeTest extends KernelTestBase {
 
@@ -59,7 +55,7 @@ class ThemeRenderAndAutoescapeTest extends KernelTestBase {
   /**
    * Provide test examples.
    */
-  public function providerTestThemeRenderAndAutoescape() {
+  public static function providerTestThemeRenderAndAutoescape() {
     return [
       'empty string unchanged' => ['', ''],
       'simple string unchanged' => ['ab', 'ab'],

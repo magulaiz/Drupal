@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\Access\AccessResult;
@@ -358,7 +360,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    *   - A bool whether to provide a bundle-specific definition.
    *   - A bool whether to provide an entity type-specific definition.
    */
-  public function providerTestTypedData(): array {
+  public static function providerTestTypedData(): array {
     return [
       'Entity data definition derivative with entity type and bundle' => [
         TRUE,
@@ -489,8 +491,8 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     // that trying to save a non-validated entity when validation is required
     // results in an exception.
     $this->assertTrue($this->entity->isValidationRequired());
-    $this->expectException(\AssertionError::class);
-    $this->expectExceptionMessage('Entity validation was skipped.');
+    $this->expectException(\LogicException::class);
+    $this->expectExceptionMessage('Entity validation is required, but was skipped.');
     $this->entity->save();
   }
 
@@ -526,13 +528,13 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   /**
    * Data provider for testGet().
    *
-   * @returns
+   * @return array
    *   - Expected output from get().
    *   - Field name parameter to get().
    *   - Language code for $activeLanguage.
    *   - Fields array for $fields.
    */
-  public function providerGet() {
+  public static function providerGet() {
     return [
       // Populated fields array.
       ['result', 'field_name', 'langcode', ['field_name' => ['langcode' => 'result']]],
@@ -586,7 +588,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   /**
    * Data provider for testGetFields().
    *
-   * @returns array
+   * @return array
    *   - Expected output from getFields().
    *   - $include_computed value to pass to getFields().
    *   - Value to mock from all field definitions for isComputed().
@@ -594,7 +596,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    *     Drupal\Core\Field\FieldDefinitionInterface object will be mocked for
    *     each name.
    */
-  public function providerGetFields() {
+  public static function providerGetFields() {
     return [
       [[], FALSE, FALSE, []],
       [['field' => 'field', 'field2' => 'field2'], TRUE, FALSE, ['field', 'field2']],

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Config;
 
 use Drupal\Component\Uuid\Php;
@@ -97,8 +99,8 @@ class StorageComparerTest extends UnitTestCase {
         ],
       ],
       // Simple config.
-      'system.performance' => [
-        'stale_file_threshold' => 2592000,
+      'system.logging' => [
+        'error_level' => 'hide',
       ],
 
     ];

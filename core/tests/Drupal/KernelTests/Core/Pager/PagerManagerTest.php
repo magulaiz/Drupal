@@ -4,6 +4,8 @@ namespace Drupal\KernelTests\Core\Pager;
 
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
  * @group Pager
@@ -22,6 +24,7 @@ class PagerManagerTest extends KernelTestBase {
       'other' => 'arbitrary',
     ];
     $request = Request::create('http://example.com', 'GET', $test_parameters);
+    $request->setSession(new Session(new MockArraySessionStorage()));
 
     /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */
     $request_stack = $this->container->get('request_stack');
@@ -43,6 +46,7 @@ class PagerManagerTest extends KernelTestBase {
    */
   public function testFindPage() {
     $request = Request::create('http://example.com', 'GET', ['page' => '0,10']);
+    $request->setSession(new Session(new MockArraySessionStorage()));
 
     /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */
     $request_stack = $this->container->get('request_stack');
@@ -77,7 +81,7 @@ class PagerManagerTest extends KernelTestBase {
    *   - Array of elements to pass to PagerManager::createPager().
    *   - The expected value returned by PagerManager::getMaxPagerElementId().
    */
-  public function providerTestGetMaxPagerElementId(): array {
+  public static function providerTestGetMaxPagerElementId(): array {
     return [
       'no_pager' => [[], -1],
       'single_pager' => [[0], 0],

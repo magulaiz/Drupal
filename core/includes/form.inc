@@ -255,7 +255,6 @@ function template_preprocess_details(&$variables) {
       $variables['summary_attributes']['aria-controls'] = $element['#attributes']['id'];
     }
     $variables['summary_attributes']['aria-expanded'] = !empty($element['#attributes']['open']) ? 'true' : 'false';
-    $variables['summary_attributes']['aria-pressed'] = $variables['summary_attributes']['aria-expanded'];
   }
   $variables['title'] = (!empty($element['#title'])) ? $element['#title'] : '';
   // If the element title is a string, wrap it a render array so that markup
@@ -664,7 +663,7 @@ function template_preprocess_form_element_label(&$variables) {
  *   // The 'success' parameter means no fatal PHP errors were detected. All
  *   // other error management should be handled using 'results'.
  *   if ($success) {
- *     $message = \Drupal::translation()->formatPlural(count($results), 'One post processed.', '@count posts processed.');
+ *     $message = \Drupal::translation()->formatPlural(count($results), 'One item processed.', '@count items processed.');
  *   }
  *   else {
  *     $message = t('Finished with an error.');

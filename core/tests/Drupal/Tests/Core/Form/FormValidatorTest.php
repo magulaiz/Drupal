@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Form;
 
 use Drupal\Core\Form\FormState;
@@ -181,7 +183,7 @@ class FormValidatorTest extends UnitTestCase {
     $this->assertSame($expected, $form_state->getValues());
   }
 
-  public function providerTestHandleErrorsWithLimitedValidation() {
+  public static function providerTestHandleErrorsWithLimitedValidation() {
     return [
       // Test with a non-existent section.
       [
@@ -317,7 +319,7 @@ class FormValidatorTest extends UnitTestCase {
     $form_validator->validateForm('test_form_id', $form, $form_state);
   }
 
-  public function providerTestRequiredErrorMessage() {
+  public static function providerTestRequiredErrorMessage() {
     return [
       [
         // Use the default message with a title.
