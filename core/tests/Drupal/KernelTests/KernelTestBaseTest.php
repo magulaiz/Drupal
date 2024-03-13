@@ -5,12 +5,11 @@ namespace Drupal\KernelTests;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Utility\Random;
 use Drupal\Core\Database\Database;
-use GuzzleHttp\Exception\GuzzleException;
 use Drupal\Tests\StreamCapturer;
 use Drupal\user\Entity\Role;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
-use PHPUnit\Framework\SkippedTestError;
+use Psr\Http\Client\ClientExceptionInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -177,7 +176,7 @@ class KernelTestBaseTest extends KernelTestBase {
     }
     catch (\Throwable $e) {
       // Ignore any HTTP errors, any other exception is considered an error.
-      self::assertInstanceOf(GuzzleException::class, $e, sprintf('Asserting that a possible exception is thrown. Got "%s" with message: "%s".', get_class($e), $e->getMessage()));
+      self::assertInstanceOf(ClientExceptionInterface::class, $e, sprintf('Asserting that a possible exception is thrown. Got "%s" with message: "%s".', get_class($e), $e->getMessage()));
     }
   }
 
@@ -271,62 +270,6 @@ class KernelTestBaseTest extends KernelTestBase {
   public function testLocalTimeZone() {
     // The 'Australia/Sydney' time zone is set in core/tests/bootstrap.php
     $this->assertEquals('Australia/Sydney', date_default_timezone_get());
-  }
-
-  /**
-   * Tests that a test method is skipped when it requires a module not present.
-   *
-   * In order to catch checkRequirements() regressions, we have to make a new
-   * test object and run checkRequirements() here.
-   *
-   * @covers ::checkRequirements
-   * @covers ::checkModuleRequirements
-   */
-  public function testMethodRequiresModule() {
-    require __DIR__ . '/../../fixtures/KernelMissingDependentModuleMethodTest.php';
-
-    // @phpstan-ignore-next-line
-    $stub_test = new KernelMissingDependentModuleMethodTest();
-    // We have to setName() to the method name we're concerned with.
-    $stub_test->setName('testRequiresModule');
-
-    // We cannot use $this->setExpectedException() because PHPUnit would skip
-    // the test before comparing the exception type.
-    try {
-      $stub_test->publicCheckRequirements();
-      $this->fail('Missing required module throws skipped test exception.');
-    }
-    catch (SkippedTestError $e) {
-      $this->assertEquals('Required modules: module_does_not_exist', $e->getMessage());
-    }
-  }
-
-  /**
-   * Tests that a test case is skipped when it requires a module not present.
-   *
-   * In order to catch checkRequirements() regressions, we have to make a new
-   * test object and run checkRequirements() here.
-   *
-   * @covers ::checkRequirements
-   * @covers ::checkModuleRequirements
-   */
-  public function testRequiresModule() {
-    require __DIR__ . '/../../fixtures/KernelMissingDependentModuleTest.php';
-
-    // @phpstan-ignore-next-line
-    $stub_test = new KernelMissingDependentModuleTest();
-    // We have to setName() to the method name we're concerned with.
-    $stub_test->setName('testRequiresModule');
-
-    // We cannot use $this->setExpectedException() because PHPUnit would skip
-    // the test before comparing the exception type.
-    try {
-      $stub_test->publicCheckRequirements();
-      $this->fail('Missing required module throws skipped test exception.');
-    }
-    catch (SkippedTestError $e) {
-      $this->assertEquals('Required modules: module_does_not_exist', $e->getMessage());
-    }
   }
 
   /**

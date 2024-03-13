@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\taxonomy\Functional\Views;
 
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
@@ -13,6 +15,7 @@ use Drupal\views\Entity\View;
  * Tests the taxonomy index filter handler UI.
  *
  * @group taxonomy
+ * @group #slow
  * @see \Drupal\taxonomy\Plugin\views\field\TaxonomyIndexTid
  */
 class TaxonomyIndexTidUiTest extends UITestBase {

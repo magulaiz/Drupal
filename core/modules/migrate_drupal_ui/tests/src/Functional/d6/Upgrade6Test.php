@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate_drupal_ui\Functional\d6;
 
 use Drupal\node\Entity\Node;
@@ -51,6 +53,11 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     $this->nodeStorage->delete($this->nodeStorage->loadMultiple());
 
     $this->loadFixture($this->getModulePath('migrate_drupal') . '/tests/fixtures/drupal6.php');
+
+    // Enable saving the logs and set the post migration admin user name.
+    $this->outputLogs = TRUE;
+    $this->migratedAdminUserName = 'root';
+    $this->expectedLoggedErrors = 39;
   }
 
   /**
@@ -89,7 +96,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'search_page' => 3,
       'shortcut' => 2,
       'shortcut_set' => 1,
-      'action' => 33,
+      'action' => 30,
       'menu' => 8,
       'path_alias' => 8,
       'taxonomy_term' => 15,
