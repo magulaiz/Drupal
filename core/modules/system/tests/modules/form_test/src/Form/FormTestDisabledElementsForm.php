@@ -216,6 +216,12 @@ class FormTestDisabledElementsForm extends FormBase {
       '#disabled' => TRUE,
     ];
 
+    $form['password_confirm'] = [
+      '#type' => 'password_confirm',
+      '#title' => 'Password confirm',
+      '#disabled' => TRUE,
+    ];
+
     // Files.
     $form['file'] = [
       '#type' => 'file',

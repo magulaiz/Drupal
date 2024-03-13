@@ -32,6 +32,7 @@ class FormTestLabelForm extends FormBase {
     'managed_file',
     'number',
     'password',
+    'password_confirm',
     'radio',
     'radios',
     'range',

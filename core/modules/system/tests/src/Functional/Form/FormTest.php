@@ -82,6 +82,12 @@ class FormTest extends BrowserTestBase {
     $elements['password']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'password'];
     $elements['password']['empty_values'] = $empty_strings;
 
+    $elements['password_confirm']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'password_confirm'];
+    // Provide empty values for both password fields.
+    foreach ($empty_strings as $key => $value) {
+      $elements['password_confirm']['empty_values'][$key] = ['pass1' => $value, 'pass2' => $value];
+    }
+
     $elements['textarea']['element'] = ['#title' => $this->randomMachineName(), '#type' => 'textarea'];
     $elements['textarea']['empty_values'] = $empty_strings;
 
@@ -766,7 +772,7 @@ class FormTest extends BrowserTestBase {
     // All the elements should be marked as disabled, including the ones below
     // the disabled container.
     $actual_count = count($disabled_elements);
-    $expected_count = 42;
+    $expected_count = 44;
     $message = new FormattableMarkup('Found @actual elements with disabled property (expected @expected).', ['@actual' => count($disabled_elements), '@expected' => $expected_count]);
     $this->assertEquals($expected_count, $actual_count, (string) $message);
 
