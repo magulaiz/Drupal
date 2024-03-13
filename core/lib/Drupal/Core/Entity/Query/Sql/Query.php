@@ -86,28 +86,6 @@ class Query extends QueryBase implements QueryInterface {
   }
 
   /**
-   * Invoke hooks to allow modules to alter the entity query.
-   *
-   * Modules may alter all queries or only those having a particular tag.
-   * Alteration happens before the query is prepared for execution, so that
-   * the alterations then get prepared in the same way.
-   *
-   * @return $this
-   *   Returns the called object.
-   */
-  protected function alter(): Query {
-    $hooks = ['entity_query', 'entity_query_' . $this->getEntityTypeId()];
-    if ($this->alterTags) {
-      foreach ($this->alterTags as $tag => $value) {
-        $hooks[] = 'entity_query_tag_' . $tag;
-        $hooks[] = 'entity_query_tag_' . $this->getEntityTypeId() . '_' . $tag;
-      }
-    }
-    \Drupal::moduleHandler()->alter($hooks, $this);
-    return $this;
-  }
-
-  /**
    * Prepares the basic query with proper metadata/tags and base fields.
    *
    * @return $this

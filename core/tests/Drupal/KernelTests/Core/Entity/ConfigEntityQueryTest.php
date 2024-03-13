@@ -758,6 +758,24 @@ class ConfigEntityQueryTest extends KernelTestBase {
   }
 
   /**
+   * Test the entity query alter hooks are invoked.
+   *
+   * @see config_test_entity_query_tag_config_query_test_config_entity_query_alter_hook_test_alter()
+   */
+  public function testAlterHook() {
+    // Run a test without any condition.
+    $this->queryResults = $this->entityStorage->getQuery()
+      ->execute();
+    $this->assertResults(['1', '2', '3', '4', '5', '6', '7']);
+
+    // config_test alter hook removes the entity with id '7'.
+    $this->queryResults = $this->entityStorage->getQuery()
+      ->addTag('config_entity_query_alter_hook_test')
+      ->execute();
+    $this->assertResults(['1', '2', '3', '4', '5', '6']);
+  }
+
+  /**
    * Asserts the results as expected regardless of order.
    *
    * @param array $expected
