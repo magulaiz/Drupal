@@ -214,7 +214,7 @@ class MappingTest extends KernelTestBase {
         'theme',
         'profile',
       ],
-      ['_core'],
+      ['_core', 'langcode'],
       [],
     ];
 
@@ -234,7 +234,7 @@ class MappingTest extends KernelTestBase {
         // @see core/modules/config/tests/config_schema_deprecated_test/config/schema/config_schema_deprecated_test.schema.yml
         'complex_structure_deprecated',
       ],
-      ['_core', 'complex_structure_deprecated'],
+      ['_core', 'langcode', 'complex_structure_deprecated'],
       [],
     ];
     yield 'No dynamic type: config_schema_deprecated_test.settings:complex_structure_deprecated' => [
