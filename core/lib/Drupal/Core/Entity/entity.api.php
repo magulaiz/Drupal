@@ -2291,7 +2291,7 @@ function hook_entity_extra_field_info_alter(&$info) {
 
 /**
  * Alter any entity query.
- * 
+ *
  * Implemented in core for config entities, and content entities using sql
  * storage.
  *
@@ -2311,7 +2311,7 @@ function hook_entity_query_alter(\Drupal\Core\Entity\Query\QueryInterface $query
 
 /**
  * Alter entity queries for a specific entity type.
- * 
+ *
  * Implemented in core for config entities, and content entities using sql
  * storage.
  *
