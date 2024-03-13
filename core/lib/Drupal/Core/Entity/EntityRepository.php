@@ -137,7 +137,7 @@ class EntityRepository implements EntityRepositoryInterface {
     $active = [];
 
     if (!isset($contexts)) {
-      $contexts = $this->contextRepository->getAvailableContexts();
+      $contexts = [];
     }
 
     // @todo Consider implementing a more performant version of this logic fully
@@ -186,7 +186,7 @@ class EntityRepository implements EntityRepositoryInterface {
     }
 
     if (!isset($contexts)) {
-      $contexts = $this->contextRepository->getAvailableContexts();
+      $contexts = [];
     }
 
     // @todo Consider deprecating the legacy context operation altogether in
@@ -224,7 +224,7 @@ class EntityRepository implements EntityRepositoryInterface {
         return $contexts[$context_id]->getContextValue()->getId();
       }
     }
-    return $this->languageManager->getDefaultLanguage()->getId();
+    return $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
   }
 
   /**
