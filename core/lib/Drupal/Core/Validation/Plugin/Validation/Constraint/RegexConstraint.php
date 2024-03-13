@@ -17,7 +17,13 @@ use Symfony\Component\Validator\Constraints\Regex;
 )]
 class RegexConstraint extends Regex {
 
-  public $message = 'This value is not valid.';
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $options = NULL) {
+    $options['message'] ??= 'This value is not valid.';
+    parent::__construct($options);
+  }
 
   /**
    * {@inheritdoc}
