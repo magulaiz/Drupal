@@ -22,8 +22,8 @@ class LocaleBulkTest extends UnitTestCase {
   public function testDeprecatedLocaleConfigBatchRefreshName() {
     $this->expectDeprecation('locale_config_batch_refresh_name() is deprecated in drupal:10.2.3 and is removed from drupal:11.0.0. Use locale_config_batch_update_config_translations() instead.');
     $names = ['English', 'German'];
-    $langcodes = ['en','de'];
-    locale_config_batch_refresh_name($names, $langcodes, $context);
+    $langcodes = ['en', 'de'];
+    \locale_config_batch_refresh_name($names, $langcodes, $context);
   }
 
   /**
