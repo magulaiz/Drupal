@@ -520,7 +520,7 @@ abstract class QueryBase implements QueryInterface {
    * @return $this
    *   Returns the called object.
    */
-  protected function alter(): Query {
+  protected function alter(): QueryInterface {
     $hooks = ['entity_query', 'entity_query_' . $this->getEntityTypeId()];
     if ($this->alterTags) {
       foreach ($this->alterTags as $tag => $value) {
@@ -530,6 +530,6 @@ abstract class QueryBase implements QueryInterface {
     }
     \Drupal::moduleHandler()->alter($hooks, $this);
     return $this;
-  }  
+  }
 
 }
