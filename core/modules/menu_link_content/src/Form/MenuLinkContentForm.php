@@ -95,23 +95,19 @@ class MenuLinkContentForm extends ContentEntityForm {
     $menu_id = $this->entity->getMenuName();
     $menu = $this->entityTypeManager->getStorage('menu')->load($menu_id);
     if ($this->entity->isNew()) {
-      $form['menu_parent_element']['menu_parent'] = $this->menuParentSelector->parentSelectElement($default, $id, [
+      $form['menu_parent_wrapper']['menu_parent'] = $this->menuParentSelector->parentSelectElement($default, $id, [
         $menu_id => $menu->label(),
       ]);
-      $form['menu_parent_element']['#type'] = 'container';
-      $form['menu_parent_element']['menu_parent']['#weight'] = 10;
-      $form['menu_parent_element']['menu_parent']['#title'] = $this->t('Parent link');
-      $form['menu_parent_element']['menu_parent']['#description'] = $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.');
-      $form['menu_parent_element']['menu_parent']['#attributes']['class'][] = 'menu-title-select';
+      $form['menu_parent_wrapper']['#type'] = 'container';
     }
     else {
       $form += $this->menuParentSelector->parentSelectElement($form_state->getValue('menu') ?: $default, '', NULL, $form_state->getValue('menu') ?: $menu_id . ':');
-      $form['menu_parent_element']['menu_parent_wrapper']['menu_parent'] += $this->menuParentSelector->parentSelectElement($form_state->getValue('menu') ?: $default, $id, $form_state->getValue('menus') ?: [$menu_id => $menu->label()]);
-      $form['menu_parent_element']['menu_parent_wrapper']['menu_parent']['#weight'] = 10;
-      $form['menu_parent_element']['menu_parent_wrapper']['menu_parent']['#title'] = $this->t('Parent link');
-      $form['menu_parent_element']['menu_parent_wrapper']['menu_parent']['#description'] = $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.');
-      $form['menu_parent_element']['menu_parent_wrapper']['menu_parent']['#attributes']['class'][] = 'menu-title-select';
+      $form['menu_parent_wrapper']['menu_parent'] += $this->menuParentSelector->parentSelectElement($form_state->getValue('menu') ?: $default, $id, $form_state->getValue('menus') ?: [$menu_id => $menu->label()]);
     }
+    $form['menu_parent_wrapper']['menu_parent']['#weight'] = 10;
+    $form['menu_parent_wrapper']['menu_parent']['#title'] = $this->t('Parent link');
+    $form['menu_parent_wrapper']['menu_parent']['#description'] = $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.');
+    $form['menu_parent_wrapper']['menu_parent']['#attributes']['class'][] = 'menu-title-select';
 
     return $form;
   }
