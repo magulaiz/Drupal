@@ -737,18 +737,19 @@
 
   $document.on('state:checked', (e) => {
     if (e.trigger) {
-      $(e.target)
+      const $element = $(e.target)
         .closest('.js-form-item, .js-form-wrapper')
         .find('input')
-        .prop('checked', e.value)
-        .dispatchEvent(new Event('change'));
+        .prop('checked', e.value);
+      $element[0].dispatchEvent(new Event('change'));
     }
   });
 
   $document.on('state:collapsed', (e) => {
     if (e.trigger) {
       if (e.target.hasAttribute('open') === e.value) {
-        $(e.target).find('> summary').dispatchEvent(new Event('click'));
+        const $element = $(e.target).find('> summary');
+        $element[0].dispatchEvent(new MouseEvent('click', { bubbles: true }));
       }
     }
   });
