@@ -296,11 +296,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/KeyValueStore/KeyValueContentEntityStorage.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$selected_bundles might not be defined\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Plugin/EntityReferenceSelection/DefaultSelection.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Plugin/Validation/Constraint/ReferenceAccessConstraintValidator.php',

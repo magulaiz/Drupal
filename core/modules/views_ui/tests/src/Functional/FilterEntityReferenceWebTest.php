@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views_ui\Functional;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Tests\views_ui\Traits\FilterEntityReferenceTrait;
 
 /**
