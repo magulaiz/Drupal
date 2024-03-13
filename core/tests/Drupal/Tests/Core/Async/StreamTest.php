@@ -17,7 +17,7 @@ use function Drupal\Core\Async\stream;
 class StreamTest extends UnitTestCase {
 
   /**
-   * Test that it doesn't complain if operations aren't actually async.
+   * Tests that stream() doesn't complain if operations aren't actually async.
    */
   public function testHandlesSynchronousOperations() : void {
     $output = [];
@@ -36,7 +36,7 @@ class StreamTest extends UnitTestCase {
   }
 
   /**
-   * Test that it properly deals with deferred operations.
+   * Tests that stream() properly deals with deferred operations.
    *
    * Results should arrive in order as guaranteed by the EventLoop.
    */
@@ -57,7 +57,7 @@ class StreamTest extends UnitTestCase {
   }
 
   /**
-   * Test that it handles delayed operations.
+   * Tests that stream() handles delayed operations.
    *
    * Results should arrive in order of completion as guaranteed by the
    * EventLoop.
@@ -79,7 +79,7 @@ class StreamTest extends UnitTestCase {
   }
 
   /**
-   * Test that operations work if an operation suspends again.
+   * Tests that operations work if an operation suspends again.
    */
   public function testNestedOperation() : void {
     $operations = [
@@ -104,7 +104,7 @@ class StreamTest extends UnitTestCase {
   }
 
   /**
-   * Create a deferred operation.
+   * Creates a deferred operation.
    *
    * @template T
    *
@@ -121,7 +121,7 @@ class StreamTest extends UnitTestCase {
   }
 
   /**
-   * Create a delay operation.
+   * Creates a delayed operation.
    *
    * @template T
    *
