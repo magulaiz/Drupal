@@ -10,6 +10,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\EntityContext;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
 
 /**
@@ -153,6 +154,44 @@ trait LayoutEntityHelperTrait {
    */
   private function sectionStorageManager() {
     return $this->sectionStorageManager ?: \Drupal::service('plugin.manager.layout_builder.section_storage');
+  }
+
+  /**
+   * Update a layout overrides's entity context when entity values change.
+   *
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
+   *   The entity with the overridden layout.
+   *
+   * @return \Drupal\layout_builder\SectionStorageInterface
+   *   The section storage.
+   */
+  public function getSectionStorageFromEntity(FieldableEntityInterface $entity) {
+    $contexts = $this->getSectionStorageContextFromEntity($entity);
+
+    $contexts['entity'] = EntityContext::fromEntity($entity);
+    $contexts['view_mode'] = new Context(new ContextDefinition('string'), 'default');
+    return $this->sectionStorageManager()->load('overrides', $contexts);
+  }
+
+  /**
+   * Update a layout overrides's entity context when entity values change.
+   *
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
+   *   The entity with the overridden layout.
+   *
+   * @return \Drupal\Core\Plugin\Context\ContextInterface[]
+   *   The section storage contexts.
+   */
+  public function getSectionStorageContextFromEntity(FieldableEntityInterface $entity) {
+    $contexts = [];
+
+    $contexts['entity'] = EntityContext::fromEntity($entity);
+    // Retrieve the actual view mode from the returned view display as the
+    // requested view mode may not exist and a fallback will be used.
+    $view_mode = LayoutBuilderEntityViewDisplay::collectRenderDisplay($entity, $view_mode)->getMode();
+    $contexts['view_mode'] = new Context(new ContextDefinition('string'), $view_mode);
+
+    return $contexts;
   }
 
 }

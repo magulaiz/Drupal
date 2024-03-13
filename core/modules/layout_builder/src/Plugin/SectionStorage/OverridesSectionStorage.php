@@ -11,14 +11,13 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\TranslatableInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Plugin\Context\Context;
-use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\layout_builder\Attribute\SectionStorage;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+use Drupal\layout_builder\LayoutEntityHelperTrait;
 use Drupal\layout_builder\OverridesSectionStorageInterface;
 use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -56,6 +55,8 @@ use Symfony\Component\Routing\RouteCollection;
   handles_permission_check: TRUE,
 )]
 class OverridesSectionStorage extends SectionStorageBase implements ContainerFactoryPluginInterface, OverridesSectionStorageInterface, SectionStorageLocalTaskProviderInterface {
+
+  use LayoutEntityHelperTrait;
 
   /**
    * The field name used by this storage.
@@ -176,14 +177,7 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
     $contexts = [];
 
     if ($entity = $this->extractEntityFromRoute($value, $defaults)) {
-      $contexts['entity'] = EntityContext::fromEntity($entity);
-      // @todo Expand to work for all view modes in
-      //   https://www.drupal.org/node/2907413.
-      $view_mode = 'full';
-      // Retrieve the actual view mode from the returned view display as the
-      // requested view mode may not exist and a fallback will be used.
-      $view_mode = LayoutBuilderEntityViewDisplay::collectRenderDisplay($entity, $view_mode)->getMode();
-      $contexts['view_mode'] = new Context(new ContextDefinition('string'), $view_mode);
+      $contexts = $this->getSectionStorageContextFromEntity($entity);
     }
     return $contexts;
   }
