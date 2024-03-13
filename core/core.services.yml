@@ -318,6 +318,13 @@ services:
     class: Drupal\Core\Cache\VariationCacheInterface
     factory: ['@variation_cache_factory', 'get']
     arguments: [access_policy_memory]
+
+  cache_prewarmer:
+    class: Drupal\Core\PreWarm\CachePreWarmer
+    arguments: ['@class_resolver']
+    tags:
+      - { name: service_id_collector, tag: cache_prewarmable }
+  Drupal\Core\PreWarm\CachePreWarmerInterface: '@cache_prewarmer'
   Drupal\Core\Asset\AssetQueryStringInterface: '@asset.query_string'
   asset.query_string:
     class: Drupal\Core\Asset\AssetQueryString
@@ -715,6 +722,8 @@ services:
   entity_field.manager:
     class: Drupal\Core\Entity\EntityFieldManager
     arguments: ['@entity_type.manager', '@entity_type.bundle.info', '@entity_display.repository', '@typed_data_manager', '@language_manager', '@keyvalue', '@module_handler', '@cache.discovery', '@entity.last_installed_schema.repository']
+    tags:
+      - { name: cache_prewarmable }
   Drupal\Core\Entity\EntityFieldManagerInterface: '@entity_field.manager'
   entity_type.listener:
     class: Drupal\Core\Entity\EntityTypeListener
@@ -1472,6 +1481,8 @@ services:
   plugin.manager.element_info:
     class: Drupal\Core\Render\ElementInfoManager
     arguments: ['@container.namespaces', '@cache.discovery', '@theme_handler', '@module_handler', '@theme.manager']
+    tags:
+      - { name: cache_prewarmable }
   Drupal\Core\Render\ElementInfoManagerInterface: '@plugin.manager.element_info'
   stream_wrapper_manager:
     class: Drupal\Core\StreamWrapper\StreamWrapperManager

@@ -530,6 +530,10 @@ prerendered
 presave
 pretransaction
 preuninstall
+prewarmable
+prewarmables
+prewarmer
+prewarmers
 processlist
 proname
 prophesize
@@ -795,6 +799,7 @@ versionless
 vfsstream
 viewports
 vocabs
+warmable
 wcag
 wcprops
 webassert

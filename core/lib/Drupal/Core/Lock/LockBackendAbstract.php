@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Lock;
 
+use function Drupal\Core\Async\usleepNonBlocking;
+
 /**
  * Non backend related common methods implementation for lock backends.
  *
@@ -48,13 +50,12 @@ abstract class LockBackendAbstract implements LockBackendInterface {
       // This function should only be called by a request that failed to get a
       // lock, so we sleep first to give the parallel request a chance to finish
       // and release the lock.
-      usleep($sleep);
+      usleepNonBlocking($sleep);
       // After each sleep, increase the value of $sleep until it reaches
       // 500ms, to reduce the potential for a lock stampede.
       $delay = $delay - $sleep;
       $sleep = min(500000, $sleep + 25000, $delay);
       if ($this->lockMayBeAvailable($name)) {
-        // No longer need to wait.
         return FALSE;
       }
     }

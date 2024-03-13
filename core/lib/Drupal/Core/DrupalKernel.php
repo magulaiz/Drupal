@@ -24,6 +24,8 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Security\RequestSanitizer;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Test\TestDatabase;
+use Revolt\EventLoop;
+use Revolt\EventLoop\InvalidCallbackError;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -712,6 +714,26 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         $this->initializeSettings($request);
         $this->boot();
       }
+
+      // We repeatedly try to pre-warm a cache. Repeating tasks are of lower
+      // priority than deferred tasks and this won't start until the next tick.
+      // This means that the repeat will only run at-least once if the response
+      // handler suspends at some point.
+      $callbackId = EventLoop::repeat(0, function ($callbackId) {
+        // While we're pre-warming a cache we don't want to start on the next
+        // one so disable for now.
+        EventLoop::disable($callbackId);
+        $this->container->get('cache_prewarmer')?->preWarmOneCache();
+        // And resume when we're done with our pre-warm, if our repeat hasn't
+        // been cancelled yet.
+        // Catch until https://github.com/revoltphp/event-loop/issues/91.
+        try {
+          EventLoop::enable($callbackId);
+        }
+        catch (InvalidCallbackError $e) {
+        }
+      });
+
       $response = $this->getHttpKernel()->handle($request, $type, $catch);
     }
     catch (\Exception $e) {
@@ -720,6 +742,13 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       }
 
       $response = $this->handleException($e, $request, $type);
+    }
+    finally {
+      if (isset($callbackId)) {
+        // If the response has completed or failed we cancel the repeating cache
+        // pre-warming from executing again.
+        EventLoop::cancel($callbackId);
+      }
     }
 
     // Adapt response headers to the current request.
