@@ -4,6 +4,8 @@ namespace Drupal\migrate\Plugin\migrate\destination;
 
 use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\Schema\ArrayElement;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Entity\DependencyTrait;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -139,12 +141,41 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface,
         $this->config->set(str_replace(Row::PROPERTY_SEPARATOR, '.', $key), $value);
       }
     }
+    $typed_config = \Drupal::service('config.typed');
+    assert($typed_config instanceof TypedConfigManagerInterface);
+    $name = $this->config->getName();
+
+    // Ensure that translatable config has `langcode` specified.
+    // @see \Drupal\Core\Validation\Plugin\Validation\Constraint\LangcodeRequiredIfTranslatableValuesConstraint
+    if ($typed_config->hasConfigSchema($name)
+      && self::containsTranslatableValue($typed_config->createFromNameAndData($name, $this->config->getRawData()))
+      && !$this->config->get('langcode')
+    ) {
+      $this->config->set('langcode', \Drupal::service('language.default')->get()->getId());
+    }
     $this->config->save();
     $ids[] = $this->config->getName();
     if ($this->isTranslationDestination()) {
       $ids[] = $row->getDestinationProperty('langcode');
     }
     return $ids;
+  }
+
+  private static function containsTranslatableValue(ArrayElement $elements): bool {
+    foreach ($elements as $element) {
+      // Early return if found.
+      if ($element->getDataDefinition()['translatable'] === TRUE) {
+        return TRUE;
+      }
+      if ($element instanceof ArrayElement) {
+        $is_translatable = self::containsTranslatableValue($element);
+        // Early return if found.
+        if ($is_translatable) {
+          return TRUE;
+        }
+      }
+    }
+    return FALSE;
   }
 
   /**
