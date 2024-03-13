@@ -21,6 +21,10 @@ class EntityType extends Plugin {
 
   public function __construct(
     public readonly string $id,
+    public readonly ?TranslatableMarkup $label = NULL,
+    public readonly ?TranslatableMarkup $label_collection = NULL,
+    public readonly ?TranslatableMarkup $label_singular = NULL,
+    public readonly ?TranslatableMarkup $label_plural = NULL,
     public readonly string $entity_type_class = 'Drupal\Core\Entity\EntityType',
     public readonly string $group = 'default',
     public readonly ?TranslatableMarkup $group_label = NULL,
@@ -43,10 +47,6 @@ class EntityType extends Plugin {
     public readonly bool $internal = FALSE,
     public readonly bool $translatable = FALSE,
     public readonly bool $show_revision_ui = FALSE,
-    public readonly ?TranslatableMarkup $label = NULL,
-    public readonly ?TranslatableMarkup $label_collection = NULL,
-    public readonly ?TranslatableMarkup $label_singular = NULL,
-    public readonly ?TranslatableMarkup $label_plural = NULL,
     public readonly array $label_count = [],
     public readonly ?string $uri_callback = NULL,
     public readonly ?string $field_ui_base_route = NULL,
