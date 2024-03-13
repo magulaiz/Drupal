@@ -8,9 +8,10 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermStorageInterface;
 use Drupal\taxonomy\VocabularyStorageInterface;
-use Drupal\views\ViewExecutable;
+use Drupal\views\FilterOptionsCacheTrait;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\filter\ManyToOne;
+use Drupal\views\ViewExecutable;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -21,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @ViewsFilter("taxonomy_index_tid")
  */
 class TaxonomyIndexTid extends ManyToOne {
-
+  use FilterOptionsCacheTrait;
   /**
    * Stores the exposed input for this filter.
    *
@@ -98,6 +99,9 @@ class TaxonomyIndexTid extends ManyToOne {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function hasExtraOptions() {
     return TRUE;
   }
@@ -109,6 +113,9 @@ class TaxonomyIndexTid extends ManyToOne {
     return $this->valueOptions;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -121,6 +128,9 @@ class TaxonomyIndexTid extends ManyToOne {
     return $options;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildExtraOptionsForm(&$form, FormStateInterface $form_state) {
     $vocabularies = $this->vocabularyStorage->loadMultiple();
     $options = [];
@@ -165,6 +175,9 @@ class TaxonomyIndexTid extends ManyToOne {
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function valueForm(&$form, FormStateInterface $form_state) {
     $vocabulary = $this->vocabularyStorage->load($this->options['vid']);
     if (empty($vocabulary) && $this->options['limit']) {
@@ -191,42 +204,49 @@ class TaxonomyIndexTid extends ManyToOne {
       }
     }
     else {
-      if (!empty($this->options['hierarchy']) && $this->options['limit']) {
-        $tree = $this->termStorage->loadTree($vocabulary->id(), 0, NULL, TRUE);
-        $options = [];
+      $this->optionsCacheAddContext(['user.permissions']);
+      $options = $this->optionsCacheGet();
+      if (!$options) {
+        if (!empty($this->options['hierarchy']) && $this->options['limit']) {
 
-        if ($tree) {
-          foreach ($tree as $term) {
-            if (!$term->isPublished() && !$this->currentUser->hasPermission('administer taxonomy')) {
-              continue;
+          $tree = $this->termStorage->loadTree($vocabulary->id(), 0, NULL, TRUE);
+          $options = [];
+          if ($tree) {
+            foreach ($tree as $term) {
+              if (!$term->isPublished() && !$this->currentUser->hasPermission('administer taxonomy')) {
+                continue;
+              }
+              $choice = new \stdClass();
+              $choice->option = [$term->id() => str_repeat('-', $term->depth) . \Drupal::service('entity.repository')->getTranslationFromContext($term)->label()];
+              $options[] = $choice;
+              $this->optionsCacheAddTags($term->getCacheTags());
             }
-            $choice = new \stdClass();
-            $choice->option = [$term->id() => str_repeat('-', $term->depth) . \Drupal::service('entity.repository')->getTranslationFromContext($term)->label()];
-            $options[] = $choice;
           }
         }
+        else {
+          $options = [];
+          $query = \Drupal::entityQuery('taxonomy_term')
+            ->accessCheck(TRUE)
+            // @todo Sorting on vocabulary properties -
+            //   https://www.drupal.org/node/1821274.
+            ->sort('weight')
+            ->sort('name')
+            ->addTag('taxonomy_term_access');
+          if (!$this->currentUser->hasPermission('administer taxonomy')) {
+            $query->condition('status', 1);
+          }
+          if ($this->options['limit']) {
+            $query->condition('vid', $vocabulary->id());
+          }
+          $terms = Term::loadMultiple($query->execute());
+          foreach ($terms as $term) {
+            $options[$term->id()] = \Drupal::service('entity.repository')->getTranslationFromContext($term)->label();
+            $this->optionsCacheAddTags($term->getCacheTags());
+          }
+        }
+        $this->optionsCacheAddTags(['taxonomy_term_list:' . $this->options['vid']]);
+        $this->optionsCacheSet($options);
       }
-      else {
-        $options = [];
-        $query = \Drupal::entityQuery('taxonomy_term')
-          ->accessCheck(TRUE)
-          // @todo Sorting on vocabulary properties -
-          //   https://www.drupal.org/node/1821274.
-          ->sort('weight')
-          ->sort('name')
-          ->addTag('taxonomy_term_access');
-        if (!$this->currentUser->hasPermission('administer taxonomy')) {
-          $query->condition('status', 1);
-        }
-        if ($this->options['limit']) {
-          $query->condition('vid', $vocabulary->id());
-        }
-        $terms = Term::loadMultiple($query->execute());
-        foreach ($terms as $term) {
-          $options[$term->id()] = \Drupal::service('entity.repository')->getTranslationFromContext($term)->label();
-        }
-      }
-
       $default_value = (array) $this->value;
 
       if ($exposed = $form_state->get('exposed')) {
@@ -276,7 +296,7 @@ class TaxonomyIndexTid extends ManyToOne {
     }
 
     if (!$form_state->get('exposed')) {
-      // Retain the helper option
+      // Retain the helper option.
       $this->helper->buildOptionsForm($form, $form_state);
 
       // Show help text if not exposed to end users.
@@ -284,6 +304,9 @@ class TaxonomyIndexTid extends ManyToOne {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function valueValidate($form, FormStateInterface $form_state) {
     // We only validate if they've chosen the text field style.
     if ($this->options['type'] != 'textfield') {
@@ -299,6 +322,9 @@ class TaxonomyIndexTid extends ManyToOne {
     $form_state->setValue(['options', 'value'], $tids);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function acceptExposedInput($input) {
     if (empty($this->options['exposed'])) {
       return TRUE;
@@ -311,7 +337,7 @@ class TaxonomyIndexTid extends ManyToOne {
     }
 
     // If view is an attachment and is inheriting exposed filters, then assume
-    // exposed input has already been validated
+    // exposed input has already been validated.
     if (!empty($this->view->is_attachment) && $this->view->display_handler->usesExposed()) {
       $this->validated_exposed_input = (array) $this->view->exposed_raw_input[$this->options['expose']['identifier']];
     }
@@ -338,6 +364,9 @@ class TaxonomyIndexTid extends ManyToOne {
     return $rc;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function validateExposed(&$form, FormStateInterface $form_state) {
     if (empty($this->options['exposed'])) {
       return;
@@ -370,10 +399,16 @@ class TaxonomyIndexTid extends ManyToOne {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function valueSubmit($form, FormStateInterface $form_state) {
-    // prevent array_filter from messing up our arrays in parent submit.
+    // Prevent array_filter from messing up our arrays in parent submit.
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function buildExposeForm(&$form, FormStateInterface $form_state) {
     parent::buildExposeForm($form, $form_state);
     if ($this->options['type'] != 'select') {
@@ -386,8 +421,11 @@ class TaxonomyIndexTid extends ManyToOne {
     ];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function adminSummary() {
-    // set up $this->valueOptions for the parent summary
+    // Set up $this->valueOptions for the parent summary.
     $this->valueOptions = [];
 
     if ($this->value) {
