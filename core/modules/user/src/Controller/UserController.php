@@ -415,10 +415,9 @@ class UserController extends ControllerBase {
     if ($this->currentUser()->isAuthenticated()) {
       $token = $request->query->get('token');
 
-      // Show confirm form when no valid csrf token is present.
+      // Show confirm form when no valid CSRF token is present.
       if (!$token || !$this->csrfToken->validate($token, 'user/logout')) {
-        return $this->formBuilder()
-          ->getForm(UserLogoutConfirm::class);
+        return $this->formBuilder()->getForm(UserLogoutConfirm::class);
       }
     }
     return $this->redirect('<front>');
