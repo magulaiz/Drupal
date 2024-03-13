@@ -70,17 +70,17 @@ class DatabaseEventSubscriber implements EventSubscriberInterface {
   }
 
   /**
-  * Subscribes to a statement execution failure event.
-  *
-  * @param \Drupal\Core\Database\Event\StatementExecutionFailureEvent $event
-  *   The database event.
-  */
- public function onStatementExecutionFailure(StatementExecutionFailureEvent $event): void {
-   unset($this->statementIdsInExecution[$event->statementObjectId]);
-   $this->countStatementFailures++;
- }
+   * Subscribes to a statement execution failure event.
+   *
+   * @param \Drupal\Core\Database\Event\StatementExecutionFailureEvent $event
+   *   The database event.
+   */
+  public function onStatementExecutionFailure(StatementExecutionFailureEvent $event): void {
+    unset($this->statementIdsInExecution[$event->statementObjectId]);
+    $this->countStatementFailures++;
+  }
 
- /**
+  /**
    * Subscribes to a TransactionBeginEvent.
    *
    * @param \Drupal\Core\Database\Event\TransactionBeginEvent $event
