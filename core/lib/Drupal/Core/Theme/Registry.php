@@ -11,6 +11,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Utility\ThemeRegistry;
+use Revolt\EventLoop;
 
 /**
  * Defines the theme registry service.
@@ -240,24 +241,32 @@ class Registry implements DestructableInterface {
     if ($cached = $this->cacheGet()) {
       return $cached;
     }
-    // If called from inside a Fiber, suspend it, this may allow another code
-    // path to begin an asynchronous operation before we do the CPU-intensive
-    // task of building the theme registry.
-    if (\Fiber::getCurrent() !== NULL) {
-      \Fiber::suspend();
-      // When the Fiber is resumed, check the cache again since it may have been
-      // built in the meantime, either in this process or via a different
+    // If we can not load the registry from the cache then we defer building
+    // the registry to the next tick of the event loop. This may allow another
+    // code path to begin an asynchronous operation before we do the
+    // CPU-intensive task of building the theme registry.
+    $suspension = EventLoop::getSuspension();
+    EventLoop::defer(function () use ($suspension) {
+      // When our deferred task starts, check the cache again since it may have
+      // been  built in the meantime, either in this process or via a different
       // request altogether.
       if ($cached = $this->cacheGet()) {
-        return $cached;
+        $suspension->resume($cached);
+        // @todo Remove after https://www.drupal.org/project/coder/issues/3427690.
+        // phpcs:ignore
+        return;
       }
-    }
-    $this->build();
-    // Only persist it if all modules are loaded to ensure it is complete.
-    if ($this->moduleHandler->isLoaded()) {
-      $this->setCache();
-    }
-    return $this->registry[$this->theme->getName()];
+
+      $this->build();
+      // Only persist it if all modules are loaded to ensure it is complete.
+      if ($this->moduleHandler->isLoaded()) {
+        $this->setCache();
+      }
+
+      $suspension->resume($this->registry[$this->theme->getName()]);
+    });
+    // Block the calling code until we have our result.
+    return $suspension->suspend();
   }
 
   /**

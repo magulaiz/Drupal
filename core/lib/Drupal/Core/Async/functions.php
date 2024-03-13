@@ -57,3 +57,35 @@ function stream(array $operations) : \Generator {
     yield $key => $result;
   }
 }
+
+/**
+ * Delay execution in a non-blocking way.
+ *
+ * The code after this function call will resume after at least $seconds of
+ * waiting but the program will remain available to do other tasks in the
+ * meantime. The delay is a minimum and approximate, accuracy is not guaranteed.
+ *
+ * @param int<0,max> $seconds
+ *   Delay time in seconds.
+ */
+function sleepNonBlocking(int $seconds) : void {
+  $suspension = EventLoop::getSuspension();
+  EventLoop::delay($seconds, fn () => $suspension->resume());
+  $suspension->suspend();
+}
+
+/**
+ * Delay execution in a non-blocking way in microseconds.
+ *
+ * The code after this function call will resume after at least $seconds of
+ * waiting but the program will remain available to do other tasks in the
+ * meantime. The delay is a minimum and approximate, accuracy is not guaranteed.
+ *
+ * @param int<0,max> $microseconds
+ *   Delay time in micro seconds. A micro second is one millionth of a second.
+ */
+function usleepNonBlocking(int $microseconds) : void {
+  $suspension = EventLoop::getSuspension();
+  EventLoop::delay($microseconds / 1000000, fn () => $suspension->resume());
+  $suspension->suspend();
+}

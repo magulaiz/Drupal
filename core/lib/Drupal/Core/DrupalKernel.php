@@ -24,6 +24,8 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Security\RequestSanitizer;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Test\TestDatabase;
+use Revolt\EventLoop;
+use Revolt\EventLoop\InvalidCallbackError;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -712,18 +714,27 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         $this->initializeSettings($request);
         $this->boot();
       }
-      // Wrap request handling in a Fiber, this allows us to call the cache
-      // prewarming service if any code tries to suspend a fiber.
-      $fiber = new \Fiber(fn() => $this->getHttpKernel()->handle($request, $type, $catch));
-      $fiber->start();
-      while ($fiber->isSuspended()) {
-        $this->container->get('cache_prewarmer')->preWarmOneCache();
-        $fiber->resume();
-      }
-      // If the fiber isn't suspended, it's either terminated or an exception
-      // has been thrown, so it should be safe to get the return value without
-      // explicitly checking \Fiber::isTerminated().
-      $response = $fiber->getReturn();
+
+      // We repeatedly try to pre-warm a cache. Repeating tasks are of lower
+      // priority than deferred tasks and this won't start until the next tick.
+      // This means that the repeat will only run at-least once if the response
+      // handler suspends at some point.
+      $callbackId = EventLoop::repeat(0, function ($callbackId) {
+        // While we're pre-warming a cache we don't want to start on the next
+        // one so disable for now.
+        EventLoop::disable($callbackId);
+        $this->container->get('cache_prewarmer')?->preWarmOneCache();
+        // And resume when we're done with our pre-warm, if our repeat hasn't
+        // been cancelled yet.
+        // Catch until https://github.com/revoltphp/event-loop/issues/91.
+        try {
+          EventLoop::enable($callbackId);
+        }
+        catch (InvalidCallbackError $e) {
+        }
+      });
+
+      $response = $this->getHttpKernel()->handle($request, $type, $catch);
     }
     catch (\Exception $e) {
       if ($catch === FALSE) {
@@ -731,6 +742,13 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       }
 
       $response = $this->handleException($e, $request, $type);
+    }
+    finally {
+      if (isset($callbackId)) {
+        // If the response has completed or failed we cancel the repeating cache
+        // pre-warming from executing again.
+        EventLoop::cancel($callbackId);
+      }
     }
 
     // Adapt response headers to the current request.
