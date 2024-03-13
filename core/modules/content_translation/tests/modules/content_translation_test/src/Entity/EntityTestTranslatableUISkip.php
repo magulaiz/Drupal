@@ -10,7 +10,23 @@ use Drupal\entity_test\Entity\EntityTest;
 /**
  * Defines the test entity class.
  */
-#[\Drupal\Core\Entity\Attribute\ContentEntityType(id: 'entity_test_translatable_UI_skip', label: new TranslatableMarkup('Test entity - Translatable skip UI check'), base_table: 'entity_test_mul', data_table: 'entity_test_mul_property_data', entity_keys: ['id' => 'id', 'uuid' => 'uuid', 'bundle' => 'type', 'label' => 'name', 'langcode' => 'langcode'], translatable: TRUE, content_translation_ui_skip: TRUE)]
+#[\Drupal\Core\Entity\Attribute\ContentEntityType(
+  id: 'entity_test_translatable_UI_skip',
+  label: new TranslatableMarkup('Test entity - Translatable skip UI check'),
+  base_table: 'entity_test_mul',
+  data_table: 'entity_test_mul_property_data',
+  entity_keys: [
+    'id' => 'id',
+    'uuid' => 'uuid',
+    'bundle' => 'type',
+    'label' => 'name',
+    'langcode' => 'langcode',
+  ],
+  translatable: TRUE,
+  additional: [
+    'content_translation_ui_skip' => TRUE,
+  ],
+)]
 class EntityTestTranslatableUISkip extends EntityTest {
 
 }

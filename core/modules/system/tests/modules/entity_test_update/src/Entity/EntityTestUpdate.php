@@ -18,7 +18,26 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * methods from
  * \Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait.
  */
-#[\Drupal\Core\Entity\Attribute\ContentEntityType(id: 'entity_test_update', label: new TranslatableMarkup('Test entity update'), handlers: ['storage_schema' => 'Drupal\entity_test_update\EntityTestUpdateStorageSchema', 'storage' => 'Drupal\entity_test_update\EntityTestUpdateStorage'], base_table: 'entity_test_update', persistent_cache: FALSE, entity_keys: ['id' => 'id', 'uuid' => 'uuid', 'bundle' => 'type', 'label' => 'name', 'langcode' => 'langcode'], content_translation_ui_skip: TRUE)]
+#[\Drupal\Core\Entity\Attribute\ContentEntityType(
+  id: 'entity_test_update',
+  label: new TranslatableMarkup('Test entity update'),
+  handlers: [
+  'storage_schema' => 'Drupal\entity_test_update\EntityTestUpdateStorageSchema',
+  'storage' => 'Drupal\entity_test_update\EntityTestUpdateStorage',
+  ],
+  base_table: 'entity_test_update',
+  persistent_cache: FALSE,
+    entity_keys: [
+    'id' => 'id',
+    'uuid' => 'uuid',
+    'bundle' => 'type',
+    'label' => 'name',
+    'langcode' => 'langcode',
+  ],
+  additional: [
+    'content_translation_ui_skip' => TRUE,
+  ],
+)]
 class EntityTestUpdate extends ContentEntityBase {
 
   /**

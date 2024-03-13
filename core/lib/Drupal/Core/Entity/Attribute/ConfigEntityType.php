@@ -56,8 +56,7 @@ class ConfigEntityType extends EntityType {
     public readonly array $constraints = [],
     public readonly array $additional = [],
     public readonly array $lookup_keys = [],
-    public readonly array $config_export = [],
-    ...$base
+    public readonly array $config_export = []
   ) {
   }
 
