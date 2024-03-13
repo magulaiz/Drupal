@@ -186,6 +186,9 @@ trait LayoutEntityHelperTrait {
     $contexts = [];
 
     $contexts['entity'] = EntityContext::fromEntity($entity);
+    // @todo Expand to work for all view modes in
+    //   https://www.drupal.org/node/2907413.
+    $view_mode = 'full';
     // Retrieve the actual view mode from the returned view display as the
     // requested view mode may not exist and a fallback will be used.
     $view_mode = LayoutBuilderEntityViewDisplay::collectRenderDisplay($entity, $view_mode)->getMode();
