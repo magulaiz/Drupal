@@ -4,15 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit\destination;
 
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\destination\Config;
 use Drupal\Tests\UnitTestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
  * @coversDefaultClass \Drupal\migrate\Plugin\migrate\destination\Config
  * @group migrate
  */
 class ConfigTest extends UnitTestCase {
+
+  use ProphecyTrait;
 
   /**
    * Tests the import method.
@@ -35,7 +39,7 @@ class ConfigTest extends UnitTestCase {
     }
     $config->expects($this->once())
       ->method('save');
-    $config->expects($this->once())
+    $config->expects($this->any())
       ->method('getName')
       ->willReturn('d8_config');
     $config_factory = $this->createMock('Drupal\Core\Config\ConfigFactoryInterface');
@@ -56,7 +60,8 @@ class ConfigTest extends UnitTestCase {
       ->method('getLanguageConfigOverride')
       ->with('fr', 'd8_config')
       ->willReturn($config);
-    $destination = new Config(['config_name' => 'd8_config'], 'd8_config', ['pluginId' => 'd8_config'], $migration, $config_factory, $language_manager);
+    $typed_config_manager = $this->prophesize(TypedConfigManagerInterface::class);
+    $destination = new Config(['config_name' => 'd8_config'], 'd8_config', ['pluginId' => 'd8_config'], $migration, $config_factory, $language_manager, $typed_config_manager->reveal());
     $destination_id = $destination->import($row);
     $this->assertEquals(['d8_config'], $destination_id);
   }
@@ -106,7 +111,8 @@ class ConfigTest extends UnitTestCase {
       ->method('getLanguageConfigOverride')
       ->with('mi', 'd8_config')
       ->willReturn($config);
-    $destination = new Config(['config_name' => 'd8_config', 'translations' => 'true'], 'd8_config', ['pluginId' => 'd8_config'], $migration, $config_factory, $language_manager);
+    $typed_config_manager = $this->prophesize(TypedConfigManagerInterface::class);
+    $destination = new Config(['config_name' => 'd8_config', 'translations' => 'true'], 'd8_config', ['pluginId' => 'd8_config'], $migration, $config_factory, $language_manager, $typed_config_manager->reveal());
     $destination_id = $destination->import($row);
     $this->assertEquals(['d8_config', 'mi'], $destination_id);
   }
