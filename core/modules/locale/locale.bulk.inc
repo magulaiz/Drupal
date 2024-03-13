@@ -595,7 +595,7 @@ function locale_config_batch_build(array $names, array $langcodes, array $option
     // it is very expensive to initialize the \Drupal::config() object on each
     // request. We batch a small number of configuration object upgrades
     // together to improve the overall performance of the process.
-    $batch_builder->addOperation('locale_config_batch_update_config_translations', [$batch_names, $langcodes]);
+    $batch_builder->addOperation('locale_config_batch_update_config_translations', [$chunk, $langcodes]);
   }
 
   if (!empty($options['finish_feedback'])) {
