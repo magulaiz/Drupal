@@ -203,14 +203,7 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
     if ($this->stack() === []) {
       return '*** empty ***';
     }
-
-    $stackItemsArray = $this->stackItemsAsArray();
-    return implode(' > ', array_map(
-      fn(string $key, string $value): string => $key . '\\' . $value,
-        array_keys($stackItemsArray),
-        array_values($stackItemsArray)
-      )
-    );
+    return implode(' > ', $this->stackItemsAsArray());
   }
 
   /**
@@ -219,12 +212,14 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
    * Drivers should not override this method unless they also override the
    * $stack property.
    *
-   * @return array<string,string>
-   *   The array representation of the stack items, with id for key, and
-   *   name for value.
+   * @return list<string>
+   *   The array of stack items represented like id\name.
    */
   protected function stackItemsAsArray(): array {
-    return array_map(fn(StackItem $item): string => $item->name, $this->stack());
+    return array_map(fn(string $id, StackItem $item): string => $id . '\\' . $item->name,
+      array_keys($this->stack()),
+      array_values($this->stack()),
+    );
   }
 
   /**
@@ -305,16 +300,12 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
       // database savepoint, rather than try to begin another database
       // transaction.
       if ($this->connection->isEventEnabled(TransactionSavepointEvent::class)) {
-        $temp = [];
-        foreach ($this->stack() as $id => $item) {
-          $temp[] = $id . '\\' . $item->name;
-        }
         $this->connection->dispatchEvent(new TransactionSavepointEvent(
           $this->connection->getKey(),
           $this->connection->getTarget(),
           $id,
           $name,
-          $temp,
+          $this->stackItemsAsArray(),
         ));
       }
       $this->addClientSavepoint($name);

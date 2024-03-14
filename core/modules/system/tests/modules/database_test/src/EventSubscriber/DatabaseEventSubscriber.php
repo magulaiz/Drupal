@@ -97,7 +97,7 @@ class DatabaseEventSubscriber implements EventSubscriberInterface {
    *   The transaction event.
    */
   public function onTransactionSavepoint(TransactionSavepointEvent $event): void {
-    throw new \RuntimeException($event->key . ' ' . $event->target . ' ' . $event->id . '\\' . $event->name . ' ' . implode(' > ', $event->stackItems));
+    throw new \RuntimeException($event->key . ' ' . $event->target . ' ' . $event->id . '\\' . $event->name . ' stack: ' . implode(' > ', $event->stackItems));
   }
 
 }

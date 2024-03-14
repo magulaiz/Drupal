@@ -26,7 +26,7 @@ class TransactionEventTest extends DatabaseTestBase {
    */
   public function testTransactionBegin(): void {
     $this->expectException(\RuntimeException::class);
-    $this->expectExceptionMessage("default default drupal_transaction");
+    $this->expectExceptionMessageMatches("/^default default .*\\\\drupal_transaction/");
     $tx = $this->connection->startTransaction();
   }
 
@@ -39,7 +39,7 @@ class TransactionEventTest extends DatabaseTestBase {
     ]);
     $tx = $this->connection->startTransaction();
     $this->expectException(\RuntimeException::class);
-    $this->expectExceptionMessage("default default savepoint_1 drupal_transaction");
+    $this->expectExceptionMessageMatches("/^default default .*\\\\savepoint_1 stack: .*\\\\drupal_transaction/");
     $savepoint = $this->connection->startTransaction();
   }
 
