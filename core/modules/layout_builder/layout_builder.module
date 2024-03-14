@@ -215,7 +215,7 @@ function layout_builder_entity_delete(EntityInterface $entity) {
 /**
  * Implements hook_entity_update().
  */
-function layout_builder_entity_update(EntityInterface $entity) {
+function layout_builder_entity_update(EntityInterface $entity): void {
   $route_name = \Drupal::routeMatch()->getRouteName();
 
   // See if the entity's layout must be updated with the new entity values if:

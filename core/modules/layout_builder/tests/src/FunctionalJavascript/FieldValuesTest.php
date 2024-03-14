@@ -52,7 +52,7 @@ class FieldValuesTest extends WebDriverTestBase {
   /**
    * Test that changes to fields are visible in the layout builder UI.
    */
-  public function testLayoutBuilderUiDoesNotShowStaleEntityFieldValues() {
+  public function testLayoutBuilderUiDoesNotShowStaleEntityFieldValues(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 

@@ -165,7 +165,7 @@ trait LayoutEntityHelperTrait {
    * @return \Drupal\layout_builder\SectionStorageInterface
    *   The section storage.
    */
-  public function getSectionStorageFromEntity(FieldableEntityInterface $entity) {
+  public function getSectionStorageFromEntity(FieldableEntityInterface $entity): SectionStorageInterface {
     $contexts = $this->getSectionStorageContextFromEntity($entity);
     return $this->sectionStorageManager()->load('overrides', $contexts);
   }
@@ -179,7 +179,7 @@ trait LayoutEntityHelperTrait {
    * @return \Drupal\Core\Plugin\Context\ContextInterface[]
    *   The section storage contexts.
    */
-  public function getSectionStorageContextFromEntity(FieldableEntityInterface $entity) {
+  public function getSectionStorageContextFromEntity(FieldableEntityInterface $entity): array {
     $contexts = [];
 
     $contexts['entity'] = EntityContext::fromEntity($entity);

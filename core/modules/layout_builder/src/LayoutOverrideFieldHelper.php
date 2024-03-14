@@ -47,7 +47,7 @@ class LayoutOverrideFieldHelper implements ContainerInjectionInterface {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('plugin.manager.layout_builder.section_storage'),
       $container->get('layout_builder.tempstore_repository')
@@ -60,7 +60,7 @@ class LayoutOverrideFieldHelper implements ContainerInjectionInterface {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity with the overridden layout.
    */
-  public function updateTempstoreEntityContext(EntityInterface $entity) {
+  public function updateTempstoreEntityContext(EntityInterface $entity): void {
     if ($section_storage = $this->getSectionStorageFromEntity($entity)) {
 
       // This is only necessary if there is a layout override in the tempstore.
