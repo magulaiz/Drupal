@@ -131,10 +131,16 @@ views.filter.many_to_one:
 views.filter.entity_reference:
   type: views.filter.many_to_one
   label: 'Entity reference'
+  constraints:
+    FullyValidatable: ~
   mapping:
     sub_handler:
       type: string
       label: 'Selection handler'
+      constraints:
+        PluginExists:
+          manager: plugin.manager.entity_reference_selection
+          interface: 'Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface'
     widget:
       type: string
       label: 'Selection type'
