@@ -27,8 +27,7 @@
     "once": true,
     "CKEditor5": true,
     "tabbable": true,
-    "slugify": true,
-    "bodyScrollLock" : true
+    "slugify": true
   },
   "rules": {
     "prettier/prettier": "error",

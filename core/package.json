@@ -98,7 +98,6 @@
     "terser": "^5.19.0",
     "terser-webpack-plugin": "^5.3.9",
     "transliteration": "^2.3.5",
-    "tua-body-scroll-lock": "^1.4.0",
     "underscore": "~1.13.4",
     "webpack": "^5.85.1",
     "webpack-cli": "^5.1.3"
