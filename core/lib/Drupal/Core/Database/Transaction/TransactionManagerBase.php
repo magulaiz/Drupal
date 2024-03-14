@@ -206,8 +206,8 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
 
     $stackItemsArray = $this->stackItemsAsArray();
     return implode(' > ', array_map(
-      fn(string $key, string $value): string => $key . '\\' . $value, 
-        array_keys($stackItemsArray), 
+      fn(string $key, string $value): string => $key . '\\' . $value,
+        array_keys($stackItemsArray),
         array_values($stackItemsArray)
       )
     );

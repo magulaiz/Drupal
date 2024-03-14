@@ -33,4 +33,5 @@ abstract class DatabaseEvent extends Event {
       TransactionEvent::all(),
     );
   }
+
 }
