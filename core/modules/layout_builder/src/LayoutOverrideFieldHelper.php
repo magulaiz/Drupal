@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\layout_builder;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
@@ -18,31 +20,12 @@ class LayoutOverrideFieldHelper implements ContainerInjectionInterface {
   use LayoutEntityHelperTrait;
 
   /**
-   * The section storage manager.
-   *
-   * @var \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface
-   */
-  protected $sectionStorageManager;
-
-  /**
-   * The layout tempstore repository.
-   *
-   * @var \Drupal\layout_builder\LayoutTempstoreRepositoryInterface
-   */
-  protected $layoutTempstoreRepository;
-
-  /**
    * LayoutOverrideFieldHelper constructor.
-   *
-   * @param \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface $section_storage_manager
-   *   The section storage manager.
-   * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layout_tempstore_repository
-   *   The layout tempstore repository.
    */
-  public function __construct(SectionStorageManagerInterface $section_storage_manager, LayoutTempstoreRepositoryInterface $layout_tempstore_repository) {
-    $this->sectionStorageManager = $section_storage_manager;
-    $this->layoutTempstoreRepository = $layout_tempstore_repository;
-  }
+  public function __construct(
+    protected SectionStorageManagerInterface $sectionStorageManager,
+    protected LayoutTempstoreRepositoryInterface $layoutTempstoreRepository,
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -55,7 +38,7 @@ class LayoutOverrideFieldHelper implements ContainerInjectionInterface {
   }
 
   /**
-   * Update a layout overrides's entity context when entity values change.
+   * Update a layout override's entity context when entity values change.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity with the overridden layout.

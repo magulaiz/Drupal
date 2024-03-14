@@ -37,7 +37,6 @@ class FieldValuesTest extends WebDriverTestBase {
     parent::setUp();
 
     $this->createContentType(['type' => 'bundle_for_testing_fields']);
-
     $this->drupalLogin($this->drupalCreateUser([
       'edit any bundle_for_testing_fields content',
       'configure any layout',

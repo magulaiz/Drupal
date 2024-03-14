@@ -12,6 +12,7 @@ use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
+use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 
 /**
  * Methods to help with entities using the layout builder.
@@ -20,10 +21,8 @@ trait LayoutEntityHelperTrait {
 
   /**
    * The section storage manager.
-   *
-   * @var \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface
    */
-  protected $sectionStorageManager;
+  protected SectionStorageManagerInterface $sectionStorageManager;
 
   /**
    * Determines if an entity can have a layout.
@@ -153,7 +152,7 @@ trait LayoutEntityHelperTrait {
    *   The section storage manager.
    */
   private function sectionStorageManager() {
-    return $this->sectionStorageManager ?: \Drupal::service('plugin.manager.layout_builder.section_storage');
+    return $this->sectionStorageManager ?? \Drupal::service('plugin.manager.layout_builder.section_storage');
   }
 
   /**

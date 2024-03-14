@@ -81,13 +81,6 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
   protected $entityFieldManager;
 
   /**
-   * The section storage manager.
-   *
-   * @var \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface
-   */
-  protected $sectionStorageManager;
-
-  /**
    * The entity repository.
    *
    * @var \Drupal\Core\Entity\EntityRepositoryInterface
