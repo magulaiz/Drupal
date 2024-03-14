@@ -185,7 +185,7 @@ class ComposerHookTest extends BuildTestBase {
     // the scaffold operation and see if the default settings file comes back,
     // and the robots.txt file modification is preserved.
     @unlink($sut . '/sites/default/default.settings.php');
-    $this->assertFileNotExists($sut . '/sites/default/default.settings.php');
+    $this->assertFileDoesNotExist($sut . '/sites/default/default.settings.php');
     $contents = file_get_contents($sut . '/robots.txt');
     file_put_contents($sut . '/robots.txt', $contents . "\n# Simulated user modification\n");
     $stdout = $this->mustExec("composer drupal:scaffold --no-ansi --no-interaction 2>&1", $sut);
@@ -196,7 +196,7 @@ class ComposerHookTest extends BuildTestBase {
     // Run the same test again to ensure that the scaffold tool still
     // understands that the deleted file is managed.
     @unlink($sut . '/sites/default/default.settings.php');
-    $this->assertFileNotExists($sut . '/sites/default/default.settings.php');
+    $this->assertFileDoesNotExist($sut . '/sites/default/default.settings.php');
     $stdout = $this->mustExec("composer drupal:scaffold --no-ansi --no-interaction 2>&1", $sut);
     $this->assertScaffoldedFile($sut . '/sites/default/default.settings.php', FALSE, 'Test version of default.settings.php from drupal/core');
     $post_scaffold_contents = file_get_contents($sut . '/robots.txt');
@@ -207,7 +207,7 @@ class ComposerHookTest extends BuildTestBase {
     // simulating the user selecting 'y' from the "discard modified" prompt.
     // Make sure that both files go back the way they were.
     @unlink($sut . '/sites/default/default.settings.php');
-    $this->assertFileNotExists($sut . '/sites/default/default.settings.php');
+    $this->assertFileDoesNotExist($sut . '/sites/default/default.settings.php');
     $contents = file_get_contents($sut . '/robots.txt');
     file_put_contents($sut . '/robots.txt', $contents . "\n# Simulated user modification\n");
     $stdout = $this->mustExec("composer drupal:scaffold --no-ansi --no-interaction 2>&1", $sut, ['DRUPAL_SCAFFOLD_DISCARD_MODIFIED' => 1]);
@@ -219,7 +219,7 @@ class ComposerHookTest extends BuildTestBase {
     // answering 'keep' to the "discard modified" prompt. Confirm that the
     // composer.json file is modified.
     @unlink($sut . '/sites/default/default.settings.php');
-    $this->assertFileNotExists($sut . '/sites/default/default.settings.php');
+    $this->assertFileDoesNotExist($sut . '/sites/default/default.settings.php');
     $contents = file_get_contents($sut . '/robots.txt');
     file_put_contents($sut . '/robots.txt', $contents . "\n# Simulated user modification\n");
     $stdout = $this->mustExec("composer drupal:scaffold --no-ansi --no-interaction 2>&1", $sut, ['DRUPAL_SCAFFOLD_KEEP_MODIFIED' => 1]);
