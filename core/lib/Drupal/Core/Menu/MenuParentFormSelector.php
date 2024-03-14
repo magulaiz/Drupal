@@ -152,7 +152,10 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
         $elements_wrapper = [
           'menu_parent_wrapper' => [
             '#type' => 'container',
-            '#attributes' => ['id' => $menu_parent_wrapper],
+            '#attributes' => [
+              'id' => $menu_parent_wrapper,
+              'aria-label' => 'Select menu and parent link.',
+            ],
             'menu_parent' => $elements['menu_parent'],
             'menu' => $elements['menu'],
             'submit' => $elements['menu_submit'],
