@@ -139,13 +139,13 @@
         .getContainer($element)
         .attr(`data-offset-${Drupal.offCanvas.getEdge()}`, '');
 
-      $(window)
-        .on(
+      window
+        .addEventListener(
           'resize.off-canvas',
           eventData,
           debounce(Drupal.offCanvas.resetSize, 100, true),
         )
-        .trigger('resize.off-canvas');
+        .dispatchEvent(new Event('resize.off-canvas'));
     },
 
     /**
@@ -246,7 +246,7 @@
 
       $element
         .dialog('option', adjustedOptions)
-        .trigger('dialogContentResize.off-canvas');
+        .dispatchEvent(new Event('dialogContentResize.off-canvas'));
 
       Drupal.offCanvas.position = position;
     },
