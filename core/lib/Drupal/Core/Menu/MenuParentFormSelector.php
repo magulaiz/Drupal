@@ -150,15 +150,15 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
         ];
         $elements['menu_parent'] = [];
         $elements_wrapper = [
-        'menu_parent_wrapper' => [
-          '#type' => 'container',
-          '#attributes' => ['id' => $menu_parent_wrapper],
-          'menu_parent' => $elements['menu_parent'],
-          'menu' => $elements['menu'],
-          'submit' => $elements['menu_submit'],
-          '#ajax' => [
-            'callback' => [$this, 'updateParentLinks'],
-            'wrapper' => $menu_parent_wrapper,
+          'menu_parent_wrapper' => [
+            '#type' => 'container',
+            '#attributes' => ['id' => $menu_parent_wrapper],
+            'menu_parent' => $elements['menu_parent'],
+            'menu' => $elements['menu'],
+            'submit' => $elements['menu_submit'],
+            '#ajax' => [
+              'callback' => [$this, 'updateParentLinks'],
+              'wrapper' => $menu_parent_wrapper,
             ],
           ],
         ];
