@@ -273,7 +273,7 @@ class HashManager {
     if (getenv('DRUPAL_SCAFFOLD_DISCARD_MODIFIED')) {
       return 'y';
     }
-    // Default is to abort the scaffold operaion.
+    // Default is to abort the scaffold operation.
     return 'a';
   }
 
