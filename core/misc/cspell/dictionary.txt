@@ -574,6 +574,7 @@ replyto
 resave
 resaved
 resaving
+rescaffold
 restrictor
 restripe
 restriped
