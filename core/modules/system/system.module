@@ -1228,8 +1228,8 @@ function system_archiver_info_alter(&$info) {
  */
 function system_config_schema_info_alter(&$definitions) {
   $config_entity_types = array_filter(
-    \Drupal::service('entity_type.manager')->getDefinitions(),
-    fn (EntityTypeInterface $entity_type) => $entity_type instanceof ConfigEntityTypeInterface,
+    \Drupal::entityTypeManager()->getDefinitions(),
+    fn ($entity_type) => $entity_type instanceof ConfigEntityTypeInterface,
   );
   foreach ($config_entity_types as $config_entity_type) {
     // Find the config schema type for this config entity type.
@@ -1240,11 +1240,11 @@ function system_config_schema_info_alter(&$definitions) {
       fn (string $config_schema_type) => str_starts_with($config_schema_type, "$prefix.") && str_ends_with($config_schema_type, '.*'),
     );
     if (count($matches) !== 1) {
-      throw new \LogicException(sprintf('Did not find 1 match but %d matches for the "%s" config entity type prefix "%s": %s.',
+      throw new \LogicException(sprintf('The "%s" config entity type prefix (%s) should only match one config schema type, but it matched %d: %s.',
         count($matches),
         $config_entity_type->getLabel(),
         $prefix,
-        implode(', ', $matches)
+        implode(', ', $matches),
       ));
     }
     $matching_config_schema_type = reset($matches);

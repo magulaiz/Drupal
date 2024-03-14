@@ -42,7 +42,7 @@ class ImmutablePropertiesConstraintValidator extends ConstraintValidator impleme
     assert($constraint instanceof ImmutablePropertiesConstraint);
 
     if (!$value instanceof ConfigEntityInterface && !is_array($value)) {
-      throw new UnexpectedValueException($value, ConfigEntityInterface::class);
+      throw new UnexpectedValueException($value, ConfigEntityInterface::class . '|array');
     }
 
     // Config entities can be represented using either ConfigEntityAdapter or a

@@ -148,7 +148,7 @@ class ConfigEntityAdapter extends EntityAdapter {
   /**
    * {@inheritdoc}
    */
-  public static function createFromEntity(EntityInterface $entity) {
+  public static function createFromEntity(EntityInterface $entity): static {
     assert($entity instanceof ConfigEntityInterface);
     $instance = parent::createFromEntity($entity);
 
