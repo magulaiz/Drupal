@@ -42,17 +42,17 @@ class FieldValuesTest extends WebDriverTestBase {
       'edit any bundle_for_testing_fields content',
       'configure any layout',
     ]));
-    LayoutBuilderEntityViewDisplay::load('node.bundle_for_testing_fields.full')
-      ->enable()
+    LayoutBuilderEntityViewDisplay::load('node.bundle_for_testing_fields.default')
+      ->createCopy('full')
       ->enableLayoutBuilder()
       ->setOverridable()
       ->save();
   }
 
   /**
-   * Test that changes to fields are visible in layout and UI.
+   * Test that changes to fields are visible in the layout builder UI.
    */
-  public function testUiCurrentWithEntityFieldChanges() {
+  public function testLayoutBuilderUiDoesNotShowStaleEntityFieldValues() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
