@@ -223,36 +223,6 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
   }
 
   /**
-   * Enables transaction events dispatching.
-   *
-   * @param string[] $eventNames
-   *   (Optional) A list of transaction events to be enabled. If left blank,
-   *   all transaction events will be enabled.
-   */
-  public function enableEvents(array $eventNames = []): void {
-    $events = TransactionEvent::all();
-    if (!empty($eventNames)) {
-      $events = array_intersect($events, $eventNames);
-    }
-    $this->connection->enableEvents($events);
-  }
-
-  /**
-   * Disables transaction events dispatching.
-   *
-   * @param string[] $eventNames
-   *   (Optional) A list of transaction events to be disabled. If left blank,
-   *   all transaction events will be disabled.
-   */
-  public function disableEvents(array $eventNames = []): void {
-    $events = TransactionEvent::all();
-    if (!empty($eventNames)) {
-      $events = array_intersect($events, $eventNames);
-    }
-    $this->connection->disableEvents($events);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function inTransaction(): bool {

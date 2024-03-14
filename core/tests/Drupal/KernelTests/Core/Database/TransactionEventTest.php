@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Event\TransactionBeginEvent;
+use Drupal\Core\Database\Event\TransactionEvent;
 
 /**
  * Tests the Transaction events.
@@ -18,7 +19,7 @@ class TransactionEventTest extends DatabaseTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->connection->transactionManager()->enableEvents();
+    $this->connection->enableEvents(TransactionEvent::all());
   }
 
   /**
@@ -34,7 +35,7 @@ class TransactionEventTest extends DatabaseTestBase {
    * Tests adding a savepoint.
    */
   public function testTransactionSavepoint(): void {
-    $this->connection->transactionManager()->disableEvents([
+    $this->connection->disableEvents([
       TransactionBeginEvent::class,
     ]);
     $tx = $this->connection->startTransaction();
