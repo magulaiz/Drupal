@@ -6,7 +6,6 @@ namespace Drupal\Core\Database\Transaction;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Event\TransactionBeginEvent;
-use Drupal\Core\Database\Event\TransactionEvent;
 use Drupal\Core\Database\Event\TransactionSavepointEvent;
 use Drupal\Core\Database\Transaction;
 use Drupal\Core\Database\TransactionCommitFailedException;
