@@ -46,24 +46,21 @@ class RequiredConfigDependenciesConstraintValidator extends ConstraintValidator 
     // plain array.
     // @see \Drupal\Core\Entity\Plugin\DataType\ConfigEntityAdapter::createFromEntity()
     // @see \Drupal\Core\Config\TypedConfigManager::processDefinition()
-    if (!$entity instanceof ConfigEntityInterface && !is_array($entity)) {
-      throw new UnexpectedTypeException($entity, ConfigEntityInterface::class);
+    if ($entity instanceof ConfigEntityInterface) {
+      $entity = $entity->toArray();
+    }
+    if (!is_array($entity)) {
+      throw new UnexpectedTypeException($entity, 'array');
     }
 
-    $config_dependencies = $entity instanceof ConfigEntityInterface
-      ? ($entity->getDependencies()['config'] ?? [])
-      : ($entity['dependencies']['config'] ?? []);
-    // When not validating a Config entity object, ensure to respect enforced
-    // dependencies.
+    // Merge the enforced config dependencies into the list of dependencies.
     // @see \Drupal\Core\Config\Entity\ConfigEntityBase::getDependencies()
-    if (!$entity instanceof ConfigEntityInterface && isset($entity['dependencies']['enforced']['config'])) {
-      // Merge the enforced config dependencies into the list of dependencies.
-      $config_dependencies = NestedArray::mergeDeep($config_dependencies, $entity['dependencies']['enforced']['config']);
-    }
+    $config_dependencies = NestedArray::mergeDeep(
+      $entity['dependencies']['config'] ?? [],
+      $entity['dependencies']['enforced']['config'] ?? [],
+    );
 
-    $validated_entity_type_id = $entity instanceof ConfigEntityInterface
-      ? $entity->getEntityTypeId()
-      : $this->configManager->getEntityTypeIdByName($this->context->getObject()->getName());
+    $validated_entity_type_id = $this->configManager->getEntityTypeIdByName($this->context->getObject()->getName());
 
     foreach ($constraint->entityTypes as $entity_type_id) {
       $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);

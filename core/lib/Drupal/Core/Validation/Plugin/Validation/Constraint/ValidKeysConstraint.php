@@ -101,11 +101,11 @@ class ValidKeysConstraint extends SymfonyConstraint {
    */
   public function getAllowedKeys(ExecutionContextInterface $context): array {
     $object = $context->getObject();
+    if ($object instanceof ConfigEntityAdapter) {
+      $object = $object->getConfigTypedData();
+    }
     // Every config entity is represented as a `type: mapping` at the root.
-    $mapping = match (TRUE) {
-      $object instanceof Mapping => $object,
-      $object instanceof ConfigEntityAdapter => $object->getConfigTypedData(),
-    };
+    assert($object instanceof Mapping);
     $resolved_type = $mapping->getDataDefinition()->getDataType();
     $valid_keys = $mapping->getValidKeys();
 
