@@ -2,19 +2,20 @@
 
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Validation\Attribute\Constraint;
 use Symfony\Component\Validator\Constraints\Count;
 
 /**
  * Count constraint.
  *
  * Overrides the symfony constraint to use Drupal-style replacement patterns.
- *
- * @Constraint(
- *   id = "Count",
- *   label = @Translation("Count", context = "Validation"),
- *   type = { "list" }
- * )
  */
+#[Constraint(
+  id: 'Count',
+  label: new TranslatableMarkup('Count', [], ['context' => 'Validation']),
+  type: ['list']
+)]
 class CountConstraint extends Count {
 
   public $minMessage = 'This collection should contain %limit element or more.|This collection should contain %limit elements or more.';
@@ -24,7 +25,7 @@ class CountConstraint extends Count {
   /**
    * {@inheritdoc}
    */
-  public function validatedBy() {
+  public function validatedBy(): string {
     return '\Symfony\Component\Validator\Constraints\CountValidator';
   }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Module;
 
 use Drupal\Core\Cache\Cache;
@@ -70,7 +72,7 @@ class UninstallTest extends BrowserTestBase {
     $this->rebuildAll();
 
     $this->drupalGet('admin/modules/uninstall');
-    $this->assertSession()->titleEquals('Uninstall | Drupal');
+    $this->assertSession()->titleEquals('Uninstall | Extend | Drupal');
 
     // Check that the experimental module link was rendered correctly.
     $this->assertSession()->elementExists('xpath', "//a[contains(@aria-label, 'View information on the Experimental status of the module Experimental Test')]");
@@ -175,7 +177,7 @@ class UninstallTest extends BrowserTestBase {
     // Make sure confirmation page is accessible only during uninstall process.
     $this->drupalGet('admin/modules/uninstall/confirm');
     $this->assertSession()->addressEquals('admin/modules/uninstall');
-    $this->assertSession()->titleEquals('Uninstall | Drupal');
+    $this->assertSession()->titleEquals('Uninstall | Extend | Drupal');
 
     // Make sure the correct error is shown when no modules are selected.
     $edit = [];

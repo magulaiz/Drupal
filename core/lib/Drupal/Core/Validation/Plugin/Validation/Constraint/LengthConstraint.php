@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Validation\Attribute\Constraint;
 use Symfony\Component\Validator\Constraints\Length;
 
 /**
@@ -10,13 +12,12 @@ use Symfony\Component\Validator\Constraints\Length;
  * Overrides the symfony constraint to use Drupal-style replacement patterns.
  *
  * @todo: Move this below the TypedData core component.
- *
- * @Constraint(
- *   id = "Length",
- *   label = @Translation("Length", context = "Validation"),
- *   type = { "string" }
- * )
  */
+#[Constraint(
+  id: 'Length',
+  label: new TranslatableMarkup('Length', [], ['context' => 'Validation']),
+  type: ['string']
+)]
 class LengthConstraint extends Length {
 
   public $maxMessage = 'This value is too long. It should have %limit character or less.|This value is too long. It should have %limit characters or less.';
@@ -26,7 +27,7 @@ class LengthConstraint extends Length {
   /**
    * {@inheritdoc}
    */
-  public function validatedBy() {
+  public function validatedBy(): string {
     return '\Symfony\Component\Validator\Constraints\LengthValidator';
   }
 
