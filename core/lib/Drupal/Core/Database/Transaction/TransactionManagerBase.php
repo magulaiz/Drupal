@@ -204,11 +204,27 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
       return '*** empty ***';
     }
 
-    $temp = [];
-    foreach ($this->stack() as $id => $item) {
-      $temp[] = $id . '\\' . $item->name;
-    }
-    return implode(' > ', $temp);
+    $stackItemsArray = $this->stackItemsAsArray();
+    return implode(' > ', array_map(
+      fn(string $key, string $value): string => $key . '\\' . $value, 
+        array_keys($stackItemsArray), 
+        array_values($stackItemsArray)
+      )
+    );
+  }
+
+  /**
+   * Produces an array representation of the stack items.
+   *
+   * Drivers should not override this method unless they also override the
+   * $stack property.
+   *
+   * @return array<string,string>
+   *   The array representation of the stack items, with id for key, and
+   *   name for value.
+   */
+  protected function stackItemsAsArray(): array {
+    return array_map(fn(StackItem $item): string => $item->name, $this->stack());
   }
 
   /**
