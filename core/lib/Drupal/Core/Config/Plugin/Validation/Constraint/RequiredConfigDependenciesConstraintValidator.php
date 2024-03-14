@@ -47,7 +47,11 @@ class RequiredConfigDependenciesConstraintValidator extends ConstraintValidator 
     // @see \Drupal\Core\Entity\Plugin\DataType\ConfigEntityAdapter::createFromEntity()
     // @see \Drupal\Core\Config\TypedConfigManager::processDefinition()
     if ($entity instanceof ConfigEntityInterface) {
+      $validated_entity_type_id = $entity->getEntityTypeId();
       $entity = $entity->toArray();
+    }
+    else {
+      $validated_entity_type_id = $this->configManager->getEntityTypeIdByName($this->context->getObject()->getName());
     }
     if (!is_array($entity)) {
       throw new UnexpectedTypeException($entity, 'array');
@@ -59,8 +63,6 @@ class RequiredConfigDependenciesConstraintValidator extends ConstraintValidator 
       $entity['dependencies']['config'] ?? [],
       $entity['dependencies']['enforced']['config'] ?? [],
     );
-
-    $validated_entity_type_id = $this->configManager->getEntityTypeIdByName($this->context->getObject()->getName());
 
     foreach ($constraint->entityTypes as $entity_type_id) {
       $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
