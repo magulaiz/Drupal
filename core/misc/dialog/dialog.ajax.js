@@ -109,10 +109,9 @@
             if ($originalButton[0].tagName === 'A') {
               $originalButton[0].click();
             } else {
-              $originalButton
-                .trigger('mousedown')
-                .trigger('mouseup')
-                .trigger('click');
+              $originalButton.dispatchEvent(new Event('mousedown'));
+              $originalButton.dispatchEvent(new Event('mouseup'));
+              $originalButton.dispatchEvent(new Event('click'));
             }
             e.preventDefault();
           },
