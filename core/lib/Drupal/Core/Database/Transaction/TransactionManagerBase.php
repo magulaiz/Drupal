@@ -219,7 +219,7 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
    *   all transaction events will be enabled.
    */
   public function enableEvents(array $eventNames = []): void {
-    $events = TransactionEvent:::all();
+    $events = TransactionEvent::all();
     if (!empty($eventNames)) {
       $events = array_intersect($events, $eventNames);
     }
@@ -234,7 +234,7 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
    *   all transaction events will be disabled.
    */
   public function disableEvents(array $eventNames = []): void {
-    $events = TransactionEvent:::all();
+    $events = TransactionEvent::all();
     if (!empty($eventNames)) {
       $events = array_intersect($events, $eventNames);
     }
