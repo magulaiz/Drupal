@@ -19,16 +19,19 @@ class TransactionSavepointEvent extends DatabaseEvent {
    *   The database connection key.
    * @param string $target
    *   The database connection target.
+   * @param string $id
+   *   The id of the transaction.
    * @param string $name
    *   The name of the savepoint.
-   * @param string $parentName
-   *   The name of the parent transaction or savepoint.
+   * @param array $stackItems
+   *   The current transaction stack items.
    */
   public function __construct(
     public readonly string $key,
     public readonly string $target,
+    public readonly string $id,
     public readonly string $name,
-    public readonly string $parentName,
+    public readonly array $stackItems,
   ) {
     parent::__construct();
   }

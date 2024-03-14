@@ -87,7 +87,7 @@ class DatabaseEventSubscriber implements EventSubscriberInterface {
    *   The transaction event.
    */
   public function onTransactionBegin(TransactionBeginEvent $event): void {
-    throw new \RuntimeException($event->key . ' ' . $event->target . ' ' . $event->name);
+    throw new \RuntimeException($event->key . ' ' . $event->target . ' ' . $event->id . '\\' . $event->name);
   }
 
   /**
@@ -97,7 +97,7 @@ class DatabaseEventSubscriber implements EventSubscriberInterface {
    *   The transaction event.
    */
   public function onTransactionSavepoint(TransactionSavepointEvent $event): void {
-    throw new \RuntimeException($event->key . ' ' . $event->target . ' ' . $event->name . ' ' . $event->parentName);
+    throw new \RuntimeException($event->key . ' ' . $event->target . ' ' . $event->id . '\\' . $event->name . ' ' . implode(' > ', $event->stackItems));
   }
 
 }

@@ -19,12 +19,15 @@ class TransactionBeginEvent extends DatabaseEvent {
    *   The database connection key.
    * @param string $target
    *   The database connection target.
+   * @param string $id
+   *   The id of the transaction.
    * @param string $name
    *   The name of the transaction.
    */
   public function __construct(
     public readonly string $key,
     public readonly string $target,
+    public readonly string $id,
     public readonly string $name,
   ) {
     parent::__construct();
