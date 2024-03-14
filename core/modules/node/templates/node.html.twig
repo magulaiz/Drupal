@@ -60,7 +60,10 @@
  * @ingroup themeable
  */
 #}
-<article{{ attributes }}>
+{% if not wrapper_element %}
+  {% set wrapper_element = (label and not page) ? 'article' : 'div' %}
+{% endif %}
+<{{ wrapper_element }}{{ attributes }}>
 
   {{ title_prefix }}
   {% if label and not page %}
@@ -83,4 +86,4 @@
     {{ content }}
   </div>
 
-</article>
+</{{ wrapper_element }}>
