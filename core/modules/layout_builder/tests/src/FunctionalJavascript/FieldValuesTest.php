@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-
-// cspell:ignore fieldslinks
 
 /**
  * Tests how Layout Builder handles changes to entity fields.
@@ -14,13 +13,6 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  * @group layout_builder
  */
 class FieldValuesTest extends WebDriverTestBase {
-
-  /**
-   * Path prefix for the field UI for the test bundle.
-   *
-   * @var string
-   */
-  const FIELD_UI_PREFIX = 'admin/structure/types/manage/bundle_for_testing_fields';
 
   /**
    * Modules to enable.
@@ -31,7 +23,6 @@ class FieldValuesTest extends WebDriverTestBase {
     'layout_builder',
     'block',
     'node',
-    'field_ui',
   ];
 
   /**
@@ -48,25 +39,14 @@ class FieldValuesTest extends WebDriverTestBase {
     $this->createContentType(['type' => 'bundle_for_testing_fields']);
 
     $this->drupalLogin($this->drupalCreateUser([
-      'access content',
+      'edit any bundle_for_testing_fields content',
       'configure any layout',
-      'administer node display',
-      'administer nodes',
-      'bypass node access',
     ]));
-
-    // Enable layout builder.
-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/full');
-    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
-
-    $this->createNode([
-      'type' => 'bundle_for_testing_fields',
-      'body' => [
-        [
-          'value' => 'The initial value',
-        ],
-      ],
-    ])->save();
+    LayoutBuilderEntityViewDisplay::load('node.bundle_for_testing_fields.full')
+      ->enable()
+      ->enableLayoutBuilder()
+      ->setOverridable()
+      ->save();
   }
 
   /**
@@ -76,8 +56,14 @@ class FieldValuesTest extends WebDriverTestBase {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/full');
-    $this->submitForm(['layout[allow_custom]' => TRUE], 'Save');
+    $this->createNode([
+      'type' => 'bundle_for_testing_fields',
+      'body' => [
+        [
+          'value' => 'The initial value',
+        ],
+      ],
+    ])->save();
 
     $this->drupalGet('node/1');
     $assert_session->pageTextContains('The initial value');
