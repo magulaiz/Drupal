@@ -167,9 +167,6 @@ trait LayoutEntityHelperTrait {
    */
   public function getSectionStorageFromEntity(FieldableEntityInterface $entity) {
     $contexts = $this->getSectionStorageContextFromEntity($entity);
-
-    $contexts['entity'] = EntityContext::fromEntity($entity);
-    $contexts['view_mode'] = new Context(new ContextDefinition('string'), 'default');
     return $this->sectionStorageManager()->load('overrides', $contexts);
   }
 

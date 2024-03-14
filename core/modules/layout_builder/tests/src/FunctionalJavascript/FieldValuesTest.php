@@ -56,7 +56,7 @@ class FieldValuesTest extends WebDriverTestBase {
     ]));
 
     // Enable layout builder.
-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
+    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/full');
     $this->submitForm(['layout[enabled]' => TRUE], 'Save');
 
     $this->createNode([
@@ -76,7 +76,7 @@ class FieldValuesTest extends WebDriverTestBase {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
-    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
+    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/full');
     $this->submitForm(['layout[allow_custom]' => TRUE], 'Save');
 
     $this->drupalGet('node/1');
