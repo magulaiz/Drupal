@@ -6,6 +6,7 @@ namespace Drupal\Tests\book\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
+use Drupal\user\Entity\Role;
 
 /**
  * Tests Book and Content Moderation integration.
@@ -16,6 +17,13 @@ class BookContentModerationTest extends BrowserTestBase {
 
   use BookTestTrait;
   use ContentModerationTestTrait;
+
+  /**
+   * A user with permission to make workflow transitions but not manage books.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $nonBookAdminUser;
 
   /**
    * Modules to install.
@@ -57,6 +65,19 @@ class BookContentModerationTest extends BrowserTestBase {
       'view any unpublished content',
       'use editorial transition create_new_draft',
       'use editorial transition publish',
+    ]);
+
+    // Another user without manage book permissions to test updates to nodes
+    // that are
+    // 1. Not part of a book outline.
+    // 2. Part of a book outline.
+    $this->nonBookAdminUser = $this->drupalCreateUser([
+      'create book content',
+      'edit own book content',
+      'use editorial transition create_new_draft',
+      'use editorial transition publish',
+      'access printer-friendly version',
+      'view any unpublished content',
     ]);
   }
 
@@ -163,6 +184,114 @@ class BookContentModerationTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
 
     $this->assertSession()->pageTextNotContains('You can only change the book outline for the published version of this content.');
+  }
+
+  /**
+   * Tests that users who cannot manage books can still make node updates.
+   */
+  public function testNonBookAdminNodeUpdates() {
+    // 1. First test that users who cannot manage books can make updates to
+    // nodes that are not part of a book outline.
+    $this->drupalLogin($this->nonBookAdminUser);
+    // Create a new book page without actually attaching it to a book and create
+    // a draft.
+    $this->drupalGet('node/add/book');
+    $this->assertSession()->statusCodeEquals(200);
+    $edit = [
+      'title[0][value]' => 'Some moderated content',
+      'moderation_state[0][state]' => 'draft',
+    ];
+    $this->submitForm($edit, 'Save');
+    $this->assertSession()->pageTextContains('Some moderated content has been created.');
+    $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
+    $this->assertNotEmpty($node);
+
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->assertSession()->statusCodeEquals(200);
+    // Publish the content.
+    $edit = [
+      'body[0][value]' => 'Second change non book admin user',
+      'moderation_state[0][state]' => 'published',
+    ];
+    $this->submitForm($edit, 'Save');
+    $this->assertSession()->pageTextNotContains('You can only change the book outline for the published version of this content.');
+    $this->assertSession()->pageTextContains('Some moderated content has been updated');
+
+    // Now update content again, it should be successfully updated and not throw
+    // any errors.
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->assertSession()->statusCodeEquals(200);
+    $edit = [
+      'moderation_state[0][state]' => 'draft',
+    ];
+    $this->submitForm($edit, 'Save');
+    $this->assertSession()->pageTextNotContains('You can only change the book outline for the published version of this content.');
+    $this->assertSession()->pageTextContains('Some moderated content has been updated');
+
+    // 2. Now test that users who cannot manage books can make updates to nodes
+    // that are part of a book outline. As the non admin book user, publish the
+    // content created above in order to be added to a book.
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->assertSession()->statusCodeEquals(200);
+    $edit = [
+      'moderation_state[0][state]' => 'published',
+    ];
+    $this->submitForm($edit, 'Save');
+
+    // Create a book (as a book admin user).
+    $book_1_nodes = $this->createBook(['moderation_state[0][state]' => 'published']);
+    $book_1 = $this->book;
+
+    // Now add the node created previously by the non book admin user to the
+    // book created above. We need to grant additional permission for bookAuthor
+    // to be able to edit the node owned by nonBookAdminUser.
+    $role_ids = $this->bookAuthor->getRoles(TRUE);
+    $role_id = reset($role_ids);
+    $role = Role::load($role_id);
+    $role->grantPermission('edit any book content');
+    $role->save();
+    $this->drupalLogin($this->bookAuthor);
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->assertSession()->statusCodeEquals(200);
+    $edit = [
+      'book[bid]' => $this->book->id(),
+      'moderation_state[0][state]' => 'published',
+    ];
+    $this->submitForm($edit, 'Save');
+
+    // Assert that the node has been added to the book.
+    $this->assertSession()->pageTextNotContains('You can only change the book outline for the published version of this content.');
+    $this->assertSession()->pageTextContains('Some moderated content has been updated');
+    $this->checkBookNode($book_1, [
+      $book_1_nodes[0],
+      $book_1_nodes[3],
+      $book_1_nodes[4],
+      $node,
+    ], FALSE, FALSE, $book_1_nodes[0], []);
+
+    // Try to update the non book admin's node in the book as the user
+    // that cannot manage books, it should be successfully updated and not
+    // throw any errors.
+    $this->drupalLogin($this->nonBookAdminUser);
+    $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->assertSession()->statusCodeEquals(200);
+    $edit = [
+      'body[0][value]' => 'Change by non book admin user again',
+      'moderation_state[0][state]' => 'draft',
+    ];
+    $this->submitForm($edit, 'Save');
+    $this->assertSession()->pageTextNotContains('You can only change the book outline for the published version of this content.');
+    $this->assertSession()->pageTextContains('Some moderated content has been updated');
+
+    // Check that the book outline did not change.
+    $this->book = $book_1;
+    $this->checkBookNode($book_1, [
+      $book_1_nodes[0],
+      $book_1_nodes[3],
+      $book_1_nodes[4],
+      $node,
+    ], FALSE, FALSE, $book_1_nodes[0], []);
+    $this->checkBookNode($book_1_nodes[0], [$book_1_nodes[1], $book_1_nodes[2]], $book_1, $book_1, $book_1_nodes[1], [$book_1]);
   }
 
 }
