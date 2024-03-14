@@ -20,14 +20,6 @@ class RegexConstraint extends Regex {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $options = NULL) {
-    $options['message'] ??= 'This value is not valid.';
-    parent::__construct($options);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function validatedBy(): string {
     return '\Symfony\Component\Validator\Constraints\RegexValidator';
   }

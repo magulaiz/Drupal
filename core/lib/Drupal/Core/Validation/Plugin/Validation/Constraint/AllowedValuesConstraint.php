@@ -20,11 +20,11 @@ class AllowedValuesConstraint extends Choice {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $options = NULL) {
-    $options['strict'] ??= TRUE;
-    $options['minMessage'] ??= 'You must select at least %limit choice.|You must select at least %limit choices.';
-    $options['maxMessage'] ??= 'You must select at most %limit choice.|You must select at most %limit choices.';
-    parent::__construct($options);
+  public function __construct(...$args) {
+    $this->strict = TRUE;
+    $this->minMessage = 'You must select at least %limit choice.|You must select at least %limit choices.';
+    $this->maxMessage = 'You must select at most %limit choice.|You must select at most %limit choices.';
+    parent::__construct(...$args);
   }
 
 }
