@@ -2,7 +2,6 @@
 
 namespace Drupal\taxonomy\Plugin\views\argument;
 
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -23,15 +22,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPluginInterface {
   use TaxonomyIndexDepthQueryTrait;
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * The deprecated properties and services on this class.
-   */
-  protected array $deprecatedProperties = ['termStorage' => 'termStorage'];
 
   /**
    * @var \Drupal\Core\Entity\EntityStorageInterface
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no
+   *   replacement.
+   *
+   * @see https://www.drupal.org/node/2765297
    */
   protected $termStorage;
 
@@ -42,7 +40,8 @@ class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPlugin
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     if ($entityRepository instanceof EntityStorageInterface) {
-      $this->termStorage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+      // @phpstan-ignore-next-line
+      $this->termStorage = $entityRepository;
       @trigger_error('Calling ' . __CLASS__ . '::__construct() with the $termStorage argument as \Drupal\Core\Entity\EntityStorageInterface is deprecated in drupal:10.3.0 and it will require Drupal\Core\Entity\EntityRepositoryInterface in drupal:11.0.0. See https://www.drupal.org/node/2765297', E_USER_DEPRECATED);
       $this->entityRepository = \Drupal::service('entity.repository');
     }
