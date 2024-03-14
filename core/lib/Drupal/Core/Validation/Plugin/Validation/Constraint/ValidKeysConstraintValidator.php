@@ -50,12 +50,12 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
       return;
     }
 
-    $object = $this->context->getObject();
-    if ($object instanceof ConfigEntityAdapter) {
-      $object = $object->getConfigTypedData();
+    $mapping = $this->context->getObject();
+    if ($mapping instanceof ConfigEntityAdapter) {
+      $mapping = $mapping->getConfigTypedData();
     }
     // Every config entity is represented as a `type: mapping` at the root.
-    assert($object instanceof Mapping);
+    assert($mapping instanceof Mapping);
     $resolved_type = $mapping->getDataDefinition()->getDataType();
 
     $valid_keys = $constraint->getAllowedKeys($this->context);
