@@ -17,6 +17,10 @@
 # custom module, theme, etc., are not ignored unless you purposely do so.
 /vendor/
 
+# The scaffold hash cache is used in Composer-managed sites. It does not need
+# to be committed to the repository.
+/.scaffolded.json
+
 # Ignore configuration files that may contain sensitive information.
 sites/*/settings*.php
 sites/*/services*.yml

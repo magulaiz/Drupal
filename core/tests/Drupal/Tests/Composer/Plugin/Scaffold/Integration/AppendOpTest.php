@@ -50,6 +50,8 @@ EOT;
 
     $pre_calculated_contents = $sut->contents();
     $this->assertEquals(trim($expected), trim($pre_calculated_contents));
+    $pre_calculated_contents = $sut->contents();
+    $this->assertEquals(trim($expected), trim($pre_calculated_contents));
 
     // Test the system under test.
     $sut->process($destination, $fixtures->io(), $options);

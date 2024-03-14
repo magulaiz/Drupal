@@ -137,6 +137,7 @@ EOT;
     $this->assertScaffoldedFile($sut . '/docroot/sites/default/.gitignore', FALSE, 'default.services.yml');
     $expected = <<<EOT
 M docroot/.gitignore
+?? .scaffolded.json
 ?? docroot/sites/.gitignore
 ?? docroot/sites/default/.gitignore
 EOT;

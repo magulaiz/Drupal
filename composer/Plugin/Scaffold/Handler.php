@@ -163,6 +163,23 @@ class Handler {
     $unchanged = $scaffold_files->checkUnchanged();
     $scaffold_files->filterFiles($unchanged);
 
+    // Check to see if there are any scaffold files from a previous run that
+    // have been modified.
+    $hash_manager = HashManager::create($this->io, $this->composer->getConfig()->get('vendor-dir'), getcwd());
+
+    // Get the scaffold files that have been modified since they were written.
+    $modified = $hash_manager->getModified($scaffold_files);
+
+    // Ask the user what to do about the modified files (if any).
+    // Prompt the user and ask what to do about modified files.
+    $modified = $hash_manager->decideHowToHandleModified($modified);
+
+    // Remove the modified files if so instructed by the user. If nothing was
+    // modified, or the user did not want to keep any files, then this list
+    // will be empty.
+    $message = '  - Preserve <info>[dest-rel-path]</info>: modified by user.';
+    $scaffold_files->skipFiles($modified, $message);
+
     // Process the list of scaffolded files.
     $scaffold_results = $scaffold_files->processScaffoldFiles($this->io, $scaffold_options);
 
@@ -180,6 +197,9 @@ class Handler {
 
     // Call post-scaffold scripts.
     $dispatcher->dispatch(self::POST_DRUPAL_SCAFFOLD_CMD);
+
+    // Save a hash for all of the scaffold result files.
+    $hash_manager->storeResultsHash($scaffold_results);
   }
 
   /**

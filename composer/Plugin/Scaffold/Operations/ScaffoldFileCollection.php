@@ -94,6 +94,28 @@ class ScaffoldFileCollection implements \IteratorAggregate {
   }
 
   /**
+   * Skip any item in the list whose destination path has been modified.
+   *
+   * @param array $files_to_skip
+   *   List of destination paths.
+   * @param string $message
+   *   Explanation of why files were skipped.
+   */
+  public function skipFiles(array $files_to_skip, $message) {
+    $op = new SkipOp($message);
+
+    // If we were instructed to keep modified files, then filter them out of our
+    // list of scaffold files to process.
+    foreach ($this->scaffoldFilesByProject as $project_name => $scaffold_files) {
+      foreach ($scaffold_files as $destination_rel_path => $scaffold_file) {
+        if (in_array($destination_rel_path, $files_to_skip)) {
+          $this->scaffoldFilesByProject[$project_name][$destination_rel_path] = new ScaffoldFileInfo($scaffold_file->destination(), $op);
+        }
+      }
+    }
+  }
+
+  /**
    * Scans through a list of scaffold files and determines if any has contents.
    *
    * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFileInfo[] $scaffold_files
