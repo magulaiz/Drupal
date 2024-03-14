@@ -173,6 +173,12 @@ class ConfigEntityAdapter extends EntityAdapter {
 
     $schema_defined_constraints = $typed_config->getDefinition($config_schema_type)['constraints'] ?? [];
     $definition = $instance->getDataDefinition();
+    // The data definition's constraints should take precedence over the
+    // constraints defined in config schema. This is enforced in the opposite
+    // direction by system_config_schema_info_alter(), and if there was any
+    // disagreement, the validation results would be different depending on
+    // whether the data is validated as config or as a typed data object, which
+    // is a discrepancy our tests would catch.
     $definition->setConstraints($definition->getConstraints() + $schema_defined_constraints);
 
     $instance = new static($definition);

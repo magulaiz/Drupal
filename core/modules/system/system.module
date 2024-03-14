@@ -1255,6 +1255,13 @@ function system_config_schema_info_alter(&$definitions) {
     if (!array_key_exists('constraints', $definitions[$matching_config_schema_type])) {
       $definitions[$matching_config_schema_type]['constraints'] = [];
     }
+    // The config schema constraints should take precedence over the ones
+    // defined by the entity type. This is enforced in the opposite
+    // direction by
+    // \Drupal\Core\Entity\Plugin\DataType\ConfigEntityAdapter::createFromEntity(),
+    // and if there was any disagreement, the validation results would be
+    // different depending on whether the data is validated as config or as a
+    // typed data object, which is a discrepancy our tests would catch.
     $definitions[$matching_config_schema_type]['constraints'] += $config_entity_type->getConstraints();
   }
 }
