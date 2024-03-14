@@ -78,6 +78,7 @@ stages:
 
 before_script:
   - echo "Installing patch utility."
+  - sudo apt update 
   - sudo apt-get install patch
   
 default:
