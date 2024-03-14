@@ -74,10 +74,11 @@ stages:
 # Defaults  #
 #############
 
+before_script:
+  - echo "Installing patch utility."
+  - sudo apt-get install patch
+  
 default:
-  before_script:
-    - echo "Installing patch utility."
-    - sudo apt-get install patch
   interruptible: true
   retry:
     max: 2
