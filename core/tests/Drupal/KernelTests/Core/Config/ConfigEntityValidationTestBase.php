@@ -745,16 +745,18 @@ abstract class ConfigEntityValidationTestBase extends KernelTestBase {
   private static function violationsToArray(ConstraintViolationListInterface $violations): array {
     $actual_violations = [];
     foreach ($violations as $violation) {
-      if (!isset($actual_violations[$violation->getPropertyPath()])) {
-        $actual_violations[$violation->getPropertyPath()] = (string) $violation->getMessage();
+      $property_path = $violation->getPropertyPath();
+
+      if (!isset($actual_violations[$property_path])) {
+        $actual_violations[$property_path] = (string) $violation->getMessage();
       }
       else {
         // Transform value from string to array.
-        if (is_string($actual_violations[$violation->getPropertyPath()])) {
-          $actual_violations[$violation->getPropertyPath()] = (array) $actual_violations[$violation->getPropertyPath()];
+        if (is_string($actual_violations[$property_path])) {
+          $actual_violations[$property_path] = (array) $actual_violations[$property_path];
         }
         // And append.
-        $actual_violations[$violation->getPropertyPath()][] = (string) $violation->getMessage();
+        $actual_violations[$property_path][] = (string) $violation->getMessage();
       }
     }
     return $actual_violations;
