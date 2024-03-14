@@ -13,7 +13,6 @@ use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Extension\Extension;
