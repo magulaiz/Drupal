@@ -49,7 +49,8 @@ class FilterEntityReferenceWebTest extends UITestBase {
     });
     $i = 0;
     foreach ($this->targetEntities as $id => $entity) {
-      $this->assertEquals($options[$i]['label'], $entity->label(), new FormattableMarkup('Expected target entity label found for option :option', [':option' => $i]));
+      $message = (string) new FormattableMarkup('Expected target entity label found for option :option', [':option' => $i]);
+      $this->assertEquals($options[$i]['label'], $entity->label(), $message);
       $i++;
     }
 
@@ -67,7 +68,8 @@ class FilterEntityReferenceWebTest extends UITestBase {
     $options = $this->getUiOptions();
     $i = 0;
     foreach ($this->targetEntities as $id => $entity) {
-      $this->assertEquals($options[$i]['label'], $entity->label(), new FormattableMarkup('Expected target entity label found for option :option', [':option' => $i]));
+      $message = (string) new FormattableMarkup('Expected target entity label found for option :option', [':option' => $i]);
+      $this->assertEquals($options[$i]['label'], $entity->label(), $message);
       $i++;
     }
 
@@ -83,7 +85,8 @@ class FilterEntityReferenceWebTest extends UITestBase {
     $options = $this->getUiOptions();
     $i = 0;
     foreach ($this->hostEntities + $this->targetEntities as $id => $entity) {
-      $this->assertEquals($options[$i]['label'], $entity->label(), new FormattableMarkup('Expected target entity label found for option :option', [':option' => $i]));
+      $message = (string) new FormattableMarkup('Expected target entity label found for option :option', [':option' => $i]);
+      $this->assertEquals($options[$i]['label'], $entity->label(), $message);
       $i++;
     }
   }
