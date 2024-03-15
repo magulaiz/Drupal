@@ -11,6 +11,7 @@ administer users:
   restrict access: true
 access user profiles:
   title: 'Access user profiles'
+  description: 'This permission grants access to view the Drupal user entity. Users without this permission will not be able to access user profiles provided by the core profiles module.'
 view user email addresses:
   title: 'View user email addresses'
   description: 'Users without this permission will not have access to email addresses on user pages or other places where they might be shown, such as Views and JSON:API responses.'
