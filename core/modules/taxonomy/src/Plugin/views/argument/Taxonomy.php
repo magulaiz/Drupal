@@ -18,6 +18,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Taxonomy extends NumericArgument implements ContainerFactoryPluginInterface {
 
   /**
+   * The taxonomy term storage.
+   *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    *
    * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no
