@@ -12,9 +12,11 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Path\CurrentPathStack;
+use Drupal\Core\Path\PathValidatorInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RedirectDestinationInterface;
 use Drupal\Core\Ajax\ScrollTopCommand;
+use Drupal\views\Ajax\SetBrowserUrl;
 use Drupal\views\Ajax\ViewAjaxResponse;
 use Drupal\views\ViewExecutableFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -80,6 +82,13 @@ class ViewAjaxController implements ContainerInjectionInterface {
   protected $redirectDestination;
 
   /**
+   * The path validator service.
+   *
+   * @var \Drupal\Core\Path\PathValidatorInterface
+   */
+  protected $pathValidator;
+
+  /**
    * Constructs a ViewAjaxController object.
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
@@ -92,13 +101,16 @@ class ViewAjaxController implements ContainerInjectionInterface {
    *   The current path.
    * @param \Drupal\Core\Routing\RedirectDestinationInterface $redirect_destination
    *   The redirect destination.
+   * @param \Drupal\Core\Path\PathValidatorInterface $path_validator
+   *   The path validator service.
    */
-  public function __construct(EntityStorageInterface $storage, ViewExecutableFactory $executable_factory, RendererInterface $renderer, CurrentPathStack $current_path, RedirectDestinationInterface $redirect_destination) {
+  public function __construct(EntityStorageInterface $storage, ViewExecutableFactory $executable_factory, RendererInterface $renderer, CurrentPathStack $current_path, RedirectDestinationInterface $redirect_destination, PathValidatorInterface $path_validator) {
     $this->storage = $storage;
     $this->executableFactory = $executable_factory;
     $this->renderer = $renderer;
     $this->currentPath = $current_path;
     $this->redirectDestination = $redirect_destination;
+    $this->pathValidator = $path_validator;
   }
 
   /**
@@ -110,7 +122,8 @@ class ViewAjaxController implements ContainerInjectionInterface {
       $container->get('views.executable'),
       $container->get('renderer'),
       $container->get('path.current'),
-      $container->get('redirect.destination')
+      $container->get('redirect.destination'),
+      $container->get('path.validator')
     );
   }
 
@@ -140,6 +153,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
       }, $args);
 
       $path = $request->get('view_path');
+      $target_url = $this->pathValidator->getUrlIfValid($path);
       $dom_id = $request->get('view_dom_id');
       $dom_id = isset($dom_id) ? preg_replace('/[^a-zA-Z0-9_-]+/', '-', $dom_id) : NULL;
       $pager_element = $request->get('pager_element');
@@ -188,6 +202,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
         $query = UrlHelper::buildQuery($used_query_parameters);
         if ($query != '') {
           $origin_destination .= '?' . $query;
+          $target_url->setOption('query', $used_query_parameters);
         }
         $this->redirectDestination->set($origin_destination);
 
@@ -214,6 +229,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
         $response->addCommand(new ReplaceCommand(".js-view-dom-id-$dom_id", $preview));
         $response->addCommand(new PrependCommand(".js-view-dom-id-$dom_id", ['#type' => 'status_messages']));
         $request->query->set('ajax_page_state', $existing_page_state);
+        $response->addCommand(new SetBrowserUrl($target_url->toString()));
 
         if (!empty($preview['#attached'])) {
           $response->setAttachments($preview['#attached']);

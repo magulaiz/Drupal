@@ -95,6 +95,7 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
     $html = $session->getPage()->getHtml();
     $this->assertStringContainsString('Page One', $html);
     $this->assertStringContainsString('Page Two', $html);
+    $this->assertSession()->addressEquals('admin/content');
 
     // Search for "Page One".
     $this->submitForm(['title' => 'Page One'], 'Filter');
@@ -104,6 +105,7 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
     $html = $session->getPage()->getHtml();
     $this->assertStringContainsString('Page One', $html);
     $this->assertStringNotContainsString('Page Two', $html);
+    $this->assertSession()->addressEquals('admin/content?title=Page%20One&type=All&status=All&langcode=All');
 
     // Search for "Page Two".
     $this->submitForm(['title' => 'Page Two'], 'Filter');
@@ -113,6 +115,7 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
     $html = $session->getPage()->getHtml();
     $this->assertStringContainsString('Page Two', $html);
     $this->assertStringNotContainsString('Page One', $html);
+    $this->assertSession()->addressEquals('admin/content?title=Page%20Two&type=All&status=All&langcode=All');
 
     // Submit bulk actions form to ensure that the previous AJAX submit does not
     // break it.
@@ -123,6 +126,7 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
 
     // Verify that the action was performed.
     $this->assertSession()->pageTextContains('Make content sticky was applied to 1 item.');
+    $this->assertSession()->addressEquals('admin/content?title=Page%20Two&type=All&status=All&langcode=All');
 
     // Reset the form.
     $this->submitForm([], 'Reset');
@@ -130,6 +134,7 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
     $this->assertSession()->pageTextContains('Page One');
     $this->assertSession()->pageTextContains('Page Two');
     $this->assertFalse($session->getPage()->hasButton('Reset'));
+    $this->assertSession()->addressEquals('admin/content');
   }
 
   /**
