@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\taxonomy\TaxonomyIndexDepthQueryTrait;
+use Drupal\views\Attribute\ViewsArgument;
 use Drupal\views\Plugin\views\argument\ArgumentPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -17,9 +18,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * because it uses a subquery to find nodes with.
  *
  * @ingroup views_argument_handlers
- *
- * @ViewsArgument("taxonomy_index_tid_depth")
  */
+#[ViewsArgument(
+  id: 'taxonomy_index_tid_depth',
+)]
 class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPluginInterface {
   use TaxonomyIndexDepthQueryTrait;
 
