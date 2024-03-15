@@ -180,3 +180,21 @@ function media_requirements($phase) {
 function media_update_last_removed() {
   return 8700;
 }
+
+/**
+ * Update filter format to add default show_contextual_links setting.
+ */
+function media_update_10100() {
+  $filter_format = \Drupal::entityTypeManager()
+    ->getStorage('filter_format')->loadByProperties();
+  /** @var \Drupal\filter\Entity\FilterFormat $item */
+  foreach ($filter_format as $item) {
+    $filters = $item->get('filters');
+    if (isset($filters['media_embed'])) {
+      $media_embed_settings = $filters['media_embed'];
+      $media_embed_settings['settings']['show_contextual_links'] = FALSE;
+      $item->setFilterConfig('media_embed', $media_embed_settings);
+      $item->save();
+    }
+  }
+}
