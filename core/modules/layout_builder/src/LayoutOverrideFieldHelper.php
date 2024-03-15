@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Drupal\layout_builder;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
+use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -39,17 +39,17 @@ class LayoutOverrideFieldHelper implements ContainerInjectionInterface {
   }
 
   /**
-   * Updates a layout override's entity context when entity values change.
+   * Updates a layout overrides's entity context when entity values change.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
+   * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The entity with the overridden layout.
    */
-  public function updateTempstoreEntityContext(EntityInterface $entity): void {
-    if ($section_storage = $this->getSectionStorageFromEntity($entity)) {
+  public function updateTempstoreEntityContext(FieldableEntityInterface $entity): void {
+    if ($section_storage = $this->getOverridesSectionStorageForEntity($entity)) {
 
       // This is only necessary if there is a layout override in the tempstore.
       if ($this->layoutTempstoreRepository->has($section_storage)) {
-        /** @var \Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage $override_temp_store */
+        /** @var \Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorageInterface $override_temp_store */
         $override_temp_store = $this->layoutTempstoreRepository->get($section_storage);
 
         // Get the entity currently in the tempstore's entity context.

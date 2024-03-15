@@ -156,21 +156,21 @@ trait LayoutEntityHelperTrait {
   }
 
   /**
-   * Updates a layout overrides's entity context when entity values change.
+   * Gets the overrides section storage for an entity.
    *
    * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The entity with the overridden layout.
    *
-   * @return \Drupal\layout_builder\SectionStorageInterface
-   *   The section storage.
+   * @return \Drupal\layout_builder\OverridesSectionStorageInterface|null
+   *   The overrides section storage if found otherwise NULL.
    */
-  public function getSectionStorageFromEntity(FieldableEntityInterface $entity): SectionStorageInterface {
-    $contexts = $this->getSectionStorageContextFromEntity($entity);
+  public function getOverridesSectionStorageForEntity(FieldableEntityInterface $entity): ?OverridesSectionStorageInterface {
+    $contexts = $this->getSectionStorageContextsForEntity($entity);
     return $this->sectionStorageManager()->load('overrides', $contexts);
   }
 
   /**
-   * Updates a layout overrides's entity context when entity values change.
+   * Gets the section storage contexts for an entity.
    *
    * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The entity with the overridden layout.
@@ -178,7 +178,7 @@ trait LayoutEntityHelperTrait {
    * @return \Drupal\Core\Plugin\Context\ContextInterface[]
    *   The section storage contexts.
    */
-  public function getSectionStorageContextFromEntity(FieldableEntityInterface $entity): array {
+  public function getSectionStorageContextsForEntity(FieldableEntityInterface $entity): array {
     $contexts = [];
 
     $contexts['entity'] = EntityContext::fromEntity($entity);

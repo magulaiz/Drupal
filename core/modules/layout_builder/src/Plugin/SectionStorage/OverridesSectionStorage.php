@@ -171,7 +171,7 @@ class OverridesSectionStorage extends SectionStorageBase implements ContainerFac
     $contexts = [];
 
     if ($entity = $this->extractEntityFromRoute($value, $defaults)) {
-      $contexts = $this->getSectionStorageContextFromEntity($entity);
+      $contexts = $this->getSectionStorageContextsForEntity($entity);
     }
     return $contexts;
   }
