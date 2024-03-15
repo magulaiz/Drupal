@@ -6,11 +6,7 @@
  */
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Entity\ContentEntityType;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Site\Settings;
-use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\Section;
 
