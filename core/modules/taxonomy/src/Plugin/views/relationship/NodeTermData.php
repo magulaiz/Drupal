@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ingroup views_relationship_handlers
  */
-#[ViewsRelationship(id: 'node_term_data')]
+#[ViewsRelationship("node_term_data")]
 class NodeTermData extends RelationshipPluginBase {
 
   /**

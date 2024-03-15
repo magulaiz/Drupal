@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ingroup views_relationship_handlers
  */
-#[ViewsRelationship(id: 'entity_reverse')]
+#[ViewsRelationship("entity_reverse")]
 class EntityReverse extends RelationshipPluginBase {
 
   /**

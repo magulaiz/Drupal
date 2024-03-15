@@ -10,7 +10,7 @@ use Drupal\views\Plugin\views\BrokenHandlerTrait;
  *
  * @ingroup views_relationship_handlers
  */
-#[ViewsRelationship(id: 'broken')]
+#[ViewsRelationship("broken")]
 class Broken extends RelationshipPluginBase {
   use BrokenHandlerTrait;
 

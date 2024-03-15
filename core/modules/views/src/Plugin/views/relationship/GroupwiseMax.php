@@ -58,7 +58,7 @@ use Drupal\views\Entity\View;
  *
  * @ingroup views_relationship_handlers
  */
-#[ViewsRelationship(id: 'groupwise_max')]
+#[ViewsRelationship("groupwise_max")]
 class GroupwiseMax extends RelationshipPluginBase {
 
   /**

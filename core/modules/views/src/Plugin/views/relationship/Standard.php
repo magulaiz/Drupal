@@ -9,7 +9,7 @@ use Drupal\views\Attribute\ViewsRelationship;
  *
  * @ingroup views_relationship_handlers
  */
-#[ViewsRelationship(id: 'standard')]
+#[ViewsRelationship("standard")]
 class Standard extends RelationshipPluginBase {
 
 }
