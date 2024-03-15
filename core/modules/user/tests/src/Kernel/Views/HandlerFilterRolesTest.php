@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\user\Kernel\Views;
 
+use Drupal\Core\Database\Database;
 use Drupal\user\Entity\Role;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
@@ -29,15 +30,28 @@ class HandlerFilterRolesTest extends UserKernelTestBase {
     $role = Role::create(['id' => 'test_user_role', 'label' => 'Test user role']);
     $role->save();
     $view = View::load('test_user_name');
-    $expected = [
-      'module' => ['user'],
-    ];
+    if (Database::getConnection()->driver() == 'mongodb') {
+      $expected = [
+        'module' => ['mongodb', 'user'],
+      ];
+    }
+    else {
+      $expected = [
+        'module' => ['user'],
+      ];
+    }
     $this->assertEquals($expected, $view->getDependencies());
 
+    if (Database::getConnection()->driver() == 'mongodb') {
+      $table = 'users';
+    }
+    else {
+      $table = 'user__roles';
+    }
     $display = &$view->getDisplay('default');
     $display['display_options']['filters']['roles_target_id'] = [
       'id' => 'roles_target_id',
-      'table' => 'user__roles',
+      'table' => $table,
       'field' => 'roles_target_id',
       'value' => ['test_user_role' => 'test_user_role'],
       'plugin_id' => 'user_roles',
@@ -50,7 +64,7 @@ class HandlerFilterRolesTest extends UserKernelTestBase {
     $display = &$view->getDisplay('default');
     $display['display_options']['filters']['roles_target_id'] = [
       'id' => 'roles_target_id',
-      'table' => 'user__roles',
+      'table' => $table,
       'field' => 'roles_target_id',
       'value' => [
         'test_user_role' => 'test_user_role',
@@ -66,7 +80,7 @@ class HandlerFilterRolesTest extends UserKernelTestBase {
     $display = &$view->getDisplay('default');
     $display['display_options']['filters']['roles_target_id'] = [
       'id' => 'roles_target_id',
-      'table' => 'user__roles',
+      'table' => $table,
       'field' => 'roles_target_id',
       'value' => [
         'test_user_role' => 'test_user_role',
@@ -86,7 +100,7 @@ class HandlerFilterRolesTest extends UserKernelTestBase {
     $display = &$view->getDisplay('default');
     $display['display_options']['filters']['roles_target_id'] = [
       'id' => 'roles_target_id',
-      'table' => 'user__roles',
+      'table' => $table,
       'field' => 'roles_target_id',
       'value' => [],
       'plugin_id' => 'user_roles',
@@ -99,6 +113,13 @@ class HandlerFilterRolesTest extends UserKernelTestBase {
    * Tests that a warning is triggered if the filter references a missing role.
    */
   public function testMissingRole() {
+    if (Database::getConnection()->driver() == 'mongodb') {
+      $table = 'users';
+    }
+    else {
+      $table = 'user__roles';
+    }
+
     $role = Role::create(['id' => 'test_user_role', 'label' => 'Test user role']);
     $role->save();
     /** @var \Drupal\views\Entity\View $view */
@@ -106,7 +127,7 @@ class HandlerFilterRolesTest extends UserKernelTestBase {
     $display = &$view->getDisplay('default');
     $display['display_options']['filters']['roles_target_id'] = [
       'id' => 'roles_target_id',
-      'table' => 'user__roles',
+      'table' => $table,
       'field' => 'roles_target_id',
       'value' => ['test_user_role' => 'test_user_role'],
       'plugin_id' => 'user_roles',

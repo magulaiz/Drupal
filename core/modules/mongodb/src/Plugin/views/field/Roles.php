@@ -2,6 +2,7 @@
 
 namespace Drupal\mongodb\Plugin\views\field;
 
+use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\user\Plugin\views\field\Roles as CoreRoles;
@@ -35,7 +36,7 @@ class Roles extends CoreRoles {
     }
 
     if ($uids) {
-      $roles = user_roles();
+      $roles = Role::loadMultiple();
 
       $result = [];
       foreach ($values as $row) {
@@ -62,7 +63,7 @@ class Roles extends CoreRoles {
         $sorted_keys = array_intersect_key($ordered_roles, $user_roles);
         // Merge with the unsorted array of role information which has the
         // effect of sorting it.
-        $user_roles = array_merge($sorted_keys, $user_roles);
+        $user_roles = array_replace($sorted_keys, $user_roles);
       }
     }
   }

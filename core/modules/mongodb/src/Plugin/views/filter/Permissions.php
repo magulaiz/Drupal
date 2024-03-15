@@ -2,7 +2,9 @@
 
 namespace Drupal\mongodb\Plugin\views\filter;
 
+use Drupal\user\Entity\Role;
 use Drupal\user\Plugin\views\filter\Permissions as CorePermissions;
+use Drupal\user\RoleInterface;
 
 /**
  * Overriding the views filter plugin "user_permissions".
@@ -16,11 +18,11 @@ class Permissions extends CorePermissions {
    * {@inheritdoc}
    */
   public function query() {
-    // @todo user_role_names() should maybe support multiple permissions.
     $rids = [];
+    $all_roles = Role::loadMultiple();
     // Get all role IDs that have the configured permissions.
     foreach ($this->value as $permission) {
-      $roles = user_role_names(FALSE, $permission);
+      $roles = array_filter($all_roles, fn(RoleInterface $role) => $role->hasPermission($permission));
       // user_role_names() returns an array with the role IDs as keys, so take
       // the array keys and merge them with previously found role IDs.
       $rids = array_merge($rids, array_keys($roles));
