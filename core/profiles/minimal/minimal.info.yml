@@ -8,5 +8,6 @@ install:
   - dblog
   - page_cache
   - dynamic_page_cache
+  - system
 themes:
   - stark

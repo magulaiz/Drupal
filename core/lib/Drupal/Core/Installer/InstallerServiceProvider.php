@@ -31,6 +31,10 @@ class InstallerServiceProvider extends NormalInstallerServiceProvider implements
     $container
       ->register('keyvalue.expirable', 'Drupal\Core\KeyValueStore\KeyValueNullExpirableFactory');
 
+    // Null session handler.
+    $container
+      ->register('session_handler.storage', 'Symfony\Component\HttpFoundation\Session\Storage\Handler\NullSessionHandler');
+
     // Replace services with no-op implementations.
     $container
       ->register('url_generator', 'Drupal\Core\Routing\NullGenerator')
