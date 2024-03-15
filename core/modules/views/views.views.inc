@@ -577,7 +577,7 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
             'title' => $label_name,
             'help' => t('This is an alias of @group: @field.', ['@group' => $group_name, '@field' => $label]),
           ];
-          $also_known[] = t('@group (historical data): @field', ['@group' => $group_name, '@field' => $label_name]);
+          $also_known[] = t('@group: @field', ['@group' => $group_name, '@field' => $label_name]);
         }
       }
       else {
