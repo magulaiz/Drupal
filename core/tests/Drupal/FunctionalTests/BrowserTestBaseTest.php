@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalTests;
 
 use Behat\Mink\Exception\ElementNotFoundException;
@@ -11,6 +13,9 @@ use Drupal\Tests\StreamCapturer;
 use Drupal\Tests\Traits\Core\CronRunTrait;
 use Drupal\user\Entity\Role;
 use PHPUnit\Framework\ExpectationFailedException;
+use Symfony\Component\HttpFoundation\Request;
+
+// cspell:ignore htkey
 
 /**
  * Tests BrowserTestBase functionality.
@@ -38,6 +43,22 @@ class BrowserTestBaseTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
+
+  /**
+   * Tests that JavaScript Drupal settings can be read.
+   */
+  public function testDrupalSettings() {
+    // Trigger a 403 because those pages have very little else going on.
+    $this->drupalGet('admin');
+    $this->assertSame([], $this->getDrupalSettings());
+
+    // Now try the same 403 as an authenticated user and verify that Drupal
+    // settings do show up.
+    $account = $this->drupalCreateUser();
+    $this->drupalLogin($account);
+    $this->drupalGet('admin');
+    $this->assertNotSame([], $this->getDrupalSettings());
+  }
 
   /**
    * Tests basic page test.
@@ -343,13 +364,13 @@ class BrowserTestBaseTest extends BrowserTestBase {
 
     // Part 1 - Test by name.
     // Test that checkboxes are found/not found correctly by name, when using
-    // TRUE or FALSE to match their 'checked' state.
+    // '1' or '' to match their 'checked' state.
     $this->assertSession()->fieldExists('checkbox_enabled');
     $this->assertSession()->fieldExists('checkbox_disabled');
-    $this->assertSession()->fieldValueEquals('checkbox_enabled', TRUE);
-    $this->assertSession()->fieldValueEquals('checkbox_disabled', FALSE);
-    $this->assertSession()->fieldValueNotEquals('checkbox_enabled', FALSE);
-    $this->assertSession()->fieldValueNotEquals('checkbox_disabled', TRUE);
+    $this->assertSession()->fieldValueEquals('checkbox_enabled', '1');
+    $this->assertSession()->fieldValueEquals('checkbox_disabled', '');
+    $this->assertSession()->fieldValueNotEquals('checkbox_enabled', '');
+    $this->assertSession()->fieldValueNotEquals('checkbox_disabled', '1');
 
     // Test that we have legacy support.
     $this->assertSession()->fieldValueEquals('checkbox_enabled', '1');
@@ -357,7 +378,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
 
     // Test that the assertion fails correctly if given the right value.
     try {
-      $this->assertSession()->fieldValueNotEquals('checkbox_enabled', TRUE);
+      $this->assertSession()->fieldValueNotEquals('checkbox_enabled', '1');
       $this->fail('fieldValueNotEquals failed to throw an exception.');
     }
     catch (ExpectationException $e) {
@@ -366,11 +387,11 @@ class BrowserTestBaseTest extends BrowserTestBase {
 
     // Part 2 - Test by ID.
     // Test that checkboxes are found/not found correctly by ID, when using
-    // TRUE or FALSE to match their 'checked' state.
-    $this->assertSession()->fieldValueEquals('edit-checkbox-enabled', TRUE);
-    $this->assertSession()->fieldValueEquals('edit-checkbox-disabled', FALSE);
-    $this->assertSession()->fieldValueNotEquals('edit-checkbox-enabled', FALSE);
-    $this->assertSession()->fieldValueNotEquals('edit-checkbox-disabled', TRUE);
+    // '1' or '' to match their 'checked' state.
+    $this->assertSession()->fieldValueEquals('edit-checkbox-enabled', '1');
+    $this->assertSession()->fieldValueEquals('edit-checkbox-disabled', '');
+    $this->assertSession()->fieldValueNotEquals('edit-checkbox-enabled', '');
+    $this->assertSession()->fieldValueNotEquals('edit-checkbox-disabled', '1');
 
     // Test that checkboxes are found by ID, when using NULL to ignore the
     // 'checked' state.
@@ -507,7 +528,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
   /**
    * Tests the protections provided by .htkey.
    */
-  public function testHtkey() {
+  public function testHtKey() {
     // Remove the Simpletest private key file so we can test the protection
     // against requests that forge a valid testing user agent to gain access
     // to the installer.
@@ -519,6 +540,30 @@ class BrowserTestBaseTest extends BrowserTestBase {
     unlink($this->siteDirectory . '/.htkey');
     $this->drupalGet($install_url);
     $this->assertSession()->statusCodeEquals(403);
+  }
+
+  /**
+   * Tests that a usable session is on the request in test-runner.
+   */
+  public function testSessionOnRequest(): void {
+    /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
+    $session = $this->container->get('request_stack')->getSession();
+
+    $session->set('some-val', 'do-not-cleanup');
+    $this->assertEquals('do-not-cleanup', $session->get('some-val'));
+
+    $session->set('some-other-val', 'do-cleanup');
+    $this->assertEquals('do-cleanup', $session->remove('some-other-val'));
+  }
+
+  /**
+   * Tests deprecation of modified request stack lacking a session.
+   *
+   * @group legacy
+   */
+  public function testDeprecatedSessionMissing(): void {
+    $this->expectDeprecation('Pushing requests without a session onto the request_stack is deprecated in drupal:10.3.0 and an error will be thrown from drupal:11.0.0. See https://www.drupal.org/node/3337193');
+    $this->container->get('request_stack')->push(Request::create('/'));
   }
 
   /**

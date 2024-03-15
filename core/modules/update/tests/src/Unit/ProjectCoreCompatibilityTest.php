@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\update\Unit;
 
 use Drupal\Tests\UnitTestCase;
@@ -27,7 +29,7 @@ class ProjectCoreCompatibilityTest extends UnitTestCase {
   /**
    * Data provider for testSetProjectCoreCompatibilityRanges().
    */
-  public function providerSetProjectCoreCompatibilityRanges() {
+  public static function providerSetProjectCoreCompatibilityRanges() {
     $test_cases['no 9 releases'] = [
       'project_data' => [
         'recommended' => '1.0.1',

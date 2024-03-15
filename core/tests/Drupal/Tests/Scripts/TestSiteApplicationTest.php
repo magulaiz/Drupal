@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Scripts;
 
 use Drupal\Component\FileSystem\FileSystem;
@@ -10,6 +12,8 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
+
+// cspell:ignore htkey
 
 /**
  * Tests core/scripts/test-site.php.

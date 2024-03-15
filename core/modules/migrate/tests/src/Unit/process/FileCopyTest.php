@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\Core\File\FileSystemInterface;
@@ -33,7 +35,7 @@ class FileCopyTest extends MigrateProcessTestCase {
   /**
    * Data provider for testFileProcessBaseConstructor.
    */
-  public function providerFileProcessBaseConstructor() {
+  public static function providerFileProcessBaseConstructor() {
     return [
       [['file_exists' => 'replace'], FileSystemInterface::EXISTS_REPLACE],
       [['file_exists' => 'rename'], FileSystemInterface::EXISTS_RENAME],

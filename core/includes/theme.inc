@@ -8,7 +8,6 @@
  * customized by user themes.
  */
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Crypt;
@@ -449,7 +448,7 @@ function theme_settings_convert_to_config(array $theme_settings, Config $config)
     elseif ($key == 'favicon_mimetype') {
       $config->set('favicon.mimetype', $value);
     }
-    elseif (substr($key, 0, 7) == 'toggle_') {
+    elseif (str_starts_with($key, 'toggle_')) {
       $config->set('features.' . mb_substr($key, 7), $value);
     }
     elseif (!in_array($key, ['theme', 'logo_upload'])) {
@@ -1320,11 +1319,31 @@ function template_preprocess_html(&$variables) {
     $variables['page']['#title'] = (string) \Drupal::service('renderer')->render($variables['page']['#title']);
   }
   if (!empty($variables['page']['#title'])) {
-    $head_title = [
-      // Marking the title as safe since it has had the tags stripped.
-      'title' => Markup::create(trim(strip_tags($variables['page']['#title']))),
-      'name' => $site_config->get('name'),
-    ];
+    $head_title = [];
+
+    // Marking the title as safe since it has had the tags stripped.
+    $head_title['title'] = Markup::create(trim(strip_tags($variables['page']['#title'])));
+
+    $maintenance_mode = defined('MAINTENANCE_MODE') || \Drupal::state()->get('system.maintenance_mode');
+    $is_admin_route = (bool) \Drupal::routeMatch()->getRouteObject()?->getOption('_admin_route');
+    if (!$maintenance_mode && $is_admin_route) {
+      $base_route_title = \Drupal::service('base_route_title_resolver')->getTitle(\Drupal::requestStack()->getCurrentRequest(), \Drupal::routeMatch()->getRouteObject());
+      if (is_array($base_route_title)) {
+        $base_route_title = (string) \Drupal::service('renderer')->render($base_route_title);
+      }
+      if ($base_route_title) {
+        // Marking the title as safe since it has had the tags stripped.
+        $base_route_title = Markup::create(trim(strip_tags($base_route_title)));
+
+        // If the base route title is not the same as the current title, append it
+        // to the head title.
+        if ((string) $base_route_title !== (string) $head_title['title']) {
+          $head_title['base_route_title'] = $base_route_title;
+        }
+      }
+    }
+
+    $head_title['name'] = $site_config->get('name');
   }
   // @todo Remove once views is not bypassing the view subscriber anymore.
   //   @see https://www.drupal.org/node/2068471
@@ -1749,6 +1768,7 @@ function template_preprocess_breadcrumb(&$variables) {
  *     - #tags: An array of labels for the controls in the pager.
  *     - #element: An optional integer to distinguish between multiple pagers on
  *       one page.
+ *     - #pagination_heading_level: An optional heading level for the pager.
  *     - #parameters: An associative array of query string parameters to append
  *       to the pager links.
  *     - #route_parameters: An associative array of the route parameters.
@@ -1875,6 +1895,10 @@ function template_preprocess_pager(&$variables) {
 
   $variables['items'] = $items;
   $variables['heading_id'] = Html::getUniqueId('pagination-heading');
+  $variables['pagination_heading_level'] = $variables['pager']['#pagination_heading_level'] ?? 'h4';
+  if (!preg_match('/^h[1-6]$/', $variables['pagination_heading_level'])) {
+    $variables['pagination_heading_level'] = 'h4';
+  }
 
   // The rendered link needs to play well with any other query parameter used
   // on the page, like exposed filters, so for the cacheability all query
@@ -1903,10 +1927,6 @@ function template_preprocess_menu_local_task(&$variables) {
 
   if (!empty($variables['element']['#active'])) {
     $variables['is_active'] = TRUE;
-
-    // Add text to indicate active tab for non-visual users.
-    $active = new FormattableMarkup('<span class="visually-hidden">@label</span>', ['@label' => t('(active tab)')]);
-    $link_text = t('@local-task-title@active', ['@local-task-title' => $link_text, '@active' => $active]);
   }
 
   $link['localized_options']['set_active_class'] = TRUE;

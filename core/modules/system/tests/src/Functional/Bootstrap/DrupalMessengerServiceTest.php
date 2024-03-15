@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Bootstrap;
 
 use Drupal\Core\Url;
@@ -58,7 +60,7 @@ class DrupalMessengerServiceTest extends BrowserTestBase {
     $edit["modules[help][enable]"] = TRUE;
     $this->drupalGet('admin/modules');
     $this->submitForm($edit, 'Install');
-    $assert->pageTextContains('Help has been enabled');
+    $assert->pageTextContains('Help has been installed');
     $assert->pageTextContains('system_test_preinstall_module called');
   }
 

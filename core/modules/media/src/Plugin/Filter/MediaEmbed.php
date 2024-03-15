@@ -15,8 +15,11 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
+use Drupal\filter\Plugin\FilterInterface;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\media\MediaInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -24,22 +27,20 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a filter to embed media items using a custom tag.
  *
- * @Filter(
- *   id = "media_embed",
- *   title = @Translation("Embed media"),
- *   description = @Translation("Embeds media items using a custom tag, <code>&lt;drupal-media&gt;</code>. If used in conjunction with the 'Align/Caption' filters, make sure this filter is configured to run after them."),
- *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_REVERSIBLE,
- *   settings = {
- *     "default_view_mode" = "default",
- *     "allowed_view_modes" = {},
- *     "allowed_media_types" = {},
- *     "show_contextual_links" = false,
- *   },
- *   weight = 100,
- * )
- *
  * @internal
  */
+#[Filter(
+  id: "media_embed",
+  title: new TranslatableMarkup("Embed media"),
+  description: new TranslatableMarkup("Embeds media items using a custom tag, <code>&lt;drupal-media&gt;</code>. If used in conjunction with the 'Align/Caption' filters, make sure this filter is configured to run after them."),
+  type: FilterInterface::TYPE_TRANSFORM_REVERSIBLE,
+  weight: 100,
+  settings: [
+    "default_view_mode" => "default",
+    "allowed_view_modes" => [],
+    "allowed_media_types" => [],
+  ],
+)]
 class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, TrustedCallbackInterface {
 
   /**
@@ -181,13 +182,6 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
       '#element_validate' => [[static::class, 'validateOptions']],
     ];
 
-    $form['show_contextual_links'] = [
-      '#title' => $this->t("Show contextual links for embedded media"),
-      '#type' => 'checkbox',
-      '#default_value' => $this->settings['show_contextual_links'],
-      '#description' => $this->t('If selected, displays contextual links to edit/delete/etc. embedded media items.'),
-    ];
-
     return $form;
   }
 
@@ -252,11 +246,9 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
     // - caching an embedded media entity separately is unnecessary; the host
     //   entity is already render cached.
     unset($build['#cache']['keys']);
-    // - Contextual Links do not always make sense for embedded entities; users
-    //   must opt in to exposing contextual links.
-    if (!$this->settings['show_contextual_links']) {
-      $build['#pre_render'][] = static::class . '::disableContextualLinks';
-    }
+    // - Contextual Links do not make sense for embedded entities; we only allow
+    //   the host entity to be contextually managed.
+    $build['#pre_render'][] = static::class . '::disableContextualLinks';
     // - default styling may break captioned media embeds; attach asset library
     //   to ensure captions behave as intended. Do not set this at the root
     //   level of the render array, otherwise it will be attached always,
@@ -388,7 +380,7 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
     // We need to render the embedded entity:
     // - without replacing placeholders, so that the placeholders are
     //   only replaced at the last possible moment. Hence we cannot use
-    //   either renderPlain() or renderRoot(), so we must use render().
+    //   either renderInIsolation() or renderRoot(), so we must use render().
     // - without bubbling beyond this filter, because filters must
     //   ensure that the bubbleable metadata for the changes they make
     //   when filtering text makes it onto the FilterProcessResult
@@ -466,11 +458,10 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
 
       if (!empty($settings['alt_field']) && $node->hasAttribute('alt')) {
         // Allow the display of the image without an alt tag in special cases.
-        // Since setting the value in the EditorMediaDialog to an empty string
-        // restores the default value, this allows special cases where the alt
-        // text should not be set to the default value, but should be
-        // explicitly empty instead so it can be ignored by assistive
-        // technologies, such as screen readers.
+        // Since setting the value to an empty string restores the default
+        // value, this allows special cases where the alt text should not be set
+        // to the default value, but should be explicitly empty instead, so it
+        // can be ignored by assistive technologies, such as screen readers.
         if ($node->getAttribute('alt') === '""') {
           $node->setAttribute('alt', '');
         }
