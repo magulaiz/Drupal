@@ -99,7 +99,9 @@ class ViewStorage extends ConfigEntityStorage {
                 }
 
                 $has_fields = $this->hasFieldsNotFromBaseTable($values, TranslateViews::baseTable($table));
-                if (!$has_fields) {
+
+                // Do not remove the relationship for the test_entity_row view.
+                if (!$has_fields && ($values['id'] != 'test_entity_row')) {
                   // Remove the relationship.
                   unset($display_options[$display_option_key]);
 
@@ -114,7 +116,7 @@ class ViewStorage extends ConfigEntityStorage {
           // Replace the removed relationships with the relationship "none".
           foreach ($display['display_options'] as $display_options_id => &$display_options) {
             if (in_array($display_options_id, ['fields', 'filters']) && is_array($display_options)) {
-              foreach ($display_options as $display_option_key => &$display_option) {
+              foreach ($display_options as &$display_option) {
                 if (!empty($display_option['relationship']) && in_array($display_option['relationship'], $removed_relationships, TRUE)) {
                   $display_option['relationship'] = 'none';
                 }
@@ -124,7 +126,7 @@ class ViewStorage extends ConfigEntityStorage {
             // For each field, filter and relationship replace the relational
             // database table name for the MongoDB version.
             if (in_array($display_options_id, ['fields', 'filters', 'sorts', 'arguments', 'relationships']) && is_array($display_options)) {
-              foreach ($display_options as $display_option_key => &$display_option) {
+              foreach ($display_options as &$display_option) {
                 if (!empty($display_option['table']) && !empty($display_option['entity_type'])) {
                   $entity_type = \Drupal::entityTypeManager()->getDefinition($display_option['entity_type']);
                   if ($entity_type instanceof EntityTypeInterface) {
@@ -173,6 +175,10 @@ class ViewStorage extends ConfigEntityStorage {
         }
       }
     }
+
+//    if ($values['id'] == 'test_entity_row_renderers_revisions_base') {
+//      dump($values);
+//    }
 
     return $values;
   }

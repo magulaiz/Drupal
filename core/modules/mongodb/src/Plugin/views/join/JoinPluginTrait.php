@@ -35,7 +35,8 @@ trait JoinPluginTrait {
 
     $right_field = $this->field;
     $left_field = $this->leftField ?? NULL;
-    $condition = "$left_field = $table[alias].$this->field";
+//    $condition = "$left_field = $table[alias].$this->field";
+//dump('$condition: ' . $condition);
     $arguments = [];
 
     if (!empty($view_query->getCurrentRevisionTable()) && !empty($view_query->getAllRevisionsTable()) && !empty($view_query->getLatestRevisionTable())) {
@@ -51,20 +52,28 @@ trait JoinPluginTrait {
       }
     }
 
+    $operator = $this->configuration['operator'] ?? '=';
+    $join_condition = $select_query->joinCondition()->compare($left_table['alias'] . '.' . $left_field, $table['alias'] . '.' . $right_field, $operator);
+
+//if (!empty($this->extra)) {
+//  dump('$this->extra');
+//  dump($this->extra);
+//}
+
     // Tack on the extra.
     if (isset($this->extra) && !empty($this->extra)) {
-      $this->joinAddExtra($arguments, $condition, $table, $select_query, $left_table);
+      $arguments = [];
+      $this->joinAddExtra($arguments, $join_condition, $table, $select_query, $left_table);
     }
     else {
       $this->extra = [];
     }
 
-//    dump($table);
-//    dump($right_field);
-//    dump($left_table);
-//    dump($left_field);
+//dump('$table[alias]: ' . $table['alias']);
+//dump('$right_field: ' . $right_field);
+//dump('$left_table[alias]: ' . $left_table['alias']);
+//dump('$left_field: ' . $left_field);
 
-    $join_condition = $select_query->joinCondition()->compare($table['alias'] . '.' . $right_field, $left_table['alias'] . '.' . $left_field);
 
     if (isset($this->extra) && is_array($this->extra)) {
       $substitutions = \Drupal::moduleHandler()->invokeAll('views_query_substitutions', [$view_query->view]);
@@ -78,6 +87,8 @@ trait JoinPluginTrait {
         }
       }
     }
+//dump('$join_condition');
+//dump($join_condition);
 
     $select_query->addJoin($this->type, $right_table, $table['alias'], $join_condition);
     if (isset($this->configuration['one_to_many']) && $this->configuration['one_to_many']) {

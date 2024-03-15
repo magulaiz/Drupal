@@ -127,7 +127,7 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
     $expected['test_argument_dependency'] = [
       'config' => [
         'core.entity_view_mode.node.teaser',
-//        'field.storage.node.body',
+        'field.storage.node.body',
       ],
       'content' => [
         'ArgumentDefaultTest',
@@ -138,7 +138,7 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
         'node',
         // The argument handler is provided by the search module.
         'search',
-//        'text',
+        'text',
         'user',
       ],
     ];
@@ -171,14 +171,14 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
       ],
     ];
     $expected_display['page'] = [
-//      'config' => [
-//        'field.storage.node.body',
-//      ],
+      'config' => [
+        'field.storage.node.body',
+      ],
       'module' => [
         'core',
         'mongodb',
         'node',
-//        'text',
+        'text',
         'views',
       ],
     ];

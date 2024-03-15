@@ -62,10 +62,17 @@ class RelationshipTest extends RelationshipJoinTestBase {
       ],
     ]);
 
+    if (Database::getConnection()->driver() == 'mongodb') {
+      $users_table = 'users';
+    }
+    else {
+      $users_table = 'users_field_data';
+    }
+
     $view->displayHandlers->get('default')->overrideOption('filters', [
       'uid' => [
         'id' => 'uid',
-        'table' => 'users_field_data',
+        'table' => $users_table,
         'field' => 'uid',
         'relationship' => 'uid',
       ],
@@ -75,7 +82,7 @@ class RelationshipTest extends RelationshipJoinTestBase {
     $view->displayHandlers->get('default')->overrideOption('fields', $fields + [
       'uid' => [
         'id' => 'uid',
-        'table' => 'users_field_data',
+        'table' => $users_table,
         'field' => 'uid',
         'relationship' => 'uid',
       ],
@@ -176,6 +183,14 @@ class RelationshipTest extends RelationshipJoinTestBase {
         'field' => 'uid',
       ],
     ]);
+
+    if (Database::getConnection()->driver() == 'mongodb') {
+      $users_table = 'users';
+    }
+    else {
+      $users_table = 'users_field_data';
+    }
+
     // Add fields for {views_test_data}.id and author name.
     $view->getDisplay()->overrideOption('fields', [
       'id' => [
@@ -185,7 +200,7 @@ class RelationshipTest extends RelationshipJoinTestBase {
       ],
       'author' => [
         'id' => 'author',
-        'table' => 'users_field_data',
+        'table' => $users_table,
         'field' => 'name',
         'relationship' => 'uid',
       ],

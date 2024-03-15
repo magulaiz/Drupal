@@ -90,7 +90,7 @@ class HandlerAllTest extends ViewsKernelTestBase {
       $view = $view_config->getExecutable();
 
       // @todo The groupwise relationship is currently broken.
-      if (Database::getConnection()->databaseType() == 'mongodb') {
+      if (Database::getConnection()->driver() == 'mongodb') {
         $exclude[] = 'taxonomy_term_data:tid_representative';
         $exclude[] = 'users:uid_representative';
       }

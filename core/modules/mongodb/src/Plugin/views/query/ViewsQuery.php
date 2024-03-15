@@ -1110,10 +1110,15 @@ class ViewsQuery extends Sql {
         }
 
         $result = $query->execute();
+//dump('$result->getData()');
+//dump($result->getData());
         $result->setFetchMode(\PDO::FETCH_CLASS, 'Drupal\views\ResultRow');
 
         // Setup the result row objects.
         $view->result = iterator_to_array($result);
+//dump('$view->result1');
+//dump($view->result);
+
         array_walk($view->result, function (ResultRow $row, $index) {
           $row->index = $index;
         });
@@ -1221,7 +1226,6 @@ class ViewsQuery extends Sql {
           $result->{$field['field']} = $result->{$field['alias']};
         }
 
-        $joined_table_alias = '';
         if (isset($field['alias']) && isset($field['table']) && $field['table'] != $this->view->storage->get('base_table')) {
           $joined_table_alias = $field['table'] . '_' . $field['alias'];
           if (!empty($joined_table_alias) && isset($result->{$joined_table_alias}) && is_array($result->{$joined_table_alias})) {
@@ -1299,8 +1303,8 @@ class ViewsQuery extends Sql {
       $entity_storage = $this->entityTypeManager->getStorage($entity_type);
       $entities = [];
 
-      foreach ($revision_ids as $index => $revision_id_by_relationship) {
-        foreach ($revision_id_by_relationship as $revision => $revision_id) {
+      foreach ($revision_ids as $revision_id_by_relationship) {
+        foreach ($revision_id_by_relationship as $revision_id) {
           // Drupal core currently has no way to load multiple revisions.
           $entity = $entity_storage->loadRevision($revision_id);
           $entities[$revision_id] = $entity;

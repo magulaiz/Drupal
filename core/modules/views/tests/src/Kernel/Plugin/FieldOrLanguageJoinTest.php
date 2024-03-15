@@ -49,6 +49,8 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
    * no functionality provided by the base join plugin is broken.
    */
   public function testBase() {
+    $driver = \Drupal::database()->driver();
+
     // Setup a simple join and test the result sql.
     $view = Views::getView('test_view');
     $view->initDisplay();
@@ -59,7 +61,7 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
     $configuration = [
       'left_table' => 'views_test_data',
       'left_field' => 'uid',
-      'table' => 'users_field_data',
+      'table' => ($driver == 'mongodb' ? 'users' : 'users_field_data'),
       'field' => 'uid',
       'adjusted' => TRUE,
     ];
@@ -73,8 +75,24 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
     $this->assertSame($join_info['table'], $configuration['table']);
     $this->assertSame($join_info['alias'], 'users_field_data');
     $condition = $join_info['condition'];
+    if ($driver == 'mongodb') {
+      $condition->setMongodbJoinCondition();
+    }
     $condition->compile($view->getQuery()->getConnection(), $view->getQuery()->query());
-    $this->assertSame($condition->__toString(), '"views_test_data"."uid" = "users_field_data"."uid"');
+    if ($driver == 'mongodb') {
+      $expected_condition = [
+        '$expr' => [
+          '$eq' => [
+            '$views_test_data.uid',
+            '$users_field_data.uid',
+          ],
+        ],
+      ];
+      $this->assertSame($condition->toMongoAggregateArray(), $expected_condition);
+    }
+    else {
+      $this->assertSame($condition->__toString(), '"views_test_data"."uid" = "users_field_data"."uid"');
+    }
 
     // Set a different alias and make sure table info is as expected.
     $join_info = $this->buildJoin($view, $configuration, 'users1');
@@ -101,11 +119,51 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
     ];
     $join_info = $this->buildJoin($view, $configuration, 'users3');
     $condition = $join_info['condition'];
+    if ($driver == 'mongodb') {
+      $condition->setMongodbJoinCondition();
+    }
     $condition->compile($view->getQuery()->getConnection(), $view->getQuery()->query());
-    $this->assertStringContainsString('"views_test_data"."uid" = "users3"."uid"', $condition->__toString());
-    $this->assertStringContainsString('"users3"."name" = :db_condition_placeholder_0', $condition->__toString());
-    $this->assertStringContainsString('"users3"."name" <> :db_condition_placeholder_1', $condition->__toString());
-    $this->assertSame(array_values($condition->arguments()), [$random_name_1, $random_name_2]);
+    if ($driver == 'mongodb') {
+      $expected_condition = [
+        '$and' => [
+          [
+            '$expr' => [
+              '$eq' => [
+                '$views_test_data.uid',
+                '$users3.uid',
+              ],
+            ],
+          ],
+          [
+            '$expr' => [
+              '$eq' => [
+                '$users3.name',
+                $random_name_1,
+              ],
+            ],
+          ],
+          [
+            '$expr' => [
+              '$ne' => [
+                '$users3.name',
+                $random_name_2,
+              ],
+            ],
+          ],
+        ],
+      ];
+      $this->assertSame($condition->toMongoAggregateArray(), $expected_condition);
+      $this->assertSame(array_values($condition->arguments()), []);
+    }
+    else {
+      $this->assertStringContainsString('"views_test_data"."uid" = "users3"."uid"', $condition->__toString());
+      $this->assertStringContainsString('"users3"."name" = :db_condition_placeholder_0', $condition->__toString());
+      $this->assertStringContainsString('"users3"."name" <> :db_condition_placeholder_1', $condition->__toString());
+      $this->assertSame(array_values($condition->arguments()), [
+        $random_name_1,
+        $random_name_2
+      ]);
+    }
 
     // Test that 'IN' conditions are properly built.
     $random_name_1 = $this->randomMachineName();
@@ -124,17 +182,65 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
     ];
     $join_info = $this->buildJoin($view, $configuration, 'users4');
     $condition = $join_info['condition'];
+    if ($driver == 'mongodb') {
+      $condition->setMongodbJoinCondition();
+    }
     $condition->compile($view->getQuery()->getConnection(), $view->getQuery()->query());
-    $this->assertStringContainsString('"views_test_data"."uid" = "users4"."uid"', $condition->__toString());
-    $this->assertStringContainsString('"users4"."name" = :db_condition_placeholder_0', $condition->__toString());
-    $this->assertStringContainsString('"users4"."name" IN (:db_condition_placeholder_1, :db_condition_placeholder_2, :db_condition_placeholder_3)', $condition->__toString());
-    $this->assertSame(array_values($condition->arguments()), [$random_name_1, $random_name_2, $random_name_3, $random_name_4]);
+    if ($driver == 'mongodb') {
+      $expected_condition = [
+        '$and' => [
+          [
+            '$expr' => [
+              '$eq' => [
+                '$views_test_data.uid',
+                '$users4.uid',
+              ],
+            ],
+          ],
+          [
+            '$expr' => [
+              '$eq' => [
+                '$users4.name',
+                $random_name_1,
+              ],
+            ],
+          ],
+          [
+            '$expr' => [
+              '$in' => [
+                '$users4.name',
+                [
+                  $random_name_2,
+                  $random_name_3,
+                  $random_name_4,
+                ],
+              ],
+            ],
+          ],
+        ],
+      ];
+      $this->assertSame($condition->toMongoAggregateArray(), $expected_condition);
+      $this->assertSame(array_values($condition->arguments()), []);
+    }
+    else {
+      $this->assertStringContainsString('"views_test_data"."uid" = "users4"."uid"', $condition->__toString());
+      $this->assertStringContainsString('"users4"."name" = :db_condition_placeholder_0', $condition->__toString());
+      $this->assertStringContainsString('"users4"."name" IN (:db_condition_placeholder_1, :db_condition_placeholder_2, :db_condition_placeholder_3)', $condition->__toString());
+      $this->assertSame(array_values($condition->arguments()), [
+        $random_name_1,
+        $random_name_2,
+        $random_name_3,
+        $random_name_4
+      ]);
+    }
   }
 
   /**
    * Tests the adding of conditions by the join plugin.
    */
   public function testLanguageBundleConditions() {
+    $driver = \Drupal::database()->driver();
+
     // Setup a simple join and test the result sql.
     $view = Views::getView('test_view');
     $view->initDisplay();
@@ -156,8 +262,36 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
     ];
     $join_info = $this->buildJoin($view, $configuration, 'node__field_tags');
     $condition = $join_info['condition'];
+    if ($driver == 'mongodb') {
+      $condition->setMongodbJoinCondition();
+    }
     $condition->compile($view->getQuery()->getConnection(), $view->getQuery()->query());
-    $this->assertStringContainsString('AND ("node__field_tags"."langcode" = "views_test_data"."langcode")', $condition->__toString());
+    if ($driver == 'mongodb') {
+      $expected_condition = [
+        '$and' => [
+          [
+            '$expr' => [
+              '$eq' => [
+                '$views_test_data.nid',
+                '$node__field_tags.entity_id',
+              ],
+            ],
+          ],
+          [
+            '$expr' => [
+              '$eq' => [
+                '$node__field_tags.langcode',
+                '$views_test_data.langcode',
+              ],
+            ],
+          ],
+        ],
+      ];
+      $this->assertSame($condition->toMongoAggregateArray(), $expected_condition);
+    }
+    else {
+      $this->assertStringContainsString('AND ("node__field_tags"."langcode" = "views_test_data"."langcode")', $condition->__toString());
+    }
 
     array_unshift($configuration['extra'], [
       'field' => 'deleted',
@@ -166,8 +300,44 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
     ]);
     $join_info = $this->buildJoin($view, $configuration, 'node__field_tags');
     $condition = $join_info['condition'];
+    if ($driver == 'mongodb') {
+      $condition->setMongodbJoinCondition();
+    }
     $condition->compile($view->getQuery()->getConnection(), $view->getQuery()->query());
-    $this->assertStringContainsString('AND ("node__field_tags"."langcode" = "views_test_data"."langcode")', $condition->__toString());
+    if ($driver == 'mongodb') {
+      $expected_condition = [
+        '$and' => [
+          [
+            '$expr' => [
+              '$eq' => [
+                '$views_test_data.nid',
+                '$node__field_tags.entity_id',
+              ],
+            ],
+          ],
+          [
+            '$expr' => [
+              '$eq' => [
+                '$node__field_tags.deleted',
+                0,
+              ],
+            ],
+          ],
+          [
+            '$expr' => [
+              '$eq' => [
+                '$node__field_tags.langcode',
+                '$views_test_data.langcode',
+              ],
+            ],
+          ],
+        ],
+      ];
+      $this->assertSame($condition->toMongoAggregateArray(), $expected_condition);
+    }
+    else {
+      $this->assertStringContainsString('AND ("node__field_tags"."langcode" = "views_test_data"."langcode")', $condition->__toString());
+    }
 
     // Replace the language condition with a bundle condition.
     $configuration['extra'][1] = [
@@ -176,8 +346,44 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
     ];
     $join_info = $this->buildJoin($view, $configuration, 'node__field_tags');
     $condition = $join_info['condition'];
+    if ($driver == 'mongodb') {
+      $condition->setMongodbJoinCondition();
+    }
     $condition->compile($view->getQuery()->getConnection(), $view->getQuery()->query());
-    $this->assertStringContainsString('AND ("node__field_tags"."bundle" = :db_condition_placeholder_1)', $condition->__toString());
+    if ($driver == 'mongodb') {
+      $expected_condition = [
+        '$and' => [
+          [
+            '$expr' => [
+              '$eq' => [
+                '$views_test_data.nid',
+                '$node__field_tags.entity_id',
+              ],
+            ],
+          ],
+          [
+            '$expr' => [
+              '$eq' => [
+                '$node__field_tags.deleted',
+                0,
+              ],
+            ],
+          ],
+          [
+            '$expr' => [
+              '$eq' => [
+                '$node__field_tags.bundle',
+                'page',
+              ],
+            ],
+          ],
+        ],
+      ];
+      $this->assertSame($condition->toMongoAggregateArray(), $expected_condition);
+    }
+    else {
+      $this->assertStringContainsString('AND ("node__field_tags"."bundle" = :db_condition_placeholder_1)', $condition->__toString());
+    }
 
     // Now re-add a language condition to make sure the bundle and language
     // conditions are combined with an OR.
@@ -187,8 +393,56 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
     ];
     $join_info = $this->buildJoin($view, $configuration, 'node__field_tags');
     $condition = $join_info['condition'];
+    if ($driver == 'mongodb') {
+      $condition->setMongodbJoinCondition();
+    }
     $condition->compile($view->getQuery()->getConnection(), $view->getQuery()->query());
-    $this->assertStringContainsString('AND (("node__field_tags"."bundle" = :db_condition_placeholder_1) OR ("node__field_tags"."langcode" = "views_test_data"."langcode"))', $condition->__toString());
+    if ($driver == 'mongodb') {
+      $expected_condition = [
+        '$and' => [
+          [
+            '$expr' => [
+              '$eq' => [
+                '$views_test_data.nid',
+                '$node__field_tags.entity_id',
+              ],
+            ],
+          ],
+          [
+            '$expr' => [
+              '$eq' => [
+                '$node__field_tags.deleted',
+                0,
+              ],
+            ],
+          ],
+          [
+            '$or' => [
+              [
+                '$expr' => [
+                  '$eq' => [
+                    '$node__field_tags.bundle',
+                    'page',
+                  ],
+                ],
+              ],
+              [
+                '$expr' => [
+                  '$eq' => [
+                    '$node__field_tags.langcode',
+                    '$views_test_data.langcode',
+                  ],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ];
+      $this->assertSame($condition->toMongoAggregateArray(), $expected_condition);
+    }
+    else {
+      $this->assertStringContainsString('AND (("node__field_tags"."bundle" = :db_condition_placeholder_1) OR ("node__field_tags"."langcode" = "views_test_data"."langcode"))', $condition->__toString());
+    }
   }
 
   /**

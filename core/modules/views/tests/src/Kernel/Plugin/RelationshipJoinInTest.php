@@ -77,10 +77,21 @@ class RelationshipJoinInTest extends RelationshipJoinTestBase {
       ],
     ]);
 
+    if (Database::getConnection()->databaseType() == 'mongodb') {
+      $users_table = 'users';
+      $this->columnMap = [
+        'views_test_data_name' => 'name',
+        'users_views_test_data_users_views_test_data_uid' => 'uid',
+      ];
+    }
+    else {
+      $users_table = 'users_field_data';
+    }
+
     $view->displayHandlers->get('default')->overrideOption('filters', [
       'uid' => [
         'id' => 'uid',
-        'table' => 'users_field_data',
+        'table' => $users_table,
         'field' => 'uid',
         'relationship' => 'uid',
       ],
@@ -90,7 +101,7 @@ class RelationshipJoinInTest extends RelationshipJoinTestBase {
     $view->displayHandlers->get('default')->overrideOption('fields', $fields + [
       'uid' => [
         'id' => 'uid',
-        'table' => 'users_field_data',
+        'table' => $users_table,
         'field' => 'uid',
         'relationship' => 'uid',
       ],
@@ -136,9 +147,17 @@ class RelationshipJoinInTest extends RelationshipJoinTestBase {
    */
   protected function viewsData() {
     $data = parent::viewsData();
+
+    if (Database::getConnection()->databaseType() == 'mongodb') {
+      $field_username = 'user_translations.name';
+    }
+    else {
+      $field_username = 'name';
+    }
+
     // Only relate if the author's name is Kristiaan or Silvie.
     $data['views_test_data']['uid']['relationship']['extra'][] = [
-      'field' => 'name',
+      'field' => $field_username,
       'value' => ['Kristiaan', 'Silvie'],
     ];
     return $data;

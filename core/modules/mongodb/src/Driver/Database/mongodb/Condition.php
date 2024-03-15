@@ -47,6 +47,13 @@ class Condition extends QueryCondition {
   protected $mongodbBaseTable;
 
   /**
+   * The condition is part of a query join.
+   *
+   * @var bool
+   */
+  protected bool $mongodbJoinCondition;
+
+  /**
    * An array of embedded table names used in the condition.
    *
    * @var array
@@ -121,6 +128,20 @@ class Condition extends QueryCondition {
   }
 
   /**
+   * Sets the variable join condition
+   *
+   * @param bool $join
+   *   (optional) The boolean value to set. Defaults to TRUE.
+   *
+   * @return void
+   */
+  public function setMongodbJoinCondition(bool $join = TRUE) {
+    $this->mongodbJoinCondition = $join;
+    // We shall need to recompile the condition.
+    $this->changed = TRUE;
+  }
+
+  /**
    * Set meta data for the condition.
    *
    * @param array $meta_data
@@ -142,6 +163,7 @@ class Condition extends QueryCondition {
    */
   public function __construct($conjunction) {
     parent::__construct($conjunction);
+    $this->mongodbJoinCondition = FALSE;
   }
 
   /**
@@ -227,58 +249,63 @@ class Condition extends QueryCondition {
       // embedded table keyed by the embedded table.
       $this->mongodbEmbeddedTables = [];
       if ($conjunction == 'AND') {
-        // Get the number of conditions per embedded table.
-        foreach ($conditions as $condition) {
-          if (is_string($condition['field'])) {
-            $last_dot = strrpos($condition['field'], '.');
-            if ($last_dot !== FALSE) {
-              // With selecting which embedded table to create a MongoDB
-              // $elemMatch for, make it as deep as possible.
-              $embedded_table = substr($condition['field'], 0, $last_dot);
-              // TODO Remove the embedded table part if it is the base table or
-              // the base table alias.
-              if (in_array($embedded_table, [$this->mongodbBaseTable, $this->mongodbBaseAlias])) {
-                $condition['field'] = substr($condition['field'], $last_dot + 1);
-              }
-              else {
-                if (!isset($this->mongodbEmbeddedTables[$embedded_table])) {
-                  $this->mongodbEmbeddedTables[$embedded_table] = 1;
-                }
-                else {
-                  $this->mongodbEmbeddedTables[$embedded_table]++;
-                }
-              }
-            }
-          }
-        }
-        // Unwound (embedded) tables are no longer arrays. Therefore the
-        // condition operator $elemMatch can no longer be used, because it only
-        // works on arrays.
-        if (!empty($this->mongodbEmbeddedTables) && !empty($this->mongodbUnwoundTables)) {
-          foreach ($this->mongodbEmbeddedTables as $mongodbEmbeddedTableName => $mongodbEmbeddedTableCount) {
-            if (in_array($mongodbEmbeddedTableName, $this->mongodbUnwoundTables, TRUE)) {
-              unset($this->mongodbEmbeddedTables[$mongodbEmbeddedTableName]);
-            }
-          }
-        }
-        if (!empty($this->mongodbEmbeddedTables)) {
-          // For embedded tables with multiple conditions change those to
-          // MongoDB "$elemMatch" on the embedded table. At this stage remove
-          // the embedded table from the field value and add the embedded table value.
-          foreach ($conditions as &$condition) {
+        if (!$this->mongodbJoinCondition) {
+          // Get the number of conditions per embedded table.
+          foreach ($conditions as $condition) {
             if (is_string($condition['field'])) {
               $last_dot = strrpos($condition['field'], '.');
               if ($last_dot !== FALSE) {
+                // With selecting which embedded table to create a MongoDB
+                // $elemMatch for, make it as deep as possible.
                 $embedded_table = substr($condition['field'], 0, $last_dot);
-                if (isset($this->mongodbEmbeddedTables[$embedded_table]) && (intval($this->mongodbEmbeddedTables[$embedded_table]) > 1) || !empty($this->mongodbEmbeddedTableProjection)) {
+                // @todo Remove the embedded table part if it is the base table
+                // or the base table alias.
+                if (in_array($embedded_table, [
+                  $this->mongodbBaseTable,
+                  $this->mongodbBaseAlias
+                ])) {
                   $condition['field'] = substr($condition['field'], $last_dot + 1);
-                  $condition['embedded_table'] = $embedded_table;
+                }
+                else {
+                  if (!isset($this->mongodbEmbeddedTables[$embedded_table])) {
+                    $this->mongodbEmbeddedTables[$embedded_table] = 1;
+                  }
+                  else {
+                    $this->mongodbEmbeddedTables[$embedded_table]++;
+                  }
                 }
               }
             }
           }
-          // Make sure that the variable $condition is unset.
-          unset($condition);
+          // Unwound (embedded) tables are no longer arrays. Therefor the
+          // condition operator $elemMatch can no longer be used, because it only
+          // works on arrays.
+          if (!empty($this->mongodbEmbeddedTables) && !empty($this->mongodbUnwoundTables)) {
+            foreach ($this->mongodbEmbeddedTables as $mongodbEmbeddedTableName => $mongodbEmbeddedTableCount) {
+              if (in_array($mongodbEmbeddedTableName, $this->mongodbUnwoundTables, TRUE)) {
+                unset($this->mongodbEmbeddedTables[$mongodbEmbeddedTableName]);
+              }
+            }
+          }
+          if (!empty($this->mongodbEmbeddedTables)) {
+            // For embedded tables with multiple conditions change those to
+            // MongoDB "$elemMatch" on the embedded table. At this stage remove
+            // the embedded table from the field value and add the embedded table value.
+            foreach ($conditions as &$condition) {
+              if (is_string($condition['field'])) {
+                $last_dot = strrpos($condition['field'], '.');
+                if ($last_dot !== FALSE) {
+                  $embedded_table = substr($condition['field'], 0, $last_dot);
+                  if (isset($this->mongodbEmbeddedTables[$embedded_table]) && (intval($this->mongodbEmbeddedTables[$embedded_table]) > 1) || !empty($this->mongodbEmbeddedTableProjection)) {
+                    $condition['field'] = substr($condition['field'], $last_dot + 1);
+                    $condition['embedded_table'] = $embedded_table;
+                  }
+                }
+              }
+            }
+            // Make sure that the variable $condition is unset.
+            unset($condition);
+          }
         }
       }
 
@@ -298,6 +325,7 @@ class Condition extends QueryCondition {
           if ($condition['field'] instanceof ConditionInterface) {
             $condition['field']->setMongodbBaseTable($this->mongodbBaseTable);
             $condition['field']->setMongodbBaseAlias($this->mongodbBaseAlias);
+            $condition['field']->setMongodbJoinCondition($this->mongodbJoinCondition);
             $condition['field']->setMetaData($this->alterMetaData);
             $condition['field']->setUnwoundTables($this->mongodbUnwoundTables);
             if (!empty($this->mongodbEmbeddedTableProjection)) {
@@ -415,7 +443,7 @@ class Condition extends QueryCondition {
                 case '<>':
                 case '!=':
                   if (reset($condition['value']) === NULL) {
-                    // If we have the condition value "NULL" then make shure we
+                    // If we have the condition value "NULL" then make sure we
                     // select nothing. Yes, this is a hack!
                     $condition_fragment = $condition_aggregate_fragment = [$connection->escapeField($condition['field']) => ['$gt' => 1]];
                     $condition_fragment2 = $condition_aggregate_fragment2 = [$connection->escapeField($condition['field']) => ['$lt' => 1]];
@@ -445,10 +473,32 @@ class Condition extends QueryCondition {
                     }
                   }
                   else {
-                    $action = [$operator['mongodb_operator'] => reset($condition['value'])];
-                    $condition_fragment = $condition_aggregate_fragment = [$connection->escapeField($condition['field']) => $action];
-                    if (!empty($condition['embedded_table'])) {
-                      $condition_aggregate_fragment = [$connection->escapeField($condition['embedded_table'] . '.' . $condition['field']) => $action];
+                    if ($this->mongodbJoinCondition) {
+                      $condition_fragment = $condition_aggregate_fragment = [
+                        '$expr' => [
+                          $operator['mongodb_operator'] => [
+                            '$' . $connection->escapeField($condition['field']),
+                            reset($condition['value']),
+                          ],
+                        ],
+                      ];
+                      if (!empty($condition['embedded_table'])) {
+                        $condition_aggregate_fragment = [
+                          '$expr' => [
+                            $operator['mongodb_operator'] => [
+                              '$' . $connection->escapeField($condition['embedded_table'] . '.' . $connection->escapeField($condition['field'])),
+                              reset($condition['value']),
+                            ],
+                          ],
+                        ];
+                      }
+                    }
+                    else {
+                      $action = [$operator['mongodb_operator'] => reset($condition['value'])];
+                      $condition_fragment = $condition_aggregate_fragment = [$connection->escapeField($condition['field']) => $action];
+                      if (!empty($condition['embedded_table'])) {
+                        $condition_aggregate_fragment = [$connection->escapeField($condition['embedded_table'] . '.' . $condition['field']) => $action];
+                      }
                     }
                   }
                   break;
@@ -457,10 +507,32 @@ class Condition extends QueryCondition {
                 case 'NOT IN':
                   // MongoDB  does not like array key values with '$in' and '$nin'
                   // operators.
-                  $action = [$operator['mongodb_operator'] => array_values($condition['value'])];
-                  $condition_fragment = $condition_aggregate_fragment = [$connection->escapeField($condition['field']) => $action];
-                  if (!empty($condition['embedded_table'])) {
-                    $condition_aggregate_fragment = [$connection->escapeField($condition['embedded_table'] . '.' . $condition['field']) => $action];
+                  if ($this->mongodbJoinCondition) {
+                    $condition_fragment = $condition_aggregate_fragment = [
+                      '$expr' => [
+                        $operator['mongodb_operator'] => [
+                          '$' . $connection->escapeField($condition['field']),
+                          array_values($condition['value']),
+                        ],
+                      ],
+                    ];
+                    if (!empty($condition['embedded_table'])) {
+                      $condition_aggregate_fragment = [
+                        '$expr' => [
+                          $operator['mongodb_operator'] => [
+                            '$' . $connection->escapeField($condition['embedded_table'] . '.' . $connection->escapeField($condition['field'])),
+                            array_values($condition['value']),
+                          ],
+                        ],
+                      ];
+                    }
+                  }
+                  else {
+                    $action = [$operator['mongodb_operator'] => array_values($condition['value'])];
+                    $condition_fragment = $condition_aggregate_fragment = [$connection->escapeField($condition['field']) => $action];
+                    if (!empty($condition['embedded_table'])) {
+                      $condition_aggregate_fragment = [$connection->escapeField($condition['embedded_table'] . '.' . $condition['field']) => $action];
+                    }
                   }
                   break;
 

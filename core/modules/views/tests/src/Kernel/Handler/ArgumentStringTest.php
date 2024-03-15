@@ -52,7 +52,7 @@ class ArgumentStringTest extends ViewsKernelTestBase {
     $view = Views::getView('test_glossary');
     $this->executeView($view);
 
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       $count_field = 'vid';
     }
     else {

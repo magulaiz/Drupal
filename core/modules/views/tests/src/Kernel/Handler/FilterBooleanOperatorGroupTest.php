@@ -6,7 +6,6 @@ namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
@@ -46,9 +45,7 @@ class FilterBooleanOperatorGroupTest extends ViewsKernelTestBase {
    * {@inheritdoc}
    */
   public function setUp($import_test_views = TRUE): void {
-    KernelTestBase::setUp();
-
-    $this->setUpFixtures();
+    parent::setup(FALSE);
 
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');

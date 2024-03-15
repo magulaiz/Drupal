@@ -75,18 +75,14 @@ class Statement extends StatementPrefetchIterator {
     $this->data = $cursor->toArray();
   }
 
+  public function getData() {
+    return $this->data;
+  }
+
   /**
    * {@inheritdoc}
    */
   public function execute($args = [], $options = []) {
-    // This is only needed by the database query logger.
-    $this->queryString = isset($options['query_string']) ? $options['query_string'] : '';
-
-    // Change the database connection for the database query logger.
-    // if (isset($options['target']) && $options['target'] != $this->connection->getTarget()) {
-    // $this->connection = Database::getConnection($options['target']);
-    // }
-
     foreach ($this->data as &$data) {
       if (isset($data['_id']) && $data['_id'] instanceof ObjectID) {
         // If set then change _id from \MongoDB\BSON\ObjectID to its string

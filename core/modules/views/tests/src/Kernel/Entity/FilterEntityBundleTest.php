@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views\Kernel\Entity;
 
+use Drupal\Core\Database\Database;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
@@ -52,6 +53,13 @@ class FilterEntityBundleTest extends ViewsKernelTestBase {
     }
     $view = Views::getView('test_entity_type_filter');
 
+    if (Database::getConnection()->driver() == 'mongodb') {
+      $modules = ['mongodb', 'node'];
+    }
+    else {
+      $modules = ['node'];
+    }
+
     // Tests \Drupal\views\Plugin\views\filter\Bundle::calculateDependencies().
     $expected = [
       'config' => [
@@ -59,9 +67,7 @@ class FilterEntityBundleTest extends ViewsKernelTestBase {
         'node.type.test_bundle',
         'node.type.test_bundle_2',
       ],
-      'module' => [
-        'node',
-      ],
+      'module' => $modules,
     ];
     $this->assertSame($expected, $view->getDependencies());
 

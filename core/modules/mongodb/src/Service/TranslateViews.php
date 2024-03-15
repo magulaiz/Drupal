@@ -36,6 +36,9 @@ class TranslateViews {
     'node__field_link' => [
       'base table' => 'node',
     ],
+    'node__field_reference' => [
+      'base table' => 'node',
+    ],
     'block_content_field_data' => [
       'base table' => 'block_content',
     ],
@@ -87,6 +90,12 @@ class TranslateViews {
       'base table' => 'entity_test_rev',
     ],
     'entity_test_rev__field_test_multiple' => [
+      'base table' => 'entity_test_rev',
+    ],
+    'entity_test_rev__field_test' => [
+      'base table' => 'entity_test_rev',
+    ],
+    'entity_test_rev_revision__field_test' => [
       'base table' => 'entity_test_rev',
     ],
     'entity_test_mul_property_data' => [

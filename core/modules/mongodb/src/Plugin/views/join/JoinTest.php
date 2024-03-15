@@ -41,6 +41,7 @@ class JoinTest extends CoreJoinTest {
    * {@inheritdoc}
    */
   public function buildJoin($select_query, $table, $view_query) {
+dump(1);
     // Add an additional hardcoded condition to the query.
     $this->extra = 'views_test_data.uid = ' . $this->getJoinValue();
     parent::buildJoin($select_query, $table, $view_query);
@@ -116,7 +117,6 @@ class JoinTest extends CoreJoinTest {
     }
 
     $select_query->addJoin($this->type, $right_table, $table['alias'], $join_condition);
-//    $select_query->addMongodbJoin($this->type, $right_table, $right_field, $left_table, $left_field, '=', $table['alias'], $this->extra);
     if (isset($this->configuration['one_to_many']) && $this->configuration['one_to_many']) {
       $select_query->addFilterUnwindPath($table['alias']);
     }

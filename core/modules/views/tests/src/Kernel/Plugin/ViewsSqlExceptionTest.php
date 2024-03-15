@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\views\Kernel\Plugin;
 
+use Drupal\Core\Database\Database;
+use Drupal\mongodb\Driver\Database\mongodb\MongodbSQLException;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
@@ -46,8 +48,15 @@ class ViewsSqlExceptionTest extends ViewsKernelTestBase {
       ],
     ]);
 
-    $this->expectException(DatabaseExceptionWrapper::class);
-    $this->expectExceptionMessageMatches('/^Exception in Test filters\[test_filter\]:/');
+    if (Database::getConnection()->driver() == 'mongodb') {
+      // The filter adds an expression, which are not supported by MongoDB.
+      $this->expectException(MongodbSQLException::class);
+      $this->expectExceptionMessage('MongoDB does not support SQL strings. Use the method ViewsQuery::addCondition() instead of this method');
+    }
+    else {
+      $this->expectException(DatabaseExceptionWrapper::class);
+      $this->expectExceptionMessageMatches('/^Exception in Test filters\[test_filter\]:/');
+    }
 
     $this->executeView($view);
   }

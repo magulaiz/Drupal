@@ -242,6 +242,13 @@ class Select extends QuerySelect {
   protected array $mongodbLookupUnwindPaths = [];
 
   /**
+   * The list of embedded tables that have been unwound in the aggregate query.
+   *
+   * @var array
+   */
+  protected array $mongodbUnwoundPaths = [];
+
+  /**
    * Exclude the default MongoDB field "_id" from the query result.
    *
    * @var bool
@@ -317,13 +324,6 @@ class Select extends QuerySelect {
    * @var bool
    */
   protected $mongodbQueryStringValue = FALSE;
-
-  /**
-   * An array of condition for which embedded table rows must be deleted.
-   *
-   * @var array
-   */
-  protected $embeddedTableCondition = [];
 
   /**
    * The table aliases for with all fields must be selected.
@@ -962,7 +962,7 @@ class Select extends QuerySelect {
       'join type' => $type,
       'table' => $table,
       'alias' => $alias,
-      'condition' => '',
+      'condition' => $condition,
       'arguments' => $arguments,
     ];
 
@@ -980,7 +980,7 @@ class Select extends QuerySelect {
       // 'extra' => $extra,
     ];
 
-    $this->mongodbJoins[$alias] += $this->getJoinConditionForMongoDB($condition, $table, $alias);
+//    $this->mongodbJoins[$alias] += $this->getJoinConditionForMongoDB($condition, $table, $alias);
 
     return $alias;
   }
@@ -1003,6 +1003,8 @@ class Select extends QuerySelect {
     $condition_parts = $condition->conditions();
     unset($condition_parts['#conjunction']);
     foreach ($condition_parts as $condition_part) {
+dump('$condition_part');
+dump($condition_part);
       // Get the right field.
       if (isset($condition_part['field']) && isset($condition_part['field2'])) {
         if (str_starts_with($condition_part['field'], $table . '.')) {
@@ -1026,8 +1028,18 @@ class Select extends QuerySelect {
         elseif (str_starts_with($condition_part['field2'], $alias . '.')) {
           $return['field'] = substr($condition_part['field2'], strlen($alias) + 1);
           $left_join = explode('.', $condition_part['field']);
-          $return['left table'] = $left_join[0];
-          $return['left field'] = $left_join[1];
+          if (count($left_join) == 1) {
+            $return['left field'] = $condition_part['field'];
+          }
+          else {
+            $return['left table'] = $left_join[0] ?? '';
+            $return['left field'] = $left_join[1] ?? '';
+          }
+        }
+        elseif (isset($condition_part['field2'])) {
+          $return['left field'] = $condition_part['field'];
+          $return['left table'] = $table;
+          $return['field'] = $condition_part['field2'];
         }
       }
 
@@ -1458,7 +1470,8 @@ class Select extends QuerySelect {
           );
           $this->connection->dispatchEvent($startEvent);
         }
-
+//dump('$pipeline');
+//dump($pipeline);
         $cursor = $this->connection->getConnection()->{$prefixed_table}->aggregate(
           $pipeline,
           [
@@ -1653,6 +1666,176 @@ class Select extends QuerySelect {
   }
 
   /**
+   * Helper method for getting the used table names and aliases.
+   *
+   * @param string $table
+   *   The table name to skip.
+   * @param string $alias
+   *   The table alias to skip.
+   *
+   * @return array
+   *   The list with used table names and aliases.
+   */
+  protected function getTableNamesAndAliases(string $table, string $alias): array {
+    $list = [];
+    foreach ($this->tables as $join) {
+      if (!in_array($join['table'], [$table, $alias, $this->mongodbBaseTable, $this->mongodbBaseAlias], TRUE)) {
+        $list[] = $join['table'];
+      }
+      if (!in_array($join['alias'], [$table, $alias, $this->mongodbBaseTable, $this->mongodbBaseAlias], TRUE)) {
+        $list[] = $join['alias'];
+      }
+    }
+
+    return array_unique($list);
+  }
+
+  /**
+   * Helper method for updating the join condition.
+   *
+   * We cannot use the function \array_walk_recursive(), because that function
+   * walks all the values of an array. It does not walk all keys of the array.
+   *
+   * @param array $condition
+   *   The compiled join condition.
+   * @param string $right_table
+   *   The right table of the join.
+   * @param string $right_alias
+   *   The right alias of the join.
+   * @param array $lookup_let
+   *   Array of query variables that must be added to the join.
+   * @param array $lookup_left_unwind_paths
+   *   The embedded table left paths to be unwound.
+   * @param array $lookup_right_unwind_paths
+   *    The embedded table right paths to be unwound.
+   */
+  protected function updateCompiledJoinCondition(array &$condition, string $right_table, string $right_alias, array &$lookup_let, array &$lookup_left_unwind_paths, array &$lookup_right_unwind_paths): void {
+    foreach ($condition as $key => &$value) {
+      if (is_string($key)) {
+        $new_key = $key;
+        if (str_starts_with($key, $this->mongodbBaseTable . '.')) {
+          // Remove base table from the condition value.
+          $new_key = str_replace($this->mongodbBaseTable . '.', '', $key);
+        }
+        elseif (str_starts_with($key, $this->mongodbBaseAlias . '.')) {
+          // Remove base table from the condition value.
+          $new_key = str_replace($this->mongodbBaseAlias . '.', '', $key);
+        }
+        foreach ($this->getTableNamesAndAliases($right_table, $right_alias) as $used_name_or_alias) {
+          if (str_starts_with($key, $used_name_or_alias . '.')) {
+            $new_key = str_replace($used_name_or_alias . '.', '', $key);
+          }
+        }
+
+        // Remove the right table name from the condition key.
+        if (str_starts_with($key, $right_table . '.')) {
+          $new_key = str_replace($right_table . '.', '', $key);
+        }
+        // Remove the alias alias name from the condition key.
+        if (str_starts_with($key, $right_alias . '.')) {
+          $new_key = str_replace($right_alias . '.', '', $key);
+        }
+
+        // Array keys cannot be updated by reference.
+        if ($key !== $new_key) {
+          $condition[$new_key] = $condition[$key];
+          unset($condition[$key]);
+        }
+      }
+      if (is_string($value)) {
+        $add_to_lookup_let = FALSE;
+        if (str_starts_with($value, '$' . $this->mongodbBaseTable . '.')) {
+          // Remove base table from the condition value.
+          $value = str_replace('$' . $this->mongodbBaseTable . '.', '$', $value);
+          $add_to_lookup_let = TRUE;
+          $last_dot_position = strrpos($value, '.');
+          if ($last_dot_position !== FALSE) {
+            $unwind_path = '';
+            $unwind_path_parts = explode('.', substr($value, 0, $last_dot_position));
+            foreach ($unwind_path_parts as $unwind_path_part) {
+              $unwind_path = (!empty($unwind_path) ? $unwind_path . '.' : '') . $unwind_path_part;
+              $lookup_left_unwind_paths[] = $unwind_path;
+            }
+          }
+        }
+        elseif (str_starts_with($value, '$' . $this->mongodbBaseAlias . '.')) {
+          // Remove base alias from the condition value.
+          $value = str_replace('$' . $this->mongodbBaseAlias . '.', '$', $value);
+          $add_to_lookup_let = TRUE;
+          $last_dot_position = strrpos($value, '.');
+          if ($last_dot_position !== FALSE) {
+            $unwind_path = '';
+            $unwind_path_parts = explode('.', substr($value, 0, $last_dot_position));
+            foreach ($unwind_path_parts as $unwind_path_part) {
+              $unwind_path = (!empty($unwind_path) ? $unwind_path . '.' : '') . $unwind_path_part;
+              $lookup_left_unwind_paths[] = $unwind_path;
+            }
+          }
+        }
+        foreach ($this->getTableNamesAndAliases($right_table, $right_alias) as $used_name_or_alias) {
+          if (str_starts_with($value, '$' . $used_name_or_alias . '.')) {
+            $add_to_lookup_let = TRUE;
+            $last_dot_position = strrpos($value, '.');
+            if ($last_dot_position !== FALSE) {
+              $unwind_path = '';
+              $unwind_path_parts = explode('.', substr($value, 0, $last_dot_position));
+              foreach ($unwind_path_parts as $unwind_path_part) {
+                $unwind_path = (!empty($unwind_path) ? $unwind_path . '.' : '') . $unwind_path_part;
+                $lookup_left_unwind_paths[] = $unwind_path;
+              }
+            }
+          }
+        }
+
+        if ($add_to_lookup_let) {
+          // Replace the used left table names and aliases with lookup "let".
+          $lookup_let_key = str_replace('.', '_', $value);
+          if (str_starts_with($lookup_let_key, '$')) {
+            $lookup_let_key = substr($lookup_let_key, 1);
+          }
+
+          // Add the variable to the lookup let.
+          $lookup_let[$lookup_let_key] = $value;
+
+          // update the variable to use the key from the lookup let.
+          $value = '$$' . $lookup_let_key;
+        }
+
+        // Remove the right table name from the condition.
+        if (str_starts_with($value, '$' . $right_table . '.')) {
+          $value = str_replace('$' . $right_table . '.', '$', $value);
+          $last_dot_position = strrpos($value, '.');
+          if ($last_dot_position !== FALSE) {
+            $unwind_path = '';
+            $unwind_path_parts = explode('.', substr($value, 0, $last_dot_position));
+            foreach ($unwind_path_parts as $unwind_path_part) {
+              $unwind_path = (!empty($unwind_path) ? $unwind_path . '.' : '') . $unwind_path_part;
+              $lookup_right_unwind_paths[] = $unwind_path;
+            }
+          }
+        }
+        // Remove the right alias name from the condition.
+        if (str_starts_with($value, '$' . $right_alias . '.')) {
+          $value = str_replace('$' . $right_alias . '.', '$', $value);
+          $last_dot_position = strrpos($value, '.');
+          if ($last_dot_position !== FALSE) {
+            $unwind_path = '';
+            $unwind_path_parts = explode('.', substr($value, 0, $last_dot_position));
+            foreach ($unwind_path_parts as $unwind_path_part) {
+              $unwind_path = (!empty($unwind_path) ? $unwind_path . '.' : '') . $unwind_path_part;
+              $lookup_right_unwind_paths[] = $unwind_path;
+            }
+          }
+        }
+      }
+      elseif (is_array($value)) {
+        // Recursive walk all array's.
+        $this->updateCompiledJoinCondition($value, $right_table, $right_alias, $lookup_let, $lookup_left_unwind_paths, $lookup_right_unwind_paths);
+      }
+    }
+  }
+
+  /**
    * Create the MongoDB select query.
    */
   protected function createMongodbQuery(): void {
@@ -1673,25 +1856,109 @@ class Select extends QuerySelect {
 
     // Add the mongodb joins to the select query.
     foreach ($this->mongodbJoins as $mongodbJoin) {
+      $lookup_pipeline = [];
       $pipeline_unwound_tables = [];
+      $lookup_let = [];
 
-      $left_table_alias = '';
-      if (isset($mongodbJoin['left table']['alias'])) {
-        // The views module way.
-        $left_table_alias = $mongodbJoin['left table']['alias'];
-      }
-      else {
-        foreach ($this->tables as $table) {
-          if (isset($table['table']) && isset($table['alias']) && isset($mongodbJoin['left table']) && isset($mongodbJoin['table']) &&
-            (($mongodbJoin['left table'] == $table['table']) || ($mongodbJoin['left table'] == $table['alias']))) {
-            $left_table_alias = $table['alias'];
+//      $left_table_alias = '';
+//      if (isset($mongodbJoin['left table']['alias'])) {
+//        // The views module way.
+//        $left_table_alias = $mongodbJoin['left table']['alias'];
+//      }
+//      else {
+//        foreach ($this->tables as $table) {
+//          if (isset($table['table']) && isset($table['alias']) && isset($mongodbJoin['left table']) && isset($mongodbJoin['table']) &&
+//            (($mongodbJoin['left table'] == $table['table']) || ($mongodbJoin['left table'] == $table['alias']))) {
+//            $left_table_alias = $table['alias'];
+//          }
+//        }
+//      }
+
+//      $lookup_conditions = [];
+      if (isset($mongodbJoin['condition']) && ($mongodbJoin['condition'] instanceof Condition)) {
+/*
+        $last_dot_position = strrpos($mongodbJoin['left field'], '.');
+//dump($last_dot_position);
+        if ($last_dot_position !== FALSE) {
+          $lookup_unwind_path = substr($mongodbJoin['left field'], 0, $last_dot_position);
+//dump('$lookup_unwind_path: ' . $lookup_unwind_path);
+          if (!in_array($lookup_unwind_path, [$this->mongodbBaseTable, $this->mongodbBaseAlias])) {
+            $embedded_table_parts = explode('.', substr($mongodbJoin['left field'], 0, $last_dot_position));
+            $unwind = '';
+            foreach ($embedded_table_parts as $embedded_table_part) {
+              $unwind = (!empty($unwind) ? $unwind . '.' : '') . $embedded_table_part;
+//dump('$unwind1: ' . $unwind);
+
+              // Check that we are not trying to unwind the base table.
+              if (!isset($this->mongodbJoins[$unwind]['table']) || ($this->mongodbJoins[$unwind]['table'] != $this->mongodbBaseTable)) {
+//dump('$unwind2: ' . $unwind);
+                $this->mongodbLookups[] = [
+                  '$unwind' => [
+                    'path' => '$' . $unwind,
+                    'preserveNullAndEmptyArrays' => TRUE,
+                  ],
+                ];
+              }
+            }
           }
         }
-      }
+*/
 
-      $lookup_let = [];
-      $lookup_conditions = [];
-      if (!empty($mongodbJoin['left field'])) {
+        $lookup_left_unwind_paths = [];
+        $lookup_right_unwind_paths = [];
+
+        // The base table and alias for the condition are those of the right
+        // table.
+//        $mongodbJoin['condition']->setMongodbBaseTable($mongodbJoin['table']);
+//        $mongodbJoin['condition']->setMongodbBaseAlias($mongodbJoin['alias']);
+        // Let the condition know that we are doing a join condition.
+        $mongodbJoin['condition']->setMongodbJoinCondition();
+
+        // Compile the condition and update the alias variable in the condition.
+        $mongodbJoin['condition']->compile($this->connection, $this);
+        $condition_compiled = $mongodbJoin['condition']->toMongoAggregateArray();
+//dump('$condition_compiled');
+//dump($condition_compiled);
+        $this->updateCompiledJoinCondition($condition_compiled, $mongodbJoin['table'], $mongodbJoin['alias'], $lookup_let, $lookup_left_unwind_paths, $lookup_right_unwind_paths);
+
+//dump('$lookup_let');
+//dump($lookup_let);
+
+        $lookup_left_unwind_paths = array_unique($lookup_left_unwind_paths);
+        sort($lookup_left_unwind_paths);
+        foreach ($lookup_left_unwind_paths as $lookup_left_unwind_path) {
+          if ($lookup_left_unwind_path && !in_array($lookup_left_unwind_path, $this->mongodbUnwoundPaths, TRUE)) {
+            $this->mongodbLookups[] = [
+              '$unwind' => [
+                'path' => $lookup_left_unwind_path,
+                'preserveNullAndEmptyArrays' => TRUE,
+              ],
+            ];
+            $this->mongodbUnwoundPaths[] = $lookup_left_unwind_path;
+          }
+        }
+
+        $lookup_right_unwind_paths = array_unique($lookup_right_unwind_paths);
+        sort($lookup_right_unwind_paths);
+        foreach ($lookup_right_unwind_paths as $lookup_right_unwind_path) {
+          if ($lookup_right_unwind_path && !in_array($lookup_right_unwind_path, $this->mongodbUnwoundPaths, TRUE)) {
+            $lookup_pipeline[] = [
+              '$unwind' => [
+                'path' => $lookup_right_unwind_path,
+                'preserveNullAndEmptyArrays' => TRUE,
+              ],
+            ];
+            $this->mongodbUnwoundPaths[] = $lookup_right_unwind_path;
+          }
+        }
+
+        $lookup_pipeline[] = [
+          '$match' => $condition_compiled,
+        ];
+      }
+/*
+      // @todo See if we can remove the code in the following elseif statement.
+      elseif (!empty($mongodbJoin['left field'])) {
         if (!empty($left_table_alias) && !in_array($left_table_alias, [$this->mongodbBaseTable, $this->mongodbBaseAlias]) &&
           ($mongodbJoin['left table'] != $mongodbJoin['table'])
         ) {
@@ -1743,7 +2010,6 @@ class Select extends QuerySelect {
         ];
       }
 
-      $lookup_pipeline = [];
       $lookup_field_parts = explode('.', $mongodbJoin['field']);
       array_pop($lookup_field_parts);
       $unwind = '';
@@ -1856,7 +2122,7 @@ class Select extends QuerySelect {
           ],
         ];
       }
-
+*/
       $lookup = [
         '$lookup' => [
           'from' => $this->connection->getMongodbPrefixedTable($mongodbJoin['table']),
@@ -1883,23 +2149,24 @@ class Select extends QuerySelect {
         ];
       }
 
-      if (!empty($pipeline_unwound_tables)) {
+      if (!in_array('$' . $mongodbJoin['alias'], $this->mongodbUnwoundPaths, TRUE)) {
         $this->mongodbLookups[] = [
           '$unwind' => [
             'path' => '$' . $mongodbJoin['alias'],
             'preserveNullAndEmptyArrays' => TRUE,
           ],
         ];
+        $this->mongodbUnwoundPaths[] = '$' . $mongodbJoin['alias'];
       }
 
-      foreach ($pipeline_unwound_tables as $pipeline_unwound_table) {
-        $this->mongodbLookups[] = [
-          '$unwind' => [
-            'path' => '$' . $mongodbJoin['alias'] . '.' . $pipeline_unwound_table,
-            'preserveNullAndEmptyArrays' => TRUE,
-          ],
-        ];
-      }
+//      foreach ($pipeline_unwound_tables as $pipeline_unwound_table) {
+//        $this->mongodbLookups[] = [
+//          '$unwind' => [
+//            'path' => '$' . $mongodbJoin['alias'] . '.' . $pipeline_unwound_table,
+//            'preserveNullAndEmptyArrays' => TRUE,
+//          ],
+//        ];
+//      }
 
       $this->mongodbUseAggregate = TRUE;
     }

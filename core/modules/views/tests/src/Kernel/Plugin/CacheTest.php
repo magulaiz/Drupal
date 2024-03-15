@@ -304,6 +304,10 @@ class CacheTest extends ViewsKernelTestBase {
    * Tests that Subqueries are cached as expected.
    */
   public function testSubqueryStringCache() {
+    if (Database::getConnection()->driver() == 'mongodb') {
+      $this->markTestSkipped('The MongoDB database driver does not support groupwise max queries.');
+    }
+
     // Execute the view.
     $view = Views::getView('test_groupwise_term_ui');
     $view->setDisplay();

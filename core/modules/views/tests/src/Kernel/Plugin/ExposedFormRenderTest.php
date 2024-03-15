@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views\Kernel\Plugin;
 
+use Drupal\Core\Database\Database;
 use Drupal\Component\Utility\Html;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
@@ -62,6 +63,13 @@ class ExposedFormRenderTest extends ViewsKernelTestBase {
       'name' => 'Article',
     ])->save();
 
+    if (Database::getConnection()->driver() == 'mongodb') {
+      $node_table = 'node';
+    }
+    else {
+      $node_table = 'node_field_data';
+    }
+
     $view = Views::getView('test_exposed_form_buttons');
     $view->setDisplay();
     $view->displayHandlers->get('default')->overrideOption('filters', [
@@ -69,7 +77,7 @@ class ExposedFormRenderTest extends ViewsKernelTestBase {
         'exposed' => TRUE,
         'field' => 'type',
         'id' => 'type',
-        'table' => 'node_field_data',
+        'table' => $node_table,
         'plugin_id' => 'in_operator',
         'entity_type' => 'node',
         'entity_field' => 'type',
@@ -85,7 +93,7 @@ class ExposedFormRenderTest extends ViewsKernelTestBase {
         'exposed' => TRUE,
         'field' => 'type',
         'id' => 'type_with_default_value',
-        'table' => 'node_field_data',
+        'table' => $node_table,
         'plugin_id' => 'in_operator',
         'entity_type' => 'node',
         'entity_field' => 'type',
@@ -102,7 +110,7 @@ class ExposedFormRenderTest extends ViewsKernelTestBase {
         'exposed' => TRUE,
         'field' => 'type',
         'id' => 'multiple_types',
-        'table' => 'node_field_data',
+        'table' => $node_table,
         'plugin_id' => 'in_operator',
         'entity_type' => 'node',
         'entity_field' => 'type',
@@ -118,7 +126,7 @@ class ExposedFormRenderTest extends ViewsKernelTestBase {
         'exposed' => TRUE,
         'field' => 'type',
         'id' => 'multiple_types_with_default_value',
-        'table' => 'node_field_data',
+        'table' => $node_table,
         'plugin_id' => 'in_operator',
         'entity_type' => 'node',
         'entity_field' => 'type',
