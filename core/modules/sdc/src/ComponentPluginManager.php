@@ -477,11 +477,11 @@ final class ComponentPluginManager extends DefaultPluginManager {
       ->getModule('sdc')
       ->getPath();
     $num_dots = count(
-      array_filter(explode(DIRECTORY_SEPARATOR, $library_provider_root))
+      array_filter(explode('/', $library_provider_root))
     );
     $dots = str_repeat('../', $num_dots);
     $path_from_root = str_starts_with($path, $this->appRoot)
-      ? substr($path, strlen($this->appRoot) + 1)
+      ? str_replace(DIRECTORY_SEPARATOR, "/", substr($path, strlen($this->appRoot) + 1))
       : $path;
     return $dots . $path_from_root;
   }
