@@ -11,6 +11,7 @@ use Drupal\Core\TypedData\Attribute\DataType;
 use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\Core\TypedData\Exception\MissingDataException;
 use Drupal\Core\TypedData\TypedData;
+use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
  * Defines the "entity" data type.
@@ -42,14 +43,20 @@ class EntityAdapter extends TypedData implements \IteratorAggregate, ComplexData
    *
    * @param \Drupal\Core\Entity\EntityInterface|null $entity
    *   The entity object to wrap.
+   * @param string|null $name
+   *   (optional) The name of the created property, or NULL if it is the root
+   *   of a typed data tree. Defaults to NULL.
+   * @param \Drupal\Core\TypedData\TypedDataInterface|null $parent
+   *   (optional) The parent object of the data property, or NULL if it is the
+   *   root of a typed data tree. Defaults to NULL.
    *
    * @return static
    */
-  public static function createFromEntity(EntityInterface $entity) {
+  public static function createFromEntity(EntityInterface $entity, string $name = NULL, TypedDataInterface $parent = NULL) {
     $definition = EntityDataDefinition::create()
       ->setEntityTypeId($entity->getEntityTypeId())
       ->setBundles([$entity->bundle()]);
-    $instance = new static($definition);
+    $instance = new static($definition, $name, $parent);
     $instance->setValue($entity);
     return $instance;
   }
