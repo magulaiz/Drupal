@@ -24,8 +24,6 @@ class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPlugin
   use TaxonomyIndexDepthQueryTrait;
 
   /**
-   * The taxonomy term storage.
-   *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    *
    * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no
@@ -62,7 +60,7 @@ class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPlugin
   }
 
   /**
-   * {@inheritdoc}
+   *
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
@@ -75,7 +73,7 @@ class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPlugin
   }
 
   /**
-   * {@inheritdoc}
+   *
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['depth'] = [
@@ -114,7 +112,7 @@ class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPlugin
   }
 
   /**
-   * Executes a query string against the database.
+   *
    */
   public function query($group_by = FALSE) {
     $this->ensureMyTable();
@@ -134,7 +132,7 @@ class IndexTidDepth extends ArgumentPluginBase implements ContainerFactoryPlugin
   }
 
   /**
-   * Override the behavior of title(). Get the title.
+   *
    */
   public function title() {
     $term = $this->entityRepository->getCanonical('taxonomy_term', $this->argument);
