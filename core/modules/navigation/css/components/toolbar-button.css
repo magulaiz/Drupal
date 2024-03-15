@@ -40,6 +40,23 @@
   line-height: var(--admin-toolbar-line-height-info-sm);
   gap: calc(0.5 * var(--admin-toolbar-rem));
 }
+
+.toolbar-button::before {
+  display: block;
+  flex-shrink: 0;
+  width: calc(1.25 * var(--admin-toolbar-rem));
+  height: calc(1.25 * var(--admin-toolbar-rem));
+  background-color: currentColor;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center center;
+  mask-position: center center;
+  -webkit-mask-size: 100% auto;
+  mask-size: 100% auto;
+  -webkit-mask-image: var(--icon);
+  mask-image: var(--icon);
+}
+
 .toolbar-button:has(+ .toolbar-popover__wrapper .is-active) {
   color: var(--admin-toolbar-color-gray-950);
   background-color: var(--admin-toolbar-color-gray-050);
@@ -182,9 +199,61 @@
 [aria-expanded="true"]:is(.toolbar-button--expand--down, [dir="rtl"] .toolbar-button--expand--down):hover {
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
-}
+
 .toolbar-button--arrow-first::after {
   order: -1;
+}
+.toolbar-button__abbreviation {
+  display: flex;
+  align-items: center;
+  /* Set the font smaller so it fits when the menu is collapsed. */
+  font-size: calc(0.75 * var(--admin-toolbar-rem));
+  /* Reset the height to the same as the surrounding text,
+  to prevent layout shift on menu collapse. 1.2 is to match the line height. */
+  block-size: calc(1.2 * var(--admin-toolbar-rem));
+}
+/* Hide the default two letter abbreviation for items with icons. */
+.toolbar-button--icon--burger::before,
+.toolbar-button--icon--cross::before,
+.toolbar-button--icon--system-themes-page::before,
+.toolbar-button--icon--navigation-blocks::before,
+.toolbar-button--icon--shortcuts::before,
+.toolbar-button--icon--system-admin-config::before,
+.toolbar-button--icon--navigation-content::before,
+.toolbar-button--icon--navigation-create::before,
+.toolbar-button--icon--system-modules-list::before,
+.toolbar-button--icon--navigation-files::before,
+.toolbar-button--icon--help::before,
+.toolbar-button--icon--navigation-media::before,
+.toolbar-button--icon--pencil::before,
+.toolbar-button--icon--preview::before,
+.toolbar-button--icon--entity-user-collection::before,
+.toolbar-button--icon--system-admin-reports::before,
+.toolbar-button--icon--system-admin-structure::before,
+.toolbar-button--icon--sidebar-toggle::before,
+.toolbar-button--icon--user::before {
+  content: "";
+}
+.toolbar-button--icon--burger .toolbar-button__abbreviation,
+.toolbar-button--icon--cross .toolbar-button__abbreviation,
+.toolbar-button--icon--system-themes-page .toolbar-button__abbreviation,
+.toolbar-button--icon--navigation-blocks .toolbar-button__abbreviation,
+.toolbar-button--icon--shortcuts .toolbar-button__abbreviation,
+.toolbar-button--icon--system-admin-config .toolbar-button__abbreviation,
+.toolbar-button--icon--navigation-content .toolbar-button__abbreviation,
+.toolbar-button--icon--navigation-create .toolbar-button__abbreviation,
+.toolbar-button--icon--system-modules-list .toolbar-button__abbreviation,
+.toolbar-button--icon--navigation-files .toolbar-button__abbreviation,
+.toolbar-button--icon--help .toolbar-button__abbreviation,
+.toolbar-button--icon--navigation-media .toolbar-button__abbreviation,
+.toolbar-button--icon--pencil .toolbar-button__abbreviation,
+.toolbar-button--icon--preview .toolbar-button__abbreviation,
+.toolbar-button--icon--entity-user-collection .toolbar-button__abbreviation,
+.toolbar-button--icon--system-admin-reports .toolbar-button__abbreviation,
+.toolbar-button--icon--system-admin-structure .toolbar-button__abbreviation,
+.toolbar-button--icon--sidebar-toggle .toolbar-button__abbreviation,
+.toolbar-button--icon--user .toolbar-button__abbreviation {
+  display: none;
 }
 .toolbar-button--icon--back {
   --icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e  %3cpath d='M14.2501 7.99994c0 .19892-.079.38968-.2197.53033-.1406.14066-.3314.21967-.5303.21967H4.3126l3.22 3.21936c.1409.1409.22005.332.22005.5313 0 .1992-.07915.3903-.22005.5312-.14089.1409-.33199.2201-.53125.2201-.19925 0-.39035-.0792-.53125-.2201l-4.5-4.49998c-.06992-.06968-.12539-.15247-.16325-.24364-.03785-.09116-.05734-.1889-.05734-.28761 0-.09871.01949-.19645.05734-.28762.03786-.09116.09333-.17395.16325-.24363l4.5-4.5c.06977-.06977.15259-.12511.24374-.16286.09115-.03776.18885-.05719.28751-.05719.09867 0 .19636.01943.28751.05719.09116.03775.17398.09309.24374.16286.06977.06976.12511.15259.16286.24374.03776.09115.05719.18885.05719.28751s-.01943.19636-.05719.28751c-.03775.09115-.09309.17397-.16286.24374l-3.22 3.21812h9.1875c.1989 0 .3897.07902.5303.21967.1407.14066.2197.33142.2197.53033Z'/%3e%3c/svg%3e");
