@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\taxonomy;
 
 use Drupal\Core\Access\AccessResult;
@@ -17,8 +19,16 @@ class VocabularyAccessControlHandler extends EntityAccessControlHandler {
   /**
    * {@inheritdoc}
    */
+  protected $viewLabelOperation = TRUE;
+
+  /**
+   * {@inheritdoc}
+   */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     switch ($operation) {
+      case 'view label':
+        return AccessResult::allowedIfHasPermission($account, 'access content');
+
       case 'access taxonomy overview':
       case 'view':
         return AccessResult::allowedIfHasPermissions($account, ['access taxonomy overview', 'administer taxonomy'], 'OR');
