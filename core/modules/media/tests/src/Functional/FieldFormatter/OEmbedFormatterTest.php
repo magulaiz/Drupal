@@ -101,7 +101,7 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
         ],
         'self_closing' => TRUE,
       ],
-      'Vimeo video empy max size' => [
+      'Vimeo video empty max size' => [
         'https://vimeo.com/7073899',
         'video_vimeo.json',
         ['max_width' => '', 'max_height' => ''],
