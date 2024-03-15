@@ -23,9 +23,6 @@ class StatisticsLastCommentName extends SortPluginBase {
    */
   protected string $user_field;
 
-  /**
-   * The query function.
-   */
   public function query() {
     $this->ensureMyTable();
     $definition = [

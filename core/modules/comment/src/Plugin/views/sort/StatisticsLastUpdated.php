@@ -23,9 +23,6 @@ class StatisticsLastUpdated extends Date {
    */
   protected string $field_alias;
 
-  /**
-   * The query function.
-   */
   public function query() {
     $this->ensureMyTable();
     $this->node_table = $this->query->ensureTable('node', $this->relationship);
