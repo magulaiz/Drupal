@@ -324,7 +324,7 @@ class CommentTest extends ResourceTestBase {
    */
   public function testPostIndividualDxWithoutCriticalBaseFields() {
     $this->setUpAuthorization('POST');
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
 
     $url = Url::fromRoute(sprintf('jsonapi.%s.collection.post', static::$resourceTypeName));
     $request_options = [];
@@ -364,7 +364,7 @@ class CommentTest extends ResourceTestBase {
    */
   public function testPostIndividualSkipCommentApproval() {
     $this->setUpAuthorization('POST');
-    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save();
 
     // Create request.
     $request_options = [];

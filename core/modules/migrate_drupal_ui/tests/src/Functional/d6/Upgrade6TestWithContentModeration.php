@@ -48,6 +48,7 @@ class Upgrade6TestWithContentModeration extends Upgrade6Test {
     );
     $type_plugin = $editorial->getTypePlugin();
     $type_plugin->setConfiguration($type_settings);
+    // @phpstan-ignore-next-line
     $editorial->trustData()->save();
   }
 

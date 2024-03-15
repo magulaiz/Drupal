@@ -345,7 +345,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
         $new_config = $overrider->createConfigObject($name, $collection);
       }
       else {
-        $new_config = new Config($name, $this->getActiveStorages($collection), $this->eventDispatcher, $this->typedConfig);
+        $new_config = new NoSchemaConfig($name, $this->getActiveStorages($collection), $this->eventDispatcher, $this->typedConfig);
       }
       if ($config_to_create[$name] !== FALSE) {
         // Add a hash to configuration created through the installer so it is
@@ -386,14 +386,16 @@ class ConfigInstaller implements ConfigInstallerInterface {
           $entity = $entity_storage->createFromStorageRecord($new_config->get());
         }
         if ($entity->isInstallable()) {
-          $entity->trustData()->save();
+          // @todo How to disable schema during module install?
+          //   Is this even correct?
+          $entity->save();
           if ($id !== $entity->id()) {
             trigger_error(sprintf('The configuration name "%s" does not match the ID "%s"', $name, $entity->id()), E_USER_WARNING);
           }
         }
       }
       else {
-        $new_config->save(TRUE);
+        $new_config->save();
       }
     }
   }
