@@ -31,7 +31,7 @@ class QueueFactory {
    * @param \Drupal\Core\Site\Settings $settings
    *   The site settings.
    * @param \Psr\Container\ContainerInterface $container
-   *   The service container.
+   *   A service locator that contains the queue services.
    */
   public function __construct(
     Settings $settings,
