@@ -156,6 +156,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
     }
     catch (\Exception $e) {
     }
+    return FALSE;
   }
 
   /**
