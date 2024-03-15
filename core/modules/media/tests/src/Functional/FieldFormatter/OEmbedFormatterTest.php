@@ -101,6 +101,21 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
         ],
         'self_closing' => TRUE,
       ],
+      'Vimeo video empy max size' => [
+        'https://vimeo.com/7073899',
+        'video_vimeo.json',
+        ['max_width' => '', 'max_height' => ''],
+        [
+          'iframe' => [
+            'src' => '/media/oembed?url=https%3A//vimeo.com/7073899',
+            'width' => '480',
+            'height' => '360',
+            'title' => 'Drupal Rap Video - Schipulcon09',
+            'loading' => 'lazy',
+          ],
+        ],
+        'self_closing' => TRUE,
+      ],
       'tweet' => [
         'https://twitter.com/drupaldevdays/status/935643039741202432',
         'rich_twitter.json',
@@ -232,56 +247,16 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
           $this->assertFalse($element->hasAttribute($attribute));
         }
       }
+
+      if ($selector === 'iframe') {
+        foreach (['max_width', 'max_height'] => $setting) {
+          if (array_key_exists($setting, $formatter_settings)) {
+            $value = intval($formatter_settings[$setting]);
+            $this->assertStringContainsString("$setting=$value", $element->getAttribute('src'));
+          }
+        }
+      }
     }
-  }
-
-  /**
-   * Tests oEmbed formatter with empty width and height settings.
-   */
-  public function testEmptyWidthHeightSettings() {
-    $account = $this->drupalCreateUser(['view media']);
-    $this->drupalLogin($account);
-
-    $media_type = $this->createMediaType('oembed:video');
-
-    $source = $media_type->getSource();
-    $source_field = $source->getSourceFieldDefinition($media_type);
-
-    EntityViewDisplay::create([
-      'targetEntityType' => 'media',
-      'bundle' => $media_type->id(),
-      'mode' => 'full',
-      'status' => TRUE,
-    ])->removeComponent('thumbnail')
-      ->setComponent($source_field->getName(), [
-        'type' => 'oembed',
-        'settings' => [
-          'max_width' => '',
-          'max_height' => '',
-        ],
-      ])
-      ->save();
-
-    $this->hijackProviderEndpoints();
-
-    ResourceController::setResourceUrl('https://vimeo.com/7073899', $this->getFixturesDirectory() . '/video_vimeo.json');
-    UrlResolver::setEndpointUrl('https://vimeo.com/7073899', 'video_vimeo.json');
-
-    $entity = Media::create([
-      'bundle' => $media_type->id(),
-      $source_field->getName() => 'https://vimeo.com/7073899',
-    ]);
-    $entity->save();
-
-    $this->drupalGet($entity->toUrl());
-    $assert = $this->assertSession();
-    $assert->statusCodeEquals(200);
-    // Check that the width and height attributes are not empty.
-    $element = $assert->elementExists('css', 'iframe');
-
-    // Assert that the iframe src attributes contains "max_width=0" and "max_height=0".
-    $this->assertStringContainsString('max_width=0', $element->getAttribute('src'));
-    $this->assertStringContainsString('max_height=0', $element->getAttribute('src'));
   }
 
 }
