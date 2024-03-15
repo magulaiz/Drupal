@@ -1073,6 +1073,14 @@ services:
     class: Drupal\Core\Utility\LinkGenerator
     arguments: ['@url_generator', '@module_handler', '@renderer']
   Drupal\Core\Utility\LinkGeneratorInterface: '@link_generator'
+  request_generator:
+    class: Drupal\Core\Utility\RequestGenerator
+    arguments: ['@path_processor_manager', '@path.current', '@router']
+  Drupal\Core\Utility\RequestGenerator: '@request_generator'
+  base_route_title_resolver:
+    class: Drupal\Core\Controller\BaseRouteTitleResolver
+    arguments: ['@url_generator', '@title_resolver', '@plugin.manager.menu.local_task', '@router.route_provider', '@request_generator']
+  Drupal\Core\Utility\BaseRouteTitleResolver: '@base_route_title_resolver'
   router:
     class: Drupal\Core\Routing\AccessAwareRouter
     arguments: ['@router.no_access_checks', '@access_manager', '@current_user']
@@ -1790,10 +1798,6 @@ services:
     class: Drupal\Core\Update\UpdateHookRegistry
     arguments: ['%container.modules%', '@keyvalue']
   Drupal\Core\Update\UpdateHookRegistry: '@update.update_hook_registry'
-  update.update_hook_registry_factory:
-    class: Drupal\Core\Update\UpdateHookRegistryFactory
-    parent: container.trait
-    deprecated: The "%service_id%" service is deprecated. You should use the 'update.update_hook_registry' service instead. See https://www.drupal.org/node/3423659
   update.post_update_registry:
     class: Drupal\Core\Update\UpdateRegistry
     arguments: ['%app.root%', '%site.path%', '%container.modules%', '@update.key_value.post_update', '@theme_handler', 'post_update']
@@ -1802,10 +1806,6 @@ services:
     factory: ['@keyvalue', 'get']
     arguments: ['post_update']
     public: false
-  update.post_update_registry_factory:
-    class: Drupal\Core\Update\UpdateRegistryFactory
-    parent: container.trait
-    deprecated: The "%service_id%" service is deprecated. You should use the 'update.post_update_registry' service instead. See https://www.drupal.org/node/3423659
   uuid:
     class: Drupal\Component\Uuid\Php
   Drupal\Component\Uuid\UuidInterface: '@uuid'
