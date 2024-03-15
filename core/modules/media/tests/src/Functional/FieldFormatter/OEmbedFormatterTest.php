@@ -249,7 +249,7 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
       }
 
       if ($selector === 'iframe') {
-        foreach (['max_width', 'max_height'] => $setting) {
+        foreach (['max_width', 'max_height'] as $setting) {
           if (array_key_exists($setting, $formatter_settings)) {
             $value = intval($formatter_settings[$setting]);
             $this->assertStringContainsString("$setting=$value", $element->getAttribute('src'));
