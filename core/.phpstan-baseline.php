@@ -346,11 +346,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\EventSubscriber\\\\KernelDestructionSubscriber\\:\\:\\$container\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/lib/Drupal/Core/EventSubscriber/KernelDestructionSubscriber.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getFromDriverName\\(\\) of class Drupal\\\\Core\\\\Extension\\\\DatabaseDriverList\\:
 in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
   DatabaseDriverList\\:\\:get\\(\\) instead, passing a database driver namespace\\.$#',
@@ -613,19 +608,9 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/TypedData/Validation/RecursiveContextualValidator.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Update\\\\UpdateHookRegistryFactory\\:\\:\\$container\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/lib/Drupal/Core/Update/UpdateHookRegistryFactory.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Update\\\\UpdateKernel\\:\\:discoverServiceProviders\\(\\) should return array but return statement is missing\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Update/UpdateKernel.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Update\\\\UpdateRegistryFactory\\:\\:\\$container\\.$#',
-	'count' => 5,
-	'path' => __DIR__ . '/lib/Drupal/Core/Update/UpdateRegistryFactory.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Updater\\\\Module\\:\\:postUpdateTasks\\(\\) should return array but return statement is missing\\.$#',
