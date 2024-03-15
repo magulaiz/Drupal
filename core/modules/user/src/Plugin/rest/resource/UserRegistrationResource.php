@@ -99,7 +99,7 @@ class UserRegistrationResource extends ResourceBase {
    * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    */
-  public function post(UserInterface $account = NULL) {
+  public function post(?UserInterface $account = NULL) {
     $this->ensureAccountCanRegister($account);
 
     // Only activate new users if visitors are allowed to register and no email
@@ -130,7 +130,7 @@ class UserRegistrationResource extends ResourceBase {
    * @param \Drupal\user\UserInterface $account
    *   The user account to register.
    */
-  protected function ensureAccountCanRegister(UserInterface $account = NULL) {
+  protected function ensureAccountCanRegister(?UserInterface $account = NULL) {
     if ($account === NULL) {
       throw new BadRequestHttpException('No user account data for registration received.');
     }

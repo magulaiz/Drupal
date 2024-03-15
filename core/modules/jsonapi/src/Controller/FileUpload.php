@@ -201,7 +201,7 @@ class FileUpload {
    * @param \Drupal\Core\Entity\FieldableEntityInterface|null $entity
    *   The entity, if one exists, for which the file is to be uploaded.
    */
-  protected static function ensureFileUploadAccess(AccountInterface $account, FieldDefinitionInterface $field_definition, FieldableEntityInterface $entity = NULL) {
+  protected static function ensureFileUploadAccess(AccountInterface $account, FieldDefinitionInterface $field_definition, ?FieldableEntityInterface $entity = NULL) {
     $access_result = $entity
       ? TemporaryJsonapiFileFieldUploader::checkFileUploadAccess($account, $field_definition, $entity)
       : TemporaryJsonapiFileFieldUploader::checkFileUploadAccess($account, $field_definition);

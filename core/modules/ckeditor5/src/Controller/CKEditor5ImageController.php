@@ -71,7 +71,7 @@ class CKEditor5ImageController extends ControllerBase {
    * @param \Drupal\file\Validation\FileValidatorInterface|null $file_validator
    *   The file validator.
    */
-  public function __construct(FileSystemInterface $fileSystem, AccountInterface | FileUploadHandler $fileUploadHandler, MimeTypeGuesserInterface | LockBackendInterface $mime_type_guesser, LockBackendInterface $lock = NULL, EventDispatcherInterface $event_dispatcher = NULL, FileValidatorInterface $file_validator = NULL) {
+  public function __construct(FileSystemInterface $fileSystem, AccountInterface | FileUploadHandler $fileUploadHandler, MimeTypeGuesserInterface | LockBackendInterface $mime_type_guesser, ?LockBackendInterface $lock = NULL, ?EventDispatcherInterface $event_dispatcher = NULL, ?FileValidatorInterface $file_validator = NULL) {
     $this->fileSystem = $fileSystem;
     if ($fileUploadHandler instanceof AccountInterface) {
       @trigger_error('Calling ' . __METHOD__ . '() with the $current_user argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3388990', E_USER_DEPRECATED);

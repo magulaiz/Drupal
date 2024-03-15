@@ -155,7 +155,7 @@ class TemporaryJsonapiFileFieldUploader {
    * @param \Drupal\file\Upload\InputStreamFileWriterInterface|null $input_stream_file_writer
    *   The stream file uploader.
    */
-  public function __construct(LoggerInterface $logger, FileSystemInterface $file_system, $mime_type_guesser, Token $token, LockBackendInterface $lock, ConfigFactoryInterface $config_factory, EventDispatcherInterface $event_dispatcher = NULL, FileValidatorInterface $file_validator = NULL, InputStreamFileWriterInterface $input_stream_file_writer = NULL) {
+  public function __construct(LoggerInterface $logger, FileSystemInterface $file_system, $mime_type_guesser, Token $token, LockBackendInterface $lock, ConfigFactoryInterface $config_factory, ?EventDispatcherInterface $event_dispatcher = NULL, ?FileValidatorInterface $file_validator = NULL, ?InputStreamFileWriterInterface $input_stream_file_writer = NULL) {
     $this->logger = $logger;
     $this->fileSystem = $file_system;
     $this->mimeTypeGuesser = $mime_type_guesser;
@@ -323,7 +323,7 @@ class TemporaryJsonapiFileFieldUploader {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The file upload access result.
    */
-  public static function checkFileUploadAccess(AccountInterface $account, FieldDefinitionInterface $field_definition, EntityInterface $entity = NULL) {
+  public static function checkFileUploadAccess(AccountInterface $account, FieldDefinitionInterface $field_definition, ?EntityInterface $entity = NULL) {
     assert(is_null($entity) ||
       $field_definition->getTargetEntityTypeId() === $entity->getEntityTypeId() &&
       // Base fields do not have target bundles.

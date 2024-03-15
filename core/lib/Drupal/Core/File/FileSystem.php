@@ -335,7 +335,7 @@ class FileSystem implements FileSystemInterface {
   /**
    * {@inheritdoc}
    */
-  public function deleteRecursive($path, callable $callback = NULL) {
+  public function deleteRecursive($path, ?callable $callback = NULL) {
     if ($callback) {
       call_user_func($callback, $path);
     }

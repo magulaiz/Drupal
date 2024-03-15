@@ -101,7 +101,7 @@ interface EntityRepositoryInterface {
    * @return \Drupal\Core\Entity\EntityInterface|null
    *   An entity object variant or NULL if the entity does not exist.
    */
-  public function getActive($entity_type_id, $entity_id, array $contexts = NULL);
+  public function getActive($entity_type_id, $entity_id, ?array $contexts = NULL);
 
   /**
    * Retrieves the active entity variants matching the specified context.
@@ -120,7 +120,7 @@ interface EntityRepositoryInterface {
    *
    * @see getActive()
    */
-  public function getActiveMultiple($entity_type_id, array $entity_ids, array $contexts = NULL);
+  public function getActiveMultiple($entity_type_id, array $entity_ids, ?array $contexts = NULL);
 
   /**
    * Retrieves the canonical entity variant matching the specified context.
@@ -147,7 +147,7 @@ interface EntityRepositoryInterface {
    * @return \Drupal\Core\Entity\EntityInterface|null
    *   An entity object variant or NULL if the entity does not exist.
    */
-  public function getCanonical($entity_type_id, $entity_id, array $contexts = NULL);
+  public function getCanonical($entity_type_id, $entity_id, ?array $contexts = NULL);
 
   /**
    * Retrieves the canonical entity variants matching the specified context.
@@ -166,6 +166,6 @@ interface EntityRepositoryInterface {
    *
    * @see getCanonical()
    */
-  public function getCanonicalMultiple($entity_type_id, array $entity_ids, array $contexts = NULL);
+  public function getCanonicalMultiple($entity_type_id, array $entity_ids, ?array $contexts = NULL);
 
 }

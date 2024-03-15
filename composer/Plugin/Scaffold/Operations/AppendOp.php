@@ -68,7 +68,7 @@ class AppendOp extends AbstractOperation {
    * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath $default_path
    *   The relative path to the default data.
    */
-  public function __construct(ScaffoldFilePath $prepend_path = NULL, ScaffoldFilePath $append_path = NULL, $force_append = FALSE, ScaffoldFilePath $default_path = NULL) {
+  public function __construct(?ScaffoldFilePath $prepend_path = NULL, ?ScaffoldFilePath $append_path = NULL, $force_append = FALSE, ?ScaffoldFilePath $default_path = NULL) {
     $this->forceAppend = $force_append;
     $this->prepend = $prepend_path;
     $this->append = $append_path;
