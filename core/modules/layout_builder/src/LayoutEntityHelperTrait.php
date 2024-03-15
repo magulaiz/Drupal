@@ -156,7 +156,7 @@ trait LayoutEntityHelperTrait {
   }
 
   /**
-   * Update a layout overrides's entity context when entity values change.
+   * Updates a layout overrides's entity context when entity values change.
    *
    * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The entity with the overridden layout.
@@ -170,7 +170,7 @@ trait LayoutEntityHelperTrait {
   }
 
   /**
-   * Update a layout overrides's entity context when entity values change.
+   * Updates a layout overrides's entity context when entity values change.
    *
    * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The entity with the overridden layout.

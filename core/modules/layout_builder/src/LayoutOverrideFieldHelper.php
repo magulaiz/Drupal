@@ -11,7 +11,7 @@ use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Methods to help with entities using the layout builder.
+ * Provides methods to help with entities using Layout Builder.
  *
  * @package Drupal\layout_builder.
  */
@@ -20,12 +20,13 @@ class LayoutOverrideFieldHelper implements ContainerInjectionInterface {
   use LayoutEntityHelperTrait;
 
   /**
-   * LayoutOverrideFieldHelper constructor.
+   * Constructs a new LayoutOverrideFieldHelper.
    */
   public function __construct(
     protected SectionStorageManagerInterface $sectionStorageManager,
     protected LayoutTempstoreRepositoryInterface $layoutTempstoreRepository,
-  ) {}
+  ) {
+  }
 
   /**
    * {@inheritdoc}
@@ -33,12 +34,12 @@ class LayoutOverrideFieldHelper implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container): static {
     return new static(
       $container->get('plugin.manager.layout_builder.section_storage'),
-      $container->get('layout_builder.tempstore_repository')
+      $container->get('layout_builder.tempstore_repository'),
     );
   }
 
   /**
-   * Update a layout override's entity context when entity values change.
+   * Updates a layout override's entity context when entity values change.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity with the overridden layout.
