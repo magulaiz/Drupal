@@ -57,6 +57,7 @@ class ValidReferenceConstraintValidatorTest extends EntityKernelTestBase {
     $entity = $this->createUser();
     // By default entity references already have the ValidReference constraint.
     $definition = BaseFieldDefinition::create('entity_reference')
+      ->setLabel('User')
       ->setSettings(['target_type' => 'user']);
 
     $typed_data = $this->typedData->create($definition, ['target_id' => $entity->id()]);

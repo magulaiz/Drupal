@@ -4,7 +4,6 @@ namespace Drupal\user\Form;
 
 use Drupal\Component\Utility\EmailValidatorInterface;
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -161,14 +160,9 @@ class UserPasswordForm extends FormBase {
     $this->flood->register('user.password_request_ip', $flood_config->get('ip_window'));
     // First, see if the input is possibly valid as a username.
     $name = trim($form_state->getValue('name'));
-    $definition = BaseFieldDefinition::create('string')
-      ->addConstraint('UserName', []);
-    $data = $this->typedDataManager->create($definition);
-    $data->setValue($name);
-    $violations = $data->validate();
     // Usernames have a maximum length shorter than email addresses. Only print
     // this error if the input is not valid as a username or email address.
-    if ($violations->count() > 0 && !$this->emailValidator->isValid($name)) {
+    if (!is_null(user_validate_name($name)) && !$this->emailValidator->isValid($name)) {
       $form_state->setErrorByName('name', $this->t("The username or email address is invalid."));
       return;
     }
