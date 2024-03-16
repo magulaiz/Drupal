@@ -99,7 +99,8 @@ class RelationshipUserFileDataTest extends ViewsKernelTestBase {
     // Tests \Drupal\taxonomy\Plugin\views\relationship\NodeTermData::calculateDependencies().
     $expected = [
       'module' => [
-        'file',
+//        'file',
+        'mongodb',
         'user',
       ],
     ];
