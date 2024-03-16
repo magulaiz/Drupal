@@ -209,11 +209,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Database/Query/Upsert.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Class Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/DependencyInjection/ClassResolver.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Usage of deprecated trait Drupal\\\\Component\\\\DependencyInjection\\\\ServiceIdHashTrait in class Drupal\\\\Core\\\\DependencyInjection\\\\ContainerBuilder\\:
 in drupal\\:9\\.5\\.1 and is removed from drupal\\:11\\.0\\.0\\. Use the
   \'Drupal\\\\Component\\\\DependencyInjection\\\\ReverseContainer\' service instead\\.$#',

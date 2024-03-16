@@ -8,8 +8,6 @@ use Drupal\Component\DependencyInjection\ReverseContainer;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Test\TestKernel;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @coversDefaultClass \Drupal\Core\DependencyInjection\DependencySerializationTrait
@@ -29,7 +27,6 @@ class DependencySerializationTest extends UnitTestCase {
     $this->assertSame($container, $container->get('service_container'));
 
     $dependencySerialization = new DependencySerializationTestDummy($service);
-    $dependencySerialization->setContainer($container);
 
     $string = serialize($dependencySerialization);
     /** @var \Drupal\Tests\Core\DependencyInjection\DependencySerializationTestDummy $dependencySerialization */
@@ -37,7 +34,6 @@ class DependencySerializationTest extends UnitTestCase {
 
     $this->assertTrue($container->has(ReverseContainer::class));
     $this->assertSame($service, $dependencySerialization->service);
-    $this->assertSame($container, $dependencySerialization->container);
     $this->assertEmpty($dependencySerialization->getServiceIds());
   }
 
@@ -46,7 +42,7 @@ class DependencySerializationTest extends UnitTestCase {
 /**
  * Defines a test class which has a single service as dependency.
  */
-class DependencySerializationTestDummy implements ContainerAwareInterface {
+class DependencySerializationTestDummy {
 
   use DependencySerializationTrait;
 
@@ -58,13 +54,6 @@ class DependencySerializationTestDummy implements ContainerAwareInterface {
   public $service;
 
   /**
-   * The container.
-   *
-   * @var \Symfony\Component\DependencyInjection\ContainerInterface
-   */
-  public $container;
-
-  /**
    * Constructs a new TestClass object.
    *
    * @param object $service
@@ -72,13 +61,6 @@ class DependencySerializationTestDummy implements ContainerAwareInterface {
    */
   public function __construct(\stdClass $service) {
     $this->service = $service;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setContainer(?ContainerInterface $container): void {
-    $this->container = $container;
   }
 
   /**
