@@ -218,8 +218,11 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
 
   /**
    * Check if the session table exists and create it if not.
+   *
+   * @return bool
+   *  TRUE if the table already exists or was created, FALSE if creation fails.
    */
-  protected function ensureTableExists() {
+  protected function ensureTableExists(): bool {
     try {
       $database_schema = $this->connection->schema();
       if (!$database_schema->tableExists('sessions')) {
