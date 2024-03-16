@@ -5,7 +5,7 @@ namespace Drupal\Core\Session;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\DatabaseException;
+use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Storage\Proxy\AbstractProxy;
@@ -69,7 +69,8 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
           ->queryRange('SELECT [session] FROM {sessions} WHERE [sid] = :sid', 0, 1, [':sid' => Crypt::hashBase64($sid)]);
         $data = (string) $query->fetchField();
       }
-      catch (\Exception $e) {
+      // Swallow the error if the table hasn't been created yet.
+      catch (\Throwable $e) {
       }
     }
     return $data;
@@ -90,7 +91,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
     try {
       $this->doWrite($sid, $fields);
     }
-    catch (\Exception $e) {
+    catch (\Throwable $e) {
       // If there was an exception, try to create the table.
       if (!$try_again = $this->ensureTableExists()) {
         // If the exception happened for other reason than the missing
@@ -135,7 +136,8 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
         ->condition('sid', Crypt::hashBase64($sid))
         ->execute();
     }
-    catch (\Exception $e) {
+    // Swallow the error if the table hasn't been created yet.
+    catch (\Throwable $e) {
     }
 
     return TRUE;
@@ -155,13 +157,14 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
         ->condition('timestamp', $this->time->getRequestTime() - $lifetime, '<')
         ->execute();
     }
-    catch (\Exception $e) {
+    // Swallow the error if the table hasn't been created yet.
+    catch (\Throwable $e) {
     }
     return FALSE;
   }
 
   /**
-   * Defines the schema for the {cache_*} bin tables.
+   * Defines the schema for the session table.
    *
    * @internal
    */
@@ -232,10 +235,10 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
         return TRUE;
       }
     }
-    // If another process has already created the cache table, attempting to
+    // If another process has already created the session table, attempting to
     // recreate it will throw an exception. In this case just catch the
     // exception and do nothing.
-    catch (DatabaseException $e) {
+    catch (SchemaObjectExistsException $e) {
       return TRUE;
     }
     return FALSE;
