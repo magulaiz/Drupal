@@ -150,6 +150,7 @@ class InlineBlockTest extends InlineBlockTestBase {
     $assert_session->pageTextContains('The block body');
     $blocks = $this->blockStorage->loadMultiple();
     $this->assertCount(1, $blocks);
+    $this->drupalGet('node/1/layout');
     $this->addInlineBlockToLayout('Block title', 'The reusable block body', TRUE);
     $this->assertSaveLayout();
     $this->drupalGet('node/1');
