@@ -209,6 +209,7 @@ function user_load_by_name($name) {
  */
 function user_validate_name($name) {
   $definition = BaseFieldDefinition::create('string')
+    ->setLabel(t('Name'))
     ->addConstraint('UserName', []);
   $data = \Drupal::typedDataManager()->create($definition);
   $data->setValue($name);
