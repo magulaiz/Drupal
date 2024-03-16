@@ -49,7 +49,7 @@ class MenuLinkAdd extends LocalActionDefault {
       $plugin_id,
       $plugin_definition,
       $container->get('router.route_provider'),
-      $container->get('redirect.destination'),
+      $container->get('redirect.destination')
     );
   }
 

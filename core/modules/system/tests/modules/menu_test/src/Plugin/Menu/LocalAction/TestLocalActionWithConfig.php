@@ -54,7 +54,7 @@ class TestLocalActionWithConfig extends LocalActionDefault {
       $plugin_id,
       $plugin_definition,
       $container->get('router.route_provider'),
-      $container->get('config.factory')->get('menu_test.links.action'),
+      $container->get('config.factory')->get('menu_test.links.action')
     );
   }
 
