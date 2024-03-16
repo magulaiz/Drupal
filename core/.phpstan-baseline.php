@@ -478,11 +478,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Lock/NullLockBackend.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Logger\\\\LoggerChannelFactory\\:\\:\\$container\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Logger/LoggerChannelFactory.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$parent in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Menu/Form/MenuLinkDefaultForm.php',
