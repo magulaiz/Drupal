@@ -88,8 +88,13 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
       'session' => $value,
       'timestamp' => $this->time->getRequestTime(),
     ];
+    $doWrite = fn() =>
+      $this->connection->merge('sessions')
+        ->keys(['sid' => Crypt::hashBase64($sid)])
+        ->fields($fields)
+        ->execute();
     try {
-      $this->doWrite($sid, $fields);
+      $doWrite($sid, $fields, $this->connection);
     }
     catch (\Throwable $e) {
       // If there was an exception, try to create the table.
@@ -101,22 +106,10 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
     }
     // Now that the bin has been created, try again if necessary.
     if ($try_again) {
-      $this->doWrite($sid, $fields);
+      $doWrite($sid, $fields, $this->connection);
     }
 
     return TRUE;
-  }
-
-  /**
-   * Helper to write the session.
-   *
-   * @return void
-   */
-  public function doWrite(#[\SensitiveParameter] string $sid, array $fields): void {
-    $this->connection->merge('sessions')
-      ->keys(['sid' => Crypt::hashBase64($sid)])
-      ->fields($fields)
-      ->execute();
   }
 
   /**
