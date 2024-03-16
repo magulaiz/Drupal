@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\field\Kernel\Entity\Update;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\Core\State\StateInterface;
@@ -101,7 +102,12 @@ class SqlContentEntityStorageSchemaColumnTest extends KernelTestBase {
   public function testColumnUpdate() {
     // Change the field type in the stored schema.
     $schema = \Drupal::keyValue('entity.storage_schema.sql')->get('entity_test_rev.field_schema_data.test');
-    $schema['entity_test_rev__test']['fields']['test_value']['type'] = 'varchar_ascii';
+    if (Database::getConnection()->driver() == 'mongodb') {
+      $schema['entity_test_rev_current_revision__test']['fields']['test_value']['type'] = 'varchar_ascii';
+    }
+    else {
+      $schema['entity_test_rev__test']['fields']['test_value']['type'] = 'varchar_ascii';
+    }
     \Drupal::keyValue('entity.storage_schema.sql')->set('entity_test_rev.field_schema_data.test', $schema);
 
     // Now attempt to run automatic updates. An exception should be thrown
