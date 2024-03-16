@@ -495,13 +495,14 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "10eb10101a8d76c02067dc99a3f84ea3991b54df"
+                "reference": "6562c0fbe768f1878a20048819bb4c6f42de0bb0"
             },
             "require": {
                 "asm89/stack-cors": "^2.1",
                 "composer-runtime-api": "^2.1",
                 "composer/semver": "^3.3",
                 "doctrine/annotations": "^2.0",
+                "doctrine/lexer": "^2.0",
                 "egulias/email-validator": "^3.2.1|^4.0",
                 "ext-date": "*",
                 "ext-dom": "*",
