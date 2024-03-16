@@ -161,7 +161,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
    *
    * @internal
    */
-  public function schemaDefinition() {
+  protected function schemaDefinition(): array {
     $schema = [
       'description' => "Drupal's session handlers read and write into the sessions table. Each record represents a user session, either anonymous or authenticated.",
       'fields' => [
