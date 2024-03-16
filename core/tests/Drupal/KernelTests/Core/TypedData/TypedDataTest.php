@@ -599,6 +599,7 @@ class TypedDataTest extends KernelTestBase {
    */
   public function testTypedDataValidation() {
     $definition = DataDefinition::create('integer')
+      ->setLabel('Integer')
       ->setConstraints([
         'Range' => ['min' => 5],
       ]);
@@ -617,6 +618,7 @@ class TypedDataTest extends KernelTestBase {
 
     // Test translating violation messages when pluralization is used.
     $definition = DataDefinition::create('string')
+      ->setLabel('String')
       ->setConstraints([
         'Length' => ['min' => 10],
       ]);
@@ -627,6 +629,7 @@ class TypedDataTest extends KernelTestBase {
 
     // Test having multiple violations.
     $definition = DataDefinition::create('integer')
+      ->setLabel('Integer')
       ->setConstraints([
         'Range' => ['min' => 5],
         'Null' => [],
@@ -639,6 +642,7 @@ class TypedDataTest extends KernelTestBase {
     // Test validating property containers and make sure the NotNull and Null
     // constraints work with typed data containers.
     $definition = BaseFieldDefinition::create('integer')
+      ->setLabel('Integer')
       ->setConstraints(['NotNull' => []]);
     $field_item = $this->typedDataManager->create($definition, ['value' => 10]);
     $violations = $field_item->validate();
@@ -656,6 +660,7 @@ class TypedDataTest extends KernelTestBase {
 
     // Test the Null constraint with typed data containers.
     $definition = BaseFieldDefinition::create('float')
+      ->setLabel('Integer')
       ->setConstraints(['Null' => []]);
     $field_item = $this->typedDataManager->create($definition, ['value' => 11.5]);
     $violations = $field_item->validate();
@@ -677,6 +682,7 @@ class TypedDataTest extends KernelTestBase {
 
     // Test automatic 'required' validation.
     $definition = DataDefinition::create('integer')
+      ->setLabel('Integer')
       ->setRequired(TRUE);
     $violations = $this->typedDataManager->create($definition)->validate();
     $this->assertEquals(1, $violations->count());
@@ -685,7 +691,8 @@ class TypedDataTest extends KernelTestBase {
 
     // Test validating a list of a values and make sure property paths starting
     // with "0" are created.
-    $definition = BaseFieldDefinition::create('integer');
+    $definition = BaseFieldDefinition::create('integer')
+      ->setLabel('Integer');
     $violations = $this->typedDataManager->create($definition, [['value' => 10]])->validate();
     $this->assertEquals(0, $violations->count());
     $violations = $this->typedDataManager->create($definition, [['value' => 'string']])->validate();

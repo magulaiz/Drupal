@@ -45,8 +45,12 @@ class EntityReferenceSupportedNewEntitiesConstraintValidatorTest extends KernelT
     $this->installEntitySchema('user');
     $this->createUser();
 
-    $fields['supported_reference'] = BaseFieldDefinition::create('entity_reference')->setSetting('target_type', 'entity_test_mulrevpub');
-    $fields['unsupported_reference'] = BaseFieldDefinition::create('entity_reference')->setSetting('target_type', 'entity_test');
+    $fields['supported_reference'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel('Supported')
+      ->setSetting('target_type', 'entity_test_mulrevpub');
+    $fields['unsupported_reference'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel('Unsupported')
+      ->setSetting('target_type', 'entity_test');
     $this->container->get('state')->set('entity_test_mulrevpub.additional_base_field_definitions', $fields);
 
     $this->installEntitySchema('entity_test_mulrevpub');
