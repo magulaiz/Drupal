@@ -70,7 +70,7 @@ class EntityType extends Plugin {
       'class' => $this->getClass(),
       'provider' => $this->getProvider(),
     ], function ($value, $key) {
-      return !($value === NULL && ($key === 'deriver' || $key === 'provider' || $key == 'entity_type_class'));
+      return isset($value) || in_array($key, ['deriver', 'provider'], TRUE));
     }, ARRAY_FILTER_USE_BOTH);
 
     return new $class($values);
