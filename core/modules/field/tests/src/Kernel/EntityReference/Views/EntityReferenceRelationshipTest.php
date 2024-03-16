@@ -110,7 +110,7 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
     Views::viewsData()->clear();
 
     // Check the generated views data.
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       $views_data = Views::viewsData()->get('entity_test');
     }
     else {
@@ -119,7 +119,7 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
     $this->assertEquals('standard', $views_data['field_test_data']['relationship']['id']);
     $this->assertEquals('id', $views_data['field_test_data']['relationship']['base field']);
     $this->assertEquals('entity_test_mul', $views_data['field_test_data']['relationship']['entity type']);
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       $this->assertEquals('entity_test_mul', $views_data['field_test_data']['relationship']['base']);
       $this->assertEquals('entity_test__field_test_data.field_test_data_target_id', $views_data['field_test_data']['relationship']['relationship field']);
     }
@@ -129,7 +129,7 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
     }
 
     // MongoDB does not need reverse relationships.
-    if (Database::getConnection()->databaseType() != 'mongodb') {
+    if (Database::getConnection()->driver() != 'mongodb') {
       // Check the backwards reference.
       $views_data = Views::viewsData()->get('entity_test_mul_property_data');
       $this->assertEquals('entity_reverse', $views_data['reverse__entity_test__field_test_data']['relationship']['id']);
@@ -158,7 +158,7 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
       $this->assertEquals($this->entities[$index]->id(), $row->_entity->id());
 
       // Test the forward relationship.
-      if (Database::getConnection()->databaseType() == 'mongodb') {
+      if (Database::getConnection()->driver() == 'mongodb') {
         $this->assertEquals(1, $row->entity_test_mul_entity_test_id);
       }
       else {
@@ -171,7 +171,7 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
     }
 
     // MongoDB does not need reverse relationships.
-    if (Database::getConnection()->databaseType() != 'mongodb') {
+    if (Database::getConnection()->driver() != 'mongodb') {
       // Check the backwards reference view.
       $view = Views::getView('test_entity_reference_reverse_entity_test_view');
       $this->executeView($view);
@@ -215,7 +215,7 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
     Views::viewsData()->clear();
 
     // Check the generated views data.
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       $views_data = Views::viewsData()->get('entity_test_mul');
     }
     else {
@@ -261,7 +261,7 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
       $this->assertEquals($this->entities[$index]->id(), $row->_entity->id());
 
       // Test the forward relationship.
-      if (Database::getConnection()->databaseType() == 'mongodb') {
+      if (Database::getConnection()->driver() == 'mongodb') {
         $this->assertEquals(1, $row->entity_test_entity_test_mul_id);
       }
       else {

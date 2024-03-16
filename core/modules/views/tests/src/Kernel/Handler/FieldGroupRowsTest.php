@@ -89,7 +89,7 @@ class FieldGroupRowsTest extends ViewsKernelTestBase {
     // For MongoDB all entity data is stored in a single document and not as
     // separate rows in multiple tables. As a result the following part is not
     // supported by MongoDB.
-    if (Database::getConnection()->databaseType() != 'mongodb') {
+    if (Database::getConnection()->driver() != 'mongodb') {
       $view->row_index = 0;
       $output = $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
         return $view->field['field_group_rows']->advancedRender($view->result[0]);

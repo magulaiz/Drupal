@@ -69,7 +69,7 @@ class ViewsConfigDependenciesIntegrationTest extends ViewsKernelTestBase {
     $view = View::load('entity_test_fields');
     $display =& $view->getDisplay('default');
 
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       $table = 'entity_test';
     }
     else {

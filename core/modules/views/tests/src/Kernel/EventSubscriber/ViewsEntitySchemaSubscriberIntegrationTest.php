@@ -134,7 +134,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    * Tests that renaming base tables adapts the views.
    */
   public function testBaseTableRename() {
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       // For MongoDB to support views with the layout for relational databases,
       // it has to transform it during loading. Supporting the changing of the
       // base table name is then no longer possible. I also do not see why you
@@ -167,7 +167,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    * Tests that renaming data tables adapts the views.
    */
   public function testDataTableRename() {
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       // Please read the explanation by the method: testBaseTableRename().
       $this->markTestSkipped();
     }
@@ -206,7 +206,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    * Tests that renaming revision tables adapts the views.
    */
   public function testRevisionBaseTableRename() {
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       // Please read the explanation by the method: testBaseTableRename().
       $this->markTestSkipped();
     }
@@ -244,7 +244,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    * Tests that renaming revision tables adapts the views.
    */
   public function testRevisionDataTableRename() {
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       // Please read the explanation by the method: testBaseTableRename().
       $this->markTestSkipped();
     }
@@ -283,7 +283,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    * Tests that adding data tables adapts the views.
    */
   public function testDataTableAddition() {
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       // Please read the explanation by the method: testBaseTableRename().
       $this->markTestSkipped();
     }
@@ -310,7 +310,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    * Tests that enabling revisions doesn't do anything.
    */
   public function testRevisionEnabling() {
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       // Please read the explanation by the method: testBaseTableRename().
       $this->markTestSkipped();
     }
@@ -335,7 +335,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    * Tests that removing revision support disables the view.
    */
   public function testRevisionDisabling() {
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       // Please read the explanation by the method: testBaseTableRename().
       $this->markTestSkipped();
     }
@@ -359,7 +359,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    * Tests a bunch possible entity definition table updates.
    */
   public function testVariousTableUpdates() {
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       // Please read the explanation by the method: testBaseTableRename().
       $this->markTestSkipped();
     }
@@ -482,7 +482,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    * Tests some possible entity table updates for a revision view.
    */
   public function testVariousTableUpdatesForRevisionView() {
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       // Please read the explanation by the method: testBaseTableRename().
       $this->markTestSkipped();
     }
@@ -522,7 +522,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    * Tests the case when a view could not be updated automatically.
    */
   public function testViewSaveException() {
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       // Please read the explanation by the method: testBaseTableRename().
       $this->markTestSkipped();
     }
@@ -566,7 +566,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    * Tests that broken views are handled gracefully.
    */
   public function testBrokenView() {
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       // Please read the explanation by the method: testBaseTableRename().
       $this->markTestSkipped();
     }

@@ -243,7 +243,7 @@ class QueryGroupByTest extends ViewsKernelTestBase {
     $view->displayHandlers->get('default')->options['fields']['name']['group_type'] = 'min';
     unset($view->displayHandlers->get('default')->options['fields']['id']['group_type']);
     $this->executeView($view);
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       $query_as_string = $view->build_info['query']->__toString();
       $query_as_array = unserialize(substr($query_as_string, 32));
       $this->assertSame('$group', key($query_as_array[0]));

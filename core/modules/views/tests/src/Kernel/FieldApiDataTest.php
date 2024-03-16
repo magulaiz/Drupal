@@ -114,7 +114,7 @@ class FieldApiDataTest extends ViewsKernelTestBase {
     $data = $this->getViewsData();
 //dump($data);
 
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       $current_table = 'node';
     }
     else {
@@ -152,13 +152,13 @@ class FieldApiDataTest extends ViewsKernelTestBase {
 
     // Test click sortable for string field.
     $this->assertTrue($data[$current_table][$field_storage_string->getName()]['field']['click sortable']);
-    if (Database::getConnection()->databaseType() != 'mongodb') {
+    if (Database::getConnection()->driver() != 'mongodb') {
       // Click sort should only be on the primary field.
       $this->assertArrayNotHasKey($field_storage_string->getName(), $data[$revision_table]);
     }
     // Test click sortable for long text field.
     $data_long = $this->getViewsData('field_string_long');
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       $current_table_long = 'node';
     }
     else {
@@ -210,7 +210,7 @@ class FieldApiDataTest extends ViewsKernelTestBase {
   protected function getViewsData($field_storage_key = 'field_string') {
     $views_data = $this->container->get('views.views_data');
 
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       return ['node' => $views_data->get('node')];
     }
     else {

@@ -1657,7 +1657,7 @@ function node_config_translation_info_alter(&$info) {
 //      if ($enabled) {
 //        $data['node_search_index']['table']['group'] = t('Search');
 //
-//        if (Database::getConnection()->databaseType() == 'mongodb') {
+//        if (Database::getConnection()->driver() == 'mongodb') {
 //          $table = 'node';
 //          $extra = [
 //            [

@@ -77,7 +77,7 @@ class RelationshipJoinInTest extends RelationshipJoinTestBase {
       ],
     ]);
 
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       $users_table = 'users';
       $this->columnMap = [
         'views_test_data_name' => 'name',
@@ -148,7 +148,7 @@ class RelationshipJoinInTest extends RelationshipJoinTestBase {
   protected function viewsData() {
     $data = parent::viewsData();
 
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       $field_username = 'user_translations.name';
     }
     else {

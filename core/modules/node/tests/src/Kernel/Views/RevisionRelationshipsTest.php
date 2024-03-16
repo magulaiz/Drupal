@@ -71,7 +71,7 @@ class RevisionRelationshipsTest extends ViewsKernelTestBase {
     // Here should be two rows for each translation.
     $view_nid = Views::getView('test_node_revision_nid');
     $this->executeView($view_nid, [$node->id()]);
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       $column_map = [
         'vid' => 'vid',
         'nid_1' => 'nid_1',
