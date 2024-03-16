@@ -11,7 +11,6 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\Url;
 use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -601,10 +600,10 @@ abstract class EntityBase implements EntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function getTypedData(string $name = NULL, TypedDataInterface $parent = NULL) {
+  public function getTypedData() {
     if (!isset($this->typedData)) {
       $class = $this->getTypedDataClass();
-      $this->typedData = $class::createFromEntity($this, $name, $parent);
+      $this->typedData = $class::createFromEntity($this);
     }
     return $this->typedData;
   }

@@ -401,24 +401,12 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
    * The returned typed data object wraps this entity and allows dealing with
    * entities based on the generic typed data API.
    *
-   * phpcs:disable Drupal.Commenting
-   * @todo Uncomment new method parameters before drupal:11.0.0.
-   * @see https://www.drupal.org/project/drupal/issues/3354672
-   *
-   * @param string|null $name
-   *   (optional) The name of the created property, or NULL if it is the root
-   *   of a typed data tree. Defaults to NULL.
-   * @param \Drupal\Core\TypedData\TypedDataInterface|null $parent
-   *   (optional) The parent object of the data property, or NULL if it is the
-   *   root of a typed data tree. Defaults to NULL.
-   * phpcs:enable
-   *
    * @return \Drupal\Core\TypedData\ComplexDataInterface
    *   The typed data object for this entity.
    *
    * @see \Drupal\Core\TypedData\TypedDataInterface
    */
-  public function getTypedData(/* string $name = NULL, TypedDataInterface $parent = NULL */);
+  public function getTypedData();
 
   /**
    * Gets the key that is used to store configuration dependencies.

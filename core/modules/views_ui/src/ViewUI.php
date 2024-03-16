@@ -8,7 +8,6 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\TempStore\Lock;
-use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\views\Controller\ViewAjaxController;
 use Drupal\views\Views;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -1241,8 +1240,8 @@ class ViewUI implements ViewEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function getTypedData(string $name = NULL, TypedDataInterface $parent = NULL) {
-    $this->storage->getTypedData($name, $parent);
+  public function getTypedData() {
+    $this->storage->getTypedData();
   }
 
   /**

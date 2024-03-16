@@ -72,7 +72,7 @@ class EntityReference extends DataReferenceBase {
       $entity = \Drupal::entityTypeManager()
         ->getStorage($this->getTargetDefinition()->getEntityTypeId())
         ->load($this->id);
-      $this->target = isset($entity) ? $entity->getTypedData('value', $this->parent) : NULL;
+      $this->target = $entity?->getTypedData()->setContext('value', $this->parent);
     }
     return $this->target;
   }
@@ -102,7 +102,7 @@ class EntityReference extends DataReferenceBase {
       $this->target = NULL;
     }
     elseif ($value instanceof EntityInterface) {
-      $this->target = $value->getTypedData('value', $this->parent);
+      $this->target = $value->getTypedData()->setContext('value', $this->parent);
     }
     elseif (!is_scalar($value) || $this->getTargetDefinition()->getEntityTypeId() === NULL) {
       throw new \InvalidArgumentException('Value is not a valid entity.');
