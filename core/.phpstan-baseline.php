@@ -513,11 +513,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Queue/Memory.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Queue\\\\QueueFactory\\:\\:\\$container\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Queue/QueueFactory.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$sort in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Render/Element/RenderElement.php',
