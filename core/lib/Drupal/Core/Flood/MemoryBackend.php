@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Flood;
 
-use Drupal\Core\CronSubscriberInterface;
+use Drupal\Core\Cron\CronSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -103,7 +103,7 @@ class MemoryBackend implements FloodInterface, PrefixFloodInterface, CronSubscri
   /**
    * {@inheritdoc}
    */
-  public function runCron(): void {
+  public function onCron(): void {
     $this->garbageCollection();
   }
 

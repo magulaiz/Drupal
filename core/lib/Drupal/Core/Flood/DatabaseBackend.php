@@ -3,7 +3,7 @@
 namespace Drupal\Core\Flood;
 
 use Drupal\Component\Datetime\TimeInterface;
-use Drupal\Core\CronSubscriberInterface;
+use Drupal\Core\Cron\CronSubscriberInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseException;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -156,7 +156,7 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface, CronSubsc
   /**
    * {@inheritdoc}
    */
-  public function runCron(): void {
+  public function onCron(): void {
     $this->garbageCollection();
   }
 

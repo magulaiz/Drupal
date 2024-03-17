@@ -4,7 +4,7 @@ namespace Drupal\Core\KeyValueStore;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Serialization\SerializationInterface;
-use Drupal\Core\CronSubscriberInterface;
+use Drupal\Core\Cron\CronSubscriberInterface;
 use Drupal\Core\Database\Connection;
 
 /**
@@ -80,7 +80,7 @@ class KeyValueDatabaseExpirableFactory implements KeyValueExpirableFactoryInterf
   /**
    * {@inheritdoc}
    */
-  public function runCron(): void {
+  public function onCron(): void {
     $this->garbageCollection();
   }
 

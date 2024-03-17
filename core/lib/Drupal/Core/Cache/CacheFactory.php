@@ -6,7 +6,7 @@ namespace Drupal\Core\Cache;
  * Defines the cache backend factory.
  */
 
-use Drupal\Core\CronSubscriberInterface;
+use Drupal\Core\Cron\CronSubscriberInterface;
 use Drupal\Core\Site\Settings;
 use Psr\Container\ContainerInterface;
 
@@ -115,7 +115,7 @@ class CacheFactory implements CacheFactoryInterface, CronSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public function runCron(): void {
+  public function onCron(): void {
     foreach (Cache::getBins() as $cache_backend) {
       $cache_backend->garbageCollection();
     }

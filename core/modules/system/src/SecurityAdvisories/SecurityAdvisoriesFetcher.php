@@ -4,7 +4,7 @@ namespace Drupal\system\SecurityAdvisories;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\CronSubscriberInterface;
+use Drupal\Core\Cron\CronSubscriberInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ProfileExtensionList;
 use Drupal\Core\Extension\ThemeExtensionList;
@@ -333,7 +333,7 @@ final class SecurityAdvisoriesFetcher implements CronSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public function runCron(): void {
+  public function onCron(): void {
     if ($this->config->get('enabled')) {
       // Fetch the security advisories so that they will be pre-fetched during
       // _system_advisories_requirements() and system_page_top().

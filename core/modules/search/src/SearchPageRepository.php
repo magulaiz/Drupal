@@ -3,7 +3,7 @@
 namespace Drupal\search;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\CronSubscriberInterface;
+use Drupal\Core\Cron\CronSubscriberInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
@@ -123,7 +123,7 @@ class SearchPageRepository implements SearchPageRepositoryInterface, CronSubscri
   /**
    * {@inheritdoc}
    */
-  public function runCron(): void {
+  public function onCron(): void {
     // Fires updateIndex() in the plugins for all indexable active search pages,
     // and cleans up dirty words.
     foreach ($this->getIndexableSearchPages() as $entity) {

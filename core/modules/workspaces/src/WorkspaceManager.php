@@ -3,7 +3,7 @@
 namespace Drupal\workspaces;
 
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
-use Drupal\Core\CronSubscriberInterface;
+use Drupal\Core\Cron\CronSubscriberInterface;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountProxyInterface;
@@ -242,7 +242,7 @@ class WorkspaceManager implements WorkspaceManagerInterface, CronSubscriberInter
   /**
    * {@inheritdoc}
    */
-  public function runCron(): void {
+  public function onCron(): void {
     $this->purgeDeletedWorkspacesBatch();
   }
 

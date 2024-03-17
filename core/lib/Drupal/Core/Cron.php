@@ -5,6 +5,7 @@ namespace Drupal\Core;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\Timer;
+use Drupal\Core\Cron\CronSubscriberInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Queue\DelayableQueueInterface;
@@ -93,7 +94,7 @@ class Cron implements CronInterface {
   /**
    * List of tagged services that implement the cron interface.
    *
-   * @var \Drupal\Core\CronSubscriberInterface[]
+   * @var \Drupal\Core\Cron\CronSubscriberInterface[]
    */
   protected array $cronSubscribers = [];
 
@@ -340,7 +341,7 @@ class Cron implements CronInterface {
       Timer::start('cron_' . $service_class);
 
       try {
-        $cron_service->runCron();
+        $cron_service->onCron();
       }
       catch (\Exception $e) {
         Error::logException($this->logger, $e);
@@ -399,7 +400,7 @@ class Cron implements CronInterface {
   /**
    * Add a cron subscriber.
    *
-   * @param \Drupal\Core\CronSubscriberInterface $cron_subscriber
+   * @param \Drupal\Core\Cron\CronSubscriberInterface $cron_subscriber
    *   The cron subscriber.
    *
    * @return void

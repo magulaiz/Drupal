@@ -62,8 +62,7 @@ services:
   system.sa_fetcher:
     class: Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher
     arguments: ['@config.factory', '@keyvalue.expirable', '@http_client', '@extension.list.module', '@extension.list.theme', '@extension.list.profile', '@logger.channel.system', '@settings']
-    tags:
-      - { name: cron }
+
   Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher: '@system.sa_fetcher'
   system.advisories_config_subscriber:
     class: Drupal\system\EventSubscriber\AdvisoriesConfigSubscriber

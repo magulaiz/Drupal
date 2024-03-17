@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Core;
+namespace Drupal\Core\Cron;
 
 /**
  * Allows to delegate cron tasks to services.
@@ -14,6 +14,6 @@ interface CronSubscriberInterface {
   /**
    * Executes a cron task.
    */
-  public function runCron(): void;
+  public function onCron(): void;
 
 }
