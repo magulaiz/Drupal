@@ -6,7 +6,7 @@ includes:
 
 parameters:
 
-  level: 1
+  level: 9
 
   fileExtensions:
     - sh
@@ -20,6 +20,8 @@ parameters:
     - lib/Drupal/Core/Serialization/Yaml.php
 
   excludePaths:
+    # Don't analyze PHPStan's automatically generated baseline.
+    - .phpstan-baseline.php
     # Skip sites directory.
     - ../sites
     # Skip test fixtures.
@@ -44,3 +46,7 @@ parameters:
     - "#Drupal calls should be avoided in classes, use dependency injection instead#"
     - "#^Plugin definitions cannot be altered.#"
     - "#^Class .* extends @internal class#"
+
+    # Ignore missing iterable types in arrays to reduce the burden on render arrays while still requiring types in other
+    # iterable classes.
+    - "#no value type specified in iterable type array#"
