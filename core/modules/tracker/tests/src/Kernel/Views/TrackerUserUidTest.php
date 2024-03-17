@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\tracker\Kernel\Views;
 
+use Drupal\Core\Database\Database;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
@@ -53,10 +54,18 @@ class TrackerUserUidTest extends KernelTestBase {
     ViewTestData::createTestViews(static::class, ['tracker_test_views']);
     $node = $this->createNode();
 
-    $map = [
-      'nid' => 'nid',
-      'title' => 'title',
-    ];
+    if (Database::getConnection()->driver() == 'mongodb') {
+      $map = [
+        'vid' => 'nid',
+        'title' => 'title',
+      ];
+    }
+    else {
+      $map = [
+        'nid' => 'nid',
+        'title' => 'title',
+      ];
+    }
 
     $expected = [
       [

@@ -5,12 +5,14 @@
  * Tracks recent content posted by a user or users.
  */
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Url;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\comment\CommentInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
+use MongoDB\BSON\UTCDateTime;
 
 /**
  * Implements hook_help().
@@ -50,7 +52,7 @@ function tracker_cron() {
 
     $nids = \Drupal::entityQuery('node')
       ->accessCheck(FALSE)
-      ->condition('nid', $max_nid, '<=')
+      ->condition('nid', (int) $max_nid, '<=')
       ->sort('nid', 'DESC')
       ->range(0, \Drupal::config('tracker.settings')->get('cron_index_limit'))
       ->execute();
@@ -212,9 +214,47 @@ function tracker_comment_delete(CommentInterface $comment) {
  */
 function _tracker_add($nid, $uid, $changed) {
   $connection = \Drupal::database();
-  // @todo This should be actually filtering on the desired language and just
-  //   fall back to the default language.
-  $node = $connection->query('SELECT [nid], [status], [uid], [changed] FROM {node_field_data} WHERE [nid] = :nid AND [default_langcode] = 1 ORDER BY [changed] DESC, [status] DESC', [':nid' => $nid])->fetchObject();
+
+  if (Database::getConnection()->driver() == 'mongodb') {
+    $node = $connection->select('node', 'n')
+        ->fields('n', ['nid', 'node_all_revisions.status', 'node_all_revisions.changed', 'node_all_revisions.default_langcode'])
+        ->condition('nid', (int) $nid)
+        ->condition('node_all_revisions.default_langcode', TRUE)
+        ->orderBy('node_all_revisions.changed', 'DESC')
+        ->orderBy('node_all_revisions.status', 'DESC')
+        ->execute()
+        ->fetchObject();
+    $node_changed = 0;
+    $node_status = FALSE;
+    if (isset($node->node_all_revisions) && is_array($node->node_all_revisions)) {
+      foreach ($node->node_all_revisions as $node_revision) {
+        if (isset($node_revision['changed']) && ($node_revision['changed'] instanceof UTCDateTime)) {
+          $node_revision['changed'] = (int) $node_revision['changed']->__toString();
+          $node_revision['changed'] = $node_revision['changed'] / 1000;
+          $node_revision['changed'] = (string) $node_revision['changed'];
+        }
+        if (isset($node_revision['default_langcode']) && $node_revision['default_langcode'] && isset($node_revision['changed']) && ($node_revision['changed'] >= $node_changed)) {
+          $node_changed = $node_revision['changed'];
+          if ($node_revision['changed'] == $node_changed) {
+            if (!$node_status && isset($node_revision['status']) && $node_revision['status']) {
+              $node_status = $node_revision['status'];
+            }
+          }
+          elseif (isset($node_revision['status'])) {
+            $node_status = $node_revision['status'];
+          }
+        }
+      }
+      $node->changed = $node_changed;
+      $node->status = $node_status;
+    }
+  }
+  else {
+    // @todo This should be actually filtering on the desired language and just
+    //   fall back to the default language.
+    $node = $connection->query('SELECT [nid], [status], [uid], [changed] FROM {node_field_data} WHERE [nid] = :nid AND [default_langcode] = 1 ORDER BY [changed] DESC, [status] DESC', [':nid' => $nid])
+      ->fetchObject();
+  }
 
   // Adding a comment can only increase the changed timestamp, so our
   // calculation here is simple.
@@ -232,8 +272,8 @@ function _tracker_add($nid, $uid, $changed) {
   // Create or update the user-level data, first for the user posting.
   $connection->merge('tracker_user')
     ->keys([
-      'nid' => $nid,
-      'uid' => $uid,
+      'nid' => (int) $nid,
+      'uid' => (int) $uid,
     ])
     ->fields([
       'changed' => $changed,
@@ -266,6 +306,10 @@ function _tracker_add($nid, $uid, $changed) {
 function _tracker_calculate_changed($node) {
   $changed = $node->getChangedTime();
   $latest_comment = \Drupal::service('comment.statistics')->read([$node], 'node', FALSE);
+  if (Database::getConnection()->driver() == 'mongodb' && is_array($latest_comment)) {
+    // The service returns an array of entities. Just grabbing the first entity.
+    $latest_comment = reset($latest_comment);
+  }
   if ($latest_comment && $latest_comment->last_comment_timestamp > $changed) {
     $changed = $latest_comment->last_comment_timestamp;
   }
