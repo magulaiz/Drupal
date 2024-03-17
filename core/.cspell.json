@@ -6,6 +6,7 @@
     "ignorePaths": [
       "**/.*.json",
       ".*ignore",
+      ".phpstan-baseline.php",
       "composer.lock",
       "assets/vendor/**",
       "misc/jquery.form.js",
