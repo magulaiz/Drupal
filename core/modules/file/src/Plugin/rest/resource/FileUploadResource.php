@@ -12,12 +12,14 @@ use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Utility\Token;
 use Drupal\file\Entity\File;
 use Drupal\file\Upload\ContentDispositionFilenameParser;
 use Drupal\file\Upload\InputStreamFileWriterInterface;
 use Drupal\file\Validation\FileValidatorInterface;
 use Drupal\file\Validation\FileValidatorSettingsTrait;
+use Drupal\rest\Attribute\RestResource;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\Plugin\rest\resource\EntityResourceValidationTrait;
@@ -45,16 +47,15 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  *     to be later moved when they are referenced from a file field.
  *   - Permission to upload a file can be determined by a users field level
  *     create access to the file field.
- *
- * @RestResource(
- *   id = "file:upload",
- *   label = @Translation("File Upload"),
- *   serialization_class = "Drupal\file\Entity\File",
- *   uri_paths = {
- *     "create" = "/file/upload/{entity_type_id}/{bundle}/{field_name}"
- *   }
- * )
  */
+#[RestResource(
+  id: "file:upload",
+  label: new TranslatableMarkup("File Upload"),
+  serialization_class: File::class,
+  uri_paths: [
+    "create" => "/file/upload/{entity_type_id}/{bundle}/{field_name}",
+  ]
+)]
 class FileUploadResource extends ResourceBase {
 
   use FileValidatorSettingsTrait;
@@ -79,6 +80,12 @@ class FileUploadResource extends ResourceBase {
    * The amount of bytes to read in each iteration when streaming file data.
    *
    * @var int
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+   * \Drupal\file\Upload\InputStreamFileWriterInterface::DEFAULT_BYTES_TO_READ
+   * instead.
+   *
+   * @see https://www.drupal.org/node/3380607
    */
   const BYTES_TO_READ = 8192;
 
@@ -208,7 +215,7 @@ class FileUploadResource extends ResourceBase {
     }
     $this->fileValidator = $file_validator;
     if (!$input_stream_file_writer) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $input_stream_file_writer argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/123', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $input_stream_file_writer argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3380607', E_USER_DEPRECATED);
       $input_stream_file_writer = \Drupal::service('file.input_stream_file_writer');
     }
     $this->inputStreamFileWriter = $input_stream_file_writer;
@@ -330,6 +337,12 @@ class FileUploadResource extends ResourceBase {
     }
 
     $file->setFileUri($file_uri);
+    // Update the filename with any changes as a result of security or renaming
+    // due to an existing file.
+    // @todo Remove this duplication by replacing with FileUploadHandler. See
+    // https://www.drupal.org/project/drupal/issues/3401734
+    $file->setFilename($this->fileSystem->basename($file->getFileUri()));
+
     // Move the file to the correct location after validation. Use
     // FileSystemInterface::EXISTS_ERROR as the file location has already been
     // determined above in FileSystem::getDestinationFilename().

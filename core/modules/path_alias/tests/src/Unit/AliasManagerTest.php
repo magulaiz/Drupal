@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\path_alias\Unit;
 
+use Drupal\Component\Datetime\Time;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\path_alias\AliasRepositoryInterface;
@@ -76,7 +77,7 @@ class AliasManagerTest extends UnitTestCase {
     $this->languageManager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
     $this->cache = $this->createMock('Drupal\Core\Cache\CacheBackendInterface');
 
-    $this->aliasManager = new AliasManager($this->aliasRepository, $this->aliasWhitelist, $this->languageManager, $this->cache);
+    $this->aliasManager = new AliasManager($this->aliasRepository, $this->aliasWhitelist, $this->languageManager, $this->cache, new Time());
 
   }
 
@@ -399,7 +400,7 @@ class AliasManagerTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getAliasByPath cache with an unpreloaded path without alias.
+   * Tests the getAliasByPath cache with an un-preloaded path without alias.
    *
    * @covers ::getAliasByPath
    * @covers ::writeCache
@@ -483,7 +484,7 @@ class AliasManagerTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getAliasByPath cache with an unpreloaded path with alias.
+   * Tests the getAliasByPath cache with an un-preloaded path with alias.
    *
    * @covers ::getAliasByPath
    * @covers ::writeCache

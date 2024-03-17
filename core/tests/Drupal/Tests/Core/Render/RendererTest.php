@@ -14,6 +14,8 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Template\Attribute;
 
+// cspell:ignore fooalert
+
 /**
  * @coversDefaultClass \Drupal\Core\Render\Renderer
  * @group Render
@@ -359,20 +361,20 @@ class RendererTest extends RendererTestBase {
 
     // Theme suggestion is not implemented, #markup should be rendered.
     $build = [
-      '#theme' => ['suggestionnotimplemented'],
+      '#theme' => ['suggestion_not_implemented'],
       '#markup' => 'foo',
     ];
     $setup_code = function () {
       $this->themeManager->expects($this->once())
         ->method('render')
-        ->with(['suggestionnotimplemented'], $this->anything())
+        ->with(['suggestion_not_implemented'], $this->anything())
         ->willReturn(FALSE);
     };
     $data[] = [$build, 'foo', $setup_code];
 
     // Tests unimplemented theme suggestion, child #markup should be rendered.
     $build = [
-      '#theme' => ['suggestionnotimplemented'],
+      '#theme' => ['suggestion_not_implemented'],
       'child' => [
         '#markup' => 'foo',
       ],
@@ -380,7 +382,7 @@ class RendererTest extends RendererTestBase {
     $setup_code = function () {
       $this->themeManager->expects($this->once())
         ->method('render')
-        ->with(['suggestionnotimplemented'], $this->anything())
+        ->with(['suggestion_not_implemented'], $this->anything())
         ->willReturn(FALSE);
     };
     $data[] = [$build, 'foo', $setup_code];
@@ -632,7 +634,7 @@ class RendererTest extends RendererTestBase {
       '#access' => AccessResult::allowed()->addCacheContexts(['user']),
     ];
 
-    $this->renderer->renderPlain($build);
+    $this->renderer->renderInIsolation($build);
 
     $this->assertEqualsCanonicalizing(['languages:language_interface', 'theme', 'user'], $build['#cache']['contexts']);
   }
@@ -664,7 +666,7 @@ class RendererTest extends RendererTestBase {
    *
    * @return array
    */
-  public function providerRenderTwice() {
+  public static function providerRenderTwice() {
     return [
       [
         [
@@ -718,7 +720,7 @@ class RendererTest extends RendererTestBase {
    *
    * @return array
    */
-  public function providerAccessValues() {
+  public static function providerAccessValues() {
     return [
       [FALSE],
       [TRUE],
@@ -793,7 +795,7 @@ class RendererTest extends RendererTestBase {
    *
    * @return array
    */
-  public function providerRenderCache() {
+  public static function providerRenderCache() {
     return [
       'full access' => [
         NULL,
@@ -830,7 +832,7 @@ class RendererTest extends RendererTestBase {
    */
   public function testRenderCache($child_access, $expected_tags) {
     $this->setUpRequest();
-    $this->setupMemoryCache();
+    $this->setUpMemoryCache();
 
     // Create an empty element.
     $test_element = [
@@ -880,7 +882,7 @@ class RendererTest extends RendererTestBase {
    */
   public function testRenderCacheMaxAge($max_age, $is_render_cached, $render_cache_item_expire) {
     $this->setUpRequest();
-    $this->setupMemoryCache();
+    $this->setUpMemoryCache();
 
     $element = [
       '#cache' => [
@@ -901,7 +903,7 @@ class RendererTest extends RendererTestBase {
     }
   }
 
-  public function providerTestRenderCacheMaxAge() {
+  public static function providerTestRenderCacheMaxAge() {
     return [
       [0, FALSE, NULL],
       [60, TRUE, (int) $_SERVER['REQUEST_TIME'] + 60],
@@ -925,7 +927,7 @@ class RendererTest extends RendererTestBase {
    */
   public function testRenderCacheProperties(array $expected_results) {
     $this->setUpRequest();
-    $this->setupMemoryCache();
+    $this->setUpMemoryCache();
 
     $element = $original = [
       '#cache' => [
@@ -971,7 +973,7 @@ class RendererTest extends RendererTestBase {
    *   An array of associative arrays of expected results keyed by property
    *   name.
    */
-  public function providerTestRenderCacheProperties() {
+  public static function providerTestRenderCacheProperties() {
     return [
       [[]],
       [['child1' => 0, 'child2' => 0, '#custom_property' => 0, '#custom_property_array' => 0]],
@@ -996,7 +998,7 @@ class RendererTest extends RendererTestBase {
     $this->assertEquals($build, $expected);
   }
 
-  public function providerTestAddCacheableDependency() {
+  public static function providerTestAddCacheableDependency() {
     return [
       // Empty render array, typical default cacheability.
       [

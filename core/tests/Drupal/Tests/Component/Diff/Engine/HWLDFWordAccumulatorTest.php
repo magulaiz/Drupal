@@ -7,6 +7,8 @@ namespace Drupal\Tests\Component\Diff\Engine;
 use Drupal\Component\Diff\Engine\HWLDFWordAccumulator;
 use PHPUnit\Framework\TestCase;
 
+// cspell:ignore wordword
+
 /**
  * Test HWLDFWordAccumulator.
  *
@@ -34,7 +36,7 @@ class HWLDFWordAccumulatorTest extends TestCase {
    *   - Array of strings for the $words parameter to addWords().
    *   - String tag for the $tag parameter to addWords().
    */
-  public function provideAddWords() {
+  public static function provideAddWords() {
     return [
       [['wordword2'], ['word', 'word2'], 'tag'],
       [['word', 'word2'], ['word', "\nword2"], 'tag'],

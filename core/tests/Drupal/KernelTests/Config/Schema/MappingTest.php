@@ -142,14 +142,14 @@ class MappingTest extends KernelTestBase {
         ])->save();
         break;
 
-      case 'field.field.node.forum.comment_forum':
-        $this->enableModules(['field', 'node', 'comment', 'taxonomy', 'forum']);
-        $this->assertNull(FieldConfig::load('node.forum.comment_forum'));
+      case 'field.field.node.config_mapping_test.comment_config_mapping_test':
+        $this->enableModules(['field', 'node', 'comment', 'taxonomy', 'config_mapping_test']);
+        $this->assertNull(FieldConfig::load('node.config_mapping_test.comment_config_mapping_test'));
         // TRICKY: \Drupal\node\Entity\NodeType::$preview_mode uses
         // DRUPAL_OPTIONAL, which is defined in system.module.
         require_once 'core/modules/system/system.module';
-        $this->installConfig(['forum']);
-        $this->assertNotNull(FieldConfig::load('node.forum.comment_forum'));
+        $this->installConfig(['config_mapping_test']);
+        $this->assertNotNull(FieldConfig::load('node.config_mapping_test.comment_config_mapping_test'));
         break;
     }
 
@@ -175,13 +175,16 @@ class MappingTest extends KernelTestBase {
    *
    * @return \Generator
    */
-  public function providerMappingInterpretation(): \Generator {
+  public static function providerMappingInterpretation(): \Generator {
     $available_block_settings_types = [
       'block.settings.field_block:*:*:*' => [
         'formatter',
       ],
       'block.settings.extra_field_block:*:*:*' => [
         'formatter',
+      ],
+      'block.settings.page_title_block' => [
+        'base_route_title',
       ],
       'block.settings.system_branding_block' => [
         'use_site_logo',
@@ -351,8 +354,8 @@ class MappingTest extends KernelTestBase {
       [],
       $available_block_settings_types,
     ];
-    yield 'Dynamic type with [%parent.%parent]: field.field.node.forum.comment_forum:default_value.0' => [
-      'field.field.node.forum.comment_forum',
+    yield 'Dynamic type with [%parent.%parent]: field.field.node.config_mapping_test.comment_config_mapping_test:default_value.0' => [
+      'field.field.node.config_mapping_test.comment_config_mapping_test',
       'default_value.0',
       [
         // Keys defined locally, in `type: field.value.comment`.
