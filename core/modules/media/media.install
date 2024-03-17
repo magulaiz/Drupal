@@ -191,7 +191,7 @@ function media_update_10100() {
   /** @var \Drupal\filter\Entity\FilterFormat $item */
   foreach ($filter_format as $item) {
     $filters = $item->get('filters');
-    if (isset($filters['media_embed'])) {
+    if (isset($filters['media_embed']) && empty($media_embed_settings['settings']['show_contextual_links'])) {
       $media_embed_settings = $filters['media_embed'];
       $media_embed_settings['settings']['show_contextual_links'] = FALSE;
       $item->setFilterConfig('media_embed', $media_embed_settings);
