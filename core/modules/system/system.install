@@ -13,6 +13,9 @@ use Drupal\Component\Utility\OpCodeCache;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\SchemaDefinition\Index;
+use Drupal\Core\Database\SchemaDefinition\KeyColumn;
+use Drupal\Core\Database\SchemaDefinition\PrimaryKey;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -1657,12 +1660,16 @@ function system_schema() {
         'size' => 'big',
       ],
     ],
-    'primary key' => [
-      'sid',
-    ],
+    'primary key' => new PrimaryKey([
+      new KeyColumn('sid'),
+    ]),
     'indexes' => [
-      'timestamp' => ['timestamp'],
-      'uid' => ['uid'],
+      new Index('timestamp', [
+        new KeyColumn('timestamp'),
+      ]),
+      new Index('uid', [
+        new KeyColumn('uid'),
+      ]),
     ],
     'foreign keys' => [
       'session_user' => [

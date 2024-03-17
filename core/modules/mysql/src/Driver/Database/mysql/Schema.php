@@ -2,11 +2,20 @@
 
 namespace Drupal\mysql\Driver\Database\mysql;
 
+
 use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Database\Event\SchemaIndexDefinitionEvent;
+use Drupal\Core\Database\Event\SchemaPrimaryKeyDefinitionEvent;
 use Drupal\Core\Database\SchemaException;
 use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\Schema as DatabaseSchema;
+use Drupal\Core\Database\Schema\Index;
+use Drupal\Core\Database\Schema\KeyColumn;
+use Drupal\Core\Database\Schema\PrimaryKey;
+use Drupal\Core\Database\SchemaDefinition\Index as IndexDefinition;
+use Drupal\Core\Database\SchemaDefinition\KeyColumn as KeyColumnDefinition;
+use Drupal\Core\Database\SchemaDefinition\PrimaryKey as PrimaryKeyDefinition;
 use Drupal\Component\Utility\Unicode;
 
 // cspell:ignore gipk
@@ -87,10 +96,21 @@ class Schema extends DatabaseSchema {
    * {@inheritdoc}
    */
   protected function createTableSql($name, $table) {
+    // INIT START.
+    if (!empty($table->spec['primary key'])) {
+      $table->primaryKey = $this->connection->dispatchEvent(new SchemaPrimaryKeyDefinitionEvent(new PrimaryKey($table->spec['primary key'])))->primaryKey;
+    }
+    if (!empty($table->spec['indexes'])) {
+      foreach ($table->spec['indexes'] as $index) {
+        $table->indexes[] = $this->connection->dispatchEvent(new SchemaIndexDefinitionEvent(new Index($index)))->index;
+      }
+    }
+    // INIT END.
+
     $info = $this->connection->getConnectionOptions();
 
     // Provide defaults if needed.
-    $table += [
+    $table->spec += [
       'mysql_engine' => 'InnoDB',
       'mysql_character_set' => 'utf8mb4',
     ];
@@ -98,15 +118,15 @@ class Schema extends DatabaseSchema {
     $sql = "CREATE TABLE {" . $name . "} (\n";
 
     // Add the SQL statement for each field.
-    foreach ($table['fields'] as $field_name => $field) {
+    foreach ($table->spec['fields'] as $field_name => $field) {
       $sql .= $this->createFieldSql($field_name, $this->processField($field)) . ", \n";
     }
 
     // Process keys & indexes.
-    if (!empty($table['primary key']) && is_array($table['primary key'])) {
-      $this->ensureNotNullPrimaryKey($table['primary key'], $table['fields']);
+    if ($table->primaryKey) {
+      $this->ensureNotNullPrimaryKey($table->primaryKey->getColumnNames(), $table->spec['fields']);
     }
-    $keys = $this->createKeysSql($table);
+    $keys = $this->createKeysSql($table->spec, $table);
     if (count($keys)) {
       $sql .= implode(", \n", $keys) . ", \n";
     }
@@ -114,7 +134,7 @@ class Schema extends DatabaseSchema {
     // Remove the last comma and space.
     $sql = substr($sql, 0, -3) . "\n) ";
 
-    $sql .= 'ENGINE = ' . $table['mysql_engine'] . ' DEFAULT CHARACTER SET ' . $table['mysql_character_set'];
+    $sql .= 'ENGINE = ' . $table->spec['mysql_engine'] . ' DEFAULT CHARACTER SET ' . $table->spec['mysql_character_set'];
     // By default, MySQL uses the default collation for new tables, which is
     // 'utf8mb4_general_ci' (MySQL 5) or 'utf8mb4_0900_ai_ci' (MySQL 8) for
     // utf8mb4. If an alternate collation has been set, it needs to be
@@ -125,8 +145,8 @@ class Schema extends DatabaseSchema {
     }
 
     // Add table comment.
-    if (!empty($table['description'])) {
-      $sql .= ' COMMENT ' . $this->prepareComment($table['description'], self::COMMENT_MAX_TABLE);
+    if (!empty($table->spec['description'])) {
+      $sql .= ' COMMENT ' . $this->prepareComment($table->spec['description'], self::COMMENT_MAX_TABLE);
     }
 
     return [$sql];
@@ -271,21 +291,21 @@ class Schema extends DatabaseSchema {
     return $map;
   }
 
-  protected function createKeysSql($spec) {
+  protected function createKeysSql($spec, $table) {
     $keys = [];
 
-    if (!empty($spec['primary key'])) {
-      $keys[] = 'PRIMARY KEY (' . $this->createKeySql($spec['primary key']) . ')';
+    if ($table->primaryKey) {
+      $keys[] = 'PRIMARY KEY (' . $this->createKeySql($table->primaryKey->columns) . ')';
     }
     if (!empty($spec['unique keys'])) {
       foreach ($spec['unique keys'] as $key => $fields) {
         $keys[] = 'UNIQUE KEY [' . $key . '] (' . $this->createKeySql($fields) . ')';
       }
     }
-    if (!empty($spec['indexes'])) {
-      $indexes = $this->getNormalizedIndexes($spec);
-      foreach ($indexes as $index => $fields) {
-        $keys[] = 'INDEX [' . $index . '] (' . $this->createKeySql($fields) . ')';
+    if ($table->indexes) {
+      $table->indexes = $this->getNormalizedIndexes($spec, $table->indexes);
+      foreach ($table->indexes as $index) {
+        $keys[] = 'INDEX [' . $index->name . '] (' . $this->createKeySql($index->columns) . ')';
       }
     }
 
@@ -307,12 +327,11 @@ class Schema extends DatabaseSchema {
    * @throws \Drupal\Core\Database\SchemaException
    *   Thrown if field specification is missing.
    */
-  protected function getNormalizedIndexes(array $spec) {
-    $indexes = $spec['indexes'] ?? [];
-    foreach ($indexes as $index_name => $index_fields) {
-      foreach ($index_fields as $index_key => $index_field) {
+  protected function getNormalizedIndexes(array $spec, array $indexes) {
+    foreach ($indexes as $index) {
+      foreach ($index->columns as $index_key => $index_field) {
         // Get the name of the field from the index specification.
-        $field_name = is_array($index_field) ? $index_field[0] : $index_field;
+        $field_name = $index_field->name;
         // Check whether the field is defined in the table specification.
         if (isset($spec['fields'][$field_name])) {
           // Get the MySQL type from the processed field.
@@ -321,7 +340,8 @@ class Schema extends DatabaseSchema {
             // Check whether we need to shorten the index.
             if ((!isset($mysql_field['type']) || $mysql_field['type'] != 'varchar_ascii') && (!isset($mysql_field['length']) || $mysql_field['length'] > 191)) {
               // Limit the index length to 191 characters.
-              $this->shortenIndex($indexes[$index_name][$index_key]);
+              $length = $index->columns[$index_key]->length;
+              $index->columns[$index_key]->length = $length === NULL ? 191 : min($length, 191);
             }
           }
         }
@@ -358,7 +378,10 @@ class Schema extends DatabaseSchema {
   protected function createKeySql($fields) {
     $return = [];
     foreach ($fields as $field) {
-      if (is_array($field)) {
+      if ($field instanceof KeyColumn) {
+        $return[] = is_null($field->length) ? "[{$field->name}]" : "[{$field->name}] ({$field->length})";
+      }
+      elseif (is_array($field)) {
         $return[] = '[' . $field[0] . '] (' . $field[1] . ')';
       }
       else {
