@@ -10,7 +10,7 @@ use Drupal\Core\CronSubscriberInterface;
 use Drupal\Core\Site\Settings;
 use Psr\Container\ContainerInterface;
 
-class CacheFactory implements CacheFactoryInterface, ContainerAwareInterface, CronSubscriberInterface {
+class CacheFactory implements CacheFactoryInterface, CronSubscriberInterface {
 
   /**
    * The site settings.
