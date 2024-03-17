@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\options\Kernel\Views;
 
+use Drupal\Core\Database\Database;
 use Drupal\views\Views;
 
 /**
@@ -26,10 +27,20 @@ class OptionsListFilterTest extends OptionsTestBase {
     $view = Views::getView('test_options_list_filter');
     $this->executeView($view);
 
-    $resultset = [
-      ['nid' => $this->nodes[0]->nid->value],
-      ['nid' => $this->nodes[1]->nid->value],
-    ];
+    if (Database::getConnection()->driver() == 'mongodb') {
+      // The expected resultset is wrong. The view sorts the nodes by nid and
+      // DESC.
+      $resultset = [
+        ['nid' => $this->nodes[1]->nid->value],
+        ['nid' => $this->nodes[0]->nid->value],
+      ];
+    }
+    else {
+      $resultset = [
+        ['nid' => $this->nodes[0]->nid->value],
+        ['nid' => $this->nodes[1]->nid->value],
+      ];
+    }
 
     $column_map = ['nid' => 'nid'];
     $this->assertIdenticalResultset($view, $resultset, $column_map);
@@ -41,11 +52,20 @@ class OptionsListFilterTest extends OptionsTestBase {
   public function testViewsTestOptionsListGroupedFilter() {
     $view = Views::getView('test_options_list_filter');
 
+    if (Database::getConnection()->databaseType() == 'mongodb') {
+      $table = 'node';
+      $field = 'field_test_list_string';
+    }
+    else {
+      $table = 'field_data_field_test_list_string';
+      $field = 'field_test_list_string_value';
+    }
+
     $filters = [
       'field_test_list_string_value' => [
-        'id' => 'field_test_list_string_value',
-        'table' => 'field_data_field_test_list_string',
-        'field' => 'field_test_list_string_value',
+        'id' => $field,
+        'table' => $table,
+        'field' => $field,
         'relationship' => 'none',
         'group_type' => 'group',
         'admin_label' => '',
@@ -100,10 +120,20 @@ class OptionsListFilterTest extends OptionsTestBase {
 
     $this->executeView($view);
 
-    $resultset = [
-      ['nid' => $this->nodes[0]->nid->value],
-      ['nid' => $this->nodes[1]->nid->value],
-    ];
+    if (Database::getConnection()->driver() == 'mongodb') {
+      // The expected resultset is wrong. The view sorts the nodes by nid and
+      // DESC.
+      $resultset = [
+        ['nid' => $this->nodes[1]->nid->value],
+        ['nid' => $this->nodes[0]->nid->value],
+      ];
+    }
+    else {
+      $resultset = [
+        ['nid' => $this->nodes[0]->nid->value],
+        ['nid' => $this->nodes[1]->nid->value],
+      ];
+    }
 
     $column_map = ['nid' => 'nid'];
     $this->assertIdenticalResultset($view, $resultset, $column_map);

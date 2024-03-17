@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\mongodb\modules\search;
+namespace Drupal\mongodb\Driver\Database\mongodb;
 
 use Drupal\search\SearchQuery as CoreSearchQuery;
 
@@ -207,7 +207,8 @@ class SearchQuery extends CoreSearchQuery {
     $this->condition($or);
 
     // Add keyword normalization information to the query.
-    $this->addMongodbJoin('INNER', 'search_total', 'word', 'search_index', 'word', '=', 't');
+//    $this->addMongodbJoin('INNER', 'search_total', 'word', 'search_index', 'word', '=', 't');
+    $this->join('search_total', 't', $this->joinCondition()->compare('i.word', 't.word'));
     $this
       ->condition('i.type', $this->type)
       ->groupBy('i.type')
@@ -227,18 +228,12 @@ class SearchQuery extends CoreSearchQuery {
     // For complex search queries, add the LIKE conditions; if the query is
     // simple, we do not need them for normalization.
     if (!$this->simple) {
-      $extra = [
-        [
-          'field' => 'type',
-          'left_field' => 'type',
-        ],
-        [
-          'field' => 'langcode',
-          'left_field' => 'langcode',
-        ],
-      ];
-
-      $normalize_query->addMongodbJoin('INNER', 'search_dataset', 'sid', 'search_index', 'sid', '=', 'd', $extra);
+      $normalize_query->join('search_dataset', 'd',
+        $normalize_query->joinCondition()
+          ->compare('i.sid', 'd.sid')
+          ->compare('i.type', 'd.type')
+          ->compare('i.langcode', 'd.langcode')
+      );
       if (count($this->conditions)) {
         $normalize_query->condition($this->conditions);
       }

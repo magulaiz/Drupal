@@ -568,6 +568,11 @@ function mongodb_views_plugins_filter_alter(array &$plugins) {
         $plugins[$id]['provider'] = 'mongodb';
         break;
 
+      case 'list_field':
+        $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\filter\ListField';
+        $plugins[$id]['provider'] = 'mongodb';
+        break;
+
       case 'in_operator':
         $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\filter\InOperator';
         $plugins[$id]['provider'] = 'mongodb';

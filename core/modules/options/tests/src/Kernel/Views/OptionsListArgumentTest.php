@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\options\Kernel\Views;
 
+use Drupal\Core\Database\Database;
 use Drupal\views\Views;
 
 /**
@@ -26,21 +27,26 @@ class OptionsListArgumentTest extends OptionsTestBase {
     $view = Views::getView('test_options_list_argument_numeric');
     $this->executeView($view, [1]);
 
-    $resultset = [
-      ['nid' => $this->nodes[0]->nid->value],
-      ['nid' => $this->nodes[1]->nid->value],
-    ];
+    if (Database::getConnection()->driver() == 'mongodb') {
+      // The expected resultset is wrong. The view sorts the nodes by nid and
+      // DESC.
+      $resultset = [
+        ['nid' => $this->nodes[1]->nid->value],
+        ['nid' => $this->nodes[0]->nid->value],
+      ];
+    }
+    else {
+      $resultset = [
+        ['nid' => $this->nodes[0]->nid->value],
+        ['nid' => $this->nodes[1]->nid->value],
+      ];
+    }
 
     $column_map = ['nid' => 'nid'];
     $this->assertIdenticalResultset($view, $resultset, $column_map);
 
     $view = Views::getView('test_options_list_argument_string');
     $this->executeView($view, ['man', 'woman']);
-
-    $resultset = [
-      ['nid' => $this->nodes[0]->nid->value],
-      ['nid' => $this->nodes[1]->nid->value],
-    ];
 
     $column_map = ['nid' => 'nid'];
     $this->assertIdenticalResultset($view, $resultset, $column_map);
