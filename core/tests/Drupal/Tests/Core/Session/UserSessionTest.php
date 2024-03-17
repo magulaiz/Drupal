@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Session;
 
+use Drupal\Component\Datetime\Time;
 use Drupal\Core\Cache\MemoryCache\MemoryCache;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Session\PermissionChecker;
 use Drupal\Core\Session\UserSession;
 use Drupal\Tests\UnitTestCase;
+use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
 
 /**
@@ -29,7 +31,7 @@ class UserSessionTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerTestHasPermission() {
+  public static function providerTestHasPermission() {
     $data = [];
     $data[] = ['example permission', ['user_one', 'user_two'], ['user_last']];
     $data[] = ['another example permission', ['user_two'], ['user_one', 'user_last']];
@@ -98,7 +100,7 @@ class UserSessionTest extends UnitTestCase {
       ]);
 
     $role_storage = $this->getMockBuilder('Drupal\user\RoleStorage')
-      ->setConstructorArgs(['role', new MemoryCache()])
+      ->setConstructorArgs(['role', new MemoryCache(new Time())])
       ->disableOriginalConstructor()
       ->onlyMethods(['loadMultiple'])
       ->getMock();
@@ -177,6 +179,21 @@ class UserSessionTest extends UnitTestCase {
     $this->assertTrue($this->users['user_three']->hasRole(RoleInterface::AUTHENTICATED_ID));
     $this->assertFalse($this->users['user_three']->hasRole(RoleInterface::ANONYMOUS_ID));
     $this->assertTrue($this->users['user_last']->hasRole(RoleInterface::ANONYMOUS_ID));
+  }
+
+  /**
+   * Tests deprecation when permission is not a string.
+   *
+   * @covers ::hasPermission
+   * @group legacy
+   */
+  public function testHasPermissionLegacy() {
+    $this->expectDeprecation('Calling Drupal\Core\Session\UserSession::hasPermission() with a $permission parameter of type other than string is deprecated in drupal:10.3.0 and will cause an error in drupal:11.0.0. See https://www.drupal.org/node/3411485');
+    $this->assertFalse((new UserSession())->hasPermission(NULL));
+    $this->expectDeprecation('Calling Drupal\user\Entity\User::hasPermission() with a $permission parameter of type other than string is deprecated in drupal:10.3.0 and will cause an error in drupal:11.0.0. See https://www.drupal.org/node/3411485');
+    $reflection = new \ReflectionClass(User::class);
+    $user = $reflection->newInstanceWithoutConstructor();
+    $this->assertFalse($user->hasPermission(NULL));
   }
 
 }

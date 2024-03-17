@@ -157,7 +157,7 @@ class ConfigSchemaTest extends KernelTestBase {
     ];
     $expected['mapping']['weight'] = [
       'label' => 'Weight',
-      'type' => 'integer',
+      'type' => 'weight',
     ];
     $expected['type'] = 'config_schema_test.ignore';
     $expected['unwrap_for_canonical_representation'] = TRUE;
@@ -206,7 +206,7 @@ class ConfigSchemaTest extends KernelTestBase {
       ],
     ];
     $expected['mapping']['effects']['sequence']['mapping']['data']['type'] = 'image.effect.[%parent.id]';
-    $expected['mapping']['effects']['sequence']['mapping']['weight']['type'] = 'integer';
+    $expected['mapping']['effects']['sequence']['mapping']['weight']['type'] = 'weight';
     $expected['mapping']['effects']['sequence']['mapping']['uuid']['type'] = 'uuid';
     $expected['mapping']['third_party_settings']['type'] = 'sequence';
     $expected['mapping']['third_party_settings']['label'] = 'Third party settings';
@@ -367,13 +367,21 @@ class ConfigSchemaTest extends KernelTestBase {
     // Now let's try something more complex, with nested objects.
     $wrapper = \Drupal::service('config.typed')->get('image.style.large');
     $effects = $wrapper->get('effects');
-    $this->assertCount(1, $effects->toArray(), 'Got an array with effects for image.style.large data');
-    $uuid = key($effects->getValue());
-    $effect = $effects->get($uuid)->getElements();
-    $this->assertFalse($effect['data']->isEmpty(), 'Got data for the image scale effect from metadata.');
-    $this->assertSame('image_scale', $effect['id']->getValue(), 'Got data for the image scale effect from metadata.');
-    $this->assertInstanceOf(IntegerInterface::class, $effect['data']->get('width'));
-    $this->assertEquals(480, $effect['data']->get('width')->getValue(), 'Got the right value for the scale effect width.');
+    $this->assertCount(2, $effects->toArray(), 'Got an array with effects for image.style.large data');
+    foreach ($effects->toArray() as $uuid => $definition) {
+      $effect = $effects->get($uuid)->getElements();
+      if ($definition['id'] == 'image_scale') {
+        $this->assertFalse($effect['data']->isEmpty(), 'Got data for the image scale effect from metadata.');
+        $this->assertSame('image_scale', $effect['id']->getValue(), 'Got data for the image scale effect from metadata.');
+        $this->assertInstanceOf(IntegerInterface::class, $effect['data']->get('width'));
+        $this->assertEquals(480, $effect['data']->get('width')->getValue(), 'Got the right value for the scale effect width.');
+      }
+      if ($definition['id'] == 'image_convert') {
+        $this->assertFalse($effect['data']->isEmpty(), 'Got data for the image convert effect from metadata.');
+        $this->assertSame('image_convert', $effect['id']->getValue(), 'Got data for the image convert effect from metadata.');
+        $this->assertSame('webp', $effect['data']->get('extension')->getValue(), 'Got the right value for the convert effect extension.');
+      }
+    }
   }
 
   /**

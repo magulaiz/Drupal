@@ -128,6 +128,20 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
   }
 
   /**
+   * Commits the entire transaction stack.
+   *
+   * @internal
+   *   This method exists only to work around a bug caused by Drupal incorrectly
+   *   relying on object destruction order to commit transactions. Xdebug 3.3.0
+   *   changes the order of object destruction when the develop mode is enabled.
+   */
+  public function commitAll(): void {
+    foreach (array_reverse($this->stack()) as $id => $item) {
+      $this->unpile($item->name, $id);
+    }
+  }
+
+  /**
    * Adds an item to the transaction stack.
    *
    * Drivers should not override this method unless they also override the
@@ -253,33 +267,8 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
     // If there is no $id to commit, or if $id does not correspond to the one
     // in the stack for that $name, the commit is out of order.
     if (!isset($this->stack()[$id]) || $this->stack()[$id]->name !== $name) {
-      throw new TransactionOutOfOrderException("Error attempting commit of {$id}\\{$name}. Active stack: " . $this->dumpStackItemsAsString());
-    }
-
-    // Commit the transaction.
-    $this->commit($name, $id);
-
-    // Void the transaction stack item.
-    $this->voidStackItem($id);
-  }
-
-  /**
-   * Commits a Drupal transaction.
-   *
-   * @param string $name
-   *   The name of the transaction.
-   * @param string $id
-   *   The id of the transaction.
-   *
-   * @throws \Drupal\Core\Database\TransactionOutOfOrderException
-   *   If a Drupal Transaction with the specified name does not exist.
-   * @throws \Drupal\Core\Database\TransactionCommitFailedException
-   *   If the commit of the root transaction failed.
-   */
-  protected function commit(string $name, string $id): void {
-    if ($this->getConnectionTransactionState() !== ClientConnectionTransactionState::Active) {
-      // The stack got corrupted.
-      throw new TransactionOutOfOrderException("Transaction {$id}\\{$name} is out of order. Active stack: " . $this->dumpStackItemsAsString());
+      unset($this->voidedItems[$id]);
+      return;
     }
 
     // If we are not releasing the last savepoint but an earlier one, or
@@ -311,21 +300,6 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
    * {@inheritdoc}
    */
   public function rollback(string $name, string $id): void {
-    // @todo remove in drupal:11.0.0.
-    // Start of BC layer.
-    if ($id === 'bc-force-rollback') {
-      foreach ($this->stack() as $stackId => $item) {
-        if ($item->name === $name) {
-          $id = $stackId;
-          break;
-        }
-      }
-      if ($id === 'bc-force-rollback') {
-        throw new TransactionOutOfOrderException();
-      }
-    }
-    // End of BC layer.
-
     // Rolled back item should match the last one in stack.
     if ($id != array_key_last($this->stack()) || $name !== $this->stack()[$id]->name) {
       throw new TransactionOutOfOrderException("Error attempting rollback of {$id}\\{$name}. Active stack: " . $this->dumpStackItemsAsString());

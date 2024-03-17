@@ -182,10 +182,6 @@ system.performance:
         gzip:
           type: boolean
           label: 'Compress JavaScript files.'
-    stale_file_threshold:
-      type: integer
-      label: 'Stale file threshold'
-      deprecated: 'The system.performance.stale_file_threshold config key is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3301744'
 
 system.rss:
   type: config_object
@@ -379,6 +375,14 @@ system.advisories:
     interval_hours:
       type: integer
       label: 'How often to check for security advisories, in hours'
+
+block.settings.page_title_block:
+  type: block_settings
+  label: 'Page title block'
+  mapping:
+    base_route_title:
+      type: boolean
+      label: 'Display section title instead of current title'
 
 block.settings.system_branding_block:
   type: block_settings
