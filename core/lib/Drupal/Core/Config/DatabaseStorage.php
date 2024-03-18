@@ -3,6 +3,7 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
@@ -112,10 +113,7 @@ class DatabaseStorage implements StorageInterface {
         $data = $this->decode($data);
       }
     }
-    catch (\Exception $e) {
-      if ($this->connection->schema()->tableExists($this->table)) {
-        throw $e;
-      }
+    catch (SchemaObjectDoesNotExistException) {
       // If we attempt a read without actually having the table available,
       // return an empty array so the caller can handle it.
     }
