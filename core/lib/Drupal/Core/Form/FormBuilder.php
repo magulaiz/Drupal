@@ -251,7 +251,8 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       $form_state->setUserInput($input);
     }
 
-    if ($request->getSession()->has('batch_form_state')) {
+    // @todo Remove hasSession() condition in https://www.drupal.org/i/3413153
+    if ($request->hasSession() && $request->getSession()->has('batch_form_state')) {
       // We've been redirected here after a batch processing. The form has
       // already been processed, but needs to be rebuilt. See _batch_finished().
       $session = $request->getSession();
