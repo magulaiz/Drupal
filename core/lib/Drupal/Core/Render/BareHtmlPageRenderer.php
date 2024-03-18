@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Render;
 
+use Drupal\Component\Utility\UrlHelper;
+
 /**
  * Default bare HTML page renderer.
  */
