@@ -378,7 +378,8 @@ class FieldConfigEditForm extends EntityForm {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 
-    // Change message, visible only when html5 validation doesn't work.
+    // Change message, visible only when client-side HTML form validation
+    // doesn't work.
     if (!$form_state->getValue('label')) {
       $form_state->setErrorByName('label', $this->t('Add new field: you need to provide a label.'));
     }
@@ -427,11 +428,10 @@ class FieldConfigEditForm extends EntityForm {
       $existing_values = $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->tempStore->get('temp_name'))['field_config_values'] ?: $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName())['field_config_values'];
       $new_entity_values = $existing_values;
       $new_entity_values['field_name'] = $form_state->getValue('field_name');
-      // Make field storage translatable as we fetch field_config_values and not field_storage.
+      // Make field storage translatable as we are fetching field_config_values
+      // and not field_storage values.
       $new_entity_values['translatable'] = TRUE;
-      $new_entity_values += [
-        'type' => $this->entity->getType(),
-      ];
+      $new_entity_values['type'] = $this->entity->getType();
       unset($new_entity_values['label']);
       $new_entity_values['field_storage'] = $this->entityTypeManager->getStorage('field_storage_config')->create($new_entity_values);
       // Delete temporary entity and create a new field instance as machine name

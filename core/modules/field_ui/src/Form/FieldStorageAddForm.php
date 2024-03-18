@@ -197,7 +197,8 @@ class FieldStorageAddForm extends FormBase {
           // If it is a category, set return value as the category label.
           // Otherwise, set it as the field type id.
           '#return_value' => $display_as_group ? $field_type['category'] : $field_type['unique_identifier'],
-          '#display_as_group' => $display_as_group ? 'true' : 'false',
+          // Set this now to decide whether to skip the step later.
+          'display_as_group' => (bool) $display_as_group,
           '#attributes' => [
             'class' => ['field-option-radio'],
           ],
@@ -250,7 +251,7 @@ class FieldStorageAddForm extends FormBase {
       '#submit' => ['::startOver'],
     ];
     // Using the validate method to run this before submit.
-    $form['actions']['back']['#validate'][] = '::UnsetStorageType';
+    $form['actions']['back']['#validate'][] = '::unsetStorageType';
     $field_type_options = $form_state->get('field_type_options');
     $new_storage_type = $form_state->getValue('new_storage_type');
     $form['new_storage_type'] = [
@@ -483,7 +484,7 @@ class FieldStorageAddForm extends FormBase {
     $storage_type = $form_state->getValue('new_storage_type');
     $storage_type_list = $form['add']['new_storage_type'];
     // Skip step in case of no storage type options (eg- Boolean, Email).
-    if (array_key_exists($storage_type, $storage_type_list) &&  $storage_type_list[$storage_type]['radio']['#display_as_group'] === 'false') {
+    if (array_key_exists($storage_type, $storage_type_list) &&  !$storage_type_list[$storage_type]['radio']['display_as_group']) {
       $this->submitForm($form, $form_state);
     }
     else {
