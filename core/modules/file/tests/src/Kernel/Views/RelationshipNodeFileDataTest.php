@@ -179,7 +179,7 @@ class RelationshipNodeFileDataTest extends ViewsKernelTestBase {
     // We should only see a single file, the one on the user account. The other
     // account's UUID, nor the other unlinked file, should appear in the
     // results.
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       $expected_result = [
         [
           'file_managed_file_usage_fid' => $file2->id(),

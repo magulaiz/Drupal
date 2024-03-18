@@ -5,7 +5,7 @@ namespace Drupal\mongodb\Plugin\views\filter;
 use Drupal\history\Plugin\views\filter\HistoryUserTimestamp as CoreHistoryUserTimestamp;
 use MongoDB\BSON\UTCDateTime;
 
-// cspell:ignore fieldcompare bzzzzzzzt
+// cspell:ignore fieldcompare
 
 /**
  * Overriding the views filter plugin "history_user_timestamp".
@@ -27,8 +27,8 @@ class HistoryUserTimestamp extends CoreHistoryUserTimestamp {
     }
 
     // Hey, Drupal kills old history, so nodes that haven't been updated
-    // since HISTORY_READ_LIMIT are bzzzzzzzt outta here!
-    $limit = REQUEST_TIME - HISTORY_READ_LIMIT;
+    // since HISTORY_READ_LIMIT are outta here!
+    $limit = $this->time->getRequestTime() - HISTORY_READ_LIMIT;
 
     $this->ensureMyTable();
     $field = "$this->tableAlias.$this->realField";

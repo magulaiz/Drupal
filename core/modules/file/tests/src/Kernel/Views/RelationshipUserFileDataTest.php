@@ -98,7 +98,7 @@ class RelationshipUserFileDataTest extends ViewsKernelTestBase {
 
     $view = Views::getView('test_file_user_file_data');
     // Tests \Drupal\taxonomy\Plugin\views\relationship\NodeTermData::calculateDependencies().
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       $expected = [
         'module' => [
           'mongodb',
@@ -116,7 +116,7 @@ class RelationshipUserFileDataTest extends ViewsKernelTestBase {
     }
     $this->assertSame($expected, $view->getDependencies());
     $view->preview();
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       // For MongoDB is all entity data stored is the same document. A join is
       // for this view not necessary. There is no filter, so all users are in
       // the result.

@@ -5,6 +5,8 @@
  * Provide views data for history.module.
  */
 
+use Drupal\Core\Database\Database;
+
 /**
  * Implements hook_views_data().
  */
@@ -16,10 +18,18 @@ function history_views_data() {
   // need it.
   $data['history']['table']['group'] = t('Content');
 
+  // Which table to use as the base table for the entity type "node".
+  if (Database::getConnection()->driver() == 'mongodb') {
+    $node_table = 'node';
+  }
+  else {
+    $node_table = 'node_field_data';
+  }
+
   // Explain how this table joins to others.
   $data['history']['table']['join'] = [
      // Directly links to node table.
-    'node_field_data' => [
+    $node_table => [
       'table' => 'history',
       'left_field' => 'nid',
       'field' => 'nid',

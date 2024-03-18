@@ -57,7 +57,7 @@ class ImageViewsDataTest extends ViewsKernelTestBase {
       'bundle' => 'entity_test',
     ])->save();
     // Check the generated views data.
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       $views_data = Views::viewsData()->get('entity_test');
     }
     else {
@@ -92,7 +92,7 @@ class ImageViewsDataTest extends ViewsKernelTestBase {
       'bundle' => 'entity_test_mul',
     ])->save();
     // Check the generated views data.
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       $views_data = Views::viewsData()->get('entity_test_mul');
     }
     else {

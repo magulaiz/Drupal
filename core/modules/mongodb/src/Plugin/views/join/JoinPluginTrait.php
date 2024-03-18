@@ -60,15 +60,6 @@ trait JoinPluginTrait {
 //  dump($this->extra);
 //}
 
-    // Tack on the extra.
-    if (isset($this->extra) && !empty($this->extra)) {
-      $arguments = [];
-      $this->joinAddExtra($arguments, $join_condition, $table, $select_query, $left_table);
-    }
-    else {
-      $this->extra = [];
-    }
-
 //dump('$table[alias]: ' . $table['alias']);
 //dump('$right_field: ' . $right_field);
 //dump('$left_table[alias]: ' . $left_table['alias']);
@@ -87,6 +78,16 @@ trait JoinPluginTrait {
         }
       }
     }
+
+    // Tack on the extra.
+    if (isset($this->extra) && !empty($this->extra)) {
+      $arguments = [];
+      $this->joinAddExtra($arguments, $join_condition, $table, $select_query, $left_table);
+    }
+    else {
+      $this->extra = [];
+    }
+
 //dump('$join_condition');
 //dump($join_condition);
 

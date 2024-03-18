@@ -52,7 +52,7 @@ class OptionsListFilterTest extends OptionsTestBase {
   public function testViewsTestOptionsListGroupedFilter() {
     $view = Views::getView('test_options_list_filter');
 
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       $table = 'node';
       $field = 'field_test_list_string';
     }

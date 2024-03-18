@@ -71,7 +71,7 @@ class ViewsDataTest extends OptionsTestBase {
    * Tests the option module's implementation of hook_field_views_data().
    */
   public function testOptionsFieldViewsData() {
-    if (Database::getConnection()->databaseType() == 'mongodb') {
+    if (Database::getConnection()->driver() == 'mongodb') {
       $field_data = \Drupal::service('views.views_data')->get('entity_test');
     }
     else {
