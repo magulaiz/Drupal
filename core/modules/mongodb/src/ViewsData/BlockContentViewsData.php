@@ -12,7 +12,7 @@ class BlockContentViewsData extends EntityViewsData {
    */
   public function getViewsData() {
     $data = parent::getViewsData();
-
+dump('mongo');
     $data['block_content']['id']['field']['id'] = 'field';
 
     $data['block_content']['info']['field']['id'] = 'field';
