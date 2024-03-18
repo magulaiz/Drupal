@@ -36,7 +36,7 @@ libraries-override:
   core/base:
     css:
       component:
-        /core/themes/stable9/css/system/components/js.module.css: false
+        /core/themes/stable9/css/misc/components/js.module.css: false
   # It works for JS as well.
   core/drupal.batch:
     js:
