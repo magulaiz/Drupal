@@ -2,7 +2,7 @@
 
 namespace Drupal\views\Attribute;
 
-use Drupal\Component\Plugin\Attribute\Plugin;
+use Drupal\Component\Plugin\Attribute\PluginID;
 
 /**
  * Defines a Plugin attribute object for views sort handlers.
@@ -12,6 +12,6 @@ use Drupal\Component\Plugin\Attribute\Plugin;
  * @ingroup views_sort_handlers
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class ViewsSort extends Plugin {
+class ViewsSort extends PluginID {
 
 }
