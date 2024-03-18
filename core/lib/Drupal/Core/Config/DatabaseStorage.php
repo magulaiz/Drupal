@@ -71,10 +71,7 @@ class DatabaseStorage implements StorageInterface {
         ':name' => $name,
       ], $this->options)->fetchField();
     }
-    catch (\Exception $e) {
-      if ($this->connection->schema()->tableExists($this->table)) {
-        throw $e;
-      }
+    catch (SchemaObjectDoesNotExistException) {
       // If we attempt a read without actually having the table available,
       // return false so the caller can handle it.
       return FALSE;
