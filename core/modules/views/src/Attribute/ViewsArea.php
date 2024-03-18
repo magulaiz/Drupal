@@ -2,7 +2,7 @@
 
 namespace Drupal\views\Attribute;
 
-use Drupal\Component\Plugin\Attribute\Plugin;
+use Drupal\Component\Plugin\Attribute\PluginID;
 
 /**
  * Defines a Plugin attribute object for views area handlers.
@@ -12,6 +12,6 @@ use Drupal\Component\Plugin\Attribute\Plugin;
  * @ingroup views_area_handlers
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class ViewsArea extends Plugin {
+class ViewsArea extends PluginID {
 
 }
