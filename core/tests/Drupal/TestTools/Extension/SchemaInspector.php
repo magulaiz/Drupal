@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\TestTools\Extension;
 
+use Drupal\Core\Database\SchemaDefinition\ConvertDefinition;
+use Drupal\Core\Database\SchemaDefinition\Table;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
@@ -30,7 +32,18 @@ class SchemaInspector {
    */
   public static function getTablesSpecification(ModuleHandlerInterface $handler, string $module): array {
     if ($handler->loadInclude($module, 'install')) {
-      return $handler->invoke($module, 'schema') ?? [];
+      $tables = $handler->invoke($module, 'schema', [FALSE]) ?? [];
+      $temp = [];
+      foreach ($tables as $name => $table) {
+        if ($table instanceof Table) {
+          $name = $table->name;
+          if (!\Drupal::database()->supportsSchemaDefinition()) {
+            $table = ConvertDefinition::tableToArray($table);
+          }
+        }
+        $temp[$name] = $table;
+      }
+      return $temp;
     }
     return [];
   }

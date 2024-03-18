@@ -6,6 +6,14 @@
  */
 
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Database\SchemaDefinition\Column;
+use Drupal\Core\Database\SchemaDefinition\ColumnSize;
+use Drupal\Core\Database\SchemaDefinition\ColumnType;
+use Drupal\Core\Database\SchemaDefinition\ConvertDefinition;
+use Drupal\Core\Database\SchemaDefinition\ForeignKey;
+use Drupal\Core\Database\SchemaDefinition\Index;
+use Drupal\Core\Database\SchemaDefinition\PrimaryKey;
+use Drupal\Core\Database\SchemaDefinition\Table;
 
 /**
  * @defgroup database Database abstraction layer
@@ -502,8 +510,8 @@ function hook_query_TAG_alter(Drupal\Core\Database\Query\AlterableInterface $que
 /**
  * Define the current version of the database schema.
  *
- * A Drupal schema definition is an array structure representing one or more
- * tables and their related keys and indexes. A schema is defined by
+ * A Drupal schema definition is a structure of value objects representing one
+ * or more tables and their related keys and indexes. A schema is defined by
  * hook_schema() which must live in your module's .install file.
  *
  * The tables declared by this hook will be automatically created when the
@@ -516,75 +524,93 @@ function hook_query_TAG_alter(Drupal\Core\Database\Query\AlterableInterface $que
  * engines. You don't have to deal with the different SQL dialects for table
  * creation and alteration of the supported database engines.
  *
- * See the Schema API Handbook at https://www.drupal.org/node/146843 for details
- * on schema definition structures. Note that foreign key definitions are for
- * documentation purposes only; foreign keys are not created in the database,
- * nor are they enforced by Drupal.
+ * See the Schema API page at
+ * https://api.drupal.org/api/drupal/core%21lib%21Drupal%21Core%21Database%21database.api.php/group/schemaapi
+ * for details on schema definition structures. Note that foreign key
+ * definitions are for documentation purposes only; foreign keys are not
+ * created in the database, nor are they enforced by Drupal.
+ *
+ * @param bool $returnArraySchema
+ *   (Optional) FALSE indicates to return an array of
+ *   Drupal\Core\Database\SchemaDefinition\Table objects, TRUE to return
+ *   an array-based schema based on legacy (prior to Drupal xx.yy.zz)
+ *   definition. Defaults to TRUE.
  *
  * @return array
- *   A schema definition structure array. For each element of the
- *   array, the key is a table name and the value is a table structure
- *   definition.
+ *   A schema definition structure array. Depending on the $returnArraySchema
+ *   parameter: if TRUE for each element of the array, the key is a table name
+ *   and the value is a legacy array-based table structure definition; if FALSE
+ *   the array is a list of Drupal\Core\Database\SchemaDefinition\Table
+ *   objects.
  *
  * @ingroup schemaapi
  */
-function hook_schema() {
-  $schema['users_data'] = [
-    'description' => 'Stores module data as key/value pairs per user.',
-    'fields' => [
-      'uid' => [
-        'description' => 'The {users}.uid this record affects.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ],
-      'module' => [
-        'description' => 'The name of the module declaring the variable.',
-        'type' => 'varchar_ascii',
-        'length' => DRUPAL_EXTENSION_NAME_MAX_LENGTH,
-        'not null' => TRUE,
-        'default' => '',
-      ],
-      'name' => [
-        'description' => 'The identifier of the data.',
-        'type' => 'varchar_ascii',
-        'length' => 128,
-        'not null' => TRUE,
-        'default' => '',
-      ],
-      'value' => [
-        'description' => 'The value.',
-        'type' => 'blob',
-        'not null' => FALSE,
-        'size' => 'big',
-      ],
-      'serialized' => [
-        'description' => 'Whether value is serialized.',
-        'type' => 'int',
-        'size' => 'tiny',
-        'unsigned' => TRUE,
-        'default' => 0,
-      ],
+function hook_schema(bool $returnArraySchema = TRUE) {
+  $schema[] = new Table(
+    name: 'users_data',
+    description: 'Stores module data as key/value pairs per user.',
+    columns: [
+      new Column(
+        name: 'uid',
+        description: 'The {users}.uid this record affects.',
+        type: ColumnType::Int,
+        unsigned: TRUE,
+        notNull: TRUE,
+        default: 0,
+      ),
+      new Column(
+        name: 'module',
+        description: 'The name of the module declaring the variable.',
+        type: ColumnType::VarcharAscii,
+        length: DRUPAL_EXTENSION_NAME_MAX_LENGTH,
+        notNull: TRUE,
+        default: '',
+      ),
+      new Column(
+        name: 'name',
+        description: 'The identifier of the data.',
+        type: ColumnType::VarcharAscii,
+        length: 128,
+        notNull: TRUE,
+        default: '',
+      ),
+      new Column(
+        name: 'value',
+        description: 'The value.',
+        type: ColumnType::Blob,
+        size: ColumnSize::Big,
+        notNull: FALSE,
+      ),
+      new Column(
+        name: 'serialized',
+        description: 'Whether value is serialized.',
+        type: ColumnType::Int,
+        size: ColumnSize::Tiny,
+        unsigned: TRUE,
+        default: 0,
+      ),
     ],
-    'primary key' => ['uid', 'module', 'name'],
-    'indexes' => [
-      'module' => ['module'],
-      'name' => ['name'],
+    primaryKey: new PrimaryKey(['uid', 'module', 'name']),
+    indexes: [
+      new Index(name: 'module', columns: ['module']),
+      new Index(name: 'name', columns: ['name']),
     ],
     // For documentation purposes only; foreign keys are not created in the
     // database.
-    'foreign keys' => [
-      'data_user' => [
-        'table' => 'users',
-        'columns' => [
-          'uid' => 'uid',
-        ],
-      ],
+    foreignKeys: [
+      new ForeignKey(
+       name: 'data_user',
+       foreignTable: 'users',
+       columns: ['uid'],
+       foreignColumns: ['uid'],
+      ),
     ],
-  ];
+  );
 
-  return $schema;
+  return match ($returnArraySchema) {
+    TRUE => ConvertDefinition::schemaToArray($schema),
+    FALSE => $schema,
+  };
 }
 
 /**
