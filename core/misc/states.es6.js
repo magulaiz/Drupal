@@ -93,6 +93,14 @@
    */
   Drupal.behaviors.states = {
     attach(context, settings) {
+      // Modules like big_pipe invoke attachBehaviors that results in multiple attachment of
+      // behaviors for a given context. So maintain semaphore to ensure that the behavior
+      // is attached only once.
+      states.behaviorsAttached = states.behaviorsAttached || false;
+      if (states.behaviorsAttached) {
+        return;
+      }
+      states.behaviorsAttached = true;
       const $states = $(context).find('[data-drupal-states]');
       const il = $states.length;
       for (let i = 0; i < il; i++) {

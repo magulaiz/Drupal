@@ -29,6 +29,11 @@
   }
   Drupal.behaviors.states = {
     attach: function attach(context, settings) {
+      states.behaviorsAttached = states.behaviorsAttached || false;
+      if (states.behaviorsAttached) {
+        return;
+      }
+      states.behaviorsAttached = true;
       var $states = $(context).find('[data-drupal-states]');
       var il = $states.length;
       var _loop = function _loop(i) {
