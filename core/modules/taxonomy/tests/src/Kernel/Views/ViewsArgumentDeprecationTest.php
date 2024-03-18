@@ -6,7 +6,6 @@ namespace Drupal\Tests\taxonomy\Kernel\Views;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\taxonomy_test\Plugin\views\argument\TaxonomyViewsArgumentTest;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * Tests deprecation messages in views argument plugins.
@@ -14,8 +13,6 @@ use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
  * @group taxonomy
  */
 class ViewsArgumentDeprecationTest extends KernelTestBase {
-
-  use ExpectDeprecationTrait;
 
   /**
    * {@inheritdoc}
