@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\Functional;
 
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\Section;
 use Drupal\node\Entity\Node;
+use Drupal\Tests\layout_builder\Traits\EnableLayoutBuilderTrait;
 
 /**
  * Tests the Layout Builder UI.
@@ -14,6 +16,8 @@ use Drupal\node\Entity\Node;
  * @group #slow
  */
 class LayoutBuilderTest extends LayoutBuilderTestBase {
+
+  use EnableLayoutBuilderTrait;
 
   /**
    * Tests the Layout Builder UI for an entity type without a bundle.
@@ -527,10 +531,10 @@ class LayoutBuilderTest extends LayoutBuilderTestBase {
     // The original node title is available when viewing the node, but the
     // pending title is visible within the Layout Builder UI.
     $this->drupalGet('node/1');
-    $assert_session->pageTextContains('The first node title');
+    $assert_session->elementTextContains('css', 'body', 'The first node title');
     $page->clickLink('Layout');
-    $assert_session->pageTextNotContains('The first node title');
-    $assert_session->pageTextContains('The pending title of the first node');
+    $assert_session->elementTextNotContains('css', 'body', 'The first node title');
+    $assert_session->elementTextContains('css', 'body', 'The pending title of the first node');
   }
 
   /**
@@ -547,9 +551,9 @@ class LayoutBuilderTest extends LayoutBuilderTestBase {
     ]));
 
     $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
+    $display = LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default');
+    $this->enableLayoutBuilder($display);
     $this->drupalGet("$field_ui_prefix/display/default");
-    $page->checkField('layout[enabled]');
-    $page->pressButton('Save');
 
     $page->clickLink('Manage layout');
     $page->clickLink('Add block');
@@ -579,11 +583,8 @@ class LayoutBuilderTest extends LayoutBuilderTestBase {
       'administer node display',
     ]));
 
-    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
-    $page->checkField('layout[enabled]');
-    $page->pressButton('Save');
-    $page->checkField('layout[allow_custom]');
-    $page->pressButton('Save');
+    $display = LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default');
+    $this->enableLayoutBuilder($display);
 
     $this->drupalGet('node/1/layout');
     $page->clickLink('Add section');

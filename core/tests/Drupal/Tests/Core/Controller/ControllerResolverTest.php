@@ -12,7 +12,6 @@ use Drupal\Core\Utility\CallableResolver;
 use Drupal\Tests\UnitTestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,8 +52,12 @@ class ControllerResolverTest extends UnitTestCase {
    * Tests createController().
    *
    * @dataProvider providerTestCreateController
+   * @group legacy
    */
-  public function testCreateController($controller, $class, $output) {
+  public function testCreateController($controller, $class, $output, string $deprecation = NULL) {
+    if ($deprecation) {
+      $this->expectDeprecation($deprecation);
+    }
     $this->container->set('some_service', new MockController());
     $result = $this->controllerResolver->getControllerFromDefinition($controller);
     $this->assertCallableController($result, $class, $output);
@@ -72,7 +75,12 @@ class ControllerResolverTest extends UnitTestCase {
       // Tests a class with injection.
       ['Drupal\Tests\Core\Controller\MockContainerInjection::getResult', 'Drupal\Tests\Core\Controller\MockContainerInjection', 'This used injection.'],
       // Tests a ContainerAware class.
-      ['Drupal\Tests\Core\Controller\MockContainerAware::getResult', 'Drupal\Tests\Core\Controller\MockContainerAware', 'This is container aware.'],
+      [
+        'Drupal\Tests\Core\Controller\MockContainerAware::getResult',
+        'Drupal\Tests\Core\Controller\MockContainerAware',
+        'This is container aware.',
+        'Implementing \Symfony\Component\DependencyInjection\ContainerAwareInterface is deprecated in drupal:10.3.0 and it will be removed in drupal:11.0.0. Implement \Drupal\Core\DependencyInjection\ContainerInjectionInterface and use dependency injection instead. See https://www.drupal.org/node/3428661',
+      ],
     ];
   }
 
@@ -96,8 +104,12 @@ class ControllerResolverTest extends UnitTestCase {
    * Tests getController().
    *
    * @dataProvider providerTestGetController
+   * @group legacy
    */
   public function testGetController($attributes, $class, $output = NULL) {
+    if ($class) {
+      $this->expectDeprecation('Implementing \Symfony\Component\DependencyInjection\ContainerAwareInterface is deprecated in drupal:10.3.0 and it will be removed in drupal:11.0.0. Implement \Drupal\Core\DependencyInjection\ContainerInjectionInterface and use dependency injection instead. See https://www.drupal.org/node/3428661');
+    }
     $request = new Request([], [], $attributes);
     $result = $this->controllerResolver->getController($request);
     if ($class) {
@@ -221,9 +233,23 @@ class MockContainerInjection implements ContainerInjectionInterface {
 
 }
 class MockContainerAware implements ContainerAwareInterface {
-  use ContainerAwareTrait;
+
+  /**
+   * The service container.
+   */
+  protected ContainerInterface $container;
+
+  /**
+   * Sets the service container.
+   */
+  public function setContainer(?ContainerInterface $container): void {
+    $this->container = $container;
+  }
 
   public function getResult() {
+    if (empty($this->container)) {
+      throw new \Exception('Container was not injected.');
+    }
     return 'This is container aware.';
   }
 

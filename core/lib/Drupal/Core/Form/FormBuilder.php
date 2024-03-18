@@ -19,7 +19,7 @@ use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\FileBag;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -251,11 +251,13 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       $form_state->setUserInput($input);
     }
 
-    if (isset($_SESSION['batch_form_state'])) {
+    // @todo Remove hasSession() condition in https://www.drupal.org/i/3413153
+    if ($request->hasSession() && $request->getSession()->has('batch_form_state')) {
       // We've been redirected here after a batch processing. The form has
       // already been processed, but needs to be rebuilt. See _batch_finished().
-      $form_state = $_SESSION['batch_form_state'];
-      unset($_SESSION['batch_form_state']);
+      $session = $request->getSession();
+      $form_state = $session->get('batch_form_state');
+      $session->remove('batch_form_state');
       return $this->rebuildForm($form_id, $form_state);
     }
 
@@ -348,10 +350,9 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // throwing an exception.
     // @see Drupal\Core\EventSubscriber\EnforcedFormResponseSubscriber
     //
-    // @todo Exceptions should not be used for code flow control. However, the
-    //   Form API does not integrate with the HTTP Kernel based architecture of
-    //   Drupal 8. In order to resolve this issue properly it is necessary to
-    //   completely separate form submission from rendering.
+    // @todo Exceptions should not be used for code flow control. In order to
+    //   resolve this issue properly it is necessary to completely separate form
+    //   submission from rendering.
     //   @see https://www.drupal.org/node/2367555
     if ($response instanceof Response) {
       throw new EnforcedResponseException($response);
@@ -831,6 +832,10 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       }
     }
 
+    // Add the 'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form' cache tag to
+    // identify this render array as a form to the render cache.
+    $form['#cache']['tags'][] = 'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form';
+
     // Invoke hook_form_alter(), hook_form_BASE_FORM_ID_alter(), and
     // hook_form_FORM_ID_alter() implementations.
     $hooks = ['form'];
@@ -967,7 +972,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
 
             $request = $this->requestStack->getCurrentRequest();
             // Do not trust any POST data.
-            $request->request = new ParameterBag();
+            $request->request = new InputBag();
             // Make sure file uploads do not get processed.
             $request->files = new FileBag();
             // Ensure PHP globals reflect these changes.
