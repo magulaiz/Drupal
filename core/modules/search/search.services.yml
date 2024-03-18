@@ -6,7 +6,8 @@ services:
   search.search_page_repository:
     class: Drupal\search\SearchPageRepository
     arguments: ['@config.factory', '@entity_type.manager']
-
+    tags:
+      - { name: cron }
   Drupal\search\SearchPageRepositoryInterface: '@search.search_page_repository'
 
   search.index:

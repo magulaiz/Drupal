@@ -4,7 +4,6 @@ namespace Drupal\Core;
 
 use Drupal\Core\Cache\Context\CacheContextsPass;
 use Drupal\Core\Cache\ListCacheBinsPass;
-use Drupal\Core\Cron\CronSubscriberInterface;
 use Drupal\Core\DependencyInjection\Compiler\AuthenticationProviderPass;
 use Drupal\Core\DependencyInjection\Compiler\BackendCompilerPass;
 use Drupal\Core\DependencyInjection\Compiler\CorsCompilerPass;
@@ -114,9 +113,6 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
 
     $container->registerForAutoconfiguration(QueueFactoryInterface::class)
       ->addTag('queue_factory');
-
-    $container->registerForAutoconfiguration(CronSubscriberInterface::class)
-      ->addTag('cron');
   }
 
   /**
