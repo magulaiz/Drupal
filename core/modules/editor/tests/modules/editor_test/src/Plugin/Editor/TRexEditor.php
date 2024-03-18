@@ -19,7 +19,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
   is_xss_safe: FALSE,
   supported_element_types: [
     'textarea',
-    'textfield',
   ]
 )]
 class TRexEditor extends EditorBase {
