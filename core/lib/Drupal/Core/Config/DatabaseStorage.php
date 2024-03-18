@@ -3,6 +3,7 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
@@ -130,11 +131,13 @@ class DatabaseStorage implements StorageInterface {
     try {
       return $this->doWrite($name, $data);
     }
-    catch (\Exception $e) {
+    catch (SchemaObjectDoesNotExistException) {
       // If there was an exception, try to create the table.
       if ($this->ensureTableExists()) {
         return $this->doWrite($name, $data);
       }
+    }
+    catch (\Exception $e) {
       // Some other failure that we can not recover from.
       throw new StorageException($e->getMessage(), 0, $e);
     }
