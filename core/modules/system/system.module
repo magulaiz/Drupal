@@ -21,6 +21,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Link;
 use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\Queue\QueueGarbageCollectionInterface;
+use Drupal\Core\Render\BareHtmlPageRenderer;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\Site\Settings;
@@ -581,27 +582,9 @@ function system_filetransfer_info() {
  * @see \Drupal\Core\EventSubscriber\ActiveLinkResponseFilter
  */
 function system_page_attachments(array &$page) {
-  // Ensure the same CSS is loaded in template_preprocess_maintenance_page().
-  $page['#attached']['library'][] = 'system/base';
+  BareHtmlPageRenderer::addAttachments($page);
   if (\Drupal::service('router.admin_context')->isAdminRoute()) {
     $page['#attached']['library'][] = 'system/admin';
-  }
-
-  // Attach libraries used by this theme.
-  $active_theme = \Drupal::theme()->getActiveTheme();
-  foreach ($active_theme->getLibraries() as $library) {
-    $page['#attached']['library'][] = $library;
-  }
-
-  // Attach favicon.
-  if (theme_get_setting('features.favicon')) {
-    $favicon = theme_get_setting('favicon.url');
-    $type = theme_get_setting('favicon.mimetype');
-    $page['#attached']['html_head_link'][][] = [
-      'rel' => 'icon',
-      'href' => UrlHelper::stripDangerousProtocols($favicon),
-      'type' => $type,
-    ];
   }
 
   // Get the major Drupal version.

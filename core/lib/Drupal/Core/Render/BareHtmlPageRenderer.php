@@ -62,7 +62,7 @@ class BareHtmlPageRenderer implements BareHtmlPageRendererInterface {
 
     // Add the bare minimum of attachments from the system module and the
     // current maintenance theme.
-    system_page_attachments($html['page']);
+    static::addAttachments($html['page']);
     $this->renderer->renderRoot($html);
 
     $response = new HtmlResponse();
@@ -71,6 +71,33 @@ class BareHtmlPageRenderer implements BareHtmlPageRendererInterface {
     // pipeline, but will be sent directly.
     $response = $this->htmlResponseAttachmentsProcessor->processAttachments($response);
     return $response;
+  }
+
+  /**
+   * Add basic attachments to the page.
+   *
+   * @param $page
+   *   The page render array.
+   */
+  public static function addAttachments(&$page) {
+    // Ensure the same CSS is loaded in template_preprocess_maintenance_page().
+    $page['#attached']['library'][] = 'core/base';
+    // Attach libraries used by this theme.
+    $active_theme = \Drupal::theme()->getActiveTheme();
+    foreach ($active_theme->getLibraries() as $library) {
+      $page['#attached']['library'][] = $library;
+    }
+
+    // Attach favicon.
+    if (theme_get_setting('features.favicon')) {
+      $favicon = theme_get_setting('favicon.url');
+      $type = theme_get_setting('favicon.mimetype');
+      $page['#attached']['html_head_link'][][] = [
+        'rel' => 'icon',
+        'href' => UrlHelper::stripDangerousProtocols($favicon),
+        'type' => $type,
+      ];
+    }
   }
 
 }
