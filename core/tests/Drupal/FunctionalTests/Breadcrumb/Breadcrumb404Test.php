@@ -31,6 +31,9 @@ class Breadcrumb404Test extends BrowserTestBase {
    */
   public function testBreadcrumbOn404Pages() {
     $this->placeBlock('system_breadcrumb_block', ['id' => 'breadcrumb']);
+    // Visit at least one page with render cache entries so that the
+    // cache_render table is created before we query it.
+    $this->drupalGet('<front>');
 
     // Prime the cache first.
     $this->drupalGet('/not-found-1');
