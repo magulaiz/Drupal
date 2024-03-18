@@ -267,10 +267,7 @@ class DatabaseStorage implements StorageInterface {
       $query->orderBy('collection')->orderBy('name');
       return $query->execute()->fetchCol();
     }
-    catch (\Exception $e) {
-      if ($this->connection->schema()->tableExists($this->table)) {
-        throw $e;
-      }
+    catch (SchemaObjectDoesNotExistException) {
       // If we attempt a read without actually having the table available,
       // return an empty array so the caller can handle it.
       return [];
@@ -287,10 +284,7 @@ class DatabaseStorage implements StorageInterface {
         ->condition('collection', $this->collection)
         ->execute();
     }
-    catch (\Exception $e) {
-      if ($this->connection->schema()->tableExists($this->table)) {
-        throw $e;
-      }
+    catch (SchemaObjectDoesNotExistException) {
       // If we attempt a delete without actually having the table available,
       // return false so the caller can handle it.
       return FALSE;
@@ -325,10 +319,7 @@ class DatabaseStorage implements StorageInterface {
         ':collection' => StorageInterface::DEFAULT_COLLECTION,
       ])->fetchCol();
     }
-    catch (\Exception $e) {
-      if ($this->connection->schema()->tableExists($this->table)) {
-        throw $e;
-      }
+    catch (SchemaObjectDoesNotExistException) {
       // If we attempt a read without actually having the table available,
       // return an empty array so the caller can handle it.
       return [];
