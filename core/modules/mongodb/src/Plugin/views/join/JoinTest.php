@@ -38,16 +38,6 @@ class JoinTest extends CoreJoinTest {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function buildJoin($select_query, $table, $view_query) {
-dump(1);
-    // Add an additional hardcoded condition to the query.
-    $this->extra = 'views_test_data.uid = ' . $this->getJoinValue();
-    parent::buildJoin($select_query, $table, $view_query);
-  }
-
-  /**
    * The temporary join build method for MongoDB.
    */
   public function buildMongodbJoin($select_query, $table, $view_query) {

@@ -1134,6 +1134,8 @@ class ViewsQuery extends Sql {
 
         // Load all entities contained in the results.
         $this->loadEntities($view->result);
+//dump('$view->result2');
+//dump($view->result);
       }
       catch (DatabaseExceptionWrapper $e) {
         $view->result = [];

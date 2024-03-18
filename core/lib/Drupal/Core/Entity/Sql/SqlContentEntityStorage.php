@@ -576,7 +576,17 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             // type only stores one property).
             // TODO: Test if typecasting is necessary. Maybe special case if
             // $value is null.
-            $values[$id][$name][LanguageInterface::LANGCODE_DEFAULT] = (is_null($value) ? NULL : (string) $value);
+            if (is_null($value)) {
+              $values[$id][$name][LanguageInterface::LANGCODE_DEFAULT] = NULL;
+            }
+            elseif ($value === FALSE) {
+              // Drupal expects boolean values with the value FALSE to
+              // have the string value of zero.
+              $values[$id][$name][LanguageInterface::LANGCODE_DEFAULT] = '0';
+            }
+            else {
+              $values[$id][$name][LanguageInterface::LANGCODE_DEFAULT] = (string) $value;
+            }
           }
         }
 

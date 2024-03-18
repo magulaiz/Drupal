@@ -62,9 +62,11 @@ class HandlerFieldFieldTest extends KernelTestBase {
   protected $nodes = [];
 
   /**
-   * Tests fields rendering in views.
+   * {@inheritdoc}
    */
-  public function testFieldRender() {
+  protected function setUp($import_test_views = TRUE): void {
+    parent::setUp(FALSE);
+
     $this->installConfig(['filter']);
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
@@ -72,11 +74,21 @@ class HandlerFieldFieldTest extends KernelTestBase {
       'type' => 'page',
       'name' => 'Page',
     ])->save();
-    ViewTestData::createTestViews(static::class, ['field_test_views']);
 
     // Setup basic fields.
     $this->createFields();
 
+    $this->container->get('views.views_data')->clear();
+
+    // For MongoDB to update the views correctly the views must be loaded after
+    // the creation of the fields.
+    ViewTestData::createTestViews(static::class, ['field_test_views']);
+  }
+
+  /**
+   * Tests fields rendering in views.
+   */
+  public function testFieldRender() {
     // Create some nodes.
     $this->nodes = [];
     for ($i = 0; $i < 3; $i++) {

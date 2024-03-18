@@ -77,6 +77,15 @@ class TranslateViews {
     'node__field_test_boolean_field' => [
       'base table' => 'node',
     ],
+    'node__field_name_0' => [
+      'base table' => 'node',
+    ],
+    'node__field_name_5' => [
+      'base table' => 'node',
+    ],
+    'node__field_no_view_access' => [
+      'base table' => 'node',
+    ],
     'entity_test__field_test' => [
       'base table' => 'entity_test',
     ],

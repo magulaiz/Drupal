@@ -387,11 +387,28 @@ class Condition extends QueryCondition {
             }
 
             if (isset($condition['field2'])) {
+              // For comparing two fields to each other, the fields sometimes
+              // have to be cast to an integer value.
+              $field_pos = strpos($condition['field'],'$toInt');
+              if ($field_pos !== FALSE) {
+                $field = unserialize($condition['field']);
+              }
+              else {
+                $field = '$' . $connection->escapeField($condition['field']);
+              }
+              $field2_pos = strpos($condition['field2'],'$toInt');
+              if ($field2_pos !== FALSE) {
+                $field2 = unserialize($condition['field2']);
+              }
+              else {
+                $field2 = '$' . $connection->escapeField($condition['field2']);
+              }
+
               $condition_fragment = $condition_aggregate_fragment = [
                 '$expr' => [
                   $operator['mongodb_operator'] => [
-                    '$' . $connection->escapeField($condition['field']),
-                    '$' . $connection->escapeField($condition['field2']),
+                    $field,
+                    $field2,
                   ],
                 ],
               ];

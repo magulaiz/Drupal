@@ -187,3 +187,8 @@ services:
     class: Drupal\mongodb\Plugin\views\query\DateSql
     arguments: ['@database']
     public: false
+
+  mongodb.views.cast_sql:
+    class: Drupal\mongodb\Plugin\views\query\CastSql
+    arguments: ['@database']
+    public: false

@@ -716,6 +716,11 @@ function mongodb_views_plugins_filter_alter(array &$plugins) {
 function mongodb_views_plugins_join_alter(array &$plugins) {
   foreach ($plugins as $id => $plugin) {
     switch ($id) {
+      case 'casted_int_field_join':
+        $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\join\CastedIntFieldJoin';
+        $plugins[$id]['provider'] = 'mongodb';
+        break;
+
       case 'subquery':
         $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\join\Subquery';
         $plugins[$id]['provider'] = 'mongodb';
