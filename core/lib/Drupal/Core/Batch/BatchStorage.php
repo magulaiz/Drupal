@@ -126,8 +126,8 @@ class BatchStorage implements BatchStorageInterface {
         ->condition('timestamp', $this->time->getRequestTime() - 864000, '<')
         ->execute();
     }
-    catch (\Exception $e) {
-      $this->catchException($e);
+    catch (SchemaObjectDoesNotExistException) {
+      // There's nothing to do if the table doesn't exist.
     }
   }
 
@@ -222,6 +222,7 @@ class BatchStorage implements BatchStorageInterface {
    * @throws \Exception
    */
   protected function catchException(\Exception $e) {
+    // @todo Deprecate this method.
     if ($this->connection->schema()->tableExists(static::TABLE_NAME)) {
       throw $e;
     }
