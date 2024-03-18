@@ -5,6 +5,7 @@ namespace Drupal\Core\Batch;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\SchemaObjectExistsException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -76,8 +77,8 @@ class BatchStorage implements BatchStorageInterface {
         ':token' => $this->csrfToken->get($id),
       ])->fetchField();
     }
-    catch (\Exception $e) {
-      $this->catchException($e);
+    catch (SchemaObjectDoesNotExistException) {
+      // It's fine if the table doesn't exist yet.
       $batch = FALSE;
     }
     if ($batch) {
