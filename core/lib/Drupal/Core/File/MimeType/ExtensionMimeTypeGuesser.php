@@ -933,7 +933,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
    * @param array|null $mapping
    *   Passing a NULL mapping will cause guess() to use self::$defaultMapping.
    */
-  public function setMapping(array $mapping = NULL) {
+  public function setMapping(?array $mapping = NULL) {
     $this->mapping = $mapping;
   }
 

@@ -24,7 +24,7 @@ class FieldItemListTest extends UnitTestCase {
    *
    * @dataProvider providerTestEquals
    */
-  public function testEquals($expected, FieldItemInterface $first_field_item = NULL, FieldItemInterface $second_field_item = NULL) {
+  public function testEquals($expected, ?FieldItemInterface $first_field_item = NULL, ?FieldItemInterface $second_field_item = NULL) {
 
     // Mock the field type manager and place it in the container.
     $field_type_manager = $this->createMock('Drupal\Core\Field\FieldTypePluginManagerInterface');
@@ -166,7 +166,7 @@ class FieldItemListTest extends UnitTestCase {
    *
    * @dataProvider providerTestEquals
    */
-  public function testHasAffectingChanges($expected, FieldItemInterface $first_field_item = NULL, FieldItemInterface $second_field_item = NULL) {
+  public function testHasAffectingChanges($expected, ?FieldItemInterface $first_field_item = NULL, ?FieldItemInterface $second_field_item = NULL) {
     // Mock the field type manager and place it in the container.
     $field_type_manager = $this->createMock(FieldTypePluginManagerInterface::class);
     $container = new ContainerBuilder();

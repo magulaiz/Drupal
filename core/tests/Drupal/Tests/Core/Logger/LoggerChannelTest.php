@@ -35,7 +35,7 @@ class LoggerChannelTest extends UnitTestCase {
    * @covers ::setCurrentUser
    * @covers ::setRequestStack
    */
-  public function testLog(callable $expected, Request $request = NULL, AccountInterface $current_user = NULL) {
+  public function testLog(callable $expected, ?Request $request = NULL, ?AccountInterface $current_user = NULL) {
     $channel = new LoggerChannel('test');
     $message = $this->randomMachineName();
     $logger = $this->createMock('Psr\Log\LoggerInterface');

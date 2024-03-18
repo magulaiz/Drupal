@@ -37,7 +37,7 @@ class SearchPageForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, SearchPageInterface $search_page = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?SearchPageInterface $search_page = NULL) {
     $this->entity = $search_page;
 
     $plugin = $this->entity->getPlugin();

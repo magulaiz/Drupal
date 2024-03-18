@@ -71,7 +71,7 @@ class WorkspacePublishForm extends ConfirmFormBase implements WorkspaceFormInter
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, WorkspaceInterface $workspace = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?WorkspaceInterface $workspace = NULL) {
     $this->workspace = $workspace;
 
     $form = parent::buildForm($form, $form_state);

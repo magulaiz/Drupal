@@ -128,7 +128,7 @@ class OperationFactory {
    * @return bool
    *   True if the file exists and has content.
    */
-  protected function hasContent(ScaffoldFilePath $file = NULL) {
+  protected function hasContent(?ScaffoldFilePath $file = NULL) {
     if (!$file) {
       return FALSE;
     }

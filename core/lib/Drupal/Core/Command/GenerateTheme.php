@@ -35,7 +35,7 @@ class GenerateTheme extends Command {
   /**
    * {@inheritdoc}
    */
-  public function __construct(string $name = NULL) {
+  public function __construct(?string $name = NULL) {
     parent::__construct($name);
 
     $this->root = dirname(__DIR__, 5);
