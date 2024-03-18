@@ -234,7 +234,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
     // If another process has already created the session table, attempting to
     // recreate it will throw an exception. In this case just catch the
     // exception and do nothing.
-    catch (SchemaObjectExistsException $e) {
+    catch (SchemaObjectExistsException) {
       return TRUE;
     }
     return FALSE;
