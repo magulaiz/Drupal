@@ -96,8 +96,8 @@ class BatchStorage implements BatchStorageInterface {
         ->condition('bid', $id)
         ->execute();
     }
-    catch (\Exception $e) {
-      $this->catchException($e);
+    catch (SchemaObjectDoesNotExistException) {
+      // There's nothing to do if the table doesn't exist.
     }
   }
 
