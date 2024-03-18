@@ -255,6 +255,7 @@ function locale_schema() {
     $schema['locales_target']['fields']['customized']['default'] = FALSE;
 
     $schema['locale_file']['fields']['timestamp']['type'] = 'date';
+    $schema['locale_file']['fields']['last_checked']['type'] = 'date';
   }
 
   return $schema;

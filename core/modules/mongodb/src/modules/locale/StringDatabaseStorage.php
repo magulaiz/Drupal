@@ -154,27 +154,33 @@ class StringDatabaseStorage extends CoreStringDatabaseStorage {
       // This is a meta-condition we need to translate into simple ones.
       if ($conditions['translated']) {
         // Select only translated strings.
-        $join_type = 'INNER';
+        $join = 'innerJoin';
       }
       else {
         // Select only untranslated strings.
-        $join_type = 'LEFT';
+        $join = 'leftJoin';
         $conditions['translation'] = NULL;
       }
       unset($conditions['translated']);
     }
     else {
-      $join_type = !empty($options['translation']) ? 'LEFT' : FALSE;
+      $join = !empty($options['translation']) ? 'leftJoin' : FALSE;
     }
 
-    if ($join_type) {
-      $join_condition = $query->joinCondition()->compare('t.lid', 's.lid');
+    if ($join) {
       if (isset($conditions['language'])) {
         // If we've got a language condition, we use it for the join.
-        $join_condition->condition('t.language', $conditions['language']);
+        $query->$join('locales_target', 't',
+          $query->joinCondition()
+            ->compare('t.lid', 's.lid')
+            ->condition('t.language', $conditions['language'])
+        );
         unset($conditions['language']);
       }
-      $query->addJoin($join_type, 'locales_target', 't', $join_condition);
+      else {
+        // Since we don't have a language, join with locale id only.
+        $query->$join('locales_target', 't', $query->joinCondition()->compare('t.lid', 's.lid'));
+      }
       if (!empty($options['translation'])) {
         // We cannot just add all fields because 'lid' may get null values.
         $query->fields('t', ['language', 'translation', 'customized']);
@@ -186,23 +192,30 @@ class StringDatabaseStorage extends CoreStringDatabaseStorage {
     // location table, for which we add a subquery. We cast any scalar value to
     // array so we can consistently use IN conditions.
     if (isset($conditions['type']) || isset($conditions['name'])) {
-      $query->fields('l', ['sid']);
+      $subquery = $this->connection->select('locales_location', 'l', $this->options)
+        ->fields('l', ['sid']);
 
-      $join_condition = $query->joinCondition()->compare('s.lid', 'l.lid');
       foreach (['type', 'name'] as $field) {
         if (isset($conditions[$field])) {
           if (is_array($conditions[$field])) {
-            $join_condition->condition($field, $conditions[$field], 'IN');
+            $subquery->condition($field, (array) $conditions[$field], 'IN');
           }
           else {
-            $join_condition->condition($field, $conditions[$field]);
+            $subquery->condition($field, $conditions[$field]);
           }
 
           unset($conditions[$field]);
         }
       }
+      $location_sids = $subquery->execute()->fetchCol();
 
-      $query->addJoin('INNER', 'locales_location', 'l', $join_condition);
+      if (!empty($location_sids)) {
+        foreach ($location_sids as &$location_sid) {
+          $location_sid = (int) $location_sid;
+        }
+
+        $query->condition('s.lid', $location_sids, 'IN');
+      }
     }
 
     // Add conditions for both tables.
@@ -212,7 +225,7 @@ class StringDatabaseStorage extends CoreStringDatabaseStorage {
       if (is_null($value)) {
         $query->isNull($field_alias);
       }
-      elseif ($table_alias == 't' && $join_type === 'LEFT') {
+      elseif ($table_alias == 't' && $join === 'leftJoin') {
         // Conditions for target fields when doing an outer join only make
         // sense if we add also OR field IS NULL.
         $query->condition(($this->connection->condition('OR'))
