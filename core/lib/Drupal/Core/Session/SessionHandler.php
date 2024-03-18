@@ -229,6 +229,9 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
         $database_schema->createTable('sessions', $this->schemaDefinition());
         return TRUE;
       }
+      else {
+        return TRUE;
+      }
     }
     // If another process has already created the session table, attempting to
     // recreate it will throw an exception. In this case just catch the
