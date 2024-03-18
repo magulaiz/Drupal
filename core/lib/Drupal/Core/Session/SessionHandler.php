@@ -5,7 +5,6 @@ namespace Drupal\Core\Session;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -71,7 +70,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
         $data = (string) $query->fetchField();
       }
       // Swallow the error if the table hasn't been created yet.
-      catch (SchemaObjectDoesNotExistException) {
+      catch (\Throwable) {
       }
     }
     return $data;
@@ -97,7 +96,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
     try {
       $doWrite();
     }
-    catch (SchemaObjectDoesNotExistException $e) {
+    catch (\Throwable $e) {
       // If there was an exception, try to create the table.
       if (!$try_again = $this->ensureTableExists()) {
         // If the exception happened for other reason than the missing
@@ -131,7 +130,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
         ->execute();
     }
     // Swallow the error if the table hasn't been created yet.
-    catch (SchemaObjectDoesNotExistException) {
+    catch (\Throwable) {
     }
 
     return TRUE;
@@ -152,7 +151,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
         ->execute();
     }
     // Swallow the error if the table hasn't been created yet.
-    catch (SchemaObjectDoesNotExistException) {
+    catch (\Throwable) {
     }
     return FALSE;
   }
