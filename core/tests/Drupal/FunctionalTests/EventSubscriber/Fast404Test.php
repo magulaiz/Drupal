@@ -33,11 +33,11 @@ class Fast404Test extends BrowserTestBase {
     $this->drupalGet('does-not-exist');
     $this->assertSession()->statusCodeEquals(404);
     // Regular 404s will contain CSS from the system module.
-    $this->assertSession()->responseContains('modules/system/css/');
+    $this->assertSession()->responseContains('core/misc/components/');
     $this->drupalGet('does-not-exist.txt');
     $this->assertSession()->statusCodeEquals(404);
     // Fast 404s do not have any CSS.
-    $this->assertSession()->responseNotContains('modules/system/css/');
+    $this->assertSession()->responseNotContains('core/misc/components/');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache', 'Miss');
     // Fast 404s can be cached.
     $this->drupalGet('does-not-exist.txt');
@@ -48,7 +48,7 @@ class Fast404Test extends BrowserTestBase {
     // Changing configuration should invalidate the cache.
     $this->config('system.performance')->set('fast_404.html', '<!DOCTYPE html><html><head><title>404 Not Found</title></head><body><h1>Oops I did it again!</h1><p>The requested URL "@path" was not found on this server.</p></body></html>')->save();
     $this->drupalGet('does-not-exist.txt');
-    $this->assertSession()->responseNotContains('modules/system/css/');
+    $this->assertSession()->responseNotContains('core/misc/components/');
     $this->assertSession()->statusCodeEquals(404);
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache', 'Miss');
     $this->assertSession()->pageTextContains('Oops I did it again!');
@@ -56,7 +56,7 @@ class Fast404Test extends BrowserTestBase {
     // Ensure disabling works.
     $this->config('system.performance')->set('fast_404.enabled', FALSE)->save();
     $this->drupalGet('does-not-exist.txt');
-    $this->assertSession()->responseContains('modules/system/css/');
+    $this->assertSession()->responseContains('core/misc/components/');
     $this->assertSession()->statusCodeEquals(404);
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache', 'Miss');
     $this->assertSession()->pageTextNotContains('Oops I did it again!');
@@ -71,7 +71,7 @@ class Fast404Test extends BrowserTestBase {
     $this->rebuildAll();
     $this->drupalGet('does-not-exist.txt');
     $this->assertSession()->statusCodeEquals(404);
-    $this->assertSession()->responseNotContains('modules/system/css/');
+    $this->assertSession()->responseNotContains('core/misc/components/');
     // Fast 404s returned via the exception subscriber still have the
     // X-Generator header.
     $this->assertSession()->responseHeaderContains('X-Generator', 'Drupal');

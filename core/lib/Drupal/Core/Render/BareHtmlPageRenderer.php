@@ -100,6 +100,57 @@ class BareHtmlPageRenderer implements BareHtmlPageRendererInterface {
         'type' => $type,
       ];
     }
+    [$version] = explode('.', \Drupal::VERSION);
+
+    // Attach default meta tags.
+    $meta_default = [
+      // Make sure the Content-Type comes first because the IE browser may be
+      // vulnerable to XSS via encoding attacks from any content that comes
+      // before this META tag, such as a TITLE tag.
+      'system_meta_content_type' => [
+        '#tag' => 'meta',
+        '#attributes' => [
+          'charset' => 'utf-8',
+        ],
+        // Security: This always has to be output first.
+        '#weight' => -1000,
+      ],
+      // Show Drupal and the major version number in the META GENERATOR tag.
+      'system_meta_generator' => [
+        '#type' => 'html_tag',
+        '#tag' => 'meta',
+        '#attributes' => [
+          'name' => 'Generator',
+          'content' => 'Drupal ' . $version . ' (https://www.drupal.org)',
+        ],
+      ],
+      // Attach default mobile meta tags for responsive design.
+      'MobileOptimized' => [
+        '#tag' => 'meta',
+        '#attributes' => [
+          'name' => 'MobileOptimized',
+          'content' => 'width',
+        ],
+      ],
+      'HandheldFriendly' => [
+        '#tag' => 'meta',
+        '#attributes' => [
+          'name' => 'HandheldFriendly',
+          'content' => 'true',
+        ],
+      ],
+      'viewport' => [
+        '#tag' => 'meta',
+        '#attributes' => [
+          'name' => 'viewport',
+          'content' => 'width=device-width, initial-scale=1.0',
+        ],
+      ],
+    ];
+    foreach ($meta_default as $key => $value) {
+      $page['#attached']['html_head'][] = [$value, $key];
+    }
+
   }
 
 }
