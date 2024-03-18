@@ -3,7 +3,7 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\DatabaseException;
+use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
 /**
@@ -173,7 +173,7 @@ class DatabaseStorage implements StorageInterface {
     // If another process has already created the config table, attempting to
     // recreate it will throw an exception. In this case just catch the
     // exception and do nothing.
-    catch (DatabaseException $e) {
+    catch (SchemaObjectExistsException) {
       return TRUE;
     }
     catch (\Exception $e) {
