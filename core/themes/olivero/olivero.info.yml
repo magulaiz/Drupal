@@ -38,7 +38,7 @@ libraries-override:
     css:
       theme:
         css/system.admin.css: false
-  system/base:
+  core/base:
     css:
       component:
         css/components/ajax-progress.module.css: css/components/ajax-progress.module.css

@@ -325,7 +325,7 @@ class TwigExtensionTest extends UnitTestCase {
     $link = new GeneratedLink();
     $link->setGeneratedLink('<a href="http://example.com"></a>');
     $link->addCacheTags(['foo']);
-    $link->addAttachments(['library' => ['system/base']]);
+    $link->addAttachments(['library' => ['core/base']]);
 
     $this->renderer->expects($this->atLeastOnce())
       ->method('render')
@@ -335,7 +335,7 @@ class TwigExtensionTest extends UnitTestCase {
           "tags" => ["foo"],
           "max-age" => -1,
         ],
-        "#attached" => ['library' => ['system/base']],
+        "#attached" => ['library' => ['core/base']],
       ]);
     $result = $this->systemUnderTest->escapeFilter($twig, $link, 'html', NULL, TRUE);
     $this->assertEquals('<a href="http://example.com"></a>', $result);

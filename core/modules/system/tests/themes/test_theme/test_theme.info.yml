@@ -33,7 +33,7 @@ libraries-override:
     css:
       component:
         css/components/dialog.css: false
-  system/base:
+  core/base:
     css:
       component:
         /core/themes/stable9/css/system/components/js.module.css: false
