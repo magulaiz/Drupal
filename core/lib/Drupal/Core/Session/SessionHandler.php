@@ -227,8 +227,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
     try {
       $database_schema = $this->connection->schema();
       if (!$database_schema->tableExists('sessions')) {
-        $schema_definition = $this->schemaDefinition();
-        $database_schema->createTable('sessions', $schema_definition);
+        $database_schema->createTable('sessions', $this->schemaDefinition());
         return TRUE;
       }
     }
