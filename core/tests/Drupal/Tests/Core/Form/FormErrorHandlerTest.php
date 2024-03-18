@@ -80,7 +80,7 @@ class FormErrorHandlerTest extends UnitTestCase {
       );
 
     $this->renderer->expects($this->any())
-      ->method('renderPlain')
+      ->method('renderInIsolation')
       ->will($this->returnCallback(function ($message) {
         return $message['message']['#markup'];
       }));
