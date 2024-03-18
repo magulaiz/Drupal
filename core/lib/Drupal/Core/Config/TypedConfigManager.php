@@ -60,7 +60,6 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
   public function __construct(StorageInterface $configStorage, StorageInterface $schemaStorage, CacheBackendInterface $cache, ModuleHandlerInterface $module_handler, ClassResolverInterface $class_resolver = NULL) {
     $this->configStorage = $configStorage;
     $this->schemaStorage = $schemaStorage;
-    // @todo associate `entity_Types` cache tag, see ::processDefinition()
     $this->setCacheBackend($cache, 'typed_config_definitions');
     $this->alterInfo('config_schema_info');
     $this->moduleHandler = $module_handler;
