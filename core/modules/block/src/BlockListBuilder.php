@@ -438,7 +438,10 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if (empty($form_state->getValue('blocks'))) {
+    $blocks = array_filter($form_state->getValue('blocks'), function ($block) {
+      return !empty($block['region']);
+    });
+    if (empty($blocks)) {
       $form_state->setErrorByName('blocks', $this->t('No blocks settings to update.'));
     }
 
