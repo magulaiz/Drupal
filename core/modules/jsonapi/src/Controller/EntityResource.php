@@ -160,7 +160,7 @@ class EntityResource {
    *
    * @var \Drupal\Core\Language\LanguageManagerInterface
    */
-  protected $languageManager;
+  protected LanguageManagerInterface $languageManager;
 
   /**
    * Instantiates an EntityResource object.
@@ -203,7 +203,7 @@ class EntityResource {
     $this->time = $time;
     $this->user = $user;
     if ($language_manager === NULL) {
-      @trigger_error(__NAMESPACE__ . '\EntityResource::__construct() without the language_manager service is deprecated in drupal:10.2.3 The language_manager dependency was added in drupal:10.2.3 and will be required before drupal:11.0.0. See https://www.drupal.org/node/3357049', E_USER_DEPRECATED);
+      @trigger_error(__NAMESPACE__ . '\EntityResource::__construct() without the language_manager service is deprecated in drupal:10.3.0 The language_manager dependency was added in drupal:10.3.0 and will be required before drupal:11.0.0. See https://www.drupal.org/node/3357049', E_USER_DEPRECATED);
       $language_manager = \Drupal::service('language_manager');
     }
     $this->languageManager = $language_manager;

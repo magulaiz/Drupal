@@ -24,7 +24,6 @@ use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -36,8 +35,6 @@ use Symfony\Component\Serializer\SerializerInterface;
  * @internal
  */
 class EntityResourceTest extends JsonapiKernelTestBase {
-
-  use ExpectDeprecationTrait;
 
   /**
    * Static UUIDs to use in testing.
@@ -259,7 +256,7 @@ class EntityResourceTest extends JsonapiKernelTestBase {
    * @group legacy
    */
   public function testEntityResourceNewParameterDeprecation(): void {
-    $this->expectDeprecation(EntityResource::class . '::__construct() without the language_manager service is deprecated in drupal:10.2.3 The language_manager dependency was added in drupal:10.2.3 and will be required before drupal:11.0.0. See https://www.drupal.org/node/3357049');
+    $this->expectDeprecation(EntityResource::class . '::__construct() without the language_manager service is deprecated in drupal:10.3.0 The language_manager dependency was added in drupal:10.3.0 and will be required before drupal:11.0.0. See https://www.drupal.org/node/3357049');
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
     $field_manager = $this->prophesize(EntityFieldManagerInterface::class);
     $resource_type_repository = $this->prophesize(ResourceTypeRepositoryInterface::class);
