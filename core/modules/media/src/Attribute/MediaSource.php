@@ -36,15 +36,13 @@ class MediaSource extends Plugin {
    *   The human-readable name of the media source.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $description
    *   (optional) A brief description of the media source.
-   * @param class-string|null $deriver
-   *   (optional) The deriver class.
    * @param string[] $allowed_field_types
    *   (optional) The field types that can be used as a source field for this
    *   media source.
-   * @param string[] $forms
+   * @param class-string[] $forms
    *   (optional) The classes used to define media source-specific forms.
    *   An array of form class names, keyed by ID. The ID represents the operation
-   *   the form is used for.
+   *   the form is used for, for example, 'media_library_add'.
    * @param string[] $providers
    *   (optional) A set of provider names, exactly as they appear in the
    *   canonical oEmbed provider database at https://oembed.com/providers.json.
@@ -70,12 +68,13 @@ class MediaSource extends Plugin {
    *   provided.
    * @param string $default_name_metadata_attribute
    *   (optional) The metadata attribute name to provide the default name.
+   * @param class-string|null $deriver
+   *   (optional) The deriver class.
    */
   public function __construct(
     public readonly string $id,
     public readonly TranslatableMarkup $label,
     public readonly ?TranslatableMarkup $description = NULL,
-    public readonly ?string $deriver = NULL,
     public readonly array $allowed_field_types = [],
     public readonly array $forms = [],
     public readonly array $providers = [],
@@ -85,7 +84,8 @@ class MediaSource extends Plugin {
     public readonly string $thumbnail_height_metadata_attribute = 'thumbnail_height',
     public readonly ?string $thumbnail_alt_metadata_attribute = NULL,
     public readonly ?string $thumbnail_title_metadata_attribute = NULL,
-    public readonly string $default_name_metadata_attribute = 'default_name'
+    public readonly string $default_name_metadata_attribute = 'default_name',
+    public readonly ?string $deriver = NULL
   ) {}
 
 }
