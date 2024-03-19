@@ -31,7 +31,8 @@ class Editor extends Plugin {
    * @param bool $supports_content_filtering
    *   Whether the editor supports "allowed content only" filtering.
    * @param bool $supports_inline_editing
-   *   Whether the editor supports the inline editing provided by the Edit module.
+   *   Whether the editor supports the inline editing provided by the Edit
+   *   module.
    * @param bool $is_xss_safe
    *   Whether this text editor is not vulnerable to XSS attacks.
    * @param string[] $supported_element_types
@@ -46,7 +47,7 @@ class Editor extends Plugin {
     public readonly bool $supports_inline_editing,
     public readonly bool $is_xss_safe,
     public readonly array $supported_element_types,
-    public readonly ?string $deriver = NULL
+    public readonly ?string $deriver = NULL,
   ) {}
 
 }
