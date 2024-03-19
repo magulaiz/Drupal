@@ -18,7 +18,6 @@ class BigPipeRegressionTestController implements TrustedCallbackInterface {
    */
   const PLACEHOLDER_COUNT = 2000;
 
-
   /**
    * @see \Drupal\Tests\big_pipe\FunctionalJavascript\BigPipeRegressionTest::testMultipleBodies_2678662()
    */
