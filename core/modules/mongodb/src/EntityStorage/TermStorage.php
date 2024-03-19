@@ -21,53 +21,53 @@ class TermStorage extends ContentEntityStorage implements TermStorageInterface {
     $query = $this->database->select($this->getBaseTable(), 't');
     $result = $query
       ->addTag('taxonomy_term_access')
-      ->fields('t', ['tid', 'taxonomy_term_translations'])
-      ->condition('taxonomy_term_translations.vid', $vid)
-      ->condition('taxonomy_term_translations.default_langcode', TRUE)
-      ->orderBy('taxonomy_term_translations.weight')
-      ->orderBy('taxonomy_term_translations.name')
+      ->fields('t', ['tid', 'taxonomy_term_current_revision'])
+      ->condition('taxonomy_term_current_revision.vid', $vid)
+      ->condition('taxonomy_term_current_revision.default_langcode', TRUE)
+      ->orderBy('taxonomy_term_current_revision.weight')
+      ->orderBy('taxonomy_term_current_revision.name')
       ->execute();
     foreach ($result as $term) {
       $parents = [];
-      if (isset($term->taxonomy_term_translations)) {
-        foreach ($term->taxonomy_term_translations as $taxonomy_term_translation) {
-          if (isset($taxonomy_term_translation['default_langcode']) && ($taxonomy_term_translation['default_langcode'] == 1)) {
-            $term->default_langcode = $taxonomy_term_translation['default_langcode'];
-            if (isset($taxonomy_term_translation['tid'])) {
-              $term->tid = $taxonomy_term_translation['tid'];
+      if (isset($term->taxonomy_term_current_revision)) {
+        foreach ($term->taxonomy_term_current_revision as $taxonomy_term_revision) {
+          if (isset($taxonomy_term_revision['default_langcode']) && ($taxonomy_term_revision['default_langcode'] == 1)) {
+            $term->default_langcode = $taxonomy_term_revision['default_langcode'];
+            if (isset($taxonomy_term_revision['tid'])) {
+              $term->tid = $taxonomy_term_revision['tid'];
             }
-            if (isset($taxonomy_term_translation['vid'])) {
-              $term->vid = $taxonomy_term_translation['vid'];
+            if (isset($taxonomy_term_revision['vid'])) {
+              $term->vid = $taxonomy_term_revision['vid'];
             }
-            if (isset($taxonomy_term_translation['uuid'])) {
-              $term->uuid = $taxonomy_term_translation['uuid'];
+            if (isset($taxonomy_term_revision['uuid'])) {
+              $term->uuid = $taxonomy_term_revision['uuid'];
             }
-            if (isset($taxonomy_term_translation['langcode'])) {
-              $term->langcode = $taxonomy_term_translation['langcode'];
+            if (isset($taxonomy_term_revision['langcode'])) {
+              $term->langcode = $taxonomy_term_revision['langcode'];
             }
-            if (isset($taxonomy_term_translation['name'])) {
-              $term->name = $taxonomy_term_translation['name'];
+            if (isset($taxonomy_term_revision['name'])) {
+              $term->name = $taxonomy_term_revision['name'];
             }
-            if (isset($taxonomy_term_translation['weight'])) {
-              $term->weight = $taxonomy_term_translation['weight'];
+            if (isset($taxonomy_term_revision['weight'])) {
+              $term->weight = $taxonomy_term_revision['weight'];
             }
-            if (isset($taxonomy_term_translation['changed'])) {
-              $term->changed = $taxonomy_term_translation['changed'];
+            if (isset($taxonomy_term_revision['changed'])) {
+              $term->changed = $taxonomy_term_revision['changed'];
             }
-            if (isset($taxonomy_term_translation['taxonomy_term_translations__parent']) && is_array($taxonomy_term_translation['taxonomy_term_translations__parent'])) {
-              foreach ($taxonomy_term_translation['taxonomy_term_translations__parent'] as $taxonomy_term_translation__parent) {
-                if (isset($taxonomy_term_translation__parent['parent_target_id'])) {
-                  $parents[] = $taxonomy_term_translation__parent['parent_target_id'];
+            if (isset($taxonomy_term_revision['taxonomy_term_current_revision__parent']) && is_array($taxonomy_term_revision['taxonomy_term_current_revision__parent'])) {
+              foreach ($taxonomy_term_revision['taxonomy_term_current_revision__parent'] as $taxonomy_term_revision__parent) {
+                if (isset($taxonomy_term_revision__parent['parent_target_id'])) {
+                  $parents[] = $taxonomy_term_revision__parent['parent_target_id'];
                 }
               }
-              $term->taxonomy_term_translations__parent = $taxonomy_term_translation['taxonomy_term_translations__parent'];
+              $term->taxonomy_term_current_revision__parent = $taxonomy_term_revision['taxonomy_term_current_revision__parent'];
             }
             else {
               $parents[] = 0;
             }
           }
         }
-        unset($term->taxonomy_term_translations);
+        unset($term->taxonomy_term_current_revision);
       }
       foreach ($parents as $term_parent) {
         $this->treeChildren[$vid][$term_parent][] = $term->tid;
@@ -197,7 +197,7 @@ class TermStorage extends ContentEntityStorage implements TermStorageInterface {
     // TODO: There is too little testing for this. Why is there a join in this
     // query. See: \Drupal\Tests\taxonomy\Functional\TokenReplaceTest.
     $query = $this->database->select('taxonomy_index', 'ti');
-    $query->addMongodbJoin('LEFT', 'taxonomy_term_data', 'tid', 'taxonomy_index', 'tid', '=', 'td', [['field' => 'taxonomy_term_translations.vid', 'value' => $vid]]);
+    $query->addMongodbJoin('LEFT', 'taxonomy_term_data', 'tid', 'taxonomy_index', 'tid', '=', 'td', [['field' => 'taxonomy_term_current_revision.vid', 'value' => $vid]]);
     $query->addTag('vocabulary_node_count');
     $results = $query->execute()->fetchAll();
     $nids = [];
@@ -221,7 +221,7 @@ class TermStorage extends ContentEntityStorage implements TermStorageInterface {
       [
         '$set' => [
           'weight' => 0,
-          "taxonomy_term_translations.$[translation].weight" => 0,
+          "taxonomy_term_current_revision.$[translation].weight" => 0,
         ],
       ],
       [
@@ -250,14 +250,14 @@ class TermStorage extends ContentEntityStorage implements TermStorageInterface {
     $query->addMongodbJoin('INNER', 'taxonomy_index', 'tid', 'taxonomy_term_data', 'tid', '=', 'tn', $extra);
     $query->fields('td', ['tid']);
     $query->addField('tn', 'nid', 'node_nid');
-    $query->orderby('taxonomy_term_translations.weight');
-    $query->orderby('taxonomy_term_translations.name');
+    $query->orderby('taxonomy_term_current_revision.weight');
+    $query->orderby('taxonomy_term_current_revision.name');
     $query->addTag('taxonomy_term_access');
     if (!empty($vocabs)) {
-      $query->condition('taxonomy_term_translations.vid', $vocabs, 'IN');
+      $query->condition('taxonomy_term_current_revision.vid', $vocabs, 'IN');
     }
     if (!empty($langcode)) {
-      $query->condition('taxonomy_term_translations.langcode', $langcode);
+      $query->condition('taxonomy_term_current_revision.langcode', $langcode);
     }
 
     $results = [];

@@ -362,7 +362,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
       // query.
       // @see \Drupal\Tests\taxonomy\Functional\TokenReplaceTest.
       $query = $this->database->select('taxonomy_index', 'ti');
-      $query->addJoin('LEFT', 'taxonomy_term_data', 'td', $query->joinCondition()->compare('ti.tid', 'td.tid')->condition('taxonomy_term_translations.vid', $vid));
+      $query->addJoin('LEFT', 'taxonomy_term_data', 'td', $query->joinCondition()->compare('ti.tid', 'td.tid')->condition('taxonomy_term_current_revision.vid', $vid));
       $query->addTag('vocabulary_node_count');
       $results = $query->execute()->fetchAll();
       $nids = [];
@@ -396,7 +396,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
         [
           '$set' => [
             'weight' => 0,
-            "taxonomy_term_translations.$[translation].weight" => 0,
+            "taxonomy_term_current_revision.$[translation].weight" => 0,
           ],
         ],
         [
@@ -433,14 +433,14 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
       $query->addMongodbJoin('INNER', 'taxonomy_index', 'tid', 'taxonomy_term_data', 'tid', '=', 'tn', $extra);
       $query->fields('td', ['tid']);
       $query->addField('tn', 'nid', 'node_nid');
-      $query->orderby('taxonomy_term_translations.weight');
-      $query->orderby('taxonomy_term_translations.name');
+      $query->orderby('taxonomy_term_current_revision.weight');
+      $query->orderby('taxonomy_term_current_revision.name');
       $query->addTag('taxonomy_term_access');
       if (!empty($vocabs)) {
-        $query->condition('taxonomy_term_translations.vid', $vocabs, 'IN');
+        $query->condition('taxonomy_term_current_revision.vid', $vocabs, 'IN');
       }
       if (!empty($langcode)) {
-        $query->condition('taxonomy_term_translations.langcode', $langcode);
+        $query->condition('taxonomy_term_current_revision.langcode', $langcode);
       }
 
       $results = [];

@@ -24,7 +24,7 @@ class NodeTermData extends CoreNodeTermData {
     $def['field'] = 'tid';
     $def['type'] = empty($this->options['required']) ? 'LEFT' : 'INNER';
     if (array_filter($this->options['vids'])) {
-      $def['extra'] = [['field' => 'taxonomy_term_translations.vid', 'value' => array_filter($this->options['vids']), 'operator' => 'IN']];
+      $def['extra'] = [['field' => 'taxonomy_term_current_revision.vid', 'value' => array_filter($this->options['vids']), 'operator' => 'IN']];
     }
 
     $join = \Drupal::service('plugin.manager.views.join')->createInstance('standard', $def);
@@ -32,7 +32,7 @@ class NodeTermData extends CoreNodeTermData {
     // use a short alias for this:
     $alias = $def['table'] . '_' . $this->table;
 
-    $this->alias = $this->query->addRelationship($alias, $join, 'taxonomy_term_field_data', $this->relationship);
+    $this->alias = $this->query->addRelationship($alias, $join, 'taxonomy_term_data', $this->relationship);
   }
 
 }

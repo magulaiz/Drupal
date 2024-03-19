@@ -78,7 +78,6 @@ class TaxonomyIndexTidFilterTest extends TaxonomyTestBase {
       'module' => [
         'mongodb',
         'node',
-        'taxonomy',
         'user',
       ],
     ], $view->calculateDependencies()->getDependencies());
@@ -95,7 +94,6 @@ class TaxonomyIndexTidFilterTest extends TaxonomyTestBase {
       'module' => [
         'mongodb',
         'node',
-        'taxonomy',
         'user',
       ],
     ], $view->calculateDependencies()->getDependencies());

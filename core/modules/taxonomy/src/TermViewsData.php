@@ -72,7 +72,7 @@ class TermViewsData extends EntityViewsData {
         'argument field' => 'tid',
         'base'   => $node_table,
         'field'  => 'nid',
-        'relationship' => 'node_field_data:term_node_tid',
+        'relationship' => "$node_table:term_node_tid",
       ],
     ];
 

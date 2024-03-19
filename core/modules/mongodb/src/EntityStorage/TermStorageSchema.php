@@ -79,7 +79,7 @@ class TermStorageSchema extends ContentEntityStorageSchema {
     $schema = parent::getSharedTableFieldSchema($storage_definition, $table_name, $column_mapping);
 
     // Added by MongoDB.
-    if ($table_name == 'taxonomy_term_translations') {
+    if ($table_name == 'taxonomy_term_current_revision') {
       $schema['primary key'] = ['tid', 'vid', 'langcode'];
     }
 

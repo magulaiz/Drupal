@@ -14,7 +14,7 @@ class GroupwiseMax extends RelationshipPluginBase {
    */
   public function query() {
     // MongoDB does not do groupwise max relationships.
-    throw new MongodbSQLException('MongoDB does not do groupwise max relationships.');
+    throw new MongodbSQLException('The MongoDB database driver does not support groupwise max relationships.');
   }
 
 }

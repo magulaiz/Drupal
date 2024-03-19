@@ -354,6 +354,12 @@ function mongodb_views_plugins_argument_alter(array &$plugins) {
         $plugins[$id]['provider'] = 'mongodb';
         break;
 
+      // Overrides for the module taxonomy.
+      case 'taxonomy_index_tid_depth':
+        $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\argument\TaxonomyIndexTidDepth';
+        $plugins[$id]['provider'] = 'mongodb';
+        break;
+
       // Overrides for the module "tracker"
       case 'tracker_user_uid':
         $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\argument\TrackerUserUid';
@@ -632,6 +638,17 @@ function mongodb_views_plugins_filter_alter(array &$plugins) {
       // Overrides for the module media.
       case 'media_status':
         $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\filter\MediaStatus';
+        $plugins[$id]['provider'] = 'mongodb';
+        break;
+
+      // Overrides for the module taxonomy.
+      case 'taxonomy_index_tid':
+        $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\filter\TaxonomyIndexTid';
+        $plugins[$id]['provider'] = 'mongodb';
+        break;
+
+      case 'taxonomy_index_tid_depth':
+        $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\filter\TaxonomyIndexTidDepth';
         $plugins[$id]['provider'] = 'mongodb';
         break;
 

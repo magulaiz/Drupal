@@ -1284,8 +1284,8 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertCount(1, $result);
     $this->assertEquals($entity->id(), reset($result));
 
-    // MongoDB does not support EntityQuery with relationships.
-    if (Database::getConnection()->databaseType() != 'mongodb') {
+    // The MongoDB database driver does not support EntityQuery relationships.
+    if (Database::getConnection()->driver() != 'mongodb') {
       // Check that works when referring with "{$field_name}.entity.id".
       $result = $storage->getQuery()
         ->accessCheck(FALSE)

@@ -1003,8 +1003,8 @@ class Select extends QuerySelect {
     $condition_parts = $condition->conditions();
     unset($condition_parts['#conjunction']);
     foreach ($condition_parts as $condition_part) {
-dump('$condition_part');
-dump($condition_part);
+//dump('$condition_part');
+//dump($condition_part);
       // Get the right field.
       if (isset($condition_part['field']) && isset($condition_part['field2'])) {
         if (str_starts_with($condition_part['field'], $table . '.')) {
@@ -1941,14 +1941,15 @@ dump($condition_part);
         $lookup_right_unwind_paths = array_unique($lookup_right_unwind_paths);
         sort($lookup_right_unwind_paths);
         foreach ($lookup_right_unwind_paths as $lookup_right_unwind_path) {
-          if ($lookup_right_unwind_path && !in_array($lookup_right_unwind_path, $this->mongodbUnwoundPaths, TRUE)) {
+//          if ($lookup_right_unwind_path && !in_array($lookup_right_unwind_path, $this->mongodbUnwoundPaths, TRUE)) {
+          if ($lookup_right_unwind_path) {
             $lookup_pipeline[] = [
               '$unwind' => [
                 'path' => $lookup_right_unwind_path,
                 'preserveNullAndEmptyArrays' => TRUE,
               ],
             ];
-            $this->mongodbUnwoundPaths[] = $lookup_right_unwind_path;
+//            $this->mongodbUnwoundPaths[] = $lookup_right_unwind_path;
           }
         }
 

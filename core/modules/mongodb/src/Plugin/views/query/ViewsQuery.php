@@ -2,6 +2,7 @@
 
 namespace Drupal\mongodb\Plugin\views\query;
 
+use Drupal\Core\Database\Query\ConditionInterface;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\mongodb\Driver\Database\mongodb\MongodbSQLException;
@@ -457,7 +458,7 @@ class ViewsQuery extends Sql {
       $this->setWhereGroup('AND', $group, 'condition');
     }
 
-    if ($field instanceof Condition) {
+    if ($field instanceof ConditionInterface) {
       $this->condition[$group]['conditions'][] = $field;
     }
     else {
@@ -527,7 +528,7 @@ class ViewsQuery extends Sql {
       $this->setWhereGroup('AND', $group, 'havingCondition');
     }
 
-    if ($field instanceof Condition) {
+    if ($field instanceof ConditionInterface) {
       $this->havingCondition[$group]['conditions'][] = $field;
     }
     else {
@@ -658,23 +659,26 @@ class ViewsQuery extends Sql {
     $main_group = $connection->condition('AND');
     $filter_group = $this->groupOperator == 'OR' ? $connection->condition('OR') : $connection->condition('AND');
 
-    foreach ($this->$where as $group => $info) {
+    foreach ($this->$where as $group => &$info) {
       if (!empty($info['conditions'])) {
         $sub_group = $info['type'] == 'OR' ? $connection->condition('OR') : $connection->condition('AND');
         foreach ($info['conditions'] as &$clause) {
-          if ($clause instanceof Condition) {
+          if ($clause instanceof ConditionInterface) {
             $has_condition = TRUE;
             $sub_group->condition($clause);
           }
-          elseif ($clause['operator'] == 'formula') {
+          elseif (is_array($clause) && ($clause['operator'] == 'formula')) {
             $has_condition = TRUE;
             $sub_group->where($clause['field'], $clause['value']);
           }
-          else {
+          elseif (is_array($clause)) {
             $has_condition = TRUE;
             // Operators that end with the sting "_STRING" should have that part removed.
             $clause_operator = strtoupper(substr($clause['operator'], -7)) == '_STRING' ? 'IN' : $clause['operator'];
             $sub_group->condition($clause['field'], $clause['value'], $clause_operator);
+          }
+          else {
+            $has_condition = FALSE;
           }
         }
 

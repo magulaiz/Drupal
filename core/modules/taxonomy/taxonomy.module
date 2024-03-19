@@ -225,7 +225,7 @@ function taxonomy_build_node_index($node) {
       $connection = \Drupal::database();
       foreach ($tid_all as $tid) {
         $connection->merge('taxonomy_index')
-          ->keys(['nid' => $node->id(), 'tid' => $tid, 'status' => $node->isPublished()])
+          ->keys(['nid' => (int) $node->id(), 'tid' => (int) $tid, 'status' => (bool) $node->isPublished()])
           ->fields(['sticky' => $sticky, 'created' => $node->getCreatedTime()])
           ->execute();
       }
