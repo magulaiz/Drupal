@@ -41,16 +41,15 @@ trait SectionListTrait {
   public function getSection($uuid) {
     if (is_int($uuid)) {
       @trigger_error('Calling ' . __FUNCTION__ . '() with delta as an argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Instead you should pass uuid. See https://www.drupal.org/node/3401886', E_USER_DEPRECATED);
-    }
-    if (Uuid::isValid($uuid)) {
-      foreach ($this->getSections() as $section) {
-        if ($section->getUuid() === $uuid) {
-          return $section;
-        }
+      if (!$this->hasSection($uuid)) {
+        throw new \OutOfBoundsException(sprintf('Invalid delta "%s"', $uuid));
       }
+      return $this->getSections()[$uuid];
     }
-
-    throw new \OutOfBoundsException(sprintf('Invalid uuid "%s"', $uuid));
+    if (!Uuid::isValid($uuid)) {
+      throw new \OutOfBoundsException(sprintf('Invalid uuid "%s"', $uuid));
+    }
+    return $this->getSections(TRUE)[$uuid];
   }
 
   /**
@@ -154,19 +153,12 @@ trait SectionListTrait {
   public function removeSection($uuid) {
     if (is_int($uuid)) {
       @trigger_error("Calling " . __FUNCTION__ . "() with delta as an argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Instead, you should use uuid. See https://www.drupal.org/node/3401886", E_USER_DEPRECATED);
-    }
-    if (Uuid::isValid($uuid)) {
       // Clear the section list if there is currently a blank section.
       if ($this->hasBlankSection()) {
         $this->removeAllSections();
       }
-
-      $sections = $this->getSections(TRUE);
-      foreach ($sections as $section_uuid => $section) {
-        if ($section_uuid === $uuid) {
-          unset($sections[$uuid]);
-        }
-      }
+      $sections = $this->getSections();
+      unset($sections[$uuid]);
       $this->setSections($sections);
       // Add a blank section when the last section is removed.
       if (empty($sections)) {
@@ -174,8 +166,21 @@ trait SectionListTrait {
       }
       return $this;
     }
-    throw new \OutOfBoundsException(sprintf('Invalid uuid "%s"', $uuid));
-
+    if (!Uuid::isValid($uuid)) {
+      throw new \OutOfBoundsException(sprintf('Invalid uuid "%s"', $uuid));
+    }
+    // Clear the section list if there is currently a blank section.
+    if ($this->hasBlankSection()) {
+      $this->removeAllSections();
+    }
+    $sections = $this->getSections(TRUE);
+    unset($sections[$uuid]);
+    $this->setSections($sections);
+    // Add a blank section when the last section is removed.
+    if (empty($sections)) {
+      $this->addBlankSection();
+    }
+    return $this;
   }
 
   /**
