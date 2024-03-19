@@ -28,7 +28,10 @@
  * @ingroup themeable
  */
 #}
-<div{{ attributes }}>
+{% if not wrapper_element %}
+  {% set wrapper_element = 'div' %}
+{% endif %}
+<{{ wrapper_element }}{{ attributes }}>
   {{ title_prefix }}
   {% if label %}
     <h2{{ title_attributes }}>{{ label }}</h2>
@@ -37,4 +40,4 @@
   {% block content %}
     {{ content }}
   {% endblock %}
-</div>
+</{{ wrapper_element }}>
