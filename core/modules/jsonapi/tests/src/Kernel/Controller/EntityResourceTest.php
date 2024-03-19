@@ -24,7 +24,6 @@ use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -36,8 +35,6 @@ use Symfony\Component\Serializer\SerializerInterface;
  * @internal
  */
 class EntityResourceTest extends JsonapiKernelTestBase {
-
-  use ExpectDeprecationTrait;
 
   /**
    * Static UUIDs to use in testing.
