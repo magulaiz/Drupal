@@ -74,6 +74,10 @@ libraries-override:
     css:
       component:
         misc/dropbutton/dropbutton.css: css/core/dropbutton/dropbutton.css
+  core/drupal.progress:
+    css:
+      component:
+        misc/components/progress.module.css: css/core/components/progress.module.css
   core/drupal.vertical-tabs:
     css:
       component:
@@ -221,7 +225,6 @@ libraries-override:
         css/components/js.module.css: css/system/components/js.module.css
         css/components/nowrap.module.css: css/system/components/nowrap.module.css
         css/components/position-container.module.css: css/system/components/position-container.module.css
-        css/components/progress.module.css: css/system/components/progress.module.css
         css/components/reset-appearance.module.css: css/system/components/reset-appearance.module.css
         css/components/resize.module.css: css/system/components/resize.module.css
         css/components/sticky-header.module.css: css/system/components/sticky-header.module.css
