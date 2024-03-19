@@ -150,18 +150,17 @@ class BareHtmlPageRenderer implements BareHtmlPageRendererInterface {
     foreach ($meta_default as $key => $value) {
       $page['#attached']['html_head'][] = [$value, $key];
     }
-		// Handle setting the "active" class on links by:
-		// - loading the active-link library if the current user is authenticated;
-		// - applying a response filter if the current user is anonymous.
-		// @see \Drupal\Core\Link
-		// @see \Drupal\Core\Utility\LinkGenerator::generate()
-		// @see template_preprocess_links()
-		// @see \Drupal\Core\EventSubscriber\ActiveLinkResponseFilter
-		$page['#cache']['contexts'][] = 'user.roles:authenticated';
-		if (\Drupal::currentUser()->isAuthenticated()) {
-			$page['#attached']['library'][] = 'core/drupal.active-link';
-		}
-
+    // Handle setting the "active" class on links by:
+    // - loading the active-link library if the current user is authenticated;
+    // - applying a response filter if the current user is anonymous.
+    // @see \Drupal\Core\Link
+    // @see \Drupal\Core\Utility\LinkGenerator::generate()
+    // @see template_preprocess_links()
+    // @see \Drupal\Core\EventSubscriber\ActiveLinkResponseFilter
+    $page['#cache']['contexts'][] = 'user.roles:authenticated';
+    if (\Drupal::currentUser()->isAuthenticated()) {
+      $page['#attached']['library'][] = 'core/drupal.active-link';
+    }
   }
 
 }
