@@ -2,6 +2,8 @@
 
 namespace Drupal\big_pipe_regression_test;
 
+// cspell:ignore openqa
+
 use Drupal\big_pipe\Render\BigPipeMarkup;
 use Drupal\Component\Utility\Random;
 use Drupal\Core\Security\TrustedCallbackInterface;
@@ -10,7 +12,12 @@ class BigPipeRegressionTestController implements TrustedCallbackInterface {
 
   const MARKER_2678662 = '<script>var hitsTheFloor = "</body>";</script>';
 
-  const PLACEHOLDER_COUNT = 3000;
+  /**
+   * @todo with the original value of 3000 we get Selenium errors. These are:
+   *   org.openqa.selenium.TimeoutException: java.util.concurrent.TimeoutException.
+   */
+  const PLACEHOLDER_COUNT = 2000;
+
 
   /**
    * @see \Drupal\Tests\big_pipe\FunctionalJavascript\BigPipeRegressionTest::testMultipleBodies_2678662()
