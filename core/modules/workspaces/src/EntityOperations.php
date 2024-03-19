@@ -228,9 +228,10 @@ class EntityOperations implements ContainerInjectionInterface {
    * @see hook_entity_translation_insert()
    */
   public function entityTranslationInsert(EntityInterface $translation): void {
-    // We don't need to check whether to react to this operation because the
-    // pre-save hook already ran at this point.
-    if ($translation->isSyncing()) {
+    if ($this->shouldSkipOperations($translation)
+      || !$this->workspaceInfo->isEntitySupported($translation)
+      || $translation->isSyncing()
+    ) {
       return;
     }
 
