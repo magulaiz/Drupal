@@ -618,6 +618,10 @@ drupal.progress:
   version: VERSION
   js:
     misc/progress.js: {}
+  css:
+    component:
+      misc/components/progress.module.css: { weight: -10 }
+
   dependencies:
     - core/drupal
     - core/jquery
