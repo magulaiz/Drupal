@@ -258,6 +258,7 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
           $this->connection->getTarget(),
           $id,
           $name,
+          [],
         ));
       }
       $this->beginClientTransaction();
