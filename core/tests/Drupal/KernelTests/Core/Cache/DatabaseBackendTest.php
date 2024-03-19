@@ -121,7 +121,33 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
   }
 
   /**
-   * Test that the service "cache_tags.invalidator.checksum" is backend overridable.
+   * Tests getting a FALSE when requesting a corrupt cache item.
+   */
+  public function testCorruptCacheReturnsFalse() {
+      $corrupt_backend = $this->getCacheBackend('corrupt');
+      // Gets the CacheTagsChecksum tag validator.
+      $cache_tags_checksum = $this->container->get('cache_tags.invalidator.checksum');
+
+     // All DatabaseBackend cache tables should be prefixed with 'cache_'. As
+      // specified on \Drupal\Core\Cache\DatabaseBackend::__construct.
+      $cid = $this->randomMachineName();
+
+      // We insert a corrupted cache item into the cache table.
+      db_insert('cache_corrupt')->fields([
+        'cid' => $cid,
+        'created' => round(microtime(TRUE), 3),
+        'data' => substr(serialize($this->randomObject()), 0, -5),
+        'expire' => CacheBackendInterface::CACHE_PERMANENT,
+        'tags' => '',
+        'serialized' => 1,
+        'checksum' => $cache_tags_checksum->getCurrentChecksum([]),
+      ])->execute();
+
+      $this->assertFalse($corrupt_backend->get($cid), "Returns a FALSE when requesting the corrupt object.");
+    }
+
+  /**
+   * Test the service "cache_tags.invalidator.checksum" is backend overridable.
    */
   public function testCacheTagsInvalidatorChecksumIsBackendOverridable() {
     $definition = $this->container->getDefinition('cache_tags.invalidator.checksum');
