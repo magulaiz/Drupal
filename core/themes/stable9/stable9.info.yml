@@ -227,7 +227,6 @@ libraries-override:
       component:
         css/components/ajax-progress.module.css: css/system/components/ajax-progress.module.css
         css/components/align.module.css: css/system/components/align.module.css
-        css/components/autocomplete-loading.module.css: css/system/components/autocomplete-loading.module.css
         css/components/fieldgroup.module.css: css/system/components/fieldgroup.module.css
         css/components/container-inline.module.css: css/system/components/container-inline.module.css
         css/components/clearfix.module.css: css/system/components/clearfix.module.css
