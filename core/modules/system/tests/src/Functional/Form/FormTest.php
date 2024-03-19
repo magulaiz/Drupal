@@ -179,6 +179,7 @@ class FormTest extends BrowserTestBase {
     $edit = [];
     $this->drupalGet('form-test/validate-required');
     $this->submitForm($edit, 'Submit');
+    $session = $this->assertSession();
 
     // The only error messages that should appear are the relevant 'required'
     // messages for each field.
@@ -193,38 +194,41 @@ class FormTest extends BrowserTestBase {
       else {
         $expected[] = $form[$key]['#title'] . ' field is required.';
       }
+      // Ensure errors are wrapped with an ID that can be referenced by aria-errormessages
+      $error_id = $form[$key]['#id'] . '--error-message';
+      $session->elementExists('css', '.messages--error #' . $error_id);
+      // Make sure form element references error.
+      $type = match ($form[$key]['#type']) {
+        'textfield' => 'input',
+        'checkboxes' => 'checkbox',
+        'select' => 'select',
+        'radios' => 'radio',
+      };
+      $session->elementExists('css', $type . '[aria-errormessage=' . $error_id . ']');
     }
 
     // Check the page for error messages.
     $errors = $this->xpath('//div[contains(@class, "error")]//li');
     foreach ($errors as $error) {
+      $this->assertContains($error->getText(), array_map(fn($n) => (string) $n, $expected));
       $expected_key = array_search($error->getText(), $expected);
-      // If the error message is not one of the expected messages, fail.
-      if ($expected_key === FALSE) {
-        $this->fail(new FormattableMarkup("Unexpected error message: @error", ['@error' => $error[0]]));
-      }
-      // Remove the expected message from the list once it is found.
-      else {
-        unset($expected[$expected_key]);
-      }
+      unset($expected[$expected_key]);
     }
 
     // Fail if any expected messages were not found.
-    foreach ($expected as $not_found) {
-      $this->fail(new FormattableMarkup("Found error message: @error", ['@error' => $not_found]));
-    }
+    $this->assertEmpty($expected, 'Found unexecpted error messages');
 
     // Verify that input elements are still empty.
-    $this->assertSession()->fieldValueEquals('textfield', '');
-    $this->assertSession()->checkboxNotChecked('edit-checkboxes-foo');
-    $this->assertSession()->checkboxNotChecked('edit-checkboxes-bar');
-    $this->assertTrue($this->assertSession()->optionExists('edit-select', '')->isSelected());
-    $this->assertSession()->checkboxNotChecked('edit-radios-foo');
-    $this->assertSession()->checkboxNotChecked('edit-radios-bar');
-    $this->assertSession()->checkboxNotChecked('edit-radios-optional-foo');
-    $this->assertSession()->checkboxNotChecked('edit-radios-optional-bar');
-    $this->assertSession()->checkboxNotChecked('edit-radios-optional-default-value-false-foo');
-    $this->assertSession()->checkboxNotChecked('edit-radios-optional-default-value-false-bar');
+    $session->fieldValueEquals('textfield', '');
+    $session->checkboxNotChecked('edit-checkboxes-foo');
+    $session->checkboxNotChecked('edit-checkboxes-bar');
+    $this->assertTrue($session->optionExists('edit-select', '')->isSelected());
+    $session->checkboxNotChecked('edit-radios-foo');
+    $session->checkboxNotChecked('edit-radios-bar');
+    $session->checkboxNotChecked('edit-radios-optional-foo');
+    $session->checkboxNotChecked('edit-radios-optional-bar');
+    $session->checkboxNotChecked('edit-radios-optional-default-value-false-foo');
+    $session->checkboxNotChecked('edit-radios-optional-default-value-false-bar');
 
     // Submit again with required fields set and verify that there are no
     // error messages.

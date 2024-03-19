@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Form;
 
+use Drupal\Core\Form\FormErrorHandler;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Tests\UnitTestCase;
+use Prophecy\Argument;
 
 /**
  * @coversDefaultClass \Drupal\Core\Form\FormErrorHandler
@@ -32,7 +34,7 @@ class FormErrorHandlerTest extends UnitTestCase {
   /**
    * The renderer service.
    *
-   * @var \Drupal\Core\Render\RendererInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\Render\RendererInterface|\Prophecy\Prophecy\ObjectProphecy
    */
   protected $renderer;
 
@@ -44,16 +46,10 @@ class FormErrorHandlerTest extends UnitTestCase {
 
     $this->messenger = $this->createMock(MessengerInterface::class);
 
-    $this->renderer = $this->createMock(RendererInterface::class);
+    $this->renderer = $this->prophesize(RendererInterface::class);
 
-    $this->formErrorHandler = $this->getMockBuilder('Drupal\Core\Form\FormErrorHandler')
-      ->setConstructorArgs([$this->renderer])
-      ->onlyMethods(['messenger'])
-      ->getMock();
-
-    $this->formErrorHandler->expects($this->atLeastOnce())
-      ->method('messenger')
-      ->willReturn($this->messenger);
+    $this->formErrorHandler = new FormErrorHandler($this->renderer->reveal());
+    $this->formErrorHandler->setMessenger($this->messenger);
   }
 
   /**
@@ -79,11 +75,8 @@ class FormErrorHandlerTest extends UnitTestCase {
         'error',
       );
 
-    $this->renderer->expects($this->any())
-      ->method('renderInIsolation')
-      ->will($this->returnCallback(function ($message) {
-        return $message['message']['#markup'];
-      }));
+    $this->renderer->renderInIsolation(Argument::any())
+      ->will(fn(array $args) => $args[0]['message']['#markup']);
 
     $form = [
       '#parents' => [],
