@@ -450,9 +450,6 @@ function drupal_install_system($install_state) {
     }
   }
 
-  // Install System module.
-  $kernel->getContainer()->get('module_installer')->install(['system'], FALSE);
-
   // Ensure default language is saved.
   if (isset($install_state['parameters']['langcode'])) {
     \Drupal::configFactory()->getEditable('system.site')

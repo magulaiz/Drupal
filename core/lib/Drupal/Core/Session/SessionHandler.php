@@ -61,11 +61,15 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
    */
   public function read(#[\SensitiveParameter] string $sid): string|false {
     $data = '';
-    if (!empty($sid)) {
-      // Read the session data from the database.
-      $query = $this->connection
-        ->queryRange('SELECT [session] FROM {sessions} WHERE [sid] = :sid', 0, 1, [':sid' => Crypt::hashBase64($sid)]);
-      $data = (string) $query->fetchField();
+    try {
+      if (!empty($sid)) {
+        // Read the session data from the database.
+        $query = $this->connection
+          ->queryRange('SELECT [session] FROM {sessions} WHERE [sid] = :sid', 0, 1, [':sid' => Crypt::hashBase64($sid)]);
+        $data = (string) $query->fetchField();
+      }
+    }
+    catch (\Exception $e) {
     }
     return $data;
   }
@@ -74,17 +78,21 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
    * {@inheritdoc}
    */
   public function write(#[\SensitiveParameter] string $sid, string $value): bool {
-    $request = $this->requestStack->getCurrentRequest();
-    $fields = [
-      'uid' => $request->getSession()->get('uid', 0),
-      'hostname' => $request->getClientIP(),
-      'session' => $value,
-      'timestamp' => $this->time->getRequestTime(),
-    ];
-    $this->connection->merge('sessions')
-      ->keys(['sid' => Crypt::hashBase64($sid)])
-      ->fields($fields)
-      ->execute();
+    try {
+      $request = $this->requestStack->getCurrentRequest();
+      $fields = [
+        'uid' => $request->getSession()->get('uid', 0),
+        'hostname' => $request->getClientIP(),
+        'session' => $value,
+        'timestamp' => $this->time->getRequestTime(),
+      ];
+      $this->connection->merge('sessions')
+        ->keys(['sid' => Crypt::hashBase64($sid)])
+        ->fields($fields)
+        ->execute();
+    }
+    catch (\Exception $e) {
+    }
     return TRUE;
   }
 
@@ -100,9 +108,13 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
    */
   public function destroy(#[\SensitiveParameter] string $sid): bool {
     // Delete session data.
-    $this->connection->delete('sessions')
-      ->condition('sid', Crypt::hashBase64($sid))
-      ->execute();
+    try {
+      $this->connection->delete('sessions')
+        ->condition('sid', Crypt::hashBase64($sid))
+        ->execute();
+    }
+    catch (\Exception $e) {
+    }
 
     return TRUE;
   }
