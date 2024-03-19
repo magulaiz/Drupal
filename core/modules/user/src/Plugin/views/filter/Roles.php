@@ -4,6 +4,7 @@ namespace Drupal\user\Plugin\views\filter;
 
 use Drupal\user\RoleInterface;
 use Drupal\user\RoleStorageInterface;
+use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\Plugin\views\filter\ManyToOne;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -11,9 +12,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Filter handler for user roles.
  *
  * @ingroup views_filter_handlers
- *
- * @ViewsFilter("user_roles")
  */
+#[ViewsFilter("user_roles")]
 class Roles extends ManyToOne {
 
   /**
@@ -52,17 +52,24 @@ class Roles extends ManyToOne {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function getValueOptions() {
-    $roles = $this->roleStorage->loadMultiple();
-    unset($roles[RoleInterface::ANONYMOUS_ID]);
-    unset($roles[RoleInterface::AUTHENTICATED_ID]);
-    $this->valueOptions = array_map(fn(RoleInterface $role) => $role->label(), $roles);
+    if (!isset($this->valueOptions)) {
+      $roles = $this->roleStorage->loadMultiple();
+      unset($roles[RoleInterface::ANONYMOUS_ID]);
+      unset($roles[RoleInterface::AUTHENTICATED_ID]);
+      $this->valueOptions = array_map(fn(RoleInterface $role) => $role->label(), $roles);
+    }
     return $this->valueOptions;
 
   }
 
   /**
    * Override empty and not empty operator labels to be clearer for user roles.
+   *
+   * @return array[]
    */
   public function operators() {
     $operators = parent::operators();
