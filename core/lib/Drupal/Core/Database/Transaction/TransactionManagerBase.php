@@ -6,6 +6,7 @@ namespace Drupal\Core\Database\Transaction;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Event\TransactionBeginEvent;
+use Drupal\Core\Database\Event\TransactionCommitEvent;
 use Drupal\Core\Database\Event\TransactionSavepointEvent;
 use Drupal\Core\Database\Transaction;
 use Drupal\Core\Database\TransactionCommitFailedException;
@@ -229,6 +230,36 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
   }
 
   /**
+   * Gets the current transaction id.
+   *
+   * @return string|null
+   *   The current transaction id.
+   *
+   * @todo add method to TransactionManagerInterface in a major.
+   */
+  public function currentTransactionId(): ?string {
+    if (!$this->inTransaction()) {
+      return NULL;
+    }
+    return array_key_last($this->stack);
+  }
+
+  /**
+   * Gets the current transaction name.
+   *
+   * @return string|null
+   *   The current transaction name.
+   *
+   * @todo add method to TransactionManagerInterface in a major.
+   */
+  public function currentTransactionName(): ?string {
+    if (!$this->inTransaction()) {
+      return NULL;
+    }
+    return end($this->stack)->name;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function push(string $name = ''): Transaction {
@@ -258,7 +289,7 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
           $this->connection->getTarget(),
           $id,
           $name,
-          [],
+          $this->stackItemsAsArray(),
         ));
       }
       $this->beginClientTransaction();
@@ -319,6 +350,15 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
       elseif ($this->stackDepth() === 1 && $this->stack()[$id]->type === StackItemType::Root) {
         // If this was the root Drupal transaction, we can commit the client
         // transaction.
+        if ($this->connection->isEventEnabled(TransactionCommitEvent::class)) {
+          $this->connection->dispatchEvent(new TransactionCommitEvent(
+            $this->connection->getKey(),
+            $this->connection->getTarget(),
+            $id,
+            $name,
+            $this->stackItemsAsArray(),
+          ));
+        }
         $this->processRootCommit();
       }
       else {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Core\Database\Event;
 
 /**
- * Base class for datbase transaction events.
+ * Base class for database transaction events.
  */
 abstract class TransactionEventBase extends DatabaseEvent {
 

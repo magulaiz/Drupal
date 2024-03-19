@@ -6,6 +6,7 @@ use Drupal\Core\Database\Event\StatementExecutionEndEvent;
 use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 use Drupal\Core\Database\Event\TransactionBeginEvent;
+use Drupal\Core\Database\Event\TransactionCommitEvent;
 use Drupal\Core\Database\Event\TransactionSavepointEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -44,6 +45,7 @@ class DatabaseEventSubscriber implements EventSubscriberInterface {
       StatementExecutionFailureEvent::class => 'onStatementExecutionFailure',
       TransactionBeginEvent::class => 'onTransactionBegin',
       TransactionSavepointEvent::class => 'onTransactionSavepoint',
+      TransactionCommitEvent::class => 'onTransactionCommit',
     ];
   }
 
@@ -97,6 +99,16 @@ class DatabaseEventSubscriber implements EventSubscriberInterface {
    *   The transaction event.
    */
   public function onTransactionSavepoint(TransactionSavepointEvent $event): void {
+    throw new \RuntimeException($event->key . ' ' . $event->target . ' ' . $event->id . '\\' . $event->name . ' stack: ' . implode(' > ', $event->stackItems));
+  }
+
+  /**
+   * Subscribes to a TransactionCommitEvent.
+   *
+   * @param \Drupal\Core\Database\Event\TransactionCommitEvent $event
+   *   The transaction event.
+   */
+  public function onTransactionCommit(TransactionCommitEvent $event): void {
     throw new \RuntimeException($event->key . ' ' . $event->target . ' ' . $event->id . '\\' . $event->name . ' stack: ' . implode(' > ', $event->stackItems));
   }
 

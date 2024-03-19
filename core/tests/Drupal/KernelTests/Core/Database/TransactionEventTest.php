@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Event\TransactionBeginEvent;
 use Drupal\Core\Database\Event\TransactionEvent;
+use Drupal\Core\Database\Event\TransactionSavepointEvent;
 
 /**
  * Tests the Transaction events.
@@ -42,6 +43,21 @@ class TransactionEventTest extends DatabaseTestBase {
     $this->expectException(\RuntimeException::class);
     $this->expectExceptionMessageMatches("/^default default .*\\\\savepoint_1 stack: .*\\\\drupal_transaction/");
     $savepoint = $this->connection->startTransaction();
+  }
+
+  /**
+   * Tests committing a transaction after a savepoint was opened.
+   */
+  public function testTransactionCommit(): void {
+    $this->connection->disableEvents([
+      TransactionBeginEvent::class,
+      TransactionSavepointEvent::class,
+    ]);
+    $tx = $this->connection->startTransaction();
+    $savepoint = $this->connection->startTransaction('foo');
+    $this->expectException(\RuntimeException::class);
+    $this->expectExceptionMessageMatches("/^default default .*\\\\drupal_transaction stack: .*\\\\drupal_transaction > .*\\\\foo/");
+    unset($tx);
   }
 
 }
