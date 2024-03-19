@@ -72,32 +72,20 @@ class EndOfTransactionQueriesTest extends KernelTestBase {
     $entity->save();
 
     // Entity save should have deferred cache invalidation to after transaction
-    // completion for the "entity_test_list", "entity_test_list:entity_test"
-    // and "4xx-response" tags. Since cache invalidation is a MERGE database
-    // operation, and in core drivers each MERGE is split in two SELECT and
-    // INSERT|UPDATE operations, we expect the last 6 logged database queries
-    // to be related to the {cachetags} table.
-    $expected_tail_length = 6;
+    // completion for the "entity_test_list", "entity_test_list:entity_test",
+    // "4xx-response" and "user_list" tags. Since cache invalidation is a MERGE
+    // database operation, and in core drivers each MERGE is split in two
+    // consecutive SELECT and INSERT|UPDATE operations, we expect 8 logged
+    // database queries to be related to the {cachetags} table, near the end of
+    // the log stack, and no INSERT or UPDATE operation afterwards.
     $executed_statements = [];
     foreach (Database::getLog('testEntitySave') as $log) {
-      // Exclude transaction related statements from the log.
-      if (
-        str_starts_with($log['query'], 'ROLLBACK TO SAVEPOINT ') ||
-        str_starts_with($log['query'], 'RELEASE SAVEPOINT ') ||
-        str_starts_with($log['query'], 'SAVEPOINT ')
-      ) {
-        continue;
-      }
       $executed_statements[] = $log['query'];
     }
-    dump([1, $executed_statements]);
-    $expected_post_transaction_statements = array_keys(array_fill(array_key_last($executed_statements) - $expected_tail_length + 1, $expected_tail_length, TRUE));
-    dump([2, $expected_post_transaction_statements]);
     $cachetag_statements = $this->getStatementsForTable($executed_statements, 'cachetags');
-    dump([3, $cachetag_statements]);
-    $tail_cachetag_statements = array_keys(array_slice($cachetag_statements, count($cachetag_statements) - $expected_tail_length, $expected_tail_length, TRUE));
-    dump([4, $tail_cachetag_statements]);
-    $this->assertSame($expected_post_transaction_statements, $tail_cachetag_statements);
+    $this->assertCount(8, $cachetag_statements);
+    $tail_statements = array_slice($executed_statements, array_key_last($cachetag_statements) + 1);
+    $this->assertNoDmlStatement($tail_statements);
 
     // Verify that a nested entity save occurred.
     $this->assertSame('john doe', User::load(1)->getAccountName());
@@ -192,6 +180,23 @@ class EndOfTransactionQueriesTest extends KernelTestBase {
     $realTableIdentifier = Database::getConnection()->prefixTables('{' . $tableName . '}');
     $pattern = '/.*(INTO|FROM|UPDATE)( |\n)' . preg_quote($realTableIdentifier, '/') . '/';
     return preg_match($pattern, $statement) === 1 ? TRUE : FALSE;
+  }
+
+  /**
+   * Asserts that an array of SQL statements is not DML instructions.
+   *
+   * INSERT and UPDATE are DML (Data Manipulation Language) statements.
+   *
+   * @param string[] $statements
+   *   The query statements.
+   */
+  protected static function assertNoDmlStatement(array $statements): void {
+    $pattern = '/.*(INSERT|UPDATE|DELETE|MERGE)/';
+    foreach ($statements as $statement) {
+      if (preg_match($pattern, $statement) === 1) {
+        self::fail("Unexpected DML statement: {$statement}");
+      }
+    }
   }
 
 }
