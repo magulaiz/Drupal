@@ -97,7 +97,7 @@ abstract class SelectionPluginBase extends PluginBase implements SelectionInterf
    * @return array
    *   The form structure.
    */
-  protected function buildAutocreateConfigurationForm(array $form, array $bundles) {
+  protected function buildAutocreateConfigurationForm(array $form, array $bundles): array {
     $form['auto_create'] = [
       '#type' => 'checkbox',
       '#title' => $this->t("Create referenced entities if they don't already exist"),
@@ -127,10 +127,10 @@ abstract class SelectionPluginBase extends PluginBase implements SelectionInterf
    *   An array of bundles in the structure of
    *   Drupal\Core\Entity\EntityTypeBundleInfoInterface::getBundleInfo().
    *
-   * @return array
+   * @return string[]
    *   An array of bundle labels keyed by the bundle name.
    */
-  protected function getBundleOptions(array $bundles) {
+  protected function getBundleOptions(array $bundles): array {
     $bundle_options = [];
     foreach ($bundles as $bundle_name => $bundle_info) {
       $bundle_options[$bundle_name] = $bundle_info['label'];
