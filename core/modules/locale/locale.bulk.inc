@@ -633,7 +633,7 @@ function locale_config_batch_update_default_config_langcodes(&$context) {
  */
 function locale_config_batch_set_config_langcodes(&$context) {
   @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.3 and is removed from drupal:11.0.0. Use locale_config_batch_update_default_config_langcodes() instead. See https://www.drupal.org/project/drupal/issues/3422977', E_USER_DEPRECATED);
-  locale_config_batch_update_default_config_langcodes(&$context);
+  locale_config_batch_update_default_config_langcodes($context);
 }
 
 /**
