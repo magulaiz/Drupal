@@ -261,14 +261,74 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
   }
 
   /**
+   * Purges a Drupal transaction from the manager.
+   *
+   * This is only called by a Transaction object's ::__destruct() method and
+   * should only be called internally by a database driver.
+   *
+   * @param string $name
+   *   The name of the transaction.
+   * @param string $id
+   *   The id of the transaction.
+   *
+   * @throws \Drupal\Core\Database\TransactionOutOfOrderException
+   *   If a Drupal Transaction with the specified name does not exist.
+   * @throws \Drupal\Core\Database\TransactionCommitFailedException
+   *   If the commit of the root transaction failed.
+   *
+   * @internal
+   */
+  public function purge(string $name, string $id): void {
+    // If the $id does not correspond to the one in the stack for that $name,
+    // we are facing an orphaned Transaction object (for example in case of a
+    // DDL statement breaking an active transaction). That should be listed in
+    // $voidedItems, so we can remove it from there.
+    if (!isset($this->stack()[$id]) || $this->stack()[$id]->name !== $name) {
+      unset($this->voidedItems[$id]);
+      return;
+    }
+
+    // Commit the transaction.
+    $this->commit($name, $id);
+
+    // Remove the transaction from the stack.
+    $this->removeStackItem($id);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function unpile(string $name, string $id): void {
     // If there is no $id to commit, or if $id does not correspond to the one
     // in the stack for that $name, the commit is out of order.
     if (!isset($this->stack()[$id]) || $this->stack()[$id]->name !== $name) {
-      unset($this->voidedItems[$id]);
-      return;
+      throw new TransactionOutOfOrderException("Error attempting commit of {$id}\\{$name}. Active stack: " . $this->dumpStackItemsAsString());
+    }
+
+    // Commit the transaction.
+    $this->commit($name, $id);
+
+    // Void the transaction stack item.
+    $this->voidStackItem($id);
+  }
+
+  /**
+   * Commits a Drupal transaction.
+   *
+   * @param string $name
+   *   The name of the transaction.
+   * @param string $id
+   *   The id of the transaction.
+   *
+   * @throws \Drupal\Core\Database\TransactionOutOfOrderException
+   *   If a Drupal Transaction with the specified name does not exist.
+   * @throws \Drupal\Core\Database\TransactionCommitFailedException
+   *   If the commit of the root transaction failed.
+   */
+  protected function commit(string $name, string $id): void {
+    if ($this->getConnectionTransactionState() !== ClientConnectionTransactionState::Active) {
+      // The stack got corrupted.
+      throw new TransactionOutOfOrderException("Transaction {$id}\\{$name} is out of order. Active stack: " . $this->dumpStackItemsAsString());
     }
 
     // If we are not releasing the last savepoint but an earlier one, or
@@ -333,45 +393,6 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
 
     // The stack got corrupted.
     throw new TransactionOutOfOrderException("Error attempting rollback of {$id}\\{$name}. Active stack: " . $this->dumpStackItemsAsString());
-  }
-
-  /**
-   * Purges a Drupal transaction from the manager.
-   *
-   * This is only called by a Transaction object's ::__destruct() method and
-   * should only be called internally by a database driver.
-   *
-   * @param string $name
-   *   The name of the transaction.
-   * @param string $id
-   *   The id of the transaction.
-   *
-   * @throws \Drupal\Core\Database\TransactionOutOfOrderException
-   *   If a Drupal Transaction with the specified name does not exist.
-   * @throws \Drupal\Core\Database\TransactionCommitFailedException
-   *   If the commit of the root transaction failed.
-   *
-   * @internal
-   */
-  public function purge(string $name, string $id): void {
-    // If the $id does not correspond to the one in the stack for that $name,
-    // we are facing an orphaned Transaction object (for example in case of a
-    // DDL statement breaking an active transaction). That should be listed in
-    // $voidedItems, so we can remove it from there.
-    if (!isset($this->stack()[$id]) || $this->stack()[$id]->name !== $name) {
-      assert(isset($this->voidedItems[$id]), "Transaction {$id}\\{$name} is out of sequence. Active stack: " . $this->dumpStackItemsAsString());
-      unset($this->voidedItems[$id]);
-      if ($this->stack() === [] && $this->voidedItems === [] && $this->getConnectionTransactionState() === ClientConnectionTransactionState::Voided) {
-        $this->processPostTransactionCallbacks();
-      }
-      return;
-    }
-
-    // Commit the transaction.
-    $this->commit($name, $id);
-
-    // Remove the transaction from the stack.
-    $this->removeStackItem($id);
   }
 
   /**
@@ -548,6 +569,7 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
       $this->voidStackItem((string) $i);
     }
     $this->setConnectionTransactionState(ClientConnectionTransactionState::Voided);
+    $this->processPostTransactionCallbacks();
   }
 
 }
