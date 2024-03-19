@@ -53,8 +53,8 @@ class ConfigImportInstallProfileTest extends BrowserTestBase {
   /**
    * Tests config importer can uninstall install profiles.
    *
-   * Install profiles can be uninstalled when none of the modules they contain
-   * are installed.
+   * Install profiles can be uninstalled when none of the modules or themes
+   * they contain are installed.
    *
    * @see \Drupal\Core\EventSubscriber\ConfigImportSubscriber
    */
