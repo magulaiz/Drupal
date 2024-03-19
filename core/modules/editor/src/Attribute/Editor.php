@@ -26,7 +26,7 @@ class Editor extends Plugin {
    *
    * @param string $id
    *   The plugin ID.
-   * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $label
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup $label
    *   The human-readable name of the text editor, translated
    * @param bool $supports_content_filtering
    *   Whether the editor supports "allowed content only" filtering.
@@ -41,11 +41,11 @@ class Editor extends Plugin {
    */
   public function __construct(
     public readonly string $id,
-    public readonly ?TranslatableMarkup $label = NULL,
-    public readonly bool $supports_content_filtering = FALSE,
-    public readonly bool $supports_inline_editing = FALSE,
-    public readonly bool $is_xss_safe = FALSE,
-    public readonly array $supported_element_types = [],
+    public readonly TranslatableMarkup $label,
+    public readonly bool $supports_content_filtering,
+    public readonly bool $supports_inline_editing,
+    public readonly bool $is_xss_safe,
+    public readonly array $supported_element_types,
     public readonly ?string $deriver = NULL
   ) {}
 
