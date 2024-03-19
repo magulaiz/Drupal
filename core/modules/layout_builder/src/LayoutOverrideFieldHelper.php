@@ -12,8 +12,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides methods to help with entities using Layout Builder.
- *
- * @package Drupal\layout_builder.
  */
 class LayoutOverrideFieldHelper implements ContainerInjectionInterface {
 
@@ -53,7 +51,7 @@ class LayoutOverrideFieldHelper implements ContainerInjectionInterface {
         $override_temp_store = $this->layoutTempstoreRepository->get($section_storage);
 
         // Get the entity currently in the tempstore's entity context.
-        $stored_entity = $override_temp_store->getContext('entity')->getContextData()->getEntity();
+        $stored_entity = $override_temp_store->getContextValue('entity');
 
         // Update the tempstore entity context with a copy of the new entity,
         // but retain the value of the layout field from the tempstore.
