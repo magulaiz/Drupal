@@ -2,12 +2,12 @@
 
 namespace Drupal\sdc\Twig;
 
+use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Template\Attribute;
-use Drupal\sdc\Component\ComponentValidator;
-use Drupal\sdc\ComponentPluginManager;
+use Drupal\sdc\Component\ComponentValidatorInterface;
+use Drupal\sdc\ComponentInterface;
 use Drupal\sdc\Exception\ComponentNotFoundException;
 use Drupal\sdc\Exception\InvalidComponentException;
-use Drupal\sdc\Plugin\Component;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -21,14 +21,14 @@ final class TwigExtension extends AbstractExtension {
   /**
    * Creates TwigExtension.
    *
-   * @param \Drupal\sdc\ComponentPluginManager $pluginManager
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $pluginManager
    *   The component plugin manager.
-   * @param \Drupal\sdc\Component\ComponentValidator $componentValidator
+   * @param \Drupal\sdc\Component\ComponentValidatorInterface $componentValidator
    *   The component validator.
    */
   public function __construct(
-    protected ComponentPluginManager $pluginManager,
-    protected ComponentValidator $componentValidator
+    protected PluginManagerInterface $pluginManager,
+    protected ComponentValidatorInterface $componentValidator
   ) {}
 
   /**
@@ -76,7 +76,7 @@ final class TwigExtension extends AbstractExtension {
   /**
    * Calculates additional context for this template.
    *
-   * @param \Drupal\sdc\Plugin\Component $component
+   * @param \Drupal\sdc\ComponentInterface $component
    *   The component.
    * @param array $context
    *   The context to update.
@@ -84,7 +84,7 @@ final class TwigExtension extends AbstractExtension {
    * @return array
    *   The additional context to inject to component templates.
    */
-  protected function mergeAdditionalRenderContext(Component $component, array $context): array {
+  protected function mergeAdditionalRenderContext(ComponentInterface $component, array $context): array {
     $context['componentMetadata'] = $component->metadata->normalize();
     $component_attributes = ['data-component-id' => $component->getPluginId()];
     if (!isset($context['attributes'])) {

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\sdc\Twig;
 
-use Drupal\sdc\ComponentPluginManager;
+use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\sdc\ComponentInterface;
 use Drupal\sdc\Exception\ComponentNotFoundException;
 use Drupal\sdc\Exception\InvalidComponentException;
-use Drupal\sdc\Plugin\Component;
 use Twig\Environment;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FunctionExpression;
@@ -26,10 +26,10 @@ final class ComponentNodeVisitor implements NodeVisitorInterface {
   /**
    * Creates a new ComponentNodeVisitor object.
    *
-   * @param \Drupal\sdc\ComponentPluginManager $pluginManager
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $pluginManager
    *   The plugin manager for components.
    */
-  public function __construct(protected ComponentPluginManager $pluginManager) {}
+  public function __construct(protected PluginManagerInterface $pluginManager) {}
 
   /**
    * {@inheritdoc}
@@ -103,10 +103,10 @@ final class ComponentNodeVisitor implements NodeVisitorInterface {
    * @param \Twig\Node\Node $node
    *   The node.
    *
-   * @return \Drupal\sdc\Plugin\Component|null
+   * @return \Drupal\sdc\ComponentInterface|null
    *   The component, if any.
    */
-  protected function getComponent(Node $node): ?Component {
+  protected function getComponent(Node $node): ?ComponentInterface {
     $component_id = $node->getTemplateName();
     if (!preg_match('/^[a-z]([a-zA-Z0-9_-]*[a-zA-Z0-9])*:[a-z]([a-zA-Z0-9_-]*[a-zA-Z0-9])*$/', $component_id)) {
       return NULL;
@@ -138,7 +138,7 @@ final class ComponentNodeVisitor implements NodeVisitorInterface {
    * @throws \Drupal\sdc\Exception\InvalidComponentException
    *   When the slots don't pass validation.
    */
-  protected function validateSlots(Component $component, Node $node): void {
+  protected function validateSlots(ComponentInterface $component, Node $node): void {
     $metadata = $component->metadata;
     if (!$metadata->mandatorySchemas) {
       return;

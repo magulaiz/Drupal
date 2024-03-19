@@ -2,8 +2,8 @@
 
 namespace Drupal\sdc\Component;
 
+use Drupal\sdc\ComponentInterface;
 use Drupal\sdc\Exception\InvalidComponentException;
-use Drupal\sdc\Plugin\Component;
 use Drupal\sdc\Utilities;
 use JsonSchema\Constraints\Constraint;
 use JsonSchema\Validator;
@@ -13,7 +13,7 @@ use JsonSchema\Validator;
  *
  * @internal
  */
-final class ComponentValidator {
+final class ComponentValidator implements ComponentValidatorInterface {
 
   /**
    * The schema validator.
@@ -25,7 +25,7 @@ final class ComponentValidator {
   protected ?Validator $validator = NULL;
 
   /**
-   * Sets the validator service if available.
+   * {@inheritdoc}
    */
   public function setValidator(Validator $validator = NULL): void {
     if ($validator) {
@@ -38,21 +38,7 @@ final class ComponentValidator {
   }
 
   /**
-   * Validates the component metadata file.
-   *
-   * A valid component metadata file can be validated against the
-   * metadata-author.schema.json, plus the ability of classes and interfaces
-   * in the `type` property.
-   *
-   * @param array $definition
-   *   The definition to validate.
-   * @param bool $enforce_schemas
-   *   TRUE if schema definitions are mandatory.
-   *
-   * @return bool
-   *   TRUE if the component is valid.
-   *
-   * @throws \Drupal\sdc\Exception\InvalidComponentException
+   * {@inheritdoc}
    */
   public function validateDefinition(array $definition, bool $enforce_schemas): bool {
     // First ensure there are no name collisions between props and slots.
@@ -124,22 +110,9 @@ final class ComponentValidator {
   }
 
   /**
-   * Validates that the props provided to the component.
-   *
-   * Valid props are compliant with the schema definition in the component
-   * metadata file.
-   *
-   * @param array $context
-   *   The Twig context that contains the prop data.
-   * @param \Drupal\sdc\Plugin\Component $component
-   *   The component to validate the props against.
-   *
-   * @return bool
-   *   TRUE if the props adhere to the component definition.
-   *
-   * @throws \Drupal\sdc\Exception\InvalidComponentException
+   * {@inheritdoc}
    */
-  public function validateProps(array $context, Component $component): bool {
+  public function validateProps(array $context, ComponentInterface $component): bool {
     // If the validator isn't set, then the validation library is not installed.
     if (!$this->validator) {
       return TRUE;
