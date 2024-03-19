@@ -16,8 +16,8 @@ core.extension:
         label: 'Weight'
     profile:
       type: string
-      # Before Drupal is installed the profile is NULL or an empty string. This
-      # allows all install profiles to be discovered by the installer.
+      # Before Drupal is installed the profile is NULL. This allows all install
+      # profiles to be discovered by the installer.
       nullable: true
       # After Drupal is installed, if the install profile is uninstalled the key
       # will be removed.
