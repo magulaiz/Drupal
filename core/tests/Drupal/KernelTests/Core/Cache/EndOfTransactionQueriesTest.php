@@ -90,9 +90,13 @@ class EndOfTransactionQueriesTest extends KernelTestBase {
       }
       $executed_statements[] = $log['query'];
     }
+    dump([1, $executed_statements]);
     $expected_post_transaction_statements = array_keys(array_fill(array_key_last($executed_statements) - $expected_tail_length + 1, $expected_tail_length, TRUE));
+    dump([2, $expected_post_transaction_statements]);
     $cachetag_statements = $this->getStatementsForTable($executed_statements, 'cachetags');
+    dump([3, $cachetag_statements]);
     $tail_cachetag_statements = array_keys(array_slice($cachetag_statements, count($cachetag_statements) - $expected_tail_length, $expected_tail_length, TRUE));
+    dump([4, $tail_cachetag_statements]);
     $this->assertSame($expected_post_transaction_statements, $tail_cachetag_statements);
 
     // Verify that a nested entity save occurred.
