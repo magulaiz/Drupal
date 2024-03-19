@@ -50,8 +50,8 @@ class StatementExecutionFailureEvent extends StatementExecutionEndEvent {
     public readonly string $exceptionClass,
     public readonly int|string $exceptionCode,
     public readonly string $exceptionMessage,
-    public ?string $transactionId = NULL,
-    public ?string $transactionName = NULL,
+    ?string $transactionId = NULL,
+    ?string $transactionName = NULL,
   ) {
     parent::__construct($statementObjectId, $key, $target, $queryString, $args, $caller, $startTime, $transactionId, $transactionName);
   }
