@@ -29,10 +29,10 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\ConfigurableLanguageInterface;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\node\Form\NodePreviewForm;
 use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
 use Drupal\user\UserInterface;
-use Drupal\node\Form\NodePreviewForm;
 
 /**
  * Implements hook_help().
@@ -404,7 +404,7 @@ function node_revision_delete($revision_id) {
  */
 function node_is_page(NodeInterface $node) {
   $route_match = \Drupal::routeMatch();
-  if ($route_match->getRouteName() == 'entity.node.canonical') {
+  if ($route_match->getRouteName() == 'entity.node.canonical' || $route_match->getRouteName() == 'entity.node.revision') {
     $page_node = $route_match->getParameter('node');
   }
   return (!empty($page_node) ? $page_node->id() == $node->id() : FALSE);
@@ -468,7 +468,6 @@ function node_preprocess_block(&$variables) {
 function node_preprocess_field__node(&$variables) {
   // Set a variable 'is_inline' in cases where inline markup is required,
   // without any block elements such as <div>.
-
   if ($variables['element']['#is_page_title'] ?? FALSE) {
     // Page title is always inline because it will be displayed inside <h1>.
     $variables['is_inline'] = TRUE;
@@ -631,7 +630,7 @@ function node_ranking() {
   $ranking = [
     'relevance' => [
       'title' => t('Keyword relevance'),
-      // Average relevance values hover around 0.15
+      // Average relevance values hover around 0.15.
       'score' => 'i.relevance',
     ],
     'sticky' => [
@@ -1113,7 +1112,7 @@ function node_access_rebuild($batch_mode = FALSE) {
       batch_set($batch_builder->toArray());
     }
     else {
-      // Try to allocate enough time to rebuild node grants
+      // Try to allocate enough time to rebuild node grants.
       Environment::setTimeLimit(240);
 
       // Rebuild newest nodes first so that recent content becomes available
