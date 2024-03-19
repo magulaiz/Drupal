@@ -53,6 +53,11 @@ libraries-override:
       component:
         css/contextual.toolbar.css: css/contextual/contextual.toolbar.css
 
+  core/drupal.autocomplete:
+    css:
+      component:
+        misc/components/autocomplete-loading.module.css: css/core/components/autocomplete-loading.module.css
+
   core/drupal.dialog.off_canvas:
     css:
       base:
@@ -74,10 +79,17 @@ libraries-override:
     css:
       component:
         misc/dropbutton/dropbutton.css: css/core/dropbutton/dropbutton.css
+
   core/drupal.progress:
     css:
       component:
         misc/components/progress.module.css: css/core/components/progress.module.css
+
+  core/drupal.tabledrag:
+    css:
+      component:
+        misc/components/tabledrag.module.css: css/core/components/tabledrag.module.css
+
   core/drupal.vertical-tabs:
     css:
       component:

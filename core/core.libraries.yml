@@ -455,6 +455,7 @@ drupal.autocomplete:
   # @todo replace with solution found in https://drupal.org/node/3076171
   css:
     component:
+      misc/components/autocomplete-loading.module.css: { weight: -10 }
       assets/vendor/jquery.ui/themes/base/autocomplete.css: { weight: -11.7 }
       assets/vendor/jquery.ui/themes/base/menu.css: { weight: -11.7 }
   dependencies:
@@ -650,6 +651,9 @@ drupal.tabledrag:
   version: VERSION
   js:
     misc/tabledrag.js: { weight: -1 }
+  css:
+    component:
+      misc/components/tabledrag.module.css: { weight: -10 }
   dependencies:
     - core/jquery
     - core/drupal
