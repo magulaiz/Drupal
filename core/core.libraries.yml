@@ -377,6 +377,9 @@ drupal.ajax:
   version: VERSION
   js:
     misc/ajax.js: {}
+  css:
+    component:
+      misc/components/ajax-progress.module.css: { weight: -10 }
   drupalSettings:
     # These placeholder values will be set by system_js_settings_alter().
     ajaxPageState:

@@ -53,6 +53,11 @@ libraries-override:
       component:
         css/contextual.toolbar.css: css/contextual/contextual.toolbar.css
 
+  core/drupal.ajax:
+    css:
+      component:
+        misc/components/ajax-progress.module.css: css/core/components/ajax-progress.module.css
+
   core/drupal.autocomplete:
     css:
       component:
