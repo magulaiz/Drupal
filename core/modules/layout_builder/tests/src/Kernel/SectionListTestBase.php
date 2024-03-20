@@ -113,7 +113,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    */
   public function testGetSectionWithDelta() {
     $this->expectDeprecation('Calling getSection() with delta as an argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Instead you should pass uuid. See https://www.drupal.org/node/3401886');
-    $this->assertInstanceOf(Section::class,$this->sectionList->getSection(0));
+    $this->assertInstanceOf(Section::class, $this->sectionList->getSection(0));
   }
 
   /**
