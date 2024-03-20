@@ -112,10 +112,8 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    * @group legacy
    */
   public function testGetSectionWithDelta() {
-    $this->expectException(\OutOfBoundsException::class);
-    $this->expectExceptionMessage('Invalid uuid "0"');
     $this->expectDeprecation('Calling getSection() with delta as an argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Instead you should pass uuid. See https://www.drupal.org/node/3401886');
-    $this->sectionList->getSection(0);
+    $this->assertInstanceOf(Section::class,$this->sectionList->getSection(0));
   }
 
   /**
@@ -217,10 +215,15 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    * @group legacy
    */
   public function testRemoveSectionWithDelta() {
-    $this->expectException(\OutOfBoundsException::class);
-    $this->expectExceptionMessage('Invalid uuid "0"');
+    $expected = [
+      (new Section('layout_test_plugin', ['setting_1' => 'bar'], [
+        '20000000-0000-1000-a000-000000000000' => new SectionComponent('20000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
+      ]))->setUuid('22000000-0000-1000-a000-000000000000'),
+    ];
+
     $this->expectDeprecation('Calling removeSection() with delta as an argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Instead, you should use uuid. See https://www.drupal.org/node/3401886');
     $this->sectionList->removeSection(0);
+    $this->assertSections($expected);
   }
 
   /**
