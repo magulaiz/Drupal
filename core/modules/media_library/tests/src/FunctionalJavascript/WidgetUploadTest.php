@@ -211,9 +211,9 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     // We set the multiple to FALSE if only one file can be uploaded
     $this->assertFalse($assert_session->fieldExists('Add file')->hasAttribute('multiple'));
     $assert_session->pageTextContains('One file only.');
-    $choosefiles = $assert_session->elementExists('css', '.form-managed-file');
-    $choosefiles->hasButton('Choose file');
-    $this->assertFalse($choosefiles->hasButton('Choose files'));
+    $choose_files = $assert_session->elementExists('css', '.form-managed-file');
+    $choose_files->hasButton('Choose file');
+    $this->assertFalse($choose_files->hasButton('Choose files'));
 
     // Assert media type four should only allow jpg files by trying a png file
     // first.
@@ -562,9 +562,9 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     // We set the multiple to FALSE if only one file can be uploaded
     $this->assertFalse($assert_session->fieldExists('Add file')->hasAttribute('multiple'));
     $assert_session->pageTextContains('One file only.');
-    $choosefiles = $assert_session->elementExists('css', '.form-managed-file');
-    $choosefiles->hasButton('Choose file');
-    $this->assertFalse($choosefiles->hasButton('Choose files'));
+    $choose_files = $assert_session->elementExists('css', '.form-managed-file');
+    $choose_files->hasButton('Choose file');
+    $this->assertFalse($choose_files->hasButton('Choose files'));
 
     // Assert media type four should only allow jpg files by trying a png file
     // first.
