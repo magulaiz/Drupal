@@ -629,7 +629,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
       // Check a condition on the revision data table.
       ->condition('title', 'stage node 2')
       // Check a condition on the revision table.
-      ->condition('revision_uid', $node_2->getRevisionUserId())
+      ->condition('revision_uid', (int) $node_2->getRevisionUserId())
       // Check a condition on the data table.
       ->condition('type', $node_2->bundle())
       // Check a condition on the base table.
@@ -640,7 +640,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
       // Check a condition on the revision data table.
       ->condition('field_test_node.entity.title', 'stage node 1')
       // Check a condition on the revision table.
-      ->condition('field_test_node.entity.revision_uid', $node_1->getRevisionUserId())
+      ->condition('field_test_node.entity.revision_uid', (int) $node_1->getRevisionUserId())
       // Check a condition on the data table.
       ->condition('field_test_node.entity.type', $node_1->bundle())
       // Check a condition on the base table.

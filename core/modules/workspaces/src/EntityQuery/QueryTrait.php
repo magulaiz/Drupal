@@ -65,7 +65,7 @@ trait QueryTrait {
       $id_field = $this->entityType->getKey('id');
       $this->sqlQuery->leftJoin('workspace_association', 'workspace_association', $this->sqlQuery->joinCondition()
         ->condition("%alias.target_entity_type_id", $this->entityTypeId)
-        ->compare("%alias.target_entity_id", "base_table.$id_field")
+        ->compare("%alias.target_entity_id", (int) "base_table.$id_field")
         ->condition("%alias.workspace", $active_workspace->id())
       );
     }

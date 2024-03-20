@@ -173,9 +173,15 @@ class WorkspaceManager implements WorkspaceManagerInterface {
   public function getActiveWorkspace() {
     if (!isset($this->activeWorkspace)) {
       $request = $this->requestStack->getCurrentRequest();
+//dump('$request');
+//dump($request);
       foreach ($this->negotiatorIds as $negotiator_id) {
+//dump('$negotiator_id: ' . $negotiator_id);
         $negotiator = $this->classResolver->getInstanceFromDefinition($negotiator_id);
+//dump('$negotiator');
+//dump($negotiator);
         if ($negotiator->applies($request)) {
+//dump(1);
           // By default, 'view' access is checked when a workspace is activated,
           // but it should also be checked when retrieving the currently active
           // workspace.
@@ -335,6 +341,8 @@ class WorkspaceManager implements WorkspaceManagerInterface {
       // Get a list of default revisions tracked by the given workspace, because
       // they need to be handled differently than pending revisions.
       $initial_revision_ids = $this->workspaceAssociation->getAssociatedInitialRevisions($workspace_id, $entity_type_id);
+//dump('$initial_revision_ids');
+//dump($initial_revision_ids);
 
       foreach (array_keys($associated_revisions) as $revision_id) {
         if ($count > $batch_size) {
@@ -345,10 +353,20 @@ class WorkspaceManager implements WorkspaceManagerInterface {
         // entity was created inside that workspace), we need to delete the
         // whole entity after all of its pending revisions are gone.
         if (isset($initial_revision_ids[$revision_id])) {
-          $associated_entity_storage->delete([$associated_entity_storage->load($initial_revision_ids[$revision_id])]);
+//dump('$revision_id: ' . $revision_id);
+//dump(get_class($associated_entity_storage));
+//$ass = $associated_entity_storage->load((int) $initial_revision_ids[$revision_id]);
+////dump('$ass');
+//dump($ass ? '$ass exists' : '$ass soes not exists');
+//dump('Delete entity id: ' . $initial_revision_ids[$revision_id]);
+          $associated_entity = $associated_entity_storage->load($initial_revision_ids[$revision_id]);
+          if ($associated_entity) {
+            $associated_entity_storage->delete([$associated_entity]);
+          }
         }
         else {
           // Delete the associated entity revision.
+//dump('Delete revision id: ' . $revision_id);
           $associated_entity_storage->deleteRevision($revision_id);
         }
         $count++;

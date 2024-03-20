@@ -591,11 +591,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         }
 
         if ($load_from_revision && ($record->{$this->revisionKey} != $load_from_revision)) {
-          $values[$id]['isDefaultRevision'][LanguageInterface::LANGCODE_DEFAULT] = '0';
           $values[$id][$this->revisionKey][LanguageInterface::LANGCODE_DEFAULT] = (string) $load_from_revision;
-        }
-        else {
-          $values[$id]['isDefaultRevision'][LanguageInterface::LANGCODE_DEFAULT] = '1';
         }
       }
 
@@ -698,6 +694,9 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       // else both data fields and revisioned fields are needed to map the
       // entity values.
       $all_fields = $revisioned_fields;
+
+      // Get the field name for the default revision field.
+      $revision_default_field = $this->entityType->getRevisionMetadataKey('revision_default');
     }
     elseif ($this->jsonStorageCurrentRevisionTable) {
       $embedded_table = $this->jsonStorageCurrentRevisionTable;
@@ -713,6 +712,9 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       // else both data fields and revisioned fields are needed to map the
       // entity values.
       $all_fields = $revisioned_fields;
+
+      // Get the field name for the default revision field.
+      $revision_default_field = $this->entityType->getRevisionMetadataKey('revision_default');
     }
     elseif ($this->jsonStorageTranslationsTable) {
       $embedded_table = $this->jsonStorageTranslationsTable;
@@ -728,11 +730,17 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       // else both data fields and revisioned fields are needed to map the
       // entity values.
       $all_fields = $translations_fields;
+
+      // There is no default revision field to be set.
+      $revision_default_field = NULL;
     }
     else {
       $embedded_table = $this->baseTable;
       $base_fields = [];
       $all_fields = [];
+
+      // There is no default revision field to be set.
+      $revision_default_field = NULL;
     }
 
     // Get the field names for the "created" field types
@@ -824,6 +832,15 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
                   if ($langcode_is_default_langcode) {
                     $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT] = $values[$id][$field_name][$langcode];
+                  }
+
+                  if ($field_name == $revision_default_field) {
+                    if ($table_row[reset($columns)] === FALSE) {
+                      $values[$id]['isDefaultRevision'][LanguageInterface::LANGCODE_DEFAULT] = '0';
+                    }
+                    else {
+                      $values[$id]['isDefaultRevision'][LanguageInterface::LANGCODE_DEFAULT] = '1';
+                    }
                   }
                 }
                 else {
@@ -1484,8 +1501,23 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
       // Get the current revision ID, so that it can be set correctly in the base
       // table.
-      if ($this->entityType->isRevisionable() && !$entity->isDefaultRevision() && ($current_revision = $this->load($entity->id()))) {
-        $current_revision_id = $current_revision->getRevisionId();
+      if ($this->entityType->isRevisionable() && !$entity->isDefaultRevision()) {
+        $entity_id = $entity->id();
+        if (is_int($entity_id) || ctype_digit($entity_id)) {
+          $entity_id = (int) $entity_id;
+        }
+        $result = $this->database->select($this->baseTable)
+          ->fields($this->baseTable, [$this->jsonStorageCurrentRevisionTable])
+          ->condition($this->idKey, $entity_id)
+          ->execute()
+          ->fetchCol();
+        foreach ($result as $current_revisions) {
+          foreach ($current_revisions as $current_revision) {
+            if (isset($current_revision[$this->idKey])) {
+              $current_revision_id = $current_revision[$this->idKey];
+            }
+          }
+        }
       }
 
       if ($this->entityType->isTranslatable() && empty($entity->get($this->langcodeKey)->value)) {
@@ -1621,11 +1653,11 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           // revision creates a problem with MongoDB. The embedded table holding
           // all the revision data can on update do only one change to the
           // embedded table data. The new revision data is added to the embedded
-          // table data. In the embedded table holding the all revision data there
-          // are now two sets of revision data for the same revision. When
+          // table data. In the embedded table holding the all revision data
+          // there are now two sets of revision data for the same revision. When
           // querying the entity for revision data the query will fail, because
-          // there are two sets of revision data. The older revision data needs to
-          // be removed.
+          // there are two sets of revision data. The older revision data needs
+          // to be removed.
           $this->cleanupEntityAllRevisionData($entity->id());
         }
       }
@@ -1786,6 +1818,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     try {
       // Only do this if the entity is revisionable.
       if ($this->entityType->isRevisionable()) {
+        $table_mapping = $this->getTableMapping();
+        // Get the field name for the default revision field.
+        $revision_default_field = $table_mapping->getColumnNames($this->entityType->getRevisionMetadataKey('revision_default'))['value'];
+
         // Make sure that the entity_id is of the correct type (integer or string).
         $base_table_entity_id_data = $this->database->tableInformation()->getTableField($this->baseTable, $this->idKey);
         if (isset($base_table_entity_id_data['type']) && in_array($base_table_entity_id_data['type'], ['int', 'serial'])) {
@@ -1799,10 +1835,16 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $entity_data = $this->database->getConnection()->{$prefixed_table}->findOne(
           [$this->idKey => ['$eq' => $entity_id]],
           [
-            'projection' => [$this->jsonStorageAllRevisionsTable => 1],
+            'projection' => [$this->jsonStorageAllRevisionsTable => 1, $this->revisionKey => 1],
             'session' => $this->database->getMongodbSession(),
           ],
         );
+
+        // Get the current revision id for setting the default revision field.
+        $current_revision_id = NULL;
+        if (isset($entity_data->{$this->revisionKey})) {
+          $current_revision_id = $entity_data->{$this->revisionKey};
+        }
 
         $revisions_langcodes = [];
         $new_all_revisions_data = [];
@@ -1814,6 +1856,11 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             foreach ($revisions_langcodes as $revision_langcode) {
               if (($revision_langcode['revision_id'] == $revision->{$this->revisionKey}) && ($revision_langcode['langcode'] == $revision->{$this->langcodeKey})) {
                 $exists = TRUE;
+              }
+              if ($current_revision_id && isset($revision->{$this->revisionKey}) && isset($revision->{$revision_default_field}) && ($revision->{$this->revisionKey} != $current_revision_id)) {
+                // All revisions that are not the current revision should have
+                // set the value of "revision_default" to FALSE.
+                $revision->{$revision_default_field} = FALSE;
               }
             }
             if (!$exists) {

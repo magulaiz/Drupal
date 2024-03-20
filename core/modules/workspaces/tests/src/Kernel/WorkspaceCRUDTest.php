@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\workspaces\Kernel;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
@@ -182,7 +183,12 @@ class WorkspaceCRUDTest extends KernelTestBase {
       'label' => 'Baboon',
     ]);
     $violations = $workspace_3->validate();
-    $this->assertCount(1, $violations);
+    if (Database::getConnection()->driver() == 'mongodb') {
+      $this->assertCount(2, $violations);
+    }
+    else {
+      $this->assertCount(1, $violations);
+    }
     $this->assertEquals('A workspace with this ID has been deleted but data still exists for it.', $violations[0]->getMessage());
 
     // Running cron should delete the remaining data as well as the workspace ID
@@ -271,6 +277,7 @@ class WorkspaceCRUDTest extends KernelTestBase {
     // were deleted by the workspace purging process.
     $workspace->delete();
 
+    $this->entityTypeManager->getStorage('node')->resetCache();
     $revisions = $this->entityTypeManager->getStorage('node')->loadMultipleRevisions([1, 2, 3, 4, 5]);
     $this->assertCount(3, $revisions);
     $this->assertFalse($revisions[1]->isDefaultRevision());

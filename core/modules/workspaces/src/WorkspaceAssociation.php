@@ -91,10 +91,10 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
           ])
           ->condition('workspace', $affected_workspaces, 'IN')
           ->condition('target_entity_type_id', $entity->getEntityTypeId())
-          ->condition('target_entity_id', $entity->id())
+          ->condition('target_entity_id', (int) $entity->id())
           // Only update descendant workspaces if they have the same initial
           // revision, which means they are currently inheriting content.
-          ->condition('target_entity_revision_id', $tracked_revision_id)
+          ->condition('target_entity_revision_id', (int) $tracked_revision_id)
           ->execute();
       }
 
@@ -151,9 +151,12 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       ->condition('workspace', $workspace_id);
 
     if ($entity_type_id) {
-      $query->condition('target_entity_type_id', $entity_type_id, '=');
+      $query->condition('target_entity_type_id', $entity_type_id);
 
       if ($entity_ids) {
+        foreach ($entity_ids as & $entity_id) {
+          $entity_id = (int) $entity_id;
+        }
         $query->condition('target_entity_id', $entity_ids, 'IN');
       }
     }
@@ -194,18 +197,40 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       $workspace_candidates = [$workspace_id];
     }
 
-    $query = $this->database->select($entity_type->getRevisionTable(), 'revision');
-    $query->leftJoin($entity_type->getBaseTable(), 'base', $query->joinCondition()->compare("revision.$id_field", "base.$id_field"));
+    if ($this->database->driver() == 'mongodb') {
+      $all_revisions_table = $table_mapping->getJsonStorageAllRevisionsTable();
+      $current_revision_table = $table_mapping->getJsonStorageCurrentRevisionTable();
 
-    $query
-      ->fields('revision', [$revision_id_field, $id_field])
-      ->condition("revision.$workspace_field", $workspace_candidates, 'IN')
-      ->where("[revision].[$revision_id_field] >= [base].[$revision_id_field]")
-      ->orderBy("revision.$revision_id_field", 'ASC');
+      $query = $this->database->select($entity_type->getBaseTable(), 'base');
+      $query->embeddedTableToUseAsBaseTable($all_revisions_table);
+      $query
+        ->fields('base', [$revision_id_field, $id_field])
+        ->condition("$all_revisions_table.$workspace_field", $workspace_candidates, 'IN')
+        ->compare("$all_revisions_table.$revision_id_field", "$current_revision_table.$revision_id_field", '<=')
+        ->orderBy("$all_revisions_table.$revision_id_field", 'ASC');
 
-    // Restrict the result to a set of entity ID's if provided.
-    if ($entity_ids) {
-      $query->condition("revision.$id_field", $entity_ids, 'IN');
+      // Restrict the result to a set of entity ID's if provided.
+      if ($entity_ids) {
+        foreach ($entity_ids as & $entity_id) {
+          $entity_id = (int) $entity_id;
+        }
+        $query->condition("$all_revisions_table.$id_field", $entity_ids, 'IN');
+      }
+    }
+    else {
+      $query = $this->database->select($entity_type->getRevisionTable(), 'revision');
+      $query->leftJoin($entity_type->getBaseTable(), 'base', $query->joinCondition()->compare("revision.$id_field", "base.$id_field"));
+
+      $query
+        ->fields('revision', [$revision_id_field, $id_field])
+        ->condition("revision.$workspace_field", $workspace_candidates, 'IN')
+        ->where("[revision].[$revision_id_field] >= [base].[$revision_id_field]")
+        ->orderBy("revision.$revision_id_field", 'ASC');
+
+      // Restrict the result to a set of entity ID's if provided.
+      if ($entity_ids) {
+        $query->condition("revision.$id_field", $entity_ids, 'IN');
+      }
     }
 
     return $query->execute()->fetchAllKeyed();
@@ -232,19 +257,58 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
     $revision_id_field = $table_mapping->getColumnNames($entity_type->getKey('revision'))['value'];
 
     $query = $this->database->select($entity_type->getBaseTable(), 'base');
-    $query->leftJoin($entity_type->getRevisionTable(), 'revision', $query->joinCondition()->compare("base.$revision_id_field", "revision.$revision_id_field"));
+    if ($this->database->driver() == 'mongodb') {
+      $all_revisions_table = $table_mapping->getJsonStorageAllRevisionsTable();
+      $current_revision_table = $table_mapping->getJsonStorageCurrentRevisionTable();
 
-    $query
-      ->fields('base', [$revision_id_field, $id_field])
-      ->condition("revision.$workspace_field", $workspace_id, '=')
-      ->orderBy("base.$revision_id_field", 'ASC');
+//      $query->embeddedTableToUseAsBaseTable($all_revisions_table);
+//      $query->embeddedTableToUseAsBaseTable($current_revision_table);
 
-    // Restrict the result to a set of entity ID's if provided.
-    if ($entity_ids) {
-      $query->condition("base.$id_field", $entity_ids, 'IN');
+      $query
+        ->fields('base', [$revision_id_field, $id_field, $current_revision_table])
+        ->condition("$current_revision_table.$workspace_field", $workspace_id)
+        ->orderBy("$current_revision_table.$revision_id_field", 'ASC');
+
+      // Restrict the result to a set of entity ID's if provided.
+      if ($entity_ids) {
+        foreach ($entity_ids as & $entity_id) {
+          $entity_id = (int) $entity_id;
+        }
+        $query->condition("$current_revision_table.$id_field", $entity_ids, 'IN');
+      }
+
+      $result = $query->execute()->fetchAll();
+      $revisions = [];
+      foreach ($result as $row) {
+        if (isset($row->{$current_revision_table})) {
+          $current_revisions = $row->{$current_revision_table};
+          foreach ($current_revisions as $current_revision) {
+            if (isset($current_revision[$revision_id_field]) && isset($current_revision[$id_field])) {
+              $revision_id = $current_revision[$revision_id_field];
+              $id = $current_revision[$id_field];
+              $revisions[$revision_id] = $id;
+            }
+          }
+        }
+      }
+
+      return $revisions;
     }
+    else {
+      $query->leftJoin($entity_type->getRevisionTable(), 'revision', $query->joinCondition()->compare("base.$revision_id_field", "revision.$revision_id_field"));
 
-    return $query->execute()->fetchAllKeyed();
+      $query
+        ->fields('base', [$revision_id_field, $id_field])
+        ->condition("revision.$workspace_field", $workspace_id, '=')
+        ->orderBy("base.$revision_id_field", 'ASC');
+
+      // Restrict the result to a set of entity ID's if provided.
+      if ($entity_ids) {
+        $query->condition("base.$id_field", $entity_ids, 'IN');
+      }
+
+      return $query->execute()->fetchAllKeyed();
+    }
   }
 
   /**
@@ -254,7 +318,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
     $query = $this->database->select(static::TABLE)
       ->fields(static::TABLE, ['workspace'])
       ->condition('target_entity_type_id', $entity->getEntityTypeId())
-      ->condition('target_entity_id', $entity->id());
+      ->condition('target_entity_id', (int) $entity->id());
 
     return $query->execute()->fetchCol();
   }
@@ -289,10 +353,16 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       $query->condition('target_entity_type_id', $entity_type_id, '=');
 
       if ($entity_ids) {
+        foreach ($entity_ids as & $entity_id) {
+          $entity_id = (int) $entity_id;
+        }
         $query->condition('target_entity_id', $entity_ids, 'IN');
       }
 
       if ($revision_ids) {
+        foreach ($revision_ids as &$revision_id) {
+          $revision_id = (int) $revision_id;
+        }
         $query->condition('target_entity_revision_id', $revision_ids, 'IN');
       }
     }

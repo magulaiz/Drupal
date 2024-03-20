@@ -54,8 +54,8 @@ trait QueryTrait {
 
     // Only alter the query if the active workspace is not the default one and
     // the entity type is supported.
-    $active_workspace = $this->workspaceManager->getActiveWorkspace();
-    if (!$active_workspace->isDefaultWorkspace() && $this->workspaceManager->isEntityTypeSupported($this->entityType)) {
+    if ($this->workspaceManager->isEntityTypeSupported($this->entityType) && $this->workspaceManager->hasActiveWorkspace()) {
+      $active_workspace = $this->workspaceManager->getActiveWorkspace();
       $this->mongodbSelect->addMetaData('active_workspace_id', $active_workspace->id());
       $this->mongodbSelect->addMetaData('simple_query', FALSE);
 
@@ -75,6 +75,22 @@ trait QueryTrait {
       ];
       $this->mongodbSelect->addMongodbJoin('LEFT', 'workspace_association', 'workspace_association_current_revision.target_entity_id', 'base_table', $id_field, '=', 'workspace_association', $extra);
     }
+
+//    if ($this->workspaceManager->isEntityTypeSupported($this->entityType) && $this->workspaceManager->hasActiveWorkspace()) {
+//      $active_workspace = $this->workspaceManager->getActiveWorkspace();
+//      $this->sqlQuery->addMetaData('active_workspace_id', $active_workspace->id());
+//      $this->sqlQuery->addMetaData('simple_query', FALSE);
+//
+//      // LEFT JOIN 'workspace_association' to the base table of the query so we
+//      // can properly include live content along with a possible workspace
+//      // revision.
+//      $id_field = $this->entityType->getKey('id');
+//      $this->sqlQuery->leftJoin('workspace_association', 'workspace_association', $this->sqlQuery->joinCondition()
+//        ->condition("%alias.target_entity_type_id", $this->entityTypeId)
+//        ->compare("%alias.target_entity_id", (int) "base_table.$id_field")
+//        ->condition("%alias.workspace", $active_workspace->id())
+//      );
+//    }
 
     return $this;
   }
