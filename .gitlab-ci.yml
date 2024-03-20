@@ -75,11 +75,6 @@ stages:
 #############
 # Defaults  #
 #############
-
-before_script:
-  - echo "Installing patch utility."
-  - sudo apt update 
-  - sudo apt-get install patch
   
 default:
   interruptible: true
@@ -288,6 +283,9 @@ default:
     paths:
       - vendor/
   script:
+      - echo "Installing patch utility."
+      - sudo apt update -qy
+      - sudo apt-get install -y patch
       - composer validate
       - composer install
       - if [ -n "$COMPOSER_UPDATE" ]; then
