@@ -5,7 +5,7 @@ namespace Drupal\Core\Session;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\SchemaObjectExistsException;
+use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Storage\Proxy\AbstractProxy;
@@ -70,7 +70,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
         $data = (string) $query->fetchField();
       }
       // Swallow the error if the table hasn't been created yet.
-      catch (\Throwable) {
+      catch (\Exception) {
       }
     }
     return $data;
@@ -96,7 +96,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
     try {
       $doWrite();
     }
-    catch (\Throwable $e) {
+    catch (\Exception $e) {
       // If there was an exception, try to create the table.
       if (!$try_again = $this->ensureTableExists()) {
         // If the exception happened for other reason than the missing
@@ -130,7 +130,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
         ->execute();
     }
     // Swallow the error if the table hasn't been created yet.
-    catch (\Throwable) {
+    catch (\Exception) {
     }
 
     return TRUE;
@@ -151,7 +151,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
         ->execute();
     }
     // Swallow the error if the table hasn't been created yet.
-    catch (\Throwable) {
+    catch (\Exception) {
     }
     return FALSE;
   }
@@ -225,21 +225,18 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   protected function ensureTableExists(): bool {
     try {
       $database_schema = $this->connection->schema();
-      if (!$database_schema->tableExists('sessions')) {
-        $database_schema->createTable('sessions', $this->schemaDefinition());
-        return TRUE;
-      }
-      else {
-        return TRUE;
-      }
+      $schema_definition = $this->schemaDefinition();
+      $database_schema->createTable('sessions', $schema_definition);
     }
-    // If another process has already created the session table, attempting to
-    // recreate it will throw an exception. In this case just catch the
-    // exception and do nothing.
-    catch (SchemaObjectExistsException) {
-      return TRUE;
+    // If another process has already created the table, attempting to create
+    // it will throw an exception. In this case just catch the exception and do
+    // nothing.
+    catch (DatabaseException $e) {
     }
-    return FALSE;
+    catch (\Exception $e) {
+      return FALSE;
+    }
+    return TRUE;
   }
 
 }

@@ -240,7 +240,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
         ->condition('uid', $uid)
         ->execute();
     }
-    catch (\Throwable) {
+    catch (\Exception) {
     }
   }
 
