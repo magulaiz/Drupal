@@ -132,6 +132,15 @@ function workspaces_entity_update(EntityInterface $entity) {
 }
 
 /**
+ * Implements hook_entity_translation_insert().
+ */
+function workspaces_entity_translation_insert(EntityInterface $translation): void {
+  \Drupal::service('class_resolver')
+    ->getInstanceFromDefinition(EntityOperations::class)
+    ->entityTranslationInsert($translation);
+}
+
+/**
  * Implements hook_entity_predelete().
  */
 function workspaces_entity_predelete(EntityInterface $entity) {
@@ -148,7 +157,7 @@ function workspaces_entity_predelete(EntityInterface $entity) {
  * Implements hook_entity_delete().
  */
 function workspaces_entity_delete(EntityInterface $entity) {
-  if (\Drupal::service('workspaces.manager')->isEntityTypeSupported($entity->getEntityType())) {
+  if (\Drupal::service('workspaces.information')->isEntityTypeSupported($entity->getEntityType())) {
     \Drupal::service('workspaces.association')
       ->deleteAssociations(NULL, $entity->getEntityTypeId(), [$entity->id()]);
   }
@@ -158,7 +167,7 @@ function workspaces_entity_delete(EntityInterface $entity) {
  * Implements hook_entity_revision_delete().
  */
 function workspaces_entity_revision_delete(EntityInterface $entity) {
-  if (\Drupal::service('workspaces.manager')->isEntityTypeSupported($entity->getEntityType())) {
+  if (\Drupal::service('workspaces.information')->isEntityTypeSupported($entity->getEntityType())) {
     \Drupal::service('workspaces.association')
       ->deleteAssociations(NULL, $entity->getEntityTypeId(), [$entity->id()], [$entity->getRevisionId()]);
   }
