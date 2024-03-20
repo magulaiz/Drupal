@@ -30,7 +30,7 @@ libraries-override:
   core/drupal.autocomplete:
     css:
       component:
-        misc/components/autocomplete-loading.module.css: css/components/autocomplete-loading.css
+        misc/components/autocomplete-loading.module.css: css/components/autocomplete-loading.module.css
 
   system/base:
     css:
