@@ -20,7 +20,6 @@ base:
       css/components/system-status-report-counters.css: { weight: -10 }
       css/components/system-status-report-general-info.css: { weight: -10 }
       css/components/tablesort.module.css: { weight: -10 }
-      css/components/tree-child.module.css: { weight: -10 }
 
 admin:
   version: VERSION
