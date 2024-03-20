@@ -124,13 +124,14 @@
         .dialog('option', { resizable: false, draggable: false })
         .dialog('widget');
       uiDialog[0].style.position = 'fixed';
-      window
-        .addEventListener(
-          'resize.dialogResize scroll.dialogResize',
-          eventData,
-          autoResize,
-        )
-        .dispatchEvent(new Event('resize.dialogResize'));
+      $(window).on(
+        'resize.dialogResize scroll.dialogResize',
+        eventData,
+        autoResize,
+      );
+
+      window.dispatchEvent(new CustomEvent('resize.dialogResize'));
+
       $(document).on(
         'drupalViewportOffsetChange.dialogResize',
         eventData,
