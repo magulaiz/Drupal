@@ -73,7 +73,6 @@ stages:
 #############
 # Defaults  #
 #############
-  
 default:
   interruptible: true
   retry:
@@ -282,7 +281,7 @@ default:
       - vendor/
   script:
       - echo "Installing patch utility."
-      - sudo apt update -qy
+      - sudo apt-get update -qy
       - sudo apt-get install -y patch
       - composer validate
       - composer install
