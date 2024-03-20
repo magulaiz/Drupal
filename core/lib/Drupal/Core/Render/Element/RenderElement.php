@@ -141,7 +141,7 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
     // \Drupal::formBuilder()->doBuildForm().
     if (!empty($element['#required'])) {
       $element['#attributes']['class'][] = 'required';
-      if (!in_array($element['#type'], ['radios', 'checkboxes'])) {
+      if (isset($element['#type']) && !in_array($element['#type'], ['radios', 'checkboxes'])) {
         $element['#attributes']['required'] = 'required';
         $element['#attributes']['aria-required'] = 'true';
       }
