@@ -798,6 +798,123 @@ JS;
   }
 
   /**
+   * Ensures that HTML scripts and styles are properly preserved in CKEditor 5.
+   *
+   * @dataProvider providerTestStylesAndScripts
+   */
+  public function testStylesAndScripts($content, $expected_content): void {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
+    // Create filter.
+    FilterFormat::create([
+      'format' => 'ckeditor5',
+      'name' => 'CKEditor 5 HTML',
+      'roles' => [RoleInterface::AUTHENTICATED_ID],
+    ])->save();
+    Editor::create([
+      'format' => 'ckeditor5',
+      'editor' => 'ckeditor5',
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'sourceEditing',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => [],
+          ],
+        ],
+      ],
+    ])->save();
+    $this->assertSame([], array_map(
+      function (ConstraintViolation $v) {
+        return (string) $v->getMessage();
+      },
+      iterator_to_array(CKEditor5::validatePair(
+        Editor::load('ckeditor5'),
+        FilterFormat::load('ckeditor5')
+      ))
+    ));
+
+    // Add a node with text rendered via the CKEditor 5 HTML format.
+    $this->drupalGet('node/add');
+    $page->fillField('title[0][value]', 'My test content');
+    $this->waitForEditor();
+    $this->pressEditorButton('Source');
+    $editor = $page->find('css', '.ck-source-editing-area textarea');
+    $editor->setValue($content);
+    $page->pressButton('Save');
+
+    $assert_session->responseContains($expected_content);
+  }
+
+  /**
+   * Data provider for testStylesAndScripts().
+   *
+   * @return string[][]
+   *   An array with the style and script HTML content to attempt to save.
+   */
+  public function providerTestStylesAndScripts(): array {
+    return [
+      'script' => [
+        'content' => '<script>(function() { let x = 10, y = 5; if( y < x ) { console.log("run me!"); }})()</script>',
+        'expected_content' => '<script>(function() { let x = 10, y = 5; if( y < x ) { console.log("run me!"); }})()</script>',
+      ],
+      'style' => [
+        'content' => '<style>
+a > span {
+  /* Important comment. */
+  color: red !important;
+}
+</style>',
+        'expected_content' => '<style>
+a > span {
+  /* Important comment. */
+  color: red !important;
+}
+</style>',
+      ],
+      'script and style' => [
+        'content' => <<<HTML
+<script type="text/javascript">
+let x = 10;
+let y = 5;
+if(y < x){
+console.log('is smaller')
+}
+</script>
+<style type="text/css">
+:root {
+  --main-bg-color: brown;
+}
+.sections > .section {
+  background: var(--main-bg-color);
+}
+</style>
+HTML,
+        'expected_content' => <<<HTML
+<script type="text/javascript">
+let x = 10;
+let y = 5;
+if(y < x){
+console.log('is smaller')
+}
+</script><style type="text/css">
+:root {
+  --main-bg-color: brown;
+}
+.sections > .section {
+  background: var(--main-bg-color);
+}
+</style>
+HTML,
+      ],
+    ];
+  }
+
+  /**
    * Ensures that changes are saved in CKEditor 5.
    */
   public function testSave(): void {
