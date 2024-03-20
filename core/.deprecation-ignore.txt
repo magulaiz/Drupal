@@ -23,10 +23,6 @@
 # testing using \Symfony\Component\ErrorHandler\DebugClassLoader.
 %The "Twig\\Environment::getTemplateClass\(\)" method is considered internal\. It may change without further notice\. You should not extend it from "Drupal\\Core\\Template\\TwigEnvironment"\.%
 
-# Drupal 11.
-%Drupal\\Core\\Form\\FormBuilder::getForm\(\).* will require a new "mixed \.\.\. \$args" argument in the next major version of its interface%
-%Drupal\\Core\\Form\\FormBuilder::submitForm\(\).* will require a new "mixed \.\.\. \$args" argument in the next major version of its interface%
-
 # PHPUnit 9.
 %"PHPUnit\\Framework\\TestListener".*is deprecated%
 %"PHPUnit\\Framework\\TestListenerDefaultImplementation".*is deprecated%
@@ -37,8 +33,12 @@
 %Expecting E_WARNING and E_USER_WARNING is deprecated and will no longer be possible in PHPUnit 10%
 %Expecting E_ERROR and E_USER_ERROR is deprecated and will no longer be possible in PHPUnit 10%
 
-# Temporarily for testing Symfony 6.4.
+# Symfony 6.4.
 %Since symfony/dependency-injection 6.4: "Symfony\\Component\\DependencyInjection\\ContainerAwareTrait" is deprecated, use dependency injection instead.%
-%The ".*" class uses "Symfony\\Component\\DependencyInjection\\ContainerAwareTrait" that is deprecated since Symfony 6.4, use dependency injection instead.%
-%The ".*" class implements "Symfony\\Component\\DependencyInjection\\ContainerAwareInterface" that is deprecated since Symfony 6.4, use dependency injection instead.%
-%The ".*" interface extends "Symfony\\Component\\DependencyInjection\\ContainerAwareInterface" that is deprecated since Symfony 6.4, use dependency injection instead.%
+%The "Drupal\\Core\\Logger\\LoggerChannelFactory" class implements "Symfony\\Component\\DependencyInjection\\ContainerAwareInterface" that is deprecated since Symfony 6.4, use dependency injection instead.%
+%The "Drupal\\Core\\Logger\\LoggerChannelFactory" class uses "Symfony\\Component\\DependencyInjection\\ContainerAwareTrait" that is deprecated since Symfony 6.4, use dependency injection instead.%
+%The "Drupal\\Core\\Queue\\QueueFactory" class implements "Symfony\\Component\\DependencyInjection\\ContainerAwareInterface" that is deprecated since Symfony 6.4, use dependency injection instead.%
+%The "Drupal\\Core\\Queue\\QueueFactory" class uses "Symfony\\Component\\DependencyInjection\\ContainerAwareTrait" that is deprecated since Symfony 6.4, use dependency injection instead.%
+%The "Drupal\\Tests\\Core\\Controller\\MockContainerAware" class implements "Symfony\\Component\\DependencyInjection\\ContainerAwareInterface" that is deprecated since Symfony 6.4, use dependency injection instead.%
+%The "Drupal\\Tests\\Core\\DependencyInjection\\DependencySerializationTestDummy" class implements "Symfony\\Component\\DependencyInjection\\ContainerAwareInterface" that is deprecated since Symfony 6.4, use dependency injection instead.%
+%The "Drupal\\Tests\\Core\\Utility\\MockContainerAware" class implements "Symfony\\Component\\DependencyInjection\\ContainerAwareInterface" that is deprecated since Symfony 6.4, use dependency injection instead.%
