@@ -59,7 +59,7 @@ use Drupal\user\StatusItem;
  *   revision_metadata_keys = {
  *     "revision_user" = "revision_user",
  *     "revision_created" = "revision_created",
- *     "revision_log_message" = "revision_log_message",
+ *     "revision_log_message" = "revision_log",
  *   },
  *   bundle_entity_type = "taxonomy_vocabulary",
  *   field_ui_base_route = "entity.taxonomy_vocabulary.overview_form",
@@ -209,12 +209,6 @@ class Term extends EditorialContentEntityBase implements TermInterface {
       ->setDescription(t('The time that the term was last edited.'))
       ->setTranslatable(TRUE)
       ->setRevisionable(TRUE);
-
-    // @todo Keep this field hidden until we have a revision UI for terms.
-    // @see https://www.drupal.org/project/drupal/issues/2936995
-    $fields['revision_log_message']->setDisplayOptions('form', [
-      'region' => 'hidden',
-    ]);
 
     return $fields;
   }

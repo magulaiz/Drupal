@@ -189,9 +189,9 @@ class TermKernelTest extends KernelTestBase {
       'access content',
     ]);
 
-    $this->assertTrue($entity->get('revision_log_message')->access('view', $admin));
-    $this->assertTrue($entity->get('revision_log_message')->access('view', $editor));
-    $this->assertFalse($entity->get('revision_log_message')->access('view', $viewer));
+    $this->assertTrue($entity->get('revision_log')->access('view', $admin));
+    $this->assertTrue($entity->get('revision_log')->access('view', $editor));
+    $this->assertFalse($entity->get('revision_log')->access('view', $viewer));
   }
 
 }
