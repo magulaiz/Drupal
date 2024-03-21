@@ -71,6 +71,7 @@ variables:
   MINK_DRIVER_ARGS_FIREFOX: '["firefox", {"browserName":"firefox", "moz:firefoxOptions":{"args":["-headless"]}}, "http://localhost:4444"]'
   CI_PARALLEL_NODE_INDEX: $CI_NODE_INDEX
   CI_PARALLEL_NODE_TOTAL: $CI_NODE_TOTAL
+  CI_DEBUG_SERVICES: "true"
 
 .with-database: &with-database
   name: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB:production
@@ -89,6 +90,11 @@ variables:
 .with-firefox: &with-firefox
   name: instrumentisto/geckodriver:124.0
   alias: firefox
+  command:
+    - "--binary=/opt/firefox/firefox"
+    - "--log=debug"
+    - "--host=0.0.0.0"
+    - "--allow-hosts=firefox localhost"
 
 .run-tests: &run-tests
   script:
