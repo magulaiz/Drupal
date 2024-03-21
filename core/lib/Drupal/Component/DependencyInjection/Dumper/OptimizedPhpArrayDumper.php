@@ -437,7 +437,7 @@ class OptimizedPhpArrayDumper extends Dumper {
       /** @var \Symfony\Component\DependencyInjection\Reference $reference */
       $reference = reset($reference);
 
-      return $this->getServiceClosureCall((string) $reference, $reference->getInvalidBehavior());
+      return $this->getServiceClosureCall($this->getReferenceCall((string) $reference, $reference));
     }
     elseif (is_object($value)) {
       // Drupal specific: Instantiated objects have a _serviceId parameter.
@@ -540,19 +540,16 @@ class OptimizedPhpArrayDumper extends Dumper {
   /**
    * Gets a service closure reference in a suitable PHP array format.
    *
-   * @param string $id
-   *   The ID of the service to get a reference for.
-   * @param int $invalid_behavior
-   *   (optional) The invalid behavior of the service.
+   * @param object $closure
+   *   The object to get a closure for.
    *
    * @return string|object
    *   A suitable representation of the service closure reference.
    */
-  protected function getServiceClosureCall(string $id, int $invalid_behavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
+  protected function getServiceClosureCall($closure) {
     return (object) [
       'type' => 'service_closure',
-      'id' => $id,
-      'invalidBehavior' => $invalid_behavior,
+      'closure' => $closure,
     ];
   }
 

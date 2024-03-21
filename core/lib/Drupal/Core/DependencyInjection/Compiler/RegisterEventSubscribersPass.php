@@ -25,6 +25,15 @@ class RegisterEventSubscribersPass implements CompilerPassInterface {
    * {@inheritdoc}
    */
   public function process(ContainerBuilder $container): void {
+    foreach (array_keys($container->findTaggedServiceIds('event_subscriber', TRUE)) as $id) {
+      $subscriber = $container->getDefinition($id);
+      $class = $subscriber->getClass();
+
+      if (count(class_implements($class)) == 1 && !in_array($id, ['views.route_subscriber'])) {
+        $subscriber->setPublic(FALSE);
+      }
+    }
+
     $this->renameTag($container, 'event_subscriber', 'kernel.event_subscriber');
     $this->pass->process($container);
     $this->renameTag($container, 'kernel.event_subscriber', 'event_subscriber');
