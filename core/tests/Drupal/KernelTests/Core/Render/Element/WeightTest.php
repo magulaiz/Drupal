@@ -95,6 +95,7 @@ class WeightTest extends KernelTestBase {
       '#process' => [
         [Select::class, 'processSelect'],
         [Select::class, 'processAjaxForm'],
+        [Select::class, 'processGroup'],
       ],
       '#pre_render' => [
         [Select::class, 'preRenderSelect'],
