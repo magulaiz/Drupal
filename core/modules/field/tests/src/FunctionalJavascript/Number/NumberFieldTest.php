@@ -144,7 +144,7 @@ class NumberFieldTest extends WebDriverTestBase {
       "fields[{$float_field}][settings_edit_form][settings][thousand_separator]" => $thousand_separator,
     ];
     foreach ($edit as $name => $value) {
-      $page->fillField($name, $value);
+      $page->fillField($name, (string) $value);
     }
     $page->pressButton("{$float_field}_plugin_settings_update");
     $assert_session->waitForElement('css', '.field-plugin-summary-cell > .ajax-new-content');

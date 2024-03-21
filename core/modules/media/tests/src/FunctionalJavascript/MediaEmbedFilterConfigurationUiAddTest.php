@@ -40,7 +40,7 @@ class MediaEmbedFilterConfigurationUiAddTest extends MediaEmbedFilterTestBase {
       // Set a non-default weight.
       if (is_numeric($media_embed)) {
         $this->click('.tabledrag-toggle-weight');
-        $page->selectFieldOption('filters[media_embed][weight]', $media_embed);
+        $page->selectFieldOption('filters[media_embed][weight]', (string) $media_embed);
       }
     }
     if (!empty($allowed_html)) {

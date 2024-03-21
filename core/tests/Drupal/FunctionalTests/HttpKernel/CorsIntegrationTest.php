@@ -143,7 +143,7 @@ class CorsIntegrationTest extends BrowserTestBase {
     /** @var \Symfony\Component\HttpFoundation\Response $response */
     $this->drupalGet('/test-page', [], ['Origin' => 'http://non-valid.com']);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', NULL);
+    $this->assertSession()->responseHeaderDoesNotExist('Access-Control-Allow-Origin');
     $this->assertSession()->responseHeaderContains('Vary', 'Origin');
 
     // Specify a valid origin.
