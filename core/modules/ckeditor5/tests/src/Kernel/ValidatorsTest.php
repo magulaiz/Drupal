@@ -24,6 +24,7 @@ use Symfony\Component\Yaml\Yaml;
  * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\FundamentalCompatibilityConstraintValidator
  * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\CKEditor5MediaAndFilterSettingsInSyncConstraintValidator
  * @group ckeditor5
+ * @group #slow
  */
 class ValidatorsTest extends KernelTestBase {
 
@@ -86,7 +87,9 @@ class ValidatorsTest extends KernelTestBase {
       'format' => 'dummy',
       'editor' => 'ckeditor5',
       'settings' => $ckeditor5_settings,
-      'image_upload' => [],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ]);
 
     $typed_config = $this->typedConfig->createFromNameAndData(
@@ -110,7 +113,7 @@ class ValidatorsTest extends KernelTestBase {
   /**
    * Provides a list of Text Editor config entities using CKEditor 5 to test.
    */
-  public function provider(): array {
+  public static function provider(): array {
     $data = [];
     $data['CKEditor5::getDefaultSettings()'] = [
       // @see ::test()
@@ -182,7 +185,10 @@ class ValidatorsTest extends KernelTestBase {
         ],
       ],
       'violations' => [
-        'settings.plugins.ckeditor5_language' => 'Configuration for the enabled plugin "<em class="placeholder">Language</em>" (<em class="placeholder">ckeditor5_language</em>) is missing.',
+        'settings.plugins.ckeditor5_language' => [
+          'Configuration for the enabled plugin "<em class="placeholder">Language</em>" (<em class="placeholder">ckeditor5_language</em>) is missing.',
+          "'language_list' is a required key because settings.plugins.%key is ckeditor5_language (see config schema type ckeditor5.plugin.ckeditor5_language).",
+        ],
       ],
     ];
     $data['valid language plugin configuration: un'] = [
@@ -578,6 +584,60 @@ class ValidatorsTest extends KernelTestBase {
       ],
       'violations' => [],
     ];
+    $data['INVALID: SourceEditing plugin configuration: <ol start type> must not be allowed because List can generate <ol reversed start>'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'numberedList',
+            'sourceEditing',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_list' => [
+            'properties' => [
+              'reversed' => TRUE,
+              'startIndex' => TRUE,
+            ],
+            'multiBlock' => TRUE,
+          ],
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => [
+              '<ol start type>',
+            ],
+          ],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_sourceEditing.allowed_tags.0' => 'The following attribute(s) are already supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: <em class="placeholder">List (&lt;ol start&gt;)</em>.',
+      ],
+    ];
+    $data['INVALID: SourceEditing plugin configuration: <ol start type> must not be allowed because List can generate <ol start>'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'numberedList',
+            'sourceEditing',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_list' => [
+            'properties' => [
+              'reversed' => FALSE,
+              'startIndex' => FALSE,
+            ],
+            'multiBlock' => TRUE,
+          ],
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => [
+              '<ol start type>',
+            ],
+          ],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_sourceEditing.allowed_tags.0' => 'The following attribute(s) can optionally be supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: <em class="placeholder">List (&lt;ol start&gt;)</em>.',
+      ],
+    ];
 
     return $data;
   }
@@ -649,7 +709,7 @@ class ValidatorsTest extends KernelTestBase {
   /**
    * Provides a list of Text Editor + Text Format pairs to test.
    */
-  public function providerPair(): array {
+  public static function providerPair(): array {
     // cspell:ignore donk
     $data = [];
     $data['INVALID: allow_view_mode_override condition not met: filter must be configured to allow 2 or more view modes'] = [
@@ -1002,7 +1062,7 @@ class ValidatorsTest extends KernelTestBase {
         ],
       ],
       'image_upload' => [
-        'status' => TRUE,
+        'status' => FALSE,
       ],
       'filters' => [],
       'violations' => [
@@ -1048,7 +1108,7 @@ class ValidatorsTest extends KernelTestBase {
         ],
       ],
       'image_upload' => [
-        'status' => TRUE,
+        'status' => FALSE,
       ],
       'filters' => [],
       'violations' => [
@@ -1109,8 +1169,15 @@ class ValidatorsTest extends KernelTestBase {
           ],
         ],
       ],
-      'image' => [
+      'image_upload' => [
         'status' => TRUE,
+        'scheme' => 'public',
+        'directory' => 'inline-images',
+        'max_size' => NULL,
+        'max_dimensions' => [
+          'width' => NULL,
+          'height' => NULL,
+        ],
       ],
       'filters' => [],
       'violations' => [],
@@ -1567,7 +1634,6 @@ class ValidatorsTest extends KernelTestBase {
         ],
         'plugins' => [],
       ],
-      'image_upload' => [],
     ]);
 
     $this->assertSame([], $this->validatePairToViolationsArray($text_editor, $text_format, TRUE));

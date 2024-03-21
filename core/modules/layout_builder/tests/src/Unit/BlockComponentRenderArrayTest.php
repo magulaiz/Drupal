@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\layout_builder\Unit;
 
 use Drupal\block_content\Access\RefinableDependentAccessInterface;
@@ -45,7 +47,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
   /**
    * Data provider for test functions that should test block types.
    */
-  public function providerBlockTypes() {
+  public static function providerBlockTypes() {
     return [
       [TRUE],
       [FALSE],

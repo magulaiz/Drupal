@@ -34,12 +34,13 @@
         "symfony/polyfill-iconv": "^1.26",
         "symfony/yaml": "^6.4",
         "twig/twig": "^3.5.0",
-        "doctrine/annotations": "^1.14",
+        "doctrine/annotations": "^2.0",
+        "doctrine/lexer": "^2.0",
         "guzzlehttp/guzzle": "^7.5",
         "guzzlehttp/psr7": "^2.4.5",
         "egulias/email-validator": "^3.2.1|^4.0",
         "masterminds/html5": "^2.7",
-        "symfony/psr-http-message-bridge": "^2.1",
+        "symfony/psr-http-message-bridge": "^2.1|^6.4",
         "composer-runtime-api": "^2.1",
         "composer/semver": "^3.3",
         "asm89/stack-cors": "^2.1",
@@ -105,7 +106,8 @@
             "lib/Drupal/Core/DrupalKernel.php",
             "lib/Drupal/Core/DrupalKernelInterface.php",
             "lib/Drupal/Core/Installer/InstallerRedirectTrait.php",
-            "lib/Drupal/Core/Site/Settings.php"
+            "lib/Drupal/Core/Site/Settings.php",
+            "lib/Drupal/Component/Datetime/Time.php"
         ],
         "files": [
             "includes/bootstrap.inc"

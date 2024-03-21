@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Unit;
 
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
@@ -210,7 +212,7 @@ class MigrationTest extends UnitTestCase {
   /**
    * Provides data for valid migration configuration test.
    */
-  public function getValidMigrationDependenciesProvider() {
+  public static function getValidMigrationDependenciesProvider() {
     return [
       [
         'source' => NULL,
@@ -238,7 +240,7 @@ class MigrationTest extends UnitTestCase {
   /**
    * Provides invalid migration dependencies.
    */
-  public function getInvalidMigrationDependenciesProvider() {
+  public static function getInvalidMigrationDependenciesProvider() {
     return [
       'invalid key' => [
         'dependencies' => ['bogus' => []],

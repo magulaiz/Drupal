@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -342,7 +344,7 @@ class FieldDefinitionTest extends UnitTestCase {
   /**
    * A data provider for all the types of factories that can create definitions.
    */
-  public function factoryTypeProvider() {
+  public static function factoryTypeProvider() {
     return [
       '::createFromFieldStorageDefinition factory' => [
         'createFromFieldStorageDefinition',

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\rest\Functional;
 
 use Drupal\Component\Render\PlainTextOutput;
@@ -15,6 +17,8 @@ use Drupal\rest\RestResourceConfigInterface;
 use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
+
+// cspell:ignore èxample msword
 
 /**
  * Tests binary data file upload route.
@@ -193,7 +197,7 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
     // header with no 'file' prefix.
     $response = $this->fileRequest($uri, $this->testFileData, ['Content-Disposition' => 'filename="example.txt"']);
     $this->assertSame(201, $response->getStatusCode());
-    $expected = $this->getExpectedNormalizedEntity(2, 'example_0.txt');
+    $expected = $this->getExpectedNormalizedEntity(2, 'example_0.txt', TRUE);
     $this->assertResponseData($expected, $response);
 
     // Check the actual file data.
@@ -315,7 +319,7 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
     $this->assertSame(201, $response->getStatusCode());
 
     // Loading expected normalized data for file 2, the duplicate file.
-    $expected = $this->getExpectedNormalizedEntity(2, 'example_0.txt');
+    $expected = $this->getExpectedNormalizedEntity(2, 'example_0.txt', TRUE);
     $this->assertResponseData($expected, $response);
 
     // Check the actual file data.

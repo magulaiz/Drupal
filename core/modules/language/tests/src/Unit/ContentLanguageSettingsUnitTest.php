@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\language\Unit;
 
 use Drupal\Core\Language\LanguageInterface;
@@ -178,7 +180,7 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
     $this->assertSame($expected, $config->isLanguageAlterable());
   }
 
-  public function providerLanguageAlterable() {
+  public static function providerLanguageAlterable() {
     $alterableConfig = new ContentLanguageSettings([
       'target_entity_type_id' => 'test_entity_type',
       'target_bundle' => 'test_bundle',
