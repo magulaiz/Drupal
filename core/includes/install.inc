@@ -588,9 +588,6 @@ function drupal_requirements_url($severity) {
  *   Array of the installation profile's requirements.
  */
 function drupal_check_profile($profile) {
-  if ($profile === FALSE) {
-    return [];
-  }
   $info = install_profile_info($profile);
   // Collect requirement testing results.
   $requirements = [];

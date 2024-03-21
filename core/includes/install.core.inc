@@ -2058,10 +2058,13 @@ function install_check_translations($langcode, $server_pattern) {
  * Checks installation requirements and reports any errors.
  */
 function install_check_requirements($install_state) {
+  $requirements = [];
   $profile = $install_state['parameters']['profile'];
 
-  // Check the profile requirements.
-  $requirements = drupal_check_profile($profile);
+  if ($profile !== FALSE) {
+    // Check the profile requirements.
+    $requirements = drupal_check_profile($profile);
+  }
 
   if ($install_state['settings_verified']) {
     return $requirements;
