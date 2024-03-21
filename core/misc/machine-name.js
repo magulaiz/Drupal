@@ -263,7 +263,7 @@
               settings.field_suffix,
           );
         }
-        data.$suffix.show();
+        data.$suffix[0].style.display = 'block';
       } else {
         data.$suffix.hide();
         data.$target[0].value = machine;
