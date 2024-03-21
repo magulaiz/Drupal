@@ -305,7 +305,9 @@ function install_begin_request($class_loader, &$install_state) {
   // Validate certain core settings that are used throughout the installation.
   if (array_key_exists('profile', $install_state['parameters'])) {
     $install_state['parameters']['profile'] = preg_replace('/[^a-zA-Z_0-9]/', '', $install_state['parameters']['profile']);
-    // @todo
+    // If the site is not using an install profile then profile will be set to
+    // an empty string in the query parameters, and will need converting back to
+    // a FALSE value.
     if ($install_state['parameters']['profile'] === '') {
       $install_state['parameters']['profile'] = FALSE;
     }
@@ -1266,10 +1268,7 @@ function _install_select_profile(&$install_state) {
   // If a valid profile has already been selected, return the selection.
   if (array_key_exists('profile', $install_state['parameters'])) {
     $profile = $install_state['parameters']['profile'];
-    if ($profile === FALSE) {
-      return FALSE;
-    }
-    if (isset($install_state['profiles'][$profile])) {
+    if ($profile === FALSE || isset($install_state['profiles'][$profile])) {
       return $profile;
     }
   }
