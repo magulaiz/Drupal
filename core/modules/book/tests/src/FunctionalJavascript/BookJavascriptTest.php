@@ -89,8 +89,7 @@ class BookJavascriptTest extends WebDriverTestBase {
     $this->assertOrderInPage(['2nd page', '1st page']);
 
     $this->submitForm([], 'Save book pages');
-    $message = new FormattableMarkup('Updated book @book.', ['@book' => $book->getTitle()]);
-    $this->assertSession()->pageTextContains((string) $message);
+    $this->assertSession()->pageTextContains(new FormattableMarkup('Updated book @book.', ['@book' => $book->getTitle()]));
 
     // Check that page reordering was done in the backend for drag-n-drop.
     $page1 = Node::load($page1->id());
@@ -125,8 +124,7 @@ class BookJavascriptTest extends WebDriverTestBase {
     $this->assertFalse($weight_select2->isVisible());
 
     $this->submitForm([], 'Save book pages');
-    $message = new FormattableMarkup('Updated book @book.', ['@book' => $book->getTitle()]);
-    $this->assertSession()->pageTextContains((string) $message);
+    $this->assertSession()->pageTextContains(new FormattableMarkup('Updated book @book.', ['@book' => $book->getTitle()]));
 
     // Check that the '1st page' is first again.
     $this->assertOrderInPage(['1st page', '2nd page']);

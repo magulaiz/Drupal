@@ -55,7 +55,6 @@ class JSInteractionTest extends WebDriverTestBase {
 
     // Enable field after 100 ms.
     $this->clickLink('Enable Field Trigger');
-    $this->assertSession()->waitForElementVisible('css', 'input[data-drupal-selector="edit-target-field"]:not(:disabled)');
     $this->assertSession()->fieldExists('target_field')->setValue('Test');
     $this->assertSession()->fieldValueEquals('target_field', 'Test');
   }

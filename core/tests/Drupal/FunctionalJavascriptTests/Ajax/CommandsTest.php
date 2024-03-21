@@ -50,16 +50,16 @@ class CommandsTest extends WebDriverTestBase {
     // Wait for the alert to appear.
     $page->waitFor(10, function () use ($session) {
       try {
-        $session->getDriver()->getWebDriverSession()->alert()->getText();
+        $session->getDriver()->getWebDriverSession()->getAlert_text();
         return TRUE;
       }
       catch (\Exception $e) {
         return FALSE;
       }
     });
-    $alert_text = $this->getSession()->getDriver()->getWebDriverSession()->alert()->getText();
+    $alert_text = $this->getSession()->getDriver()->getWebDriverSession()->getAlert_text();
     $this->assertEquals('Alert', $alert_text);
-    $this->getSession()->getDriver()->getWebDriverSession()->alert()->accept();
+    $this->getSession()->getDriver()->getWebDriverSession()->accept_alert();
 
     $this->drupalGet($form_path);
     $page->pressButton("AJAX 'Announce': Click to announce");

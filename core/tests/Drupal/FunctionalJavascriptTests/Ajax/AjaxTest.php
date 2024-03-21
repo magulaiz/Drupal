@@ -328,7 +328,6 @@ JS;
 
     // Test textfield with 'change' event.
     $textfield3->focus();
-    $this->assertSession()->assertWaitOnAjaxRequest();
     $textfield3->setValue('Wasps buzz');
     $textfield3->blur();
     $this->assertSession()->assertWaitOnAjaxRequest();

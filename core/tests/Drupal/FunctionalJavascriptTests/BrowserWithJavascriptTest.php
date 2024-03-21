@@ -30,15 +30,15 @@ class BrowserWithJavascriptTest extends WebDriverTestBase {
     $session = $this->getSession();
 
     $session->resizeWindow(400, 300);
-    // Webdriver will resize to as close as possible rather than the exact value.
-    $window_size = $session->getDriver()->getWebDriverSession()->window()->getRect();
-    $width = $window_size['width'];
-    $height = $window_size['height'];
     $javascript = <<<JS
     (function(){
-        let x = window.outerWidth;
-        let y = window.outerHeight;
-        return x == $width && y == $height;
+        var w = window,
+        d = document,
+        e = d.documentElement,
+        g = d.getElementsByTagName('body')[0],
+        x = w.innerWidth || e.clientWidth || g.clientWidth,
+        y = w.innerHeight || e.clientHeight|| g.clientHeight;
+        return x == 400 && y == 300;
     }())
 JS;
     $this->assertJsCondition($javascript);
@@ -141,8 +141,8 @@ JS;
     $session->visit($url);
 
     // There are 2 alerts to accept before we can get the content of the page.
-    $session->getDriver()->getWebdriverSession()->alert()->accept();
-    $session->getDriver()->getWebdriverSession()->alert()->accept();
+    $session->getDriver()->getWebdriverSession()->accept_alert();
+    $session->getDriver()->getWebdriverSession()->accept_alert();
 
     $out = $session->getPage()->getContent();
 

@@ -89,50 +89,10 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $page = $this->getSession()->getPage();
     $src = $this->imageAttributes()['src'];
     $this->waitForEditor();
-    // Store the $src value in the revision textarea so we can copy and paste it
-    // as the modal which pops up in CKEditor can't be manipulated via webdriver.
-    $revision_textarea = $page->find('css', 'textarea[data-drupal-selector="edit-revision-log-0-value"]');
-    $revision_value = $revision_textarea->getValue();
-    $revision_textarea->setValue($src);
-    $revision_textarea->click();
-    $control_key = "\xEE\x80\x89";
-    $actions = [
-      'actions' => [
-        [
-          'type' => 'key',
-          'id' => 'keyboard1',
-          'actions' => [
-            ['type' => 'keyDown', 'value' => $control_key],
-            ['type' => 'keyDown', 'value' => 'a'],
-            ['type' => 'keyUp', 'value' => $control_key],
-            ['type' => 'keyUp', 'value' => 'a'],
-            ['type' => 'keyDown', 'value' => $control_key],
-            ['type' => 'keyDown', 'value' => 'c'],
-            ['type' => 'keyUp', 'value' => $control_key],
-            ['type' => 'keyUp', 'value' => 'c'],
-          ],
-        ],
-      ],
-    ];
-    $this->getSession()->getDriver()->getWebDriverSession()->postActions($actions);
-    $revision_textarea->setValue($revision_value);
     $this->pressEditorButton('Insert image via URL');
     $panel = $page->find('css', '.ck-dropdown__panel  .ck-image-insert-url');
-    $actions = [
-      'actions' => [
-        [
-          'type' => 'key',
-          'id' => 'keyboard1',
-          'actions' => [
-            ['type' => 'keyDown', 'value' => $control_key],
-            ['type' => 'keyDown', 'value' => 'v'],
-            ['type' => 'keyUp', 'value' => $control_key],
-            ['type' => 'keyUp', 'value' => 'v'],
-          ],
-        ],
-      ],
-    ];
-    $this->getSession()->getDriver()->getWebDriverSession()->postActions($actions);
+    $src_input = $panel->find('css', 'input[type=text]');
+    $src_input->setValue($src);
     $panel->find('xpath', "//button[span[text()='Insert']]")->click();
     // Wait for the image to be uploaded and rendered by CKEditor 5.
     $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', '.ck-widget.image > img[src="' . $src . '"]'));

@@ -30,8 +30,7 @@ trait ContextualLinkClickTrait {
     }
 
     $element = $this->getSession()->getPage()->find('css', $selector);
-    $element->find('css', '.contextual button')->mouseOver();
-    $element->find('css', '.contextual button')->click();
+    $element->find('css', '.contextual button')->press();
     $element->findLink($link_locator)->click();
 
     if ($force_visible) {
