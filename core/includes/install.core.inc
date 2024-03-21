@@ -455,13 +455,12 @@ function install_begin_request($class_loader, &$install_state) {
     $module_list->setPathname($name, $profile->getPathname());
   }
 
-  if ($profile = _install_select_profile($install_state)) {
+  $profile = _install_select_profile($install_state);
+  if ($profile !== NULL) {
     $install_state['parameters']['profile'] = $profile;
-    if ($profile !== FALSE) {
-      install_load_profile($install_state);
-      if (isset($install_state['profile_info']['distribution']['install']['theme'])) {
-        $install_state['theme'] = $install_state['profile_info']['distribution']['install']['theme'];
-      }
+    install_load_profile($install_state);
+    if (isset($install_state['profile_info']['distribution']['install']['theme'])) {
+      $install_state['theme'] = $install_state['profile_info']['distribution']['install']['theme'];
     }
   }
 
@@ -1255,7 +1254,7 @@ function install_select_profile(&$install_state) {
  *
  * @return string|null|false
  *   The machine-readable name of the selected profile or NULL if no profile was
- *   selected.
+ *   selected or FALSE if the site has no profile.
  *
  *  @see install_select_profile()
  */

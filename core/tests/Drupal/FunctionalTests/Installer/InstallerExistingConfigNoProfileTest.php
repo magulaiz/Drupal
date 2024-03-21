@@ -19,11 +19,6 @@ class InstallerExistingConfigNoProfileTest extends InstallerExistingConfigTestBa
   /**
    * {@inheritdoc}
    */
-  protected $profile = FALSE;
-
-  /**
-   * {@inheritdoc}
-   */
   protected $existingSyncDirectory = TRUE;
 
   /**
@@ -66,6 +61,9 @@ class InstallerExistingConfigNoProfileTest extends InstallerExistingConfigTestBa
         unset($core_extension['module'][$core_extension['profile']]);
         unset($core_extension['profile']);
       }
+
+      // Set the default theme to the first theme that will be installed.
+      $this->defaultTheme = array_key_first($core_extension['theme']);
 
       file_put_contents($config_sync_directory . '/core.extension.yml', Yaml::encode($core_extension));
     }
