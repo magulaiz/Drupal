@@ -248,6 +248,20 @@ class ElementTest extends BrowserTestBase {
       if (!$info_has_process_group) {
         $this->fail('FormElement ' . $definition['id'] . ' does not have a processGroup #process callback (2).');
       }
+
+      if (!isset($info['#pre_render'])) {
+        $this->fail('FormElement ' . $definition['id'] . ' does not have a preRenderGroup #pre_render callback (1).');
+      }
+      $info_has_pre_render_group = FALSE;
+      foreach ($info['#pre_render'] as $item) {
+        if (is_subclass_of($item[0], FormElement::class) && $item[1] == 'preRenderGroup') {
+          $info_has_pre_render_group = TRUE;
+          break;
+        }
+      }
+      if (!$info_has_pre_render_group) {
+        $this->fail('FormElement ' . $definition['id'] . ' does not have a preRenderGroup #pre_render callback (2).');
+      }
     }
   }
 

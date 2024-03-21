@@ -28,6 +28,9 @@ class LanguageSelect extends FormElementBase {
       '#process' => [
         [$class, 'processGroup'],
       ],
+      '#pre_render' => [
+        [$class, 'preRenderGroup'],
+      ],
     ];
   }
 

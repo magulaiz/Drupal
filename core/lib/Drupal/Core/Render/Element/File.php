@@ -37,6 +37,7 @@ class File extends FormElementBase {
       '#size' => 60,
       '#pre_render' => [
         [static::class, 'preRenderFile'],
+        [static::class, 'preRenderGroup'],
       ],
       '#theme' => 'input__file',
       '#theme_wrappers' => ['form_element'],

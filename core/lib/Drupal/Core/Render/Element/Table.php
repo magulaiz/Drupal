@@ -143,6 +143,7 @@ class Table extends FormElementBase {
       // Render properties.
       '#pre_render' => [
         [static::class, 'preRenderTable'],
+        [static::class, 'preRenderGroup'],
       ],
       '#theme' => 'table',
     ];

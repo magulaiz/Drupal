@@ -46,8 +46,12 @@ class Date extends FormElementBase {
       '#process' => [
         [static::class, 'processAjaxForm'],
         [static::class, 'processGroup'],
+        [static::class, 'preRenderGroup'],
       ],
-      '#pre_render' => [[static::class, 'preRenderDate']],
+      '#pre_render' => [
+        [static::class, 'preRenderDate'],
+        [static::class, 'preRenderGroup'],
+      ],
       '#theme_wrappers' => ['form_element'],
       '#attributes' => ['type' => 'date'],
       '#date_date_format' => 'Y-m-d',

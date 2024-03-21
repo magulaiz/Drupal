@@ -44,6 +44,7 @@ class Password extends FormElementBase {
       ],
       '#pre_render' => [
         [static::class, 'preRenderPassword'],
+        [static::class, 'preRenderGroup'],
       ],
       '#theme' => 'input__password',
       '#theme_wrappers' => ['form_element'],

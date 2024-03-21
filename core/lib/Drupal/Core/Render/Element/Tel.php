@@ -46,6 +46,7 @@ class Tel extends FormElementBase {
       ],
       '#pre_render' => [
         [static::class, 'preRenderTel'],
+        [static::class, 'preRenderGroup'],
       ],
       '#theme' => 'input__tel',
       '#theme_wrappers' => ['form_element'],

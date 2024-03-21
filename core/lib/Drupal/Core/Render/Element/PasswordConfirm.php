@@ -39,6 +39,9 @@ class PasswordConfirm extends FormElementBase {
         [static::class, 'processPasswordConfirm'],
         [static::class, 'processGroup'],
       ],
+      '#pre_render' => [
+        [$class, 'preRenderGroup'],
+      ],
       '#theme_wrappers' => ['form_element'],
     ];
   }

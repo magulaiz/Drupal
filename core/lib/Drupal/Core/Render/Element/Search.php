@@ -37,6 +37,7 @@ class Search extends FormElementBase {
       ],
       '#pre_render' => [
         [static::class, 'preRenderSearch'],
+        [static::class, 'preRenderGroup'],
       ],
       '#theme' => 'input__search',
       '#theme_wrappers' => ['form_element'],

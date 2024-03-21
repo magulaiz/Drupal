@@ -50,6 +50,7 @@ class Checkboxes extends FormElementBase {
       ],
       '#pre_render' => [
         [static::class, 'preRenderCompositeFormElement'],
+        [static::class, 'preRenderGroup'],
       ],
       '#theme_wrappers' => ['checkboxes'],
     ];

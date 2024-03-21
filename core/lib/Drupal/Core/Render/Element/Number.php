@@ -48,6 +48,7 @@ class Number extends FormElementBase {
       ],
       '#pre_render' => [
         [static::class, 'preRenderNumber'],
+        [static::class, 'preRenderGroup'],
       ],
       '#theme' => 'input__number',
       '#theme_wrappers' => ['form_element'],

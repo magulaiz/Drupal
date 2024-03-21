@@ -61,6 +61,7 @@ class Email extends FormElementBase {
       ],
       '#pre_render' => [
         [static::class, 'preRenderEmail'],
+        [static::class, 'preRenderGroup'],
       ],
       '#theme' => 'input__email',
       '#theme_wrappers' => ['form_element'],

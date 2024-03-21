@@ -38,6 +38,7 @@ class Hidden extends FormElementBase {
       ],
       '#pre_render' => [
         [static::class, 'preRenderHidden'],
+        [static::class, 'preRenderGroup'],
       ],
       '#theme' => 'input__hidden',
     ];

@@ -40,6 +40,7 @@ class Color extends FormElementBase {
       ],
       '#pre_render' => [
         [static::class, 'preRenderColor'],
+        [static::class, 'preRenderGroup'],
       ],
       '#theme' => 'input__color',
       '#theme_wrappers' => ['form_element'],

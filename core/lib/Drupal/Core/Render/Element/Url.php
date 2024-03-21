@@ -51,6 +51,7 @@ class Url extends FormElementBase {
       ],
       '#pre_render' => [
         [static::class, 'preRenderUrl'],
+        [static::class, 'preRenderGroup'],
       ],
       '#theme' => 'input__url',
       '#theme_wrappers' => ['form_element'],

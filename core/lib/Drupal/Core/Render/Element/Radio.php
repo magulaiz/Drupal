@@ -30,6 +30,7 @@ class Radio extends FormElementBase {
       ],
       '#pre_render' => [
         [static::class, 'preRenderRadio'],
+        [static::class, 'preRenderGroup'],
       ],
       '#theme' => 'input__radio',
       '#theme_wrappers' => ['form_element'],

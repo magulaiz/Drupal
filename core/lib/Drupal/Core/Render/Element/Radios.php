@@ -51,6 +51,7 @@ class Radios extends FormElementBase {
       '#theme_wrappers' => ['radios'],
       '#pre_render' => [
         [static::class, 'preRenderCompositeFormElement'],
+        [static::class, 'preRenderGroup'],
       ],
     ];
   }
