@@ -29,7 +29,10 @@ class RegisterEventSubscribersPass implements CompilerPassInterface {
       $subscriber = $container->getDefinition($id);
       $class = $subscriber->getClass();
 
-      if (count(class_implements($class)) == 1 && !in_array($id, ['views.route_subscriber'])) {
+      if (count(class_implements($class)) == 1 && !in_array($id, [
+        'database.replica_kill_switch',
+        'views.route_subscriber',
+      ])) {
         $subscriber->setPublic(FALSE);
       }
     }
