@@ -70,6 +70,7 @@ class Tableselect extends Table {
       ],
       '#process' => [
         [static::class, 'processTableselect'],
+        [static::class, 'processGroup'],
       ],
       '#options' => [],
       '#empty' => '',

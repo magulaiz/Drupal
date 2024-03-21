@@ -34,6 +34,7 @@ class Hidden extends FormElementBase {
       '#input' => TRUE,
       '#process' => [
         [static::class, 'processAjaxForm'],
+        [static::class, 'processGroup'],
       ],
       '#pre_render' => [
         [static::class, 'preRenderHidden'],

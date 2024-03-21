@@ -41,6 +41,7 @@ class Number extends FormElementBase {
       '#step' => 1,
       '#process' => [
         [static::class, 'processAjaxForm'],
+        [static::class, 'processGroup'],
       ],
       '#element_validate' => [
         [static::class, 'validateNumber'],

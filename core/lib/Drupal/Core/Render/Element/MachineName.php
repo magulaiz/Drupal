@@ -87,6 +87,7 @@ class MachineName extends Textfield {
         [static::class, 'processMachineName'],
         [static::class, 'processAutocomplete'],
         [static::class, 'processAjaxForm'],
+        [static::class, 'processGroup'],
       ],
       '#element_validate' => [
         [static::class, 'validateMachineName'],

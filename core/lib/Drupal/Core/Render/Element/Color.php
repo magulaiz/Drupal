@@ -33,6 +33,7 @@ class Color extends FormElementBase {
       '#input' => TRUE,
       '#process' => [
         [static::class, 'processAjaxForm'],
+        [static::class, 'processGroup'],
       ],
       '#element_validate' => [
         [static::class, 'validateColor'],

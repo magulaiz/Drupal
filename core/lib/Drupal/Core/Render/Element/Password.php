@@ -40,6 +40,7 @@ class Password extends FormElementBase {
       '#process' => [
         [static::class, 'processAjaxForm'],
         [static::class, 'processPattern'],
+        [static::class, 'processGroup'],
       ],
       '#pre_render' => [
         [static::class, 'preRenderPassword'],

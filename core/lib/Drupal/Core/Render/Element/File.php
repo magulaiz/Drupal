@@ -32,6 +32,7 @@ class File extends FormElementBase {
       '#multiple' => FALSE,
       '#process' => [
         [static::class, 'processFile'],
+        [static::class, 'processGroup'],
       ],
       '#size' => 60,
       '#pre_render' => [

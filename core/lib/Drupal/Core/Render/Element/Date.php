@@ -45,6 +45,7 @@ class Date extends FormElementBase {
       '#theme' => 'input__date',
       '#process' => [
         [static::class, 'processAjaxForm'],
+        [static::class, 'processGroup'],
       ],
       '#pre_render' => [[static::class, 'preRenderDate']],
       '#theme_wrappers' => ['form_element'],

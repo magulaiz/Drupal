@@ -46,6 +46,7 @@ class Checkboxes extends FormElementBase {
       '#input' => TRUE,
       '#process' => [
         [static::class, 'processCheckboxes'],
+        [static::class, 'processGroup'],
       ],
       '#pre_render' => [
         [static::class, 'preRenderCompositeFormElement'],

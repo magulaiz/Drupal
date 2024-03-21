@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\Form;
 
+use Drupal\Core\Render\Element\FormElement;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -215,6 +216,39 @@ class ElementTest extends BrowserTestBase {
   protected function testDetailsSummaryAttributes(): void {
     $this->drupalGet('form-test/group-details');
     $this->assertSession()->elementExists('css', 'summary[data-summary-attribute="test"]');
+  }
+
+  /**
+   * Test if all FormElements support grouping.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/3122011
+   */
+  public function testFormElementsGroupingSupport() {
+    /**
+     * @var \Drupal\Core\Render\ElementInfoManagerInterface $element_info_manager
+     */
+    $element_info_manager = $this->container->get('plugin.manager.element_info');
+
+    foreach ($element_info_manager->getDefinitions() as $definition) {
+      if (!is_subclass_of($definition['class'], FormElement::class)) {
+        continue;
+      }
+      $info = $element_info_manager->getInfo($definition['id']);
+
+      if (!isset($info['#process'])) {
+        $this->fail('FormElement ' . $definition['id'] . ' does not have a processGroup #process callback (1).');
+      }
+      $info_has_processgroup = FALSE;
+      foreach ($info['#process'] as $item) {
+        if (is_subclass_of($item[0], FormElement::class) && $item[1] == 'processGroup') {
+          $info_has_processgroup = TRUE;
+          break;
+        }
+      }
+      if (!$info_has_processgroup) {
+        $this->fail('FormElement ' . $definition['id'] . ' does not have a processGroup #process callback (2).');
+      }
+    }
   }
 
 }

@@ -32,6 +32,7 @@ class ManagedFile extends FormElementBase {
       '#input' => TRUE,
       '#process' => [
         [static::class, 'processManagedFile'],
+        [static::class, 'processGroup'],
       ],
       '#element_validate' => [
         [static::class, 'validateManagedFile'],

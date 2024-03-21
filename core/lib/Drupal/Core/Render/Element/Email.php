@@ -54,6 +54,7 @@ class Email extends FormElementBase {
         [static::class, 'processAutocomplete'],
         [static::class, 'processAjaxForm'],
         [static::class, 'processPattern'],
+        [static::class, 'processGroup'],
       ],
       '#element_validate' => [
         [static::class, 'validateEmail'],

@@ -45,6 +45,7 @@ class Button extends FormElementBase {
       '#process' => [
         [static::class, 'processButton'],
         [static::class, 'processAjaxForm'],
+        [static::class, 'processGroup'],
       ],
       '#pre_render' => [
         [static::class, 'preRenderButton'],

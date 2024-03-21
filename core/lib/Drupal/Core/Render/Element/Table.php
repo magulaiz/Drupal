@@ -129,6 +129,7 @@ class Table extends FormElementBase {
       '#js_select' => TRUE,
       '#process' => [
         [static::class, 'processTable'],
+        [static::class, 'processGroup'],
       ],
       '#element_validate' => [
         [static::class, 'validateTable'],
