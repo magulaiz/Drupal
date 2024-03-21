@@ -27,9 +27,6 @@ libraries-override:
       component:
         css/components/ajax-progress.module.css: css/components/ajax-progress.module.css
         css/components/autocomplete-loading.module.css: css/components/autocomplete-loading.module.css
-        css/components/system-status-counter.css: css/components/system-status-counter.css
-        css/components/system-status-report-counters.css: css/components/system-status-report-counters.css
-        css/components/system-status-report-general-info.css: css/components/system-status-report-general-info.css
         css/components/tabledrag.module.css: css/components/tabledrag.css
 
   system/admin:

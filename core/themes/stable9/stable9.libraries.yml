@@ -13,3 +13,18 @@ tour:
   version: VERSION
   js:
     js/tour.js: {}
+
+system-status-counter:
+  css:
+    component:
+      css/system/components/system-status-counter.css: { weight: -10 }
+
+system-status-report-general-info:
+  css:
+    component:
+      css/system/components/system-status-report-general-info.css: { weight: -10 }
+
+system-status-report-counters:
+  css:
+    component:
+      css/system/components/system-status-report-counters.css: { weight: -10 }
