@@ -6,3 +6,22 @@ drupal.book:
     - core/jquery
     - core/drupal
     - core/drupal.form
+
+claro.book:
+  version: VERSION
+  css:
+    component:
+      css/themes/claro/book.css: {}
+
+olivero.book:
+  version: VERSION
+  css:
+    theme:
+      css/themes/olivero/book.css: {}
+      css/themes/olivero/links.css: {}
+
+umami.book:
+  version: VERSION
+  css:
+    component:
+      css/themes/umami/book.css: {}
