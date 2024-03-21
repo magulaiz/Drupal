@@ -2,6 +2,7 @@
 
 namespace Drupal\Core;
 
+use Drupal\Component\Plugin\Discovery\CachedDiscoveryInterface;
 use Drupal\Core\Cache\Context\CacheContextsPass;
 use Drupal\Core\Cache\ListCacheBinsPass;
 use Drupal\Core\DependencyInjection\Compiler\AuthenticationProviderPass;
@@ -24,7 +25,6 @@ use Drupal\Core\DependencyInjection\Compiler\TwigExtensionPass;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
-use Drupal\Core\Plugin\PluginManagerPass;
 use Drupal\Core\Queue\QueueFactoryInterface;
 use Drupal\Core\Render\MainContent\MainContentRenderersPass;
 use Drupal\Core\Site\Settings;
@@ -100,9 +100,6 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     $container->addCompilerPass(new CacheContextsPass());
     $container->addCompilerPass(new AuthenticationProviderPass());
 
-    // Register plugin managers.
-    $container->addCompilerPass(new PluginManagerPass());
-
     $container->addCompilerPass(new DeprecatedServicePass());
 
     $container->registerForAutoconfiguration(EventSubscriberInterface::class)
@@ -113,6 +110,9 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
 
     $container->registerForAutoconfiguration(QueueFactoryInterface::class)
       ->addTag('queue_factory');
+
+    $container->registerForAutoconfiguration(CachedDiscoveryInterface::class)
+      ->addTag('plugin_manager_cache_clear');
   }
 
   /**
