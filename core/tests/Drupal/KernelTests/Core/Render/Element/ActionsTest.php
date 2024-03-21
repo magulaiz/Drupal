@@ -38,7 +38,7 @@ class ActionsTest extends KernelTestBase implements FormInterface {
       ],
       '#attached' => [
         'library' => [
-          'system/base',
+          'core/base',
         ],
       ],
     ];
@@ -64,7 +64,7 @@ class ActionsTest extends KernelTestBase implements FormInterface {
   public function testDropbuttonWithBubbleableMetadata() {
     $result = \Drupal::formBuilder()->getForm($this);
     \Drupal::service('renderer')->renderRoot($result);
-    $this->assertEquals(['system/base', 'core/drupal.dropbutton'], $result['#attached']['library']);
+    $this->assertEquals(['core/base', 'core/drupal.dropbutton'], $result['#attached']['library']);
     $this->assertEquals(['CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form', 'foo'], $result['#cache']['tags']);
   }
 

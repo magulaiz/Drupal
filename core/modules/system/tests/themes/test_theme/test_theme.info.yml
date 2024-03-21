@@ -33,10 +33,10 @@ libraries-override:
     css:
       component:
         css/components/dialog.css: false
-  system/base:
+  core/base:
     css:
       component:
-        /core/themes/stable9/css/system/components/js.module.css: false
+        /core/themes/stable9/css/core/components/js.module.css: false
   # It works for JS as well.
   core/drupal.batch:
     js:

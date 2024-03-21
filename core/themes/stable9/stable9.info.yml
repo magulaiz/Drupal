@@ -206,31 +206,31 @@ libraries-override:
         css/shortcut.theme.css: css/shortcut/shortcut.theme.css
         css/shortcut.icons.theme.css: css/shortcut/shortcut.icons.theme.css
 
-  system/base:
+  core/base:
     css:
       component:
-        css/components/ajax-progress.module.css: css/system/components/ajax-progress.module.css
-        css/components/align.module.css: css/system/components/align.module.css
-        css/components/autocomplete-loading.module.css: css/system/components/autocomplete-loading.module.css
-        css/components/fieldgroup.module.css: css/system/components/fieldgroup.module.css
-        css/components/container-inline.module.css: css/system/components/container-inline.module.css
-        css/components/clearfix.module.css: css/system/components/clearfix.module.css
-        css/components/details.module.css: css/system/components/details.module.css
-        css/components/hidden.module.css: css/system/components/hidden.module.css
-        css/components/item-list.module.css: css/system/components/item-list.module.css
-        css/components/js.module.css: css/system/components/js.module.css
-        css/components/nowrap.module.css: css/system/components/nowrap.module.css
-        css/components/position-container.module.css: css/system/components/position-container.module.css
-        css/components/progress.module.css: css/system/components/progress.module.css
-        css/components/reset-appearance.module.css: css/system/components/reset-appearance.module.css
-        css/components/resize.module.css: css/system/components/resize.module.css
-        css/components/sticky-header.module.css: css/system/components/sticky-header.module.css
-        css/components/system-status-counter.css: css/system/components/system-status-counter.css
-        css/components/system-status-report-counters.css: css/system/components/system-status-report-counters.css
-        css/components/system-status-report-general-info.css: css/system/components/system-status-report-general-info.css
-        css/components/tabledrag.module.css: css/system/components/tabledrag.module.css
-        css/components/tablesort.module.css: css/system/components/tablesort.module.css
-        css/components/tree-child.module.css: css/system/components/tree-child.module.css
+        misc/components/ajax-progress.module.css: css/core/components/ajax-progress.module.css
+        misc/components/align.module.css: css/core/components/align.module.css
+        misc/components/autocomplete-loading.module.css: css/core/components/autocomplete-loading.module.css
+        misc/components/fieldgroup.module.css: css/core/components/fieldgroup.module.css
+        misc/components/container-inline.module.css: css/core/components/container-inline.module.css
+        misc/components/clearfix.module.css: css/core/components/clearfix.module.css
+        misc/components/details.module.css: css/core/components/details.module.css
+        misc/components/hidden.module.css: css/core/components/hidden.module.css
+        misc/components/item-list.module.css: css/core/components/item-list.module.css
+        misc/components/js.module.css: css/core/components/js.module.css
+        misc/components/nowrap.module.css: css/core/components/nowrap.module.css
+        misc/components/position-container.module.css: css/core/components/position-container.module.css
+        misc/components/progress.module.css: css/core/components/progress.module.css
+        misc/components/reset-appearance.module.css: css/core/components/reset-appearance.module.css
+        misc/components/resize.module.css: css/core/components/resize.module.css
+        misc/components/sticky-header.module.css: css/core/components/sticky-header.module.css
+        misc/components/system-status-counter.css: css/core/components/system-status-counter.css
+        misc/components/system-status-report-counters.css: css/core/components/system-status-report-counters.css
+        misc/components/system-status-report-general-info.css: css/core/components/system-status-report-general-info.css
+        misc/components/tabledrag.module.css: css/core/components/tabledrag.module.css
+        misc/components/tablesort.module.css: css/core/components/tablesort.module.css
+        misc/components/tree-child.module.css: css/core/components/tree-child.module.css
   system/admin:
     css:
       theme:

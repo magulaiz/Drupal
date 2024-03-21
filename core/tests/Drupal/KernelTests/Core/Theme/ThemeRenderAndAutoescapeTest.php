@@ -91,7 +91,7 @@ class ThemeRenderAndAutoescapeTest extends KernelTestBase {
     $link = new GeneratedLink();
     $link->setGeneratedLink('<a href="http://example.com"></a>');
     $link->addCacheTags(['foo']);
-    $link->addAttachments(['library' => ['system/base']]);
+    $link->addAttachments(['library' => ['core/base']]);
 
     $context = new RenderContext();
     // Use a closure here since we need to render with a render context.
@@ -105,7 +105,7 @@ class ThemeRenderAndAutoescapeTest extends KernelTestBase {
     /** @var \Drupal\Core\Render\BubbleableMetadata $metadata */
     $metadata = $context->pop();
     $this->assertEquals(['foo'], $metadata->getCacheTags());
-    $this->assertEquals(['library' => ['system/base']], $metadata->getAttachments());
+    $this->assertEquals(['library' => ['core/base']], $metadata->getAttachments());
   }
 
   /**

@@ -80,7 +80,7 @@ class SiteMaintenanceTest extends BrowserTestBase {
     $this->drupalGet(Url::fromRoute('user.page'));
     // Aggregation should be enabled, individual assets should not be rendered.
     $this->assertSession()->elementNotExists('xpath', '//script[contains(@src, "/core/misc/drupal.js")]');
-    $this->assertSession()->elementNotExists('xpath', '//link[contains(@href, "/core/modules/system/css/components/align.module.css")]');
+    $this->assertSession()->elementNotExists('xpath', '//link[contains(@href, "/core/misc/components/align.module.css")]');
     // Turn on maintenance mode.
     $edit = [
       'maintenance_mode' => 1,
@@ -95,7 +95,7 @@ class SiteMaintenanceTest extends BrowserTestBase {
     $this->drupalGet(Url::fromRoute('user.page'));
     // Aggregation should be disabled, individual assets should be rendered.
     $this->assertSession()->elementExists('xpath', '//script[contains(@src, "/core/misc/drupal.js")]');
-    $this->assertSession()->elementExists('xpath', '//link[contains(@href, "/core/modules/system/css/components/align.module.css")]');
+    $this->assertSession()->elementExists('xpath', '//link[contains(@href, "/core/misc/components/align.module.css")]');
     $this->assertSession()->pageTextContains($admin_message);
     $this->assertSession()->linkExists('Go online.');
     $this->assertSession()->linkByHrefExists(Url::fromRoute('system.site_maintenance_mode')->toString());

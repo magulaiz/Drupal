@@ -1,4 +1,31 @@
 # All libraries are defined in alphabetical order.
+base:
+  version: VERSION
+  css:
+    # Adjust the weights to load these early.
+    component:
+      misc/components/ajax-progress.module.css: { weight: -10 }
+      misc/components/align.module.css: { weight: -10 }
+      misc/components/autocomplete-loading.module.css: { weight: -10 }
+      misc/components/fieldgroup.module.css: { weight: -10 }
+      misc/components/container-inline.module.css: { weight: -10 }
+      misc/components/clearfix.module.css: { weight: -10 }
+      misc/components/details.module.css: { weight: -10 }
+      misc/components/hidden.module.css: { weight: -10 }
+      misc/components/item-list.module.css: { weight: -10 }
+      misc/components/js.module.css: { weight: -10 }
+      misc/components/nowrap.module.css: { weight: -10 }
+      misc/components/position-container.module.css: { weight: -10 }
+      misc/components/progress.module.css: { weight: -10 }
+      misc/components/reset-appearance.module.css: { weight: -10 }
+      misc/components/resize.module.css: { weight: -10 }
+      misc/components/sticky-header.module.css: { weight: -10 }
+      misc/components/system-status-counter.css: { weight: -10 }
+      misc/components/system-status-report-counters.css: { weight: -10 }
+      misc/components/system-status-report-general-info.css: { weight: -10 }
+      misc/components/tabledrag.module.css: { weight: -10 }
+      misc/components/tablesort.module.css: { weight: -10 }
+      misc/components/tree-child.module.css: { weight: -10 }
 
 internal.backbone:
   # Internal library. Do not depend on it outside core nor add new core usage.
