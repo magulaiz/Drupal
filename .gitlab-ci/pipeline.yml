@@ -93,7 +93,7 @@ variables:
     - "--binary=/opt/firefox/firefox"
     - "--log=debug"
     - "--host=0.0.0.0"
-    - "--allow-hosts=firefox"
+    - "--allow-hosts=firefox localhost"
 
 .run-tests: &run-tests
   script:
