@@ -230,7 +230,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
 
     $this->drupalGet('shortcut_test/no_title');
     $this->clickLink('Add to Default shortcuts');
-    $this->assertSession()->pageTextContains("Added a shortcut for (empty).");
+    $this->assertSession()->pageTextContains("Added a shortcut for (Empty).");
   }
 
   /**

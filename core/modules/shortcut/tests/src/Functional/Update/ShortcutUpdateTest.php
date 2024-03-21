@@ -46,7 +46,7 @@ class ShortcutUpdateTest extends UpdatePathTestBase {
     $this->runUpdates();
 
     $shortcut = ShortCut::load($shortcut->id());
-    $this->assertEquals('(empty)', $shortcut->getTitle());
+    $this->assertEquals('(Empty)', $shortcut->getTitle());
 
   }
 
