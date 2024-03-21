@@ -65,7 +65,7 @@ class MigrateEventsTest extends KernelTestBase {
   /**
    * Tests migration events.
    */
-  public function testMigrateEvents(): void {
+  public function testMigrateEvents() {
     // Run a simple little migration, which should trigger one of each event
     // other than map_delete.
     $definition = [
@@ -142,7 +142,7 @@ class MigrateEventsTest extends KernelTestBase {
    *
    * @dataProvider importFailedDataProvider
    */
-  public function testImportFailedEvent(int $migrationStatus, array $definition, string|null $exception) {
+  public function testImportFailedEvent(int $migrationStatus, array $definition, string|null $exception): void {
     $migration = \Drupal::service('plugin.manager.migration')->createStubMigration($definition);
 
     $migration->setStatus($migrationStatus);
@@ -319,7 +319,7 @@ class MigrateEventsTest extends KernelTestBase {
   /**
    * Tests row skipped event.
    */
-  public function testRowSkippedEvent() {
+  public function testRowSkippedEvent(): void {
     $definition = [
       'migration_tags' => ['Event test'],
       'source' => [
@@ -475,6 +475,7 @@ class MigrateEventsTest extends KernelTestBase {
       'event_name' => $name,
       'migration' => $event->getMigration(),
       'exception' => $event->getException(),
+      'row' => $event->getRow(),
     ]);
   }
 

@@ -14,14 +14,7 @@ use Drupal\migrate\Row;
 class MigrateRowSkippedEvent extends EventBase {
 
   /**
-   * Row object.
-   *
-   * @var \Drupal\migrate\Row
-   */
-  protected $row;
-
-  /**
-   * Constructs a skip event object.
+   * Constructs a row skipped event object.
    *
    * @param \Drupal\migrate\Plugin\MigrationInterface $migration
    *   Migration entity.
@@ -32,18 +25,14 @@ class MigrateRowSkippedEvent extends EventBase {
    * @param \Throwable $exception
    *   The exception that was thrown.
    */
-  public function __construct(MigrationInterface $migration, MigrateMessageInterface $message, Row $row, protected \Throwable $exception) {
+  public function __construct(MigrationInterface $migration, MigrateMessageInterface $message, protected Row $row, protected \Throwable $exception) {
     parent::__construct($migration, $message);
-    $this->row = $row;
   }
 
   /**
    * Gets the row object.
-   *
-   * @return \Drupal\migrate\Row
-   *   The skipped row object.
    */
-  public function getRow() {
+  public function getRow(): Row {
     return $this->row;
   }
 
