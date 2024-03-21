@@ -27,7 +27,7 @@ class ShortcutUpdateTest extends UpdatePathTestBase {
    * @see shortcut_post_update_fix_empty_titles()
    */
   public function testFixShortcutEmptyTitle(): void {
-    // Create shortcut without a title.
+    // Create a shortcut without a title.
     $shortcut = Shortcut::create([
       'shortcut_set' => 'default',
       'weight' => -20,
