@@ -3,8 +3,12 @@
 namespace Drupal\Tests\user\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Tests deprecated user module functions.
@@ -14,6 +18,8 @@ use Drupal\user\RoleInterface;
  */
 class LegacyUserTest extends KernelTestBase {
 
+  use UserCreationTrait;
+
   /**
    * {@inheritdoc}
    */
@@ -21,6 +27,22 @@ class LegacyUserTest extends KernelTestBase {
     'system',
     'user',
   ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    $this->installEntitySchema('user');
+
+    // Set up our session.
+    $request_stack = new RequestStack();
+    $request = new Request();
+    $session = new Session($this->container->get('session_manager'));
+    $request->setSession($session);
+    $request_stack->push($request);
+    $this->container->set('request_stack', $request_stack);
+  }
 
   /**
    * Tests deprecation of user_role_permissions().
@@ -51,6 +73,23 @@ class LegacyUserTest extends KernelTestBase {
       ->save();
     $permissions = user_role_permissions([$role->id()]);
     $this->assertSame([$role->id() => [$permission]], $permissions);
+  }
+
+  /**
+   * Tests the user_login_finalize() deprecation.
+   */
+  public function testUserLoginDeprecation(): void {
+    $this->expectDeprecation("user_login_finalize() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use Drupal\user\UserSessionFinalize::finalizeLogin() instead. See https://www.drupal.org/node/3379194");
+    $account = $this->createUser();
+    user_login_finalize($account);
+  }
+
+  /**
+   * Tests the user_logout() deprecation.
+   */
+  public function testUserLogoutDeprecation(): void {
+    $this->expectDeprecation("user_logout() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use Drupal\user\UserSessionFinalize::finalizeLogout() instead. See https://www.drupal.org/node/3379194");
+    user_logout();
   }
 
 }

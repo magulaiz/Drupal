@@ -6,6 +6,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Site\MaintenanceModeEvents;
 use Drupal\Core\Site\MaintenanceModeInterface;
 use Drupal\Core\Url;
+use Drupal\user\UserSessionFinalize;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -36,10 +37,16 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
    *   The maintenance mode.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
+   * @param \Drupal\user\UserSessionFinalize|null $userSessionFinalize
+   *   The user session finalize service..
    */
-  public function __construct(MaintenanceModeInterface $maintenance_mode, AccountInterface $account) {
+  public function __construct(MaintenanceModeInterface $maintenance_mode, AccountInterface $account, protected ?UserSessionFinalize $userSessionFinalize = NULL) {
     $this->maintenanceMode = $maintenance_mode;
     $this->account = $account;
+    if (!$this->userSessionFinalize) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $userSessionFinalize argument is deprecated in drupal:10.2.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3379194', E_USER_DEPRECATED);
+      $this->userSessionFinalize = \Drupal::service('user.session_finalize');
+    }
   }
 
   /**
@@ -51,7 +58,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
   public function onMaintenanceModeRequest(RequestEvent $event) {
     // If the site is offline, log out unprivileged users.
     if ($this->account->isAuthenticated()) {
-      user_logout();
+      $this->userSessionFinalize->finalizeLogout();
       // Redirect to homepage.
       $event->setResponse(
         new RedirectResponse(Url::fromRoute('<front>')->toString())
