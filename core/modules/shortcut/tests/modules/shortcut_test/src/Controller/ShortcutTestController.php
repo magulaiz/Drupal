@@ -11,8 +11,10 @@ class ShortcutTestController extends ControllerBase {
 
   /**
    * Returns the markup for a page without a title.
+   *
+   * @return mixed[]
    */
-  public function pageNoTitle() {
+  public function pageNoTitle(): array {
     return ['#markup' => 'Shortcut test of a page with no title.'];
   }
 

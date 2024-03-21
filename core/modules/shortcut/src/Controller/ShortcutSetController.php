@@ -45,7 +45,7 @@ class ShortcutSetController extends ControllerBase {
    */
   public function addShortcutLinkInline(ShortcutSetInterface $shortcut_set, Request $request) {
     $link = $request->query->get('link');
-    $name = $request->query->get('name') ? $request->query->get('name') : '(' . $this->t('empty', [], ['langcode' => $shortcut_set->language()->getId()]) . ')';
+    $name = $request->query->get('name') ?? '(' . $this->t('empty', [], ['langcode' => $shortcut_set->language()->getId()]) . ')';
 
     if (parse_url($link, PHP_URL_SCHEME) === NULL && $this->pathValidator->isValid($link)) {
       $shortcut = $this->entityTypeManager()->getStorage('shortcut')->create([

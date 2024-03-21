@@ -10,7 +10,7 @@ use Drupal\shortcut\Entity\Shortcut;
 /**
  * Fix empty shortcut titles.
  */
-function shortcut_post_update_fix_empty_titles() {
+function shortcut_post_update_fix_empty_titles(): void {
   $ids = \Drupal::entityQuery('shortcut')
     ->accessCheck(FALSE)
     ->execute();
