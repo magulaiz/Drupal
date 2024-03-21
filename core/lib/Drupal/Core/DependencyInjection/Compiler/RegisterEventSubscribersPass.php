@@ -31,6 +31,7 @@ class RegisterEventSubscribersPass implements CompilerPassInterface {
 
       if (count(class_implements($class)) == 1 && !in_array($id, [
         'database.replica_kill_switch',
+        'update.post_update_registry',
         'views.route_subscriber',
       ])) {
         $subscriber->setPublic(FALSE);
