@@ -87,14 +87,13 @@ variables:
     - "--allowed-origins=*"
 
 .with-firefox: &with-firefox
-  name: instrumentisto/geckodriver:123.0.1
+  name: instrumentisto/geckodriver:124.0
   alias: firefox
   command:
-    - --binary=/opt/firefox/firefox
-    - --host=0.0.0.0
-    - --port=4444
-    - --allow-hosts=localhost
-    - --log=debug
+    - "--binary=/opt/firefox/firefox"
+    - "--log=debug"
+    - "--host=0.0.0.0"
+    - "--allow-hosts=firefox"
 
 .run-tests: &run-tests
   script:
