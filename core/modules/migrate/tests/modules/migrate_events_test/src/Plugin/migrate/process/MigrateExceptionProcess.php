@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\migrate_events_test\Plugin\migrate\process;
 
 use Drupal\migrate\MigrateException;
@@ -20,7 +22,7 @@ class MigrateExceptionProcess extends ProcessPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
+  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property): void {
     throw new MigrateException();
   }
 

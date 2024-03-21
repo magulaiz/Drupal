@@ -65,7 +65,7 @@ class MigrateEventsTest extends KernelTestBase {
   /**
    * Tests migration events.
    */
-  public function testMigrateEvents() {
+  public function testMigrateEvents(): void {
     // Run a simple little migration, which should trigger one of each event
     // other than map_delete.
     $definition = [
@@ -454,7 +454,7 @@ class MigrateEventsTest extends KernelTestBase {
    * @param string $name
    *   The event name.
    */
-  public function importFailedEventRecorder(MigrateImportFailedEvent $event, $name) {
+  public function importFailedEventRecorder(MigrateImportFailedEvent $event, $name): void {
     $this->state->set('migrate_events_test.import_failed_event', [
       'event_name' => $name,
       'migration' => $event->getMigration(),
@@ -470,7 +470,7 @@ class MigrateEventsTest extends KernelTestBase {
    * @param string $name
    *   The event name.
    */
-  public function rowSkippedEventRecorder(MigrateRowSkippedEvent $event, $name) {
+  public function rowSkippedEventRecorder(MigrateRowSkippedEvent $event, $name): void {
     $this->state->set('migrate_events_test.row_skipped_event', [
       'event_name' => $name,
       'migration' => $event->getMigration(),

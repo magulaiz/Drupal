@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\migrate_events_test\Plugin\migrate\destination;
 
 use Drupal\migrate\MigrateException;
@@ -19,7 +21,7 @@ class DestinationMigrateException extends DestinationBase {
   /**
    * {@inheritdoc}
    */
-  public function getIds() {
+  public function getIds(): array {
     $ids['value']['type'] = 'string';
     return $ids;
   }
@@ -27,14 +29,14 @@ class DestinationMigrateException extends DestinationBase {
   /**
    * {@inheritdoc}
    */
-  public function fields() {
+  public function fields(): array {
     return ['value' => 'Dummy value'];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function import(Row $row, array $old_destination_id_values = []) {
+  public function import(Row $row, array $old_destination_id_values = []): void {
     throw new MigrateException();
   }
 
