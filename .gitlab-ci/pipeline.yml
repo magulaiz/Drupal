@@ -68,7 +68,7 @@ variables:
   POSTGRES_USER: drupaltestbot
   POSTGRES_PASSWORD: drupaltestbotpw
   MINK_DRIVER_ARGS_CHROME: '["chrome", {"browserName":"chrome","goog:chromeOptions":{"args":["--disable-gpu","--headless","--dns-prefetch-disable"]}}, "http://localhost:9515"]'
-  MINK_DRIVER_ARGS_FIREFOX: '["firefox", {"browserName":"firefox", "moz:firefoxOptions":{"args":["-headless"]}}, "http://firefox:4444"]'
+  MINK_DRIVER_ARGS_FIREFOX: '["firefox", {"browserName":"firefox", "moz:firefoxOptions":{"args":["-headless"]}}, "http://localhost:4444"]'
   CI_PARALLEL_NODE_INDEX: $CI_NODE_INDEX
   CI_PARALLEL_NODE_TOTAL: $CI_NODE_TOTAL
 
@@ -89,11 +89,6 @@ variables:
 .with-firefox: &with-firefox
   name: instrumentisto/geckodriver:124.0
   alias: firefox
-  command:
-    - "--binary=/opt/firefox/firefox"
-    - "--log=debug"
-    - "--host=0.0.0.0"
-    - "--allow-hosts=firefox localhost"
 
 .run-tests: &run-tests
   script:
