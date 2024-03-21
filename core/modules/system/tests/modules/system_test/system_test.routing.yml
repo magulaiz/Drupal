@@ -224,11 +224,11 @@ system_test.copy_field_value:
     _access: 'TRUE'
 
 router_test.cacheable_redirect:
- path: '/system-test/redirect/cacheable/{status_code}'
- defaults:
-   _controller: '\Drupal\system_test\Controller\SystemTestController::respondWithCacheableRedirectResponse'
- requirements:
-   _access: 'TRUE'
+  path: '/system-test/redirect/cacheable/{status_code}'
+  defaults:
+    _controller: '\Drupal\system_test\Controller\SystemTestController::respondWithCacheableRedirectResponse'
+  requirements:
+    _access: 'TRUE'
 
 router_test.local_redirect:
   path: '/system-test/redirect/local/{status_code}'
