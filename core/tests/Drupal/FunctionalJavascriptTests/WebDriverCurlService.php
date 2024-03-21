@@ -67,7 +67,8 @@ class WebDriverCurlService extends CurlService {
           case 'POST':
             if ($parameters && is_array($parameters)) {
               curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($parameters));
-            } else {
+            }
+            else {
               curl_setopt($curl, CURLOPT_POSTFIELDS, "{}");
               $customHeaders[] = 'Content-Length: 2';
 
@@ -91,7 +92,8 @@ class WebDriverCurlService extends CurlService {
           case 'PUT':
             if ($parameters && is_array($parameters)) {
               curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($parameters));
-            } else {
+            }
+            else {
               curl_setopt($curl, CURLOPT_POSTFIELDS, "{}");
               $customHeaders[] = 'Content-Length: 2';
 
