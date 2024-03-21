@@ -102,7 +102,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    */
   public function testGetSectionInvalidUuid() {
     $this->expectException(\OutOfBoundsException::class);
-    $this->expectExceptionMessage('Invalid uuid "uuid"');
+    $this->expectExceptionMessage('Invalid UUID "uuid"');
     $this->sectionList->getSection('uuid');
   }
 
@@ -112,7 +112,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    * @group legacy
    */
   public function testGetSectionWithDelta() {
-    $this->expectDeprecation('Calling getSection() with delta as an argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Instead you should pass uuid. See https://www.drupal.org/node/3401886');
+    $this->expectDeprecation('Calling getSection() with delta as an argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Instead you should pass a UUID. See https://www.drupal.org/node/3401886');
     $this->assertInstanceOf(Section::class, $this->sectionList->getSection(0));
   }
 
@@ -205,7 +205,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
    */
   public function testRemoveSectionInvalidUuid() {
     $this->expectException(\OutOfBoundsException::class);
-    $this->expectExceptionMessage('Invalid uuid "uuid"');
+    $this->expectExceptionMessage('Invalid UUID "uuid"');
     $this->sectionList->removeSection('uuid');
   }
 
@@ -221,7 +221,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
       ]))->setUuid('22000000-0000-1000-a000-000000000000'),
     ];
 
-    $this->expectDeprecation('Calling removeSection() with delta as an argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Instead, you should use uuid. See https://www.drupal.org/node/3401886');
+    $this->expectDeprecation('Calling removeSection() with delta as an argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Instead, you should pass a UUID. See https://www.drupal.org/node/3401886');
     $this->sectionList->removeSection(0);
     $this->assertSections($expected);
   }

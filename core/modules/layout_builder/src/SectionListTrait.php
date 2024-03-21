@@ -40,14 +40,14 @@ trait SectionListTrait {
    */
   public function getSection($uuid) {
     if (is_int($uuid)) {
-      @trigger_error('Calling ' . __FUNCTION__ . '() with delta as an argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Instead you should pass uuid. See https://www.drupal.org/node/3401886', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __FUNCTION__ . '() with delta as an argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Instead you should pass a UUID. See https://www.drupal.org/node/3401886', E_USER_DEPRECATED);
       if (!$this->hasSection($uuid)) {
         throw new \OutOfBoundsException(sprintf('Invalid delta "%s"', $uuid));
       }
       return $this->getSections()[$uuid];
     }
     if (!Uuid::isValid($uuid)) {
-      throw new \OutOfBoundsException(sprintf('Invalid uuid "%s"', $uuid));
+      throw new \OutOfBoundsException(sprintf('Invalid UUID "%s"', $uuid));
     }
     return $this->getSections(TRUE)[$uuid];
   }
@@ -152,7 +152,7 @@ trait SectionListTrait {
    */
   public function removeSection($uuid) {
     if (is_int($uuid)) {
-      @trigger_error("Calling " . __FUNCTION__ . "() with delta as an argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Instead, you should use uuid. See https://www.drupal.org/node/3401886", E_USER_DEPRECATED);
+      @trigger_error("Calling " . __FUNCTION__ . "() with delta as an argument is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Instead, you should pass a UUID. See https://www.drupal.org/node/3401886", E_USER_DEPRECATED);
       // Clear the section list if there is currently a blank section.
       if ($this->hasBlankSection()) {
         $this->removeAllSections();
@@ -167,7 +167,7 @@ trait SectionListTrait {
       return $this;
     }
     if (!Uuid::isValid($uuid)) {
-      throw new \OutOfBoundsException(sprintf('Invalid uuid "%s"', $uuid));
+      throw new \OutOfBoundsException(sprintf('Invalid UUID "%s"', $uuid));
     }
     // Clear the section list if there is currently a blank section.
     if ($this->hasBlankSection()) {
