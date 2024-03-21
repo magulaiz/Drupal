@@ -35,12 +35,7 @@ class LayoutSectionItemList extends FieldItemList implements SectionListInterfac
   public function getSections(bool $key_by_uuid = FALSE) {
     $sections = [];
     foreach ($this->list as $item) {
-      if ($key_by_uuid) {
-        $sections[$item->section->getUuid()] = $item->section;
-      }
-      else {
-        $sections[$item->section->getWeight()] = $item->section;
-      }
+      $sections[$key_by_uuid ? $item->section->getUuid() : $item->section->getWeight()] = $item->section;
     }
     return $sections;
   }
