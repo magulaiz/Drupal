@@ -428,6 +428,11 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Form/FormBuilder.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Variable \\$input in isset\\(\\) always exists and is not nullable\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Form/FormBuilder.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Variable \\$form in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Form/FormCache.php',
@@ -515,18 +520,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Queue/Memory.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Class Drupal\\\\Core\\\\Queue\\\\QueueFactory implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
-since Symfony 6\\.4, use dependency injection instead$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Queue/QueueFactory.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Usage of deprecated trait Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareTrait in class Drupal\\\\Core\\\\Queue\\\\QueueFactory\\:
-since Symfony 6\\.4, use dependency injection instead$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Queue/QueueFactory.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$sort in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Render/Element/RenderElement.php',
@@ -545,6 +538,11 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$page_top in empty\\(\\) always exists and is always falsy\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Render/MainContent/HtmlRenderer.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Variable \\$elements in isset\\(\\) always exists and is not nullable\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Render/Renderer.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#',
@@ -607,33 +605,9 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/TypedData/Validation/RecursiveContextualValidator.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Class Drupal\\\\Core\\\\Update\\\\UpdateHookRegistryFactory implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
-since Symfony 6\\.4, use dependency injection instead$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Update/UpdateHookRegistryFactory.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Usage of deprecated trait Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareTrait in class Drupal\\\\Core\\\\Update\\\\UpdateHookRegistryFactory\\:
-since Symfony 6\\.4, use dependency injection instead$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Update/UpdateHookRegistryFactory.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Update\\\\UpdateKernel\\:\\:discoverServiceProviders\\(\\) should return array but return statement is missing\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Update/UpdateKernel.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Drupal\\\\Core\\\\Update\\\\UpdateRegistryFactory implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
-since Symfony 6\\.4, use dependency injection instead$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Update/UpdateRegistryFactory.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Usage of deprecated trait Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareTrait in class Drupal\\\\Core\\\\Update\\\\UpdateRegistryFactory\\:
-since Symfony 6\\.4, use dependency injection instead$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Update/UpdateRegistryFactory.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Updater\\\\Module\\:\\:postUpdateTasks\\(\\) should return array but return statement is missing\\.$#',
@@ -1337,7 +1311,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/migrate/src/Plugin/migrate/destination/NullDestination.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined static method static\\(Drupal\\\\Tests\\\\migrate\\\\Kernel\\\\MigrateTestBase\\)\\:\\:migrateDumpAlter\\(\\)\\.$#',
+	'message' => '#^Call to an undefined static method Drupal\\\\Tests\\\\migrate\\\\Kernel\\\\MigrateTestBase\\:\\:migrateDumpAlter\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate/tests/src/Kernel/MigrateTestBase.php',
 ];
@@ -1789,9 +1763,9 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/Menu/BreadcrumbTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\system\\\\Functional\\\\Menu\\\\MenuAccessTest\\:\\:getStatus\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Menu/MenuAccessTest.php',
+	'message' => '#^Variable \\$test_meta in empty\\(\\) always exists and is not falsy\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/system/tests/src/Functional/Render/HtmlResponseAttachmentsTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$expected_required_list_items might not be defined\\.$#',
@@ -1860,11 +1834,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\taxonomy\\\\VocabularyForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/src/VocabularyForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$depth_count might not be defined\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/modules/taxonomy/tests/src/Kernel/TermKernelTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\tour\\\\TipPluginBase\\:\\:get\\(\\) should return string but return statement is missing\\.$#',
@@ -2019,7 +1988,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$validate_types might not be defined\\.$#',
-	'count' => 2,
+	'count' => 1,
 	'path' => __DIR__ . '/modules/views/src/Plugin/views/argument/ArgumentPluginBase.php',
 ];
 $ignoreErrors[] = [
@@ -2456,11 +2425,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$e might not be defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/FieldableEntityDefinitionUpdateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$entity might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/FieldableEntityDefinitionUpdateTest.php',
 ];
