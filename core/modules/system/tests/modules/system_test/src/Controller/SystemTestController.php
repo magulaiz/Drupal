@@ -3,20 +3,23 @@
 namespace Drupal\system_test\Controller;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\CacheableRedirectResponse;
 use Drupal\Core\Cache\CacheableResponse;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\PageCache\ResponsePolicy\KillSwitch;
-use Drupal\Core\Security\TrustedCallbackInterface;
-use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Render\Markup;
+use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Routing\LocalRedirectResponse;
+use Drupal\Core\Routing\TrustedRedirectResponse;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Drupal\Core\Lock\LockBackendInterface;
 
 /**
  * Controller routines for system_test routes.
@@ -422,6 +425,27 @@ class SystemTestController extends ControllerBase implements TrustedCallbackInte
    */
   public function getCacheableResponseWithCustomCacheControl() {
     return new CacheableResponse('Foo', 200, ['Cache-Control' => 'bar']);
+  }
+
+  /**
+   * Returns a CacheableRedirectResponse with the given status code.
+   */
+  public function respondWithCacheableRedirectResponse($status_code) {
+    return new CacheableRedirectResponse('/llamaslikelabeorphily', $status_code);
+  }
+
+  /**
+   * Returns a LocalRedirectResponse with the given status code.
+   */
+  public function respondWithLocalRedirectResponse($status_code) {
+    return new LocalRedirectResponse('/llamaslikelabeorphily', $status_code);
+  }
+
+  /**
+   * Returns a TrustedRedirectResponse with the given status code.
+   */
+  public function respondWithTrustedRedirectResponse($status_code) {
+    return new TrustedRedirectResponse('/llamaslikelabeorphily', $status_code);
   }
 
   /**

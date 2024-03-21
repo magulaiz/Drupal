@@ -562,6 +562,26 @@ class PageCacheTest extends BrowserTestBase {
   }
 
   /**
+   * Verify that the cache-control header is added by FinishResponseSubscriber.
+   */
+  public function testCacheabilityOfRedirectResponses() {
+    $config = $this->config('system.performance');
+    $config->set('cache.page.max_age', 300);
+    $config->save();
+
+    $this->getSession()->getDriver()->getClient()->followRedirects(FALSE);
+    $this->maximumMetaRefreshCount = 0;
+
+    foreach ([301, 302, 303, 307, 308] as $status_code) {
+      foreach (['local', 'cacheable', 'trusted'] as $type) {
+        $this->drupalGet("/system-test/redirect/${type}/${status_code}");
+        $this->assertResponse($status_code);
+        $this->assertHeader('Cache-Control', 'max-age=300, public');
+      }
+    }
+  }
+
+  /**
    * Tests that URLs are cached in a not normalized form.
    */
   public function testNoUrlNormalization() {
