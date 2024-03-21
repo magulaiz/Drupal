@@ -238,14 +238,14 @@ class ElementTest extends BrowserTestBase {
       if (!isset($info['#process'])) {
         $this->fail('FormElement ' . $definition['id'] . ' does not have a processGroup #process callback (1).');
       }
-      $info_has_processgroup = FALSE;
+      $info_has_process_group = FALSE;
       foreach ($info['#process'] as $item) {
         if (is_subclass_of($item[0], FormElement::class) && $item[1] == 'processGroup') {
-          $info_has_processgroup = TRUE;
+          $info_has_process_group = TRUE;
           break;
         }
       }
-      if (!$info_has_processgroup) {
+      if (!$info_has_process_group) {
         $this->fail('FormElement ' . $definition['id'] . ' does not have a processGroup #process callback (2).');
       }
     }

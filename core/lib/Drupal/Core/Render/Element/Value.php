@@ -31,7 +31,7 @@ class Value extends FormElementBase {
       '#input' => TRUE,
       '#process' => [
         [$class, 'processGroup'],
-      ]
+      ],
     ];
   }
 

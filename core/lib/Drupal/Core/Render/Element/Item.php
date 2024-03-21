@@ -30,7 +30,7 @@ class Item extends FormElementBase {
       '#theme_wrappers' => ['form_element'],
       '#process' => [
         [$class, 'processGroup'],
-      ]
+      ],
     ];
   }
 
