@@ -39,6 +39,7 @@ class ManagedFile extends FormElementBase {
       ],
       '#pre_render' => [
         [static::class, 'preRenderManagedFile'],
+        [static::class, 'preRenderGroup'],
       ],
       '#theme' => 'file_managed_file',
       '#theme_wrappers' => ['form_element'],

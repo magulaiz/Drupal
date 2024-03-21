@@ -99,6 +99,7 @@ class WeightTest extends KernelTestBase {
       ],
       '#pre_render' => [
         [Select::class, 'preRenderSelect'],
+        [Select::class, 'preRenderGroup'],
       ],
     ]);
 
