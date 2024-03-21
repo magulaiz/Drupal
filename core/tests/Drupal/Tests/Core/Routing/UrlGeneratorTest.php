@@ -469,18 +469,6 @@ class UrlGeneratorTest extends UnitTestCase {
   }
 
   /**
-   * Tests deprecated methods.
-   *
-   * @group legacy
-   */
-  public function testDeprecatedMethods() {
-    $this->expectDeprecation('Drupal\Core\Routing\UrlGenerator::getRouteDebugMessage() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use the route name instead. See https://www.drupal.org/node/3172303');
-    $this->assertSame('test', $this->generator->getRouteDebugMessage('test'));
-    $this->expectDeprecation('Drupal\Core\Routing\UrlGenerator::supports() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Only string route names are supported. See https://www.drupal.org/node/3172303');
-    $this->assertTrue($this->generator->supports('test'));
-  }
-
-  /**
    * Tests the 'scheme' route requirement during URL generation.
    */
   public function testUrlGenerationWithHttpsRequirement() {
