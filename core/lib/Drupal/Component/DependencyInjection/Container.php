@@ -456,7 +456,7 @@ class Container implements ContainerInterface, ResetInterface {
         }
         elseif ($type == 'service_closure') {
           $arguments[$key] = function () use ($argument) {
-            return $this->get($argument->id, $argument->invalidBehavior);
+            return $this->resolveServicesAndParameters([$argument->closure])[0];
           };
 
           continue;
