@@ -116,7 +116,7 @@ abstract class BrowserTestBase extends TestCase {
   /**
    * The profile to install as a basis for testing.
    *
-   * @var string|false
+   * @var string
    */
   protected $profile = 'testing';
 
