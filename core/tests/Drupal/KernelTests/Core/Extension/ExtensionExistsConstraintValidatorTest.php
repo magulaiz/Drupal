@@ -83,6 +83,8 @@ class ExtensionExistsConstraintValidatorTest extends KernelTestBase {
     $definition->setConstraints(['ExtensionExists' => 'profile']);
     $this->expectExceptionMessage("Unknown extension type: 'profile'");
     $data->validate();
+
+    // @todo test validation of profiles.
   }
 
 }
