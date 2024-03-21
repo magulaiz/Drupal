@@ -150,6 +150,9 @@ function drupal_install_profile_distribution_version() {
  */
 function drupal_verify_profile($install_state) {
   $profile = $install_state['parameters']['profile'];
+  if ($profile === FALSE) {
+    return [];
+  }
   $info = $install_state['profile_info'];
 
   // Get the list of available modules for the selected installation profile.
@@ -233,9 +236,14 @@ function drupal_install_system($install_state) {
 
   // Store the installation profile in configuration to populate the
   // 'install_profile' container parameter.
-  \Drupal::configFactory()->getEditable('core.extension')
-    ->set('profile', $install_state['parameters']['profile'])
-    ->save();
+  $config = \Drupal::configFactory()->getEditable('core.extension');
+  if ($install_state['parameters']['profile'] === FALSE) {
+    $config->clear('profile');
+  }
+  else {
+    $config->set('profile', $install_state['parameters']['profile']);
+  }
+  $config->save();
 
   $connection = Database::getConnection();
   $provider = $connection->getProvider();
@@ -580,6 +588,9 @@ function drupal_requirements_url($severity) {
  *   Array of the installation profile's requirements.
  */
 function drupal_check_profile($profile) {
+  if ($profile === FALSE) {
+    return [];
+  }
   $info = install_profile_info($profile);
   // Collect requirement testing results.
   $requirements = [];
