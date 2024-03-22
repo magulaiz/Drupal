@@ -548,7 +548,7 @@ class PageCacheTest extends BrowserTestBase {
   /**
    * Tests that the Cache-Control header is added by FinishResponseSubscriber.
    */
-  public function testCacheabilityOfRedirectResponses() {
+  public function testCacheabilityOfRedirectResponses(): void {
     $this->enablePageCaching();
 
     $this->getSession()->getDriver()->getClient()->followRedirects(FALSE);

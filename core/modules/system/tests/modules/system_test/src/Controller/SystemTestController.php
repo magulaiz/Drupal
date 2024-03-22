@@ -430,21 +430,21 @@ class SystemTestController extends ControllerBase implements TrustedCallbackInte
   /**
    * Returns a CacheableRedirectResponse with the given status code.
    */
-  public function respondWithCacheableRedirectResponse($status_code) {
+  public function respondWithCacheableRedirectResponse(int $status_code): CacheableRedirectResponse {
     return new CacheableRedirectResponse('/llamas', $status_code);
   }
 
   /**
    * Returns a LocalRedirectResponse with the given status code.
    */
-  public function respondWithLocalRedirectResponse($status_code) {
+  public function respondWithLocalRedirectResponse(int $status_code): LocalRedirectResponse {
     return new LocalRedirectResponse('/llamas', $status_code);
   }
 
   /**
    * Returns a TrustedRedirectResponse with the given status code.
    */
-  public function respondWithTrustedRedirectResponse($status_code) {
+  public function respondWithTrustedRedirectResponse(int $status_code): TrustedRedirectResponse {
     return new TrustedRedirectResponse('/llamas', $status_code);
   }
 
