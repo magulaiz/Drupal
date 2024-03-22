@@ -2,9 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Module;
 
-use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\workspaces\Entity\Workspace;
 
 /**
  * Tests PrepareModulesEntityUninstallForm::formTitle().
