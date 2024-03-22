@@ -556,7 +556,7 @@ class PageCacheTest extends BrowserTestBase {
 
     foreach ([301, 302, 303, 307, 308] as $status_code) {
       foreach (['local', 'cacheable', 'trusted'] as $type) {
-        $this->drupalGet("/system-test/redirect/${type}/${status_code}");
+        $this->drupalGet("/system-test/redirect/{$type}/{$status_code}");
         $this->assertSession()->statusCodeEquals($status_code);
         $this->assertCacheMaxAge(300);
       }
