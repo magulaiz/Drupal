@@ -69,7 +69,7 @@ class TermTest extends ResourceTestBase {
   protected function setUpAuthorization($method) {
     switch ($method) {
       case 'GET':
-        $this->grantPermissionsToTestedRole(['access content']);
+        $this->grantPermissionsToTestedRole(['access content', 'view vocabulary camelids']);
         break;
 
       case 'POST':
