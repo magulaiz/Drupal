@@ -75,7 +75,7 @@ class Pager {
    *   The maximum number of items per page.
    */
   protected function setTotalPages($totalItems, $limit) {
-    $this->totalPages = (int) ceil($totalItems / $limit);
+    $this->totalPages = $limit > 0 ? (int) ceil($totalItems / $limit) : 1;
   }
 
   /**
