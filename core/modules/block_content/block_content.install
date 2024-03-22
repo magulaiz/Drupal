@@ -11,6 +11,7 @@ use Drupal\Core\Entity\Form\RevisionDeleteForm;
 use Drupal\Core\Entity\Form\RevisionRevertForm;
 use Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_update_last_removed().

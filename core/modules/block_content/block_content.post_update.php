@@ -6,10 +6,12 @@
  */
 
 use Drupal\block_content\BlockContentTypeInterface;
+use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\user\Entity\Role;
 use Drupal\views\Entity\View;
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_removed_post_updates().
