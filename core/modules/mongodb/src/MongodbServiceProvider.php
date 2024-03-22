@@ -4,6 +4,7 @@ namespace Drupal\mongodb;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderBase;
+use Drupal\mongodb\modules\workspaces\WorkspacesAliasRepository;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**

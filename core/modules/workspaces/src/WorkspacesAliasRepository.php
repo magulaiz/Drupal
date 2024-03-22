@@ -41,16 +41,39 @@ class WorkspacesAliasRepository extends AliasRepository {
     $active_workspace = $this->workspaceManager->getActiveWorkspace();
 
     $query = $this->connection->select('path_alias', 'base_table_2');
-    $wa_join = $query->leftJoin('workspace_association', NULL,
-      $query->joinCondition()
-        ->condition("%alias.target_entity_type_id", 'path_alias')
-        ->compare("%alias.target_entity_id", "base_table_2.id")
-        ->condition("%alias.workspace", $active_workspace->id())
-    );
-    $query->innerJoin('path_alias_revision', 'base_table',
-      $query->joinCondition()
-        ->where("[%alias].[revision_id] = COALESCE([$wa_join].[target_entity_revision_id], [base_table_2].[revision_id])")
-    );
+    if ($this->connection->driver() == 'mongodb') {
+      $query = $this->connection->select('path_alias', 'base_table_2');
+      $query->leftJoin('workspace_association', 'wa',
+        $query->joinCondition()
+          ->condition("%alias.target_entity_type_id", 'path_alias')
+          ->compare("%alias.target_entity_id", "base_table_2.id")
+          ->condition("%alias.workspace", $active_workspace->id())
+      );
+
+      $coalesce_field = [
+        '$ifNull' => [
+          '$' . $this->connection->escapeField('wa.target_entity_revision_id'),
+          '$' . $this->connection->escapeField('base_table_2.revision_id'),
+        ]
+      ];
+
+      $query->innerJoin('path_alias', 'base_table',
+        $query->joinCondition()
+          ->compare("base_table.path_alias_current_revision.revision_id", serialize($coalesce_field)),
+      );
+    }
+    else {
+      $wa_join = $query->leftJoin('workspace_association', NULL,
+        $query->joinCondition()
+          ->condition("%alias.target_entity_type_id", 'path_alias')
+          ->compare("%alias.target_entity_id", "base_table_2.id")
+          ->condition("%alias.workspace", $active_workspace->id())
+      );
+      $query->innerJoin('path_alias_revision', 'base_table',
+        $query->joinCondition()
+          ->where("[%alias].[revision_id] = COALESCE([$wa_join].[target_entity_revision_id], [base_table_2].[revision_id])")
+      );
+    }
 
     return $query;
   }

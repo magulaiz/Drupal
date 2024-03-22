@@ -387,31 +387,37 @@ class Condition extends QueryCondition {
             }
 
             if (isset($condition['field2'])) {
-              // For comparing two fields to each other, the fields sometimes
-              // have to be cast to an integer value.
-              $field_pos = strpos($condition['field'],'$toInt');
-              if ($field_pos !== FALSE) {
+              $pattern = '\$toInt|\$ifNull';
+              // If the field name contains the string "$toInt" or "$ifNull" the
+              // field contains a special query.
+              if (preg_match("/$pattern/", $condition['field'])) {
                 $field = unserialize($condition['field']);
               }
               else {
                 $field = '$' . $connection->escapeField($condition['field']);
               }
-              $field2_pos = strpos($condition['field2'],'$toInt');
-              if ($field2_pos !== FALSE) {
+              if (preg_match("/$pattern/", $condition['field2'])) {
                 $field2 = unserialize($condition['field2']);
               }
               else {
                 $field2 = '$' . $connection->escapeField($condition['field2']);
               }
-
-              $condition_fragment = $condition_aggregate_fragment = [
-                '$expr' => [
-                  $operator['mongodb_operator'] => [
-                    $field,
-                    $field2,
+              if ($this->mongodbJoinCondition) {
+                $condition_fragment = $condition_aggregate_fragment = [
+                  '$expr' => [
+                    $operator['mongodb_operator'] => [
+                      $field,
+                      $field2,
+                    ],
                   ],
-                ],
-              ];
+                ];
+              }
+              else {
+                $condition_fragment = $condition_aggregate_fragment = [$connection->escapeField($condition['field']) => [$operator['mongodb_operator'] => '$' . $connection->escapeField($condition['field2'])]];
+                if (!empty($condition['embedded_table'])) {
+                  $condition_aggregate_fragment = [$connection->escapeField($condition['embedded_table'] . '.' . $condition['field']) => [$operator['mongodb_operator'] => '$' . $connection->escapeField($condition['embedded_table'] . '.' . $condition['field2'])]];
+                }
+              }
             }
             else {
               $placeholders = [];

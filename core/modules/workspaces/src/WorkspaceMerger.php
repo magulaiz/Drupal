@@ -101,7 +101,11 @@ class WorkspaceMerger implements WorkspaceMergerInterface {
     }
 
     try {
-      $transaction = $this->database->startTransaction();
+      if ($this->database->driver() != 'mongodb'){
+        // For MongoDB the next line in a fail, because MongoDB does not support
+        // nested transactions.
+        $transaction = $this->database->startTransaction();
+      }
       foreach ($this->getDifferringRevisionIdsOnSource() as $entity_type_id => $revision_difference) {
         $revisions_on_source = $this->entityTypeManager->getStorage($entity_type_id)
           ->loadMultipleRevisions(array_keys($revision_difference));

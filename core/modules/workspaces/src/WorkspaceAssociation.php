@@ -199,14 +199,11 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
 
     if ($this->database->driver() == 'mongodb') {
       $all_revisions_table = $table_mapping->getJsonStorageAllRevisionsTable();
-      $current_revision_table = $table_mapping->getJsonStorageCurrentRevisionTable();
 
       $query = $this->database->select($entity_type->getBaseTable(), 'base');
-      $query->embeddedTableToUseAsBaseTable($all_revisions_table);
       $query
-        ->fields('base', [$revision_id_field, $id_field])
+        ->fields('base', [$revision_id_field, $id_field, $all_revisions_table])
         ->condition("$all_revisions_table.$workspace_field", $workspace_candidates, 'IN')
-        ->compare("$all_revisions_table.$revision_id_field", "$current_revision_table.$revision_id_field", '<=')
         ->orderBy("$all_revisions_table.$revision_id_field", 'ASC');
 
       // Restrict the result to a set of entity ID's if provided.
@@ -214,8 +211,26 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
         foreach ($entity_ids as & $entity_id) {
           $entity_id = (int) $entity_id;
         }
-        $query->condition("$all_revisions_table.$id_field", $entity_ids, 'IN');
+        $query->condition($id_field, $entity_ids, 'IN');
       }
+
+      $revisions = [];
+
+      $result = $query->execute()->fetchAll();
+      foreach ($result as $row) {
+        $id = $row->{$id_field};
+        $revision_id = $row->{$revision_id_field};
+        $all_revisions = $row->{$all_revisions_table};
+        foreach ($all_revisions as $all_revision) {
+          $all_revision_revision_id = $all_revision[$revision_id_field] ?? NULL;
+          $all_revision_workspace = $all_revision[$workspace_field] ?? NULL;
+          // @todo the next if-statement should be moved to the query.
+          if ($all_revision_revision_id && $all_revision_workspace && ($all_revision_revision_id >= $revision_id) && (in_array($all_revision_workspace, $workspace_candidates, TRUE))) {
+            $revisions[$all_revision_revision_id] = $id;
+          }
+        }
+      }
+      return $revisions;
     }
     else {
       $query = $this->database->select($entity_type->getRevisionTable(), 'revision');
@@ -231,9 +246,9 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       if ($entity_ids) {
         $query->condition("revision.$id_field", $entity_ids, 'IN');
       }
-    }
 
-    return $query->execute()->fetchAllKeyed();
+      return $query->execute()->fetchAllKeyed();
+    }
   }
 
   /**
@@ -258,11 +273,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
 
     $query = $this->database->select($entity_type->getBaseTable(), 'base');
     if ($this->database->driver() == 'mongodb') {
-      $all_revisions_table = $table_mapping->getJsonStorageAllRevisionsTable();
       $current_revision_table = $table_mapping->getJsonStorageCurrentRevisionTable();
-
-//      $query->embeddedTableToUseAsBaseTable($all_revisions_table);
-//      $query->embeddedTableToUseAsBaseTable($current_revision_table);
 
       $query
         ->fields('base', [$revision_id_field, $id_field, $current_revision_table])
@@ -375,15 +386,44 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
    */
   public function initializeWorkspace(WorkspaceInterface $workspace) {
     if ($parent_id = $workspace->parent->target_id) {
-      $indexed_rows = $this->database->select(static::TABLE);
-      $indexed_rows->addExpressionConstant("'" . $workspace->id() . "'", 'workspace');
-      $indexed_rows->fields(static::TABLE, [
-        'target_entity_type_id',
-        'target_entity_id',
-        'target_entity_revision_id',
-      ]);
-      $indexed_rows->condition('workspace', $parent_id);
-      $this->database->insert(static::TABLE)->from($indexed_rows)->execute();
+      if ($this->database->driver() == 'mongodb') {
+        $indexed_rows = $this->database->select(static::TABLE);
+        $indexed_rows->fields(static::TABLE, [
+          'target_entity_type_id',
+          'target_entity_id',
+          'target_entity_revision_id',
+        ]);
+        $indexed_rows->condition('workspace', $parent_id);
+        $result = $indexed_rows->execute()->fetchAll();
+        if (!empty($result)) {
+          $query = $this->database->insert(static::TABLE)->fields([
+            'workspace',
+            'target_entity_type_id',
+            'target_entity_id',
+            'target_entity_revision_id',
+          ]);
+          foreach ($result as $row) {
+            $query->values([
+              $workspace->id(),
+              $row->target_entity_type_id,
+              $row->target_entity_id,
+              $row->target_entity_revision_id,
+            ]);
+          }
+          $query->execute();
+        }
+      }
+      else {
+        $indexed_rows = $this->database->select(static::TABLE);
+        $indexed_rows->addExpressionConstant("'" . $workspace->id() . "'", 'workspace');
+        $indexed_rows->fields(static::TABLE, [
+          'target_entity_type_id',
+          'target_entity_id',
+          'target_entity_revision_id',
+        ]);
+        $indexed_rows->condition('workspace', $parent_id);
+        $this->database->insert(static::TABLE)->from($indexed_rows)->execute();
+      }
     }
   }
 

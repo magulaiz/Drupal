@@ -1513,8 +1513,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           ->fetchCol();
         foreach ($result as $current_revisions) {
           foreach ($current_revisions as $current_revision) {
-            if (isset($current_revision[$this->idKey])) {
-              $current_revision_id = $current_revision[$this->idKey];
+            if (isset($current_revision[$this->revisionKey])) {
+              $current_revision_id = $current_revision[$this->revisionKey];
             }
           }
         }
@@ -1835,15 +1835,19 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $entity_data = $this->database->getConnection()->{$prefixed_table}->findOne(
           [$this->idKey => ['$eq' => $entity_id]],
           [
-            'projection' => [$this->jsonStorageAllRevisionsTable => 1, $this->revisionKey => 1],
+            'projection' => [$this->jsonStorageAllRevisionsTable => 1, $this->jsonStorageCurrentRevisionTable => 1],
             'session' => $this->database->getMongodbSession(),
           ],
         );
 
         // Get the current revision id for setting the default revision field.
-        $current_revision_id = NULL;
-        if (isset($entity_data->{$this->revisionKey})) {
-          $current_revision_id = $entity_data->{$this->revisionKey};
+        if (isset($entity_data->{$this->jsonStorageCurrentRevisionTable})) {
+          $current_revision_data = (array) $entity_data->{$this->jsonStorageCurrentRevisionTable};
+          foreach ($current_revision_data as $revision) {
+            if (isset($revision->{$this->revisionKey})) {
+              $current_revision_id = $revision->{$this->revisionKey};
+            }
+          }
         }
 
         $revisions_langcodes = [];
@@ -1857,10 +1861,15 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
               if (($revision_langcode['revision_id'] == $revision->{$this->revisionKey}) && ($revision_langcode['langcode'] == $revision->{$this->langcodeKey})) {
                 $exists = TRUE;
               }
-              if ($current_revision_id && isset($revision->{$this->revisionKey}) && isset($revision->{$revision_default_field}) && ($revision->{$this->revisionKey} != $current_revision_id)) {
-                // All revisions that are not the current revision should have
-                // set the value of "revision_default" to FALSE.
-                $revision->{$revision_default_field} = FALSE;
+              if ($current_revision_id && isset($revision->{$this->revisionKey}) && isset($revision->{$revision_default_field})) {
+                if ($revision->{$this->revisionKey} == $current_revision_id) {
+                  $revision->{$revision_default_field} = TRUE;
+                }
+                else {
+                  // All revisions that are not the current revision should have
+                  // set the value of "revision_default" to FALSE.
+                  $revision->{$revision_default_field} = FALSE;
+                }
               }
             }
             if (!$exists) {

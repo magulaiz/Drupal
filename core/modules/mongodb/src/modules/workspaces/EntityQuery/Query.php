@@ -39,14 +39,11 @@ class Query extends BaseQuery {
     // query, we need to re-define the the key fields for fetchAllKeyed() as SQL
     // expressions.
     if ($this->mongodbSelect->getMetaData('active_workspace_id')) {
-      $this->mongodbIdField = $this->entityType->getKey('id');
-      $this->mongodbRevisionField = $this->entityType->getKey('revision');
-
       // Since the query is against the base table, we have to take into account
       // that the revision ID might come from the workspace_association
       // relationship, and, as a consequence, the revision ID field is no longer
       // a simple SQL field but an expression.
-      $this->mongodbFields = [];
+      // $this->mongodbFields = [];
 
       $this->mongodbWorkspaceRevisionField = [
         'alias' => 'coalesce_' . $this->mongodbRevisionField,
@@ -66,7 +63,6 @@ class Query extends BaseQuery {
    */
   protected function finish() {
     if (!empty($this->mongodbWorkspaceRevisionField) && !empty($this->mongodbWorkspaceIdField)) {
-      $this->mongodbSelect->addField('workspace_association', 'target_entity_revision_id', 'coalesce_target_entity_revision_id');
       $this->mongodbSelect->addField('base_table', $this->mongodbWorkspaceRevisionField['field'], $this->mongodbWorkspaceRevisionField['alias']);
       $this->mongodbSelect->addField('base_table', $this->mongodbWorkspaceIdField['field'], $this->mongodbWorkspaceIdField['alias']);
     }
@@ -106,6 +102,12 @@ class Query extends BaseQuery {
         }
         else {
           $results = $this->mongodbSelect->execute()->fetchAll();
+          foreach ($results as &$record) {
+            if (!empty($record->{'coalesce_' . $this->mongodbRevisionField})) {
+              $record->{$this->mongodbRevisionField} = $record->{'coalesce_' . $this->mongodbRevisionField};
+              unset($record->{'coalesce_' . $this->mongodbRevisionField});
+            }
+          }
           $results = $this->sortQueryResult($results);
           if ($this->range) {
             // We also need the keys.

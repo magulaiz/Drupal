@@ -277,7 +277,6 @@ class WorkspaceCRUDTest extends KernelTestBase {
     // were deleted by the workspace purging process.
     $workspace->delete();
 
-    $this->entityTypeManager->getStorage('node')->resetCache();
     $revisions = $this->entityTypeManager->getStorage('node')->loadMultipleRevisions([1, 2, 3, 4, 5]);
     $this->assertCount(3, $revisions);
     $this->assertFalse($revisions[1]->isDefaultRevision());

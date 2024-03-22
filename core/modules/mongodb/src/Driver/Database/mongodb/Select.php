@@ -201,13 +201,20 @@ class Select extends QuerySelect {
   protected array $mongodbDateStringFormattedFields = [];
 
   /**
-   * The array containing the fields be added to the query.
+   * The array containing the field be added to the query.
    *
-   * If they are null then be replaced by the given value..
+   * If they are null then be replaced by the given value.
    *
    * @var array
    */
   protected array $mongodbCoalesceValueFields = [];
+
+  /**
+   * The array containing the fields be added to the query.
+   *
+   * @var array
+   */
+  protected array $mongodbCoalesceFields = [];
 
   /**
    * The array containing the fields where the one with the greatest value.
@@ -884,11 +891,9 @@ class Select extends QuerySelect {
   public function addExpressionCoalesce(array $fields, ?string $alias = NULL) {
     $alias = $this->getExpressionAlias($alias);
 
-    $this->expressions[$alias] = [
-      'type' => 'coalesce',
-      'fields' => $fields,
+    $this->mongodbCoalesceFields[$alias] = [
       'alias' => $alias,
-      'arguments' => [],
+      'fields' => $fields,
     ];
 
     return $alias;
@@ -1633,7 +1638,8 @@ class Select extends QuerySelect {
         );
         $this->connection->dispatchEvent($startEvent);
       }
-
+//dump('$this->mongodbFilter');
+//dump($this->mongodbFilter);
       $cursor = $this->connection->getConnection()->{$prefixed_table}->find($this->mongodbFilter, $options);
 
       if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionEndEvent::class)) {
@@ -2322,6 +2328,16 @@ class Select extends QuerySelect {
       $this->mongodbUseAggregate = TRUE;
     }
 
+    // Add the MongoDB coalesce fields.
+    foreach ($this->mongodbCoalesceFields as $alias => $data) {
+      $coalesce_fields = [];
+      foreach ($data['fields'] as $coalesce_field) {
+        $coalesce_fields[] = '$' . $this->connection->escapeField($coalesce_field);
+      }
+      $this->mongodbAddFields[$this->connection->escapeField($alias)] = ['$ifNull' => $coalesce_fields];
+      $this->mongodbUseAggregate = TRUE;
+    }
+
     // Add the MongoDB greatest fields.
     foreach ($this->mongodbGreatestFields as $alias => $data) {
       $max_fields = [];
@@ -2666,6 +2682,7 @@ class Select extends QuerySelect {
                 $last_dot = strrpos($field, '.');
                 if ($last_dot !== FALSE) {
                   $embedded_table = substr($field, 0, $last_dot);
+dump('group by $embedded_table: ' . $embedded_table);
                   if (!in_array($embedded_table, $this->mongodbUnwind, TRUE)) {
                     $this->mongodbUnwind[] = '$' . $embedded_table;
                   }
