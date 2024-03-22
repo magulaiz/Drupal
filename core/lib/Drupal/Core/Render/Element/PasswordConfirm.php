@@ -12,6 +12,7 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * Properties:
  * - #size: The size of the input element in characters.
+ * - #pass2_attributes: An array of attributes to apply to the confirm password field.
  *
  * Usage example:
  * @code
@@ -19,6 +20,8 @@ use Drupal\Core\Form\FormStateInterface;
  *   '#type' => 'password_confirm',
  *   '#title' => $this->t('Password'),
  *   '#size' => 25,
+ *   '#attributes' => ['class' => ['password-field']],
+ *   '#pass2_attributes' => ['class' => ['password-confirm']],
  * );
  * @endcode
  *
