@@ -52,7 +52,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getEntityCounts() {
     return [
-      'action' => 24,
+      'action' => 26,
       'base_field_override' => 22,
       'block' => 33,
       'block_content' => 1,
@@ -81,7 +81,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'shortcut' => 2,
       'shortcut_set' => 1,
       'taxonomy_term' => 7,
-      'taxonomy_vocabulary' => 2,
+      'taxonomy_vocabulary' => 4,
       'user' => 3,
       'user_role' => 4,
       'view' => 14,
