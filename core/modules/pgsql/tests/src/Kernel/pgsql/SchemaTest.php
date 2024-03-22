@@ -234,7 +234,7 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
   }
 
   /**
-   * @covers \Drupal\Core\Database\Driver\pgsql\Schema::extensionExists
+   * @covers \Drupal\pgsql\Driver\Database\pgsql\Schema::extensionExists
    */
   public function testPgsqlExtensionExists(): void {
     // Test the method for a non existing extension.
@@ -361,6 +361,24 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
     $this->schema->renameTable($table_name_old, $table_name_new);
 
     $this->assertTrue($this->schema->tableExists($table_name_new));
+  }
+
+  /**
+   * Tests column name escaping in field constraints.
+   */
+  public function testUnsignedField(): void {
+    $table_name = 'unsigned_table';
+    $table_spec = [
+      'fields' => [
+        'order' => [
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        ],
+      ],
+      'primary key' => ['order'],
+    ];
+    $this->schema->createTable($table_name, $table_spec);
   }
 
 }

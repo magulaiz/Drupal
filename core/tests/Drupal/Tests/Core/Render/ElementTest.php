@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Render;
 
 use Drupal\Core\Access\AccessResult;
@@ -107,7 +109,7 @@ class ElementTest extends UnitTestCase {
       'foo' => 'bar',
     ];
     $this->expectError();
-    $this->expectErrorMessage('"foo" is an invalid render array key');
+    $this->expectErrorMessage('"foo" is an invalid render array key. Value should be an array but got a string');
     Element::children($element);
   }
 
@@ -140,7 +142,7 @@ class ElementTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerVisibleChildren() {
+  public static function providerVisibleChildren() {
     return [
       [['#property1' => '', '#property2' => []], []],
       [['#property1' => '', 'child1' => []], ['child1']],
@@ -167,7 +169,7 @@ class ElementTest extends UnitTestCase {
   /**
    * Data provider for testSetAttributes().
    */
-  public function providerTestSetAttributes() {
+  public static function providerTestSetAttributes() {
     $base = ['#id' => 'id', '#class' => []];
     return [
       [$base, [], $base],
@@ -185,7 +187,7 @@ class ElementTest extends UnitTestCase {
     $this->assertSame(Element::isEmpty($element), $expected);
   }
 
-  public function providerTestIsEmpty() {
+  public static function providerTestIsEmpty() {
     return [
       [[], TRUE],
       [['#attached' => []], FALSE],

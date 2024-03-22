@@ -3,6 +3,7 @@
 namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Component\Datetime\DateTimePlus;
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -74,15 +75,32 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    *   A policy rule determining the cacheability of a response.
    * @param \Drupal\Core\Cache\Context\CacheContextsManager $cache_contexts_manager
    *   The cache contexts manager service.
+   * @param \Drupal\Component\Datetime\TimeInterface|null|bool $time
+   *   The time service.
    * @param bool $http_response_debug_cacheability_headers
    *   (optional) Whether to send cacheability headers for debugging purposes.
    */
-  public function __construct(LanguageManagerInterface $language_manager, ConfigFactoryInterface $config_factory, RequestPolicyInterface $request_policy, ResponsePolicyInterface $response_policy, CacheContextsManager $cache_contexts_manager, $http_response_debug_cacheability_headers = FALSE) {
+  public function __construct(
+    LanguageManagerInterface $language_manager,
+    ConfigFactoryInterface $config_factory,
+    RequestPolicyInterface $request_policy,
+    ResponsePolicyInterface $response_policy,
+    CacheContextsManager $cache_contexts_manager,
+    protected TimeInterface|bool|null $time = NULL,
+    $http_response_debug_cacheability_headers = FALSE,
+  ) {
     $this->languageManager = $language_manager;
     $this->config = $config_factory->get('system.performance');
     $this->requestPolicy = $request_policy;
     $this->responsePolicy = $response_policy;
     $this->cacheContextsManager = $cache_contexts_manager;
+    if (!$time || is_bool($time)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $time argument is deprecated in drupal:10.3.0 and it will be the 5th argument in drupal:11.0.0. See https://www.drupal.org/node/3387233', E_USER_DEPRECATED);
+      if (is_bool($time)) {
+        $http_response_debug_cacheability_headers = $time;
+      }
+      $this->time = \Drupal::service(TimeInterface::class);
+    }
     $this->debugCacheabilityHeaders = $http_response_debug_cacheability_headers;
   }
 
@@ -257,8 +275,8 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     // In order to support HTTP cache-revalidation, ensure that there is a
     // Last-Modified and an ETag header on the response.
     if (!$response->headers->has('Last-Modified')) {
-      $timestamp = REQUEST_TIME;
-      $response->setLastModified(new \DateTime(gmdate(DateTimePlus::RFC7231, REQUEST_TIME)));
+      $timestamp = $this->time->getRequestTime();
+      $response->setLastModified(new \DateTime(gmdate(DateTimePlus::RFC7231, $this->time->getRequestTime())));
     }
     else {
       $timestamp = $response->getLastModified()->getTimestamp();
@@ -301,40 +319,6 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Sets the Content-Length header on the response.
-   *
-   * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
-   *   The event to process.
-   *
-   * @see \Symfony\Component\HttpFoundation\Response::prepare()
-   * @see https://www.rfc-editor.org/rfc/rfc9110.html#name-content-length
-   */
-  public function setContentLengthHeader(ResponseEvent $event): void {
-    $response = $event->getResponse();
-
-    if ($response->isInformational() || $response->isEmpty()) {
-      return;
-    }
-
-    if ($response->headers->has('Transfer-Encoding')) {
-      return;
-    }
-
-    // Drupal cannot set the correct content length header when there is a
-    // server error.
-    if ($response->isServerError()) {
-      return;
-    }
-
-    $content = $response->getContent();
-    if ($content === FALSE) {
-      return;
-    }
-
-    $response->headers->set('Content-Length', strlen($content), TRUE);
-  }
-
-  /**
    * Registers the methods in this class that should be listeners.
    *
    * @return array
@@ -345,10 +329,6 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     // There is no specific reason for choosing 16 beside it should be executed
     // before ::onRespond().
     $events[KernelEvents::RESPONSE][] = ['onAllResponds', 16];
-    // Run very late, after all other response subscribers have run. However,
-    // any response subscribers that convert a response to a streamed response
-    // must run after this and undo what this does.
-    $events[KernelEvents::RESPONSE][] = ['setContentLengthHeader', -1024];
     return $events;
   }
 

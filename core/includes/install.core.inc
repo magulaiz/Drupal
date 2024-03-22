@@ -26,7 +26,6 @@ use Drupal\Core\Installer\Form\SiteSettingsForm;
 use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
-use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StringTranslation\Translator\FileTranslation;
 use Drupal\Core\StackMiddleware\ReverseProxyMiddleware;
@@ -36,12 +35,12 @@ use Drupal\Core\Url;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Core\Routing\RouteObjectInterface;
+use Psr\Http\Client\ClientExceptionInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Route;
 use Drupal\user\Entity\User;
-use GuzzleHttp\Exception\TransferException;
 
 /**
  * Do not run the task during the current installation request.
@@ -148,10 +147,7 @@ function install_drupal($class_loader, $settings = [], callable $callback = NULL
   // installations can send output to the browser or redirect the user to the
   // next page.
   if ($state['interactive']) {
-    // If a session has been initiated in this request, make sure to save it.
-    if (\Drupal::request()->hasSession()) {
-      \Drupal::request()->getSession()->save();
-    }
+    \Drupal::request()->getSession()->save();
     if ($state['parameters_changed']) {
       // Redirect to the correct page if the URL parameters have changed.
       install_goto(install_redirect_url($state));
@@ -360,16 +356,6 @@ function install_begin_request($class_loader, &$install_state) {
     ->register('string_translation', 'Drupal\Core\StringTranslation\TranslationManager')
     ->addArgument(new Reference('language.default'));
 
-  // Register the stream wrapper manager.
-  $container
-    ->register('stream_wrapper_manager', 'Drupal\Core\StreamWrapper\StreamWrapperManager')
-    ->addMethodCall('setContainer', [new Reference('service_container')]);
-  $container
-    ->register('file_system', 'Drupal\Core\File\FileSystem')
-    ->addArgument(new Reference('stream_wrapper_manager'))
-    ->addArgument(Settings::getInstance())
-    ->addArgument((new LoggerChannelFactory())->get('file'));
-
   // Register the database driver extension list provider.
   $container
     ->register('extension.list.database_driver', 'Drupal\Core\Extension\DatabaseDriverList')
@@ -400,8 +386,7 @@ function install_begin_request($class_loader, &$install_state) {
   if ($install_state['settings_verified']) {
     try {
       $system_schema = system_schema();
-      end($system_schema);
-      $table = key($system_schema);
+      $table = array_key_last($system_schema);
       $install_state['base_system_verified'] = Database::getConnection()->schema()->tableExists($table);
     }
     catch (DatabaseExceptionWrapper $e) {
@@ -569,9 +554,7 @@ function install_run_tasks(&$install_state, callable $callback = NULL) {
     // so we regenerate the remaining tasks based on the installation state,
     // each time through the loop.
     $tasks_to_perform = install_tasks_to_perform($install_state);
-    // Run the first task on the list.
-    reset($tasks_to_perform);
-    $task_name = key($tasks_to_perform);
+    $task_name = array_key_first($tasks_to_perform);
     $task = array_shift($tasks_to_perform);
     $install_state['active_task'] = $task_name;
     $original_parameters = $install_state['parameters'];
@@ -659,10 +642,7 @@ function install_run_task($task, &$install_state) {
       $url = Url::fromUri('base:install.php', ['query' => $install_state['parameters'], 'script' => '']);
       $response = batch_process($url, clone $url);
       if ($response instanceof Response) {
-        if (\Drupal::request()->hasSession()) {
-          \Drupal::request()->getSession()->save();
-        }
-        // Send the response.
+        \Drupal::request()->getSession()->save();
         $response->send();
         exit;
       }
@@ -677,10 +657,7 @@ function install_run_task($task, &$install_state) {
       // @todo Replace this when we refactor the installer to use a request-
       //   response workflow.
       if ($output instanceof Response) {
-        if (\Drupal::request()->hasSession()) {
-          \Drupal::request()->getSession()->save();
-        }
-        // Send the response.
+        \Drupal::request()->getSession()->save();
         $output->send();
         exit;
       }
@@ -969,16 +946,7 @@ function install_get_form($form_id, array &$install_state) {
     // values taken from the installation state.
     $install_form_id = $form_builder->getFormId($form_id, $form_state);
     if (!empty($install_state['forms'][$install_form_id])) {
-      $values = $install_state['forms'][$install_form_id];
-      if ($install_form_id === 'install_settings_form' && isset($values['driver']) && !str_contains($values['driver'], "\\")) {
-        @trigger_error("Passing a database driver name '{$values['driver']}' to " . __FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Pass a database driver namespace instead. See https://www.drupal.org/node/3258175', E_USER_DEPRECATED);
-        $driverExtension = Database::getDriverList()->getFromDriverName($values['driver']);
-        $tmp = [];
-        $tmp['driver'] = $driverExtension->getName();
-        $tmp[$driverExtension->getName()] = $values[$values['driver']];
-        $values = $tmp;
-      }
-      $form_state->setValues($values);
+      $form_state->setValues($install_state['forms'][$install_form_id]);
     }
     $form_builder->submitForm($form_id, $form_state);
 
@@ -1178,8 +1146,7 @@ function install_verify_database_settings($site_path) {
  */
 function install_verify_database_ready() {
   $system_schema = system_schema();
-  end($system_schema);
-  $table = key($system_schema);
+  $table = array_key_last($system_schema);
 
   $existing_install = FALSE;
   if (Database::getConnectionInfo()) {
@@ -1457,9 +1424,10 @@ function install_retrieve_file($uri, $destination) {
       return FALSE;
     }
   }
-  catch (TransferException $e) {
+  catch (ClientExceptionInterface) {
     return FALSE;
   }
+
   return file_put_contents($path, $data) !== FALSE;
 }
 
@@ -1477,7 +1445,7 @@ function install_check_localization_server($uri) {
     \Drupal::httpClient()->head($uri);
     return TRUE;
   }
-  catch (TransferException $e) {
+  catch (ClientExceptionInterface) {
     return FALSE;
   }
 }
@@ -1792,8 +1760,9 @@ function _install_prepare_import($langcodes, $server_pattern) {
     if (is_object($file)) {
       $filename = $file->filename;
       preg_match('/drupal-([0-9a-z\.-]+)\.' . $langcode . '\.po/', $filename, $matches);
-      // Get the version information.
-      if ($version = $matches[1]) {
+      // Get the version information. Custom translation files may not have a
+      // version number.
+      if (isset($matches[1]) && $version = $matches[1]) {
         $info = _install_get_version_info($version);
         // Picking the first file does not necessarily result in the right file. So
         // we check if at least the major version number is available.
@@ -2321,7 +2290,7 @@ function install_display_requirements($install_state, $requirements) {
               'description' => $requirement['description'],
             ],
           ];
-          $failures[] = \Drupal::service('renderer')->renderPlain($render_array);
+          $failures[] = \Drupal::service('renderer')->renderInIsolation($render_array);
         }
       }
       if (!empty($failures)) {

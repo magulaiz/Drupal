@@ -3,6 +3,7 @@
 namespace Drupal\Component\DependencyInjection\Dumper;
 
 use Drupal\Component\Utility\Crypt;
+use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
@@ -305,6 +306,9 @@ class OptimizedPhpArrayDumper extends Dumper {
     $code = [];
 
     foreach ($collection as $key => $value) {
+      if ($value instanceof IteratorArgument) {
+        $value = $value->getValues();
+      }
       if (is_array($value)) {
         $resolve_collection = FALSE;
         $code[$key] = $this->dumpCollection($value, $resolve_collection);
@@ -328,7 +332,6 @@ class OptimizedPhpArrayDumper extends Dumper {
     return (object) [
       'type' => 'collection',
       'value' => $code,
-      'resolve' => $resolve,
     ];
   }
 
@@ -436,12 +439,7 @@ class OptimizedPhpArrayDumper extends Dumper {
       return $this->getServiceClosureCall((string) $reference, $reference->getInvalidBehavior());
     }
     elseif (is_object($value)) {
-      // Drupal specific: Instantiated objects have a _serviceId parameter.
-      if (isset($value->_serviceId)) {
-        @trigger_error('_serviceId is deprecated in drupal:9.5.0 and is removed from drupal:11.0.0. Use \Drupal\Core\DrupalKernelInterface::getServiceIdMapping() instead. See https://www.drupal.org/node/3292540', E_USER_DEPRECATED);
-        return $this->getReferenceCall($value->_serviceId);
-      }
-      throw new RuntimeException('Unable to dump a service container if a parameter is an object without _serviceId.');
+      throw new RuntimeException('Unable to dump a service container if a parameter is an object.');
     }
     elseif (is_resource($value)) {
       throw new RuntimeException('Unable to dump a service container if a parameter is a resource.');

@@ -425,6 +425,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
         }
         $break = FALSE;
         foreach ($value as $scalar_value) {
+          $plugin->reset();
           try {
             $new_value[] = $plugin->transform($scalar_value, $this, $row, $destination);
           }
@@ -437,6 +438,9 @@ class MigrateExecutable implements MigrateExecutableInterface {
             $message = sprintf("%s: %s", $plugin->getPluginId(), $e->getMessage());
             throw new MigrateException($message);
           }
+          if ($plugin->isPipelineStopped()) {
+            $break = TRUE;
+          }
         }
         $value = $new_value;
         if ($break) {
@@ -444,6 +448,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
         }
       }
       else {
+        $plugin->reset();
         try {
           $value = $plugin->transform($value, $this, $row, $destination);
         }
@@ -456,7 +461,9 @@ class MigrateExecutable implements MigrateExecutableInterface {
           $message = sprintf("%s: %s", $plugin->getPluginId(), $e->getMessage());
           throw new MigrateException($message);
         }
-
+        if ($plugin->isPipelineStopped()) {
+          break;
+        }
         $multiple = $plugin->multiple();
       }
     }
@@ -611,26 +618,6 @@ class MigrateExecutable implements MigrateExecutableInterface {
     gc_collect_cycles();
 
     return memory_get_usage();
-  }
-
-  /**
-   * Generates a string representation for the given byte count.
-   *
-   * @param int $size
-   *   A size in bytes.
-   *
-   * @return string
-   *   A translated string representation of the size.
-   *
-   * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
-   *   \Drupal\Core\StringTranslation\ByteSizeMarkup::create($size, $langcode)
-   *   instead.
-   *
-   * @see https://www.drupal.org/node/2999981
-   */
-  protected function formatSize($size) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\Core\StringTranslation\ByteSizeMarkup::create($size, $langcode) instead. See https://www.drupal.org/node/2999981', E_USER_DEPRECATED);
-    return format_size($size);
   }
 
 }
