@@ -604,16 +604,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/block/tests/src/Functional/BlockUiTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^@dataProvider providerTestContextualizeTitleOnNodeOperationPages related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/tests/src/Functional/PageTitleBlockTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^@dataProvider providerTestPostUpdateAddContextualizePageTitle related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/tests/src/Functional/Update/BlockTitleUpdateTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to deprecated method addMethods\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\:
 https\\://github\\.com/sebastianbergmann/phpunit/issues/5320$#',
 	'count' => 1,
@@ -665,11 +655,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/ckeditor5/src/Plugin/Validation/Constraint/StyleSensibleElementConstraintValidator.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^@dataProvider providerTestWarningFilterUI related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/CKEditorStylesheetsWarningTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\comment\\\\CommentForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/comment/src/CommentForm.php',
@@ -713,12 +698,6 @@ $ignoreErrors[] = [
 	'message' => '#^@dataProvider getLinkCombinations related method must be static in PHPUnit 10 and newer\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/comment/tests/src/Unit/CommentLinkBuilderTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method returnSelf\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-Use \\<code\\>\\$double\\-\\>willReturnSelf\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>returnSelf\\(\\)\\)\\</code\\>$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/comment/tests/src/Unit/CommentStatisticsUnitTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$data might not be defined\\.$#',
@@ -1021,12 +1000,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/image/tests/src/Kernel/ImageItemTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method returnArgument\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-Use \\<code\\>\\$double\\-\\>willReturnArgument\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>returnArgument\\(\\)\\)\\</code\\>$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/image/tests/src/Unit/ImageStyleTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$reason in empty\\(\\) always exists and is not falsy\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/jsonapi/src/Context/FieldResolver.php',
@@ -1189,12 +1162,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/locale/src/StringDatabaseStorage.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method returnSelf\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-Use \\<code\\>\\$double\\-\\>willReturnSelf\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>returnSelf\\(\\)\\)\\</code\\>$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/locale/tests/src/Unit/LocaleLookupTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$error in empty\\(\\) always exists and is not falsy\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media/media.install',
@@ -1309,24 +1276,6 @@ $ignoreErrors[] = [
 Use \\<code\\>\\$double\\-\\>willReturn\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>onConsecutiveCalls\\(\\)\\)\\</code\\>$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate/tests/src/Unit/MigrateExecutableTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method returnSelf\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-Use \\<code\\>\\$double\\-\\>willReturnSelf\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>returnSelf\\(\\)\\)\\</code\\>$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate/tests/src/Unit/destination/PerComponentEntityDisplayTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method returnSelf\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-Use \\<code\\>\\$double\\-\\>willReturnSelf\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>returnSelf\\(\\)\\)\\</code\\>$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate/tests/src/Unit/destination/PerComponentEntityFormDisplayTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method returnSelf\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-Use \\<code\\>\\$double\\-\\>willReturnSelf\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>returnSelf\\(\\)\\)\\</code\\>$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate/tests/src/Unit/process/MakeUniqueEntityFieldTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$sub_process_plugins might not be defined\\.$#',
@@ -1776,12 +1725,6 @@ $ignoreErrors[] = [
 Use \\<code\\>\\$double\\-\\>willReturn\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>onConsecutiveCalls\\(\\)\\)\\</code\\>$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/src/Unit/Batch/BatchControllerTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method returnArgument\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-Use \\<code\\>\\$double\\-\\>willReturnArgument\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>returnArgument\\(\\)\\)\\</code\\>$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Unit/Breadcrumbs/PathBasedBreadcrumbBuilderTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method returnValue\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
@@ -2843,12 +2786,6 @@ Client\\:\\:getConfig will be removed in guzzlehttp/guzzle\\:8\\.0\\.$#',
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Http/ClientFactoryTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method returnArgument\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-Use \\<code\\>\\$double\\-\\>willReturnArgument\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>returnArgument\\(\\)\\)\\</code\\>$#',
-	'count' => 14,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Image/ImageTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Lock/LockBackendAbstractTest.php',
@@ -2857,12 +2794,6 @@ $ignoreErrors[] = [
 	'message' => '#^@dataProvider providerTestLog related method must be static in PHPUnit 10 and newer\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Logger/LoggerChannelTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method returnSelf\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-Use \\<code\\>\\$double\\-\\>willReturnSelf\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>returnSelf\\(\\)\\)\\</code\\>$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Menu/StaticMenuLinkOverridesTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#',
@@ -2918,12 +2849,6 @@ $ignoreErrors[] = [
 	'message' => '#^Missing cache backend declaration for performance\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Plugin/TestPluginManager.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method returnArgument\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-Use \\<code\\>\\$double\\-\\>willReturnArgument\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>returnArgument\\(\\)\\)\\</code\\>$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Render/ElementInfoManagerTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Render\\\\ElementTest\\:\\:expectError\\(\\)\\.$#',
@@ -2989,31 +2914,9 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/TypedData/RecursiveContextualValidatorTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method returnArgument\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-Use \\<code\\>\\$double\\-\\>willReturnArgument\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>returnArgument\\(\\)\\)\\</code\\>$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/UnroutedUrlTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^@dataProvider callableResolverTestCases related method must be static in PHPUnit 10 and newer\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Utility/CallableResolverTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method returnArgument\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-Use \\<code\\>\\$double\\-\\>willReturnArgument\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>returnArgument\\(\\)\\)\\</code\\>$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Utility/LinkGeneratorTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^@dataProvider providerTestGenerateRequestForPath related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Utility/RequestGeneratorTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^@dataProvider providerTestGenerateRequestForPathWithException related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Utility/RequestGeneratorTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getConfig\\(\\) of class GuzzleHttp\\\\ClientInterface\\:
