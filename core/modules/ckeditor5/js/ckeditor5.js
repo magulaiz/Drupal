@@ -442,18 +442,22 @@
 
           // Update aria-label with the value from default textarea label.
           // @see https://www.drupal.org/project/drupal/issues/3426798
-          const selector = editor.sourceElement.getAttribute(
-            'data-drupal-selector',
+          // @todo: Update when CKEditor5 will fix issue #15208
+          // @see https://github.com/ckeditor/ckeditor5/issues/15208
+          const fieldId = editor.sourceElement.getAttribute(
+            'id',
           );
-          const label = selector
-            ? document.querySelector(`label[for=${selector}]`).innerText
-            : false;
-          if (label) {
-            editor.sourceElement.parentNode.querySelector('label').innerText =
-              label;
 
+          const fieldLabel = fieldId
+            ? document.querySelector(`label[for=${selector}]`)
+            : false;
+
+          if (fieldLabel) {
+            const labelText = fieldLabel.innerText;
+            editor.sourceElement.parentNode.querySelector('label').innerText =
+              labelText;
             editor.ui.view.editable.element.closest('.ck-content').ariaLabel =
-              label;
+              labelText;
 
             editor.ui.focusTracker.on(
               'change:isFocused',
@@ -462,7 +466,7 @@
                 // overwrite the label to appropriate field label value.
                 editor.ui.view.editable.element.closest(
                   '.ck-content',
-                ).ariaLabel = label;
+                ).ariaLabel = labelText;
               },
             );
           }
@@ -664,7 +668,7 @@
 
   // Redirect on hash change when the original hash has an associated CKEditor 5.
   function redirectTextareaFragmentToCKEditor5Instance() {
-    const hash = window.location.hash.substring(1);
+    const hash = window.location.hash.substr(1);
     const element = document.getElementById(hash);
     if (element) {
       const editorID = getElementId(element);
