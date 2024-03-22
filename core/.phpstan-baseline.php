@@ -52,13 +52,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Component/Datetime/DateTimePlus.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Usage of deprecated trait Drupal\\\\Component\\\\DependencyInjection\\\\ServiceIdHashTrait in class Drupal\\\\Component\\\\DependencyInjection\\\\Container\\:
-in drupal\\:9\\.5\\.1 and is removed from drupal\\:11\\.0\\.0\\. Use the
-  \'Drupal\\\\Component\\\\DependencyInjection\\\\ReverseContainer\' service instead\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Component/DependencyInjection/Container.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$x0 might not be defined\\.$#',
 	'count' => 4,
 	'path' => __DIR__ . '/lib/Drupal/Component/Diff/DiffFormatter.php',
@@ -207,13 +200,6 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$affected_rows might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Database/Query/Upsert.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Usage of deprecated trait Drupal\\\\Component\\\\DependencyInjection\\\\ServiceIdHashTrait in class Drupal\\\\Core\\\\DependencyInjection\\\\ContainerBuilder\\:
-in drupal\\:9\\.5\\.1 and is removed from drupal\\:11\\.0\\.0\\. Use the
-  \'Drupal\\\\Component\\\\DependencyInjection\\\\ReverseContainer\' service instead\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/DependencyInjection/ContainerBuilder.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\DrupalKernel\\:\\:discoverServiceProviders\\(\\) should return array but return statement is missing\\.$#',
@@ -471,18 +457,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Lock\\\\NullLockBackend\\:\\:wait\\(\\) should return bool but return statement is missing\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Lock/NullLockBackend.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Drupal\\\\Core\\\\Logger\\\\LoggerChannelFactory implements deprecated interface Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface\\:
-since Symfony 6\\.4, use dependency injection instead$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Logger/LoggerChannelFactory.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Usage of deprecated trait Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareTrait in class Drupal\\\\Core\\\\Logger\\\\LoggerChannelFactory\\:
-since Symfony 6\\.4, use dependency injection instead$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Logger/LoggerChannelFactory.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$parent in isset\\(\\) always exists and is not nullable\\.$#',
