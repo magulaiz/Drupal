@@ -546,7 +546,7 @@ class PageCacheTest extends BrowserTestBase {
   }
 
   /**
-   * Verify that the cache-control header is added by FinishResponseSubscriber.
+   * Tests that the Cache-Control header is added by FinishResponseSubscriber.
    */
   public function testCacheabilityOfRedirectResponses() {
     $this->enablePageCaching();
@@ -567,7 +567,6 @@ class PageCacheTest extends BrowserTestBase {
    * Tests that URLs are cached in a not normalized form.
    */
   public function testNoUrlNormalization() {
-
     // Use absolute URLs to avoid any processing.
     $url = Url::fromRoute('<front>')->setAbsolute()->toString();
 
