@@ -159,24 +159,6 @@ function block_content_post_update_revision_type(&$sandbox = NULL) {
     });
 }
 
-/**
- * Add status with settings to all form displays for block_content entities.
- */
-function block_content_post_update_configure_status_field_widget(&$sandbox = NULL): void {
-  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'entity_form_display', function (EntityDisplayInterface $entity_form_display) {
-    if ($entity_form_display->getTargetEntityTypeId() === 'block_content' && empty($entity_form_display->getComponent('status'))) {
-      $entity_form_display->setComponent('status', [
-        'type' => 'boolean_checkbox',
-        'settings' => [
-          'display_label' => TRUE,
-        ],
-      ]);
-      return TRUE;
-    }
-    return FALSE;
-  });
-}
-
 function block_content_post_update_add_status_view_updates(&$sandbox = NULL) {
   $view = \Drupal::configFactory()->getEditable('views.view.block_content');
 
