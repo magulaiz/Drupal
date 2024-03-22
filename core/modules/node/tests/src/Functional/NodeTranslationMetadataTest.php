@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\file\Entity\File;
-use Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase;
+use Drupal\Tests\content_translation\Functional\ContentTranslationTestBase;
 use Drupal\Tests\language\Traits\LanguageTestTrait;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -17,7 +17,7 @@ use Drupal\Tests\TestFileCreationTrait;
  *
  * @group node
  */
-class NodeTranslationMetadataTest extends ContentTranslationUITestBase {
+class NodeTranslationMetadataTest extends ContentTranslationTestBase {
 
   use LanguageTestTrait;
   use TestFileCreationTrait;
