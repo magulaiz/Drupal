@@ -119,7 +119,7 @@ class TaxonomyFieldVidTest extends ViewsKernelTestBase {
     $this->assertEquals($expected, $actual, 'Displayed vocabulary name should match that loaded from the term.');
     $this->assertEquals('bbb', $vocabulary->id(), 'First result should be vocabulary "bbb", due to DESC sorting.');
 
-    // Test with user without 'access content' permission.
+    // Test with user without 'view vocabulary {$this->vocabulary->id()}' permission.
     $this->setUpCurrentUser();
     $actual = $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
       return $view->field['vid']->advancedRender($view->result[0]);
@@ -127,8 +127,11 @@ class TaxonomyFieldVidTest extends ViewsKernelTestBase {
     $expected = '';
     $this->assertEquals($expected, $actual);
 
-    // Test with user with 'access content' permission.
-    $this->setUpCurrentUser([], ['access content']);
+    // Test with user with 'view vocabulary' permissions.
+    $permissions = array_map(function ($term) {
+      return "view vocabulary {$term->bundle()}";
+    }, $this->terms);
+    $this->setUpCurrentUser([], $permissions);
     $actual = $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
       return $view->field['vid']->advancedRender($view->result[0]);
     });
