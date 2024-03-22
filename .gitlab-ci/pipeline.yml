@@ -88,13 +88,12 @@ variables:
     - "--allowed-origins=*"
 
 .with-firefox: &with-firefox
-  name: instrumentisto/geckodriver:124.0
+  name: selenium/standalone-firefox:123.0
   alias: firefox
-  command:
-    - "--binary=/opt/firefox/firefox"
-    - "--log=debug"
-    - "--host=0.0.0.0"
-    - "--allow-hosts=firefox"
+  variables:
+    SE_START_VNC: false
+    SE_NODE_OVERRIDE_MAX_SESSIONS: true
+    SE_NODE_MAX_SESSIONS: 15
 
 .run-tests: &run-tests
   script:
@@ -155,10 +154,10 @@ variables:
 
 '🖱️🦊️️ PHPUnit Functional Javascript (Firefox)':
   <<: [ *with-composer, *run-tests-firefox, *default-job-settings ]
-  parallel: 1
+  parallel: 2
   variables:
     TESTSUITE: PHPUnit-FunctionalJavascript
-    CONCURRENCY: 1
+    CONCURRENCY: 15
     KUBERNETES_CPU_REQUEST: "24"
   services:
     - <<: *with-database
