@@ -64,7 +64,6 @@ class StaticDiscoveryDecoratorTest extends TestCase {
     // Mock our StaticDiscoveryDecorator.
     $mock_decorator = $this->getMockBuilder('Drupal\Component\Plugin\Discovery\StaticDiscoveryDecorator')
       ->disableOriginalConstructor()
-      ->addMethods(['registeredDefinitionCallback'])
       ->getMock();
 
     // Set up the ::$registerDefinitions property.
@@ -131,7 +130,6 @@ class StaticDiscoveryDecoratorTest extends TestCase {
     // Mock our StaticDiscoveryDecorator.
     $mock_decorator = $this->getMockBuilder('Drupal\Component\Plugin\Discovery\StaticDiscoveryDecorator')
       ->disableOriginalConstructor()
-      ->addMethods(['registeredDefinitionCallback'])
       ->getMock();
 
     // Set up the ::$registerDefinitions property.

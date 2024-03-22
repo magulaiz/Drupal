@@ -42,7 +42,6 @@ class CollectRoutesTest extends UnitTestCase {
       ->getMock();
 
     $view = $this->getMockBuilder('\Drupal\views\Entity\View')
-      ->addMethods(['initHandlers'])
       ->setConstructorArgs([['id' => 'test_view'], 'view'])
       ->getMock();
 

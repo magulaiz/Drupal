@@ -375,7 +375,6 @@ class FormValidatorTest extends UnitTestCase {
   public function testPerformRequiredValidation($element, $expected_message, $call_watchdog) {
     $form_validator = $this->getMockBuilder('Drupal\Core\Form\FormValidator')
       ->setConstructorArgs([new RequestStack(), $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $this->formErrorHandler])
-      ->addMethods(['setError'])
       ->getMock();
 
     if ($call_watchdog) {
