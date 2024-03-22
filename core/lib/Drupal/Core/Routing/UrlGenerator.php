@@ -127,9 +127,6 @@ class UrlGenerator implements UrlGeneratorInterface {
    */
   public function getPathFromRoute($name, $parameters = []) {
     $route = $this->getRoute($name);
-    if (!is_string($name)) {
-      $name = $this->getRouteStringIdentifier($name);
-    }
     $this->processRoute($name, $route, $parameters);
     $path = $this->getInternalPathFromRoute($name, $route, $parameters);
     // Router-based paths may have a querystring on them but Drupal paths may
@@ -288,9 +285,6 @@ class UrlGenerator implements UrlGeneratorInterface {
     $options += $route->getOption('default_url_options') ?: [];
     $options += ['prefix' => '', 'path_processing' => TRUE];
 
-    if (!is_string($name)) {
-      $name = $this->getRouteStringIdentifier($name);
-    }
     $this->processRoute($name, $route, $parameters, $generated_url);
     $path = $this->getInternalPathFromRoute($name, $route, $parameters, $options['query']);
     // Outbound path processors might need the route object for the path, e.g.
@@ -438,31 +432,6 @@ class UrlGenerator implements UrlGeneratorInterface {
       $route = clone $this->provider->getRouteByName($name);
     }
     return $route;
-  }
-
-  /**
-   * Gets either the route name or a string based on the route object.
-   *
-   * @param string|\Symfony\Component\Routing\Route $name
-   *   A string route name, or a serializable object.
-   *
-   * @return string
-   *   Either the route name, or a string that uniquely identifies the route.
-   *
-   * @todo Remove in https://www.drupal.org/project/drupal/issues/3339710
-   *
-   * @internal
-   */
-  private function getRouteStringIdentifier(string|SymfonyRoute $name): string {
-    if (is_scalar($name)) {
-      return $name;
-    }
-
-    if ($name instanceof SymfonyRoute) {
-      return 'Route with pattern ' . $name->getPath();
-    }
-
-    return serialize($name);
   }
 
 }
