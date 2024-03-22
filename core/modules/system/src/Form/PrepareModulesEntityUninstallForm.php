@@ -94,13 +94,16 @@ class PrepareModulesEntityUninstallForm extends ConfirmFormBase {
   /**
    * Gets the form title.
    *
-   * @param string $entity_type_id
+   * @param string|null $entity_type_id
    *   The entity type ID.
    *
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup
    *   The form title.
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+   *   Thrown when the entity-type does not exist.
    */
-  public function formTitle($entity_type_id = NULL) {
+  public function formTitle(string $entity_type_id = NULL): TranslatableMarkup {
     $this->entityTypeId = $entity_type_id;
     if (!$this->entityTypeManager->hasDefinition($this->entityTypeId)) {
       throw new NotFoundHttpException();
