@@ -91,9 +91,9 @@ variables:
   name: selenium/standalone-firefox:123.0
   alias: firefox
   variables:
-    SE_START_VNC: false
-    SE_NODE_OVERRIDE_MAX_SESSIONS: true
-    SE_NODE_MAX_SESSIONS: 15
+    SE_START_VNC: "false"
+    SE_NODE_OVERRIDE_MAX_SESSIONS: "true"
+    SE_NODE_MAX_SESSIONS: "20"
 
 .run-tests: &run-tests
   script:
