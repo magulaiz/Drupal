@@ -444,12 +444,10 @@
           // @see https://www.drupal.org/project/drupal/issues/3426798
           // @todo: Update when CKEditor5 will fix issue #15208
           // @see https://github.com/ckeditor/ckeditor5/issues/15208
-          const fieldId = editor.sourceElement.getAttribute(
-            'id',
-          );
+          const fieldId = editor.sourceElement.getAttribute('id');
 
           const fieldLabel = fieldId
-            ? document.querySelector(`label[for=${selector}]`)
+            ? document.querySelector(`label[for=${fieldId}]`)
             : false;
 
           if (fieldLabel) {
