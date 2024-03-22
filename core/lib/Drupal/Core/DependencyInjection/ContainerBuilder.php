@@ -57,8 +57,13 @@ class ContainerBuilder extends SymfonyContainerBuilder implements ContainerInter
    */
   public function setAlias($alias, $id): Alias {
     $alias = parent::setAlias($alias, $id);
-    // As of Symfony 3.4 all aliases are private by default.
-    $alias->setPublic(TRUE);
+    if ($this->hasDefinition($id)) {
+      $alias->setPublic($this->getDefinition($id)->isPublic());
+    }
+    else {
+      // As of Symfony 3.4 all aliases are private by default.
+      $alias->setPublic(TRUE);
+    }
     return $alias;
   }
 
