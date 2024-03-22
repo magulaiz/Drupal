@@ -239,14 +239,13 @@
           // safe because the event handler doesn't include any slow
           // asynchronous operations (e.g., network requests) that could
           // accumulate.
-          $source
-            .on(
-              'change.machineName input.machineName',
-              eventData,
-              machineNameHandler,
-            )
-            // Initialize machine name preview.
-            .trigger('change.machineName');
+          $source.on(
+            'change.machineName input.machineName',
+            eventData,
+            machineNameHandler,
+          );
+          // Initialize machine name preview.
+          $source[0].dispatchEvent(new CustomEvent('change.machineName'));
         }
       });
     },
