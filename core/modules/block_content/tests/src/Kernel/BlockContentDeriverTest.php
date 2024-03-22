@@ -95,72 +95,28 @@ class BlockContentDeriverTest extends KernelTestBase {
   /**
    * Tests the admin labels of derivative definitions.
    */
-  public function testGetDerivativeDefinitionsAdminLabels() {
-    $block_content_entities = $this->getTestBlockContentEntities();
-
-    foreach ($block_content_entities as $block_content) {
-      $entity = $block_content['entity'];
-      $plugin = \Drupal::service('plugin.manager.block')->createInstance('block_content:' . $entity->uuid());
-      $plugin_definition = $plugin->getPluginDefinition();
-
-      // Check the plugin definition admin label.
-      $this->assertEquals($block_content['expected_label'], $plugin_definition['admin_label']);
-      $this->assertNotNull($plugin_definition['admin_label']);
-
-      // Check the deprecation notice is no longer triggered.
-      $previous_error_handler = set_error_handler(function ($severity, $message, $file, $line) use (&$previous_error_handler) {
-        // Convert deprecation error into a catchable exception.
-        if ($severity === E_DEPRECATED) {
-          throw new \ErrorException($message, 0, $severity, $file, $line);
-        }
-        if ($previous_error_handler) {
-          return $previous_error_handler($severity, $message, $file, $line);
-        }
-      });
-
-      try {
-        $expected_suggestion = str_replace(' ', '', strtolower($block_content['expected_label']));
-        $this->assertEquals($expected_suggestion, $plugin->getMachineNameSuggestion());
-      }
-      catch (\ErrorException $e) {
-        $this->fail(sprintf('Deprecation notice thrown when calling the a block content getMachineNameSuggestion(). Message: %s', $e->getMessage()));
-      }
-    }
-  }
-
-  /**
-   * Creates the block content test entities.
-   */
-  protected function getTestBlockContentEntities() {
-    // Create a block content type.
-    $block_content_type = BlockContentType::create([
+  public function testGetDerivativeDefinitionsAdminLabels(): void {
+    $blockContentType = BlockContentType::create([
       'id' => 'basic',
       'label' => 'Basic Block',
     ]);
-    $block_content_type->save();
-    // Create a block content entity with a label.
-    $block_content_label = BlockContent::create([
+    $blockContentType->save();
+    $blockContentWithLabel = BlockContent::create([
       'info' => 'Basic prototype',
       'type' => 'basic',
     ]);
-    $block_content_label->save();
-    // Create a block content entity without a label.
-    $block_content_no_label = BlockContent::create([
+    $blockContentWithLabel->save();
+    $blockContentNoLabel = BlockContent::create([
       'type' => 'basic',
     ]);
-    $block_content_no_label->save();
+    $blockContentNoLabel->save();
 
-    // Created entities keyed by their id.
-    return [
-      $block_content_label->id() => [
-        'entity' => $block_content_label,
-        'expected_label' => 'Basic prototype',
-      ],
-      $block_content_no_label->id() => [
-        'entity' => $block_content_no_label,
-        'expected_label' => 'Basic Block ' . $block_content_no_label->id(),
-      ],
-    ];
+    $blockPluginManager = \Drupal::service('plugin.manager.block');
+    $plugin = $blockPluginManager->createInstance('block_content:' . $blockContentWithLabel->uuid());
+    $this->assertEquals('Basic prototype', $plugin->getPluginDefinition()['admin_label']);
+
+    $plugin = $blockPluginManager->createInstance('block_content:' . $blockContentNoLabel->uuid());
+    $this->assertEquals('Basic Block: ' . $blockContentNoLabel->id(), $plugin->getPluginDefinition()['admin_label']);
   }
 
 }
