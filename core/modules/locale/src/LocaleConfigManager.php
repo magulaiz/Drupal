@@ -5,6 +5,7 @@ namespace Drupal\locale;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ConfigManagerInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -657,6 +658,9 @@ class LocaleConfigManager {
     // Need to rewrite some default configuration language codes if the default
     // site language is not English.
     $default_langcode = $this->languageManager->getDefaultLanguage()->getId();
+    $available_langcodes = array_keys(
+      $this->languageManager->getLanguages(LanguageInterface::STATE_CONFIGURABLE)
+    );
     if ($default_langcode != 'en') {
       // Update active configuration copies of all prior shipped configuration if
       // they are still English. It is not enough to change configuration shipped
@@ -667,9 +671,11 @@ class LocaleConfigManager {
         $config = $this->configFactory->reset($name)->getEditable($name);
         // Should only update if still exists in active configuration. If locale
         // module is enabled later, then some configuration may not exist anymore.
+        // Config will only be overridden if shipped language code is not available.
         if (!$config->isNew()) {
           $langcode = $config->get('langcode');
-          if (empty($langcode) || $langcode == 'en') {
+          $is_available_langcode = in_array($langcode, $available_langcodes);
+          if ((empty($langcode) || $langcode == 'en') && !$is_available_langcode) {
             $config->set('langcode', $default_langcode)->save();
           }
         }
