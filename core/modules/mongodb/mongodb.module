@@ -66,7 +66,7 @@ function mongodb_entity_type_alter(array &$entity_types) {
     }
 
     if (!empty($entity_types['node'])) {
-      // $entity_types['node']->setStorageClass('Drupal\mongodb\EntityStorage\NodeStorage');
+      $entity_types['node']->setStorageClass('Drupal\mongodb\EntityStorage\NodeStorage');
       // $entity_types['node']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentEntityStorageSchema');
       // $entity_types['node']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\NodeViewsData');
     }

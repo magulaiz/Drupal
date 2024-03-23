@@ -2,15 +2,17 @@
 
 namespace Drupal\mongodb\EntityStorage;
 
+use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
 use Drupal\node\NodeStorage as CoreNodeStorage;
+use Drupal\node\NodeStorageInterface;
 
 /**
  * The MongoDB implementation of \Drupal\node\NodeStorage.
  */
-class NodeStorage extends CoreNodeStorage {
+class NodeStorage extends SqlContentEntityStorage implements NodeStorageInterface {
 
   /**
    * {@inheritdoc}
@@ -66,6 +68,26 @@ class NodeStorage extends CoreNodeStorage {
       }
     }
     return $count;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function updateType($old_type, $new_type) {
+    return $this->database->update($this->getBaseTable())
+      ->fields(['type' => $new_type])
+      ->condition('type', $old_type)
+      ->execute();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function clearRevisionsLanguage(LanguageInterface $language) {
+    return $this->database->update($this->getRevisionTable())
+      ->fields(['langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED])
+      ->condition('langcode', $language->getId())
+      ->execute();
   }
 
 }
