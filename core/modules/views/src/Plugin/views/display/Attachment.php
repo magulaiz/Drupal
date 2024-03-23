@@ -91,9 +91,7 @@ class Attachment extends DisplayPluginBase {
       }
     }
 
-    if (!isset($attach_to)) {
-      $attach_to = $this->t('Not defined');
-    }
+    $attach_to ??= $this->t('Not defined');
 
     $options['displays'] = [
       'category' => 'attachment',

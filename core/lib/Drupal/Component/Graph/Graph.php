@@ -75,9 +75,7 @@ class Graph {
 
     foreach ($state['last_visit_order'] as $vertex) {
       $component = $this->graph[$vertex]['component'];
-      if (!isset($component_weights[$component])) {
-        $component_weights[$component] = 0;
-      }
+      $component_weights[$component] ??= 0;
       $this->graph[$vertex]['weight'] = $component_weights[$component]--;
     }
 
@@ -100,9 +98,7 @@ class Graph {
    */
   protected function depthFirstSearch(&$state, $start, &$component = NULL) {
     // Assign new component for each new vertex, i.e. when not called recursively.
-    if (!isset($component)) {
-      $component = $start;
-    }
+    $component ??= $start;
     // Nothing to do, if we already visited this vertex.
     if (isset($this->graph[$start]['paths'])) {
       return;

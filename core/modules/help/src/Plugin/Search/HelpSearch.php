@@ -278,14 +278,10 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
     $keys = $this->getKeywords();
     foreach ($found as $item) {
       $section_plugin_id = $item->section_plugin_id;
-      if (!isset($plugins[$section_plugin_id])) {
-        $plugins[$section_plugin_id] = $this->getSectionPlugin($section_plugin_id);
-      }
+      $plugins[$section_plugin_id] ??= $this->getSectionPlugin($section_plugin_id);
       if ($plugins[$section_plugin_id]) {
         $langcode = $item->langcode;
-        if (!isset($languages[$langcode])) {
-          $languages[$langcode] = $this->languageManager->getLanguage($item->langcode);
-        }
+        $languages[$langcode] ??= $this->languageManager->getLanguage($item->langcode);
         $topic = $plugins[$section_plugin_id]->renderTopicForSearch($item->topic_id, $languages[$langcode]);
         if ($topic) {
           if (isset($topic['cacheable_metadata'])) {
@@ -347,9 +343,7 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
     try {
       foreach ($items as $item) {
         $section_plugin_id = $item->section_plugin_id;
-        if (!isset($section_plugins[$section_plugin_id])) {
-          $section_plugins[$section_plugin_id] = $this->getSectionPlugin($section_plugin_id);
-        }
+        $section_plugins[$section_plugin_id] ??= $this->getSectionPlugin($section_plugin_id);
 
         if (!$section_plugins[$section_plugin_id]) {
           $this->removeItemsFromIndex($item->sid);

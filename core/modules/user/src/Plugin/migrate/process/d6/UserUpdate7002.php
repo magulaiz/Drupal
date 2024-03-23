@@ -39,9 +39,7 @@ class UserUpdate7002 extends ProcessPluginBase implements ContainerFactoryPlugin
   public function __construct(array $configuration, $plugin_id, array $plugin_definition, Config $date_config) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->dateConfig = $date_config;
-    if (!isset(static::$timezones)) {
-      static::$timezones = TimeZoneFormHelper::getOptionsList();
-    }
+    static::$timezones ??= TimeZoneFormHelper::getOptionsList();
   }
 
   /**

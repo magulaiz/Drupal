@@ -550,9 +550,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     // conflict.
     unset($options['settings']);
     $options = $form_state_options + $options;
-    if (!isset($options['settings'])) {
-      $options['settings'] = [];
-    }
+    $options['settings'] ??= [];
     return $options;
   }
 
@@ -1020,9 +1018,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
    *   The field formatter instance.
    */
   protected function getFormatterInstance($format = NULL) {
-    if (!isset($format)) {
-      $format = $this->options['type'];
-    }
+    $format ??= $this->options['type'];
     $settings = $this->options['settings'] + $this->formatterPluginManager->getDefaultSettings($format);
 
     $options = [

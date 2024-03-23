@@ -175,9 +175,7 @@ class BreakpointManager extends DefaultPluginManager implements BreakpointManage
 
     $instances = [];
     foreach ($this->breakpointsByGroup[$group] as $plugin_id => $definition) {
-      if (!isset($this->instances[$plugin_id])) {
-        $this->instances[$plugin_id] = $this->createInstance($plugin_id);
-      }
+      $this->instances[$plugin_id] ??= $this->createInstance($plugin_id);
       $instances[$plugin_id] = $this->instances[$plugin_id];
     }
     return $instances;
@@ -194,9 +192,7 @@ class BreakpointManager extends DefaultPluginManager implements BreakpointManage
     else {
       $groups = [];
       foreach ($this->getDefinitions() as $plugin_definition) {
-        if (!isset($groups[$plugin_definition['group']])) {
-          $groups[$plugin_definition['group']] = $plugin_definition['group'];
-        }
+        $groups[$plugin_definition['group']] ??= $plugin_definition['group'];
       }
       $this->cacheBackend->set($this->cacheKey . '::groups', $groups, Cache::PERMANENT, ['breakpoints']);
     }

@@ -184,9 +184,7 @@ function views_theme($existing, $type, $theme, $path) {
 
       // For the views module we ensure views.theme.inc is included.
       if ($def['provider'] == 'views') {
-        if (!isset($hooks[$def['theme']]['includes'])) {
-          $hooks[$def['theme']]['includes'] = [];
-        }
+        $hooks[$def['theme']]['includes'] ??= [];
         if (!in_array('views.theme.inc', $hooks[$def['theme']]['includes'])) {
           $hooks[$def['theme']]['includes'][] = $module_dir . '/views.theme.inc';
         }
@@ -364,9 +362,7 @@ function views_theme_suggestions_container_alter(array &$suggestions, array $var
  * @see template_preprocess_views_view()
  */
 function views_add_contextual_links(&$render_element, $location, $display_id, array $view_element = NULL) {
-  if (!isset($view_element)) {
-    $view_element = $render_element;
-  }
+  $view_element ??= $render_element;
   $view_element['#cache_properties'] = ['view_id', 'view_display_show_admin_links', 'view_display_plugin_id'];
   $view_id = $view_element['#view_id'];
   $show_admin_links = $view_element['#view_display_show_admin_links'];

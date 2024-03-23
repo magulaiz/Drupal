@@ -388,9 +388,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    * {@inheritdoc}
    */
   public function getSourcePlugin() {
-    if (!isset($this->sourcePlugin)) {
-      $this->sourcePlugin = $this->sourcePluginManager->createInstance($this->source['plugin'], $this->source, $this);
-    }
+    $this->sourcePlugin ??= $this->sourcePluginManager->createInstance($this->source['plugin'], $this->source, $this);
     return $this->sourcePlugin;
   }
 
@@ -398,9 +396,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    * {@inheritdoc}
    */
   public function getProcessPlugins(array $process = NULL) {
-    if (!isset($process)) {
-      $process = $this->getProcess();
-    }
+    $process ??= $this->getProcess();
     $index = serialize($process);
     if (!isset($this->processPlugins[$index])) {
       $this->processPlugins[$index] = [];
@@ -460,9 +456,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
     if ($stub_being_requested && !empty($this->destination['no_stub'])) {
       throw new MigrateSkipRowException('Stub requested but not made because no_stub configuration is set.');
     }
-    if (!isset($this->destinationPlugin)) {
-      $this->destinationPlugin = $this->destinationPluginManager->createInstance($this->destination['plugin'], $this->destination, $this);
-    }
+    $this->destinationPlugin ??= $this->destinationPluginManager->createInstance($this->destination['plugin'], $this->destination, $this);
     return $this->destinationPlugin;
   }
 

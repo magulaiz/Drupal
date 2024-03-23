@@ -299,13 +299,11 @@ class StringFilter extends FilterPluginBase implements FilterOperatorsInterface 
       }
     }
 
-    if (!isset($form['value'])) {
-      // Ensure there is something in the 'value'.
-      $form['value'] = [
-        '#type' => 'value',
-        '#value' => NULL,
-      ];
-    }
+    // Ensure there is something in the 'value'.
+    $form['value'] ??= [
+      '#type' => 'value',
+      '#value' => NULL,
+    ];
   }
 
   /**

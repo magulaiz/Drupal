@@ -182,9 +182,7 @@ class SearchPage extends ConfigEntityBase implements SearchPageInterface, Entity
 
     // @todo Use self::applyDefaultValue() once
     //   https://www.drupal.org/node/2004756 is in.
-    if (!isset($this->weight)) {
-      $this->weight = $this->isDefaultSearch() ? -10 : 0;
-    }
+    $this->weight ??= $this->isDefaultSearch() ? -10 : 0;
   }
 
   /**

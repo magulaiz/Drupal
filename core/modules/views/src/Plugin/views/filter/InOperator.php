@@ -259,9 +259,7 @@ class InOperator extends FilterPluginBase implements FilterOperatorsInterface {
    * When using exposed filters, we may be required to reduce the set.
    */
   public function reduceValueOptions($input = NULL) {
-    if (!isset($input)) {
-      $input = $this->valueOptions;
-    }
+    $input ??= $this->valueOptions;
 
     // Because options may be an array of strings, or an array of mixed arrays
     // and strings (optgroups), or an array of objects, or a form of Markup, we

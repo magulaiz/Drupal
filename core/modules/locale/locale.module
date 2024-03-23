@@ -515,9 +515,7 @@ function locale_js_alter(&$javascript, AttachedAssetsInterface $assets, Language
  *   applicable.
  */
 function locale_js_translate(array $files = [], $language_interface = NULL) {
-  if (!isset($language_interface)) {
-    $language_interface = \Drupal::languageManager()->getCurrentLanguage();
-  }
+  $language_interface ??= \Drupal::languageManager()->getCurrentLanguage();
 
   $dir = 'public://' . \Drupal::config('locale.settings')->get('javascript.directory');
   $parsed = \Drupal::state()->get('system.javascript_parsed', []);

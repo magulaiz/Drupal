@@ -58,9 +58,7 @@ class UserLangcode extends ProcessPluginBase implements ContainerFactoryPluginIn
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    if (!isset($this->configuration['fallback_to_site_default'])) {
-      $this->configuration['fallback_to_site_default'] = TRUE;
-    }
+    $this->configuration['fallback_to_site_default'] ??= TRUE;
 
     // If the user's language is empty, it means the locale module was not
     // installed, so the user's langcode should be English and the user's

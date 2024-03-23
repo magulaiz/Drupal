@@ -457,10 +457,8 @@ class MenuForm extends EntityForm {
           uasort($operations, [SortArray::class, 'sortByWeightElement']);
         }
         foreach ($operations as $key => $operation) {
-          if (!isset($operations[$key]['query'])) {
-            // Bring the user back to the menu overview.
-            $operations[$key]['query'] = $this->getDestinationArray();
-          }
+          // Bring the user back to the menu overview.
+          $operations[$key]['query'] ??= $this->getDestinationArray();
         }
         $form[$id]['operations'] = [
           '#type' => 'operations',

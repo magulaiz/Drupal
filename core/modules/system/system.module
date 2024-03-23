@@ -734,13 +734,9 @@ function system_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
 
   // Only set core/drupalSettings values that haven't been set already.
   foreach ($path_settings as $key => $value) {
-    if (!isset($settings['path'][$key])) {
-      $settings['path'][$key] = $value;
-    }
+    $settings['path'][$key] ??= $value;
   }
-  if (!isset($settings['pluralDelimiter'])) {
-    $settings['pluralDelimiter'] = PoItem::DELIMITER;
-  }
+  $settings['pluralDelimiter'] ??= PoItem::DELIMITER;
   // Add the theme token to ajaxPageState, ensuring the database is available
   // before doing so. Also add the loaded libraries to ajaxPageState.
   /** @var \Drupal\Core\Asset\LibraryDependencyResolver $library_dependency_resolver */

@@ -519,9 +519,7 @@ class Sql extends QueryPluginBase {
     $alias = $this->markTable($table, $relationship, $alias);
 
     // If no alias is specified, give it the default.
-    if (!isset($alias)) {
-      $alias = $this->tables[$relationship][$table]['alias'] . $this->tables[$relationship][$table]['count'];
-    }
+    $alias ??= $this->tables[$relationship][$table]['alias'] . $this->tables[$relationship][$table]['count'];
 
     // If this is a relationship based table, add a marker with
     // the relationship as a primary table for the alias.
@@ -617,9 +615,7 @@ class Sql extends QueryPluginBase {
     }
 
     // If we do not have join info, fetch it.
-    if (!isset($join)) {
-      $join = $this->getJoinData($table, $this->relationships[$relationship]['base']);
-    }
+    $join ??= $this->getJoinData($table, $this->relationships[$relationship]['base']);
 
     // If it can't be fetched, this won't work.
     if (empty($join)) {
@@ -674,18 +670,14 @@ class Sql extends QueryPluginBase {
    * additional copies will NOT be added if the table is already there.
    */
   protected function ensurePath($table, $relationship = NULL, $join = NULL, $traced = [], $add = []) {
-    if (!isset($relationship)) {
-      $relationship = $this->view->storage->get('base_table');
-    }
+    $relationship ??= $this->view->storage->get('base_table');
 
     if (!array_key_exists($relationship, $this->relationships)) {
       return FALSE;
     }
 
     // If we do not have join info, fetch it.
-    if (!isset($join)) {
-      $join = $this->getJoinData($table, $this->relationships[$relationship]['base']);
-    }
+    $join ??= $this->getJoinData($table, $this->relationships[$relationship]['base']);
 
     // If it can't be fetched, this won't work.
     if (empty($join)) {
@@ -1322,9 +1314,7 @@ class Sql extends QueryPluginBase {
     else {
       $this->getCountOptimized = FALSE;
     }
-    if (!isset($this->getCountOptimized)) {
-      $this->getCountOptimized = TRUE;
-    }
+    $this->getCountOptimized ??= TRUE;
 
     // Go ahead and build the query.
     $query = $this->getConnection()
@@ -1593,9 +1583,7 @@ class Sql extends QueryPluginBase {
     $entity_types = [];
     foreach ($entity_information as $info) {
       $entity_type = $info['entity_type'];
-      if (!isset($entity_types[$entity_type])) {
-        $entity_types[$entity_type] = $this->entityTypeManager->getDefinition($entity_type);
-      }
+      $entity_types[$entity_type] ??= $this->entityTypeManager->getDefinition($entity_type);
     }
 
     // Assemble a list of entities to load.
