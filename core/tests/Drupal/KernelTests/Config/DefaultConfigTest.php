@@ -105,7 +105,7 @@ class DefaultConfigTest extends KernelTestBase {
    * @dataProvider moduleListDataProvider
    */
   public function testModuleConfig($module) {
-    if ((Database::getConnection()->driver() == 'mongodb') && in_array($module, ['content_moderation', 'help'], TRUE)) {
+    if ((Database::getConnection()->driver() == 'mongodb') && in_array($module, ['content_moderation'], TRUE)) {
       // @todo For both modules there is still a bug to be fixed.
       $this->markTestSkipped();
     }
