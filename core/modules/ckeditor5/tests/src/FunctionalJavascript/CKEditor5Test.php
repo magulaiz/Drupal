@@ -67,8 +67,8 @@ class CKEditor5Test extends CKEditor5TestBase {
     $ariaLabel = $page->find('css', 'div.ck-content');
     $this->assertSame('Body (Edit summary)', $ariaLabel->getAttribute('aria-label'));
 
-    $label = $page->find('css', '.ck-label');
-    $this->assertSame('Body (Edit summary)', $label->getText());
+    $label = $page->find('css', 'label.ck-label.ck-voice-label');
+    $this->assertSame('Body (Edit summary)', $label->getHtml());
 
     $page->pressButton('Save');
 
