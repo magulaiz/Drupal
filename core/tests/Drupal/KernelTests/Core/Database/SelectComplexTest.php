@@ -69,15 +69,7 @@ class SelectComplexTest extends DatabaseTestBase {
       $this->assertGreaterThanOrEqual(0, strcmp($record->$name_field, $last_name));
     }
 
-    $expected_num_records = 8;
-    if ($this->connection->driver() == 'mongodb') {
-      // Joins in MongoDB work a little bit different compared to a relational
-      // database. The joined table records are returned as an array of values
-      // inside the base results.
-      $expected_num_records = 4;
-    }
-
-    $this->assertEquals($expected_num_records, $num_records, 'Returned the correct number of rows.');
+    $this->assertEquals(8, $num_records, 'Returned the correct number of rows.');
   }
 
   /**

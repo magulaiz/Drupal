@@ -40,20 +40,10 @@ class AlterTest extends DatabaseTestBase {
 
     $this->assertCount(2, $records, 'Returned the correct number of rows.');
 
-    if ($this->connection->driver() == 'mongodb') {
-      $this->assertEquals('George', $records[0]->name[0], 'Correct data retrieved.');
-    }
-    else {
-      $this->assertEquals('George', $records[0]->name, 'Correct data retrieved.');
-    }
+    $this->assertEquals('George', $records[0]->name, 'Correct data retrieved.');
     $this->assertEquals(4, $records[0]->{$tid_field}, 'Correct data retrieved.');
     $this->assertEquals('sing', $records[0]->{$task_field}, 'Correct data retrieved.');
-    if ($this->connection->driver() == 'mongodb') {
-      $this->assertEquals('George', $records[1]->name[0], 'Correct data retrieved.');
-    }
-    else {
-      $this->assertEquals('George', $records[1]->name, 'Correct data retrieved.');
-    }
+    $this->assertEquals('George', $records[1]->name, 'Correct data retrieved.');
     $this->assertEquals(5, $records[1]->{$tid_field}, 'Correct data retrieved.');
     $this->assertEquals('sleep', $records[1]->{$task_field}, 'Correct data retrieved.');
   }
@@ -77,12 +67,7 @@ class AlterTest extends DatabaseTestBase {
     $records = $result->fetchAll();
 
     $this->assertCount(1, $records, 'Returned the correct number of rows.');
-    if ($this->connection->driver() == 'mongodb') {
-      $this->assertEquals('John', $records[0]->{$name_field}[0], 'Correct data retrieved.');
-    }
-    else {
-      $this->assertEquals('John', $records[0]->{$name_field}, 'Correct data retrieved.');
-    }
+    $this->assertEquals('John', $records[0]->{$name_field}, 'Correct data retrieved.');
     $this->assertEquals(2, $records[0]->{$tid_field}, 'Correct data retrieved.');
     $this->assertEquals(1, $records[0]->{$pid_field}, 'Correct data retrieved.');
     $this->assertEquals('sleep', $records[0]->{$task_field}, 'Correct data retrieved.');
