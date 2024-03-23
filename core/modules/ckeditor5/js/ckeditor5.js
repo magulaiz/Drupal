@@ -453,7 +453,7 @@
           if (fieldLabel) {
             const labelText = fieldLabel.innerText;
             editor.sourceElement.parentNode.querySelector(
-              'label.ck-voice-label'
+              'label.ck-voice-label',
             ).innerText = labelText;
             editor.ui.view.editable.element.closest('.ck-content').ariaLabel =
               labelText;
