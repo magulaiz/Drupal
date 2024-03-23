@@ -230,9 +230,7 @@ class ManyToOneHelper {
           // The table alias needs to be unique to this value across the
           // multiple times the filter or argument is called by the view.
           if (!isset($this->handler->view->many_to_one_aliases[$field][$value])) {
-            if (!isset($this->handler->view->many_to_one_count[$this->handler->table])) {
-              $this->handler->view->many_to_one_count[$this->handler->table] = 0;
-            }
+            $this->handler->view->many_to_one_count[$this->handler->table] ??= 0;
             $this->handler->view->many_to_one_aliases[$field][$value] = $this->handler->table . '_value_' . ($this->handler->view->many_to_one_count[$this->handler->table]++);
           }
 

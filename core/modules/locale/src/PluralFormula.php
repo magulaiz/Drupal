@@ -95,9 +95,7 @@ class PluralFormula implements PluralFormulaInterface {
    * Loads the formulae and stores them on the PluralFormula object if not set.
    */
   protected function loadFormulae() {
-    if (!isset($this->formulae)) {
-      $this->formulae = $this->state->get('locale.translation.formulae', []);
-    }
+    $this->formulae ??= $this->state->get('locale.translation.formulae', []);
   }
 
   /**

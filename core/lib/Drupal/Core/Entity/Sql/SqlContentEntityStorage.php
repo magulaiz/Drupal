@@ -352,9 +352,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
     // If we are using our internal storage definitions, which is our main use
     // case, we can statically cache the computed table mapping.
-    if (!isset($this->tableMapping)) {
-      $this->tableMapping = $this->getCustomTableMapping($this->entityType, $this->fieldStorageDefinitions);
-    }
+    $this->tableMapping ??= $this->getCustomTableMapping($this->entityType, $this->fieldStorageDefinitions);
 
     return $this->tableMapping;
   }
@@ -946,9 +944,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         // Even if this is a new entity the ID key might have been set, in which
         // case we should not override the provided ID. An ID key that is not set
         // to any value is interpreted as NULL (or DEFAULT) and thus overridden.
-        if (!isset($record->{$this->idKey})) {
-          $record->{$this->idKey} = $insert_id;
-        }
+        $record->{$this->idKey} ??= $insert_id;
         $entity->{$this->idKey} = (string) $record->{$this->idKey};
         if ($this->revisionTable) {
           $record->{$this->revisionKey} = $this->saveRevision($entity);
@@ -988,12 +984,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   the information from the entity object.
    */
   protected function saveToSharedTables(ContentEntityInterface $entity, $table_name = NULL, $new_revision = NULL) {
-    if (!isset($table_name)) {
-      $table_name = $this->dataTable;
-    }
-    if (!isset($new_revision)) {
-      $new_revision = $entity->isNewRevision();
-    }
+    $table_name ??= $this->dataTable;
+    $new_revision ??= $entity->isNewRevision();
     $revision = $table_name != $this->dataTable;
 
     if (!$revision || !$new_revision) {
@@ -1031,9 +1023,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   The record to store.
    */
   protected function mapToStorageRecord(ContentEntityInterface $entity, $table_name = NULL) {
-    if (!isset($table_name)) {
-      $table_name = $this->baseTable;
-    }
+    $table_name ??= $this->baseTable;
 
     $record = new \stdClass();
     $table_mapping = $this->getTableMapping();
@@ -1120,9 +1110,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   The record to store.
    */
   protected function mapToDataStorageRecord(EntityInterface $entity, $table_name = NULL) {
-    if (!isset($table_name)) {
-      $table_name = $this->dataTable;
-    }
+    $table_name ??= $this->dataTable;
     $record = $this->mapToStorageRecord($entity, $table_name);
     return $record;
   }
@@ -1148,9 +1136,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         ->execute();
       // Even if this is a new revision, the revision ID key might have been
       // set in which case we should not override the provided revision ID.
-      if (!isset($record->{$this->revisionKey})) {
-        $record->{$this->revisionKey} = $insert_id;
-      }
+      $record->{$this->revisionKey} ??= $insert_id;
       if ($entity->isDefaultRevision()) {
         $this->database->update($this->baseTable)
           ->fields([$this->revisionKey => $record->{$this->revisionKey}])
@@ -1247,9 +1233,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           $langcode = $row->langcode;
         }
 
-        if (!isset($values[$value_key][$field_name][$langcode])) {
-          $values[$value_key][$field_name][$langcode] = [];
-        }
+        $values[$value_key][$field_name][$langcode] ??= [];
 
         // Ensure that records for non-translatable fields having invalid
         // languages are skipped.
@@ -1292,9 +1276,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $translation_langcodes = array_keys($entity->getTranslationLanguages());
     $table_mapping = $this->getTableMapping();
 
-    if (!isset($vid)) {
-      $vid = $id;
-    }
+    $vid ??= $id;
 
     $original = !empty($entity->original) ? $entity->original : NULL;
 

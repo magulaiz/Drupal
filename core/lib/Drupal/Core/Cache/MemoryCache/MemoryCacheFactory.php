@@ -27,9 +27,7 @@ class MemoryCacheFactory implements CacheFactoryInterface {
    * {@inheritdoc}
    */
   public function get($bin) {
-    if (!isset($this->bins[$bin])) {
-      $this->bins[$bin] = new MemoryCache($this->time);
-    }
+    $this->bins[$bin] ??= new MemoryCache($this->time);
     return $this->bins[$bin];
   }
 

@@ -283,9 +283,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
       // If the entity references a language that is not or no longer available,
       // we return a mock language object to avoid disrupting the consuming
       // code.
-      if (!isset($this->languages[$this->defaultLangcode])) {
-        $this->languages[$this->defaultLangcode] = new Language(['id' => $this->defaultLangcode]);
-      }
+      $this->languages[$this->defaultLangcode] ??= new Language(['id' => $this->defaultLangcode]);
     }
     return $this->languages;
   }
@@ -620,9 +618,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
 
       $default = $langcode == LanguageInterface::LANGCODE_DEFAULT;
       if (!$default && !$definition->isTranslatable()) {
-        if (!isset($this->fields[$name][LanguageInterface::LANGCODE_DEFAULT])) {
-          $this->fields[$name][LanguageInterface::LANGCODE_DEFAULT] = $this->getTranslatedField($name, LanguageInterface::LANGCODE_DEFAULT);
-        }
+        $this->fields[$name][LanguageInterface::LANGCODE_DEFAULT] ??= $this->getTranslatedField($name, LanguageInterface::LANGCODE_DEFAULT);
         $this->fields[$name][$langcode] = &$this->fields[$name][LanguageInterface::LANGCODE_DEFAULT];
       }
       else {
@@ -707,9 +703,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    * {@inheritdoc}
    */
   public function getFieldDefinitions() {
-    if (!isset($this->fieldDefinitions)) {
-      $this->fieldDefinitions = \Drupal::service('entity_field.manager')->getFieldDefinitions($this->entityTypeId, $this->bundle());
-    }
+    $this->fieldDefinitions ??= \Drupal::service('entity_field.manager')->getFieldDefinitions($this->entityTypeId, $this->bundle());
     return $this->fieldDefinitions;
   }
 
@@ -882,9 +876,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
 
     // Populate entity translation object cache so it will be available for all
     // translation objects.
-    if (!isset($this->translations[$this->activeLangcode]['entity'])) {
-      $this->translations[$this->activeLangcode]['entity'] = $this;
-    }
+    $this->translations[$this->activeLangcode]['entity'] ??= $this;
 
     // If we already have a translation object for the specified language we can
     // just return it.
@@ -1089,9 +1081,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     }
     // Else directly read/write plain values. That way, non-field entity
     // properties can always be accessed directly.
-    if (!isset($this->values[$name])) {
-      $this->values[$name] = NULL;
-    }
+    $this->values[$name] ??= NULL;
     return $this->values[$name];
   }
 
@@ -1429,9 +1419,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    */
   protected function getFieldsToSkipFromTranslationChangesCheck() {
     $bundle = $this->bundle();
-    if (!isset(static::$fieldsToSkipFromTranslationChangesCheck[$this->entityTypeId][$bundle])) {
-      static::$fieldsToSkipFromTranslationChangesCheck[$this->entityTypeId][$bundle] = $this->traitGetFieldsToSkipFromTranslationChangesCheck($this);
-    }
+    static::$fieldsToSkipFromTranslationChangesCheck[$this->entityTypeId][$bundle] ??= $this->traitGetFieldsToSkipFromTranslationChangesCheck($this);
     return static::$fieldsToSkipFromTranslationChangesCheck[$this->entityTypeId][$bundle];
   }
 

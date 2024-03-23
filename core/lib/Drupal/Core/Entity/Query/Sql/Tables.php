@@ -360,9 +360,7 @@ class Tables implements TablesInterface {
         // entity table several times for different entity reference fields,
         // each join gets a separate alias.
         $key = $index_prefix . ($base_table === 'base_table' ? $table : $base_table);
-        if (!isset($this->entityTables[$key])) {
-          $this->entityTables[$key] = $this->addJoin($type, $table, "[%alias].[$id_field] = [$base_table].[$id_field]", $langcode);
-        }
+        $this->entityTables[$key] ??= $this->addJoin($type, $table, "[%alias].[$id_field] = [$base_table].[$id_field]", $langcode);
         return $this->entityTables[$key];
       }
     }

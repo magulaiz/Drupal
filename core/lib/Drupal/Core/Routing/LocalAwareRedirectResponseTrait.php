@@ -37,9 +37,7 @@ trait LocalAwareRedirectResponseTrait {
    *   The request context.
    */
   protected function getRequestContext() {
-    if (!isset($this->requestContext)) {
-      $this->requestContext = \Drupal::service('router.request_context');
-    }
+    $this->requestContext ??= \Drupal::service('router.request_context');
     return $this->requestContext;
   }
 

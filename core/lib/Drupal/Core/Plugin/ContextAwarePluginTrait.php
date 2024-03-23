@@ -47,9 +47,7 @@ trait ContextAwarePluginTrait {
    */
   public function getContext($name) {
     // Check for a valid context value.
-    if (!isset($this->context[$name])) {
-      $this->context[$name] = new Context($this->getContextDefinition($name));
-    }
+    $this->context[$name] ??= new Context($this->getContextDefinition($name));
     return $this->context[$name];
   }
 

@@ -165,9 +165,7 @@ class MachineName extends Textfield {
 
     // By default, machine names are restricted to Latin alphanumeric characters.
     // So, default to LTR directionality.
-    if (!isset($element['#attributes'])) {
-      $element['#attributes'] = [];
-    }
+    $element['#attributes'] ??= [];
     $element['#attributes'] += ['dir' => LanguageInterface::DIRECTION_LTR];
 
     // The source element defaults to array('name'), but may have been overridden.

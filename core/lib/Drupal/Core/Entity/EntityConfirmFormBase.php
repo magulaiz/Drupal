@@ -61,9 +61,7 @@ abstract class EntityConfirmFormBase extends EntityForm implements ConfirmFormIn
     $form[$this->getFormName()] = ['#type' => 'hidden', '#value' => 1];
 
     // By default, render the form using theme_confirm_form().
-    if (!isset($form['#theme'])) {
-      $form['#theme'] = 'confirm_form';
-    }
+    $form['#theme'] ??= 'confirm_form';
     return $form;
   }
 

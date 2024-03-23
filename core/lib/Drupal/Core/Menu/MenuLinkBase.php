@@ -26,9 +26,7 @@ abstract class MenuLinkBase extends PluginBase implements MenuLinkInterface {
    */
   public function getWeight() {
     // By default the weight is 0.
-    if (!isset($this->pluginDefinition['weight'])) {
-      $this->pluginDefinition['weight'] = 0;
-    }
+    $this->pluginDefinition['weight'] ??= 0;
     return $this->pluginDefinition['weight'];
   }
 

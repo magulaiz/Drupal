@@ -522,13 +522,11 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
       $entity_type_id = $entity->getEntityTypeId();
       $bundle = $entity->bundle();
       $key = $entity_type_id . ':' . $bundle . ':' . $field_name . ':' . Crypt::hashBase64(serialize($display_options));
-      if (!isset($this->singleFieldDisplays[$key])) {
-        $this->singleFieldDisplays[$key] = EntityViewDisplay::create([
-          'targetEntityType' => $entity_type_id,
-          'bundle' => $bundle,
-          'status' => TRUE,
-        ])->setComponent($field_name, $display_options);
-      }
+      $this->singleFieldDisplays[$key] ??= EntityViewDisplay::create([
+        'targetEntityType' => $entity_type_id,
+        'bundle' => $bundle,
+        'status' => TRUE,
+      ])->setComponent($field_name, $display_options);
       $display = $this->singleFieldDisplays[$key];
     }
 

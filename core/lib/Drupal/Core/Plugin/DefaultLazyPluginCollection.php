@@ -176,9 +176,7 @@ class DefaultLazyPluginCollection extends LazyPluginCollection {
     if ($configuration !== NULL) {
       $this->setInstanceConfiguration($id, $configuration);
     }
-    if (!isset($this->originalOrder[$id])) {
-      $this->originalOrder[$id] = $id;
-    }
+    $this->originalOrder[$id] ??= $id;
   }
 
   /**

@@ -89,9 +89,7 @@ class Link extends RenderElement {
     // Conditionally invoke self::preRenderAjaxForm(), if #ajax is set.
     if (isset($element['#ajax']) && !isset($element['#ajax_processed'])) {
       // If no HTML ID was found above, automatically create one.
-      if (!isset($element['#id'])) {
-        $element['#id'] = $element['#options']['attributes']['id'] = HtmlUtility::getUniqueId('ajax-link');
-      }
+      $element['#id'] ??= $element['#options']['attributes']['id'] = HtmlUtility::getUniqueId('ajax-link');
       $element = static::preRenderAjaxForm($element);
     }
 

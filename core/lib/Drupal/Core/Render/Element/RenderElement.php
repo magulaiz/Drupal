@@ -131,9 +131,7 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
    */
   public static function setAttributes(&$element, $class = []) {
     if (!empty($class)) {
-      if (!isset($element['#attributes']['class'])) {
-        $element['#attributes']['class'] = [];
-      }
+      $element['#attributes']['class'] ??= [];
       $element['#attributes']['class'] = array_merge($element['#attributes']['class'], $class);
     }
     // This function is invoked from form element theme functions, but the
@@ -302,9 +300,7 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
           // an additional handler to prevent such a click from triggering a
           // non-Ajax form submission. This also prevents a textfield's ENTER
           // press triggering this button's non-Ajax form submission behavior.
-          if (!isset($element['#ajax']['prevent'])) {
-            $element['#ajax']['prevent'] = 'click';
-          }
+          $element['#ajax']['prevent'] ??= 'click';
           break;
 
         case 'password':

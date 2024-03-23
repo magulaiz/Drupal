@@ -64,9 +64,7 @@ class ProjectInfo {
       }
 
       // If the .info.yml doesn't define the 'project', try to figure it out.
-      if (!isset($file->info['project'])) {
-        $file->info['project'] = $this->getProjectName($file);
-      }
+      $file->info['project'] ??= $this->getProjectName($file);
 
       // If we still don't know the 'project', give up.
       if (empty($file->info['project'])) {
@@ -80,13 +78,9 @@ class ProjectInfo {
       // tarball. We want to see the last time the file was changed on disk,
       // which is left alone by tar and correctly set to the time the .info.yml
       // file was unpacked.
-      if (!isset($file->info['_info_file_ctime'])) {
-        $file->info['_info_file_ctime'] = $file->getFileInfo()->getCTime();
-      }
+      $file->info['_info_file_ctime'] ??= $file->getFileInfo()->getCTime();
 
-      if (!isset($file->info['datestamp'])) {
-        $file->info['datestamp'] = 0;
-      }
+      $file->info['datestamp'] ??= 0;
 
       $project_name = $file->info['project'];
 

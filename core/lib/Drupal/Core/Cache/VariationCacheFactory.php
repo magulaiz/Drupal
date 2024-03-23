@@ -39,9 +39,7 @@ class VariationCacheFactory implements VariationCacheFactoryInterface {
    * {@inheritdoc}
    */
   public function get($bin) {
-    if (!isset($this->bins[$bin])) {
-      $this->bins[$bin] = new VariationCache($this->requestStack, $this->cacheFactory->get($bin), $this->cacheContextsManager);
-    }
+    $this->bins[$bin] ??= new VariationCache($this->requestStack, $this->cacheFactory->get($bin), $this->cacheContextsManager);
     return $this->bins[$bin];
   }
 

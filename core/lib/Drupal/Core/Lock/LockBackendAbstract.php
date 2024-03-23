@@ -66,9 +66,7 @@ abstract class LockBackendAbstract implements LockBackendInterface {
    * {@inheritdoc}
    */
   public function getLockId() {
-    if (!isset($this->lockId)) {
-      $this->lockId = uniqid(mt_rand(), TRUE);
-    }
+    $this->lockId ??= uniqid(mt_rand(), TRUE);
     return $this->lockId;
   }
 

@@ -125,16 +125,12 @@ class Renderer implements RendererInterface {
     $this->elementInfo = $element_info;
     $this->placeholderGenerator = $placeholder_generator;
     $this->renderCache = $render_cache;
-    if (!isset($renderer_config['debug'])) {
-      $renderer_config['debug'] = FALSE;
-    }
+    $renderer_config['debug'] ??= FALSE;
     $this->rendererConfig = $renderer_config;
     $this->requestStack = $request_stack;
 
     // Initialize the context collection if needed.
-    if (!isset(static::$contextCollection)) {
-      static::$contextCollection = new \SplObjectStorage();
-    }
+    static::$contextCollection ??= new \SplObjectStorage();
   }
 
   /**
@@ -462,9 +458,7 @@ class Renderer implements RendererInterface {
 
     // Initialize this element's #children, unless a #pre_render callback
     // already preset #children.
-    if (!isset($elements['#children'])) {
-      $elements['#children'] = '';
-    }
+    $elements['#children'] ??= '';
 
     // Assume that if #theme is set it represents an implemented hook.
     $theme_is_implemented = isset($elements['#theme']);

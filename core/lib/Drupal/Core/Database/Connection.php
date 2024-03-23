@@ -1138,9 +1138,7 @@ abstract class Connection {
    *   If the transaction manager is undefined or unavailable.
    */
   public function transactionManager(): TransactionManagerInterface {
-    if (!isset($this->transactionManager)) {
-      $this->transactionManager = $this->driverTransactionManager();
-    }
+    $this->transactionManager ??= $this->driverTransactionManager();
     return $this->transactionManager;
   }
 

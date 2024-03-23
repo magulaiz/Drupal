@@ -87,9 +87,7 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
    */
   public function getInfo($type) {
     $theme_name = $this->themeManager->getActiveTheme()->getName();
-    if (!isset($this->elementInfo[$theme_name])) {
-      $this->elementInfo[$theme_name] = $this->buildInfo($theme_name);
-    }
+    $this->elementInfo[$theme_name] ??= $this->buildInfo($theme_name);
     $info = $this->elementInfo[$theme_name][$type] ?? [];
     $info['#defaults_loaded'] = TRUE;
     return $info;

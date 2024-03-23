@@ -386,9 +386,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       // translation. This way we can ensure we always have only one affected
       // translation in pending revisions. This constraint is enforced by
       // EntityUntranslatableFieldsConstraintValidator.
-      if (!isset($keep_untranslatable_fields)) {
-        $keep_untranslatable_fields = $entity->isDefaultTranslation() && $entity->isDefaultTranslationAffectedOnly();
-      }
+      $keep_untranslatable_fields ??= $entity->isDefaultTranslation() && $entity->isDefaultTranslationAffectedOnly();
 
       /** @var \Drupal\Core\Entity\ContentEntityInterface $default_revision */
       $default_revision = $this->load($entity->id());

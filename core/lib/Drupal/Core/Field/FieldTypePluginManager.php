@@ -182,9 +182,7 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
     foreach ($grouped_categories as $group => $definitions) {
       if (!isset($category_info[$group])) {
         assert(FALSE, "\"$group\" must be defined in MODULE_NAME.field_type_categories.yml");
-        if (!isset($grouped_categories[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY])) {
-          $grouped_categories[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY] = [];
-        }
+        $grouped_categories[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY] ??= [];
         $grouped_categories[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY] += $definitions;
         unset($grouped_categories[$group]);
       }
