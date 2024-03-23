@@ -78,10 +78,6 @@ class TaxonomyPermissions implements ContainerInjectionInterface {
         'title' => $this->t('%vocabulary: Delete term revisions', $args),
         'description' => $this->t('To delete a revision you also need permission to delete the taxonomy term.'),
       ],
-      "view vocabulary $id" => [
-        'title' => $this->t('%vocabulary: View vocabulary', $args),
-        'description' => $this->t('Controls display of vocabulary label.'),
-      ],
     ];
   }
 
