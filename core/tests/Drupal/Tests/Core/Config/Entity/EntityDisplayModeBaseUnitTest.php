@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Config\Entity;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Entity\EntityDisplayModeBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\UnitTestCase;
 
@@ -92,10 +93,7 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
         [$this->entityType, TRUE, $this->entityInfo],
       ]);
 
-    $this->entity = $this->getMockBuilder('\Drupal\Core\Entity\EntityDisplayModeBase')
-      ->setConstructorArgs([$values, $this->entityType])
-      ->getMock();
-
+    $this->entity = new EntityDisplayModeBase($values, $this->entityType);
     $dependencies = $this->entity->calculateDependencies()->getDependencies();
     $this->assertContains('test_module', $dependencies['module']);
   }
