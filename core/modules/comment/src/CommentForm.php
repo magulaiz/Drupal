@@ -442,7 +442,6 @@ class CommentForm extends ContentEntityForm {
       $entity_url->getRouteParameters() === $this->current_route_match->getRawParameters()) {
       $form_state->setRedirectUrl($uri);
     }
-    $form_state->setRedirectUrl($uri);
   }
 
 }
