@@ -1088,21 +1088,9 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/language/tests/src/Unit/ContentLanguageSettingsUnitTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method returnValue\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-Use \\<code\\>\\$double\\-\\>willReturn\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>returnValue\\(\\)\\)\\</code\\>$#',
-	'count' => 8,
-	'path' => __DIR__ . '/modules/language/tests/src/Unit/Plugin/LanguageNegotiation/LanguageNegotiationContentEntityTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Constructor of class Drupal\\\\link\\\\Plugin\\\\migrate\\\\process\\\\FieldLink has an unused parameter \\$migration\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/link/src/Plugin/migrate/process/FieldLink.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method returnValue\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-Use \\<code\\>\\$double\\-\\>willReturn\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>returnValue\\(\\)\\)\\</code\\>$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/link/tests/src/Unit/LinkFormatterTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^@dataProvider providerValidate related method must be static in PHPUnit 10 and newer\\.$#',
@@ -1261,12 +1249,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate/tests/src/Unit/MigrateExecutableTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method onConsecutiveCalls\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-Use \\<code\\>\\$double\\-\\>willReturn\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>onConsecutiveCalls\\(\\)\\)\\</code\\>$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate/tests/src/Unit/MigrateExecutableTest.php',
 ];
@@ -1714,18 +1696,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/src/Kernel/MenuAccessControlHandlerTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method onConsecutiveCalls\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-Use \\<code\\>\\$double\\-\\>willReturn\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>onConsecutiveCalls\\(\\)\\)\\</code\\>$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Unit/Batch/BatchControllerTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method returnValue\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-Use \\<code\\>\\$double\\-\\>willReturn\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>returnValue\\(\\)\\)\\</code\\>$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Unit/Menu/SystemLocalTasksTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$help_message might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/src/Form/OverviewTerms.php',
@@ -1784,12 +1754,6 @@ $ignoreErrors[] = [
 	'message' => '#^@dataProvider securityUpdateAvailabilityProvider related method must be static in PHPUnit 10 and newer\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/update/tests/src/Functional/UpdateSemverCoreSecurityAvailabilityTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method returnValueMap\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-Use \\<code\\>\\$double\\-\\>willReturnMap\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>returnValueMap\\(\\)\\)\\</code\\>$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/update/tests/src/Unit/UpdateMailTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$users might not be defined\\.$#',
@@ -2163,12 +2127,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/tests/src/Unit/Plugin/pager/SqlBaseTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method returnValue\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-Use \\<code\\>\\$double\\-\\>willReturn\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>returnValue\\(\\)\\)\\</code\\>$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Unit/Plugin/pager/SqlBaseTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/src/Unit/Plugin/views/field/EntityOperationsUnitTest.php',
@@ -2379,12 +2337,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Installer/InstallerRedirectTraitTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method getMockForTrait\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5306$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Installer/InstallerRedirectTraitTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Class PHPUnit\\\\Framework\\\\Error\\\\Warning not found\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Test/Comparator/MarkupInterfaceComparatorTest.php',
@@ -2439,24 +2391,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
 	'count' => 3,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Plugin/Context/ContextTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method getMockForTrait\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5243$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Plugin/Discovery/DiscoveryCachedTraitTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method getMockForTrait\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5306$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Plugin/Discovery/DiscoveryTraitTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method getMockForTrait\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5243$#',
-	'count' => 4,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Plugin/Discovery/DiscoveryTraitTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method addMethods\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\:
@@ -2560,18 +2494,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Composer/Plugin/VendorHardening/VendorHardeningPluginTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method onConsecutiveCalls\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-Use \\<code\\>\\$double\\-\\>willReturn\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>onConsecutiveCalls\\(\\)\\)\\</code\\>$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Asset/AssetResolverTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method returnCallback\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-Use \\<code\\>\\$double\\-\\>willReturnCallback\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>returnCallback\\(\\)\\)\\</code\\>$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Cache/ChainedFastBackendFactoryTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^@dataProvider providerTestResolveConditions related method must be static in PHPUnit 10 and newer\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Condition/ConditionAccessResolverTraitTest.php',
@@ -2608,12 +2530,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Config/Entity/Query/QueryFactoryTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method returnValue\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-Use \\<code\\>\\$double\\-\\>willReturn\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>returnValue\\(\\)\\)\\</code\\>$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Config/StorageComparerTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Controller/ControllerBaseTest.php',
@@ -2627,12 +2543,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Database\\\\ConditionTest\\:\\:expectError\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Database/ConditionTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method returnValue\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-Use \\<code\\>\\$double\\-\\>willReturn\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>returnValue\\(\\)\\)\\</code\\>$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Datetime/DateHelperTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^@dataProvider providerTestProcess related method must be static in PHPUnit 10 and newer\\.$#',
@@ -2745,12 +2655,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/EventSubscriber/SpecialAttributesRouteSubscriberTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method onConsecutiveCalls\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-Use \\<code\\>\\$double\\-\\>willReturn\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>onConsecutiveCalls\\(\\)\\)\\</code\\>$#',
-	'count' => 3,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Extension/ModuleHandlerTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^@dataProvider providerTestEquals related method must be static in PHPUnit 10 and newer\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Field/FieldItemListTest.php',
@@ -2759,12 +2663,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
 	'count' => 16,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Field/FieldItemListTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method getMockForTrait\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5243$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Form/ConfigFormBaseTraitTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method addMethods\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\:
@@ -2875,12 +2773,6 @@ https\\://github\\.com/sebastianbergmann/phpunit/issues/5244$#',
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/StringTranslation/StringTranslationTraitTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method onConsecutiveCalls\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-Use \\<code\\>\\$double\\-\\>willReturn\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>onConsecutiveCalls\\(\\)\\)\\</code\\>$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/TempStore/SharedTempStoreTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php',
@@ -2889,12 +2781,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
 	'count' => 3,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Test/BrowserTestBaseTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method getMockForTrait\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5243$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Test/TestSetupTraitTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
