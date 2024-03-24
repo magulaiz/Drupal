@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Component\Plugin\Discovery;
 
+use Drupal\Component\Plugin\Discovery\StaticDiscovery;
 use Drupal\Component\Plugin\Discovery\StaticDiscoveryDecorator;
 use PHPUnit\Framework\TestCase;
 
