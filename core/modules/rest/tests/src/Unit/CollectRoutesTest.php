@@ -43,6 +43,7 @@ class CollectRoutesTest extends UnitTestCase {
       ->getMock();
 
     $view = $this->getMockBuilder(ViewMockableClass::class)
+      ->onlyMethods(['initHandlers'])
       ->setConstructorArgs([['id' => 'test_view'], 'view'])
       ->getMock();
 
