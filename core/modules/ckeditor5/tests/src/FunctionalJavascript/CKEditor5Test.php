@@ -862,6 +862,12 @@ JS;
         'content' => '<script>(function() { let x = 10, y = 5; if( y < x ) { console.log("run me!"); }})()</script>',
         'expected_content' => '<script>(function() { let x = 10, y = 5; if( y < x ) { console.log("run me!"); }})()</script>',
       ],
+      // Test case taken from the HTML documentation.
+      // @see https://html.spec.whatwg.org/multipage/scripting.html#restrictions-for-contents-of-script-elements
+      'script to escape' => [
+        'content' => "<script>const example = 'Consider this string: <!-- <script>';</script>",
+        'expected_content' => "<script>const example = 'Consider this string: <!-- <script>';</script>",
+      ],
       'style' => [
         'content' => '<style>
 a > span {
