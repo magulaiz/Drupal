@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\content_moderation\Kernel;
 
+use Drupal\Core\Database\Database;
 use Drupal\entity_test\Entity\EntityTestNoBundle;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
@@ -193,7 +194,13 @@ class ViewsModerationStateFilterTest extends ViewsKernelTestBase {
       'moderation_state' => 'editorial-draft',
     ]);
     $view->execute();
-    $this->assertIdenticalResultset($view, [['id' => $test_entity->id()]], ['id' => 'id']);
+    if (Database::getConnection()->driver() == 'mongodb') {
+      $map = ['revision_id' => 'id'];
+    }
+    else {
+      $map = ['id' => 'id'];
+    }
+    $this->assertIdenticalResultset($view, [['id' => $test_entity->id()]], $map);
   }
 
   /**

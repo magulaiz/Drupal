@@ -1648,7 +1648,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $query->fields($fields);
         $query->execute();
 
-        if ($this->entityType->isRevisionable() && !$entity->isNewRevision()) {
+//        if ($this->entityType->isRevisionable() && !$entity->isNewRevision()) {
+        if ($this->entityType->isRevisionable()) {
           // When updating an entity with revisions and without creating a new
           // revision creates a problem with MongoDB. The embedded table holding
           // all the revision data can on update do only one change to the
@@ -1858,8 +1859,15 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           foreach ($all_revisions_data as $revision) {
             $exists = FALSE;
             foreach ($revisions_langcodes as $revision_langcode) {
-              if (($revision_langcode['revision_id'] == $revision->{$this->revisionKey}) && ($revision_langcode['langcode'] == $revision->{$this->langcodeKey})) {
-                $exists = TRUE;
+              if ($this->entityType->isTranslatable()) {
+                if (($revision_langcode['revision_id'] == $revision->{$this->revisionKey}) && ($revision_langcode['langcode'] == $revision->{$this->langcodeKey})) {
+                  $exists = TRUE;
+                }
+              }
+              else {
+                if (($revision_langcode['revision_id'] == $revision->{$this->revisionKey})) {
+                  $exists = TRUE;
+                }
               }
               if ($current_revision_id && isset($revision->{$this->revisionKey}) && isset($revision->{$revision_default_field})) {
                 if ($revision->{$this->revisionKey} == $current_revision_id) {
@@ -1875,12 +1883,13 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             if (!$exists) {
               $revisions_langcodes[] = [
                 'revision_id' => $revision->{$this->revisionKey},
-                'langcode' => $revision->{$this->langcodeKey},
+                'langcode' => $revision->{$this->langcodeKey} ?? 'und',
               ];
               $new_all_revisions_data[] = clone $revision;
             }
           }
         }
+
         $new_all_revisions_data = array_reverse($new_all_revisions_data);
 
         $this->database->getConnection()->{$prefixed_table}->updateOne(

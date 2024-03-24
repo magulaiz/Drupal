@@ -2,6 +2,7 @@
 
 namespace Drupal\content_moderation;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -55,8 +56,15 @@ class ViewsData {
       return $this->moderationInformation->isModeratedEntityType($type);
     });
 
+    $driver = Database::getConnection()->driver();
+
     foreach ($entity_types_with_moderation as $entity_type) {
-      $table = $entity_type->getDataTable() ?: $entity_type->getBaseTable();
+      if ($driver == 'mongodb') {
+        $table = $entity_type->getBaseTable();
+      }
+      else {
+        $table = $entity_type->getDataTable() ?: $entity_type->getBaseTable();
+      }
 
       $data[$table]['moderation_state'] = [
         'title' => t('Moderation state'),
@@ -69,17 +77,22 @@ class ViewsData {
         'sort' => ['id' => 'moderation_state_sort'],
       ];
 
-      $revision_table = $entity_type->getRevisionDataTable() ?: $entity_type->getRevisionTable();
-      $data[$revision_table]['moderation_state'] = [
-        'title' => t('Moderation state'),
-        'field' => [
-          'id' => 'moderation_state_field',
-          'default_formatter' => 'content_moderation_state',
-          'field_name' => 'moderation_state',
-        ],
-        'filter' => ['id' => 'moderation_state_filter', 'allow empty' => TRUE],
-        'sort' => ['id' => 'moderation_state_sort'],
-      ];
+      if ($driver != 'mongodb') {
+        $revision_table = $entity_type->getRevisionDataTable() ?: $entity_type->getRevisionTable();
+        $data[$revision_table]['moderation_state'] = [
+          'title' => t('Moderation state'),
+          'field' => [
+            'id' => 'moderation_state_field',
+            'default_formatter' => 'content_moderation_state',
+            'field_name' => 'moderation_state',
+          ],
+          'filter' => [
+            'id' => 'moderation_state_filter',
+            'allow empty' => TRUE
+          ],
+          'sort' => ['id' => 'moderation_state_sort'],
+        ];
+      }
     }
 
     return $data;
