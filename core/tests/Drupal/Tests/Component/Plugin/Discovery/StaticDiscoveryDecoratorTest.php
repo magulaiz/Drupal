@@ -208,18 +208,13 @@ class StaticDiscoveryDecoratorTest extends TestCase {
         }
       );
 
-    // Create a mock decorator.
-    $mock_decorator = $this->getMockBuilder('Drupal\Component\Plugin\Discovery\StaticDiscoveryDecorator')
-      ->disableOriginalConstructor()
-      ->getMock();
-    // Poke the decorated object into our decorator.
-    $ref_decorated = new \ReflectionProperty($mock_decorator, 'decorated');
-    $ref_decorated->setValue($mock_decorator, $mock_decorated);
+    // Create the decorator.
+    $decorator = new StaticDiscoveryDecorator($mock_decorated);
 
-    // Exercise __call.
+    // Exercise __call on the decorator.
     $this->assertEquals(
       $args,
-      \call_user_func_array([$mock_decorated, $method], $args)
+      \call_user_func_array([$decorator, $method], $args)
     );
   }
 
@@ -246,10 +241,12 @@ class StaticDiscoveryTestDecoratedClass extends StaticDiscovery {
     return [];
   }
 
-  public function complexArguments(string $a, float $b, int $c, array $d): void {
+  public function complexArguments(mixed ...$args): array {
+    return $args;
   }
 
-  public function noArguments(): void {
+  public function noArguments(): array {
+    return [];
   }
 
 }
