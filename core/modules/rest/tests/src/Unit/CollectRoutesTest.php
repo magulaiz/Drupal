@@ -7,6 +7,7 @@ namespace Drupal\Tests\rest\Unit;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\rest\Plugin\views\display\RestExport;
+use Drupal\views\Entity\View;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -41,7 +42,7 @@ class CollectRoutesTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $view = $this->getMockBuilder('\Drupal\views\Entity\View')
+    $view = $this->getMockBuilder(ViewMockableClass::class)
       ->setConstructorArgs([['id' => 'test_view'], 'view'])
       ->getMock();
 
@@ -157,6 +158,16 @@ class CollectRoutesTest extends UnitTestCase {
     $auth = $this->routes->get('view.test_view.page_1')->getOption('_auth');
     $this->assertCount(1, $auth, 'View route with rest export has an auth option added');
     $this->assertEquals('basic_auth', $auth[0], 'View route with rest export has the correct auth option added');
+  }
+
+}
+
+/**
+ * A class extending View for mocking purposes.
+ */
+class ViewMockableClass extends View {
+
+  public function initHandlers() {
   }
 
 }
