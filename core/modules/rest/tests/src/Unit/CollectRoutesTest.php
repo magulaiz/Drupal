@@ -42,10 +42,7 @@ class CollectRoutesTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $view = $this->getMockBuilder(ViewMockableClass::class)
-      ->onlyMethods(['initHandlers'])
-      ->setConstructorArgs([['id' => 'test_view'], 'view'])
-      ->getMock();
+    $view = new View(['id' => 'test_view'], 'view');
 
     $view_executable = $this->getMockBuilder('\Drupal\views\ViewExecutable')
       ->onlyMethods(['initHandlers', 'getTitle'])
@@ -159,16 +156,6 @@ class CollectRoutesTest extends UnitTestCase {
     $auth = $this->routes->get('view.test_view.page_1')->getOption('_auth');
     $this->assertCount(1, $auth, 'View route with rest export has an auth option added');
     $this->assertEquals('basic_auth', $auth[0], 'View route with rest export has the correct auth option added');
-  }
-
-}
-
-/**
- * A class extending View for mocking purposes.
- */
-class ViewMockableClass extends View {
-
-  public function initHandlers() {
   }
 
 }

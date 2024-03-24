@@ -63,8 +63,9 @@ class StaticDiscoveryDecoratorTest extends TestCase {
    */
   public function testGetDefinition($expected, $has_register_definitions, $exception_on_invalid, $definitions, $base_plugin_id) {
     // Mock our StaticDiscoveryDecorator.
-    $mock_decorator = $this->getMockBuilder(StaticDiscoveryDecoratorMockableClass::class)
+    $mock_decorator = $this->getMockBuilder(StaticDiscoveryDecorator::class)
       ->disableOriginalConstructor()
+      ->onlyMethods([])
       ->getMock();
 
     // Set up the ::$registerDefinitions property.
@@ -129,8 +130,9 @@ class StaticDiscoveryDecoratorTest extends TestCase {
    */
   public function testGetDefinitions($has_register_definitions, $definitions) {
     // Mock our StaticDiscoveryDecorator.
-    $mock_decorator = $this->getMockBuilder(StaticDiscoveryDecoratorMockableClass::class)
+    $mock_decorator = $this->getMockBuilder(StaticDiscoveryDecorator::class)
       ->disableOriginalConstructor()
+      ->onlyMethods([])
       ->getMock();
 
     // Set up the ::$registerDefinitions property.
@@ -231,15 +233,5 @@ interface StaticDiscoveryDecoratorTestMockInterface {
    * Function used in the mocking process of this test.
    */
   public function registerDefinitionsCallback();
-
-}
-
-/**
- * A class extending StaticDiscoveryDecorator for mocking purposes.
- */
-class StaticDiscoveryDecoratorMockableClass extends StaticDiscoveryDecorator {
-
-  public function registerDefinitionCallback() {
-  }
 
 }
