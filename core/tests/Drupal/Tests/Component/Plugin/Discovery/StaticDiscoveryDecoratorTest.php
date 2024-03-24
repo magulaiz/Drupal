@@ -195,9 +195,9 @@ class StaticDiscoveryDecoratorTest extends TestCase {
    */
   public function testCall($method, $args) {
     // Mock a decorated object.
-    $mock_decorated = $this->getMockBuilder('Drupal\Component\Plugin\Discovery\DiscoveryInterface')
-      ->addMethods([$method])
-      ->getMockForAbstractClass();
+    $mock_decorated = $this->getMockBuilder(StaticDiscoveryTestDecoratedClass::class)
+      ->onlyMethods([$method])
+      ->getMock();
     // Our mocked method will return any arguments sent to it.
     $mock_decorated->expects($this->once())
       ->method($method)
@@ -233,5 +233,22 @@ interface StaticDiscoveryDecoratorTestMockInterface {
    * Function used in the mocking process of this test.
    */
   public function registerDefinitionsCallback();
+
+}
+
+/**
+ * A class extending StaticDiscovery for testing purposes.
+ */
+class StaticDiscoveryTestDecoratedClass extends StaticDiscovery {
+
+  public function getDefinitions(): array {
+    return [];
+  }
+
+  public function complexArguments(string $a, float $b, int $c, array $d): void {
+  }
+
+  public function noArguments(): void {
+  }
 
 }
