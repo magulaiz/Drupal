@@ -93,7 +93,7 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
         [$this->entityType, TRUE, $this->entityInfo],
       ]);
 
-    $this->entity = new EntityDisplayModeBase($values, $this->entityType);
+    $this->entity = new EntityDisplayModeBaseTestableClass($values, $this->entityType);
     $dependencies = $this->entity->calculateDependencies()->getDependencies();
     $this->assertContains('test_module', $dependencies['module']);
   }
@@ -150,4 +150,10 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
     $this->assertEquals($value, $property->getValue($mock));
   }
 
+}
+
+/**
+ * A class extending EntityDisplayModeBase for testing purposes.
+ */
+class EntityDisplayModeBaseTestableClass extends EntityDisplayModeBase {
 }
