@@ -27,7 +27,7 @@ abstract class SecuredRedirectResponse extends RedirectResponse {
    * @return static
    */
   public static function createFromRedirectResponse(RedirectResponse $response) {
-    $safe_response = new static($response->getTargetUrl(), $response->getStatusCode(), $response->headers->all());
+    $safe_response = new static($response->getTargetUrl(), $response->getStatusCode(), $response->headers->allPreserveCase());
     $safe_response->fromResponse($response);
     return $safe_response;
   }
