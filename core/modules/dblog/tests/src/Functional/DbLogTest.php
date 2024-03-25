@@ -9,6 +9,7 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Link;
+use Drupal\Core\Logger\RfcLogLevelEnum;
 use Drupal\Core\Url;
 use Drupal\dblog\Controller\DbLogController;
 use Drupal\error_test\Controller\ErrorTestController;
@@ -663,7 +664,7 @@ class DbLogTest extends BrowserTestBase {
     $types = [];
     for ($i = 0; $i < 3; $i++) {
       $type_names[] = $type_name = $this->randomMachineName();
-      $severity = RfcLogLevel::EMERGENCY;
+      $severity = RfcLogLevelEnum::Emergency->value;
       for ($j = 0; $j < 3; $j++) {
         $types[] = $type = [
           'count' => $j + 1,

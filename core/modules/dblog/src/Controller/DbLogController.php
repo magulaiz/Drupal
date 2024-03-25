@@ -72,6 +72,8 @@ class DbLogController extends ControllerBase {
    *
    * @return array
    *   An array of log level classes.
+   *
+   * @todo use enum.
    */
   public static function getLogLevelClassMap() {
     return [
