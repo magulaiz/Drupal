@@ -26,7 +26,7 @@ class LegacyFileThemeTest extends KernelTestBase {
     $variables['upload_validators'] = [
       'file_validate_size' => [1000],
       'file_validate_extensions' => ['txt'],
-      'file_validate_image_resolution' => ['100x100', '50x50', 'resize_larger_images'],
+      'file_validate_image_resolution' => ['100x100', '50x50'],
     ];
 
     $this->expectDeprecation('\'file_validate_size\' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the \'FileSizeLimit\' constraint instead. See https://www.drupal.org/node/3363700');

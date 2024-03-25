@@ -259,9 +259,6 @@ function file_validate_is_image(FileInterface $file) {
  *   (optional) A string in the form WIDTHxHEIGHT. This will check that the
  *   image meets a minimum size. A value of zero (the default) indicates that
  *   there is no restriction on size.
- * @param string $resize_policy
- *   (optional) The image resize policy when an image exceeds the maximum
- *   resolution. Defaults to "Resize larger images in a proportional way".
  *
  * @return array
  *   An empty array if the file meets the specified dimensions, was resized
@@ -275,7 +272,7 @@ function file_validate_is_image(FileInterface $file) {
  * @see https://www.drupal.org/node/3363700
  * @see hook_file_validate()
  */
-function file_validate_image_resolution(FileInterface $file, $maximum_dimensions = 0, $minimum_dimensions = 0, $resize_policy = 'resize_larger_images') {
+function file_validate_image_resolution(FileInterface $file, $maximum_dimensions = 0, $minimum_dimensions = 0) {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the \'file.validator\' service instead. See https://www.drupal.org/node/3363700', E_USER_DEPRECATED);
   $errors = [];
 
@@ -289,50 +286,40 @@ function file_validate_image_resolution(FileInterface $file, $maximum_dimensions
       // Check that it is smaller than the given dimensions.
       [$width, $height] = explode('x', $maximum_dimensions);
       if ($image->getWidth() > $width || $image->getHeight() > $height) {
-        if ($resize_policy == 'reject_larger_images_with_error') {
-          $errors[] = t('The image is too large. The maximum dimensions are %dimensions pixels and the image size is %widthx%height pixels.',
-            [
-              '%dimensions' => $maximum_dimensions,
-              '%width' => $image->getWidth(),
-              '%height' => $image->getHeight(),
-            ]);
+        // Try to resize the image to fit the dimensions.
+        if ($image->scale($width, $height)) {
+          $scaling = TRUE;
+          $image->save();
+          // Update the file size now that the image has been resized.
+          $file->setSize($image->getFileSize());
+          if (!empty($width) && !empty($height)) {
+            $message = t('The image was resized to fit within the maximum allowed dimensions of %dimensions pixels. The new dimensions of the resized image are %new_widthx%new_height pixels.',
+              [
+                '%dimensions' => $maximum_dimensions,
+                '%new_width' => $image->getWidth(),
+                '%new_height' => $image->getHeight(),
+              ]);
+          }
+          elseif (empty($width)) {
+            $message = t('The image was resized to fit within the maximum allowed height of %height pixels. The new dimensions of the resized image are %new_widthx%new_height pixels.',
+              [
+                '%height' => $height,
+                '%new_width' => $image->getWidth(),
+                '%new_height' => $image->getHeight(),
+              ]);
+          }
+          elseif (empty($height)) {
+            $message = t('The image was resized to fit within the maximum allowed width of %width pixels. The new dimensions of the resized image are %new_widthx%new_height pixels.',
+              [
+                '%width' => $width,
+                '%new_width' => $image->getWidth(),
+                '%new_height' => $image->getHeight(),
+              ]);
+          }
+          \Drupal::messenger()->addStatus($message);
         }
         else {
-          // Try to resize the image to fit the dimensions.
-          if ($image->scale($width, $height)) {
-            $scaling = TRUE;
-            $image->save();
-            // Update the file size now that the image has been resized.
-            $file->setSize($image->getFileSize());
-            if (!empty($width) && !empty($height)) {
-              $message = t('The image was resized to fit within the maximum allowed dimensions of %dimensions pixels. The new dimensions of the resized image are %new_widthx%new_height pixels.',
-                [
-                  '%dimensions' => $maximum_dimensions,
-                  '%new_width' => $image->getWidth(),
-                  '%new_height' => $image->getHeight(),
-                ]);
-            }
-            elseif (empty($width)) {
-              $message = t('The image was resized to fit within the maximum allowed height of %height pixels. The new dimensions of the resized image are %new_widthx%new_height pixels.',
-                [
-                  '%height' => $height,
-                  '%new_width' => $image->getWidth(),
-                  '%new_height' => $image->getHeight(),
-                ]);
-            }
-            elseif (empty($height)) {
-              $message = t('The image was resized to fit within the maximum allowed width of %width pixels. The new dimensions of the resized image are %new_widthx%new_height pixels.',
-                [
-                  '%width' => $width,
-                  '%new_width' => $image->getWidth(),
-                  '%new_height' => $image->getHeight(),
-                ]);
-            }
-            \Drupal::messenger()->addStatus($message);
-          }
-          else {
-            $errors[] = t('The image exceeds the maximum allowed dimensions and an attempt to resize it failed.');
-          }
+          $errors[] = t('The image exceeds the maximum allowed dimensions and an attempt to resize it failed.');
         }
       }
     }
@@ -1273,34 +1260,25 @@ function template_preprocess_file_upload_help(&$variables) {
       @trigger_error('\'file_validate_image_resolution\' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use the \'FileImageDimensions\' constraint instead. See https://www.drupal.org/node/3363700', E_USER_DEPRECATED);
       $max = $upload_validators['file_validate_image_resolution'][0];
       $min = $upload_validators['file_validate_image_resolution'][1];
-      $resize_policy = $upload_validators['file_validate_image_resolution'][2];
     }
     else {
       $max = $upload_validators['FileImageDimensions']['maxDimensions'];
       $min = $upload_validators['FileImageDimensions']['minDimensions'];
-      $resize_policy = $upload_validators['FileImageDimensions']['resizePolicy'];
     }
     if ($min && $max && $min == $max) {
       $descriptions[] = t('Images must be exactly <strong>@size</strong> pixels.', ['@size' => $max]);
     }
     elseif ($min && $max) {
-      if ($resize_policy == 'reject_larger_images_with_error') {
-        $descriptions[] = t('Images must be between <strong>@min</strong> pixels and <strong>@max</strong>.', ['@min' => $min, '@max' => $max]);
-      }
-      else {
-        $descriptions[] = t('Images must be larger than <strong>@min</strong> pixels. Images larger than <strong>@max</strong> pixels will be resized.', ['@min' => $min, '@max' => $max]);
-      }
+      $descriptions[] = t('Images must be larger than <strong>@min</strong> pixels. Images larger than <strong>@max</strong> pixels will be resized.', [
+        '@min' => $min,
+        '@max' => $max,
+      ]);
     }
     elseif ($min) {
       $descriptions[] = t('Images must be larger than <strong>@min</strong> pixels.', ['@min' => $min]);
     }
     elseif ($max) {
-      if ($resize_policy == 'reject_larger_images_with_error') {
-        $descriptions[] = t('Images must be smaller than <strong>@max</strong> pixels.', ['@max' => $max]);
-      }
-      else {
-        $descriptions[] = t('Images larger than <strong>@max</strong> pixels will be resized.', ['@max' => $max]);
-      }
+      $descriptions[] = t('Images larger than <strong>@max</strong> pixels will be resized.', ['@max' => $max]);
     }
   }
 
