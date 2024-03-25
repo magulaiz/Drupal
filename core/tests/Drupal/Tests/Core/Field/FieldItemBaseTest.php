@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Field;
 
@@ -8,7 +10,6 @@ use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\Field\FieldItemBase;
 
-
 /**
  * @coversDefaultClass \Drupal\Core\Field\FieldItemBase
  * @group Field
@@ -16,12 +17,11 @@ use Drupal\Core\Field\FieldItemBase;
 class FieldItemBaseTest extends UnitTestCase {
 
   /**
-  * Tests calling __get() without values being set.
-  *
-  * @covers ::__get
-  */
-  public function testGetWithOutValues(): void
-  {
+   * Tests calling __get() without values being set.
+   *
+   * @covers ::__get
+   */
+  public function testGetWithOutValues(): void {
     $data_definition = $this->prophesize(ComplexDataDefinitionInterface::class);
     $data_definition->getPropertyDefinitions()
       ->shouldBeCalled()
@@ -59,8 +59,7 @@ class FieldItemBaseTest extends UnitTestCase {
    *
    * @covers ::__get
    */
-  public function testGetWithValues()
-  {
+  public function testGetWithValues(): void {
     $data_definition = $this->prophesize(ComplexDataDefinitionInterface::class);
     $data_definition->getPropertyDefinitions()
       ->shouldBeCalled()
@@ -77,4 +76,5 @@ class FieldItemBaseTest extends UnitTestCase {
     $fieldItem->setValue(['property-name' => 'property-value']);
     $this->assertEquals('property-value', $fieldItem->__get('property-name'));
   }
+
 }
