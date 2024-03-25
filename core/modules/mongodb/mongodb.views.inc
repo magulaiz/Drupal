@@ -250,6 +250,11 @@ function mongodb_views_plugins_argument_alter(array &$plugins) {
         $plugins[$id]['provider'] = 'mongodb';
         break;
 
+      case 'number_list_field':
+        $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\argument\NumberListField';
+        $plugins[$id]['provider'] = 'mongodb';
+        break;
+
       case 'numeric':
         $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\argument\NumericArgument';
         $plugins[$id]['provider'] = 'mongodb';
@@ -267,6 +272,11 @@ function mongodb_views_plugins_argument_alter(array &$plugins) {
 
       case 'string':
         $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\argument\StringArgument';
+        $plugins[$id]['provider'] = 'mongodb';
+        break;
+
+      case 'string_list_field':
+        $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\argument\StringListField';
         $plugins[$id]['provider'] = 'mongodb';
         break;
 
