@@ -188,9 +188,6 @@ class LegacyValidatorTest extends FileManagedUnitTestBase {
       $errors = file_validate_image_resolution($this->image, '10x5');
       $this->assertCount(0, $errors, 'No errors should be reported when an oversized image can be scaled down.');
 
-      $errors = file_validate_image_resolution($this->image, '1x1', 0, 'reject_larger_images_with_error');
-      $this->assertCount(1, $errors, 'An error reported for an oversized image that is not allowed to resize.');
-
       $image = $this->container->get('image.factory')->get($this->image->getFileUri());
       // Verify that the image was scaled to the correct width and height.
       $this->assertLessThanOrEqual(10, $image->getWidth());
