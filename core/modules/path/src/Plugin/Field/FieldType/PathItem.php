@@ -18,7 +18,10 @@ use Drupal\Core\TypedData\DataDefinition;
  *   no_ui = TRUE,
  *   default_widget = "path",
  *   list_class = "\Drupal\path\Plugin\Field\FieldType\PathFieldItemList",
- *   constraints = {"PathAlias" = {}},
+ *   constraints = {
+ *    "PathAlias" = {},
+ *    "PathAliasOverride" = {}
+ *   },
  * )
  */
 class PathItem extends FieldItemBase {

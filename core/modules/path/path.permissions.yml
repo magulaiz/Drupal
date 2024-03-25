@@ -2,3 +2,5 @@ administer url aliases:
   title: 'Administer URL aliases'
 create url aliases:
   title: 'Create and edit URL aliases'
+override url aliases:
+  title: 'Override system aliases'
