@@ -1,0 +1,7 @@
+name: 'Layout Builder Prevent Adding New Fields to Layout'
+type: module
+description: 'When enabled, this module stops new fields from being added to a layout.'
+package: Core
+version: VERSION
+dependencies:
+  - drupal:layout_builder

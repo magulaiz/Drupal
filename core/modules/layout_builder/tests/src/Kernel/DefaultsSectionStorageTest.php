@@ -51,7 +51,7 @@ class DefaultsSectionStorageTest extends KernelTestBase {
     entity_test_create_bundle('bundle_with_extra_fields');
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('user');
-    $this->installConfig(['layout_builder', 'layout_builder_defaults_test']);
+    $this->installConfig(['layout_builder_defaults_test']);
 
     $definition = (new SectionStorageDefinition())
       ->addContextDefinition('display', EntityContextDefinition::fromEntityTypeId('entity_view_display'))

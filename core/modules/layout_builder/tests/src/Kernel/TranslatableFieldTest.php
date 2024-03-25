@@ -39,7 +39,6 @@ class TranslatableFieldTest extends KernelTestBase {
     parent::setUp();
 
     $this->installEntitySchema('entity_test');
-    $this->installConfig('layout_builder');
 
     // Create a translation.
     ConfigurableLanguage::createFromLangcode('es')->save();

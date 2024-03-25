@@ -162,7 +162,7 @@ trait LayoutEntityHelperTrait {
    *   TRUE if the new fields should be added to the layout.
    */
   protected function shouldAddNewFieldsToLayout(): bool {
-    return \Drupal::config('layout_builder.settings')->get('add_new_fields_to_layout');
+    return !\Drupal::moduleHandler()->moduleExists('layout_builder_prevent_adding_new_fields_to_layout');
   }
 
 }

@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * Module implementation file.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function layout_builder_prevent_adding_new_fields_to_layout_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.layout_builder_prevent_adding_new_fields_to_layout':
+      $output = '<h2>' . t('About') . '</h2>';
+      $output .= '<p>' . t('The Layout Builder Prevent Adding New Fields to Layout module is a Feature Flag module which, when enabled, prevents new fields from being automatically added to layouts.') . '</p>';
+      $output .= '<p>' . t('Leaving this module disabled means that new fields will automatically be added to layouts, which is easy to miss and often is not the desired outcome. It is recommended to enable this if possible.') . '</p>';
+      return $output;
+  }
+  return NULL;
+}

@@ -82,13 +82,3 @@ function layout_builder_schema() {
 function layout_builder_update_last_removed() {
   return 8602;
 }
-
-/**
- * Set the default configuration for layout_builder.settings.
- */
-function layout_builder_update_10300():void {
-  $config_factory = \Drupal::configFactory();
-  $config_factory->getEditable('layout_builder.settings')
-    ->set('add_new_fields_to_layout', TRUE)
-    ->save();
-}

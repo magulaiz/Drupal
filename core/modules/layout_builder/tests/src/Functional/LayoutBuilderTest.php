@@ -838,9 +838,9 @@ class LayoutBuilderTest extends LayoutBuilderTestBase {
     $this->submitForm([
       'layout[enabled]' => TRUE,
     ], 'Save');
-    // Set the configuration that stops new fields from being added to the
+    // Enable the module that stops new fields from being added to the
     // Layout Builder display.
-    \Drupal::configFactory()->getEditable('layout_builder.settings')->set('add_new_fields_to_layout', FALSE)->save();
+    \Drupal::service('module_installer')->install(['layout_builder_prevent_adding_new_fields_to_layout']);
     // Add a new field with default text.
     $field_edit = [
       'set_default_value' => '1',
