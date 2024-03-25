@@ -799,10 +799,96 @@ JS;
 
   /**
    * Ensures that HTML scripts and styles are properly preserved in CKEditor 5.
-   *
-   * @dataProvider providerTestStylesAndScripts
    */
-  public function testStylesAndScripts($content, $expected_content): void {
+  public function testStylesAndScripts(): void {
+    $test_cases = [
+      // Test cases taken from the HTML documentation.
+      // @see https://html.spec.whatwg.org/multipage/scripting.html#restrictions-for-contents-of-script-elements
+      'script' => [
+        '<script>(function() { let x = 10, y = 5; if( y <--x ) { console.log("run me!"); }})()</script>',
+        '<script>(function() { let x = 10, y = 5; if( y <--x ) { console.log("run me!"); }})()</script>',
+      ],
+      'script like tag' => [
+        '<script>(function() { let player = 5, script = 10; if (player<script) { console.log("run me!"); }})()</script>',
+        '<script>(function() { let player = 5, script = 10; if (player<script) { console.log("run me!"); }})()</script>',
+      ],
+      'script to escape' => [
+        "<script>const example = 'Consider this string: <!-- <script>';</script>",
+        "<script>const example = 'Consider this string: <!-- <script>';</script>",
+      ],
+      'unescaped script tag' => [
+        <<<HTML
+<script>
+  const example = 'Consider this string: <!-- <script>';
+  console.log(example);
+</script>
+<!-- despite appearances, this is actually part of the script still! -->
+<script>
+  let a = 1 + 2; // this is the same script block still...
+</script>
+HTML,
+        <<<HTML
+<script>
+  const example = 'Consider this string: <!-- <script>';
+  console.log(example);
+</script>
+<!-- despite appearances, this is actually part of the script still! -->
+<script>
+  let a = 1 + 2; // this is the same script block still...
+</script>
+HTML,
+      ],
+      'style' => [
+        '<style>
+a > span {
+  /* Important comment. */
+  color: red !important;
+}
+</style>',
+        '<style>
+a > span {
+  /* Important comment. */
+  color: red !important;
+}
+</style>',
+      ],
+      'script and style' => [
+        <<<HTML
+<script type="text/javascript">
+let x = 10;
+let y = 5;
+if(y < x){
+console.log('is smaller')
+}
+</script>
+<style type="text/css">
+:root {
+  --main-bg-color: brown;
+}
+.sections > .section {
+  background: var(--main-bg-color);
+}
+</style>
+HTML,
+        <<<HTML
+<script type="text/javascript">
+let x = 10;
+let y = 5;
+if(y < x){
+console.log('is smaller')
+}
+</script><style type="text/css">
+:root {
+  --main-bg-color: brown;
+}
+.sections > .section {
+  background: var(--main-bg-color);
+}
+</style>
+HTML,
+      ],
+    ];
+
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -839,85 +925,18 @@ JS;
     ));
 
     // Add a node with text rendered via the CKEditor 5 HTML format.
-    $this->drupalGet('node/add');
-    $page->fillField('title[0][value]', 'My test content');
-    $this->waitForEditor();
-    $this->pressEditorButton('Source');
-    $editor = $page->find('css', '.ck-source-editing-area textarea');
-    $editor->setValue($content);
-    $page->pressButton('Save');
+    foreach ($test_cases as $test_case_name => $test_case) {
+      [$markup, $expected_content] = $test_case;
+      $this->drupalGet('node/add');
+      $page->fillField('title[0][value]', "Style and script test - $test_case_name");
+      $this->waitForEditor();
+      $this->pressEditorButton('Source');
+      $editor = $page->find('css', '.ck-source-editing-area textarea');
+      $editor->setValue($markup);
+      $page->pressButton('Save');
 
-    $assert_session->responseContains($expected_content);
-  }
-
-  /**
-   * Data provider for testStylesAndScripts().
-   *
-   * @return string[][]
-   *   An array with the style and script HTML content to attempt to save.
-   */
-  public function providerTestStylesAndScripts(): array {
-    return [
-      'script' => [
-        'content' => '<script>(function() { let x = 10, y = 5; if( y < x ) { console.log("run me!"); }})()</script>',
-        'expected_content' => '<script>(function() { let x = 10, y = 5; if( y < x ) { console.log("run me!"); }})()</script>',
-      ],
-      // Test case taken from the HTML documentation.
-      // @see https://html.spec.whatwg.org/multipage/scripting.html#restrictions-for-contents-of-script-elements
-      'script to escape' => [
-        'content' => "<script>const example = 'Consider this string: <!-- <script>';</script>",
-        'expected_content' => "<script>const example = 'Consider this string: <!-- <script>';</script>",
-      ],
-      'style' => [
-        'content' => '<style>
-a > span {
-  /* Important comment. */
-  color: red !important;
-}
-</style>',
-        'expected_content' => '<style>
-a > span {
-  /* Important comment. */
-  color: red !important;
-}
-</style>',
-      ],
-      'script and style' => [
-        'content' => <<<HTML
-<script type="text/javascript">
-let x = 10;
-let y = 5;
-if(y < x){
-console.log('is smaller')
-}
-</script>
-<style type="text/css">
-:root {
-  --main-bg-color: brown;
-}
-.sections > .section {
-  background: var(--main-bg-color);
-}
-</style>
-HTML,
-        'expected_content' => <<<HTML
-<script type="text/javascript">
-let x = 10;
-let y = 5;
-if(y < x){
-console.log('is smaller')
-}
-</script><style type="text/css">
-:root {
-  --main-bg-color: brown;
-}
-.sections > .section {
-  background: var(--main-bg-color);
-}
-</style>
-HTML,
-      ],
-    ];
+      $assert_session->responseContains($expected_content);
+    }
   }
 
   /**
