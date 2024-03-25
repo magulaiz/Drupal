@@ -142,7 +142,12 @@ class RevisionableContentEntityBaseTest extends EntityKernelTestBase {
     foreach ([TRUE, FALSE, TRUE, FALSE] as $index => $expected) {
       /** @var \Drupal\entity_test_revlog\Entity\EntityTestMulWithRevisionLog $revision */
       $revision = $storage->loadRevision($index + 1);
-      $this->assertEquals($expected, $revision->wasDefaultRevision());
+      if (Database::getConnection()->driver() != 'mongodb') {
+        // Mongodb Does not support the method wasDefaultRevision(). The entity
+        // key "revision_default" is set to FALSE for older revisions when there
+        // is a new current revision.
+        $this->assertEquals($expected, $revision->wasDefaultRevision());
+      }
     }
 
     // Check that the default revision is flagged correctly.
