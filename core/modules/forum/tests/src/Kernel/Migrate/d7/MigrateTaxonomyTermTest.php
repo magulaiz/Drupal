@@ -29,7 +29,6 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
     'node',
     'taxonomy',
     'text',
-
   ];
 
   /**
