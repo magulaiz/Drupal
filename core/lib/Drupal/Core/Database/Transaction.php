@@ -35,7 +35,7 @@ class Transaction {
   }
 
   public function __destruct() {
-    $this->connection->transactionManager()->unpile($this->name, $this->id);
+    $this->connection->transactionManager()->purge($this->name, $this->id);
   }
 
   /**
@@ -46,17 +46,30 @@ class Transaction {
   }
 
   /**
-   * Rolls back the current transaction.
+   * Rolls back the transaction.
    *
-   * This is just a wrapper method to rollback whatever transaction stack we are
-   * currently in, which is managed by the connection object itself. Note that
-   * logging needs to happen after a transaction has been rolled back or the log
-   * messages will be rolled back too.
-   *
-   * @see \Drupal\Core\Database\Connection::rollBack()
+   * Depending on the state of the transaction stack, this leads to a ROLLBACK
+   * operation (if this transaction is a root one), or to a ROLLBACK TO
+   * SAVEPOINT + a RELEASE SAVEPOINT operations (if this transaction is a
+   * savepoint one).
    */
   public function rollBack() {
     $this->connection->transactionManager()->rollback($this->name, $this->id);
+  }
+
+  /**
+   * Commits the transaction.
+   *
+   * Depending on the state of the transaction stack, this leads to a COMMIT
+   * operation (if this transaction is a root one), or to a RELEASE SAVEPOINT
+   * operation (if this transaction is a savepoint one).
+   */
+  public function commit(): void {
+    if (!$this->connection->transactionManager()) {
+      @trigger_error('Calling ' . __METHOD__ . '() with no TransactionManager available is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Ensure the database driver implements a TransactionManager. See https://www.drupal.org/node/7654321', E_USER_DEPRECATED);
+      return;
+    }
+    $this->connection->transactionManager()->unpile($this->name, $this->id);
   }
 
 }

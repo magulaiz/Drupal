@@ -4,6 +4,8 @@ namespace Drupal\Core\Database;
 
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Core\Database\Event\DatabaseEvent;
+use Drupal\Core\Database\Event\StatementExecutionEndEvent;
+use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 use Drupal\Core\Database\Exception\EventException;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\Delete;
@@ -663,6 +665,83 @@ abstract class Connection {
       $result = FALSE;
     }
     return $result ? $statement : NULL;
+  }
+
+  /**
+   * Executes a data definition language (DDL) statement.
+   *
+   * This method allows to void an active transaction when the driver does
+   * not support transactional DDL.
+   *
+   * @param string $sql
+   *   The DDL statement to execute. This is a SQL string that may contain
+   *   placeholders.
+   * @param array $arguments
+   *   (Optional) The associative array of arguments for the prepared
+   *   statement.
+   * @param array $options
+   *   (Optional) An associative array of options to control how the query is
+   *   run. The given options will be merged with self::defaultOptions().
+   */
+  public function executeDdlStatement(string $sql, array $arguments = [], array $options = []): void {
+    if (count($arguments) > 0) {
+      $this->query($sql, $arguments, $options);
+    }
+    else {
+      $this->executeSql($sql, $options);
+    }
+
+    // DDL statements when in a transaction force a commit in some databases.
+    // Void the transaction in that case.
+    if (!$this->transactionalDDLSupport && $this->transactionManager()->inTransaction()) {
+      $this->transactionManager()->voidClientTransaction();
+    }
+  }
+
+  /**
+   * Executes an SQL statement, directly through the client connection.
+   *
+   * This method does not allow placeholders. It assumes the client connection
+   * is \PDO. Non-PDO based drivers need to override this method.
+   *
+   * @param string $sql
+   *   The SQL statement to execute.
+   * @param array $options
+   *   (Optional) An associative array of options. The given options will be
+   *    merged with self::defaultOptions().
+   */
+  protected function executeSql(string $sql, array $options = []): void {
+    $sql = $this->preprocessStatement($sql, $options);
+    try {
+      if ($this->isEventEnabled(StatementExecutionStartEvent::class)) {
+        $startEvent = new StatementExecutionStartEvent(
+          spl_object_id($this),
+          $this->getKey(),
+          $this->getTarget(),
+          $sql,
+          [],
+          $this->findCallerFromDebugBacktrace()
+        );
+        $this->dispatchEvent($startEvent);
+      }
+
+      $this->getClientConnection()->exec($sql);
+
+      if (isset($startEvent) && $this->isEventEnabled(StatementExecutionEndEvent::class)) {
+        $this->dispatchEvent(new StatementExecutionEndEvent(
+          $startEvent->statementObjectId,
+          $startEvent->key,
+          $startEvent->target,
+          $startEvent->queryString,
+          $startEvent->args,
+          $startEvent->caller,
+          $startEvent->time
+        ));
+      }
+    }
+    catch (\Exception $e) {
+      $this->exceptionHandler()->handleExecuteSqlException($e, $sql, $options);
+    }
   }
 
   /**

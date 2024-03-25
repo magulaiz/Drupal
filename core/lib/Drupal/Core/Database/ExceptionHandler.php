@@ -55,18 +55,52 @@ class ExceptionHandler {
    */
   public function handleExecutionException(\Exception $exception, StatementInterface $statement, array $arguments = [], array $options = []): void {
     if ($exception instanceof \PDOException) {
-      // Wrap the exception in another exception, because PHP does not allow
-      // overriding Exception::getMessage(). Its message is the extra database
-      // debug information.
-      $message = $exception->getMessage() . ": " . $statement->getQueryString() . "; " . print_r($arguments, TRUE);
-      // Match all SQLSTATE 23xxx errors.
-      if (substr($exception->getCode(), -6, -3) == '23') {
-        throw new IntegrityConstraintViolationException($message, $exception->getCode(), $exception);
-      }
-      throw new DatabaseExceptionWrapper($message, 0, $exception);
+      $this->throwExecutionException($exception, $exception->getMessage() . ": " . $statement->getQueryString() . "; " . print_r($arguments, TRUE));
     }
-
     throw $exception;
+  }
+
+  /**
+   * Handles exceptions thrown during direct execution of an SQL statement.
+   *
+   * @param \Exception $exception
+   *   The exception to be handled.
+   * @param string $sql
+   *   The SQL statement executed.
+   * @param array $options
+   *   An associative array of options to control how the database operation is
+   *   run.
+   *
+   * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
+   * @throws \Drupal\Core\Database\IntegrityConstraintViolationException
+   */
+  public function handleExecuteSqlException(\Exception $exception, string $sql, array $options = []): void {
+    if ($exception instanceof \PDOException) {
+      $this->throwExecutionException($exception, $exception->getMessage() . ": " . $sql);
+    }
+    throw $exception;
+  }
+
+  /**
+   * Re-throws the appropriate exception.
+   *
+   * @param \Exception $exception
+   *   The exception to be handled.
+   * @param string $message
+   *   The message to be included in the exception.
+   *
+   * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
+   * @throws \Drupal\Core\Database\IntegrityConstraintViolationException
+   */
+  protected function throwExecutionException(\Exception $exception, string $message): void {
+    // Wrap the exception in another exception, because PHP does not allow
+    // overriding Exception::getMessage(). Its message is the extra database
+    // debug information.
+    // Match all SQLSTATE 23xxx errors.
+    if (substr($exception->getCode(), -6, -3) == '23') {
+      throw new IntegrityConstraintViolationException($message, $exception->getCode(), $exception);
+    }
+    throw new DatabaseExceptionWrapper($message, 0, $exception);
   }
 
 }
