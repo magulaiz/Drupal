@@ -22,6 +22,7 @@
         "doctrine/instantiator": "2.0.0",
         "drupal/coder": "8.3.22",
         "google/protobuf": "v3.25.1",
+        "jangregor/phpstan-prophecy": "dev-master",
         "justinrainbow/json-schema": "v5.2.13",
         "lullabot/mink-selenium2-driver": "v1.7.2",
         "lullabot/php-webdriver": "v2.0.3",
