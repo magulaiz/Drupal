@@ -148,13 +148,20 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
    * {@inheritdoc}
    */
   public function __get($name) {
-    // There is either a property object or a plain value - possibly for a
-    // not-defined property. If we have a plain value, directly return it.
+    // If the property has been instantiated already, return its value.
     if (isset($this->properties[$name])) {
       return $this->properties[$name]->getValue();
     }
+    // If the property has not been instantiated, return its plain value if we
+    // have one.
     elseif (isset($this->values[$name])) {
-      return $this->values[$name];
+       return $this->values[$name];
+    }
+    // Instantiate the property if it exists, and return its value. We do this
+    // last, because property instantiation is often slower than the previous
+    // retrieval methods.
+    elseif ($this->definition->getPropertyDefinition($name)) {
+      return $this->get($name)->getValue();
     }
   }
 
