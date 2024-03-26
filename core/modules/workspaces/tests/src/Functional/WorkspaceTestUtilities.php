@@ -110,6 +110,7 @@ trait WorkspaceTestUtilities {
       'region' => 'sidebar_first',
       'label' => 'Workspace switcher',
     ]);
+    $this->drupalGet('<front>');
 
     $this->switcherBlockConfigured = TRUE;
   }
