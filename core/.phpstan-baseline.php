@@ -597,12 +597,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/block/tests/src/Functional/BlockUiTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method addMethods\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5320$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/tests/src/Unit/Plugin/DisplayVariant/BlockPageVariantTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$dependency in empty\\(\\) always exists and is not falsy\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/block_content/src/BlockContentAccessControlHandler.php',
@@ -1483,12 +1477,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/rest/tests/src/Functional/EntityResource/EntityResourceTestBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method addMethods\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5320$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/rest/tests/src/Unit/CollectRoutesTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$working_to might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/search/search.module',
@@ -1754,6 +1742,11 @@ $ignoreErrors[] = [
 	'message' => '#^@dataProvider securityUpdateAvailabilityProvider related method must be static in PHPUnit 10 and newer\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/update/tests/src/Functional/UpdateSemverCoreSecurityAvailabilityTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^@dataProvider providerProjectStatus related method must be static in PHPUnit 10 and newer\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/update/tests/src/Kernel/UpdateCalculateProjectDataTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$users might not be defined\\.$#',
@@ -2111,12 +2104,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/tests/src/Unit/Plugin/field/FieldPluginBaseTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method addMethods\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5320$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Unit/Plugin/field/FieldPluginBaseTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/src/Unit/Plugin/pager/PagerPluginBaseTest.php',
@@ -2393,14 +2380,8 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Plugin/Context/ContextTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method addMethods\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5320$#',
-	'count' => 3,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Plugin/Discovery/StaticDiscoveryDecoratorTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
-	'count' => 3,
+	'count' => 2,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Plugin/Discovery/StaticDiscoveryDecoratorTest.php',
 ];
 $ignoreErrors[] = [
@@ -2517,12 +2498,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
 	'count' => 5,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Config/Entity/EntityDisplayBaseTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method addMethods\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5320$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Config/Entity/EntityDisplayModeBaseUnitTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^@dataProvider providerTestGetKeys related method must be static in PHPUnit 10 and newer\\.$#',
@@ -2665,12 +2640,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Field/FieldItemListTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method addMethods\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5320$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Form/FormValidatorTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getConfig\\(\\) of class GuzzleHttp\\\\Client\\:
 Client\\:\\:getConfig will be removed in guzzlehttp/guzzle\\:8\\.0\\.$#',
 	'count' => 1,
@@ -2765,12 +2734,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Security\\\\DoTrustedCallbackTraitTest\\:\\:expectWarningMessage\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Security/DoTrustedCallbackTraitTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method getObjectForTrait\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5244$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/StringTranslation/StringTranslationTraitTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#',
