@@ -20,6 +20,7 @@ use Drupal\Core\Render\Attribute\FormElement;
  *   '#type' => 'password_confirm',
  *   '#title' => $this->t('Password'),
  *   '#size' => 25,
+ *   '#maxlength' => 15,
  * );
  * @endcode
  *
@@ -95,6 +96,10 @@ class PasswordConfirm extends FormElementBase {
 
     if (isset($element['#size'])) {
       $element['pass1']['#size'] = $element['pass2']['#size'] = $element['#size'];
+    }
+
+    if (isset($element['#maxlength'])) {
+      $element['pass1']['#maxlength'] = $element['pass2']['#maxlength'] = $element['#maxlength'];
     }
 
     return $element;
