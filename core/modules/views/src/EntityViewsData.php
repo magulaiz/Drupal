@@ -148,6 +148,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
     $revision_field = $entity_revision_key;
     $revisionable = $this->entityType->isRevisionable();
     $translatable = $this->entityType->isTranslatable();
+    $entity_keys = $this->entityType->getKeys();
 
     if ($this->connection->driver() == 'mongodb') {
       // Setup base information of the views data.
@@ -232,7 +233,6 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
       $field_definitions = $this->entityFieldManager->getBaseFieldDefinitions($this->entityType->id());
 
       if ($table_mapping = $this->storage->getTableMapping($field_definitions)) {
-        $entity_keys = $this->entityType->getKeys();
         $duplicate_fields = array_intersect_key($entity_keys, array_flip(['id', 'bundle']));
 
         foreach ($table_mapping->getTableNames() as $table) {
@@ -247,10 +247,16 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
           }
         }
       }
+
+      if (($uid_key = $entity_keys['uid'] ?? '')) {
+        $data[$base_table][$uid_key]['filter']['id'] = 'user_name';
+      }
+      if ($revision_uid_key = $this->entityType->getRevisionMetadataKeys()['revision_user'] ?? '') {
+        $data[$base_table][$revision_uid_key]['filter']['id'] = 'user_name';
+      }
     }
     else {
       $views_revision_base_table = NULL;
-      $entity_keys = $this->entityType->getKeys();
 
       $revision_table = '';
       if ($revisionable) {

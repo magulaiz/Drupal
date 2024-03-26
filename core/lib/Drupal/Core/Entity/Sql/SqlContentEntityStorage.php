@@ -590,6 +590,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           }
         }
 
+        // @todo Check if we can remove the next if-statement.
         if ($load_from_revision && ($record->{$this->revisionKey} != $load_from_revision)) {
           $values[$id][$this->revisionKey][LanguageInterface::LANGCODE_DEFAULT] = (string) $load_from_revision;
         }
@@ -844,22 +845,27 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
                   }
                 }
                 else {
-                  foreach ($columns as $column_name) {
+                  $item = [];
+                  foreach ($storage_definitions[$field_name]->getColumns() as $column => $attributes) {
+                    $column_name = $table_mapping->getFieldColumnName($storage_definitions[$field_name], $column);
+
                     if (is_null($table_row[$column_name])) {
-                      $values[$id][$field_name][$langcode] = NULL;
+                      $item[$column] = NULL;
                     }
                     elseif ($table_row[$column_name] === FALSE) {
                       // Drupal expects boolean values with the value FALSE to
                       // have the string value of zero.
-                      $values[$id][$field_name][$langcode] = '0';
+                      $item[$column] = '0';
                     }
                     else {
-                      $values[$id][$field_name][$langcode] = (string) $table_row[$column_name];
+                      $item[$column] = (!empty($attributes['serialize'])) ? unserialize($table_row[$column_name]) : $table_row[$column_name];
                     }
+                  }
 
-                    if ($langcode_is_default_langcode) {
-                      $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT] = $values[$id][$field_name][$langcode];
-                    }
+                  $values[$id][$field_name][$langcode] = $item;
+
+                  if ($langcode_is_default_langcode) {
+                    $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT] = $values[$id][$field_name][$langcode];
                   }
                 }
               }
