@@ -223,7 +223,7 @@ class ElementTest extends BrowserTestBase {
    *
    * @see https://www.drupal.org/project/drupal/issues/3122011
    */
-  public function testFormElementsGroupingSupport() {
+  public function testFormElementsGroupingSupport(): void {
     /**
      * @var \Drupal\Core\Render\ElementInfoManagerInterface $element_info_manager
      */
