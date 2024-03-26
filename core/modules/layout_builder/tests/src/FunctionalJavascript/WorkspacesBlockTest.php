@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Drupal\Tests\system\Traits\OffCanvasTestTrait;
@@ -10,6 +12,7 @@ use Drupal\workspaces\Entity\Workspace;
  * Tests for layout editing in workspaces.
  *
  * @group layout_builder
+ * @group workspaces
  */
 class WorkspacesBlockTest extends InlineBlockTestBase {
 
@@ -66,7 +69,7 @@ class WorkspacesBlockTest extends InlineBlockTestBase {
   /**
    * Tests changing a layout/blocks inside a workspace.
    */
-  public function testBlocksInWorkspaces() {
+  public function testBlocksInWorkspaces(): void {
     $assert_session = $this->assertSession();
     $this->drupalGet('node/1');
     $assert_session->pageTextContains('The DEFAULT block body');
@@ -128,7 +131,7 @@ class WorkspacesBlockTest extends InlineBlockTestBase {
   /**
    * Tests that blocks can be deleted inside workspaces.
    */
-  public function testBlockDeletionInWorkspaces() {
+  public function testBlockDeletionInWorkspaces(): void {
     $assert_session = $this->assertSession();
 
     $stage = Workspace::load('stage');
