@@ -232,7 +232,7 @@ class InlineBlockEntityOperations implements ContainerInjectionInterface {
     $pre_save_configuration = $plugin->getConfiguration();
     $plugin->saveBlockContent($new_revision, $duplicate_blocks);
     $post_save_configuration = $plugin->getConfiguration();
-    if ($duplicate_blocks || (empty($pre_save_configuration['block_id']) && !empty($post_save_configuration['block_id']))) {
+    if ($duplicate_blocks || (empty($pre_save_configuration['block_revision_id']) && !empty($post_save_configuration['block_revision_id']))) {
       $this->usage->addUsage($post_save_configuration['block_id'], $entity);
     }
     $component->setConfiguration($post_save_configuration);

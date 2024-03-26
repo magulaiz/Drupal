@@ -115,6 +115,7 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
   public function defaultConfiguration() {
     return [
       'view_mode' => 'full',
+      'block_id' => NULL,
       'block_revision_id' => NULL,
       'block_serialized' => NULL,
     ];
