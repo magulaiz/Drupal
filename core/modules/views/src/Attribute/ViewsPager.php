@@ -41,7 +41,7 @@ class ViewsPager extends Plugin {
    *   Defaults to FALSE.
    * @param bool $register_theme
    *   (optional) Whether or not to register a theme function automatically.
-   * @param string|null $deriver
+   * @param class-string|null $deriver
    *   (optional) The deriver class.
    */
   public function __construct(
