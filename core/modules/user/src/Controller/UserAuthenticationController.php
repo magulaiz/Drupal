@@ -198,7 +198,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
         throw new BadRequestHttpException('The user has not been activated or is blocked.');
       }
       if ($this->userAuth instanceof UserAuthenticationInterface) {
-        $authenticated = $this->userAuth->authenticateAccount($account, $credentials['pass'])?->id();
+        $authenticated = $this->userAuth->authenticateAccount($account, $credentials['pass']) ? $account->id() : NULL;
       }
       else {
         $authenticated = $this->userAuth->authenticateAccount($credentials['name'], $credentials['pass']);
