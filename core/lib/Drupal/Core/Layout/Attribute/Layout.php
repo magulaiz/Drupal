@@ -54,6 +54,8 @@ class Layout extends Plugin {
    *   (optional) The deriver class.
    * @param string $class
    *   The layout plugin class.
+   * @param array $context_definitions
+   *   The context definition.
    */
   public function __construct(
     public readonly string $id,
@@ -70,6 +72,7 @@ class Layout extends Plugin {
     public readonly ?string $default_region = NULL,
     public readonly ?string $deriver = NULL,
     public string $class = LayoutDefault::class,
+    public readonly array $context_definitions = [],
   ) {}
 
   /**
