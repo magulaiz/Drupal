@@ -61,7 +61,8 @@
            * @checkbox {HTMLElement}
            */
           if (stateChanged) {
-            $checkbox.prop('checked', state).trigger('change');
+            const $val = $checkbox.prop('checked', state);
+            $val[0].dispatchEvent(new Event('change'));
           }
         });
     };

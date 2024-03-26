@@ -31,7 +31,10 @@
         message:
           'Drupal.editorConfiguration.addedFeature is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3422372.',
       });
-      $(document).trigger('drupalEditorFeatureAdded', feature);
+      const event = new CustomEvent('drupalEditorFeatureAdded', {
+        detail: { feature },
+      });
+      document.dispatchEvent(event);
     },
 
     /**
@@ -51,7 +54,10 @@
         message:
           'Drupal.editorConfiguration.removedFeature is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3422372.',
       });
-      $(document).trigger('drupalEditorFeatureRemoved', feature);
+      const event = new CustomEvent('drupalEditorFeatureRemoved', {
+        detail: { feature },
+      });
+      document.dispatchEvent(event);
     },
 
     /**
@@ -74,7 +80,10 @@
         message:
           'Drupal.editorConfiguration.modifiedFeature is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3422372.',
       });
-      $(document).trigger('drupalEditorFeatureModified', feature);
+      const event = new CustomEvent('drupalEditorFeatureModified', {
+        detail: { feature },
+      });
+      document.dispatchEvent(event);
     },
 
     /**

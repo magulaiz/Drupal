@@ -628,7 +628,7 @@
               window.scrollBy(0, -parseInt(item.offsetHeight, 10));
             }
             // Regain focus after the DOM manipulation.
-            $handle.trigger('focus');
+            $handle[0].dispatchEvent(new FocusEvent('focus'));
           }
           break;
         }
@@ -685,7 +685,7 @@
               window.scrollBy(0, parseInt(item.offsetHeight, 10));
             }
             // Regain focus after the DOM manipulation.
-            $handle.trigger('focus');
+            $handle[0].dispatchEvent(new FocusEvent('focus'));
           }
           break;
         }
@@ -755,7 +755,8 @@
 
     // If there's a lingering row object from the keyboard, remove its focus.
     if (self.rowObject) {
-      $(self.rowObject.element).find('a.tabledrag-handle').trigger('blur');
+      const $ele = $(self.rowObject.element).find('a.tabledrag-handle');
+      $ele[0].dispatchEvent(new FocusEvent('blur'));
     }
 
     // Create a new rowObject for manipulation of this row.
