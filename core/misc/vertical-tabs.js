@@ -26,7 +26,7 @@
    */
   const handleFragmentLinkClickOrHashChange = (e, $target) => {
     $target.parents('.vertical-tabs__pane').each((index, pane) => {
-      $(pane).data('verticalTab').focus();
+      pane.verticalTab.focus();
     });
   };
 
@@ -93,8 +93,8 @@
             $that
               .removeClass('collapsed')
               .removeAttr('open')
-              .addClass('vertical-tabs__pane')
-              .data('verticalTab', verticalTab);
+              .addClass('vertical-tabs__pane');
+            $that[0].verticalTab = verticalTab;
             if (this.id === focusID) {
               tabFocus = $that;
             }
@@ -114,7 +114,7 @@
             }
           }
           if (tabFocus.length) {
-            tabFocus.data('verticalTab').focus();
+            tabFocus[0].verticalTab.focus();
           }
         },
       );
@@ -189,7 +189,7 @@
       this.details
         .siblings('.vertical-tabs__pane')
         .each(function () {
-          const tab = $(this).data('verticalTab');
+          const tab = $(this)[0].verticalTab;
           tab.details.hide();
           tab.details.removeAttr('open');
           tab.item.removeClass('is-selected');
@@ -273,7 +273,7 @@
         .siblings('.vertical-tabs__pane:not(.vertical-tab--hidden)')
         .eq(0);
       if ($firstTab.length) {
-        $firstTab.data('verticalTab').focus();
+        $firstTab[0].verticalTab.focus();
       }
       // Hide the vertical tabs (if no tabs remain).
       else {

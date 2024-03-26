@@ -310,9 +310,9 @@
       const elementSettings = {
         // Clicked links look better with the throbber than the progress bar.
         progress: { type: 'throbber' },
-        dialogType: $linkElement.getAttribute('data-dialog-type'),
-        dialog: $linkElement.getAttribute('data-dialog-options'),
-        dialogRenderer: $linkElement.getAttribute('data-dialog-renderer'),
+        dialogType: ajaxLink.getAttribute('data-dialog-type'),
+        dialog: JSON.parse(ajaxLink.getAttribute('data-dialog-options')),
+        dialogRenderer: ajaxLink.getAttribute('data-dialog-renderer'),
         base: $linkElement.attr('id'),
         element: ajaxLink,
       };
@@ -325,7 +325,7 @@
         elementSettings.url = href;
         elementSettings.event = 'click';
       }
-      const httpMethod = $linkElement.getAttribute('data-ajax-http-method');
+      const httpMethod = ajaxLink.getAttribute('data-ajax-http-method');
       /**
        * In case of setting custom ajax http method for link we rewrite ajax.httpMethod.
        */
@@ -1101,17 +1101,14 @@
             let target = false;
             if (this.element) {
               if (
-                this.element.getAttribute('data-refocus-blur') &&
+                $(this.element).data('refocus-blur') &&
                 this.preCommandsFocusedElementSelector
               ) {
                 target = document.querySelector(
                   `[data-drupal-selector="${this.preCommandsFocusedElementSelector}"]`,
                 );
               }
-              if (
-                !target &&
-                !this.element.getAttribute('data-disable-refocus')
-              ) {
+              if (!target && !$(this.element).data('disable-refocus')) {
                 for (
                   let n = elementParents.length - 1;
                   !target && n >= 0;
@@ -1594,10 +1591,7 @@
      *   The XMLHttpRequest status.
      */
     data(ajax, response, status) {
-      $(response.selector).setAttribute(
-        `data-${response.name}`,
-        response.value,
-      );
+      $(response.selector).data(response.name, response.value);
     },
 
     /**
