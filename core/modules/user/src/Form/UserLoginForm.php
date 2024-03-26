@@ -245,9 +245,7 @@ class UserLoginForm extends FormBase {
         // We are not limited by flood control, so try to authenticate.
         // Store the user ID in form state as a flag for self::validateFinal().
         if ($this->userAuth instanceof UserAuthenticationInterface) {
-          if ($this->userAuth->authenticateAccount($account, $password)) {
-            $form_state->set('uid', $account->id());
-          }
+          $form_state->set('uid', $this->userAuth->authenticateAccount($account, $password)?>id());
         }
         else {
           $uid = $this->userAuth->authenticate($form_state->getValue('name'), $password);
