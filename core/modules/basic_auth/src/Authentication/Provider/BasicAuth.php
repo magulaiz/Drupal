@@ -29,6 +29,8 @@ class BasicAuth implements AuthenticationProviderInterface, AuthenticationProvid
 
   /**
    * The user auth service.
+   *
+   * @var \Drupal\user\UserAuthInterface|\Drupal\user\UserAuthenticationInterface
    */
   protected $userAuth;
 
