@@ -12,6 +12,7 @@ text.settings:
       constraints:
         Range:
           min: 0
+
 field.storage_settings.text:
   type: mapping
   label: 'Text (formatted) settings'
