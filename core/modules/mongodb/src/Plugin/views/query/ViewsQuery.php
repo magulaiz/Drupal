@@ -575,7 +575,7 @@ class ViewsQuery extends Sql {
     // Only fill out this aliasing if there is a table;
     // otherwise we assume it is a formula.
     if (!$alias && $table) {
-      $as = $table . '_' . str_replace('.', '_', $field);
+      $as = $table . '_' . str_replace('.', '_', ($field ?? ''));
     }
     else {
       $as = $alias;
