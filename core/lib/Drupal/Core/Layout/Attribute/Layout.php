@@ -19,8 +19,6 @@ use Drupal\Core\Layout\LayoutDefinition;
  * @see \Drupal\Core\Layout\LayoutDefault
  * @see \Drupal\Core\Layout\LayoutPluginManager
  * @see plugin_api
- *
- * @Annotation
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class Layout extends Plugin {
@@ -59,7 +57,7 @@ class Layout extends Plugin {
    */
   public function __construct(
     public readonly string $id,
-    public readonly TranslatableMarkup $label = NULL,
+    public readonly TranslatableMarkup $label,
     public readonly ?TranslatableMarkup $category = NULL,
     public readonly ?TranslatableMarkup $description = NULL,
     public readonly ?string $template = NULL,
@@ -71,14 +69,29 @@ class Layout extends Plugin {
     public readonly array $regions = [],
     public readonly ?string $default_region = NULL,
     public readonly ?string $deriver = NULL,
-    public readonly string $class = LayoutDefault::class,
+    public string $class = LayoutDefault::class,
   ) {}
 
   /**
    * {@inheritdoc}
    */
-  public function get() {
-    return new LayoutDefinition($this->definition);
+  public function get(): LayoutDefinition {
+    return new LayoutDefinition([
+      'id' => $this->id,
+      'label' => $this->label,
+      'category' => $this->category,
+      'description' => $this->description,
+      'template' => $this->template,
+      'theme_hook' => $this->theme_hook,
+      'path' => $this->path,
+      'library' => $this->library,
+      'icon' => $this->icon,
+      'icon_map' => $this->icon_map,
+      'regions' => $this->regions,
+      'default_region' => $this->default_region,
+      'deriver' => $this->deriver,
+      'class' => $this->class,
+    ]);
   }
 
 }
