@@ -12,6 +12,13 @@ use Drupal\Tests\UnitTestCase;
  */
 class LocaleBulkTest extends UnitTestCase {
 
+  protected function setUp(): void
+  {
+    parent::setUp();
+
+    include_once DRUPAL_ROOT . '/core/modules/locale/locale.bulk.inc';
+  }
+
   /**
    * Tests the deprecation of locale_config_batch_refresh_name().
    *
