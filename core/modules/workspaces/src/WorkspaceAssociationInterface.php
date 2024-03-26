@@ -46,12 +46,20 @@ interface WorkspaceAssociationInterface {
    * @param int[]|string[]|null $entity_ids
    *   (optional) An array of entity IDs to filter the results by. Defaults to
    *   NULL.
+   * @param int|null $offset
+   *   (optional) The zero-based offset of the first result returned. Defaults
+   *   to NULL.
+   * @param int|null $limit
+   *   (optional) The number of results to return. Defaults to NULL.
+   * @param string $order
+   *   (optional) The order to sort the revision IDs by, either 'ASC' or 'DESC'.
+   *   Defaults to 'ASC'.
    *
    * @return array
    *   Returns a multidimensional array where the first level keys are entity
    *   type IDs and the values are an array of entity IDs keyed by revision IDs.
    */
-  public function getTrackedEntities($workspace_id, $entity_type_id = NULL, $entity_ids = NULL);
+  public function getTrackedEntities($workspace_id, $entity_type_id = NULL, $entity_ids = NULL, int $offset = NULL, int $limit = NULL, string $order = 'ASC');
 
   /**
    * Retrieves all content revisions tracked by a given workspace.

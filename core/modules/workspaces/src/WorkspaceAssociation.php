@@ -165,11 +165,13 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
   /**
    * {@inheritdoc}
    */
-  public function getTrackedEntities($workspace_id, $entity_type_id = NULL, $entity_ids = NULL) {
+  public function getTrackedEntities($workspace_id, $entity_type_id = NULL, $entity_ids = NULL, int $offset = NULL, int $limit = NULL, string $order = 'ASC') {
     $query = $this->database->select(static::TABLE);
     $query
       ->fields(static::TABLE, ['target_entity_type_id', 'target_entity_id', 'target_entity_revision_id'])
-      ->orderBy('target_entity_revision_id', 'ASC')
+      ->orderBy('target_entity_type_id', 'ASC')
+      ->orderBy('target_entity_revision_id', $order)
+      ->range($offset, $limit)
       ->condition('workspace', $workspace_id);
 
     if ($entity_type_id) {
