@@ -120,7 +120,7 @@ class BasicAuth implements AuthenticationProviderInterface, AuthenticationProvid
         if ($this->flood->isAllowed('basic_auth.failed_login_user', $flood_config->get('user_limit'), $flood_config->get('user_window'), $identifier)) {
           $uid = FALSE;
           if ($this->userAuth instanceof UserAuthenticationInterface) {
-            $uid = $this->userAuth->authenticateAccount($account, $password) ? $account->id() : NULL;
+            $uid = $this->userAuth->authenticateAccount($account, $password) ? $account->id() : FALSE;
           }
           else {
             $uid = $this->userAuth->authenticate($username, $password);
