@@ -48,6 +48,24 @@ class RenderElementTest extends UnitTestCase {
    * @covers ::preRenderAjaxForm
    */
   public function testPreRenderAjaxForm() {
+    // Test no AJAX element.
+    $element_no_ajax = [
+      '#type' => 'select',
+      '#id' => 'test',
+    ];
+    $element = RenderElement::preRenderAjaxForm($element_no_ajax);
+    $this->assertFalse($element['#ajax_processed']);
+
+    // Test non-empty AJAX (true) element.
+    $element_ajax_true = [
+      '#type' => 'select',
+      '#id' => 'test',
+      '#ajax' => TRUE,
+    ];
+    $element = RenderElement::preRenderAjaxForm($element_ajax_true);
+    $this->assertTrue($element['#ajax_processed']);
+
+    // Test an element with AJAX Request / URL / callback.
     $request = Request::create('/test');
     $request->query->set('foo', 'bar');
     $this->requestStack->push($request);

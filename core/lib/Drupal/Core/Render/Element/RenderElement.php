@@ -268,6 +268,11 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
       return $element;
     }
 
+    // If set to TRUE, default values should be applied.
+    if ($element['#ajax'] === TRUE) {
+      $element['#ajax'] = [];
+    }
+
     // Add a data attribute to disable automatic refocus after ajax call.
     if (!empty($element['#ajax']['disable-refocus'])) {
       $element['#attributes']['data-disable-refocus'] = "true";

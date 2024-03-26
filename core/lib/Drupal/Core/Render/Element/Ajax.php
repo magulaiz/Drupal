@@ -5,7 +5,8 @@ namespace Drupal\Core\Render\Element;
 /**
  * Provides a render element for adding Ajax to a render element.
  *
- * Holds an array whose values control the Ajax behavior of the element.
+ * Holds an array whose values control the Ajax behavior of the element, or
+ * TRUE to use default values.
  *
  * @ingroup ajax
  *

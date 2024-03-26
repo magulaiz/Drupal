@@ -2389,6 +2389,12 @@ function hook_validation_constraint_alter(array &$definitions) {
  *   omit this key and use Drupal's content negotiation rather than using
  *   substantially different URLs between Ajax and non-Ajax.
  *
+ * The #ajax property for a form element can also be set to TRUE to use the
+ * default values:
+ * @code
+ * $form['#ajax'] = TRUE;
+ * @endcode
+ *
  * @subsection sub_callback Setting up a callback to process Ajax
  * Once you have set up your form to trigger an Ajax response (see @ref sub_form
  * above), you need to write some PHP code to process the response. If you use
