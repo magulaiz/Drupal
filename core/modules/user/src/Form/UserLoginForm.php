@@ -148,8 +148,7 @@ class UserLoginForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $uid = $form_state->get('uid');
-    if (!$uid) {
+    if (empty($uid = $form_state->get('uid'))) {
       return;
     }
     $account = $this->userStorage->load($uid);
