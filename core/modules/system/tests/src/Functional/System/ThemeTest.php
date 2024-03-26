@@ -194,6 +194,7 @@ class ThemeTest extends BrowserTestBase {
     // Upload a file to use for the logo. Try both the test image we've been
     // using so far and an SVG file.
     $upload_uris = [$file->uri, 'core/themes/olivero/logo.svg'];
+    $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);
     foreach ($upload_uris as $upload_uri) {
       $edit = [
         'default_logo' => FALSE,
@@ -202,11 +203,20 @@ class ThemeTest extends BrowserTestBase {
       ];
       $this->drupalGet('admin/appearance/settings');
       $this->submitForm($edit, 'Save configuration');
+      $this->assertSession()->pageTextContains('The configuration options have been saved.');
 
       $uploaded_filename = 'public://' . $this->getSession()->getPage()->findField('logo_path')->getValue();
-      $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);
       $this->drupalGet('');
       $this->assertSession()->elementAttributeContains('xpath', '//header//a[@rel="home"]/img', 'src', $file_url_generator->generateString($uploaded_filename));
+
+      // Clear the logo or it will use previous value.
+      $edit = [
+        'default_logo' => FALSE,
+        'logo_path' => '',
+        'files[logo_upload]' => '',
+      ];
+      $this->drupalGet('admin/appearance/settings');
+      $this->submitForm($edit, 'Save configuration');
     }
 
     $this->container->get('theme_installer')->install(['olivero']);
