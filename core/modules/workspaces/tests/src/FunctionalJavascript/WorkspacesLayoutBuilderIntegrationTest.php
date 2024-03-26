@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\layout_builder\FunctionalJavascript;
+namespace Drupal\Tests\workspaces\FunctionalJavascript;
 
+use Drupal\Tests\layout_builder\FunctionalJavascript\InlineBlockTestBase;
 use Drupal\Tests\system\Traits\OffCanvasTestTrait;
 use Drupal\Tests\workspaces\Functional\WorkspaceTestUtilities;
 use Drupal\workspaces\Entity\Workspace;
@@ -13,8 +14,9 @@ use Drupal\workspaces\Entity\Workspace;
  *
  * @group layout_builder
  * @group workspaces
+ * @group #slow
  */
-class WorkspacesBlockTest extends InlineBlockTestBase {
+class WorkspacesLayoutBuilderIntegrationTest extends InlineBlockTestBase {
 
   use OffCanvasTestTrait;
   use WorkspaceTestUtilities;
