@@ -101,6 +101,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertCountBetween(40, 43, $performance_data->getCacheTagChecksumCount());
     $this->assertCountBetween(47, 50, $performance_data->getCacheTagIsValidCount());
     $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
+    $this->assertSame(33, $performance_data->getCacheTagLookupQueryCount());
 
     // Test node page.
     $performance_data = $this->collectPerformanceData(function () {
@@ -132,6 +133,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertCountBetween(24, 25, $performance_data->getCacheTagChecksumCount());
     $this->assertCountBetween(41, 42, $performance_data->getCacheTagIsValidCount());
     $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
+    $this->assertSame(26, $performance_data->getCacheTagLookupQueryCount());
 
     // Test user profile page.
     $user = $this->drupalCreateUser();
@@ -168,6 +170,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertCountBetween(24, 25, $performance_data->getCacheTagChecksumCount());
     $this->assertCountBetween(36, 37, $performance_data->getCacheTagIsValidCount());
     $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
+    $this->assertSame(24, $performance_data->getCacheTagLookupQueryCount());
   }
 
   /**
@@ -228,6 +231,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertSame(1, $performance_data->getCacheTagChecksumCount());
     $this->assertSame(28, $performance_data->getCacheTagIsValidCount());
     $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
+    $this->assertSame(14, $performance_data->getCacheTagLookupQueryCount());
   }
 
   /**
@@ -295,6 +299,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertSame(1, $performance_data->getCacheTagChecksumCount());
     $this->assertSame(44, $performance_data->getCacheTagIsValidCount());
     $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
+    $this->assertSame(29, $performance_data->getCacheTagLookupQueryCount());
   }
 
   /**
