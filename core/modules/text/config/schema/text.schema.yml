@@ -10,8 +10,9 @@ text.settings:
       type: integer
       label: 'Default summary length'
       constraints:
+        NotNull: [ ]
         Range:
-          min: 0
+          min: 1
 
 field.storage_settings.text:
   type: mapping
