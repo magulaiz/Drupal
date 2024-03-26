@@ -1175,8 +1175,7 @@ services:
       - { name: route_filter, priority: 5 }
   paramconverter_manager:
     class: Drupal\Core\ParamConverter\ParamConverterManager
-    tags:
-      - { name: service_collector, tag: paramconverter, call: addConverter }
+    autowire: true
   Drupal\Core\ParamConverter\ParamConverterManagerInterface: '@paramconverter_manager'
   paramconverter_subscriber:
     class: Drupal\Core\EventSubscriber\ParamConverterSubscriber
