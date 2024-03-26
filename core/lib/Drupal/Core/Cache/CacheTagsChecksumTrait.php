@@ -132,12 +132,19 @@ trait CacheTagsChecksumTrait {
   protected function calculateChecksum(array $tags) {
     $checksum = 0;
     // If there are no cache tags, then there is no cache tag to checksum,
-    // so return early..
+    // so return early.
     if (empty($tags)) {
       return $checksum;
     }
 
-    $query_tags = array_diff($tags, array_keys($this->tagCache));
+    // Merge in the common cache tags the very first time we look anything up.
+    if (empty($this->tagCache)) {
+      $query_tags = array_merge($tags, $this->getCommonCacheTags());
+    }
+    else {
+      $query_tags = array_diff($tags, array_keys($this->tagCache));
+    }
+
     if ($query_tags) {
       $tag_invalidations = $this->getTagInvalidationCounts($query_tags);
       $this->tagCache += $tag_invalidations;
@@ -150,6 +157,48 @@ trait CacheTagsChecksumTrait {
     }
 
     return $checksum;
+  }
+
+  /**
+   * Returns a list of common cache tags.
+   *
+   * @return string[]
+   *   The list of common cache tags.
+   *
+   * @todo Merely for demo purposes, turn into event.
+   */
+  protected function getCommonCacheTags(): array {
+    $generic = [
+      'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form',
+      'config:core.extension',
+      'config:search.settings',
+      'config:system.site',
+      'config:user.role.anonymous',
+      'config:user.role.authenticated',
+      'entity_bundles',
+      'entity_field_info',
+      'entity_types',
+      'http_response',
+      'library_info',
+      'local_task',
+      'rendered',
+      'route_match',
+      'routes',
+      'views_data',
+    ];
+
+    $entity_type_based = [
+      'block_content_view',
+      'block_view',
+      'node_list',
+      'node_values',
+      'node_view',
+      'taxonomy_term_list',
+      'user_values',
+      'user_view',
+    ];
+
+    return array_merge($generic, $entity_type_based);
   }
 
   /**

@@ -56,7 +56,7 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
     $this->assertSame(0, $performance_data->getCacheTagChecksumCount());
     $this->assertSame(13, $performance_data->getCacheTagIsValidCount());
     $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
-    $this->assertSame(6, $performance_data->getCacheTagLookupQueryCount());
+    $this->assertSame(2, $performance_data->getCacheTagLookupQueryCount());
   }
 
 }
