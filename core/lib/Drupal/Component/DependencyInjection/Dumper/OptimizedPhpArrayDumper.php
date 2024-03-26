@@ -3,11 +3,8 @@
 namespace Drupal\Component\DependencyInjection\Dumper;
 
 use Drupal\Component\Utility\Crypt;
-use Symfony\Component\DependencyInjection\Argument\ArgumentInterface;
 use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
-use Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
-use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Parameter;
@@ -16,7 +13,6 @@ use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 use Symfony\Component\DependencyInjection\Dumper\Dumper;
 use Symfony\Component\ExpressionLanguage\Expression;
-use Symfony\Component\Yaml\Tag\TaggedValue;
 
 /**
  * OptimizedPhpArrayDumper dumps a service container as a serialized PHP array.
@@ -398,51 +394,6 @@ class OptimizedPhpArrayDumper extends Dumper {
    *   When trying to dump object or resource.
    */
   protected function dumpValue($value) {
-    if ($value instanceof ArgumentInterface) {
-      $tag = $value;
-
-      if ($value instanceof TaggedIteratorArgument || ($value instanceof ServiceLocatorArgument && $tag = $value->getTaggedIteratorArgument())) {
-        if (NULL === $tag->getIndexAttribute()) {
-          $content = $tag->getTag();
-        }
-        else {
-          $content = [
-            'tag' => $tag->getTag(),
-            'index_by' => $tag->getIndexAttribute(),
-          ];
-
-          if (NULL !== $tag->getDefaultIndexMethod()) {
-            $content['default_index_method'] = $tag->getDefaultIndexMethod();
-          }
-          if (NULL !== $tag->getDefaultPriorityMethod()) {
-            $content['default_priority_method'] = $tag->getDefaultPriorityMethod();
-          }
-        }
-        if ($excludes = $tag->getExclude()) {
-          if (!\is_array($content)) {
-            $content = ['tag' => $content];
-          }
-          $content['exclude'] = 1 === \count($excludes) ? $excludes[0] : $excludes;
-        }
-        if (!$tag->excludeSelf()) {
-          $content['exclude_self'] = FALSE;
-        }
-
-        return new TaggedValue($value instanceof TaggedIteratorArgument ? 'tagged_iterator' : 'tagged_locator', $content);
-      }
-
-      if ($value instanceof IteratorArgument) {
-        $tag = 'iterator';
-      }
-      elseif ($value instanceof ServiceLocatorArgument) {
-        $tag = 'service_locator';
-      }
-      else {
-        throw new RuntimeException(sprintf('Unspecified Yaml tag for type "%s".', get_debug_type($value)));
-      }
-
-      return new TaggedValue($tag, $this->dumpValue($value->getValues()));
-    }
     if (is_array($value)) {
       $code = [];
       foreach ($value as $k => $v) {
