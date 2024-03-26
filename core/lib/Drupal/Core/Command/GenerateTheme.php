@@ -244,7 +244,6 @@ class GenerateTheme extends Command {
         'description' => $description,
         'core_version_requirement' => '^' . explode('.', \Drupal::VERSION)[0],
         'hidden' => NULL,
-        'starterkit' => NULL,
         'version' => '1.0.0',
         'generator' => "{$theme->getName()}:$version",
       ],

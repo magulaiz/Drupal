@@ -152,8 +152,6 @@ delete: []
 no_edit: []
 no_rename: []
 info:
-  hidden: null
-  starterkit: null
   version: 1.0.0
 YAML
     );
