@@ -300,6 +300,11 @@ libraries-override:
     css:
       theme:
         css/field_ui_display_mode_table.css: css/field_ui/field_ui_display_mode_table.css
+  core/drupal.dialog:
+    css:
+      component:
+        misc/dialog/dialog.css: css/core/dialog/dialog.css
+        modules/ckeditor5/css/ckeditor5.dialog.fix.css: css/ckeditor5/ckeditor5.dialog.fix.css
 
 libraries-extend:
   tour/tour:

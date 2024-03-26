@@ -16,7 +16,13 @@ class DialogPositionTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block'];
+  protected static $modules = [
+    'block',
+    'entity_test',
+    'node',
+    'field_ui',
+    'ajax_test',
+  ];
 
   /**
    * {@inheritdoc}
@@ -24,11 +30,26 @@ class DialogPositionTest extends WebDriverTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * {@inheritdoc}
+   */
+  protected $adminUser;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp(): void {
+    parent::setUp();
+    $this->adminUser = $this->drupalCreateUser([
+      'administer blocks',
+      'administer entity_test fields',
+    ]);
+    $this->drupalLogin($this->adminUser);
+  }
+
+  /**
    * Tests if the dialog UI works properly with block layout page.
    */
   public function testDialogOpenAndClose() {
-    $admin_user = $this->drupalCreateUser(['administer blocks']);
-    $this->drupalLogin($admin_user);
     $this->drupalGet('admin/structure/block');
     $session = $this->getSession();
     $assert_session = $this->assertSession();
@@ -53,6 +74,55 @@ class DialogPositionTest extends WebDriverTestBase {
     // javascript errors the test will fail on that.
     $session->resizeWindow(625, 625);
     usleep(5000);
+  }
+
+  /**
+   * Tests dialog resizing on window resize.
+   */
+  public function testModalWidthResizing() {
+    $this->drupalGet('entity_test/structure/entity_test/fields');
+    $page = $this->getSession()->getPage();
+
+    $page->pressButton('List additional actions');
+    $page->findLink('Delete')->click();
+    $this->assertSession()->waitForElementVisible('css', '[role="dialog"]');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $script = <<<SCRIPT
+      (function() {
+        return document.querySelector('.ui-dialog').clientWidth;
+      }())
+      SCRIPT;
+    $width_before = $this->getSession()->getDriver()->evaluateScript($script);
+    // This is the original width of the modal.
+    $this->assertEquals('886', $width_before);
+
+    // Resize the window near to the breaking point.
+    $this->getSession()->resizeWindow(870, 805);
+    $width_after = $this->getSession()->getDriver()->evaluateScript($script);
+    $this->assertEquals('876', $width_after);
+
+    // Resize the window.
+    $this->getSession()->resizeWindow(1300, 1300);
+    $width_after_resize = $this->getSession()->getDriver()->evaluateScript($script);
+    // Assert that the width is restored to full size.
+    $this->assertEquals('886', $width_after_resize);
+    $this->drupalGet('ajax-test/dialog');
+    $this->clickLink('Link 3 (non-modal)');
+    $this->assertSession()->waitForElementVisible('css', '[role="dialog"]');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $width_before = $this->getSession()->getDriver()->evaluateScript($script);
+    $this->assertEquals('806', $width_before);
+
+    // Resize the window near to the breaking point.
+    $this->getSession()->resizeWindow(780, 805);
+    $width_after = $this->getSession()->getDriver()->evaluateScript($script);
+    $this->assertEquals('786', $width_after);
+
+    // Resize the window to bigger size to get the full modal width.
+    $this->getSession()->resizeWindow(1300, 1300);
+    $width_after_resize = $this->getSession()->getDriver()->evaluateScript($script);
+    // Assert that the width is restored to full size.
+    $this->assertEquals('806', $width_after_resize);
   }
 
 }

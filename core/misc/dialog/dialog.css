@@ -1,0 +1,6 @@
+.ui-dialog:not(.ui-dialog-off-canvas) {
+  max-width: calc(100vw - var(--drupal-displace-offset-left, 0px) - var(--drupal-displace-offset-right, 0px));
+}
+.ui-dialog.modal-dialog:not(.ui-dialog-off-canvas) {
+  max-width: 100vw;
+}
