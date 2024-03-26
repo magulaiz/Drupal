@@ -38,7 +38,7 @@ class UserLoginForm extends FormBase {
   /**
    * The user authentication object.
    *
-   * @var \Drupal\user\UserAuthenticationInterface
+   * @var \Drupal\user\UserAuthInterface|\Drupal\user\UserAuthenticationInterface
    */
   protected $userAuth;
 
