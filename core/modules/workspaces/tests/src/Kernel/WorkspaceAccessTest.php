@@ -226,7 +226,7 @@ class WorkspaceAccessTest extends KernelTestBase {
   /**
    * @covers \Drupal\workspaces\Plugin\Block\WorkspaceSwitcherBlock::blockAccess
    */
-  public function testWorkspaceSwitcherBlock() {
+  public function testWorkspaceSwitcherBlock(): void {
     $own_permission_user = $this->createUser(['view own workspace']);
     $any_permission_user = $this->createUser(['view any workspace']);
     $admin_permission_user = $this->createUser(['administer workspaces']);
