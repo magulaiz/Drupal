@@ -304,8 +304,7 @@
       // Ensures form.js' 'formUpdated' event is triggered even for changes that
       // happen within the text editor.
       Drupal.editors[format.editor].onChange(field, () => {
-        $(field).trigger('formUpdated');
-
+        document.querySelector(field).dispatchEvent(new Event('formUpdated'));
         // Keep track of changes, so we know what to do when switching text
         // formats and guaranteeing XSS protection.
         field.setAttribute('data-editor-value-is-changed', 'true');

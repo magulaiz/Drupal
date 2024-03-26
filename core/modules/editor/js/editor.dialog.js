@@ -29,6 +29,8 @@
     response,
     status,
   ) {
-    $(window).trigger('editor:dialogsave', [response.values]);
+    window.dispatchEvent(
+      new CustomEvent('editor:dialogsave', { detail: response.values }),
+    );
   };
 })(jQuery, Drupal);
