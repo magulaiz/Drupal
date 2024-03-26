@@ -2169,7 +2169,7 @@ function hook_countries_alter(&$countries) {
  *   The array of display variant definitions, keyed by plugin ID.
  *
  * @see \Drupal\Core\Display\VariantManager
- * @see \Drupal\Core\Display\Annotation\DisplayVariant
+ * @see \Drupal\Core\Display\Attribute\DisplayVariant
  */
 function hook_display_variant_plugin_alter(array &$definitions) {
   $definitions['full_page']['admin_label'] = t('Block layout');
@@ -2299,7 +2299,7 @@ function hook_config_schema_info_alter(&$definitions) {
  *   The array of validation constraint definitions, keyed by plugin ID.
  *
  * @see \Drupal\Core\Validation\ConstraintManager
- * @see \Drupal\Core\Validation\Annotation\Constraint
+ * @see \Drupal\Core\Validation\Attribute\Constraint
  */
 function hook_validation_constraint_alter(array &$definitions) {
   $definitions['Null']['class'] = '\Drupal\my_module\Plugin\Validation\Constraints\MyClass';
