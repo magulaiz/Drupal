@@ -902,10 +902,11 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $container = new $class($container_definition);
     }
 
-    $this->attachSynthetic($container);
-    $this->restoreServiceState($container);
-
-    $this->container = $container;
+    if (isset($container)) {
+      $this->attachSynthetic($container);
+      $this->restoreServiceState($container);
+      $this->container = $container;
+    }
     \Drupal::setContainer($this->container);
 
     // The request stack is preserved across container rebuilds. Allow other
