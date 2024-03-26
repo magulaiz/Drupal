@@ -263,6 +263,13 @@ class CommentViewsData extends EntityViewsData {
       if ($type == 'comment' || !$entity_type->entityClassImplements(ContentEntityInterface::class) || !$entity_type->getBaseTable()) {
         continue;
       }
+      if ($this->connection->driver() == 'mongodb') {
+        $entity_type_table = $entity_type->getBaseTable();
+      }
+      else {
+        $entity_type_table = $entity_type->getDataTable() ?: $entity_type->getBaseTable();
+      }
+
       // This relationship does not use the 'field id' column, if the entity has
       // multiple comment-fields, then this might introduce duplicates, in which
       // case the site-builder should enable aggregation and SUM the comment_count
@@ -270,7 +277,7 @@ class CommentViewsData extends EntityViewsData {
       // {comment_entity_statistics} for each field as multiple joins between
       // the same two tables is not supported.
       if (\Drupal::service('comment.manager')->getFields($type)) {
-        $data['comment_entity_statistics']['table']['join'][$entity_type->getDataTable() ?: $entity_type->getBaseTable()] = [
+        $data['comment_entity_statistics']['table']['join'][$entity_type_table] = [
           'type' => 'LEFT',
           'left_field' => $entity_type->getKey('id'),
           'field' => 'entity_id',

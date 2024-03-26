@@ -81,7 +81,7 @@ function comment_views_data_alter(&$data) {
           'relationship' => [
             'group' => t('Comment'),
             'label' => t('Comments'),
-            'base' => 'comment_field_data',
+            'base' => $base_table,
             'base field' => 'entity_id',
             'relationship field' => $entity_type->getKey('id'),
             'id' => 'standard',

@@ -76,11 +76,8 @@ class JoinTest extends RelationshipJoinTestBase {
       $expected_condition = [
         '$and' => [
           [
-            '$expr' => [
-              '$eq' => [
-                '$users_field_data.uid',
-                '$views_test_data.uid',
-              ],
+            'users_field_data.uid' => [
+              '$eq' => '$views_test_data.uid',
             ],
           ],
           [
@@ -146,11 +143,8 @@ class JoinTest extends RelationshipJoinTestBase {
       $condition = $join_info['condition'];
       $condition->compile($connection, $query);
       $expected_condition = [
-        '$expr' => [
-          '$eq' => [
-            '$views_test_data.uid',
-            '$users_field_data.uid',
-          ],
+        'views_test_data.uid' => [
+          '$eq' => '$users_field_data.uid',
         ],
       ];
       $this->assertSame($condition->toMongoAggregateArray(), $expected_condition);
