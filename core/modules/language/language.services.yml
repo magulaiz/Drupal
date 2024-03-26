@@ -25,4 +25,3 @@ services:
     arguments: ['@language_manager']
     tags:
       - { name: paramconverter }
-    lazy: true
