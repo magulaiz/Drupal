@@ -495,7 +495,7 @@ services:
     arguments: ['@serialization.phpserialize', '@database', '@datetime.time']
   logger.factory:
     class: Drupal\Core\Logger\LoggerChannelFactory
-    parent: container.trait
+    arguments: ['@request_stack', '@current_user']
     tags:
       - { name: service_collector, tag: logger, call: addLogger }
   Drupal\Core\Logger\LoggerChannelFactoryInterface: '@logger.factory'
@@ -556,9 +556,7 @@ services:
   Drupal\Core\State\StateInterface: '@state'
   queue:
     class: Drupal\Core\Queue\QueueFactory
-    arguments: ['@settings']
-    calls:
-      - [setContainer, ['@service_container']]
+    autowire: true
   Drupal\Core\Queue\QueueFactory: '@queue'
   queue.database:
     class: Drupal\Core\Queue\QueueDatabaseFactory
@@ -677,6 +675,12 @@ services:
     tags:
       - { name: module_install.uninstall_validator }
     arguments: ['@string_translation', '@extension.list.module', '@database']
+    lazy: true
+  install_profile_uninstall_validator:
+    class: Drupal\Core\Extension\InstallProfileUninstallValidator
+    tags:
+      - { name: module_install.uninstall_validator }
+    arguments: ['@string_translation', '@extension.list.module', '@extension.list.theme', '%install_profile%', '%app.root%', '%site.path%']
     lazy: true
   theme_handler:
     class: Drupal\Core\Extension\ThemeHandler
@@ -1788,17 +1792,16 @@ services:
   Drupal\Component\Utility\EmailValidatorInterface: '@email.validator'
   update.update_hook_registry:
     class: Drupal\Core\Update\UpdateHookRegistry
-    factory: ['@update.update_hook_registry_factory', create]
+    arguments: ['%container.modules%', '@keyvalue']
   Drupal\Core\Update\UpdateHookRegistry: '@update.update_hook_registry'
-  update.update_hook_registry_factory:
-    class: Drupal\Core\Update\UpdateHookRegistryFactory
-    parent: container.trait
   update.post_update_registry:
     class: Drupal\Core\Update\UpdateRegistry
-    factory: ['@update.post_update_registry_factory', create]
-  update.post_update_registry_factory:
-    class: Drupal\Core\Update\UpdateRegistryFactory
-    parent: container.trait
+    arguments: ['%app.root%', '%site.path%', '%container.modules%', '@update.key_value.post_update', '@theme_handler', 'post_update']
+  update.key_value.post_update:
+    class: Drupal\Core\KeyValueStore\KeyValueStoreInterface
+    factory: ['@keyvalue', 'get']
+    arguments: ['post_update']
+    public: false
   uuid:
     class: Drupal\Component\Uuid\Php
   Drupal\Component\Uuid\UuidInterface: '@uuid'
