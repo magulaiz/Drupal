@@ -4,18 +4,19 @@ namespace Drupal\tour_test\Plugin\tour\tip;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Utility\Token;
+use Drupal\tour\Attribute\Tip;
 use Drupal\tour\TipPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Displays an image as a tip.
- *
- * @Tip(
- *   id = "image_legacy",
- *   title = @Translation("Image Legacy")
- * )
  */
+#[Tip(
+  id: 'image_legacy',
+  title: new TranslatableMarkup('Image Legacy'),
+)]
 class TipPluginImageLegacy extends TipPluginBase implements ContainerFactoryPluginInterface {
 
   /**

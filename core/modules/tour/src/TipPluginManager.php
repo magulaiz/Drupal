@@ -5,6 +5,7 @@ namespace Drupal\tour;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\tour\Attribute\Tip;
 
 /**
  * Provides a plugin manager for tour items.
@@ -28,7 +29,7 @@ class TipPluginManager extends DefaultPluginManager {
    *   The module handler to invoke the alter hook with.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/tour/tip', $namespaces, $module_handler, 'Drupal\tour\TipPluginInterface', 'Drupal\tour\Annotation\Tip');
+    parent::__construct('Plugin/tour/tip', $namespaces, $module_handler, 'Drupal\tour\TipPluginInterface', Tip::class, 'Drupal\tour\Annotation\Tip');
 
     $this->alterInfo('tour_tips_info');
     $this->setCacheBackend($cache_backend, 'tour_plugins');
