@@ -5,11 +5,8 @@ declare (strict_types=1);
 namespace Drupal\Core\Rector;
 
 use PhpParser\Node;
-use PhpParser\Node\Expr\ArrowFunction;
-use PhpParser\Node\Expr\Closure;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Stmt\ClassMethod;
-use PhpParser\Node\Stmt\Function_;
 use PHPStan\PhpDocParser\Ast\PhpDoc\ParamTagValueNode;
 use PHPStan\Reflection\ClassReflection;
 use PHPStan\Type\VerbosityLevel;
@@ -87,10 +84,10 @@ CODE_SAMPLE
      */
     public function getNodeTypes() : array
     {
-        return [ClassMethod::class, Function_::class, Closure::class, ArrowFunction::class];
+        return [ClassMethod::class];
     }
     /**
-     * @param ClassMethod|Function_|Closure|ArrowFunction $node
+     * @param ClassMethod $node
      */
     public function refactor(Node $node) : ?Node
     {
@@ -122,7 +119,7 @@ CODE_SAMPLE
         return $this->classChildAnalyzer->hasParentClassMethod($classReflection, $methodName);
     }
     /**
-     * @param \PhpParser\Node\Stmt\ClassMethod|\PhpParser\Node\Stmt\Function_|\PhpParser\Node\Expr\Closure|\PhpParser\Node\Expr\ArrowFunction $functionLike
+     * @param \PhpParser\Node\Stmt\ClassMethod $functionLike
      */
     private function refactorParamTypes($functionLike, PhpDocInfo $phpDocInfo) : void
     {
