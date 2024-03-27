@@ -13,8 +13,8 @@ use Drupal\views\Plugin\Derivative\DefaultWizardDeriver;
  */
 #[ViewsWizard(
   id: 'standard',
+  title: new TranslatableMarkup('Default wizard'),
   deriver: DefaultWizardDeriver::class,
-  title: new TranslatableMarkup('Default wizard')
 )]
 class Standard extends WizardPluginBase {
 
