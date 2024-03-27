@@ -31,7 +31,7 @@ class RemoveCommand implements CommandInterface {
    * @param string $selector
    *   The selector.
    */
-  public function __construct($selector) {
+  public function __construct(string $selector) {
     $this->selector = $selector;
   }
 

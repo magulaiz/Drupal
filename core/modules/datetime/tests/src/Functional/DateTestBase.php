@@ -169,7 +169,7 @@ abstract class DateTestBase extends BrowserTestBase {
    * @return string
    *   The rendered HTML output.
    */
-  protected function renderTestEntity($id, $view_mode = 'full', $reset = TRUE) {
+  protected function renderTestEntity($id, string $view_mode = 'full', $reset = TRUE) {
     if ($reset) {
       $this->container->get('entity_type.manager')->getStorage('entity_test')->resetCache([$id]);
     }
@@ -185,7 +185,7 @@ abstract class DateTestBase extends BrowserTestBase {
    * @param string $timezone
    *   The timezone identifier to set.
    */
-  protected function setSiteTimezone($timezone) {
+  protected function setSiteTimezone(string $timezone) {
     // Set an explicit site timezone, and disallow per-user timezones.
     $this->config('system.date')
       ->set('timezone.user.configurable', 0)

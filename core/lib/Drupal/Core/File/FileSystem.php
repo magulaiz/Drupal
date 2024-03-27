@@ -422,7 +422,7 @@ class FileSystem implements FileSystemInterface {
    * @see \Drupal\Core\File\FileSystemInterface::copy()
    * @see \Drupal\Core\File\FileSystemInterface::move()
    */
-  protected function prepareDestination($source, &$destination, $replace) {
+  protected function prepareDestination(string $source, &$destination, $replace) {
     $original_source = $source;
 
     if (!file_exists($source)) {
@@ -661,7 +661,7 @@ class FileSystem implements FileSystemInterface {
    *
    * @see \Drupal\Core\File\FileSystemInterface::scanDirectory()
    */
-  protected function doScanDirectory($dir, $mask, array $options = [], $depth = 0) {
+  protected function doScanDirectory(string $dir, string $mask, array $options = [], $depth = 0) {
     $files_in_sub_dirs = [];
     $files_in_this_directory = [];
     // Avoid warnings when opendir does not have the permissions to open a

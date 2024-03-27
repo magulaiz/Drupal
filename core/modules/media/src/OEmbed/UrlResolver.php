@@ -92,7 +92,7 @@ class UrlResolver implements UrlResolverInterface {
    * @return string|bool
    *   URL of the oEmbed endpoint, or FALSE if the discovery was unsuccessful.
    */
-  protected function discoverResourceUrl($url) {
+  protected function discoverResourceUrl(string $url) {
     try {
       $response = $this->httpClient->get($url);
     }
@@ -117,7 +117,7 @@ class UrlResolver implements UrlResolverInterface {
    * @return bool|string
    *   A URL to an oEmbed resource or FALSE if not found.
    */
-  protected function findUrl(\DOMXPath $xpath, $format) {
+  protected function findUrl(\DOMXPath $xpath, string $format) {
     $result = $xpath->query("//link[@type='application/$format+oembed']");
     return $result->length ? $result->item(0)->getAttribute('href') : FALSE;
   }
@@ -195,7 +195,7 @@ class UrlResolver implements UrlResolverInterface {
    * @return string
    *   The resource URL.
    */
-  protected function getEndpointMatchingUrl($url, Provider $provider) {
+  protected function getEndpointMatchingUrl(string $url, Provider $provider) {
     $endpoints = $provider->getEndpoints();
     $resource_url = reset($endpoints)->buildResourceUrl($url);
     foreach ($endpoints as $endpoint) {

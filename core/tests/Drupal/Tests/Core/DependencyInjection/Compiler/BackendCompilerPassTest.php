@@ -44,7 +44,7 @@ class BackendCompilerPassTest extends UnitTestCase {
    *
    * @covers ::process
    */
-  public function testProcess($expected_class, ContainerBuilder $container) {
+  public function testProcess(string $expected_class, ContainerBuilder $container) {
     $this->backendPass->process($container);
 
     $this->assertEquals($expected_class, get_class($container->get('service')));

@@ -283,7 +283,7 @@ class Query extends QueryBase implements QueryInterface {
    *   An expression that will select the given field for the given language in
    *   a SELECT query, such as 'base_table.id'.
    */
-  protected function getSqlField($field, $langcode) {
+  protected function getSqlField(string $field, string $langcode) {
     if (!isset($this->tables)) {
       $this->tables = $this->getTables($this->sqlQuery);
     }

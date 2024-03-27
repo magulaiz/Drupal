@@ -74,7 +74,7 @@ class SubformState extends FormStateDecoratorBase implements SubformStateInterfa
    * @throws \UnexpectedValueException
    *   Thrown when the subform is not contained by the given parent form.
    */
-  protected function getParents($property) {
+  protected function getParents(string $property) {
     foreach ([$this->subform, $this->parentForm] as $form) {
       if (!isset($form[$property]) || !is_array($form[$property])) {
         throw new \RuntimeException(sprintf('The subform and parent form must contain the %s property, which must be an array. Try calling this method from a #process callback instead.', $property));

@@ -363,7 +363,7 @@ class AreaDisplayLinkTest extends ViewsKernelTestBase {
    * @return string
    *   The rendered display link.
    */
-  protected function renderDisplayLink(ViewExecutable $view, $display_link_id) {
+  protected function renderDisplayLink(ViewExecutable $view, string $display_link_id) {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
     $display_link = $view->display_handler->getHandler('header', $display_link_id)->render();

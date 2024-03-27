@@ -106,7 +106,7 @@ abstract class EntityKernelTestBase extends KernelTestBase {
    * @return \Drupal\user\Entity\User
    *   The created user entity.
    */
-  protected function createUser(array $permissions = [], $name = NULL, bool $admin = FALSE, array $values = []) {
+  protected function createUser(array $permissions = [], string $name = NULL, bool $admin = FALSE, array $values = []) {
     // Allow for the old signature of this method:
     // createUser($values = [], $permissions = [])
     if (!array_is_list($permissions)) {
@@ -165,7 +165,7 @@ abstract class EntityKernelTestBase extends KernelTestBase {
    * @param string $module
    *   The module to install.
    */
-  protected function installModule($module) {
+  protected function installModule(string $module) {
     $this->enableModules([$module]);
     $this->refreshServices();
   }
@@ -176,7 +176,7 @@ abstract class EntityKernelTestBase extends KernelTestBase {
    * @param string $module
    *   The module to uninstall.
    */
-  protected function uninstallModule($module) {
+  protected function uninstallModule(string $module) {
     $this->disableModules([$module]);
     $this->refreshServices();
   }

@@ -112,7 +112,7 @@ class FileUpload {
    *   Thrown if an exception occurs during a subrequest to fetch the newly
    *   created file entity.
    */
-  public function handleFileUploadForExistingResource(Request $request, ResourceType $resource_type, $file_field_name, FieldableEntityInterface $entity) {
+  public function handleFileUploadForExistingResource(Request $request, ResourceType $resource_type, string $file_field_name, FieldableEntityInterface $entity) {
     $file_field_name = $resource_type->getInternalName($file_field_name);
     $field_definition = $this->validateAndLoadFieldDefinition($resource_type->getEntityTypeId(), $resource_type->getBundle(), $file_field_name);
 
@@ -162,7 +162,7 @@ class FileUpload {
    * @throws \Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException
    *   Thrown when there are validation errors.
    */
-  public function handleFileUploadForNewResource(Request $request, ResourceType $resource_type, $file_field_name) {
+  public function handleFileUploadForNewResource(Request $request, ResourceType $resource_type, string $file_field_name) {
     $file_field_name = $resource_type->getInternalName($file_field_name);
     $field_definition = $this->validateAndLoadFieldDefinition($resource_type->getEntityTypeId(), $resource_type->getBundle(), $file_field_name);
 
@@ -233,7 +233,7 @@ class FileUpload {
    *   Thrown when the target type of the field is not a file, or the current
    *   user does not have 'edit' access for the field.
    */
-  protected function validateAndLoadFieldDefinition($entity_type_id, $bundle, $field_name) {
+  protected function validateAndLoadFieldDefinition(string $entity_type_id, string $bundle, string $field_name) {
     $field_definitions = $this->fieldManager->getFieldDefinitions($entity_type_id, $bundle);
     if (!isset($field_definitions[$field_name])) {
       throw new NotFoundHttpException(sprintf('Field "%s" does not exist.', $field_name));

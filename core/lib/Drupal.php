@@ -193,7 +193,7 @@ class Drupal {
    * @return mixed
    *   The specified service.
    */
-  public static function service($id) {
+  public static function service(string $id) {
     return static::getContainer()->get($id);
   }
 
@@ -206,7 +206,7 @@ class Drupal {
    * @return bool
    *   TRUE if the specified service exists, FALSE otherwise.
    */
-  public static function hasService($id) {
+  public static function hasService(string $id) {
     // Check hasContainer() first in order to always return a Boolean.
     return static::hasContainer() && static::getContainer()->has($id);
   }
@@ -337,7 +337,7 @@ class Drupal {
    *
    * @ingroup cache
    */
-  public static function cache($bin = 'default') {
+  public static function cache(string $bin = 'default') {
     return static::getContainer()->get('cache.' . $bin);
   }
 
@@ -361,7 +361,7 @@ class Drupal {
    * @throws \InvalidArgumentException
    *   If $class does not exist.
    */
-  public static function classResolver($class = NULL) {
+  public static function classResolver(string $class = NULL) {
     if ($class) {
       return static::getContainer()->get('class_resolver')->getInstanceFromDefinition($class);
     }
@@ -377,7 +377,7 @@ class Drupal {
    * @return \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface
    *   An expirable key value store collection.
    */
-  public static function keyValueExpirable($collection) {
+  public static function keyValueExpirable(string $collection) {
     return static::getContainer()->get('keyvalue.expirable')->get($collection);
   }
 
@@ -410,7 +410,7 @@ class Drupal {
    * @return \Drupal\Core\Config\ImmutableConfig
    *   An immutable configuration object.
    */
-  public static function config($name) {
+  public static function config(string $name) {
     return static::getContainer()->get('config.factory')->get($name);
   }
 
@@ -450,7 +450,7 @@ class Drupal {
    * @return \Drupal\Core\Queue\QueueInterface
    *   The queue object for a given name.
    */
-  public static function queue($name, $reliable = FALSE) {
+  public static function queue(string $name, $reliable = FALSE) {
     return static::getContainer()->get('queue')->get($name, $reliable);
   }
 
@@ -462,7 +462,7 @@ class Drupal {
    *
    * @return \Drupal\Core\KeyValueStore\KeyValueStoreInterface
    */
-  public static function keyValue($collection) {
+  public static function keyValue(string $collection) {
     return static::getContainer()->get('keyvalue')->get($collection);
   }
 
@@ -504,7 +504,7 @@ class Drupal {
    * @return \Drupal\Core\Entity\Query\QueryInterface
    *   The query object that can query the given entity type.
    */
-  public static function entityQuery($entity_type, $conjunction = 'AND') {
+  public static function entityQuery(string $entity_type, string $conjunction = 'AND') {
     return static::entityTypeManager()->getStorage($entity_type)->getQuery($conjunction);
   }
 
@@ -521,7 +521,7 @@ class Drupal {
    * @return \Drupal\Core\Entity\Query\QueryAggregateInterface
    *   The query object that can query the given entity type.
    */
-  public static function entityQueryAggregate($entity_type, $conjunction = 'AND') {
+  public static function entityQueryAggregate(string $entity_type, string $conjunction = 'AND') {
     return static::entityTypeManager()->getStorage($entity_type)->getAggregateQuery($conjunction);
   }
 
@@ -672,7 +672,7 @@ class Drupal {
    * @return \Psr\Log\LoggerInterface
    *   The logger for this channel.
    */
-  public static function logger($channel) {
+  public static function logger(string $channel) {
     return static::getContainer()->get('logger.factory')->get($channel);
   }
 

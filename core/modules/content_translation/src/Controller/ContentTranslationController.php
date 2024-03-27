@@ -134,7 +134,7 @@ class ContentTranslationController extends ControllerBase {
    * @return array
    *   Array of page elements to render.
    */
-  public function overview(RouteMatchInterface $route_match, $entity_type_id = NULL) {
+  public function overview(RouteMatchInterface $route_match, string $entity_type_id = NULL) {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $route_match->getParameter($entity_type_id);
     $account = $this->currentUser();
@@ -393,7 +393,7 @@ class ContentTranslationController extends ControllerBase {
    * @return array
    *   A processed form array ready to be rendered.
    */
-  public function add(LanguageInterface $source, LanguageInterface $target, RouteMatchInterface $route_match, $entity_type_id = NULL) {
+  public function add(LanguageInterface $source, LanguageInterface $target, RouteMatchInterface $route_match, string $entity_type_id = NULL) {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $route_match->getParameter($entity_type_id);
 
@@ -443,7 +443,7 @@ class ContentTranslationController extends ControllerBase {
    * @return array
    *   A processed form array ready to be rendered.
    */
-  public function edit(LanguageInterface $language, RouteMatchInterface $route_match, $entity_type_id = NULL) {
+  public function edit(LanguageInterface $language, RouteMatchInterface $route_match, string $entity_type_id = NULL) {
     $entity = $route_match->getParameter($entity_type_id);
 
     // @todo Provide a way to figure out the default form operation. Maybe like

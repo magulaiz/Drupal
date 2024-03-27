@@ -139,7 +139,7 @@ class MockBlockManager extends PluginManagerBase {
    *
    * @return \Drupal\Core\Plugin\Context\ContextDefinition
    */
-  protected function createContextDefinition($data_type, $label, $required = TRUE) {
+  protected function createContextDefinition(string $data_type, $label, $required = TRUE) {
     // We cast the label to string for testing purposes only, as it may be
     // a TranslatableMarkup and we will do assertEquals() checks on arrays that
     // include ContextDefinition objects, and var_export() has problems

@@ -122,7 +122,7 @@ class DefaultsSectionStorageTest extends UnitTestCase {
    * @param array $defaults
    *   The defaults to pass to ::extractEntityFromRoute().
    */
-  public function testExtractEntityFromRoute($success, $expected_entity_id, $value, array $defaults) {
+  public function testExtractEntityFromRoute($success, $expected_entity_id, string $value, array $defaults) {
     if ($expected_entity_id) {
       $entity_storage = $this->prophesize(EntityStorageInterface::class);
       $entity_storage->load($expected_entity_id)->willReturn('the_return_value');

@@ -107,7 +107,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider
    */
-  public function __construct($root, array $module_list, CacheBackendInterface $cache_backend) {
+  public function __construct(string $root, array $module_list, CacheBackendInterface $cache_backend) {
     $this->root = $root;
     $this->moduleList = [];
     foreach ($module_list as $name => $module) {
@@ -210,7 +210,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    * @param string $path
    *   The module path; e.g., 'core/modules/node'.
    */
-  protected function add($type, $name, $path) {
+  protected function add(string $type, string $name, string $path) {
     $pathname = "$path/$name.info.yml";
     $filename = file_exists($this->root . "/$path/$name.$type") ? "$name.$type" : NULL;
     $this->moduleList[$name] = new Extension($this->root, $type, $pathname, $filename);
@@ -443,7 +443,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    * @param string $hook
    *   The name of the hook.
    */
-  private function triggerDeprecationError($description, $hook) {
+  private function triggerDeprecationError(string $description, string $hook) {
     $modules = array_keys($this->getImplementationInfo($hook));
     if (!empty($modules)) {
       $message = 'The deprecated hook hook_' . $hook . '() is implemented in these functions: ';
@@ -580,7 +580,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    *   which the implementation is to be found, or FALSE, if the implementation
    *   is in the module file.
    */
-  protected function getImplementationInfo($hook) {
+  protected function getImplementationInfo(string $hook) {
     if (!isset($this->implementations)) {
       $this->implementations = [];
       $this->verified = [];
@@ -626,7 +626,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    *
    * @see \Drupal\Core\Extension\ModuleHandler::getImplementationInfo()
    */
-  protected function buildImplementationInfo($hook) {
+  protected function buildImplementationInfo(string $hook) {
     $implementations = [];
     $hook_info = $this->getHookInfo();
     foreach ($this->moduleList as $module => $extension) {
@@ -677,7 +677,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    *   FALSE, if one or more implementations don't exist and need to be removed
    *     from the cache.
    */
-  protected function verifyImplementations(&$implementations, $hook) {
+  protected function verifyImplementations(&$implementations, string $hook) {
     $all_valid = TRUE;
     foreach ($implementations as $module => $group) {
       // If this hook implementation is stored in a lazy-loaded file, include

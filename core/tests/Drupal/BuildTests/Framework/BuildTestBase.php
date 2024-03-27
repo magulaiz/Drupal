@@ -201,7 +201,7 @@ abstract class BuildTestBase extends TestCase {
    * @return string
    *   The full path to the working directory within the workspace directory.
    */
-  protected function getWorkingPath($working_dir = NULL) {
+  protected function getWorkingPath(string $working_dir = NULL) {
     $full_path = $this->getWorkspaceDirectory();
     if ($working_dir) {
       $full_path .= '/' . $working_dir;
@@ -261,7 +261,7 @@ abstract class BuildTestBase extends TestCase {
    * @param string $expected
    *   Text we expect to find in the error output of the command.
    */
-  public function assertErrorOutputContains($expected) {
+  public function assertErrorOutputContains(string $expected) {
     $this->assertStringContainsString($expected, $this->commandProcess->getErrorOutput());
   }
 
@@ -271,7 +271,7 @@ abstract class BuildTestBase extends TestCase {
    * @param string $expected
    *   Text we expect not to find in the error output of the command.
    */
-  public function assertErrorOutputNotContains($expected) {
+  public function assertErrorOutputNotContains(string $expected) {
     $this->assertStringNotContainsString($expected, $this->commandProcess->getErrorOutput());
   }
 
@@ -281,7 +281,7 @@ abstract class BuildTestBase extends TestCase {
    * @param string $expected
    *   Text we expect to find in the output of the command.
    */
-  public function assertCommandOutputContains($expected) {
+  public function assertCommandOutputContains(string $expected) {
     $this->assertStringContainsString($expected, $this->commandProcess->getOutput());
   }
 
@@ -322,7 +322,7 @@ abstract class BuildTestBase extends TestCase {
    *
    * @return \Symfony\Component\Process\Process
    */
-  public function executeCommand($command_line, $working_dir = NULL) {
+  public function executeCommand(string $command_line, string $working_dir = NULL) {
     $this->commandProcess = Process::fromShellCommandline($command_line);
     $this->commandProcess->setWorkingDirectory($this->getWorkingPath($working_dir))
       ->setTimeout(300)
@@ -360,7 +360,7 @@ abstract class BuildTestBase extends TestCase {
    * @throws \InvalidArgumentException
    *   Thrown when $request_uri does not start with a slash.
    */
-  public function visit($request_uri = '/', $working_dir = NULL) {
+  public function visit(string $request_uri = '/', string $working_dir = NULL) {
     if ($request_uri[0] !== '/') {
       throw new \InvalidArgumentException('URI: ' . $request_uri . ' must be relative. Example: /some/path?foo=bar');
     }

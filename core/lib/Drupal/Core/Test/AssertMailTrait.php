@@ -54,7 +54,7 @@ trait AssertMailTrait {
    * @return bool
    *   TRUE on pass.
    */
-  protected function assertMail($name, $value = '', $message = '') {
+  protected function assertMail(string $name, string $value = '', string $message = '') {
     $captured_emails = $this->container->get('state')->get('system.test_mail_collector') ?: [];
     $email = end($captured_emails);
     $this->assertIsArray($email, $message);
@@ -78,7 +78,7 @@ trait AssertMailTrait {
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    */
-  protected function assertMailString($field_name, $string, $email_depth, $message = '') {
+  protected function assertMailString(string $field_name, string $string, $email_depth, string $message = '') {
     $mails = $this->getMails();
     $string_found = FALSE;
     // Cast MarkupInterface objects to string.
@@ -113,7 +113,7 @@ trait AssertMailTrait {
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    */
-  protected function assertMailPattern($field_name, $regex, $message = '') {
+  protected function assertMailPattern(string $field_name, string $regex, string $message = '') {
     $mails = $this->getMails();
     $mail = end($mails);
     $regex_found = preg_match("/$regex/", $mail[$field_name]);

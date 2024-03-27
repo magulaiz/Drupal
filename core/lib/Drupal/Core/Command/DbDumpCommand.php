@@ -145,7 +145,7 @@ class DbDumpCommand extends DbCommandBase {
    *
    * @todo This implementation is hard-coded for MySQL.
    */
-  protected function getTableSchema(Connection $connection, $table) {
+  protected function getTableSchema(Connection $connection, string $table) {
     // Check this is MySQL.
     if ($connection->databaseType() !== 'mysql') {
       throw new \RuntimeException('This script can only be used with MySQL database backends.');
@@ -237,7 +237,7 @@ class DbDumpCommand extends DbCommandBase {
    * @param array &$definition
    *   The schema definition to modify.
    */
-  protected function getTableIndexes(Connection $connection, $table, &$definition) {
+  protected function getTableIndexes(Connection $connection, string $table, &$definition) {
     // Note, this query doesn't support ordering, so that is worked around
     // below by keying the array on Seq_in_index.
     $query = $connection->query("SHOW INDEX FROM {" . $table . "}");
@@ -274,7 +274,7 @@ class DbDumpCommand extends DbCommandBase {
    * @param array &$definition
    *   The schema definition to modify.
    */
-  protected function getTableCollation(Connection $connection, $table, &$definition) {
+  protected function getTableCollation(Connection $connection, string $table, &$definition) {
     // Remove identifier quotes from the table name. See
     // \Drupal\mysql\Driver\Database\mysql\Connection::$identifierQuotes.
     $table = trim($connection->prefixTables('{' . $table . '}'), '"');
@@ -302,7 +302,7 @@ class DbDumpCommand extends DbCommandBase {
    * @return array
    *   The data from the table as an array.
    */
-  protected function getTableData(Connection $connection, $table) {
+  protected function getTableData(Connection $connection, string $table) {
     $order = $this->getFieldOrder($connection, $table);
     $query = $connection->query("SELECT * FROM {" . $table . "} " . $order);
     $results = [];
@@ -324,7 +324,7 @@ class DbDumpCommand extends DbCommandBase {
    *   The Drupal schema field type. If there is no mapping, the original field
    *   type is returned.
    */
-  protected function fieldTypeMap(Connection $connection, $type) {
+  protected function fieldTypeMap(Connection $connection, string $type) {
     // Convert everything to lowercase.
     $map = array_map('strtolower', $connection->schema()->getFieldTypeMap());
     $map = array_flip($map);
@@ -344,7 +344,7 @@ class DbDumpCommand extends DbCommandBase {
    * @return string|null
    *   The Drupal schema field size.
    */
-  protected function fieldSizeMap(Connection $connection, $type) {
+  protected function fieldSizeMap(Connection $connection, string $type) {
     // Convert everything to lowercase.
     $map = array_map('strtolower', $connection->schema()->getFieldTypeMap());
     $map = array_flip($map);
@@ -373,7 +373,7 @@ class DbDumpCommand extends DbCommandBase {
    * @return string
    *   The order string to append to the query.
    */
-  protected function getFieldOrder(Connection $connection, $table) {
+  protected function getFieldOrder(Connection $connection, string $table) {
     // @todo this is MySQL only since there are no Database API functions for
     // table column data.
     // @todo this code is duplicated in `core/scripts/migrate-db.sh`.
@@ -449,7 +449,7 @@ END_OF_SCRIPT;
    * @return string
    *   The table create statement, and if there is data, the insert command.
    */
-  protected function getTableScript($table, array $schema, array $data, int $insert_count = 1000) {
+  protected function getTableScript(string $table, array $schema, array $data, int $insert_count = 1000) {
     $output = '';
     $output .= "\$connection->schema()->createTable('" . $table . "', " . Variable::export($schema) . ");\n\n";
     if (!empty($data)) {

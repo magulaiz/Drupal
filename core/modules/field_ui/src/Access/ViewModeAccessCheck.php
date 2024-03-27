@@ -57,7 +57,7 @@ class ViewModeAccessCheck implements AccessInterface {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function access(Route $route, RouteMatchInterface $route_match, AccountInterface $account, $view_mode_name = 'default', $bundle = NULL) {
+  public function access(Route $route, RouteMatchInterface $route_match, AccountInterface $account, string $view_mode_name = 'default', string $bundle = NULL) {
     $access = AccessResult::neutral();
     if ($entity_type_id = $route->getDefault('entity_type_id')) {
       if (empty($bundle)) {

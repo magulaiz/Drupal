@@ -73,7 +73,7 @@ class RedirectDestinationTest extends UnitTestCase {
    *
    * @covers ::get
    */
-  public function testGet(Request $request, $expected_destination) {
+  public function testGet(Request $request, string $expected_destination) {
     $this->requestStack->push($request);
     $this->setupUrlGenerator();
 

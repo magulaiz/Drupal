@@ -86,7 +86,7 @@ class PhpSelection extends DefaultSelection {
    * @return bool
    *   TRUE when matches, FALSE otherwise.
    */
-  protected function matchLabel($match, $match_operator, $label) {
+  protected function matchLabel($match, string $match_operator, string $label) {
     // Always use a case-insensitive value.
     $label = mb_strtolower($label);
 

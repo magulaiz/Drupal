@@ -49,7 +49,7 @@ class LibrariesDirectoryFileFinder {
    * @param string $install_profile
    *   The install profile.
    */
-  public function __construct($root, $site_path, ProfileExtensionList $profile_extension_list, $install_profile) {
+  public function __construct(string $root, string $site_path, ProfileExtensionList $profile_extension_list, string $install_profile) {
     $this->root = $root;
     $this->sitePath = $site_path;
     $this->profileExtensionList = $profile_extension_list;
@@ -75,7 +75,7 @@ class LibrariesDirectoryFileFinder {
    *   The real path to the library file relative to the root directory. If the
    *   library cannot be found then FALSE.
    */
-  public function find($path) {
+  public function find(string $path) {
     // Search sites/<domain>/*.
     $directories[] = "{$this->sitePath}/libraries/";
 

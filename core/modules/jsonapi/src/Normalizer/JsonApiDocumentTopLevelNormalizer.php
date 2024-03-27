@@ -216,7 +216,7 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
    *
    * @todo: refactor this to use CacheableNormalization::aggregate in https://www.drupal.org/project/drupal/issues/3036284.
    */
-  protected function normalizeErrorDocument(JsonApiDocumentTopLevel $document, $format, array $context = []) {
+  protected function normalizeErrorDocument(JsonApiDocumentTopLevel $document, string $format, array $context = []) {
     $normalized_values = array_map(function (HttpExceptionInterface $exception) use ($format, $context) {
       return $this->serializer->normalize($exception, $format, $context);
     }, (array) $document->getData()->getIterator());
@@ -244,7 +244,7 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
    *
    * @todo: refactor this to use link collections in https://www.drupal.org/project/drupal/issues/3036279.
    */
-  protected function normalizeOmissionsLinks(OmittedData $omissions, $format, array $context = []) {
+  protected function normalizeOmissionsLinks(OmittedData $omissions, string $format, array $context = []) {
     $normalized_omissions = array_map(function (HttpExceptionInterface $exception) use ($format, $context) {
       return $this->serializer->normalize($exception, $format, $context);
     }, $omissions->toArray());
@@ -323,7 +323,7 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
    * @return string
    *   A 7 character hash.
    */
-  protected static function getLinkHash($salt, $link_href) {
+  protected static function getLinkHash(string $salt, string $link_href) {
     return substr(str_replace(['-', '_'], '', Crypt::hashBase64($salt . $link_href)), 0, 7);
   }
 

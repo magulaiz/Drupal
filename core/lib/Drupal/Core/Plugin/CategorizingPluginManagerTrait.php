@@ -47,7 +47,7 @@ trait CategorizingPluginManagerTrait {
    *   The human-readable module name if it exists, otherwise the
    *   machine-readable name passed.
    */
-  protected function getProviderName($provider) {
+  protected function getProviderName(string $provider) {
     try {
       return $this->getModuleExtensionList()->getName($provider);
     }

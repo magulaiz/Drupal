@@ -114,6 +114,6 @@ abstract class EntityDenormalizerBase extends NormalizerBase implements Denormal
    * @return array
    *   The modified input data.
    */
-  abstract protected function prepareInput(array $data, ResourceType $resource_type, $format, array $context);
+  abstract protected function prepareInput(array $data, ResourceType $resource_type, string $format, array $context);
 
 }

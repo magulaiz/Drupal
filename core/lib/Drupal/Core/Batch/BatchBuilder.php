@@ -215,7 +215,7 @@ class BatchBuilder {
    *
    * @return $this
    */
-  public function setFile($filename) {
+  public function setFile(string $filename) {
     include_once $filename;
 
     $this->file = $filename;
@@ -284,7 +284,7 @@ class BatchBuilder {
    *
    * @return $this
    */
-  public function setQueue($name, $class) {
+  public function setQueue(string $name, string $class) {
     if (!class_exists($class)) {
       throw new \InvalidArgumentException('Class ' . $class . ' does not exist.');
     }

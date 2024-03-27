@@ -132,7 +132,7 @@ class ViewsData {
    * @return array
    *   An array of table data.
    */
-  public function get($key) {
+  public function get(string $key) {
     if (!$key) {
       throw new \InvalidArgumentException('A valid cache entry key is required. Use getAll() to get all table data.');
     }
@@ -179,7 +179,7 @@ class ViewsData {
    * @return mixed
    *   The cached data.
    */
-  protected function cacheGet($cid) {
+  protected function cacheGet(string $cid) {
     return $this->cacheBackend->get($this->prepareCid($cid));
   }
 
@@ -191,7 +191,7 @@ class ViewsData {
    * @param mixed $data
    *   The data that will be cached.
    */
-  protected function cacheSet($cid, $data) {
+  protected function cacheSet(string $cid, $data) {
     return $this->cacheBackend->set($this->prepareCid($cid), $data, Cache::PERMANENT, ['views_data', 'config:core.extension']);
   }
 
@@ -204,7 +204,7 @@ class ViewsData {
    * @return string
    *   The prepared cache ID.
    */
-  protected function prepareCid($cid) {
+  protected function prepareCid(string $cid) {
     return $cid . ':' . $this->langcode;
   }
 

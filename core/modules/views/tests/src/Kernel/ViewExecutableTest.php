@@ -394,7 +394,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
    * @return mixed
    *   The instance property value.
    */
-  protected function getProtectedProperty($instance, $property) {
+  protected function getProtectedProperty($instance, string $property) {
     $reflection = new \ReflectionProperty($instance, $property);
     return $reflection->getValue($instance);
   }

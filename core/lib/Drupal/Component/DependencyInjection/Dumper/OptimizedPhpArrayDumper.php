@@ -367,7 +367,7 @@ class OptimizedPhpArrayDumper extends Dumper {
    * @return object
    *   A very lightweight private service value object.
    */
-  protected function getPrivateServiceCall($id, Definition $definition, $shared = FALSE) {
+  protected function getPrivateServiceCall(string $id, Definition $definition, $shared = FALSE) {
     $service_definition = $this->getServiceDefinition($definition);
     if (!$id) {
       $hash = Crypt::hashBase64(serialize($service_definition));
@@ -464,7 +464,7 @@ class OptimizedPhpArrayDumper extends Dumper {
    * @return string|object
    *   A suitable representation of the service reference.
    */
-  protected function getReferenceCall($id, Reference $reference = NULL) {
+  protected function getReferenceCall(string $id, Reference $reference = NULL) {
     $invalid_behavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE;
 
     if ($reference !== NULL) {
@@ -497,7 +497,7 @@ class OptimizedPhpArrayDumper extends Dumper {
    * @return string|object
    *   A suitable representation of the service reference.
    */
-  protected function getServiceCall($id, $invalid_behavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
+  protected function getServiceCall(string $id, $invalid_behavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
     return (object) [
       'type' => 'service',
       'id' => $id,
@@ -514,7 +514,7 @@ class OptimizedPhpArrayDumper extends Dumper {
    * @return string|object
    *   A suitable representation of the parameter reference.
    */
-  protected function getParameterCall($name) {
+  protected function getParameterCall(string $name) {
     return (object) [
       'type' => 'parameter',
       'name' => $name,

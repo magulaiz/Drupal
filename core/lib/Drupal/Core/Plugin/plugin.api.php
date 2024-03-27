@@ -26,7 +26,7 @@
  * @param string $consumer
  *   A string identifying the consumer of these plugin definitions.
  */
-function hook_plugin_filter_TYPE_alter(array &$definitions, array $extra, $consumer) {
+function hook_plugin_filter_TYPE_alter(array &$definitions, array $extra, string $consumer) {
   // Remove the "Help" block from the Block UI list.
   if ($consumer == 'block_ui') {
     unset($definitions['help_block']);

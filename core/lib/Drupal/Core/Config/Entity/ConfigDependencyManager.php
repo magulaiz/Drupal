@@ -148,7 +148,7 @@ class ConfigDependencyManager {
    * @return \Drupal\Core\Config\Entity\ConfigEntityDependency[]
    *   An array of config entity dependency objects that are dependent.
    */
-  public function getDependentEntities($type, $name) {
+  public function getDependentEntities(string $type, string $name) {
     $dependent_entities = [];
 
     $entities_to_check = [];

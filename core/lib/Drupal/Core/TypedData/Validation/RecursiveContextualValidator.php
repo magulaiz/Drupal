@@ -181,7 +181,7 @@ class RecursiveContextualValidator implements ContextualValidatorInterface {
    * @param \Symfony\Component\Validator\Constraint[] $constraints
    *   The constraints which should be ensured for the given value.
    */
-  protected function validateConstraints($value, $cache_key, $constraints) {
+  protected function validateConstraints($value, string $cache_key, $constraints) {
     foreach ($constraints as $constraint) {
       // Prevent duplicate validation of constraints, in the case
       // that constraints belong to multiple validated groups

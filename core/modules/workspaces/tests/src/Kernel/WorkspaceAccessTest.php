@@ -75,7 +75,7 @@ class WorkspaceAccessTest extends KernelTestBase {
    *
    * @dataProvider operationCases
    */
-  public function testWorkspaceAccess($operation, $permission) {
+  public function testWorkspaceAccess(string $operation, string $permission) {
     $user = $this->createUser();
     $this->setCurrentUser($user);
     $workspace = Workspace::create(['id' => 'oak']);

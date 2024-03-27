@@ -42,7 +42,7 @@ class Provider {
    *
    * @throws \Drupal\media\OEmbed\ProviderException
    */
-  public function __construct($name, $url, array $endpoints) {
+  public function __construct(string $name, string $url, array $endpoints) {
     $this->name = $name;
 
     if (!UrlHelper::isValid($url, TRUE) || !UrlHelper::isExternal($url)) {

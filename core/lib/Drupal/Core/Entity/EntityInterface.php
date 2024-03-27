@@ -133,7 +133,7 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
    * @throws \Drupal\Core\Entity\EntityMalformedException
    * @throws \Drupal\Core\Entity\Exception\UndefinedLinkTemplateException
    */
-  public function toUrl($rel = NULL, array $options = []);
+  public function toUrl(string $rel = NULL, array $options = []);
 
   /**
    * Generates the HTML for a link to this entity.
@@ -153,7 +153,7 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
    * @throws \Drupal\Core\Entity\EntityMalformedException
    * @throws \Drupal\Core\Entity\Exception\UndefinedLinkTemplateException
    */
-  public function toLink($text = NULL, $rel = 'canonical', array $options = []);
+  public function toLink($text = NULL, string $rel = 'canonical', array $options = []);
 
   /**
    * Indicates if a link template exists for a given key.
@@ -164,7 +164,7 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
    * @return bool
    *   TRUE if the link template exists, FALSE otherwise.
    */
-  public function hasLinkTemplate($key);
+  public function hasLinkTemplate(string $key);
 
   /**
    * Gets a list of URI relationships supported by this entity.

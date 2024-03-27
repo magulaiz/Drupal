@@ -81,7 +81,7 @@ class FileTranslation extends StaticTranslation {
    *
    * @see \Drupal\Core\File\FileSystemInterface::scanDirectory()
    */
-  public function findTranslationFiles($langcode = NULL) {
+  public function findTranslationFiles(string $langcode = NULL) {
     $files = [];
     if (is_dir($this->directory)) {
       $files = $this->fileSystem->scanDirectory($this->directory, $this->getTranslationFilesPattern($langcode), ['recurse' => FALSE]);
@@ -99,7 +99,7 @@ class FileTranslation extends StaticTranslation {
    * @return string
    *   String file pattern.
    */
-  protected function getTranslationFilesPattern($langcode = NULL) {
+  protected function getTranslationFilesPattern(string $langcode = NULL) {
     // The file name matches: drupal-[release version].[language code].po
     // When provided the $langcode is use as language code. If not provided all
     // language codes will match.
@@ -119,7 +119,7 @@ class FileTranslation extends StaticTranslation {
    *
    * @see \Drupal\Component\Gettext\PoMemoryWriter
    */
-  public static function filesToArray($langcode, array $files) {
+  public static function filesToArray(string $langcode, array $files) {
     $writer = new PoMemoryWriter();
     $writer->setLangcode($langcode);
     foreach ($files as $file) {

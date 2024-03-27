@@ -66,7 +66,7 @@ class ToolbarController extends ControllerBase implements TrustedCallbackInterfa
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function checkSubTreeAccess($hash) {
+  public function checkSubTreeAccess(string $hash) {
     $expected_hash = _toolbar_get_subtrees_hash()[0];
     return AccessResult::allowedIf($this->currentUser()->hasPermission('access toolbar') && hash_equals($expected_hash, $hash))->cachePerPermissions();
   }

@@ -192,7 +192,7 @@ class RevisionableContentEntityBaseTest extends EntityKernelTestBase {
    * @param string $log_message
    *   The log message of the new revision.
    */
-  protected function createRevision(EntityInterface $entity, UserInterface $user, $timestamp, $log_message) {
+  protected function createRevision(EntityInterface $entity, UserInterface $user, $timestamp, string $log_message) {
     $entity->setNewRevision(TRUE);
     $entity->setRevisionCreationTime($timestamp);
     $entity->setRevisionUserId($user->id());

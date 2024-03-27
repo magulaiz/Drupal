@@ -100,7 +100,7 @@ class CommentLazyBuilders implements TrustedCallbackInterface {
    * @return array
    *   A renderable array containing the comment form.
    */
-  public function renderForm($commented_entity_type_id, $commented_entity_id, $field_name, $comment_type_id) {
+  public function renderForm(string $commented_entity_type_id, string $commented_entity_id, string $field_name, string $comment_type_id) {
     $values = [
       'entity_type' => $commented_entity_type_id,
       'entity_id' => $commented_entity_id,
@@ -127,7 +127,7 @@ class CommentLazyBuilders implements TrustedCallbackInterface {
    * @return array
    *   A renderable array representing the comment links.
    */
-  public function renderLinks($comment_entity_id, $view_mode, $langcode, $is_in_preview) {
+  public function renderLinks(string $comment_entity_id, string $view_mode, string $langcode, $is_in_preview) {
     $links = [
       '#theme' => 'links__comment',
       '#pre_render' => [[Link::class, 'preRenderLinks']],

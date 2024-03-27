@@ -232,7 +232,7 @@ class LocaleStringTest extends KernelTestBase {
    * @return \Drupal\locale\StringInterface
    *   The translated string object.
    */
-  protected function createTranslation(StringInterface $source, $langcode, array $values = []) {
+  protected function createTranslation(StringInterface $source, string $langcode, array $values = []) {
     return $this->storage->createTranslation($values + [
       'lid' => $source->lid,
       'language' => $langcode,

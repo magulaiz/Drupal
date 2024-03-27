@@ -83,7 +83,7 @@ class PluralTranslatableMarkup extends TranslatableMarkup {
    * @return static
    *   A PluralTranslatableMarkup object.
    */
-  public static function createFromTranslatedString($count, $translated_string, array $args = [], array $options = []) {
+  public static function createFromTranslatedString($count, string $translated_string, array $args = [], array $options = []) {
     $plural = new static($count, '', '', $args, $options);
     $plural->translatedString = $translated_string;
     return $plural;

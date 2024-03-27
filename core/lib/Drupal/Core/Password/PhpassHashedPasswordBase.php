@@ -85,7 +85,7 @@ abstract class PhpassHashedPasswordBase implements PasswordInterface {
    * @return string
    *   Encoded string.
    */
-  protected function base64Encode($input, $count) {
+  protected function base64Encode(string $input, $count) {
     $output = '';
     $i = 0;
     do {
@@ -174,7 +174,7 @@ abstract class PhpassHashedPasswordBase implements PasswordInterface {
    *   A string containing the hashed password (and salt) or FALSE on failure.
    *   The return string will be truncated at HASH_LENGTH characters max.
    */
-  protected function crypt($algo, #[\SensitiveParameter] $password, $setting) {
+  protected function crypt(string $algo, #[\SensitiveParameter] string $password, string $setting) {
     // Prevent DoS attacks by refusing to hash large passwords.
     if (strlen($password) > PasswordInterface::PASSWORD_MAX_LENGTH) {
       return FALSE;
@@ -225,7 +225,7 @@ abstract class PhpassHashedPasswordBase implements PasswordInterface {
    * @return int
    *   The log2 iteration count.
    */
-  public function getCountLog2($setting) {
+  public function getCountLog2(string $setting) {
     return strpos(static::$ITOA64, $setting[3]);
   }
 

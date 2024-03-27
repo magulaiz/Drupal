@@ -207,7 +207,7 @@ class RequestSanitizerTest extends UnitTestCase {
    *
    * @dataProvider providerTestAcceptableDestinations
    */
-  public function testAcceptableDestinationGet($destination) {
+  public function testAcceptableDestinationGet(string $destination) {
     // Set up a GET request.
     $request = $this->createRequestForTesting(['destination' => $destination]);
 
@@ -229,7 +229,7 @@ class RequestSanitizerTest extends UnitTestCase {
    *
    * @dataProvider providerTestSanitizedDestinations
    */
-  public function testSanitizedDestinationGet($destination) {
+  public function testSanitizedDestinationGet(string $destination) {
     // Set up a GET request.
     $request = $this->createRequestForTesting(['destination' => $destination]);
 
@@ -251,7 +251,7 @@ class RequestSanitizerTest extends UnitTestCase {
    *
    * @dataProvider providerTestAcceptableDestinations
    */
-  public function testAcceptableDestinationPost($destination) {
+  public function testAcceptableDestinationPost(string $destination) {
     // Set up a POST request.
     $request = $this->createRequestForTesting([], ['destination' => $destination]);
 
@@ -273,7 +273,7 @@ class RequestSanitizerTest extends UnitTestCase {
    *
    * @dataProvider providerTestSanitizedDestinations
    */
-  public function testSanitizedDestinationPost($destination) {
+  public function testSanitizedDestinationPost(string $destination) {
     // Set up a POST request.
     $request = $this->createRequestForTesting([], ['destination' => $destination]);
 
@@ -348,7 +348,7 @@ class RequestSanitizerTest extends UnitTestCase {
    * @param string $errstr
    *   The error message.
    */
-  public function errorHandler($errno, $errstr) {
+  public function errorHandler($errno, string $errstr) {
     $this->errors[] = compact('errno', 'errstr');
   }
 

@@ -616,7 +616,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
    * @return array
    *   The location of processing information within $form_state.
    */
-  protected static function getWidgetStateParents(array $parents, $field_name) {
+  protected static function getWidgetStateParents(array $parents, string $field_name) {
     // Field processing data is placed at
     // $form_state->get(['field_storage', '#parents', ...$parents..., '#fields', $field_name]),
     // to avoid clashes between field names and $parents parts.
@@ -670,7 +670,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
    * @return mixed
    *   The setting value.
    */
-  protected function getFieldSetting($setting_name) {
+  protected function getFieldSetting(string $setting_name) {
     return $this->fieldDefinition->getSetting($setting_name);
   }
 

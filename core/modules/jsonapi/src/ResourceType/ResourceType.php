@@ -197,7 +197,7 @@ class ResourceType {
    *   A resource type field object or NULL if the field does not exist on this
    *   resource type.
    */
-  public function getFieldByPublicName($public_field_name) {
+  public function getFieldByPublicName(string $public_field_name) {
     return isset($this->fieldMapping[$public_field_name])
       ? $this->getFieldByInternalName($this->fieldMapping[$public_field_name])
       : NULL;
@@ -213,7 +213,7 @@ class ResourceType {
    *   A resource type field object or NULL if the field does not exist on this
    *   resource type.
    */
-  public function getFieldByInternalName($internal_field_name) {
+  public function getFieldByInternalName(string $internal_field_name) {
     return $this->fields[$internal_field_name] ?? NULL;
   }
 
@@ -234,7 +234,7 @@ class ResourceType {
    *   TRUE if the field is known to exist on the resource type; FALSE
    *   otherwise.
    */
-  public function hasField($field_name) {
+  public function hasField(string $field_name) {
     return array_key_exists($field_name, $this->fields);
   }
 
@@ -251,7 +251,7 @@ class ResourceType {
    *   TRUE if the field exists and is enabled and should be considered as part
    *   of the data model. FALSE otherwise.
    */
-  public function isFieldEnabled($field_name) {
+  public function isFieldEnabled(string $field_name) {
     return $this->hasField($field_name) && $this->fields[$field_name]->isFieldEnabled();
   }
 
@@ -348,7 +348,7 @@ class ResourceType {
    * @param null|string $type_name
    *   The resource type name.
    */
-  public function __construct($entity_type_id, $bundle, $deserialization_target_class, $internal = FALSE, $is_locatable = TRUE, $is_mutable = TRUE, $is_versionable = FALSE, array $fields = [], $type_name = NULL) {
+  public function __construct(string $entity_type_id, string $bundle, string $deserialization_target_class, $internal = FALSE, $is_locatable = TRUE, $is_mutable = TRUE, $is_versionable = FALSE, array $fields = [], $type_name = NULL) {
     $this->entityTypeId = $entity_type_id;
     $this->bundle = $bundle;
     $this->deserializationTargetClass = $deserialization_target_class;
@@ -422,7 +422,7 @@ class ResourceType {
    *
    * @see self::getRelatableResourceTypes()
    */
-  public function getRelatableResourceTypesByField($field_name) {
+  public function getRelatableResourceTypesByField(string $field_name) {
     return ($field = $this->getFieldByPublicName($field_name)) && $field instanceof ResourceTypeRelationship && $field->isFieldEnabled()
       ? $field->getRelatableResourceTypes()
       : [];

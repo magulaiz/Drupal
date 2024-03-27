@@ -287,7 +287,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    * @return bool
    *   TRUE if the user is blocked, otherwise FALSE.
    */
-  protected function userIsBlocked($name) {
+  protected function userIsBlocked(string $name) {
     return user_is_blocked($name);
   }
 
@@ -361,7 +361,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    * @param string $username
    *   The user name sent for login credentials.
    */
-  protected function floodControl(Request $request, $username) {
+  protected function floodControl(Request $request, string $username) {
     $flood_config = $this->config('user.flood');
     if (!$this->userFloodControl->isAllowed('user.failed_login_ip', $flood_config->get('ip_limit'), $flood_config->get('ip_window'))) {
       throw new AccessDeniedHttpException('Access is blocked because of IP based flood prevention.', NULL, Response::HTTP_TOO_MANY_REQUESTS);
@@ -393,7 +393,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    * @return string
    *   The login identifier or if the user does not exist an empty string.
    */
-  protected function getLoginFloodIdentifier(Request $request, $username) {
+  protected function getLoginFloodIdentifier(Request $request, string $username) {
     $flood_config = $this->config('user.flood');
     $accounts = $this->userStorage->loadByProperties(['name' => $username, 'status' => 1]);
     if ($account = reset($accounts)) {

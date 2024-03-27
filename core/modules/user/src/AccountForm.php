@@ -351,7 +351,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
-  public function syncUserLangcode($entity_type_id, UserInterface $user, array &$form, FormStateInterface &$form_state) {
+  public function syncUserLangcode(string $entity_type_id, UserInterface $user, array &$form, FormStateInterface &$form_state) {
     $user->getUntranslated()->langcode = $user->preferred_langcode;
   }
 

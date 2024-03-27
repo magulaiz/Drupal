@@ -328,7 +328,7 @@ class StringFilter extends FilterPluginBase implements FilterOperatorsInterface 
    * @return string
    *   Specified condition operator mapping value.
    */
-  protected function getConditionOperator($operator) {
+  protected function getConditionOperator(string $operator) {
     $mapping = $this->connection->mapConditionOperator($operator);
     return $mapping['operator'] ?? $operator;
   }
@@ -440,7 +440,7 @@ class StringFilter extends FilterPluginBase implements FilterOperatorsInterface 
    * @param string $field
    *   The expression pointing to the queries field, for example "foo.bar".
    */
-  protected function opRegex($field) {
+  protected function opRegex(string $field) {
     $this->query->addWhere($this->options['group'], $field, $this->value, 'REGEXP');
   }
 
@@ -450,7 +450,7 @@ class StringFilter extends FilterPluginBase implements FilterOperatorsInterface 
    * @param string $field
    *   The expression pointing to the queries field, for example "foo.bar".
    */
-  protected function opNotRegex($field) {
+  protected function opNotRegex(string $field) {
     $this->query->addWhere($this->options['group'], $field, $this->value, 'NOT REGEXP');
   }
 

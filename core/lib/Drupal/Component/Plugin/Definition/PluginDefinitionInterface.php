@@ -30,7 +30,7 @@ interface PluginDefinitionInterface {
    * @throws \InvalidArgumentException
    *   If the class is invalid.
    */
-  public function setClass($class);
+  public function setClass(string $class);
 
   /**
    * Gets the class.

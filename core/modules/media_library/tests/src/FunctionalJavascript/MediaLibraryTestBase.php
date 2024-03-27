@@ -62,7 +62,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    * @todo replace with whatever gets added in
    *   https://www.drupal.org/node/3061852
    */
-  protected function waitForText($text, $timeout = 10000) {
+  protected function waitForText(string $text, $timeout = 10000) {
     $result = $this->assertSession()->waitForText($text, $timeout);
     $this->assertNotEmpty($result, "\"$text\" not found");
   }
@@ -78,7 +78,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    * @todo replace with whatever gets added in
    *   https://www.drupal.org/node/3061852
    */
-  protected function waitForNoText($text, $timeout = 10000) {
+  protected function waitForNoText(string $text, $timeout = 10000) {
     $page = $this->getSession()->getPage();
     $result = $page->waitFor($timeout / 1000, function ($page) use ($text) {
       $actual = preg_replace('/\s+/u', ' ', $page->getText());
@@ -103,7 +103,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    * @todo replace with whatever gets added in
    *   https://www.drupal.org/node/3061852
    */
-  protected function waitForElementsCount($selector_type, $selector, $count, $timeout = 10000) {
+  protected function waitForElementsCount(string $selector_type, $selector, $count, $timeout = 10000) {
     $page = $this->getSession()->getPage();
 
     $start = microtime(TRUE);
@@ -132,7 +132,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    * @todo replace with whatever gets added in
    *   https://www.drupal.org/node/3061852
    */
-  protected function waitForElementTextContains($selector, $text, $timeout = 10000) {
+  protected function waitForElementTextContains(string $selector, string $text, $timeout = 10000) {
     $element = $this->assertSession()->waitForElement('css', "$selector:contains('$text')", $timeout);
     $this->assertNotEmpty($element);
   }
@@ -154,7 +154,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    * @todo replace with whatever gets added in
    *   https://www.drupal.org/node/3061852
    */
-  protected function assertElementExistsAfterWait($selector, $locator, $timeout = 10000) {
+  protected function assertElementExistsAfterWait(string $selector, $locator, $timeout = 10000) {
     $element = $this->assertSession()->waitForElement($selector, $locator, $timeout);
     $this->assertNotEmpty($element);
     return $element;
@@ -209,7 +209,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    * @todo replace with whatever gets added in
    *   https://www.drupal.org/node/3061852
    */
-  protected function waitForFieldExists($field, $timeout = 10000) {
+  protected function waitForFieldExists(string $field, $timeout = 10000) {
     $assert_session = $this->assertSession();
     $assert_session->waitForField($field, $timeout);
     return $assert_session->fieldExists($field);
@@ -230,7 +230,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    * @param string $operation
    *   The final word of the button to be clicked.
    */
-  protected function saveAnd($operation) {
+  protected function saveAnd(string $operation) {
     $this->assertElementExistsAfterWait('css', '.ui-dialog-buttonpane')->pressButton("Save and $operation");
 
     // assertWaitOnAjaxRequest() required for input "id" attributes to
@@ -275,7 +275,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    * @return \Behat\Mink\Element\NodeElement
    *   The NodeElement found via $after_open_selector.
    */
-  protected function openMediaLibraryForField($field_name, $after_open_selector = '.js-media-library-menu') {
+  protected function openMediaLibraryForField(string $field_name, string $after_open_selector = '.js-media-library-menu') {
     $this->assertElementExistsAfterWait('css', "#$field_name-media-library-wrapper.js-media-library-widget")
       ->pressButton('Add media');
     $this->waitForText('Add or select media');
@@ -363,7 +363,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    *   selected" is pressed in
    *   https://www.drupal.org/project/drupal/issues/3087227.
    */
-  protected function pressInsertSelected($expected_announcement = NULL, bool $should_close = TRUE) {
+  protected function pressInsertSelected(string $expected_announcement = NULL, bool $should_close = TRUE) {
     $this->assertSession()
       ->elementExists('css', '.ui-dialog-buttonpane')
       ->pressButton('Insert selected');
@@ -396,7 +396,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    * @param string $expected_selected_count
    *   (optional) The expected text of the selection counter.
    */
-  protected function selectMediaItem($index, $expected_selected_count = NULL) {
+  protected function selectMediaItem($index, string $expected_selected_count = NULL) {
     $checkboxes = $this->getCheckboxes();
     $this->assertGreaterThan($index, count($checkboxes));
     $checkboxes[$index]->check();
@@ -465,7 +465,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    * @param string $text
    *   The expected text of the counter.
    */
-  protected function assertSelectedMediaCount($text) {
+  protected function assertSelectedMediaCount(string $text) {
     $selected_count = $this->assertSession()
       ->elementExists('css', '.js-media-library-selected-count');
 

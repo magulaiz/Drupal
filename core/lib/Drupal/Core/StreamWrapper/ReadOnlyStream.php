@@ -115,7 +115,7 @@ abstract class ReadOnlyStream implements StreamWrapperInterface {
    *   prevent static analysis errors. In D11, consider changing it to an
    *   abstract method.
    */
-  protected function getLocalPath($uri = NULL) {
+  protected function getLocalPath(string $uri = NULL) {
     throw new \BadMethodCallException(get_class($this) . '::getLocalPath() not implemented.');
   }
 

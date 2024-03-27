@@ -151,7 +151,7 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
    *   replaced with underscores and if a default fallback to .value happened,
    *   the _value is stripped.
    */
-  public function createSqlAlias($field, $sql_field) {
+  public function createSqlAlias(string $field, string $sql_field) {
     $alias = str_replace('.', '_', $sql_field);
     // If the alias contains of field_*_value remove the _value at the end.
     if (str_starts_with($alias, 'field_') && !str_ends_with($field, '_value') && str_ends_with($alias, '_value')) {

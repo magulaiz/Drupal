@@ -25,7 +25,7 @@ interface EntityFieldManagerInterface {
    * @throws \LogicException
    *   Thrown if one of the entity keys is flagged as translatable.
    */
-  public function getBaseFieldDefinitions($entity_type_id);
+  public function getBaseFieldDefinitions(string $entity_type_id);
 
   /**
    * Gets the field definitions for a specific bundle.
@@ -39,7 +39,7 @@ interface EntityFieldManagerInterface {
    * @return \Drupal\Core\Field\FieldDefinitionInterface[]
    *   The array of field definitions for the bundle, keyed by field name.
    */
-  public function getFieldDefinitions($entity_type_id, $bundle);
+  public function getFieldDefinitions(string $entity_type_id, string $bundle);
 
   /**
    * Gets the field storage definitions for a content entity type.
@@ -59,7 +59,7 @@ interface EntityFieldManagerInterface {
    *
    * @see \Drupal\Core\Field\FieldStorageDefinitionInterface
    */
-  public function getFieldStorageDefinitions($entity_type_id);
+  public function getFieldStorageDefinitions(string $entity_type_id);
 
   /**
    * Gets a lightweight map of fields across bundles.
@@ -96,7 +96,7 @@ interface EntityFieldManagerInterface {
    *   - bundles: An associative array of the bundles in which the field
    *     appears, where the keys and values are both the bundle's machine name.
    */
-  public function getFieldMapByFieldType($field_type);
+  public function getFieldMapByFieldType(string $field_type);
 
   /**
    * Clears static and persistent field definition caches.
@@ -138,6 +138,6 @@ interface EntityFieldManagerInterface {
    *     element's 'delete' operation in the administration interface. Only for
    *     'form' context.
    */
-  public function getExtraFields($entity_type_id, $bundle);
+  public function getExtraFields(string $entity_type_id, string $bundle);
 
 }

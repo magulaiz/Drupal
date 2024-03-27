@@ -166,7 +166,7 @@ class EntityUrlTest extends UnitTestCase {
    * @covers ::linkTemplates
    * @covers ::urlRouteParameters
    */
-  public function testToUrlLinkTemplates($link_template, $expected_route_name) {
+  public function testToUrlLinkTemplates(string $link_template, string $expected_route_name) {
     $values = ['id' => static::ENTITY_ID, 'langcode' => $this->langcode];
     $entity = $this->getEntity(UrlTestEntity::class, $values);
     $this->registerLinkTemplate($link_template);
@@ -264,7 +264,7 @@ class EntityUrlTest extends UnitTestCase {
    * @covers ::linkTemplates
    * @covers ::urlRouteParameters
    */
-  public function testToUrlLinkTemplateNoId($link_template, $expected_route_name) {
+  public function testToUrlLinkTemplateNoId(string $link_template, string $expected_route_name) {
     $entity = $this->getEntity(UrlTestEntity::class, ['id' => static::ENTITY_ID]);
     $this->registerLinkTemplate($link_template);
 
@@ -354,7 +354,7 @@ class EntityUrlTest extends UnitTestCase {
    * @covers ::toUrl
    * @covers ::linkTemplates
    */
-  public function testToUrlUriCallbackUndefined(array $bundle_info, $uri_callback) {
+  public function testToUrlUriCallbackUndefined(array $bundle_info, string $uri_callback) {
     $entity = $this->getEntity(UrlTestEntity::class, ['id' => static::ENTITY_ID]);
 
     $this->registerBundleInfo($bundle_info);
@@ -473,7 +473,7 @@ class EntityUrlTest extends UnitTestCase {
    *
    * @return \Drupal\Tests\Core\Entity\UrlTestEntity|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected function getEntity($class, array $values, array $methods = []) {
+  protected function getEntity(string $class, array $values, array $methods = []) {
     $methods = array_merge($methods, ['getEntityType', 'entityTypeBundleInfo']);
 
     // Prophecy does not allow prophesizing abstract classes while actually
@@ -530,7 +530,7 @@ class EntityUrlTest extends UnitTestCase {
    * @param string $link_template
    *   The link template to register.
    */
-  protected function registerLinkTemplate($link_template) {
+  protected function registerLinkTemplate(string $link_template) {
     $link_templates = [
       // The path is actually never used because we never invoke the URL
       // generator but perform assertions on the URL object directly.

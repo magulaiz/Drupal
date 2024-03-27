@@ -335,7 +335,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
    *
    * @internal
    */
-  public function makeSequenceName($table, $field) {
+  public function makeSequenceName(string $table, string $field) {
     $sequence_name = $this->prefixTables('{' . $table . '}_' . $field . '_seq');
     // Remove identifier quotes as we are constructing a new name from a
     // prefixed and quoted table name.

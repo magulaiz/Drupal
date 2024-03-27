@@ -159,7 +159,7 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
+  protected function checkAccess(EntityInterface $entity, string $operation, AccountInterface $account) {
     if ($operation == 'delete' && $entity->isNew()) {
       return AccessResult::forbidden()->addCacheableDependency($entity);
     }
@@ -190,7 +190,7 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
    *   The cached AccessResult, or NULL if there is no record for the given
    *   user, operation, langcode and entity in the cache.
    */
-  protected function getCache($cid, $operation, $langcode, AccountInterface $account) {
+  protected function getCache(string $cid, string $operation, string $langcode, AccountInterface $account) {
     // Return from cache if a value has been set for it previously.
     if (isset($this->accessCache[$account->id()][$cid][$langcode][$operation])) {
       return $this->accessCache[$account->id()][$cid][$langcode][$operation];
@@ -216,7 +216,7 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
    * @return \Drupal\Core\Access\AccessResultInterface
    *   Whether the user has access, plus cacheability metadata.
    */
-  protected function setCache($access, $cid, $operation, $langcode, AccountInterface $account) {
+  protected function setCache($access, string $cid, string $operation, string $langcode, AccountInterface $account) {
     // Save the given value in the static cache and directly return it.
     return $this->accessCache[$account->id()][$cid][$langcode][$operation] = $access;
   }
@@ -388,7 +388,7 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  protected function checkFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+  protected function checkFieldAccess(string $operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
     if (!$items instanceof FieldItemListInterface || $operation !== 'view') {
       return AccessResult::allowed();
     }

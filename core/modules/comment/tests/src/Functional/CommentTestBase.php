@@ -120,7 +120,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    * @return \Drupal\comment\CommentInterface|null
    *   The posted comment or NULL when posted comment was not found.
    */
-  public function postComment($entity, $comment, $subject = '', $contact = NULL, $field_name = 'comment') {
+  public function postComment($entity, string $comment, string $subject = '', string $contact = NULL, string $field_name = 'comment') {
     $edit = [];
     $edit['comment_body[0][value]'] = $comment;
 
@@ -267,7 +267,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    *   (optional) Field name through which the comment should be posted.
    *   Defaults to 'comment'.
    */
-  public function setCommentPreview($mode, $field_name = 'comment') {
+  public function setCommentPreview($mode, string $field_name = 'comment') {
     switch ($mode) {
       case DRUPAL_DISABLED:
         $mode_text = 'disabled';
@@ -294,7 +294,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    *   (optional) Field name through which the comment should be posted.
    *   Defaults to 'comment'.
    */
-  public function setCommentForm($enabled, $field_name = 'comment') {
+  public function setCommentForm($enabled, string $field_name = 'comment') {
     $this->setCommentSettings('form_location', ($enabled ? CommentItemInterface::FORM_BELOW : CommentItemInterface::FORM_SEPARATE_PAGE), 'Comment controls ' . ($enabled ? 'enabled' : 'disabled') . '.', $field_name);
   }
 
@@ -320,7 +320,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    *   (optional) Field name through which the comment should be posted.
    *   Defaults to 'comment'.
    */
-  public function setCommentsPerPage($number, $field_name = 'comment') {
+  public function setCommentsPerPage($number, string $field_name = 'comment') {
     $this->setCommentSettings('per_page', $number, new FormattableMarkup('Number of comments per page set to @number.', ['@number' => $number]), $field_name);
   }
 
@@ -337,7 +337,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    *   (optional) Field name through which the comment should be posted.
    *   Defaults to 'comment'.
    */
-  public function setCommentSettings($name, $value, $message, $field_name = 'comment') {
+  public function setCommentSettings(string $name, string $value, string $message, string $field_name = 'comment') {
     $field = FieldConfig::loadByName('node', 'article', $field_name);
     $field->setSetting($name, $value);
     $field->save();
@@ -363,7 +363,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    * @param bool $approval
    *   Operation is found on approval page.
    */
-  public function performCommentOperation(CommentInterface $comment, $operation, $approval = FALSE) {
+  public function performCommentOperation(CommentInterface $comment, string $operation, $approval = FALSE) {
     $edit = [];
     $edit['operation'] = $operation;
     $edit['comments[' . $comment->id() . ']'] = TRUE;
@@ -388,7 +388,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    * @return int
    *   Comment id.
    */
-  public function getUnapprovedComment($subject) {
+  public function getUnapprovedComment(string $subject) {
     $this->drupalGet('admin/content/comment/approval');
     preg_match('/href="(.*?)#comment-([^"]+)"(.*?)>(' . $subject . ')/', $this->getSession()->getPage()->getContent(), $match);
 
@@ -404,7 +404,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    * @return \Drupal\comment\Entity\CommentType
    *   Created comment type.
    */
-  protected function createCommentType($label) {
+  protected function createCommentType(string $label) {
     $bundle = CommentType::create([
       'id' => $label,
       'label' => $label,

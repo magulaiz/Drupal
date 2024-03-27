@@ -48,7 +48,7 @@ interface LanguageManagerInterface {
    * @return \Drupal\Core\Language\LanguageInterface
    *   The current language object for the given type of language.
    */
-  public function getCurrentLanguage($type = LanguageInterface::TYPE_INTERFACE);
+  public function getCurrentLanguage(string $type = LanguageInterface::TYPE_INTERFACE);
 
   /**
    * Resets the given language type or all types if none specified.
@@ -102,7 +102,7 @@ interface LanguageManagerInterface {
    * @return \Drupal\Core\Language\LanguageInterface|null
    *   A fully-populated language object or NULL.
    */
-  public function getLanguage($langcode);
+  public function getLanguage(string $langcode);
 
   /**
    * Produced the printed name for a language for display.
@@ -113,7 +113,7 @@ interface LanguageManagerInterface {
    * @return string
    *   The printed name of the language.
    */
-  public function getLanguageName($langcode);
+  public function getLanguageName(string $langcode);
 
   /**
    * Returns a list of the default locked languages.
@@ -136,7 +136,7 @@ interface LanguageManagerInterface {
    * @return bool
    *   Returns whether the language is locked.
    */
-  public function isLanguageLocked($langcode);
+  public function isLanguageLocked(string $langcode);
 
   /**
    * Returns the language fallback candidates for a given context.
@@ -177,7 +177,7 @@ interface LanguageManagerInterface {
    *   - method_id: The language negotiation method ID
    *   or NULL if there are no language switch links.
    */
-  public function getLanguageSwitchLinks($type, Url $url);
+  public function getLanguageSwitchLinks(string $type, Url $url);
 
   /**
    * Sets the configuration override language.

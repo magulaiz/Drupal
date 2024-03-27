@@ -918,7 +918,7 @@ class AccessResultTest extends UnitTestCase {
    * @param \Drupal\Core\Access\AccessResult $expected_access
    *   The expected access check result.
    */
-  public function testAllowedIfHasPermissions($permissions, $conjunction, AccessResult $expected_access) {
+  public function testAllowedIfHasPermissions($permissions, string $conjunction, AccessResult $expected_access) {
     $account = $this->createMock('\Drupal\Core\Session\AccountInterface');
     $account->expects($this->any())
       ->method('hasPermission')

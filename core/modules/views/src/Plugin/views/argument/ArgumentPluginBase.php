@@ -1273,7 +1273,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
    *
    * @see decodeValidatorId()
    */
-  public static function encodeValidatorId($id) {
+  public static function encodeValidatorId(string $id) {
     return str_replace(':', '---', $id);
   }
 
@@ -1286,7 +1286,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
    * @return string
    *   The original identifier.
    */
-  public static function decodeValidatorId($id) {
+  public static function decodeValidatorId(string $id) {
     return str_replace('---', ':', $id);
   }
 

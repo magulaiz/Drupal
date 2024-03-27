@@ -72,7 +72,7 @@ class OpenDialogCommand implements CommandInterface, CommandWithAttachedAssetsIn
    *   on the content of the dialog. If left empty, the settings will be
    *   populated automatically from the current request.
    */
-  public function __construct($selector, string|\Stringable|null $title, $content, array $dialog_options = [], $settings = NULL) {
+  public function __construct(string $selector, string|\Stringable|null $title, $content, array $dialog_options = [], $settings = NULL) {
     $title = PlainTextOutput::renderFromHtml($title);
 
     $dialog_options += ['title' => $title];
@@ -111,7 +111,7 @@ class OpenDialogCommand implements CommandInterface, CommandWithAttachedAssetsIn
    * @param mixed $value
    *   Option to be passed to the dialog implementation.
    */
-  public function setDialogOption($key, $value) {
+  public function setDialogOption(string $key, $value) {
     $this->dialogOptions[$key] = $value;
   }
 
@@ -121,7 +121,7 @@ class OpenDialogCommand implements CommandInterface, CommandWithAttachedAssetsIn
    * @param string $title
    *   The new title of the dialog.
    */
-  public function setDialogTitle($title) {
+  public function setDialogTitle(string $title) {
     $this->setDialogOption('title', $title);
   }
 

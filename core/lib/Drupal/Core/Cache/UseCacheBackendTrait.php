@@ -32,7 +32,7 @@ trait UseCacheBackendTrait {
    *
    * @see \Drupal\Core\Cache\CacheBackendInterface::get()
    */
-  protected function cacheGet($cid) {
+  protected function cacheGet(string $cid) {
     if ($this->useCaches && $this->cacheBackend) {
       return $this->cacheBackend->get($cid);
     }
@@ -66,7 +66,7 @@ trait UseCacheBackendTrait {
    *
    * @see \Drupal\Core\Cache\CacheBackendInterface::set()
    */
-  protected function cacheSet($cid, $data, $expire = Cache::PERMANENT, array $tags = []) {
+  protected function cacheSet(string $cid, $data, $expire = Cache::PERMANENT, array $tags = []) {
     if ($this->cacheBackend && $this->useCaches) {
       $this->cacheBackend->set($cid, $data, $expire, $tags);
     }

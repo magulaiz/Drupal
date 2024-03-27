@@ -120,7 +120,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    * @return static
    *   The object itself for chaining.
    */
-  public function setName($name) {
+  public function setName(string $name) {
     $this->definition['field_name'] = $name;
     return $this;
   }
@@ -203,7 +203,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    *
    * @return $this
    */
-  public function setProvider($provider) {
+  public function setProvider(string $provider) {
     $this->definition['provider'] = $provider;
     return $this;
   }
@@ -303,7 +303,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    * @return static
    *   The object itself for chaining.
    */
-  public function setPropertyConstraints($name, array $constraints) {
+  public function setPropertyConstraints(string $name, array $constraints) {
     $item_constraints = $this->getItemDefinition()->getConstraints();
     $item_constraints['ComplexData'][$name] = $constraints;
     $this->getItemDefinition()->setConstraints($item_constraints);
@@ -342,7 +342,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    *
    * @see \Drupal\Core\Field\BaseFieldDefinition::addConstraint()
    */
-  public function addPropertyConstraints($name, array $constraints) {
+  public function addPropertyConstraints(string $name, array $constraints) {
     $item_constraints = $this->getItemDefinition()->getConstraint('ComplexData') ?: [];
     if (isset($item_constraints[$name])) {
       // Add the new property constraints, overwriting as required.
@@ -378,7 +378,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    * @return static
    *   The object itself for chaining.
    */
-  public function setDisplayOptions($display_context, array $options) {
+  public function setDisplayOptions(string $display_context, array $options) {
     $this->definition['display'][$display_context]['options'] = $options;
     return $this;
   }
@@ -396,7 +396,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    * @return static
    *   The object itself for chaining.
    */
-  public function setDisplayConfigurable($display_context, $configurable) {
+  public function setDisplayConfigurable(string $display_context, $configurable) {
     // If no explicit display options have been specified, default to 'hidden'.
     if (empty($this->definition['display'][$display_context])) {
       $this->definition['display'][$display_context]['options'] = ['region' => 'hidden'];
@@ -548,7 +548,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    *
    * @return $this
    */
-  public function setInitialValueFromField($field_name, $default_value = NULL) {
+  public function setInitialValueFromField(string $field_name, $default_value = NULL) {
     $this->definition['initial_value_from_field'] = $field_name;
     $this->setInitialValue($default_value);
     return $this;
@@ -632,7 +632,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    *
    * @return $this
    */
-  public function setTargetEntityTypeId($entity_type_id) {
+  public function setTargetEntityTypeId(string $entity_type_id) {
     $this->definition['entity_type'] = $entity_type_id;
     return $this;
   }

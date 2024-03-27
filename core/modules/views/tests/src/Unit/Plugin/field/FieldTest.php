@@ -321,7 +321,7 @@ class FieldTest extends UnitTestCase {
    * @param string $order
    *   The sort order.
    */
-  public function testClickSortWithOutConfiguredColumn($order) {
+  public function testClickSortWithOutConfiguredColumn(string $order) {
     $definition = [
       'entity_type' => 'test_entity',
       'field_name' => 'title',
@@ -343,7 +343,7 @@ class FieldTest extends UnitTestCase {
    *
    * @covers ::clickSort
    */
-  public function testClickSortWithBaseField($order) {
+  public function testClickSortWithBaseField(string $order) {
     $definition = [
       'entity_type' => 'test_entity',
       'field_name' => 'title',
@@ -403,7 +403,7 @@ class FieldTest extends UnitTestCase {
    *
    * @covers ::clickSort
    */
-  public function testClickSortWithConfiguredField($order) {
+  public function testClickSortWithConfiguredField(string $order) {
     $definition = [
       'entity_type' => 'test_entity',
       'field_name' => 'body',

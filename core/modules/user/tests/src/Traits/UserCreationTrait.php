@@ -149,7 +149,7 @@ trait UserCreationTrait {
    * @throws \Drupal\Core\Entity\EntityStorageException
    *   If the user creation fails.
    */
-  protected function createUser(array $permissions = [], $name = NULL, $admin = FALSE, array $values = []) {
+  protected function createUser(array $permissions = [], string $name = NULL, $admin = FALSE, array $values = []) {
     // Create a role with the given permission set, if any.
     $rid = FALSE;
     if ($permissions) {
@@ -210,7 +210,7 @@ trait UserCreationTrait {
    * @return string
    *   Role ID of newly created role, or FALSE if role creation failed.
    */
-  protected function createAdminRole($rid = NULL, $name = NULL, $weight = NULL) {
+  protected function createAdminRole(string $rid = NULL, string $name = NULL, $weight = NULL) {
     $rid = $this->createRole([], $rid, $name, $weight);
     if ($rid) {
       /** @var \Drupal\user\RoleInterface $role */
@@ -237,7 +237,7 @@ trait UserCreationTrait {
    * @return string
    *   Role ID of newly created role, or FALSE if role creation failed.
    */
-  protected function createRole(array $permissions, $rid = NULL, $name = NULL, $weight = NULL) {
+  protected function createRole(array $permissions, string $rid = NULL, string $name = NULL, $weight = NULL) {
     // Generate a random, lowercase machine name if none was passed.
     if (!isset($rid)) {
       $rid = $this->randomMachineName(8);

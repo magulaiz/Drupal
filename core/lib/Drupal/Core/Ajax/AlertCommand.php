@@ -22,7 +22,7 @@ class AlertCommand implements CommandInterface {
    * @param string $text
    *   The text to be displayed in the alert box.
    */
-  public function __construct($text) {
+  public function __construct(string $text) {
     $this->text = $text;
   }
 

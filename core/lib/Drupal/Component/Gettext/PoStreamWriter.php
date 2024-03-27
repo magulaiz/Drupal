@@ -110,7 +110,7 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
    * @throws \Exception
    *   If writing the data is not possible.
    */
-  private function write($data) {
+  private function write(string $data) {
     $result = fwrite($this->fd, $data);
     if ($result === FALSE || $result != strlen($data)) {
       throw new \Exception('Unable to write data: ' . substr($data, 0, 20));

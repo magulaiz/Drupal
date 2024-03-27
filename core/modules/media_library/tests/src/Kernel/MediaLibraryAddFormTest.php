@@ -111,7 +111,7 @@ class MediaLibraryAddFormTest extends KernelTestBase {
    * @return array
    *   The render array for the media library.
    */
-  protected function buildLibraryUi($selected_type_id) {
+  protected function buildLibraryUi(string $selected_type_id) {
     $state = MediaLibraryState::create('test', ['image', 'remote_video'], $selected_type_id, -1);
     return \Drupal::service('media_library.ui_builder')->buildUi($state);
   }

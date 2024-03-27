@@ -64,7 +64,7 @@ interface SectionStorageInterface extends SectionListInterface, PluginInspection
    * @return \Drupal\Core\Url
    *   The URL object.
    */
-  public function getLayoutBuilderUrl($rel = 'view');
+  public function getLayoutBuilderUrl(string $rel = 'view');
 
   /**
    * Derives the available plugin contexts from route values.
@@ -87,7 +87,7 @@ interface SectionStorageInterface extends SectionListInterface, PluginInspection
    *
    * @see \Drupal\Core\ParamConverter\ParamConverterInterface::convert()
    */
-  public function deriveContextsFromRoute($value, $definition, $name, array $defaults);
+  public function deriveContextsFromRoute($value, $definition, string $name, array $defaults);
 
   /**
    * Gets contexts for use during preview.

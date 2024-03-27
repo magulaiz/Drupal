@@ -170,7 +170,7 @@ class ConfigController implements ContainerInjectionInterface {
    * @return array
    *   Table showing a two-way diff between the active and staged configuration.
    */
-  public function diff($source_name, $target_name = NULL, $collection = NULL) {
+  public function diff(string $source_name, string $target_name = NULL, string $collection = NULL) {
     if (!isset($collection)) {
       $collection = StorageInterface::DEFAULT_COLLECTION;
     }

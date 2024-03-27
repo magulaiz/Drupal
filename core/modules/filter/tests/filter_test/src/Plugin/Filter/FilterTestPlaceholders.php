@@ -40,7 +40,7 @@ class FilterTestPlaceholders extends FilterBase implements TrustedCallbackInterf
    * @return array
    *   A renderable array.
    */
-  public static function renderDynamicThing($thing) {
+  public static function renderDynamicThing(string $thing) {
     return [
       '#markup' => new FormattableMarkup('This is a dynamic @thing.', ['@thing' => $thing]),
     ];

@@ -210,7 +210,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity object.
    */
-  protected function invokeHook($hook, EntityInterface $entity) {
+  protected function invokeHook(string $hook, EntityInterface $entity) {
     // Invoke the hook.
     $this->moduleHandler()->invokeAll($this->entityTypeId . '_' . $hook, [$entity]);
     // Invoke the respective entity-level hook.

@@ -29,7 +29,7 @@ class Zip implements ArchiverInterface {
    *
    * @throws \Drupal\Core\Archiver\ArchiverException
    */
-  public function __construct($file_path, array $configuration = []) {
+  public function __construct(string $file_path, array $configuration = []) {
     $this->zip = new \ZipArchive();
     if ($this->zip->open($file_path, $configuration['flags'] ?? 0) !== TRUE) {
       throw new ArchiverException("Cannot open '$file_path'");

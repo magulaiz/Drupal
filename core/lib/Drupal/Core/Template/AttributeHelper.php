@@ -31,7 +31,7 @@ class AttributeHelper {
    * @throws \InvalidArgumentException
    *   When the input $collection is neither an Attribute object nor an array.
    */
-  public static function attributeExists($name, $collection) {
+  public static function attributeExists(string $name, $collection) {
     if ($collection instanceof Attribute) {
       return $collection->hasAttribute($name);
     }

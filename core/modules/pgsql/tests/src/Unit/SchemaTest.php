@@ -27,7 +27,7 @@ class SchemaTest extends UnitTestCase {
    * @covers ::constraintExists
    * @dataProvider providerComputedConstraintName
    */
-  public function testComputedConstraintName($table_name, $name, $expected) {
+  public function testComputedConstraintName(string $table_name, string $name, string $expected) {
     $max_identifier_length = 63;
 
     $connection = $this->prophesize('\Drupal\pgsql\Driver\Database\pgsql\Connection');

@@ -33,7 +33,7 @@ trait MediaTypeCreationTrait {
    * @see \Drupal\media\MediaTypeInterface
    * @see \Drupal\media\Entity\MediaType
    */
-  protected function createMediaType($source_plugin_id, array $values = []) {
+  protected function createMediaType(string $source_plugin_id, array $values = []) {
     $values += [
       'id' => $this->randomMachineName(),
       'label' => $this->randomString(),

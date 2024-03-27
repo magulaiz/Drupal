@@ -91,7 +91,7 @@ class FieldUninstallValidator implements ConfigImportModuleUninstallValidatorInt
    * @return \Drupal\field\FieldStorageConfigInterface[]
    *   An array of field storages for a specified module.
    */
-  protected function getFieldStoragesByModule($module) {
+  protected function getFieldStoragesByModule(string $module) {
     return $this->fieldStorageConfigStorage->loadByProperties(['module' => $module, 'include_deleted' => TRUE]);
   }
 
@@ -104,7 +104,7 @@ class FieldUninstallValidator implements ConfigImportModuleUninstallValidatorInt
    * @return string
    *   The field type label.
    */
-  protected function getFieldTypeLabel($field_type) {
+  protected function getFieldTypeLabel(string $field_type) {
     return $this->fieldTypeManager->getDefinitions()[$field_type]['label'];
   }
 

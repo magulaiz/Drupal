@@ -76,7 +76,7 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
    * @return $this
    *   The configuration object.
    */
-  public function setName($name) {
+  public function setName(string $name) {
     $this->name = $name;
     return $this;
   }
@@ -91,7 +91,7 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
    *
    * @see Config::MAX_NAME_LENGTH
    */
-  public static function validateName($name) {
+  public static function validateName(string $name) {
     // The name must be namespaced by owner.
     if (!str_contains($name, '.')) {
       throw new ConfigNameException("Missing namespace in Config object name $name.");
@@ -128,7 +128,7 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
    * @return mixed
    *   The data that was requested.
    */
-  public function get($key = '') {
+  public function get(string $key = '') {
     if (empty($key)) {
       return $this->data;
     }
@@ -177,7 +177,7 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
    * @throws \Drupal\Core\Config\ConfigValueException
    *   If $value is an array and any of its keys in any depth contains a dot.
    */
-  public function set($key, $value) {
+  public function set(string $key, $value) {
     $value = $this->castSafeStrings($value);
     // The dot/period is a reserved character; it may appear between keys, but
     // not within keys.
@@ -223,7 +223,7 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
    * @return $this
    *   The configuration object.
    */
-  public function clear($key) {
+  public function clear(string $key) {
     $parts = explode('.', $key);
     if (count($parts) == 1) {
       unset($this->data[$key]);

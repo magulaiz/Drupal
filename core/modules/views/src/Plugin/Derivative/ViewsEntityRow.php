@@ -57,7 +57,7 @@ class ViewsEntityRow implements ContainerDeriverInterface {
    * @param \Drupal\views\ViewsData $views_data
    *   The views data service.
    */
-  public function __construct($base_plugin_id, EntityTypeManagerInterface $entity_type_manager, ViewsData $views_data) {
+  public function __construct(string $base_plugin_id, EntityTypeManagerInterface $entity_type_manager, ViewsData $views_data) {
     $this->basePluginId = $base_plugin_id;
     $this->entityTypeManager = $entity_type_manager;
     $this->viewsData = $views_data;

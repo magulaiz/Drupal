@@ -134,7 +134,7 @@ abstract class ExtensionList {
    * @param string $install_profile
    *   The install profile used by the site.
    */
-  public function __construct($root, $type, CacheBackendInterface $cache, InfoParserInterface $info_parser, ModuleHandlerInterface $module_handler, StateInterface $state, $install_profile) {
+  public function __construct(string $root, string $type, CacheBackendInterface $cache, InfoParserInterface $info_parser, ModuleHandlerInterface $module_handler, StateInterface $state, string $install_profile) {
     $this->root = $root;
     $this->type = $type;
     $this->cache = $cache;
@@ -224,7 +224,7 @@ abstract class ExtensionList {
    *   TRUE if the extension exists (regardless installed or not) and FALSE if
    *   not.
    */
-  public function exists($extension_name) {
+  public function exists(string $extension_name) {
     $extensions = $this->getList();
     return isset($extensions[$extension_name]);
   }
@@ -241,7 +241,7 @@ abstract class ExtensionList {
    * @throws \Drupal\Core\Extension\Exception\UnknownExtensionException
    *   If there is no extension with the supplied machine name.
    */
-  public function getName($extension_name) {
+  public function getName(string $extension_name) {
     return $this->get($extension_name)->info['name'];
   }
 
@@ -258,7 +258,7 @@ abstract class ExtensionList {
    * @throws \Drupal\Core\Extension\Exception\UnknownExtensionException
    *   If there is no extension with the supplied name.
    */
-  public function get($extension_name) {
+  public function get(string $extension_name) {
     $extensions = $this->getList();
     if (isset($extensions[$extension_name])) {
       return $extensions[$extension_name];
@@ -340,7 +340,7 @@ abstract class ExtensionList {
    * @throws \Drupal\Core\Extension\Exception\UnknownExtensionException
    *   If there is no extension with the supplied name.
    */
-  public function getExtensionInfo($extension_name) {
+  public function getExtensionInfo(string $extension_name) {
     $all_info = $this->getAllInstalledInfo();
     if (isset($all_info[$extension_name])) {
       return $all_info[$extension_name];
@@ -466,7 +466,7 @@ abstract class ExtensionList {
    *
    * @see ::getPathname
    */
-  public function setPathname($extension_name, $pathname) {
+  public function setPathname(string $extension_name, string $pathname) {
     $this->addedPathNames[$extension_name] = $pathname;
   }
 
@@ -511,7 +511,7 @@ abstract class ExtensionList {
    * @throws \Drupal\Core\Extension\Exception\UnknownExtensionException
    *   If there is no extension with the supplied machine name.
    */
-  public function getPathname($extension_name) {
+  public function getPathname(string $extension_name) {
     if (isset($this->addedPathNames[$extension_name])) {
       return $this->addedPathNames[$extension_name];
     }
@@ -539,7 +539,7 @@ abstract class ExtensionList {
    * @throws \Drupal\Core\Extension\Exception\UnknownExtensionException
    *   If there is no extension with the supplied name.
    */
-  public function getPath($extension_name) {
+  public function getPath(string $extension_name) {
     return dirname($this->getPathname($extension_name));
   }
 
@@ -582,7 +582,7 @@ abstract class ExtensionList {
    * @throws \Drupal\Core\Extension\Exception\UnknownExtensionException
    *   If there is no extension with the supplied name.
    */
-  public function checkIncompatibility($name) {
+  public function checkIncompatibility(string $name) {
     $extension = $this->get($name);
     return $extension->info['core_incompatible'] || (isset($extension->info['php']) && version_compare(phpversion(), $extension->info['php']) < 0);
   }

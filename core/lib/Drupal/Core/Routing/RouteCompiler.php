@@ -73,7 +73,7 @@ class RouteCompiler extends SymfonyRouteCompiler implements RouteCompilerInterfa
    * @return string
    *   The path pattern outline.
    */
-  public static function getPatternOutline($path) {
+  public static function getPatternOutline(string $path) {
     return preg_replace('#\{\w+\}#', '%', $path);
   }
 
@@ -86,7 +86,7 @@ class RouteCompiler extends SymfonyRouteCompiler implements RouteCompilerInterfa
    * @return int
    *   The fitness of the path, as an integer.
    */
-  public static function getFit($path) {
+  public static function getFit(string $path) {
     $parts = explode('/', trim($path, '/'));
     $number_parts = count($parts);
     // We store the highest index of parts here to save some work in the fit

@@ -24,7 +24,7 @@ trait EntityDefinitionTestTrait {
    *   (optional) Applies changes only for the specified entity type ID.
    *   Defaults to NULL.
    */
-  protected function applyEntityUpdates($entity_type_id = NULL) {
+  protected function applyEntityUpdates(string $entity_type_id = NULL) {
     $complete_change_list = \Drupal::entityDefinitionUpdateManager()->getChangeList();
     if ($complete_change_list) {
       // In case there are changes, explicitly invalidate caches.
@@ -68,7 +68,7 @@ trait EntityDefinitionTestTrait {
    * @param string $entity_type_id
    *   The entity type ID.
    */
-  protected function doEntityUpdate($op, $entity_type_id) {
+  protected function doEntityUpdate(string $op, string $entity_type_id) {
     $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
     $field_storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions($entity_type_id);
     switch ($op) {
@@ -96,7 +96,7 @@ trait EntityDefinitionTestTrait {
    * @param array|null $original_storage_definition
    *   The original field storage definition.
    */
-  protected function doFieldUpdate($op, $storage_definition = NULL, $original_storage_definition = NULL) {
+  protected function doFieldUpdate(string $op, $storage_definition = NULL, $original_storage_definition = NULL) {
     switch ($op) {
       case EntityDefinitionUpdateManagerInterface::DEFINITION_CREATED:
         \Drupal::service('field_storage_definition.listener')->onFieldStorageDefinitionCreate($storage_definition);
@@ -235,7 +235,7 @@ trait EntityDefinitionTestTrait {
    *   (optional) If the base field should be translatable or not. Defaults to
    *   FALSE.
    */
-  protected function addBaseField($type = 'string', $entity_type_id = 'entity_test_update', $is_revisionable = FALSE, $set_label = TRUE, $is_translatable = FALSE) {
+  protected function addBaseField(string $type = 'string', string $entity_type_id = 'entity_test_update', $is_revisionable = FALSE, $set_label = TRUE, $is_translatable = FALSE) {
     $definitions['new_base_field'] = BaseFieldDefinition::create($type)
       ->setName('new_base_field')
       ->setRevisionable($is_revisionable)
@@ -268,7 +268,7 @@ trait EntityDefinitionTestTrait {
    * @param string $type
    *   (optional) The field type for the new field. Defaults to 'string'.
    */
-  protected function addRevisionableBaseField($type = 'string') {
+  protected function addRevisionableBaseField(string $type = 'string') {
     $definitions['new_base_field'] = BaseFieldDefinition::create($type)
       ->setName('new_base_field')
       ->setLabel(t('A new revisionable base field'))
@@ -300,7 +300,7 @@ trait EntityDefinitionTestTrait {
    * @param string $entity_type_id
    *   (optional) The entity type ID the base field should be attached to.
    */
-  protected function removeBaseField($entity_type_id = 'entity_test_update') {
+  protected function removeBaseField(string $entity_type_id = 'entity_test_update') {
     $this->state->delete($entity_type_id . '.additional_base_field_definitions');
   }
 
@@ -328,7 +328,7 @@ trait EntityDefinitionTestTrait {
    * @param bool $translatable
    *   (optional) Whether the field should be translatable. Defaults to FALSE.
    */
-  protected function addBundleField($type = 'string', $revisionable = FALSE, $translatable = FALSE) {
+  protected function addBundleField(string $type = 'string', $revisionable = FALSE, $translatable = FALSE) {
     $definitions['new_bundle_field'] = FieldStorageDefinition::create($type)
       ->setName('new_bundle_field')
       ->setLabel(t('A new bundle field'))

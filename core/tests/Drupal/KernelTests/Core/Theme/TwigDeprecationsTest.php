@@ -147,7 +147,7 @@ class TwigDeprecationsTest extends KernelTestBase {
    * @param array $preprocess
    *   An array to merge in theme_test_deprecations_preprocess_preprocess().
    */
-  protected function assertRendered($expected, array $preprocess): void {
+  protected function assertRendered(string $expected, array $preprocess): void {
     \Drupal::state()->set('theme_test.theme_test_deprecations_preprocess', $preprocess);
     $element = [
       '#theme' => 'theme_test_deprecations_preprocess',

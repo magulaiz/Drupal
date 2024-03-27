@@ -450,7 +450,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
    * @param bool $allow_custom
    *   Whether to allow custom layouts.
    */
-  private function enableLayoutsForBundle($path, $allow_custom = FALSE) {
+  private function enableLayoutsForBundle(string $path, $allow_custom = FALSE) {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $this->drupalGet($path);
@@ -470,7 +470,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
    * @param string $block_title
    *   The block title which will be the link text.
    */
-  private function openAddBlockForm($block_title) {
+  private function openAddBlockForm(string $block_title) {
     $assert_session = $this->assertSession();
     $assert_session->linkExists('Add block');
     $this->clickLink('Add block');

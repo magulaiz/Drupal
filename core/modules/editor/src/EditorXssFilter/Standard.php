@@ -84,7 +84,7 @@ class Standard extends Xss implements EditorXssFilterInterface {
    * @return string
    *   The filtered string.
    */
-  protected static function filterXssDataAttributes($html) {
+  protected static function filterXssDataAttributes(string $html) {
     if (stristr($html, 'data-') !== FALSE) {
       $dom = Html::load($html);
       $xpath = new \DOMXPath($dom);

@@ -56,7 +56,7 @@ class ModerationInformationTest extends UnitTestCase {
    * @return \Drupal\Core\Entity\EntityTypeManagerInterface
    *   The mocked entity type manager.
    */
-  public function setupModerationBundleInfo($bundle, $workflow = NULL) {
+  public function setupModerationBundleInfo(string $bundle, $workflow = NULL) {
     $bundle_info_array = [];
     if ($workflow) {
       $bundle_info_array['workflow'] = $workflow;

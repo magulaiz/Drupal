@@ -258,7 +258,7 @@ class MigrateUpgradeImportBatch {
    * @param string $elapsed
    *   The time to run the batch.
    */
-  public static function finished($success, $results, $operations, $elapsed) {
+  public static function finished($success, $results, $operations, string $elapsed) {
     $successes = $results['successes'];
     $failures = $results['failures'];
 

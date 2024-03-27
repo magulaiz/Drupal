@@ -437,7 +437,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
    *   The EntityQuery object with the basic conditions and sorting applied to
    *   it.
    */
-  protected function buildEntityQuery($match = NULL, $match_operator = 'CONTAINS') {
+  protected function buildEntityQuery($match = NULL, string $match_operator = 'CONTAINS') {
     $configuration = $this->getConfiguration();
     $target_type = $configuration['target_type'];
     $entity_type = $this->entityTypeManager->getDefinition($target_type);

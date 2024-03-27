@@ -49,7 +49,7 @@ class HtmlTest extends TestCase {
    *
    * @covers ::cleanCssIdentifier
    */
-  public function testCleanCssIdentifier($expected, $source, $filter = NULL) {
+  public function testCleanCssIdentifier(string $expected, string $source, $filter = NULL) {
     if ($filter !== NULL) {
       $this->assertSame($expected, Html::cleanCssIdentifier($source, $filter));
     }
@@ -119,7 +119,7 @@ class HtmlTest extends TestCase {
    *
    * @covers ::getUniqueId
    */
-  public function testHtmlGetUniqueId($expected, $source, $reset = FALSE) {
+  public function testHtmlGetUniqueId(string $expected, string $source, $reset = FALSE) {
     if ($reset) {
       Html::resetSeenIds();
     }
@@ -162,7 +162,7 @@ class HtmlTest extends TestCase {
    *
    * @covers ::getUniqueId
    */
-  public function testHtmlGetUniqueIdWithAjaxIds($expected, $source) {
+  public function testHtmlGetUniqueIdWithAjaxIds(string $expected, string $source) {
     Html::setIsAjax(TRUE);
     $id = Html::getUniqueId($source);
 
@@ -206,7 +206,7 @@ class HtmlTest extends TestCase {
    *
    * @covers ::getId
    */
-  public function testHtmlGetId($expected, $source) {
+  public function testHtmlGetId(string $expected, string $source) {
     Html::setIsAjax(FALSE);
     $this->assertSame($expected, Html::getId($source));
   }

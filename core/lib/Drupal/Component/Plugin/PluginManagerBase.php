@@ -99,7 +99,7 @@ abstract class PluginManagerBase implements PluginManagerInterface {
    *   When ::getFallbackPluginId() is not implemented in the concrete plugin
    *   manager class.
    */
-  protected function handlePluginNotFound($plugin_id, array $configuration) {
+  protected function handlePluginNotFound(string $plugin_id, array $configuration) {
     $fallback_id = $this->getFallbackPluginId($plugin_id, $configuration);
     return $this->getFactory()->createInstance($fallback_id, $configuration);
   }
@@ -124,7 +124,7 @@ abstract class PluginManagerBase implements PluginManagerInterface {
    * @throws \BadMethodCallException
    *   If the method is not implemented in the concrete plugin manager class.
    */
-  protected function getFallbackPluginId($plugin_id, array $configuration = []) {
+  protected function getFallbackPluginId(string $plugin_id, array $configuration = []) {
     throw new \BadMethodCallException(static::class . '::getFallbackPluginId() not implemented.');
   }
 

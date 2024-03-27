@@ -45,7 +45,7 @@ class Crypt {
    *   A base-64 encoded sha-256 hash, with + replaced with -, / with _ and
    *   any = padding characters removed.
    */
-  public static function hashBase64($data) {
+  public static function hashBase64(string $data) {
     $hash = base64_encode(hash('sha256', $data, TRUE));
     // Modify the hash so it's safe to use in URLs.
     return str_replace(['+', '/', '='], ['-', '_', ''], $hash);

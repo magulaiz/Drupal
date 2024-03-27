@@ -96,7 +96,7 @@ class Bytes {
    * @return bool
    *   TRUE if the string is valid, FALSE otherwise.
    */
-  public static function validate($string): bool {
+  public static function validate(string $string): bool {
     // Ensure that the string starts with a numeric character.
     if (!preg_match('/^[0-9]/', $string)) {
       return FALSE;

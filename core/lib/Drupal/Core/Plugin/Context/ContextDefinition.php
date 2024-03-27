@@ -80,7 +80,7 @@ class ContextDefinition implements ContextDefinitionInterface {
    * @return static
    *   The created context definition object.
    */
-  public static function create($data_type = 'any') {
+  public static function create(string $data_type = 'any') {
     if (str_starts_with($data_type, 'entity:')) {
       return new EntityContextDefinition($data_type);
     }
@@ -108,7 +108,7 @@ class ContextDefinition implements ContextDefinitionInterface {
    *   An array of constraints keyed by the constraint name and a value of an
    *   array constraint options or a NULL.
    */
-  public function __construct($data_type = 'any', $label = NULL, $required = TRUE, $multiple = FALSE, $description = NULL, $default_value = NULL, array $constraints = []) {
+  public function __construct(string $data_type = 'any', $label = NULL, $required = TRUE, $multiple = FALSE, $description = NULL, $default_value = NULL, array $constraints = []) {
     $this->dataType = $data_type;
     $this->label = $label;
     $this->isRequired = $required;

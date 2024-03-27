@@ -84,7 +84,7 @@ class SharedTempStoreFactory {
    * @return \Drupal\Core\TempStore\SharedTempStore
    *   An instance of the key/value store.
    */
-  public function get($collection, $owner = NULL) {
+  public function get(string $collection, $owner = NULL) {
     // Use the currently authenticated user ID or the active user ID unless
     // the owner is overridden.
     if (!isset($owner)) {

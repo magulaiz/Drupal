@@ -38,7 +38,7 @@ trait ApiRequestTrait {
    *
    * @see \GuzzleHttp\ClientInterface::request()
    */
-  protected function makeApiRequest($method, Url $url, array $request_options) {
+  protected function makeApiRequest(string $method, Url $url, array $request_options) {
     // HEAD requests do not have bodies. If one is specified, Guzzle will not
     // ignore it and the request will be treated as GET with an overridden
     // method string, and libcurl will expect to read a response body.

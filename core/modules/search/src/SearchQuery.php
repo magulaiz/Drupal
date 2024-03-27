@@ -196,7 +196,7 @@ class SearchQuery extends SelectExtender {
    *
    * @return $this
    */
-  public function searchExpression($expression, $type) {
+  public function searchExpression(string $expression, string $type) {
     $this->searchExpression = $expression;
     $this->type = $type;
 
@@ -499,7 +499,7 @@ class SearchQuery extends SelectExtender {
    *
    * @return $this
    */
-  public function addScore($score, $arguments = [], $multiply = FALSE) {
+  public function addScore(string $score, $arguments = [], $multiply = FALSE) {
     if ($multiply) {
       $i = count($this->multiply);
       // Modify the score expression so it is multiplied by the multiplier,

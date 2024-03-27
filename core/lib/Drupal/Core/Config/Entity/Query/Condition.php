@@ -160,7 +160,7 @@ class Condition extends ConditionBase {
    * @return bool
    *   TRUE when matches else FALSE.
    */
-  protected function match(array $condition, $value) {
+  protected function match(array $condition, string $value) {
     // "IS NULL" and "IS NOT NULL" conditions can also deal with array values,
     // so we return early for them to avoid problems.
     if (in_array($condition['operator'], ['IS NULL', 'IS NOT NULL'], TRUE)) {

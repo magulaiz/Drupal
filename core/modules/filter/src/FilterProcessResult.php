@@ -78,7 +78,7 @@ class FilterProcessResult extends BubbleableMetadata {
    * @param string $processed_text
    *   The text as processed by a text filter.
    */
-  public function __construct($processed_text = '') {
+  public function __construct(string $processed_text = '') {
     $this->processedText = $processed_text;
   }
 
@@ -108,7 +108,7 @@ class FilterProcessResult extends BubbleableMetadata {
    *
    * @return $this
    */
-  public function setProcessedText($processed_text) {
+  public function setProcessedText(string $processed_text) {
     $this->processedText = $processed_text;
     return $this;
   }
@@ -131,7 +131,7 @@ class FilterProcessResult extends BubbleableMetadata {
    * @return string
    *   The placeholder markup.
    */
-  public function createPlaceholder($callback, array $args) {
+  public function createPlaceholder(string $callback, array $args) {
     // Generate placeholder markup.
     // @see \Drupal\Core\Render\PlaceholderGenerator::createPlaceholder()
     $arguments = UrlHelper::buildQuery($args);

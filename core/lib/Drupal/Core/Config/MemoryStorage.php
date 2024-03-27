@@ -28,7 +28,7 @@ class MemoryStorage implements StorageInterface {
    *   (optional) The collection to store configuration in. Defaults to the
    *   default collection.
    */
-  public function __construct($collection = StorageInterface::DEFAULT_COLLECTION) {
+  public function __construct(string $collection = StorageInterface::DEFAULT_COLLECTION) {
     $this->collection = $collection;
     $this->config = new \ArrayObject();
     $this->config[$collection] = [];

@@ -153,7 +153,7 @@ class AccessManager implements AccessManagerInterface {
    * @throws \Drupal\Core\Access\AccessException
    *   Thrown when the access check returns an invalid value.
    */
-  protected function performCheck($service_id, ArgumentsResolverInterface $arguments_resolver) {
+  protected function performCheck(string $service_id, ArgumentsResolverInterface $arguments_resolver) {
     $callable = $this->checkProvider->loadCheck($service_id);
     $arguments = $arguments_resolver->getArguments($callable);
     /** @var \Drupal\Core\Access\AccessResultInterface $service_access **/

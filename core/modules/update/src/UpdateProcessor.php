@@ -231,7 +231,7 @@ class UpdateProcessor implements UpdateProcessorInterface {
    *   Array of parsed data about releases for a given project, or NULL if there
    *   was an error parsing the string.
    */
-  protected function parseXml($raw_xml) {
+  protected function parseXml(string $raw_xml) {
     try {
       $xml = new \SimpleXMLElement($raw_xml);
     }

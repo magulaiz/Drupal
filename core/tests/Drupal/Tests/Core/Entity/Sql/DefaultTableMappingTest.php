@@ -279,7 +279,7 @@ class DefaultTableMappingTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetFieldColumnName
    */
-  public function testGetFieldColumnName($base_field, $columns, $column, $expected) {
+  public function testGetFieldColumnName($base_field, $columns, string $column, string $expected) {
     $definitions['test'] = $this->setUpDefinition('test', $columns, $base_field);
     $table_mapping = new TestDefaultTableMapping($this->entityType, $definitions);
     $result = $table_mapping->getFieldColumnName($definitions['test'], $column);
@@ -301,7 +301,7 @@ class DefaultTableMappingTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetFieldColumnName
    */
-  public function testGetFieldColumnNameInvalid($base_field, $columns, $column) {
+  public function testGetFieldColumnNameInvalid($base_field, $columns, string $column) {
     $definitions['test'] = $this->setUpDefinition('test', $columns, $base_field);
 
     // Mark field storage definition as custom storage.
@@ -355,7 +355,7 @@ class DefaultTableMappingTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetFieldTableName
    */
-  public function testGetFieldTableName($table_names, $expected) {
+  public function testGetFieldTableName($table_names, string $expected) {
     $field_name = 'test';
     $columns = ['test'];
 
@@ -589,7 +589,7 @@ class DefaultTableMappingTest extends UnitTestCase {
    *
    * @return \Drupal\Core\Field\FieldStorageDefinitionInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected function setUpDefinition($name, array $column_names, $base_field = TRUE) {
+  protected function setUpDefinition(string $name, array $column_names, $base_field = TRUE) {
     $definition = $this->createMock('Drupal\Tests\Core\Field\TestBaseFieldDefinitionInterface');
     $definition->expects($this->any())
       ->method('isBaseField')

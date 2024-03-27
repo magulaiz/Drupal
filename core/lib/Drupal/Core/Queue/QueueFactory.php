@@ -54,7 +54,7 @@ class QueueFactory {
    * @return \Drupal\Core\Queue\QueueInterface
    *   A queue implementation for the given name.
    */
-  public function get($name, $reliable = FALSE) {
+  public function get(string $name, $reliable = FALSE) {
     if (!isset($this->queues[$name])) {
       // If it is a reliable queue, check the specific settings first.
       if ($reliable) {

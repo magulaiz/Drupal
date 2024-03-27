@@ -253,7 +253,7 @@ class FilePathTest extends MigrateUpgradeTestBase {
    * @param string $scheme
    *   The file scheme.
    */
-  public function getSourcePath($scheme) {
+  public function getSourcePath(string $scheme) {
     $base_path = $this->localDirectory[$scheme] ?: '';
     // Puts the source files in the site temp directory.
     return $this->tempFilesDirectory . '/' . $base_path;

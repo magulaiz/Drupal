@@ -141,7 +141,7 @@ class FormValidator implements FormValidatorInterface {
    * @param string $form_id
    *   The unique string identifying the form.
    */
-  protected function handleErrorsWithLimitedValidation(&$form, FormStateInterface &$form_state, $form_id) {
+  protected function handleErrorsWithLimitedValidation(&$form, FormStateInterface &$form_state, string $form_id) {
     // If validation errors are limited then remove any non validated form values,
     // so that only values that passed validation are left for submit callbacks.
     $triggering_element = $form_state->getTriggeringElement();
@@ -194,7 +194,7 @@ class FormValidator implements FormValidatorInterface {
    * @param string $form_id
    *   The unique string identifying the form.
    */
-  protected function finalizeValidation(&$form, FormStateInterface &$form_state, $form_id) {
+  protected function finalizeValidation(&$form, FormStateInterface &$form_state, string $form_id) {
     // Delegate handling of form errors to a service.
     $this->formErrorHandler->handleFormErrors($form, $form_state);
 

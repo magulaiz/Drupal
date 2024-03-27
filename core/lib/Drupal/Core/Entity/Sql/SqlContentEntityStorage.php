@@ -376,7 +376,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *
    * @internal
    */
-  public function getCustomTableMapping(ContentEntityTypeInterface $entity_type, array $storage_definitions, $prefix = '') {
+  public function getCustomTableMapping(ContentEntityTypeInterface $entity_type, array $storage_definitions, string $prefix = '') {
     $prefix = $prefix ?: ($this->temporary ? 'tmp_' : '');
     return DefaultTableMapping::create($entity_type, $storage_definitions, $prefix);
   }
@@ -987,7 +987,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   (optional) Whether we are dealing with a new revision. By default fetches
    *   the information from the entity object.
    */
-  protected function saveToSharedTables(ContentEntityInterface $entity, $table_name = NULL, $new_revision = NULL) {
+  protected function saveToSharedTables(ContentEntityInterface $entity, string $table_name = NULL, $new_revision = NULL) {
     if (!isset($table_name)) {
       $table_name = $this->dataTable;
     }
@@ -1030,7 +1030,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    * @return object
    *   The record to store.
    */
-  protected function mapToStorageRecord(ContentEntityInterface $entity, $table_name = NULL) {
+  protected function mapToStorageRecord(ContentEntityInterface $entity, string $table_name = NULL) {
     if (!isset($table_name)) {
       $table_name = $this->baseTable;
     }
@@ -1119,7 +1119,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    * @return object
    *   The record to store.
    */
-  protected function mapToDataStorageRecord(EntityInterface $entity, $table_name = NULL) {
+  protected function mapToDataStorageRecord(EntityInterface $entity, string $table_name = NULL) {
     if (!isset($table_name)) {
       $table_name = $this->dataTable;
     }

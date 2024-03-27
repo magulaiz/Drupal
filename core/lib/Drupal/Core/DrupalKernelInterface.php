@@ -53,7 +53,7 @@ interface DrupalKernelInterface extends HttpKernelInterface {
    * @return array
    *   An associative array of ServiceProvider objects, keyed by name.
    */
-  public function getServiceProviders($origin);
+  public function getServiceProviders(string $origin);
 
   /**
    * Gets the current container.
@@ -84,7 +84,7 @@ interface DrupalKernelInterface extends HttpKernelInterface {
    * @throws \LogicException
    *   In case the kernel is already booted.
    */
-  public function setSitePath($path);
+  public function setSitePath(string $path);
 
   /**
    * Gets the site path directory.

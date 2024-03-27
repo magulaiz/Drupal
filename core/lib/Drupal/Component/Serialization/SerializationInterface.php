@@ -31,7 +31,7 @@ interface SerializationInterface {
    *
    * @throws \Drupal\Component\Serialization\Exception\InvalidDataTypeException
    */
-  public static function decode($raw);
+  public static function decode(string $raw);
 
   /**
    * Gets the file extension for this serialization format.

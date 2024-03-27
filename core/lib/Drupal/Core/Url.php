@@ -124,7 +124,7 @@ class Url implements TrustedCallbackInterface {
    * @todo Update this documentation for non-routed URIs in
    *   https://www.drupal.org/node/2346787
    */
-  public function __construct($route_name, $route_parameters = [], $options = []) {
+  public function __construct(string $route_name, $route_parameters = [], $options = []) {
     $this->routeName = $route_name;
     $this->routeParameters = $route_parameters;
     $this->options = $options;
@@ -150,7 +150,7 @@ class Url implements TrustedCallbackInterface {
    * @see \Drupal\Core\Url::fromUserInput()
    * @see \Drupal\Core\Url::fromUri()
    */
-  public static function fromRoute($route_name, $route_parameters = [], $options = []) {
+  public static function fromRoute(string $route_name, $route_parameters = [], $options = []) {
     return new static($route_name, $route_parameters, $options);
   }
 
@@ -207,7 +207,7 @@ class Url implements TrustedCallbackInterface {
    *   Thrown when the user input does not begin with one of the following
    *   characters: '/', '?', or '#'.
    */
-  public static function fromUserInput($user_input, $options = []) {
+  public static function fromUserInput(string $user_input, $options = []) {
     // Ensuring one of these initial characters also enforces that what is
     // passed is a relative URI reference rather than an absolute URI,
     // because these are URI reserved characters that a scheme name may not
@@ -275,7 +275,7 @@ class Url implements TrustedCallbackInterface {
    * @see \Drupal\Core\Url::fromRoute()
    * @see \Drupal\Core\Url::fromUserInput()
    */
-  public static function fromUri($uri, $options = []) {
+  public static function fromUri(string $uri, $options = []) {
     // parse_url() incorrectly parses base:number/... as hostname:port/...
     // and not the scheme. Prevent that by prefixing the path with a slash.
     if (preg_match('/^base:\d/', $uri)) {
@@ -350,7 +350,7 @@ class Url implements TrustedCallbackInterface {
    * @throws \InvalidArgumentException
    *   Thrown if the entity URI is invalid.
    */
-  protected static function fromEntityUri(array $uri_parts, array $options, $uri) {
+  protected static function fromEntityUri(array $uri_parts, array $options, string $uri) {
     [$entity_type_id, $entity_id] = explode('/', $uri_parts['path'], 2);
     if ($uri_parts['scheme'] != 'entity' || $entity_id === '') {
       throw new \InvalidArgumentException("The entity URI '$uri' is invalid. You must specify the entity id in the URL. e.g., entity:node/1 for loading the canonical path to node entity with id 1.");
@@ -449,7 +449,7 @@ class Url implements TrustedCallbackInterface {
    * @throws \InvalidArgumentException
    *   Thrown when the route URI does not have a route name.
    */
-  protected static function fromRouteUri(array $uri_parts, array $options, $uri) {
+  protected static function fromRouteUri(array $uri_parts, array $options, string $uri) {
     $route_parts = explode(';', $uri_parts['path'], 2);
     $route_name = $route_parts[0];
     if ($route_name === '') {
@@ -618,7 +618,7 @@ class Url implements TrustedCallbackInterface {
    * @throws \UnexpectedValueException.
    *   If this is a URI with no corresponding route.
    */
-  public function setRouteParameter($key, $value) {
+  public function setRouteParameter(string $key, $value) {
     if ($this->unrouted) {
       throw new \UnexpectedValueException('External URLs do not have route parameters.');
     }
@@ -648,7 +648,7 @@ class Url implements TrustedCallbackInterface {
    * @return mixed
    *   The value for a specific option, or NULL if it does not exist.
    */
-  public function getOption($name) {
+  public function getOption(string $name) {
     if (!isset($this->options[$name])) {
       return NULL;
     }
@@ -682,7 +682,7 @@ class Url implements TrustedCallbackInterface {
    *
    * @return $this
    */
-  public function setOption($name, $value) {
+  public function setOption(string $name, $value) {
     $this->options[$name] = $value;
     return $this;
   }

@@ -24,7 +24,7 @@ class ReplaceTitleCommand implements CommandInterface {
    * @param string $title
    *   The title of the page.
    */
-  public function __construct($title) {
+  public function __construct(string $title) {
     $this->title = $title;
   }
 

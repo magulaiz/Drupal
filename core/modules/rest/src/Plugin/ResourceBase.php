@@ -168,7 +168,7 @@ abstract class ResourceBase extends PluginBase implements ContainerFactoryPlugin
    * @return \Symfony\Component\Routing\Route
    *   The created base route.
    */
-  protected function getBaseRoute($canonical_path, $method) {
+  protected function getBaseRoute(string $canonical_path, string $method) {
     return new Route($canonical_path, [
       '_controller' => 'Drupal\rest\RequestHandler::handle',
     ],

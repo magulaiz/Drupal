@@ -134,7 +134,7 @@ class ContentTranslationManager implements ContentTranslationManagerInterface, B
    *   The content language config entity if one exists. Otherwise, returns
    *   default values.
    */
-  protected function loadContentLanguageSettings($entity_type_id, $bundle) {
+  protected function loadContentLanguageSettings(string $entity_type_id, string $bundle) {
     if ($entity_type_id == NULL || $bundle == NULL) {
       return NULL;
     }
@@ -163,7 +163,7 @@ class ContentTranslationManager implements ContentTranslationManagerInterface, B
    *
    * @see https://www.drupal.org/node/2940575
    */
-  public static function isPendingRevisionSupportEnabled($entity_type_id, $bundle_id = NULL) {
+  public static function isPendingRevisionSupportEnabled(string $entity_type_id, string $bundle_id = NULL) {
     if (!\Drupal::moduleHandler()->moduleExists('content_moderation')) {
       return FALSE;
     }

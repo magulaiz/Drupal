@@ -42,7 +42,7 @@ interface TermStorageInterface extends ContentEntityStorageInterface {
    * @return \Drupal\taxonomy\TermInterface[]
    *   An array of term objects that are the children of the term $tid.
    */
-  public function loadChildren($tid, $vid = NULL);
+  public function loadChildren($tid, string $vid = NULL);
 
   /**
    * Finds all terms in a given vocabulary ID.
@@ -65,7 +65,7 @@ interface TermStorageInterface extends ContentEntityStorageInterface {
    *   A numerically indexed array of term objects that are the children of the
    *   vocabulary $vid.
    */
-  public function loadTree($vid, $parent = 0, $max_depth = NULL, $load_entities = FALSE);
+  public function loadTree(string $vid, $parent = 0, $max_depth = NULL, $load_entities = FALSE);
 
   /**
    * Count the number of nodes in a given vocabulary ID.
@@ -76,7 +76,7 @@ interface TermStorageInterface extends ContentEntityStorageInterface {
    * @return int
    *   A count of the nodes in a given vocabulary ID.
    */
-  public function nodeCount($vid);
+  public function nodeCount(string $vid);
 
   /**
    * Reset the weights for a given vocabulary ID.
@@ -84,7 +84,7 @@ interface TermStorageInterface extends ContentEntityStorageInterface {
    * @param string $vid
    *   Vocabulary ID to retrieve terms for.
    */
-  public function resetWeights($vid);
+  public function resetWeights(string $vid);
 
   /**
    * Returns all terms used to tag some given nodes.
@@ -100,7 +100,7 @@ interface TermStorageInterface extends ContentEntityStorageInterface {
    * @return array
    *   An array of nids and the term entities they were tagged with.
    */
-  public function getNodeTerms(array $nids, array $vids = [], $langcode = NULL);
+  public function getNodeTerms(array $nids, array $vids = [], string $langcode = NULL);
 
   /**
    * Returns the hierarchy type for a specific vocabulary ID.
@@ -115,7 +115,7 @@ interface TermStorageInterface extends ContentEntityStorageInterface {
    *    - VocabularyInterface::HIERARCHY_SINGLE: Single parent.
    *    - VocabularyInterface::HIERARCHY_MULTIPLE: Multiple parents.
    */
-  public function getVocabularyHierarchyType($vid);
+  public function getVocabularyHierarchyType(string $vid);
 
   /**
    * Gets a list of term IDs with pending revisions.

@@ -276,7 +276,7 @@ class FileUploadResource extends ResourceBase {
    *   Thrown when temporary files cannot be written, a lock cannot be acquired,
    *   or when temporary files cannot be moved to their new location.
    */
-  public function post(Request $request, $entity_type_id, $bundle, $field_name) {
+  public function post(Request $request, string $entity_type_id, string $bundle, string $field_name) {
     $filename = ContentDispositionFilenameParser::parseFilename($request);
 
     $field_definition = $this->validateAndLoadFieldDefinition($entity_type_id, $bundle, $field_name);
@@ -438,7 +438,7 @@ class FileUploadResource extends ResourceBase {
    *   Thrown when the target type of the field is not a file, or the current
    *   user does not have 'edit' access for the field.
    */
-  protected function validateAndLoadFieldDefinition($entity_type_id, $bundle, $field_name) {
+  protected function validateAndLoadFieldDefinition(string $entity_type_id, string $bundle, string $field_name) {
     $field_definitions = $this->entityFieldManager->getFieldDefinitions($entity_type_id, $bundle);
     if (!isset($field_definitions[$field_name])) {
       throw new NotFoundHttpException(sprintf('Field "%s" does not exist', $field_name));
@@ -472,7 +472,7 @@ class FileUploadResource extends ResourceBase {
    * @return string
    *   The prepared/munged filename.
    */
-  protected function prepareFilename($filename, array &$validators) {
+  protected function prepareFilename(string $filename, array &$validators) {
     // The actual extension validation occurs in
     // \Drupal\file\Plugin\rest\resource\FileUploadResource::validate().
     $extensions = $validators['FileExtension']['extensions'] ?? '';

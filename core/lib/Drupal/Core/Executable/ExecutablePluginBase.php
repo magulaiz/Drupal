@@ -44,7 +44,7 @@ abstract class ExecutablePluginBase extends PluginBase implements ExecutableInte
    *   The typed data definition describing the configuration option, or FALSE
    *   if the option does not exist.
    */
-  public function getConfigDefinition($key) {
+  public function getConfigDefinition(string $key) {
     $definition = $this->getPluginDefinition();
     if (!empty($definition['configuration'][$key])) {
       return $definition['configuration'][$key];
@@ -83,7 +83,7 @@ abstract class ExecutablePluginBase extends PluginBase implements ExecutableInte
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    *   If the provided configuration value does not pass validation.
    */
-  public function setConfig($key, $value) {
+  public function setConfig(string $key, $value) {
     if ($definition = $this->getConfigDefinition($key)) {
       $typed_data = \Drupal::typedDataManager()->create($definition, $value);
 

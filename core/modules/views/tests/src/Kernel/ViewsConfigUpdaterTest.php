@@ -116,7 +116,7 @@ class ViewsConfigUpdaterTest extends ViewsKernelTestBase {
    * @return \Drupal\views\ViewEntityInterface
    *   A view entity object.
    */
-  protected function loadTestView($view_id) {
+  protected function loadTestView(string $view_id) {
     // We just instantiate the test view from the raw configuration, as it may
     // not be possible to save it, due to its faulty schema.
     $config_dir = $this->getModulePath('views') . '/tests/fixtures/update';

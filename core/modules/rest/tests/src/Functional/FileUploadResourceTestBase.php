@@ -680,7 +680,7 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
    * @return array
    *   The expected normalized data array.
    */
-  protected function getExpectedNormalizedEntity($fid = 1, $expected_filename = 'example.txt', $expected_as_filename = FALSE) {
+  protected function getExpectedNormalizedEntity($fid = 1, string $expected_filename = 'example.txt', $expected_as_filename = FALSE) {
     $author = User::load(static::$auth ? $this->account->id() : 0);
     $file = File::load($fid);
 
@@ -767,7 +767,7 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
    *
    * @return \Psr\Http\Message\ResponseInterface
    */
-  protected function fileRequest(Url $url, $file_contents, array $headers = []) {
+  protected function fileRequest(Url $url, string $file_contents, array $headers = []) {
     // Set the format for the response.
     $url->setOption('query', ['_format' => static::$format]);
 

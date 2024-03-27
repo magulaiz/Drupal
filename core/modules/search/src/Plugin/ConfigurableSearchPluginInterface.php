@@ -19,6 +19,6 @@ interface ConfigurableSearchPluginInterface extends ConfigurableInterface, Depen
    *
    * @return static
    */
-  public function setSearchPageId($search_page_id);
+  public function setSearchPageId(string $search_page_id);
 
 }

@@ -115,7 +115,7 @@ class Composer {
    *
    * @internal
    */
-  public static function upgradePHPUnitCheck($phpunit_version) {
+  public static function upgradePHPUnitCheck(string $phpunit_version) {
     return !(version_compare(PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION, '7.4') >= 0 && version_compare($phpunit_version, '9.0') < 0);
   }
 

@@ -316,7 +316,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  protected function doEditStep($active_langcode, $default_revision, $untranslatable_update = FALSE, $valid = TRUE) {
+  protected function doEditStep(string $active_langcode, $default_revision, $untranslatable_update = FALSE, $valid = TRUE) {
     $this->stepInfo = [$active_langcode, $default_revision, $untranslatable_update, $valid];
 
     // If changes to untranslatable fields affect only the default translation,
@@ -483,7 +483,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
    * @return string
    *   The formatted message.
    */
-  protected function formatMessage($message) {
+  protected function formatMessage(string $message) {
     $args = func_get_args();
     array_shift($args);
     $params = array_merge($args, $this->stepInfo);

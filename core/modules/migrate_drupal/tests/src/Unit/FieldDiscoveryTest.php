@@ -62,7 +62,7 @@ class FieldDiscoveryTest extends UnitTestCase {
    * @covers ::getEntityFields
    * @dataProvider getEntityFieldsData
    */
-  public function testGetEntityFields($entity_type_id, array $expected_fields) {
+  public function testGetEntityFields(string $entity_type_id, array $expected_fields) {
     $test_data = [
       'getAllFields' => [
         '7' => $this->getAllFieldData(),
@@ -139,7 +139,7 @@ class FieldDiscoveryTest extends UnitTestCase {
    * @covers ::getBundleFields
    * @dataProvider getBundleFieldsData
    */
-  public function testGetBundleFields($entity_type_id, $bundle, array $expected_fields) {
+  public function testGetBundleFields(string $entity_type_id, string $bundle, array $expected_fields) {
     $test_data = [
       'getAllFields' => [
         '7' => $this->getAllFieldData(),

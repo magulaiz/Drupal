@@ -48,7 +48,7 @@ class ImageStyleTest extends UnitTestCase {
    * @return \Drupal\image\ImageStyleInterface
    *   The mocked image style.
    */
-  protected function getImageStyleMock($image_effect_id, $image_effect, $stubs = []) {
+  protected function getImageStyleMock(string $image_effect_id, $image_effect, $stubs = []) {
     $effectManager = $this->getMockBuilder('\Drupal\image\ImageEffectManager')
       ->disableOriginalConstructor()
       ->getMock();

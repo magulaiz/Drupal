@@ -103,7 +103,7 @@ class FormCache implements FormCacheInterface {
    * @param \Drupal\Core\PageCache\RequestPolicyInterface $request_policy
    *   A policy rule determining the cacheability of a request.
    */
-  public function __construct($root, KeyValueExpirableFactoryInterface $key_value_expirable_factory, ModuleHandlerInterface $module_handler, AccountInterface $current_user, CsrfTokenGenerator $csrf_token, LoggerInterface $logger, RequestStack $request_stack, RequestPolicyInterface $request_policy) {
+  public function __construct(string $root, KeyValueExpirableFactoryInterface $key_value_expirable_factory, ModuleHandlerInterface $module_handler, AccountInterface $current_user, CsrfTokenGenerator $csrf_token, LoggerInterface $logger, RequestStack $request_stack, RequestPolicyInterface $request_policy) {
     $this->root = $root;
     $this->keyValueExpirableFactory = $key_value_expirable_factory;
     $this->moduleHandler = $module_handler;
@@ -146,7 +146,7 @@ class FormCache implements FormCacheInterface {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
-  protected function loadCachedFormState($form_build_id, FormStateInterface $form_state) {
+  protected function loadCachedFormState(string $form_build_id, FormStateInterface $form_state) {
     if ($stored_form_state = $this->keyValueExpirableFactory->get('form_state')->get($form_build_id)) {
       // Re-populate $form_state for subsequent rebuilds.
       $form_state->setFormState($stored_form_state);

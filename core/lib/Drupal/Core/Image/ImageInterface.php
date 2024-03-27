@@ -91,7 +91,7 @@ interface ImageInterface {
    * @return bool
    *   TRUE on success, FALSE on failure.
    */
-  public function apply($operation, array $arguments = []);
+  public function apply(string $operation, array $arguments = []);
 
   /**
    * Closes the image and saves the changes to a file.
@@ -128,7 +128,7 @@ interface ImageInterface {
    * @return bool
    *   TRUE on success, FALSE on failure.
    */
-  public function createNew($width, $height, $extension = 'png', $transparent_color = '#ffffff');
+  public function createNew($width, $height, string $extension = 'png', string $transparent_color = '#ffffff');
 
   /**
    * Scales an image while maintaining aspect ratio.
@@ -181,7 +181,7 @@ interface ImageInterface {
    *
    * @see \Drupal\Core\ImageToolkit\ImageToolkitInterface::getSupportedExtensions()
    */
-  public function convert($extension);
+  public function convert(string $extension);
 
   /**
    * Crops an image to a rectangle specified by the given dimensions.

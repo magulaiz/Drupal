@@ -528,7 +528,7 @@ class EntityResource {
    * @return \Drupal\jsonapi\ResourceResponse
    *   The response.
    */
-  public function getRelated(ResourceType $resource_type, FieldableEntityInterface $entity, $related, Request $request) {
+  public function getRelated(ResourceType $resource_type, FieldableEntityInterface $entity, string $related, Request $request) {
     /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
     $resource_relationship = $resource_type->getFieldByPublicName($related);
     $field_list = $entity->get($resource_relationship->getInternalName());
@@ -579,7 +579,7 @@ class EntityResource {
    * @return \Drupal\jsonapi\ResourceResponse
    *   The response.
    */
-  public function getRelationship(ResourceType $resource_type, FieldableEntityInterface $entity, $related, Request $request, $response_code = 200) {
+  public function getRelationship(ResourceType $resource_type, FieldableEntityInterface $entity, string $related, Request $request, $response_code = 200) {
     /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
     $field_list = $entity->get($resource_type->getInternalName($related));
     // Access will have already been checked by the RelationshipRouteAccessCheck
@@ -619,7 +619,7 @@ class EntityResource {
    * @throws \Drupal\jsonapi\Exception\UnprocessableHttpEntityException
    *   Thrown when the updated entity does not pass validation.
    */
-  public function addToRelationshipData(ResourceType $resource_type, FieldableEntityInterface $entity, $related, Request $request) {
+  public function addToRelationshipData(ResourceType $resource_type, FieldableEntityInterface $entity, string $related, Request $request) {
     $resource_identifiers = $this->deserialize($resource_type, $request, ResourceIdentifier::class, $related);
     $internal_relationship_field_name = $resource_type->getInternalName($related);
     // According to the specification, you are only allowed to POST to a
@@ -683,7 +683,7 @@ class EntityResource {
    * @throws \Drupal\jsonapi\Exception\UnprocessableHttpEntityException
    *   Thrown when the updated entity does not pass validation.
    */
-  public function replaceRelationshipData(ResourceType $resource_type, EntityInterface $entity, $related, Request $request) {
+  public function replaceRelationshipData(ResourceType $resource_type, EntityInterface $entity, string $related, Request $request) {
     /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $resource_identifiers */
     $resource_identifiers = $this->deserialize($resource_type, $request, ResourceIdentifier::class, $related);
     $internal_relationship_field_name = $resource_type->getInternalName($related);
@@ -766,7 +766,7 @@ class EntityResource {
    * @throws \Drupal\Core\Entity\EntityStorageException
    *   Thrown when the underlying entity cannot be saved.
    */
-  public function removeFromRelationshipData(ResourceType $resource_type, EntityInterface $entity, $related, Request $request) {
+  public function removeFromRelationshipData(ResourceType $resource_type, EntityInterface $entity, string $related, Request $request) {
     $resource_identifiers = $this->deserialize($resource_type, $request, ResourceIdentifier::class, $related);
     $internal_relationship_field_name = $resource_type->getInternalName($related);
     /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
@@ -827,7 +827,7 @@ class EntityResource {
    * @throws \Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException
    *   Thrown if the request body cannot be denormalized.
    */
-  protected function deserialize(ResourceType $resource_type, Request $request, $class, $relationship_field_name = NULL) {
+  protected function deserialize(ResourceType $resource_type, Request $request, string $class, string $relationship_field_name = NULL) {
     assert($class === JsonApiDocumentTopLevel::class || $class === ResourceIdentifier::class && !empty($relationship_field_name) && is_string($relationship_field_name));
     $received = (string) $request->getContent();
     if (!$received) {
@@ -1088,7 +1088,7 @@ class EntityResource {
    *   Thrown when the serialized and destination entities are of different
    *   types.
    */
-  protected function updateEntityField(ResourceType $resource_type, EntityInterface $origin, EntityInterface $destination, $field_name) {
+  protected function updateEntityField(ResourceType $resource_type, EntityInterface $origin, EntityInterface $destination, string $field_name) {
     // The update is different for configuration entities and content entities.
     if ($origin instanceof ContentEntityInterface && $destination instanceof ContentEntityInterface) {
       // First scenario: both are content entities.
@@ -1336,7 +1336,7 @@ class EntityResource {
    * @return array
    *   The pagination query param array.
    */
-  protected static function getPagerQueries($link_id, $offset, $size, array $query = [], $total = 0) {
+  protected static function getPagerQueries(string $link_id, $offset, $size, array $query = [], $total = 0) {
     $extra_query = [];
     switch ($link_id) {
       case 'next':

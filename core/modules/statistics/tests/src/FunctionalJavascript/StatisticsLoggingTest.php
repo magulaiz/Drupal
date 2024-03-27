@@ -79,7 +79,7 @@ class StatisticsLoggingTest extends WebDriverTestBase {
    * @return int|null
    *   A counter of views. Returns NULL if the page does not contain statistics.
    */
-  protected function getStatisticsCounter($path) {
+  protected function getStatisticsCounter(string $path) {
     $this->drupalGet($path);
     // Wait while statistics module send ajax request.
     $this->assertSession()->assertWaitOnAjaxRequest();

@@ -75,7 +75,7 @@ class UrlResolverTest extends MediaFunctionalTestBase {
    *
    * @dataProvider providerEndpointMatching
    */
-  public function testEndpointMatching($url, $resource_url) {
+  public function testEndpointMatching(string $url, string $resource_url) {
     $this->assertSame(
       $resource_url,
       $this->container->get('media.oembed.url_resolver')->getResourceUrl($url)
@@ -130,7 +130,7 @@ class UrlResolverTest extends MediaFunctionalTestBase {
    *
    * @dataProvider providerUrlDiscovery
    */
-  public function testUrlDiscovery($url, $resource_url) {
+  public function testUrlDiscovery(string $url, string $resource_url) {
     $this->assertSame(
       $this->container->get('media.oembed.url_resolver')->getResourceUrl($url),
       $resource_url

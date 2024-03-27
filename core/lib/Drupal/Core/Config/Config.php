@@ -62,7 +62,7 @@ class Config extends StorableConfigBase {
    * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
    *   The typed configuration manager service.
    */
-  public function __construct($name, StorageInterface $storage, EventDispatcherInterface $event_dispatcher, TypedConfigManagerInterface $typed_config) {
+  public function __construct(string $name, StorageInterface $storage, EventDispatcherInterface $event_dispatcher, TypedConfigManagerInterface $typed_config) {
     $this->name = $name;
     $this->storage = $storage;
     $this->eventDispatcher = $event_dispatcher;
@@ -315,7 +315,7 @@ class Config extends StorableConfigBase {
    * @return bool
    *   TRUE if there are any overrides for the key, otherwise FALSE.
    */
-  public function hasOverrides($key = '') {
+  public function hasOverrides(string $key = '') {
     if (empty($key)) {
       return !(empty($this->moduleOverrides) && empty($this->settingsOverrides));
     }

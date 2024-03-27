@@ -332,7 +332,7 @@ class DateFormatter implements DateFormatterInterface {
    *   The configuration entity for the date format in the given language for
    *   non-custom formats, NULL otherwise.
    */
-  protected function dateFormat($type, $langcode) {
+  protected function dateFormat(string $type, string $langcode) {
     if (!isset($this->dateFormats[$type][$langcode])) {
       $original_language = $this->languageManager->getConfigOverrideLanguage();
       $this->languageManager->setConfigOverrideLanguage(new Language(['id' => $langcode]));

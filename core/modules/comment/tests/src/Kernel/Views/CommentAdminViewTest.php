@@ -149,7 +149,7 @@ class CommentAdminViewTest extends ViewsKernelTestBase {
    * @param string $display_id
    *   The display ID.
    */
-  protected function doTestFilters($display_id) {
+  protected function doTestFilters(string $display_id) {
     $comment = $this->comments[0];
     $comment_anonymous = $this->comments[1];
     /** @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */

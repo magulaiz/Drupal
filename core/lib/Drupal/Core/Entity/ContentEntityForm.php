@@ -376,7 +376,7 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
    *
    * @see \Drupal\Core\Entity\ContentEntityForm::form()
    */
-  public function updateFormLangcode($entity_type_id, EntityInterface $entity, array $form, FormStateInterface $form_state) {
+  public function updateFormLangcode(string $entity_type_id, EntityInterface $entity, array $form, FormStateInterface $form_state) {
     $langcode = $entity->language()->getId();
     $form_state->set('langcode', $langcode);
 

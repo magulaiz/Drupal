@@ -146,7 +146,7 @@ class Map extends TypedData implements \IteratorAggregate, ComplexDataInterface 
    * @param $value
    *   The value to set.
    */
-  protected function writePropertyValue($property_name, $value) {
+  protected function writePropertyValue(string $property_name, $value) {
     if ($this->definition->getPropertyDefinition($property_name)) {
       $this->get($property_name)->setValue($value, FALSE);
     }

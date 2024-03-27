@@ -40,7 +40,7 @@ trait DiscoveryTrait {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    *   Thrown if $plugin_id is invalid and $exception_on_invalid is TRUE.
    */
-  protected function doGetDefinition(array $definitions, $plugin_id, $exception_on_invalid) {
+  protected function doGetDefinition(array $definitions, string $plugin_id, $exception_on_invalid) {
     // Avoid using a ternary that would create a copy of the array.
     if (isset($definitions[$plugin_id])) {
       return $definitions[$plugin_id];

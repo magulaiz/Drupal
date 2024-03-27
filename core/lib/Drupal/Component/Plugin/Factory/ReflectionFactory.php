@@ -49,7 +49,7 @@ class ReflectionFactory extends DefaultFactory {
    * @return array
    *   An array of arguments to be passed to the constructor.
    */
-  protected function getInstanceArguments(\ReflectionClass $reflector, $plugin_id, $plugin_definition, array $configuration) {
+  protected function getInstanceArguments(\ReflectionClass $reflector, string $plugin_id, $plugin_definition, array $configuration) {
 
     $arguments = [];
     foreach ($reflector->getMethod('__construct')->getParameters() as $param) {

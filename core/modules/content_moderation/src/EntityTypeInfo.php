@@ -298,7 +298,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    *
    * @see hook_entity_prepare_form()
    */
-  public function entityPrepareForm(EntityInterface $entity, $operation, FormStateInterface $form_state) {
+  public function entityPrepareForm(EntityInterface $entity, string $operation, FormStateInterface $form_state) {
     /** @var \Drupal\Core\Entity\EntityFormInterface $form_object */
     $form_object = $form_state->getFormObject();
 
@@ -332,7 +332,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    *
    * @see hook_form_alter()
    */
-  public function formAlter(array &$form, FormStateInterface $form_state, $form_id) {
+  public function formAlter(array &$form, FormStateInterface $form_state, string $form_id) {
     $form_object = $form_state->getFormObject();
     if ($form_object instanceof BundleEntityFormBase) {
       $config_entity = $form_object->getEntity();

@@ -70,7 +70,7 @@ class RouteProcessorCsrf implements OutboundRouteProcessorInterface, TrustedCall
    * @return array
    *   A renderable array representing the CSRF token.
    */
-  public function renderPlaceholderCsrfToken($path) {
+  public function renderPlaceholderCsrfToken(string $path) {
     return [
       '#markup' => $this->csrfToken->get($path),
       // Tokens are per session.

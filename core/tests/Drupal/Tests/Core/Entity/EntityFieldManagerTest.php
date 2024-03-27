@@ -589,7 +589,7 @@ class EntityFieldManagerTest extends UnitTestCase {
    * @return \Drupal\Core\Field\BaseFieldDefinition|\Prophecy\Prophecy\ProphecyInterface
    *   A field definition object.
    */
-  protected function setUpEntityWithFieldDefinition($custom_invoke_all = FALSE, $field_definition_id = 'id', $entity_keys = []) {
+  protected function setUpEntityWithFieldDefinition($custom_invoke_all = FALSE, string $field_definition_id = 'id', $entity_keys = []) {
     $field_type_manager = $this->prophesize(FieldTypePluginManagerInterface::class);
     $field_type_manager->getDefaultStorageSettings('boolean')->willReturn([]);
     $field_type_manager->getDefaultFieldSettings('boolean')->willReturn([]);

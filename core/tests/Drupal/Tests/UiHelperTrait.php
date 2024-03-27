@@ -65,7 +65,7 @@ trait UiHelperTrait {
    *   form, which is typically the same thing but with hyphens replacing the
    *   underscores.
    */
-  protected function submitForm(array $edit, $submit, $form_html_id = NULL) {
+  protected function submitForm(array $edit, string $submit, string $form_html_id = NULL) {
     $assert_session = $this->assertSession();
 
     // Get the form.
@@ -200,7 +200,7 @@ trait UiHelperTrait {
    * @return \Drupal\Tests\WebAssert
    *   A new web-assert option for asserting the presence of elements with.
    */
-  public function assertSession($name = NULL) {
+  public function assertSession(string $name = NULL) {
     $this->addToAssertionCount(1);
     return new WebAssert($this->getSession($name), $this->baseUrl);
   }
@@ -330,7 +330,7 @@ trait UiHelperTrait {
    * @return string
    *   The $path with $base_url prepended, if necessary.
    */
-  protected function getAbsoluteUrl($path) {
+  protected function getAbsoluteUrl(string $path) {
     global $base_url, $base_path;
 
     $parts = parse_url($path);
@@ -391,7 +391,7 @@ trait UiHelperTrait {
    * @param string $css_selector
    *   The CSS selector identifying the element to click.
    */
-  protected function click($css_selector) {
+  protected function click(string $css_selector) {
     $starting_url = $this->getSession()->getCurrentUrl();
     $this->getSession()->getDriver()->click($this->cssSelectToXpath($css_selector));
     // Log only for WebDriverTestBase tests because for BrowserKitDriver we log
@@ -478,7 +478,7 @@ trait UiHelperTrait {
    * @return \Behat\Mink\Element\NodeElement[]
    *   The list of elements on the page that match the selector.
    */
-  protected function cssSelect($selector) {
+  protected function cssSelect(string $selector) {
     return $this->getSession()->getPage()->findAll('css', $selector);
   }
 
@@ -497,7 +497,7 @@ trait UiHelperTrait {
    * @return string
    *   The equivalent XPath of a CSS expression.
    */
-  protected function cssSelectToXpath($selector, $html = TRUE, $prefix = 'descendant-or-self::') {
+  protected function cssSelectToXpath(string $selector, $html = TRUE, string $prefix = 'descendant-or-self::') {
     return (new CssSelectorConverter($html))->toXPath($selector, $prefix);
   }
 

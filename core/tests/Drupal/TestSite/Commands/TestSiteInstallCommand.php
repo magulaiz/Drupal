@@ -199,7 +199,7 @@ class TestSiteInstallCommand extends Command {
    * @param string $root
    *   The Drupal root.
    */
-  protected function ensureDirectory($root) {
+  protected function ensureDirectory(string $root) {
     if (!is_writable($root . '/sites/simpletest')) {
       if (!@mkdir($root . '/sites/simpletest')) {
         throw new \RuntimeException($root . '/sites/simpletest must exist and be writable to install a test site');
@@ -218,7 +218,7 @@ class TestSiteInstallCommand extends Command {
    * @param string $langcode
    *   (optional) The language to install the site in.
    */
-  public function setup($profile = 'testing', $setup_class = NULL, $langcode = 'en') {
+  public function setup(string $profile = 'testing', string $setup_class = NULL, string $langcode = 'en') {
     $this->profile = $profile;
     $this->langcode = $langcode;
     $this->setupBaseUrl();
@@ -250,7 +250,7 @@ class TestSiteInstallCommand extends Command {
    *
    * @see \Drupal\TestSite\TestSetupInterface
    */
-  protected function executeSetupClass($class) {
+  protected function executeSetupClass(string $class) {
     if (is_subclass_of($class, TestSetupInterface::class)) {
       /** @var \Drupal\TestSite\TestSetupInterface $instance */
       $instance = new $class();
@@ -268,7 +268,7 @@ class TestSiteInstallCommand extends Command {
    *
    * @see \Drupal\TestSite\TestPreinstallInterface
    */
-  protected function executePreinstallClass($class) {
+  protected function executePreinstallClass(string $class) {
     if (is_subclass_of($class, TestPreinstallInterface::class)) {
       /** @var \Drupal\TestSite\TestPreinstallInterface $instance */
       $instance = new $class();

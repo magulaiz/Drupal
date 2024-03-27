@@ -52,7 +52,7 @@ class RouteMatch implements RouteMatchInterface {
    * @param array $raw_parameters
    *   The raw $parameters array.
    */
-  public function __construct($route_name, Route $route, array $parameters = [], array $raw_parameters = []) {
+  public function __construct(string $route_name, Route $route, array $parameters = [], array $raw_parameters = []) {
     $this->routeName = $route_name;
     $this->route = $route;
 

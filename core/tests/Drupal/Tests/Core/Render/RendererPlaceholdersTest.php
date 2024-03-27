@@ -1139,7 +1139,7 @@ class RecursivePlaceholdersTest implements TrustedCallbackInterface {
    * @return array
    *   A renderable array.
    */
-  public static function callback($animal) {
+  public static function callback(string $animal) {
     return [
       'another' => [
         '#create_placeholder' => TRUE,

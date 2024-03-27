@@ -104,7 +104,7 @@ class Test {
    * @param string $value
    *   (optional) The header value ot set.
    */
-  public function setHeader($name, $value = NULL) {
+  public function setHeader(string $name, string $value = NULL) {
     $response = new Response();
     $response->headers->set($name, $value);
     return $response;

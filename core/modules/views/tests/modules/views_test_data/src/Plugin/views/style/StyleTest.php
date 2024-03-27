@@ -73,7 +73,7 @@ class StyleTest extends StylePluginBase {
    * @param string $output
    *   The string to output by this plugin.
    */
-  public function setOutput($output) {
+  public function setOutput(string $output) {
     $this->output = $output;
   }
 

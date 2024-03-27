@@ -225,7 +225,7 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
    * @param array $dynamic_ids
    *   The dynamic ID mapping.
    */
-  protected function addDependency(array &$graph, $id, $dependency, $dynamic_ids) {
+  protected function addDependency(array &$graph, $id, string $dependency, $dynamic_ids) {
     $dependencies = $dynamic_ids[$dependency] ?? [$dependency];
     if (!isset($graph[$id]['edges'])) {
       $graph[$id]['edges'] = [];

@@ -59,7 +59,7 @@ class UpdateManagerInstall extends FormBase {
    * @param \Drupal\Core\Archiver\ArchiverManager $archiver_manager
    *   The archiver plugin manager service.
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, $site_path, ArchiverManager $archiver_manager) {
+  public function __construct(string $root, ModuleHandlerInterface $module_handler, string $site_path, ArchiverManager $archiver_manager) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->sitePath = $site_path;

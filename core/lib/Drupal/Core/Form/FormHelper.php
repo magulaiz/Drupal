@@ -28,7 +28,7 @@ class FormHelper {
    *
    * @see self::processStates()
    */
-  public static function rewriteStatesSelector(array &$elements, $search, $replace) {
+  public static function rewriteStatesSelector(array &$elements, string $search, string $replace) {
     if (!empty($elements['#states'])) {
       foreach ($elements['#states'] as $state => $ids) {
         static::processStatesArray($elements['#states'][$state], $search, $replace);
@@ -54,7 +54,7 @@ class FormHelper {
    *
    * @see self::rewriteStatesSelector()
    */
-  protected static function processStatesArray(array &$conditions, $search, $replace) {
+  protected static function processStatesArray(array &$conditions, string $search, string $replace) {
     // Retrieve the keys to make it easy to rename a key without changing the
     // order of an array.
     $keys = array_keys($conditions);

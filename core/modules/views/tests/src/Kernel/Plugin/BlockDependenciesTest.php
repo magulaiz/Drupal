@@ -90,7 +90,7 @@ class BlockDependenciesTest extends ViewsKernelTestBase {
    * @return \Drupal\block\Entity\Block
    *   The block entity.
    */
-  protected function createBlock($plugin_id, array $settings = []) {
+  protected function createBlock(string $plugin_id, array $settings = []) {
     $settings += [
       'plugin' => $plugin_id,
       'region' => 'sidebar_first',

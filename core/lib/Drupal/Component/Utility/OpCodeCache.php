@@ -28,7 +28,7 @@ class OpCodeCache {
    * @param string $pathname
    *   The absolute pathname of the PHP file to invalidate.
    */
-  public static function invalidate($pathname) {
+  public static function invalidate(string $pathname) {
     clearstatcache(TRUE, $pathname);
 
     // Check if the Zend OPcache is enabled and if so invalidate the file.

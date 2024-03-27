@@ -28,7 +28,7 @@ class FileTransferAuthorizeForm extends FormBase {
    * @param string $root
    *   The app root.
    */
-  public function __construct($root) {
+  public function __construct(string $root) {
     $this->root = $root;
   }
 
@@ -259,7 +259,7 @@ class FileTransferAuthorizeForm extends FormBase {
    *
    * @see hook_filetransfer_backends()
    */
-  protected function addConnectionSettings($backend) {
+  protected function addConnectionSettings(string $backend) {
     $defaults = [];
     $form = [];
 

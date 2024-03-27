@@ -120,7 +120,7 @@ class ThemeExtensionListTest extends UnitTestCase {
    *
    * @group legacy
    */
-  public function testGetBaseThemes(array $themes, $theme, array $expected) {
+  public function testGetBaseThemes(array $themes, string $theme, array $expected) {
     // Mocks and stubs.
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
     $state = new State(new KeyValueMemoryFactory());
@@ -146,7 +146,7 @@ class ThemeExtensionListTest extends UnitTestCase {
    *
    * @dataProvider providerTestDoGetBaseThemes
    */
-  public function testDoGetBaseThemes(array $themes, $theme, array $expected): void {
+  public function testDoGetBaseThemes(array $themes, string $theme, array $expected): void {
     // Mocks and stubs.
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
     $state = new State(new KeyValueMemoryFactory());

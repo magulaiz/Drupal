@@ -423,7 +423,7 @@ class CredentialForm extends MigrateUpgradeFormBase {
    * @throws \Drupal\Core\TempStore\TempStoreException
    *   Thrown when a lock for the backend storage could not be acquired.
    */
-  protected function setupMigrations(Connection $connection, $version, array $database, FormStateInterface $form_state) {
+  protected function setupMigrations(Connection $connection, string $version, array $database, FormStateInterface $form_state) {
     $this->createDatabaseStateSettings($database, $version);
     $migrations = $this->getMigrations('migrate_drupal_' . $version, $version);
 

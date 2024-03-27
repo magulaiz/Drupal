@@ -53,7 +53,7 @@ class DbImportCommand extends DbCommandBase {
    * @param string $script
    *   Path to dump script.
    */
-  protected function runScript(Connection $connection, $script) {
+  protected function runScript(Connection $connection, string $script) {
     $old_key = Database::setActiveConnection($connection->getKey());
 
     if (str_ends_with($script, '.gz')) {

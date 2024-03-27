@@ -90,7 +90,7 @@ class FrontMatterTest extends TestCase {
    *
    * @dataProvider providerFrontMatterData
    */
-  public function testFrontMatterData($yaml, $line, $content = self::SOURCE) {
+  public function testFrontMatterData($yaml, $line, string $content = self::SOURCE) {
     $source = static::createFrontMatterSource($yaml, $content);
     $frontMatter = FrontMatter::create($source);
     $this->assertEquals($content, $frontMatter->getContent());

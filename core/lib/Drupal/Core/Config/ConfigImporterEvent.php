@@ -47,7 +47,7 @@ class ConfigImporterEvent extends Event {
    *
    * @see \Drupal\Core\Config\StorageComparerInterface::getChangelist()
    */
-  public function getChangelist($op = NULL, $collection = StorageInterface::DEFAULT_COLLECTION) {
+  public function getChangelist(string $op = NULL, string $collection = StorageInterface::DEFAULT_COLLECTION) {
     return $this->configImporter->getStorageComparer()->getChangelist($op, $collection);
   }
 

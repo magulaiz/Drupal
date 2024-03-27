@@ -81,7 +81,7 @@ class MenuTreeParameters implements \Serializable {
    *
    * @codeCoverageIgnore
    */
-  public function setRoot($root) {
+  public function setRoot(string $root) {
     $this->root = (string) $root;
     return $this;
   }
@@ -162,7 +162,7 @@ class MenuTreeParameters implements \Serializable {
    *
    * @return $this
    */
-  public function addCondition($definition_field, $value, $operator = NULL) {
+  public function addCondition(string $definition_field, $value, $operator = NULL) {
     if (!isset($operator)) {
       $this->conditions[$definition_field] = $value;
     }

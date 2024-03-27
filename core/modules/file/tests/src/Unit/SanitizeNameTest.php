@@ -43,7 +43,7 @@ class SanitizeNameTest extends UnitTestCase {
    * @covers \Drupal\file\EventSubscriber\FileEventSubscriber::sanitizeFilename
    * @covers \Drupal\Core\File\Event\FileUploadSanitizeNameEvent::__construct
    */
-  public function testFileNameTransliteration($original, $expected, array $options, $language_id = 'en') {
+  public function testFileNameTransliteration(string $original, string $expected, array $options, string $language_id = 'en') {
     $sanitization_options = [
       'transliterate' => $options[0],
       'replacement_character' => $options[1],

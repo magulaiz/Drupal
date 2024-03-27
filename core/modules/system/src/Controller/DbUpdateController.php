@@ -102,7 +102,7 @@ class DbUpdateController extends ControllerBase {
    *   The asset query string.
    */
   public function __construct(
-    $root,
+    string $root,
     KeyValueExpirableFactoryInterface $key_value_expirable_factory,
     CacheBackendInterface $cache,
     StateInterface $state,
@@ -154,7 +154,7 @@ class DbUpdateController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\Response
    *   A response object.
    */
-  public function handle($op, Request $request) {
+  public function handle(string $op, Request $request) {
     require_once $this->root . '/core/includes/install.inc';
     require_once $this->root . '/core/includes/update.inc';
 
@@ -569,7 +569,7 @@ class DbUpdateController extends ControllerBase {
    * @return array
    *   A render array.
    */
-  protected function updateTasksList($active = NULL) {
+  protected function updateTasksList(string $active = NULL) {
     // Default list of tasks.
     $tasks = [
       'requirements' => $this->t('Verify requirements'),

@@ -218,7 +218,7 @@ class CacheContextsManager {
    * @return \Drupal\Core\Cache\Context\CacheContextInterface
    *   The requested cache context service.
    */
-  protected function getService($context_id) {
+  protected function getService(string $context_id) {
     return $this->container->get('cache_context.' . $context_id);
   }
 

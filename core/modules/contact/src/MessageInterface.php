@@ -31,7 +31,7 @@ interface MessageInterface extends ContentEntityInterface {
    * @param string $sender_name
    *   The name of the message sender.
    */
-  public function setSenderName($sender_name);
+  public function setSenderName(string $sender_name);
 
   /**
    * Returns the email address of the sender.
@@ -47,7 +47,7 @@ interface MessageInterface extends ContentEntityInterface {
    * @param string $sender_mail
    *   The email address of the message sender.
    */
-  public function setSenderMail($sender_mail);
+  public function setSenderMail(string $sender_mail);
 
   /**
    * Returns the message subject.
@@ -63,7 +63,7 @@ interface MessageInterface extends ContentEntityInterface {
    * @param string $subject
    *   The message subject.
    */
-  public function setSubject($subject);
+  public function setSubject(string $subject);
 
   /**
    * Returns the message body.
@@ -79,7 +79,7 @@ interface MessageInterface extends ContentEntityInterface {
    * @param string $message
    *   The message body.
    */
-  public function setMessage($message);
+  public function setMessage(string $message);
 
   /**
    * Returns TRUE if a copy should be sent to the sender.

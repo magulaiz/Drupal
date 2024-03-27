@@ -149,7 +149,7 @@ class ExtensionDiscovery {
    * @return \Drupal\Core\Extension\Extension[]
    *   An associative array of Extension objects, keyed by extension name.
    */
-  public function scan($type, $include_tests = NULL) {
+  public function scan(string $type, $include_tests = NULL) {
     // Determine the installation profile directories to scan for extensions,
     // unless explicit profile directories have been set. Exclude profiles as we
     // cannot have profiles within profiles.
@@ -401,7 +401,7 @@ class ExtensionDiscovery {
    *
    * @see \Drupal\Core\Extension\Discovery\RecursiveExtensionFilterCallback
    */
-  protected function scanDirectory($dir, $include_tests) {
+  protected function scanDirectory(string $dir, $include_tests) {
     $files = [];
 
     // In order to scan top-level directories, absolute directory paths have to

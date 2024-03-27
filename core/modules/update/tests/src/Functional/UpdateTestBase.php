@@ -106,7 +106,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
    * @param string $update_element_css_locator
    *   The CSS locator for the page element that contains the security updates.
    */
-  protected function assertSecurityUpdates($project_path_part, array $expected_security_releases, $expected_update_message_type, $update_element_css_locator) {
+  protected function assertSecurityUpdates(string $project_path_part, array $expected_security_releases, string $expected_update_message_type, string $update_element_css_locator) {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $this->standardTests();
@@ -165,7 +165,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
    * @param string $version
    *   The project version.
    */
-  protected function assertVersionUpdateLinks($label, $version) {
+  protected function assertVersionUpdateLinks(string $label, string $version) {
     $update_element = $this->findUpdateElementByLabel($label);
     // In the release notes URL the periods are replaced with dashes.
     $url_version = str_replace('.', '-', $version);
@@ -186,7 +186,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
    *   The expected label for the newer version (for example 'Recommended
    *   version:' or 'Also available:').
    */
-  protected function confirmRevokedStatus($revoked_version, $newer_version, $new_version_label) {
+  protected function confirmRevokedStatus(string $revoked_version, string $newer_version, string $new_version_label) {
     $this->drupalGet('admin/reports/updates');
     $this->clickLink('Check manually');
     $this->checkForMetaRefresh();
@@ -208,7 +208,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
    *   The expected label for the newer version (for example 'Recommended
    *   version:' or 'Also available:').
    */
-  protected function confirmUnsupportedStatus($unsupported_version, $newer_version, $new_version_label) {
+  protected function confirmUnsupportedStatus(string $unsupported_version, string $newer_version, string $new_version_label) {
     $this->drupalGet('admin/reports/updates');
     $this->clickLink('Check manually');
     $this->checkForMetaRefresh();
@@ -227,7 +227,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
    *
    * @see \Behat\Mink\WebAssert::elementTextContains()
    */
-  protected function assertUpdateTableTextContains($text) {
+  protected function assertUpdateTableTextContains(string $text) {
     $this->assertSession()
       ->elementTextContains('css', $this->updateTableLocator, $text);
   }
@@ -238,7 +238,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
    * @param string $text
    *   The expected text.
    */
-  protected function assertUpdateTableTextNotContains($text) {
+  protected function assertUpdateTableTextNotContains(string $text) {
     $this->assertSession()->elementTextNotContains('css', $this->updateTableLocator, $text);
   }
 
@@ -250,7 +250,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
    *
    * @see \Behat\Mink\WebAssert::elementContains()
    */
-  protected function assertUpdateTableElementContains($text) {
+  protected function assertUpdateTableElementContains(string $text) {
     $this->assertSession()
       ->elementContains('css', $this->updateTableLocator, $text);
   }
@@ -263,7 +263,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
    *
    * @see \Behat\Mink\WebAssert::elementNotContains()
    */
-  protected function assertUpdateTableElementNotContains($text) {
+  protected function assertUpdateTableElementNotContains(string $text) {
     $this->assertSession()
       ->elementNotContains('css', $this->updateTableLocator, $text);
   }
@@ -278,7 +278,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
    * @return \Behat\Mink\Element\NodeElement
    *   The update element.
    */
-  protected function findUpdateElementByLabel($label) {
+  protected function findUpdateElementByLabel(string $label) {
     $update_elements = $this->getSession()->getPage()
       ->findAll('css', $this->updateTableLocator . " .project-update__version:contains(\"$label\")");
     $this->assertCount(1, $update_elements);

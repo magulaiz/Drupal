@@ -159,7 +159,7 @@ class HelpController extends ControllerBase {
    *
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
-  public function helpPage($name) {
+  public function helpPage(string $name) {
     $build = [];
     if ($this->moduleHandler()->hasImplementations('help', $name)) {
       $module_name = $this->moduleExtensionList->getName($name);

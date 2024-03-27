@@ -36,7 +36,7 @@ class BytesTest extends TestCase {
    * @dataProvider providerTestToNumber
    * @covers ::toNumber
    */
-  public function testToNumber($size, float $expected_number): void {
+  public function testToNumber(string $size, float $expected_number): void {
     $this->assertSame($expected_number, Bytes::toNumber($size));
   }
 
@@ -91,7 +91,7 @@ class BytesTest extends TestCase {
    * @covers ::validate
    * @covers ::validateConstraint
    */
-  public function testValidate($string, bool $expected_result): void {
+  public function testValidate(string $string, bool $expected_result): void {
     $this->assertSame($expected_result, Bytes::validate($string));
 
     $execution_context = $this->prophesize(ExecutionContextInterface::class);

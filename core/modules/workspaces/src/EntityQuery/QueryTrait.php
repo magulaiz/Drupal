@@ -45,7 +45,7 @@ trait QueryTrait {
    * @param \Drupal\workspaces\WorkspaceInformationInterface $workspace_information
    *   The workspace information service.
    */
-  public function __construct(EntityTypeInterface $entity_type, $conjunction, Connection $connection, array $namespaces, WorkspaceManagerInterface $workspace_manager, WorkspaceInformationInterface $workspace_information) {
+  public function __construct(EntityTypeInterface $entity_type, string $conjunction, Connection $connection, array $namespaces, WorkspaceManagerInterface $workspace_manager, WorkspaceInformationInterface $workspace_information) {
     parent::__construct($entity_type, $conjunction, $connection, $namespaces);
 
     $this->workspaceManager = $workspace_manager;

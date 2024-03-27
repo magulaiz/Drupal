@@ -39,7 +39,7 @@ class ContentTranslationLocalTasks extends DeriverBase implements ContainerDeriv
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The translation manager.
    */
-  public function __construct($base_plugin_id, ContentTranslationManagerInterface $content_translation_manager, TranslationInterface $string_translation) {
+  public function __construct(string $base_plugin_id, ContentTranslationManagerInterface $content_translation_manager, TranslationInterface $string_translation) {
     $this->basePluginId = $base_plugin_id;
     $this->contentTranslationManager = $content_translation_manager;
     $this->stringTranslation = $string_translation;

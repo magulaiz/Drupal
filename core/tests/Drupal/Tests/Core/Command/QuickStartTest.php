@@ -272,7 +272,7 @@ class QuickStartTest extends TestCase {
    *
    * @see \Drupal\Core\File\FileSystemInterface::deleteRecursive()
    */
-  protected function fileUnmanagedDeleteRecursive($path, $callback = NULL) {
+  protected function fileUnmanagedDeleteRecursive(string $path, $callback = NULL) {
     if (isset($callback)) {
       call_user_func($callback, $path);
     }

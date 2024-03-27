@@ -173,7 +173,7 @@ class VocabularyForm extends BundleEntityFormBase {
    * @return bool
    *   TRUE if the vocabulary exists, FALSE otherwise.
    */
-  public function exists($vid) {
+  public function exists(string $vid) {
     $action = $this->vocabularyStorage->load($vid);
     return !empty($action);
   }

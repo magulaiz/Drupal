@@ -125,7 +125,7 @@ interface QueryInterface extends AlterableInterface {
    *
    * @return $this
    */
-  public function exists($field, $langcode = NULL);
+  public function exists(string $field, $langcode = NULL);
 
   /**
    * Queries for an empty field.
@@ -138,7 +138,7 @@ interface QueryInterface extends AlterableInterface {
    *
    * @return $this
    */
-  public function notExists($field, $langcode = NULL);
+  public function notExists(string $field, $langcode = NULL);
 
   /**
    * Enables a pager for the query.
@@ -188,7 +188,7 @@ interface QueryInterface extends AlterableInterface {
    * @todo standardize $direction options in
    * https://www.drupal.org/project/drupal/issues/3079258
    */
-  public function sort($field, $direction = 'ASC', $langcode = NULL);
+  public function sort(string $field, string $direction = 'ASC', $langcode = NULL);
 
   /**
    * Makes this a count query.

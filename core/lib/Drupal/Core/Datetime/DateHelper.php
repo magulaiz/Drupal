@@ -348,7 +348,7 @@ class DateHelper {
    * @return array
    *   An array of hours in the selected format.
    */
-  public static function hours($format = 'H', $required = FALSE) {
+  public static function hours(string $format = 'H', $required = FALSE) {
     $hours = [];
     if ($format == 'h' || $format == 'g') {
       $min = 1;
@@ -381,7 +381,7 @@ class DateHelper {
    * @return array
    *   An array of minutes in the selected format.
    */
-  public static function minutes($format = 'i', $required = FALSE, $increment = 1) {
+  public static function minutes(string $format = 'i', $required = FALSE, $increment = 1) {
     $minutes = [];
     // Ensure $increment has a value so we don't loop endlessly.
     if (empty($increment)) {
@@ -410,7 +410,7 @@ class DateHelper {
    * @return array
    *   An array of seconds in the selected format.
    */
-  public static function seconds($format = 's', $required = FALSE, $increment = 1) {
+  public static function seconds(string $format = 's', $required = FALSE, $increment = 1) {
     $seconds = [];
     // Ensure $increment has a value so we don't loop endlessly.
     if (empty($increment)) {
@@ -525,7 +525,7 @@ class DateHelper {
    *   The name of the day in the week for that date, or null if the $date has
    *   errors.
    */
-  public static function dayOfWeekName($date = NULL, $abbr = TRUE) {
+  public static function dayOfWeekName($date = NULL, string $abbr = TRUE) {
     $date = $date ?? 'now';
     if (!$date instanceof DrupalDateTime) {
       $date = new DrupalDateTime($date);

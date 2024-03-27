@@ -134,7 +134,7 @@ class UserAccountFormFieldsTest extends KernelTestBase {
    * @return array
    *   The form array.
    */
-  protected function buildAccountForm($operation) {
+  protected function buildAccountForm(string $operation) {
     // @see HtmlEntityFormController::getFormObject()
     $entity_type = 'user';
     if ($operation != 'register') {

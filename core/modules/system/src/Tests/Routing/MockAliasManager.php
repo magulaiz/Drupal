@@ -49,7 +49,7 @@ class MockAliasManager implements AliasManagerInterface {
    * @param string $path_language
    *   The language of this alias.
    */
-  public function addAlias($path, $alias, $path_language = NULL) {
+  public function addAlias(string $path, string $alias, string $path_language = NULL) {
     $language = $path_language ?: $this->defaultLanguage;
 
     if ($path[0] !== '/') {

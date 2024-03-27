@@ -124,7 +124,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
    * @return \Symfony\Component\Routing\Route
    *   The route for the view.
    */
-  protected function getRoute($view_id, $display_id) {
+  protected function getRoute(string $view_id, string $display_id) {
     $defaults = [
       '_controller' => 'Drupal\views\Routing\ViewPageController::handle',
       '_title_callback' => 'Drupal\views\Routing\ViewPageController::getTitle',
@@ -245,7 +245,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
    * @return bool
    *   TRUE, when the view should override the given route.
    */
-  protected function overrideApplies($view_path, Route $view_route, Route $route) {
+  protected function overrideApplies(string $view_path, Route $view_route, Route $route) {
     return (!$route->hasRequirement('_format') || $route->getRequirement('_format') === 'html')
       && $this->overrideAppliesPathAndMethod($view_path, $view_route, $route);
   }
@@ -263,7 +263,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
    * @return bool
    *   TRUE, when the view should override the given route.
    */
-  protected function overrideAppliesPathAndMethod($view_path, Route $view_route, Route $route) {
+  protected function overrideAppliesPathAndMethod(string $view_path, Route $view_route, Route $route) {
     // Find all paths which match the path of the current display..
     $route_path = RouteCompiler::getPathWithoutDefaults($route);
     $route_path = RouteCompiler::getPatternOutline($route_path);
@@ -491,7 +491,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
    * @return array
    *   A list of error strings.
    */
-  protected function validatePath($path) {
+  protected function validatePath(string $path) {
     $errors = [];
     if (str_starts_with($path, '%')) {
       $errors[] = $this->t('"%" may not be used for the first segment of a path.');

@@ -122,7 +122,7 @@ class Search extends FilterPluginBase {
    * @param string $input
    *   The search keywords entered by the user.
    */
-  protected function queryParseSearchExpression($input) {
+  protected function queryParseSearchExpression(string $input) {
     if (!isset($this->searchQuery)) {
       $this->parsed = TRUE;
       $this->searchQuery = \Drupal::service('database.replica')->select('search_index', 'i')->extend(ViewsSearchQuery::class);

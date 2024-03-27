@@ -172,7 +172,7 @@ class InstallHelper implements ContainerInjectionInterface {
    *     1. All multilingual content that was read from the files.
    *     2. List of language codes that need to be imported.
    */
-  protected function readMultilingualContent($filename) {
+  protected function readMultilingualContent(string $filename) {
     $default_content_path = $this->module_path . "/default_content/languages/";
 
     // Get all enabled languages.
@@ -211,7 +211,7 @@ class InstallHelper implements ContainerInjectionInterface {
    * @return int
    *   Term ID, or 0 if Term ID could not be found.
    */
-  protected function getTermId($vocabulary, $term_csv_id) {
+  protected function getTermId(string $vocabulary, $term_csv_id) {
     if (array_key_exists($vocabulary, $this->termIdMap) && array_key_exists($term_csv_id, $this->termIdMap[$vocabulary])) {
       return $this->termIdMap[$vocabulary][$term_csv_id];
     }
@@ -228,7 +228,7 @@ class InstallHelper implements ContainerInjectionInterface {
    * @param int $tid
    *   Term ID generated when saved in the Drupal database.
    */
-  protected function saveTermId($vocabulary, $term_csv_id, $tid) {
+  protected function saveTermId(string $vocabulary, $term_csv_id, $tid) {
     $this->termIdMap[$vocabulary][$term_csv_id] = $tid;
   }
 
@@ -273,7 +273,7 @@ class InstallHelper implements ContainerInjectionInterface {
    * @return string
    *   Node path, or 0 if node CSV ID could not be found.
    */
-  protected function getNodePath($langcode, $content_type, $node_csv_id) {
+  protected function getNodePath(string $langcode, string $content_type, string $node_csv_id) {
     if (array_key_exists($langcode, $this->nodeIdMap) &&
         array_key_exists($content_type, $this->nodeIdMap[$langcode]) &&
         array_key_exists($node_csv_id, $this->nodeIdMap[$langcode][$content_type])) {
@@ -294,7 +294,7 @@ class InstallHelper implements ContainerInjectionInterface {
    * @param string $node_url
    *   Node's URL alias when saved in the Drupal database.
    */
-  protected function saveNodePath($langcode, $content_type, $node_csv_id, $node_url) {
+  protected function saveNodePath(string $langcode, string $content_type, string $node_csv_id, string $node_url) {
     $this->nodeIdMap[$langcode][$content_type][$node_csv_id] = $node_url;
   }
 
@@ -354,7 +354,7 @@ class InstallHelper implements ContainerInjectionInterface {
    * @return array
    *   Data structured as a term.
    */
-  protected function processTerm(array $data, $vocabulary) {
+  protected function processTerm(array $data, string $vocabulary) {
     $term_name = trim($data['term']);
 
     // Prepare content.
@@ -407,7 +407,7 @@ class InstallHelper implements ContainerInjectionInterface {
    * @return array
    *   Data structured as a page node.
    */
-  protected function processPage(array $data, $langcode) {
+  protected function processPage(array $data, string $langcode) {
     // Prepare content.
     $values = [
       'type' => 'page',
@@ -445,7 +445,7 @@ class InstallHelper implements ContainerInjectionInterface {
    * @return array
    *   Data structured as a recipe node.
    */
-  protected function processRecipe(array $data, $langcode) {
+  protected function processRecipe(array $data, string $langcode) {
     $values = [
       'type' => 'recipe',
       // Title field.
@@ -539,7 +539,7 @@ class InstallHelper implements ContainerInjectionInterface {
    * @return array
    *   Data structured as an article node.
    */
-  protected function processArticle(array $data, $langcode) {
+  protected function processArticle(array $data, string $langcode) {
     // Prepare content.
     $values = [
       'type' => 'article',
@@ -597,7 +597,7 @@ class InstallHelper implements ContainerInjectionInterface {
    * @return array
    *   Data structured as a block.
    */
-  protected function processBannerBlock(array $data, $langcode) {
+  protected function processBannerBlock(array $data, string $langcode) {
     $node_url = $this->getNodePath($langcode, $data['content_type'], $data['node_id']);
     $values = [
       'uuid' => $data['uuid'],
@@ -659,7 +659,7 @@ class InstallHelper implements ContainerInjectionInterface {
    * @return array
    *   Data structured as a block.
    */
-  protected function processFooterPromoBlock(array $data, $langcode) {
+  protected function processFooterPromoBlock(array $data, string $langcode) {
     $node_url = $this->getNodePath($langcode, $data['content_type'], $data['node_id']);
     $values = [
       'uuid' => $data['uuid'],
@@ -696,7 +696,7 @@ class InstallHelper implements ContainerInjectionInterface {
    * @return array
    *   Structured content.
    */
-  protected function processContent($bundle_machine_name, array $content, $langcode) {
+  protected function processContent(string $bundle_machine_name, array $content, string $langcode) {
     switch ($bundle_machine_name) {
       case 'recipe':
         $structured_content = $this->processRecipe($content, $langcode);
@@ -747,7 +747,7 @@ class InstallHelper implements ContainerInjectionInterface {
    *
    * @return $this
    */
-  protected function importContentFromFile($entity_type, $bundle_machine_name) {
+  protected function importContentFromFile(string $entity_type, string $bundle_machine_name) {
     $filename = $entity_type . '/' . $bundle_machine_name . '.csv';
 
     // Read all multilingual content from the file.
@@ -831,7 +831,7 @@ class InstallHelper implements ContainerInjectionInterface {
    * @return int
    *   User ID.
    */
-  protected function getUser($name) {
+  protected function getUser(string $name) {
     $user_storage = $this->entityTypeManager->getStorage('user');
     $users = $user_storage->loadByProperties(['name' => $name]);
     if (empty($users)) {
@@ -860,7 +860,7 @@ class InstallHelper implements ContainerInjectionInterface {
    * @return int
    *   File ID.
    */
-  protected function createFileEntity($path) {
+  protected function createFileEntity(string $path) {
     $filename = basename($path);
     try {
       $uri = $this->fileSystem->copy($path, 'public://' . $filename, FileSystemInterface::EXISTS_REPLACE);

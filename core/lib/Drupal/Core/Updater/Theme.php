@@ -73,7 +73,7 @@ class Theme extends Updater implements UpdaterInterface {
    *
    * @return bool
    */
-  public static function canUpdate($project_name) {
+  public static function canUpdate(string $project_name) {
     return (bool) \Drupal::service('extension.list.theme')->getPath($project_name);
   }
 

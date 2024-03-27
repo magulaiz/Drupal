@@ -108,7 +108,7 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
    * @return string
    *   The destination as absolute URL.
    */
-  protected function getDestinationAsAbsoluteUrl($destination, $scheme_and_host) {
+  protected function getDestinationAsAbsoluteUrl(string $destination, string $scheme_and_host) {
     if (!UrlHelper::isExternal($destination)) {
       // The destination query parameter can be a relative URL in the sense of
       // not including the scheme and host, but its path is expected to be

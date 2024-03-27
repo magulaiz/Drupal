@@ -88,7 +88,7 @@ class Schema extends DatabaseSchema {
    * @return string
    *   The index/constraint/pkey identifier.
    */
-  protected function ensureIdentifiersLength($table_identifier_part, $column_identifier_part, $tag, $separator = '__') {
+  protected function ensureIdentifiersLength(string $table_identifier_part, string $column_identifier_part, string $tag, string $separator = '__') {
     $info = $this->getPrefixInfo($table_identifier_part);
     $table_identifier_part = $info['table'];
     $identifierName = implode($separator, [$table_identifier_part, $column_identifier_part, $tag]);
@@ -125,7 +125,7 @@ class Schema extends DatabaseSchema {
    * @throws \Exception
    *   Exception thrown when the query for the table information fails.
    */
-  public function queryTableInformation($table) {
+  public function queryTableInformation(string $table) {
     // Generate a key to reference this table's information on.
     $prefixed_table = $this->connection->getPrefix() . $table;
     $key = $this->connection->prefixTables('{' . $table . '}');
@@ -250,7 +250,7 @@ EOD;
    * @throws \Exception
    *   Exception thrown when the query for the table information fails.
    */
-  public function queryFieldInformation($table, $field, $constraint_type = 'c') {
+  public function queryFieldInformation(string $table, string $field, string $constraint_type = 'c') {
     assert(in_array($constraint_type, ['c', 'f', 'p', 'u', 't', 'x']));
     $prefixInfo = $this->getPrefixInfo($table, TRUE);
 
@@ -746,7 +746,7 @@ EOD;
    * @return bool
    *   TRUE if the constraint exists, FALSE otherwise.
    */
-  public function constraintExists($table, $name) {
+  public function constraintExists(string $table, string $name) {
     // ::ensureIdentifiersLength() expects three parameters, although not
     // explicitly stated in its signature, thus we split our constraint name in
     // a proper name and a suffix.
@@ -1087,7 +1087,7 @@ EOD;
    *
    * @internal
    */
-  public function extensionExists($name): bool {
+  public function extensionExists(string $name): bool {
     return (bool) $this->connection->query('SELECT installed_version FROM pg_available_extensions WHERE name = :name', [
       ':name' => $name,
     ])->fetchField();

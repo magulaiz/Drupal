@@ -140,7 +140,7 @@ class Tables extends BaseTables {
    * @return string
    *   The alias of the joined table.
    */
-  public function addWorkspaceAssociationJoin($entity_type_id, $base_table_alias, $active_workspace_id) {
+  public function addWorkspaceAssociationJoin(string $entity_type_id, string $base_table_alias, string $active_workspace_id) {
     if (!isset($this->contentWorkspaceTables[$base_table_alias])) {
       $entity_type = $this->entityTypeManager->getActiveDefinition($entity_type_id);
       $id_field = $entity_type->getKey('id');

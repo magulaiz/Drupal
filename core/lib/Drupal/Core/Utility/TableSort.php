@@ -55,7 +55,7 @@ class TableSort {
    *
    * @see getContextFromRequest()
    */
-  public static function header(&$cell_content, array &$cell_attributes, array $header, array $context) {
+  public static function header(string &$cell_content, array &$cell_attributes, array $header, array $context) {
     // Special formatting for the currently sorted column header.
     if (isset($cell_attributes['field'])) {
       $title = new TranslatableMarkup('sort by @s', ['@s' => $cell_content]);

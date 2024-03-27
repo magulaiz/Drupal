@@ -196,7 +196,7 @@ class PhpMail implements MailInterface {
    * @todo Rename to ::isShellSafe() and/or discuss whether this is the correct
    *   location for this helper.
    */
-  protected static function _isShellSafe($string) {
+  protected static function _isShellSafe(string $string) {
     if (escapeshellcmd($string) !== $string || !in_array(escapeshellarg($string), ["'$string'", "\"$string\""])) {
       return FALSE;
     }

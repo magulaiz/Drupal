@@ -163,7 +163,7 @@ class ExtraFieldBlock extends BlockBase implements ContextAwarePluginInterface, 
    *
    * @see ::build()
    */
-  public static function replaceFieldPlaceholder(array &$build, array $built_field, $field_name) {
+  public static function replaceFieldPlaceholder(array &$build, array $built_field, string $field_name) {
     foreach (Element::children($build) as $child) {
       if (isset($build[$child]['#extra_field_placeholder_field_name']) && $build[$child]['#extra_field_placeholder_field_name'] === $field_name) {
         $placeholder_cache = CacheableMetadata::createFromRenderArray($build[$child]);

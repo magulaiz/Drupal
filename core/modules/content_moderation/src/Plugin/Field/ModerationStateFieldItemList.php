@@ -144,7 +144,7 @@ class ModerationStateFieldItemList extends FieldItemList {
    * @param string $moderation_state_id
    *   The ID of the new moderation state.
    */
-  protected function updateModeratedEntity($moderation_state_id) {
+  protected function updateModeratedEntity(string $moderation_state_id) {
     $entity = $this->getEntity();
 
     /** @var \Drupal\content_moderation\ModerationInformationInterface $content_moderation_info */

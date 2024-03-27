@@ -145,7 +145,7 @@ class ProcessedText extends RenderElementBase {
    * @return \Psr\Log\LoggerInterface
    *   The logger for this channel.
    */
-  protected static function logger($channel) {
+  protected static function logger(string $channel) {
     return \Drupal::logger($channel);
   }
 

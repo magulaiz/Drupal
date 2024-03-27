@@ -276,7 +276,7 @@ class FieldResolver {
    *
    * @throws \Drupal\Core\Http\Exception\CacheableBadRequestHttpException
    */
-  public function resolveInternalEntityQueryPath(ResourceType $resource_type, $external_field_name, $operator = NULL) {
+  public function resolveInternalEntityQueryPath(ResourceType $resource_type, string $external_field_name, string $operator = NULL) {
     $cacheability = (new CacheableMetadata())->addCacheContexts(['url.query_args:filter', 'url.query_args:sort']);
     if (empty($external_field_name)) {
       throw new CacheableBadRequestHttpException($cacheability, 'No field name was provided for the filter.');
@@ -482,7 +482,7 @@ class FieldResolver {
    * @return \Drupal\Core\TypedData\ComplexDataDefinitionInterface[]
    *   The found field item definitions.
    */
-  protected function getFieldItemDefinitions(array $resource_types, $field_name) {
+  protected function getFieldItemDefinitions(array $resource_types, string $field_name) {
     return array_reduce($resource_types, function ($result, ResourceType $resource_type) use ($field_name) {
       /** @var \Drupal\jsonapi\ResourceType\ResourceType $resource_type */
       $entity_type = $resource_type->getEntityTypeId();
@@ -520,7 +520,7 @@ class FieldResolver {
    * @return string
    *   The resolved internal name.
    */
-  protected function getInternalName($field_name, array $resource_types) {
+  protected function getInternalName(string $field_name, array $resource_types) {
     return array_reduce($resource_types, function ($carry, ResourceType $resource_type) use ($field_name) {
       if ($carry != $field_name) {
         // We already found the internal name.
@@ -542,7 +542,7 @@ class FieldResolver {
    *   Whether the given field is present as a filterable member of the targeted
    *   resource objects.
    */
-  protected function isMemberFilterable($external_name, array $resource_types) {
+  protected function isMemberFilterable(string $external_name, array $resource_types) {
     return array_reduce($resource_types, function ($carry, ResourceType $resource_type) use ($external_name) {
       // @todo: remove the next line and uncomment the following one in https://www.drupal.org/project/drupal/issues/3017047.
       return $carry ?: $external_name === 'id' || $resource_type->isFieldEnabled($resource_type->getInternalName($external_name));
@@ -663,7 +663,7 @@ class FieldResolver {
    * @return bool
    *   TRUE if the part is an integer, FALSE otherwise.
    */
-  protected static function isDelta($part) {
+  protected static function isDelta(string $part) {
     return (bool) preg_match('/^[0-9]+$/', $part);
   }
 
@@ -680,7 +680,7 @@ class FieldResolver {
    *   TRUE if the part is a property of one of the candidate definitions, FALSE
    *   otherwise.
    */
-  protected static function isCandidateDefinitionProperty($part, array $candidate_definitions) {
+  protected static function isCandidateDefinitionProperty(string $part, array $candidate_definitions) {
     $part = static::getPathPartPropertyName($part);
     foreach ($candidate_definitions as $definition) {
       $property_definitions = $definition->getPropertyDefinitions();
@@ -710,7 +710,7 @@ class FieldResolver {
    *   TRUE if the part is a property of one of the candidate definitions, FALSE
    *   otherwise.
    */
-  protected static function isCandidateDefinitionReferenceProperty($part, array $candidate_definitions) {
+  protected static function isCandidateDefinitionReferenceProperty(string $part, array $candidate_definitions) {
     $part = static::getPathPartPropertyName($part);
     foreach ($candidate_definitions as $definition) {
       $property = $definition->getPropertyDefinition($part);
@@ -735,7 +735,7 @@ class FieldResolver {
    * @return string
    *   The property name from a path part.
    */
-  protected static function getPathPartPropertyName($part) {
+  protected static function getPathPartPropertyName(string $part) {
     return str_contains($part, ':') ? explode(':', $part)[0] : $part;
   }
 
@@ -750,7 +750,7 @@ class FieldResolver {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The 'view' access result.
    */
-  protected function getFieldAccess(ResourceType $resource_type, $internal_field_name) {
+  protected function getFieldAccess(ResourceType $resource_type, string $internal_field_name) {
     $definitions = $this->fieldManager->getFieldDefinitions($resource_type->getEntityTypeId(), $resource_type->getBundle());
     assert(isset($definitions[$internal_field_name]), 'The field name should have already been validated.');
     $field_definition = $definitions[$internal_field_name];

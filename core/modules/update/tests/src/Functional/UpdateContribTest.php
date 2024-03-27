@@ -602,7 +602,7 @@ class UpdateContribTest extends UpdateTestBase {
    *
    * @dataProvider securityUpdateAvailabilityProvider
    */
-  public function testSecurityUpdateAvailability($module_version, array $expected_security_releases, $expected_update_message_type, $fixture) {
+  public function testSecurityUpdateAvailability(string $module_version, array $expected_security_releases, string $expected_update_message_type, string $fixture) {
     $this->mockInstalledExtensionsInfo([
       'aaa_update_test' => [
         'project' => 'aaa_update_test',

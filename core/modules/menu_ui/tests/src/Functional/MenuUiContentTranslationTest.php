@@ -87,7 +87,7 @@ class MenuUiContentTranslationTest extends BrowserTestBase {
    * @return \Drupal\Core\Entity\ContentEntityInterface
    *   First found content entity with given title.
    */
-  protected function getContentEntityByTitle($entity_type_id, $title) {
+  protected function getContentEntityByTitle(string $entity_type_id, string $title) {
     $entity_type_manager = $this->container->get('entity_type.manager');
     $storage = $entity_type_manager->getStorage($entity_type_id);
     $storage->resetCache();
@@ -120,7 +120,7 @@ class MenuUiContentTranslationTest extends BrowserTestBase {
    *
    * @dataProvider provideChangeContentToPseudoLanguageData
    */
-  public function testChangeContentToPseudoLanguage($langcode) {
+  public function testChangeContentToPseudoLanguage(string $langcode) {
     $node_title = 'Test node';
     $menu_link_title_en = 'Test menu link EN';
     $menu_link_title_pseudo = 'Test menu link PSEUDO';

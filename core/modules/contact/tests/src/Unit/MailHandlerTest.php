@@ -294,7 +294,7 @@ class MailHandlerTest extends UnitTestCase {
    * @return \Drupal\Core\Session\AccountInterface|\PHPUnit\Framework\MockObject\MockObject
    *   Mock sender for testing.
    */
-  protected function getMockSender($anonymous = TRUE, $mail_address = 'anonymous@drupal.org') {
+  protected function getMockSender($anonymous = TRUE, string $mail_address = 'anonymous@drupal.org') {
     $sender = $this->createMock(User::class);
     $sender->expects($this->once())
       ->method('isAnonymous')
@@ -398,7 +398,7 @@ class MailHandlerTest extends UnitTestCase {
    * @return \Drupal\contact\ContactFormInterface|\PHPUnit\Framework\MockObject\MockObject
    *   Mock message for testing.
    */
-  protected function getMockContactForm($recipients, $auto_reply) {
+  protected function getMockContactForm($recipients, string $auto_reply) {
     $contact_form = $this->createMock('\Drupal\contact\ContactFormInterface');
     $contact_form->expects($this->once())
       ->method('getRecipients')

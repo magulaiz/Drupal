@@ -66,7 +66,7 @@ interface FileSystemInterface {
    * @see https://www.drupal.org/node/515192
    * @ingroup php_wrappers
    */
-  public function moveUploadedFile($filename, $uri);
+  public function moveUploadedFile(string $filename, string $uri);
 
   /**
    * Sets the permissions on a file or directory.
@@ -95,7 +95,7 @@ interface FileSystemInterface {
    *
    * @ingroup php_wrappers
    */
-  public function chmod($uri, $mode = NULL);
+  public function chmod(string $uri, $mode = NULL);
 
   /**
    * Deletes a file.
@@ -114,7 +114,7 @@ interface FileSystemInterface {
    * @see unlink()
    * @ingroup php_wrappers
    */
-  public function unlink($uri, $context = NULL);
+  public function unlink(string $uri, $context = NULL);
 
   /**
    * Resolves the absolute filepath of a local URI or filepath.
@@ -137,7 +137,7 @@ interface FileSystemInterface {
    * @see http://php.net/manual/function.realpath.php
    * @ingroup php_wrappers
    */
-  public function realpath($uri);
+  public function realpath(string $uri);
 
   /**
    * Gets the name of the directory from a given path.
@@ -158,7 +158,7 @@ interface FileSystemInterface {
    * @see https://www.drupal.org/node/515192
    * @ingroup php_wrappers
    */
-  public function dirname($uri);
+  public function dirname(string $uri);
 
   /**
    * Gets the filename from a given path.
@@ -201,7 +201,7 @@ interface FileSystemInterface {
    * @todo Update with open_basedir compatible recursion logic from
    *   \Drupal\Component\PhpStorage\FileStorage::ensureDirectory().
    */
-  public function mkdir($uri, $mode = NULL, $recursive = FALSE, $context = NULL);
+  public function mkdir(string $uri, $mode = NULL, $recursive = FALSE, $context = NULL);
 
   /**
    * Removes a directory.
@@ -220,7 +220,7 @@ interface FileSystemInterface {
    * @see rmdir()
    * @ingroup php_wrappers
    */
-  public function rmdir($uri, $context = NULL);
+  public function rmdir(string $uri, $context = NULL);
 
   /**
    * Creates a file with a unique filename in the specified directory.
@@ -244,7 +244,7 @@ interface FileSystemInterface {
    * @see https://www.drupal.org/node/515192
    * @ingroup php_wrappers
    */
-  public function tempnam($directory, $prefix);
+  public function tempnam(string $directory, string $prefix);
 
   /**
    * Copies a file to a new location without invoking the file API.
@@ -282,7 +282,7 @@ interface FileSystemInterface {
    * @throws \Drupal\Core\File\Exception\FileException
    *   Implementation may throw FileException or its subtype on failure.
    */
-  public function copy($source, $destination, $replace = self::EXISTS_RENAME);
+  public function copy(string $source, string $destination, $replace = self::EXISTS_RENAME);
 
   /**
    * Deletes a file without database changes or hook invocations.
@@ -296,7 +296,7 @@ interface FileSystemInterface {
    * @throws \Drupal\Core\File\Exception\FileException
    *   Implementation may throw FileException or its subtype on failure.
    */
-  public function delete($path);
+  public function delete(string $path);
 
   /**
    * Deletes all files and directories in the specified filepath recursively.
@@ -320,7 +320,7 @@ interface FileSystemInterface {
    * @throws \Drupal\Core\File\Exception\FileException
    *   Implementation may throw FileException or its subtype on failure.
    */
-  public function deleteRecursive($path, callable $callback = NULL);
+  public function deleteRecursive(string $path, callable $callback = NULL);
 
   /**
    * Moves a file to a new location without database changes or hook invocation.
@@ -356,7 +356,7 @@ interface FileSystemInterface {
    *
    * @see https://bugs.php.net/bug.php?id=60456
    */
-  public function move($source, $destination, $replace = self::EXISTS_RENAME);
+  public function move(string $source, string $destination, $replace = self::EXISTS_RENAME);
 
   /**
    * Saves a file to the specified destination without invoking file API.
@@ -385,7 +385,7 @@ interface FileSystemInterface {
    *
    * @see \Drupal\file\FileRepositoryInterface::writeData()
    */
-  public function saveData($data, $destination, $replace = self::EXISTS_RENAME);
+  public function saveData(string $data, string $destination, $replace = self::EXISTS_RENAME);
 
   /**
    * Checks that the directory exists and is writable.
@@ -405,7 +405,7 @@ interface FileSystemInterface {
    *   TRUE if the directory exists (or was created) and is writable. FALSE
    *   otherwise.
    */
-  public function prepareDirectory(&$directory, $options = self::MODIFY_PERMISSIONS);
+  public function prepareDirectory(string &$directory, $options = self::MODIFY_PERMISSIONS);
 
   /**
    * Creates a full file path from a directory and filename.
@@ -425,7 +425,7 @@ interface FileSystemInterface {
    * @throws \Drupal\Core\File\Exception\FileException
    *   Implementation may throw FileException or its subtype on failure.
    */
-  public function createFilename($basename, $directory);
+  public function createFilename(string $basename, string $directory);
 
   /**
    * Determines the destination path for a file.
@@ -446,7 +446,7 @@ interface FileSystemInterface {
    * @throws \Drupal\Core\File\Exception\FileException
    *   Implementation may throw FileException or its subtype on failure.
    */
-  public function getDestinationFilename($destination, $replace);
+  public function getDestinationFilename(string $destination, $replace);
 
   /**
    * Gets the path of the configured temporary directory.
@@ -497,6 +497,6 @@ interface FileSystemInterface {
    * @throws \Drupal\Core\File\Exception\NotRegularDirectoryException
    *   If the directory does not exist.
    */
-  public function scanDirectory($dir, $mask, array $options = []);
+  public function scanDirectory(string $dir, string $mask, array $options = []);
 
 }

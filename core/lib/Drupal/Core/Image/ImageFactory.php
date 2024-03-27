@@ -42,7 +42,7 @@ class ImageFactory {
    *
    * @return $this
    */
-  public function setToolkitId($toolkit_id) {
+  public function setToolkitId(string $toolkit_id) {
     $this->toolkitId = $toolkit_id;
     return $this;
   }

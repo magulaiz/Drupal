@@ -17,7 +17,7 @@ class ConfigValidation {
    * @param \Symfony\Component\Validator\Context\ExecutionContextInterface $context
    *   The validation execution context.
    */
-  public static function validateLlama($string, ExecutionContextInterface $context) {
+  public static function validateLlama(string $string, ExecutionContextInterface $context) {
     if (!in_array($string, ['llama', 'alpaca', 'guanaco', 'vicuña'], TRUE)) {
       $context->addViolation('no valid llama');
     }
@@ -31,7 +31,7 @@ class ConfigValidation {
    * @param \Symfony\Component\Validator\Context\ExecutionContextInterface $context
    *   The validation execution context.
    */
-  public static function validateCats($string, ExecutionContextInterface $context) {
+  public static function validateCats(string $string, ExecutionContextInterface $context) {
     if (!in_array($string, ['kitten', 'cats', 'nyans'])) {
       $context->addViolation('no valid cat');
     }
@@ -59,7 +59,7 @@ class ConfigValidation {
    * @param \Symfony\Component\Validator\Context\ExecutionContextInterface $context
    *   The validation execution context.
    */
-  public static function validateGiraffes($string, ExecutionContextInterface $context) {
+  public static function validateGiraffes(string $string, ExecutionContextInterface $context) {
     if (!str_starts_with($string, 'hum')) {
       $context->addViolation('Giraffes just hum');
     }

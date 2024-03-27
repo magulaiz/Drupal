@@ -61,7 +61,7 @@ class TableDragTestForm extends FormBase {
    * @return array
    *   The renderable array of the draggable table used for testing.
    */
-  protected function buildTestTable(array $rows = [], $table_id = 'tabledrag-test-table', $group_prefix = 'tabledrag-test', $indentation = TRUE) {
+  protected function buildTestTable(array $rows = [], string $table_id = 'tabledrag-test-table', string $group_prefix = 'tabledrag-test', $indentation = TRUE) {
     $tabledrag = [
       [
         'action' => 'order',

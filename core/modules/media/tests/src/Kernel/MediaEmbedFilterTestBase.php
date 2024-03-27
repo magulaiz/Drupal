@@ -176,7 +176,7 @@ abstract class MediaEmbedFilterTestBase extends KernelTestBase {
    * @see \Drupal\Tests\media\Kernel\MediaEmbedFilterTestBase::createEmbedCode()
    * @see \Drupal\KernelTests\AssertContentTrait::setRawContent()
    */
-  protected function applyFilter($text, $langcode = 'en') {
+  protected function applyFilter(string $text, string $langcode = 'en') {
     $this->assertStringContainsString('<drupal-media', $text);
     $this->assertStringContainsString('This placeholder should not be rendered.', $text);
     $filter_result = $this->processText($text, $langcode);
@@ -223,7 +223,7 @@ abstract class MediaEmbedFilterTestBase extends KernelTestBase {
    *
    * @see \Drupal\filter\Element\ProcessedText::preRenderText()
    */
-  protected function processText($text, $langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED, array $filter_ids = ['media_embed']) {
+  protected function processText(string $text, string $langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED, array $filter_ids = ['media_embed']) {
     $manager = $this->container->get('plugin.manager.filter');
     $bag = new FilterPluginCollection($manager, []);
     $filters = [];

@@ -85,7 +85,7 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
    * @return \Drupal\workflows\WorkflowInterface|null
    *   A workflow entity object. NULL if no matching entity is found.
    */
-  protected function getWorkflow($config_name) {
+  protected function getWorkflow(string $config_name) {
     $entity_type_id = $this->configManager->getEntityTypeIdByName($config_name);
     if ($entity_type_id !== 'workflow') {
       return;

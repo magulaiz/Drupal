@@ -138,7 +138,7 @@ class MenuLinkParentTest extends MigrateProcessTestCase {
    *
    * @dataProvider providerMenuLinkParent
    */
-  public function testMenuLinkParent(array $source_value, $lookup_result, $plugin_id, $route_name, $expected_result) {
+  public function testMenuLinkParent(array $source_value, string $lookup_result, string $plugin_id, string $route_name, string $expected_result) {
     [$parent_id, $menu_name, $parent_link_path] = $source_value;
     $this->migrateLookup->lookup(NULL, [$parent_id])
       ->willReturn([['id' => $lookup_result]]);
@@ -207,7 +207,7 @@ class MenuLinkParentTest extends MigrateProcessTestCase {
    *
    * @throws \Drupal\migrate\MigrateSkipRowException
    */
-  public function doTransform(array $source_value, $plugin_id) {
+  public function doTransform(array $source_value, string $plugin_id) {
     [$parent_id, $menu_name, $parent_link_path] = $source_value;
 
     $menu_link_content = $this->prophesize(MenuLinkContent::class);

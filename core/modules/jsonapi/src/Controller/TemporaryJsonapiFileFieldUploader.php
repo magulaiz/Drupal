@@ -197,7 +197,7 @@ class TemporaryJsonapiFileFieldUploader {
    *   Thrown when temporary files cannot be written, a lock cannot be acquired,
    *   or when temporary files cannot be moved to their new location.
    */
-  public function handleFileUploadForField(FieldDefinitionInterface $field_definition, $filename, AccountInterface $owner) {
+  public function handleFileUploadForField(FieldDefinitionInterface $field_definition, string $filename, AccountInterface $owner) {
     assert(is_a($field_definition->getClass(), FileFieldItemList::class, TRUE));
     $settings = $field_definition->getSettings();
     $destination = $this->getUploadLocation($settings);
@@ -409,7 +409,7 @@ class TemporaryJsonapiFileFieldUploader {
    * @return string
    *   The prepared/munged filename.
    */
-  protected function prepareFilename($filename, array &$validators) {
+  protected function prepareFilename(string $filename, array &$validators) {
     // The actual extension validation occurs in
     // \Drupal\jsonapi\Controller\TemporaryJsonapiFileFieldUploader::validate().
     $extensions = $validators['FileExtension']['extensions'] ?? '';
@@ -446,7 +446,7 @@ class TemporaryJsonapiFileFieldUploader {
    * @return string
    *   The generated lock ID.
    */
-  protected static function generateLockIdFromFileUri($file_uri) {
+  protected static function generateLockIdFromFileUri(string $file_uri) {
     return 'file:jsonapi:' . Crypt::hashBase64($file_uri);
   }
 

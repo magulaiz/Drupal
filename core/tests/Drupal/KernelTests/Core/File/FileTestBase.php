@@ -157,7 +157,7 @@ abstract class FileTestBase extends KernelTestBase {
    * @return string
    *   The path to the directory.
    */
-  public function createDirectory($path = NULL) {
+  public function createDirectory(string $path = NULL) {
     // A directory to operate on.
     if (!isset($path)) {
       $path = 'public://' . $this->randomMachineName();

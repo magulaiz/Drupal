@@ -145,7 +145,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
    *
    * @dataProvider providerTestPrimaryKeyUpdate
    */
-  public function testPrimaryKeyUpdate($entity_type_id, $field_name) {
+  public function testPrimaryKeyUpdate(string $entity_type_id, string $field_name) {
     // EntityKernelTestBase::setUp() already installs the schema for the
     // 'entity_test' entity type.
     if ($entity_type_id !== 'entity_test') {

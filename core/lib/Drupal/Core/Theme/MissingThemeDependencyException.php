@@ -24,7 +24,7 @@ class MissingThemeDependencyException extends \Exception {
    * @param string $theme
    *   The missing theme dependency.
    */
-  public function __construct($message, $theme) {
+  public function __construct(string $message, string $theme) {
     parent::__construct($message);
     $this->theme = $theme;
   }

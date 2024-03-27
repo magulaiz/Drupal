@@ -301,7 +301,7 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
    * @return string
    *   The alias of the 'workspace_association' table.
    */
-  protected function ensureWorkspaceAssociationTable($entity_type_id, Sql $query, $relationship) {
+  protected function ensureWorkspaceAssociationTable(string $entity_type_id, Sql $query, string $relationship) {
     if (isset($query->tables[$relationship]['workspace_association'])) {
       return $query->tables[$relationship]['workspace_association']['alias'];
     }
@@ -346,7 +346,7 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
    * @return string
    *   The alias of the relationship.
    */
-  protected function ensureRevisionTable(EntityTypeInterface $entity_type, Sql $query, $relationship) {
+  protected function ensureRevisionTable(EntityTypeInterface $entity_type, Sql $query, string $relationship) {
     // Get the alias for the 'workspace_association' table we chain off of in
     // the COALESCE.
     $workspace_association_table = $this->ensureWorkspaceAssociationTable($entity_type->id(), $query, $relationship);
@@ -400,7 +400,7 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
-  protected function getRevisionTableJoin($relationship, $table, $field, $workspace_association_table, EntityTypeInterface $entity_type) {
+  protected function getRevisionTableJoin(string $relationship, string $table, string $field, string $workspace_association_table, EntityTypeInterface $entity_type) {
     $definition = [
       'table' => $table,
       'field' => $field,
@@ -438,7 +438,7 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
    * @param string $alias
    *   The alias of the table it needs to appear before.
    */
-  protected function moveEntityTable(Sql $query, $workspace_association_table, $alias) {
+  protected function moveEntityTable(Sql $query, string $workspace_association_table, string $alias) {
     $table_queue =& $query->getTableQueue();
     $keys = array_keys($table_queue);
     $current_index = array_search($workspace_association_table, $keys);

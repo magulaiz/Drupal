@@ -89,7 +89,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, DrupalKernelInterface $kernel, Connection $connection, UpdateHookRegistry $update_registry, protected LoggerInterface $logger) {
+  public function __construct(string $root, ModuleHandlerInterface $module_handler, DrupalKernelInterface $kernel, Connection $connection, UpdateHookRegistry $update_registry, protected LoggerInterface $logger) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->kernel = $kernel;
@@ -568,7 +568,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
    * @param string $module
    *   The name of the module for which to remove all registered cache bins.
    */
-  protected function removeCacheBins($module) {
+  protected function removeCacheBins(string $module) {
     $service_yaml_file = \Drupal::service('extension.list.module')->getPath($module) . "/$module.services.yml";
     if (!file_exists($service_yaml_file)) {
       return;

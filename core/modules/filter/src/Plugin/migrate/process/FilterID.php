@@ -113,7 +113,7 @@ class FilterID extends StaticMap implements ContainerFactoryPluginInterface {
    *
    * @see \Drupal\filter\Plugin\FilterInterface::getType()
    */
-  protected static function getSourceFilterType($filter_id) {
+  protected static function getSourceFilterType(string $filter_id) {
     switch ($filter_id) {
       // Drupal 7 core filters.
       // - https://git.drupalcode.org/project/drupal/blob/7.69/modules/filter/filter.module#L1229

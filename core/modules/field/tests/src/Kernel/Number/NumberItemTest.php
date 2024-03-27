@@ -146,7 +146,7 @@ class NumberItemTest extends FieldKernelTestBase {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function testConstraints($type, $min, $max, $value, $expect_constraints, $expected_constraint_message = '') {
+  public function testConstraints(string $type, $min, $max, $value, $expect_constraints, string $expected_constraint_message = '') {
     $field = FieldConfig::loadByName('entity_test', 'entity_test', 'field_' . $type);
     $field->setSetting('min', $min);
     $field->setSetting('max', $max);

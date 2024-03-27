@@ -527,7 +527,7 @@ class ViewExecutable {
    *
    * @return $this
    */
-  public function addCacheContext($cache_context) {
+  public function addCacheContext(string $cache_context) {
     $this->element['#cache']['contexts'][] = $cache_context;
 
     return $this;
@@ -803,7 +803,7 @@ class ViewExecutable {
    * @return bool
    *   TRUE if the display was correctly set, FALSE otherwise.
    */
-  public function setDisplay($display_id = NULL) {
+  public function setDisplay(string $display_id = NULL) {
     // If we have not already initialized the display, do so.
     if (!isset($this->current_display)) {
       // This will set the default display and instantiate the default display
@@ -862,7 +862,7 @@ class ViewExecutable {
    *   A new display plugin instance if executable is set, the new display ID
    *   otherwise.
    */
-  public function newDisplay($plugin_id = 'page', $title = NULL, $id = NULL) {
+  public function newDisplay(string $plugin_id = 'page', string $title = NULL, string $id = NULL) {
     $this->initDisplay();
 
     $id = $this->storage->addDisplay($plugin_id, $title, $id);
@@ -1057,7 +1057,7 @@ class ViewExecutable {
    *   An array of views handler types use in the view with additional
    *   information about them.
    */
-  protected function _initHandler($key, $info) {
+  protected function _initHandler(string $key, $info) {
     // Load the requested items from the display onto the object.
     $this->$key = &$this->display_handler->getHandlers($key);
 
@@ -1215,7 +1215,7 @@ class ViewExecutable {
    *   TRUE if the view build process was successful, FALSE if setting the
    *   display fails or NULL if the view has been built already.
    */
-  public function build($display_id = NULL) {
+  public function build(string $display_id = NULL) {
     if (!empty($this->built)) {
       return;
     }
@@ -1366,7 +1366,7 @@ class ViewExecutable {
    *   The type of handlers (filter etc.) which should be iterated over to build
    *   the relationship and query information.
    */
-  public function _build($key) {
+  public function _build(string $key) {
     $handlers = &$this->$key;
     foreach ($handlers as $id => $data) {
 
@@ -1408,7 +1408,7 @@ class ViewExecutable {
    *   TRUE if the view execution was successful, FALSE otherwise. For example,
    *   an argument could stop the process.
    */
-  public function execute($display_id = NULL) {
+  public function execute(string $display_id = NULL) {
     if (empty($this->built)) {
       if (!$this->build($display_id)) {
         return FALSE;
@@ -1472,7 +1472,7 @@ class ViewExecutable {
    *   A renderable array containing the view output or NULL if the build
    *   process failed.
    */
-  public function render($display_id = NULL) {
+  public function render(string $display_id = NULL) {
     $this->execute($display_id);
 
     // Check to see if the build failed.
@@ -1606,7 +1606,7 @@ class ViewExecutable {
    *   A renderable array with #type 'view' or NULL if the display ID was
    *   invalid.
    */
-  public function buildRenderable($display_id = NULL, $args = [], $cache = TRUE) {
+  public function buildRenderable(string $display_id = NULL, $args = [], $cache = TRUE) {
     // @todo Extract that into a generic method.
     if (empty($this->current_display) || $this->current_display != $this->chooseDisplay($display_id)) {
       if (!$this->setDisplay($display_id)) {
@@ -1639,7 +1639,7 @@ class ViewExecutable {
    *   A renderable array containing the view output or NULL if the display ID
    *   of the view to be executed doesn't exist.
    */
-  public function executeDisplay($display_id = NULL, $args = []) {
+  public function executeDisplay(string $display_id = NULL, $args = []) {
     if (empty($this->current_display) || $this->current_display != $this->chooseDisplay($display_id)) {
       if (!$this->setDisplay($display_id)) {
         return NULL;
@@ -1766,7 +1766,7 @@ class ViewExecutable {
    * @return bool
    *   TRUE if the user has access to the view, FALSE otherwise.
    */
-  public function access($displays = NULL, $account = NULL) {
+  public function access(string $displays = NULL, $account = NULL) {
     // No one should have access to disabled views.
     if (!$this->storage->status()) {
       return FALSE;
@@ -1909,7 +1909,7 @@ class ViewExecutable {
    * @return bool
    *   TRUE if the current display has a valid route available, FALSE otherwise.
    */
-  public function hasUrl($args = NULL, $display_id = NULL) {
+  public function hasUrl($args = NULL, string $display_id = NULL) {
     if (!empty($this->override_url)) {
       return TRUE;
     }
@@ -1951,7 +1951,7 @@ class ViewExecutable {
    * @throws \InvalidArgumentException
    *   Thrown when the current view doesn't have a route available.
    */
-  public function getUrl($args = NULL, $display_id = NULL) {
+  public function getUrl($args = NULL, string $display_id = NULL) {
     if (!empty($this->override_url)) {
       return $this->override_url;
     }
@@ -2018,7 +2018,7 @@ class ViewExecutable {
    * @throws \InvalidArgumentException
    *   Thrown when the display plugin does not have a URL to return.
    */
-  public function getUrlInfo($display_id = '') {
+  public function getUrlInfo(string $display_id = '') {
     $this->initDisplay();
     if (!$this->display_handler instanceof DisplayRouterInterface) {
       throw new \InvalidArgumentException("You cannot generate a URL for the display '$display_id'");
@@ -2184,7 +2184,7 @@ class ViewExecutable {
    * @return string
    *   The unique ID for this handler instance.
    */
-  public function addHandler($display_id, $type, $table, $field, $options = [], $id = NULL) {
+  public function addHandler(string $display_id, string $type, string $table, string $field, $options = [], string $id = NULL) {
     $types = $this::getHandlerTypes();
     $this->setDisplay($display_id);
 
@@ -2238,7 +2238,7 @@ class ViewExecutable {
    *   integer to make it unique, e.g., "{$requested_id}_1",
    *   "{$requested_id}_2", etc.
    */
-  public static function generateHandlerId($requested_id, $existing_items) {
+  public static function generateHandlerId(string $requested_id, $existing_items) {
     $count = 0;
     $id = $requested_id;
     while (!empty($existing_items[$id])) {
@@ -2259,7 +2259,7 @@ class ViewExecutable {
    * @return array
    *   An array of handler instances of a given type for this display.
    */
-  public function getHandlers($type, $display_id = NULL) {
+  public function getHandlers(string $type, string $display_id = NULL) {
     $old_display_id = !empty($this->current_display) ? $this->current_display : 'default';
 
     $this->setDisplay($display_id);
@@ -2294,7 +2294,7 @@ class ViewExecutable {
    *   Either the handler instance's configuration, or NULL if the handler is
    *   not used on the display.
    */
-  public function getHandler($display_id, $type, $id) {
+  public function getHandler(string $display_id, string $type, string $id) {
     // Get info about the types so we can get the right data.
     $types = static::getHandlerTypes();
     // Initialize the display
@@ -2320,7 +2320,7 @@ class ViewExecutable {
    *
    * @see set_item_option()
    */
-  public function setHandler($display_id, $type, $id, $item) {
+  public function setHandler(string $display_id, string $type, string $id, $item) {
     // Get info about the types so we can get the right data.
     $types = static::getHandlerTypes();
     // Initialize the display.
@@ -2346,7 +2346,7 @@ class ViewExecutable {
    * @param string $id
    *   The ID of the handler being removed.
    */
-  public function removeHandler($display_id, $type, $id) {
+  public function removeHandler(string $display_id, string $type, string $id) {
     // Get info about the types so we can get the right data.
     $types = static::getHandlerTypes();
     // Initialize the display.
@@ -2381,7 +2381,7 @@ class ViewExecutable {
    *
    * @see set_item()
    */
-  public function setHandlerOption($display_id, $type, $id, $option, $value) {
+  public function setHandlerOption(string $display_id, string $type, string $id, string $option, $value) {
     $item = $this->getHandler($display_id, $type, $id);
     $item[$option] = $value;
     $this->setHandler($display_id, $type, $id, $item);
@@ -2430,7 +2430,7 @@ class ViewExecutable {
    * @return array
    *   An array of theme hook suggestions.
    */
-  public function buildThemeFunctions($hook) {
+  public function buildThemeFunctions(string $hook) {
     $themes = [];
     $display = isset($this->display_handler) ? $this->display_handler->display : NULL;
     $id = $this->storage->id();

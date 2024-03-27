@@ -61,7 +61,7 @@ class EntityDeleteMultipleAccessCheck implements AccessInterface {
    * @return \Drupal\Core\Access\AccessResult
    *   Allowed or forbidden, neutral if tempstore is empty.
    */
-  public function access(AccountInterface $account, $entity_type_id) {
+  public function access(AccountInterface $account, string $entity_type_id) {
     $selection = $this->tempStore->get($account->id() . ':' . $entity_type_id);
     if (empty($selection) || !is_array($selection)) {
       return AccessResult::neutral();

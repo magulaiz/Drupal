@@ -137,7 +137,7 @@ abstract class StorableConfigBase extends ConfigBase {
    * @return mixed
    *   The data that was requested.
    */
-  public function getOriginal($key = '') {
+  public function getOriginal(string $key = '') {
     $original_data = $this->originalData;
 
     if (empty($key)) {
@@ -190,7 +190,7 @@ abstract class StorableConfigBase extends ConfigBase {
    * @throws \Drupal\Core\Config\UnsupportedDataTypeConfigException
    *   If the value is unsupported in configuration.
    */
-  protected function validateValue($key, $value) {
+  protected function validateValue(string $key, $value) {
     // Minimal validation. Should not try to serialize resources or non-arrays.
     if (is_array($value)) {
       foreach ($value as $nested_value_key => $nested_value) {

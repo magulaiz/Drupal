@@ -69,7 +69,7 @@ interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, 
    * @return $this
    *   The called node entity.
    */
-  public function setTitle($title);
+  public function setTitle(string $title);
 
   /**
    * Gets the node creation timestamp.

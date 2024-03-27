@@ -96,7 +96,7 @@ class Views {
    *
    * @return \Drupal\views\Plugin\ViewsPluginManager
    */
-  public static function pluginManager($type) {
+  public static function pluginManager(string $type) {
     return \Drupal::service('plugin.manager.views.' . $type);
   }
 
@@ -118,7 +118,7 @@ class Views {
    * @return \Drupal\views\ViewExecutable|null
    *   A view executable instance or NULL if the view does not exist.
    */
-  public static function getView($id) {
+  public static function getView(string $id) {
     $view = \Drupal::entityTypeManager()->getStorage('view')->load($id);
     if ($view) {
       return static::executableFactory()->get($view);
@@ -140,7 +140,7 @@ class Views {
    * @return array
    *   A keyed array of in the form of 'base_table' => 'Description'.
    */
-  public static function fetchPluginNames($type, $key = NULL, array $base = []) {
+  public static function fetchPluginNames(string $type, string $key = NULL, array $base = []) {
     $definitions = static::pluginManager($type)->getDefinitions();
     $plugins = [];
 
@@ -206,7 +206,7 @@ class Views {
    * );
    * @endcode
    */
-  public static function getApplicableViews($type) {
+  public static function getApplicableViews(string $type) {
     // Get all display plugins which provides the type.
     $display_plugins = static::pluginManager('display')->getDefinitions();
 
@@ -303,7 +303,7 @@ class Views {
    *   An associative array for use in select.
    *   - key: view name and display ID separated by ':', or the view name only.
    */
-  public static function getViewsAsOptions($views_only = FALSE, $filter = 'all', $exclude_view = NULL, $optgroup = FALSE, $sort = FALSE) {
+  public static function getViewsAsOptions($views_only = FALSE, string $filter = 'all', $exclude_view = NULL, $optgroup = FALSE, $sort = FALSE) {
 
     // Filter the big views array.
     switch ($filter) {
@@ -510,7 +510,7 @@ class Views {
    * @return array
    *   An array of plugin types.
    */
-  public static function getPluginTypes($type = NULL) {
+  public static function getPluginTypes(string $type = NULL) {
     if ($type === NULL) {
       return array_keys(static::$plugins);
     }

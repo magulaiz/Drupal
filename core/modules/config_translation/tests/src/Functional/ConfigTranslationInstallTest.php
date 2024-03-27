@@ -48,7 +48,7 @@ class ConfigTranslationInstallTest extends InstallerTestBase {
    * @return string
    *   Contents for the test .po file.
    */
-  protected function getPo($langcode) {
+  protected function getPo(string $langcode) {
     return <<<PO
 msgid ""
 msgstr ""

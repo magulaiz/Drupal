@@ -26,7 +26,7 @@ interface ViewEntityInterface extends ConfigEntityInterface {
    * @return array
    *   A reference to the specified display configuration.
    */
-  public function &getDisplay($display_id);
+  public function &getDisplay(string $display_id);
 
   /**
    * Add defaults to the display options.
@@ -46,7 +46,7 @@ interface ViewEntityInterface extends ConfigEntityInterface {
    * @return string
    *   The display ID of the new display.
    */
-  public function duplicateDisplayAsType($old_display_id, $new_display_type);
+  public function duplicateDisplayAsType(string $old_display_id, string $new_display_type);
 
   /**
    * Adds a new display handler to the view, automatically creating an ID.
@@ -64,6 +64,6 @@ interface ViewEntityInterface extends ConfigEntityInterface {
    *   The key to the display in $view->display, or FALSE if no plugin ID was
    *   provided.
    */
-  public function addDisplay($plugin_id = 'page', $title = NULL, $id = NULL);
+  public function addDisplay(string $plugin_id = 'page', string $title = NULL, string $id = NULL);
 
 }

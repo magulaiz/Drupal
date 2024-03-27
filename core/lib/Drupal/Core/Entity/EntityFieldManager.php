@@ -213,7 +213,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
    *   Thrown if a config entity type is given or if one of the entity keys is
    *   flagged as translatable.
    */
-  protected function buildBaseFieldDefinitions($entity_type_id) {
+  protected function buildBaseFieldDefinitions(string $entity_type_id) {
     /** @var \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type */
     $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
     $class = $entity_type->getClass();
@@ -377,7 +377,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
    *   An array of bundle field definitions, keyed by field name. Does
    *   not include base fields.
    */
-  protected function buildBundleFieldDefinitions($entity_type_id, $bundle, array $base_field_definitions) {
+  protected function buildBundleFieldDefinitions(string $entity_type_id, string $bundle, array $base_field_definitions) {
     $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
 
     // Use a bundle specific class if one is defined.
@@ -483,7 +483,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
    *
    * @internal
    */
-  public function getActiveFieldStorageDefinitions($entity_type_id) {
+  public function getActiveFieldStorageDefinitions(string $entity_type_id) {
     if (!isset($this->activeFieldStorageDefinitions[$entity_type_id])) {
       $this->activeFieldStorageDefinitions[$entity_type_id] = $this->entityLastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions($entity_type_id);
     }
@@ -581,7 +581,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
    * @return \Drupal\Core\Field\FieldStorageDefinitionInterface[]
    *   An array of field storage definitions, keyed by field name.
    */
-  protected function buildFieldStorageDefinitions($entity_type_id) {
+  protected function buildFieldStorageDefinitions(string $entity_type_id) {
     $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
     $field_definitions = [];
 

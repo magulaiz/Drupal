@@ -120,7 +120,7 @@ class BlockFormTest extends UnitTestCase {
    * @return \Drupal\block\BlockInterface|\PHPUnit\Framework\MockObject\MockObject
    *   The mocked block.
    */
-  protected function getBlockMockWithMachineName($machine_name) {
+  protected function getBlockMockWithMachineName(string $machine_name) {
     $plugin = $this->getMockBuilder(BlockBase::class)
       ->disableOriginalConstructor()
       ->getMock();

@@ -49,7 +49,7 @@ class MissingContentEvent extends Event {
    * @return $this
    *   The MissingContentEvent object.
    */
-  public function resolveMissingContent($uuid) {
+  public function resolveMissingContent(string $uuid) {
     if (isset($this->missingContent[$uuid])) {
       unset($this->missingContent[$uuid]);
     }

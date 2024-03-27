@@ -88,7 +88,7 @@ function hook_field_info_entity_type_ui_definitions_alter(array &$ui_definitions
  *
  * @see \Drupal\Core\Field\PreconfiguredFieldUiOptionsInterface::getPreconfiguredOptions()
  */
-function hook_field_ui_preconfigured_options_alter(array &$options, $field_type) {
+function hook_field_ui_preconfigured_options_alter(array &$options, string $field_type) {
   // If the field is not an "entity_reference"-based field, bail out.
   /** @var \Drupal\Core\Field\FieldTypePluginManager $field_type_manager */
   $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
@@ -381,7 +381,7 @@ function hook_field_formatter_info_alter(array &$info) {
  *
  * @ingroup field_info
  */
-function hook_field_info_max_weight($entity_type, $bundle, $context, $context_mode) {
+function hook_field_info_max_weight(string $entity_type, string $bundle, string $context, string $context_mode) {
   $weights = [];
 
   foreach (my_module_entity_additions($entity_type, $bundle, $context, $context_mode) as $addition) {

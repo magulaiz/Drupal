@@ -87,7 +87,7 @@ interface ViewsHandlerInterface extends ViewsPluginInterface {
    *
    * @return \Drupal\views\Plugin\views\join\JoinPluginBase
    */
-  public static function getTableJoin($table, $base_table);
+  public static function getTableJoin(string $table, string $base_table);
 
   /**
    * Shortcut to get a handler's raw field value.
@@ -135,7 +135,7 @@ interface ViewsHandlerInterface extends ViewsPluginInterface {
    * @return object
    *   A stdClass object containing value and operator properties.
    */
-  public static function breakString($str, $force_int = FALSE);
+  public static function breakString(string $str, $force_int = FALSE);
 
   /**
    * Provide text for the administrative summary.

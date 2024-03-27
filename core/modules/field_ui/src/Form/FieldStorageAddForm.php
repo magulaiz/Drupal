@@ -594,7 +594,7 @@ class FieldStorageAddForm extends FormBase {
    * @return bool
    *   Whether or not the field machine name is taken.
    */
-  public function fieldNameExists($value, $element, FormStateInterface $form_state) {
+  public function fieldNameExists(string $value, $element, FormStateInterface $form_state) {
     // Add the field prefix.
     $field_name = $this->configFactory->get('field_ui.settings')->get('field_prefix') . $value;
 

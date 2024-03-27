@@ -133,7 +133,7 @@ class TaggedHandlersPass implements CompilerPassInterface {
    * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
    *   The service container.
    */
-  protected function processServiceCollectorPass(array $pass, $consumer_id, ContainerBuilder $container) {
+  protected function processServiceCollectorPass(array $pass, string $consumer_id, ContainerBuilder $container) {
     $tag = $pass['tag'] ?? $consumer_id;
     $method_name = $pass['call'] ?? 'addHandler';
     $required = $pass['required'] ?? FALSE;
@@ -227,7 +227,7 @@ class TaggedHandlersPass implements CompilerPassInterface {
    * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
    *   The service container.
    */
-  protected function processServiceIdCollectorPass(array $pass, $consumer_id, ContainerBuilder $container) {
+  protected function processServiceIdCollectorPass(array $pass, string $consumer_id, ContainerBuilder $container) {
     $tag = $pass['tag'] ?? $consumer_id;
     $required = $pass['required'] ?? FALSE;
 

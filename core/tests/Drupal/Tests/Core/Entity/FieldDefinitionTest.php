@@ -369,7 +369,7 @@ class FieldDefinitionTest extends UnitTestCase {
    *
    * @return \Drupal\Core\Field\FieldDefinition
    */
-  protected function initializeFieldUsingFactory($factory_name) {
+  protected function initializeFieldUsingFactory(string $factory_name) {
     switch ($factory_name) {
       case 'createFromFieldStorageDefinition':
         return FieldDefinition::createFromFieldStorageDefinition($this->storageDefinition);

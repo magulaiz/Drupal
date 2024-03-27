@@ -202,7 +202,7 @@ class EntityReferenceAutocompleteWidget extends WidgetBase {
    * @return mixed
    *   The setting value.
    */
-  protected function getSelectionHandlerSetting($setting_name) {
+  protected function getSelectionHandlerSetting(string $setting_name) {
     $settings = $this->getFieldSetting('handler_settings');
     return $settings[$setting_name] ?? NULL;
   }

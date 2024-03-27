@@ -239,7 +239,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    * @return $this
    *   The migration entity.
    */
-  public function setProcessOfProperty($property, $process_of_property);
+  public function setProcessOfProperty(string $property, $process_of_property);
 
   /**
    * Merge the process pipeline configuration for a single property.
@@ -254,7 +254,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    * @return $this
    *   The migration entity.
    */
-  public function mergeProcessOfProperty($property, array $process_of_property);
+  public function mergeProcessOfProperty(string $property, array $process_of_property);
 
   /**
    * Checks if the migration should track time of last import.

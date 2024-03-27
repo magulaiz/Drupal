@@ -92,7 +92,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
    * @param \Drupal\Core\Extension\ExtensionPathResolver $extension_path_resolver
    *   The extension path resolver.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, StorageInterface $active_storage, TypedConfigManagerInterface $typed_config, ConfigManagerInterface $config_manager, EventDispatcherInterface $event_dispatcher, $install_profile, ExtensionPathResolver $extension_path_resolver) {
+  public function __construct(ConfigFactoryInterface $config_factory, StorageInterface $active_storage, TypedConfigManagerInterface $typed_config, ConfigManagerInterface $config_manager, EventDispatcherInterface $event_dispatcher, string $install_profile, ExtensionPathResolver $extension_path_resolver) {
     $this->configFactory = $config_factory;
     $this->activeStorages[$active_storage->getCollectionName()] = $active_storage;
     $this->typedConfig = $typed_config;
@@ -278,7 +278,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
    *   An array of configuration data read from the source storage keyed by the
    *   configuration object name.
    */
-  protected function getConfigToCreate(StorageInterface $storage, $collection, $prefix = '', array $profile_storages = []) {
+  protected function getConfigToCreate(StorageInterface $storage, string $collection, string $prefix = '', array $profile_storages = []) {
     if ($storage->getCollectionName() != $collection) {
       $storage = $storage->createCollection($collection);
     }
@@ -325,7 +325,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
    * @param array $config_to_create
    *   An array of configuration data to create, keyed by name.
    */
-  protected function createConfiguration($collection, array $config_to_create) {
+  protected function createConfiguration(string $collection, array $config_to_create) {
     // Order the configuration to install in the order of dependencies.
     if ($collection == StorageInterface::DEFAULT_COLLECTION) {
       $dependency_manager = new ConfigDependencyManager();
@@ -441,7 +441,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
    * @return \Drupal\Core\Config\StorageInterface
    *   The configuration storage that provides the default configuration.
    */
-  protected function getActiveStorages($collection = StorageInterface::DEFAULT_COLLECTION) {
+  protected function getActiveStorages(string $collection = StorageInterface::DEFAULT_COLLECTION) {
     if (!isset($this->activeStorages[$collection])) {
       $this->activeStorages[$collection] = reset($this->activeStorages)->createCollection($collection);
     }
@@ -587,7 +587,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
    * @return bool
    *   TRUE if all dependencies are present, FALSE otherwise.
    */
-  protected function validateDependencies($config_name, array $data, array $enabled_extensions, array $all_config) {
+  protected function validateDependencies(string $config_name, array $data, array $enabled_extensions, array $all_config) {
     if (!isset($data['dependencies'])) {
       // Simple config or a config entity without dependencies.
       [$provider] = explode('.', $config_name, 2);
@@ -613,7 +613,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
    * @return array
    *   A list of missing config dependencies.
    */
-  protected function getMissingDependencies($config_name, array $data, array $enabled_extensions, array $all_config) {
+  protected function getMissingDependencies(string $config_name, array $data, array $enabled_extensions, array $all_config) {
     $missing = [];
     if (isset($data['dependencies'])) {
       [$provider] = explode('.', $config_name, 2);
@@ -684,7 +684,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
    *   installing the profile itself, then it will return an empty array as the
    *   profile storage should not be used.
    */
-  protected function getProfileStorages($installing_name = '') {
+  protected function getProfileStorages(string $installing_name = '') {
     $profile = $this->drupalGetProfile();
     $profile_storages = [];
     if ($profile && $profile != $installing_name) {
@@ -709,7 +709,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
    * @return string
    *   The extension's default configuration directory.
    */
-  protected function getDefaultConfigDirectory($type, $name) {
+  protected function getDefaultConfigDirectory(string $type, string $name) {
     return $this->extensionPathResolver->getPath($type, $name) . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
   }
 

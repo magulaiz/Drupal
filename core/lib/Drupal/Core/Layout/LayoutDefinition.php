@@ -156,7 +156,7 @@ class LayoutDefinition extends PluginDefinition implements PluginDefinitionInter
    * @return mixed
    *   The value for that property, or NULL if the property does not exist.
    */
-  public function get($property) {
+  public function get(string $property) {
     if (property_exists($this, $property)) {
       $value = $this->{$property} ?? NULL;
     }
@@ -176,7 +176,7 @@ class LayoutDefinition extends PluginDefinition implements PluginDefinitionInter
    *
    * @return $this
    */
-  public function set($property, $value) {
+  public function set(string $property, $value) {
     if (property_exists($this, $property)) {
       $this->{$property} = $value;
     }
@@ -296,7 +296,7 @@ class LayoutDefinition extends PluginDefinition implements PluginDefinitionInter
    *
    * @return $this
    */
-  public function setTemplatePath($template_path) {
+  public function setTemplatePath(string $template_path) {
     $this->templatePath = $template_path;
     return $this;
   }
@@ -319,7 +319,7 @@ class LayoutDefinition extends PluginDefinition implements PluginDefinitionInter
    *
    * @return $this
    */
-  public function setThemeHook($theme_hook) {
+  public function setThemeHook(string $theme_hook) {
     $this->theme_hook = $theme_hook;
     return $this;
   }
@@ -342,7 +342,7 @@ class LayoutDefinition extends PluginDefinition implements PluginDefinitionInter
    *
    * @return $this
    */
-  public function setPath($path) {
+  public function setPath(string $path) {
     $this->path = $path;
     return $this;
   }
@@ -538,7 +538,7 @@ class LayoutDefinition extends PluginDefinition implements PluginDefinitionInter
    *
    * @return $this
    */
-  public function setDefaultRegion($default_region) {
+  public function setDefaultRegion(string $default_region) {
     $this->default_region = $default_region;
     return $this;
   }

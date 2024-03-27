@@ -46,7 +46,7 @@ abstract class Upsert extends Query implements \Countable {
    *
    * @return $this
    */
-  public function key($field) {
+  public function key(string $field) {
     $this->key = $field;
 
     return $this;

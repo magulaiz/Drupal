@@ -94,7 +94,7 @@ abstract class FileTransfer {
    *
    * @throws \Drupal\Core\FileTransfer\FileTransferException
    */
-  public static function factory($jail, $settings) {
+  public static function factory(string $jail, $settings) {
     throw new FileTransferException('FileTransfer::factory() static method not overridden by FileTransfer subclass.');
   }
 
@@ -111,7 +111,7 @@ abstract class FileTransfer {
    * @return string|bool
    *   The variable specified in $name.
    */
-  public function __get($name) {
+  public function __get(string $name) {
     if ($name == 'connection') {
       $this->connect();
       return $this->connectionHandle;
@@ -173,7 +173,7 @@ abstract class FileTransfer {
    * @param string $destination
    *   The destination path.
    */
-  final public function copyDirectory($source, $destination) {
+  final public function copyDirectory(string $source, string $destination) {
     $source = $this->sanitizePath($source);
     $destination = $this->fixRemotePath($destination);
     $this->checkPath($destination);
@@ -194,7 +194,7 @@ abstract class FileTransfer {
    *
    * @see http://php.net/chmod
    */
-  final public function chmod($path, $mode, $recursive = FALSE) {
+  final public function chmod(string $path, $mode, $recursive = FALSE) {
     if (!($this instanceof ChmodInterface)) {
       throw new FileTransferException('Unable to change file permissions');
     }
@@ -210,7 +210,7 @@ abstract class FileTransfer {
    * @param string $directory
    *   The directory to be created.
    */
-  final public function createDirectory($directory) {
+  final public function createDirectory(string $directory) {
     $directory = $this->fixRemotePath($directory);
     $this->checkPath($directory);
     $this->createDirectoryJailed($directory);
@@ -222,7 +222,7 @@ abstract class FileTransfer {
    * @param string $directory
    *   The directory to be removed.
    */
-  final public function removeDirectory($directory) {
+  final public function removeDirectory(string $directory) {
     $directory = $this->fixRemotePath($directory);
     $this->checkPath($directory);
     $this->removeDirectoryJailed($directory);
@@ -236,7 +236,7 @@ abstract class FileTransfer {
    * @param string $destination
    *   The destination file.
    */
-  final public function copyFile($source, $destination) {
+  final public function copyFile(string $source, string $destination) {
     $source = $this->sanitizePath($source);
     $destination = $this->fixRemotePath($destination);
     $this->checkPath($destination);
@@ -249,7 +249,7 @@ abstract class FileTransfer {
    * @param string $destination
    *   The destination file to be removed.
    */
-  final public function removeFile($destination) {
+  final public function removeFile(string $destination) {
     $destination = $this->fixRemotePath($destination);
     $this->checkPath($destination);
     $this->removeFileJailed($destination);
@@ -263,7 +263,7 @@ abstract class FileTransfer {
    *
    * @throws \Drupal\Core\FileTransfer\FileTransferException
    */
-  final protected function checkPath($path) {
+  final protected function checkPath(string $path) {
     $full_jail = $this->chroot . $this->jail;
     $full_path = \Drupal::service('file_system')
       ->realpath(substr($this->chroot . $path, 0, strlen($full_jail)));
@@ -288,7 +288,7 @@ abstract class FileTransfer {
    * @return string
    *   The modified path.
    */
-  final protected function fixRemotePath($path, $strip_chroot = TRUE) {
+  final protected function fixRemotePath(string $path, $strip_chroot = TRUE) {
     $path = $this->sanitizePath($path);
     // Strip out windows drive letter if its there.
     $path = preg_replace('|^([a-z]{1}):|i', '', $path);
@@ -309,7 +309,7 @@ abstract class FileTransfer {
    * @return string
    *   The modified path.
    */
-  public function sanitizePath($path) {
+  public function sanitizePath(string $path) {
     // Windows path sanitization.
     $path = str_replace('\\', '/', $path);
     if (str_ends_with($path, '/')) {
@@ -328,7 +328,7 @@ abstract class FileTransfer {
    * @param string $destination
    *   The destination path.
    */
-  protected function copyDirectoryJailed($source, $destination) {
+  protected function copyDirectoryJailed(string $source, string $destination) {
     if ($this->isDirectory($destination)) {
       $destination = $destination . '/' . \Drupal::service('file_system')->basename($source);
     }
@@ -350,7 +350,7 @@ abstract class FileTransfer {
    * @param string $directory
    *   The directory to be created.
    */
-  abstract protected function createDirectoryJailed($directory);
+  abstract protected function createDirectoryJailed(string $directory);
 
   /**
    * Removes a directory.
@@ -358,7 +358,7 @@ abstract class FileTransfer {
    * @param string $directory
    *   The directory to be removed.
    */
-  abstract protected function removeDirectoryJailed($directory);
+  abstract protected function removeDirectoryJailed(string $directory);
 
   /**
    * Copies a file.
@@ -368,7 +368,7 @@ abstract class FileTransfer {
    * @param string $destination
    *   The destination file.
    */
-  abstract protected function copyFileJailed($source, $destination);
+  abstract protected function copyFileJailed(string $source, string $destination);
 
   /**
    * Removes a file.
@@ -376,7 +376,7 @@ abstract class FileTransfer {
    * @param string $destination
    *   The destination file to be removed.
    */
-  abstract protected function removeFileJailed($destination);
+  abstract protected function removeFileJailed(string $destination);
 
   /**
    * Checks if a particular path is a directory.
@@ -387,7 +387,7 @@ abstract class FileTransfer {
    * @return bool
    *   TRUE if the specified path is a directory, FALSE otherwise.
    */
-  abstract public function isDirectory($path);
+  abstract public function isDirectory(string $path);
 
   /**
    * Checks if a particular path is a file (not a directory).
@@ -398,7 +398,7 @@ abstract class FileTransfer {
    * @return bool
    *   TRUE if the specified path is a file, FALSE otherwise.
    */
-  abstract public function isFile($path);
+  abstract public function isFile(string $path);
 
   /**
    * Returns the chroot property for this connection.

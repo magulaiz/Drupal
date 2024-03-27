@@ -53,7 +53,7 @@ class RequiredModuleUninstallValidator implements ModuleUninstallValidatorInterf
    * @return array
    *   The module info, or empty array if that module does not exist.
    */
-  protected function getModuleInfoByModule($module) {
+  protected function getModuleInfoByModule(string $module) {
     if ($this->moduleExtensionList->exists($module)) {
       return $this->moduleExtensionList->get($module)->info;
     }

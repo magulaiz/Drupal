@@ -28,7 +28,7 @@ class ContentEntityDeriver extends DeriverBase implements ContainerDeriverInterf
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    */
-  public function __construct($base_plugin_id, EntityTypeManagerInterface $entityTypeManager) {
+  public function __construct(string $base_plugin_id, EntityTypeManagerInterface $entityTypeManager) {
     $this->entityTypeManager = $entityTypeManager;
   }
 

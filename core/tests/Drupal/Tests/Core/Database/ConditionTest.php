@@ -80,7 +80,7 @@ class ConditionTest extends UnitTestCase {
    * @param mixed $expected_arguments
    *   (optional) The expected set arguments.
    */
-  public function testCompileWithKnownOperators($expected, $field, $value, $operator, $expected_arguments = NULL) {
+  public function testCompileWithKnownOperators(string $expected, string $field, $value, string $operator, $expected_arguments = NULL) {
     $connection = $this->prophesize(Connection::class);
     $connection->escapeField(Argument::any())->will(function ($args) {
       return preg_replace('/[^A-Za-z0-9_.]+/', '', $args[0]);

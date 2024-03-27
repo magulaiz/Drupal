@@ -61,7 +61,7 @@ interface ConfigFactoryOverrideInterface {
    *   collections. For example: a module that provides an overrider to avoid
    *   storing API keys in config would not use collections.
    */
-  public function createConfigObject($name, $collection = StorageInterface::DEFAULT_COLLECTION);
+  public function createConfigObject(string $name, string $collection = StorageInterface::DEFAULT_COLLECTION);
 
   /**
    * Gets the cacheability metadata associated with the config factory override.
@@ -72,6 +72,6 @@ interface ConfigFactoryOverrideInterface {
    * @return \Drupal\Core\Cache\CacheableMetadata
    *   A cacheable metadata object.
    */
-  public function getCacheableMetadata($name);
+  public function getCacheableMetadata(string $name);
 
 }

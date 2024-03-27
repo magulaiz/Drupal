@@ -37,7 +37,7 @@ interface DateFormatterInterface {
    *   A translated date string in the requested format. Since the format may
    *   contain user input, this value should be escaped when output.
    */
-  public function format($timestamp, $type = 'medium', $format = '', $timezone = NULL, $langcode = NULL);
+  public function format($timestamp, string $type = 'medium', string $format = '', $timezone = NULL, $langcode = NULL);
 
   /**
    * Formats a time interval with the requested granularity.

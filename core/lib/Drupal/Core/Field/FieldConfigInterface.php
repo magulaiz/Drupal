@@ -24,7 +24,7 @@ interface FieldConfigInterface extends FieldDefinitionInterface, ConfigEntityInt
    *
    * @return $this
    */
-  public function setLabel($label);
+  public function setLabel(string $label);
 
   /**
    * Sets a human readable description.
@@ -37,7 +37,7 @@ interface FieldConfigInterface extends FieldDefinitionInterface, ConfigEntityInt
    *
    * @return $this
    */
-  public function setDescription($description);
+  public function setDescription(string $description);
 
   /**
    * Sets whether the field is translatable.
@@ -91,7 +91,7 @@ interface FieldConfigInterface extends FieldDefinitionInterface, ConfigEntityInt
    *
    * @return $this
    */
-  public function setSetting($setting_name, $value);
+  public function setSetting(string $setting_name, $value);
 
   /**
    * Sets whether the field can be empty.
@@ -171,7 +171,7 @@ interface FieldConfigInterface extends FieldDefinitionInterface, ConfigEntityInt
    *
    * @see hook_entity_bundle_field_info_alter()
    */
-  public function setPropertyConstraints($name, array $constraints);
+  public function setPropertyConstraints(string $name, array $constraints);
 
   /**
    * Adds constraints for a given field item property.
@@ -210,7 +210,7 @@ interface FieldConfigInterface extends FieldDefinitionInterface, ConfigEntityInt
    * @see \Drupal\Core\Field\FieldConfigInterface::addConstraint()
    * @see hook_entity_bundle_field_info_alter()
    */
-  public function addPropertyConstraints($name, array $constraints);
+  public function addPropertyConstraints(string $name, array $constraints);
 
   /**
    * Adds a validation constraint to the FieldItemList.

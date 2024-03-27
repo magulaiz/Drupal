@@ -60,7 +60,7 @@ class StaticTranslation implements TranslatorInterface {
    *   source string belongs to. The second level is using original strings as
    *   keys. An empty array will be returned when no translations are available.
    */
-  protected function getLanguage($langcode) {
+  protected function getLanguage(string $langcode) {
     // This class is usually a base class but we do not declare as abstract
     // because it can be used on its own, by passing a simple array on the
     // constructor. This can be useful while testing, but it does not support

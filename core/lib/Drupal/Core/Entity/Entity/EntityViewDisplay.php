@@ -77,7 +77,7 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
    * @see \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getViewDisplay()
    * @see hook_entity_view_display_alter()
    */
-  public static function collectRenderDisplays($entities, $view_mode) {
+  public static function collectRenderDisplays($entities, string $view_mode) {
     if (empty($entities)) {
       return [];
     }
@@ -167,7 +167,7 @@ class EntityViewDisplay extends EntityDisplayBase implements EntityViewDisplayIn
    *
    * @see \Drupal\Core\Entity\Entity\EntityViewDisplay::collectRenderDisplays()
    */
-  public static function collectRenderDisplay(FieldableEntityInterface $entity, $view_mode) {
+  public static function collectRenderDisplay(FieldableEntityInterface $entity, string $view_mode) {
     $displays = static::collectRenderDisplays([$entity], $view_mode);
     return $displays[$entity->bundle()];
   }

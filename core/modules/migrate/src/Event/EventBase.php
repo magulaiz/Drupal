@@ -53,7 +53,7 @@ class EventBase extends Event {
    * @param string $type
    *   The type of message, for example: status or warning.
    */
-  public function logMessage($message, $type = 'status') {
+  public function logMessage(string $message, string $type = 'status') {
     $this->message->display($message, $type);
   }
 

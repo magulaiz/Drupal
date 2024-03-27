@@ -189,7 +189,7 @@ abstract class MigrateTestCase extends UnitTestCase {
    * @return mixed
    *   The value on a row for a given key.
    */
-  protected function getValue($row, $key) {
+  protected function getValue($row, string $key) {
     return $row[$key];
   }
 
@@ -203,7 +203,7 @@ abstract class MigrateTestCase extends UnitTestCase {
    * @param string $message
    *   The tested result as a formatted string.
    */
-  protected function retrievalAssertHelper($expected_value, $actual_value, $message) {
+  protected function retrievalAssertHelper($expected_value, $actual_value, string $message) {
     if (is_array($expected_value)) {
       // If the expected and actual values are empty, no need to array compare.
       if (empty($expected_value && $actual_value)) {

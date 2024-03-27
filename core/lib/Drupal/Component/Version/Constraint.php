@@ -34,7 +34,7 @@ class Constraint {
    *   Core compatibility declared for the current version of Drupal core.
    *   Normally this is set to \Drupal::CORE_COMPATIBILITY by the caller.
    */
-  public function __construct($constraint, $core_compatibility) {
+  public function __construct(string $constraint, string $core_compatibility) {
     $this->constraint = $constraint;
     $this->parseConstraint($constraint, $core_compatibility);
   }
@@ -61,7 +61,7 @@ class Constraint {
    *   TRUE if the provided version is satisfied by this constraint, FALSE if
    *   not.
    */
-  public function isCompatible($version) {
+  public function isCompatible(string $version) {
     foreach ($this->constraintArray as $constraint) {
       if (!version_compare($version, $constraint['version'], $constraint['op'])) {
         return FALSE;
@@ -79,7 +79,7 @@ class Constraint {
    *   Core compatibility declared for the current version of Drupal core.
    *   Normally this is set to \Drupal::CORE_COMPATIBILITY by the caller.
    */
-  private function parseConstraint($constraint_string, $core_compatibility) {
+  private function parseConstraint(string $constraint_string, string $core_compatibility) {
     // We use named sub-patterns and support every op that version_compare
     // supports. Also, op is optional and defaults to equals.
     $p_op = '(?<operation>!=|==|=|<|<=|>|>=|<>)?';

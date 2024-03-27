@@ -556,7 +556,7 @@ class TableDragTest extends WebDriverTestBase {
    * @return \Behat\Mink\Element\NodeElement
    *   The row element.
    */
-  protected function findRowById($id, $table_id = 'tabledrag-test-table') {
+  protected function findRowById(string $id, string $table_id = 'tabledrag-test-table') {
     $xpath = "//table[@id='$table_id']/tbody/tr[.//input[@name='table[$id][id]']]";
     $row = $this->getSession()->getPage()->find('xpath', $xpath);
     $this->assertNotEmpty($row);
@@ -572,7 +572,7 @@ class TableDragTest extends WebDriverTestBase {
    * @return \Behat\Mink\Element\NodeElement
    *   The toggle element.
    */
-  protected function findWeightsToggle($expected_text) {
+  protected function findWeightsToggle(string $expected_text) {
     $toggle = $this->getSession()->getPage()->findButton($expected_text);
     $this->assertNotEmpty($toggle);
     return $toggle;
@@ -589,7 +589,7 @@ class TableDragTest extends WebDriverTestBase {
    * @param int $repeat
    *   (optional) How many times to press the arrow button. Defaults to 1.
    */
-  protected function moveRowWithKeyboard(NodeElement $row, $arrow, $repeat = 1) {
+  protected function moveRowWithKeyboard(NodeElement $row, string $arrow, $repeat = 1) {
     $keys = [
       'left' => 37,
       'right' => 39,

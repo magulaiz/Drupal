@@ -157,7 +157,7 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
    * @see \Symfony\Component\Routing\Matcher\UrlMatcher::matchCollection()
    * @see \Drupal\Core\Routing\RouteProvider::getRoutesByPath()
    */
-  protected function doMatchCollection($pathinfo, RouteCollection $routes, $case_sensitive) {
+  protected function doMatchCollection(string $pathinfo, RouteCollection $routes, $case_sensitive) {
     foreach ($routes as $name => $route) {
       $compiledRoute = $route->compile();
 

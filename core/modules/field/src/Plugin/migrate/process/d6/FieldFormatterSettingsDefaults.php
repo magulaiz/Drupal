@@ -52,7 +52,7 @@ class FieldFormatterSettingsDefaults extends ProcessPluginBase {
    *
    * @throws \Drupal\migrate\MigrateException
    */
-  protected function numberSettings($type, $format) {
+  protected function numberSettings(string $type, $format) {
     $map = [
       'number_decimal' => [
         'us_0' => [

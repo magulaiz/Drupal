@@ -42,7 +42,7 @@ class FilterHtmlTest extends UnitTestCase {
    * @param string $expected
    *   The expected output string.
    */
-  public function testFilterAttributes($html, $expected) {
+  public function testFilterAttributes(string $html, string $expected) {
     $this->assertSame($expected, $this->filter->filterAttributes($html));
   }
 

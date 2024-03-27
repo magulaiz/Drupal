@@ -68,7 +68,7 @@ use Drupal\Core\Url;
  *   A render array, localized string, or object that can be rendered into
  *   a string, containing the help text.
  */
-function hook_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route_match) {
+function hook_help(string $route_name, \Drupal\Core\Routing\RouteMatchInterface $route_match) {
   switch ($route_name) {
     // Main module help for the block module.
     case 'help.page.block':

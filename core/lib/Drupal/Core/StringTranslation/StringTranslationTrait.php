@@ -67,7 +67,7 @@ trait StringTranslationTrait {
    *
    * @ingroup sanitization
    */
-  protected function t($string, array $args = [], array $options = []) {
+  protected function t(string $string, array $args = [], array $options = []) {
     return new TranslatableMarkup($string, $args, $options, $this->getStringTranslation());
   }
 

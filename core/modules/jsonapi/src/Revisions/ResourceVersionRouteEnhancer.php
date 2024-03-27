@@ -179,7 +179,7 @@ final class ResourceVersionRouteEnhancer implements EnhancerInterface {
    * @return bool
    *   TRUE if the received resource version value is valid, FALSE otherwise.
    */
-  protected static function isValidVersionIdentifier($resource_version) {
+  protected static function isValidVersionIdentifier(string $resource_version) {
     return preg_match(static::VERSION_IDENTIFIER_VALIDATOR, $resource_version) === 1;
   }
 

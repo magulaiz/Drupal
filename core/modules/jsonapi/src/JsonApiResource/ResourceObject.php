@@ -88,7 +88,7 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
    * @param \Drupal\Core\Language\LanguageInterface|null $language
    *   (optional) The resource language.
    */
-  public function __construct(CacheableDependencyInterface $cacheability, ResourceType $resource_type, $id, $revision_id, array $fields, LinkCollection $links, LanguageInterface $language = NULL) {
+  public function __construct(CacheableDependencyInterface $cacheability, ResourceType $resource_type, string $id, $revision_id, array $fields, LinkCollection $links, LanguageInterface $language = NULL) {
     assert(is_null($revision_id) || $resource_type->isVersionable());
     $this->setCacheability($cacheability);
     $this->resourceType = $resource_type;
@@ -138,7 +138,7 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
    * @return bool
    *   TRUE if the resource object has the given field, FALSE otherwise.
    */
-  public function hasField($public_field_name) {
+  public function hasField(string $public_field_name) {
     return isset($this->fields[$public_field_name]);
   }
 
@@ -153,7 +153,7 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
    *
    * @see ::extractFields()
    */
-  public function getField($public_field_name) {
+  public function getField(string $public_field_name) {
     return $this->hasField($public_field_name) ? $this->fields[$public_field_name] : NULL;
   }
 

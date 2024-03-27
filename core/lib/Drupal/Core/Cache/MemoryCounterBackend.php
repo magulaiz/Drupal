@@ -51,7 +51,7 @@ class MemoryCounterBackend extends MemoryBackend {
    * @param string $cid
    *   The cache ID of the cache entry to increase the counter.
    */
-  protected function increaseCounter($function, $cid) {
+  protected function increaseCounter(string $function, string $cid) {
     if (!isset($this->counter[$function][$cid])) {
       $this->counter[$function][$cid] = 1;
     }
@@ -71,7 +71,7 @@ class MemoryCounterBackend extends MemoryBackend {
    * @return int|array
    *   An integer if both method and cid is given, an array otherwise.
    */
-  public function getCounter($method = NULL, $cid = NULL) {
+  public function getCounter(string $method = NULL, string $cid = NULL) {
     if ($method && $cid) {
       return $this->counter[$method][$cid] ?? 0;
     }

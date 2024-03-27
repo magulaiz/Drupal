@@ -19,7 +19,7 @@ interface DeletedFieldsRepositoryInterface {
    * @return \Drupal\Core\Field\FieldDefinitionInterface[]
    *   An array of field definition objects, keyed by their unique identifier.
    */
-  public function getFieldDefinitions($field_storage_unique_id = NULL);
+  public function getFieldDefinitions(string $field_storage_unique_id = NULL);
 
   /**
    * Returns a list of deleted field storage definitions.

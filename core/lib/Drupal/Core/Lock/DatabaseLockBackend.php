@@ -218,7 +218,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
    * @return string
    *   An ASCII-encoded lock name that is at most 255 characters long.
    */
-  protected function normalizeName($name) {
+  protected function normalizeName(string $name) {
     // Nothing to do if the name is a US ASCII string of 255 characters or less.
     $name_is_ascii = mb_check_encoding($name, 'ASCII');
 

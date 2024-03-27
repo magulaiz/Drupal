@@ -25,7 +25,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * @return static
    *   A new DataDefinition object.
    */
-  public static function create($type) {
+  public static function create(string $type) {
     $definition['type'] = $type;
     return new static($definition);
   }
@@ -63,7 +63,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * @return static
    *   The object itself for chaining.
    */
-  public function setDataType($type) {
+  public function setDataType(string $type) {
     $this->definition['type'] = $type;
     return $this;
   }
@@ -250,7 +250,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * @return static
    *   The object itself for chaining.
    */
-  public function setSetting($setting_name, $value) {
+  public function setSetting(string $setting_name, $value) {
     $this->definition['settings'][$setting_name] = $value;
     return $this;
   }

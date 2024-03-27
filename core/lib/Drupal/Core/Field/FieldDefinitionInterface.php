@@ -119,7 +119,7 @@ interface FieldDefinitionInterface extends ListDataDefinitionInterface, Cacheabl
    *
    * @see \Drupal\Core\Entity\Display\EntityDisplayInterface
    */
-  public function isDisplayConfigurable($display_context);
+  public function isDisplayConfigurable(string $display_context);
 
   /**
    * Returns the default display options for the field.
@@ -155,7 +155,7 @@ interface FieldDefinitionInterface extends ListDataDefinitionInterface, Cacheabl
    *
    * @see \Drupal\Core\Entity\Display\EntityDisplayInterface
    */
-  public function getDisplayOptions($display_context);
+  public function getDisplayOptions(string $display_context);
 
   /**
    * Returns whether the field can be empty.
@@ -257,7 +257,7 @@ interface FieldDefinitionInterface extends ListDataDefinitionInterface, Cacheabl
    *
    * @return \Drupal\Core\Field\FieldConfigInterface
    */
-  public function getConfig($bundle);
+  public function getConfig(string $bundle);
 
   /**
    * Returns a unique identifier for the field.

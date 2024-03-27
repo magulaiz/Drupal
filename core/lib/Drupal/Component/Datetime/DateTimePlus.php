@@ -238,7 +238,7 @@ class DateTimePlus {
    * @throws \UnexpectedValueException
    *   If the created date does not match the input value.
    */
-  public static function createFromFormat($format, $time, $timezone = NULL, $settings = []) {
+  public static function createFromFormat(string $format, string $time, $timezone = NULL, $settings = []) {
     if (!isset($settings['validate_format'])) {
       $settings['validate_format'] = TRUE;
     }
@@ -287,7 +287,7 @@ class DateTimePlus {
    *   - debug: (optional) Boolean choice to leave debug values in the
    *     date object for debugging purposes. Defaults to FALSE.
    */
-  public function __construct($time = 'now', $timezone = NULL, $settings = []) {
+  public function __construct(string $time = 'now', $timezone = NULL, $settings = []) {
 
     // Unpack settings.
     $this->langcode = !empty($settings['langcode']) ? $settings['langcode'] : NULL;
@@ -348,7 +348,7 @@ class DateTimePlus {
    *   Thrown when there is no corresponding method on the DateTime object to
    *   call.
    */
-  public function __call($method, array $args) {
+  public function __call(string $method, array $args) {
     // @todo consider using assert() as per https://www.drupal.org/node/2451793.
     if (!isset($this->dateTimeObject)) {
       throw new \Exception('DateTime object not set.');
@@ -472,7 +472,7 @@ class DateTimePlus {
    * @return string
    *   The massaged PHP format string.
    */
-  protected function prepareFormat($format) {
+  protected function prepareFormat(string $format) {
     return $format;
   }
 
@@ -678,7 +678,7 @@ class DateTimePlus {
    *   The formatted value of the date or NULL if there were construction
    *   errors.
    */
-  public function format($format, $settings = []) {
+  public function format(string $format, $settings = []) {
 
     // If there were construction errors, we can't format the date.
     if ($this->hasErrors()) {

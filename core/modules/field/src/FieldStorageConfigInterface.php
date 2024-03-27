@@ -80,7 +80,7 @@ interface FieldStorageConfigInterface extends ConfigEntityInterface, FieldStorag
    *
    * @return $this
    */
-  public function setSetting($setting_name, $value);
+  public function setSetting(string $setting_name, $value);
 
   /**
    * Sets field storage settings.

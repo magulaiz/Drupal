@@ -37,7 +37,7 @@ trait FieldStorageDefinitionEventSubscriberTrait {
    * @param string $event_name
    *   The event name.
    */
-  public function onFieldStorageDefinitionEvent(FieldStorageDefinitionEvent $event, $event_name) {
+  public function onFieldStorageDefinitionEvent(FieldStorageDefinitionEvent $event, string $event_name) {
     switch ($event_name) {
       case FieldStorageDefinitionEvents::CREATE:
         $this->onFieldStorageDefinitionCreate($event->getFieldStorageDefinition());

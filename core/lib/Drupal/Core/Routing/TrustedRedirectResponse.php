@@ -34,7 +34,7 @@ class TrustedRedirectResponse extends CacheableSecuredRedirectResponse {
    *
    * @return $this
    */
-  public function setTrustedTargetUrl($url) {
+  public function setTrustedTargetUrl(string $url) {
     $this->trustedUrls[$url] = TRUE;
     return $this->setTargetUrl($url);
   }

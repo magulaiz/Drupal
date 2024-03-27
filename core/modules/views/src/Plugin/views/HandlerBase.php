@@ -642,7 +642,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    * @return string
    *   An appropriate SQL string for the DB type and field type.
    */
-  public function getDateFormat($format) {
+  public function getDateFormat(string $format) {
     return $this->query->getDateFormat($this->getDateField(), $format);
   }
 

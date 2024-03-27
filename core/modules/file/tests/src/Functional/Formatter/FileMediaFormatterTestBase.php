@@ -46,7 +46,7 @@ abstract class FileMediaFormatterTestBase extends BrowserTestBase {
    * @return \Drupal\field\Entity\FieldConfig
    *   Newly created file field.
    */
-  protected function createMediaField($formatter, $file_extensions, array $formatter_settings = []) {
+  protected function createMediaField(string $formatter, string $file_extensions, array $formatter_settings = []) {
     $entity_type = $bundle = 'entity_test';
     $field_name = $this->randomMachineName();
 

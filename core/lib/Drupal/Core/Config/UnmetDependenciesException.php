@@ -69,7 +69,7 @@ class UnmetDependenciesException extends ConfigException {
    *
    * @return string
    */
-  public function getTranslatedMessage(TranslationInterface $string_translation, $extension) {
+  public function getTranslatedMessage(TranslationInterface $string_translation, string $extension) {
     return $string_translation->translate(
       'Unable to install %extension due to unmet dependencies: %config_names',
       [

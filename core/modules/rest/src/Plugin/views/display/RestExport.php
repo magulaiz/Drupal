@@ -202,7 +202,7 @@ class RestExport extends PathPluginBase implements ResponseDisplayPluginInterfac
    * @param string $mime_type
    *   The response mime type. E.g. 'application/json'.
    */
-  public function setMimeType($mime_type) {
+  public function setMimeType(string $mime_type) {
     $this->mimeType = $mime_type;
   }
 
@@ -225,7 +225,7 @@ class RestExport extends PathPluginBase implements ResponseDisplayPluginInterfac
    * @param string $content_type
    *   The content type machine name. E.g. 'json'.
    */
-  public function setContentType($content_type) {
+  public function setContentType(string $content_type) {
     $this->contentType = $content_type;
   }
 

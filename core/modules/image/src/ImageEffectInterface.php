@@ -48,7 +48,7 @@ interface ImageEffectInterface extends PluginInspectionInterface, ConfigurableIn
    *   be aware that performing IO on the URI may lead to decrease in
    *   performance.
    */
-  public function transformDimensions(array &$dimensions, $uri);
+  public function transformDimensions(array &$dimensions, string $uri);
 
   /**
    * Returns the extension of the derivative after applying this image effect.
@@ -59,7 +59,7 @@ interface ImageEffectInterface extends PluginInspectionInterface, ConfigurableIn
    * @return string
    *   The file extension after applying.
    */
-  public function getDerivativeExtension($extension);
+  public function getDerivativeExtension(string $extension);
 
   /**
    * Returns a render array summarizing the configuration of the image effect.

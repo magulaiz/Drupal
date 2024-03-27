@@ -706,7 +706,7 @@ use Drupal\node\Entity\NodeType;
  *
  * @ingroup entity_api
  */
-function hook_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account) {
+function hook_entity_access(\Drupal\Core\Entity\EntityInterface $entity, string $operation, \Drupal\Core\Session\AccountInterface $account) {
   // No opinion.
   return AccessResult::neutral();
 }
@@ -738,7 +738,7 @@ function hook_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operat
  *
  * @ingroup entity_api
  */
-function hook_ENTITY_TYPE_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account) {
+function hook_ENTITY_TYPE_access(\Drupal\Core\Entity\EntityInterface $entity, string $operation, \Drupal\Core\Session\AccountInterface $account) {
   // No opinion.
   return AccessResult::neutral();
 }
@@ -765,7 +765,7 @@ function hook_ENTITY_TYPE_access(\Drupal\Core\Entity\EntityInterface $entity, $o
  *
  * @ingroup entity_api
  */
-function hook_entity_create_access(\Drupal\Core\Session\AccountInterface $account, array $context, $entity_bundle) {
+function hook_entity_create_access(\Drupal\Core\Session\AccountInterface $account, array $context, string $entity_bundle) {
   // No opinion.
   return AccessResult::neutral();
 }
@@ -791,7 +791,7 @@ function hook_entity_create_access(\Drupal\Core\Session\AccountInterface $accoun
  *
  * @ingroup entity_api
  */
-function hook_ENTITY_TYPE_create_access(\Drupal\Core\Session\AccountInterface $account, array $context, $entity_bundle) {
+function hook_ENTITY_TYPE_create_access(\Drupal\Core\Session\AccountInterface $account, array $context, string $entity_bundle) {
   // No opinion.
   return AccessResult::neutral();
 }
@@ -916,7 +916,7 @@ function hook_entity_bundle_info_alter(&$bundles) {
  *
  * @see entity_crud
  */
-function hook_entity_bundle_create($entity_type_id, $bundle) {
+function hook_entity_bundle_create(string $entity_type_id, string $bundle) {
   // When a new bundle is created, the menu needs to be rebuilt to add the
   // Field UI menu item tabs.
   \Drupal::service('router.builder')->setRebuildNeeded();
@@ -934,7 +934,7 @@ function hook_entity_bundle_create($entity_type_id, $bundle) {
  *
  * @ingroup entity_crud
  */
-function hook_entity_bundle_delete($entity_type_id, $bundle) {
+function hook_entity_bundle_delete(string $entity_type_id, string $bundle) {
   // Remove the settings associated with the bundle in my_module.settings.
   $config = \Drupal::config('my_module.settings');
   $bundle_settings = $config->get('bundle_settings');
@@ -1038,7 +1038,7 @@ function hook_ENTITY_TYPE_revision_create(\Drupal\Core\Entity\EntityInterface $n
  *
  * @ingroup entity_crud
  */
-function hook_entity_preload(array $ids, $entity_type_id) {
+function hook_entity_preload(array $ids, string $entity_type_id) {
   $entities = [];
 
   foreach ($ids as $id) {
@@ -1065,7 +1065,7 @@ function hook_entity_preload(array $ids, $entity_type_id) {
  * @ingroup entity_crud
  * @see hook_ENTITY_TYPE_load()
  */
-function hook_entity_load(array $entities, $entity_type_id) {
+function hook_entity_load(array $entities, string $entity_type_id) {
   foreach ($entities as $entity) {
     $entity->foo = my_module_add_something($entity);
   }
@@ -1098,7 +1098,7 @@ function hook_ENTITY_TYPE_load($entities) {
  *
  * @see hook_entity_load()
  */
-function hook_entity_storage_load(array $entities, $entity_type) {
+function hook_entity_storage_load(array $entities, string $entity_type) {
   foreach ($entities as $entity) {
     $entity->foo = my_module_add_something_uncached($entity);
   }
@@ -1656,7 +1656,7 @@ function hook_ENTITY_TYPE_view_alter(array &$build, \Drupal\Core\Entity\EntityIn
  *
  * @ingroup entity_crud
  */
-function hook_entity_prepare_view($entity_type_id, array $entities, array $displays, $view_mode) {
+function hook_entity_prepare_view(string $entity_type_id, array $entities, array $displays, string $view_mode) {
   // Load a specific node into the user object for later theming.
   if (!empty($entities) && $entity_type_id == 'user') {
     // Only do the extra work if the component is configured to be
@@ -1687,7 +1687,7 @@ function hook_entity_prepare_view($entity_type_id, array $entities, array $displ
  *
  * @ingroup entity_crud
  */
-function hook_entity_view_mode_alter(&$view_mode, \Drupal\Core\Entity\EntityInterface $entity) {
+function hook_entity_view_mode_alter(string &$view_mode, \Drupal\Core\Entity\EntityInterface $entity) {
   // For nodes, change the view mode when it is teaser.
   if ($entity->getEntityTypeId() == 'node' && $view_mode == 'teaser') {
     $view_mode = 'my_custom_view_mode';
@@ -1733,7 +1733,7 @@ function hook_ENTITY_TYPE_view_mode_alter(string &$view_mode, \Drupal\Core\Entit
  *
  * @ingroup entity_crud
  */
-function hook_ENTITY_TYPE_build_defaults_alter(array &$build, \Drupal\Core\Entity\EntityInterface $entity, $view_mode) {
+function hook_ENTITY_TYPE_build_defaults_alter(array &$build, \Drupal\Core\Entity\EntityInterface $entity, string $view_mode) {
 
 }
 
@@ -1757,7 +1757,7 @@ function hook_ENTITY_TYPE_build_defaults_alter(array &$build, \Drupal\Core\Entit
  *
  * @ingroup entity_crud
  */
-function hook_entity_build_defaults_alter(array &$build, \Drupal\Core\Entity\EntityInterface $entity, $view_mode) {
+function hook_entity_build_defaults_alter(array &$build, \Drupal\Core\Entity\EntityInterface $entity, string $view_mode) {
 
 }
 
@@ -1870,7 +1870,7 @@ function hook_ENTITY_TYPE_prepare_form(\Drupal\Core\Entity\EntityInterface $enti
  *
  * @ingroup entity_crud
  */
-function hook_entity_form_mode_alter(&$form_mode, \Drupal\Core\Entity\EntityInterface $entity) {
+function hook_entity_form_mode_alter(string &$form_mode, \Drupal\Core\Entity\EntityInterface $entity) {
   // Change the form mode for users with Administrator role.
   if ($entity->getEntityTypeId() == 'user' && $entity->hasRole('administrator')) {
     $form_mode = 'my_custom_form_mode';
@@ -1986,7 +1986,7 @@ function hook_entity_base_field_info_alter(&$fields, \Drupal\Core\Entity\EntityT
  * @todo WARNING: This hook will be changed in
  * https://www.drupal.org/node/2346347.
  */
-function hook_entity_bundle_field_info(\Drupal\Core\Entity\EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
+function hook_entity_bundle_field_info(\Drupal\Core\Entity\EntityTypeInterface $entity_type, string $bundle, array $base_field_definitions) {
   // Add a property only to nodes of the 'article' bundle.
   if ($entity_type->id() == 'node' && $bundle == 'article') {
     $fields = [];
@@ -2015,7 +2015,7 @@ function hook_entity_bundle_field_info(\Drupal\Core\Entity\EntityTypeInterface $
  * @todo WARNING: This hook will be changed in
  * https://www.drupal.org/node/2346347.
  */
-function hook_entity_bundle_field_info_alter(&$fields, \Drupal\Core\Entity\EntityTypeInterface $entity_type, $bundle) {
+function hook_entity_bundle_field_info_alter(&$fields, \Drupal\Core\Entity\EntityTypeInterface $entity_type, string $bundle) {
   if ($entity_type->id() == 'node' && $bundle == 'article' && !empty($fields['my_module_text'])) {
     // Alter the my_module_text field to use a custom class.
     $fields['my_module_text']->setClass('\Drupal\another_module\EntityComputedText');
@@ -2142,7 +2142,7 @@ function hook_entity_operation_alter(array &$operations, \Drupal\Core\Entity\Ent
  *
  * @see \Drupal\Core\Entity\EntityAccessControlHandlerInterface::fieldAccess()
  */
-function hook_entity_field_access($operation, \Drupal\Core\Field\FieldDefinitionInterface $field_definition, \Drupal\Core\Session\AccountInterface $account, \Drupal\Core\Field\FieldItemListInterface $items = NULL) {
+function hook_entity_field_access(string $operation, \Drupal\Core\Field\FieldDefinitionInterface $field_definition, \Drupal\Core\Session\AccountInterface $account, \Drupal\Core\Field\FieldItemListInterface $items = NULL) {
   if ($field_definition->getName() == 'field_of_interest' && $operation == 'edit') {
     return AccessResult::allowedIfHasPermission($account, 'update field of interest');
   }

@@ -147,7 +147,7 @@ abstract class QueryBase implements QueryInterface {
    * @param array $namespaces
    *   List of potential namespaces of the classes belonging to this query.
    */
-  public function __construct(EntityTypeInterface $entity_type, $conjunction, array $namespaces) {
+  public function __construct(EntityTypeInterface $entity_type, string $conjunction, array $namespaces) {
     $this->entityTypeId = $entity_type->id();
     $this->entityType = $entity_type;
     $this->conjunction = $conjunction;
@@ -212,7 +212,7 @@ abstract class QueryBase implements QueryInterface {
    * @return \Drupal\Core\Entity\Query\ConditionInterface
    *   An object holding a group of conditions.
    */
-  protected function conditionGroupFactory($conjunction = 'AND') {
+  protected function conditionGroupFactory(string $conjunction = 'AND') {
     $class = static::getClass($this->namespaces, 'Condition');
     return new $class($conjunction, $this, $this->namespaces);
   }
@@ -461,7 +461,7 @@ abstract class QueryBase implements QueryInterface {
    * @return string
    *   The alias for the field.
    */
-  protected function getAggregationAlias($field, $function) {
+  protected function getAggregationAlias(string $field, string $function) {
     return strtolower($field . '_' . $function);
   }
 
@@ -501,7 +501,7 @@ abstract class QueryBase implements QueryInterface {
    * @return string
    *   The fully qualified name of the class.
    */
-  public static function getClass(array $namespaces, $short_class_name) {
+  public static function getClass(array $namespaces, string $short_class_name) {
     foreach ($namespaces as $namespace) {
       $class = $namespace . '\\' . $short_class_name;
       if (class_exists($class)) {

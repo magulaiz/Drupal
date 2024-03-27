@@ -75,7 +75,7 @@ final class ProjectSecurityData {
    * @param array $releases
    *   Project releases as returned by update_get_available().
    */
-  private function __construct($existing_version = NULL, array $releases = []) {
+  private function __construct(string $existing_version = NULL, array $releases = []) {
     $this->existingVersion = $existing_version;
     $this->releases = $releases;
   }
@@ -214,7 +214,7 @@ final class ProjectSecurityData {
    *
    * @see \Drupal\update\ProjectSecurityData\getSecurityCoverageUntilVersion()
    */
-  private function getAdditionalSecurityCoveredMinors($security_covered_version) {
+  private function getAdditionalSecurityCoveredMinors(string $security_covered_version) {
     $security_covered_version_major = ExtensionVersion::createFromVersionString($security_covered_version)->getMajorVersion();
     $security_covered_version_minor = $this->getSemanticMinorVersion($security_covered_version);
     foreach ($this->releases as $release_info) {
@@ -253,7 +253,7 @@ final class ProjectSecurityData {
    * @return int
    *   The minor version as an integer.
    */
-  private function getSemanticMinorVersion($version) {
+  private function getSemanticMinorVersion(string $version) {
     return (int) (explode('.', $version)[1]);
   }
 

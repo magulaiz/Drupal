@@ -63,7 +63,7 @@ class UserFloodEvent extends Event {
    * @param string $identifier
    *   The identifier of the flood event.
    */
-  public function __construct($name, $threshold, $window, $identifier) {
+  public function __construct(string $name, $threshold, $window, string $identifier) {
     $this->name = $name;
     $this->threshold = $threshold;
     $this->window = $window;

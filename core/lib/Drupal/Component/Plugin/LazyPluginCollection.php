@@ -29,7 +29,7 @@ abstract class LazyPluginCollection implements \IteratorAggregate, \Countable {
    * @param string $instance_id
    *   The ID of the plugin instance to initialize.
    */
-  abstract protected function initializePlugin($instance_id);
+  abstract protected function initializePlugin(string $instance_id);
 
   /**
    * Gets the current configuration of all plugins in this collection.
@@ -65,7 +65,7 @@ abstract class LazyPluginCollection implements \IteratorAggregate, \Countable {
    * @return bool
    *   TRUE if the plugin instance exists, FALSE otherwise.
    */
-  public function has($instance_id) {
+  public function has(string $instance_id) {
     return isset($this->pluginInstances[$instance_id]) || isset($this->instanceIds[$instance_id]);
   }
 
@@ -75,7 +75,7 @@ abstract class LazyPluginCollection implements \IteratorAggregate, \Countable {
    * @param string $instance_id
    *   The ID of the plugin instance being retrieved.
    */
-  public function &get($instance_id) {
+  public function &get(string $instance_id) {
     if (!isset($this->pluginInstances[$instance_id])) {
       $this->initializePlugin($instance_id);
     }
@@ -90,7 +90,7 @@ abstract class LazyPluginCollection implements \IteratorAggregate, \Countable {
    * @param mixed $value
    *   An instantiated plugin.
    */
-  public function set($instance_id, $value) {
+  public function set(string $instance_id, $value) {
     $this->pluginInstances[$instance_id] = $value;
     $this->addInstanceId($instance_id);
   }
@@ -103,7 +103,7 @@ abstract class LazyPluginCollection implements \IteratorAggregate, \Countable {
    * @param string $instance_id
    *   The ID of the plugin instance to remove.
    */
-  public function remove($instance_id) {
+  public function remove(string $instance_id) {
     unset($this->pluginInstances[$instance_id]);
   }
 
@@ -115,7 +115,7 @@ abstract class LazyPluginCollection implements \IteratorAggregate, \Countable {
    * @param array|null $configuration
    *   (optional) The configuration used by this instance. Defaults to NULL.
    */
-  public function addInstanceId($id, $configuration = NULL) {
+  public function addInstanceId(string $id, $configuration = NULL) {
     if (!isset($this->instanceIds[$id])) {
       $this->instanceIds[$id] = $id;
     }
@@ -137,7 +137,7 @@ abstract class LazyPluginCollection implements \IteratorAggregate, \Countable {
    * @param string $instance_id
    *   The ID of the plugin instance to remove.
    */
-  public function removeInstanceId($instance_id) {
+  public function removeInstanceId(string $instance_id) {
     unset($this->instanceIds[$instance_id]);
     $this->remove($instance_id);
   }

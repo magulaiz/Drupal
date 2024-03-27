@@ -68,7 +68,7 @@ class IncludeResolver {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    *   Thrown if a storage handler couldn't be loaded.
    */
-  public function resolve($data, $include_parameter) {
+  public function resolve($data, string $include_parameter) {
     assert($data instanceof ResourceObject || $data instanceof ResourceObjectData);
     $data = $data instanceof ResourceObjectData ? $data : new ResourceObjectData([$data], 1);
     $include_tree = static::toIncludeTree($data, $include_parameter);
@@ -193,7 +193,7 @@ class IncludeResolver {
    *   A multi-dimensional array representing a tree of field names to be
    *   included. Array keys are the field names. Leaves are empty arrays.
    */
-  protected static function toIncludeTree(ResourceObjectData $data, $include_parameter) {
+  protected static function toIncludeTree(ResourceObjectData $data, string $include_parameter) {
     // $include_parameter: 'one.two.three, one.two.four'.
     $include_paths = array_map('trim', explode(',', $include_parameter));
     // $exploded_paths: [['one', 'two', 'three'], ['one', 'two', 'four']].

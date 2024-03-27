@@ -82,7 +82,7 @@ class HtaccessWriter implements HtaccessWriterInterface {
    *
    * @see \Drupal\Component\FileSecurity\FileSecurity::writeHtaccess()
    */
-  public function write($directory, $deny_public_access = TRUE, $force_overwrite = FALSE) {
+  public function write(string $directory, $deny_public_access = TRUE, $force_overwrite = FALSE) {
     if (StreamWrapperManager::getScheme($directory)) {
       $directory = $this->streamWrapperManager->normalizeUri($directory);
     }

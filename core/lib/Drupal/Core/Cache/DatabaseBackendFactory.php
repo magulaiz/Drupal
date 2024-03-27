@@ -74,7 +74,7 @@ class DatabaseBackendFactory implements CacheFactoryInterface {
    *   The maximum number of rows for the given bin. Defaults to
    *   DatabaseBackend::DEFAULT_MAX_ROWS.
    */
-  protected function getMaxRowsForBin($bin) {
+  protected function getMaxRowsForBin(string $bin) {
     $max_rows_settings = $this->settings->get('database_cache_max_rows');
     // First, look for a cache bin specific setting.
     if (isset($max_rows_settings['bins'][$bin])) {

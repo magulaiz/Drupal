@@ -317,7 +317,7 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
    * @return bool
    *   Return true if the value is valid.
    */
-  protected function isValid($value) {
+  protected function isValid(string $value) {
     return !in_array($value, [NULL, FALSE, [], ""], TRUE);
   }
 

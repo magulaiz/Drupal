@@ -347,7 +347,7 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
    * @return string
    *   The proper message to display in the AccessDeniedHttpException.
    */
-  protected function generateFallbackAccessDeniedMessage(EntityInterface $entity, $operation) {
+  protected function generateFallbackAccessDeniedMessage(EntityInterface $entity, string $operation) {
     $message = "You are not authorized to {$operation} this {$entity->getEntityTypeId()} entity";
 
     if ($entity->bundle() !== $entity->getEntityTypeId()) {

@@ -21,7 +21,7 @@ class FormElementHelper {
    * @return array
    *   The form element.
    */
-  public static function getElementByName($name, array $form) {
+  public static function getElementByName(string $name, array $form) {
     foreach (Element::children($form) as $key) {
       if (implode('][', $form[$key]['#parents']) === $name) {
         return $form[$key];

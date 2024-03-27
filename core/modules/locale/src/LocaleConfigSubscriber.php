@@ -122,7 +122,7 @@ class LocaleConfigSubscriber implements EventSubscriberInterface {
    *   override. This allows us to update locale keys for data not in the
    *   override but still in the active configuration.
    */
-  public function updateLocaleStorage(StorableConfigBase $config, $langcode, array $reference_config = []) {
+  public function updateLocaleStorage(StorableConfigBase $config, string $langcode, array $reference_config = []) {
     $name = $config->getName();
     if ($this->localeConfigManager->isSupported($name) && locale_is_translatable($langcode)) {
       $translatables = $this->localeConfigManager->getTranslatableDefaultConfig($name);
@@ -147,7 +147,7 @@ class LocaleConfigSubscriber implements EventSubscriberInterface {
    *   override. This allows us to update locale keys for data not in the
    *   override but still in the active configuration.
    */
-  protected function processTranslatableData($name, array $config, array $translatable, $langcode, array $reference_config = []) {
+  protected function processTranslatableData(string $name, array $config, array $translatable, string $langcode, array $reference_config = []) {
     foreach ($translatable as $key => $item) {
       if (!isset($config[$key])) {
         if (isset($reference_config[$key])) {
@@ -183,7 +183,7 @@ class LocaleConfigSubscriber implements EventSubscriberInterface {
    * @param string $langcode
    *   The language code of the translation being processed.
    */
-  protected function resetExistingTranslations($name, $translatable, $reference_config, $langcode) {
+  protected function resetExistingTranslations(string $name, $translatable, $reference_config, string $langcode) {
     if (is_array($translatable)) {
       foreach ($translatable as $key => $item) {
         if (isset($reference_config[$key])) {
@@ -213,7 +213,7 @@ class LocaleConfigSubscriber implements EventSubscriberInterface {
    * @param string $langcode
    *   The language code of the translation.
    */
-  protected function saveCustomizedTranslation($name, $source, $context, $new_translation, $langcode) {
+  protected function saveCustomizedTranslation(string $name, string $source, string $context, string $new_translation, string $langcode) {
     $locale_translation = $this->localeConfigManager->getStringTranslation($name, $langcode, $source, $context);
     if (!empty($locale_translation)) {
       // If this code is triggered during installation never set the translation

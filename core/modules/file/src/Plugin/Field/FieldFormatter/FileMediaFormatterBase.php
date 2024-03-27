@@ -167,7 +167,7 @@ abstract class FileMediaFormatterBase extends FileFormatterBase implements FileM
    * @return bool
    *   TRUE if the MIME type applies, FALSE otherwise.
    */
-  protected static function mimeTypeApplies($mime_type) {
+  protected static function mimeTypeApplies(string $mime_type) {
     [$type] = explode('/', $mime_type, 2);
     return $type === static::getMediaType();
   }
@@ -186,7 +186,7 @@ abstract class FileMediaFormatterBase extends FileFormatterBase implements FileM
    *     - file => \Drupal\file\Entity\File
    *     - source_attributes => \Drupal\Core\Template\Attribute
    */
-  protected function getSourceFiles(EntityReferenceFieldItemListInterface $items, $langcode) {
+  protected function getSourceFiles(EntityReferenceFieldItemListInterface $items, string $langcode) {
     $source_files = [];
     // Because we can have the files grouped in a single media tag, we do a
     // grouping in case the multiple file behavior is not 'tags'.

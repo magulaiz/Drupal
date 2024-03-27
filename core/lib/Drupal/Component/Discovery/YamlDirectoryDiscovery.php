@@ -55,7 +55,7 @@ class YamlDirectoryDiscovery implements DiscoverableInterface {
    *   (optional) The key contained in the discovered data that identifies it.
    *   Defaults to 'id'.
    */
-  public function __construct(array $directories, $file_cache_key_suffix, $key = 'id') {
+  public function __construct(array $directories, string $file_cache_key_suffix, string $key = 'id') {
     $this->directories = $directories;
     $this->fileCacheKeySuffix = $file_cache_key_suffix;
     $this->idKey = $key;
@@ -109,7 +109,7 @@ class YamlDirectoryDiscovery implements DiscoverableInterface {
    * @return string
    *   The identifier from the data.
    */
-  protected function getIdentifier($file, array $data) {
+  protected function getIdentifier(string $file, array $data) {
     if (!isset($data[$this->idKey])) {
       throw new DiscoveryException("The $file contains no data in the identifier key '{$this->idKey}'");
     }
@@ -152,7 +152,7 @@ class YamlDirectoryDiscovery implements DiscoverableInterface {
    *   An \Traversable object or array where the values are \SplFileInfo
    *   objects.
    */
-  protected function getDirectoryIterator($directory) {
+  protected function getDirectoryIterator(string $directory) {
     return new RegexDirectoryIterator($directory, '/\.yml$/i');
   }
 

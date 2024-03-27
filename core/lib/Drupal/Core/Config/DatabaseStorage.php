@@ -53,7 +53,7 @@ class DatabaseStorage implements StorageInterface {
    *   (optional) The collection to store configuration in. Defaults to the
    *   default collection.
    */
-  public function __construct(Connection $connection, $table, array $options = [], $collection = StorageInterface::DEFAULT_COLLECTION) {
+  public function __construct(Connection $connection, string $table, array $options = [], string $collection = StorageInterface::DEFAULT_COLLECTION) {
     $this->connection = $connection;
     $this->table = $table;
     $this->options = $options;
@@ -150,7 +150,7 @@ class DatabaseStorage implements StorageInterface {
    *
    * @return bool
    */
-  protected function doWrite($name, $data) {
+  protected function doWrite(string $name, string $data) {
     return (bool) $this->connection->merge($this->table, $this->options)
       ->keys(['collection', 'name'], [$this->collection, $name])
       ->fields(['data' => $data])

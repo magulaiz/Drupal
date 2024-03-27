@@ -19,7 +19,7 @@ class CronAccessCheck implements AccessInterface {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function access($key) {
+  public function access(string $key) {
     if ($key != \Drupal::state()->get('system.cron_key')) {
       \Drupal::logger('cron')->notice('Cron could not run because an invalid key was used.');
       return AccessResult::forbidden()->setCacheMaxAge(0);

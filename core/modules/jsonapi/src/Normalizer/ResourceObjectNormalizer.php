@@ -104,7 +104,7 @@ class ResourceObjectNormalizer extends NormalizerBase {
    *
    * @see ::normalize()
    */
-  protected function getNormalization(array $field_names, ResourceObject $object, $format = NULL, array $context = []) {
+  protected function getNormalization(array $field_names, ResourceObject $object, string $format = NULL, array $context = []) {
     $cached_normalization_parts = $this->cacher->get($object);
     $normalizer_values = $cached_normalization_parts !== FALSE
       ? $cached_normalization_parts
@@ -160,7 +160,7 @@ class ResourceObjectNormalizer extends NormalizerBase {
    * @return \Drupal\jsonapi\Normalizer\Value\CacheableNormalization
    *   The normalized value.
    */
-  protected function serializeField($field, array $context, $format) {
+  protected function serializeField($field, array $context, string $format) {
     // Only content entities contain FieldItemListInterface fields. Since config
     // entities do not have "real" fields and therefore do not have field access
     // restrictions.

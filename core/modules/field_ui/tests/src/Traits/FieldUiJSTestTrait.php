@@ -131,7 +131,7 @@ trait FieldUiJSTestTrait {
    * @return \Behat\Mink\Element\NodeElement|false|mixed|null
    *   Field card element within a group.
    */
-  public function getFieldFromGroupJS($field_type) {
+  public function getFieldFromGroupJS(string $field_type) {
     $group_elements = $this->getSession()->getPage()->findAll('css', '.field-option-radio');
     $groups = [];
     foreach ($group_elements as $group_element) {

@@ -424,7 +424,7 @@ class EntityReferenceFormatterTest extends EntityKernelTestBase {
    * @return array
    *   A render array.
    */
-  protected function buildRenderArray(array $referenced_entities, $formatter, $formatter_options = []) {
+  protected function buildRenderArray(array $referenced_entities, string $formatter, $formatter_options = []) {
     // Create the entity that will have the entity reference field.
     $referencing_entity = $this->container->get('entity_type.manager')
       ->getStorage($this->entityType)

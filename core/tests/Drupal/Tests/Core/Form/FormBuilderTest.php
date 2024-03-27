@@ -315,7 +315,7 @@ class FormBuilderTest extends FormTestBase {
    *
    * @dataProvider providerTestBuildFormWithTriggeringElement
    */
-  public function testBuildFormWithTriggeringElement($element_value, $input_value) {
+  public function testBuildFormWithTriggeringElement(string $element_value, string $input_value) {
     $form_id = 'test_form_id';
     $expected_form = $form_id();
 

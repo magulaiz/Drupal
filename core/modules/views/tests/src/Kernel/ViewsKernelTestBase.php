@@ -103,7 +103,7 @@ abstract class ViewsKernelTestBase extends KernelTestBase {
    * @return array
    *   The sorted result set.
    */
-  protected function orderResultSet($result_set, $column, $reverse = FALSE) {
+  protected function orderResultSet($result_set, string $column, $reverse = FALSE) {
     $order = $reverse ? -1 : 1;
     usort($result_set, function ($a, $b) use ($column, $order) {
       return $order * ($a[$column] <=> $b[$column]);

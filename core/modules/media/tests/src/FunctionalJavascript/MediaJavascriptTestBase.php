@@ -40,7 +40,7 @@ abstract class MediaJavascriptTestBase extends WebDriverTestBase {
    * @param string $message
    *   (Optional) Message to pass to assertJsCondition().
    */
-  protected function waitUntilVisible($selector, $timeout = 1000, $message = '') {
+  protected function waitUntilVisible(string $selector, $timeout = 1000, string $message = '') {
     $condition = "jQuery('" . $selector . ":visible').length > 0";
     $this->assertJsCondition($condition, $timeout, $message);
   }

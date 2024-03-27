@@ -89,7 +89,7 @@ abstract class ViewTestBase extends BrowserTestBase {
    * @return array
    *   The sorted result set.
    */
-  protected function orderResultSet($result_set, $column, $reverse = FALSE) {
+  protected function orderResultSet($result_set, string $column, $reverse = FALSE) {
     $order = $reverse ? -1 : 1;
     usort($result_set, function ($a, $b) use ($column, $order) {
       return $order * ($a[$column] <=> $b[$column]);
@@ -110,7 +110,7 @@ abstract class ViewTestBase extends BrowserTestBase {
    *
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    */
-  protected function helperButtonHasLabel($id, $expected_label, $message = 'Label has the expected value: %label.') {
+  protected function helperButtonHasLabel(string $id, string $expected_label, string $message = 'Label has the expected value: %label.') {
     $xpath = $this->assertSession()->buildXPathQuery('//button[@id=:value]|//input[@id=:value]', [':value' => $id]);
     $field = $this->getSession()->getPage()->find('xpath', $xpath);
 

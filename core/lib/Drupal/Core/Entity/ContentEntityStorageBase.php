@@ -914,7 +914,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    *   A multidimensional associative array of results, keyed by entity
    *   translation language code and field name.
    */
-  protected function invokeFieldMethod($method, ContentEntityInterface $entity) {
+  protected function invokeFieldMethod(string $method, ContentEntityInterface $entity) {
     $result = [];
     $args = array_slice(func_get_args(), 2);
     $langcodes = array_keys($entity->getTranslationLanguages());
@@ -1063,7 +1063,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    * @return array
    *   The sanitized list of entity key values.
    */
-  protected function cleanIds(array $ids, $entity_key = 'id') {
+  protected function cleanIds(array $ids, string $entity_key = 'id') {
     $definitions = $this->entityFieldManager->getActiveFieldStorageDefinitions($this->entityTypeId);
     $field_name = $this->entityType->getKey($entity_key);
     if ($field_name && $definitions[$field_name]->getType() == 'integer') {

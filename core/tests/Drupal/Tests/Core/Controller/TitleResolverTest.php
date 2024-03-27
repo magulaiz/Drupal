@@ -174,7 +174,7 @@ class TitleCallback {
    * @return string
    *   Returns the example string.
    */
-  public function example($value) {
+  public function example(string $value) {
     return 'test ' . $value;
   }
 

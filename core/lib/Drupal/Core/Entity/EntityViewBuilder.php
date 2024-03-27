@@ -174,7 +174,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
    *
    * @return array
    */
-  protected function getBuildDefaults(EntityInterface $entity, $view_mode) {
+  protected function getBuildDefaults(EntityInterface $entity, string $view_mode) {
     // Allow modules to change the view mode.
     $entityType = $this->entityTypeId;
     $this->moduleHandler()->alter([$entityType . '_view_mode', 'entity_view_mode'], $view_mode, $entity);
@@ -387,7 +387,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
    * @param string $view_mode
    *   The view mode that should be used to prepare the entity.
    */
-  protected function alterBuild(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {}
+  protected function alterBuild(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, string $view_mode) {}
 
   /**
    * {@inheritdoc}
@@ -432,7 +432,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
    * @return bool
    *   TRUE if the view mode can be cached, FALSE otherwise.
    */
-  protected function isViewModeCacheable($view_mode) {
+  protected function isViewModeCacheable(string $view_mode) {
     if ($view_mode == 'default') {
       // The 'default' is not an actual view mode.
       return TRUE;
@@ -502,7 +502,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
    *
    * @return \Drupal\Core\Entity\Display\EntityViewDisplayInterface
    */
-  protected function getSingleFieldDisplay($entity, $field_name, $display_options) {
+  protected function getSingleFieldDisplay($entity, string $field_name, $display_options) {
     if (is_string($display_options)) {
       // View mode: use the Display configured for the view mode.
       $view_mode = $display_options;

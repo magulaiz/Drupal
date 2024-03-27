@@ -21,7 +21,7 @@ class EntityStorageBaseTest extends UnitTestCase {
    * @return \Drupal\Core\Entity\EntityInterface|\PHPUnit\Framework\MockObject\MockObject
    *   The mocked entity.
    */
-  public function generateEntityInterface($id) {
+  public function generateEntityInterface(string $id) {
     $mock_entity = $this->getMockBuilder('\Drupal\Core\Entity\EntityInterface')
       ->onlyMethods(['id'])
       ->getMockForAbstractClass();

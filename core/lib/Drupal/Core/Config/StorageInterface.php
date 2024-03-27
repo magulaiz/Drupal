@@ -29,7 +29,7 @@ interface StorageInterface {
    * @return bool
    *   TRUE if the configuration object exists, FALSE otherwise.
    */
-  public function exists($name);
+  public function exists(string $name);
 
   /**
    * Reads configuration data from the storage.
@@ -41,7 +41,7 @@ interface StorageInterface {
    *   The configuration data stored for the configuration object name. If no
    *   configuration data exists for the given name, FALSE is returned.
    */
-  public function read($name);
+  public function read(string $name);
 
   /**
    * Reads configuration data from the storage.
@@ -69,7 +69,7 @@ interface StorageInterface {
    * @throws \Drupal\Core\Config\StorageException
    *   If the back-end storage does not exist and cannot be created.
    */
-  public function write($name, array $data);
+  public function write(string $name, array $data);
 
   /**
    * Deletes a configuration object from the storage.
@@ -80,7 +80,7 @@ interface StorageInterface {
    * @return bool
    *   TRUE on success, FALSE otherwise.
    */
-  public function delete($name);
+  public function delete(string $name);
 
   /**
    * Renames a configuration object in the storage.
@@ -93,7 +93,7 @@ interface StorageInterface {
    * @return bool
    *   TRUE on success, FALSE otherwise.
    */
-  public function rename($name, $new_name);
+  public function rename(string $name, string $new_name);
 
   /**
    * Encodes configuration data into the storage-specific format.
@@ -121,7 +121,7 @@ interface StorageInterface {
    * @return array
    *   The decoded configuration data as an associative array.
    */
-  public function decode($raw);
+  public function decode(string $raw);
 
   /**
    * Gets configuration object names starting with a given prefix.
@@ -140,7 +140,7 @@ interface StorageInterface {
    * @return array
    *   An array containing matching configuration object names.
    */
-  public function listAll($prefix = '');
+  public function listAll(string $prefix = '');
 
   /**
    * Deletes configuration objects whose names start with a given prefix.
@@ -159,7 +159,7 @@ interface StorageInterface {
    * @return bool
    *   TRUE on success, FALSE otherwise.
    */
-  public function deleteAll($prefix = '');
+  public function deleteAll(string $prefix = '');
 
   /**
    * Creates a collection on the storage.
@@ -181,7 +181,7 @@ interface StorageInterface {
    * @return $this
    *   A new instance of the storage backend with the collection set.
    */
-  public function createCollection($collection);
+  public function createCollection(string $collection);
 
   /**
    * Gets the existing collections.

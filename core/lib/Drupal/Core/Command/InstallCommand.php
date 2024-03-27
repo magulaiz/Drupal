@@ -130,7 +130,7 @@ class InstallCommand extends Command {
    * @return int
    *   The command exit status.
    */
-  protected function install($class_loader, SymfonyStyle $io, $profile, $langcode, $site_path, $site_name) {
+  protected function install($class_loader, SymfonyStyle $io, string $profile, string $langcode, string $site_path, string $site_name) {
     $sqliteDriverNamespace = 'Drupal\\sqlite\\Driver\\Database\\sqlite';
     $password = Crypt::randomBytesBase64(12);
     $parameters = [
@@ -283,7 +283,7 @@ class InstallCommand extends Command {
    * @return bool
    *   TRUE if the profile is valid, FALSE if not.
    */
-  protected function validateProfile($install_profile, SymfonyStyle $io) {
+  protected function validateProfile(string $install_profile, SymfonyStyle $io) {
     // Allow people to install hidden and non-distribution profiles if they
     // supply the argument.
     $profiles = $this->getProfiles(TRUE, FALSE);

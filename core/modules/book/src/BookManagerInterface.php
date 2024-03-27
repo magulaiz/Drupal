@@ -46,7 +46,7 @@ interface BookManagerInterface {
    * @return array
    *   An array containing the active trail: a list of menu link IDs.
    */
-  public function getActiveTrailIds($bid, $link);
+  public function getActiveTrailIds(string $bid, $link);
 
   /**
    * Loads a single book entry.

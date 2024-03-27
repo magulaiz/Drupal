@@ -224,7 +224,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    * @return array
    *   An array of results keyed by delta.
    */
-  protected function delegateMethod($method) {
+  protected function delegateMethod(string $method) {
     $result = [];
     $args = array_slice(func_get_args(), 1);
     foreach ($this->list as $delta => $item) {

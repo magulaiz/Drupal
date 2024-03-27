@@ -192,7 +192,7 @@ class ContentLanguageSettings extends ConfigEntityBase implements ContentLanguag
    *   The content language config entity if one exists. Otherwise, returns
    *   default values.
    */
-  public static function loadByEntityTypeBundle($entity_type_id, $bundle) {
+  public static function loadByEntityTypeBundle(string $entity_type_id, string $bundle) {
     if ($entity_type_id == NULL || $bundle == NULL) {
       return NULL;
     }

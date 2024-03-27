@@ -230,7 +230,7 @@ class Filter {
    * @return array
    *   The expanded filter item.
    */
-  protected static function expandItem($filter_index, array $filter_item) {
+  protected static function expandItem(string $filter_index, array $filter_item) {
     if (isset($filter_item[EntityCondition::VALUE_KEY])) {
       if (!isset($filter_item[EntityCondition::PATH_KEY])) {
         $filter_item[EntityCondition::PATH_KEY] = $filter_index;

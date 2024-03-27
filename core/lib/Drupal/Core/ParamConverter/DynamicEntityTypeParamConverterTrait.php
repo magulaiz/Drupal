@@ -23,7 +23,7 @@ trait DynamicEntityTypeParamConverterTrait {
    * @throws \Drupal\Core\ParamConverter\ParamNotConvertedException
    *   Thrown when the dynamic entity type is not found in the route defaults.
    */
-  protected function getEntityTypeFromDefaults($definition, $name, array $defaults) {
+  protected function getEntityTypeFromDefaults($definition, string $name, array $defaults) {
     $type_part = strstr($definition['type'], ':');
     if (!$type_part) {
       throw new ParamNotConvertedException(sprintf('The type definition "%s" is invalid. The expected format is "entity_revision:<entity_type_id>".', $definition['type']));

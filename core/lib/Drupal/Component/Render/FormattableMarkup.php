@@ -87,7 +87,7 @@ class FormattableMarkup implements MarkupInterface, \Countable {
    *
    * @see \Drupal\Component\Render\FormattableMarkup::placeholderFormat()
    */
-  public function __construct($string, array $arguments) {
+  public function __construct(string $string, array $arguments) {
     $this->string = (string) $string;
     $this->arguments = $arguments;
   }
@@ -193,7 +193,7 @@ class FormattableMarkup implements MarkupInterface, \Countable {
    * @see \Drupal\Component\Utility\UrlHelper::stripDangerousProtocols()
    * @see \Drupal\Core\Url::fromUri()
    */
-  protected static function placeholderFormat($string, array $args) {
+  protected static function placeholderFormat(string $string, array $args) {
     // Transform arguments before inserting them.
     foreach ($args as $key => $value) {
       if (is_null($value)) {

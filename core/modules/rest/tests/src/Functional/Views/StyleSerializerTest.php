@@ -159,7 +159,7 @@ class StyleSerializerTest extends ViewTestBase {
    * @param string $format
    *   The new request format.
    */
-  protected function addRequestWithFormat($format) {
+  protected function addRequestWithFormat(string $format) {
     $request = \Drupal::request();
     $request = clone $request;
     $request->setRequestFormat($format);

@@ -211,7 +211,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends UnitTestCase {
    * @covers ::denormalize
    * @dataProvider denormalizeUuidProvider
    */
-  public function testDenormalizeUuid($id, $expect_exception) {
+  public function testDenormalizeUuid(string $id, $expect_exception) {
     $data['data'] = (isset($id)) ?
       ['type' => 'node--article', 'id' => $id] :
       ['type' => 'node--article'];

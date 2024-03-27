@@ -129,7 +129,7 @@ class DerivativeDiscoveryDecorator implements CachedDiscoveryInterface {
    *   An array with the base plugin id as the first index and the derivative id
    *   as the second. If there is no derivative id it will be null.
    */
-  protected function decodePluginId($plugin_id) {
+  protected function decodePluginId(string $plugin_id) {
     // Try and split the passed plugin definition into a plugin and a
     // derivative id. We don't need to check for !== FALSE because a leading
     // colon would break the derivative system and doesn't makes sense.
@@ -151,7 +151,7 @@ class DerivativeDiscoveryDecorator implements CachedDiscoveryInterface {
    * @return string
    *   A uniquely encoded combination of the $base_plugin_id and $derivative_id.
    */
-  protected function encodePluginId($base_plugin_id, $derivative_id) {
+  protected function encodePluginId(string $base_plugin_id, string $derivative_id) {
     if ($derivative_id) {
       return "$base_plugin_id:$derivative_id";
     }
@@ -176,7 +176,7 @@ class DerivativeDiscoveryDecorator implements CachedDiscoveryInterface {
    *   Thrown if the 'deriver' class specified in the plugin definition
    *   does not implement \Drupal\Component\Plugin\Derivative\DeriverInterface.
    */
-  protected function getDeriver($base_plugin_id, $base_definition) {
+  protected function getDeriver(string $base_plugin_id, $base_definition) {
     if (!isset($this->derivers[$base_plugin_id])) {
       $this->derivers[$base_plugin_id] = FALSE;
       $class = $this->getDeriverClass($base_definition);

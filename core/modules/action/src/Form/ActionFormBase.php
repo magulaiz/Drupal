@@ -93,7 +93,7 @@ abstract class ActionFormBase extends EntityForm {
    * @return bool
    *   TRUE if the action exists, FALSE otherwise.
    */
-  public function exists($id) {
+  public function exists(string $id) {
     $action = $this->storage->load($id);
     return !empty($action);
   }

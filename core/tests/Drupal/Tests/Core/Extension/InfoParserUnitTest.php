@@ -63,7 +63,7 @@ class InfoParserUnitTest extends UnitTestCase {
    *
    * @dataProvider providerInfoException
    */
-  public function testInfoException($yaml, $expected_exception_message): void {
+  public function testInfoException(string $yaml, string $expected_exception_message): void {
 
     vfsStream::setup('modules');
     vfsStream::create([

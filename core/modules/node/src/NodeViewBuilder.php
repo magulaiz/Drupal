@@ -86,7 +86,7 @@ class NodeViewBuilder extends EntityViewBuilder implements TrustedCallbackInterf
    * @return array
    *   A renderable array representing the node links.
    */
-  public static function renderLinks($node_entity_id, $view_mode, $langcode, $is_in_preview, $revision_id = NULL) {
+  public static function renderLinks(string $node_entity_id, string $view_mode, string $langcode, $is_in_preview, $revision_id = NULL) {
     $links = [
       '#theme' => 'links__node',
       '#pre_render' => [[Link::class, 'preRenderLinks']],
@@ -121,7 +121,7 @@ class NodeViewBuilder extends EntityViewBuilder implements TrustedCallbackInterf
    * @return array
    *   An array that can be processed by drupal_pre_render_links().
    */
-  protected static function buildLinks(NodeInterface $entity, $view_mode) {
+  protected static function buildLinks(NodeInterface $entity, string $view_mode) {
     $links = [];
 
     // Always display a read more link on teasers because we have no way

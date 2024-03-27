@@ -53,7 +53,7 @@ abstract class MigrateDrupalTestBase extends MigrateTestBase {
    * @param string $path
    *   Path to the dump file.
    */
-  protected function loadFixture($path) {
+  protected function loadFixture(string $path) {
     $default_db = Database::getConnection()->getKey();
     Database::setActiveConnection($this->sourceDatabase->getKey());
 

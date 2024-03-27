@@ -88,7 +88,7 @@ class ChooseBlockController implements ContainerInjectionInterface {
    * @return array
    *   A render array.
    */
-  public function build(SectionStorageInterface $section_storage, int $delta, $region) {
+  public function build(SectionStorageInterface $section_storage, int $delta, string $region) {
     if ($this->entityTypeManager->hasDefinition('block_content_type') && $types = $this->entityTypeManager->getStorage('block_content_type')->loadMultiple()) {
       if (count($types) === 1) {
         $type = reset($types);
@@ -172,7 +172,7 @@ class ChooseBlockController implements ContainerInjectionInterface {
    * @return array
    *   A render array.
    */
-  public function inlineBlockList(SectionStorageInterface $section_storage, int $delta, $region) {
+  public function inlineBlockList(SectionStorageInterface $section_storage, int $delta, string $region) {
     $definitions = $this->blockManager->getFilteredDefinitions('layout_builder', $this->getPopulatedContexts($section_storage), [
       'section_storage' => $section_storage,
       'region' => $region,
@@ -220,7 +220,7 @@ class ChooseBlockController implements ContainerInjectionInterface {
    * @return array
    *   The block links render array.
    */
-  protected function getBlockLinks(SectionStorageInterface $section_storage, int $delta, $region, array $blocks) {
+  protected function getBlockLinks(SectionStorageInterface $section_storage, int $delta, string $region, array $blocks) {
     $links = [];
     foreach ($blocks as $block_id => $block) {
       $attributes = $this->getAjaxAttributes();

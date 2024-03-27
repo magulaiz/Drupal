@@ -172,7 +172,7 @@ class StringDatabaseStorage implements StringStorageInterface {
    * @param string $version
    *   Drupal version to check against.
    */
-  protected function checkVersion($string, $version) {
+  protected function checkVersion($string, string $version) {
     if ($string->getId() && $string->getVersion() != $version) {
       $string->setVersion($version);
       $this->connection->update('locales_source', $this->options)
@@ -250,7 +250,7 @@ class StringDatabaseStorage implements StringStorageInterface {
    *   - 't' for "language", "translation", "customized" (locales_target
    *     table fields)
    */
-  protected function dbFieldTable($field) {
+  protected function dbFieldTable(string $field) {
     if (in_array($field, ['language', 'translation', 'customized'])) {
       return 't';
     }
@@ -317,7 +317,7 @@ class StringDatabaseStorage implements StringStorageInterface {
    * @return \Drupal\locale\StringInterface[]
    *   Array of objects of the class requested.
    */
-  protected function dbStringLoad(array $conditions, array $options, $class) {
+  protected function dbStringLoad(array $conditions, array $options, string $class) {
     $strings = [];
     $result = $this->dbStringSelect($conditions, $options)->execute();
     foreach ($result as $item) {
@@ -523,7 +523,7 @@ class StringDatabaseStorage implements StringStorageInterface {
    * @return \Drupal\Core\Database\Query\Delete
    *   Returns a new Delete object for the injected database connection.
    */
-  protected function dbDelete($table, $keys) {
+  protected function dbDelete(string $table, $keys) {
     $query = $this->connection->delete($table, $this->options);
     foreach ($keys as $field => $value) {
       $query->condition($field, $value);

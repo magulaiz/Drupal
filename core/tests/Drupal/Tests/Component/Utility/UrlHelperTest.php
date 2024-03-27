@@ -42,7 +42,7 @@ class UrlHelperTest extends TestCase {
    * @param string $message
    *   The assertion message.
    */
-  public function testBuildQuery($query, $expected, $message) {
+  public function testBuildQuery($query, string $expected, string $message) {
     $this->assertEquals(UrlHelper::buildQuery($query), $expected, $message);
   }
 
@@ -268,7 +268,7 @@ class UrlHelperTest extends TestCase {
    * @param array $expected
    *   Associative array with expected parameters.
    */
-  public function testParse($url, $expected) {
+  public function testParse(string $url, $expected) {
     $parsed = UrlHelper::parse($url);
     $this->assertEquals($expected, $parsed, 'The URL was not properly parsed.');
   }
@@ -390,7 +390,7 @@ class UrlHelperTest extends TestCase {
    * @param string $expected
    *   The expected encoded path.
    */
-  public function testEncodePath($path, $expected) {
+  public function testEncodePath(string $path, string $expected) {
     $encoded = UrlHelper::encodePath($path);
     $this->assertEquals($expected, $encoded);
   }
@@ -418,7 +418,7 @@ class UrlHelperTest extends TestCase {
    * @param bool $expected
    *   Expected result.
    */
-  public function testIsExternal($path, $expected) {
+  public function testIsExternal(string $path, $expected) {
     $isExternal = UrlHelper::isExternal($path);
     $this->assertEquals($expected, $isExternal);
   }
@@ -480,7 +480,7 @@ class UrlHelperTest extends TestCase {
    *
    * @runInSeparateProcess
    */
-  public function testFilterBadProtocol($uri, $expected, $protocols) {
+  public function testFilterBadProtocol(string $uri, string $expected, $protocols) {
     UrlHelper::setAllowedProtocols($protocols);
     $this->assertEquals($expected, UrlHelper::filterBadProtocol($uri));
     // Multiple calls to UrlHelper::filterBadProtocol() do not cause double
@@ -521,7 +521,7 @@ class UrlHelperTest extends TestCase {
    *
    * @runInSeparateProcess
    */
-  public function testStripDangerousProtocols($uri, $expected, $protocols) {
+  public function testStripDangerousProtocols(string $uri, string $expected, $protocols) {
     UrlHelper::setAllowedProtocols($protocols);
     $stripped = UrlHelper::stripDangerousProtocols($uri);
     $this->assertEquals($expected, $stripped);
@@ -598,7 +598,7 @@ class UrlHelperTest extends TestCase {
    * @covers ::externalIsLocal
    * @dataProvider providerTestExternalIsLocal
    */
-  public function testExternalIsLocal($url, $base_url, $expected) {
+  public function testExternalIsLocal(string $url, string $base_url, $expected) {
     $this->assertSame($expected, UrlHelper::externalIsLocal($url, $base_url));
   }
 
@@ -650,7 +650,7 @@ class UrlHelperTest extends TestCase {
    * @covers ::externalIsLocal
    * @dataProvider providerTestExternalIsLocalInvalid
    */
-  public function testExternalIsLocalInvalid($url, $base_url) {
+  public function testExternalIsLocalInvalid(string $url, string $base_url) {
     $this->expectException(\InvalidArgumentException::class);
     UrlHelper::externalIsLocal($url, $base_url);
   }

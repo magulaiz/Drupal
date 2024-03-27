@@ -86,7 +86,7 @@ class LibraryDiscoveryParser {
    * @param \Drupal\Core\Extension\ExtensionPathResolver $extension_path_resolver
    *   The extension path resolver.
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, StreamWrapperManagerInterface $stream_wrapper_manager, LibrariesDirectoryFileFinder $libraries_directory_file_finder, ExtensionPathResolver $extension_path_resolver) {
+  public function __construct(string $root, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, StreamWrapperManagerInterface $stream_wrapper_manager, LibrariesDirectoryFileFinder $libraries_directory_file_finder, ExtensionPathResolver $extension_path_resolver) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->themeManager = $theme_manager;
@@ -122,7 +122,7 @@ class LibraryDiscoveryParser {
    * @throws \LogicException
    *   Thrown when a header key in a library definition is invalid.
    */
-  public function buildByExtension($extension) {
+  public function buildByExtension(string $extension) {
     if ($extension === 'core') {
       $path = 'core';
       $extension_type = 'core';
@@ -364,7 +364,7 @@ class LibraryDiscoveryParser {
    * @throws \Drupal\Core\Asset\Exception\InvalidLibraryFileException
    *   Thrown when a parser exception got thrown.
    */
-  protected function parseLibraryInfo($extension, $path) {
+  protected function parseLibraryInfo(string $extension, string $path) {
     $libraries = [];
 
     $library_file = $path . '/' . $extension . '.libraries.yml';
@@ -408,7 +408,7 @@ class LibraryDiscoveryParser {
    * @return array
    *   The modified libraries definitions.
    */
-  protected function applyLibrariesOverride($libraries, $extension) {
+  protected function applyLibrariesOverride($libraries, string $extension) {
     $active_theme = $this->themeManager->getActiveTheme();
     // ActiveTheme::getLibrariesOverride() returns libraries-overrides for the
     // current theme as well as all its base themes.
@@ -488,7 +488,7 @@ class LibraryDiscoveryParser {
    * @param string $theme_path
    *   The theme or base theme.
    */
-  protected function setOverrideValue(array &$library, array $sub_key, array $overrides, $theme_path) {
+  protected function setOverrideValue(array &$library, array $sub_key, array $overrides, string $theme_path) {
     foreach ($overrides as $original => $replacement) {
       // Get the attributes of the asset to be overridden. If the key does
       // not exist, then throw an exception.
@@ -522,7 +522,7 @@ class LibraryDiscoveryParser {
    * @return string
    *   A fully resolved theme asset path relative to the Drupal directory.
    */
-  protected function resolveThemeAssetPath($theme_path, $overriding_asset) {
+  protected function resolveThemeAssetPath(string $theme_path, string $overriding_asset) {
     if ($overriding_asset[0] !== '/' && !$this->isValidUri($overriding_asset)) {
       // The destination is not an absolute path and it's not a URI (e.g.
       // public://generated_js/example.js or http://example.com/js/my_js.js), so

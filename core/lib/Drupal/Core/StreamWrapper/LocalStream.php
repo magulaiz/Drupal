@@ -82,7 +82,7 @@ abstract class LocalStream implements StreamWrapperInterface {
    *   Returns a string representing a location suitable for writing of a file,
    *   or FALSE if unable to write to the file such as with read-only streams.
    */
-  protected function getTarget($uri = NULL) {
+  protected function getTarget(string $uri = NULL) {
     if (!isset($uri)) {
       $uri = $this->uri;
     }
@@ -115,7 +115,7 @@ abstract class LocalStream implements StreamWrapperInterface {
    *   path, as determined by the realpath() function. If $uri is set but not
    *   valid, returns FALSE.
    */
-  protected function getLocalPath($uri = NULL) {
+  protected function getLocalPath(string $uri = NULL) {
     if (!isset($uri)) {
       $uri = $this->uri;
     }

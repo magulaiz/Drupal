@@ -168,7 +168,7 @@ class FieldItemSerializationTest extends NormalizerTestBase {
    *
    * @dataProvider providerTestCustomBooleanNormalization
    */
-  public function testCustomBooleanNormalization(array $test_modules, $format) {
+  public function testCustomBooleanNormalization(array $test_modules, string $format) {
     // Asserts the entity contains the value we set.
     $this->assertFalse($this->entity->field_test_boolean->value);
 

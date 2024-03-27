@@ -44,7 +44,7 @@ abstract class FieldableEntity extends DrupalSqlBase {
    * @return array[]
    *   The field instances, keyed by field name.
    */
-  protected function getFields($entity_type, $bundle = NULL) {
+  protected function getFields(string $entity_type, $bundle = NULL) {
     $cid = $entity_type . ':' . ($bundle ?? '');
     if (!isset($this->fieldInfo[$cid])) {
       $query = $this->select('field_config_instance', 'fci')
@@ -84,7 +84,7 @@ abstract class FieldableEntity extends DrupalSqlBase {
    * @return array
    *   The raw field values, keyed and sorted by delta.
    */
-  protected function getFieldValues($entity_type, $field, $entity_id, $revision_id = NULL, $language = NULL) {
+  protected function getFieldValues(string $entity_type, string $field, $entity_id, $revision_id = NULL, string $language = NULL) {
     $table = (isset($revision_id) ? 'field_revision_' : 'field_data_') . $field;
     $query = $this->select($table, 't')
       ->fields('t')
@@ -122,7 +122,7 @@ abstract class FieldableEntity extends DrupalSqlBase {
    * @return bool
    *   Whether the entity type uses entity translation.
    */
-  protected function isEntityTranslatable($entity_type) {
+  protected function isEntityTranslatable(string $entity_type) {
     return in_array($entity_type, $this->variableGet('entity_translation_entity_types', []), TRUE);
   }
 
@@ -137,7 +137,7 @@ abstract class FieldableEntity extends DrupalSqlBase {
    * @return string|bool
    *   The entity source language or FALSE if no source language was found.
    */
-  protected function getEntityTranslationSourceLanguage($entity_type, $entity_id) {
+  protected function getEntityTranslationSourceLanguage(string $entity_type, $entity_id) {
     try {
       return $this->select('entity_translation', 'et')
         ->fields('et', ['language'])

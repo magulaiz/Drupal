@@ -56,7 +56,7 @@ class UserPermissionsModuleSpecificForm extends UserPermissionsForm {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function access($modules): AccessResultInterface {
+  public function access(string $modules): AccessResultInterface {
     foreach (explode(',', $modules) as $module) {
       if ($this->permissionHandler->moduleProvidesPermissions($module)) {
         return AccessResult::allowed();

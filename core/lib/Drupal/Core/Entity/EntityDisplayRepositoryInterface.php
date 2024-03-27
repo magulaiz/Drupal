@@ -31,7 +31,7 @@ interface EntityDisplayRepositoryInterface {
    * @return array
    *   The view mode info for a specific entity type.
    */
-  public function getViewModes($entity_type_id);
+  public function getViewModes(string $entity_type_id);
 
   /**
    * Gets the entity form mode info for all entity types.
@@ -50,7 +50,7 @@ interface EntityDisplayRepositoryInterface {
    * @return array
    *   The form mode info for a specific entity type.
    */
-  public function getFormModes($entity_type_id);
+  public function getFormModes(string $entity_type_id);
 
   /**
    * Gets an array of view mode options.
@@ -61,7 +61,7 @@ interface EntityDisplayRepositoryInterface {
    * @return array
    *   An array of view mode labels, keyed by the display mode ID.
    */
-  public function getViewModeOptions($entity_type_id);
+  public function getViewModeOptions(string $entity_type_id);
 
   /**
    * Gets an array of form mode options.
@@ -72,7 +72,7 @@ interface EntityDisplayRepositoryInterface {
    * @return array
    *   An array of form mode labels, keyed by the display mode ID.
    */
-  public function getFormModeOptions($entity_type_id);
+  public function getFormModeOptions(string $entity_type_id);
 
   /**
    * Returns an array of enabled view mode options by bundle.
@@ -85,7 +85,7 @@ interface EntityDisplayRepositoryInterface {
    * @return array
    *   An array of view mode labels, keyed by the display mode ID.
    */
-  public function getViewModeOptionsByBundle($entity_type_id, $bundle);
+  public function getViewModeOptionsByBundle(string $entity_type_id, string $bundle);
 
   /**
    * Returns an array of enabled form mode options by bundle.
@@ -98,7 +98,7 @@ interface EntityDisplayRepositoryInterface {
    * @return array
    *   An array of form mode labels, keyed by the display mode ID.
    */
-  public function getFormModeOptionsByBundle($entity_type_id, $bundle);
+  public function getFormModeOptionsByBundle(string $entity_type_id, string $bundle);
 
   /**
    * Clears the gathered display mode info.
@@ -146,7 +146,7 @@ interface EntityDisplayRepositoryInterface {
    * @return \Drupal\Core\Entity\Display\EntityViewDisplayInterface
    *   The entity view display associated with the view mode.
    */
-  public function getViewDisplay($entity_type, $bundle, $view_mode = self::DEFAULT_DISPLAY_MODE);
+  public function getViewDisplay(string $entity_type, string $bundle, string $view_mode = self::DEFAULT_DISPLAY_MODE);
 
   /**
    * Returns the entity form display associated with a bundle and form mode.
@@ -187,6 +187,6 @@ interface EntityDisplayRepositoryInterface {
    * @see \Drupal\Core\Entity\EntityStorageInterface::create()
    * @see \Drupal\Core\Entity\EntityStorageInterface::load()
    */
-  public function getFormDisplay($entity_type, $bundle, $form_mode = self::DEFAULT_DISPLAY_MODE);
+  public function getFormDisplay(string $entity_type, string $bundle, string $form_mode = self::DEFAULT_DISPLAY_MODE);
 
 }

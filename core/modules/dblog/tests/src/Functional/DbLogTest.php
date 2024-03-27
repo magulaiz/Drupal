@@ -329,7 +329,7 @@ class DbLogTest extends BrowserTestBase {
    * @param string $severity
    *   (optional) The log entry severity.
    */
-  protected function filterLogsEntries($type = NULL, $severity = NULL) {
+  protected function filterLogsEntries(string $type = NULL, string $severity = NULL) {
     $edit = [];
     if (isset($type)) {
       $edit['type[]'] = $type;
@@ -433,7 +433,7 @@ class DbLogTest extends BrowserTestBase {
    * @param string $order
    *   The order by which the table should be sorted.
    */
-  public function verifySort($sort = 'asc', $order = 'Date') {
+  public function verifySort(string $sort = 'asc', string $order = 'Date') {
     $this->drupalGet('admin/reports/dblog', ['query' => ['sort' => $sort, 'order' => $order]]);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('Recent log messages');
@@ -546,7 +546,7 @@ class DbLogTest extends BrowserTestBase {
    * @param string $type
    *   A node type (e.g., 'article' or 'page').
    */
-  private function doNode($type) {
+  private function doNode(string $type) {
     // Create user.
     $perm = ['create ' . $type . ' content', 'edit own ' . $type . ' content', 'delete own ' . $type . ' content'];
     $user = $this->drupalCreateUser($perm);
@@ -793,7 +793,7 @@ class DbLogTest extends BrowserTestBase {
    * @return int|null
    *   The watchdog severity constant or NULL if not found.
    */
-  protected function getSeverityConstant($class) {
+  protected function getSeverityConstant(string $class) {
     $map = array_flip(DbLogController::getLogLevelClassMap());
 
     // Find the class that contains the severity.

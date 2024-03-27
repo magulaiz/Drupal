@@ -125,7 +125,7 @@ class DefaultTableMapping implements TableMappingInterface {
    *   (optional) A prefix to be used by all the tables of this mapping.
    *   Defaults to an empty string.
    */
-  public function __construct(ContentEntityTypeInterface $entity_type, array $storage_definitions, $prefix = '') {
+  public function __construct(ContentEntityTypeInterface $entity_type, array $storage_definitions, string $prefix = '') {
     $this->entityType = $entity_type;
     $this->fieldStorageDefinitions = $storage_definitions;
     $this->prefix = $prefix;
@@ -160,7 +160,7 @@ class DefaultTableMapping implements TableMappingInterface {
    *
    * @internal
    */
-  public static function create(ContentEntityTypeInterface $entity_type, array $storage_definitions, $prefix = '') {
+  public static function create(ContentEntityTypeInterface $entity_type, array $storage_definitions, string $prefix = '') {
     $table_mapping = new static($entity_type, $storage_definitions, $prefix);
 
     $revisionable = $entity_type->isRevisionable();
@@ -458,7 +458,7 @@ class DefaultTableMapping implements TableMappingInterface {
    * @todo Make this method protected in drupal:9.0.0.
    * @see https://www.drupal.org/node/3067336
    */
-  public function setFieldNames($table_name, array $field_names) {
+  public function setFieldNames(string $table_name, array $field_names) {
     $this->fieldNames[$table_name] = $field_names;
     // Force the re-computation of the column list.
     unset($this->allColumns[$table_name]);
@@ -490,7 +490,7 @@ class DefaultTableMapping implements TableMappingInterface {
    * @todo Make this method protected in drupal:9.0.0.
    * @see https://www.drupal.org/node/3067336
    */
-  public function setExtraColumns($table_name, array $column_names) {
+  public function setExtraColumns(string $table_name, array $column_names) {
     $this->extraColumns[$table_name] = $column_names;
     // Force the re-computation of the column list.
     unset($this->allColumns[$table_name]);

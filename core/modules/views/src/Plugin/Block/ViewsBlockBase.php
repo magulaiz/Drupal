@@ -200,7 +200,7 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
    *   The type of the block. If it's 'block' it's a regular views display,
    *   but 'exposed_filter' exist as well.
    */
-  protected function addContextualLinks(&$output, $block_type = 'block') {
+  protected function addContextualLinks(&$output, string $block_type = 'block') {
     // Do not add contextual links to an empty block.
     if (!empty($output)) {
       // Contextual links only work on blocks whose content is a renderable

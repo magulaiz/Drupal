@@ -135,7 +135,7 @@ class EntityController implements ContainerInjectionInterface {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirect response object that may be returned by the controller.
    */
-  protected function redirect($route_name, array $route_parameters = [], array $options = [], $status = 302) {
+  protected function redirect(string $route_name, array $route_parameters = [], array $options = [], $status = 302) {
     $options['absolute'] = TRUE;
     return new RedirectResponse(Url::fromRoute($route_name, $route_parameters, $options)->toString(), $status);
   }
@@ -152,7 +152,7 @@ class EntityController implements ContainerInjectionInterface {
    *   If there's only one available bundle, a redirect response.
    *   Otherwise, a render array with the add links for each bundle.
    */
-  public function addPage($entity_type_id) {
+  public function addPage(string $entity_type_id) {
     $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
     $bundles = $this->entityTypeBundleInfo->getBundleInfo($entity_type_id);
     $bundle_key = $entity_type->getKey('bundle');
@@ -220,7 +220,7 @@ class EntityController implements ContainerInjectionInterface {
    * @return string
    *   The title for the entity add page.
    */
-  public function addTitle($entity_type_id) {
+  public function addTitle(string $entity_type_id) {
     $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
     return $this->t('Add @entity-type', ['@entity-type' => $entity_type->getSingularLabel()]);
   }
@@ -238,7 +238,7 @@ class EntityController implements ContainerInjectionInterface {
    * @return string
    *   The title for the entity add page, if the bundle was found.
    */
-  public function addBundleTitle(RouteMatchInterface $route_match, $entity_type_id, $bundle_parameter) {
+  public function addBundleTitle(RouteMatchInterface $route_match, string $entity_type_id, string $bundle_parameter) {
     $bundles = $this->entityTypeBundleInfo->getBundleInfo($entity_type_id);
     // If the entity has bundle entities, the parameter might have been upcasted
     // so fetch the raw parameter.

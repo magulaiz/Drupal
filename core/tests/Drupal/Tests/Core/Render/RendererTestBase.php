@@ -247,7 +247,7 @@ abstract class RendererTestBase extends UnitTestCase {
    * @param string $method
    *   The HTTP method to use for the request. Defaults to 'GET'.
    */
-  protected function setUpRequest($method = 'GET') {
+  protected function setUpRequest(string $method = 'GET') {
     $request = Request::create('/', $method);
     // Ensure that the request time is set as expected.
     $request->server->set('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
@@ -264,7 +264,7 @@ abstract class RendererTestBase extends UnitTestCase {
    * @param string $bin
    *   The expected cache bin.
    */
-  protected function assertRenderCacheItem($keys, $data, $bin = 'render') {
+  protected function assertRenderCacheItem($keys, $data, string $bin = 'render') {
     $cache_backend = $this->cacheFactory->get($bin);
     $cached = $cache_backend->get($keys, CacheableMetadata::createFromRenderArray($data));
     $this->assertNotFalse($cached, sprintf('Expected cache item "%s" exists.', implode(':', $keys)));
@@ -301,7 +301,7 @@ class PlaceholdersTest implements TrustedCallbackInterface {
    * @return array
    *   A renderable array.
    */
-  public static function callback($animal, $use_animal_as_array_key = FALSE) {
+  public static function callback(string $animal, $use_animal_as_array_key = FALSE) {
     $value = $animal;
     if ($use_animal_as_array_key) {
       $value = [$animal => TRUE];
@@ -325,7 +325,7 @@ class PlaceholdersTest implements TrustedCallbackInterface {
    * @return array
    *   A renderable array.
    */
-  public static function callbackPerUser($animal) {
+  public static function callbackPerUser(string $animal) {
     // As well as adding the user cache context, additionally suspend the
     // current Fiber if there is one.
     if ($fiber = \Fiber::getCurrent()) {
@@ -345,7 +345,7 @@ class PlaceholdersTest implements TrustedCallbackInterface {
    * @return array
    *   A renderable array.
    */
-  public static function callbackTagCurrentTemperature($animal) {
+  public static function callbackTagCurrentTemperature(string $animal) {
     $build = static::callback($animal);
     $build['#cache']['tags'][] = 'current-temperature';
     return $build;

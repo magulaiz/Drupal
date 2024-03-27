@@ -77,7 +77,7 @@ class IFrameUrlHelperTest extends UnitTestCase {
    *
    * @dataProvider providerIsSecure
    */
-  public function testIsSecure($url, $base_url, $secure) {
+  public function testIsSecure(string $url, string $base_url, $secure) {
     $request_context = $this->createMock(RequestContext::class);
     $request_context->expects($this->any())
       ->method('getCompleteBaseUrl')

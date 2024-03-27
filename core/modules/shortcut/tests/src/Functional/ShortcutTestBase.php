@@ -136,7 +136,7 @@ abstract class ShortcutTestBase extends BrowserTestBase {
    * @return array
    *   Array of the requested information from each link.
    */
-  public function getShortcutInformation(ShortcutSetInterface $set, $key) {
+  public function getShortcutInformation(ShortcutSetInterface $set, string $key) {
     $info = [];
     \Drupal::entityTypeManager()->getStorage('shortcut')->resetCache();
     foreach ($set->getShortcuts() as $shortcut) {

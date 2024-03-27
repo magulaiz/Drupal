@@ -2705,7 +2705,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
    * @param string $type
    *   The name of the plugin type option.
    */
-  protected function mergePlugin($type) {
+  protected function mergePlugin(string $type) {
     if (($options = $this->getOption($type)) && isset($options['options'])) {
       $plugin = $this->getPlugin($type);
       $options['options'] = $options['options'] + $plugin->options;
@@ -2719,7 +2719,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
    * @param string $type
    *   The name of the handler type option.
    */
-  protected function mergeHandler($type) {
+  protected function mergeHandler(string $type) {
     $types = ViewExecutable::getHandlerTypes();
 
     $options = $this->getOption($types[$type]['plural']);

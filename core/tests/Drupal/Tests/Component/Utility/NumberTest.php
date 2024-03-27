@@ -130,7 +130,7 @@ class NumberTest extends TestCase {
    * @param string $expected
    *   The expected alphadecimal value.
    */
-  public function testConversions($value, $expected) {
+  public function testConversions($value, string $expected) {
     $this->assertSame(Number::intToAlphadecimal($value), $expected);
     $this->assertSame($value, Number::alphadecimalToInt($expected));
   }

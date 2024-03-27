@@ -206,7 +206,7 @@ class RssFields extends RowPluginBase {
    * @return string
    *   A string with an absolute URL.
    */
-  protected function getAbsoluteUrl($url_string) {
+  protected function getAbsoluteUrl(string $url_string) {
     // If the given URL already starts with a leading slash, it's been processed
     // and we need to simply make it an absolute path by prepending the host.
     if (str_starts_with($url_string, '/')) {

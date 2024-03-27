@@ -16,7 +16,7 @@ trait MigrationDeriverTrait {
    * @return \Drupal\migrate\Plugin\MigrateSourceInterface|\Drupal\migrate\Plugin\RequirementsInterface
    *   The fully initialized source plugin.
    */
-  public static function getSourcePlugin($source_plugin_id) {
+  public static function getSourcePlugin(string $source_plugin_id) {
     $definition = [
       'source' => [
         'ignore_map' => TRUE,

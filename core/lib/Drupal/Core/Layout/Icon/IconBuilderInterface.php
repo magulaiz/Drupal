@@ -44,7 +44,7 @@ interface IconBuilderInterface {
    *
    * @return $this
    */
-  public function setId($id);
+  public function setId(string $id);
 
   /**
    * Sets the label.
@@ -54,7 +54,7 @@ interface IconBuilderInterface {
    *
    * @return $this
    */
-  public function setLabel($label);
+  public function setLabel(string $label);
 
   /**
    * Sets the width.

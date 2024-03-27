@@ -92,7 +92,7 @@ abstract class LazyPluginCollectionTestBase extends UnitTestCase {
    * @return \Drupal\Component\Plugin\PluginInspectionInterface|\PHPUnit\Framework\MockObject\MockObject
    *   The mock plugin object.
    */
-  public function returnPluginMap($plugin_id) {
+  public function returnPluginMap(string $plugin_id) {
     return $this->pluginInstances[$plugin_id];
   }
 
@@ -106,7 +106,7 @@ abstract class LazyPluginCollectionTestBase extends UnitTestCase {
    *
    * @return \Drupal\Component\Plugin\PluginInspectionInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected function getPluginMock($plugin_id, array $definition) {
+  protected function getPluginMock(string $plugin_id, array $definition) {
     // Create a mock plugin instance.
     $mock = $this->createMock('Drupal\Component\Plugin\PluginInspectionInterface');
     $mock->expects($this->any())

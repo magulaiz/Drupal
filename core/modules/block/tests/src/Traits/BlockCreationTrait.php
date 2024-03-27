@@ -40,7 +40,7 @@ trait BlockCreationTrait {
    * @todo
    *   Add support for creating content block instances.
    */
-  protected function placeBlock($plugin_id, array $settings = []) {
+  protected function placeBlock(string $plugin_id, array $settings = []) {
     $config = \Drupal::configFactory();
     $settings += [
       'plugin' => $plugin_id,

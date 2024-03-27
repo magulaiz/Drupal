@@ -84,7 +84,7 @@ class DefaultLazyPluginCollectionTest extends LazyPluginCollectionTestBase {
    * @covers ::sortHelper
    * @dataProvider providerTestSortHelper
    */
-  public function testSortHelper($plugin_id_1, $plugin_id_2, $expected) {
+  public function testSortHelper(string $plugin_id_1, string $plugin_id_2, $expected) {
     $this->setupPluginCollection($this->any());
     if ($expected != 0) {
       $expected = $expected > 0 ? 1 : -1;

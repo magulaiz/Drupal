@@ -67,7 +67,7 @@ interface ContactFormInterface extends ConfigEntityInterface {
    *
    * @return $this
    */
-  public function setMessage($message);
+  public function setMessage(string $message);
 
   /**
    * Sets list of recipient email addresses.
@@ -87,7 +87,7 @@ interface ContactFormInterface extends ConfigEntityInterface {
    *
    * @return $this
    */
-  public function setRedirectPath($redirect);
+  public function setRedirectPath(string $redirect);
 
   /**
    * Sets an auto-reply message to send to the message author.
@@ -97,7 +97,7 @@ interface ContactFormInterface extends ConfigEntityInterface {
    *
    * @return $this
    */
-  public function setReply($reply);
+  public function setReply(string $reply);
 
   /**
    * Sets the weight.

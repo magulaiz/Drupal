@@ -111,7 +111,7 @@ class EntityReferenceSelectionReferenceableTest extends KernelTestBase {
    *
    * @dataProvider providerTestCases
    */
-  public function testReferenceablesWithNoLabelKey($match, $match_operator, $limit, $count_limited, array $items, $count_all) {
+  public function testReferenceablesWithNoLabelKey($match, string $match_operator, $limit, $count_limited, array $items, $count_all) {
     // Test ::getReferenceableEntities().
     $referenceables = $this->selectionHandler->getReferenceableEntities($match, $match_operator, $limit);
 

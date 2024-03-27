@@ -60,7 +60,7 @@ JS;
    * @param string $name
    *   The name of the button, such as `drupallink`, `source`, etc.
    */
-  protected function pressEditorButton($name) {
+  protected function pressEditorButton(string $name) {
     $this->getEditorButton($name)->click();
   }
 
@@ -73,7 +73,7 @@ JS;
    * @return \Behat\Mink\Element\NodeElement|null
    *   The page element node if found, NULL if not.
    */
-  protected function getEditorButton($name) {
+  protected function getEditorButton(string $name) {
     $button = $this->assertSession()->waitForElementVisible('xpath', "//button[span[text()='$name']]");
     $this->assertNotEmpty($button);
     return $button;
@@ -85,7 +85,7 @@ JS;
    * @param string $name
    *   The name of the button, such as `drupallink`, `source`, etc.
    */
-  protected function assertEditorButtonDisabled($name) {
+  protected function assertEditorButtonDisabled(string $name) {
     $button = $this->getEditorButton($name);
     $this->assertTrue($button->hasAttribute('aria-disabled'));
     $this->assertTrue($button->hasClass('ck-disabled'));
@@ -97,7 +97,7 @@ JS;
    * @param string $name
    *   The name of the button, such as `drupallink`, `source`, etc.
    */
-  protected function assertEditorButtonEnabled($name) {
+  protected function assertEditorButtonEnabled(string $name) {
     $button = $this->getEditorButton($name);
     $this->assertFalse($button->hasAttribute('aria-disabled'));
     $this->assertFalse($button->hasClass('ck-disabled'));

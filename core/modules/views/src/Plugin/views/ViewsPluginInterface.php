@@ -136,7 +136,7 @@ interface ViewsPluginInterface extends PluginInspectionInterface, DerivativeInsp
    * @return string
    *   The tokenized string.
    */
-  public function globalTokenReplace($string = '', array $options = []);
+  public function globalTokenReplace(string $string = '', array $options = []);
 
   /**
    * Clears a plugin.

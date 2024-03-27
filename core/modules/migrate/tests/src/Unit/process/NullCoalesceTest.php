@@ -94,7 +94,7 @@ class NullCoalesceTest extends MigrateProcessTestCase {
    *
    * @throws \Drupal\migrate\MigrateException
    */
-  public function testTransformWithDefault(array $source, $default_value, $expected_result) {
+  public function testTransformWithDefault(array $source, string $default_value, $expected_result) {
     $plugin = new NullCoalesce(['default_value' => $default_value], 'null_coalesce', []);
     $result = $plugin->transform($source, $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame($expected_result, $result);

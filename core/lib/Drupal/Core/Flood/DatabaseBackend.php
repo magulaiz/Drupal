@@ -85,7 +85,7 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
    *
    * @see \Drupal\Core\Flood\DatabaseBackend::register
    */
-  protected function doInsert($name, $window, $identifier) {
+  protected function doInsert(string $name, $window, string $identifier) {
     $this->connection->insert(static::TABLE_NAME)
       ->fields([
         'event' => $name,

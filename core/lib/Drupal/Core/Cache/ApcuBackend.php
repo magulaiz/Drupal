@@ -53,8 +53,8 @@ class ApcuBackend implements CacheBackendInterface {
    *   The time service.
    */
   public function __construct(
-    $bin,
-    $site_prefix,
+    string $bin,
+    string $site_prefix,
     CacheTagsChecksumInterface $checksum_provider,
     protected TimeInterface $time,
   ) {
@@ -73,7 +73,7 @@ class ApcuBackend implements CacheBackendInterface {
    * @return string
    *   The APCu key for the cache item ID.
    */
-  public function getApcuKey($cid) {
+  public function getApcuKey(string $cid) {
     return $this->binPrefix . $cid;
   }
 
@@ -127,7 +127,7 @@ class ApcuBackend implements CacheBackendInterface {
    * @return \APCUIterator
    *   An APCUIterator containing matched items.
    */
-  protected function getAll($prefix = '') {
+  protected function getAll(string $prefix = '') {
     return $this->getIterator('/^' . preg_quote($this->getApcuKey($prefix), '/') . '/');
   }
 

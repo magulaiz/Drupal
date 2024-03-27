@@ -399,7 +399,7 @@ abstract class StylePluginBase extends PluginBase {
    * @param string $display_type
    *   The display type, either block or page.
    */
-  public function wizardSubmit(&$form, FormStateInterface $form_state, WizardInterface $wizard, &$display_options, $display_type) {
+  public function wizardSubmit(&$form, FormStateInterface $form_state, WizardInterface $wizard, &$display_options, string $display_type) {
   }
 
   /**
@@ -778,7 +778,7 @@ abstract class StylePluginBase extends PluginBase {
    * @return \Drupal\Component\Render\MarkupInterface|null
    *   The output of the field, or NULL if it was empty.
    */
-  public function getField($index, $field) {
+  public function getField($index, string $field) {
     if (!isset($this->rendered_fields)) {
       $this->renderFields($this->view->result);
     }

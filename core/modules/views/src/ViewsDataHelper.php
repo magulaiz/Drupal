@@ -49,7 +49,7 @@ class ViewsDataHelper {
    * @return array
    *   A keyed array of in the form of 'base_table' => 'Description'.
    */
-  public function fetchFields($base, $type, $grouping = FALSE, $sub_type = NULL) {
+  public function fetchFields($base, string $type, $grouping = FALSE, string $sub_type = NULL) {
     if (!$this->fields) {
       $data = $this->data->getAll();
       // This constructs this ginormous multi dimensional array to

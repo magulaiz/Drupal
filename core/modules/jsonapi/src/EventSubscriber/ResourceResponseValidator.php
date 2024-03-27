@@ -67,7 +67,7 @@ class ResourceResponseValidator implements EventSubscriberInterface {
    * @param string $app_root
    *   The application's root file path.
    */
-  public function __construct(LoggerInterface $logger, ModuleHandlerInterface $module_handler, $app_root) {
+  public function __construct(LoggerInterface $logger, ModuleHandlerInterface $module_handler, string $app_root) {
     $this->logger = $logger;
     $this->moduleHandler = $module_handler;
     $this->appRoot = $app_root;
@@ -156,7 +156,7 @@ class ResourceResponseValidator implements EventSubscriberInterface {
    * @return bool
    *   TRUE if the string is a valid instance of the schema. FALSE otherwise.
    */
-  protected function validateSchema($schema, $response_data) {
+  protected function validateSchema($schema, string $response_data) {
     $this->validator->check($response_data, $schema);
     $is_valid = $this->validator->isValid();
     if (!$is_valid) {

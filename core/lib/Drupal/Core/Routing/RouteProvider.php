@@ -125,7 +125,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   (Optional) The language manager.
    */
-  public function __construct(Connection $connection, StateInterface $state, CurrentPathStack $current_path, CacheBackendInterface $cache_backend, InboundPathProcessorInterface $path_processor, CacheTagsInvalidatorInterface $cache_tag_invalidator, $table = 'router', LanguageManagerInterface $language_manager = NULL) {
+  public function __construct(Connection $connection, StateInterface $state, CurrentPathStack $current_path, CacheBackendInterface $cache_backend, InboundPathProcessorInterface $path_processor, CacheTagsInvalidatorInterface $cache_tag_invalidator, string $table = 'router', LanguageManagerInterface $language_manager = NULL) {
     $this->connection = $connection;
     $this->state = $state;
     $this->currentPath = $current_path;
@@ -345,7 +345,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
    *   empty and will be sorted from highest to lowest fit (match of path parts)
    *   and then in ascending order by route name for routes with the same fit.
    */
-  protected function getRoutesByPath($path) {
+  protected function getRoutesByPath(string $path) {
     // Split the path up on the slashes, ignoring multiple slashes in a row
     // or leading or trailing slashes. Convert to lower case here so we can
     // have a case-insensitive match from the incoming path to the lower case

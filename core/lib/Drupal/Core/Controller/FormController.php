@@ -104,6 +104,6 @@ abstract class FormController {
    * @return \Drupal\Core\Form\FormInterface
    *   The form object to use.
    */
-  abstract protected function getFormObject(RouteMatchInterface $route_match, $form_arg);
+  abstract protected function getFormObject(RouteMatchInterface $route_match, string $form_arg);
 
 }

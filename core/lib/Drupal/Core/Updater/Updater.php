@@ -44,7 +44,7 @@ abstract class Updater {
    *   new project. Usually this is the app root (the directory in which the
    *   Drupal site is installed).
    */
-  public function __construct($source, $root) {
+  public function __construct(string $source, string $root) {
     $this->source = $source;
     $this->root = $root;
     $this->name = self::getProjectName($source);
@@ -69,7 +69,7 @@ abstract class Updater {
    *
    * @throws \Drupal\Core\Updater\UpdaterException
    */
-  public static function factory($source, $root) {
+  public static function factory(string $source, string $root) {
     if (is_dir($source)) {
       $updater = self::getUpdaterFromDirectory($source);
     }
@@ -90,7 +90,7 @@ abstract class Updater {
    *
    * @throws \Drupal\Core\Updater\UpdaterException
    */
-  public static function getUpdaterFromDirectory($directory) {
+  public static function getUpdaterFromDirectory(string $directory) {
     // Gets a list of possible implementing classes.
     $updaters = drupal_get_updaters();
     foreach ($updaters as $updater) {
@@ -115,7 +115,7 @@ abstract class Updater {
    * @return string
    *   Path to the info file.
    */
-  public static function findInfoFile($directory) {
+  public static function findInfoFile(string $directory) {
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
     $info_files = [];
@@ -148,7 +148,7 @@ abstract class Updater {
    * @throws \Drupal\Core\Updater\UpdaterException
    *   If the info parser does not provide any info.
    */
-  protected static function getExtensionInfo($directory) {
+  protected static function getExtensionInfo(string $directory) {
     $info_file = static::findInfoFile($directory);
     $info = \Drupal::service('info_parser')->parse($info_file);
     if (empty($info)) {
@@ -170,7 +170,7 @@ abstract class Updater {
    * @return string
    *   The name of the project.
    */
-  public static function getProjectName($directory) {
+  public static function getProjectName(string $directory) {
     return \Drupal::service('file_system')->basename($directory);
   }
 
@@ -185,7 +185,7 @@ abstract class Updater {
    *
    * @throws \Drupal\Core\Updater\UpdaterException
    */
-  public static function getProjectTitle($directory) {
+  public static function getProjectTitle(string $directory) {
     $info_file = self::findInfoFile($directory);
     $info = \Drupal::service('info_parser')->parse($info_file);
     if (empty($info)) {
@@ -324,7 +324,7 @@ abstract class Updater {
    *
    * @throws \Drupal\Core\Updater\UpdaterException
    */
-  public function prepareInstallDirectory(&$filetransfer, $directory) {
+  public function prepareInstallDirectory(&$filetransfer, string $directory) {
     // Make the parent dir writable if need be and create the dir.
     if (!is_dir($directory)) {
       $parent_dir = dirname($directory);
@@ -369,7 +369,7 @@ abstract class Updater {
    * @param bool $recursive
    *   If the chmod should be applied recursively.
    */
-  public function makeWorldReadable(&$filetransfer, $path, $recursive = TRUE) {
+  public function makeWorldReadable(&$filetransfer, string $path, $recursive = TRUE) {
     if (!is_executable($path)) {
       // Set it to read + execute.
       $new_perms = fileperms($path) & 0777 | 0005;
@@ -389,7 +389,7 @@ abstract class Updater {
    *
    * @todo Not implemented: https://www.drupal.org/node/2474355
    */
-  public function makeBackup(FileTransfer $filetransfer, $from, $to) {
+  public function makeBackup(FileTransfer $filetransfer, string $from, string $to) {
   }
 
   /**

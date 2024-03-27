@@ -234,7 +234,7 @@ class TwigTransTest extends BrowserTestBase {
    * @return string|false
    *   The .po contents for the specified language or FALSE if none exists.
    */
-  protected function poFileContents($langcode) {
+  protected function poFileContents(string $langcode) {
     if ($langcode === 'xx') {
       return <<< EOF
 msgid ""

@@ -39,7 +39,7 @@ class ManageFieldsLifecycleTest extends ManageFieldsFunctionalTestBase {
    * @param string $type
    *   (optional) The name of a content type.
    */
-  protected function manageFieldsPage($type = '') {
+  protected function manageFieldsPage(string $type = '') {
     $type = empty($type) ? $this->contentType : $type;
     $this->drupalGet('admin/structure/types/manage/' . $type . '/fields');
     // Check all table columns.

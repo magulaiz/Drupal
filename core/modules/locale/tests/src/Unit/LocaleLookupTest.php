@@ -291,7 +291,7 @@ class LocaleLookupTest extends UnitTestCase {
    * @covers ::resolveCacheMiss
    * @dataProvider providerFixOldPluralTranslationProvider
    */
-  public function testFixOldPluralStyleTranslations($translations, $langcode, $string, $is_fix) {
+  public function testFixOldPluralStyleTranslations($translations, string $langcode, string $string, $is_fix) {
     $this->storage->expects($this->any())
       ->method('findTranslation')
       ->willReturnCallback(function ($argument) use ($translations) {

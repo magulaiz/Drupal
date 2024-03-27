@@ -181,7 +181,7 @@ class Registry implements DestructableInterface {
    * @param string $theme_name
    *   (optional) The name of the theme for which to construct the registry.
    */
-  public function __construct($root, CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, ThemeInitializationInterface $theme_initialization, CacheBackendInterface $runtime_cache, ModuleExtensionList $module_list, $theme_name = NULL) {
+  public function __construct(string $root, CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, ThemeInitializationInterface $theme_initialization, CacheBackendInterface $runtime_cache, ModuleExtensionList $module_list, string $theme_name = NULL) {
     $this->root = $root;
     $this->cache = $cache;
     $this->lock = $lock;
@@ -212,7 +212,7 @@ class Registry implements DestructableInterface {
    * @param string $theme_name
    *   (optional) The name of the theme for which to construct the registry.
    */
-  protected function init($theme_name = NULL) {
+  protected function init(string $theme_name = NULL) {
     if ($this->initialized) {
       return;
     }
@@ -309,7 +309,7 @@ class Registry implements DestructableInterface {
    * @return string|false
    *   The name of the base hook or FALSE.
    */
-  public function getBaseHook($hook) {
+  public function getBaseHook(string $hook) {
     $this->init($this->themeName);
     $base_hook = $hook;
     // Iteratively strip everything after the last '__' delimiter, until a
@@ -460,7 +460,7 @@ class Registry implements DestructableInterface {
    *
    * @throws \BadFunctionCallException
    */
-  protected function processExtension(array &$cache, $name, $type, $theme, $path) {
+  protected function processExtension(array &$cache, string $name, string $type, string $theme, string $path) {
     $result = [];
 
     $hook_defaults = [
@@ -624,7 +624,7 @@ class Registry implements DestructableInterface {
    *   The theme registry, as documented in
    *   \Drupal\Core\Theme\Registry::processExtension().
    */
-  protected function completeSuggestion($hook, array &$cache) {
+  protected function completeSuggestion(string $hook, array &$cache) {
     $previous_hook = $hook;
     $incomplete_previous_hook = [];
     // Continue looping if the candidate hook doesn't exist or if the candidate
@@ -664,7 +664,7 @@ class Registry implements DestructableInterface {
    *   The theme registry, as documented in
    *   \Drupal\Core\Theme\Registry::processExtension().
    */
-  protected function mergePreprocessFunctions($destination_hook_name, $source_hook_name, $parent_hook, array &$cache) {
+  protected function mergePreprocessFunctions(string $destination_hook_name, string $source_hook_name, $parent_hook, array &$cache) {
     // If base hook exists clone of it for the preprocess function
     // without a template.
     // @see https://www.drupal.org/node/2457295

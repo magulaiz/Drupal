@@ -42,6 +42,6 @@ interface EntityTypeRepositoryInterface {
    * @see \Drupal\Core\Entity\Entity::load()
    * @see \Drupal\Core\Entity\Entity::loadMultiple()
    */
-  public function getEntityTypeFromClass($class_name);
+  public function getEntityTypeFromClass(string $class_name);
 
 }

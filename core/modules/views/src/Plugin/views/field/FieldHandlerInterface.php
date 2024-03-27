@@ -16,7 +16,7 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * @param string $order
    *   Either ASC or DESC
    */
-  public function clickSort($order);
+  public function clickSort(string $order);
 
   /**
    * Determines if this field is click sortable.
@@ -92,7 +92,7 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * @param bool $row_index
    *   The index of current row.
    */
-  public function tokenizeValue($value, $row_index = NULL);
+  public function tokenizeValue(string $value, $row_index = NULL);
 
   /**
    * Returns the class of the field's label.
@@ -133,7 +133,7 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * @param string $field
    *   Optional name of the field where the value is stored.
    */
-  public function getValue(ResultRow $values, $field = NULL);
+  public function getValue(ResultRow $values, string $field = NULL);
 
   /**
    * Determines if this field can be grouped in the results.

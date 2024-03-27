@@ -396,7 +396,7 @@ class EntityForm extends FormBase implements EntityFormInterface {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
-  protected function prepareInvokeAll($hook, FormStateInterface $form_state) {
+  protected function prepareInvokeAll(string $hook, FormStateInterface $form_state) {
     $this->moduleHandler->invokeAllWith($hook, function (callable $hook, string $module) use ($form_state) {
       // Ensure we pass an updated translation object and form display at
       // each invocation, since they depend on form state which is alterable.

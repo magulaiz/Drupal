@@ -90,7 +90,7 @@ class CallbackTest extends MigrateProcessTestCase {
    *
    * @dataProvider providerCallbackExceptions
    */
-  public function testCallbackExceptions($message, array $configuration, $class = 'InvalidArgumentException', $args = NULL) {
+  public function testCallbackExceptions(string $message, array $configuration, string $class = 'InvalidArgumentException', $args = NULL) {
     $this->expectException($class);
     $this->expectExceptionMessage($message);
     $this->plugin = new Callback($configuration, 'map', []);
@@ -130,7 +130,7 @@ class CallbackTest extends MigrateProcessTestCase {
    *
    * @see \Drupal\Tests\migrate\Unit\process\CallbackTest::providerCallback()
    */
-  public static function strToLower($string) {
+  public static function strToLower(string $string) {
     return mb_strtolower($string);
   }
 

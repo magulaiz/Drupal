@@ -24,6 +24,6 @@ interface ContainerDeriverInterface extends DeriverInterface {
    * @return static
    *   Returns an instance of this fetcher.
    */
-  public static function create(ContainerInterface $container, $base_plugin_id);
+  public static function create(ContainerInterface $container, string $base_plugin_id);
 
 }

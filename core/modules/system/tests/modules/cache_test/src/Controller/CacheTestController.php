@@ -30,7 +30,7 @@ class CacheTestController {
    * @return array
    *   Renderable array.
    */
-  public function bundleTags($entity_type_id, $bundle) {
+  public function bundleTags(string $entity_type_id, string $bundle) {
     $storage = \Drupal::entityTypeManager()->getStorage($entity_type_id);
     $entity_ids = $storage->getQuery()->accessCheck(TRUE)->condition('type', $bundle)->execute();
     $page = [];

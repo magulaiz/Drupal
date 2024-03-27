@@ -49,7 +49,7 @@ class LinkUriTest extends KernelTestBase {
    *
    * @covers ::transform
    */
-  public function testRouted($value, $expected) {
+  public function testRouted(string $value, string $expected) {
     $actual = $this->doTransform($value);
     $this->assertSame($expected, $actual);
   }
@@ -90,7 +90,7 @@ class LinkUriTest extends KernelTestBase {
    *
    * @dataProvider providerTestNotRouted
    */
-  public function testNotRouted($value, $exception_message) {
+  public function testNotRouted(string $value, string $exception_message) {
     $this->expectException(MigrateException::class);
     $this->expectExceptionMessage($exception_message);
     $this->doTransform($value);
@@ -135,7 +135,7 @@ class LinkUriTest extends KernelTestBase {
    *
    * @covers ::transform
    */
-  public function testDisablingRouteValidation($value, $expected) {
+  public function testDisablingRouteValidation(string $value, string $expected) {
     // Create a node so we have a valid route.
     Node::create([
       'nid' => 1,
@@ -180,7 +180,7 @@ class LinkUriTest extends KernelTestBase {
    * @return string
    *   The transformed link.
    */
-  public function doTransform($value, $configuration = []) {
+  public function doTransform(string $value, $configuration = []) {
     $entityTypeManager = $this->container->get('entity_type.manager');
     $row = new Row();
     $executable = $this->prophesize(MigrateExecutableInterface::class)->reveal();

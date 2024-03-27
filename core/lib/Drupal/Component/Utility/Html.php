@@ -95,7 +95,7 @@ class Html {
    * @return string
    *   The cleaned identifier.
    */
-  public static function cleanCssIdentifier($identifier, array $filter = [
+  public static function cleanCssIdentifier(string $identifier, array $filter = [
     ' ' => '-',
     '_' => '-',
     '/' => '-',
@@ -171,7 +171,7 @@ class Html {
    * @return string
    *   The cleaned ID.
    */
-  public static function getUniqueId($id) {
+  public static function getUniqueId(string $id) {
     // If this is an Ajax request, then content returned by this page request
     // will be merged with content already on the base page. The HTML IDs must
     // be unique for the fully merged content. Therefore use unique IDs.
@@ -218,7 +218,7 @@ class Html {
    *
    * @see self::getUniqueId()
    */
-  public static function getId($id) {
+  public static function getId(string $id) {
     $id = str_replace([' ', '_', '[', ']'], ['-', '-', '-', ''], mb_strtolower($id));
 
     // As defined in http://www.w3.org/TR/html4/types.html#type-name, HTML IDs can
@@ -253,7 +253,7 @@ class Html {
    * @return string
    *   The normalized HTML string.
    */
-  public static function normalize($html) {
+  public static function normalize(string $html) {
     $document = static::load($html);
     return static::serialize($document);
   }
@@ -274,7 +274,7 @@ class Html {
    * @return \DOMDocument
    *   A \DOMDocument that represents the loaded HTML snippet.
    */
-  public static function load($html) {
+  public static function load(string $html) {
     // Instantiate the HTML5 parser, but without the HTML5 namespace being
     // added to the DOM document.
     $html5 = new HTML5(['disable_html_ns' => TRUE, 'encoding' => 'UTF-8']);
@@ -348,7 +348,7 @@ class Html {
    *   (optional) A string to use as a comment end marker to escape the CDATA
    *   declaration. Defaults to an empty string.
    */
-  public static function escapeCdataElement(\DOMNode $node, $comment_start = '//', $comment_end = '') {
+  public static function escapeCdataElement(\DOMNode $node, string $comment_start = '//', string $comment_end = '') {
     foreach ($node->childNodes as $child_node) {
       if ($child_node instanceof \DOMCdataSection) {
         $data = $child_node->data;
@@ -387,7 +387,7 @@ class Html {
    * @see html_entity_decode()
    * @see \Drupal\Component\Utility\Html::escape()
    */
-  public static function decodeEntities($text): string {
+  public static function decodeEntities(string $text): string {
     if (is_null($text)) {
       @trigger_error('Passing NULL to ' . __METHOD__ . ' is deprecated in drupal:9.5.0 and will trigger a PHP error from drupal:11.0.0. Pass a string instead. See https://www.drupal.org/node/3318826', E_USER_DEPRECATED);
       return '';
@@ -429,7 +429,7 @@ class Html {
    *
    * @ingroup sanitization
    */
-  public static function escape($text): string {
+  public static function escape(string $text): string {
     if (is_null($text)) {
       @trigger_error('Passing NULL to ' . __METHOD__ . ' is deprecated in drupal:9.5.0 and will trigger a PHP error from drupal:11.0.0. Pass a string instead. See https://www.drupal.org/node/3318826', E_USER_DEPRECATED);
       return '';
@@ -464,7 +464,7 @@ class Html {
    * @return string
    *   The updated HTML snippet.
    */
-  public static function transformRootRelativeUrlsToAbsolute($html, $scheme_and_host) {
+  public static function transformRootRelativeUrlsToAbsolute(string $html, string $scheme_and_host) {
     assert(empty(array_diff(array_keys(parse_url($scheme_and_host)), ["scheme", "host", "port"])), '$scheme_and_host contains scheme, host and port at most.');
     assert(isset(parse_url($scheme_and_host)["scheme"]), '$scheme_and_host is absolute and hence has a scheme.');
     assert(isset(parse_url($scheme_and_host)["host"]), '$base_url is absolute and hence has a host.');

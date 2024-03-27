@@ -79,7 +79,7 @@ abstract class LocaleUpdateBase extends BrowserTestBase {
    *   Path of the translations directory relative to the drupal installation
    *   directory.
    */
-  protected function setTranslationsDirectory($path) {
+  protected function setTranslationsDirectory(string $path) {
     \Drupal::service('file_system')->prepareDirectory($path, FileSystemInterface::CREATE_DIRECTORY);
     $this->config('locale.settings')->set('translation.path', $path)->save();
   }
@@ -90,7 +90,7 @@ abstract class LocaleUpdateBase extends BrowserTestBase {
    * @param string $langcode
    *   The language code of the language to add.
    */
-  protected function addLanguage($langcode) {
+  protected function addLanguage(string $langcode) {
     $edit = ['predefined_langcode' => $langcode];
     $this->drupalGet('admin/config/regional/language/add');
     $this->submitForm($edit, 'Add language');
@@ -112,7 +112,7 @@ abstract class LocaleUpdateBase extends BrowserTestBase {
    *   singular strings are supported, no plurals. No double quotes are allowed
    *   in source and translations strings.
    */
-  protected function makePoFile($path, $filename, $timestamp = NULL, array $translations = []) {
+  protected function makePoFile(string $path, string $filename, $timestamp = NULL, array $translations = []) {
     $timestamp = $timestamp ? $timestamp : \Drupal::time()->getRequestTime();
     $path = 'public://' . $path;
     $text = '';
@@ -307,7 +307,7 @@ EOF;
    * @param string $message
    *   (optional) A message to display with the assertion.
    */
-  protected function assertTranslation($source, $translation, $langcode, $message = '') {
+  protected function assertTranslation(string $source, string $translation, string $langcode, string $message = '') {
     $query = Database::getConnection()->select('locales_target', 'lt');
     $query->innerJoin('locales_source', 'ls', '[ls].[lid] = [lt].[lid]');
     $db_translation = $query->fields('lt', ['translation'])

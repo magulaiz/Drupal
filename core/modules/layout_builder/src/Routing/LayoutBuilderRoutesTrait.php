@@ -34,7 +34,7 @@ trait LayoutBuilderRoutesTrait {
    * @param string $entity_type_id
    *   (optional) The entity type ID, if available.
    */
-  protected function buildLayoutRoutes(RouteCollection $collection, SectionStorageDefinition $definition, $path, array $defaults = [], array $requirements = [], array $options = [], $route_name_prefix = '', $entity_type_id = '') {
+  protected function buildLayoutRoutes(RouteCollection $collection, SectionStorageDefinition $definition, string $path, array $defaults = [], array $requirements = [], array $options = [], string $route_name_prefix = '', string $entity_type_id = '') {
     $type = $definition->id();
     $defaults['section_storage_type'] = $type;
     // Provide an empty value to allow the section storage to be upcast.

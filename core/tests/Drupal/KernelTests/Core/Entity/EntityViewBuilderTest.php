@@ -346,7 +346,7 @@ class EntityViewBuilderTest extends EntityKernelTestBase {
    * @return \Drupal\Core\Entity\EntityInterface
    *   The created entity.
    */
-  protected function createTestEntity($entity_type) {
+  protected function createTestEntity(string $entity_type) {
     $data = [
       'bundle' => $entity_type,
       'name' => $this->randomMachineName(),

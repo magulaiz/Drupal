@@ -69,7 +69,7 @@ interface ConfigurableLanguageManagerInterface extends LanguageManagerInterface 
    * @return \Drupal\language\Config\LanguageConfigOverride
    *   The language config override object.
    */
-  public function getLanguageConfigOverride($langcode, $name);
+  public function getLanguageConfigOverride(string $langcode, string $name);
 
   /**
    * Gets a language configuration override storage object.
@@ -81,7 +81,7 @@ interface ConfigurableLanguageManagerInterface extends LanguageManagerInterface 
    *   A storage object to use for reading and writing the
    *   configuration override.
    */
-  public function getLanguageConfigOverrideStorage($langcode);
+  public function getLanguageConfigOverrideStorage(string $langcode);
 
   /**
    * Returns the standard language list excluding already configured languages.
@@ -101,6 +101,6 @@ interface ConfigurableLanguageManagerInterface extends LanguageManagerInterface 
    * @return string|null
    *   The negotiated language method ID.
    */
-  public function getNegotiatedLanguageMethod($type = LanguageInterface::TYPE_INTERFACE);
+  public function getNegotiatedLanguageMethod(string $type = LanguageInterface::TYPE_INTERFACE);
 
 }

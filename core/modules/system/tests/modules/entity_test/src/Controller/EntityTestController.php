@@ -32,7 +32,7 @@ class EntityTestController extends ControllerBase {
    * @return array
    *   A renderable array.
    */
-  public function listReferencingEntities($entity_reference_field_name, $referenced_entity_type, $referenced_entity_id) {
+  public function listReferencingEntities(string $entity_reference_field_name, string $referenced_entity_type, $referenced_entity_id) {
     // Early return if the referenced entity does not exist (or is deleted).
     $referenced_entity = $this->entityTypeManager()
       ->getStorage($referenced_entity_type)
@@ -61,7 +61,7 @@ class EntityTestController extends ControllerBase {
    * @return array
    *   A renderable array.
    */
-  public function listEntitiesAlphabetically($entity_type_id) {
+  public function listEntitiesAlphabetically(string $entity_type_id) {
     $entity_type_definition = $this->entityTypeManager()->getDefinition($entity_type_id);
     $query = $this->entityTypeManager()->getStorage($entity_type_id)->getQuery()->accessCheck(TRUE);
 
@@ -109,7 +109,7 @@ class EntityTestController extends ControllerBase {
    * @return array
    *   A renderable array.
    */
-  public function listEntitiesEmpty($entity_type_id) {
+  public function listEntitiesEmpty(string $entity_type_id) {
     $entity_type_definition = $this->entityTypeManager()->getDefinition($entity_type_id);
     return [
       '#theme' => 'item_list',

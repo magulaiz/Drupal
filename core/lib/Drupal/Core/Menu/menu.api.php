@@ -310,7 +310,7 @@ function hook_menu_links_discovered_alter(&$links) {
  *
  * @ingroup menu
  */
-function hook_menu_local_tasks_alter(&$data, $route_name, \Drupal\Core\Cache\RefinableCacheableDependencyInterface &$cacheability) {
+function hook_menu_local_tasks_alter(&$data, string $route_name, \Drupal\Core\Cache\RefinableCacheableDependencyInterface &$cacheability) {
 
   // Add a tab linking to node/add to all pages.
   $data['tabs'][0]['node.add_page'] = [
@@ -392,7 +392,7 @@ function hook_local_tasks_alter(&$local_tasks) {
  *
  * @ingroup menu
  */
-function hook_contextual_links_alter(array &$links, $group, array $route_parameters) {
+function hook_contextual_links_alter(array &$links, string $group, array $route_parameters) {
   if ($group == 'menu') {
     // Dynamically use the menu name for the title of the menu_edit contextual
     // link.

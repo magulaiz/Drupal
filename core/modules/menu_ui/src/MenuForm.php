@@ -163,7 +163,7 @@ class MenuForm extends EntityForm {
    * @return bool
    *   Returns TRUE if the menu already exists, FALSE otherwise.
    */
-  public function menuNameExists($value) {
+  public function menuNameExists(string $value) {
     // Check first to see if a menu with this ID exists.
     if ($this->entityTypeManager->getStorage('menu')->getQuery()->condition('id', $value)->range(0, 1)->count()->execute()) {
       return TRUE;

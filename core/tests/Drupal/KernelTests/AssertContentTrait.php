@@ -57,7 +57,7 @@ trait AssertContentTrait {
    * @param string $content
    *   The raw content to set.
    */
-  protected function setRawContent($content) {
+  protected function setRawContent(string $content) {
     $this->content = $content;
     $this->plainTextContent = NULL;
     $this->elements = NULL;
@@ -154,7 +154,7 @@ trait AssertContentTrait {
    * @return string
    *   An XPath query with arguments replaced.
    */
-  protected function buildXPathQuery($xpath, array $args = []) {
+  protected function buildXPathQuery(string $xpath, array $args = []) {
     // Replace placeholders.
     foreach ($args as $placeholder => $value) {
       // Cast MarkupInterface objects to string.
@@ -206,7 +206,7 @@ trait AssertContentTrait {
    *
    * @see http://php.net/manual/function.simplexml-element-xpath.php
    */
-  protected function xpath($xpath, array $arguments = []) {
+  protected function xpath(string $xpath, array $arguments = []) {
     if ($this->parse()) {
       $xpath = $this->buildXPathQuery($xpath, $arguments);
       $result = $this->elements->xpath($xpath);
@@ -230,7 +230,7 @@ trait AssertContentTrait {
    *   The return value of the XPath search performed after converting the CSS
    *   selector to an XPath selector.
    */
-  protected function cssSelect($selector) {
+  protected function cssSelect(string $selector) {
     return $this->xpath((new CssSelectorConverter())->toXPath($selector));
   }
 
@@ -278,7 +278,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE if the assertion succeeded.
    */
-  protected function assertLink($label, $index = 0, $message = '') {
+  protected function assertLink($label, $index = 0, string $message = '') {
     // Cast MarkupInterface objects to string.
     $label = (string) $label;
     $links = $this->xpath('//a[normalize-space(text())=:label]', [':label' => $label]);
@@ -301,7 +301,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE if the assertion succeeded.
    */
-  protected function assertNoLink($label, $message = '') {
+  protected function assertNoLink($label, string $message = '') {
     // Cast MarkupInterface objects to string.
     $label = (string) $label;
     $links = $this->xpath('//a[normalize-space(text())=:label]', [':label' => $label]);
@@ -326,7 +326,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE if the assertion succeeded.
    */
-  protected function assertLinkByHref($href, $index = 0, $message = '') {
+  protected function assertLinkByHref(string $href, string $index = 0, string $message = '') {
     $links = $this->xpath('//a[contains(@href, :href)]', [':href' => $href]);
     $message = ($message ? $message : new FormattableMarkup('Link containing href %href found.', ['%href' => $href]));
     $this->assertArrayHasKey($index, $links, $message);
@@ -347,7 +347,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE if the assertion succeeded.
    */
-  protected function assertNoLinkByHref($href, $message = '') {
+  protected function assertNoLinkByHref(string $href, string $message = '') {
     $links = $this->xpath('//a[contains(@href, :href)]', [':href' => $href]);
     $message = ($message ? $message : new FormattableMarkup('No link containing href %href found.', ['%href' => $href]));
     $this->assertEmpty($links, $message);
@@ -368,7 +368,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE if the assertion succeeded.
    */
-  protected function assertNoLinkByHrefInMainRegion($href, $message = '') {
+  protected function assertNoLinkByHrefInMainRegion(string $href, string $message = '') {
     $links = $this->xpath('//main//a[contains(@href, :href)]', [':href' => $href]);
     $message = ($message ? $message : new FormattableMarkup('No link containing href %href found.', ['%href' => $href]));
     $this->assertEmpty($links, $message);
@@ -388,7 +388,7 @@ trait AssertContentTrait {
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    */
-  protected function assertRaw($raw, $message = ''): void {
+  protected function assertRaw(string $raw, string $message = ''): void {
     if (!$message) {
       $message = 'Raw "' . Html::escape($raw) . '" found';
     }
@@ -408,7 +408,7 @@ trait AssertContentTrait {
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    */
-  protected function assertNoRaw($raw, $message = ''): void {
+  protected function assertNoRaw(string $raw, string $message = ''): void {
     if (!$message) {
       $message = 'Raw "' . Html::escape($raw) . '" not found';
     }
@@ -428,7 +428,7 @@ trait AssertContentTrait {
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    */
-  protected function assertEscaped($raw, $message = ''): void {
+  protected function assertEscaped(string $raw, string $message = ''): void {
     if (!$message) {
       $message = 'Escaped "' . Html::escape($raw) . '" found';
     }
@@ -448,7 +448,7 @@ trait AssertContentTrait {
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    */
-  protected function assertNoEscaped($raw, $message = ''): void {
+  protected function assertNoEscaped(string $raw, string $message = ''): void {
     if (!$message) {
       $message = 'Escaped "' . Html::escape($raw) . '" not found';
     }
@@ -471,7 +471,7 @@ trait AssertContentTrait {
    *
    * @see \Drupal\KernelTests\AssertContentTrait::assertRaw()
    */
-  protected function assertText($text, $message = ''): void {
+  protected function assertText(string $text, string $message = ''): void {
     $this->assertTextHelper($text, $message, NULL, FALSE);
   }
 
@@ -491,7 +491,7 @@ trait AssertContentTrait {
    *
    * @see \Drupal\KernelTests\AssertContentTrait::assertNoRaw()
    */
-  protected function assertNoText($text, $message = ''): void {
+  protected function assertNoText(string $text, string $message = ''): void {
     $this->assertTextHelper($text, $message, NULL, TRUE);
   }
 
@@ -513,7 +513,7 @@ trait AssertContentTrait {
    *   (optional) TRUE if this text should not exist, FALSE if it should.
    *   Defaults to TRUE.
    */
-  protected function assertTextHelper($text, $message = '', $group = NULL, $not_exists = TRUE): void {
+  protected function assertTextHelper(string $text, string $message = '', string $group = NULL, $not_exists = TRUE): void {
     if (!$message) {
       $message = !$not_exists ? new FormattableMarkup('"@text" found', ['@text' => $text]) : new FormattableMarkup('"@text" not found', ['@text' => $text]);
     }
@@ -543,7 +543,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertUniqueText($text, $message = '') {
+  protected function assertUniqueText($text, string $message = '') {
     return $this->assertUniqueTextHelper($text, $message, NULL, TRUE);
   }
 
@@ -565,7 +565,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertNoUniqueText($text, $message = '') {
+  protected function assertNoUniqueText($text, string $message = '') {
     return $this->assertUniqueTextHelper($text, $message, NULL, FALSE);
   }
 
@@ -590,7 +590,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass.
    */
-  protected function assertUniqueTextHelper($text, $message = '', $group = NULL, $be_unique = FALSE) {
+  protected function assertUniqueTextHelper($text, string $message = '', string $group = NULL, $be_unique = FALSE) {
     // Cast MarkupInterface objects to string.
     $text = (string) $text;
     if (!$message) {
@@ -620,7 +620,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass.
    */
-  protected function assertPattern($pattern, $message = '') {
+  protected function assertPattern(string $pattern, string $message = '') {
     if (!$message) {
       $message = new FormattableMarkup('Pattern "@pattern" found', ['@pattern' => $pattern]);
     }
@@ -642,7 +642,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass.
    */
-  protected function assertNoPattern($pattern, $message = '') {
+  protected function assertNoPattern(string $pattern, string $message = '') {
     if (!$message) {
       $message = new FormattableMarkup('Pattern "@pattern" not found', ['@pattern' => $pattern]);
     }
@@ -661,7 +661,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass.
    */
-  protected function assertTextPattern($pattern, $message = NULL) {
+  protected function assertTextPattern(string $pattern, string $message = NULL) {
     if (!isset($message)) {
       $message = new FormattableMarkup('Pattern "@pattern" found', ['@pattern' => $pattern]);
     }
@@ -680,7 +680,7 @@ trait AssertContentTrait {
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    */
-  protected function assertTitle($title, $message = '') {
+  protected function assertTitle(string $title, string $message = '') {
     // Don't use xpath as it messes with HTML escaping.
     preg_match('@<title>(.*)</title>@', $this->getRawContent(), $matches);
     if (isset($matches[1])) {
@@ -709,7 +709,7 @@ trait AssertContentTrait {
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    */
-  protected function assertNoTitle($title, $message = '') {
+  protected function assertNoTitle(string $title, string $message = '') {
     $actual = (string) current($this->xpath('//title'));
     if (!$message) {
       $message = new FormattableMarkup('Page title @actual is not equal to @unexpected.', [
@@ -735,7 +735,7 @@ trait AssertContentTrait {
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    */
-  protected function assertThemeOutput($callback, array $variables = [], $expected = '', $message = '') {
+  protected function assertThemeOutput(string $callback, array $variables = [], string $expected = '', string $message = '') {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
 
@@ -769,7 +769,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass.
    */
-  protected function assertFieldsByValue($fields, $value = NULL, $message = '') {
+  protected function assertFieldsByValue($fields, string $value = NULL, string $message = '') {
     // If value specified then check array for match.
     $found = TRUE;
     if (isset($value)) {
@@ -824,7 +824,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertFieldByXPath($xpath, $value = NULL, $message = '') {
+  protected function assertFieldByXPath(string $xpath, string $value = NULL, string $message = '') {
     $fields = $this->xpath($xpath);
 
     return $this->assertFieldsByValue($fields, $value, $message);
@@ -870,7 +870,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass.
    */
-  protected function assertNoFieldByXPath($xpath, $value = NULL, $message = '') {
+  protected function assertNoFieldByXPath(string $xpath, string $value = NULL, string $message = '') {
     $fields = $this->xpath($xpath);
 
     // If value specified then check array for match.
@@ -908,7 +908,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertFieldByName($name, $value = NULL, $message = NULL) {
+  protected function assertFieldByName(string $name, string $value = NULL, string $message = NULL) {
     if (!isset($message)) {
       if (!isset($value)) {
         $message = new FormattableMarkup('Found field with name @name', [
@@ -944,7 +944,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertNoFieldByName($name, $value = '', $message = '') {
+  protected function assertNoFieldByName(string $name, string $value = '', string $message = '') {
     return $this->assertNoFieldByXPath($this->constructFieldXpath('name', $name), $value, $message ? $message : new FormattableMarkup('Did not find field by name @name', ['@name' => $name]));
   }
 
@@ -967,7 +967,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertFieldById($id, $value = '', $message = '') {
+  protected function assertFieldById(string $id, $value = '', $message = '') {
     // Cast MarkupInterface objects to string.
     if (isset($value)) {
       $value = (string) $value;
@@ -995,7 +995,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertNoFieldById($id, $value = '', $message = '') {
+  protected function assertNoFieldById(string $id, string $value = '', string $message = '') {
     return $this->assertNoFieldByXPath($this->constructFieldXpath('id', $id), $value, $message ? $message : new FormattableMarkup('Did not find field by id @id', ['@id' => $id]));
   }
 
@@ -1013,7 +1013,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass.
    */
-  protected function assertFieldChecked($id, $message = '') {
+  protected function assertFieldChecked(string $id, string $message = '') {
     $message = $message ? $message : new FormattableMarkup('Checkbox field @id is checked.', ['@id' => $id]);
     $elements = $this->xpath('//input[@id=:id]', [':id' => $id]);
     $this->assertNotEmpty($elements, $message);
@@ -1035,7 +1035,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass.
    */
-  protected function assertNoFieldChecked($id, $message = '') {
+  protected function assertNoFieldChecked(string $id, string $message = '') {
     $message = $message ? $message : new FormattableMarkup('Checkbox field @id is not checked.', ['@id' => $id]);
     $elements = $this->xpath('//input[@id=:id]', [':id' => $id]);
     $this->assertNotEmpty($elements, $message);
@@ -1056,7 +1056,7 @@ trait AssertContentTrait {
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    */
-  protected function assertOption($id, $option, $message = '') {
+  protected function assertOption(string $id, string $option, string $message = '') {
     $options = $this->xpath('//select[@id=:id]//option[@value=:option]', [':id' => $id, ':option' => $option]);
     $this->assertTrue(isset($options[0]), $message ? $message : new FormattableMarkup('Option @option for field @id exists.', ['@option' => $option, '@id' => $id]));
   }
@@ -1071,7 +1071,7 @@ trait AssertContentTrait {
    * @param string $message
    *   (optional) A message to display with the assertion.
    */
-  protected function assertOptionByText($id, $text, $message = '') {
+  protected function assertOptionByText(string $id, string $text, string $message = '') {
     $options = $this->xpath('//select[@id=:id]//option[normalize-space(text())=:text]', [':id' => $id, ':text' => $text]);
     $this->assertTrue(isset($options[0]), $message ?: 'Option with text label ' . $text . ' for select field ' . $id . ' exits.');
   }
@@ -1089,7 +1089,7 @@ trait AssertContentTrait {
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    */
-  protected function assertOptionWithDrupalSelector($drupal_selector, $option, $message = '') {
+  protected function assertOptionWithDrupalSelector(string $drupal_selector, string $option, string $message = '') {
     $options = $this->xpath('//select[@data-drupal-selector=:data_drupal_selector]//option[@value=:option]', [':data_drupal_selector' => $drupal_selector, ':option' => $option]);
     $this->assertTrue(isset($options[0]), $message ? $message : new FormattableMarkup('Option @option for field @data_drupal_selector exists.', ['@option' => $option, '@data_drupal_selector' => $drupal_selector]));
   }
@@ -1110,7 +1110,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass.
    */
-  protected function assertNoOption($id, $option, $message = '') {
+  protected function assertNoOption(string $id, string $option, string $message = '') {
     $message = $message ? $message : new FormattableMarkup('Option @option for field @id does not exist.', ['@option' => $option, '@id' => $id]);
     $selects = $this->xpath('//select[@id=:id]', [':id' => $id]);
     $options = $this->xpath('//select[@id=:id]//option[@value=:option]', [':id' => $id, ':option' => $option]);
@@ -1137,7 +1137,7 @@ trait AssertContentTrait {
    *
    * @todo $id is unusable. Replace with $name.
    */
-  protected function assertOptionSelected($id, $option, $message = '') {
+  protected function assertOptionSelected(string $id, string $option, string $message = '') {
     $message = $message ? $message : new FormattableMarkup('Option @option for field @id is selected.', ['@option' => $option, '@id' => $id]);
     $elements = $this->xpath('//select[@id=:id]//option[@value=:option]', [':id' => $id, ':option' => $option]);
     $this->assertNotEmpty($elements, $message);
@@ -1163,7 +1163,7 @@ trait AssertContentTrait {
    *
    * @todo $id is unusable. Replace with $name.
    */
-  protected function assertOptionSelectedWithDrupalSelector($drupal_selector, $option, $message = '') {
+  protected function assertOptionSelectedWithDrupalSelector(string $drupal_selector, string $option, string $message = '') {
     $message = $message ? $message : new FormattableMarkup('Option @option for field @data_drupal_selector is selected.', ['@option' => $option, '@data_drupal_selector' => $drupal_selector]);
     $elements = $this->xpath('//select[@data-drupal-selector=:data_drupal_selector]//option[@value=:option]', [':data_drupal_selector' => $drupal_selector, ':option' => $option]);
     $this->assertNotEmpty($elements, $message);
@@ -1187,7 +1187,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass.
    */
-  protected function assertNoOptionSelected($id, $option, $message = '') {
+  protected function assertNoOptionSelected(string $id, string $option, string $message = '') {
     $message = $message ? $message : new FormattableMarkup('Option @option for field @id is not selected.', ['@option' => $option, '@id' => $id]);
     $elements = $this->xpath('//select[@id=:id]//option[@value=:option]', [':id' => $id, ':option' => $option]);
     $this->assertNotEmpty($elements, $message);
@@ -1209,7 +1209,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertField($field, $message = '') {
+  protected function assertField(string $field, string $message = '') {
     return $this->assertFieldByXPath($this->constructFieldXpath('name', $field) . '|' . $this->constructFieldXpath('id', $field), NULL, $message);
   }
 
@@ -1227,7 +1227,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertNoField($field, $message = '') {
+  protected function assertNoField(string $field, string $message = '') {
     return $this->assertNoFieldByXPath($this->constructFieldXpath('name', $field) . '|' . $this->constructFieldXpath('id', $field), NULL, $message);
   }
 
@@ -1252,7 +1252,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass.
    */
-  protected function assertNoDuplicateIds($message = '', $group = NULL, $ids_to_skip = []) {
+  protected function assertNoDuplicateIds(string $message = '', string $group = NULL, $ids_to_skip = []) {
     $status = TRUE;
     foreach ($this->xpath('//*[@id]') as $element) {
       $id = (string) $element['id'];
@@ -1277,7 +1277,7 @@ trait AssertContentTrait {
    * @return string
    *   XPath for specified values.
    */
-  protected function constructFieldXpath($attribute, $value) {
+  protected function constructFieldXpath(string $attribute, string $value) {
     $xpath = '//textarea[@' . $attribute . '=:value]|//input[@' . $attribute . '=:value]|//select[@' . $attribute . '=:value]';
     return $this->buildXPathQuery($xpath, [':value' => $value]);
   }

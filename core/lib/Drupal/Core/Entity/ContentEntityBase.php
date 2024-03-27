@@ -926,7 +926,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    *   The translation object. The content properties of the translation object
    *   are stored as references to the main entity.
    */
-  protected function initializeTranslation($langcode) {
+  protected function initializeTranslation(string $langcode) {
     // If the requested translation is valid, clone it with the current language
     // as the active language. The $translationInitialize flag triggers a
     // shallow (non-recursive) clone.
@@ -1325,7 +1325,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    * @return mixed
    *   The value of the entity key, NULL if not defined.
    */
-  protected function getEntityKey($key) {
+  protected function getEntityKey(string $key) {
     // If the value is known already, return it.
     if (isset($this->entityKeys[$key])) {
       return $this->entityKeys[$key];

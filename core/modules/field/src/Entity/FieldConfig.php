@@ -374,7 +374,7 @@ class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
    *   The field config entity if one exists for the provided field
    *   name, otherwise NULL.
    */
-  public static function loadByName($entity_type_id, $bundle, $field_name) {
+  public static function loadByName(string $entity_type_id, string $bundle, string $field_name) {
     return \Drupal::entityTypeManager()->getStorage('field_config')->load($entity_type_id . '.' . $bundle . '.' . $field_name);
   }
 

@@ -31,7 +31,7 @@ class TestSelection extends DefaultSelection {
    * @param bool $is_reusable
    *   Whether to set the condition for reusable or non-reusable blocks.
    */
-  public function setTestMode($condition_type = NULL, $is_reusable = NULL) {
+  public function setTestMode(string $condition_type = NULL, $is_reusable = NULL) {
     $this->conditionType = $condition_type;
     $this->isReusable = $is_reusable;
   }

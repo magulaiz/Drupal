@@ -32,7 +32,7 @@ interface FieldTranslationSynchronizerInterface {
    *   (optional) If a new translation is being created, this should be the
    *   language code of the original values. Defaults to NULL.
    */
-  public function synchronizeFields(ContentEntityInterface $entity, $sync_langcode, $original_langcode = NULL);
+  public function synchronizeFields(ContentEntityInterface $entity, string $sync_langcode, string $original_langcode = NULL);
 
   /**
    * Synchronize the items of a single field.
@@ -53,7 +53,7 @@ interface FieldTranslationSynchronizerInterface {
    * @param array $properties
    *   An array of property names to be synchronized.
    */
-  public function synchronizeItems(array &$field_values, array $unchanged_items, $sync_langcode, array $translations, array $properties);
+  public function synchronizeItems(array &$field_values, array $unchanged_items, string $sync_langcode, array $translations, array $properties);
 
   /**
    * Returns the synchronized properties for the specified field definition.

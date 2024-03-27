@@ -25,7 +25,7 @@ class FileSecurity {
    * @return bool
    *   TRUE if the file already exists or was created. FALSE otherwise.
    */
-  public static function writeHtaccess($directory, $deny_public_access = TRUE, $force = FALSE) {
+  public static function writeHtaccess(string $directory, $deny_public_access = TRUE, $force = FALSE) {
     return self::writeFile($directory, '.htaccess', self::htaccessLines($deny_public_access), $force);
   }
 
@@ -109,7 +109,7 @@ EOF;
    * @return bool
    *   TRUE if the file already exists or was created. FALSE otherwise.
    */
-  public static function writeWebConfig($directory, $force = FALSE) {
+  public static function writeWebConfig(string $directory, $force = FALSE) {
     return self::writeFile($directory, 'web.config', self::webConfigLines(), $force);
   }
 
@@ -146,7 +146,7 @@ EOT;
    * @return bool
    *   TRUE if writing the file was successful.
    */
-  protected static function writeFile($directory, $filename, $contents, $force) {
+  protected static function writeFile(string $directory, string $filename, string $contents, $force) {
     $file_path = $directory . DIRECTORY_SEPARATOR . $filename;
     // Don't overwrite if the file exists unless forced.
     if (file_exists($file_path) && !$force) {

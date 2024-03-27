@@ -131,7 +131,7 @@ abstract class DrupalSqlBase extends SqlBase implements DependentPluginInterface
    *   The current module schema version on the origin system table or FALSE if
    *   not found.
    */
-  protected function getModuleSchemaVersion($module) {
+  protected function getModuleSchemaVersion(string $module) {
     $system_data = $this->getSystemData();
     return $system_data['module'][$module]['schema_version'] ?? FALSE;
   }
@@ -145,7 +145,7 @@ abstract class DrupalSqlBase extends SqlBase implements DependentPluginInterface
    * @return bool
    *   TRUE if module is enabled on the origin system, FALSE if not.
    */
-  protected function moduleExists($module) {
+  protected function moduleExists(string $module) {
     $system_data = $this->getSystemData();
     return !empty($system_data['module'][$module]['status']);
   }

@@ -76,7 +76,7 @@ class FieldInstanceSettings extends ProcessPluginBase {
    * @return string
    *   The D8 version of the size string.
    */
-  protected function convertSizeUnit($size_string) {
+  protected function convertSizeUnit(string $size_string) {
     $size_unit = substr($size_string, strlen($size_string) - 1);
     if ($size_unit == "M" || $size_unit == "K") {
       return $size_string . "B";

@@ -234,7 +234,7 @@ class TemporaryArrayObjectThrowingExceptions extends \ArrayObject {
    *   This class does not support this action but it must implement it, because
    *   it is extending \ArrayObject.
    */
-  public function setIteratorClass($iteratorClass): void {
+  public function setIteratorClass(string $iteratorClass): void {
     throw new \Exception('This ' . __CLASS__ . ' does not support this action but it must implement it, because it is extending \ArrayObject.');
   }
 

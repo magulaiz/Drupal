@@ -83,7 +83,7 @@ class ResultTest extends UnitTestCase {
    *
    * @dataProvider providerTestResultArea
    */
-  public function testResultArea($content, $expected, $items_per_page = 0) {
+  public function testResultArea(string $content, string $expected, $items_per_page = 0) {
     $this->setupViewPager($items_per_page);
     $this->resultHandler->options['content'] = $content;
     $this->assertEquals(['#markup' => $expected], $this->resultHandler->render());

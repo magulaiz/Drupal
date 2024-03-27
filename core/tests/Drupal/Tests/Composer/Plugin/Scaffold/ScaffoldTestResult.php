@@ -20,7 +20,7 @@ class ScaffoldTestResult {
    * @param string $scaffoldOutput
    *   The stdout from the test.
    */
-  public function __construct($docroot, $scaffoldOutput) {
+  public function __construct(string $docroot, string $scaffoldOutput) {
     $this->docroot = $docroot;
     $this->scaffoldOutput = $scaffoldOutput;
   }

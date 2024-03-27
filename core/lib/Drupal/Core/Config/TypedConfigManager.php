@@ -246,7 +246,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    * @return string
    *   The typed config type for the given plugin ID.
    */
-  protected function determineType($base_plugin_id, array $definitions) {
+  protected function determineType(string $base_plugin_id, array $definitions) {
     if (isset($definitions[$base_plugin_id])) {
       $type = $base_plugin_id;
     }
@@ -276,7 +276,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    * @return array
    *   A schema definition array.
    */
-  protected function getDefinitionWithReplacements($base_plugin_id, array $replacements, $exception_on_invalid = TRUE) {
+  protected function getDefinitionWithReplacements(string $base_plugin_id, array $replacements, $exception_on_invalid = TRUE) {
     $definitions = $this->getDefinitions();
     $type = $this->determineType($base_plugin_id, $definitions);
     $definition = $definitions[$type];
@@ -370,7 +370,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    * @return null|string
    *   The resolved schema name for the given configuration name or key.
    */
-  protected function getFallbackName($name) {
+  protected function getFallbackName(string $name) {
     // Check for definition of $name with filesystem marker.
     $replaced = preg_replace('/([^\.:]+)([\.:\*]*)$/', '*\2', $name);
     if ($replaced != $name) {
@@ -410,7 +410,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    *
    * @see https://www.drupal.org/node/3408266
    */
-  protected function replaceName($name, $data) {
+  protected function replaceName(string $name, $data) {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Config\Schema\TypeResolver::resolveDynamicTypeName() instead. See https://www.drupal.org/node/3408266', E_USER_DEPRECATED);
     return TypeResolver::resolveDynamicTypeName($name, $data);
   }
@@ -433,7 +433,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    *
    * @see https://www.drupal.org/node/3408266
    */
-  protected function replaceVariable($value, $data) {
+  protected function replaceVariable(string $value, $data) {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Config\Schema\TypeResolver::resolveExpression() instead. See https://www.drupal.org/node/3408266', E_USER_DEPRECATED);
     return TypeResolver::resolveExpression($value, $data);
   }

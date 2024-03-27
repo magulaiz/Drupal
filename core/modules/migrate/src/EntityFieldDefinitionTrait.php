@@ -24,7 +24,7 @@ trait EntityFieldDefinitionTrait {
    *
    * @see \Drupal\Core\Field\FieldStorageDefinitionInterface::getSettings()
    */
-  protected function getDefinitionFromEntity($key) {
+  protected function getDefinitionFromEntity(string $key) {
     $plugin_id = $this->getPluginId();
     $entity_type_id = $this->getEntityTypeId($plugin_id);
     /** @var \Drupal\Core\Field\FieldStorageDefinitionInterface[] $definitions */
@@ -45,7 +45,7 @@ trait EntityFieldDefinitionTrait {
    * @return string
    *   The entity type.
    */
-  protected static function getEntityTypeId($plugin_id) {
+  protected static function getEntityTypeId(string $plugin_id) {
     $entity_type_id = NULL;
     if (strpos($plugin_id, static::DERIVATIVE_SEPARATOR)) {
       [, $entity_type_id] = explode(static::DERIVATIVE_SEPARATOR, $plugin_id, 2);

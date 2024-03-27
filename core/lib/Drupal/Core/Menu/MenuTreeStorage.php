@@ -90,7 +90,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    * @param array $options
    *   (optional) Any additional database connection options to use in queries.
    */
-  public function __construct(Connection $connection, CacheBackendInterface $menu_cache_backend, CacheTagsInvalidatorInterface $cache_tags_invalidator, $table, array $options = []) {
+  public function __construct(Connection $connection, CacheBackendInterface $menu_cache_backend, CacheTagsInvalidatorInterface $cache_tags_invalidator, string $table, array $options = []) {
     $this->connection = $connection;
     $this->menuCacheBackend = $menu_cache_backend;
     $this->cacheTagsInvalidator = $cache_tags_invalidator;
@@ -716,7 +716,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    * @return array
    *   The loaded menu link definition or an empty array if not be found.
    */
-  protected function loadFull($id) {
+  protected function loadFull(string $id) {
     $loaded = $this->loadFullMultiple([$id]);
     return $loaded[$id] ?? [];
   }
@@ -800,7 +800,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    * @param array $links
    *   An array of all definitions keyed by ID.
    */
-  protected function saveRecursive($id, &$children, &$links) {
+  protected function saveRecursive(string $id, &$children, &$links) {
     if (!empty($links[$id]['parent']) && empty($links[$links[$id]['parent']])) {
       // Invalid parent ID, so remove it.
       $links[$id]['parent'] = '';
@@ -857,7 +857,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    *   the fields from the {menu_tree} table. This array must be ordered
    *   depth-first.
    */
-  protected function loadLinks($menu_name, MenuTreeParameters $parameters) {
+  protected function loadLinks(string $menu_name, MenuTreeParameters $parameters) {
     $query = $this->connection->select($this->table, NULL, $this->options);
     $query->fields($this->table);
 

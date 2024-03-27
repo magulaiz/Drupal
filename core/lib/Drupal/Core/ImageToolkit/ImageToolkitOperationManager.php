@@ -80,7 +80,7 @@ class ImageToolkitOperationManager extends DefaultPluginManager implements Image
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    *   When no plugin is available.
    */
-  protected function getToolkitOperationPluginId(ImageToolkitInterface $toolkit, $operation) {
+  protected function getToolkitOperationPluginId(ImageToolkitInterface $toolkit, string $operation) {
     $toolkit_id = $toolkit->getPluginId();
     $definitions = $this->getDefinitions();
 

@@ -128,7 +128,7 @@ interface StreamWrapperInterface extends PhpStreamWrapperInterface {
    * @param string $uri
    *   A string containing the URI that should be used for this instance.
    */
-  public function setUri($uri);
+  public function setUri(string $uri);
 
   /**
    * Returns the stream resource URI.
@@ -180,6 +180,6 @@ interface StreamWrapperInterface extends PhpStreamWrapperInterface {
    *
    * @see \Drupal\Core\File\FileSystemInterface::dirname()
    */
-  public function dirname($uri = NULL);
+  public function dirname(string $uri = NULL);
 
 }

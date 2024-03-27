@@ -160,7 +160,7 @@ class DefaultLazyPluginCollection extends LazyPluginCollection {
    * @param array $configuration
    *   The plugin configuration to set.
    */
-  public function setInstanceConfiguration($instance_id, array $configuration) {
+  public function setInstanceConfiguration(string $instance_id, array $configuration) {
     $this->configurations[$instance_id] = $configuration;
     $instance = $this->get($instance_id);
     if ($instance instanceof ConfigurableInterface) {

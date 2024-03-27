@@ -56,7 +56,7 @@ class Xss {
    *
    * @ingroup sanitization
    */
-  public static function filter($string, array $allowed_html_tags = NULL) {
+  public static function filter(string $string, array $allowed_html_tags = NULL) {
     if (is_null($allowed_html_tags)) {
       $allowed_html_tags = static::$htmlTags;
     }
@@ -119,7 +119,7 @@ class Xss {
    *
    * @see \Drupal\Component\Utility\Xss::getAdminTagList()
    */
-  public static function filterAdmin($string) {
+  public static function filterAdmin(string $string) {
     return static::filter($string, static::$adminTags);
   }
 
@@ -140,7 +140,7 @@ class Xss {
    *   If the element isn't allowed, an empty string. Otherwise, the cleaned up
    *   version of the HTML element.
    */
-  protected static function split($string, array $html_tags, $class) {
+  protected static function split(string $string, array $html_tags, string $class) {
     if (!str_starts_with($string, '<')) {
       // We matched a lone ">" character.
       return '&gt;';
@@ -199,7 +199,7 @@ class Xss {
    * @return string
    *   Cleaned up version of the HTML attributes.
    */
-  protected static function attributes($attributes) {
+  protected static function attributes(string $attributes) {
     $attributes_array = [];
     $mode = 0;
     $attribute_name = '';
@@ -337,7 +337,7 @@ class Xss {
    * @return bool
    *   TRUE if this element needs to be removed.
    */
-  protected static function needsRemoval(array $html_tags, $elem) {
+  protected static function needsRemoval(array $html_tags, string $elem) {
     return !isset($html_tags[strtolower($elem)]);
   }
 

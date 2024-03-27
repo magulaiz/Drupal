@@ -297,7 +297,7 @@ class BigPipe {
    *   The cumulative assets sent so far; to be updated while rendering no-JS
    *   BigPipe placeholders.
    */
-  protected function sendPreBody($pre_body, array $no_js_placeholders, AttachedAssetsInterface $cumulative_assets) {
+  protected function sendPreBody(string $pre_body, array $no_js_placeholders, AttachedAssetsInterface $cumulative_assets) {
     // If there are no no-JS BigPipe placeholders, we can send the pre-</body>
     // part of the page immediately.
     if (empty($no_js_placeholders)) {
@@ -365,7 +365,7 @@ class BigPipe {
    *   error logging is configured to be verbose, the exception is rethrown to
    *   simplify debugging.
    */
-  protected function sendNoJsPlaceholders($html, $no_js_placeholders, AttachedAssetsInterface $cumulative_assets) {
+  protected function sendNoJsPlaceholders(string $html, $no_js_placeholders, AttachedAssetsInterface $cumulative_assets) {
     // Split the HTML on every no-JS placeholder string.
     $placeholder_strings = array_keys($no_js_placeholders);
     $fragments = static::splitHtmlOnPlaceholders($html, $placeholder_strings);
@@ -665,7 +665,7 @@ EOF;
    * @param string $post_body
    *   The HTML response's content after the closing </body> tag.
    */
-  protected function sendPostBody($post_body) {
+  protected function sendPostBody(string $post_body) {
     $this->sendChunk('</body>' . $post_body);
   }
 
@@ -685,7 +685,7 @@ EOF;
    *
    * @see \Drupal\Core\Render\RendererInterface::renderPlaceholder()
    */
-  protected function renderPlaceholder($placeholder, array $placeholder_render_array) {
+  protected function renderPlaceholder(string $placeholder, array $placeholder_render_array) {
     $elements = [
       '#markup' => $placeholder,
       '#attached' => [
@@ -717,7 +717,7 @@ EOF;
    *   kept: if the same placeholder occurs multiple times, we only keep the
    *   first occurrence.
    */
-  protected function getPlaceholderOrder($html, $placeholders) {
+  protected function getPlaceholderOrder(string $html, $placeholders) {
     $placeholder_ids = [];
     $dom = Html::load($html);
     $xpath = new \DOMXPath($dom);
@@ -741,7 +741,7 @@ EOF;
    * @return string[]
    *   The resulting HTML fragments.
    */
-  private static function splitHtmlOnPlaceholders($html_string, array $html_placeholders) {
+  private static function splitHtmlOnPlaceholders(string $html_string, array $html_placeholders) {
     $prepare_for_preg_split = function ($placeholder_string) {
       return '(' . preg_quote($placeholder_string, '/') . ')';
     };

@@ -119,7 +119,7 @@ class TemporaryQueryGuard {
    * @see \Drupal\Core\Database\Query\AlterableInterface::addMetaData()
    * @see \Drupal\Core\Database\Query\ConditionInterface
    */
-  protected static function secureQuery(QueryInterface $query, $entity_type_id, array $tree, CacheableMetadata $cacheability, $field_prefix = NULL, FieldStorageDefinitionInterface $field_storage_definition = NULL) {
+  protected static function secureQuery(QueryInterface $query, string $entity_type_id, array $tree, CacheableMetadata $cacheability, $field_prefix = NULL, FieldStorageDefinitionInterface $field_storage_definition = NULL) {
     $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
     // Config entity types are not fieldable, therefore they do not have field
     // access restrictions, nor entity references to other entity types.
@@ -194,7 +194,7 @@ class TemporaryQueryGuard {
    * @param \Drupal\Core\Cache\CacheableMetadata $cacheability
    *   Collects cacheability for the query.
    */
-  protected static function applyAccessConditions(QueryInterface $query, $entity_type_id, $field_prefix, CacheableMetadata $cacheability) {
+  protected static function applyAccessConditions(QueryInterface $query, string $entity_type_id, $field_prefix, CacheableMetadata $cacheability) {
     $access_condition = static::getAccessCondition($entity_type_id, $cacheability);
     if ($access_condition) {
       $prefixed_condition = !is_null($field_prefix)
@@ -234,7 +234,7 @@ class TemporaryQueryGuard {
    *   An EntityConditionGroup or NULL if no conditions need to be applied to
    *   secure an entity query.
    */
-  protected static function getAccessCondition($entity_type_id, CacheableMetadata $cacheability) {
+  protected static function getAccessCondition(string $entity_type_id, CacheableMetadata $cacheability) {
     $current_user = \Drupal::currentUser();
     $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
 

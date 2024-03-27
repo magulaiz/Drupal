@@ -480,7 +480,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
    * @return array
    *   A table row array.
    */
-  protected function buildExtraFieldRow($field_id, $extra_field) {
+  protected function buildExtraFieldRow(string $field_id, $extra_field) {
     $display_options = $this->entity->getComponent($field_id);
 
     $regions = array_keys($this->getRegions());
@@ -756,7 +756,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
    * @return \Drupal\Core\Entity\Display\EntityDisplayInterface
    *   An entity display.
    */
-  abstract protected function getEntityDisplay($entity_type_id, $bundle, $mode);
+  abstract protected function getEntityDisplay(string $entity_type_id, string $bundle, string $mode);
 
   /**
    * Returns an array of applicable widget or formatter options for a field.
@@ -788,7 +788,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
    * @return string
    *   The widget or formatter plugin ID.
    */
-  abstract protected function getDefaultPlugin($field_type);
+  abstract protected function getDefaultPlugin(string $field_type);
 
   /**
    * Returns the form or view modes used by this form.
@@ -903,7 +903,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
    * @return \Drupal\Core\Url
    *   A Url object for the overview route.
    */
-  abstract protected function getOverviewUrl($mode);
+  abstract protected function getOverviewUrl(string $mode);
 
   /**
    * Adds the widget or formatter third party settings forms.

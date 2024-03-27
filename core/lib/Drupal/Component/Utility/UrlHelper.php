@@ -39,7 +39,7 @@ class UrlHelper {
    *
    * @ingroup php_wrappers
    */
-  public static function buildQuery(array $query, $parent = '') {
+  public static function buildQuery(array $query, string $parent = '') {
     $params = [];
 
     foreach ($query as $key => $value) {
@@ -119,7 +119,7 @@ class UrlHelper {
    * @return array
    *   An array containing query parameters.
    */
-  public static function filterQueryParameters(array $query, array $exclude = [], $parent = '') {
+  public static function filterQueryParameters(array $query, array $exclude = [], string $parent = '') {
     // If $exclude is empty, there is nothing to filter.
     if (empty($exclude)) {
       return $query;
@@ -173,7 +173,7 @@ class UrlHelper {
    *
    * @ingroup php_wrappers
    */
-  public static function parse($url) {
+  public static function parse(string $url) {
     $options = [
       'path' => NULL,
       'query' => [],
@@ -235,7 +235,7 @@ class UrlHelper {
    * @return string
    *   The encoded path.
    */
-  public static function encodePath($path) {
+  public static function encodePath(string $path) {
     return str_replace('%2F', '/', rawurlencode($path));
   }
 
@@ -253,7 +253,7 @@ class UrlHelper {
    * @return bool
    *   TRUE or FALSE, where TRUE indicates an external path.
    */
-  public static function isExternal($path) {
+  public static function isExternal(string $path) {
     $colon_position = strpos($path, ':');
     // Some browsers treat \ as / so normalize to forward slashes.
     $path = str_replace('\\', '/', $path);
@@ -287,7 +287,7 @@ class UrlHelper {
    * @throws \InvalidArgumentException
    *   Exception thrown when either $url or $base_url are not fully qualified.
    */
-  public static function externalIsLocal($url, $base_url) {
+  public static function externalIsLocal(string $url, string $base_url) {
     // Some browsers treat \ as / so normalize to forward slashes.
     $url = str_replace('\\', '/', $url);
 
@@ -326,7 +326,7 @@ class UrlHelper {
    * @return string
    *   Cleaned up and HTML-escaped version of $string.
    */
-  public static function filterBadProtocol($string) {
+  public static function filterBadProtocol(string $string) {
     // Get the plain text representation of the attribute value (i.e. its
     // meaning).
     $string = Html::decodeEntities($string);
@@ -392,7 +392,7 @@ class UrlHelper {
    * @see \Drupal\Core\Url::toString()
    * @see \Drupal\Core\Url::fromUri()
    */
-  public static function stripDangerousProtocols($uri) {
+  public static function stripDangerousProtocols(string $uri) {
     $allowed_protocols = array_flip(static::$allowedProtocols);
 
     // Iteratively remove any invalid protocol found.
@@ -434,7 +434,7 @@ class UrlHelper {
    * @return bool
    *   TRUE if the URL is in a valid format, FALSE otherwise.
    */
-  public static function isValid($url, $absolute = FALSE) {
+  public static function isValid(string $url, $absolute = FALSE) {
     if ($absolute) {
       return (bool) preg_match("
         /^                                                      # Start at the beginning of the text

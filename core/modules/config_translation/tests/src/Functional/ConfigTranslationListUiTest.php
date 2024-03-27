@@ -474,7 +474,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
    * @param string $link
    *   URL of the settings page to test.
    */
-  public function doSettingsPageTest($link) {
+  public function doSettingsPageTest(string $link) {
     // Get the settings page.
     $this->drupalGet($link);
 

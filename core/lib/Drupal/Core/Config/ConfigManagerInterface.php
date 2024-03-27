@@ -16,7 +16,7 @@ interface ConfigManagerInterface {
    * @return string|null
    *   Either the entity type name, or NULL if none match.
    */
-  public function getEntityTypeIdByName($name);
+  public function getEntityTypeIdByName(string $name);
 
   /**
    * Loads a configuration entity using the configuration name.
@@ -27,7 +27,7 @@ interface ConfigManagerInterface {
    * @return \Drupal\Core\Entity\EntityInterface|null
    *   The configuration entity or NULL if it does not exist.
    */
-  public function loadConfigEntityByName($name);
+  public function loadConfigEntityByName(string $name);
 
   /**
    * Gets the entity type manager.
@@ -68,7 +68,7 @@ interface ConfigManagerInterface {
    *
    * @see \Drupal\Core\Diff\DiffFormatter
    */
-  public function diff(StorageInterface $source_storage, StorageInterface $target_storage, $source_name, $target_name = NULL, $collection = StorageInterface::DEFAULT_COLLECTION);
+  public function diff(StorageInterface $source_storage, StorageInterface $target_storage, string $source_name, string $target_name = NULL, string $collection = StorageInterface::DEFAULT_COLLECTION);
 
   /**
    * Creates a configuration snapshot following a successful import.
@@ -88,7 +88,7 @@ interface ConfigManagerInterface {
    * @param string $name
    *   The name of the module or theme to install configuration for.
    */
-  public function uninstall($type, $name);
+  public function uninstall(string $type, string $name);
 
   /**
    * Creates and populates a ConfigDependencyManager object.
@@ -114,7 +114,7 @@ interface ConfigManagerInterface {
    * @return \Drupal\Core\Config\Entity\ConfigEntityDependency[]
    *   An array of configuration entity dependency objects.
    */
-  public function findConfigEntityDependencies($type, array $names);
+  public function findConfigEntityDependencies(string $type, array $names);
 
   /**
    * Finds config entities that are dependent on extensions or entities.
@@ -130,7 +130,7 @@ interface ConfigManagerInterface {
    * @return \Drupal\Core\Config\Entity\ConfigEntityInterface[]
    *   An array of dependencies as configuration entities.
    */
-  public function findConfigEntityDependenciesAsEntities($type, array $names);
+  public function findConfigEntityDependenciesAsEntities(string $type, array $names);
 
   /**
    * Lists which config entities to update and delete on removal of a dependency.
@@ -154,7 +154,7 @@ interface ConfigManagerInterface {
    *   processed before deletes. The order of the deletes is significant and
    *   must be processed in the returned order.
    */
-  public function getConfigEntitiesToChangeOnDependencyRemoval($type, array $names, $dry_run = TRUE);
+  public function getConfigEntitiesToChangeOnDependencyRemoval(string $type, array $names, $dry_run = TRUE);
 
   /**
    * Gets available collection information using the event system.

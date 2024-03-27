@@ -34,7 +34,7 @@ class Timer {
    * @return int
    *   The current timer value in ms.
    */
-  public static function read($name) {
+  public static function read(string $name) {
     if (isset(static::$timers[$name]['start'])) {
       $stop = microtime(TRUE);
       $diff = round(($stop - static::$timers[$name]['start']) * 1000, 2);
@@ -57,7 +57,7 @@ class Timer {
    *   A timer array. The array contains the number of times the timer has been
    *   started and stopped (count) and the accumulated timer value in ms (time).
    */
-  public static function stop($name) {
+  public static function stop(string $name) {
     if (isset(static::$timers[$name]['start'])) {
       $stop = microtime(TRUE);
       $diff = round(($stop - static::$timers[$name]['start']) * 1000, 2);

@@ -102,7 +102,7 @@ class AnnotatedClassDiscovery extends ComponentAnnotatedClassDiscovery {
    * @return string|null
    *   The matching provider name, or NULL otherwise.
    */
-  protected function getProviderFromNamespace($namespace) {
+  protected function getProviderFromNamespace(string $namespace) {
     preg_match('|^Drupal\\\\(?<provider>[\w]+)\\\\|', $namespace, $matches);
 
     if (isset($matches['provider'])) {

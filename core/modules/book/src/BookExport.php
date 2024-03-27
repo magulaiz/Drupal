@@ -142,7 +142,7 @@ class BookExport {
    *
    * @see \Drupal\book\BookExport::exportTraverse()
    */
-  protected function bookNodeExport(NodeInterface $node, $children = '') {
+  protected function bookNodeExport(NodeInterface $node, string $children = '') {
     $build = $this->viewBuilder->view($node, 'print', NULL);
     unset($build['#theme']);
 

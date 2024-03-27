@@ -95,7 +95,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
    * @param int $response
    *   Expected response from visiting the page for the topic.
    */
-  protected function verifyTopic($id, $definitions, $response = 200) {
+  protected function verifyTopic(string $id, $definitions, $response = 200) {
     $definition = $definitions[$id];
     HelpTestTwigNodeVisitor::setStateValue('manner', 0);
 
@@ -229,7 +229,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
    * @param array $definitions
    *   Array of all topic definitions, keyed by ID.
    */
-  protected function verifyBadTopic($id, $definitions) {
+  protected function verifyBadTopic(string $id, $definitions) {
     $bad_topic_type = substr($id, 16);
     // Topics should fail verifyTopic() in specific ways.
     $found_error = FALSE;
@@ -299,7 +299,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
    *   An array of all of the help topic directories for this type of
    *   extension, keyed by extension short name.
    */
-  protected function listDirectories($type) {
+  protected function listDirectories(string $type) {
     $directories = [];
 
     // Find the extensions of this type, even if they are not installed, but

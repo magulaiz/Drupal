@@ -45,7 +45,7 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
    * @param string $id
    *   The ID of the item this form is manipulating.
    */
-  protected function setID($id) {
+  protected function setID(string $id) {
     if ($id) {
       $this->id = $id;
     }
@@ -57,7 +57,7 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
    * @param string $type
    *   The type of the item this form is manipulating.
    */
-  protected function setType($type) {
+  protected function setType(string $type) {
     if ($type) {
       $this->type = $type;
     }

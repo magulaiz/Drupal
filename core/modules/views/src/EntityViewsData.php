@@ -433,7 +433,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
    *   A reference to a specific entity table (for example data_table) inside
    *   the views data.
    */
-  protected function mapFieldDefinition($table, $field_name, FieldDefinitionInterface $field_definition, TableMappingInterface $table_mapping, &$table_data) {
+  protected function mapFieldDefinition(string $table, string $field_name, FieldDefinitionInterface $field_definition, TableMappingInterface $table_mapping, &$table_data) {
     // Create a dummy instance to retrieve property definitions.
     $field_column_mapping = $table_mapping->getColumnNames($field_name);
     $field_schema = $this->getFieldStorageDefinitions()[$field_name]->getSchema();
@@ -476,7 +476,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
    * @return array
    *   The modified views data field definition.
    */
-  protected function mapSingleFieldViewsData($table, $field_name, $field_type, $column_name, $column_type, $first, FieldDefinitionInterface $field_definition) {
+  protected function mapSingleFieldViewsData(string $table, string $field_name, string $field_type, string $column_name, string $column_type, $first, FieldDefinitionInterface $field_definition) {
     $views_field = [];
 
     // Provide a nicer, less verbose label for the first column within a field.
@@ -601,7 +601,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
    * @param string $field_column_name
    *   The field column being processed.
    */
-  protected function processViewsDataForLanguage($table, FieldDefinitionInterface $field_definition, array &$views_field, $field_column_name) {
+  protected function processViewsDataForLanguage(string $table, FieldDefinitionInterface $field_definition, array &$views_field, string $field_column_name) {
     // Apply special titles for the langcode field.
     if ($field_definition->getName() == $this->entityType->getKey('langcode')) {
       if ($table == $this->entityType->getDataTable() || $table == $this->entityType->getRevisionDataTable()) {
@@ -625,7 +625,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
    * @param string $field_column_name
    *   The field column being processed.
    */
-  protected function processViewsDataForEntityReference($table, FieldDefinitionInterface $field_definition, array &$views_field, $field_column_name) {
+  protected function processViewsDataForEntityReference(string $table, FieldDefinitionInterface $field_definition, array &$views_field, string $field_column_name) {
 
     // @todo Should the actual field handler respect that this just renders a
     //   number?
@@ -673,7 +673,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
    * @param string $field_column_name
    *   The field column being processed.
    */
-  protected function processViewsDataForTextLong($table, FieldDefinitionInterface $field_definition, array &$views_field, $field_column_name) {
+  protected function processViewsDataForTextLong(string $table, FieldDefinitionInterface $field_definition, array &$views_field, string $field_column_name) {
     // Connect the text field to its formatter.
     if ($field_column_name == 'value') {
       $views_field['field']['format'] = $field_definition->getName() . '__format';
@@ -693,7 +693,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
    * @param string $field_column_name
    *   The field column being processed.
    */
-  protected function processViewsDataForUuid($table, FieldDefinitionInterface $field_definition, array &$views_field, $field_column_name) {
+  protected function processViewsDataForUuid(string $table, FieldDefinitionInterface $field_definition, array &$views_field, string $field_column_name) {
     // It does not make sense for UUID fields to be click sortable.
     $views_field['field']['click sortable'] = FALSE;
   }

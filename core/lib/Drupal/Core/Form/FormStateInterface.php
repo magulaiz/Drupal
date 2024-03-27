@@ -69,7 +69,7 @@ interface FormStateInterface {
    *
    * @see \Drupal\Core\Extension\ModuleHandlerInterface::loadInclude()
    */
-  public function loadInclude($module, $type, $name = NULL);
+  public function loadInclude(string $module, string $type, $name = NULL);
 
   /**
    * Returns an array representation of the cacheable portion of the form state.
@@ -129,7 +129,7 @@ interface FormStateInterface {
    * @see \Drupal\Core\Form\FormSubmitterInterface::redirectForm()
    * @see \Drupal\Core\Url::fromUri()
    */
-  public function setRedirect($route_name, array $route_parameters = [], array $options = []);
+  public function setRedirect(string $route_name, array $route_parameters = [], array $options = []);
 
   /**
    * Sets the redirect URL for the form.
@@ -296,7 +296,7 @@ interface FormStateInterface {
    *
    * @return $this
    */
-  public function addBuildInfo($property, $value);
+  public function addBuildInfo(string $property, $value);
 
   /**
    * Returns the form values as they were submitted by the user.
@@ -541,7 +541,7 @@ interface FormStateInterface {
    *
    * @return $this
    */
-  public function setErrorByName($name, $message = '');
+  public function setErrorByName(string $name, string $message = '');
 
   /**
    * Flags an element as having an error.
@@ -553,7 +553,7 @@ interface FormStateInterface {
    *
    * @return $this
    */
-  public function setError(array &$element, $message = '');
+  public function setError(array &$element, string $message = '');
 
   /**
    * Clears all errors against all form elements made by self::setErrorByName().
@@ -808,7 +808,7 @@ interface FormStateInterface {
    *
    * @return $this
    */
-  public function setMethod($method);
+  public function setMethod(string $method);
 
   /**
    * Sets the HTTP method used by the request that is building the form.
@@ -820,7 +820,7 @@ interface FormStateInterface {
    *
    * @see \Drupal\Core\Form\FormStateInterface::setMethod()
    */
-  public function setRequestMethod($method);
+  public function setRequestMethod(string $method);
 
   /**
    * Returns the HTTP form method.
@@ -833,7 +833,7 @@ interface FormStateInterface {
    *
    * @see \Drupal\Core\Form\FormState::$method
    */
-  public function isMethodType($method_type);
+  public function isMethodType(string $method_type);
 
   /**
    * Enforces that validation is run.
@@ -961,7 +961,7 @@ interface FormStateInterface {
    *
    * @return $this
    */
-  public function addRebuildInfo($property, $value);
+  public function addRebuildInfo(string $property, $value);
 
   /**
    * Sets the submit handlers.
@@ -1053,7 +1053,7 @@ interface FormStateInterface {
    *   array, each element of the array will be used as a nested key. If
    *   $key = ['foo', 'bar'] it will return isset($temporary['foo']['bar']).
    */
-  public function hasTemporaryValue($key);
+  public function hasTemporaryValue(string $key);
 
   /**
    * Sets the form element that triggered submission.
@@ -1135,7 +1135,7 @@ interface FormStateInterface {
    *
    * @return $this
    */
-  public function addCleanValueKey($key);
+  public function addCleanValueKey(string $key);
 
   /**
    * Removes internal Form API elements and buttons from submitted form values.

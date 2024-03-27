@@ -119,7 +119,7 @@ class Sort {
    * @return array
    *   The expanded sort.
    */
-  protected static function expandFieldString($fields) {
+  protected static function expandFieldString(string $fields) {
     return array_map(function ($field) {
       $sort = [];
 

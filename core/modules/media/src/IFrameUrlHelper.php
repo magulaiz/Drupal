@@ -56,7 +56,7 @@ class IFrameUrlHelper {
    * @return string
    *   The hashed URL.
    */
-  public function getHash($url, $max_width = NULL, $max_height = NULL) {
+  public function getHash(string $url, $max_width = NULL, $max_height = NULL) {
     return Crypt::hmacBase64("$url:$max_width:$max_height", $this->privateKey->get() . Settings::getHashSalt());
   }
 
@@ -69,7 +69,7 @@ class IFrameUrlHelper {
    * @return bool
    *   TRUE if the URL is considered secure, otherwise FALSE.
    */
-  public function isSecure($url) {
+  public function isSecure(string $url) {
     if (!$url) {
       return FALSE;
     }

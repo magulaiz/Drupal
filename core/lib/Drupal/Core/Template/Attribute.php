@@ -115,7 +115,7 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
    * @return \Drupal\Core\Template\AttributeValueBase
    *   An AttributeValueBase representation of the attribute's value.
    */
-  protected function createAttributeValue($name, $value) {
+  protected function createAttributeValue(string $name, $value) {
     // If the value is already an AttributeValueBase object,
     // return a new instance of the same class, but with the new name.
     if ($value instanceof AttributeValueBase) {
@@ -208,7 +208,7 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
    *
    * @return $this
    */
-  public function setAttribute($attribute, $value) {
+  public function setAttribute(string $attribute, $value) {
     $this->offsetSet($attribute, $value);
 
     return $this;
@@ -223,7 +223,7 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
    * @return bool
    *   Returns TRUE if the attribute exists, or FALSE otherwise.
    */
-  public function hasAttribute($name) {
+  public function hasAttribute(string $name) {
     return array_key_exists($name, $this->storage);
   }
 
@@ -304,7 +304,7 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
    * @return bool
    *   Returns TRUE if the class exists, or FALSE otherwise.
    */
-  public function hasClass($class) {
+  public function hasClass(string $class) {
     if (isset($this->storage['class']) && $this->storage['class'] instanceof AttributeArray) {
       return in_array($class, $this->storage['class']->value());
     }

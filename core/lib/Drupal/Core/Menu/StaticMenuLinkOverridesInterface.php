@@ -30,7 +30,7 @@ interface StaticMenuLinkOverridesInterface {
    *     - enabled
    *   or an empty array if there is no override for the given ID.
    */
-  public function loadOverride($id);
+  public function loadOverride(string $id);
 
   /**
    * Deletes any overrides to the definition of a static (YAML-defined) link.
@@ -38,7 +38,7 @@ interface StaticMenuLinkOverridesInterface {
    * @param string $id
    *   A menu link plugin ID.
    */
-  public function deleteOverride($id);
+  public function deleteOverride(string $id);
 
   /**
    * Deletes multiple overrides to definitions of static (YAML-defined) links.
@@ -77,7 +77,7 @@ interface StaticMenuLinkOverridesInterface {
    * @return array
    *   A list of properties which got saved.
    */
-  public function saveOverride($id, array $definition);
+  public function saveOverride(string $id, array $definition);
 
   /**
    * The unique cache tag associated with this menu link override.

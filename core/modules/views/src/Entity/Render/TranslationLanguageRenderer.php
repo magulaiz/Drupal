@@ -48,7 +48,7 @@ class TranslationLanguageRenderer extends EntityTranslationRendererBase {
    * @return string
    *   A table name.
    */
-  protected function getLangcodeTable(QueryPluginBase $query, $relationship) {
+  protected function getLangcodeTable(QueryPluginBase $query, string $relationship) {
     /** @var \Drupal\Core\Entity\Sql\SqlContentEntityStorage $storage */
     $storage = \Drupal::entityTypeManager()->getStorage($this->entityType->id());
     $langcode_key = $this->entityType->getKey('langcode');

@@ -98,7 +98,7 @@ class MediaLibraryStateTest extends KernelTestBase {
    * @covers ::create
    * @dataProvider providerCreate
    */
-  public function testCreate($opener_id, array $allowed_media_type_ids, $selected_type_id, $remaining_slots, $exception_message = '') {
+  public function testCreate(string $opener_id, array $allowed_media_type_ids, string $selected_type_id, $remaining_slots, string $exception_message = '') {
     if ($exception_message) {
       $this->expectException(\InvalidArgumentException::class);
       $this->expectExceptionMessage($exception_message);

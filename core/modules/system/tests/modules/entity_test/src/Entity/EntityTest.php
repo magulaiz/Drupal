@@ -149,7 +149,7 @@ class EntityTest extends ContentEntityBase implements EntityOwnerInterface {
    *
    * @return $this
    */
-  public function setName($name) {
+  public function setName(string $name) {
     $this->set('name', $name);
     return $this;
   }

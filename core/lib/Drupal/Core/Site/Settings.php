@@ -105,7 +105,7 @@ final class Settings {
    * @return mixed
    *   The value of the setting, the provided default if not set.
    */
-  public static function get($name, $default = NULL) {
+  public static function get(string $name, $default = NULL) {
     // If the caller is asking for the value of a deprecated setting, trigger a
     // deprecation message about it.
     if (isset(self::$deprecatedSettings[$name])) {
@@ -139,7 +139,7 @@ final class Settings {
    *
    * @see default.settings.php
    */
-  public static function initialize($app_root, $site_path, &$class_loader) {
+  public static function initialize(string $app_root, string $site_path, &$class_loader) {
     // Export these settings.php variables to the global namespace.
     global $config;
     $settings = [];
@@ -205,7 +205,7 @@ final class Settings {
    *
    * @see https://www.drupal.org/project/drupal/issues/2926309
    */
-  public static function getApcuPrefix($identifier, $root, $site_path = '') {
+  public static function getApcuPrefix(string $identifier, string $root, string $site_path = '') {
     if (static::get('apcu_ensure_unique_prefix', TRUE)) {
       return 'drupal.' . $identifier . '.' . \Drupal::VERSION . '.' . static::get('deployment_identifier') . '.' . hash_hmac('sha256', $identifier, static::get('hash_salt') . '.' . $root . '/' . $site_path);
     }

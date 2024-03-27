@@ -128,7 +128,7 @@ class PathProcessorLanguage implements InboundPathProcessorInterface, OutboundPa
    * @param string $scope
    *   The scope of the processors: "inbound" or "outbound".
    */
-  protected function initProcessors($scope) {
+  protected function initProcessors(string $scope) {
     $interface = 'Drupal\Core\PathProcessor\\' . Unicode::ucfirst($scope) . 'PathProcessorInterface';
     $this->processors[$scope] = [];
     $weights = [];

@@ -49,7 +49,7 @@ trait FieldableEntityNormalizerTrait {
    * @return string
    *   The entity type ID.
    */
-  protected function determineEntityTypeId($class, $context) {
+  protected function determineEntityTypeId(string $class, $context) {
     // Get the entity type ID while letting context override the $class param.
     return !empty($context['entity_type']) ? $context['entity_type'] : $this->getEntityTypeRepository()->getEntityTypeFromClass($class);
   }
@@ -65,7 +65,7 @@ trait FieldableEntityNormalizerTrait {
    *
    * @throws \Symfony\Component\Serializer\Exception\UnexpectedValueException
    */
-  protected function getEntityTypeDefinition($entity_type_id) {
+  protected function getEntityTypeDefinition(string $entity_type_id) {
     /** @var \Drupal\Core\Entity\EntityTypeInterface $entity_type_definition */
     // Get the entity type definition.
     $entity_type_definition = $this->getEntityTypeManager()->getDefinition($entity_type_id, FALSE);
@@ -135,7 +135,7 @@ trait FieldableEntityNormalizerTrait {
    * @param array $context
    *   The context data.
    */
-  protected function denormalizeFieldData(array $data, FieldableEntityInterface $entity, $format, array $context) {
+  protected function denormalizeFieldData(array $data, FieldableEntityInterface $entity, string $format, array $context) {
     foreach ($data as $field_name => $field_data) {
       $field_item_list = $entity->get($field_name);
 

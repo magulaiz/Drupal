@@ -401,7 +401,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
    * @dataProvider providerTestSetLinkActiveClass
    * @covers ::setLinkActiveClass
    */
-  public function testSetLinkActiveClass($html_markup, $current_path, $is_front, $url_language, array $query, $expected_html_markup) {
+  public function testSetLinkActiveClass(string $html_markup, string $current_path, $is_front, string $url_language, array $query, string $expected_html_markup) {
     $this->assertSame($expected_html_markup, ActiveLinkResponseFilter::setLinkActiveClass($html_markup, $current_path, $is_front, $url_language, $query));
   }
 

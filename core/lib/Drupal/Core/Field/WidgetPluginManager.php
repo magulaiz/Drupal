@@ -137,7 +137,7 @@ class WidgetPluginManager extends DefaultPluginManager {
    * @return array
    *   The display properties with defaults added.
    */
-  public function prepareConfiguration($field_type, array $configuration) {
+  public function prepareConfiguration(string $field_type, array $configuration) {
     // Fill in defaults for missing properties.
     $configuration += [
       'settings' => [],
@@ -199,7 +199,7 @@ class WidgetPluginManager extends DefaultPluginManager {
    *   The widget type's default settings, as provided by the plugin
    *   definition, or an empty array if type or settings are undefined.
    */
-  public function getDefaultSettings($type) {
+  public function getDefaultSettings(string $type) {
     $plugin_definition = $this->getDefinition($type, FALSE);
     if (!empty($plugin_definition['class'])) {
       $plugin_class = DefaultFactory::getPluginClass($type, $plugin_definition);

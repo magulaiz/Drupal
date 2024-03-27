@@ -153,7 +153,7 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
    *
    * @internal
    */
-  public function getActiveDefinition($entity_type_id) {
+  public function getActiveDefinition(string $entity_type_id) {
     $definition = $this->entityLastInstalledSchemaRepository->getLastInstalledDefinition($entity_type_id);
     return $definition ?: $this->getDefinition($entity_type_id);
   }

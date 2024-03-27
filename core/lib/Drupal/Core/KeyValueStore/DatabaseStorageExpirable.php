@@ -119,7 +119,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
    * @param int $expire
    *   The time to live for items, in seconds.
    */
-  protected function doSetWithExpire($key, $value, $expire) {
+  protected function doSetWithExpire(string $key, $value, $expire) {
     $this->connection->merge($this->table)
       ->keys([
         'name' => $key,
@@ -165,7 +165,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
    * @return bool
    *   TRUE if the data was set, or FALSE if it already existed.
    */
-  protected function doSetWithExpireIfNotExists($key, $value, $expire) {
+  protected function doSetWithExpireIfNotExists(string $key, $value, $expire) {
     if (!$this->has($key)) {
       $this->setWithExpire($key, $value, $expire);
       return TRUE;

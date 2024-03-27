@@ -30,7 +30,7 @@ trait NodeMigrateTypeTestTrait {
    *   An associative array with the total number of complete and classic
    *   node migrate_map tables.
    */
-  protected function nodeMigrateMapTableCount($version) {
+  protected function nodeMigrateMapTableCount(string $version) {
     $results = [];
     $bases = ['node', 'node_complete'];
     $tables = \Drupal::database()->schema()
@@ -53,7 +53,7 @@ trait NodeMigrateTypeTestTrait {
    *
    * @throws \Exception
    */
-  protected function removeNodeMigrateMapTable($type, $version) {
+  protected function removeNodeMigrateMapTable(string $type, string $version) {
     $name = $this->getTableName($type, $version);
     \Drupal::database()->schema()->dropTable($name);
   }
@@ -69,7 +69,7 @@ trait NodeMigrateTypeTestTrait {
    * @return string
    *   The migrate_map table name.
    */
-  protected function getTableName($type, $version) {
+  protected function getTableName(string $type, string $version) {
     if (!$this->tableName) {
       $content_type = $this->randomMachineName();
       $this->tableName = 'migrate_map_d' . $version . '_node_complete__' . $content_type;
@@ -90,7 +90,7 @@ trait NodeMigrateTypeTestTrait {
    *
    * @throws \Exception
    */
-  protected function makeNodeMigrateMapTable($type, $version) {
+  protected function makeNodeMigrateMapTable(string $type, string $version) {
     $name = $this->getTableName($type, $version);
     $fields = [
       'source_ids_hash' => [

@@ -34,7 +34,7 @@ trait LoggerChannelTrait {
    * @todo Require the use of injected services:
    *   https://www.drupal.org/node/2733703
    */
-  protected function getLogger($channel) {
+  protected function getLogger(string $channel) {
     if (!$this->loggerFactory) {
       $this->loggerFactory = \Drupal::service('logger.factory');
     }

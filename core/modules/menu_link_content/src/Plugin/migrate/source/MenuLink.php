@@ -186,7 +186,7 @@ class MenuLink extends DrupalSqlBase {
    * @return bool
    *   True if the menu_link has an i18n translation.
    */
-  public function hasTranslation($mlid) {
+  public function hasTranslation(string $mlid) {
     if ($this->getDatabase()->schema()->tableExists('i18n_string')) {
       $results = $this->select('i18n_string', 'i18n')
         ->fields('i18n')

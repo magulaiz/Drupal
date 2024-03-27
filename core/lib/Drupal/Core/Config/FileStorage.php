@@ -43,7 +43,7 @@ class FileStorage implements StorageInterface {
    *   (optional) The collection to store configuration in. Defaults to the
    *   default collection.
    */
-  public function __construct($directory, $collection = StorageInterface::DEFAULT_COLLECTION) {
+  public function __construct(string $directory, string $collection = StorageInterface::DEFAULT_COLLECTION) {
     $this->directory = $directory;
     $this->collection = $collection;
     // Use a NULL File Cache backend by default. This will ensure only the
@@ -308,7 +308,7 @@ class FileStorage implements StorageInterface {
    * @return array
    *   A list of collection names contained within the provided directory.
    */
-  protected function getAllCollectionNamesHelper($directory) {
+  protected function getAllCollectionNamesHelper(string $directory) {
     $collections = [];
     $pattern = '/\.' . preg_quote($this->getFileExtension(), '/') . '$/';
     foreach (new \DirectoryIterator($directory) as $fileinfo) {

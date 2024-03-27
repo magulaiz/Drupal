@@ -23,7 +23,7 @@ trait FieldLayoutEntityDisplayTrait {
    * @return \Drupal\Core\Layout\LayoutDefinition
    *   The layout definition.
    */
-  protected function getLayoutDefinition($layout_id) {
+  protected function getLayoutDefinition(string $layout_id) {
     return \Drupal::service('plugin.manager.core.layout')->getDefinition($layout_id);
   }
 
@@ -95,7 +95,7 @@ trait FieldLayoutEntityDisplayTrait {
    * @return \Drupal\Core\Layout\LayoutInterface
    *   The layout plugin.
    */
-  protected function doGetLayout($layout_id, array $layout_settings) {
+  protected function doGetLayout(string $layout_id, array $layout_settings) {
     return \Drupal::service('plugin.manager.core.layout')->createInstance($layout_id, $layout_settings);
   }
 

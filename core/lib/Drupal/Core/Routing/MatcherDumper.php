@@ -65,7 +65,7 @@ class MatcherDumper implements MatcherDumperInterface {
    * @param string $table
    *   (optional) The table to store the route info in. Defaults to 'router'.
    */
-  public function __construct(Connection $connection, StateInterface $state, LoggerInterface|string|null $logger = NULL, $table = 'router') {
+  public function __construct(Connection $connection, StateInterface $state, LoggerInterface|string|null $logger = NULL, string $table = 'router') {
     $this->connection = $connection;
     $this->state = $state;
     if (is_string($logger) || is_null($logger)) {

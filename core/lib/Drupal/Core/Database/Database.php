@@ -73,7 +73,7 @@ abstract class Database {
    *
    * @see \Drupal\Core\Database\Log
    */
-  final public static function startLog($logging_key, $key = 'default') {
+  final public static function startLog(string $logging_key, string $key = 'default') {
     if (empty(self::$logs[$key])) {
       self::$logs[$key] = new Log($key);
 
@@ -109,7 +109,7 @@ abstract class Database {
    *
    * @see \Drupal\Core\Database\Log
    */
-  final public static function getLog($logging_key, $key = 'default') {
+  final public static function getLog(string $logging_key, string $key = 'default') {
     if (empty(self::$logs[$key])) {
       return [];
     }
@@ -129,7 +129,7 @@ abstract class Database {
    * @return \Drupal\Core\Database\Connection
    *   The corresponding connection object.
    */
-  final public static function getConnection($target = 'default', $key = NULL) {
+  final public static function getConnection(string $target = 'default', string $key = NULL) {
     if (!isset($key)) {
       // By default, we want the active connection, set in setActiveConnection.
       $key = self::$activeKey;
@@ -267,7 +267,7 @@ abstract class Database {
    *
    * @see \Drupal\Core\Database\Database::setActiveConnection
    */
-  final public static function addConnectionInfo($key, $target, array $info, $class_loader = NULL, $app_root = NULL) {
+  final public static function addConnectionInfo(string $key, string $target, array $info, $class_loader = NULL, string $app_root = NULL) {
     if (empty(self::$databaseInfo[$key][$target])) {
       $info = self::parseConnectionInfo($info);
       self::$databaseInfo[$key][$target] = $info;
@@ -304,7 +304,7 @@ abstract class Database {
    *
    * @return array|null
    */
-  final public static function getConnectionInfo($key = 'default') {
+  final public static function getConnectionInfo(string $key = 'default') {
     if (!empty(self::$databaseInfo[$key])) {
       return self::$databaseInfo[$key];
     }
@@ -331,7 +331,7 @@ abstract class Database {
    * @param string $app_root
    *   The app root.
    */
-  final public static function setMultipleConnectionInfo(array $databases, $class_loader = NULL, $app_root = NULL) {
+  final public static function setMultipleConnectionInfo(array $databases, $class_loader = NULL, string $app_root = NULL) {
     foreach ($databases as $key => $targets) {
       foreach ($targets as $target => $info) {
         self::addConnectionInfo($key, $target, $info, $class_loader, $app_root);
@@ -350,7 +350,7 @@ abstract class Database {
    * @return bool
    *   TRUE in case of success, FALSE otherwise.
    */
-  final public static function renameConnection($old_key, $new_key) {
+  final public static function renameConnection(string $old_key, string $new_key) {
     if (!empty(self::$databaseInfo[$old_key]) && empty(self::$databaseInfo[$new_key])) {
       // Migrate the database connection information.
       self::$databaseInfo[$new_key] = self::$databaseInfo[$old_key];
@@ -378,7 +378,7 @@ abstract class Database {
    * @return bool
    *   TRUE in case of success, FALSE otherwise.
    */
-  final public static function removeConnection($key) {
+  final public static function removeConnection(string $key) {
     if (isset(self::$databaseInfo[$key])) {
       self::closeConnection(NULL, $key);
       unset(self::$databaseInfo[$key]);
@@ -401,7 +401,7 @@ abstract class Database {
    * @throws \Drupal\Core\Database\ConnectionNotDefinedException
    * @throws \Drupal\Core\Database\DriverNotSpecifiedException
    */
-  final protected static function openConnection($key, $target) {
+  final protected static function openConnection(string $key, string $target) {
     // If the requested database does not exist then it is an unrecoverable
     // error.
     if (!isset(self::$databaseInfo[$key])) {
@@ -438,7 +438,7 @@ abstract class Database {
    * @param string $key
    *   The database connection key. Defaults to NULL which means the active key.
    */
-  public static function closeConnection($target = NULL, $key = NULL) {
+  public static function closeConnection(string $target = NULL, string $key = NULL) {
     // Gets the active connection by default.
     if (!isset($key)) {
       $key = self::$activeKey;
@@ -474,7 +474,7 @@ abstract class Database {
    * @param string $target
    *   The target of the specified key to ignore.
    */
-  public static function ignoreTarget($key, $target) {
+  public static function ignoreTarget(string $key, string $target) {
     self::$ignoreTargets[$key][$target] = TRUE;
   }
 
@@ -499,7 +499,7 @@ abstract class Database {
    * @throws \RuntimeException
    *   Exception thrown when a module provided database driver does not exist.
    */
-  public static function convertDbUrlToConnectionInfo($url, $root, ?bool $include_test_drivers = NULL) {
+  public static function convertDbUrlToConnectionInfo(string $url, string $root, ?bool $include_test_drivers = NULL) {
     // Check that the URL is well formed, starting with 'scheme://', where
     // 'scheme' is a database driver name.
     if (preg_match('/^(.*):\/\//', $url, $matches) !== 1) {
@@ -591,7 +591,7 @@ abstract class Database {
    * @throws \RuntimeException
    *   When the database connection is not defined.
    */
-  public static function getConnectionInfoAsUrl($key = 'default') {
+  public static function getConnectionInfoAsUrl(string $key = 'default') {
     $db_info = static::getConnectionInfo($key);
     if (empty($db_info) || empty($db_info['default'])) {
       throw new \RuntimeException("Database connection $key not defined or missing the 'default' settings");

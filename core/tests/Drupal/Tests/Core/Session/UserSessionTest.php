@@ -148,7 +148,7 @@ class UserSessionTest extends UnitTestCase {
    *
    * @see \Drupal\Core\Session\UserSession::hasPermission()
    */
-  public function testHasPermission($permission, array $sessions_with_access, array $sessions_without_access) {
+  public function testHasPermission(string $permission, array $sessions_with_access, array $sessions_without_access) {
     foreach ($sessions_with_access as $name) {
       $this->assertTrue($this->users[$name]->hasPermission($permission));
     }

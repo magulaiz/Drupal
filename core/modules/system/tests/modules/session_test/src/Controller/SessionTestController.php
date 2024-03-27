@@ -82,7 +82,7 @@ class SessionTestController extends ControllerBase {
    * @return string
    *   A notification message.
    */
-  public function set($test_value) {
+  public function set(string $test_value) {
     $_SESSION['session_test_value'] = $test_value;
 
     return ['#markup' => $this->t('The current value of the stored session variable has been set to %val', ['%val' => $test_value])];
@@ -97,7 +97,7 @@ class SessionTestController extends ControllerBase {
    * @return string
    *   A notification message.
    */
-  public function noSet($test_value) {
+  public function noSet(string $test_value) {
     \Drupal::service('session_handler.write_safe')->setSessionWritable(FALSE);
     $this->set($test_value);
     return ['#markup' => $this->t('session saving was disabled, and then %val was set', ['%val' => $test_value])];
@@ -189,7 +189,7 @@ class SessionTestController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *   A response object containing the session values and the user ID.
    */
-  public function setSession(Request $request, $test_value) {
+  public function setSession(Request $request, string $test_value) {
     $session = $request->getSession();
     $session->set('test_value', $test_value);
     return new JsonResponse(['session' => $session->all(), 'user' => $this->currentUser()->id()]);

@@ -28,7 +28,7 @@ trait ViewResultAssertionTrait {
    *   (optional) A custom message to display with the assertion. Defaults to
    *   'Identical result set.'
    */
-  protected function assertIdenticalResultset($view, $expected_result, $column_map = [], $message = NULL): void {
+  protected function assertIdenticalResultset($view, $expected_result, $column_map = [], string $message = NULL): void {
     $this->assertIdenticalResultsetHelper($view, $expected_result, $column_map, 'assertIdentical', $message);
   }
 
@@ -48,7 +48,7 @@ trait ViewResultAssertionTrait {
    *   (optional) A custom message to display with the assertion. Defaults to
    *   'Non-identical result set.'
    */
-  protected function assertNotIdenticalResultset($view, $expected_result, $column_map = [], $message = NULL): void {
+  protected function assertNotIdenticalResultset($view, $expected_result, $column_map = [], string $message = NULL): void {
     $this->assertIdenticalResultsetHelper($view, $expected_result, $column_map, 'assertNotIdentical', $message);
   }
 
@@ -71,7 +71,7 @@ trait ViewResultAssertionTrait {
    * @param string $message
    *   (optional) The message to display with the assertion.
    */
-  protected function assertIdenticalResultsetHelper($view, $expected_result, $column_map, $assert_method, $message = NULL): void {
+  protected function assertIdenticalResultsetHelper($view, $expected_result, $column_map, string $assert_method, string $message = NULL): void {
     // Convert $view->result to an array of arrays.
     $result = [];
     foreach ($view->result as $key => $value) {

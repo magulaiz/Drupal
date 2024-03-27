@@ -67,6 +67,6 @@ abstract class UpdateSemverTestBase extends UpdateTestBase {
    * @param string $version
    *   The version number.
    */
-  abstract protected function setProjectInstalledVersion($version);
+  abstract protected function setProjectInstalledVersion(string $version);
 
 }

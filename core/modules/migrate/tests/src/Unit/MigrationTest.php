@@ -300,7 +300,7 @@ class TestMigration extends Migration {
    * @param string $plugin_id
    *   The plugin_id of the plugin instance.
    */
-  public function setPluginId($plugin_id) {
+  public function setPluginId(string $plugin_id) {
     $this->pluginId = $plugin_id;
   }
 

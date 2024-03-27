@@ -36,7 +36,7 @@ interface CheckProviderInterface {
    * @param bool $needs_incoming_request
    *   (optional) True if access-check method only acts on an incoming request.
    */
-  public function addCheckService($service_id, $service_method, array $applies_checks = [], $needs_incoming_request = FALSE);
+  public function addCheckService(string $service_id, string $service_method, array $applies_checks = [], $needs_incoming_request = FALSE);
 
   /**
    * Lazy-loads access check services.
@@ -52,7 +52,7 @@ interface CheckProviderInterface {
    * @throws \Drupal\Core\Access\AccessException
    *   Thrown when the service doesn't implement the required interface.
    */
-  public function loadCheck($service_id);
+  public function loadCheck(string $service_id);
 
   /**
    * A list of checks that needs the request.

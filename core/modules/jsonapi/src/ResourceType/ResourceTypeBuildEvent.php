@@ -46,7 +46,7 @@ class ResourceTypeBuildEvent extends Event {
    * @param \Drupal\jsonapi\ResourceType\ResourceTypeField[] $fields
    *   The fields of the resource type to be built.
    */
-  protected function __construct($resource_type_name, array $fields) {
+  protected function __construct(string $resource_type_name, array $fields) {
     assert(Inspector::assertAllObjects($fields, ResourceTypeField::class));
     $this->resourceTypeName = $resource_type_name;
     $this->fields = $fields;
@@ -66,7 +66,7 @@ class ResourceTypeBuildEvent extends Event {
    * @return \Drupal\jsonapi\ResourceType\ResourceTypeBuildEvent
    *   A new event.
    */
-  public static function createFromEntityTypeAndBundle(EntityTypeInterface $entity_type, $bundle, array $fields) {
+  public static function createFromEntityTypeAndBundle(EntityTypeInterface $entity_type, string $bundle, array $fields) {
     return new static($entity_type->id() . ResourceType::TYPE_NAME_URI_PATH_SEPARATOR . $bundle, $fields);
   }
 
@@ -127,7 +127,7 @@ class ResourceTypeBuildEvent extends Event {
    * @param string $public_field_name
    *   The public field name to set.
    */
-  public function setPublicFieldName(ResourceTypeField $field, $public_field_name) {
+  public function setPublicFieldName(ResourceTypeField $field, string $public_field_name) {
     foreach ($this->fields as $index => $value) {
       if ($field === $value) {
         $this->fields[$index] = $value->withPublicName($public_field_name);

@@ -753,7 +753,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
    *   Array of default form values for the advanced search form, including
    *   a modified 'keys' element for the bare search keywords.
    */
-  protected function parseAdvancedDefaults($f, $keys) {
+  protected function parseAdvancedDefaults($f, string $keys) {
     $defaults = [];
 
     // Split out the advanced search parameters.

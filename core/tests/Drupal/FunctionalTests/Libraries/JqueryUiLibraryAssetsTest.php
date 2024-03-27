@@ -204,7 +204,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
    * @return string
    *   The trimmed path.
    */
-  protected function trimFilePath($path) {
+  protected function trimFilePath(string $path) {
     $base_path_position = strpos($path, base_path());
     if ($base_path_position !== FALSE) {
       $path = substr_replace($path, '', $base_path_position, strlen(base_path()));
@@ -299,7 +299,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
    *
    * @dataProvider providerTestAssetLoading
    */
-  public function testAssetLoadingUnchanged($library, array $expected_css, array $expected_js) {
+  public function testAssetLoadingUnchanged(string $library, array $expected_css, array $expected_js) {
     $this->drupalGet("jqueryui_library_assets_test/$library");
     $this->assertSession()->statusCodeEquals(200);
 

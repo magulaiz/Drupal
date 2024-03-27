@@ -22,7 +22,7 @@ class ViewTestData {
    * @param array $modules
    *   The module directories to look in for test views.
    */
-  public static function createTestViews($class, array $modules) {
+  public static function createTestViews(string $class, array $modules) {
     $views = [];
     while ($class) {
       if (property_exists($class, 'testViews')) {

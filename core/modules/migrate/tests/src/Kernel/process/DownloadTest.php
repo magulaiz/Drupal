@@ -98,7 +98,7 @@ class DownloadTest extends FileTestBase {
    * @return string
    *   The local URI of the downloaded file.
    */
-  protected function doTransform($destination_uri, $configuration = []) {
+  protected function doTransform(string $destination_uri, $configuration = []) {
     // Prepare a mock HTTP client.
     $this->container->set('http_client', $this->createMock(Client::class));
 
