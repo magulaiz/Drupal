@@ -282,10 +282,7 @@ system.file:
       label: 'Default download method'
       constraints:
         Choice:
-          choices:
-            - 'public'
-            - 'private'
-            - 'temporary'
+          callback: \Drupal\File\Plugin\Field\FieldType::getValidSchemes
     path:
       type: mapping
       label: 'Path settings'
