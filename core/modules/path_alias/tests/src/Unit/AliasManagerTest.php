@@ -211,8 +211,7 @@ class AliasManagerTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getAliasByPath method to ensure an exception is thrown if the
-   * path does not start with a slash.
+   * Tests the getAliasByPath method exception.
    *
    * @covers ::getAliasByPath
    */
