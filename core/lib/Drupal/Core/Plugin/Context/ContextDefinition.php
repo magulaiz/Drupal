@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Plugin\Context;
 
-use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\TypedData\TypedDataTrait;
 use Symfony\Component\Validator\ConstraintViolationList;
 
@@ -10,10 +9,6 @@ use Symfony\Component\Validator\ConstraintViolationList;
  * Defines a class for context definitions.
  */
 class ContextDefinition implements ContextDefinitionInterface {
-
-  use DependencySerializationTrait {
-    __sleep as traitSleep;
-  }
 
   use TypedDataTrait;
 
