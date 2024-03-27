@@ -125,7 +125,7 @@ class UrlGenerator implements UrlGeneratorInterface {
   /**
    * {@inheritdoc}
    */
-  public function getPathFromRoute($name, $parameters = []) {
+  public function getPathFromRoute(string $name, $parameters = []) {
     $route = $this->getRoute($name);
     $this->processRoute($name, $route, $parameters);
     $path = $this->getInternalPathFromRoute($name, $route, $parameters);
@@ -171,7 +171,7 @@ class UrlGenerator implements UrlGeneratorInterface {
    *   When a parameter value for a placeholder is not correct because it does
    *   not match the requirement.
    */
-  protected function doGenerate(array $variables, array $defaults, array $tokens, array $parameters, array &$query_params, $name) {
+  protected function doGenerate(array $variables, array $defaults, array $tokens, array $parameters, array &$query_params, string $name) {
     $variables = array_flip($variables);
     $mergedParams = array_replace($defaults, $this->context->getParameters(), $parameters);
 
@@ -241,7 +241,7 @@ class UrlGenerator implements UrlGeneratorInterface {
    *   The URL path corresponding to the route, without the base path, not URL
    *   encoded.
    */
-  protected function getInternalPathFromRoute($name, SymfonyRoute $route, $parameters = [], &$query_params = []) {
+  protected function getInternalPathFromRoute(string $name, SymfonyRoute $route, $parameters = [], &$query_params = []) {
     // The Route has a cache of its own and is not recompiled as long as it does
     // not get modified.
     $compiledRoute = $route->compile();
@@ -260,7 +260,7 @@ class UrlGenerator implements UrlGeneratorInterface {
   /**
    * {@inheritdoc}
    */
-  public function generateFromRoute($name, $parameters = [], $options = [], $collect_bubbleable_metadata = FALSE) {
+  public function generateFromRoute(string $name, $parameters = [], $options = [], $collect_bubbleable_metadata = FALSE) {
     $options += ['prefix' => ''];
     if (!isset($options['query']) || !is_array($options['query'])) {
       $options['query'] = [];
@@ -411,8 +411,8 @@ class UrlGenerator implements UrlGeneratorInterface {
   /**
    * Find the route using the provided route name.
    *
-   * @param string|\Symfony\Component\Routing\Route $name
-   *   The route name or a route object.
+   * @param string $name
+   *   The route name
    *
    * @return \Symfony\Component\Routing\Route
    *   The found route.
@@ -424,13 +424,8 @@ class UrlGenerator implements UrlGeneratorInterface {
    *
    * @see \Drupal\Core\Routing\RouteProviderInterface
    */
-  protected function getRoute($name) {
-    if ($name instanceof SymfonyRoute) {
-      $route = $name;
-    }
-    else {
-      $route = clone $this->provider->getRouteByName($name);
-    }
+  protected function getRoute(string $name) {
+    $route = clone $this->provider->getRouteByName($name);
     return $route;
   }
 
