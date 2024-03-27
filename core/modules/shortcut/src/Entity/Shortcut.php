@@ -55,7 +55,7 @@ use Drupal\shortcut\ShortcutInterface;
   ],
   list_cache_tags: [
     'config:shortcut_set_list',
-  ]
+  ],
 )]
 class Shortcut extends ContentEntityBase implements ShortcutInterface {
 

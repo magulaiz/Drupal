@@ -48,7 +48,8 @@ use Drupal\responsive_image\ResponsiveImageStyleInterface;
     'image_style_mappings',
     'breakpoint_group',
     'fallback_image_style',
-  ])]
+  ],
+)]
 class ResponsiveImageStyle extends ConfigEntityBase implements ResponsiveImageStyleInterface {
 
   /**

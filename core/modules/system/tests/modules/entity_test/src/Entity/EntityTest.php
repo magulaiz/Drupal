@@ -48,7 +48,7 @@ use Drupal\user\UserInterface;
   base_table: 'entity_test', field_ui_base_route: 'entity.entity_test.admin_form',
   list_cache_contexts: [
     'entity_test_view_grants',
-  ]
+  ],
 )]
 class EntityTest extends ContentEntityBase implements EntityOwnerInterface {
 

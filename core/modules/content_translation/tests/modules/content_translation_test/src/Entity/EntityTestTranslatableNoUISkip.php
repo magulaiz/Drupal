@@ -33,7 +33,8 @@ use Drupal\entity_test\Entity\EntityTest;
   admin_permission: 'administer entity_test content',
   base_table: 'entity_test_mul',
   data_table: 'entity_test_mul_property_data',
-  translatable: TRUE)]
+  translatable: TRUE,
+)]
 class EntityTestTranslatableNoUISkip extends EntityTest {
 
 }

@@ -37,7 +37,8 @@ use Drupal\Core\Action\ActionPluginCollection;
     'type',
     'plugin',
     'configuration',
-  ])]
+  ],
+)]
 class Action extends ConfigEntityBase implements ActionConfigEntityInterface, EntityWithPluginCollectionInterface {
 
   /**

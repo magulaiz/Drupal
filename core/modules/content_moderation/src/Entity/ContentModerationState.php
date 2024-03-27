@@ -47,7 +47,8 @@ use Drupal\user\EntityOwnerTrait;
   label_count: [
     'singular' => '@count content moderation state',
     'plural' => '@count content moderation states',
-  ])]
+  ],
+)]
 class ContentModerationState extends ContentEntityBase implements ContentModerationStateInterface {
 
   use EntityOwnerTrait;

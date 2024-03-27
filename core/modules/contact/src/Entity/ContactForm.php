@@ -54,7 +54,8 @@ use Drupal\Core\Url;
     'weight',
     'message',
     'redirect',
-  ])]
+  ],
+)]
 class ContactForm extends ConfigEntityBundleBase implements ContactFormInterface {
 
   /**

@@ -27,7 +27,8 @@ use Drupal\Core\Field\BaseFieldDefinition;
     'serialized_field_property_names' => [
       'serialized_long' => ['value'],
     ],
-  ])]
+  ],
+)]
 class EntitySerializedField extends EntityTest {
 
   /**

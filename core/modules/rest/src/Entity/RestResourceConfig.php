@@ -32,7 +32,8 @@ use Drupal\rest\RestResourceConfigInterface;
     'plugin_id',
     'granularity',
     'configuration',
-  ])]
+  ],
+)]
 class RestResourceConfig extends ConfigEntityBase implements RestResourceConfigInterface {
 
   /**

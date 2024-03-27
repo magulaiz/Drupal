@@ -61,7 +61,8 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
     'plugin',
     'settings',
     'visibility',
-  ])]
+  ],
+)]
 class Block extends ConfigEntityBase implements BlockInterface, EntityWithPluginCollectionInterface {
 
   /**

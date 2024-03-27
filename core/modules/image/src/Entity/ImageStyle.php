@@ -66,7 +66,8 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
     'name',
     'label',
     'effects',
-  ])]
+  ],
+)]
 class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, EntityWithPluginCollectionInterface {
 
   /**

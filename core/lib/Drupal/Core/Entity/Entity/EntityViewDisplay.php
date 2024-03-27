@@ -31,16 +31,14 @@ use Drupal\Core\TypedData\TranslatableInterface as TranslatableDataInterface;
   ],
   constraints: [
     'ImmutableProperties' => [
-      '
-    id',
+      'id',
       'targetEntityType',
       'bundle',
       'mode',
     ],
   ],
   config_export: [
-    '
-  id',
+    'id',
     'targetEntityType',
     'bundle',
     'mode',

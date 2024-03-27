@@ -47,7 +47,8 @@ use Drupal\shortcut\ShortcutSetInterface;
   config_export: [
     'id',
     'label',
-  ])]
+  ],
+)]
 class ShortcutSet extends ConfigEntityBundleBase implements ShortcutSetInterface {
 
   /**

@@ -35,7 +35,8 @@ use Drupal\system\MenuInterface;
     'label',
     'description',
     'locked',
-  ])]
+  ],
+)]
 class Menu extends ConfigEntityBase implements MenuInterface {
 
   /**

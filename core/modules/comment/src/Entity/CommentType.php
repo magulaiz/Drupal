@@ -50,7 +50,8 @@ use Drupal\comment\CommentTypeInterface;
     'label',
     'target_entity_type_id',
     'description',
-  ])]
+  ],
+)]
 class CommentType extends ConfigEntityBundleBase implements CommentTypeInterface {
 
   /**

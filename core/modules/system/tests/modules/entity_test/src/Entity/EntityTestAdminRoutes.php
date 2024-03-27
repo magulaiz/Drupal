@@ -38,7 +38,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
   admin_permission: 'administer entity_test content',
   base_table: 'entity_test_admin_routes',
   data_table: 'entity_test_admin_routes_property_data',
-  translatable: TRUE
+  translatable: TRUE,
 )]
 class EntityTestAdminRoutes extends EntityTest {
 

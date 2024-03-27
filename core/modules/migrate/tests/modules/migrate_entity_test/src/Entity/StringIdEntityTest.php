@@ -19,7 +19,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
   entity_keys: [
     'id' => 'id',
   ],
-  base_table: 'migrate_entity_test_string_id'
+  base_table: 'migrate_entity_test_string_id',
 )]
 class StringIdEntityTest extends ContentEntityBase {
 

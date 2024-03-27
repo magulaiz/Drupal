@@ -48,7 +48,8 @@ use Drupal\Core\Field\FieldException;
     'default_value_callback',
     'settings',
     'field_type',
-  ])]
+  ],
+)]
 class BaseFieldOverride extends FieldConfigBase {
 
   /**

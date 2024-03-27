@@ -56,7 +56,8 @@ use Drupal\user\Entity\Role;
     'weight',
     'roles',
     'filters',
-  ])]
+  ],
+)]
 class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, EntityWithPluginCollectionInterface {
 
   /**

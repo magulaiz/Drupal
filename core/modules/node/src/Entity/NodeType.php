@@ -55,7 +55,7 @@ use Drupal\node\NodeTypeInterface;
     'new_revision',
     'preview_mode',
     'display_submitted',
-  ]
+  ],
 )]
 class NodeType extends ConfigEntityBundleBase implements NodeTypeInterface {
 

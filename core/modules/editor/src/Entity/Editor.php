@@ -43,7 +43,8 @@ use Drupal\editor\EditorInterface;
     'editor',
     'settings',
     'image_upload',
-  ])]
+  ],
+)]
 class Editor extends ConfigEntityBase implements EditorInterface {
 
   /**

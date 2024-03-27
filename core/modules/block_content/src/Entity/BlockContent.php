@@ -85,7 +85,8 @@ use Drupal\block_content\BlockContentInterface;
     'revision_user' => 'revision_user',
     'revision_created' => 'revision_created',
     'revision_log_message' => 'revision_log',
-  ])]
+  ],
+)]
 class BlockContent extends EditorialContentEntityBase implements BlockContentInterface {
 
   use RefinableDependentAccessTrait;

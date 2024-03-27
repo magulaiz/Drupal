@@ -67,7 +67,8 @@ use Drupal\user\EntityOwnerTrait;
   field_ui_base_route: 'entity.comment_type.edit_form',
   constraints: [
     'CommentName' => [],
-  ])]
+  ],
+)]
 class Comment extends ContentEntityBase implements CommentInterface {
 
   use EntityChangedTrait;

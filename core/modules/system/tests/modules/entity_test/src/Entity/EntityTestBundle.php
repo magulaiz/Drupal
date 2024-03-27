@@ -38,7 +38,8 @@ use Drupal\Core\Entity\EntityDescriptionInterface;
     'id',
     'label',
     'description',
-  ])]
+  ],
+)]
 class EntityTestBundle extends ConfigEntityBundleBase implements EntityDescriptionInterface {
 
   /**

@@ -36,7 +36,7 @@ use Drupal\entity_test\FieldStorageDefinition;
   ],
   admin_permission: 'administer entity_test content',
   base_table: 'entity_test_base_field_display',
-  field_ui_base_route: 'entity.entity_test_base_field_display.admin_form'
+  field_ui_base_route: 'entity.entity_test_base_field_display.admin_form',
 )]
 class EntityTestBaseFieldDisplay extends EntityTest {
 

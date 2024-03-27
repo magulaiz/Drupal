@@ -48,7 +48,8 @@ use Drupal\user\EntityOwnerTrait;
   label_count: [
     'singular' => '@count file',
     'plural' => '@count files',
-  ])]
+  ],
+)]
 class File extends ContentEntityBase implements FileInterface {
 
   use EntityChangedTrait;

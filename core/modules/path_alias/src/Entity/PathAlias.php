@@ -42,7 +42,8 @@ use Drupal\path_alias\PathAliasInterface;
   list_cache_tags: ['route_match'],
   constraints: [
     'UniquePathAlias' => [],
-  ])]
+  ],
+)]
 class PathAlias extends ContentEntityBase implements PathAliasInterface {
 
   use EntityPublishedTrait;

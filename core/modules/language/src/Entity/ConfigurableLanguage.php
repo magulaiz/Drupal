@@ -54,7 +54,8 @@ use Drupal\language\ConfigurableLanguageInterface;
     'direction',
     'weight',
     'locked',
-  ])]
+  ],
+)]
 class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLanguageInterface {
 
   /**

@@ -30,7 +30,8 @@ use Drupal\Core\Entity\EntityTypeInterface;
   constraints: [
     'EntityTestComposite' => [],
     'EntityTestEntityLevel' => [],
-  ])]
+  ],
+)]
 class EntityTestCompositeConstraint extends EntityTest {
 
   /**

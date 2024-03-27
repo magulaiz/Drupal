@@ -57,7 +57,8 @@ use Drupal\search\SearchPageInterface;
     'weight',
     'plugin',
     'configuration',
-  ])]
+  ],
+)]
 class SearchPage extends ConfigEntityBase implements SearchPageInterface, EntityWithPluginCollectionInterface {
 
   /**

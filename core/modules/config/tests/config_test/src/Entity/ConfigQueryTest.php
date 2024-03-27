@@ -33,7 +33,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
     'label',
     'array',
     'number',
-  ]
+  ],
 )]
 class ConfigQueryTest extends ConfigTest {
 

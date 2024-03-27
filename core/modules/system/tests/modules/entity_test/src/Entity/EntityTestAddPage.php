@@ -33,7 +33,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
     'add-form' => '/entity_test_add_page/add/{user}/form',
   ],
   admin_permission: 'administer entity_test content',
-  base_table: 'entity_test_add_page'
+  base_table: 'entity_test_add_page',
 )]
 class EntityTestAddPage extends EntityTest {
 }
