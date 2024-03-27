@@ -456,7 +456,6 @@
 
     return `<div class="layout-builder-block__content-preview-placeholder-label js-layout-builder-content-preview-placeholder-label">${contentPreviewPlaceholderText}</div>`;
   };
-
   // Remove all contextual links outside the layout.
   $(window).on('drupalContextualLinkAdded', (event, data) => {
     const element = data.$el;
