@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Update;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
@@ -30,7 +32,15 @@ class MailDsnSettingsUpdateTest extends UpdatePathTestBase {
 
     // Confirm that config was created.
     $config = $this->config('system.mail');
-    $this->assertEquals('sendmail://default', $config->get('mailer_dsn'));
+    $expected = [
+      'scheme' => 'sendmail',
+      'host' => 'default',
+      'user' => NULL,
+      'password' => NULL,
+      'port' => NULL,
+      'options' => [],
+    ];
+    $this->assertEquals($expected, $config->get('mailer_dsn'));
   }
 
 }

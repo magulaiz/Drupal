@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Cache\Context;
 
 use Drupal\Core\Cache\Context\SessionCacheContext;
@@ -89,15 +91,6 @@ class SessionCacheContextTest extends UnitTestCase {
 
     $this->assertStringNotContainsString($session1_id, $context1, 'Session ID not contained in cache context');
     $this->assertStringNotContainsString($session2_id, $context2, 'Session ID not contained in cache context');
-  }
-
-  /**
-   * @covers ::getContext
-   */
-  public function testContextWithoutSessionInRequest() {
-    $cache_context = new SessionCacheContext($this->requestStack);
-
-    $this->assertSame('none', $cache_context->getContext());
   }
 
 }

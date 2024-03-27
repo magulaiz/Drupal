@@ -11,6 +11,7 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
  * Tests the media access control handler.
  *
  * @group media
+ * @group #slow
  *
  * @coversDefaultClass \Drupal\media\MediaAccessControlHandler
  */
@@ -33,15 +34,18 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
    *   Expected cache contexts.
    * @param string[] $expected_cache_tags
    *   Expected cache tags.
+   * @param bool $is_latest_revision
+   *   If FALSE, the media is historic revision.
    *
    * @covers ::checkAccess
    * @dataProvider providerAccess
    */
-  public function testAccess(array $permissions, array $entity_values, $operation, AccessResultInterface $expected_result, array $expected_cache_contexts, array $expected_cache_tags) {
+  public function testAccess(array $permissions, array $entity_values, string $operation, AccessResultInterface $expected_result, array $expected_cache_contexts, array $expected_cache_tags, bool $is_latest_revision) {
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $entityStorage $entity_storage */
+    $entity_storage = $this->container->get('entity_type.manager')->getStorage('media');
+
     // Set a fixed ID so the type specific permissions match.
-    $media_type = $this->createMediaType('test', [
-      'id' => 'test',
-    ]);
+    $media_type = $this->createMediaType('test', ['id' => 'test']);
 
     $user = $this->createUser($permissions);
 
@@ -53,6 +57,20 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
 
     $entity = Media::create($entity_values);
     $entity->save();
+
+    $load_revision_id = NULL;
+    if (!$is_latest_revision) {
+      $load_revision_id = $entity->getRevisionId();
+      // Set up for a new revision to be saved.
+      $entity = $entity_storage->createRevision($entity);
+    }
+    $entity->save();
+
+    // Reload a previous revision.
+    if ($load_revision_id !== NULL) {
+      $entity = $entity_storage->loadRevision($load_revision_id);
+    }
+
     /** @var \Drupal\Core\Entity\EntityAccessControlHandlerInterface $access_handler */
     $access_handler = $this->container->get('entity_type.manager')->getAccessControlHandler('media');
     $this->assertAccess($expected_result, $expected_cache_contexts, $expected_cache_tags, $access_handler->access($entity, $operation, $user, TRUE));
@@ -115,7 +133,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
    * @return array
    *   The data sets to test.
    */
-  public function providerAccess() {
+  public static function providerAccess() {
     $test_data = [];
 
     // Check published / unpublished media access for a user owning the media
@@ -127,6 +145,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       ['media:1'],
+      TRUE,
     ];
     $test_data['owner, no permissions / published / update'] = [
       [],
@@ -135,6 +154,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       [],
+      TRUE,
     ];
     $test_data['owner, no permissions / published / delete'] = [
       [],
@@ -143,6 +163,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       [],
+      TRUE,
     ];
     $test_data['owner, no permissions / unpublished / view'] = [
       [],
@@ -151,6 +172,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       ['media:1'],
+      TRUE,
     ];
     $test_data['owner, no permissions / unpublished / update'] = [
       [],
@@ -159,6 +181,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       [],
+      TRUE,
     ];
     $test_data['owner, no permissions / unpublished / delete'] = [
       [],
@@ -167,6 +190,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       [],
+      TRUE,
     ];
 
     // Check published / unpublished media access for a user not owning the
@@ -178,6 +202,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       ['media:1'],
+      TRUE,
     ];
     $test_data['not owner, no permissions / published / update'] = [
       [],
@@ -186,6 +211,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       [],
+      TRUE,
     ];
     $test_data['not owner, no permissions / published / delete'] = [
       [],
@@ -194,6 +220,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       [],
+      TRUE,
     ];
     $test_data['not owner, no permissions / unpublished / view'] = [
       [],
@@ -202,6 +229,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       ['media:1'],
+      TRUE,
     ];
     $test_data['not owner, no permissions / unpublished / update'] = [
       [],
@@ -210,6 +238,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       [],
+      TRUE,
     ];
     $test_data['not owner, no permissions / unpublished / delete'] = [
       [],
@@ -218,6 +247,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       [],
+      TRUE,
     ];
 
     // Check published / unpublished media access for a user owning the media
@@ -229,6 +259,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::allowed(),
       ['user.permissions'],
       ['media:1'],
+      TRUE,
     ];
     $test_data['owner, can view media / published / update'] = [
       ['view media'],
@@ -237,6 +268,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       [],
+      TRUE,
     ];
     $test_data['owner, can view media / published / delete'] = [
       ['view media'],
@@ -245,6 +277,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       [],
+      TRUE,
     ];
     $test_data['owner, can view media / unpublished / view'] = [
       ['view media'],
@@ -253,6 +286,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       ['media:1'],
+      TRUE,
     ];
     $test_data['owner, can view media / unpublished / update'] = [
       ['view media'],
@@ -261,6 +295,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       [],
+      TRUE,
     ];
     $test_data['owner, can view media / unpublished / delete'] = [
       ['view media'],
@@ -269,6 +304,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       [],
+      TRUE,
     ];
 
     // Check published / unpublished media access for a user not owning the
@@ -280,6 +316,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::allowed(),
       ['user.permissions'],
       ['media:1'],
+      TRUE,
     ];
     $test_data['not owner, can view media / published / update'] = [
       ['view media'],
@@ -288,6 +325,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       [],
+      TRUE,
     ];
     $test_data['not owner, can view media / published / delete'] = [
       ['view media'],
@@ -296,6 +334,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       [],
+      TRUE,
     ];
     $test_data['not owner, can view media / unpublished / view'] = [
       ['view media'],
@@ -304,6 +343,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       ['media:1'],
+      TRUE,
     ];
     $test_data['not owner, can view media / unpublished / update'] = [
       ['view media'],
@@ -312,6 +352,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       [],
+      TRUE,
     ];
     $test_data['not owner, can view media / unpublished / delete'] = [
       ['view media'],
@@ -320,6 +361,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       [],
+      TRUE,
     ];
 
     // Check published / unpublished media access for a user owning the media
@@ -331,6 +373,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::allowed(),
       ['user.permissions'],
       ['media:1'],
+      TRUE,
     ];
     $test_data['owner, can view own unpublished media / published / update'] = [
       ['view media', 'view own unpublished media'],
@@ -339,6 +382,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       [],
+      TRUE,
     ];
     $test_data['owner, can view own unpublished media / published / delete'] = [
       ['view media', 'view own unpublished media'],
@@ -347,6 +391,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       [],
+      TRUE,
     ];
     $test_data['owner, can view own unpublished media / unpublished / view'] = [
       ['view media', 'view own unpublished media'],
@@ -355,6 +400,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::allowed(),
       ['user.permissions', 'user'],
       ['media:1'],
+      TRUE,
     ];
     $test_data['owner, can view own unpublished media / unpublished / update'] = [
       ['view media', 'view own unpublished media'],
@@ -363,6 +409,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       [],
+      TRUE,
     ];
     $test_data['owner, can view own unpublished media / unpublished / delete'] = [
       ['view media', 'view own unpublished media'],
@@ -371,6 +418,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       [],
+      TRUE,
     ];
 
     // Check published / unpublished media access for a user not owning the
@@ -382,6 +430,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::allowed(),
       ['user.permissions'],
       ['media:1'],
+      TRUE,
     ];
     $test_data['not owner, can view own unpublished media / published / update'] = [
       ['view media', 'view own unpublished media'],
@@ -390,6 +439,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       [],
+      TRUE,
     ];
     $test_data['not owner, can view own unpublished media / published / delete'] = [
       ['view media', 'view own unpublished media'],
@@ -398,6 +448,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       [],
+      TRUE,
     ];
     $test_data['not owner, can view own unpublished media / unpublished / view'] = [
       ['view media', 'view own unpublished media'],
@@ -406,6 +457,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions', 'user'],
       ['media:1'],
+      TRUE,
     ];
     $test_data['not owner, can view own unpublished media / unpublished / update'] = [
       ['view media', 'view own unpublished media'],
@@ -414,6 +466,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       [],
+      TRUE,
     ];
     $test_data['not owner, can view own unpublished media / unpublished / delete'] = [
       ['view media', 'view own unpublished media'],
@@ -422,6 +475,145 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       AccessResult::neutral(),
       ['user.permissions'],
       [],
+      TRUE,
+    ];
+    // View all revisions:
+    $test_data['view all revisions:none'] = [
+      [],
+      [],
+      'view all revisions',
+      AccessResult::neutral(),
+      ['user.permissions'],
+      [],
+      TRUE,
+    ];
+    $test_data['admins can view all revisions'] = [
+      ['administer media'],
+      [],
+      'view all revisions',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      [],
+      TRUE,
+    ];
+    $test_data['view all revisions with view bundle permission'] = [
+      ['view any test media revisions', 'view media'],
+      ['status' => TRUE],
+      'view all revisions',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      TRUE,
+    ];
+    // Revert revisions:
+    $test_data['revert a latest revision with no permissions'] = [
+      [],
+      [],
+      'revert',
+      AccessResult::forbidden(),
+      [],
+      [],
+      TRUE,
+    ];
+    $test_data['revert a historical revision with no permissions'] = [
+      [],
+      [],
+      'revert',
+      AccessResult::neutral(),
+      ['user.permissions'],
+      ['media:1'],
+      FALSE,
+    ];
+    $test_data['revert latest revision with administer media permission'] = [
+      ['administer media'],
+      [],
+      'revert',
+      AccessResult::forbidden(),
+      [],
+      [],
+      TRUE,
+    ];
+    $test_data['revert a historical revision with administer media permission'] = [
+      ['administer media'],
+      [],
+      'revert',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      [],
+      FALSE,
+    ];
+    $test_data['revert a latest revision with revert bundle permission'] = [
+      ['revert any test media revisions'],
+      [],
+      'revert',
+      AccessResult::forbidden(),
+      [],
+      [],
+      TRUE,
+    ];
+    $test_data['revert a historical revision with revert bundle permission'] = [
+      ['revert any test media revisions'],
+      [],
+      'revert',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      FALSE,
+    ];
+    // Delete revisions:
+    $test_data['delete a latest revision with no permission'] = [
+      [],
+      [],
+      'delete revision',
+      AccessResult::forbidden(),
+      [],
+      [],
+      TRUE,
+    ];
+    $test_data['delete a historical revision with no permission'] = [
+      [],
+      [],
+      'delete revision',
+      AccessResult::neutral(),
+      ['user.permissions'],
+      ['media:1'],
+      FALSE,
+    ];
+    $test_data['delete a latest revision with administer media permission'] = [
+      ['administer media'],
+      [],
+      'delete revision',
+      AccessResult::forbidden(),
+      [],
+      [],
+      TRUE,
+    ];
+    $test_data['delete a historical revision with administer media permission'] = [
+      ['administer media'],
+      [],
+      'delete revision',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      [],
+      FALSE,
+    ];
+    $test_data['delete a latest revision with delete bundle permission'] = [
+      ['delete any test media revisions'],
+      [],
+      'delete revision',
+      AccessResult::forbidden(),
+      [],
+      [],
+      TRUE,
+    ];
+    $test_data['delete a historical revision with delete bundle permission'] = [
+      ['delete any test media revisions'],
+      [],
+      'delete revision',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      FALSE,
     ];
 
     return $test_data;
@@ -433,7 +625,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
    * @return array
    *   The data sets to test.
    */
-  public function providerCreateAccess() {
+  public static function providerCreateAccess() {
     $test_data = [];
 
     // Check create access for a user without permissions.
@@ -549,6 +741,39 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
     ];
 
     return $test_data;
+  }
+
+  /**
+   * Tests access to the revision log field.
+   */
+  public function testRevisionLogFieldAccess(): void {
+    $admin = $this->createUser([
+      'administer media',
+      'view media',
+    ]);
+    $editor = $this->createUser([
+      'view all media revisions',
+      'view media',
+    ]);
+    $viewer = $this->createUser([
+      'view media',
+    ]);
+
+    $media_type = $this->createMediaType('test', [
+      'id' => 'test',
+    ]);
+
+    $entity = Media::create([
+      'status' => TRUE,
+      'bundle' => $media_type->id(),
+    ]);
+    $entity->save();
+    $this->assertTrue($entity->get('revision_log_message')->access('view', $admin));
+    $this->assertTrue($entity->get('revision_log_message')->access('view', $editor));
+    $this->assertFalse($entity->get('revision_log_message')->access('view', $viewer));
+    $entity->setUnpublished()->save();
+    \Drupal::entityTypeManager()->getAccessControlHandler('media')->resetCache();
+    $this->assertFalse($entity->get('revision_log_message')->access('view', $viewer));
   }
 
 }

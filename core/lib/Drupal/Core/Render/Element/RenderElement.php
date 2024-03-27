@@ -117,7 +117,7 @@ use Drupal\Core\Url;
  *   the same weight are rendered in the order they appear in the render
  *   array.
  *
- * @see \Drupal\Core\Render\Annotation\RenderElement
+ * @see \Drupal\Core\Render\Attribute\RenderElement
  * @see \Drupal\Core\Render\ElementInterface
  * @see \Drupal\Core\Render\ElementInfoManager
  * @see plugin_api
@@ -338,7 +338,7 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
       // event. This behavior can be explicitly overridden if needed.
       if (!isset($element['#ajax']['refocus-blur'])) {
         // The change event on text input types is triggered on blur.
-        $text_types = ['password', 'textfield', 'number', 'tel', 'textarea'];
+        $text_types = ['password', 'textfield', 'number', 'tel', 'textarea', 'machine_name'];
         if ($element['#ajax']['event'] === 'blur' || ($element['#ajax']['event'] === 'change' && in_array($element['#type'], $text_types))) {
           $element['#attributes']['data-refocus-blur'] = "true";
         }

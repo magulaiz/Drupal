@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\DependencyInjection;
 
 use Drupal\Component\FileCache\FileCacheFactory;
@@ -78,7 +80,7 @@ YAML;
     $yaml_file_loader->load('vfs://drupal/modules/example/example.yml');
   }
 
-  public function providerTestExceptions() {
+  public static function providerTestExceptions() {
     return [
       '_defaults must be an array' => [<<<YAML
 services:
@@ -171,9 +173,15 @@ YAML,
       ],
       'YAML must be valid' => [<<<YAML
    do not:
-      do this for the love of Foo Bar!
+      do: this: for the love of Foo Bar!
 YAML,
         'The file "vfs://drupal/modules/example/example.yml" does not contain valid YAML',
+      ],
+      'YAML must have expected keys' => [<<<YAML
+      "do not":
+        do: this
+      YAML,
+        'The service file "vfs://drupal/modules/example/example.yml" is not valid: it contains invalid root key(s) "do not". Services have to be added under "services" and Parameters under "parameters".',
       ],
     ];
   }

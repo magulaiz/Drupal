@@ -475,7 +475,7 @@ class FilterKernelTest extends KernelTestBase {
     $this->assertFilteredString($filter, $tests);
 
     // Very long string hitting PCRE limits.
-    $limit = max(ini_get('pcre.backtrack_limit'), ini_get('pcre.recursion_limit'));
+    $limit = max((int) ini_get('pcre.backtrack_limit'), (int) ini_get('pcre.recursion_limit'));
     $source = $this->randomMachineName($limit);
     $result = _filter_autop($source);
     $this->assertEquals($result, '<p>' . $source . "</p>\n", 'Line break filter can process very long strings.');
@@ -579,6 +579,17 @@ class FilterKernelTest extends KernelTestBase {
     $this->assertNormalized($f, '<a>link</a>', 'HTML filter removes allowed attributes that have a not explicitly allowed value.');
     $f = (string) $filter->process('<a href="/beautiful-animals" kitten="cute" llama="epic majestical">link</a>', Language::LANGCODE_NOT_SPECIFIED);
     $this->assertSame('<a href="/beautiful-animals" llama="epic majestical">link</a>', $f, 'HTML filter keeps explicitly allowed attributes with an attribute value that is also explicitly allowed.');
+
+    // Allow iframes and check that the subsequent tags are parsed correctly.
+    $filter->setConfiguration([
+      'settings' => [
+        'allowed_html' => '<iframe> <a href llama>',
+        'filter_html_help' => 1,
+        'filter_html_nofollow' => 0,
+      ],
+    ]);
+    $f = (string) $filter->process('<a kitten="cute" llama="awesome">link</a>', Language::LANGCODE_NOT_SPECIFIED);
+    $this->assertNormalized($f, '<a llama="awesome">link</a>');
   }
 
   /**
@@ -755,7 +766,7 @@ class FilterKernelTest extends KernelTestBase {
       Absolute URL and query string with 2 different punctuation characters (http://www.example.com/q=abc).
       Partial URL with brackets in the URL as well as surrounded brackets (www.foo.com/more_(than)_one_(parens)).
       Absolute URL with square brackets in the URL as well as surrounded brackets [https://www.drupal.org/?class[]=1]
-      Absolute URL with quotes "https://www.drupal.org/sample"' => [
+      Absolute URL with quotes "https://www.example.org/sample"' => [
         'period <a href="http://www.partial.com">www.partial.com</a>.' => TRUE,
         'comma <a href="mailto:person@example.com">person@example.com</a>,' => TRUE,
         'question <a href="http://www.absolute.com">http://www.absolute.com</a>?' => TRUE,
@@ -765,7 +776,7 @@ class FilterKernelTest extends KernelTestBase {
         'characters (<a href="http://www.example.com/q=abc">http://www.example.com/q=abc</a>).' => TRUE,
         'brackets (<a href="http://www.foo.com/more_(than)_one_(parens)">www.foo.com/more_(than)_one_(parens)</a>).' => TRUE,
         'brackets [<a href="https://www.drupal.org/?class[]=1">https://www.drupal.org/?class[]=1</a>]' => TRUE,
-        'quotes "<a href="https://www.drupal.org/sample">https://www.drupal.org/sample</a>"' => TRUE,
+        'quotes "<a href="https://www.example.org/sample">https://www.example.org/sample</a>"' => TRUE,
       ],
       '(www.parenthesis.com/dir?a=1&b=2#a)' => [
         '(<a href="http://www.parenthesis.com/dir?a=1&amp;b=2#a">www.parenthesis.com/dir?a=1&amp;b=2#a</a>)' => TRUE,

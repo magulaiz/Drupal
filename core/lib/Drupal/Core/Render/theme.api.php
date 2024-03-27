@@ -313,18 +313,18 @@
  * define a render element is to create a render element plugin. There are
  * two types of render element plugins:
  * - Generic elements: Generic render element plugins implement
- *   \Drupal\Core\Render\Element\ElementInterface, are annotated with
- *   \Drupal\Core\Render\Annotation\RenderElement annotation, go in plugin
+ *   \Drupal\Core\Render\Element\ElementInterface, have the
+ *   \Drupal\Core\Render\Attribute\RenderElement attribute, go in plugin
  *   namespace Element, and generally extend the
  *   \Drupal\Core\Render\Element\RenderElement base class.
  * - Form input elements: Render elements representing form input elements
- *   implement \Drupal\Core\Render\Element\FormElementInterface, are annotated
- *   with \Drupal\Core\Render\Annotation\FormElement annotation, go in plugin
- *   namespace Element, and generally extend the
- *   \Drupal\Core\Render\Element\FormElement base class.
+ *   implement \Drupal\Core\Render\Element\FormElementInterface, have the
+ *   \Drupal\Core\Render\Attribute\FormElement, go in plugin namespace Element,
+ *   and generally extend the \Drupal\Core\Render\Element\FormElement base
+ *   class.
  * See the @link plugin_api Plugin API topic @endlink for general information
  * on plugins. You can search for classes with the RenderElement or FormElement
- * annotation to discover what render elements are available. API reference
+ * attribute to discover what render elements are available. API reference
  * sites (such as https://api.drupal.org) generate lists of all existing
  * elements from these classes. Look for the Elements link in the API Navigation
  * block.
@@ -455,8 +455,8 @@
  *   ways: no decoration at all (just a page showing the main content) or blocks
  *   (a page with regions, with blocks positioned in regions around the main
  *   content). Modules can provide additional options, by implementing a page
- *   variant, which is a plugin annotated with
- *   \Drupal\Core\Display\Annotation\PageDisplayVariant.
+ *   variant, which is a plugin with the
+ *   \Drupal\Core\Display\Attribute\PageDisplayVariant attribute.
  *
  * Routes whose controllers return a \Symfony\Component\HttpFoundation\Response
  * object are fully handled by the Symfony render pipeline.
@@ -685,8 +685,9 @@ function hook_theme_suggestions_HOOK(array $variables) {
  *
  * In the following example, we provide an alternative template suggestion to
  * node and taxonomy term templates based on the user being logged in.
+ *
  * @code
- * function MYMODULE_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
+ * function MY_MODULE_theme_suggestions_alter(array &$suggestions, array &$variables, $hook) {
  *   if (\Drupal::currentUser()->isAuthenticated() && in_array($hook, array('node', 'taxonomy_term'))) {
  *     $suggestions[] = $hook . '__' . 'logged_in';
  *   }
@@ -694,11 +695,12 @@ function hook_theme_suggestions_HOOK(array $variables) {
  *
  * @endcode
  *
- * @param array $suggestions
- *   An array of alternate, more specific names for template files.
+ * @param array &$suggestions
+ *   An array of alternate, more specific names for template files, passed by
+ *   reference.
  * @param array $variables
- *   An array of variables passed to the theme hook. Note that this hook is
- *   invoked before any variable preprocessing.
+ *   An array of variables passed to the theme hook, passed by reference. Note
+ *   that this hook is invoked before any variable preprocessing.
  * @param string $hook
  *   The base hook name. For example, if '#theme' => 'node__article' is called,
  *   then $hook will be 'node', not 'node__article'. The specific hook called
@@ -707,7 +709,7 @@ function hook_theme_suggestions_HOOK(array $variables) {
  *
  * @see hook_theme_suggestions_HOOK_alter()
  */
-function hook_theme_suggestions_alter(array &$suggestions, array $variables, $hook) {
+function hook_theme_suggestions_alter(array &$suggestions, array &$variables, $hook) {
   // Add an interface-language specific suggestion to all theme hooks.
   $suggestions[] = $hook . '__' . \Drupal::languageManager()->getCurrentLanguage()->getId();
 }
@@ -739,7 +741,7 @@ function hook_theme_suggestions_alter(array &$suggestions, array $variables, $ho
  * In the following example, we provide an alternative template suggestion to
  * node templates based on the user being logged in.
  * @code
- * function MYMODULE_theme_suggestions_node_alter(array &$suggestions, array $variables) {
+ * function MY_MODULE_theme_suggestions_node_alter(array &$suggestions, array $variables) {
  *   if (\Drupal::currentUser()->isAuthenticated()) {
  *     $suggestions[] = 'node__logged_in';
  *   }
@@ -748,15 +750,15 @@ function hook_theme_suggestions_alter(array &$suggestions, array $variables, $ho
  * @endcode
  *
  * @param array $suggestions
- *   An array of theme suggestions.
+ *   An array of theme suggestions, passed by reference.
  * @param array $variables
- *   An array of variables passed to the theme hook. Note that this hook is
- *   invoked before any preprocessing.
+ *   An array of variables passed to the theme hook, passed by reference. Note
+ *   that this hook is invoked before any preprocessing.
  *
  * @see hook_theme_suggestions_alter()
  * @see hook_theme_suggestions_HOOK()
  */
-function hook_theme_suggestions_HOOK_alter(array &$suggestions, array $variables) {
+function hook_theme_suggestions_HOOK_alter(array &$suggestions, array &$variables) {
   if (empty($variables['header'])) {
     $suggestions[] = 'hookname__no_header';
   }
@@ -867,7 +869,7 @@ function hook_element_info_alter(array &$info) {
  */
 function hook_element_plugin_alter(array &$definitions) {
   // Use a custom class for the LayoutBuilder element.
-  $definitions['layout_builder']['class'] = '\Drupal\mymodule\Element\MyLayoutBuilderElement';
+  $definitions['layout_builder']['class'] = '\Drupal\my_module\Element\MyLayoutBuilderElement';
 }
 
 /**
@@ -1131,7 +1133,7 @@ function hook_page_attachments_alter(array &$attachments) {
  *   A renderable array representing the top of the page.
  */
 function hook_page_top(array &$page_top) {
-  $page_top['mymodule'] = ['#markup' => 'This is the top.'];
+  $page_top['my_module'] = ['#markup' => 'This is the top.'];
 }
 
 /**
@@ -1141,7 +1143,7 @@ function hook_page_top(array &$page_top) {
  *   A renderable array representing the bottom of the page.
  */
 function hook_page_bottom(array &$page_bottom) {
-  $page_bottom['mymodule'] = ['#markup' => 'This is the bottom.'];
+  $page_bottom['my_module'] = ['#markup' => 'This is the bottom.'];
 }
 
 /**
@@ -1219,16 +1221,9 @@ function hook_page_bottom(array &$page_bottom) {
  *     suggestion, then this suggestion's template will be used to generate the
  *     rendered output.
  *   - pattern: A regular expression pattern to be used to allow this theme
- *     implementation to have a dynamic name. The convention is to use __ to
- *     differentiate the dynamic portion of the theme. For example, to allow
- *     forums to be themed individually, the pattern might be: 'forum__'. Then,
- *     when the forum is rendered, following render array can be used:
- *     @code
- *     $render_array = array(
- *       '#theme' => array('forum__' . $tid, 'forum'),
- *       '#forum' => $forum,
- *     );
- *     @endcode
+ *     implementation to have a dynamic name. The default is to use __ to
+ *     differentiate the dynamic portion of the theme. Implementations
+ *     can specify a different pattern if required.
  *   - preprocess functions: A list of functions used to preprocess this data.
  *     Ordinarily this won't be used; it's automatically filled in. By default,
  *     for a module this will be filled in as template_preprocess_HOOK. For
@@ -1254,13 +1249,13 @@ function hook_page_bottom(array &$page_bottom) {
  */
 function hook_theme($existing, $type, $theme, $path) {
   return [
-    'forum_display' => [
-      'variables' => ['forums' => NULL, 'topics' => NULL, 'parents' => NULL, 'tid' => NULL, 'sortby' => NULL, 'forum_per_page' => NULL],
+    'my_module_display' => [
+      'variables' => ['my_modules' => NULL, 'topics' => NULL, 'parents' => NULL, 'tid' => NULL, 'sortby' => NULL, 'my_module_per_page' => NULL],
     ],
-    'forum_list' => [
-      'variables' => ['forums' => NULL, 'parents' => NULL, 'tid' => NULL],
+    'my_module_list' => [
+      'variables' => ['my_modules' => NULL, 'parents' => NULL, 'tid' => NULL],
     ],
-    'forum_icon' => [
+    'my_module_icon' => [
       'variables' => ['new_posts' => NULL, 'num_posts' => 0, 'comment_mode' => 0, 'sticky' => 0],
     ],
     'status_report' => [
@@ -1313,10 +1308,10 @@ function hook_theme($existing, $type, $theme, $path) {
  * @see \Drupal\Core\Theme\Registry::processExtension()
  */
 function hook_theme_registry_alter(&$theme_registry) {
-  // Kill the next/previous forum topic navigation links.
-  foreach ($theme_registry['forum_topic_navigation']['preprocess functions'] as $key => $value) {
-    if ($value == 'template_preprocess_forum_topic_navigation') {
-      unset($theme_registry['forum_topic_navigation']['preprocess functions'][$key]);
+  // Kill the next/previous my_module topic navigation links.
+  foreach ($theme_registry['my_module_topic_navigation']['preprocess functions'] as $key => $value) {
+    if ($value == 'template_preprocess_my_module_topic_navigation') {
+      unset($theme_registry['my_module_topic_navigation']['preprocess functions'][$key]);
     }
   }
 }

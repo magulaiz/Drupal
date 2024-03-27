@@ -181,7 +181,7 @@ class ViewsForm implements FormInterface, ContainerInjectionInterface {
     $form = [];
 
     $query = $this->requestStack->getCurrentRequest()->query->all();
-    $query = UrlHelper::filterQueryParameters($query, ['_wrapper_format', 'ajax_page_state'], '');
+    $query = UrlHelper::filterQueryParameters($query, ['_wrapper_format'], '');
 
     $options = ['query' => $query];
     $form['#action'] = match (TRUE) {

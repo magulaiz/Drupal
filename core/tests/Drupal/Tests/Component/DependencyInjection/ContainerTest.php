@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Component\DependencyInjection\ContainerTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\Component\DependencyInjection;
 
@@ -678,7 +675,7 @@ class ContainerTest extends TestCase {
    * @covers ::getServiceIds
    */
   public function testGetServiceIds() {
-    $service_definition_keys = array_keys($this->containerDefinition['services']);
+    $service_definition_keys = array_merge(['service_container'], array_keys($this->containerDefinition['services']));
     $this->assertEquals($service_definition_keys, $this->container->getServiceIds(), 'Retrieved service IDs match definition.');
 
     $mock_service = new MockService();
@@ -701,21 +698,22 @@ class ContainerTest extends TestCase {
   }
 
   /**
-   * @covers \Drupal\Component\DependencyInjection\ServiceIdHashTrait::getServiceIdMappings
-   * @covers \Drupal\Component\DependencyInjection\ServiceIdHashTrait::generateServiceIdHash
+   * Tests Container::reset().
    *
-   * @group legacy
+   * @covers ::reset
    */
-  public function testGetServiceIdMappings() {
-    $this->expectDeprecation("Drupal\Component\DependencyInjection\ServiceIdHashTrait::generateServiceIdHash() is deprecated in drupal:9.5.1 and is removed from drupal:11.0.0. Use the 'Drupal\Component\DependencyInjection\ReverseContainer' service instead. See https://www.drupal.org/node/3327942");
-    $this->expectDeprecation("Drupal\Component\DependencyInjection\ServiceIdHashTrait::getServiceIdMappings() is deprecated in drupal:9.5.1 and is removed from drupal:11.0.0. Use the 'Drupal\Component\DependencyInjection\ReverseContainer' service instead. See https://www.drupal.org/node/3327942");
-    $this->assertEquals([], $this->container->getServiceIdMappings());
-    $s1 = $this->container->get('other.service');
-    $s2 = $this->container->get('late.service');
-    $this->assertEquals([
-      $this->container->generateServiceIdHash($s1) => 'other.service',
-      $this->container->generateServiceIdHash($s2) => 'late.service',
-    ], $this->container->getServiceIdMappings());
+  public function testReset() {
+    $this->assertFalse($this->container->initialized('late.service'), 'Late service is not initialized.');
+    $this->container->get('late.service');
+    $this->assertTrue($this->container->initialized('late.service'), 'Late service is initialized after it was retrieved once.');
+
+    // Reset the container. All initialized services will be reset.
+    $this->container->reset();
+
+    $this->assertFalse($this->container->initialized('late.service'), 'Late service is not initialized.');
+    $this->container->get('late.service');
+    $this->assertTrue($this->container->initialized('late.service'), 'Late service is initialized after it was retrieved once.');
+    $this->assertSame($this->container, $this->container->get('service_container'));
   }
 
   /**
@@ -736,9 +734,6 @@ class ContainerTest extends TestCase {
     $parameters['service_from_parameter'] = $this->getServiceCall('service.provider_alias');
 
     $services = [];
-    $services['service_container'] = [
-      'class' => '\Drupal\service_container\DependencyInjection\Container',
-    ];
     $services['other.service'] = [
       'class' => get_class($fake_service),
     ];
