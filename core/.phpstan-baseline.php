@@ -52,13 +52,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Component/Datetime/DateTimePlus.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Usage of deprecated trait Drupal\\\\Component\\\\DependencyInjection\\\\ServiceIdHashTrait in class Drupal\\\\Component\\\\DependencyInjection\\\\Container\\:
-in drupal\\:9\\.5\\.1 and is removed from drupal\\:11\\.0\\.0\\. Use the
-  \'Drupal\\\\Component\\\\DependencyInjection\\\\ReverseContainer\' service instead\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Component/DependencyInjection/Container.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$x0 might not be defined\\.$#',
 	'count' => 4,
 	'path' => __DIR__ . '/lib/Drupal/Component/Diff/DiffFormatter.php',
@@ -209,13 +202,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Database/Query/Upsert.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Usage of deprecated trait Drupal\\\\Component\\\\DependencyInjection\\\\ServiceIdHashTrait in class Drupal\\\\Core\\\\DependencyInjection\\\\ContainerBuilder\\:
-in drupal\\:9\\.5\\.1 and is removed from drupal\\:11\\.0\\.0\\. Use the
-  \'Drupal\\\\Component\\\\DependencyInjection\\\\ReverseContainer\' service instead\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/DependencyInjection/ContainerBuilder.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\DrupalKernel\\:\\:discoverServiceProviders\\(\\) should return array but return statement is missing\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/DrupalKernel.php',
@@ -339,13 +325,6 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$initial_storage_value in empty\\(\\) always exists and is not falsy\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method getFromDriverName\\(\\) of class Drupal\\\\Core\\\\Extension\\\\DatabaseDriverList\\:
-in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-  DatabaseDriverList\\:\\:get\\(\\) instead, passing a database driver namespace\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Extension/DatabaseDriverList.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$minor_version might not be defined\\.$#',
