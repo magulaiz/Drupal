@@ -132,7 +132,7 @@ class TaxonomyFieldVidTest extends ViewsKernelTestBase {
     $actual = $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
       return $view->field['vid']->advancedRender($view->result[0]);
     });
-    $expected = $vocabulary->get('name');
+    $expected = $vocabulary->label();
     $this->assertEquals($expected, $actual);
   }
 
