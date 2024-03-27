@@ -3,6 +3,9 @@
 namespace Drupal\language\Entity;
 
 use Drupal\Core\Config\Action\Attribute\ActionMethod;
+use Drupal\Core\Entity\Attribute\ConfigEntityType;
+use Drupal\Core\Entity\Attribute\ConfigEntityType;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Language\LanguageManager;
@@ -15,7 +18,43 @@ use Drupal\language\ConfigurableLanguageInterface;
 /**
  * Defines the ConfigurableLanguage entity.
  */
-#[\Drupal\Core\Entity\Attribute\ConfigEntityType(id: 'configurable_language', label: new TranslatableMarkup('Language'), label_collection: new TranslatableMarkup('Languages'), label_singular: new TranslatableMarkup('language'), label_plural: new TranslatableMarkup('languages'), label_count: ['singular' => '@count language', 'plural' => '@count languages'], handlers: ['list_builder' => 'Drupal\language\LanguageListBuilder', 'access' => 'Drupal\language\LanguageAccessControlHandler', 'form' => ['add' => 'Drupal\language\Form\LanguageAddForm', 'edit' => 'Drupal\language\Form\LanguageEditForm', 'delete' => 'Drupal\language\Form\LanguageDeleteForm']], admin_permission: 'administer languages', config_prefix: 'entity', entity_keys: ['id' => 'id', 'label' => 'label', 'weight' => 'weight'], config_export: ['id', 'label', 'direction', 'weight', 'locked'], links: ['delete-form' => '/admin/config/regional/language/delete/{configurable_language}', 'edit-form' => '/admin/config/regional/language/edit/{configurable_language}', 'collection' => '/admin/config/regional/language'])]
+#[ConfigEntityType(
+  id: 'configurable_language',
+  label: new TranslatableMarkup('Language'),
+  label_collection: new TranslatableMarkup('Languages'),
+  label_singular: new TranslatableMarkup('language'),
+  label_plural: new TranslatableMarkup('languages'),
+  config_prefix: 'entity',
+  entity_keys: [
+    'id' => 'id',
+    'label' => 'label',
+    'weight' => 'weight',
+  ], handlers: [
+    'list_builder' => 'Drupal\language\LanguageListBuilder',
+    'access' => 'Drupal\language\LanguageAccessControlHandler',
+    'form' => [
+      'add' => 'Drupal\language\Form\LanguageAddForm',
+      'edit' => 'Drupal\language\Form\LanguageEditForm',
+      'delete' => 'Drupal\language\Form\LanguageDeleteForm',
+    ],
+  ],
+  links: [
+    'delete-form' => '/admin/config/regional/language/delete/{configurable_language}',
+    'edit-form' => '/admin/config/regional/language/edit/{configurable_language}',
+    'collection' => '/admin/config/regional/language',
+  ],
+  admin_permission: 'administer languages',
+  label_count: [
+    'singular' => '@count language',
+    'plural' => '@count languages',
+  ],
+  config_export: [
+    'id',
+    'label',
+    'direction',
+    'weight',
+    'locked',
+  ])]
 class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLanguageInterface {
 
   /**

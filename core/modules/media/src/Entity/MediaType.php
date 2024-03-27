@@ -20,7 +20,7 @@ use Drupal\media\MediaTypeInterface;
   label_singular: new TranslatableMarkup('media type'),
   label_plural: new TranslatableMarkup('media types'),
   label_count: [
-    'singular' => '@count media type',
+    'singular' => '@cogunt media type',
     'plural' => '@count media types',
   ],
   handlers: [

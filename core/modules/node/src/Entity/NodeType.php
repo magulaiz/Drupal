@@ -18,9 +18,10 @@ use Drupal\node\NodeTypeInterface;
   label_collection: new TranslatableMarkup('Content types'),
   label_singular: new TranslatableMarkup('content type'),
   label_plural: new TranslatableMarkup('content types'),
-  label_count: [
-    'singular' => '@count content type',
-    'plural' => '@count content types',
+  config_prefix: 'type',
+  entity_keys: [
+    'id' => 'type',
+    'label' => 'name',
   ],
   handlers: [
     'access' => 'Drupal\node\NodeTypeAccessControlHandler',
@@ -34,18 +35,17 @@ use Drupal\node\NodeTypeInterface;
     ],
     'list_builder' => 'Drupal\node\NodeTypeListBuilder',
   ],
-  admin_permission: 'administer content types',
-  config_prefix: 'type',
-  bundle_of: 'node',
-  entity_keys: [
-    'id' => 'type',
-    'label' => 'name',
-  ],
   links: [
     'edit-form' => '/admin/structure/types/manage/{node_type}',
     'delete-form' => '/admin/structure/types/manage/{node_type}/delete',
     'entity-permissions-form' => '/admin/structure/types/manage/{node_type}/permissions',
     'collection' => '/admin/structure/types',
+  ],
+  admin_permission: 'administer content types',
+  bundle_of: 'node',
+  label_count: [
+    'singular' => '@count content type',
+    'plural' => '@count content types',
   ],
   config_export: [
     'name',

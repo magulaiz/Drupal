@@ -2,6 +2,7 @@
 
 namespace Drupal\content_moderation\Entity;
 
+use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityInterface;
@@ -19,7 +20,34 @@ use Drupal\user\EntityOwnerTrait;
  *   alter the moderation state of an entity. Instead, the computed
  *   moderation_state field should be set on the entity directly.
  */
-#[\Drupal\Core\Entity\Attribute\ContentEntityType(id: 'content_moderation_state', label: new TranslatableMarkup('Content moderation state'), label_singular: new TranslatableMarkup('content moderation state'), label_plural: new TranslatableMarkup('content moderation states'), label_count: ['singular' => '@count content moderation state', 'plural' => '@count content moderation states'], handlers: ['storage_schema' => 'Drupal\content_moderation\ContentModerationStateStorageSchema', 'views_data' => '\Drupal\views\EntityViewsData', 'access' => 'Drupal\content_moderation\ContentModerationStateAccessControlHandler'], base_table: 'content_moderation_state', revision_table: 'content_moderation_state_revision', data_table: 'content_moderation_state_field_data', revision_data_table: 'content_moderation_state_field_revision', translatable: TRUE, internal: TRUE, entity_keys: ['id' => 'id', 'revision' => 'revision_id', 'uuid' => 'uuid', 'uid' => 'uid', 'owner' => 'uid', 'langcode' => 'langcode'])]
+#[ContentEntityType(
+  id: 'content_moderation_state',
+  label: new TranslatableMarkup('Content moderation state'),
+  label_singular: new TranslatableMarkup('content moderation state'),
+  label_plural: new TranslatableMarkup('content moderation states'),
+  entity_keys: [
+    'id' => 'id',
+    'revision' => 'revision_id',
+    'uuid' => 'uuid',
+    'uid' => 'uid',
+    'owner' => 'uid',
+    'langcode' => 'langcode',
+  ],
+  handlers: [
+    'storage_schema' => 'Drupal\content_moderation\ContentModerationStateStorageSchema',
+    'views_data' => '\Drupal\views\EntityViewsData',
+    'access' => 'Drupal\content_moderation\ContentModerationStateAccessControlHandler',
+  ],
+  base_table: 'content_moderation_state',
+  data_table: 'content_moderation_state_field_data',
+  revision_table: 'content_moderation_state_revision',
+  revision_data_table: 'content_moderation_state_field_revision',
+  internal: TRUE,
+  translatable: TRUE,
+  label_count: [
+    'singular' => '@count content moderation state',
+    'plural' => '@count content moderation states',
+  ])]
 class ContentModerationState extends ContentEntityBase implements ContentModerationStateInterface {
 
   use EntityOwnerTrait;

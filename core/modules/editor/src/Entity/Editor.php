@@ -2,6 +2,7 @@
 
 namespace Drupal\editor\Entity;
 
+use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
@@ -16,7 +17,33 @@ use Drupal\editor\EditorInterface;
  * Editor entity will be same as the ID of the filter format entity in which
  * the editor plugin was selected.
  */
-#[\Drupal\Core\Entity\Attribute\ConfigEntityType(id: 'editor', label: new TranslatableMarkup('Text editor'), label_collection: new TranslatableMarkup('Text editors'), label_singular: new TranslatableMarkup('text editor'), label_plural: new TranslatableMarkup('text editors'), label_count: ['singular' => '@count text editor', 'plural' => '@count text editors'], handlers: ['access' => 'Drupal\editor\EditorAccessControlHandler'], entity_keys: ['id' => 'format'], config_export: ['format', 'editor', 'settings', 'image_upload'], constraints: ['RequiredConfigDependencies' => ['filter_format']])]
+#[ConfigEntityType(
+  id: 'editor',
+  label: new TranslatableMarkup('Text editor'),
+  label_collection: new TranslatableMarkup('Text editors'),
+  label_singular: new TranslatableMarkup('text editor'),
+  label_plural: new TranslatableMarkup('text editors'),
+  entity_keys: [
+    'id' => 'format',
+  ],
+  handlers: [
+    'access' => 'Drupal\editor\EditorAccessControlHandler',
+  ],
+  label_count: [
+    'singular' => '@count text editor',
+    'plural' => '@count text editors',
+  ],
+  constraints: [
+    'RequiredConfigDependencies' => [
+      'filter_format',
+    ],
+  ],
+  config_export: [
+    'format',
+    'editor',
+    'settings',
+    'image_upload',
+  ])]
 class Editor extends ConfigEntityBase implements EditorInterface {
 
   /**

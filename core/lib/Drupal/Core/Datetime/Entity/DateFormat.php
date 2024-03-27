@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Datetime\Entity;
 
+use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
@@ -10,7 +11,22 @@ use Drupal\Core\Datetime\DateFormatInterface;
 /**
  * Defines the Date Format configuration entity class.
  */
-#[\Drupal\Core\Entity\Attribute\ConfigEntityType(id: 'date_format', label: new TranslatableMarkup('Date format'), handlers: ['access' => 'Drupal\system\DateFormatAccessControlHandler'], entity_keys: ['id' => 'id', 'label' => 'label'], admin_permission: 'administer site configuration', list_cache_tags: ['rendered'], config_export: ['id', 'label', 'locked', 'pattern'])]
+#[ConfigEntityType(
+  id: 'date_format',
+  label: new TranslatableMarkup('Date format'),
+  entity_keys: [
+    'id' => 'id',
+    'label' => 'label',
+  ],
+  handlers: ['access' => 'Drupal\system\DateFormatAccessControlHandler'],
+  admin_permission: 'administer site configuration',
+  list_cache_tags: ['rendered'],
+  config_export: [
+    'id',
+    'label',
+    'locked',
+    'pattern',
+  ])]
 class DateFormat extends ConfigEntityBase implements DateFormatInterface {
 
   /**

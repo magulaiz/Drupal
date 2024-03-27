@@ -2,6 +2,7 @@
 
 namespace Drupal\system\Entity;
 
+use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
@@ -15,7 +16,28 @@ use Drupal\Core\Action\ActionPluginCollection;
 /**
  * Defines the configured action entity.
  */
-#[\Drupal\Core\Entity\Attribute\ConfigEntityType(id: 'action', label: new TranslatableMarkup('Action'), label_collection: new TranslatableMarkup('Actions'), label_singular: new TranslatableMarkup('action'), label_plural: new TranslatableMarkup('actions'), label_count: ['singular' => '@count action', 'plural' => '@count actions'], admin_permission: 'administer actions', entity_keys: ['id' => 'id', 'label' => 'label'], config_export: ['id', 'label', 'type', 'plugin', 'configuration'])]
+#[ConfigEntityType(
+  id: 'action',
+  label: new TranslatableMarkup('Action'),
+  label_collection: new TranslatableMarkup('Actions'),
+  label_singular: new TranslatableMarkup('action'),
+  label_plural: new TranslatableMarkup('actions'),
+  entity_keys: [
+    'id' => 'id',
+    'label' => 'label',
+  ],
+  admin_permission: 'administer actions',
+  label_count: [
+    'singular' => '@count action',
+    'plural' => '@count actions',
+  ],
+  config_export: [
+    'id',
+    'label',
+    'type',
+    'plugin',
+    'configuration',
+  ])]
 class Action extends ConfigEntityBase implements ActionConfigEntityInterface, EntityWithPluginCollectionInterface {
 
   /**

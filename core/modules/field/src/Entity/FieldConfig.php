@@ -2,6 +2,7 @@
 
 namespace Drupal\field\Entity;
 
+use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\FieldableEntityStorageInterface;
@@ -13,7 +14,49 @@ use Drupal\field\FieldConfigInterface;
 /**
  * Defines the Field entity.
  */
-#[\Drupal\Core\Entity\Attribute\ConfigEntityType(id: 'field_config', label: new TranslatableMarkup('Field'), label_collection: new TranslatableMarkup('Fields'), label_singular: new TranslatableMarkup('field'), label_plural: new TranslatableMarkup('fields'), label_count: ['singular' => '@count field', 'plural' => '@count fields'], handlers: ['access' => 'Drupal\field\FieldConfigAccessControlHandler', 'storage' => 'Drupal\field\FieldConfigStorage'], config_prefix: 'field', entity_keys: ['id' => 'id', 'label' => 'label'], config_export: ['id', 'field_name', 'entity_type', 'bundle', 'label', 'description', 'required', 'translatable', 'default_value', 'default_value_callback', 'settings', 'field_type'], constraints: ['RequiredConfigDependencies' => ['field_storage_config'], 'ImmutableProperties' => ['id', 'entity_type', 'field_name', 'bundle', 'field_type']])]
+#[ConfigEntityType(
+  id: 'field_config',
+  label: new TranslatableMarkup('Field'),
+  label_collection: new TranslatableMarkup('Fields'),
+  label_singular: new TranslatableMarkup('field'),
+  label_plural: new TranslatableMarkup('fields'),
+  config_prefix: 'field',
+  entity_keys: [
+    'id' => 'id',
+    'label' => 'label',
+  ],
+  handlers: [
+    'access' => 'Drupal\field\FieldConfigAccessControlHandler',
+    'storage' => 'Drupal\field\FieldConfigStorage',
+  ],
+  label_count: [
+    'singular' => '@count field',
+    'plural' => '@count fields',
+  ],
+  constraints: [
+    'RequiredConfigDependencies' => ['field_storage_config'],
+    'ImmutableProperties' => [
+      'id',
+      'entity_type',
+      'field_name',
+      'bundle',
+      'field_type',
+    ],
+  ],
+  config_export: [
+    'id',
+    'field_name',
+    'entity_type',
+    'bundle',
+    'label',
+    'description',
+    'required',
+    'translatable',
+    'default_value',
+    'default_value_callback',
+    'settings',
+    'field_type',
+  ])]
 class FieldConfig extends FieldConfigBase implements FieldConfigInterface {
 
   /**

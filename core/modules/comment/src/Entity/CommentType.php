@@ -2,6 +2,7 @@
 
 namespace Drupal\comment\Entity;
 
+use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\comment\CommentTypeInterface;
@@ -9,7 +10,47 @@ use Drupal\comment\CommentTypeInterface;
 /**
  * Defines the comment type entity.
  */
-#[\Drupal\Core\Entity\Attribute\ConfigEntityType(id: 'comment_type', label: new TranslatableMarkup('Comment type'), label_singular: new TranslatableMarkup('comment type'), label_plural: new TranslatableMarkup('comment types'), label_count: ['singular' => '@count comment type', 'plural' => '@count comment types'], handlers: ['form' => ['default' => 'Drupal\comment\CommentTypeForm', 'add' => 'Drupal\comment\CommentTypeForm', 'edit' => 'Drupal\comment\CommentTypeForm', 'delete' => 'Drupal\comment\Form\CommentTypeDeleteForm'], 'route_provider' => ['permissions' => 'Drupal\user\Entity\EntityPermissionsRouteProvider'], 'list_builder' => 'Drupal\comment\CommentTypeListBuilder'], admin_permission: 'administer comment types', config_prefix: 'type', bundle_of: 'comment', entity_keys: ['id' => 'id', 'label' => 'label'], links: ['delete-form' => '/admin/structure/comment/manage/{comment_type}/delete', 'edit-form' => '/admin/structure/comment/manage/{comment_type}', 'add-form' => '/admin/structure/comment/types/add', 'entity-permissions-form' => '/admin/structure/comment/manage/{comment_type}/permissions', 'collection' => '/admin/structure/comment'], config_export: ['id', 'label', 'target_entity_type_id', 'description'])]
+#[ConfigEntityType(
+  id: 'comment_type',
+  label: new TranslatableMarkup('Comment type'),
+  label_singular: new TranslatableMarkup('comment type'),
+  label_plural: new TranslatableMarkup('comment types'),
+  config_prefix: 'type',
+  entity_keys: [
+    'id' => 'id',
+    'label' => 'label',
+  ],
+  handlers: [
+    'form' => [
+      'default' => 'Drupal\comment\CommentTypeForm',
+      'add' => 'Drupal\comment\CommentTypeForm',
+      'edit' => 'Drupal\comment\CommentTypeForm',
+      'delete' => 'Drupal\comment\Form\CommentTypeDeleteForm',
+    ],
+    'route_provider' => [
+      'permissions' => 'Drupal\user\Entity\EntityPermissionsRouteProvider',
+    ],
+    'list_builder' => 'Drupal\comment\CommentTypeListBuilder',
+  ],
+  links: [
+    'delete-form' => '/admin/structure/comment/manage/{comment_type}/delete',
+    'edit-form' => '/admin/structure/comment/manage/{comment_type}',
+    'add-form' => '/admin/structure/comment/types/add',
+    'entity-permissions-form' => '/admin/structure/comment/manage/{comment_type}/permissions',
+    'collection' => '/admin/structure/comment',
+  ],
+  admin_permission: 'administer comment types',
+  bundle_of: 'comment',
+  label_count: [
+    'singular' => '@count comment type',
+    'plural' => '@count comment types',
+  ],
+  config_export: [
+    'id',
+    'label',
+    'target_entity_type_id',
+    'description',
+  ])]
 class CommentType extends ConfigEntityBundleBase implements CommentTypeInterface {
 
   /**

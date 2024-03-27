@@ -2,6 +2,7 @@
 
 namespace Drupal\responsive_image\Entity;
 
+use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\image\Entity\ImageStyle;
@@ -10,7 +11,44 @@ use Drupal\responsive_image\ResponsiveImageStyleInterface;
 /**
  * Defines the responsive image style entity.
  */
-#[\Drupal\Core\Entity\Attribute\ConfigEntityType(id: 'responsive_image_style', label: new TranslatableMarkup('Responsive image style'), label_collection: new TranslatableMarkup('Responsive image styles'), label_singular: new TranslatableMarkup('responsive image style'), label_plural: new TranslatableMarkup('responsive image styles'), label_count: ['singular' => '@count responsive image style', 'plural' => '@count responsive image styles'], handlers: ['list_builder' => 'Drupal\responsive_image\ResponsiveImageStyleListBuilder', 'form' => ['edit' => 'Drupal\responsive_image\ResponsiveImageStyleForm', 'add' => 'Drupal\responsive_image\ResponsiveImageStyleForm', 'delete' => 'Drupal\Core\Entity\EntityDeleteForm', 'duplicate' => 'Drupal\responsive_image\ResponsiveImageStyleForm']], admin_permission: 'administer responsive images', config_prefix: 'styles', entity_keys: ['id' => 'id', 'label' => 'label'], config_export: ['id', 'label', 'image_style_mappings', 'breakpoint_group', 'fallback_image_style'], links: ['edit-form' => '/admin/config/media/responsive-image-style/{responsive_image_style}', 'duplicate-form' => '/admin/config/media/responsive-image-style/{responsive_image_style}/duplicate', 'delete-form' => '/admin/config/media/responsive-image-style/{responsive_image_style}/delete', 'collection' => '/admin/config/media/responsive-image-style'])]
+#[ConfigEntityType(
+  id: 'responsive_image_style',
+  label: new TranslatableMarkup('Responsive image style'),
+  label_collection: new TranslatableMarkup('Responsive image styles'),
+  label_singular: new TranslatableMarkup('responsive image style'),
+  label_plural: new TranslatableMarkup('responsive image styles'),
+  config_prefix: 'styles',
+  entity_keys: [
+    'id' => 'id',
+    'label' => 'label',
+  ],
+  handlers: [
+    'list_builder' => 'Drupal\responsive_image\ResponsiveImageStyleListBuilder',
+    'form' => [
+      'edit' => 'Drupal\responsive_image\ResponsiveImageStyleForm',
+      'add' => 'Drupal\responsive_image\ResponsiveImageStyleForm',
+      'delete' => 'Drupal\Core\Entity\EntityDeleteForm',
+      'duplicate' => 'Drupal\responsive_image\ResponsiveImageStyleForm',
+    ],
+  ],
+  links: [
+    'edit-form' => '/admin/config/media/responsive-image-style/{responsive_image_style}',
+    'duplicate-form' => '/admin/config/media/responsive-image-style/{responsive_image_style}/duplicate',
+    'delete-form' => '/admin/config/media/responsive-image-style/{responsive_image_style}/delete',
+    'collection' => '/admin/config/media/responsive-image-style',
+  ],
+  admin_permission: 'administer responsive images',
+  label_count: [
+    'singular' => '@count responsive image style',
+    'plural' => '@count responsive image styles',
+  ],
+  config_export: [
+    'id',
+    'label',
+    'image_style_mappings',
+    'breakpoint_group',
+    'fallback_image_style',
+  ])]
 class ResponsiveImageStyle extends ConfigEntityBase implements ResponsiveImageStyleInterface {
 
   /**

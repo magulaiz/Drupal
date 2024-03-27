@@ -2,6 +2,7 @@
 
 namespace Drupal\contact\Entity;
 
+use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\contact\MessageInterface;
@@ -11,7 +12,32 @@ use Drupal\Core\Field\BaseFieldDefinition;
 /**
  * Defines the contact message entity.
  */
-#[\Drupal\Core\Entity\Attribute\ContentEntityType(id: 'contact_message', label: new TranslatableMarkup('Contact message'), label_collection: new TranslatableMarkup('Contact messages'), label_singular: new TranslatableMarkup('contact message'), label_plural: new TranslatableMarkup('contact messages'), label_count: ['singular' => '@count contact message', 'plural' => '@count contact messages'], bundle_label: new TranslatableMarkup('Contact form'), handlers: ['access' => 'Drupal\contact\ContactMessageAccessControlHandler', 'storage' => 'Drupal\Core\Entity\ContentEntityNullStorage', 'view_builder' => 'Drupal\contact\MessageViewBuilder', 'form' => ['default' => 'Drupal\contact\MessageForm']], admin_permission: 'administer contact forms', entity_keys: ['bundle' => 'contact_form', 'uuid' => 'uuid', 'langcode' => 'langcode'], bundle_entity_type: 'contact_form', field_ui_base_route: 'entity.contact_form.edit_form')]
+#[ContentEntityType(
+  id: 'contact_message',
+  label: new TranslatableMarkup('Contact message'),
+  label_collection: new TranslatableMarkup('Contact messages'),
+  label_singular: new TranslatableMarkup('contact message'),
+  label_plural: new TranslatableMarkup('contact messages'),
+  entity_keys: [
+    'bundle' => 'contact_form',
+    'uuid' => 'uuid',
+    'langcode' => 'langcode',
+  ],
+  handlers: [
+    'access' => 'Drupal\contact\ContactMessageAccessControlHandler',
+    'storage' => 'Drupal\Core\Entity\ContentEntityNullStorage',
+    'view_builder' => 'Drupal\contact\MessageViewBuilder',
+    'form' => ['default' => 'Drupal\contact\MessageForm'],
+  ],
+  admin_permission: 'administer contact forms',
+  bundle_entity_type: 'contact_form',
+  bundle_label: new TranslatableMarkup('Contact form'),
+  label_count: [
+    'singular' => '@count contact message',
+    'plural' => '@count contact messages',
+  ],
+  field_ui_base_route: 'entity.contact_form.edit_form'
+)]
 class Message extends ContentEntityBase implements MessageInterface {
 
   /**

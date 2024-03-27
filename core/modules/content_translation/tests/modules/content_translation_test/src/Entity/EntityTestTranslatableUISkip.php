@@ -13,8 +13,6 @@ use Drupal\entity_test\Entity\EntityTest;
 #[\Drupal\Core\Entity\Attribute\ContentEntityType(
   id: 'entity_test_translatable_UI_skip',
   label: new TranslatableMarkup('Test entity - Translatable skip UI check'),
-  base_table: 'entity_test_mul',
-  data_table: 'entity_test_mul_property_data',
   entity_keys: [
     'id' => 'id',
     'uuid' => 'uuid',
@@ -22,6 +20,8 @@ use Drupal\entity_test\Entity\EntityTest;
     'label' => 'name',
     'langcode' => 'langcode',
   ],
+  base_table: 'entity_test_mul',
+  data_table: 'entity_test_mul_property_data',
   translatable: TRUE,
   additional: [
     'content_translation_ui_skip' => TRUE,

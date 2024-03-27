@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\entity_test\Entity;
 
+use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -11,9 +12,10 @@ use Drupal\Core\Field\BaseFieldDefinition;
 /**
  * Defines a test class for testing fields with a serialized column.
  */
-#[\Drupal\Core\Entity\Attribute\ContentEntityType(
+#[ContentEntityType(
   id: 'entity_test_serialized_field',
   label: new TranslatableMarkup('Test serialized fields'),
+  persistent_cache: FALSE,
   entity_keys: [
     'id' => 'id',
     'uuid' => 'uuid',
@@ -21,7 +23,6 @@ use Drupal\Core\Field\BaseFieldDefinition;
     'label' => 'name',
   ],
   base_table: 'entity_test_serialized_fields',
-  persistent_cache: FALSE,
   additional: [
     'serialized_field_property_names' => [
       'serialized_long' => ['value'],
