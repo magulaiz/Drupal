@@ -85,7 +85,7 @@ interface RendererInterface {
    *
    * @see \Drupal\Core\Render\RendererInterface::render()
    */
-  public function renderPlaceholder($placeholder, array $elements);
+  public function renderPlaceholder(string $placeholder, array $elements);
 
   /**
    * Renders HTML given a structured array tree.
@@ -340,7 +340,7 @@ interface RendererInterface {
    * @see \Drupal\Core\Render\AttachmentsResponseProcessorInterface::processAttachments()
    * @see \Drupal\Core\Render\RendererInterface::renderRoot()
    */
-  public function render(&$elements, $is_root_call = FALSE);
+  public function render(&$elements, bool $is_root_call = FALSE);
 
   /**
    * Checks whether a render context is active.

@@ -128,6 +128,6 @@ interface MenuLinkContentInterface extends ContentEntityInterface, EntityChanged
    *
    * @see \Drupal\menu_link_content\MenuLinkContentInterface::requiresRediscovery()
    */
-  public function setRequiresRediscovery($rediscovery);
+  public function setRequiresRediscovery(bool $rediscovery);
 
 }

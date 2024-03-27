@@ -23,6 +23,6 @@ interface EntityDescriptionInterface extends EntityInterface {
    *
    * @return $this
    */
-  public function setDescription($description);
+  public function setDescription(string $description);
 
 }

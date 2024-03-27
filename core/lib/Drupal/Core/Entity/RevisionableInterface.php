@@ -45,7 +45,7 @@ interface RevisionableInterface extends EntityInterface {
    *
    * @see \Drupal\Core\Entity\EntityInterface::isNewRevision()
    */
-  public function setNewRevision($value = TRUE);
+  public function setNewRevision(bool $value = TRUE);
 
   /**
    * Gets the revision identifier of the entity.
@@ -87,7 +87,7 @@ interface RevisionableInterface extends EntityInterface {
    *   TRUE if the entity is the default revision, FALSE otherwise. If
    *   $new_value was passed, the previous value is returned.
    */
-  public function isDefaultRevision($new_value = NULL);
+  public function isDefaultRevision(bool $new_value = NULL);
 
   /**
    * Checks whether the entity object was a default revision when it was saved.

@@ -25,7 +25,7 @@ interface AnnotationInterface {
    * @param string $provider
    *   The provider of the annotated class.
    */
-  public function setProvider($provider);
+  public function setProvider(string $provider);
 
   /**
    * Gets the unique ID for this annotated class.
@@ -47,6 +47,6 @@ interface AnnotationInterface {
    * @param string $class
    *   The class of the annotated class.
    */
-  public function setClass($class);
+  public function setClass(string $class);
 
 }

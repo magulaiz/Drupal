@@ -38,7 +38,7 @@ interface CacheBackendInterface {
    *
    * @see \Drupal\Core\Cache\CacheBackendInterface::getMultiple()
    */
-  public function get($cid, $allow_invalid = FALSE);
+  public function get(string $cid, bool $allow_invalid = FALSE);
 
   /**
    * Returns data from the persistent cache when given an array of cache IDs.
@@ -60,7 +60,7 @@ interface CacheBackendInterface {
    *
    * @see \Drupal\Core\Cache\CacheBackendInterface::get()
    */
-  public function getMultiple(&$cids, $allow_invalid = FALSE);
+  public function getMultiple(&$cids, bool $allow_invalid = FALSE);
 
   /**
    * Stores data in the persistent cache.
@@ -96,7 +96,7 @@ interface CacheBackendInterface {
    * @see \Drupal\Core\Cache\CacheBackendInterface::get()
    * @see \Drupal\Core\Cache\CacheBackendInterface::getMultiple()
    */
-  public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = []);
+  public function set(string $cid, $data, int $expire = Cache::PERMANENT, array $tags = []);
 
   /**
    * Store multiple items in the persistent cache.
@@ -133,7 +133,7 @@ interface CacheBackendInterface {
    * @see \Drupal\Core\Cache\CacheBackendInterface::deleteMultiple()
    * @see \Drupal\Core\Cache\CacheBackendInterface::deleteAll()
    */
-  public function delete($cid);
+  public function delete(string $cid);
 
   /**
    * Deletes multiple items from the cache.
@@ -175,7 +175,7 @@ interface CacheBackendInterface {
    * @see \Drupal\Core\Cache\CacheBackendInterface::invalidateMultiple()
    * @see \Drupal\Core\Cache\CacheBackendInterface::invalidateAll()
    */
-  public function invalidate($cid);
+  public function invalidate(string $cid);
 
   /**
    * Marks cache items as invalid.

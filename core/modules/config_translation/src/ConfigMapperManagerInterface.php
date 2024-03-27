@@ -30,6 +30,6 @@ interface ConfigMapperManagerInterface extends PluginManagerInterface {
    * @return bool
    *   A boolean indicating if the configuration data has translatable items.
    */
-  public function hasTranslatable($name);
+  public function hasTranslatable(string $name);
 
 }

@@ -20,7 +20,7 @@ interface MultiItemsFieldHandlerInterface extends FieldHandlerInterface {
    * @return string
    *   The rendered output.
    */
-  public function render_item($count, $item);
+  public function render_item(int $count, $item);
 
   /**
    * Gets an array of items for the field.

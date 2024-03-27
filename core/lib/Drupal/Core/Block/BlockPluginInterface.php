@@ -59,7 +59,7 @@ interface BlockPluginInterface extends ConfigurableInterface, DependentPluginInt
    *
    * @see \Drupal\block\BlockAccessControlHandler
    */
-  public function access(AccountInterface $account, $return_as_object = FALSE);
+  public function access(AccountInterface $account, bool $return_as_object = FALSE);
 
   /**
    * Builds and returns the renderable array for this block plugin.
@@ -90,7 +90,7 @@ interface BlockPluginInterface extends ConfigurableInterface, DependentPluginInt
    *
    * @see \Drupal\Component\Plugin\PluginBase::$configuration
    */
-  public function setConfigurationValue($key, $value);
+  public function setConfigurationValue(string $key, $value);
 
   /**
    * Returns the configuration form elements specific to this block plugin.

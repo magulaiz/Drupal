@@ -30,7 +30,7 @@ interface ConfigInstallerInterface {
    *
    * @see \Drupal\Core\Config\ExtensionInstallStorage
    */
-  public function installDefaultConfig($type, $name);
+  public function installDefaultConfig(string $type, string $name);
 
   /**
    * Installs optional configuration.
@@ -64,7 +64,7 @@ interface ConfigInstallerInterface {
    * @param string $collection
    *   The configuration collection.
    */
-  public function installCollectionDefaultConfig($collection);
+  public function installCollectionDefaultConfig(string $collection);
 
   /**
    * Sets the configuration storage that provides the default configuration.
@@ -93,7 +93,7 @@ interface ConfigInstallerInterface {
    *
    * @return $this
    */
-  public function setSyncing($status);
+  public function setSyncing(bool $status);
 
   /**
    * Gets the syncing state.
@@ -114,6 +114,6 @@ interface ConfigInstallerInterface {
    * @throws \Drupal\Core\Config\UnmetDependenciesException
    * @throws \Drupal\Core\Config\PreExistingConfigException
    */
-  public function checkConfigurationToInstall($type, $name);
+  public function checkConfigurationToInstall(string $type, string $name);
 
 }

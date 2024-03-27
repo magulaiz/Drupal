@@ -44,7 +44,7 @@ interface EditorInterface extends ConfigEntityInterface {
    * @param string $editor
    *   The text editor plugin ID to set.
    */
-  public function setEditor($editor);
+  public function setEditor(string $editor);
 
   /**
    * Returns the text editor plugin-specific settings.

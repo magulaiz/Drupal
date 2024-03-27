@@ -92,7 +92,7 @@ interface LockBackendInterface {
    *
    * @return bool
    */
-  public function acquire($name, $timeout = 30.0);
+  public function acquire(string $name, float $timeout = 30.0);
 
   /**
    * Checks if a lock is available for acquiring.
@@ -102,7 +102,7 @@ interface LockBackendInterface {
    *
    * @return bool
    */
-  public function lockMayBeAvailable($name);
+  public function lockMayBeAvailable(string $name);
 
   /**
    * Waits a short amount of time before a second lock acquire attempt.
@@ -121,7 +121,7 @@ interface LockBackendInterface {
    *   TRUE if the lock holds, FALSE if it may be available. You still need to
    *   acquire the lock manually and it may fail again.
    */
-  public function wait($name, $delay = 30);
+  public function wait(string $name, int $delay = 30);
 
   /**
    * Releases the given lock.
@@ -129,7 +129,7 @@ interface LockBackendInterface {
    * @param string $name
    *   The lock name.
    */
-  public function release($name);
+  public function release(string $name);
 
   /**
    * Releases all locks for the given lock token identifier.
@@ -138,7 +138,7 @@ interface LockBackendInterface {
    *   (optional) If none given, remove all locks from the current page.
    *   Defaults to NULL.
    */
-  public function releaseAll($lockId = NULL);
+  public function releaseAll(string $lockId = NULL);
 
   /**
    * Gets the unique page token for locks.

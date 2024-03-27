@@ -28,7 +28,7 @@ interface ContentTranslationMetadataWrapperInterface {
    *
    * @return $this
    */
-  public function setSource($source);
+  public function setSource(string $source);
 
   /**
    * Returns the translation outdated status.
@@ -46,7 +46,7 @@ interface ContentTranslationMetadataWrapperInterface {
    *
    * @return $this
    */
-  public function setOutdated($outdated);
+  public function setOutdated(bool $outdated);
 
   /**
    * Returns the translation author.
@@ -86,7 +86,7 @@ interface ContentTranslationMetadataWrapperInterface {
    *
    * @return $this
    */
-  public function setPublished($published);
+  public function setPublished(bool $published);
 
   /**
    * Returns the translation creation timestamp.
@@ -106,7 +106,7 @@ interface ContentTranslationMetadataWrapperInterface {
    *
    * @return $this
    */
-  public function setCreatedTime($timestamp);
+  public function setCreatedTime(int $timestamp);
 
   /**
    * Returns the timestamp of the last entity change from current translation.
@@ -126,6 +126,6 @@ interface ContentTranslationMetadataWrapperInterface {
    *
    * @return $this
    */
-  public function setChangedTime($timestamp);
+  public function setChangedTime(int $timestamp);
 
 }

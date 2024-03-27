@@ -23,7 +23,7 @@ interface TransliterationInterface {
    * @return string
    *   $string with accented letters replaced by their unaccented equivalents.
    */
-  public function removeDiacritics($string);
+  public function removeDiacritics(string $string);
 
   /**
    * Transliterates text from Unicode to US-ASCII.
@@ -45,6 +45,6 @@ interface TransliterationInterface {
    *   $string with non-US-ASCII characters transliterated to US-ASCII
    *   characters, and unknown characters replaced with $unknown_character.
    */
-  public function transliterate($string, $langcode = 'en', $unknown_character = '?', $max_length = NULL);
+  public function transliterate(string $string, string $langcode = 'en', string $unknown_character = '?', int $max_length = NULL);
 
 }

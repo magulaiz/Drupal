@@ -33,6 +33,6 @@ interface EntityResolverInterface {
    * @return string|null
    *   Returns the local entity ID, if found. Otherwise, returns NULL.
    */
-  public function resolve(NormalizerInterface $normalizer, $data, $entity_type);
+  public function resolve(NormalizerInterface $normalizer, $data, string $entity_type);
 
 }

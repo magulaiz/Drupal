@@ -21,6 +21,6 @@ interface MigrateStubInterface {
    *   An array of destination ids for the new stub, keyed by destination id
    *   key, or false if the stub failed.
    */
-  public function createStub($migration_id, array $source_ids, array $default_values = []);
+  public function createStub(string $migration_id, array $source_ids, array $default_values = []);
 
 }

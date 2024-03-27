@@ -126,7 +126,7 @@ interface FieldItemInterface extends ComplexDataInterface {
    * @throws \InvalidArgumentException
    *   If a non-existent property is accessed.
    */
-  public function __get($property_name);
+  public function __get(string $property_name);
 
   /**
    * Magic method: Sets a property value.
@@ -141,7 +141,7 @@ interface FieldItemInterface extends ComplexDataInterface {
    * @throws \InvalidArgumentException
    *   If a non-existent property is set.
    */
-  public function __set($property_name, $value);
+  public function __set(string $property_name, $value);
 
   /**
    * Magic method: Determines whether a property is set.
@@ -152,7 +152,7 @@ interface FieldItemInterface extends ComplexDataInterface {
    * @return bool
    *   Returns TRUE if the property exists and is set, FALSE otherwise.
    */
-  public function __isset($property_name);
+  public function __isset(string $property_name);
 
   /**
    * Magic method: Unsets a property.
@@ -160,7 +160,7 @@ interface FieldItemInterface extends ComplexDataInterface {
    * @param string $property_name
    *   The name of the property to get; e.g., 'title' or 'name'.
    */
-  public function __unset($property_name);
+  public function __unset(string $property_name);
 
   /**
    * Returns a renderable array for a single field item.
@@ -213,7 +213,7 @@ interface FieldItemInterface extends ComplexDataInterface {
    *   Whether field items should be rewritten to the storage as a consequence
    *   of the logic implemented by the custom behavior.
    */
-  public function postSave($update);
+  public function postSave(bool $update);
 
   /**
    * Defines custom delete behavior for field values.
@@ -402,7 +402,7 @@ interface FieldItemInterface extends ComplexDataInterface {
    * @return array
    *   The form definition for the field settings.
    */
-  public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data);
+  public function storageSettingsForm(array &$form, FormStateInterface $form_state, bool $has_data);
 
   /**
    * Returns a form for the field-level settings.

@@ -63,7 +63,7 @@ interface ComplexDataInterface extends TraversableTypedDataInterface {
    * @throws \Drupal\Core\TypedData\Exception\MissingDataException
    *   If the complex data structure is unset and no property can be set.
    */
-  public function set($property_name, $value, $notify = TRUE);
+  public function set($property_name, $value, bool $notify = TRUE);
 
   /**
    * Gets an array of property objects.
@@ -78,7 +78,7 @@ interface ComplexDataInterface extends TraversableTypedDataInterface {
    * @throws \Drupal\Core\TypedData\Exception\MissingDataException
    *   If the complex data structure is unset and no property can be created.
    */
-  public function getProperties($include_computed = FALSE);
+  public function getProperties(bool $include_computed = FALSE);
 
   /**
    * Returns an array of all property values.

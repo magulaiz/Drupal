@@ -19,6 +19,6 @@ interface ChmodInterface {
    *
    * @see http://php.net/chmod
    */
-  public function chmodJailed($path, $mode, $recursive);
+  public function chmodJailed(string $path, int $mode, bool $recursive);
 
 }

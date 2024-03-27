@@ -16,7 +16,7 @@ interface ContextualLinkManagerInterface {
    * @return array
    *   A list of contextual links plugin definitions.
    */
-  public function getContextualLinkPluginsByGroup($group_name);
+  public function getContextualLinkPluginsByGroup(string $group_name);
 
   /**
    * Gets the contextual links prepared as expected by links.html.twig.
@@ -41,6 +41,6 @@ interface ContextualLinkManagerInterface {
    *       to the link generator.
    *     - metadata: The array of additional metadata that was passed in.
    */
-  public function getContextualLinksArrayByGroup($group_name, array $route_parameters, array $metadata = []);
+  public function getContextualLinksArrayByGroup(string $group_name, array $route_parameters, array $metadata = []);
 
 }

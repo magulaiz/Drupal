@@ -25,7 +25,7 @@ interface DateSqlInterface {
    * @return string
    *   An expression representing a date field with timezone.
    */
-  public function getDateField($field, $string_date);
+  public function getDateField(string $field, bool $string_date);
 
   /**
    * Creates a native database date formatting.
@@ -39,7 +39,7 @@ interface DateSqlInterface {
    *   A string representing the field formatted as a date as specified by
    *   $format.
    */
-  public function getDateFormat($field, $format);
+  public function getDateFormat(string $field, string $format);
 
   /**
    * Applies the given offset to the given field.
@@ -49,7 +49,7 @@ interface DateSqlInterface {
    * @param int $offset
    *   The timezone offset in seconds.
    */
-  public function setFieldTimezoneOffset(&$field, $offset);
+  public function setFieldTimezoneOffset(string &$field, int $offset);
 
   /**
    * Set the database to the given timezone.
@@ -57,6 +57,6 @@ interface DateSqlInterface {
    * @param string $offset
    *   The timezone.
    */
-  public function setTimezoneOffset($offset);
+  public function setTimezoneOffset(string $offset);
 
 }

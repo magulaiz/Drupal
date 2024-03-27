@@ -26,7 +26,7 @@ interface ContentTranslationManagerInterface {
    * @return bool
    *   TRUE if an entity type is supported, FALSE otherwise.
    */
-  public function isSupported($entity_type_id);
+  public function isSupported(string $entity_type_id);
 
   /**
    * Returns an instance of the Content translation handler.
@@ -37,7 +37,7 @@ interface ContentTranslationManagerInterface {
    * @return \Drupal\content_translation\ContentTranslationHandlerInterface
    *   An instance of the content translation handler.
    */
-  public function getTranslationHandler($entity_type_id);
+  public function getTranslationHandler(string $entity_type_id);
 
   /**
    * Returns an instance of the Content translation metadata.
@@ -60,7 +60,7 @@ interface ContentTranslationManagerInterface {
    * @param bool $value
    *   The boolean value we need to save.
    */
-  public function setEnabled($entity_type_id, $bundle, $value);
+  public function setEnabled(string $entity_type_id, string $bundle, bool $value);
 
   /**
    * Determines whether the given entity type is translatable.
@@ -75,6 +75,6 @@ interface ContentTranslationManagerInterface {
    *   TRUE if the specified bundle is translatable. If no bundle is provided
    *   returns TRUE if at least one of the entity bundles is translatable.
    */
-  public function isEnabled($entity_type_id, $bundle = NULL);
+  public function isEnabled(string $entity_type_id, string $bundle = NULL);
 
 }

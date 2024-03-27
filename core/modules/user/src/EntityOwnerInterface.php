@@ -49,6 +49,6 @@ interface EntityOwnerInterface {
    *
    * @return $this
    */
-  public function setOwnerId($uid);
+  public function setOwnerId(int $uid);
 
 }

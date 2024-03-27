@@ -69,7 +69,7 @@ interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, 
    * @return $this
    *   The called node entity.
    */
-  public function setTitle($title);
+  public function setTitle(string $title);
 
   /**
    * Gets the node creation timestamp.
@@ -88,7 +88,7 @@ interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, 
    * @return $this
    *   The called node entity.
    */
-  public function setCreatedTime($timestamp);
+  public function setCreatedTime(int $timestamp);
 
   /**
    * Returns the node promotion status.
@@ -107,7 +107,7 @@ interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, 
    * @return $this
    *   The called node entity.
    */
-  public function setPromoted($promoted);
+  public function setPromoted(bool $promoted);
 
   /**
    * Returns the node sticky status.
@@ -126,7 +126,7 @@ interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, 
    * @return $this
    *   The called node entity.
    */
-  public function setSticky($sticky);
+  public function setSticky(bool $sticky);
 
   /**
    * Gets the node revision creation timestamp.

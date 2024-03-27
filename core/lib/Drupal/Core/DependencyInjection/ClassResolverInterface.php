@@ -21,6 +21,6 @@ interface ClassResolverInterface {
    * @throws \InvalidArgumentException
    *   If $class is not a valid service identifier and the class does not exist.
    */
-  public function getInstanceFromDefinition($definition);
+  public function getInstanceFromDefinition(string $definition);
 
 }

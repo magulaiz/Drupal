@@ -23,6 +23,6 @@ interface LayoutBuilderOverridableInterface {
    *
    * @return $this
    */
-  public function setOverridable($overridable = TRUE);
+  public function setOverridable(bool $overridable = TRUE);
 
 }

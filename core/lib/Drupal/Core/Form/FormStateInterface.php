@@ -69,7 +69,7 @@ interface FormStateInterface {
    *
    * @see \Drupal\Core\Extension\ModuleHandlerInterface::loadInclude()
    */
-  public function loadInclude($module, $type, $name = NULL);
+  public function loadInclude(string $module, string $type, $name = NULL);
 
   /**
    * Returns an array representation of the cacheable portion of the form state.
@@ -129,7 +129,7 @@ interface FormStateInterface {
    * @see \Drupal\Core\Form\FormSubmitterInterface::redirectForm()
    * @see \Drupal\Core\Url::fromUri()
    */
-  public function setRedirect($route_name, array $route_parameters = [], array $options = []);
+  public function setRedirect(string $route_name, array $route_parameters = [], array $options = []);
 
   /**
    * Sets the redirect URL for the form.
@@ -296,7 +296,7 @@ interface FormStateInterface {
    *
    * @return $this
    */
-  public function addBuildInfo($property, $value);
+  public function addBuildInfo(string $property, $value);
 
   /**
    * Returns the form values as they were submitted by the user.
@@ -541,7 +541,7 @@ interface FormStateInterface {
    *
    * @return $this
    */
-  public function setErrorByName($name, $message = '');
+  public function setErrorByName(string $name, string $message = '');
 
   /**
    * Flags an element as having an error.
@@ -553,7 +553,7 @@ interface FormStateInterface {
    *
    * @return $this
    */
-  public function setError(array &$element, $message = '');
+  public function setError(array &$element, string $message = '');
 
   /**
    * Clears all errors against all form elements made by self::setErrorByName().
@@ -590,7 +590,7 @@ interface FormStateInterface {
    *
    * @return $this
    */
-  public function setRebuild($rebuild = TRUE);
+  public function setRebuild(bool $rebuild = TRUE);
 
   /**
    * Determines if the form should be rebuilt after processing.
@@ -608,7 +608,7 @@ interface FormStateInterface {
    *
    * @return $this
    */
-  public function setInvalidToken($invalid_token);
+  public function setInvalidToken(bool $invalid_token);
 
   /**
    * Determines if the form has an invalid token.
@@ -662,7 +662,7 @@ interface FormStateInterface {
    *
    * @return $this
    */
-  public function setAlwaysProcess($always_process = TRUE);
+  public function setAlwaysProcess(bool $always_process = TRUE);
 
   /**
    * Determines if this form should always be processed.
@@ -702,7 +702,7 @@ interface FormStateInterface {
    *   If the current request is using an HTTP method that must not change
    *   state (e.g., GET).
    */
-  public function setCached($cache = TRUE);
+  public function setCached(bool $cache = TRUE);
 
   /**
    * Determines if the form should be cached.
@@ -759,7 +759,7 @@ interface FormStateInterface {
    *
    * @return $this
    */
-  public function setHasFileElement($has_file_element = TRUE);
+  public function setHasFileElement(bool $has_file_element = TRUE);
 
   /**
    * Returns whether this form has a file element.
@@ -808,7 +808,7 @@ interface FormStateInterface {
    *
    * @return $this
    */
-  public function setMethod($method);
+  public function setMethod(string $method);
 
   /**
    * Sets the HTTP method used by the request that is building the form.
@@ -820,7 +820,7 @@ interface FormStateInterface {
    *
    * @see \Drupal\Core\Form\FormStateInterface::setMethod()
    */
-  public function setRequestMethod($method);
+  public function setRequestMethod(string $method);
 
   /**
    * Returns the HTTP form method.
@@ -833,7 +833,7 @@ interface FormStateInterface {
    *
    * @see \Drupal\Core\Form\FormState::$method
    */
-  public function isMethodType($method_type);
+  public function isMethodType(string $method_type);
 
   /**
    * Enforces that validation is run.
@@ -843,7 +843,7 @@ interface FormStateInterface {
    *
    * @return $this
    */
-  public function setValidationEnforced($must_validate = TRUE);
+  public function setValidationEnforced(bool $must_validate = TRUE);
 
   /**
    * Checks if validation is enforced.
@@ -861,7 +861,7 @@ interface FormStateInterface {
    *
    * @return $this
    */
-  public function disableRedirect($no_redirect = TRUE);
+  public function disableRedirect(bool $no_redirect = TRUE);
 
   /**
    * Determines if redirecting has been prevented.
@@ -879,7 +879,7 @@ interface FormStateInterface {
    *
    * @return $this
    */
-  public function setProcessInput($process_input = TRUE);
+  public function setProcessInput(bool $process_input = TRUE);
 
   /**
    * Determines if the form input will be processed.
@@ -897,7 +897,7 @@ interface FormStateInterface {
    *
    * @return $this
    */
-  public function setProgrammed($programmed = TRUE);
+  public function setProgrammed(bool $programmed = TRUE);
 
   /**
    * Returns if this form was submitted programmatically.
@@ -918,7 +918,7 @@ interface FormStateInterface {
    *
    * @see \Drupal\Core\Form\FormState::$programmed_bypass_access_check
    */
-  public function setProgrammedBypassAccessCheck($programmed_bypass_access_check = TRUE);
+  public function setProgrammedBypassAccessCheck(bool $programmed_bypass_access_check = TRUE);
 
   /**
    * Determines if this form submission should bypass #access.
@@ -961,7 +961,7 @@ interface FormStateInterface {
    *
    * @return $this
    */
-  public function addRebuildInfo($property, $value);
+  public function addRebuildInfo(string $property, $value);
 
   /**
    * Sets the submit handlers.
@@ -1053,7 +1053,7 @@ interface FormStateInterface {
    *   array, each element of the array will be used as a nested key. If
    *   $key = ['foo', 'bar'] it will return isset($temporary['foo']['bar']).
    */
-  public function hasTemporaryValue($key);
+  public function hasTemporaryValue(string $key);
 
   /**
    * Sets the form element that triggered submission.
@@ -1099,7 +1099,7 @@ interface FormStateInterface {
    *
    * @return $this
    */
-  public function setValidationComplete($validation_complete = TRUE);
+  public function setValidationComplete(bool $validation_complete = TRUE);
 
   /**
    * Determines if validation has been completed.
@@ -1135,7 +1135,7 @@ interface FormStateInterface {
    *
    * @return $this
    */
-  public function addCleanValueKey($key);
+  public function addCleanValueKey(string $key);
 
   /**
    * Removes internal Form API elements and buttons from submitted form values.

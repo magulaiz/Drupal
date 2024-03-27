@@ -127,7 +127,7 @@ interface LanguageNegotiatorInterface {
    *   negotiation method ID used to determine the language of the specified
    *   type. If negotiation is not possible the default language is returned.
    */
-  public function initializeType($type);
+  public function initializeType(string $type);
 
   /**
    * Returns the language negotiation methods enabled for a language type.
@@ -139,7 +139,7 @@ interface LanguageNegotiatorInterface {
    * @return array[]
    *   An array of language negotiation method definitions keyed by method id.
    */
-  public function getNegotiationMethods($type = NULL);
+  public function getNegotiationMethods(string $type = NULL);
 
   /**
    * Returns an instance of the specified language negotiation method.
@@ -149,7 +149,7 @@ interface LanguageNegotiatorInterface {
    *
    * @return \Drupal\language\LanguageNegotiationMethodInterface
    */
-  public function getNegotiationMethodInstance($method_id);
+  public function getNegotiationMethodInstance(string $method_id);
 
   /**
    * Returns the ID of the language type's primary language negotiation method.
@@ -161,7 +161,7 @@ interface LanguageNegotiatorInterface {
    *   The identifier of the primary language negotiation method for the given
    *   language type, or the default method if none exists.
    */
-  public function getPrimaryNegotiationMethod($type);
+  public function getPrimaryNegotiationMethod(string $type);
 
   /**
    * Checks whether a language negotiation method is enabled for a language type.
@@ -176,7 +176,7 @@ interface LanguageNegotiatorInterface {
    *   TRUE if the method is enabled for at least one of the given language
    *   types, or FALSE otherwise.
    */
-  public function isNegotiationMethodEnabled($method_id, $type = NULL);
+  public function isNegotiationMethodEnabled(string $method_id, string $type = NULL);
 
   /**
    * Saves a list of language negotiation methods for a language type.
@@ -186,7 +186,7 @@ interface LanguageNegotiatorInterface {
    * @param int[] $enabled_methods
    *   An array of language negotiation method weights keyed by method ID.
    */
-  public function saveConfiguration($type, $enabled_methods);
+  public function saveConfiguration(string $type, $enabled_methods);
 
   /**
    * Resave the configuration to purge missing negotiation methods.

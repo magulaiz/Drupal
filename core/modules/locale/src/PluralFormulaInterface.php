@@ -18,7 +18,7 @@ interface PluralFormulaInterface {
    * @return self
    *   The PluralFormula object.
    */
-  public function setPluralFormula($langcode, $plural_count, array $formula);
+  public function setPluralFormula(string $langcode, int $plural_count, array $formula);
 
   /**
    * Returns the number of plurals supported by a given language.
@@ -41,7 +41,7 @@ interface PluralFormulaInterface {
    * @return array
    *   An array of formulae.
    */
-  public function getFormula($langcode);
+  public function getFormula(string $langcode);
 
   /**
    * Resets the static formulae cache.

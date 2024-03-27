@@ -28,6 +28,6 @@ interface PluginFormFactoryInterface {
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
-  public function createInstance(PluginWithFormsInterface $plugin, $operation, $fallback_operation = NULL);
+  public function createInstance(PluginWithFormsInterface $plugin, string $operation, string $fallback_operation = NULL);
 
 }

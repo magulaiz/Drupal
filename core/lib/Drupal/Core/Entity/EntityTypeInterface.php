@@ -42,7 +42,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * @return mixed
    *   The value for that property, or NULL if the property does not exist.
    */
-  public function get($property);
+  public function get(string $property);
 
   /**
    * Sets a value to an arbitrary property.
@@ -54,7 +54,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    *
    * @return $this
    */
-  public function set($property, $value);
+  public function set(string $property, $value);
 
   /**
    * Gets the name of the original entity type class.
@@ -112,7 +112,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    *
    * @see self::getKeys()
    */
-  public function getKey($key);
+  public function getKey(string $key);
 
   /**
    * Indicates if a given entity key exists.
@@ -123,7 +123,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * @return bool
    *   TRUE if a given entity key exists, FALSE otherwise.
    */
-  public function hasKey($key);
+  public function hasKey(string $key);
 
   /**
    * Indicates whether entities should be statically cached.
@@ -164,7 +164,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * @return bool
    *   TRUE if a handler of this type exists, FALSE otherwise.
    */
-  public function hasHandlerClass($handler_type, $nested = FALSE);
+  public function hasHandlerClass(string $handler_type, string|false $nested = FALSE);
 
   /**
    * @param string $handler_type
@@ -176,7 +176,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * @return array|string|null
    *   The handlers for a given type, or NULL if none exist.
    */
-  public function getHandlerClass($handler_type, $nested = FALSE);
+  public function getHandlerClass(string $handler_type, string|false $nested = FALSE);
 
   /**
    * Gets an array of handlers.
@@ -224,7 +224,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    *
    * @return $this
    */
-  public function setStorageClass($class);
+  public function setStorageClass(string $class);
 
   /**
    * Gets the form class for a specific operation.
@@ -238,7 +238,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    *
    * @see \Drupal\Core\Entity\EntityFormBuilderInterface
    */
-  public function getFormClass($operation);
+  public function getFormClass(string $operation);
 
   /**
    * Sets a form class for a specific operation.
@@ -253,7 +253,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    *
    * @see \Drupal\Core\Entity\EntityFormBuilderInterface
    */
-  public function setFormClass($operation, $class);
+  public function setFormClass(string $operation, string $class);
 
   /**
    * Indicates if this entity type has any forms.
@@ -295,7 +295,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    *
    * @return $this
    */
-  public function setListBuilderClass($class);
+  public function setListBuilderClass(string $class);
 
   /**
    * Indicates if this entity type has a list class.
@@ -321,7 +321,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    *
    * @return $this
    */
-  public function setViewBuilderClass($class);
+  public function setViewBuilderClass(string $class);
 
   /**
    * Indicates if this entity type has a view builder.
@@ -347,7 +347,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    *
    * @return $this
    */
-  public function setAccessClass($class);
+  public function setAccessClass(string $class);
 
   /**
    * Indicates if the entity type class implements the given interface.
@@ -358,7 +358,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * @return bool
    *   TRUE if the entity type class implements the given interface.
    */
-  public function entityClassImplements($interface);
+  public function entityClassImplements(string $interface);
 
   /**
    * Sets the handlers for a given type.
@@ -370,7 +370,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    *
    * @return $this
    */
-  public function setHandlerClass($handler_type, $value);
+  public function setHandlerClass(string $handler_type, $value);
 
   /**
    * Gets the name of the default administrative permission.
@@ -442,7 +442,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * @return string|bool
    *   The path for this link, or FALSE if it doesn't exist.
    */
-  public function getLinkTemplate($key);
+  public function getLinkTemplate(string $key);
 
   /**
    * Indicates if a link template exists for a given key.
@@ -453,7 +453,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * @return bool
    *   TRUE if the link template exists, FALSE otherwise.
    */
-  public function hasLinkTemplate($key);
+  public function hasLinkTemplate(string $key);
 
   /**
    * Sets a single link template.
@@ -468,7 +468,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * @throws \InvalidArgumentException
    *   Thrown when the path does not start with a leading slash.
    */
-  public function setLinkTemplate($key, $path);
+  public function setLinkTemplate(string $key, string $path);
 
   /**
    * Gets the name of the entity type which provides bundles.
@@ -651,7 +651,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    * @return string|\Drupal\Core\StringTranslation\TranslatableMarkup
    *   The count label.
    */
-  public function getCountLabel($count);
+  public function getCountLabel(int $count);
 
   /**
    * Gets a callable that can be used to provide the entity URI.
@@ -784,7 +784,7 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    *
    * @return $this
    */
-  public function addConstraint($constraint_name, $options = NULL);
+  public function addConstraint(string $constraint_name, $options = NULL);
 
   /**
    * Gets the config dependency info for this entity, if any exists.
@@ -797,6 +797,6 @@ interface EntityTypeInterface extends PluginDefinitionInterface {
    *   - 'type': The config dependency type (e.g. 'module', 'config').
    *   - 'name': The name of the config dependency.
    */
-  public function getBundleConfigDependency($bundle);
+  public function getBundleConfigDependency(string $bundle);
 
 }

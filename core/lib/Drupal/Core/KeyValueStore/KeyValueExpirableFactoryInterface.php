@@ -16,6 +16,6 @@ interface KeyValueExpirableFactoryInterface {
    * @return \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface
    *   An expirable key/value store implementation for the given $collection.
    */
-  public function get($collection);
+  public function get(string $collection);
 
 }

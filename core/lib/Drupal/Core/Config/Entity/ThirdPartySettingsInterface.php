@@ -24,7 +24,7 @@ interface ThirdPartySettingsInterface {
    *
    * @return $this
    */
-  public function setThirdPartySetting($module, $key, $value);
+  public function setThirdPartySetting(string $module, string $key, $value);
 
   /**
    * Gets the value of a third-party setting.
@@ -39,7 +39,7 @@ interface ThirdPartySettingsInterface {
    * @return mixed
    *   The value.
    */
-  public function getThirdPartySetting($module, $key, $default = NULL);
+  public function getThirdPartySetting(string $module, string $key, $default = NULL);
 
   /**
    * Gets all third-party settings of a given module.
@@ -50,7 +50,7 @@ interface ThirdPartySettingsInterface {
    * @return array
    *   An array of key-value pairs.
    */
-  public function getThirdPartySettings($module);
+  public function getThirdPartySettings(string $module);
 
   /**
    * Unsets a third-party setting.
@@ -63,7 +63,7 @@ interface ThirdPartySettingsInterface {
    * @return mixed
    *   The value.
    */
-  public function unsetThirdPartySetting($module, $key);
+  public function unsetThirdPartySetting(string $module, string $key);
 
   /**
    * Gets the list of third parties that store information.

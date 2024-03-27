@@ -51,6 +51,6 @@ interface MigrateExecutableInterface {
    * @param int $level
    *   (optional) Message severity (defaults to MESSAGE_ERROR).
    */
-  public function saveMessage($message, $level = MigrationInterface::MESSAGE_ERROR);
+  public function saveMessage(string $message, int $level = MigrationInterface::MESSAGE_ERROR);
 
 }

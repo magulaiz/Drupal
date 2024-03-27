@@ -21,7 +21,7 @@ interface StatisticsStorageInterface {
    * @return bool
    *   TRUE if the entity view has been counted.
    */
-  public function recordView($id);
+  public function recordView(int $id);
 
   /**
    * Returns the number of times entities have been viewed.
@@ -46,7 +46,7 @@ interface StatisticsStorageInterface {
    *   If the entity exists, a value object representing the number of times if
    *   has been viewed. If it does not exist, FALSE is returned.
    */
-  public function fetchView($id);
+  public function fetchView(int $id);
 
   /**
    * Returns the number of times an entity has been viewed.
@@ -62,7 +62,7 @@ interface StatisticsStorageInterface {
    * @return array
    *   An ordered array of entity IDs.
    */
-  public function fetchAll($order = 'totalcount', $limit = 5);
+  public function fetchAll(string $order = 'totalcount', int $limit = 5);
 
   /**
    * Delete counts for a specific entity.
@@ -73,7 +73,7 @@ interface StatisticsStorageInterface {
    * @return bool
    *   TRUE if the entity views have been deleted.
    */
-  public function deleteViews($id);
+  public function deleteViews(int $id);
 
   /**
    * Reset the day counter for all entities once every day.

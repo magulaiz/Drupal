@@ -27,7 +27,7 @@ interface CacheCollectorInterface {
    * @return mixed
    *   The corresponding cache data.
    */
-  public function get($key);
+  public function get(string $key);
 
   /**
    * Sets cache data.
@@ -40,7 +40,7 @@ interface CacheCollectorInterface {
    * @param mixed $value
    *   The data to be set.
    */
-  public function set($key, $value);
+  public function set(string $key, $value);
 
   /**
    * Deletes the element.
@@ -51,7 +51,7 @@ interface CacheCollectorInterface {
    * @param string $key
    *   Key that identifies the data.
    */
-  public function delete($key);
+  public function delete(string $key);
 
   /**
    * Returns whether data exists for this key.
@@ -59,7 +59,7 @@ interface CacheCollectorInterface {
    * @param string $key
    *   Key that identifies the data.
    */
-  public function has($key);
+  public function has(string $key);
 
   /**
    * Resets the local cache.

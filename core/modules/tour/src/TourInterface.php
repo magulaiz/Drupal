@@ -28,7 +28,7 @@ interface TourInterface extends ConfigEntityInterface {
    * @return bool
    *   TRUE if the tour matches the route parameters.
    */
-  public function hasMatchingRoute($route_name, $route_params);
+  public function hasMatchingRoute(string $route_name, $route_params);
 
   /**
    * Returns tip plugin.
@@ -39,7 +39,7 @@ interface TourInterface extends ConfigEntityInterface {
    * @return \Drupal\tour\TipPluginInterface
    *   The tip plugin.
    */
-  public function getTip($id);
+  public function getTip(string $id);
 
   /**
    * Returns the tips for this tour.

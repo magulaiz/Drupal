@@ -29,7 +29,7 @@ interface UserDataInterface {
    *     existing data for $module in all user accounts, keyed first by user ID
    *     and $name second.
    */
-  public function get($module, $uid = NULL, $name = NULL);
+  public function get(string $module, int $uid = NULL, string $name = NULL);
 
   /**
    * Stores data for a user account.
@@ -43,7 +43,7 @@ interface UserDataInterface {
    * @param mixed $value
    *   The value to store. Non-scalar values are serialized automatically.
    */
-  public function set($module, $uid, $name, $value);
+  public function set(string $module, int $uid, string $name, $value);
 
   /**
    * Deletes data stored for a user account.
@@ -59,6 +59,6 @@ interface UserDataInterface {
    *   (optional) The name of the data key. If omitted, all data associated with
    *   $module and $uid is deleted.
    */
-  public function delete($module = NULL, $uid = NULL, $name = NULL);
+  public function delete($module = NULL, $uid = NULL, string $name = NULL);
 
 }

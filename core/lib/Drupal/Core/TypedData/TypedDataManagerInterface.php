@@ -66,7 +66,7 @@ interface TypedDataManagerInterface extends PluginManagerInterface, CachedDiscov
    * @see \Drupal\Core\TypedData\Plugin\DataType\StringData
    * @see \Drupal\Core\TypedData\Plugin\DataType\Uri
    */
-  public function create(DataDefinitionInterface $definition, $value = NULL, $name = NULL, $parent = NULL);
+  public function create(DataDefinitionInterface $definition, $value = NULL, string $name = NULL, $parent = NULL);
 
   /**
    * Creates a new data definition object.
@@ -91,7 +91,7 @@ interface TypedDataManagerInterface extends PluginManagerInterface, CachedDiscov
    *
    * @see \Drupal\Core\TypedData\TypedDataManager::createListDataDefinition()
    */
-  public function createDataDefinition($data_type);
+  public function createDataDefinition(string $data_type);
 
   /**
    * Creates a new list data definition for items of the given data type.
@@ -104,7 +104,7 @@ interface TypedDataManagerInterface extends PluginManagerInterface, CachedDiscov
    *
    * @see \Drupal\Core\TypedData\TypedDataManager::createDataDefinition()
    */
-  public function createListDataDefinition($item_type);
+  public function createListDataDefinition(string $item_type);
 
   /**
    * {@inheritdoc}
@@ -160,7 +160,7 @@ interface TypedDataManagerInterface extends PluginManagerInterface, CachedDiscov
    *
    * @see \Drupal\Core\TypedData\TypedDataManager::create()
    */
-  public function getPropertyInstance(TypedDataInterface $object, $property_name, $value = NULL);
+  public function getPropertyInstance(TypedDataInterface $object, string $property_name, $value = NULL);
 
   /**
    * Gets the validator for validating typed data.

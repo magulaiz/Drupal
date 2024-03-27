@@ -53,7 +53,7 @@ interface UpdateFetcherInterface {
    * @return string
    *   The project information fetched as string. Empty string upon failure.
    */
-  public function fetchProjectData(array $project, $site_key = '');
+  public function fetchProjectData(array $project, string $site_key = '');
 
   /**
    * Generates the URL to fetch information about project updates.
@@ -75,6 +75,6 @@ interface UpdateFetcherInterface {
    * @see \Drupal\update\UpdateProcessor::processFetchTask()
    * @see \Drupal\update\UpdateManager::getProjects()
    */
-  public function buildFetchUrl(array $project, $site_key = '');
+  public function buildFetchUrl(array $project, string $site_key = '');
 
 }

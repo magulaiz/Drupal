@@ -66,7 +66,7 @@ interface BlockInterface extends ConfigEntityInterface {
    * @return \Drupal\Core\Condition\ConditionInterface
    *   A condition plugin.
    */
-  public function getVisibilityCondition($instance_id);
+  public function getVisibilityCondition(string $instance_id);
 
   /**
    * Sets the visibility condition configuration.
@@ -78,7 +78,7 @@ interface BlockInterface extends ConfigEntityInterface {
    *
    * @return $this
    */
-  public function setVisibilityConfig($instance_id, array $configuration);
+  public function setVisibilityConfig(string $instance_id, array $configuration);
 
   /**
    * Returns the weight of this block (used for sorting).
@@ -96,7 +96,7 @@ interface BlockInterface extends ConfigEntityInterface {
    *
    * @return $this
    */
-  public function setRegion($region);
+  public function setRegion(string $region);
 
   /**
    * Sets the block weight.
@@ -106,7 +106,7 @@ interface BlockInterface extends ConfigEntityInterface {
    *
    * @return $this
    */
-  public function setWeight($weight);
+  public function setWeight(int $weight);
 
   /**
    * Creates a duplicate of the block entity.
@@ -120,6 +120,6 @@ interface BlockInterface extends ConfigEntityInterface {
    *   A clone of $this with all identifiers unset, so saving it inserts a new
    *   entity into the storage system.
    */
-  public function createDuplicateBlock($new_id = NULL, $new_theme = NULL);
+  public function createDuplicateBlock(string $new_id = NULL, string $new_theme = NULL);
 
 }

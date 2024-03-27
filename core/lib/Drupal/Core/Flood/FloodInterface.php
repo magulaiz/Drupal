@@ -26,7 +26,7 @@ interface FloodInterface {
    *   PrefixFloodInterface which allows all flood events that share the same
    *   prefix to be cleared simultaneously.
    */
-  public function register($name, $window = 3600, $identifier = NULL);
+  public function register(string $name, int $window = 3600, string $identifier = NULL);
 
   /**
    * Makes the flood control mechanism forget an event for the current visitor.
@@ -37,7 +37,7 @@ interface FloodInterface {
    *   (optional) Unique identifier of the current user. Defaults to the current
    *   user's IP address).
    */
-  public function clear($name, $identifier = NULL);
+  public function clear(string $name, string $identifier = NULL);
 
   /**
    * Checks whether a user is allowed to proceed with the specified event.
@@ -61,7 +61,7 @@ interface FloodInterface {
    *   TRUE if the user is allowed to proceed. FALSE if they have exceeded the
    *   threshold and should not be allowed to proceed.
    */
-  public function isAllowed($name, $threshold, $window = 3600, $identifier = NULL);
+  public function isAllowed(string $name, int $threshold, int $window = 3600, string $identifier = NULL);
 
   /**
    * Cleans up expired flood events.

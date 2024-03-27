@@ -38,7 +38,7 @@ interface PluginSettingsInterface extends PluginInspectionInterface, ThirdPartyS
    * @return mixed
    *   The setting value.
    */
-  public function getSetting($key);
+  public function getSetting(string $key);
 
   /**
    * Sets the settings for the plugin.
@@ -61,7 +61,7 @@ interface PluginSettingsInterface extends PluginInspectionInterface, ThirdPartyS
    *
    * @return $this
    */
-  public function setSetting($key, $value);
+  public function setSetting(string $key, $value);
 
   /**
    * Informs the plugin that some configuration it depends on will be deleted.

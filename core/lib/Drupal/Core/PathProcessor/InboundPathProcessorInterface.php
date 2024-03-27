@@ -27,6 +27,6 @@ interface InboundPathProcessorInterface {
    * @return string
    *   The processed path.
    */
-  public function processInbound($path, Request $request);
+  public function processInbound(string $path, Request $request);
 
 }

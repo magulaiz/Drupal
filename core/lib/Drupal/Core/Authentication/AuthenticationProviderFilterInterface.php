@@ -30,6 +30,6 @@ interface AuthenticationProviderFilterInterface {
    *   TRUE if an authentication method is allowed on the request, otherwise
    *   FALSE.
    */
-  public function appliesToRoutedRequest(Request $request, $authenticated);
+  public function appliesToRoutedRequest(Request $request, bool $authenticated);
 
 }

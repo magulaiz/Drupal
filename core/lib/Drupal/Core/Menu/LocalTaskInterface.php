@@ -73,7 +73,7 @@ interface LocalTaskInterface {
    * @return $this
    *   The called object for chaining.
    */
-  public function setActive($active = TRUE);
+  public function setActive(bool $active = TRUE);
 
   /**
    * Gets the active status.

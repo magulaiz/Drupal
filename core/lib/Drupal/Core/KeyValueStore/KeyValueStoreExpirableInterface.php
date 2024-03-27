@@ -17,7 +17,7 @@ interface KeyValueStoreExpirableInterface extends KeyValueStoreInterface {
    * @param int $expire
    *   The time to live for items, in seconds.
    */
-  public function setWithExpire($key, $value, $expire);
+  public function setWithExpire(string $key, $value, int $expire);
 
   /**
    * Sets a value for a given key with a time to live if it does not yet exist.
@@ -34,7 +34,7 @@ interface KeyValueStoreExpirableInterface extends KeyValueStoreInterface {
    * @return bool
    *   TRUE if the data was set, or FALSE if it already existed.
    */
-  public function setWithExpireIfNotExists($key, $value, $expire);
+  public function setWithExpireIfNotExists(string $key, $value, int $expire);
 
   /**
    * Saves an array of values with a time to live.
@@ -44,6 +44,6 @@ interface KeyValueStoreExpirableInterface extends KeyValueStoreInterface {
    * @param int $expire
    *   The time to live for items, in seconds.
    */
-  public function setMultipleWithExpire(array $data, $expire);
+  public function setMultipleWithExpire(array $data, int $expire);
 
 }

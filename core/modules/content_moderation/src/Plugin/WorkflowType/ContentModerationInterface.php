@@ -27,7 +27,7 @@ interface ContentModerationInterface extends WorkflowTypeInterface {
    *   The bundles of the entity type the workflow is applied to or an empty
    *   array if the entity type is not applied to the workflow.
    */
-  public function getBundlesForEntityType($entity_type_id);
+  public function getBundlesForEntityType(string $entity_type_id);
 
   /**
    * Checks if the workflow applies to the supplied entity type and bundle.
@@ -41,7 +41,7 @@ interface ContentModerationInterface extends WorkflowTypeInterface {
    *   TRUE if the workflow applies to the supplied entity type ID and bundle
    *   ID. FALSE if not.
    */
-  public function appliesToEntityTypeAndBundle($entity_type_id, $bundle_id);
+  public function appliesToEntityTypeAndBundle(string $entity_type_id, string $bundle_id);
 
   /**
    * Removes an entity type ID / bundle ID from the workflow.
@@ -51,7 +51,7 @@ interface ContentModerationInterface extends WorkflowTypeInterface {
    * @param string $bundle_id
    *   The bundle ID to remove.
    */
-  public function removeEntityTypeAndBundle($entity_type_id, $bundle_id);
+  public function removeEntityTypeAndBundle(string $entity_type_id, string $bundle_id);
 
   /**
    * Add an entity type ID / bundle ID to the workflow.
@@ -63,7 +63,7 @@ interface ContentModerationInterface extends WorkflowTypeInterface {
    *   The bundle ID to add. It is responsibility of the caller to provide a
    *   valid bundle ID.
    */
-  public function addEntityTypeAndBundle($entity_type_id, $bundle_id);
+  public function addEntityTypeAndBundle(string $entity_type_id, string $bundle_id);
 
   /**
    * {@inheritdoc}

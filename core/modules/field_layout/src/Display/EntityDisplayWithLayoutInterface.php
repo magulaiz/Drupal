@@ -73,6 +73,6 @@ interface EntityDisplayWithLayoutInterface extends EntityDisplayInterface {
    *
    * @return $this
    */
-  public function ensureLayout($default_layout_id = 'layout_onecol');
+  public function ensureLayout(string $default_layout_id = 'layout_onecol');
 
 }

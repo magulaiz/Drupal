@@ -26,7 +26,7 @@ interface UserStorageInterface extends ContentEntityStorageInterface {
    * @param int $timestamp
    *   The last access timestamp.
    */
-  public function updateLastAccessTimestamp(AccountInterface $account, $timestamp);
+  public function updateLastAccessTimestamp(AccountInterface $account, int $timestamp);
 
   /**
    * Delete role references.

@@ -15,6 +15,6 @@ interface ChainBreadcrumbBuilderInterface extends BreadcrumbBuilderInterface {
    * @param int $priority
    *   Priority of the breadcrumb builder.
    */
-  public function addBuilder(BreadcrumbBuilderInterface $builder, $priority);
+  public function addBuilder(BreadcrumbBuilderInterface $builder, int $priority);
 
 }

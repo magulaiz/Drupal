@@ -25,7 +25,7 @@ interface FieldableEntityStorageInterface extends EntityStorageInterface {
    *
    * @see \Drupal\Core\Entity\FieldableEntityStorageInterface::purgeFieldData()
    */
-  public function countFieldData($storage_definition, $as_bool = FALSE);
+  public function countFieldData($storage_definition, bool $as_bool = FALSE);
 
   /**
    * Purges a batch of field data.
@@ -40,7 +40,7 @@ interface FieldableEntityStorageInterface extends EntityStorageInterface {
    * @return int
    *   The number of field data records that have been purged.
    */
-  public function purgeFieldData(FieldDefinitionInterface $field_definition, $batch_size);
+  public function purgeFieldData(FieldDefinitionInterface $field_definition, int $batch_size);
 
   /**
    * Performs final cleanup after all data of a field has been purged.

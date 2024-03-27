@@ -17,7 +17,7 @@ interface StorageComparerInterface {
    * @return \Drupal\Core\Config\StorageInterface
    *   Storage object used to read configuration.
    */
-  public function getSourceStorage($collection = StorageInterface::DEFAULT_COLLECTION);
+  public function getSourceStorage(string $collection = StorageInterface::DEFAULT_COLLECTION);
 
   /**
    * Gets the configuration target storage.
@@ -29,7 +29,7 @@ interface StorageComparerInterface {
    * @return \Drupal\Core\Config\StorageInterface
    *   Storage object used to write configuration.
    */
-  public function getTargetStorage($collection = StorageInterface::DEFAULT_COLLECTION);
+  public function getTargetStorage(string $collection = StorageInterface::DEFAULT_COLLECTION);
 
   /**
    * Changes the StorageComparer to write mode.
@@ -63,7 +63,7 @@ interface StorageComparerInterface {
    * @return array
    *   An array of config changes that are yet to be imported.
    */
-  public function getChangelist($op = NULL, $collection = StorageInterface::DEFAULT_COLLECTION);
+  public function getChangelist(string $op = NULL, string $collection = StorageInterface::DEFAULT_COLLECTION);
 
   /**
    * Calculates the differences.
@@ -112,7 +112,7 @@ interface StorageComparerInterface {
    *
    * @see \Drupal\Core\Config\ConfigImporter::createRenameName()
    */
-  public function moveRenameToUpdate($rename, $collection = StorageInterface::DEFAULT_COLLECTION);
+  public function moveRenameToUpdate(string $rename, string $collection = StorageInterface::DEFAULT_COLLECTION);
 
   /**
    * Extracts old and new configuration names from a configuration change name.
@@ -128,7 +128,7 @@ interface StorageComparerInterface {
    *
    * @see \Drupal\Core\Config\StorageComparer::createRenameNames()
    */
-  public function extractRenameNames($name);
+  public function extractRenameNames(string $name);
 
   /**
    * Gets the existing collections from both the target and source storage.
@@ -139,6 +139,6 @@ interface StorageComparerInterface {
    * @return array
    *   An array of existing collection names.
    */
-  public function getAllCollectionNames($include_default = TRUE);
+  public function getAllCollectionNames(bool $include_default = TRUE);
 
 }

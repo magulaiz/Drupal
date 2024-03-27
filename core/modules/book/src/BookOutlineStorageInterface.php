@@ -42,7 +42,7 @@ interface BookOutlineStorageInterface {
    * @return array
    *   Array of loaded book items.
    */
-  public function loadMultiple($nids, $access = TRUE);
+  public function loadMultiple($nids, bool $access = TRUE);
 
   /**
    * Gets child relative depth.
@@ -55,7 +55,7 @@ interface BookOutlineStorageInterface {
    * @return int
    *   The depth of the searched book.
    */
-  public function getChildRelativeDepth($book_link, $max_depth);
+  public function getChildRelativeDepth($book_link, int $max_depth);
 
   /**
    * Deletes a book entry.
@@ -66,7 +66,7 @@ interface BookOutlineStorageInterface {
    * @return mixed
    *   Number of deleted book entries.
    */
-  public function delete($nid);
+  public function delete(int $nid);
 
   /**
    * Loads book's children using its parent ID.
@@ -77,7 +77,7 @@ interface BookOutlineStorageInterface {
    * @return array
    *   Array of loaded book items.
    */
-  public function loadBookChildren($pid);
+  public function loadBookChildren(int $pid);
 
   /**
    * Builds tree data used for the menu tree.
@@ -95,7 +95,7 @@ interface BookOutlineStorageInterface {
    * @return array
    *   Array of loaded book links.
    */
-  public function getBookMenuTree($bid, $parameters, $min_depth, $max_depth);
+  public function getBookMenuTree(int $bid, $parameters, int $min_depth, int $max_depth);
 
   /**
    * Inserts a book link.
@@ -121,7 +121,7 @@ interface BookOutlineStorageInterface {
    * @return mixed
    *   The number of rows matched by the update query.
    */
-  public function update($nid, $fields);
+  public function update(int $nid, $fields);
 
   /**
    * Update the book ID of the book link that it's being moved.
@@ -139,7 +139,7 @@ interface BookOutlineStorageInterface {
    * @return mixed
    *   The number of rows matched by the update query.
    */
-  public function updateMovedChildren($bid, $original, $expressions, $shift);
+  public function updateMovedChildren(int $bid, $original, $expressions, int $shift);
 
   /**
    * Count the number of original link children.
@@ -163,6 +163,6 @@ interface BookOutlineStorageInterface {
    * @return array
    *   Array of unordered subtree book items.
    */
-  public function getBookSubtree($link, $max_depth);
+  public function getBookSubtree($link, int $max_depth);
 
 }

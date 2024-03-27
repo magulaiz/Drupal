@@ -33,7 +33,7 @@ interface ThemeInstallerInterface {
    * @throws \Drupal\Core\Extension\MissingDependencyException
    *   Thrown when a requested dependency can't be found.
    */
-  public function install(array $theme_list, $install_dependencies = TRUE);
+  public function install(array $theme_list, bool $install_dependencies = TRUE);
 
   /**
    * Uninstalls a given list of themes.

@@ -35,7 +35,7 @@ interface ConfigEntityInterface extends EntityInterface, ThirdPartySettingsInter
    *
    * @return $this
    */
-  public function setStatus($status);
+  public function setStatus(bool $status);
 
   /**
    * Returns whether the configuration entity is enabled.
@@ -83,7 +83,7 @@ interface ConfigEntityInterface extends EntityInterface, ThirdPartySettingsInter
    * @return mixed
    *   The property if it exists, or NULL otherwise.
    */
-  public function get($property_name);
+  public function get(string $property_name);
 
   /**
    * Sets the value of a property.
@@ -95,7 +95,7 @@ interface ConfigEntityInterface extends EntityInterface, ThirdPartySettingsInter
    *
    * @return $this
    */
-  public function set($property_name, $value);
+  public function set(string $property_name, $value);
 
   /**
    * Calculates dependencies and stores them in the dependency property.

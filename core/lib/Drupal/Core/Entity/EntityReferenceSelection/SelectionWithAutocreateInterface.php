@@ -26,7 +26,7 @@ interface SelectionWithAutocreateInterface {
    * @return \Drupal\Core\Entity\EntityInterface
    *   An unsaved entity object.
    */
-  public function createNewEntity($entity_type_id, $bundle, $label, $uid);
+  public function createNewEntity(string $entity_type_id, string $bundle, string $label, int $uid);
 
   /**
    * Validates which newly created entities can be referenced.

@@ -21,7 +21,7 @@ interface ArchiverInterface {
    * @return $this
    *   The called object.
    */
-  public function add($file_path);
+  public function add(string $file_path);
 
   /**
    * Removes the specified file from the archive.
@@ -32,7 +32,7 @@ interface ArchiverInterface {
    * @return $this
    *   The called object.
    */
-  public function remove($path);
+  public function remove(string $path);
 
   /**
    * Extracts multiple files in the archive to the specified path.
@@ -47,7 +47,7 @@ interface ArchiverInterface {
    * @return $this
    *   The called object.
    */
-  public function extract($path, array $files = []);
+  public function extract(string $path, array $files = []);
 
   /**
    * Lists all files in the archive.

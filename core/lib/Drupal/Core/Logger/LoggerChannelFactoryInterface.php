@@ -27,6 +27,6 @@ interface LoggerChannelFactoryInterface {
    *
    * @see \Symfony\Component\HttpKernel\DependencyInjection\LoggerPass
    */
-  public function addLogger(LoggerInterface $logger, $priority = 0);
+  public function addLogger(LoggerInterface $logger, int $priority = 0);
 
 }

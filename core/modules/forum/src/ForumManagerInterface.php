@@ -21,7 +21,7 @@ interface ForumManagerInterface {
    * @return array
    *   Array with keys 'topics' and 'header'.
    */
-  public function getTopics($tid, AccountInterface $account);
+  public function getTopics(int $tid, AccountInterface $account);
 
   /**
    * Utility method to fetch the child forums for a given forum.
@@ -34,7 +34,7 @@ interface ForumManagerInterface {
    * @return array
    *   Array of children.
    */
-  public function getChildren($vid, $tid);
+  public function getChildren(int $vid, int $tid);
 
   /**
    * Generates and returns the forum index.
@@ -75,6 +75,6 @@ interface ForumManagerInterface {
    * @return int
    *   The number of new posts in the forum that have not been read by the user.
    */
-  public function unreadTopics($term, $uid);
+  public function unreadTopics(int $term, int $uid);
 
 }

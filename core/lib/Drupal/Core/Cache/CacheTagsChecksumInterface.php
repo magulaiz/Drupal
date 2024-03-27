@@ -63,7 +63,7 @@ interface CacheTagsChecksumInterface {
    *   FALSE if cache tag invalidations happened for the passed in tags since
    *   the cache item was stored, TRUE otherwise.
    */
-  public function isValid($checksum, array $tags);
+  public function isValid(int $checksum, array $tags);
 
   /**
    * Reset statically cached tags.

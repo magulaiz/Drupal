@@ -53,7 +53,7 @@ interface MediaTypeInterface extends ConfigEntityInterface, EntityDescriptionInt
    *
    * @return $this
    */
-  public function setQueueThumbnailDownloadsStatus($queue_thumbnail_downloads);
+  public function setQueueThumbnailDownloadsStatus(bool $queue_thumbnail_downloads);
 
   /**
    * Returns the media source plugin.
@@ -71,7 +71,7 @@ interface MediaTypeInterface extends ConfigEntityInterface, EntityDescriptionInt
    *
    * @return $this
    */
-  public function setNewRevision($new_revision);
+  public function setNewRevision(bool $new_revision);
 
   /**
    * Returns the metadata field map.

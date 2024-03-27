@@ -20,7 +20,7 @@ interface ComplexDataDefinitionInterface extends DataDefinitionInterface {
    * @return \Drupal\Core\TypedData\DataDefinitionInterface|null
    *   The definition of the property or NULL if the property does not exist.
    */
-  public function getPropertyDefinition($name);
+  public function getPropertyDefinition(string $name);
 
   /**
    * Gets an array of property definitions of contained properties.

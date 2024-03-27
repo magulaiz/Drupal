@@ -28,7 +28,7 @@ interface ContextDefinitionInterface {
    *
    * @return $this
    */
-  public function setLabel($label);
+  public function setLabel(string $label);
 
   /**
    * Gets a human readable description.
@@ -66,7 +66,7 @@ interface ContextDefinitionInterface {
    *
    * @return $this
    */
-  public function setDataType($data_type);
+  public function setDataType(string $data_type);
 
   /**
    * Determines whether the data is multi-valued, i.e. a list of data items.
@@ -84,7 +84,7 @@ interface ContextDefinitionInterface {
    *
    * @return $this
    */
-  public function setMultiple($multiple = TRUE);
+  public function setMultiple(bool $multiple = TRUE);
 
   /**
    * Determines whether the context is required.
@@ -104,7 +104,7 @@ interface ContextDefinitionInterface {
    *
    * @return $this
    */
-  public function setRequired($required = TRUE);
+  public function setRequired(bool $required = TRUE);
 
   /**
    * Gets the default value for this context definition.
@@ -159,7 +159,7 @@ interface ContextDefinitionInterface {
    *
    * @return $this
    */
-  public function addConstraint($constraint_name, $options = NULL);
+  public function addConstraint(string $constraint_name, $options = NULL);
 
   /**
    * Gets a validation constraint.
@@ -171,6 +171,6 @@ interface ContextDefinitionInterface {
    *   A validation constraint definition which can be used for instantiating a
    *   \Symfony\Component\Validator\Constraint object.
    */
-  public function getConstraint($constraint_name);
+  public function getConstraint(string $constraint_name);
 
 }

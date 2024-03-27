@@ -31,7 +31,7 @@ interface ContentLanguageSettingsInterface extends ConfigEntityInterface {
    *
    * @return $this
    */
-  public function setTargetBundle($target_bundle);
+  public function setTargetBundle(string $target_bundle);
 
   /**
    * Sets the default language code.
@@ -41,7 +41,7 @@ interface ContentLanguageSettingsInterface extends ConfigEntityInterface {
    *
    * @return $this
    */
-  public function setDefaultLangcode($default_langcode);
+  public function setDefaultLangcode(string $default_langcode);
 
   /**
    * Gets the default language code.
@@ -58,7 +58,7 @@ interface ContentLanguageSettingsInterface extends ConfigEntityInterface {
    *
    * @return $this
    */
-  public function setLanguageAlterable($language_alterable);
+  public function setLanguageAlterable(bool $language_alterable);
 
   /**
    * Checks if the language is alterable or not.

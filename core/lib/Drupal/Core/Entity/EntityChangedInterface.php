@@ -34,7 +34,7 @@ interface EntityChangedInterface extends EntityInterface {
    *
    * @return $this
    */
-  public function setChangedTime($timestamp);
+  public function setChangedTime(int $timestamp);
 
   /**
    * Gets the timestamp of the last entity change across all translations.

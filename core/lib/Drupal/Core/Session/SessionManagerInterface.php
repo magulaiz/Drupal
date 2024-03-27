@@ -15,7 +15,7 @@ interface SessionManagerInterface extends SessionStorageInterface {
    * @param int $uid
    *   User ID.
    */
-  public function delete($uid);
+  public function delete(int $uid);
 
   /**
    * Destroys the current session and removes session cookies.

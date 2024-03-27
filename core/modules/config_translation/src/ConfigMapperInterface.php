@@ -175,7 +175,7 @@ interface ConfigMapperInterface {
    * @param string $name
    *   Configuration name.
    */
-  public function addConfigName($name);
+  public function addConfigName(string $name);
 
   /**
    * Returns the weight of the mapper.
@@ -211,7 +211,7 @@ interface ConfigMapperInterface {
    * @return string
    *   The language code of the configuration object.
    */
-  public function getLangcodeFromConfig($config_name);
+  public function getLangcodeFromConfig(string $config_name);
 
   /**
    * Sets the original language code.
@@ -221,7 +221,7 @@ interface ConfigMapperInterface {
    *
    * @return $this
    */
-  public function setLangcode($langcode);
+  public function setLangcode(string $langcode);
 
   /**
    * Returns the name of the type of data the mapper encapsulates.

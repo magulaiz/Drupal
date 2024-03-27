@@ -23,7 +23,7 @@ interface TypedConfigManagerInterface extends TypedDataManagerInterface {
    * @return \Drupal\Core\TypedData\TraversableTypedDataInterface
    *   Typed configuration element.
    */
-  public function get($name);
+  public function get(string $name);
 
   /**
    * Creates a new data definition object.
@@ -44,7 +44,7 @@ interface TypedConfigManagerInterface extends TypedDataManagerInterface {
    * @return \Drupal\Core\TypedData\DataDefinitionInterface
    *   A data definition for the given data type.
    */
-  public function buildDataDefinition(array $definition, $value, $name = NULL, $parent = NULL);
+  public function buildDataDefinition(array $definition, $value, string $name = NULL, $parent = NULL);
 
   /**
    * Checks if the configuration schema with the given config name exists.
@@ -55,7 +55,7 @@ interface TypedConfigManagerInterface extends TypedDataManagerInterface {
    * @return bool
    *   TRUE if configuration schema exists, FALSE otherwise.
    */
-  public function hasConfigSchema($name);
+  public function hasConfigSchema(string $name);
 
   /**
    * Gets a specific plugin definition.
@@ -85,6 +85,6 @@ interface TypedConfigManagerInterface extends TypedDataManagerInterface {
    * @return \Drupal\Core\TypedData\TraversableTypedDataInterface
    *   The typed configuration element.
    */
-  public function createFromNameAndData($config_name, array $config_data);
+  public function createFromNameAndData(string $config_name, array $config_data);
 
 }

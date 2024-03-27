@@ -42,7 +42,7 @@ interface MessengerInterface {
    *
    * @return $this
    */
-  public function addMessage($message, $type = self::TYPE_STATUS, $repeat = FALSE);
+  public function addMessage($message, string $type = self::TYPE_STATUS, bool $repeat = FALSE);
 
   /**
    * Adds a new status message to the queue.
@@ -57,7 +57,7 @@ interface MessengerInterface {
    *
    * @return $this
    */
-  public function addStatus($message, $repeat = FALSE);
+  public function addStatus($message, bool $repeat = FALSE);
 
   /**
    * Adds a new error message to the queue.
@@ -72,7 +72,7 @@ interface MessengerInterface {
    *
    * @return $this
    */
-  public function addError($message, $repeat = FALSE);
+  public function addError($message, bool $repeat = FALSE);
 
   /**
    * Adds a new warning message to the queue.
@@ -87,7 +87,7 @@ interface MessengerInterface {
    *
    * @return $this
    */
-  public function addWarning($message, $repeat = FALSE);
+  public function addWarning($message, bool $repeat = FALSE);
 
   /**
    * Gets all messages.
@@ -109,7 +109,7 @@ interface MessengerInterface {
    * @return string[]|\Drupal\Component\Render\MarkupInterface[]
    *   The messages of given type.
    */
-  public function messagesByType($type);
+  public function messagesByType(string $type);
 
   /**
    * Deletes all messages.
@@ -129,6 +129,6 @@ interface MessengerInterface {
    * @return string[]|\Drupal\Component\Render\MarkupInterface[]
    *   The deleted messages of given type.
    */
-  public function deleteByType($type);
+  public function deleteByType(string $type);
 
 }

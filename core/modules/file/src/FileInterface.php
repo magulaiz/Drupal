@@ -59,7 +59,7 @@ interface FileInterface extends ContentEntityInterface, EntityChangedInterface, 
    *   The URI of the file, e.g. public://directory/file.jpg. Does not change
    *   the location of the file.
    */
-  public function setFileUri($uri);
+  public function setFileUri(string $uri);
 
   /**
    * Creates a file URL for the URI of this file.
@@ -72,7 +72,7 @@ interface FileInterface extends ContentEntityInterface, EntityChangedInterface, 
    *
    * @see \Drupal\Core\File\FileUrlGeneratorInterface
    */
-  public function createFileUrl($relative = TRUE);
+  public function createFileUrl(bool $relative = TRUE);
 
   /**
    * Returns the MIME type of the file.

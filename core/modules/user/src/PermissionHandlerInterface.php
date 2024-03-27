@@ -61,6 +61,6 @@ interface PermissionHandlerInterface {
    * @return bool
    *   Returns TRUE if the module provides some permissions, otherwise FALSE.
    */
-  public function moduleProvidesPermissions($module_name);
+  public function moduleProvidesPermissions(string $module_name);
 
 }

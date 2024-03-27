@@ -86,7 +86,7 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
    *   (optional) How to handle the destination object on rollback. Defaults to
    *   self::ROLLBACK_DELETE.
    */
-  public function saveIdMapping(Row $row, array $destination_id_values, $status = self::STATUS_IMPORTED, $rollback_action = self::ROLLBACK_DELETE);
+  public function saveIdMapping(Row $row, array $destination_id_values, int $status = self::STATUS_IMPORTED, int $rollback_action = self::ROLLBACK_DELETE);
 
   /**
    * Saves a message related to a source record in the migration message table.
@@ -99,7 +99,7 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
    *   (optional) The message severity. Defaults to
    *   MigrationInterface::MESSAGE_ERROR.
    */
-  public function saveMessage(array $source_id_values, $message, $level = MigrationInterface::MESSAGE_ERROR);
+  public function saveMessage(array $source_id_values, string $message, int $level = MigrationInterface::MESSAGE_ERROR);
 
   /**
    * Retrieves a traversable object of messages related to source records.
@@ -120,7 +120,7 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
    *   MigrationInterface::MESSAGE_WARNING, MigrationInterface::MESSAGE_NOTICE,
    *   MigrationInterface::MESSAGE_INFORMATIONAL.
    */
-  public function getMessages(array $source_id_values = [], $level = NULL);
+  public function getMessages(array $source_id_values = [], int $level = NULL);
 
   /**
    * Prepares to run a full update.
@@ -180,7 +180,7 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
    * @param bool $messages_only
    *   (optional) TRUE to only delete the migrate messages. Defaults to FALSE.
    */
-  public function delete(array $source_id_values, $messages_only = FALSE);
+  public function delete(array $source_id_values, bool $messages_only = FALSE);
 
   /**
    * Deletes the map and message table entries for a given destination row.
@@ -226,7 +226,7 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
    * @return array
    *   Array of map row objects that need updating.
    */
-  public function getRowsNeedingUpdate($count);
+  public function getRowsNeedingUpdate(int $count);
 
   /**
    * Looks up the source identifier.

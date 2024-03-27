@@ -129,7 +129,7 @@ interface MenuLinkInterface extends PluginInspectionInterface, DerivativeInspect
    * @return \Drupal\Core\Url
    *   A URL object containing either the external path or route.
    */
-  public function getUrlObject($title_attribute = TRUE);
+  public function getUrlObject(bool $title_attribute = TRUE);
 
   /**
    * Returns the options for this link.
@@ -167,7 +167,7 @@ interface MenuLinkInterface extends PluginInspectionInterface, DerivativeInspect
    * @return array
    *   The plugin definition incorporating any allowed changes.
    */
-  public function updateLink(array $new_definition_values, $persist);
+  public function updateLink(array $new_definition_values, bool $persist);
 
   /**
    * Deletes a menu link.

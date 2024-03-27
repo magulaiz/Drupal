@@ -16,7 +16,7 @@ interface BatchStorageInterface {
    * @return array
    *   An array representing the batch, or FALSE if no batch was found.
    */
-  public function load($id);
+  public function load(int $id);
 
   /**
    * Creates and saves a batch.
@@ -40,7 +40,7 @@ interface BatchStorageInterface {
    * @param int $id
    *   The ID of the batch to delete.
    */
-  public function delete($id);
+  public function delete(int $id);
 
   /**
    * Cleans up failed or old batches.

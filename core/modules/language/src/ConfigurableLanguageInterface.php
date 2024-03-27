@@ -18,7 +18,7 @@ interface ConfigurableLanguageInterface extends ConfigEntityInterface, LanguageI
    *
    * @return $this
    */
-  public function setName($name);
+  public function setName(string $name);
 
   /**
    * Sets the weight of the language.
@@ -29,6 +29,6 @@ interface ConfigurableLanguageInterface extends ConfigEntityInterface, LanguageI
    *
    * @return $this
    */
-  public function setWeight($weight);
+  public function setWeight(int $weight);
 
 }

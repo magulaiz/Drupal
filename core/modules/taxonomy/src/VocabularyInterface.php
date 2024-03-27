@@ -39,6 +39,6 @@ interface VocabularyInterface extends ConfigEntityInterface, RevisionableEntityB
    * @param bool $new_revision
    *   TRUE if a new revision should be created by default.
    */
-  public function setNewRevision($new_revision);
+  public function setNewRevision(bool $new_revision);
 
 }

@@ -53,7 +53,7 @@ interface RouteMatchInterface {
    *
    * @see \Drupal\Core\Routing\RouteMatchInterface::getRawParameter()
    */
-  public function getParameter($parameter_name);
+  public function getParameter(string $parameter_name);
 
   /**
    * Returns the bag of all processed route parameters.
@@ -84,7 +84,7 @@ interface RouteMatchInterface {
    *
    * @see \Drupal\Core\Routing\RouteMatchInterface::getParameter()
    */
-  public function getRawParameter($parameter_name);
+  public function getRawParameter(string $parameter_name);
 
   /**
    * Returns the bag of all raw route parameters.

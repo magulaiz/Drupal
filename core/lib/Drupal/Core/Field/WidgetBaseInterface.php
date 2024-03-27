@@ -36,7 +36,7 @@ interface WidgetBaseInterface extends PluginSettingsInterface {
    * @return array
    *   The form element array created for this field.
    */
-  public function form(FieldItemListInterface $items, array &$form, FormStateInterface $form_state, $get_delta = NULL);
+  public function form(FieldItemListInterface $items, array &$form, FormStateInterface $form_state, int $get_delta = NULL);
 
   /**
    * Extracts field values from submitted form values.
@@ -85,7 +85,7 @@ interface WidgetBaseInterface extends PluginSettingsInterface {
    *   - array_parents: The location of the field's widgets within the $form
    *     structure. This entry is populated at '#after_build' time.
    */
-  public static function getWidgetState(array $parents, $field_name, FormStateInterface $form_state);
+  public static function getWidgetState(array $parents, string $field_name, FormStateInterface $form_state);
 
   /**
    * Stores processing information about the widget in $form_state.
@@ -102,6 +102,6 @@ interface WidgetBaseInterface extends PluginSettingsInterface {
    *   The array of data to store. See getWidgetState() for the structure and
    *   content of the array.
    */
-  public static function setWidgetState(array $parents, $field_name, FormStateInterface $form_state, array $field_state);
+  public static function setWidgetState(array $parents, string $field_name, FormStateInterface $form_state, array $field_state);
 
 }
