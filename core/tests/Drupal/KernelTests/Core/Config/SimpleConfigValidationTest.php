@@ -18,7 +18,7 @@ class SimpleConfigValidationTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system'];
+  protected static $modules = ['config_test', 'system'];
 
   /**
    * {@inheritdoc}
@@ -111,6 +111,12 @@ class SimpleConfigValidationTest extends KernelTestBase {
       'system.maintenance',
       'message',
       '🤓',
+      NULL,
+    ];
+    $data['plural label'] = [
+      'config_test.with_plural_label',
+      'label',
+      "\x03",
       NULL,
     ];
 
