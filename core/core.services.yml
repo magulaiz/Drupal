@@ -495,7 +495,7 @@ services:
     arguments: ['@serialization.phpserialize', '@database', '@datetime.time']
   logger.factory:
     class: Drupal\Core\Logger\LoggerChannelFactory
-    parent: container.trait
+    arguments: ['@request_stack', '@current_user']
     tags:
       - { name: service_collector, tag: logger, call: addLogger }
   Drupal\Core\Logger\LoggerChannelFactoryInterface: '@logger.factory'
@@ -675,6 +675,12 @@ services:
     tags:
       - { name: module_install.uninstall_validator }
     arguments: ['@string_translation', '@extension.list.module', '@database']
+    lazy: true
+  install_profile_uninstall_validator:
+    class: Drupal\Core\Extension\InstallProfileUninstallValidator
+    tags:
+      - { name: module_install.uninstall_validator }
+    arguments: ['@string_translation', '@extension.list.module', '@extension.list.theme', '%install_profile%', '%app.root%', '%site.path%']
     lazy: true
   theme_handler:
     class: Drupal\Core\Extension\ThemeHandler
@@ -1071,14 +1077,6 @@ services:
     class: Drupal\Core\Utility\LinkGenerator
     arguments: ['@url_generator', '@module_handler', '@renderer']
   Drupal\Core\Utility\LinkGeneratorInterface: '@link_generator'
-  request_generator:
-    class: Drupal\Core\Utility\RequestGenerator
-    arguments: ['@path_processor_manager', '@path.current', '@router']
-  Drupal\Core\Utility\RequestGenerator: '@request_generator'
-  base_route_title_resolver:
-    class: Drupal\Core\Controller\BaseRouteTitleResolver
-    arguments: ['@url_generator', '@title_resolver', '@plugin.manager.menu.local_task', '@router.route_provider', '@request_generator']
-  Drupal\Core\Utility\BaseRouteTitleResolver: '@base_route_title_resolver'
   router:
     class: Drupal\Core\Routing\AccessAwareRouter
     arguments: ['@router.no_access_checks', '@access_manager', '@current_user']
@@ -1578,13 +1576,24 @@ services:
     tags:
       - { name: service_collector, call: addAccessPolicy, tag: access_policy }
   Drupal\Core\Session\AccessPolicyChainInterface: '@access_policy_processor'
+  access_policy.super_user:
+    class: Drupal\Core\Session\SuperUserAccessPolicy
+    tags:
+      - { name: access_policy }
+  Drupal\Core\Session\SuperUserAccessPolicy: '@access_policy.super_user'
+  access_policy.user_roles:
+    class: Drupal\Core\Session\UserRolesAccessPolicy
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: access_policy }
+  Drupal\Core\Session\UserRolesAccessPolicy: '@access_policy.user_roles'
   permission_checker:
     class: Drupal\Core\Session\PermissionChecker
-    arguments: ['@entity_type.manager']
+    arguments: ['@access_policy_processor']
   Drupal\Core\Session\PermissionCheckerInterface: '@permission_checker'
   user_permissions_hash_generator:
     class: Drupal\Core\Session\PermissionsHashGenerator
-    arguments: ['@private_key', '@cache.bootstrap', '@cache.static', '@entity_type.manager']
+    arguments: ['@private_key', '@cache.static', '@access_policy_processor']
   Drupal\Core\Session\PermissionsHashGeneratorInterface: '@user_permissions_hash_generator'
   current_user:
     class: Drupal\Core\Session\AccountProxy
