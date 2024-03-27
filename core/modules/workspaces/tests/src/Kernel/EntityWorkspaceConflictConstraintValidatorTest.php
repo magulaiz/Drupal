@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\workspaces\Kernel;
 
 use Drupal\Core\Entity\EntityInterface;
@@ -53,7 +55,7 @@ class EntityWorkspaceConflictConstraintValidatorTest extends KernelTestBase {
   /**
    * @covers ::validate
    */
-  public function testNewEntitiesAllowedInDefaultWorkspace() {
+  public function testNewEntitiesAllowedInDefaultWorkspace(): void {
     // Create two top-level workspaces and a second-level one.
     $stage = Workspace::create(['id' => 'stage', 'label' => 'Stage']);
     $stage->save();
