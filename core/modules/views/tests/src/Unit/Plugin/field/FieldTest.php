@@ -679,6 +679,9 @@ class FieldTest extends UnitTestCase {
     $title_storage->expects($this->any())
       ->method('getConstraints')
       ->willReturn([]);
+    $title_storage->expects($this->any())
+      ->method('getType')
+      ->willReturn('test');
     return $title_storage;
   }
 
@@ -698,6 +701,9 @@ class FieldTest extends UnitTestCase {
     $title_storage->expects($this->any())
       ->method('getConstraints')
       ->willReturn([]);
+    $title_storage->expects($this->any())
+      ->method('getType')
+      ->willReturn('test');
     return $title_storage;
   }
 
