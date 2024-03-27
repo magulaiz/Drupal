@@ -211,6 +211,17 @@ class AliasManagerTest extends UnitTestCase {
   }
 
   /**
+   * Tests the getAliasByPath method to ensure an exception is thrown if the
+   * path does not start with a slash.
+   *
+   * @covers ::getAliasByPath
+   */
+  public function testGetAliasByPathException(): void {
+    $this->expectException(\InvalidArgumentException::class);
+    $this->aliasManager->getAliasByPath('no-leading-slash-here');
+  }
+
+  /**
    * Tests the getAliasByPath method for a path that has a matching alias.
    *
    * @covers ::getAliasByPath
