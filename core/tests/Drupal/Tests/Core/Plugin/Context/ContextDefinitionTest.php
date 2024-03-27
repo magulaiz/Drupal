@@ -102,6 +102,12 @@ class ContextDefinitionTest extends UnitTestCase {
     $mock_context_definition->expects($this->once())
       ->method('getConstraints')
       ->willReturn([]);
+    $mock_context_definition->expects($this->any())
+      ->method('getLabel')
+      ->willReturn('Context name');
+    $mock_context_definition->expects($this->any())
+      ->method('isRequired')
+      ->willReturn(FALSE);
 
     $this->assertSame(
       $mock_data_definition,
