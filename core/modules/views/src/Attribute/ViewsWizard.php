@@ -21,20 +21,20 @@ class ViewsWizard extends Plugin {
    *
    * @param string $id
    *   The plugin ID.
+   * @param string $base_table
+   *   The base table on which this wizard is used.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $title
    *   The plugin title used in the views UI.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $short_title
    *   (optional) The short title used in the views UI.
-   * @param string $base_table
-   *   The base table on which this wizard is used.
    * @param class-string|null $deriver
    *   (optional) The deriver class.
    */
   public function __construct(
     public readonly string $id,
+    public readonly string $base_table,
     public readonly ?TranslatableMarkup $title = NULL,
     public readonly ?TranslatableMarkup $short_title = NULL,
-    public readonly ?string $base_table = '',
     public readonly ?string $deriver = NULL
   ) {}
 
