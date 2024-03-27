@@ -13,5 +13,6 @@ return RectorConfig::configure()
   ])
   ->withSkipPath('core/lib/Drupal/Component/Annotation/Doctrine')
   ->withFileExtensions(['php'])
+  ->withRules([StringTypeRector::class])
   ->withParallel(300)
 ;
