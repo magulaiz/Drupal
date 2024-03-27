@@ -165,6 +165,8 @@ class GenerateTheme extends Command {
       array_merge($info, $starterkit_config['info']),
       static fn (mixed $value) => $value !== NULL,
     );
+    // Ensure the generated theme is not hidden.
+    unset($info['hidden']);
     file_put_contents($info_file, Yaml::encode($info));
 
     $loader = new ClassLoader();
@@ -243,7 +245,6 @@ class GenerateTheme extends Command {
         'name' => $name,
         'description' => $description,
         'core_version_requirement' => '^' . explode('.', \Drupal::VERSION)[0],
-        'hidden' => NULL,
         'version' => '1.0.0',
         'generator' => "{$theme->getName()}:$version",
       ],
