@@ -348,18 +348,24 @@ trait PerformanceTestTrait {
   private function collectNetworkData(array $messages, PerformanceData $performance_data): void {
     $stylesheet_count = 0;
     $script_count = 0;
+    $stylesheet_bytes = 0;
+    $script_bytes = 0;
     foreach ($messages as $message) {
-      if ($message['method'] === 'Network.responseReceived') {
-        if ($message['params']['type'] === 'Stylesheet') {
+      if ($message['method'] === 'Tracing.dataCollected' && $message['params']['name'] === 'ResourceReceiveResponse') {
+        if ($message['params']['args']['data']['mimeType'] ?? '' === 'text/css') {
           $stylesheet_count++;
+          $stylesheet_bytes += $message['params']['args']['data']['encodedDataLength'];
         }
-        if ($message['params']['type'] === 'Script') {
+        if (in_array($message['params']['args']['data']['mimeType'] ?? '', ['text/javascript', 'application/javascript'], TRUE)) {
           $script_count++;
+          $script_bytes += $message['params']['args']['data']['encodedDataLength'];
         }
       }
     }
     $performance_data->setStylesheetCount($stylesheet_count);
+    $performance_data->setStylesheetBytes($stylesheet_bytes);
     $performance_data->setScriptCount($script_count);
+    $performance_data->setScriptBytes($script_bytes);
   }
 
   /**

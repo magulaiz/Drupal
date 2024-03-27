@@ -63,6 +63,9 @@ class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
     $this->assertSame(0, $performance_data->getCacheTagChecksumCount());
     $this->assertSame(1, $performance_data->getCacheTagIsValidCount());
     $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
+    $this->assertSame(0, $performance_data->getScriptCount());
+    $this->assertSame(0, $performance_data->getStylesheetCount());
+    $this->assertSame(0, $performance_data->getStylesheetBytes());
   }
 
   /**
