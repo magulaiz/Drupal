@@ -691,8 +691,8 @@
    * an event to respond to.
    *
    * @return {object}
-   *   Returns the jQuery.Deferred object underlying the Ajax request. If
-   *   pre-serialization fails, the Deferred will be returned in the rejected
+   *   Returns the Promise object underlying the Ajax request. If
+   *   pre-serialization fails, the Promise will be returned in the rejected
    *   state.
    */
   Drupal.Ajax.prototype.execute = function () {
