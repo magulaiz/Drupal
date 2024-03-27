@@ -1,7 +1,7 @@
 <?php
 
+use Drupal\Core\Rector\AddParamTypeFromPhpDocRector;
 use Rector\Config\RectorConfig;
-use Drupal\Core\Rector\StringTypeRector;
 
 return RectorConfig::configure()
   ->withPaths([
@@ -14,4 +14,5 @@ return RectorConfig::configure()
   ->withSkipPath('core/lib/Drupal/Component/Annotation/Doctrine')
   ->withFileExtensions(['php'])
   ->withParallel(300)
+  ->withRules([AddParamTypeFromPhpDocRector::class])
 ;
