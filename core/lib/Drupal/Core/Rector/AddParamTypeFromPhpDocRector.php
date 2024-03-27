@@ -111,9 +111,12 @@ CODE_SAMPLE
     }
     private function shouldSkipClassMethod(ClassMethod $classMethod) : bool
     {
-        $classReflection = $this->reflectionResolver->resolveClassReflection($classMethod);
+      $classReflection = $this->reflectionResolver->resolveClassReflection($classMethod);
         if (!$classReflection instanceof ClassReflection) {
             return \false;
+        }
+        if (!$classReflection->isInterface()) {
+          return \true;
         }
         $methodName = $this->nodeNameResolver->getName($classMethod);
         return $this->classChildAnalyzer->hasParentClassMethod($classReflection, $methodName);
