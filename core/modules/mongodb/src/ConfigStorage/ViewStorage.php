@@ -144,9 +144,6 @@ class ViewStorage extends ConfigEntityStorage {
                       }
                     }
                     if (!empty($display_option['table']) && in_array($display_option['table'], $this->getEntityTables($entity_type), TRUE)) {
-                      if (($display_options_id == 'relationships') && isset($display_option['table']) && TranslateViews::isRevisionTable($display_option['table'])) {
-                        $display_option['revisionable_join'] = TRUE;
-                      }
                       $display_option['table'] = $entity_type->getBaseTable();
                     }
                   }
@@ -176,7 +173,7 @@ class ViewStorage extends ConfigEntityStorage {
       }
     }
 
-//    if ($values['id'] == 'test_taxonomy_node_term_data') {
+//    if ($values['id'] == 'moderated_content') {
 //      dump($values);
 //    }
 

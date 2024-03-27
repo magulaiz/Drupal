@@ -1654,7 +1654,6 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $query->fields($fields);
         $query->execute();
 
-//        if ($this->entityType->isRevisionable() && !$entity->isNewRevision()) {
         if ($this->entityType->isRevisionable()) {
           // When updating an entity with revisions and without creating a new
           // revision creates a problem with MongoDB. The embedded table holding
@@ -1898,9 +1897,16 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
         $new_all_revisions_data = array_reverse($new_all_revisions_data);
 
+        $set = [];
+        $set[$this->jsonStorageAllRevisionsTable] = $new_all_revisions_data;
+        if (isset($current_revision_id)) {
+          $set[$this->revisionKey] = $current_revision_id;
+          $this->entityKeys[$this->revisionKey] = $current_revision_id;
+        }
+
         $this->database->getConnection()->{$prefixed_table}->updateOne(
           [$this->idKey => ['$eq' => $entity_id]],
-          ['$set' => [$this->jsonStorageAllRevisionsTable => $new_all_revisions_data]],
+          ['$set' => $set],
           ['session' => $this->database->getMongodbSession()],
         );
       }

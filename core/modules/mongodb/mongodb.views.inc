@@ -496,6 +496,12 @@ function mongodb_views_plugins_field_alter(array &$plugins) {
         $plugins[$id]['provider'] = 'mongodb';
         break;
 
+      // Overrides for the module content_moderation.
+      case 'moderation_state_field':
+        $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\field\ModerationStateField';
+        $plugins[$id]['provider'] = 'mongodb';
+        break;
+
       // Overrides for the module history.
       case 'history_user_timestamp':
         $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\field\HistoryUserTimestamp';
@@ -636,6 +642,12 @@ function mongodb_views_plugins_filter_alter(array &$plugins) {
 
       case 'latest_revision':
         $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\filter\LatestRevision';
+        $plugins[$id]['provider'] = 'mongodb';
+        break;
+
+      // Overrides for the module content_moderation.
+      case 'moderation_state_filter':
+        $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\filter\ModerationStateFilter';
         $plugins[$id]['provider'] = 'mongodb';
         break;
 
@@ -853,6 +865,12 @@ function mongodb_views_plugins_sort_alter(array &$plugins) {
       // Overrides for the module datetime.
       case 'datetime':
         $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\sort\DatetimeDate';
+        $plugins[$id]['provider'] = 'mongodb';
+        break;
+
+      // Overrides for the module content_moderation.
+      case 'moderation_state_sort':
+        $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\sort\ModerationStateSort';
         $plugins[$id]['provider'] = 'mongodb';
         break;
 

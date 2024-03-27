@@ -1295,6 +1295,11 @@ class ViewsQuery extends Sql {
       }
     }
 
+//dump('$entity_ids_by_type');
+//dump($entity_ids_by_type);
+//dump('$revision_ids_by_type');
+//dump($revision_ids_by_type);
+
     // Load all entities and assign them to the correct result row.
     foreach ($entity_ids_by_type as $entity_type => $ids) {
       $entity_storage = $this->entityTypeManager->getStorage($entity_type);
