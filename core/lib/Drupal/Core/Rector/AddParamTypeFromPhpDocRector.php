@@ -2,6 +2,8 @@
 
 declare (strict_types=1);
 
+// cspell:ignore Symplify
+
 namespace Drupal\Core\Rector;
 
 use PhpParser\Node;
