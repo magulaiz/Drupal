@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\Core\Command;
+namespace Drupal\BuildTests\Command;
 
 use Drupal\BuildTests\QuickStart\QuickStartTestBase;
 use Drupal\Core\Command\GenerateTheme;
