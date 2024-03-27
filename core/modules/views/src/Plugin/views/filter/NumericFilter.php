@@ -439,7 +439,7 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
 
     $rc = parent::acceptExposedInput($input);
 
-    if (empty($this->options['exposed']['required'])) {
+    if (empty($this->options['expose']['required'])) {
       // We have to do some of our own checking for non-required filters.
       $info = $this->operators();
       if (!empty($info[$this->operator]['values'])) {
