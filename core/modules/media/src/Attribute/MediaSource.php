@@ -40,8 +40,8 @@ class MediaSource extends Plugin {
    *   (optional) The field types that can be used as a source field for this
    *   media source.
    * @param class-string[] $forms
-   *   (optional) The classes used to define media source-specific forms.
-   *   An array of form class names, keyed by ID. The ID represents the operation
+   *   (optional) The classes used to define media source-specific forms. An
+   *   array of form class names, keyed by ID. The ID represents the operation
    *   the form is used for, for example, 'media_library_add'.
    * @param string[] $providers
    *   (optional) A set of provider names, exactly as they appear in the
