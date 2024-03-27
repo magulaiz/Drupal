@@ -338,7 +338,9 @@ EOS;
     $plugin_provided_layout = <<<'EOS'
 <?php
 namespace Drupal\Core\Plugin\Layout;
+use Drupal\Core\Layout\Attribute\Layout;
 use Drupal\Core\Layout\LayoutDefault;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * The TestLayout Class.
  */
