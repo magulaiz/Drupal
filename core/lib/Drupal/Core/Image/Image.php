@@ -51,7 +51,7 @@ class Image implements ImageInterface {
       $this->getToolkit()->setSource($this->source);
       // Defer image file validity check to the toolkit.
       if ($this->getToolkit()->parseFile()) {
-        $this->fileSize = filesize($this->source);
+        $this->fileSize = @filesize($this->source) ?: NULL;
       }
     }
   }
