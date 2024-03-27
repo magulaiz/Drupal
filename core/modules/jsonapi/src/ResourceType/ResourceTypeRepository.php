@@ -153,7 +153,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
    * @return \Drupal\jsonapi\ResourceType\ResourceType
    *   A JSON:API resource type.
    */
-  protected function createResourceType(EntityTypeInterface $entity_type, $bundle) {
+  protected function createResourceType(EntityTypeInterface $entity_type, string $bundle) {
     $type_name = NULL;
     $raw_fields = $this->getAllFieldNames($entity_type, $bundle);
     $internalize_resource_type = $entity_type->isInternal();
@@ -221,7 +221,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
    * @return \Drupal\jsonapi\ResourceType\ResourceTypeField[]
    *   An array of JSON:API resource type fields keyed by internal field names.
    */
-  protected function getFields(array $field_names, EntityTypeInterface $entity_type, $bundle) {
+  protected function getFields(array $field_names, EntityTypeInterface $entity_type, string $bundle) {
     assert(Inspector::assertAllStrings($field_names));
     assert($entity_type instanceof ContentEntityTypeInterface || $entity_type instanceof ConfigEntityTypeInterface);
     assert(is_string($bundle) && !empty($bundle), 'A bundle ID is required. Bundleless entity types should pass the entity type ID again.');
@@ -318,7 +318,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
    * @return string[]
    *   All field names.
    */
-  protected function getAllFieldNames(EntityTypeInterface $entity_type, $bundle) {
+  protected function getAllFieldNames(EntityTypeInterface $entity_type, string $bundle) {
     if ($entity_type instanceof ContentEntityTypeInterface) {
       $field_definitions = $this->entityFieldManager->getFieldDefinitions(
         $entity_type->id(),
@@ -353,7 +353,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
    * @return bool
    *   TRUE if the entity type is mutable, FALSE otherwise.
    */
-  protected static function isMutableResourceType(EntityTypeInterface $entity_type, $bundle) {
+  protected static function isMutableResourceType(EntityTypeInterface $entity_type, string $bundle) {
     assert(is_string($bundle) && !empty($bundle), 'A bundle ID is required. Bundleless entity types should pass the entity type ID again.');
     return !$entity_type instanceof ConfigEntityTypeInterface;
   }
@@ -369,7 +369,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
    * @return bool
    *   TRUE if the entity type is locatable, FALSE otherwise.
    */
-  protected static function isLocatableResourceType(EntityTypeInterface $entity_type, $bundle) {
+  protected static function isLocatableResourceType(EntityTypeInterface $entity_type, string $bundle) {
     assert(is_string($bundle) && !empty($bundle), 'A bundle ID is required. Bundleless entity types should pass the entity type ID again.');
     return $entity_type->getStorageClass() !== ContentEntityNullStorage::class;
   }
@@ -519,7 +519,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
    * @return string[]
    *   The bundle IDs.
    */
-  protected function getAllBundlesForEntityType($entity_type_id) {
+  protected function getAllBundlesForEntityType(string $entity_type_id) {
     // Ensure all keys are strings because numeric values are allowed as bundle
     // names and "array_keys()" casts "42" to 42.
     return array_map('strval', array_keys($this->entityTypeBundleInfo->getBundleInfo($entity_type_id)));
@@ -538,7 +538,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
    * @return \Drupal\jsonapi\ResourceType\ResourceType|null
    *   The resource type or NULL if one cannot be found.
    */
-  protected static function lookupResourceType(array $resource_types, $entity_type_id, $bundle) {
+  protected static function lookupResourceType(array $resource_types, string $entity_type_id, string $bundle) {
     if (isset($resource_types[$entity_type_id . ResourceType::TYPE_NAME_URI_PATH_SEPARATOR . $bundle])) {
       return $resource_types[$entity_type_id . ResourceType::TYPE_NAME_URI_PATH_SEPARATOR . $bundle];
     }

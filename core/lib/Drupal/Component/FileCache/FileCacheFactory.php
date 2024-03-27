@@ -38,7 +38,7 @@ class FileCacheFactory {
    * @return \Drupal\Component\FileCache\FileCacheInterface
    *   The initialized FileCache object.
    */
-  public static function get($collection, $default_configuration = []) {
+  public static function get(string $collection, $default_configuration = []) {
     // If there is a special key in the configuration, disable FileCache completely.
     if (!empty(static::$configuration[static::DISABLE_CACHE])) {
       return new NullFileCache('', '');
@@ -112,7 +112,7 @@ class FileCacheFactory {
    * @param string $prefix
    *   The cache prefix.
    */
-  public static function setPrefix($prefix) {
+  public static function setPrefix(string $prefix) {
     static::$prefix = $prefix;
   }
 

@@ -82,7 +82,7 @@ final class LinkCollection implements \IteratorAggregate {
    *   A new LinkCollection with the given link inserted or merged with the
    *   current set of links.
    */
-  public function withLink($key, Link $new_link) {
+  public function withLink(string $key, Link $new_link) {
     assert(static::validKey($key));
     $merged = $this->links;
     if (isset($merged[$key])) {
@@ -106,7 +106,7 @@ final class LinkCollection implements \IteratorAggregate {
    * @return bool
    *   TRUE if a link with the given key exist, FALSE otherwise.
    */
-  public function hasLinkWithKey($key) {
+  public function hasLinkWithKey(string $key) {
     return array_key_exists($key, $this->links);
   }
 
@@ -194,7 +194,7 @@ final class LinkCollection implements \IteratorAggregate {
    * @return bool
    *   TRUE if the key is valid, FALSE otherwise.
    */
-  protected static function validKey($key) {
+  protected static function validKey(string $key) {
     return is_string($key) && !is_numeric($key) && !str_contains($key, ':');
   }
 

@@ -24,7 +24,7 @@ class PluginEventSubscriber implements EventSubscriberInterface {
    * @param string $plugin_interface
    *   The interface which plugins must implement in order to be invoked.
    */
-  protected function invoke($method, $event, $plugin_interface) {
+  protected function invoke(string $method, $event, string $plugin_interface) {
     $migration = $event->getMigration();
 
     $source = $migration->getSourcePlugin();

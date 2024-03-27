@@ -67,7 +67,7 @@ class Endpoint {
    * @throws \InvalidArgumentException
    *   If the endpoint URL is empty.
    */
-  public function __construct($url, Provider $provider, array $schemes = [], array $formats = [], $supports_discovery = FALSE) {
+  public function __construct(string $url, Provider $provider, array $schemes = [], array $formats = [], $supports_discovery = FALSE) {
     $this->provider = $provider;
     $this->schemes = $schemes;
 
@@ -148,7 +148,7 @@ class Endpoint {
    * @return bool
    *   TRUE if the URL matches against the endpoint schemes, otherwise FALSE.
    */
-  public function matchUrl($url) {
+  public function matchUrl(string $url) {
     foreach ($this->getSchemes() as $scheme) {
       // Convert scheme into a valid regular expression.
       $regexp = str_replace(['.', '*', '?'], ['\.', '.*', '\?'], $scheme);
@@ -174,7 +174,7 @@ class Endpoint {
    *
    * @see \Drupal\media\OEmbed\UrlResolver::getResourceUrl()
    */
-  public function buildResourceUrl($url) {
+  public function buildResourceUrl(string $url) {
     $query = ['url' => $url];
     return $this->getUrl() . '?' . UrlHelper::buildQuery($query);
   }

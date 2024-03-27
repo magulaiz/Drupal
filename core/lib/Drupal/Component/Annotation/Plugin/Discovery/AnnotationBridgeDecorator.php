@@ -36,7 +36,7 @@ class AnnotationBridgeDecorator implements DiscoveryInterface {
    *   corresponding to this name must implement
    *   \Drupal\Component\Annotation\AnnotationInterface.
    */
-  public function __construct(DiscoveryInterface $decorated, $plugin_definition_annotation_name) {
+  public function __construct(DiscoveryInterface $decorated, string $plugin_definition_annotation_name) {
     $this->decorated = $decorated;
     $this->pluginDefinitionAnnotationName = $plugin_definition_annotation_name;
   }
@@ -68,7 +68,7 @@ class AnnotationBridgeDecorator implements DiscoveryInterface {
    * @return mixed
    *   The method result.
    */
-  public function __call($method, $args) {
+  public function __call(string $method, $args) {
     return call_user_func_array([$this->decorated, $method], $args);
   }
 

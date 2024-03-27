@@ -113,6 +113,6 @@ abstract class ComponentEntityDisplayBase extends DestinationBase implements Con
    * @return \Drupal\Core\Entity\Display\EntityDisplayInterface
    *   The entity display object.
    */
-  abstract protected function getEntity($entity_type, $bundle, $mode);
+  abstract protected function getEntity(string $entity_type, string $bundle, string $mode);
 
 }

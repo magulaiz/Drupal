@@ -174,7 +174,7 @@ class MigrationProvidersExistTest extends MigrateDrupalTestBase {
    *
    * @dataProvider fieldPluginDefinitionsProvider
    */
-  public function testFieldProviderMissingRequiredProperty(array $definitions, $missing_property) {
+  public function testFieldProviderMissingRequiredProperty(array $definitions, string $missing_property) {
     $discovery = $this->getMockBuilder(MigrateFieldPluginManager::class)
       ->disableOriginalConstructor()
       ->onlyMethods(['getDefinitions'])

@@ -57,7 +57,7 @@ class ResourceController {
    * @param string $resource_path
    *   The path of the oEmbed resource representing the asset.
    */
-  public static function setResourceUrl($asset_url, $resource_path) {
+  public static function setResourceUrl(string $asset_url, string $resource_path) {
     $resources = \Drupal::state()->get(static::class, []);
     $resources[$asset_url] = $resource_path;
     \Drupal::state()->set(static::class, $resources);
@@ -69,7 +69,7 @@ class ResourceController {
    * @param string $asset_url
    *   The asset URL.
    */
-  public static function setResource404($asset_url) {
+  public static function setResource404(string $asset_url) {
     $resources = \Drupal::state()->get(static::class, []);
     $resources[$asset_url] = 404;
     \Drupal::state()->set(static::class, $resources);

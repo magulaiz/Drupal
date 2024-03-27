@@ -99,7 +99,7 @@ trait MigrationConfigurationTrait {
    *
    * @see \Drupal\migrate\Plugin\migrate\source\SqlBase::getDatabase()
    */
-  protected function createDatabaseStateSettings(array $database, $drupal_version) {
+  protected function createDatabaseStateSettings(array $database, string $drupal_version) {
     $database_state['key'] = 'upgrade';
     $database_state['database'] = $database;
     $database_state_key = 'migrate_drupal_' . $drupal_version;
@@ -119,7 +119,7 @@ trait MigrationConfigurationTrait {
    * @return \Drupal\migrate\Plugin\MigrationInterface[]
    *   The migrations for import.
    */
-  protected function getMigrations($database_state_key, $drupal_version) {
+  protected function getMigrations(string $database_state_key, $drupal_version) {
     $version_tag = 'Drupal ' . $drupal_version;
     /** @var \Drupal\migrate\Plugin\MigrationInterface[] $all_migrations */
     $all_migrations = $this->getMigrationPluginManager()->createInstancesByTag($version_tag);

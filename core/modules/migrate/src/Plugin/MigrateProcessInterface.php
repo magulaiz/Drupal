@@ -40,7 +40,7 @@ interface MigrateProcessInterface extends PluginInspectionInterface {
    * @return mixed
    *   The newly transformed value.
    */
-  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property);
+  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, string $destination_property);
 
   /**
    * Indicates whether the returned value requires multiple handling.

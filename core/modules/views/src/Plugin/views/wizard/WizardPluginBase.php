@@ -569,7 +569,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * @param string $type
    *   The display ID (e.g. 'page' or 'block').
    */
-  protected function buildFormStyle(array &$form, FormStateInterface $form_state, $type) {
+  protected function buildFormStyle(array &$form, FormStateInterface $form_state, string $type) {
     $style_form = &$form['displays'][$type]['options']['style'];
     $style = $style_form['style_plugin']['#default_value'];
     $style_plugin = Views::pluginManager('style')->createInstance($style);

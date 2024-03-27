@@ -413,7 +413,7 @@ class DbLogController extends ControllerBase {
    *   A build array in the format expected by
    *   \Drupal\Core\Render\RendererInterface::render().
    */
-  public function topLogMessages($type) {
+  public function topLogMessages(string $type) {
     $header = [
       ['data' => $this->t('Count'), 'field' => 'count', 'sort' => 'desc'],
       ['data' => $this->t('Message'), 'field' => 'message'],

@@ -189,7 +189,7 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
    *
    * @dataProvider providerRender
    */
-  public function testRender($url, $resource_url, array $formatter_settings, array $selectors, bool $self_closing) {
+  public function testRender(string $url, string $resource_url, array $formatter_settings, array $selectors, bool $self_closing) {
     $account = $this->drupalCreateUser(['view media']);
     $this->drupalLogin($account);
 

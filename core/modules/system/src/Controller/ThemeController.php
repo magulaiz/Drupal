@@ -168,7 +168,7 @@ class ThemeController extends ControllerBase {
    * @return bool
    *   Whether experimental themes will be installed.
    */
-  protected function willInstallExperimentalTheme($theme) {
+  protected function willInstallExperimentalTheme(string $theme) {
     $all_themes = $this->themeList->getList();
     $dependencies = array_keys($all_themes[$theme]->requires);
     $themes_to_enable = array_merge([$theme], $dependencies);

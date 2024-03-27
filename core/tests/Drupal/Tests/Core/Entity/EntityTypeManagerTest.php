@@ -570,7 +570,7 @@ class TestEntityFormInjected extends TestEntityForm implements ContainerInjectio
    * @param string $color
    *   The color of the entity type.
    */
-  public function __construct($color) {
+  public function __construct(string $color) {
     $this->color = $color;
   }
 

@@ -116,7 +116,7 @@ class TermParentsTest extends BrowserTestBase {
    * @return \Drupal\taxonomy\TermInterface
    *   The newly created taxonomy term.
    */
-  protected function submitAddTermForm($name) {
+  protected function submitAddTermForm(string $name) {
     $this->getSession()->getPage()->fillField('Name', $name);
 
     $this->submitForm([], 'Save');
@@ -309,7 +309,7 @@ class TermParentsTest extends BrowserTestBase {
    * @return \Drupal\taxonomy\TermInterface
    *   The created term.
    */
-  protected function createTerm($name, array $parent_ids = []) {
+  protected function createTerm(string $name, array $parent_ids = []) {
     /** @var \Drupal\taxonomy\TermInterface $term */
     $term = $this->termStorage->create([
       'name' => $name,

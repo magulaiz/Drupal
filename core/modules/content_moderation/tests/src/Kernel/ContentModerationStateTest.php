@@ -679,7 +679,7 @@ class ContentModerationStateTest extends KernelTestBase {
    *
    * @dataProvider basicModerationTestCases
    */
-  public function testRevisionDefaultState($entity_type_id) {
+  public function testRevisionDefaultState(string $entity_type_id) {
     // Check that the revision default state of the moderated entity and the
     // content moderation state entity always match.
     $entity = $this->createEntity($entity_type_id, 'published');
@@ -720,7 +720,7 @@ class ContentModerationStateTest extends KernelTestBase {
    * @return \Drupal\Core\Entity\ContentEntityInterface
    *   The created entity.
    */
-  protected function createEntity($entity_type_id, $moderation_state = 'published', $create_workflow = TRUE) {
+  protected function createEntity(string $entity_type_id, string $moderation_state = 'published', $create_workflow = TRUE) {
     $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
 
     $bundle_id = $entity_type_id;

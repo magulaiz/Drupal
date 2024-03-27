@@ -39,7 +39,7 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
    *
    * @see ::prepareView()
    */
-  protected function getEntitiesToView(EntityReferenceFieldItemListInterface $items, $langcode) {
+  protected function getEntitiesToView(EntityReferenceFieldItemListInterface $items, string $langcode) {
     $entities = [];
 
     foreach ($items as $delta => $item) {

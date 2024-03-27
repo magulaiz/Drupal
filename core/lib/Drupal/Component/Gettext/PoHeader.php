@@ -70,7 +70,7 @@ class PoHeader {
    * @param string $langcode
    *   Language code.
    */
-  public function __construct($langcode = NULL) {
+  public function __construct(string $langcode = NULL) {
     $this->langcode = $langcode;
     // Ignore errors when run during site installation before
     // date_default_timezone_set() is called.
@@ -95,7 +95,7 @@ class PoHeader {
    * @param string $languageName
    *   Human readable language name.
    */
-  public function setLanguageName($languageName) {
+  public function setLanguageName(string $languageName) {
     $this->languageName = $languageName;
   }
 
@@ -115,7 +115,7 @@ class PoHeader {
    * @param string $projectName
    *   Human readable project name.
    */
-  public function setProjectName($projectName) {
+  public function setProjectName(string $projectName) {
     $this->projectName = $projectName;
   }
 
@@ -135,7 +135,7 @@ class PoHeader {
    * @param string $header
    *   Full header string with key-value pairs.
    */
-  public function setFromString($header) {
+  public function setFromString(string $header) {
     // Get an array of all header values for processing.
     $values = $this->parseHeader($header);
 
@@ -191,7 +191,7 @@ class PoHeader {
    *
    * @throws \Exception
    */
-  public function parsePluralForms($plural_forms) {
+  public function parsePluralForms(string $plural_forms) {
     $plurals = [];
     // First, delete all whitespace.
     $plural_forms = strtr($plural_forms, [" " => "", "\t" => ""]);
@@ -250,7 +250,7 @@ class PoHeader {
    * @return array
    *   An associative array of key-value pairs.
    */
-  private function parseHeader($header) {
+  private function parseHeader(string $header) {
     $header_parsed = [];
     $lines = array_map('trim', explode("\n", $header));
     foreach ($lines as $line) {
@@ -275,7 +275,7 @@ class PoHeader {
    *   A stack of values and operations to be evaluated. False if the formula
    *   could not be parsed.
    */
-  private function parseArithmetic($string) {
+  private function parseArithmetic(string $string) {
     // Operator precedence table.
     $precedence = ["(" => -1, ")" => -1, "?" => 1, ":" => 1, "||" => 3, "&&" => 4, "==" => 5, "!=" => 5, "<" => 6, ">" => 6, "<=" => 6, ">=" => 6, "+" => 7, "-" => 7, "*" => 8, "/" => 8, "%" => 8];
     // Right associativity.
@@ -373,7 +373,7 @@ class PoHeader {
    * @return array
    *   List of arithmetic tokens identified in the formula.
    */
-  private function tokenizeFormula($formula) {
+  private function tokenizeFormula(string $formula) {
     $formula = str_replace(" ", "", $formula);
     $tokens = [];
     for ($i = 0; $i < strlen($formula); $i++) {

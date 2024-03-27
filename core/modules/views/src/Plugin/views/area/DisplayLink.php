@@ -217,7 +217,7 @@ class DisplayLink extends AreaPluginBase {
    * @return bool
    *   Whether the display ID is an allowed display or not.
    */
-  protected function isPathBasedDisplay($display_id) {
+  protected function isPathBasedDisplay(string $display_id) {
     $loaded_display = $this->view->displayHandlers->get($display_id);
     return $loaded_display instanceof PathPluginBase;
   }
@@ -234,7 +234,7 @@ class DisplayLink extends AreaPluginBase {
    *   Whether the option of the view display are equal to the current display
    *   or not.
    */
-  protected function hasEqualOptions($display_id, $option) {
+  protected function hasEqualOptions(string $display_id, string $option) {
     $loaded_display = $this->view->displayHandlers->get($display_id);
     return $loaded_display->getOption($option) === $this->displayHandler->getOption($option);
   }

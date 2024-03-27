@@ -84,7 +84,7 @@ class FileCopyTest extends FileTestBase {
    * @param string $destination_path
    *   The destination path to copy to.
    */
-  public function testSuccessfulReuse($source_path, $destination_path) {
+  public function testSuccessfulReuse(string $source_path, string $destination_path) {
     $file_reuse = $this->doTransform($source_path, $destination_path);
     clearstatcache(TRUE, $destination_path);
 
@@ -243,7 +243,7 @@ class FileCopyTest extends FileTestBase {
    * @return string
    *   The URI of the copied file.
    */
-  protected function doTransform($source_path, $destination_path, $configuration = []) {
+  protected function doTransform(string $source_path, string $destination_path, $configuration = []) {
     // Prepare a mock HTTP client.
     $this->container->set('http_client', $this->createMock(Client::class));
 

@@ -140,7 +140,7 @@ class Schema extends DatabaseSchema {
    * @param array $spec
    *   The field specification, as per the schema data structure format.
    */
-  protected function createFieldSql($name, $spec) {
+  protected function createFieldSql(string $name, $spec) {
     $sql = "[" . $name . "] " . $spec['mysql_type'];
 
     if (in_array($spec['mysql_type'], $this->mysqlStringTypes)) {

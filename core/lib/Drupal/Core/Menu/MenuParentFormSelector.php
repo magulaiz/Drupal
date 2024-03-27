@@ -110,7 +110,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
    * @return int
    *   The depth related to the depth of the given menu link.
    */
-  protected function getParentDepthLimit($id) {
+  protected function getParentDepthLimit(string $id) {
     if ($id) {
       $limit = $this->menuLinkTree->maxDepth() - $this->menuLinkTree->getSubtreeHeight($id);
     }
@@ -138,7 +138,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
    * @param \Drupal\Core\Cache\CacheableMetadata|null &$cacheability
    *   The object to add cacheability metadata to, if not NULL.
    */
-  protected function parentSelectOptionsTreeWalk(array $tree, $menu_name, $indent, array &$options, $exclude, $depth_limit, CacheableMetadata &$cacheability = NULL) {
+  protected function parentSelectOptionsTreeWalk(array $tree, string $menu_name, string $indent, array &$options, string $exclude, $depth_limit, CacheableMetadata &$cacheability = NULL) {
     foreach ($tree as $element) {
       if ($element->depth > $depth_limit) {
         // Don't iterate through any links on this level.

@@ -244,7 +244,7 @@ class TwigExtension extends AbstractExtension {
    * @return array
    *   A render array representing a link to the given URL.
    */
-  public function getLink($text, $url, $attributes = []) {
+  public function getLink(string $text, $url, $attributes = []) {
     assert(is_string($url) || $url instanceof Url, '$url must be a string or object of type \Drupal\Core\Url');
     assert(is_array($attributes) || $attributes instanceof Attribute, '$attributes, if set, must be an array or object of type \Drupal\Core\Template\Attribute');
 
@@ -360,7 +360,7 @@ class TwigExtension extends AbstractExtension {
    * @param string $library
    *   An asset library.
    */
-  public function attachLibrary($library) {
+  public function attachLibrary(string $library) {
     assert(is_string($library), 'Argument must be a string.');
 
     // Use Renderer::render() on a temporary render array to get additional
@@ -410,7 +410,7 @@ class TwigExtension extends AbstractExtension {
    *   When $arg is passed as an object which does not implement __toString(),
    *   RenderableInterface or toString().
    */
-  public function escapeFilter(Environment $env, $arg, $strategy = 'html', $charset = NULL, $autoescape = FALSE) {
+  public function escapeFilter(Environment $env, $arg, string $strategy = 'html', string $charset = NULL, $autoescape = FALSE) {
     // Check for a numeric zero int or float.
     if ($arg === 0 || $arg === 0.0) {
       return 0;
@@ -592,7 +592,7 @@ class TwigExtension extends AbstractExtension {
    * @return string
    *   The strings joined together.
    */
-  public function safeJoin(Environment $env, $value, $glue = '') {
+  public function safeJoin(Environment $env, $value, string $glue = '') {
     if ($value instanceof \Traversable) {
       $value = iterator_to_array($value, FALSE);
     }

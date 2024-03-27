@@ -154,7 +154,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetBaseTable
    */
-  public function testGetBaseTable($base_table, $expected) {
+  public function testGetBaseTable(string $base_table, string $expected) {
     $this->entityType->expects($this->once())
       ->method('getBaseTable')
       ->willReturn($base_table);
@@ -196,7 +196,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetRevisionTable
    */
-  public function testGetRevisionTable($revision_table, $expected) {
+  public function testGetRevisionTable(string $revision_table, string $expected) {
     $this->entityType->expects($this->any())
       ->method('isRevisionable')
       ->willReturn(TRUE);
@@ -267,7 +267,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetRevisionDataTable
    */
-  public function testGetRevisionDataTable($revision_data_table, $expected) {
+  public function testGetRevisionDataTable(string $revision_data_table, string $expected) {
     $this->entityType->expects($this->any())
       ->method('isRevisionable')
       ->willReturn(TRUE);

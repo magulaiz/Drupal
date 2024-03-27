@@ -40,7 +40,7 @@ trait AssertBreadcrumbTrait {
    * @param string $active_class
    *   (optional) The class of the active element. Defaults to 'is-active'.
    */
-  protected function assertBreadcrumb($goto, array $trail, $page_title = NULL, array $tree = [], $last_active = TRUE, $active_trail_class = 'menu-item--active-trail', $active_class = 'is-active') {
+  protected function assertBreadcrumb($goto, array $trail, string $page_title = NULL, array $tree = [], $last_active = TRUE, string $active_trail_class = 'menu-item--active-trail', string $active_class = 'is-active') {
     if (isset($goto)) {
       $this->drupalGet($goto);
     }

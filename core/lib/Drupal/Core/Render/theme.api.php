@@ -709,7 +709,7 @@ function hook_theme_suggestions_HOOK(array $variables) {
  *
  * @see hook_theme_suggestions_HOOK_alter()
  */
-function hook_theme_suggestions_alter(array &$suggestions, array &$variables, $hook) {
+function hook_theme_suggestions_alter(array &$suggestions, array &$variables, string $hook) {
   // Add an interface-language specific suggestion to all theme hooks.
   $suggestions[] = $hook . '__' . \Drupal::languageManager()->getCurrentLanguage()->getId();
 }
@@ -828,7 +828,7 @@ function hook_extension() {
  *   The output generated from the template. In most cases this will be a string
  *   containing HTML markup.
  */
-function hook_render_template($template_file, $variables) {
+function hook_render_template(string $template_file, $variables) {
   $twig_service = \Drupal::service('twig');
 
   return $twig_service->loadTemplate($template_file)->render($variables);
@@ -1025,7 +1025,7 @@ function hook_js_settings_alter(array &$settings, \Drupal\Core\Asset\AttachedAss
  *
  * @see \Drupal\Core\Asset\LibraryDiscoveryParser::parseLibraryInfo()
  */
-function hook_library_info_alter(&$libraries, $extension) {
+function hook_library_info_alter(&$libraries, string $extension) {
   // Update imaginary library 'foo' to version 2.0.
   if ($extension === 'core' && isset($libraries['foo'])) {
     // Verify existing version is older than the one we are updating to.

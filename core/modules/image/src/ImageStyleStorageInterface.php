@@ -22,7 +22,7 @@ interface ImageStyleStorageInterface extends ConfigEntityStorageInterface {
    * @param string $replacement
    *   The ID of the image style used as replacement.
    */
-  public function setReplacementId($name, $replacement);
+  public function setReplacementId(string $name, string $replacement);
 
   /**
    * Retrieves the replacement ID of a deleted image style.
@@ -37,7 +37,7 @@ interface ImageStyleStorageInterface extends ConfigEntityStorageInterface {
    *
    * @see \Drupal\image\ImageStyleStorageInterface::setReplacementId()
    */
-  public function getReplacementId($name);
+  public function getReplacementId(string $name);
 
   /**
    * Clears a replacement ID from the storage.
@@ -49,6 +49,6 @@ interface ImageStyleStorageInterface extends ConfigEntityStorageInterface {
    *
    * @see \Drupal\image\ImageStyleStorageInterface::setReplacementId()
    */
-  public function clearReplacementId($name);
+  public function clearReplacementId(string $name);
 
 }

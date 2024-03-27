@@ -47,7 +47,7 @@ class Dependency {
    * @param string $constraint
    *   The constraint string. For example, '>8.x-1.1'.
    */
-  public function __construct($name, $project, $constraint) {
+  public function __construct(string $name, string $project, string $constraint) {
     $this->name = $name;
     $this->project = $project;
     $this->constraintString = $constraint;
@@ -105,7 +105,7 @@ class Dependency {
    * @return bool
    *   TRUE if compatible with the provided version, FALSE if not.
    */
-  public function isCompatible($version) {
+  public function isCompatible(string $version) {
     return $this->getConstraint()->isCompatible($version);
   }
 
@@ -122,7 +122,7 @@ class Dependency {
    *
    * @return static
    */
-  public static function createFromString($dependency) {
+  public static function createFromString(string $dependency) {
     if (str_contains($dependency, ':')) {
       [$project, $dependency] = explode(':', $dependency);
     }

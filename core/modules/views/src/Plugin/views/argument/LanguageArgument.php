@@ -43,7 +43,7 @@ class LanguageArgument extends ArgumentPluginBase {
    *   The translated name for the language, or "Unknown language" if the
    *   language was not found.
    */
-  public function language($langcode) {
+  public function language(string $langcode) {
     $languages = $this->listLanguages();
     return $languages[$langcode] ?? $this->t('Unknown language');
   }

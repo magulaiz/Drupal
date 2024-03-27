@@ -140,6 +140,6 @@ abstract class ImageEffectFormBase extends FormBase {
    * @return \Drupal\image\ImageEffectInterface
    *   The image effect object.
    */
-  abstract protected function prepareImageEffect($image_effect);
+  abstract protected function prepareImageEffect(string $image_effect);
 
 }

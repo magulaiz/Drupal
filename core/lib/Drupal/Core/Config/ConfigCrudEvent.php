@@ -44,7 +44,7 @@ class ConfigCrudEvent extends Event {
    *
    * @return bool
    */
-  public function isChanged($key) {
+  public function isChanged(string $key) {
     return $this->config->get($key) !== $this->config->getOriginal($key);
   }
 

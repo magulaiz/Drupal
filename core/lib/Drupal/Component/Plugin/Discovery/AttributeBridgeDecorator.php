@@ -62,7 +62,7 @@ class AttributeBridgeDecorator implements DiscoveryInterface {
    * @return mixed
    *   The method result.
    */
-  public function __call($method, $args) {
+  public function __call(string $method, $args) {
     return $this->decorated->{$method}(...$args);
   }
 

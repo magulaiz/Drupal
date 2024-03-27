@@ -256,7 +256,7 @@ class EntityRepositoryTest extends KernelTestBase {
    * @param string $method_name
    *   An entity repository method name.
    */
-  protected function doTestLanguageFallback($method_name) {
+  protected function doTestLanguageFallback(string $method_name) {
     $entity_type_id = 'entity_test_mulrev';
     $en_contexts = $this->getLanguageContexts('en');
     $it_contexts = $this->getLanguageContexts('it');
@@ -317,7 +317,7 @@ class EntityRepositoryTest extends KernelTestBase {
    * @return \Drupal\Core\Plugin\Context\ContextInterface[]
    *   An array of contexts.
    */
-  protected function getLanguageContexts($langcode) {
+  protected function getLanguageContexts(string $langcode) {
     $prefix = '@language.current_language_context:';
     return [
       $prefix . LanguageInterface::TYPE_INTERFACE => new Context(new ContextDefinition('language'), $langcode),

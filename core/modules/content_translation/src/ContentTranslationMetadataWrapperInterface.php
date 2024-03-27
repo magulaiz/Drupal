@@ -28,7 +28,7 @@ interface ContentTranslationMetadataWrapperInterface {
    *
    * @return $this
    */
-  public function setSource($source);
+  public function setSource(string $source);
 
   /**
    * Returns the translation outdated status.

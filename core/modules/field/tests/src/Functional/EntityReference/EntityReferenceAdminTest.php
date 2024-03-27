@@ -391,7 +391,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
    * @return string
    *   Returns the generated field name
    */
-  protected function createEntityReferenceField($target_type, $bundles = []) {
+  protected function createEntityReferenceField(string $target_type, $bundles = []) {
     // Generates a bundle path for the newly created content type.
     $bundle_path = 'admin/structure/types/manage/' . $this->type;
 

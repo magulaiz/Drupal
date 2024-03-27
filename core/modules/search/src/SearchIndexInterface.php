@@ -35,7 +35,7 @@ interface SearchIndexInterface {
    * @throws \Drupal\search\Exception\SearchIndexException
    *   If there is an error indexing the text.
    */
-  public function index($type, $sid, $langcode, $text, $update_weights = TRUE);
+  public function index(string $type, $sid, string $langcode, string $text, $update_weights = TRUE);
 
   /**
    * Clears either a part of, or the entire search index.
@@ -82,7 +82,7 @@ interface SearchIndexInterface {
    * @throws \Drupal\search\Exception\SearchIndexException
    *   If there is an error marking the index for re-indexing.
    */
-  public function markForReindex($type = NULL, $sid = NULL, $langcode = NULL);
+  public function markForReindex(string $type = NULL, $sid = NULL, string $langcode = NULL);
 
   /**
    * Updates the {search_total} database table.

@@ -140,7 +140,7 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
    * @return bool
    *   TRUE if provider is allowed, FALSE otherwise.
    */
-  protected function applyFilter(Request $request, $authenticated, $provider_id) {
+  protected function applyFilter(Request $request, $authenticated, string $provider_id) {
     $provider = $this->authCollector->getProvider($provider_id);
 
     if ($provider && ($provider instanceof AuthenticationProviderFilterInterface)) {
@@ -171,7 +171,7 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
    * @return bool
    *   TRUE if provider is allowed, FALSE otherwise.
    */
-  protected function defaultFilter(Request $request, $provider_id) {
+  protected function defaultFilter(Request $request, string $provider_id) {
     $route = RouteMatch::createFromRequest($request)->getRouteObject();
     $has_auth_option = isset($route) && $route->hasOption('_auth');
 

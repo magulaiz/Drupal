@@ -33,7 +33,7 @@ trait FieldUiTestTrait {
    *   (optional) Parameter for conditional execution of second and third step
    *   (Saving the storage settings and field settings). Defaults to 'TRUE'.
    */
-  public function fieldUIAddNewField($bundle_path, $field_name, $label = NULL, $field_type = 'test_field', array $storage_edit = [], array $field_edit = [], bool $save_settings = TRUE) {
+  public function fieldUIAddNewField(string $bundle_path, string $field_name, string $label = NULL, string $field_type = 'test_field', array $storage_edit = [], array $field_edit = [], bool $save_settings = TRUE) {
     // Generate a label containing only letters and numbers to prevent random
     // test failure.
     // See https://www.drupal.org/project/drupal/issues/3030902
@@ -122,7 +122,7 @@ trait FieldUiTestTrait {
    *   (optional) $edit parameter for submitForm() on the second step
    *   ('Field settings' form).
    */
-  public function fieldUIAddExistingField($bundle_path, $existing_storage_name, $label = NULL, array $field_edit = []) {
+  public function fieldUIAddExistingField(string $bundle_path, string $existing_storage_name, string $label = NULL, array $field_edit = []) {
     $label = $label ?: $this->randomMachineName();
     $field_edit['edit-label'] = $label;
 
@@ -165,7 +165,7 @@ trait FieldUiTestTrait {
    * @param string $source_label
    *   (optional) The label of the source entity type bundle.
    */
-  public function fieldUIDeleteField($bundle_path, $field_name, $label, $bundle_label, string $source_label = '') {
+  public function fieldUIDeleteField(string $bundle_path, string $field_name, string $label, string $bundle_label, string $source_label = '') {
     // Display confirmation form.
     $this->drupalGet("$bundle_path/fields/$field_name/delete");
     $this->assertSession()->pageTextContains("Are you sure you want to delete the field $label");
@@ -193,7 +193,7 @@ trait FieldUiTestTrait {
    * @return string
    *   Group name
    */
-  public function getFieldFromGroup($field_type) {
+  public function getFieldFromGroup(string $field_type) {
     $group_elements = $this->getSession()->getPage()->findAll('css', '.field-option-radio');
     $groups = [];
     foreach ($group_elements as $group_element) {

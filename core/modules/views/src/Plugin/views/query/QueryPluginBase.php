@@ -226,7 +226,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
    * @return string
    *   An expression representing a timestamp with time zone.
    */
-  public function getDateField($field, $string_date = FALSE, $calculate_offset = TRUE) {
+  public function getDateField(string $field, $string_date = FALSE, $calculate_offset = TRUE) {
     return $field;
   }
 
@@ -255,7 +255,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
    *   A string representing the field formatted as a date in the format
    *   specified by $format.
    */
-  public function getDateFormat($field, $format, $string_date = FALSE) {
+  public function getDateFormat(string $field, string $format, $string_date = FALSE) {
     return $field;
   }
 
@@ -370,7 +370,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
    * @param int $offset
    *   The timezone offset to apply to the field.
    */
-  public function setFieldTimezoneOffset(&$field, $offset) {
+  public function setFieldTimezoneOffset(string &$field, $offset) {
     // No-op. Timezone offsets are implementation-specific and should implement
     // this method as needed.
   }

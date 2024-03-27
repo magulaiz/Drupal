@@ -173,7 +173,7 @@ class FileCopy extends FileProcessBase implements ContainerFactoryPluginInterfac
    * @return string|bool
    *   File destination on success, FALSE on failure.
    */
-  protected function writeFile($source, $destination, $replace = FileSystemInterface::EXISTS_REPLACE) {
+  protected function writeFile(string $source, string $destination, $replace = FileSystemInterface::EXISTS_REPLACE) {
     // Check if there is a destination available for copying. If there isn't,
     // it already exists at the destination and the replace flag tells us to not
     // replace it. In that case, return the original destination.
@@ -208,7 +208,7 @@ class FileCopy extends FileProcessBase implements ContainerFactoryPluginInterfac
    *   The directory component of the path or URI, or FALSE if it could not
    *   be determined.
    */
-  protected function getDirectory($uri) {
+  protected function getDirectory(string $uri) {
     $dir = $this->fileSystem->dirname($uri);
     if (str_ends_with($dir, '://')) {
       return $this->fileSystem->realpath($dir);
@@ -228,7 +228,7 @@ class FileCopy extends FileProcessBase implements ContainerFactoryPluginInterfac
    *   TRUE if the source and destination URIs refer to the same physical path,
    *   otherwise FALSE.
    */
-  protected function isLocationUnchanged($source, $destination) {
+  protected function isLocationUnchanged(string $source, string $destination) {
     return $this->fileSystem->realpath($source) === $this->fileSystem->realpath($destination);
   }
 
@@ -244,7 +244,7 @@ class FileCopy extends FileProcessBase implements ContainerFactoryPluginInterfac
    *
    * @return bool
    */
-  protected function isLocalUri($uri) {
+  protected function isLocalUri(string $uri) {
     $scheme = StreamWrapperManager::getScheme($uri);
 
     // The vfs scheme is vfsStream, which is used in testing. vfsStream is a

@@ -735,7 +735,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
    *
    * @dataProvider providerTestCssAssert
    */
-  public function testCssAssert($extension, $exception_message) {
+  public function testCssAssert(string $extension, string $exception_message) {
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('moduleExists')
       ->with($extension)

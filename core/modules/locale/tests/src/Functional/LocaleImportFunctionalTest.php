@@ -404,7 +404,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
    * @param array $options
    *   (optional) Additional options to pass to the translation import form.
    */
-  public function importPoFile($contents, array $options = []) {
+  public function importPoFile(string $contents, array $options = []) {
     $file_system = \Drupal::service('file_system');
     $name = $file_system->tempnam('temporary://', "po_") . '.po';
     file_put_contents($name, $contents);

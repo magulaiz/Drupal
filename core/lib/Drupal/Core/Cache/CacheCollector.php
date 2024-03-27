@@ -111,7 +111,7 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
    * @param array $tags
    *   (optional) The tags to specify for the cache item.
    */
-  public function __construct($cid, CacheBackendInterface $cache, LockBackendInterface $lock, array $tags = []) {
+  public function __construct(string $cid, CacheBackendInterface $cache, LockBackendInterface $lock, array $tags = []) {
     assert(Inspector::assertAllStrings($tags), 'Cache tags must be strings.');
     $this->cid = $cid;
     $this->cache = $cache;
@@ -190,7 +190,7 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
    *   TRUE. When called with $persist = FALSE the offset will be un-flagged so
    *   that it will not be written at the end of the request.
    */
-  protected function persist($key, $persist = TRUE) {
+  protected function persist(string $key, $persist = TRUE) {
     $this->keysToPersist[$key] = $persist;
   }
 
@@ -207,7 +207,7 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
    * @return mixed
    *   The value of the offset, or NULL if no value was found.
    */
-  abstract protected function resolveCacheMiss($key);
+  abstract protected function resolveCacheMiss(string $key);
 
   /**
    * Writes a value to the persistent cache immediately.
@@ -282,7 +282,7 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
    * @return string
    *   An ASCII-encoded cache ID that is at most 255 characters long.
    */
-  protected function normalizeLockName($cid) {
+  protected function normalizeLockName(string $cid) {
     // Nothing to do if the ID is a US ASCII string of 255 characters or less.
     $cid_is_ascii = mb_check_encoding($cid, 'ASCII');
     if (strlen($cid) <= 255 && $cid_is_ascii) {

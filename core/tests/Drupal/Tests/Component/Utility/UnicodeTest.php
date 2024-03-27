@@ -218,7 +218,7 @@ EOF;
    * @param string $expected
    *   The expected return from Unicode::truncateBytes().
    */
-  public function testTruncateBytes($text, $max_length, $expected) {
+  public function testTruncateBytes(string $text, $max_length, string $expected) {
     $this->assertEquals($expected, Unicode::truncateBytes($text, $max_length), 'The string was not correctly truncated.');
   }
 
@@ -253,7 +253,7 @@ EOF;
    * @param string $message
    *   The message to display on failure.
    */
-  public function testValidateUtf8($text, $expected, $message) {
+  public function testValidateUtf8(string $text, $expected, string $message) {
     $this->assertEquals($expected, Unicode::validateUtf8($text), $message);
   }
 
@@ -292,7 +292,7 @@ EOF;
    * @param string|bool $expected
    *   The expected result.
    */
-  public function testConvertToUtf8($data, $encoding, $expected) {
+  public function testConvertToUtf8(string $data, string $encoding, $expected) {
     $this->assertEquals($expected, Unicode::convertToUtf8($data, $encoding));
   }
 

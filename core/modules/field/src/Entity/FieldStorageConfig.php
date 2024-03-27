@@ -839,7 +839,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
    *   The field config entity if one exists for the provided field name,
    *   otherwise NULL.
    */
-  public static function loadByName($entity_type_id, $field_name) {
+  public static function loadByName(string $entity_type_id, string $field_name) {
     return \Drupal::entityTypeManager()->getStorage('field_storage_config')->load($entity_type_id . '.' . $field_name);
   }
 

@@ -85,7 +85,7 @@ trait SchemaCheckTrait {
    *   FALSE if no schema found. List of errors if any found. TRUE if fully
    *   valid.
    */
-  public function checkConfigSchema(TypedConfigManagerInterface $typed_config, $config_name, $config_data, bool $validate_constraints = FALSE) {
+  public function checkConfigSchema(TypedConfigManagerInterface $typed_config, string $config_name, $config_data, bool $validate_constraints = FALSE) {
     // We'd like to verify that the top-level type is either config_base,
     // config_entity, or a derivative. The only thing we can really test though
     // is that the schema supports having langcode in it. So add 'langcode' to
@@ -198,7 +198,7 @@ trait SchemaCheckTrait {
    * @return array
    *   List of errors found while checking with the corresponding schema.
    */
-  protected function checkValue($key, $value) {
+  protected function checkValue(string $key, $value) {
     $error_key = $this->configName . ':' . $key;
     /** @var \Drupal\Core\TypedData\TypedDataInterface $element */
     $element = $this->schema->get($key);

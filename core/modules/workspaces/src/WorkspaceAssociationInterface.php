@@ -51,7 +51,7 @@ interface WorkspaceAssociationInterface {
    *   Returns a multidimensional array where the first level keys are entity
    *   type IDs and the values are an array of entity IDs keyed by revision IDs.
    */
-  public function getTrackedEntities($workspace_id, $entity_type_id = NULL, $entity_ids = NULL);
+  public function getTrackedEntities(string $workspace_id, $entity_type_id = NULL, $entity_ids = NULL);
 
   /**
    * Retrieves all content revisions tracked by a given workspace.
@@ -72,7 +72,7 @@ interface WorkspaceAssociationInterface {
    *   Returns an array where the values are an array of entity IDs keyed by
    *   revision IDs.
    */
-  public function getAssociatedRevisions($workspace_id, $entity_type_id, $entity_ids = NULL);
+  public function getAssociatedRevisions(string $workspace_id, string $entity_type_id, $entity_ids = NULL);
 
   /**
    * Retrieves all content revisions that were created in a given workspace.

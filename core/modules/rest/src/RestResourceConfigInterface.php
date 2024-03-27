@@ -45,7 +45,7 @@ interface RestResourceConfigInterface extends ConfigEntityInterface, EntityWithP
    * @return string[]
    *   A list of supported authentication provider IDs.
    */
-  public function getAuthenticationProviders($method);
+  public function getAuthenticationProviders(string $method);
 
   /**
    * Retrieves a list of supported response formats.
@@ -56,6 +56,6 @@ interface RestResourceConfigInterface extends ConfigEntityInterface, EntityWithP
    * @return string[]
    *   A list of supported format IDs.
    */
-  public function getFormats($method);
+  public function getFormats(string $method);
 
 }

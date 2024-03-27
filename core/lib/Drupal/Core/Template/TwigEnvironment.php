@@ -228,7 +228,7 @@ class TwigEnvironment extends Environment {
    *
    * @see \Drupal\Core\Template\Loader\StringLoader::exists()
    */
-  public function renderInline($template_string, array $context = []) {
+  public function renderInline(string $template_string, array $context = []) {
     // Prefix all inline templates with a special comment.
     $template_string = '{# inline_template_start #}' . $template_string;
     return Markup::create($this->createTemplate($template_string)->render($context));

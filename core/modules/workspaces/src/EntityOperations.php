@@ -285,7 +285,7 @@ class EntityOperations implements ContainerInjectionInterface {
    *
    * @see hook_form_alter()
    */
-  public function entityFormAlter(array &$form, FormStateInterface $form_state, $form_id) {
+  public function entityFormAlter(array &$form, FormStateInterface $form_state, string $form_id) {
     $entity = $form_state->getFormObject()->getEntity();
     if (!$this->workspaceInfo->isEntitySupported($entity) && !$this->workspaceInfo->isEntityIgnored($entity)) {
       return;

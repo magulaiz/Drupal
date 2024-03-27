@@ -229,7 +229,7 @@ class ConfigImporter {
    * @param string $message
    *   The message to log.
    */
-  public function logError($message) {
+  public function logError(string $message) {
     $this->errors[] = $message;
   }
 
@@ -318,7 +318,7 @@ class ConfigImporter {
    * @return array
    *   An array containing a list of processed changes.
    */
-  public function getProcessedConfiguration($collection = StorageInterface::DEFAULT_COLLECTION) {
+  public function getProcessedConfiguration(string $collection = StorageInterface::DEFAULT_COLLECTION) {
     return $this->processedConfiguration[$collection];
   }
 
@@ -332,7 +332,7 @@ class ConfigImporter {
    * @param string $name
    *   The name of the configuration processed.
    */
-  protected function setProcessedConfiguration($collection, $op, $name) {
+  protected function setProcessedConfiguration(string $collection, string $op, string $name) {
     $this->processedConfiguration[$collection][$op][] = $name;
   }
 
@@ -349,7 +349,7 @@ class ConfigImporter {
    * @return array
    *   An array of configuration names.
    */
-  public function getUnprocessedConfiguration($op, $collection = StorageInterface::DEFAULT_COLLECTION) {
+  public function getUnprocessedConfiguration(string $op, string $collection = StorageInterface::DEFAULT_COLLECTION) {
     return array_diff($this->storageComparer->getChangelist($op, $collection), $this->processedConfiguration[$collection][$op]);
   }
 
@@ -373,7 +373,7 @@ class ConfigImporter {
    * @param string $name
    *   The name of the extension processed.
    */
-  protected function setProcessedExtension($type, $op, $name) {
+  protected function setProcessedExtension(string $type, string $op, string $name) {
     $this->processedExtensions[$type][$op][] = $name;
   }
 
@@ -501,7 +501,7 @@ class ConfigImporter {
    * @return array
    *   An array of extension names.
    */
-  public function getExtensionChangelist($type, $op = NULL) {
+  public function getExtensionChangelist(string $type, string $op = NULL) {
     if ($op) {
       return $this->extensionChangelist[$type][$op];
     }
@@ -517,7 +517,7 @@ class ConfigImporter {
    * @return array
    *   An array of extension names.
    */
-  protected function getUnprocessedExtensions($type) {
+  protected function getUnprocessedExtensions(string $type) {
     $changelist = $this->getExtensionChangelist($type);
     return [
       'install' => array_diff($changelist['install'], $this->processedExtensions[$type]['install']),
@@ -844,7 +844,7 @@ class ConfigImporter {
    *   set, otherwise the exception message is logged and the configuration
    *   is skipped.
    */
-  protected function processConfiguration($collection, $op, $name) {
+  protected function processConfiguration(string $collection, string $op, string $name) {
     try {
       $processed = FALSE;
       if ($collection == StorageInterface::DEFAULT_COLLECTION) {
@@ -872,7 +872,7 @@ class ConfigImporter {
    * @param string $name
    *   The name of the extension to process.
    */
-  protected function processExtension($type, $op, $name) {
+  protected function processExtension(string $type, string $op, string $name) {
     // Set the config installer to use the sync directory instead of the
     // extensions own default config directories.
     \Drupal::service('config.installer')
@@ -922,7 +922,7 @@ class ConfigImporter {
    *
    * @throws \Drupal\Core\Config\ConfigImporterException
    */
-  protected function checkOp($collection, $op, $name) {
+  protected function checkOp(string $collection, string $op, string $name) {
     if ($op == 'rename') {
       $names = $this->storageComparer->extractRenameNames($name);
       $target_exists = $this->storageComparer->getTargetStorage($collection)->exists($names['new_name']);
@@ -991,7 +991,7 @@ class ConfigImporter {
    * @param string $name
    *   The name of the configuration to process.
    */
-  protected function importConfig($collection, $op, $name) {
+  protected function importConfig(string $collection, string $op, string $name) {
     // Allow config factory overriders to use a custom configuration object if
     // they are responsible for the collection.
     $overrider = $this->configManager->getConfigCollectionInfo()->getOverrideService($collection);
@@ -1039,7 +1039,7 @@ class ConfigImporter {
    *   Thrown if the data is owned by an entity type, but the entity storage
    *   does not support imports.
    */
-  protected function importInvokeOwner($collection, $op, $name) {
+  protected function importInvokeOwner(string $collection, string $op, string $name) {
     // Renames are handled separately.
     if ($op == 'rename') {
       return $this->importInvokeRename($collection, $name);
@@ -1091,7 +1091,7 @@ class ConfigImporter {
    *
    * @see \Drupal\Core\Config\ConfigImporter::createRenameName()
    */
-  protected function importInvokeRename($collection, $rename_name) {
+  protected function importInvokeRename(string $collection, string $rename_name) {
     $names = $this->storageComparer->extractRenameNames($rename_name);
     $entity_type_id = $this->configManager->getEntityTypeIdByName($names['old_name']);
     $old_config = new Config($names['old_name'], $this->storageComparer->getTargetStorage($collection), $this->eventDispatcher, $this->typedConfigManager);

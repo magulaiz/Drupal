@@ -322,7 +322,7 @@ class RowTest extends UnitTestCase {
    * @dataProvider getDataProvider
    * @covers ::get
    */
-  public function testGet($key, $expected_value) {
+  public function testGet(string $key, string $expected_value) {
     $row = $this->createRowWithDestinationProperties($this->testGetSourceProperties, $this->testGetSourceIds, $this->testGetDestinationProperties);
     $this->assertSame($expected_value, $row->get($key));
   }

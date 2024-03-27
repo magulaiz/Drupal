@@ -224,7 +224,7 @@ class CKEditor5ImageController extends ControllerBase {
    * @return string
    *   The generated lock ID.
    */
-  protected static function generateLockIdFromFileUri($file_uri) {
+  protected static function generateLockIdFromFileUri(string $file_uri) {
     return 'file:ckeditor5:' . Crypt::hashBase64($file_uri);
   }
 

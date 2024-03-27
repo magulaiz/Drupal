@@ -820,7 +820,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    * @return int
    *   The number of records.
    */
-  protected function countHelper($status = NULL, $table = NULL) {
+  protected function countHelper($status = NULL, string $table = NULL) {
     // Use database directly to avoid creating tables.
     $query = $this->database->select($table ?: $this->mapTableName());
     if (isset($status)) {

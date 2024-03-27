@@ -28,7 +28,7 @@ interface TermInterface extends ContentEntityInterface, EntityChangedInterface, 
    *
    * @return $this
    */
-  public function setDescription($description);
+  public function setDescription(string $description);
 
   /**
    * Gets the text format name for the term description.
@@ -46,7 +46,7 @@ interface TermInterface extends ContentEntityInterface, EntityChangedInterface, 
    *
    * @return $this
    */
-  public function setFormat($format);
+  public function setFormat(string $format);
 
   /**
    * Gets the term name.
@@ -64,7 +64,7 @@ interface TermInterface extends ContentEntityInterface, EntityChangedInterface, 
    *
    * @return $this
    */
-  public function setName($name);
+  public function setName(string $name);
 
   /**
    * Gets the term weight.

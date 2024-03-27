@@ -51,7 +51,7 @@ class NoSourcePluginDecorator implements DiscoveryInterface {
    * @return mixed
    *   The return value from the method on the decorated object.
    */
-  public function __call($method, array $args) {
+  public function __call(string $method, array $args) {
     return call_user_func_array([$this->decorated, $method], $args);
   }
 

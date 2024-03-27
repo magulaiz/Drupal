@@ -190,7 +190,7 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
    *
    * @return \Drupal\Core\TypedData\TypedDataInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected function setupTypedData(array $tree, $name = '') {
+  protected function setupTypedData(array $tree, string $name = '') {
     $callback = function ($value, ExecutionContextInterface $context) {
       $context->addViolation('violation: ' . (is_array($value) ? count($value) : $value));
     };

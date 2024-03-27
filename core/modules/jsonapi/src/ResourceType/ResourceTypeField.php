@@ -55,7 +55,7 @@ abstract class ResourceTypeField {
    * @param bool $has_one
    *   (optional) Whether the field can only have ony value. Defaults to TRUE.
    */
-  public function __construct($internal_name, $public_name = NULL, $enabled = TRUE, $has_one = TRUE) {
+  public function __construct(string $internal_name, string $public_name = NULL, $enabled = TRUE, $has_one = TRUE) {
     $this->internalName = $internal_name;
     $this->publicName = $public_name ?: $internal_name;
     $this->enabled = $enabled;
@@ -91,7 +91,7 @@ abstract class ResourceTypeField {
    * @return static
    *   A new instance of the field with the given public name.
    */
-  public function withPublicName($public_name) {
+  public function withPublicName(string $public_name) {
     return new static($this->internalName, $public_name, $this->enabled, $this->hasOne);
   }
 

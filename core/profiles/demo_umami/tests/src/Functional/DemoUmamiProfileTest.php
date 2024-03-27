@@ -276,7 +276,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
    *
    * @see drupalCreateUser()
    */
-  protected function drupalLoginWithPassword(AccountInterface $account, $password) {
+  protected function drupalLoginWithPassword(AccountInterface $account, string $password) {
     if ($this->loggedInUser) {
       $this->drupalLogout();
     }

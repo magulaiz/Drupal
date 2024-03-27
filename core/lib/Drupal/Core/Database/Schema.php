@@ -81,7 +81,7 @@ abstract class Schema implements PlaceholderInterface {
    * @return array
    *   A keyed array with information about the schema, table name and prefix.
    */
-  protected function getPrefixInfo($table = 'default', $add_prefix = TRUE) {
+  protected function getPrefixInfo(string $table = 'default', $add_prefix = TRUE) {
     $info = [
       'schema' => $this->defaultSchema,
       'prefix' => $this->connection->getPrefix(),
@@ -192,7 +192,7 @@ abstract class Schema implements PlaceholderInterface {
    * @return array
    *   Both the keys and the values are the matching tables.
    */
-  public function findTables($table_expression) {
+  public function findTables(string $table_expression) {
     // Load all the tables up front in order to take into account per-table
     // prefixes. The actual matching is done at the bottom of the method.
     $condition = $this->buildTableNameCondition('%', 'LIKE');
@@ -245,7 +245,7 @@ abstract class Schema implements PlaceholderInterface {
    * @return bool
    *   TRUE if the given column exists, otherwise FALSE.
    */
-  public function fieldExists($table, $column) {
+  public function fieldExists(string $table, string $column) {
     $condition = $this->buildTableNameCondition($table);
     $condition->condition('column_name', $column);
     $condition->compile($this->connection, $this);
@@ -393,7 +393,7 @@ abstract class Schema implements PlaceholderInterface {
    * @throws \RuntimeException
    *   If the driver does not override this method.
    */
-  protected function findPrimaryKeyColumns($table) {
+  protected function findPrimaryKeyColumns(string $table) {
     if (!$this->tableExists($table)) {
       return FALSE;
     }
@@ -522,7 +522,7 @@ abstract class Schema implements PlaceholderInterface {
    * @throws \RuntimeException
    *   If the driver does not implement this method.
    */
-  protected function introspectIndexSchema($table) {
+  protected function introspectIndexSchema(string $table) {
     if (!$this->tableExists($table)) {
       throw new SchemaObjectDoesNotExistException("The table $table doesn't exist.");
     }
@@ -642,7 +642,7 @@ abstract class Schema implements PlaceholderInterface {
    *   make it private for each driver, and ::createTable actually an abstract
    *   method here for implementation in each driver.
    */
-  protected function createTableSql($name, $table) {
+  protected function createTableSql(string $name, $table) {
     throw new \BadMethodCallException(get_class($this) . '::createTableSql() not implemented.');
   }
 

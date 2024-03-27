@@ -71,7 +71,7 @@ class UuidTest extends TestCase {
    *
    * @dataProvider providerTestValidation
    */
-  public function testValidation($uuid, $is_valid, $message) {
+  public function testValidation(string $uuid, $is_valid, string $message) {
     $this->assertSame($is_valid, Uuid::isValid($uuid), $message);
   }
 

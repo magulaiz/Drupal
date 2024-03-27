@@ -47,7 +47,7 @@ class YamlDiscovery implements DiscoveryInterface {
    * @param array $directories
    *   An array of directories to scan.
    */
-  public function __construct($name, array $directories) {
+  public function __construct(string $name, array $directories) {
     $this->discovery = new CoreYamlDiscovery($name, $directories);
   }
 
@@ -63,7 +63,7 @@ class YamlDiscovery implements DiscoveryInterface {
    *
    * @return $this
    */
-  public function addTranslatableProperty($value_key, $context_key = '') {
+  public function addTranslatableProperty(string $value_key, string $context_key = '') {
     $this->translatableProperties[$value_key] = $context_key;
     return $this;
   }

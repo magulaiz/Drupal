@@ -17,7 +17,7 @@ class TourTestController {
    * @return array
    *   Array of markup.
    */
-  public function tourTest1($locale = 'foo') {
+  public function tourTest1(string $locale = 'foo') {
     return [
       'tip-1' => [
         '#type' => 'container',

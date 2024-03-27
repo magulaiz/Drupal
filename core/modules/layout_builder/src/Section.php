@@ -62,7 +62,7 @@ class Section implements ThirdPartySettingsInterface {
    * @param array[] $third_party_settings
    *   (optional) Any third party settings.
    */
-  public function __construct($layout_id, array $layout_settings = [], array $components = [], array $third_party_settings = []) {
+  public function __construct(string $layout_id, array $layout_settings = [], array $components = [], array $third_party_settings = []) {
     $this->layoutId = $layout_id;
     $this->layoutSettings = $layout_settings;
     foreach ($components as $component) {
@@ -191,7 +191,7 @@ class Section implements ThirdPartySettingsInterface {
    * @throws \InvalidArgumentException
    *   Thrown when the expected UUID does not exist.
    */
-  public function getComponent($uuid) {
+  public function getComponent(string $uuid) {
     if (!isset($this->components[$uuid])) {
       throw new \InvalidArgumentException(sprintf('Invalid UUID "%s"', $uuid));
     }
@@ -220,7 +220,7 @@ class Section implements ThirdPartySettingsInterface {
    *
    * @return $this
    */
-  public function removeComponent($uuid) {
+  public function removeComponent(string $uuid) {
     unset($this->components[$uuid]);
     return $this;
   }
@@ -248,7 +248,7 @@ class Section implements ThirdPartySettingsInterface {
    * @return int
    *   A number higher than the highest weight of the component in the region.
    */
-  protected function getNextHighestWeight($region) {
+  protected function getNextHighestWeight(string $region) {
     $components = $this->getComponentsByRegion($region);
     $weights = array_map(function (SectionComponent $component) {
       return $component->getWeight();
@@ -265,7 +265,7 @@ class Section implements ThirdPartySettingsInterface {
    * @return \Drupal\layout_builder\SectionComponent[]
    *   An array of components in the specified region, sorted by weight.
    */
-  public function getComponentsByRegion($region) {
+  public function getComponentsByRegion(string $region) {
     $components = array_filter($this->getComponents(), function (SectionComponent $component) use ($region) {
       return $component->getRegion() === $region;
     });
@@ -288,7 +288,7 @@ class Section implements ThirdPartySettingsInterface {
    * @throws \InvalidArgumentException
    *   Thrown when the expected UUID does not exist.
    */
-  public function insertAfterComponent($preceding_uuid, SectionComponent $component) {
+  public function insertAfterComponent(string $preceding_uuid, SectionComponent $component) {
     // Find the delta of the specified UUID.
     $uuids = array_keys($this->getComponentsByRegion($component->getRegion()));
     $delta = array_search($preceding_uuid, $uuids, TRUE);

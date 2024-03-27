@@ -175,7 +175,7 @@ class InternalEntitiesTest extends BrowserTestBase {
    * @return array
    *   The decoded response document.
    */
-  protected function getRelated(EntityInterface $entity, $relationship, array $options = []) {
+  protected function getRelated(EntityInterface $entity, string $relationship, array $options = []) {
     $entity_type_id = $entity->getEntityTypeId();
     $bundle = $entity->bundle();
     $path = "/jsonapi/{$entity_type_id}/{$bundle}/{$entity->uuid()}/{$relationship}";

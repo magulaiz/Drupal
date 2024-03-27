@@ -539,7 +539,7 @@ xss:ex/*XSS*//*/*/pression(alert("XSS"))\'>',
    *
    * @dataProvider providerTestFilterXss
    */
-  public function testFilterXss($input, $expected_output) {
+  public function testFilterXss(string $input, string $expected_output) {
     $output = Standard::filterXss($input, $this->format);
     $this->assertSame($expected_output, $output);
   }
@@ -563,7 +563,7 @@ xss:ex/*XSS*//*/*/pression(alert("XSS"))\'>',
    *
    * @dataProvider providerTestBlackListMode
    */
-  public function testBlacklistMode($value, $expected, $message, array $disallowed_tags) {
+  public function testBlacklistMode(string $value, string $expected, string $message, array $disallowed_tags) {
     $value = Standard::filter($value, $disallowed_tags);
     $this->assertSame($expected, $value, $message);
   }

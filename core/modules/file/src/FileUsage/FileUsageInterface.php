@@ -30,7 +30,7 @@ interface FileUsageInterface {
    * @param int $count
    *   (optional) The number of references to add to the object. Defaults to 1.
    */
-  public function add(FileInterface $file, $module, $type, $id, $count = 1);
+  public function add(FileInterface $file, string $module, string $type, string $id, $count = 1);
 
   /**
    * Removes a record to indicate that a module is no longer using a file.
@@ -52,7 +52,7 @@ interface FileUsageInterface {
    *   to 1. Zero may be specified to delete all references to the file within a
    *   specific object.
    */
-  public function delete(FileInterface $file, $module, $type = NULL, $id = NULL, $count = 1);
+  public function delete(FileInterface $file, string $module, string $type = NULL, string $id = NULL, $count = 1);
 
   /**
    * Determines where a file is used.

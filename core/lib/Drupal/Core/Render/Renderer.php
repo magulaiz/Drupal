@@ -858,7 +858,7 @@ class Renderer implements RendererInterface {
    *
    * @see \Drupal\Core\Security\TrustedCallbackInterface
    */
-  protected function doCallback($callback_type, $callback, array $args) {
+  protected function doCallback(string $callback_type, $callback, array $args) {
     $callable = $this->callableResolver->getCallableFromDefinition($callback);
     $message = sprintf('Render %s callbacks must be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface or be an anonymous function. The callback was %s. See https://www.drupal.org/node/2966725', $callback_type, '%s');
     // Add \Drupal\Core\Render\Element\RenderCallbackInterface as an extra

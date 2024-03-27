@@ -73,7 +73,7 @@ class EntityDisplayRebuilder implements ContainerInjectionInterface {
    * @param string $bundle
    *   The bundle we need to rebuild.
    */
-  public function rebuildEntityTypeDisplays($entity_type_id, $bundle) {
+  public function rebuildEntityTypeDisplays(string $entity_type_id, string $bundle) {
     // Get the displays.
     $view_modes = $this->entityDisplayRepository->getViewModeOptions($entity_type_id);
     $form_modes = $this->entityDisplayRepository->getFormModeOptions($entity_type_id);

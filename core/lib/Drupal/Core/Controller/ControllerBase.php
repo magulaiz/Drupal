@@ -139,7 +139,7 @@ abstract class ControllerBase implements ContainerInjectionInterface {
    * @return \Drupal\Core\Cache\CacheBackendInterface
    *   The cache object associated with the specified bin.
    */
-  protected function cache($bin = 'default') {
+  protected function cache(string $bin = 'default') {
     return $this->container()->get('cache.' . $bin);
   }
 
@@ -159,7 +159,7 @@ abstract class ControllerBase implements ContainerInjectionInterface {
    * @return \Drupal\Core\Config\Config
    *   A configuration object.
    */
-  protected function config($name) {
+  protected function config(string $name) {
     if (!$this->configFactory) {
       $this->configFactory = $this->container()->get('config.factory');
     }
@@ -174,7 +174,7 @@ abstract class ControllerBase implements ContainerInjectionInterface {
    *
    * @return \Drupal\Core\KeyValueStore\KeyValueStoreInterface
    */
-  protected function keyValue($collection) {
+  protected function keyValue(string $collection) {
     if (!$this->keyValue) {
       $this->keyValue = $this->container()->get('keyvalue')->get($collection);
     }
@@ -265,7 +265,7 @@ abstract class ControllerBase implements ContainerInjectionInterface {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirect response object that may be returned by the controller.
    */
-  protected function redirect($route_name, array $route_parameters = [], array $options = [], $status = 302) {
+  protected function redirect(string $route_name, array $route_parameters = [], array $options = [], $status = 302) {
     $options['absolute'] = TRUE;
     return new RedirectResponse(Url::fromRoute($route_name, $route_parameters, $options)->toString(), $status);
   }

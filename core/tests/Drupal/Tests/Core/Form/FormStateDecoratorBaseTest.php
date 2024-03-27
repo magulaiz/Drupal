@@ -652,7 +652,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    *   \Drupal\Core\Form\FormStateInterface::setTemporaryValue()'s $value
    *   argument.
    */
-  public function testSetTemporaryValue($key, $value) {
+  public function testSetTemporaryValue(string $key, $value) {
     $this->decoratedFormState->setTemporaryValue($key, $value)
       ->shouldBeCalled();
 
@@ -683,7 +683,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    *   \Drupal\Core\Form\FormStateInterface::getTemporaryValue()'s return
    *   value.
    */
-  public function testGetTemporaryValue($key, $value = NULL) {
+  public function testGetTemporaryValue(string $key, $value = NULL) {
     // Use PHPUnit for mocking, because Prophecy cannot mock methods that return
     // by reference. See \Prophecy\Doubler\Generator\Node::getCode().
     $decorated_form_state = $this->createMock(FormStateInterface::class);
@@ -721,7 +721,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    *   \Drupal\Core\Form\FormStateInterface::hasTemporaryValue()'s $key
    *   argument.
    */
-  public function testHasTemporaryValue($exists, $key) {
+  public function testHasTemporaryValue($exists, string $key) {
     $this->decoratedFormState->hasTemporaryValue($key)
       ->willReturn($exists)
       ->shouldBeCalled();
@@ -855,7 +855,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    *   Any valid value for \Drupal\Core\Form\FormStateInterface::loadInclude()'s
    *   $name argument.
    */
-  public function testLoadInclude($expected, $module, $type, $name) {
+  public function testLoadInclude($expected, string $module, string $type, $name) {
     $this->decoratedFormState->loadInclude($module, $type, $name)
       ->willReturn($expected)
       ->shouldBeCalled();
@@ -940,7 +940,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    *   Any valid value for \Drupal\Core\Form\FormStateInterface::set()'s $value
    *   argument.
    */
-  public function testSet($key, $value) {
+  public function testSet(string $key, $value) {
     $this->decoratedFormState->set($key, $value)
       ->shouldBeCalled();
 
@@ -969,7 +969,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    *   (optional) Any valid value for
    *   \Drupal\Core\Form\FormStateInterface::get()'s return value.
    */
-  public function testGet($key, $value = NULL) {
+  public function testGet(string $key, $value = NULL) {
 
     // Use PHPUnit for mocking, because Prophecy cannot mock methods that return
     // by reference. See \Prophecy\Doubler\Generator\Node::getCode().
@@ -1006,7 +1006,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
    *   Any valid value for \Drupal\Core\Form\FormStateInterface::has()'s $key
    *   argument.
    */
-  public function testHas($exists, $key) {
+  public function testHas($exists, string $key) {
     $this->decoratedFormState->has($key)
       ->willReturn($exists)
       ->shouldBeCalled();

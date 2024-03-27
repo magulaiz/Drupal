@@ -69,7 +69,7 @@ class CurrentPathStack {
    *
    * @return $this
    */
-  public function setPath($path, Request $request = NULL) {
+  public function setPath(string $path, Request $request = NULL) {
     if (!isset($request)) {
       $request = $this->requestStack->getCurrentRequest();
     }

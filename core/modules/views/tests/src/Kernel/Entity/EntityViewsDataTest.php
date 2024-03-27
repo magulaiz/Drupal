@@ -818,7 +818,7 @@ class TestEntityType extends ContentEntityType {
    *
    * @return $this
    */
-  public function setKey($key, $value) {
+  public function setKey(string $key, string $value) {
     $this->entity_keys[$key] = $value;
     return $this;
   }

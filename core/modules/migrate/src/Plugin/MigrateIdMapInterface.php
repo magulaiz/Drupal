@@ -99,7 +99,7 @@ interface MigrateIdMapInterface extends \Iterator, PluginInspectionInterface {
    *   (optional) The message severity. Defaults to
    *   MigrationInterface::MESSAGE_ERROR.
    */
-  public function saveMessage(array $source_id_values, $message, $level = MigrationInterface::MESSAGE_ERROR);
+  public function saveMessage(array $source_id_values, string $message, $level = MigrationInterface::MESSAGE_ERROR);
 
   /**
    * Retrieves a traversable object of messages related to source records.

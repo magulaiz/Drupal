@@ -118,7 +118,7 @@ abstract class SearchPageFormBase extends EntityForm {
    * @return bool
    *   TRUE if the search configuration exists, FALSE otherwise.
    */
-  public function exists($id) {
+  public function exists(string $id) {
     $entity = $this->entityTypeManager->getStorage('search_page')->getQuery()
       ->condition('id', $id)
       ->execute();

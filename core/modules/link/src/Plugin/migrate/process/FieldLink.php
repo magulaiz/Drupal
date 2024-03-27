@@ -58,7 +58,7 @@ class FieldLink extends ProcessPluginBase {
    *
    * @see \Drupal\link\Plugin\Field\FieldWidget\LinkWidget::getUserEnteredStringAsUri()
    */
-  protected function canonicalizeUri($uri) {
+  protected function canonicalizeUri(string $uri) {
     // If the path starts with 2 slashes then it is always considered an
     // external URL without an explicit protocol part.
     // @todo Remove this when https://www.drupal.org/node/2744729 lands.

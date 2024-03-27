@@ -117,7 +117,7 @@ class SystemController extends ControllerBase {
    * @return array
    *   A renderable array of the administration overview page.
    */
-  public function overview($link_id) {
+  public function overview(string $link_id) {
     // Check for status report errors.
     if ($this->currentUser()->hasPermission('administer site configuration') && $this->systemManager->checkRequirements()) {
       $this->messenger()->addError($this->t('One or more problems were detected with your Drupal installation. Check the <a href=":status">status report</a> for more information.', [':status' => Url::fromRoute('system.status')->toString()]));
@@ -180,7 +180,7 @@ class SystemController extends ControllerBase {
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    */
-  public function compactPage($mode) {
+  public function compactPage(string $mode) {
     user_cookie_save(['admin_compact_mode' => ($mode == 'on')]);
     return $this->redirect('<front>');
   }

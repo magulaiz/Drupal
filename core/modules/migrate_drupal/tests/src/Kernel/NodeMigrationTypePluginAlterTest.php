@@ -42,7 +42,7 @@ class NodeMigrationTypePluginAlterTest extends MigrateTestBase {
    *
    * @throws \Exception
    */
-  public function testMigrationPluginAlter($type, array $migration_definitions, array $expected) {
+  public function testMigrationPluginAlter(string $type, array $migration_definitions, array $expected) {
     $this->makeNodeMigrateMapTable($type, '7');
     migrate_drupal_migration_plugins_alter($migration_definitions);
     $this->assertSame($expected, $migration_definitions);

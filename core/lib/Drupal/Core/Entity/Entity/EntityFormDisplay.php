@@ -82,7 +82,7 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
    * @see \Drupal\Core\Entity\EntityDisplayRepositoryInterface::getFormDisplay()
    * @see hook_entity_form_display_alter()
    */
-  public static function collectRenderDisplay(FieldableEntityInterface $entity, $form_mode, $default_fallback = TRUE) {
+  public static function collectRenderDisplay(FieldableEntityInterface $entity, string $form_mode, $default_fallback = TRUE) {
     $entity_type = $entity->getEntityTypeId();
     $bundle = $entity->bundle();
 
@@ -286,7 +286,7 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
    * @return \Symfony\Component\Validator\ConstraintViolationList
    *   A new constraint violation list with the changed property path.
    */
-  protected function movePropertyPathViolationsRelativeToField($field_name, ConstraintViolationListInterface $violations) {
+  protected function movePropertyPathViolationsRelativeToField(string $field_name, ConstraintViolationListInterface $violations) {
     $new_violations = new ConstraintViolationList();
     foreach ($violations as $violation) {
       // All the logic below is necessary to change the property path of the

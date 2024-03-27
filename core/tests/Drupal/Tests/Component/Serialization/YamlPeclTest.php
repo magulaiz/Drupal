@@ -74,7 +74,7 @@ foo:
    * @covers ::applyBooleanCallbacks
    * @dataProvider providerBoolTest
    */
-  public function testApplyBooleanCallbacks($string, $expected) {
+  public function testApplyBooleanCallbacks(string $string, $expected) {
     $this->assertEquals($expected, YamlPecl::applyBooleanCallbacks($string, 'bool', NULL));
   }
 

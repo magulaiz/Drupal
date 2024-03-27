@@ -80,7 +80,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
    * @param string $module
    *   The name of the module.
    */
-  public function assertModuleConfig($module) {
+  public function assertModuleConfig(string $module) {
     $module_config_dir = $this->getModulePath($module) . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
     if (!is_dir($module_config_dir)) {
       return;
@@ -121,7 +121,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
    * @param string $module
    *   The name of the module.
    */
-  public function assertNoModuleConfig($module) {
+  public function assertNoModuleConfig(string $module) {
     $names = \Drupal::configFactory()->listAll($module . '.');
     $this->assertEmpty($names, "No configuration found for $module module.");
   }

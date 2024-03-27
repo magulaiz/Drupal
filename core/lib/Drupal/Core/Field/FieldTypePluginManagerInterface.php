@@ -31,7 +31,7 @@ interface FieldTypePluginManagerInterface extends PluginManagerInterface, Catego
    * @return \Drupal\Core\Field\FieldItemListInterface
    *   The instantiated object.
    */
-  public function createFieldItemList(FieldableEntityInterface $entity, $field_name, $values = NULL);
+  public function createFieldItemList(FieldableEntityInterface $entity, string $field_name, $values = NULL);
 
   /**
    * Creates a new field item as part of a field item list.
@@ -62,7 +62,7 @@ interface FieldTypePluginManagerInterface extends PluginManagerInterface, Catego
    *   The field's default settings, as provided by the plugin definition, or
    *   an empty array if type or settings are undefined.
    */
-  public function getDefaultFieldSettings($type);
+  public function getDefaultFieldSettings(string $type);
 
   /**
    * Returns the default storage-level settings for a field type.
@@ -74,7 +74,7 @@ interface FieldTypePluginManagerInterface extends PluginManagerInterface, Catego
    *   The type's default settings, as provided by the plugin definition, or an
    *   empty array if type or settings are undefined.
    */
-  public function getDefaultStorageSettings($type);
+  public function getDefaultStorageSettings(string $type);
 
   /**
    * Returns the summary of storage-level settings for a field type.
@@ -145,7 +145,7 @@ interface FieldTypePluginManagerInterface extends PluginManagerInterface, Catego
    * @see \Drupal\Core\Field\PreconfiguredFieldUiOptionsInterface::getPreconfiguredOptions()
    * @see hook_field_ui_preconfigured_options_alter()
    */
-  public function getPreconfiguredOptions($field_type);
+  public function getPreconfiguredOptions(string $field_type);
 
   /**
    * Returns the PHP class that implements the field type plugin.
@@ -159,6 +159,6 @@ interface FieldTypePluginManagerInterface extends PluginManagerInterface, Catego
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    *   Thrown if the field type plugin name is invalid.
    */
-  public function getPluginClass($type);
+  public function getPluginClass(string $type);
 
 }

@@ -109,7 +109,7 @@ class ResourceFetcher implements ResourceFetcherInterface {
    * @throws \Drupal\media\OEmbed\ResourceException
    *   If the resource cannot be created.
    */
-  protected function createResource(array $data, $url) {
+  protected function createResource(array $data, string $url) {
     $data += [
       'title' => NULL,
       'author_name' => NULL,
@@ -219,7 +219,7 @@ class ResourceFetcher implements ResourceFetcherInterface {
    * @throws \Drupal\media\OEmbed\ResourceException
    *   If the resource data could not be parsed.
    */
-  protected function parseResourceXml($data, $url) {
+  protected function parseResourceXml(string $data, string $url) {
     // Enable userspace error handling.
     $was_using_internal_errors = libxml_use_internal_errors(TRUE);
     libxml_clear_errors();

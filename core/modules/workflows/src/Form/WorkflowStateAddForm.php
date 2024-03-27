@@ -97,7 +97,7 @@ class WorkflowStateAddForm extends EntityForm {
    * @return bool
    *   TRUE if the workflow state exists, FALSE otherwise.
    */
-  public function exists($state_id) {
+  public function exists(string $state_id) {
     /** @var \Drupal\workflows\WorkflowInterface $original_workflow */
     $original_workflow = \Drupal::entityTypeManager()->getStorage('workflow')->loadUnchanged($this->getEntity()->id());
     return $original_workflow->getTypePlugin()->hasState($state_id);

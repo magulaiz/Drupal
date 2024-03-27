@@ -149,7 +149,7 @@ function hook_module_implements_alter(&$implementations, $hook) {
  *
  * @see \Drupal\Core\Extension\ModuleUninstallValidatorInterface
  */
-function hook_system_info_alter(array &$info, \Drupal\Core\Extension\Extension $file, $type) {
+function hook_system_info_alter(array &$info, \Drupal\Core\Extension\Extension $file, string $type) {
   // Only fill this in if the .info.yml file does not define a 'datestamp'.
   if (empty($info['datestamp'])) {
     $info['datestamp'] = $file->getFileInfo()->getMTime();
@@ -169,7 +169,7 @@ function hook_system_info_alter(array &$info, \Drupal\Core\Extension\Extension $
  *   should be made earlier and exported so during import there's no need to
  *   do them again.
  */
-function hook_module_preinstall($module, bool $is_syncing) {
+function hook_module_preinstall(string $module, bool $is_syncing) {
   my_module_cache_clear();
 }
 
@@ -266,7 +266,7 @@ function hook_install($is_syncing) {
  *   should be made earlier and exported so during import there's no need to
  *   do them again.
  */
-function hook_module_preuninstall($module, bool $is_syncing) {
+function hook_module_preuninstall(string $module, bool $is_syncing) {
   my_module_cache_clear();
 }
 

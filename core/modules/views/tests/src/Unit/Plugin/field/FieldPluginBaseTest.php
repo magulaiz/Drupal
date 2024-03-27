@@ -237,7 +237,7 @@ class FieldPluginBaseTest extends UnitTestCase {
    * @dataProvider providerTestRenderTrimmedWithMoreLinkAndPath
    * @covers ::renderText
    */
-  public function testRenderTrimmedWithMoreLinkAndPath($path, $url) {
+  public function testRenderTrimmedWithMoreLinkAndPath(string $path, string $url) {
     $alter = [
       'trim' => TRUE,
       'max_length' => 7,

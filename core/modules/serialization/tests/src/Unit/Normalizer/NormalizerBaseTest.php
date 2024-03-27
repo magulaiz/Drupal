@@ -25,7 +25,7 @@ class NormalizerBaseTest extends UnitTestCase {
    * @param string $supported_types
    *   (optional) The supported interface or class to set on the normalizer.
    */
-  public function testSupportsNormalization($expected_return, $data, $supported_types = NULL) {
+  public function testSupportsNormalization($expected_return, $data, string $supported_types = NULL) {
     $normalizer_base = $this->getMockForAbstractClass('Drupal\Tests\serialization\Unit\Normalizer\TestNormalizerBase');
 
     if (isset($supported_types)) {
@@ -78,7 +78,7 @@ abstract class TestNormalizerBase extends NormalizerBase {
    * @param string $supported_types
    *   The class name to set.
    */
-  public function setSupportedTypes($supported_types): void {
+  public function setSupportedTypes(string $supported_types): void {
     $this->supportedTypes = [$supported_types => FALSE];
   }
 

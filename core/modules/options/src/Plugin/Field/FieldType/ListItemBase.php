@@ -454,7 +454,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
    * @return string
    *   The error message if the specified value is invalid, NULL otherwise.
    */
-  protected static function validateAllowedValue($option) {}
+  protected static function validateAllowedValue(string $option) {}
 
   /**
    * Generates a string representation of an array of 'allowed values'.

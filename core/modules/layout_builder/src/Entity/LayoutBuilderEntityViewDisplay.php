@@ -185,7 +185,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
    * @param string $field_name
    *   The name for the layout section field.
    */
-  protected function removeSectionField($entity_type_id, $bundle, $field_name) {
+  protected function removeSectionField(string $entity_type_id, string $bundle, string $field_name) {
     /** @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $storage */
     $storage = $this->entityTypeManager()->getStorage($this->getEntityTypeId());
     $query = $storage->getQuery()
@@ -209,7 +209,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
    * @param string $field_name
    *   The name for the layout section field.
    */
-  protected function addSectionField($entity_type_id, $bundle, $field_name) {
+  protected function addSectionField(string $entity_type_id, string $bundle, string $field_name) {
     $field = FieldConfig::loadByName($entity_type_id, $bundle, $field_name);
     if (!$field) {
       $field_storage = FieldStorageConfig::loadByName($entity_type_id, $field_name);
@@ -508,7 +508,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
    * @return \Drupal\layout_builder\SectionComponent|null
    *   The section component if it is available.
    */
-  private function getSectionComponentForFieldName($field_name) {
+  private function getSectionComponentForFieldName(string $field_name) {
     // Loop through every component until the first match is found.
     foreach ($this->getSections() as $section) {
       foreach ($section->getComponents() as $component) {

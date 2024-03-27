@@ -107,9 +107,8 @@ class YamlFileLoader
      * Parses definitions
      *
      * @param array $content
-     * @param string $file
      */
-    private function parseDefinitions($content, $file)
+    private function parseDefinitions($content, string $file)
     {
         if (!isset($content['services'])) {
             return;
@@ -138,8 +137,6 @@ class YamlFileLoader
     }
 
     /**
-     * @param array  $content
-     * @param string $file
      *
      * @return array
      *
@@ -197,10 +194,7 @@ class YamlFileLoader
     /**
      * Parses a definition.
      *
-     * @param string $id
      * @param array $service
-     * @param string $file
-     * @param array $defaults
      *
      * @throws InvalidArgumentException
      *   When tags are invalid.
@@ -402,14 +396,12 @@ class YamlFileLoader
     /**
      * Loads a YAML file.
      *
-     * @param string $file
      *
      * @return array The file content
-     *
      * @throws InvalidArgumentException
      *   When the given file is not a local file or when it does not exist.
      */
-    protected function loadFile($file)
+    protected function loadFile(string $file)
     {
         if (!stream_is_local($file)) {
             throw new InvalidArgumentException(sprintf('This is not a local file "%s".', $file));
@@ -433,14 +425,12 @@ class YamlFileLoader
      * Validates a YAML file.
      *
      * @param mixed $content
-     * @param string $file
      *
      * @return array
-     *
      * @throws InvalidArgumentException
      *   When service file is not valid.
      */
-    private function validate($content, $file)
+    private function validate($content, string $file)
     {
         if (null === $content) {
             return $content;

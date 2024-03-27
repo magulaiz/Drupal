@@ -132,7 +132,7 @@ class LayoutBuilderEntityViewDisplayForm extends EntityViewDisplayEditForm {
    * @return bool
    *   TRUE if the mode is valid, FALSE otherwise.
    */
-  protected function isCanonicalMode($mode) {
+  protected function isCanonicalMode(string $mode) {
     // @todo This is a convention core uses but is not a given, nor is it easily
     //   introspectable. Address in https://www.drupal.org/node/2907413.
     $canonical_mode = 'full';

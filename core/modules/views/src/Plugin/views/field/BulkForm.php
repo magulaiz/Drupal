@@ -553,7 +553,7 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
    *   The entity loaded in the state (language, optionally revision) specified
    *   as part of the bulk form key.
    */
-  protected function loadEntityFromBulkFormKey($bulk_form_key) {
+  protected function loadEntityFromBulkFormKey(string $bulk_form_key) {
     $key = base64_decode($bulk_form_key);
     $key_parts = json_decode($key);
     $revision_id = NULL;

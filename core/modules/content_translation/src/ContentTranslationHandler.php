@@ -294,7 +294,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    * @return bool
    *   TRUE if translatable field storage definition exists, FALSE otherwise.
    */
-  protected function checkFieldStorageDefinitionTranslatability($field_name) {
+  protected function checkFieldStorageDefinitionTranslatability(string $field_name) {
     return array_key_exists($field_name, $this->fieldStorageDefinitions) && $this->fieldStorageDefinitions[$field_name]->isTranslatable();
   }
 
@@ -717,7 +717,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    *
    * @see \Drupal\content_translation\ContentTranslationHandler::entityFormAlter()
    */
-  public function entityFormEntityBuild($entity_type, EntityInterface $entity, array $form, FormStateInterface $form_state) {
+  public function entityFormEntityBuild(string $entity_type, EntityInterface $entity, array $form, FormStateInterface $form_state) {
     $form_object = $form_state->getFormObject();
     $form_langcode = $form_object->getFormLangcode($form_state);
     $values = &$form_state->getValue('content_translation', []);

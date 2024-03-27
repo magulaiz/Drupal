@@ -100,7 +100,7 @@ class SkipOnEmpty extends ProcessPluginBase {
    *   Thrown if the source property is not set and the row should be skipped,
    *   records with STATUS_IGNORED status in the map.
    */
-  public function row($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
+  public function row($value, MigrateExecutableInterface $migrate_executable, Row $row, string $destination_property) {
     if (!$value) {
       $message = !empty($this->configuration['message']) ? $this->configuration['message'] : '';
       throw new MigrateSkipRowException($message);
@@ -124,7 +124,7 @@ class SkipOnEmpty extends ProcessPluginBase {
    * @return mixed
    *   The input value, $value, if it is not empty.
    */
-  public function process($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
+  public function process($value, MigrateExecutableInterface $migrate_executable, Row $row, string $destination_property) {
     if (!$value) {
       $this->stopPipeline();
       return NULL;

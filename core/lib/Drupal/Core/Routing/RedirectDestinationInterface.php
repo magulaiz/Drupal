@@ -52,6 +52,6 @@ interface RedirectDestinationInterface {
    *
    * @return $this
    */
-  public function set($new_destination);
+  public function set(string $new_destination);
 
 }

@@ -26,7 +26,7 @@ interface QueryAggregateInterface extends QueryInterface {
    * @return $this
    *   The called object.
    */
-  public function aggregate($field, $function, $langcode = NULL, &$alias = NULL);
+  public function aggregate(string $field, string $function, string $langcode = NULL, string &$alias = NULL);
 
   /**
    * Specifies the field to group on.
@@ -37,7 +37,7 @@ interface QueryAggregateInterface extends QueryInterface {
    * @return $this
    *   The called object.
    */
-  public function groupBy($field);
+  public function groupBy(string $field);
 
   /**
    * Sets a condition for an aggregated value.
@@ -65,7 +65,7 @@ interface QueryAggregateInterface extends QueryInterface {
    *
    * @see \Drupal\Core\Entity\Query\QueryInterface::condition()
    */
-  public function conditionAggregate($field, $function = NULL, $value = NULL, $operator = '=', $langcode = NULL);
+  public function conditionAggregate(string $field, string $function = NULL, $value = NULL, $operator = '=', string $langcode = NULL);
 
   /**
    * Queries for the existence of a field.
@@ -80,7 +80,7 @@ interface QueryAggregateInterface extends QueryInterface {
    * @return $this
    *   The called object.
    */
-  public function existsAggregate($field, $function, $langcode = NULL);
+  public function existsAggregate(string $field, string $function, $langcode = NULL);
 
   /**
    * Queries for the nonexistence of a field.
@@ -95,7 +95,7 @@ interface QueryAggregateInterface extends QueryInterface {
    * @return $this
    *   The called object.
    */
-  public function notExistsAggregate($field, $function, $langcode = NULL);
+  public function notExistsAggregate(string $field, string $function, string $langcode = NULL);
 
   /**
    * Creates an object holding a group of conditions.
@@ -109,7 +109,7 @@ interface QueryAggregateInterface extends QueryInterface {
    * @return ConditionInterface
    *   An object holding a group of conditions.
    */
-  public function conditionAggregateGroupFactory($conjunction = 'AND');
+  public function conditionAggregateGroupFactory(string $conjunction = 'AND');
 
   /**
    * Sorts by an aggregated value.
@@ -127,7 +127,7 @@ interface QueryAggregateInterface extends QueryInterface {
    * @return $this
    *   The called object.
    */
-  public function sortAggregate($field, $function, $direction = 'ASC', $langcode = NULL);
+  public function sortAggregate(string $field, string $function, string $direction = 'ASC', string $langcode = NULL);
 
   /**
    * Executes the aggregate query.

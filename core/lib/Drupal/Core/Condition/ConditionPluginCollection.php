@@ -66,7 +66,7 @@ class ConditionPluginCollection extends DefaultLazyPluginCollection {
    *
    * @return $this
    */
-  public function addContext($name, ContextInterface $context) {
+  public function addContext(string $name, ContextInterface $context) {
     $this->conditionContexts[$name] = $context;
     return $this;
   }

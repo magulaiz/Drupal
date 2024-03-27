@@ -126,7 +126,7 @@ class UserController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   The redirect response.
    */
-  public function resetPass(Request $request, $uid, $timestamp, $hash) {
+  public function resetPass(Request $request, $uid, $timestamp, string $hash) {
     $account = $this->currentUser();
     // When processing the one-time login link, we have to make sure that a user
     // isn't already logged in.
@@ -244,7 +244,7 @@ class UserController extends ControllerBase {
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    *   If $uid is for a blocked user or invalid user ID.
    */
-  public function resetPassLogin($uid, $timestamp, $hash, Request $request) {
+  public function resetPassLogin($uid, $timestamp, string $hash, Request $request) {
     /** @var \Drupal\user\UserInterface $user */
     $user = $this->userStorage->load($uid);
     if ($redirect = $this->determineErrorRedirect($user, $timestamp, $hash)) {
@@ -417,7 +417,7 @@ class UserController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirect response.
    */
-  public function confirmCancel(UserInterface $user, $timestamp = 0, $hashed_pass = '') {
+  public function confirmCancel(UserInterface $user, $timestamp = 0, string $hashed_pass = '') {
     // Time out in seconds until cancel URL expires; 24 hours = 86400 seconds.
     $timeout = 86400;
 

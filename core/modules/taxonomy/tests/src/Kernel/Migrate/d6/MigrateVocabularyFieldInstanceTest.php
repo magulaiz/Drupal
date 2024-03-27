@@ -106,7 +106,7 @@ class MigrateVocabularyFieldInstanceTest extends MigrateDrupal6TestBase {
    * @param string[] $target_bundles
    *   An array of expected target bundles.
    */
-  protected function assertTargetBundles($id, array $target_bundles) {
+  protected function assertTargetBundles(string $id, array $target_bundles) {
     $field = FieldConfig::load($id);
     $handler_settings = $field->getSetting('handler_settings');
     $this->assertArrayHasKey('target_bundles', $handler_settings);

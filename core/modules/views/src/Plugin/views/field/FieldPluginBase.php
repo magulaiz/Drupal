@@ -1411,7 +1411,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * @return string
    *   The rendered trimmed string.
    */
-  protected function renderTrimText($alter, $value) {
+  protected function renderTrimText($alter, string $value) {
     if (!empty($alter['strip_tags'])) {
       // NOTE: It's possible that some external fields might override the
       // element type.
@@ -1842,7 +1842,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * @return string
    *   The trimmed string.
    */
-  public static function trimText($alter, $value) {
+  public static function trimText($alter, string $value) {
     if (mb_strlen($value) > $alter['max_length']) {
       $value = mb_substr($value, 0, $alter['max_length']);
       if (!empty($alter['word_boundary'])) {

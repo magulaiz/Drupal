@@ -167,7 +167,7 @@ class Date extends NumericDate implements ContainerFactoryPluginInterface {
    * @return int
    *   The computed offset in seconds.
    */
-  protected function getOffset($time, $timezone) {
+  protected function getOffset(string $time, string $timezone) {
     // Date-only fields do not have a time zone or offset from UTC associated
     // with them. For relative (i.e. 'offset') comparisons, we need to compute
     // the user's offset from UTC for use in the query.

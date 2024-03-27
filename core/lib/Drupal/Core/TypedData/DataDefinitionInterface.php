@@ -44,7 +44,7 @@ interface DataDefinitionInterface {
    *   If an unsupported data type gets passed to the class; e.g., 'string' to a
    *   definition class handling 'entity:* data types.
    */
-  public static function createFromDataType($data_type);
+  public static function createFromDataType(string $data_type);
 
   /**
    * Returns the data type of the data.
@@ -145,7 +145,7 @@ interface DataDefinitionInterface {
    * @return mixed
    *   The setting value or NULL if the setting name doesn't exist.
    */
-  public function getSetting($setting_name);
+  public function getSetting(string $setting_name);
 
   /**
    * Returns an array of validation constraints.
@@ -203,7 +203,7 @@ interface DataDefinitionInterface {
    *
    * @see \Symfony\Component\Validator\Constraint
    */
-  public function getConstraint($constraint_name);
+  public function getConstraint(string $constraint_name);
 
   /**
    * Adds a validation constraint.
@@ -219,7 +219,7 @@ interface DataDefinitionInterface {
    * @return static
    *   The object itself for chaining.
    */
-  public function addConstraint($constraint_name, $options = NULL);
+  public function addConstraint(string $constraint_name, $options = NULL);
 
   /**
    * Determines whether the data value is internal.

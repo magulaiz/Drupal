@@ -194,7 +194,7 @@ class MTimeProtectedFastFileStorage extends FileStorage {
    *   The full path of the containing directory where the file is or should be
    *   stored.
    */
-  protected function getContainingDirectoryFullPath($name) {
+  protected function getContainingDirectoryFullPath(string $name) {
     // Remove the .php file extension from the directory name.
     // Within a single directory, a subdirectory cannot have the same name as a
     // file. Thus, when switching between MTimeProtectedFastFileStorage and

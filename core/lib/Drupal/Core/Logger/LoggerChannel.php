@@ -84,7 +84,7 @@ class LoggerChannel implements LoggerChannelInterface {
    * @param string $channel
    *   The channel name for this instance.
    */
-  public function __construct($channel) {
+  public function __construct(string $channel) {
     $this->channel = $channel;
   }
 

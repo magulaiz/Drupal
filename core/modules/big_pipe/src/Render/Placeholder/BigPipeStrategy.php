@@ -183,7 +183,7 @@ class BigPipeStrategy implements PlaceholderStrategyInterface {
    *   Whether the placeholder is safe for use in an HTML attribute (in case
    *   it's a placeholder for an HTML attribute value or a subset of it).
    */
-  protected static function placeholderIsAttributeSafe($placeholder) {
+  protected static function placeholderIsAttributeSafe(string $placeholder) {
     assert(is_string($placeholder));
     return $placeholder[0] !== '<' || $placeholder !== Html::normalize($placeholder);
   }
@@ -199,7 +199,7 @@ class BigPipeStrategy implements PlaceholderStrategyInterface {
    * @return array
    *   The resulting BigPipe JS placeholder render array.
    */
-  protected static function createBigPipeJsPlaceholder($original_placeholder, array $placeholder_render_array) {
+  protected static function createBigPipeJsPlaceholder(string $original_placeholder, array $placeholder_render_array) {
     $big_pipe_placeholder_id = static::generateBigPipePlaceholderId($original_placeholder, $placeholder_render_array);
 
     $interface_preview = [];
@@ -254,7 +254,7 @@ class BigPipeStrategy implements PlaceholderStrategyInterface {
    * @return array
    *   The resulting BigPipe no-JS placeholder render array.
    */
-  protected static function createBigPipeNoJsPlaceholder($original_placeholder, array $placeholder_render_array, $placeholder_must_be_attribute_safe = FALSE) {
+  protected static function createBigPipeNoJsPlaceholder(string $original_placeholder, array $placeholder_render_array, $placeholder_must_be_attribute_safe = FALSE) {
     if (!$placeholder_must_be_attribute_safe) {
       $big_pipe_placeholder = '<span data-big-pipe-nojs-placeholder-id="' . Html::escape(static::generateBigPipePlaceholderId($original_placeholder, $placeholder_render_array)) . '"></span>';
     }
@@ -289,7 +289,7 @@ class BigPipeStrategy implements PlaceholderStrategyInterface {
    * @return string
    *   The generated BigPipe placeholder ID.
    */
-  protected static function generateBigPipePlaceholderId($original_placeholder, array $placeholder_render_array) {
+  protected static function generateBigPipePlaceholderId(string $original_placeholder, array $placeholder_render_array) {
     // Generate a BigPipe placeholder ID (to be used by BigPipe's JavaScript).
     // @see \Drupal\Core\Render\PlaceholderGenerator::createPlaceholder()
     if (isset($placeholder_render_array['#lazy_builder'])) {

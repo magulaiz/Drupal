@@ -87,7 +87,7 @@ interface CommentInterface extends ContentEntityInterface, EntityChangedInterfac
    * @return $this
    *   The class instance that this method is called on.
    */
-  public function setFieldName($field_name);
+  public function setFieldName(string $field_name);
 
   /**
    * Returns the name of the field the comment is attached to.
@@ -114,7 +114,7 @@ interface CommentInterface extends ContentEntityInterface, EntityChangedInterfac
    * @return $this
    *   The class instance that this method is called on.
    */
-  public function setSubject($subject);
+  public function setSubject(string $subject);
 
   /**
    * Returns the comment author's name.
@@ -135,7 +135,7 @@ interface CommentInterface extends ContentEntityInterface, EntityChangedInterfac
    * @return $this
    *   The class instance that this method is called on.
    */
-  public function setAuthorName($name);
+  public function setAuthorName(string $name);
 
   /**
    * Returns the comment author's email address.
@@ -168,7 +168,7 @@ interface CommentInterface extends ContentEntityInterface, EntityChangedInterfac
    * @return $this
    *   The class instance that this method is called on.
    */
-  public function setHomepage($homepage);
+  public function setHomepage(string $homepage);
 
   /**
    * Returns the comment author's hostname.
@@ -187,7 +187,7 @@ interface CommentInterface extends ContentEntityInterface, EntityChangedInterfac
    * @return $this
    *   The class instance that this method is called on.
    */
-  public function setHostname($hostname);
+  public function setHostname(string $hostname);
 
   /**
    * Returns the time that the comment was created.
@@ -226,7 +226,7 @@ interface CommentInterface extends ContentEntityInterface, EntityChangedInterfac
    * @return $this
    *   The class instance that this method is called on.
    */
-  public function setThread($thread);
+  public function setThread(string $thread);
 
   /**
    * Returns the permalink URL for this comment.

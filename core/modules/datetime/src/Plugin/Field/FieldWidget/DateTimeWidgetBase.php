@@ -83,7 +83,7 @@ class DateTimeWidgetBase extends WidgetBase {
    * @return \Drupal\Core\Datetime\DrupalDateTime
    *   A date object for use as a default value in a field widget.
    */
-  protected function createDefaultValue($date, $timezone) {
+  protected function createDefaultValue($date, string $timezone) {
     // The date was created and verified during field_load(), so it is safe to
     // use without further inspection.
     $year = $date->format('Y');

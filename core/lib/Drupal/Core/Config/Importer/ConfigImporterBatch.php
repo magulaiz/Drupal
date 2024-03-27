@@ -22,7 +22,7 @@ class ConfigImporterBatch {
    * @param array $context
    *   The batch context.
    */
-  public static function process(ConfigImporter $config_importer, $sync_step, &$context) {
+  public static function process(ConfigImporter $config_importer, string $sync_step, &$context) {
     if (!isset($context['sandbox']['config_importer'])) {
       $context['sandbox']['config_importer'] = $config_importer;
     }

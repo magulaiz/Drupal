@@ -88,7 +88,7 @@ class ThemeUiTest extends BrowserTestBase {
    *
    * @dataProvider providerTestThemeInstallWithModuleDependencies
    */
-  public function testThemeInstallWithModuleDependencies($theme_name, array $first_modules, array $second_modules, array $required_by_messages, $base_theme_to_uninstall, array $base_theme_module_names) {
+  public function testThemeInstallWithModuleDependencies(string $theme_name, array $first_modules, array $second_modules, array $required_by_messages, string $base_theme_to_uninstall, array $base_theme_module_names) {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $all_dependent_modules = array_merge($first_modules, $second_modules);
@@ -200,7 +200,7 @@ class ThemeUiTest extends BrowserTestBase {
    * @param string $theme_name
    *   The theme name.
    */
-  protected function uninstallTheme($theme_name) {
+  protected function uninstallTheme(string $theme_name) {
     $this->drupalGet('admin/appearance');
     $this->clickLink("Uninstall $theme_name theme");
     $this->assertSession()->pageTextContains("The $theme_name theme has been uninstalled.");

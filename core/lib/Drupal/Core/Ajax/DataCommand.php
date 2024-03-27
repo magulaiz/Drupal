@@ -51,7 +51,7 @@ class DataCommand implements CommandInterface {
    * @param mixed $value
    *   The value of the data to be attached to elements matched by the selector.
    */
-  public function __construct($selector, $name, $value) {
+  public function __construct(string $selector, string $name, $value) {
     $this->selector = $selector;
     $this->name = $name;
     $this->value = $value;

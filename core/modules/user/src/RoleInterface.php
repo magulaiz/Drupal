@@ -39,7 +39,7 @@ interface RoleInterface extends ConfigEntityInterface {
    * @return bool
    *   TRUE if the role has the permission, FALSE if not.
    */
-  public function hasPermission($permission);
+  public function hasPermission(string $permission);
 
   /**
    * Grant permissions to the role.
@@ -49,7 +49,7 @@ interface RoleInterface extends ConfigEntityInterface {
    *
    * @return $this
    */
-  public function grantPermission($permission);
+  public function grantPermission(string $permission);
 
   /**
    * Revokes a permissions from the user role.
@@ -59,7 +59,7 @@ interface RoleInterface extends ConfigEntityInterface {
    *
    * @return $this
    */
-  public function revokePermission($permission);
+  public function revokePermission(string $permission);
 
   /**
    * Indicates that a role has all available permissions.

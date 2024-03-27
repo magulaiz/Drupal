@@ -28,7 +28,7 @@ interface WorkspaceRepositoryInterface {
    * @return string[]
    *   An array of descendant workspace IDs, including the passed-in one.
    */
-  public function getDescendantsAndSelf($workspace_id);
+  public function getDescendantsAndSelf(string $workspace_id);
 
   /**
    * Resets the cached workspace tree.

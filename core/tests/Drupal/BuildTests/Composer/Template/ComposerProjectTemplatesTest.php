@@ -53,7 +53,7 @@ class ComposerProjectTemplatesTest extends ComposerBuildTestBase {
    * @return string[]
    *   Array of paths, indexed by package name.
    */
-  public function getPathReposForType($workspace_directory, $subdir) {
+  public function getPathReposForType(string $workspace_directory, string $subdir) {
     // Find the Composer items that we want to be path repos.
     /** @var \SplFileInfo[] $path_repos */
     $path_repos = Composer::composerSubprojectPaths($workspace_directory, $subdir);
@@ -310,7 +310,7 @@ class ComposerProjectTemplatesTest extends ComposerBuildTestBase {
    * @param string $version
    *   The version under test.
    */
-  protected function makeTestPackage($repository_path, $version) {
+  protected function makeTestPackage(string $repository_path, string $version) {
     $json = <<<JSON
 {
   "packages": {
@@ -349,7 +349,7 @@ JSON;
    * @param string $repository_path
    *   The path where to create the test package.
    */
-  protected function makeVendorPackage($repository_path) {
+  protected function makeVendorPackage(string $repository_path) {
     $root = $this->getDrupalRoot();
     $process = $this->executeCommand("composer --working-dir=$root info --format=json");
     $this->assertCommandSuccessful();

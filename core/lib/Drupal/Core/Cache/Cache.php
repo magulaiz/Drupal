@@ -92,7 +92,7 @@ class Cache {
    * @return string[]
    *   An array of cache tags.
    */
-  public static function buildTags($prefix, array $suffixes, $glue = ':') {
+  public static function buildTags(string $prefix, array $suffixes, string $glue = ':') {
     $tags = [];
     foreach ($suffixes as $suffix) {
       $tags[] = $prefix . $glue . $suffix;

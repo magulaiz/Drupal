@@ -28,7 +28,7 @@ abstract class TestSuiteBase extends TestSuite {
    * @return string[]
    *   Associative array of extension paths, with extension name as keys.
    */
-  protected function findExtensionDirectories($root) {
+  protected function findExtensionDirectories(string $root) {
     $extension_roots = \drupal_phpunit_contrib_extension_directory_roots($root);
 
     $extension_directories = array_map('drupal_phpunit_find_extension_directories', $extension_roots);
@@ -43,7 +43,7 @@ abstract class TestSuiteBase extends TestSuite {
    * @param string $suite_namespace
    *   SubNamespace used to separate test suite. Examples: Unit, Functional.
    */
-  protected function addTestsBySuiteNamespace($root, $suite_namespace) {
+  protected function addTestsBySuiteNamespace(string $root, string $suite_namespace) {
     // Core's tests are in the namespace Drupal\{$suite_namespace}Tests\ and are
     // always inside of core/tests/Drupal/{$suite_namespace}Tests. The exception
     // to this is Unit tests for historical reasons.

@@ -146,7 +146,7 @@ class ViewsUIController extends ControllerBase {
    *   Either returns a rebuilt listing page as an AJAX response, or redirects
    *   back to the listing page.
    */
-  public function ajaxOperation(ViewEntityInterface $view, $op, Request $request) {
+  public function ajaxOperation(ViewEntityInterface $view, string $op, Request $request) {
     // Perform the operation.
     $view->$op()->save();
 

@@ -87,7 +87,7 @@ class FieldDefinition extends ListDataDefinition implements FieldDefinitionInter
    *
    * @return $this
    */
-  public function setTargetBundle($bundle) {
+  public function setTargetBundle(string $bundle) {
     $this->definition['bundle'] = $bundle;
     return $this;
   }
@@ -111,7 +111,7 @@ class FieldDefinition extends ListDataDefinition implements FieldDefinitionInter
    *
    * @return $this
    */
-  public function setDisplayConfigurable($display_context, $configurable) {
+  public function setDisplayConfigurable(string $display_context, $configurable) {
     // If no explicit display options have been specified, default to 'hidden'.
     if (empty($this->definition['display'][$display_context])) {
       $this->definition['display'][$display_context]['options'] = ['region' => 'hidden'];
@@ -148,7 +148,7 @@ class FieldDefinition extends ListDataDefinition implements FieldDefinitionInter
    *
    * @return $this
    */
-  public function setDisplayOptions($display_context, array $options) {
+  public function setDisplayOptions(string $display_context, array $options) {
     $this->definition['display'][$display_context]['options'] = $options;
     return $this;
   }
@@ -175,7 +175,7 @@ class FieldDefinition extends ListDataDefinition implements FieldDefinitionInter
    *
    * @return $this
    */
-  public function setDefaultValueCallback($callback) {
+  public function setDefaultValueCallback(string $callback) {
     if (isset($callback) && !is_string($callback)) {
       throw new \InvalidArgumentException('Default value callback must be a string, like "function_name" or "ClassName::methodName"');
     }

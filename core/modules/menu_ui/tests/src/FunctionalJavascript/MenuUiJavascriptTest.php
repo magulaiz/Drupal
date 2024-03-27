@@ -128,7 +128,7 @@ class MenuUiJavascriptTest extends WebDriverTestBase {
    * @return \Drupal\menu_link_content\Entity\MenuLinkContent
    *   A menu link entity.
    */
-  protected function addMenuLink($parent = '', $path = '/', $menu_id = 'tools', $expanded = FALSE, $weight = '0') {
+  protected function addMenuLink(string $parent = '', string $path = '/', string $menu_id = 'tools', $expanded = FALSE, string $weight = '0') {
     // View add menu link page.
     $this->drupalGet("admin/structure/menu/manage/$menu_id/add");
 

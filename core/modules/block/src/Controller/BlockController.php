@@ -41,7 +41,7 @@ class BlockController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirect back to the listing page.
    */
-  public function performOperation(BlockInterface $block, $op) {
+  public function performOperation(BlockInterface $block, string $op) {
     $block->$op()->save();
     $this->messenger()->addStatus($this->t('The block settings have been updated.'));
     return $this->redirect('block.admin_display');
@@ -56,7 +56,7 @@ class BlockController extends ControllerBase {
    * @return array
    *   A #type 'page' render array containing the block region demo.
    */
-  public function demo($theme) {
+  public function demo(string $theme) {
     if (!$this->themeHandler->hasUi($theme)) {
       throw new NotFoundHttpException();
     }
@@ -101,7 +101,7 @@ class BlockController extends ControllerBase {
    * @return array
    *   An array of human-readable region names keyed by machine name.
    */
-  protected function getVisibleRegionNames($theme) {
+  protected function getVisibleRegionNames(string $theme) {
     return system_region_list($theme, REGIONS_VISIBLE);
   }
 

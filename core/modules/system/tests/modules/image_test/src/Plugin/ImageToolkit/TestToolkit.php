@@ -164,7 +164,7 @@ class TestToolkit extends ImageToolkitBase {
    * @see \Drupal\Tests\system\Functional\Image\ToolkitTestBase::imageTestReset()
    * @see \Drupal\Tests\system\Functional\Image\ToolkitTestBase::imageTestGetAllCalls()
    */
-  protected function logCall($op, $args) {
+  protected function logCall(string $op, $args) {
     $results = $this->state->get('image_test.results', []);
     $results[$op][] = $args;
     // A call to apply is also logged under its operation name whereby the

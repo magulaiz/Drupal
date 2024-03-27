@@ -57,7 +57,7 @@ class LanguageNegotiation extends ProcessPluginBase {
    * @return string
    *   The new negotiation method name.
    */
-  protected function mapNewMethods($value) {
+  protected function mapNewMethods(string $value) {
     switch ($value) {
       case 'language-default':
         return 'language-selected';

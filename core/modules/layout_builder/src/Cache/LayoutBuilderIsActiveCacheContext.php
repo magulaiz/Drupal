@@ -81,7 +81,7 @@ class LayoutBuilderIsActiveCacheContext implements CalculatedCacheContextInterfa
    * @return \Drupal\layout_builder\Entity\LayoutEntityDisplayInterface|null
    *   The entity view display, if it exists.
    */
-  protected function getDisplay($entity_type_id) {
+  protected function getDisplay(string $entity_type_id) {
     if ($entity = $this->routeMatch->getParameter($entity_type_id)) {
       if ($entity instanceof FieldableEntityInterface) {
         // @todo Expand to work for all view modes in

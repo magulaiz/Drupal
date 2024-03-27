@@ -32,7 +32,7 @@ trait AssertPageCacheContextsAndTagsTrait {
    * @return string[]
    *   The header value, potentially exploded by spaces.
    */
-  protected function getCacheHeaderValues($header_name) {
+  protected function getCacheHeaderValues(string $header_name) {
     $header_value = $this->getSession()->getResponseHeader($header_name);
     return empty($header_value) ? [] : explode(' ', $header_value);
   }
@@ -43,7 +43,7 @@ trait AssertPageCacheContextsAndTagsTrait {
    * @param string $expected_cache_context
    *   The expected cache context.
    */
-  protected function assertCacheContext($expected_cache_context) {
+  protected function assertCacheContext(string $expected_cache_context) {
     $cache_contexts = explode(' ', $this->getSession()->getResponseHeader('X-Drupal-Cache-Contexts'));
     $this->assertContains($expected_cache_context, $cache_contexts, "'" . $expected_cache_context . "' is present in the X-Drupal-Cache-Contexts header.");
   }
@@ -54,7 +54,7 @@ trait AssertPageCacheContextsAndTagsTrait {
    * @param string $not_expected_cache_context
    *   The expected cache context.
    */
-  protected function assertNoCacheContext($not_expected_cache_context) {
+  protected function assertNoCacheContext(string $not_expected_cache_context) {
     $cache_contexts = explode(' ', $this->getSession()->getResponseHeader('X-Drupal-Cache-Contexts'));
     $this->assertNotContains($not_expected_cache_context, $cache_contexts, "'" . $not_expected_cache_context . "' is not present in the X-Drupal-Cache-Contexts header.");
   }
@@ -129,7 +129,7 @@ trait AssertPageCacheContextsAndTagsTrait {
    * @return bool
    *   Always returns TRUE.
    */
-  protected function assertCacheContexts(array $expected_contexts, $message = NULL, $include_default_contexts = TRUE) {
+  protected function assertCacheContexts(array $expected_contexts, string $message = NULL, $include_default_contexts = TRUE) {
     if ($include_default_contexts) {
       $default_contexts = ['languages:language_interface', 'theme'];
       // Add the user based contexts to the list of default contexts except when

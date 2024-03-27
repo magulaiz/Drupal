@@ -27,7 +27,7 @@ trait PathAliasTestTrait {
    * @return \Drupal\path_alias\PathAliasInterface
    *   A path alias entity.
    */
-  protected function createPathAlias($path, $alias, $langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED) {
+  protected function createPathAlias(string $path, string $alias, string $langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED) {
     /** @var \Drupal\path_alias\PathAliasInterface $path_alias */
     $path_alias = \Drupal::entityTypeManager()->getStorage('path_alias')->create([
       'path' => $path,
@@ -71,7 +71,7 @@ trait PathAliasTestTrait {
    * @param string|null $message
    *   (optional) A message to display with the assertion.
    */
-  protected function assertPathAliasExists($alias, $langcode = NULL, $path = NULL, $message = '') {
+  protected function assertPathAliasExists(string $alias, $langcode = NULL, $path = NULL, $message = '') {
     $query = \Drupal::entityTypeManager()
       ->getStorage('path_alias')
       ->getQuery()
@@ -100,7 +100,7 @@ trait PathAliasTestTrait {
    * @param string|null $message
    *   (optional) A message to display with the assertion.
    */
-  protected function assertPathAliasNotExists($alias, $langcode = NULL, $path = NULL, $message = '') {
+  protected function assertPathAliasNotExists(string $alias, $langcode = NULL, $path = NULL, $message = '') {
     $query = \Drupal::entityTypeManager()
       ->getStorage('path_alias')
       ->getQuery()

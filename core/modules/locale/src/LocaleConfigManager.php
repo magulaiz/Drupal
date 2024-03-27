@@ -136,7 +136,7 @@ class LocaleConfigManager {
    *   Array of Locale translatable elements of the default configuration in
    *   $name.
    */
-  public function getTranslatableDefaultConfig($name) {
+  public function getTranslatableDefaultConfig(string $name) {
     if ($this->isSupported($name)) {
       // Create typed configuration wrapper based on install storage data.
       $data = $this->defaultConfigStorage->read($name);
@@ -212,7 +212,7 @@ class LocaleConfigManager {
    *
    * @see self::getTranslatableData()
    */
-  protected function processTranslatableData($name, array $active, array $translatable, $langcode) {
+  protected function processTranslatableData(string $name, array $active, array $translatable, string $langcode) {
     $translated = [];
     foreach ($translatable as $key => $item) {
       if (!isset($active[$key])) {
@@ -250,7 +250,7 @@ class LocaleConfigManager {
    * @param array $data
    *   Configuration data to be saved, that will be only the translated values.
    */
-  protected function saveTranslationOverride($name, $langcode, array $data) {
+  protected function saveTranslationOverride(string $name, string $langcode, array $data) {
     $this->isUpdatingFromLocale = TRUE;
     $this->languageManager->getLanguageConfigOverride($langcode, $name)->setData($data)->save();
     $this->isUpdatingFromLocale = FALSE;
@@ -264,7 +264,7 @@ class LocaleConfigManager {
    * @param array $data
    *   Configuration data to be saved with translations merged in.
    */
-  protected function saveTranslationActive($name, array $data) {
+  protected function saveTranslationActive(string $name, array $data) {
     $this->isUpdatingFromLocale = TRUE;
     $this->configFactory->getEditable($name)->setData($data)->save();
     $this->isUpdatingFromLocale = FALSE;
@@ -278,7 +278,7 @@ class LocaleConfigManager {
    * @param string $langcode
    *   Language code.
    */
-  protected function deleteTranslationOverride($name, $langcode) {
+  protected function deleteTranslationOverride(string $name, string $langcode) {
     $this->isUpdatingFromLocale = TRUE;
     $this->languageManager->getLanguageConfigOverride($langcode, $name)->delete();
     $this->isUpdatingFromLocale = FALSE;
@@ -334,7 +334,7 @@ class LocaleConfigManager {
    * @param string $langcode
    *   Language code to delete.
    */
-  public function deleteLanguageTranslations($langcode) {
+  public function deleteLanguageTranslations(string $langcode) {
     $this->isUpdatingFromLocale = TRUE;
     $storage = $this->languageManager->getLanguageConfigOverrideStorage($langcode);
     foreach ($storage->listAll() as $name) {
@@ -363,7 +363,7 @@ class LocaleConfigManager {
    * @return string|false
    *   Translated string if there is a translation, FALSE if not.
    */
-  public function translateString($name, $langcode, $source, $context) {
+  public function translateString(string $name, string $langcode, string $source, string $context) {
     if ($source) {
       // If translations for a language have not been loaded yet.
       if (!isset($this->translations[$name][$langcode])) {
@@ -435,7 +435,7 @@ class LocaleConfigManager {
    * @return \Drupal\locale\TranslationString|false
    *   The translation object if the string was not empty or FALSE otherwise.
    */
-  public function getStringTranslation($name, $langcode, $source, $context) {
+  public function getStringTranslation(string $name, string $langcode, string $source, string $context) {
     if ($source) {
       $this->translateString($name, $langcode, $source, $context);
       if ($string = $this->translations[$name][$langcode][$context][$source]) {
@@ -464,7 +464,7 @@ class LocaleConfigManager {
    * @return bool
    *   A boolean indicating if a language has configuration translations.
    */
-  public function hasTranslation($name, $langcode) {
+  public function hasTranslation(string $name, string $langcode) {
     $translation = $this->languageManager->getLanguageConfigOverride($langcode, $name);
     return !$translation->isNew();
   }
@@ -481,7 +481,7 @@ class LocaleConfigManager {
    *   assumed to be English. The return value is NULL if no such default
    *   configuration exists.
    */
-  public function getDefaultConfigLangcode($name) {
+  public function getDefaultConfigLangcode(string $name) {
     // Config entities that do not have the 'default_config_hash' cannot be
     // shipped configuration regardless of whether there is a name match.
     // configurable_language entities are a special case since they can be
@@ -511,7 +511,7 @@ class LocaleConfigManager {
    *   assumed to be English. The return value is NULL if no such active
    *   configuration exists.
    */
-  public function getActiveConfigLangcode($name) {
+  public function getActiveConfigLangcode(string $name) {
     $active = $this->configStorage->read($name);
     if (!empty($active)) {
       return !empty($active['langcode']) ? $active['langcode'] : 'en';
@@ -527,7 +527,7 @@ class LocaleConfigManager {
    * @return bool
    *   TRUE if interface translation is supported.
    */
-  public function isSupported($name) {
+  public function isSupported(string $name) {
     return $this->getDefaultConfigLangcode($name) == 'en' && $this->configStorage->read($name);
   }
 

@@ -662,7 +662,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    * @return array
    *   A renderable array containing the CSRF token.
    */
-  public function renderFormTokenPlaceholder($placeholder) {
+  public function renderFormTokenPlaceholder(string $placeholder) {
     return [
       '#markup' => $this->csrfToken->get($placeholder),
       '#cache' => [

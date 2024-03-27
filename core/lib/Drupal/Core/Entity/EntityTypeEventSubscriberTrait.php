@@ -37,7 +37,7 @@ trait EntityTypeEventSubscriberTrait {
    * @param string $event_name
    *   The event name.
    */
-  public function onEntityTypeEvent(EntityTypeEvent $event, $event_name) {
+  public function onEntityTypeEvent(EntityTypeEvent $event, string $event_name) {
     switch ($event_name) {
       case EntityTypeEvents::CREATE:
         $this->onEntityTypeCreate($event->getEntityType());

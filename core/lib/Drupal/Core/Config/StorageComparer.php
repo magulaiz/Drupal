@@ -220,7 +220,7 @@ class StorageComparer implements StorageComparerInterface {
    *   (optional) Array to sort that can be used to sort the changelist. This
    *   array must contain all the items that are in the change list.
    */
-  protected function addChangeList($collection, $op, array $changes, array $sort_order = NULL) {
+  protected function addChangeList(string $collection, string $op, array $changes, array $sort_order = NULL) {
     // Only add changes that aren't already listed.
     $changes = array_diff($changes, $this->changelist[$collection][$op]);
     $this->changelist[$collection][$op] = array_merge($this->changelist[$collection][$op], $changes);
@@ -263,7 +263,7 @@ class StorageComparer implements StorageComparerInterface {
    * @param string $collection
    *   The storage collection to operate on.
    */
-  protected function addChangelistDelete($collection) {
+  protected function addChangelistDelete(string $collection) {
     $deletes = array_diff(array_reverse($this->targetNames[$collection]), $this->sourceNames[$collection]);
     $this->addChangeList($collection, 'delete', $deletes);
   }
@@ -278,7 +278,7 @@ class StorageComparer implements StorageComparerInterface {
    * @param string $collection
    *   The storage collection to operate on.
    */
-  protected function addChangelistCreate($collection) {
+  protected function addChangelistCreate(string $collection) {
     $creates = array_diff($this->sourceNames[$collection], $this->targetNames[$collection]);
     $this->addChangeList($collection, 'create', $creates);
   }
@@ -293,7 +293,7 @@ class StorageComparer implements StorageComparerInterface {
    * @param string $collection
    *   The storage collection to operate on.
    */
-  protected function addChangelistUpdate($collection) {
+  protected function addChangelistUpdate(string $collection) {
     $recreates = [];
     foreach (array_intersect($this->sourceNames[$collection], $this->targetNames[$collection]) as $name) {
       $source_data = $this->getSourceStorage($collection)->read($name);
@@ -330,7 +330,7 @@ class StorageComparer implements StorageComparerInterface {
    * @param string $collection
    *   The storage collection to operate on.
    */
-  protected function addChangelistRename($collection) {
+  protected function addChangelistRename(string $collection) {
     // Renames will be present in both the create and delete lists.
     $create_list = $this->getChangelist('create', $collection);
     $delete_list = $this->getChangelist('delete', $collection);
@@ -384,7 +384,7 @@ class StorageComparer implements StorageComparerInterface {
    * @param string $name
    *   The name of the configuration to remove.
    */
-  protected function removeFromChangelist($collection, $op, $name) {
+  protected function removeFromChangelist(string $collection, string $op, string $name) {
     $key = array_search($name, $this->changelist[$collection][$op]);
     if ($key !== FALSE) {
       unset($this->changelist[$collection][$op][$key]);
@@ -475,7 +475,7 @@ class StorageComparer implements StorageComparerInterface {
    *
    * @see \Drupal\Core\Config\StorageComparerInterface::extractRenameNames()
    */
-  protected function createRenameName($old_name, $new_name) {
+  protected function createRenameName(string $old_name, string $new_name) {
     return $old_name . '::' . $new_name;
   }
 

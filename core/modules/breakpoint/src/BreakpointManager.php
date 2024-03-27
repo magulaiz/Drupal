@@ -249,7 +249,7 @@ class BreakpointManager extends DefaultPluginManager implements BreakpointManage
    * @return string
    *   The label.
    */
-  protected function getGroupLabel($group) {
+  protected function getGroupLabel(string $group) {
     // Extension names are not translatable.
     if ($this->moduleHandler->moduleExists($group)) {
       $label = $this->moduleExtensionList->getName($group);

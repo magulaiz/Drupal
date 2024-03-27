@@ -38,7 +38,7 @@ class FieldInstanceWidgetSettings extends ProcessPluginBase {
    * @return array
    *   A valid array of settings.
    */
-  public function getSettings($widget_type, $widget_settings) {
+  public function getSettings(string $widget_type, $widget_settings) {
     $progress = $widget_settings['progress_indicator'] ?? 'throbber';
     $size = $widget_settings['size'] ?? 60;
     $rows = $widget_settings['rows'] ?? 5;

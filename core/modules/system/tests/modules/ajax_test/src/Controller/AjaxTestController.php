@@ -52,7 +52,7 @@ class AjaxTestController {
    * @return array
    *   Renderable array of AJAX response contents.
    */
-  public function renderTypes($type) {
+  public function renderTypes(string $type) {
     return [
       '#title' => '<em>AJAX Dialog & contents</em>',
       'content' => [

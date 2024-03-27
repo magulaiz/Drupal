@@ -75,7 +75,7 @@ class ConstraintManager extends DefaultPluginManager {
    * @return \Symfony\Component\Validator\Constraint
    *   A validation constraint plugin.
    */
-  public function create($name, $options) {
+  public function create(string $name, $options) {
     if (!is_array($options)) {
       // Plugins need an array as configuration, so make sure we have one.
       // The constraint classes support passing the options as part of the
@@ -138,7 +138,7 @@ class ConstraintManager extends DefaultPluginManager {
    *   An array of constraint plugin definitions supporting the given type,
    *   keyed by constraint name (plugin ID).
    */
-  public function getDefinitionsByType($type) {
+  public function getDefinitionsByType(string $type) {
     $definitions = [];
     foreach ($this->getDefinitions() as $plugin_id => $definition) {
       if ($definition['type'] === FALSE || in_array($type, $definition['type'])) {

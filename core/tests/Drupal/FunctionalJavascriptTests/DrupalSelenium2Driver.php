@@ -68,7 +68,7 @@ class DrupalSelenium2Driver extends Selenium2Driver {
    * @throws \Exception
    *   When a known error occurred during file upload.
    */
-  public function uploadFileAndGetRemoteFilePath($path) {
+  public function uploadFileAndGetRemoteFilePath(string $path) {
     if (!is_file($path)) {
       throw new DriverException('File does not exist locally and cannot be uploaded to the remote instance.');
     }

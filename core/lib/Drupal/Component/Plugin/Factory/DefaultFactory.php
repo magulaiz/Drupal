@@ -72,7 +72,7 @@ class DefaultFactory implements FactoryInterface {
    *   Thrown when there is no class specified, the class doesn't exist, or
    *   the class does not implement the specified required interface.
    */
-  public static function getPluginClass($plugin_id, $plugin_definition = NULL, $required_interface = NULL) {
+  public static function getPluginClass(string $plugin_id, $plugin_definition = NULL, string $required_interface = NULL) {
     $missing_class_message = sprintf('The plugin (%s) did not specify an instance class.', $plugin_id);
     if (is_array($plugin_definition)) {
       if (empty($plugin_definition['class'])) {

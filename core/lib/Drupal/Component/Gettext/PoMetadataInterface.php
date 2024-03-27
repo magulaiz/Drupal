@@ -16,7 +16,7 @@ interface PoMetadataInterface {
    * @param string $langcode
    *   Language code string.
    */
-  public function setLangcode($langcode);
+  public function setLangcode(string $langcode);
 
   /**
    * Get language code.

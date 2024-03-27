@@ -16,7 +16,7 @@ class ProxyBuilder {
    * @return string
    *   The class name of the proxy.
    */
-  public static function buildProxyClassName($class_name) {
+  public static function buildProxyClassName(string $class_name) {
     $match = [];
     preg_match('/([a-zA-Z0-9_]+\\\\[a-zA-Z0-9_]+)\\\\(.+)/', $class_name, $match);
     $root_namespace = $match[1];
@@ -35,7 +35,7 @@ class ProxyBuilder {
    * @return string
    *   The namespace name of the proxy.
    */
-  public static function buildProxyNamespace($class_name) {
+  public static function buildProxyNamespace(string $class_name) {
     $proxy_classname = static::buildProxyClassName($class_name);
 
     preg_match('/(.+)\\\\[a-zA-Z0-9]+/', $proxy_classname, $match);
@@ -52,7 +52,7 @@ class ProxyBuilder {
    * @return string
    *   The full string with namespace class and methods.
    */
-  public function build($class_name) {
+  public function build(string $class_name) {
     $reflection = new \ReflectionClass($class_name);
 
     $proxy_class_name = $this->buildProxyClassName($class_name);

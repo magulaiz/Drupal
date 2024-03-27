@@ -176,7 +176,7 @@ class CallableResolverTest extends UnitTestCase {
    * @return string
    *   A test string.
    */
-  public static function staticMethod($suffix) {
+  public static function staticMethod(string $suffix) {
     return __METHOD__ . '+' . $suffix;
   }
 
@@ -192,7 +192,7 @@ class CallableResolverTest extends UnitTestCase {
    * @throws \Exception
    *   Throws an exception when called statically.
    */
-  public function method($suffix) {
+  public function method(string $suffix) {
     return __METHOD__ . '+' . $suffix;
   }
 
@@ -205,7 +205,7 @@ class CallableResolverTest extends UnitTestCase {
    * @return string
    *   A test string.
    */
-  public function __invoke($suffix) {
+  public function __invoke(string $suffix) {
     return __METHOD__ . '+' . $suffix;
   }
 

@@ -82,7 +82,7 @@ class EntityAccess implements ContainerInjectionInterface {
    *
    * @see hook_entity_access()
    */
-  public function entityOperationAccess(EntityInterface $entity, $operation, AccountInterface $account) {
+  public function entityOperationAccess(EntityInterface $entity, string $operation, AccountInterface $account) {
     // Workspaces themselves are handled by their own access handler and we
     // should not try to do any access checks for entity types that can not
     // belong to a workspace.
@@ -118,7 +118,7 @@ class EntityAccess implements ContainerInjectionInterface {
    *
    * @see hook_entity_create_access()
    */
-  public function entityCreateAccess(AccountInterface $account, array $context, $entity_bundle) {
+  public function entityCreateAccess(AccountInterface $account, array $context, string $entity_bundle) {
     // Workspaces themselves are handled by their own access handler and we
     // should not try to do any access checks for entity types that can not
     // belong to a workspace.

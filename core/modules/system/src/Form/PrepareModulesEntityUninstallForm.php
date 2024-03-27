@@ -203,7 +203,7 @@ class PrepareModulesEntityUninstallForm extends ConfirmFormBase {
    * @internal
    *   This batch callback is only meant to be used by this form.
    */
-  public static function deleteContentEntities($entity_type_id, &$context) {
+  public static function deleteContentEntities(string $entity_type_id, &$context) {
     $storage = \Drupal::entityTypeManager()->getStorage($entity_type_id);
 
     // Set the entity type ID in the results array so we can access it in the

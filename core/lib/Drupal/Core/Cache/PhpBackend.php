@@ -55,7 +55,7 @@ class PhpBackend implements CacheBackendInterface {
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    */
-  public function __construct($bin, CacheTagsChecksumInterface $checksum_provider, protected TimeInterface $time) {
+  public function __construct(string $bin, CacheTagsChecksumInterface $checksum_provider, protected TimeInterface $time) {
     $this->bin = 'cache_' . $bin;
     $this->checksumProvider = $checksum_provider;
   }
@@ -78,7 +78,7 @@ class PhpBackend implements CacheBackendInterface {
    *
    * @return bool|mixed
    */
-  protected function getByHash($cidhash, $allow_invalid = FALSE) {
+  protected function getByHash(string $cidhash, $allow_invalid = FALSE) {
     if ($file = $this->storage()->getFullPath($cidhash)) {
       $cache = @include $file;
     }
@@ -202,7 +202,7 @@ class PhpBackend implements CacheBackendInterface {
    * @param string $cidhash
    *   The hashed version of the original cache ID after being normalized.
    */
-  protected function invalidateByHash($cidhash) {
+  protected function invalidateByHash(string $cidhash) {
     if ($item = $this->getByHash($cidhash)) {
       $item->expire = $this->time->getRequestTime() - 1;
       $this->writeItem($cidhash, $item);
@@ -249,7 +249,7 @@ class PhpBackend implements CacheBackendInterface {
    * @param object $item
    *   The cache item to store.
    */
-  protected function writeItem($cidhash, \stdClass $item) {
+  protected function writeItem(string $cidhash, \stdClass $item) {
     $content = '<?php return unserialize(' . var_export(serialize($item), TRUE) . ');';
     $this->storage()->save($cidhash, $content);
   }
@@ -275,7 +275,7 @@ class PhpBackend implements CacheBackendInterface {
    * @return string
    *   A normalized cache ID.
    */
-  protected function normalizeCid($cid) {
+  protected function normalizeCid(string $cid) {
     return Crypt::hashBase64($cid);
   }
 

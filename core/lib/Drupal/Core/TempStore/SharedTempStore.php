@@ -121,7 +121,7 @@ class SharedTempStore {
    * @return mixed
    *   The data associated with the key, or NULL if the key does not exist.
    */
-  public function get($key) {
+  public function get(string $key) {
     if ($object = $this->storage->get($key)) {
       return $object->data;
     }
@@ -138,7 +138,7 @@ class SharedTempStore {
    * @return mixed
    *   The data associated with the key, or NULL if the key does not exist.
    */
-  public function getIfOwner($key) {
+  public function getIfOwner(string $key) {
     if (($object = $this->storage->get($key)) && ($object->owner == $this->owner)) {
       return $object->data;
     }
@@ -155,7 +155,7 @@ class SharedTempStore {
    * @return bool
    *   TRUE if the data was set, or FALSE if it already existed.
    */
-  public function setIfNotExists($key, $value) {
+  public function setIfNotExists(string $key, $value) {
     $value = (object) [
       'owner' => $this->owner,
       'data' => $value,
@@ -184,7 +184,7 @@ class SharedTempStore {
    * @throws \Drupal\Core\TempStore\TempStoreException
    *   Thrown when a lock for the backend storage could not be acquired.
    */
-  public function setIfOwner($key, $value) {
+  public function setIfOwner(string $key, $value) {
     if ($this->setIfNotExists($key, $value)) {
       return TRUE;
     }
@@ -208,7 +208,7 @@ class SharedTempStore {
    * @throws \Drupal\Core\TempStore\TempStoreException
    *   Thrown when a lock for the backend storage could not be acquired.
    */
-  public function set($key, $value) {
+  public function set(string $key, $value) {
     if (!$this->lockBackend->acquire($key)) {
       $this->lockBackend->wait($key);
       if (!$this->lockBackend->acquire($key)) {
@@ -236,7 +236,7 @@ class SharedTempStore {
    *   An object with the owner and updated time if the key has a value, or
    *   NULL otherwise.
    */
-  public function getMetadata($key) {
+  public function getMetadata(string $key) {
     // Fetch the key/value pair and its metadata.
     $object = $this->storage->get($key);
     if ($object) {
@@ -255,7 +255,7 @@ class SharedTempStore {
    * @throws \Drupal\Core\TempStore\TempStoreException
    *   Thrown when a lock for the backend storage could not be acquired.
    */
-  public function delete($key) {
+  public function delete(string $key) {
     if (!$this->lockBackend->acquire($key)) {
       $this->lockBackend->wait($key);
       if (!$this->lockBackend->acquire($key)) {
@@ -281,7 +281,7 @@ class SharedTempStore {
    * @throws \Drupal\Core\TempStore\TempStoreException
    *   Thrown when a lock for the backend storage could not be acquired.
    */
-  public function deleteIfOwner($key) {
+  public function deleteIfOwner(string $key) {
     if (!$object = $this->storage->get($key)) {
       return TRUE;
     }

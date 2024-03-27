@@ -460,7 +460,7 @@ class BookManager implements BookManagerInterface {
    *   Any link deeper than this value will be excluded (along with its
    *   children).
    */
-  protected function recurseTableOfContents(array $tree, $indent, array &$toc, array $exclude, $depth_limit) {
+  protected function recurseTableOfContents(array $tree, string $indent, array &$toc, array $exclude, $depth_limit) {
     $nids = [];
     foreach ($tree as $data) {
       if ($data['link']['depth'] > $depth_limit) {

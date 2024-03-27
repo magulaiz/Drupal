@@ -187,7 +187,7 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
    * @return \Drupal\file\FileInterface
    *   The thumbnail file entity.
    */
-  protected function loadThumbnail($thumbnail_uri = NULL) {
+  protected function loadThumbnail(string $thumbnail_uri = NULL) {
     $values = [
       'uri' => $thumbnail_uri ?: $this->getDefaultThumbnailUri(),
     ];

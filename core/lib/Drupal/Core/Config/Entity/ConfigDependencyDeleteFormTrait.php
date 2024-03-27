@@ -38,7 +38,7 @@ trait ConfigDependencyDeleteFormTrait {
    *
    * @see \Drupal\Core\Config\ConfigManagerInterface::getConfigEntitiesToChangeOnDependencyRemoval()
    */
-  protected function addDependencyListsToForm(array &$form, $type, array $names, ConfigManagerInterface $config_manager, EntityTypeManagerInterface $entity_type_manager) {
+  protected function addDependencyListsToForm(array &$form, string $type, array $names, ConfigManagerInterface $config_manager, EntityTypeManagerInterface $entity_type_manager) {
     // Get the dependent entities.
     $dependent_entities = $config_manager->getConfigEntitiesToChangeOnDependencyRemoval($type, $names);
     $entity_types = [];

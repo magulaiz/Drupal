@@ -29,7 +29,7 @@ class UpdateSemverCoreSecurityCoverageTest extends UpdateSemverCoreTestBase {
    *
    * @dataProvider securityCoverageMessageProvider
    */
-  public function testSecurityCoverageMessage($installed_version, $fixture, $requirements_section_heading, $message, $mock_date) {
+  public function testSecurityCoverageMessage(string $installed_version, string $fixture, string $requirements_section_heading, string $message, string $mock_date) {
     \Drupal::state()->set('update_test.mock_date', $mock_date);
     $this->setProjectInstalledVersion($installed_version);
     $this->refreshUpdateStatus(['drupal' => $fixture]);

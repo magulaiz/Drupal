@@ -151,7 +151,7 @@ class DisplayTest extends WebDriverTestBase {
    * @param string $selector
    *   The selector for the element that contains the contextual Rink.
    */
-  protected function toggleContextualTriggerVisibility($selector) {
+  protected function toggleContextualTriggerVisibility(string $selector) {
     // Hovering over the element itself with should be enough, but does not
     // work. Manually remove the visually-hidden class.
     $this->getSession()->executeScript("jQuery('{$selector} .contextual .trigger').toggleClass('visually-hidden');");

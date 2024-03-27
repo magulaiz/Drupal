@@ -193,7 +193,7 @@ class SearchController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirect back to the search settings page.
    */
-  public function performOperation(SearchPageInterface $search_page, $op) {
+  public function performOperation(SearchPageInterface $search_page, string $op) {
     $search_page->$op()->save();
 
     if ($op == 'enable') {

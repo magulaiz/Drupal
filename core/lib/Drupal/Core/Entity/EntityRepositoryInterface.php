@@ -25,7 +25,7 @@ interface EntityRepositoryInterface {
    * @throws \Drupal\Core\Entity\EntityStorageException
    *   Thrown in case the requested entity type does not support UUIDs.
    */
-  public function loadEntityByUuid($entity_type_id, $uuid);
+  public function loadEntityByUuid(string $entity_type_id, string $uuid);
 
   /**
    * Loads an entity by the config target identifier.
@@ -46,7 +46,7 @@ interface EntityRepositoryInterface {
    *
    * @see \Drupal\Core\Entity\EntityInterface::getConfigTarget()
    */
-  public function loadEntityByConfigTarget($entity_type_id, $target);
+  public function loadEntityByConfigTarget(string $entity_type_id, string $target);
 
   /**
    * Gets the entity translation to be used in the given context.
@@ -70,7 +70,7 @@ interface EntityRepositoryInterface {
    *
    * @see \Drupal\Core\Language\LanguageManagerInterface::getFallbackCandidates()
    */
-  public function getTranslationFromContext(EntityInterface $entity, $langcode = NULL, $context = []);
+  public function getTranslationFromContext(EntityInterface $entity, string $langcode = NULL, $context = []);
 
   /**
    * Retrieves the active entity variant matching the specified context.
@@ -101,7 +101,7 @@ interface EntityRepositoryInterface {
    * @return \Drupal\Core\Entity\EntityInterface|null
    *   An entity object variant or NULL if the entity does not exist.
    */
-  public function getActive($entity_type_id, $entity_id, array $contexts = NULL);
+  public function getActive(string $entity_type_id, $entity_id, array $contexts = NULL);
 
   /**
    * Retrieves the active entity variants matching the specified context.
@@ -120,7 +120,7 @@ interface EntityRepositoryInterface {
    *
    * @see getActive()
    */
-  public function getActiveMultiple($entity_type_id, array $entity_ids, array $contexts = NULL);
+  public function getActiveMultiple(string $entity_type_id, array $entity_ids, array $contexts = NULL);
 
   /**
    * Retrieves the canonical entity variant matching the specified context.
@@ -147,7 +147,7 @@ interface EntityRepositoryInterface {
    * @return \Drupal\Core\Entity\EntityInterface|null
    *   An entity object variant or NULL if the entity does not exist.
    */
-  public function getCanonical($entity_type_id, $entity_id, array $contexts = NULL);
+  public function getCanonical(string $entity_type_id, $entity_id, array $contexts = NULL);
 
   /**
    * Retrieves the canonical entity variants matching the specified context.
@@ -166,6 +166,6 @@ interface EntityRepositoryInterface {
    *
    * @see getCanonical()
    */
-  public function getCanonicalMultiple($entity_type_id, array $entity_ids, array $contexts = NULL);
+  public function getCanonicalMultiple(string $entity_type_id, array $entity_ids, array $contexts = NULL);
 
 }

@@ -65,7 +65,7 @@ trait WorkspaceTestTrait {
    * @param string $workspace_id
    *   The ID of the workspace to switch to.
    */
-  protected function switchToWorkspace($workspace_id) {
+  protected function switchToWorkspace(string $workspace_id) {
     // Switch the test runner's context to the specified workspace.
     $workspace = $this->entityTypeManager->getStorage('workspace')->load($workspace_id);
     \Drupal::service('workspaces.manager')->setActiveWorkspace($workspace);
@@ -109,7 +109,7 @@ trait WorkspaceTestTrait {
    * @param string $entity_type_id
    *   The ID of the entity type that is being tested.
    */
-  protected function assertWorkspaceAssociation(array $expected, $entity_type_id) {
+  protected function assertWorkspaceAssociation(array $expected, string $entity_type_id) {
     /** @var \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association */
     $workspace_association = \Drupal::service('workspaces.association');
     foreach ($expected as $workspace_id => $expected_tracked_revision_ids) {
@@ -131,7 +131,7 @@ trait WorkspaceTestTrait {
    * @return array
    *   An array of entity IDs, keyed by revision IDs.
    */
-  protected function getUnassociatedRevisions($entity_type_id, $entity_ids = NULL) {
+  protected function getUnassociatedRevisions(string $entity_type_id, $entity_ids = NULL) {
     $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
 
     $query = \Drupal::entityTypeManager()

@@ -101,7 +101,7 @@ class EntityDisplayRepository implements EntityDisplayRepositoryInterface {
    * @return array
    *   The display mode info for all entity types.
    */
-  protected function getAllDisplayModesByEntityType($display_type) {
+  protected function getAllDisplayModesByEntityType(string $display_type) {
     if (!isset($this->displayModeInfo[$display_type])) {
       $key = 'entity_' . $display_type . '_info';
       $entity_type_id = 'entity_' . $display_type;
@@ -134,7 +134,7 @@ class EntityDisplayRepository implements EntityDisplayRepositoryInterface {
    * @return array
    *   The display mode info for a specific entity type.
    */
-  protected function getDisplayModesByEntityType($display_type, $entity_type_id) {
+  protected function getDisplayModesByEntityType(string $display_type, string $entity_type_id) {
     if (isset($this->displayModeInfo[$display_type][$entity_type_id])) {
       return $this->displayModeInfo[$display_type][$entity_type_id];
     }
@@ -186,7 +186,7 @@ class EntityDisplayRepository implements EntityDisplayRepositoryInterface {
    * @return array
    *   An array of display mode labels, keyed by the display mode ID.
    */
-  protected function getDisplayModeOptions($display_type, $entity_type_id) {
+  protected function getDisplayModeOptions(string $display_type, string $entity_type_id) {
     $options = ['default' => t('Default')];
     foreach ($this->getDisplayModesByEntityType($display_type, $entity_type_id) as $mode => $settings) {
       $options[$mode] = $settings['label'];
@@ -207,7 +207,7 @@ class EntityDisplayRepository implements EntityDisplayRepositoryInterface {
    * @return array
    *   An array of display mode labels, keyed by the display mode ID.
    */
-  protected function getDisplayModeOptionsByBundle($display_type, $entity_type_id, $bundle) {
+  protected function getDisplayModeOptionsByBundle($display_type, string $entity_type_id, string $bundle) {
     // Collect all the entity's display modes.
     $options = $this->getDisplayModeOptions($display_type, $entity_type_id);
 

@@ -87,7 +87,7 @@ class DiffFormatter extends DiffFormatterBase {
    * @return array
    *   An array representing a table row.
    */
-  protected function addedLine($line) {
+  protected function addedLine(string $line) {
     return [
       [
         'data' => '+',
@@ -109,7 +109,7 @@ class DiffFormatter extends DiffFormatterBase {
    * @return array
    *   An array representing a table row.
    */
-  protected function deletedLine($line) {
+  protected function deletedLine(string $line) {
     return [
       [
         'data' => '-',
@@ -131,7 +131,7 @@ class DiffFormatter extends DiffFormatterBase {
    * @return array
    *   An array representing a table row.
    */
-  protected function contextLine($line) {
+  protected function contextLine(string $line) {
     return [
       ' ',
       [

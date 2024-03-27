@@ -189,7 +189,7 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
    * @param \Drupal\file\Entity\File $file
    *   The file entity.
    */
-  protected function addInlineFileBlockToLayout($title, File $file) {
+  protected function addInlineFileBlockToLayout(string $title, File $file) {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $page->clickLink('Add block');
@@ -213,7 +213,7 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
    * @return \Drupal\Core\Entity\EntityInterface|\Drupal\file\Entity\File
    *   The file entity.
    */
-  protected function createPrivateFile($file_name) {
+  protected function createPrivateFile(string $file_name) {
     // Create a new file entity.
     $file = File::create([
       'uid' => 1,

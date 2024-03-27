@@ -284,7 +284,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
    *   In case the host name in the request is not trusted.
    */
-  public static function createFromRequest(Request $request, $class_loader, $environment, $allow_dumping = TRUE, $app_root = NULL) {
+  public static function createFromRequest(Request $request, $class_loader, string $environment, $allow_dumping = TRUE, string $app_root = NULL) {
     $kernel = new static($environment, $class_loader, $allow_dumping, $app_root);
     static::bootEnvironment($app_root);
     $kernel->initializeSettings($request);
@@ -306,7 +306,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *   (optional) The path to the application root as a string. If not supplied,
    *   the application root will be computed.
    */
-  public function __construct($environment, $class_loader, $allow_dumping = TRUE, $app_root = NULL) {
+  public function __construct(string $environment, $class_loader, $allow_dumping = TRUE, string $app_root = NULL) {
     $this->environment = $environment;
     $this->classLoader = $class_loader;
     $this->allowDumping = $allow_dumping;
@@ -386,7 +386,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @see default.settings.php
    * @see example.sites.php
    */
-  public static function findSitePath(Request $request, $require_settings = TRUE, $app_root = NULL) {
+  public static function findSitePath(Request $request, $require_settings = TRUE, string $app_root = NULL) {
     if (static::validateHostname($request) === FALSE) {
       throw new BadRequestHttpException();
     }
@@ -969,7 +969,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *   (optional) The path to the application root as a string. If not supplied,
    *   the application root will be computed.
    */
-  public static function bootEnvironment($app_root = NULL) {
+  public static function bootEnvironment(string $app_root = NULL) {
     if (static::$isEnvironmentInitialized) {
       return;
     }
@@ -1549,7 +1549,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @return bool
    *   TRUE if the length is appropriate, or FALSE otherwise.
    */
-  protected static function validateHostnameLength($host) {
+  protected static function validateHostnameLength(string $host) {
     // Limit the length of the host name to 1000 bytes to prevent DoS attacks
     // with long host names.
     return strlen($host) <= 1000

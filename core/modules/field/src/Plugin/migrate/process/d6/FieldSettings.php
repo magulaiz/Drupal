@@ -45,7 +45,7 @@ class FieldSettings extends ProcessPluginBase {
    * @return array
    *   A valid array of settings.
    */
-  public function getSettings($field_type, $global_settings, $original_field_type = NULL) {
+  public function getSettings(string $field_type, $global_settings, string $original_field_type = NULL) {
     $max_length = $global_settings['max_length'] ?? '';
     $max_length = empty($max_length) ? 255 : $max_length;
     $allowed_values = [];

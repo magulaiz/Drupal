@@ -112,7 +112,7 @@ class RenderPlaceholderMessageTestController implements TrustedCallbackInterface
    * @return array
    *   A renderable array containing the message.
    */
-  public static function setAndLogMessage($message) {
+  public static function setAndLogMessage(string $message) {
     // Ensure that messages are rendered last even when earlier placeholders
     // suspend the Fiber, this will cause BigPipe::renderPlaceholders() to loop
     // around all of the fibers before resuming this one, then finally rendering

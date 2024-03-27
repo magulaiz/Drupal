@@ -131,7 +131,7 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Typed
    *
    * @return \Drupal\Core\TypedData\TypedDataInterface
    */
-  protected function createElement($definition, $value, $key) {
+  protected function createElement($definition, $value, string $key) {
     return $this->getTypedDataManager()->create($definition, $value, $key, $this);
   }
 
@@ -148,7 +148,7 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Typed
    *
    * @return \Drupal\Core\TypedData\DataDefinitionInterface
    */
-  protected function buildDataDefinition($definition, $value, $key) {
+  protected function buildDataDefinition($definition, $value, string $key) {
     return $this->getTypedDataManager()->buildDataDefinition($definition, $value, $key, $this);
   }
 

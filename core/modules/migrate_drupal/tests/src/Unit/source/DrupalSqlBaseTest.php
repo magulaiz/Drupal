@@ -115,7 +115,7 @@ class DrupalSqlBaseTest extends MigrateTestCase {
    *
    * @dataProvider providerMinimumVersion
    */
-  public function testMinimumVersion($success, $minimum_version, $schema_version) {
+  public function testMinimumVersion($success, $minimum_version, string $schema_version) {
     $this->pluginDefinition['minimum_version'] = $minimum_version;
     $this->databaseContents['system'][0]['status'] = 1;
     $this->databaseContents['system'][0]['schema_version'] = $schema_version;

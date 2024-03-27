@@ -105,7 +105,7 @@ abstract class FormBase implements FormInterface, ContainerInjectionInterface {
    * @return \Drupal\Core\Config\ImmutableConfig
    *   A configuration object.
    */
-  protected function config($name) {
+  protected function config(string $name) {
     return $this->configFactory()->get($name);
   }
 
@@ -208,7 +208,7 @@ abstract class FormBase implements FormInterface, ContainerInjectionInterface {
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   A redirect response object that may be returned by the controller.
    */
-  protected function redirect($route_name, array $route_parameters = [], array $options = [], $status = 302) {
+  protected function redirect(string $route_name, array $route_parameters = [], array $options = [], $status = 302) {
     $options['absolute'] = TRUE;
     return new RedirectResponse(Url::fromRoute($route_name, $route_parameters, $options)->toString(), $status);
   }
@@ -241,7 +241,7 @@ abstract class FormBase implements FormInterface, ContainerInjectionInterface {
    * @return \Psr\Log\LoggerInterface
    *   The logger for the given channel.
    */
-  protected function logger($channel) {
+  protected function logger(string $channel) {
     return $this->getLogger($channel);
   }
 

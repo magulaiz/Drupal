@@ -15,7 +15,7 @@ trait StubTestTrait {
    * @param string $entity_type_id
    *   The entity type we are stubbing.
    */
-  protected function performStubTest($entity_type_id) {
+  protected function performStubTest(string $entity_type_id) {
     $entity_id = $this->createEntityStub($entity_type_id);
     $this->assertNotEmpty($entity_id, 'Stub successfully created');
     // When validateStub fails, it will return an array with the violations.
@@ -31,7 +31,7 @@ trait StubTestTrait {
    * @return int
    *   ID of the created entity.
    */
-  protected function createEntityStub($entity_type_id) {
+  protected function createEntityStub(string $entity_type_id) {
     // Create a dummy migration to pass to the destination plugin.
     $definition = [
       'migration_tags' => ['Stub test'],
@@ -57,7 +57,7 @@ trait StubTestTrait {
    * @return \Drupal\Core\Entity\EntityConstraintViolationListInterface
    *   List of constraint violations identified.
    */
-  protected function validateStub($entity_type_id, $entity_id) {
+  protected function validateStub(string $entity_type_id, string $entity_id) {
     $controller = \Drupal::entityTypeManager()->getStorage($entity_type_id);
     /** @var \Drupal\Core\Entity\ContentEntityInterface $stub_entity */
     $stub_entity = $controller->load($entity_id);

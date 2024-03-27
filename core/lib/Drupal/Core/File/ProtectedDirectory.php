@@ -38,7 +38,7 @@ class ProtectedDirectory {
    * @param bool $private
    *   (optional) Whether the directory is private or public (default).
    */
-  public function __construct($title, $path, $private = FALSE) {
+  public function __construct(string $title, string $path, $private = FALSE) {
     $this->title = $title;
     $this->path = $path;
     $this->private = $private;

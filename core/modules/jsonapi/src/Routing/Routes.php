@@ -78,7 +78,7 @@ class Routes implements ContainerInjectionInterface {
    * @param string $jsonapi_base_path
    *   The JSON:API base path.
    */
-  public function __construct(ResourceTypeRepositoryInterface $resource_type_repository, array $authentication_providers, $jsonapi_base_path) {
+  public function __construct(ResourceTypeRepositoryInterface $resource_type_repository, array $authentication_providers, string $jsonapi_base_path) {
     $this->resourceTypeRepository = $resource_type_repository;
     $this->providerIds = array_keys($authentication_providers);
     assert(is_string($jsonapi_base_path));
@@ -148,7 +148,7 @@ class Routes implements ContainerInjectionInterface {
    * @return \Symfony\Component\Routing\RouteCollection
    *   A collection of routes for the given resource type.
    */
-  protected static function getRoutesForResourceType(ResourceType $resource_type, $path_prefix) {
+  protected static function getRoutesForResourceType(ResourceType $resource_type, string $path_prefix) {
     // Internal resources have no routes.
     if ($resource_type->isInternal()) {
       return new RouteCollection();
@@ -205,7 +205,7 @@ class Routes implements ContainerInjectionInterface {
    * @return \Symfony\Component\Routing\RouteCollection
    *   The route collection.
    */
-  protected static function getFileUploadRoutesForResourceType(ResourceType $resource_type, $path_prefix) {
+  protected static function getFileUploadRoutesForResourceType(ResourceType $resource_type, string $path_prefix) {
     $routes = new RouteCollection();
 
     // Internal resources have no routes; individual routes require locations.
@@ -363,7 +363,7 @@ class Routes implements ContainerInjectionInterface {
    * @return \Symfony\Component\Routing\Route
    *   The entry point route.
    */
-  protected function getEntryPointRoute($path_prefix) {
+  protected function getEntryPointRoute(string $path_prefix) {
     $entry_point = new Route("/{$path_prefix}");
     $entry_point->addDefaults([RouteObjectInterface::CONTROLLER_NAME => EntryPoint::class . '::index']);
     $entry_point->setRequirement('_access', 'TRUE');
@@ -385,7 +385,7 @@ class Routes implements ContainerInjectionInterface {
    * @param mixed $parameter
    *   The parameter's options.
    */
-  protected static function addRouteParameter(Route $route, $name, $parameter) {
+  protected static function addRouteParameter(Route $route, string $name, $parameter) {
     $parameters = $route->getOption('parameters') ?: [];
     $parameters[$name] = $parameter;
     $route->setOption('parameters', $parameters);
@@ -402,7 +402,7 @@ class Routes implements ContainerInjectionInterface {
    * @return string
    *   The generated route name.
    */
-  public static function getRouteName(ResourceType $resource_type, $route_type) {
+  public static function getRouteName(ResourceType $resource_type, string $route_type) {
     return sprintf('jsonapi.%s.%s', $resource_type->getTypeName(), $route_type);
   }
 
@@ -417,7 +417,7 @@ class Routes implements ContainerInjectionInterface {
    * @return string
    *   The generated route name.
    */
-  protected static function getFileUploadRouteName(ResourceType $resource_type, $route_type) {
+  protected static function getFileUploadRouteName(ResourceType $resource_type, string $route_type) {
     return sprintf('jsonapi.%s.%s.%s', $resource_type->getTypeName(), 'file_upload', $route_type);
   }
 

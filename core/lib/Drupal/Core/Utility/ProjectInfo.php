@@ -39,7 +39,7 @@ class ProjectInfo {
    *   (optional) Array of additional elements to be collected from the .info.yml
    *   file. Defaults to array().
    */
-  public function processInfoList(array &$projects, array $list, $project_type, $status, array $additional_elements = []) {
+  public function processInfoList(array &$projects, array $list, string $project_type, $status, array $additional_elements = []) {
     foreach ($list as $file) {
       // Just projects with a matching status should be listed.
       if ($file->status != $status) {

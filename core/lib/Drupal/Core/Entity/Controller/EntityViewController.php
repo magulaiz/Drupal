@@ -128,7 +128,7 @@ class EntityViewController implements ContainerInjectionInterface, TrustedCallba
    *   A render array as expected by
    *   \Drupal\Core\Render\RendererInterface::render().
    */
-  public function view(EntityInterface $_entity, $view_mode = 'full') {
+  public function view(EntityInterface $_entity, string $view_mode = 'full') {
     $page = $this->entityTypeManager
       ->getViewBuilder($_entity->getEntityTypeId())
       ->view($_entity, $view_mode);
@@ -190,7 +190,7 @@ class EntityViewController implements ContainerInjectionInterface, TrustedCallba
    *
    * @see https://www.drupal.org/node/3314346
    */
-  public function viewRevision(EntityInterface $_entity_revision, $view_mode = 'full') {
+  public function viewRevision(EntityInterface $_entity_revision, string $view_mode = 'full') {
     @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\Controller\EntityRevisionViewController instead. See https://www.drupal.org/node/3314346', E_USER_DEPRECATED);
     return $this->view($_entity_revision, $view_mode);
   }

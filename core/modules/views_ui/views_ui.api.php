@@ -28,7 +28,7 @@
  *
  * @see \Drupal\views_ui\ViewUI::renderDisplayTop()
  */
-function hook_views_ui_display_top_alter(&$build, \Drupal\views_ui\ViewUI $view, $display_id) {
+function hook_views_ui_display_top_alter(&$build, \Drupal\views_ui\ViewUI $view, string $display_id) {
   $build['custom']['#markup'] = 'This text should always appear';
 }
 
@@ -50,7 +50,7 @@ function hook_views_ui_display_top_alter(&$build, \Drupal\views_ui\ViewUI $view,
  *
  * @see \Drupal\views_ui\ViewEditForm::getDisplayTab()
  */
-function hook_views_ui_display_tab_alter(&$build, \Drupal\views_ui\ViewUI $view, $display_id) {
+function hook_views_ui_display_tab_alter(&$build, \Drupal\views_ui\ViewUI $view, string $display_id) {
   $build['custom']['#markup'] = 'This text should always appear';
 }
 
@@ -68,7 +68,7 @@ function hook_views_ui_display_tab_alter(&$build, \Drupal\views_ui\ViewUI $view,
  *
  * @see \Drupal\views_ui\ViewUI::renderDisplayTop()
  */
-function hook_views_ui_display_top_links_alter(array &$links, ViewExecutable $view, $display_id) {
+function hook_views_ui_display_top_links_alter(array &$links, ViewExecutable $view, string $display_id) {
   // Put the export link first in the list.
   if (isset($links['export'])) {
     $links = ['export' => $links['export']] + $links;

@@ -61,7 +61,7 @@ class TestDiscovery {
    *   front controller, but may also be decorated; e.g.,
    *   \Symfony\Component\ClassLoader\ApcClassLoader.
    */
-  public function __construct($root, $class_loader) {
+  public function __construct(string $root, $class_loader) {
     $this->root = $root;
     $this->classLoader = $class_loader;
   }
@@ -142,7 +142,7 @@ class TestDiscovery {
    * @todo Remove singular grouping; retain list of groups in 'group' key.
    * @see https://www.drupal.org/node/2296615
    */
-  public function getTestClasses($extension = NULL, array $types = []) {
+  public function getTestClasses(string $extension = NULL, array $types = []) {
     if (!isset($extension) && empty($types)) {
       if (!empty($this->testClasses)) {
         return $this->testClasses;
@@ -207,7 +207,7 @@ class TestDiscovery {
    *   A classmap containing all discovered class files; i.e., a map of
    *   fully-qualified classnames to path names.
    */
-  public function findAllClassFiles($extension = NULL) {
+  public function findAllClassFiles(string $extension = NULL) {
     $classmap = [];
     $namespaces = $this->registerTestNamespaces();
     if (isset($extension)) {
@@ -247,7 +247,7 @@ class TestDiscovery {
    * @todo Limit to '*Test.php' files (~10% less files to reflect/introspect).
    * @see https://www.drupal.org/node/2296635
    */
-  public static function scanDirectory($namespace_prefix, $path) {
+  public static function scanDirectory(string $namespace_prefix, string $path) {
     if (substr($namespace_prefix, -1) !== '\\') {
       throw new \InvalidArgumentException("Namespace prefix for $path must contain a trailing namespace separator.");
     }
@@ -303,7 +303,7 @@ class TestDiscovery {
    * @throws \Drupal\Core\Test\Exception\MissingGroupException
    *   If the class does not have a @group annotation.
    */
-  public static function getTestInfo($classname, $doc_comment = NULL) {
+  public static function getTestInfo(string $classname, string $doc_comment = NULL) {
     if ($doc_comment === NULL) {
       $reflection = new \ReflectionClass($classname);
       $doc_comment = $reflection->getDocComment();
@@ -359,7 +359,7 @@ class TestDiscovery {
    *   The parsed phpDoc summary line. An empty string is returned if no summary
    *   line can be parsed.
    */
-  public static function parseTestClassSummary($doc_comment) {
+  public static function parseTestClassSummary(string $doc_comment) {
     // Normalize line endings.
     $doc_comment = preg_replace('/\r\n|\r/', '\n', $doc_comment);
     // Strip leading and trailing doc block lines.
@@ -387,7 +387,7 @@ class TestDiscovery {
    * @return string|false
    *   The testsuite name or FALSE if its not a phpunit test.
    */
-  public static function getPhpunitTestSuite($classname) {
+  public static function getPhpunitTestSuite(string $classname) {
     if (preg_match('/Drupal\\\\Tests\\\\(\w+)\\\\(\w+)/', $classname, $matches)) {
       // This could be an extension test, in which case the first match will be
       // the extension name. We assume that lower-case strings are module names.

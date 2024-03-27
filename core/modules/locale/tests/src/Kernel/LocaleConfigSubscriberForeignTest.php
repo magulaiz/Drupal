@@ -156,7 +156,7 @@ class LocaleConfigSubscriberForeignTest extends LocaleConfigSubscriberTest {
    * @param string $langcode
    *   The language code.
    */
-  protected function saveLanguageActive($config_name, $key, $value, $langcode) {
+  protected function saveLanguageActive(string $config_name, string $key, string $value, string $langcode) {
     $this
       ->configFactory
       ->getEditable($config_name)

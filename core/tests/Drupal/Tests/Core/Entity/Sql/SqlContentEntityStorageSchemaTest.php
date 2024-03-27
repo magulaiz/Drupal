@@ -1439,7 +1439,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    *   The schema array of the field definition, as returned from
    *   FieldStorageDefinitionInterface::getSchema().
    */
-  public function setUpStorageDefinition($field_name, array $schema) {
+  public function setUpStorageDefinition(string $field_name, array $schema) {
     $this->storageDefinitions[$field_name] = $this->createMock('Drupal\Tests\Core\Field\TestBaseFieldDefinitionInterface');
     $this->storageDefinitions[$field_name]->expects($this->any())
       ->method('isBaseField')

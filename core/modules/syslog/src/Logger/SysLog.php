@@ -112,7 +112,7 @@ class SysLog implements LoggerInterface {
    * @param string $entry
    *   The message to send to syslog function.
    */
-  protected function syslogWrapper($level, $entry) {
+  protected function syslogWrapper($level, string $entry) {
     syslog($level, $entry);
   }
 

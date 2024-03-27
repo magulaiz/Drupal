@@ -178,7 +178,7 @@ class SiteSettingsForm extends FormBase {
    * @return array
    *   An array of form errors keyed by the element name and parents.
    */
-  protected function getDatabaseErrors(array $database, $settings_file) {
+  protected function getDatabaseErrors(array $database, string $settings_file) {
     $errors = install_database_errors($database, $settings_file);
     $form_errors = array_filter($errors, function ($value) {
       // Errors keyed by something other than an integer already are linked to

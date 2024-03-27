@@ -53,7 +53,7 @@ class TwigPhpStorageCache implements CacheInterface {
    * @param string $twig_cache_prefix
    *   A Twig cache file prefix that changes when Twig extensions change.
    */
-  public function __construct(CacheBackendInterface $cache, $twig_cache_prefix) {
+  public function __construct(CacheBackendInterface $cache, string $twig_cache_prefix) {
     $this->cache = $cache;
     $this->templateCacheFilenamePrefix = $twig_cache_prefix;
   }

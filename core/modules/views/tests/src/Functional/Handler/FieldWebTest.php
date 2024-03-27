@@ -177,7 +177,7 @@ class FieldWebTest extends ViewTestBase {
    * @return array
    *   An array containing simplexml objects.
    */
-  protected function parseContent($content) {
+  protected function parseContent(string $content) {
     $htmlDom = Html::load($content);
     $elements = simplexml_import_dom($htmlDom);
 
@@ -201,7 +201,7 @@ class FieldWebTest extends ViewTestBase {
    *   format and return values see the SimpleXML documentation,
    *   http://php.net/manual/function.simplexml-element-xpath.php.
    */
-  protected function xpathContent($content, $xpath, array $arguments = []) {
+  protected function xpathContent(string $content, string $xpath, array $arguments = []) {
     if ($elements = $this->parseContent($content)) {
       $xpath = $this->assertSession()->buildXPathQuery($xpath, $arguments);
       $result = $elements->xpath($xpath);

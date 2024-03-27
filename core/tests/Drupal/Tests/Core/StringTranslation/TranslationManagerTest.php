@@ -77,7 +77,7 @@ class TranslationManagerTest extends UnitTestCase {
    *
    * @dataProvider providerTestTranslatePlaceholder
    */
-  public function testTranslatePlaceholder($string, array $args, $expected_string) {
+  public function testTranslatePlaceholder(string $string, array $args, string $expected_string) {
     $actual = $this->translationManager->translate($string, $args);
     $this->assertInstanceOf(MarkupInterface::class, $actual);
     $this->assertEquals($expected_string, (string) $actual);

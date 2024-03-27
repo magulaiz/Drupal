@@ -516,7 +516,7 @@ class HelpSearch extends SearchPluginBase implements AccessibleInterface, Search
    * @return \Drupal\help\SearchableHelpInterface|false
    *   Plugin object, or FALSE if it is not searchable.
    */
-  protected function getSectionPlugin($section_plugin_id) {
+  protected function getSectionPlugin(string $section_plugin_id) {
     /** @var \Drupal\help\HelpSectionPluginInterface $section_plugin */
     $section_plugin = $this->helpSectionManager->createInstance($section_plugin_id);
     // Intentionally return boolean to allow caching of results.

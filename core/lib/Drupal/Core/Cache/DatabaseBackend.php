@@ -88,7 +88,7 @@ class DatabaseBackend implements CacheBackendInterface {
   public function __construct(
     Connection $connection,
     CacheTagsChecksumInterface $checksum_provider,
-    $bin,
+    string $bin,
     protected ObjectAwareSerializationInterface $serializer,
     protected TimeInterface $time,
     $max_rows = NULL,
@@ -480,7 +480,7 @@ class DatabaseBackend implements CacheBackendInterface {
    * @return string
    *   An ASCII-encoded cache ID that is at most 255 characters long.
    */
-  protected function normalizeCid($cid) {
+  protected function normalizeCid(string $cid) {
     // Nothing to do if the ID is a US ASCII string of 255 characters or less.
     $cid_is_ascii = mb_check_encoding($cid, 'ASCII');
     if (strlen($cid) <= 255 && $cid_is_ascii) {

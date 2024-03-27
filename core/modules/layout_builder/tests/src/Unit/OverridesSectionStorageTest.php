@@ -88,7 +88,7 @@ class OverridesSectionStorageTest extends UnitTestCase {
    * @param array $defaults
    *   The defaults to pass to ::extractEntityFromRoute().
    */
-  public function testExtractEntityFromRoute($success, $expected_entity_type_id, $value, array $defaults) {
+  public function testExtractEntityFromRoute($success, $expected_entity_type_id, string $value, array $defaults) {
     if ($expected_entity_type_id) {
       $entity_without_layout = $this->prophesize(FieldableEntityInterface::class);
       $entity_without_layout->hasField(OverridesSectionStorage::FIELD_NAME)->willReturn(FALSE);

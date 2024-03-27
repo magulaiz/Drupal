@@ -38,7 +38,7 @@ trait EntityDeleteFormTrait {
    * @return \Psr\Log\LoggerInterface
    *   The logger for this channel.
    */
-  abstract protected function logger($channel);
+  abstract protected function logger(string $channel);
 
   /**
    * {@inheritdoc}

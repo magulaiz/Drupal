@@ -156,7 +156,7 @@ class UserRegistrationRestTest extends ResourceTestBase {
    * @return array
    *   Return the request body.
    */
-  protected function createRequestBody($name, $include_password = TRUE, $include_email = TRUE) {
+  protected function createRequestBody(string $name, $include_password = TRUE, $include_email = TRUE) {
     $request_body = [
       'langcode' => [['value' => 'en']],
       'name' => [['value' => $name]],
@@ -203,7 +203,7 @@ class UserRegistrationRestTest extends ResourceTestBase {
    * @return bool|\Drupal\user\Entity\User
    *   Return bool or the user.
    */
-  protected function registerUser($name, $include_password = TRUE, $include_email = TRUE) {
+  protected function registerUser(string $name, $include_password = TRUE, $include_email = TRUE) {
     // Verify that an anonymous user can register.
     $response = $this->registerRequest($name, $include_password, $include_email);
     $this->assertResourceResponse(200, FALSE, $response);
@@ -225,7 +225,7 @@ class UserRegistrationRestTest extends ResourceTestBase {
    * @return \Psr\Http\Message\ResponseInterface
    *   Return the Response.
    */
-  protected function registerRequest($name, $include_password = TRUE, $include_email = TRUE) {
+  protected function registerRequest(string $name, $include_password = TRUE, $include_email = TRUE) {
     $user_register_url = Url::fromRoute('user.register')
       ->setRouteParameter('_format', static::$format);
     $request_body = $this->createRequestBody($name, $include_password, $include_email);

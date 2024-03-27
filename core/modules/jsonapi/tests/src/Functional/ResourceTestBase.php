@@ -632,7 +632,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *
    * @see ::grantPermissionsToTestedRole()
    */
-  abstract protected function setUpAuthorization($method);
+  abstract protected function setUpAuthorization(string $method);
 
   /**
    * Sets up the necessary authorization for handling revisions.
@@ -642,7 +642,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *
    * @see ::testRevisions()
    */
-  protected function setUpRevisionAuthorization($method) {
+  protected function setUpRevisionAuthorization(string $method) {
     assert($method === 'GET', 'Only read operations on revisions are supported.');
     $this->setUpAuthorization($method);
   }
@@ -656,7 +656,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @return string
    *   The error string.
    */
-  protected function getExpectedUnauthorizedAccessMessage($method) {
+  protected function getExpectedUnauthorizedAccessMessage(string $method) {
     $permission = $this->entity->getEntityType()->getAdminPermission();
     if ($permission !== FALSE) {
       return "The '{$permission}' permission is required.";
@@ -849,7 +849,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *   FALSE if that header should be absent. Possible strings: 'MISS', 'HIT'.
    *   Defaults to FALSE.
    */
-  protected function assertResourceErrorResponse($expected_status_code, $expected_message, $via_link, ResponseInterface $response, $pointer = FALSE, $expected_cache_tags = FALSE, $expected_cache_contexts = FALSE, $expected_page_cache_header_value = FALSE, $expected_dynamic_page_cache_header_value = FALSE) {
+  protected function assertResourceErrorResponse($expected_status_code, string $expected_message, $via_link, ResponseInterface $response, $pointer = FALSE, $expected_cache_tags = FALSE, $expected_cache_contexts = FALSE, $expected_page_cache_header_value = FALSE, $expected_dynamic_page_cache_header_value = FALSE) {
     assert(is_null($via_link) || $via_link instanceof Url);
     $expected_error = [];
     if (!empty(Response::$statusTexts[$expected_status_code])) {
@@ -901,7 +901,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @return array
    *   The updated JSON:API document, now invalid.
    */
-  protected function makeNormalizationInvalid(array $document, $entity_key) {
+  protected function makeNormalizationInvalid(array $document, string $entity_key) {
     $entity_type = $this->entity->getEntityType();
     switch ($entity_key) {
       case 'label':
@@ -1269,7 +1269,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *
    * @see \GuzzleHttp\ClientInterface::request()
    */
-  protected function getExpectedCollectionResponse(array $collection, $self_link, array $request_options, array $included_paths = NULL, $filtered = FALSE) {
+  protected function getExpectedCollectionResponse(array $collection, string $self_link, array $request_options, array $included_paths = NULL, $filtered = FALSE) {
     $resource_identifiers = array_map([static::class, 'toResourceIdentifier'], $collection);
     $individual_responses = static::toResourceResponses($this->getResponses(static::getResourceLinks($resource_identifiers), $request_options));
     $merged_response = static::toCollectionResourceResponse($individual_responses, $self_link, TRUE);
@@ -1702,7 +1702,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @return \Drupal\jsonapi\CacheableResourceResponse
    *   The expected ResourceResponse.
    */
-  protected function getExpectedGetRelationshipResponse($relationship_field_name, EntityInterface $entity = NULL) {
+  protected function getExpectedGetRelationshipResponse(string $relationship_field_name, EntityInterface $entity = NULL) {
     $entity = $entity ?: $this->entity;
     $access = AccessResult::neutral()->addCacheContexts($entity->getEntityType()->isRevisionable() ? ['url.query_args:resourceVersion'] : []);
     $access = $access->orIf(static::entityFieldAccess($entity, $this->resourceType->getInternalName($relationship_field_name), 'view', $this->account));
@@ -1740,7 +1740,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @return array
    *   The expected document array.
    */
-  protected function getExpectedGetRelationshipDocument($relationship_field_name, EntityInterface $entity = NULL) {
+  protected function getExpectedGetRelationshipDocument(string $relationship_field_name, EntityInterface $entity = NULL) {
     $entity = $entity ?: $this->entity;
     $entity_type_id = $entity->getEntityTypeId();
     $bundle = $entity->bundle();
@@ -1774,7 +1774,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @return mixed
    *   The expected document data.
    */
-  protected function getExpectedGetRelationshipDocumentData($relationship_field_name, EntityInterface $entity = NULL) {
+  protected function getExpectedGetRelationshipDocumentData(string $relationship_field_name, EntityInterface $entity = NULL) {
     $entity = $entity ?: $this->entity;
     $internal_field_name = $this->resourceType->getInternalName($relationship_field_name);
     /** @var \Drupal\Core\Field\FieldItemListInterface $field */
@@ -1911,7 +1911,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *
    * @see \GuzzleHttp\ClientInterface::request()
    */
-  protected function getExpectedRelatedResponse($relationship_field_name, array $request_options, EntityInterface $entity) {
+  protected function getExpectedRelatedResponse(string $relationship_field_name, array $request_options, EntityInterface $entity) {
     // Get the relationships responses which contain resource identifiers for
     // every related resource.
     $base_resource_identifier = static::toResourceIdentifier($entity);
@@ -3427,7 +3427,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The AccessResult.
    */
-  protected static function entityAccess(EntityInterface $entity, $operation, AccountInterface $account) {
+  protected static function entityAccess(EntityInterface $entity, string $operation, AccountInterface $account) {
     // The default entity access control handler assumes that permissions do not
     // change during the lifetime of a request and caches access results.
     // However, we're changing permissions during a test run and need fresh
@@ -3451,7 +3451,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The AccessResult.
    */
-  protected static function entityFieldAccess(EntityInterface $entity, $field_name, $operation, AccountInterface $account) {
+  protected static function entityFieldAccess(EntityInterface $entity, string $field_name, string $operation, AccountInterface $account) {
     $entity_access = static::entityAccess($entity, $operation === 'edit' ? 'update' : 'view', $account);
     $field_access = $entity->{$field_name}->access($operation, $account, TRUE);
     return $entity_access->andIf($field_access);

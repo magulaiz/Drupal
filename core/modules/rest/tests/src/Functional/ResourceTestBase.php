@@ -188,7 +188,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @return string
    *   The error string.
    */
-  protected function getExpectedUnauthorizedAccessMessage($method) {
+  protected function getExpectedUnauthorizedAccessMessage(string $method) {
     $resource_plugin_id = str_replace('.', ':', static::$resourceConfigId);
     $permission = 'restful ' . strtolower($method) . ' ' . $resource_plugin_id;
     return "The '$permission' permission is required.";
@@ -213,7 +213,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @see ::grantPermissionsToAnonymousRole()
    * @see ::grantPermissionsToAuthenticatedRole()
    */
-  abstract protected function setUpAuthorization($method);
+  abstract protected function setUpAuthorization(string $method);
 
   /**
    * Verifies the error response in case of missing authentication.
@@ -223,7 +223,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @param \Psr\Http\Message\ResponseInterface $response
    *   The response to assert.
    */
-  abstract protected function assertResponseWhenMissingAuthentication($method, ResponseInterface $response);
+  abstract protected function assertResponseWhenMissingAuthentication(string $method, ResponseInterface $response);
 
   /**
    * Asserts normalization-specific edge cases.
@@ -239,7 +239,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @param array $request_options
    *   Request options to apply.
    */
-  abstract protected function assertNormalizationEdgeCases($method, Url $url, array $request_options);
+  abstract protected function assertNormalizationEdgeCases(string $method, Url $url, array $request_options);
 
   /**
    * Asserts authentication provider-specific edge cases.
@@ -255,7 +255,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @param array $request_options
    *   Request options to apply.
    */
-  abstract protected function assertAuthenticationEdgeCases($method, Url $url, array $request_options);
+  abstract protected function assertAuthenticationEdgeCases(string $method, Url $url, array $request_options);
 
   /**
    * Returns the expected cacheability of an unauthorized access response.
@@ -283,7 +283,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *
    * @see \GuzzleHttp\ClientInterface::request()
    */
-  protected function getAuthenticationRequestOptions($method) {
+  protected function getAuthenticationRequestOptions(string $method) {
     return [];
   }
 
@@ -347,7 +347,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *
    * @return \Psr\Http\Message\ResponseInterface
    */
-  protected function request($method, Url $url, array $request_options) {
+  protected function request(string $method, Url $url, array $request_options) {
     $request_options[RequestOptions::HTTP_ERRORS] = FALSE;
     $request_options[RequestOptions::ALLOW_REDIRECTS] = FALSE;
     $request_options = $this->decorateWithXdebugCookie($request_options);
@@ -453,7 +453,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *   FALSE if that header should be absent. Possible strings: 'MISS', 'HIT'.
    *   Defaults to FALSE.
    */
-  protected function assertResourceErrorResponse($expected_status_code, $expected_message, ResponseInterface $response, $expected_cache_tags = FALSE, $expected_cache_contexts = FALSE, $expected_page_cache_header_value = FALSE, $expected_dynamic_page_cache_header_value = FALSE) {
+  protected function assertResourceErrorResponse($expected_status_code, string $expected_message, ResponseInterface $response, $expected_cache_tags = FALSE, $expected_cache_contexts = FALSE, $expected_page_cache_header_value = FALSE, $expected_dynamic_page_cache_header_value = FALSE) {
     $expected_body = ($expected_message !== FALSE) ? $this->serializer->encode(['message' => $expected_message], static::$format) : FALSE;
     $this->assertResourceResponse($expected_status_code, $expected_body, $response, $expected_cache_tags, $expected_cache_contexts, $expected_page_cache_header_value, $expected_dynamic_page_cache_header_value);
   }

@@ -126,7 +126,7 @@ class DatabaseStorage extends StorageBase {
    * @param mixed $value
    *   The data to store.
    */
-  protected function doSet($key, $value) {
+  protected function doSet(string $key, $value) {
     $this->connection->merge($this->table)
       ->keys([
         'name' => $key,
@@ -167,7 +167,7 @@ class DatabaseStorage extends StorageBase {
    * @return bool
    *   TRUE if the data was set, FALSE if it already existed.
    */
-  public function doSetIfNotExists($key, $value) {
+  public function doSetIfNotExists(string $key, $value) {
     $result = $this->connection->merge($this->table)
       ->insertFields([
         'collection' => $this->collection,

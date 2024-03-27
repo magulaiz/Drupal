@@ -62,7 +62,7 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
    * @todo in Drupal 11, move method to Drupal\Core\Session\AccountInterface.
    * @see https://www.drupal.org/node/3228209
    */
-  public function hasRole($rid);
+  public function hasRole(string $rid);
 
   /**
    * Add a role to a user.
@@ -72,7 +72,7 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
    *
    * @return $this
    */
-  public function addRole($rid);
+  public function addRole(string $rid);
 
   /**
    * Remove a role from a user.
@@ -82,7 +82,7 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
    *
    * @return $this
    */
-  public function removeRole($rid);
+  public function removeRole(string $rid);
 
   /**
    * Sets the username of this account.
@@ -93,7 +93,7 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
    * @return $this
    *   The called user entity.
    */
-  public function setUsername($username);
+  public function setUsername(string $username);
 
   /**
    * Returns the hashed password.
@@ -112,7 +112,7 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
    * @return $this
    *   The called user entity.
    */
-  public function setPassword(#[\SensitiveParameter] $password);
+  public function setPassword(#[\SensitiveParameter] string $password);
 
   /**
    * Sets the email address of the user.
@@ -123,7 +123,7 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
    * @return $this
    *   The called user entity.
    */
-  public function setEmail($mail);
+  public function setEmail(string $mail);
 
   /**
    * Returns the creation time of the user as a UNIX timestamp.
@@ -213,7 +213,7 @@ interface UserInterface extends ContentEntityInterface, EntityChangedInterface, 
    *
    * @return $this
    */
-  public function setExistingPassword(#[\SensitiveParameter] $password);
+  public function setExistingPassword(#[\SensitiveParameter] string $password);
 
   /**
    * Checks the existing password if set.

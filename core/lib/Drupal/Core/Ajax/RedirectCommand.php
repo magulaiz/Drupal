@@ -23,7 +23,7 @@ class RedirectCommand implements CommandInterface {
    *   The URL that will be loaded into window.location. This should be a full
    *   URL.
    */
-  public function __construct($url) {
+  public function __construct(string $url) {
     $this->url = $url;
   }
 

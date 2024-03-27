@@ -27,7 +27,7 @@ class CryptTest extends TestCase {
    * @param string $expected_hash
    *   Expected result from hashing $data.
    */
-  public function testHashBase64($data, $expected_hash) {
+  public function testHashBase64(string $data, string $expected_hash) {
     $hash = Crypt::hashBase64($data);
     $this->assertEquals($expected_hash, $hash, 'The correct hash was not calculated.');
   }
@@ -45,7 +45,7 @@ class CryptTest extends TestCase {
    * @param string $expected_hmac
    *   Expected result from hashing $data using $key.
    */
-  public function testHmacBase64($data, $key, $expected_hmac) {
+  public function testHmacBase64(string $data, string $key, string $expected_hmac) {
     $hmac = Crypt::hmacBase64($data, $key);
     $this->assertEquals($expected_hmac, $hmac, 'The correct hmac was not calculated.');
   }
@@ -61,7 +61,7 @@ class CryptTest extends TestCase {
    * @param string $key
    *   Key to use in hashing process.
    */
-  public function testHmacBase64Invalid($data, $key) {
+  public function testHmacBase64Invalid(string $data, string $key) {
     $this->expectException('InvalidArgumentException');
     Crypt::hmacBase64($data, $key);
   }

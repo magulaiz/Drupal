@@ -91,7 +91,7 @@ interface FieldableEntityInterface extends EntityInterface {
    * @todo WARNING: This method will be changed in
    *   https://www.drupal.org/node/2346347.
    */
-  public static function bundleFieldDefinitions(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions);
+  public static function bundleFieldDefinitions(EntityTypeInterface $entity_type, string $bundle, array $base_field_definitions);
 
   /**
    * Determines whether the entity has a field with the given name.
@@ -102,7 +102,7 @@ interface FieldableEntityInterface extends EntityInterface {
    * @return bool
    *   TRUE if the entity has a field with the given name. FALSE otherwise.
    */
-  public function hasField($field_name);
+  public function hasField(string $field_name);
 
   /**
    * Gets the definition of a contained field.
@@ -113,7 +113,7 @@ interface FieldableEntityInterface extends EntityInterface {
    * @return \Drupal\Core\Field\FieldDefinitionInterface|null
    *   The definition of the field or null if the field does not exist.
    */
-  public function getFieldDefinition($name);
+  public function getFieldDefinition(string $name);
 
   /**
    * Gets an array of field definitions of all contained fields.
@@ -148,7 +148,7 @@ interface FieldableEntityInterface extends EntityInterface {
    * @throws \InvalidArgumentException
    *   If an invalid field name is given.
    */
-  public function get($field_name);
+  public function get(string $field_name);
 
   /**
    * Sets a field value.
@@ -167,7 +167,7 @@ interface FieldableEntityInterface extends EntityInterface {
    * @throws \InvalidArgumentException
    *   If the specified field does not exist.
    */
-  public function set($field_name, $value, $notify = TRUE);
+  public function set(string $field_name, $value, $notify = TRUE);
 
   /**
    * Gets an array of all field item lists.
@@ -207,7 +207,7 @@ interface FieldableEntityInterface extends EntityInterface {
    *   - The language of a translation.
    *   - The value of the flag identifying the default translation object.
    */
-  public function onChange($field_name);
+  public function onChange(string $field_name);
 
   /**
    * Validates the currently set values.

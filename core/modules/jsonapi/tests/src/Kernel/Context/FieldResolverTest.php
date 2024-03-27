@@ -129,7 +129,7 @@ class FieldResolverTest extends JsonapiKernelTestBase {
    * @covers ::resolveInternalIncludePath
    * @dataProvider resolveInternalIncludePathErrorProvider
    */
-  public function testResolveInternalIncludePathError($entity_type, $bundle, $external_path, $expected_message = '') {
+  public function testResolveInternalIncludePathError(string $entity_type, string $bundle, string $external_path, string $expected_message = '') {
     $path_parts = explode('.', $external_path);
     $this->expectException(CacheableBadRequestHttpException::class);
     if (!empty($expected_message)) {
@@ -253,7 +253,7 @@ class FieldResolverTest extends JsonapiKernelTestBase {
    * @covers ::resolveInternalEntityQueryPath
    * @dataProvider resolveInternalEntityQueryPathErrorProvider
    */
-  public function testResolveInternalEntityQueryPathError($entity_type, $bundle, $external_path, $expected_message = '') {
+  public function testResolveInternalEntityQueryPathError(string $entity_type, string $bundle, string $external_path, string $expected_message = '') {
     $this->expectException(CacheableBadRequestHttpException::class);
     if (!empty($expected_message)) {
       $this->expectExceptionMessage($expected_message);
@@ -352,7 +352,7 @@ class FieldResolverTest extends JsonapiKernelTestBase {
    * @param string $name
    *   The name of the bundle to create.
    */
-  protected function makeBundle($name) {
+  protected function makeBundle(string $name) {
     EntityTestBundle::create([
       'id' => $name,
     ])->save();
@@ -374,7 +374,7 @@ class FieldResolverTest extends JsonapiKernelTestBase {
    * @param array $config_settings
    *   Custom configuration settings for the field.
    */
-  protected function makeField($type, $name, $entity_type, array $bundles, array $storage_settings = [], array $config_settings = []) {
+  protected function makeField(string $type, string $name, string $entity_type, array $bundles, array $storage_settings = [], array $config_settings = []) {
     $storage_config = [
       'field_name' => $name,
       'type' => $type,

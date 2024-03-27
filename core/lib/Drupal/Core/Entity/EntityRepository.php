@@ -240,7 +240,7 @@ class EntityRepository implements EntityRepositoryInterface {
    *   just the latest revision, if the specified entity is not translatable or
    *   does not have a matching translation yet.
    */
-  protected function getLatestTranslationAffectedRevision(RevisionableInterface $entity, $langcode) {
+  protected function getLatestTranslationAffectedRevision(RevisionableInterface $entity, string $langcode) {
     $revision = NULL;
     $storage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
 
@@ -286,7 +286,7 @@ class EntityRepository implements EntityRepositoryInterface {
    * @return \Drupal\Core\Entity\RevisionableInterface
    *   An entity revision object.
    */
-  protected function loadRevision(RevisionableInterface $entity, $revision_id) {
+  protected function loadRevision(RevisionableInterface $entity, string $revision_id) {
     // We explicitly perform a loose equality check, since a revision ID may be
     // returned as an integer or a string.
     if ($entity->getLoadedRevisionId() != $revision_id) {

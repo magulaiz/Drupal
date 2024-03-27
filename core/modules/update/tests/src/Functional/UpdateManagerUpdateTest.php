@@ -192,7 +192,7 @@ class UpdateManagerUpdateTest extends UpdateTestBase {
    *   - 'recommended': The recommended version.
    *   - 'range': The versions of Drupal core required for that version.
    */
-  public function testIncompatibleUpdatesTable($core_fixture, $a_fixture, $b_fixture, array $compatible, array $incompatible) {
+  public function testIncompatibleUpdatesTable(string $core_fixture, string $a_fixture, string $b_fixture, array $compatible, array $incompatible) {
 
     $assert_session = $this->assertSession();
     $compatible_table_locator = '[data-drupal-selector="edit-projects"]';
@@ -318,7 +318,7 @@ class UpdateManagerUpdateTest extends UpdateTestBase {
    *   Array of expected header texts, keyed by CSS selectors relative to the
    *   thead tr (for example, "th:nth-of-type(3)").
    */
-  private function checkTableHeaders($table_locator, array $expected_headers) {
+  private function checkTableHeaders(string $table_locator, array $expected_headers) {
     $assert_session = $this->assertSession();
     $assert_session->elementExists('css', $table_locator);
     foreach ($expected_headers as $locator => $header) {

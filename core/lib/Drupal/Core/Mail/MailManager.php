@@ -225,7 +225,7 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
    *
    * @see \Drupal\Core\Mail\MailManagerInterface::mail()
    */
-  public function doMail($module, $key, $to, $langcode, $params = [], $reply = NULL, $send = TRUE) {
+  public function doMail(string $module, string $key, string $to, string $langcode, $params = [], $reply = NULL, $send = TRUE) {
     $site_config = $this->configFactory->get('system.site');
     $site_mail = $site_config->get('mail');
     if (empty($site_mail)) {

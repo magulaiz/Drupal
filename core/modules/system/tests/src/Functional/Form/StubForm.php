@@ -36,7 +36,7 @@ class StubForm extends FormBase {
    * @param array $form
    *   The form array.
    */
-  public function __construct($form_id, $form) {
+  public function __construct(string $form_id, $form) {
     $this->formId = $form_id;
     $this->form = $form;
   }

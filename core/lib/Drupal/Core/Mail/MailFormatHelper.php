@@ -51,7 +51,7 @@ class MailFormatHelper {
    * @return string
    *   The content of the email as a string with formatting applied.
    */
-  public static function wrapMail($text, $indent = '') {
+  public static function wrapMail(string $text, string $indent = '') {
     // Convert CRLF into LF.
     $text = str_replace("\r", '', $text);
     // See if soft-wrapping is allowed.
@@ -102,7 +102,7 @@ class MailFormatHelper {
    * @return string
    *   The transformed string.
    */
-  public static function htmlToText($string, $allowed_tags = NULL) {
+  public static function htmlToText(string $string, $allowed_tags = NULL) {
     // Cache list of supported tags.
     if (empty(static::$supportedTags)) {
       static::$supportedTags = ['a', 'em', 'i', 'strong', 'b', 'br', 'p',
@@ -370,7 +370,7 @@ class MailFormatHelper {
    *
    * @see \Drupal\Core\Mail\MailFormatHelper::htmlToText()
    */
-  protected static function htmlToTextPad($text, $pad, $prefix = '') {
+  protected static function htmlToTextPad(string $text, string $pad, string $prefix = '') {
     // Remove last line break.
     $text = substr($text, 0, -1);
     // Calculate needed padding space and add it.

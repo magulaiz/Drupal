@@ -40,7 +40,7 @@ interface PhpStreamWrapperInterface {
    * @see opendir()
    * @see http://php.net/manual/en/streamwrapper.dir-opendir.php
    */
-  public function dir_opendir($path, $options);
+  public function dir_opendir(string $path, $options);
 
   /**
    * Read entry from directory handle.
@@ -98,7 +98,7 @@ interface PhpStreamWrapperInterface {
    * @see PhpStreamWrapperInterface::rmdir()
    * @see http://php.net/manual/en/streamwrapper.mkdir.php
    */
-  public function mkdir($path, $mode, $options);
+  public function mkdir(string $path, $mode, $options);
 
   /**
    * Renames a file or directory.
@@ -123,7 +123,7 @@ interface PhpStreamWrapperInterface {
    * @see rename()
    * @see http://php.net/manual/en/streamwrapper.rename.php
    */
-  public function rename($path_from, $path_to);
+  public function rename(string $path_from, string $path_to);
 
   /**
    * Removes a directory.
@@ -149,7 +149,7 @@ interface PhpStreamWrapperInterface {
    * @see PhpStreamWrapperInterface::unlink()
    * @see http://php.net/manual/en/streamwrapper.rmdir.php
    */
-  public function rmdir($path, $options);
+  public function rmdir(string $path, $options);
 
   /**
    * Retrieve the underlying stream resource.
@@ -276,7 +276,7 @@ interface PhpStreamWrapperInterface {
    *
    * @see http://php.net/manual/streamwrapper.stream-metadata.php
    */
-  public function stream_metadata($path, $option, $value);
+  public function stream_metadata(string $path, $option, $value);
 
   /**
    * Opens file or URL.
@@ -315,7 +315,7 @@ interface PhpStreamWrapperInterface {
    * @see parse_url()
    * @see http://php.net/manual/en/streamwrapper.stream-open.php
    */
-  public function stream_open($path, $mode, $options, &$opened_path);
+  public function stream_open(string $path, string $mode, $options, string &$opened_path);
 
   /**
    * Read from stream.
@@ -468,7 +468,7 @@ interface PhpStreamWrapperInterface {
    * @see fwrite()
    * @see http://php.net/manual/en/streamwrapper.stream-write.php
    */
-  public function stream_write($data);
+  public function stream_write(string $data);
 
   /**
    * Delete a file.
@@ -491,7 +491,7 @@ interface PhpStreamWrapperInterface {
    * @see PhpStreamWrapperInterface::rmdir()
    * @see http://php.net/manual/en/streamwrapper.unlink.php
    */
-  public function unlink($path);
+  public function unlink(string $path);
 
   /**
    * Retrieve information about a file.
@@ -525,6 +525,6 @@ interface PhpStreamWrapperInterface {
    * @see PhpStreamWrapperInterface::stream_stat()
    * @see http://php.net/manual/en/streamwrapper.url-stat.php
    */
-  public function url_stat($path, $flags);
+  public function url_stat(string $path, $flags);
 
 }

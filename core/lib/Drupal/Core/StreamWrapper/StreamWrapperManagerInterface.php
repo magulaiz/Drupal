@@ -127,7 +127,7 @@ interface StreamWrapperManagerInterface {
    *   (Drupal\Core\StreamWrapper\PublicStream).
    *   FALSE is returned if no registered handler could be found.
    */
-  public function getViaScheme($scheme);
+  public function getViaScheme(string $scheme);
 
   /**
    * Returns a reference to the stream wrapper class responsible for a URI.
@@ -144,7 +144,7 @@ interface StreamWrapperManagerInterface {
    *   "private://example.txt" would return a new private stream wrapper object
    *   (Drupal\Core\StreamWrapper\PrivateStream).
    */
-  public function getViaUri($uri);
+  public function getViaUri(string $uri);
 
   /**
    * Returns the stream wrapper class name for a given scheme.
@@ -155,7 +155,7 @@ interface StreamWrapperManagerInterface {
    * @return string|bool
    *   Return string if a scheme has a registered handler, or FALSE.
    */
-  public function getClass($scheme);
+  public function getClass(string $scheme);
 
   /**
    * Registers stream wrapper with PHP.
@@ -167,7 +167,7 @@ interface StreamWrapperManagerInterface {
    * @param int $type
    *   The type of the stream wrapper.
    */
-  public function registerWrapper($scheme, $class, $type);
+  public function registerWrapper(string $scheme, string $class, $type);
 
   /**
    * Returns the part of a URI after the schema.
@@ -182,7 +182,7 @@ interface StreamWrapperManagerInterface {
    *
    * @see \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::getScheme()
    */
-  public static function getTarget($uri);
+  public static function getTarget(string $uri);
 
   /**
    * Normalizes a URI by making it syntactically correct.
@@ -199,7 +199,7 @@ interface StreamWrapperManagerInterface {
    * @return string
    *   The normalized URI.
    */
-  public function normalizeUri($uri);
+  public function normalizeUri(string $uri);
 
   /**
    * Returns the scheme of a URI (e.g. a stream).
@@ -213,7 +213,7 @@ interface StreamWrapperManagerInterface {
    *
    * @see \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface::getTarget()
    */
-  public static function getScheme($uri);
+  public static function getScheme(string $uri);
 
   /**
    * Checks that the scheme of a stream URI is valid.
@@ -229,7 +229,7 @@ interface StreamWrapperManagerInterface {
    *   Returns TRUE if the string is the name of a validated stream, or FALSE if
    *   the scheme does not have a registered handler.
    */
-  public function isValidScheme($scheme);
+  public function isValidScheme(string $scheme);
 
   /**
    * Determines whether the URI has a valid scheme for file API operations.
@@ -244,6 +244,6 @@ interface StreamWrapperManagerInterface {
    * @return bool
    *   TRUE if the URI is valid.
    */
-  public function isValidUri($uri);
+  public function isValidUri(string $uri);
 
 }

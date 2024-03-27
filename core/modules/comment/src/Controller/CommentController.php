@@ -211,7 +211,7 @@ class CommentController extends ControllerBase {
    *
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
-  public function getReplyForm(Request $request, EntityInterface $entity, $field_name, $pid = NULL) {
+  public function getReplyForm(Request $request, EntityInterface $entity, string $field_name, $pid = NULL) {
     $account = $this->currentUser();
     $build = [];
 
@@ -269,7 +269,7 @@ class CommentController extends ControllerBase {
    *
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
-  public function replyFormAccess(EntityInterface $entity, $field_name, $pid = NULL) {
+  public function replyFormAccess(EntityInterface $entity, string $field_name, $pid = NULL) {
     // Check if entity and field exists.
     $fields = $this->commentManager->getFields($entity->getEntityTypeId());
     if (empty($fields[$field_name])) {

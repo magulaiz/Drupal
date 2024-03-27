@@ -200,7 +200,7 @@ class UnroutedUrlAssemblerTest extends UnitTestCase {
    * @param string $subdir
    *   The wanted subdir.
    */
-  protected function setupRequestStack($subdir) {
+  protected function setupRequestStack(string $subdir) {
     $server = [];
     if ($subdir) {
       // Setup a fake request which looks like a Drupal installed under the

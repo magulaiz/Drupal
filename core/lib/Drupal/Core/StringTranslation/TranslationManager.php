@@ -126,7 +126,7 @@ class TranslationManager implements TranslationInterface, TranslatorInterface {
    * @return string
    *   The translated string.
    */
-  protected function doTranslate($string, array $options = []) {
+  protected function doTranslate(string $string, array $options = []) {
     // If a NULL langcode has been provided, unset it.
     if (!isset($options['langcode']) && array_key_exists('langcode', $options)) {
       unset($options['langcode']);
@@ -154,7 +154,7 @@ class TranslationManager implements TranslationInterface, TranslatorInterface {
    * @param string $langcode
    *   A language code.
    */
-  public function setDefaultLangcode($langcode) {
+  public function setDefaultLangcode(string $langcode) {
     $this->defaultLangcode = $langcode;
   }
 

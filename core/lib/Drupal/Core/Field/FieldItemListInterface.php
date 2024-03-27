@@ -44,7 +44,7 @@ interface FieldItemListInterface extends ListInterface, AccessibleInterface {
    * @param string $langcode
    *   The langcode.
    */
-  public function setLangcode($langcode);
+  public function setLangcode(string $langcode);
 
   /**
    * Gets the langcode of the field values held in the object.
@@ -79,7 +79,7 @@ interface FieldItemListInterface extends ListInterface, AccessibleInterface {
    * @return mixed
    *   The setting value.
    */
-  public function getSetting($setting_name);
+  public function getSetting(string $setting_name);
 
   /**
    * Contains the default access logic of this field.
@@ -295,6 +295,6 @@ interface FieldItemListInterface extends ListInterface, AccessibleInterface {
    * @return bool
    *   TRUE if the field has relevant changes, FALSE if not.
    */
-  public function hasAffectingChanges(FieldItemListInterface $original_items, $langcode);
+  public function hasAffectingChanges(FieldItemListInterface $original_items, string $langcode);
 
 }

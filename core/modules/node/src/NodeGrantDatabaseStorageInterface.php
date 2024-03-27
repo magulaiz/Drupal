@@ -45,7 +45,7 @@ interface NodeGrantDatabaseStorageInterface {
    * @return int
    *   Status of the access check.
    */
-  public function alterQuery($query, array $tables, $operation, AccountInterface $account, $base_table);
+  public function alterQuery($query, array $tables, string $operation, AccountInterface $account, string $base_table);
 
   /**
    * Writes a list of grants to the database, deleting previously saved ones.
@@ -74,7 +74,7 @@ interface NodeGrantDatabaseStorageInterface {
    *   purposes, and assumes the caller has already performed a mass delete of
    *   some form. Defaults to TRUE.
    */
-  public function write(NodeInterface $node, array $grants, $realm = NULL, $delete = TRUE);
+  public function write(NodeInterface $node, array $grants, string $realm = NULL, $delete = TRUE);
 
   /**
    * Deletes all node access entries.
@@ -105,7 +105,7 @@ interface NodeGrantDatabaseStorageInterface {
    * @see hook_node_access_records()
    * @see \Drupal\node\NodeGrantDatabaseStorageInterface::writeDefault()
    */
-  public function access(NodeInterface $node, $operation, AccountInterface $account);
+  public function access(NodeInterface $node, string $operation, AccountInterface $account);
 
   /**
    * Counts available node grants.

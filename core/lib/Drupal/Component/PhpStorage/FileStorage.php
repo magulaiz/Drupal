@@ -69,7 +69,7 @@ class FileStorage implements PhpStorageInterface {
    * @param int $mode
    *   The mode, permissions, the directory should have.
    */
-  protected function ensureDirectory($directory, $mode = 0777) {
+  protected function ensureDirectory(string $directory, $mode = 0777) {
     if ($this->createDirectory($directory, $mode)) {
       FileSecurity::writeHtaccess($directory);
     }
@@ -92,7 +92,7 @@ class FileStorage implements PhpStorageInterface {
    * @return bool
    *   TRUE if the directory exists or has been created, FALSE otherwise.
    */
-  protected function createDirectory($directory, $mode = 0777) {
+  protected function createDirectory(string $directory, $mode = 0777) {
     // If the directory exists already, there's nothing to do.
     if (is_dir($directory)) {
       return TRUE;
@@ -173,7 +173,7 @@ class FileStorage implements PhpStorageInterface {
    *   TRUE for success or if path does not exist, FALSE in the event of an
    *   error.
    */
-  protected function unlink($path) {
+  protected function unlink(string $path) {
     if (file_exists($path)) {
       if (is_dir($path)) {
         // Ensure the folder is writable.

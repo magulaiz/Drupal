@@ -515,7 +515,7 @@ class GDToolkit extends ImageToolkitBase {
    *
    * @see image_type_to_extension()
    */
-  public function extensionToImageType($extension) {
+  public function extensionToImageType(string $extension) {
     if (in_array($extension, ['jpe', 'jpg'])) {
       $extension = 'jpeg';
     }

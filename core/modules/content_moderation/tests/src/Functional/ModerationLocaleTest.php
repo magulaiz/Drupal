@@ -554,7 +554,7 @@ class ModerationLocaleTest extends ModerationStateTestBase {
    * @return \Drupal\node\NodeInterface|null
    *   A node object if a new one is being created, NULL otherwise.
    */
-  protected function submitNodeForm($title, $moderation_state, $default_translation = FALSE, $langcode = 'en') {
+  protected function submitNodeForm(string $title, string $moderation_state, $default_translation = FALSE, $langcode = 'en') {
     $is_new = str_contains($this->getSession()->getCurrentUrl(), '/node/add/');
     $edit = [
       'title[0][value]' => $title,
@@ -582,7 +582,7 @@ class ModerationLocaleTest extends ModerationStateTestBase {
    * @return \Drupal\node\NodeInterface
    *   The node translation object.
    */
-  protected function loadTranslation(NodeInterface $node, $langcode) {
+  protected function loadTranslation(NodeInterface $node, string $langcode) {
     /** @var \Drupal\node\NodeStorageInterface $storage */
     $storage = $this->container->get('entity_type.manager')->getStorage('node');
     // Explicitly invalidate the cache for that node, as the call below is

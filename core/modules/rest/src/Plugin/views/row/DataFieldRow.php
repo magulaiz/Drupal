@@ -169,7 +169,7 @@ class DataFieldRow extends RowPluginBase {
    * @return string
    *   The matches user entered alias, or the original ID if nothing is found.
    */
-  public function getFieldKeyAlias($id) {
+  public function getFieldKeyAlias(string $id) {
     if (isset($this->replacementAliases[$id])) {
       return $this->replacementAliases[$id];
     }
@@ -188,7 +188,7 @@ class DataFieldRow extends RowPluginBase {
    * @return array
    *   A regular one dimensional array of values.
    */
-  protected static function extractFromOptionsArray($key, $options) {
+  protected static function extractFromOptionsArray(string $key, $options) {
     return array_map(function ($item) use ($key) {
       return $item[$key] ?? NULL;
     }, $options);

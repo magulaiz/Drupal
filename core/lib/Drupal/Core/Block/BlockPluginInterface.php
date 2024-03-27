@@ -90,7 +90,7 @@ interface BlockPluginInterface extends ConfigurableInterface, DependentPluginInt
    *
    * @see \Drupal\Component\Plugin\PluginBase::$configuration
    */
-  public function setConfigurationValue($key, $value);
+  public function setConfigurationValue(string $key, $value);
 
   /**
    * Returns the configuration form elements specific to this block plugin.

@@ -24,7 +24,7 @@ trait ModuleDependencyMessageTrait {
    * @return string|null
    *   NULL if compatible, otherwise a string describing the incompatibility.
    */
-  public function checkDependencyMessage(array $modules, $dependency, Dependency $dependency_object) {
+  public function checkDependencyMessage(array $modules, string $dependency, Dependency $dependency_object) {
     if (!isset($modules[$dependency])) {
       return $this->t('@module_name (<span class="admin-missing">missing</span>)', ['@module_name' => $dependency]);
     }

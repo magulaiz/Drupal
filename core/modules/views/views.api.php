@@ -719,7 +719,7 @@ function hook_views_form_substitutions() {
  *
  * @see \Drupal\views\ViewExecutable
  */
-function hook_views_pre_view(ViewExecutable $view, $display_id, array &$args) {
+function hook_views_pre_view(ViewExecutable $view, string $display_id, array &$args) {
 
   // Modify contextual filters for my_special_view if user has 'my special permission'.
   $account = \Drupal::currentUser();

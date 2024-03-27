@@ -47,7 +47,7 @@ class DisplayFeedTest extends UITestBase {
    * @param string $view_name
    *   The view name to check against.
    */
-  protected function checkFeedViewUi($view_name) {
+  protected function checkFeedViewUi(string $view_name) {
     $this->drupalGet('admin/structure/views');
     // Verify that the page lists the $view_name view.
     // Regression test: ViewListBuilder::getDisplayPaths() did not properly

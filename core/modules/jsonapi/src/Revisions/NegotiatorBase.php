@@ -49,7 +49,7 @@ abstract class NegotiatorBase implements VersionNegotiatorInterface {
    * @throws \Drupal\jsonapi\Revisions\InvalidVersionIdentifierException
    *   When the revision ID is not valid.
    */
-  abstract protected function getRevisionId(EntityInterface $entity, $version_argument);
+  abstract protected function getRevisionId(EntityInterface $entity, string $version_argument);
 
   /**
    * {@inheritdoc}

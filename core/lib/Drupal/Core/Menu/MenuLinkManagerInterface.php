@@ -39,7 +39,7 @@ interface MenuLinkManagerInterface extends PluginManagerInterface {
    * @param string $menu_name
    *   The name of the menu whose links will be deleted or reset.
    */
-  public function deleteLinksInMenu($menu_name);
+  public function deleteLinksInMenu(string $menu_name);
 
   /**
    * Removes a single link definition from the menu tree storage.
@@ -57,7 +57,7 @@ interface MenuLinkManagerInterface extends PluginManagerInterface {
    *   Thrown if the $id is not a valid, existing, plugin ID or if the link
    *   cannot be deleted.
    */
-  public function removeDefinition($id, $persist = TRUE);
+  public function removeDefinition(string $id, $persist = TRUE);
 
   /**
    * Loads multiple plugin instances based on route.
@@ -72,7 +72,7 @@ interface MenuLinkManagerInterface extends PluginManagerInterface {
    * @return \Drupal\Core\Menu\MenuLinkInterface[]
    *   An array of instances keyed by plugin ID.
    */
-  public function loadLinksByRoute($route_name, array $route_parameters = [], $menu_name = NULL);
+  public function loadLinksByRoute(string $route_name, array $route_parameters = [], string $menu_name = NULL);
 
   /**
    * Adds a new menu link definition to the menu tree storage.
@@ -91,7 +91,7 @@ interface MenuLinkManagerInterface extends PluginManagerInterface {
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    *   Thrown when the $id is not valid or is an already existing plugin ID.
    */
-  public function addDefinition($id, array $definition);
+  public function addDefinition(string $id, array $definition);
 
   /**
    * Updates the values for a menu link definition in the menu tree storage.
@@ -116,7 +116,7 @@ interface MenuLinkManagerInterface extends PluginManagerInterface {
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    *   Thrown if the $id is not a valid, existing, plugin ID.
    */
-  public function updateDefinition($id, array $new_definition_values, $persist = TRUE);
+  public function updateDefinition(string $id, array $new_definition_values, $persist = TRUE);
 
   /**
    * Resets the values for a menu link based on the values found by discovery.
@@ -131,7 +131,7 @@ interface MenuLinkManagerInterface extends PluginManagerInterface {
    *   Thrown if the $id is not a valid, existing, plugin ID or if the link
    *   cannot be reset.
    */
-  public function resetLink($id);
+  public function resetLink(string $id);
 
   /**
    * Counts the total number of menu links.
@@ -143,7 +143,7 @@ interface MenuLinkManagerInterface extends PluginManagerInterface {
    *   The number of menu links in the named menu, or in all menus if the
    *   menu name is NULL.
    */
-  public function countMenuLinks($menu_name = NULL);
+  public function countMenuLinks(string $menu_name = NULL);
 
   /**
    * Loads all parent link IDs of a given menu link.
@@ -160,7 +160,7 @@ interface MenuLinkManagerInterface extends PluginManagerInterface {
    *   The first element of the array will be equal to $id, unless $id is not
    *   valid, in which case the return value will be NULL.
    */
-  public function getParentIds($id);
+  public function getParentIds(string $id);
 
   /**
    * Loads all child link IDs of a given menu link, regardless of visibility.
@@ -174,7 +174,7 @@ interface MenuLinkManagerInterface extends PluginManagerInterface {
    *   An unordered array of IDs representing the IDs of all children, or NULL
    *   if the ID is invalid.
    */
-  public function getChildIds($id);
+  public function getChildIds(string $id);
 
   /**
    * Determines if any links use a given menu name.
@@ -185,7 +185,7 @@ interface MenuLinkManagerInterface extends PluginManagerInterface {
    * @return bool
    *   TRUE if any links are present in the named menu, FALSE otherwise.
    */
-  public function menuNameInUse($menu_name);
+  public function menuNameInUse(string $menu_name);
 
   /**
    * Resets any local definition cache. Used for testing.

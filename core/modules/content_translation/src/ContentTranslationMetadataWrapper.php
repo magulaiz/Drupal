@@ -141,7 +141,7 @@ class ContentTranslationMetadataWrapper implements ContentTranslationMetadataWra
    * @param mixed $value
    *   The field value to be set.
    */
-  protected function setFieldOnlyIfTranslatable($field_name, $value) {
+  protected function setFieldOnlyIfTranslatable(string $field_name, $value) {
     if ($this->translation->getFieldDefinition($field_name)->isTranslatable()) {
       $this->translation->set($field_name, $value);
     }

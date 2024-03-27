@@ -30,7 +30,7 @@ abstract class DateElementBase extends FormElement {
    *   A numerically indexed array, containing the minimum and maximum year
    *   described by this pattern.
    */
-  protected static function datetimeRangeYears($string, $date = NULL) {
+  protected static function datetimeRangeYears(string $string, $date = NULL) {
     $datetime = new DrupalDateTime();
     $this_year = $datetime->format('Y');
     [$min_year, $max_year] = explode(':', $string);

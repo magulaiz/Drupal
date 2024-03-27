@@ -269,7 +269,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
    * @param string $theme_name
    *   The name of the theme to be activated.
    */
-  protected function activateTheme($theme_name) {
+  protected function activateTheme(string $theme_name) {
     $this->container->get('theme_installer')->install([$theme_name]);
 
     /** @var \Drupal\Core\Theme\ThemeInitializationInterface $theme_initializer */

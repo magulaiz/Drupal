@@ -322,7 +322,7 @@ class EntityAutocomplete extends Textfield {
    * @return int|null
    *   Value of a matching entity ID, or NULL if none.
    */
-  protected static function matchEntityByTitle(SelectionInterface $handler, $input, array &$element, FormStateInterface $form_state, $strict) {
+  protected static function matchEntityByTitle(SelectionInterface $handler, string $input, array &$element, FormStateInterface $form_state, $strict) {
     $entities_by_bundle = $handler->getReferenceableEntities($input, '=', 6);
     $entities = array_reduce($entities_by_bundle, function ($flattened, $bundle_entities) {
       return $flattened + $bundle_entities;
@@ -404,7 +404,7 @@ class EntityAutocomplete extends Textfield {
    * @return mixed|null
    *   An entity ID or NULL if the input does not contain one.
    */
-  public static function extractEntityIdFromAutocompleteInput($input) {
+  public static function extractEntityIdFromAutocompleteInput(string $input) {
     $match = NULL;
 
     // Take "label (entity id)', match the ID from inside the parentheses.

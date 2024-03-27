@@ -126,7 +126,7 @@ class ProcessField extends ProcessPluginBase implements ContainerFactoryPluginIn
    * @return mixed
    *   The return value from the method called on the field plugin.
    */
-  protected function callMethodOnFieldPlugin(MigrateFieldPluginManagerInterface $field_plugin_manager, $field_type, $method, Row $row) {
+  protected function callMethodOnFieldPlugin(MigrateFieldPluginManagerInterface $field_plugin_manager, string $field_type, string $method, Row $row) {
     $plugin_id = $field_plugin_manager->getPluginIdFromFieldType($field_type, [], $this->migration);
     $plugin_instance = $field_plugin_manager->createInstance($plugin_id, [], $this->migration);
     if (!is_callable([$plugin_instance, $method])) {

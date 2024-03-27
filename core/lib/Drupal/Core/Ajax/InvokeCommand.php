@@ -51,7 +51,7 @@ class InvokeCommand implements CommandInterface {
    * @param array $arguments
    *   An optional array of arguments to pass to the method.
    */
-  public function __construct($selector, $method, array $arguments = []) {
+  public function __construct(string $selector, string $method, array $arguments = []) {
     $this->selector = $selector;
     $this->method = $method;
     $this->arguments = $arguments;

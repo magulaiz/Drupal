@@ -99,7 +99,7 @@ class PublicStream extends LocalStream {
    * @return string
    *   The base path for public:// typically sites/default/files.
    */
-  public static function basePath($site_path = NULL) {
+  public static function basePath(string $site_path = NULL) {
     if ($site_path === NULL) {
       // Find the site path. Kernel service is not always available at this
       // point, but is preferred, when available.

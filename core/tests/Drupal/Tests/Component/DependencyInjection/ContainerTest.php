@@ -1149,7 +1149,7 @@ class MockService {
    * @param string $some_parameter
    *   (optional) An injected parameter.
    */
-  public function __construct($some_other_service = NULL, $some_parameter = NULL) {
+  public function __construct($some_other_service = NULL, string $some_parameter = NULL) {
     if (is_array($some_other_service)) {
       $some_other_service = $some_other_service[0];
     }
@@ -1203,7 +1203,7 @@ class MockService {
    * @param string $some_other_parameter
    *   The setter injected parameter.
    */
-  public function setOtherConfigParameter($some_other_parameter) {
+  public function setOtherConfigParameter(string $some_other_parameter) {
     $this->someOtherParameter = $some_other_parameter;
   }
 
@@ -1228,7 +1228,7 @@ class MockService {
    * @return object
    *   The instantiated service object.
    */
-  public static function getFactoryMethod($class, $arguments = []) {
+  public static function getFactoryMethod(string $class, $arguments = []) {
     $r = new \ReflectionClass($class);
     $service = ($r->getConstructor() === NULL) ? $r->newInstance() : $r->newInstanceArgs($arguments);
 

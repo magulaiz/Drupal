@@ -47,7 +47,7 @@ class Variable {
    * @return string
    *   The variable exported in a way compatible to Drupal's coding standards.
    */
-  public static function export($var, $prefix = '') {
+  public static function export($var, string $prefix = '') {
     if (is_array($var)) {
       if (empty($var)) {
         $output = 'array()';

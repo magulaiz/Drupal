@@ -38,7 +38,7 @@ class SettingsTrayTestBase extends OffCanvasTestBase {
    *   The element that contains the contextual links. If none provide the
    *   $block_selector will be used.
    */
-  protected function openBlockForm($block_selector, $contextual_link_container = '') {
+  protected function openBlockForm(string $block_selector, string $contextual_link_container = '') {
     if (!$contextual_link_container) {
       $contextual_link_container = $block_selector;
     }

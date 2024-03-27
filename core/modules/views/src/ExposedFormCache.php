@@ -26,7 +26,7 @@ class ExposedFormCache {
    * @param array $form_output
    *   The form structure. Only needed when inserting the value.
    */
-  public function setForm($view_id, $display_id, array $form_output) {
+  public function setForm(string $view_id, string $display_id, array $form_output) {
     // Save the form output.
     $views_exposed[$view_id][$display_id] = $form_output;
   }
@@ -42,7 +42,7 @@ class ExposedFormCache {
    * @return array|bool
    *   The form structure, if any, otherwise FALSE.
    */
-  public function getForm($view_id, $display_id) {
+  public function getForm(string $view_id, string $display_id) {
     // Return the form output, if any.
     if (empty($this->cache[$view_id][$display_id])) {
       return FALSE;

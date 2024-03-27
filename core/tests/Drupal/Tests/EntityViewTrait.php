@@ -35,7 +35,7 @@ trait EntityViewTrait {
    *
    * @see \Drupal\Core\Render\RendererInterface::render()
    */
-  protected function buildEntityView(EntityInterface $entity, $view_mode = 'full', $langcode = NULL) {
+  protected function buildEntityView(EntityInterface $entity, string $view_mode = 'full', $langcode = NULL) {
     $ensure_fully_built = function (&$elements) use (&$ensure_fully_built) {
       // If the default values for this element have not been loaded yet, populate
       // them.

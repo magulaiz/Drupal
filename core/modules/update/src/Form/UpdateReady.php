@@ -58,7 +58,7 @@ class UpdateReady extends FormBase {
    * @param string $site_path
    *   The site path.
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, StateInterface $state, $site_path) {
+  public function __construct(string $root, ModuleHandlerInterface $module_handler, StateInterface $state, string $site_path) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->state = $state;

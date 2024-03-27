@@ -338,7 +338,7 @@ abstract class Connection {
    * @param string $prefix
    *   A single prefix.
    */
-  protected function setPrefix($prefix) {
+  protected function setPrefix(string $prefix) {
     assert(is_string($prefix), 'The \'$prefix\' argument to ' . __METHOD__ . '() must be a string');
     $this->prefix = $prefix;
     $this->tablePlaceholderReplacements = [
@@ -361,7 +361,7 @@ abstract class Connection {
    * @return string
    *   The properly-prefixed string.
    */
-  public function prefixTables($sql) {
+  public function prefixTables(string $sql) {
     return str_replace(['{', '}'], $this->tablePlaceholderReplacements, $sql);
   }
 
@@ -385,7 +385,7 @@ abstract class Connection {
    * @internal
    *   This method should only be called by database API code.
    */
-  public function quoteIdentifiers($sql) {
+  public function quoteIdentifiers(string $sql) {
     return str_replace(['[', ']'], $this->identifierQuotes, $sql);
   }
 
@@ -397,7 +397,7 @@ abstract class Connection {
    *
    * @return string
    */
-  public function getFullQualifiedTableName($table) {
+  public function getFullQualifiedTableName(string $table) {
     $options = $this->getConnectionOptions();
     $prefix = $this->getPrefix();
     return $options['database'] . '.' . $prefix . $table;
@@ -500,7 +500,7 @@ abstract class Connection {
    * @param string $target
    *   (optional) The target this connection is for.
    */
-  public function setTarget($target = NULL) {
+  public function setTarget(string $target = NULL) {
     if (!isset($this->target)) {
       $this->target = $target;
     }
@@ -522,7 +522,7 @@ abstract class Connection {
    * @param string $key
    *   The key this connection is for.
    */
-  public function setKey($key) {
+  public function setKey(string $key) {
     if (!isset($this->key)) {
       $this->key = $key;
     }
@@ -613,7 +613,7 @@ abstract class Connection {
    * @return string
    *   A sanitized version of the query comment string.
    */
-  protected function filterComment($comment = '') {
+  protected function filterComment(string $comment = '') {
     // Change semicolons to period to avoid triggering multi-statement check.
     return strtr($comment, ['*' => ' * ', ';' => '.']);
   }
@@ -645,7 +645,7 @@ abstract class Connection {
    *
    * @see \Drupal\Core\Database\Connection::defaultOptions()
    */
-  public function query($query, array $args = [], $options = []) {
+  public function query(string $query, array $args = [], $options = []) {
     assert(is_string($query), 'The \'$query\' argument to ' . __METHOD__ . '() must be a string');
     assert(!isset($options['return']), 'Passing "return" option to query() has no effect. See https://www.drupal.org/node/3185520');
     assert(!isset($options['target']), 'Passing "target" option to query() has no effect. See https://www.drupal.org/node/2993033');
@@ -686,7 +686,7 @@ abstract class Connection {
    *   - A placeholder that does not end in [] is supplied, and the supplied
    *     value is an array.
    */
-  protected function expandArguments(&$query, &$args) {
+  protected function expandArguments(string &$query, &$args) {
     $modified = FALSE;
 
     // If the placeholder indicated the value to use is an array,  we need to
@@ -740,7 +740,7 @@ abstract class Connection {
    * @return string
    *   The name of the class that should be used for this driver.
    */
-  public function getDriverClass($class) {
+  public function getDriverClass(string $class) {
     match($class) {
       'Install\\Tasks',
       'ExceptionHandler',
@@ -844,7 +844,7 @@ abstract class Connection {
    *
    * @see \Drupal\Core\Database\Query\Select
    */
-  public function select($table, $alias = NULL, array $options = []) {
+  public function select($table, string $alias = NULL, array $options = []) {
     assert(is_string($alias) || $alias === NULL, 'The \'$alias\' argument to ' . __METHOD__ . '() must be a string or NULL');
     return new Select($this, $table, $alias, $options);
   }
@@ -865,7 +865,7 @@ abstract class Connection {
    * @see \Drupal\Core\Database\Query\Insert
    * @see \Drupal\Core\Database\Connection::defaultOptions()
    */
-  public function insert($table, array $options = []) {
+  public function insert(string $table, array $options = []) {
     return new Insert($this, $table, $options);
   }
 
@@ -912,7 +912,7 @@ abstract class Connection {
    *
    * @see \Drupal\Core\Database\Query\Merge
    */
-  public function merge($table, array $options = []) {
+  public function merge(string $table, array $options = []) {
     return new Merge($this, $table, $options);
   }
 
@@ -929,7 +929,7 @@ abstract class Connection {
    *
    * @see \Drupal\Core\Database\Query\Upsert
    */
-  abstract public function upsert($table, array $options = []);
+  abstract public function upsert(string $table, array $options = []);
 
   /**
    * Prepares and returns an UPDATE query object.
@@ -947,7 +947,7 @@ abstract class Connection {
    * @see \Drupal\Core\Database\Query\Update
    * @see \Drupal\Core\Database\Connection::defaultOptions()
    */
-  public function update($table, array $options = []) {
+  public function update(string $table, array $options = []) {
     return new Update($this, $table, $options);
   }
 
@@ -967,7 +967,7 @@ abstract class Connection {
    * @see \Drupal\Core\Database\Query\Delete
    * @see \Drupal\Core\Database\Connection::defaultOptions()
    */
-  public function delete($table, array $options = []) {
+  public function delete(string $table, array $options = []) {
     return new Delete($this, $table, $options);
   }
 
@@ -984,7 +984,7 @@ abstract class Connection {
    *
    * @see \Drupal\Core\Database\Query\Truncate
    */
-  public function truncate($table, array $options = []) {
+  public function truncate(string $table, array $options = []) {
     return new Truncate($this, $table, $options);
   }
 
@@ -1009,7 +1009,7 @@ abstract class Connection {
    *
    * @see \Drupal\Core\Database\Query\Condition
    */
-  public function condition($conjunction) {
+  public function condition(string $conjunction) {
     // Creating an instance of the class Drupal\Core\Database\Query\Condition
     // should only be created from the database layer. This will allow database
     // drivers to override the default Condition class.
@@ -1029,7 +1029,7 @@ abstract class Connection {
    * @return string
    *   The sanitized database name.
    */
-  public function escapeDatabase($database) {
+  public function escapeDatabase(string $database) {
     $database = preg_replace('/[^A-Za-z0-9_]+/', '', $database);
     [$start_quote, $end_quote] = $this->identifierQuotes;
     return $start_quote . $database . $end_quote;
@@ -1052,7 +1052,7 @@ abstract class Connection {
    * @see \Drupal\Core\Database\Connection::prefixTables()
    * @see \Drupal\Core\Database\Connection::setPrefix()
    */
-  public function escapeTable($table) {
+  public function escapeTable(string $table) {
     if (!isset($this->escapedTables[$table])) {
       $this->escapedTables[$table] = preg_replace('/[^A-Za-z0-9_.]+/', '', $table);
     }
@@ -1072,7 +1072,7 @@ abstract class Connection {
    * @return string
    *   The sanitized field name.
    */
-  public function escapeField($field) {
+  public function escapeField(string $field) {
     if (!isset($this->escapedFields[$field])) {
       $escaped = preg_replace('/[^A-Za-z0-9_.]+/', '', $field);
       [$start_quote, $end_quote] = $this->identifierQuotes;
@@ -1097,7 +1097,7 @@ abstract class Connection {
    * @return string
    *   The sanitized alias name.
    */
-  public function escapeAlias($field) {
+  public function escapeAlias(string $field) {
     if (!isset($this->escapedAliases[$field])) {
       [$start_quote, $end_quote] = $this->identifierQuotes;
       $this->escapedAliases[$field] = $start_quote . preg_replace('/[^A-Za-z0-9_]+/', '', $field) . $end_quote;
@@ -1130,7 +1130,7 @@ abstract class Connection {
    * @return string
    *   The escaped string.
    */
-  public function escapeLike($string) {
+  public function escapeLike(string $string) {
     return addcslashes($string, '\%_');
   }
 
@@ -1188,7 +1188,7 @@ abstract class Connection {
    *
    * @see \Drupal\Core\Database\Transaction
    */
-  public function startTransaction($name = '') {
+  public function startTransaction(string $name = '') {
     return $this->transactionManager()->push($name);
   }
 
@@ -1216,7 +1216,7 @@ abstract class Connection {
    *   A database query result resource, or NULL if the query was not executed
    *   correctly.
    */
-  abstract public function queryRange($query, $from, $count, array $args = [], array $options = []);
+  abstract public function queryRange(string $query, $from, $count, array $args = [], array $options = []);
 
   /**
    * Returns the type of database driver.
@@ -1284,7 +1284,7 @@ abstract class Connection {
    * @param string $database
    *   The name of the database to create.
    */
-  abstract public function createDatabase($database);
+  abstract public function createDatabase(string $database);
 
   /**
    * Gets any special processing requirements for the condition operator.
@@ -1302,7 +1302,7 @@ abstract class Connection {
    *
    * @see \Drupal\Core\Database\Query\Condition::compile()
    */
-  abstract public function mapConditionOperator($operator);
+  abstract public function mapConditionOperator(string $operator);
 
   /**
    * Quotes a string for use in a query.
@@ -1319,7 +1319,7 @@ abstract class Connection {
    *
    * @see \PDO::quote()
    */
-  public function quote($string, $parameter_type = \PDO::PARAM_STR) {
+  public function quote(string $string, $parameter_type = \PDO::PARAM_STR) {
     return $this->connection->quote($string, $parameter_type);
   }
 
@@ -1372,7 +1372,7 @@ abstract class Connection {
    *
    * @see \Drupal\Core\Database\Database::convertDbUrlToConnectionInfo()
    */
-  public static function createConnectionOptionsFromUrl($url, $root) {
+  public static function createConnectionOptionsFromUrl(string $url, string $root) {
     $url_components = parse_url($url);
     if (!isset($url_components['scheme'], $url_components['host'], $url_components['path'])) {
       throw new \InvalidArgumentException('Minimum requirement: driver://host/database');

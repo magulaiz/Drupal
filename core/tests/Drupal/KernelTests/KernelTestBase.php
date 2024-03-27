@@ -450,7 +450,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * @return \Drupal\Core\Config\Config
    *   The configuration object with original configuration data.
    */
-  protected function config($name) {
+  protected function config(string $name) {
     return $this->container->get('config.factory')->getEditable($name);
   }
 
@@ -762,7 +762,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * @throws \LogicException
    *   If $module is not enabled or the table schema cannot be found.
    */
-  protected function installSchema($module, $tables) {
+  protected function installSchema(string $module, $tables) {
     /** @var \Drupal\Core\Extension\ModuleHandlerInterface $module_handler */
     $module_handler = $this->container->get('module_handler');
     // Database connection schema is technically able to create database tables
@@ -795,7 +795,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * @param string $entity_type_id
    *   The ID of the entity type.
    */
-  protected function installEntitySchema($entity_type_id) {
+  protected function installEntitySchema(string $entity_type_id) {
     $entity_type_manager = \Drupal::entityTypeManager();
     $entity_type = $entity_type_manager->getDefinition($entity_type_id);
     \Drupal::service('entity_type.listener')->onEntityTypeCreate($entity_type);
@@ -961,7 +961,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    *   The value to set. Note that array values are replaced entirely; use
    *   \Drupal\Core\Site\Settings::get() to perform custom merges.
    */
-  protected function setSetting($name, $value) {
+  protected function setSetting(string $name, $value) {
     $settings = Settings::getInstance() ? Settings::getAll() : [];
     $settings[$name] = $value;
     new Settings($settings);
@@ -973,7 +973,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * @param string $profile
    *   The install profile to set.
    */
-  protected function setInstallProfile($profile) {
+  protected function setInstallProfile(string $profile) {
     $this->container->get('config.factory')
       ->getEditable('core.extension')
       ->set('profile', $profile)
@@ -1006,7 +1006,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    *
    * @return array
    */
-  private static function getModulesToEnable($class) {
+  private static function getModulesToEnable(string $class) {
     $modules = [];
     while ($class) {
       if (property_exists($class, 'modules')) {

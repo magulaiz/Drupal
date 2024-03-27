@@ -247,7 +247,7 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
    * @param string $password
    *   The password to log in with.
    */
-  protected function assertRpcLogin($username, $password) {
+  protected function assertRpcLogin(string $username, string $password) {
     $request_body = [
       'name' => $username,
       'pass' => $password,

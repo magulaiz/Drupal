@@ -31,7 +31,7 @@ trait CommonCollectionFilterAccessTestPatternsTrait {
    * @return \Drupal\Core\Entity\EntityInterface
    *   The referencing entity.
    */
-  public function doTestCollectionFilterAccessBasedOnPermissions($label_field_name, $view_permission) {
+  public function doTestCollectionFilterAccessBasedOnPermissions(string $label_field_name, string $view_permission) {
     assert($this instanceof ResourceTestBase);
 
     // Set up data model.
@@ -139,7 +139,7 @@ trait CommonCollectionFilterAccessTestPatternsTrait {
    * @return \Drupal\Core\Entity\EntityInterface
    *   The referencing entity.
    */
-  public function doTestCollectionFilterAccessForPublishableEntities($label_field_name, $view_permission, $admin_permission) {
+  public function doTestCollectionFilterAccessForPublishableEntities(string $label_field_name, string $view_permission, string $admin_permission) {
     assert($this->entity instanceof EntityPublishedInterface);
     $this->assertTrue($this->entity->isPublished());
 

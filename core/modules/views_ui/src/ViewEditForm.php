@@ -710,7 +710,7 @@ class ViewEditForm extends ViewFormBase {
    * @param string $display_id
    *   The display ID of the tab to regenerate.
    */
-  public function rebuildCurrentTab(ViewUI $view, AjaxResponse $response, $display_id) {
+  public function rebuildCurrentTab(ViewUI $view, AjaxResponse $response, string $display_id) {
     $this->displayID = $display_id;
     if (!$view->getExecutable()->setDisplay('default')) {
       return;

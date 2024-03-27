@@ -88,7 +88,7 @@ abstract class RendererBase implements CacheableDependencyInterface {
    * @param string $relationship
    *   (optional) The relationship, used by a field.
    */
-  abstract public function query(QueryPluginBase $query, $relationship = NULL);
+  abstract public function query(QueryPluginBase $query, string $relationship = NULL);
 
   /**
    * Runs before each entity is rendered.

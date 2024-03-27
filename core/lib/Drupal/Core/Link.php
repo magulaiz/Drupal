@@ -72,7 +72,7 @@ class Link implements RenderableInterface {
    *
    * @return static
    */
-  public static function createFromRoute($text, $route_name, $route_parameters = [], $options = []) {
+  public static function createFromRoute($text, string $route_name, $route_parameters = [], $options = []) {
     return new static($text, new Url($route_name, $route_parameters, $options));
   }
 

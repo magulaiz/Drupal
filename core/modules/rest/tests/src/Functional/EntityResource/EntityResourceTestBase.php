@@ -1301,7 +1301,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    * @return array
    *   The updated entity normalization, now invalid.
    */
-  protected function makeNormalizationInvalid(array $normalization, $entity_key) {
+  protected function makeNormalizationInvalid(array $normalization, string $entity_key) {
     $entity_type = $this->entity->getEntityType();
     switch ($entity_key) {
       case 'label':

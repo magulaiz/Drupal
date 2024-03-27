@@ -326,7 +326,7 @@ trait ResourceResponseTestTrait {
    * @return array
    *   An array of link paths, keyed by relationship field name.
    */
-  protected static function getLinkPaths(array $relationship_field_names, $type) {
+  protected static function getLinkPaths(array $relationship_field_names, string $type) {
     assert($type === 'relationship' || $type === 'related');
     return array_reduce($relationship_field_names, function ($link_paths, $relationship_field_name) use ($type) {
       $tail = $type === 'relationship' ? 'self' : $type;
@@ -398,7 +398,7 @@ trait ResourceResponseTestTrait {
    * @return string
    *   The relationship link.
    */
-  protected static function getRelationshipLink(array $resource_identifier, $relationship_field_name) {
+  protected static function getRelationshipLink(array $resource_identifier, string $relationship_field_name) {
     return static::getResourceLink($resource_identifier) . "/relationships/$relationship_field_name";
   }
 
@@ -413,7 +413,7 @@ trait ResourceResponseTestTrait {
    * @return string
    *   The related resource link.
    */
-  protected static function getRelatedLink(array $resource_identifier, $relationship_field_name) {
+  protected static function getRelatedLink(array $resource_identifier, string $relationship_field_name) {
     return static::getResourceLink($resource_identifier) . "/$relationship_field_name";
   }
 
@@ -541,7 +541,7 @@ trait ResourceResponseTestTrait {
    * @return \Drupal\jsonapi\CacheableResourceResponse
    *   The empty collection ResourceResponse.
    */
-  protected function getEmptyCollectionResponse($cardinality, $self_link) {
+  protected function getEmptyCollectionResponse($cardinality, string $self_link) {
     // If the entity type is revisionable, add a resource version cache context.
     $cache_contexts = Cache::mergeContexts([
       // Cache contexts for JSON:API URL query parameters.

@@ -28,7 +28,7 @@ trait DependencyTrait {
    *
    * @return $this
    */
-  protected function addDependency($type, $name) {
+  protected function addDependency(string $type, string $name) {
     if (empty($this->dependencies[$type])) {
       $this->dependencies[$type] = [$name];
       if (count($this->dependencies) > 1) {

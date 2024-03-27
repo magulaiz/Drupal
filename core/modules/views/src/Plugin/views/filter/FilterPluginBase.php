@@ -793,7 +793,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    *
    * @return string
    */
-  protected function validateIdentifier($identifier, FormStateInterface $form_state = NULL, &$form_group = []) {
+  protected function validateIdentifier(string $identifier, FormStateInterface $form_state = NULL, &$form_group = []) {
     $error = '';
     if (empty($identifier)) {
       $error = $this->t('The identifier is required if the filter is exposed.');
@@ -1008,7 +1008,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    * @param string $wrapper_identifier
    *   The key to use for the wrapper element.
    */
-  protected function buildValueWrapper(&$form, $wrapper_identifier) {
+  protected function buildValueWrapper(&$form, string $wrapper_identifier) {
     // If both the field and the operator are exposed, this will end up being
     // called twice. We don't want to wipe out what's already there, so if it
     // exists already, do nothing.
@@ -1672,7 +1672,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    * @return bool
    *   TRUE if the value is equal to an empty string, FALSE otherwise.
    */
-  protected static function arrayFilterZero($var) {
+  protected static function arrayFilterZero(string $var) {
     if (is_int($var)) {
       return $var != 0;
     }

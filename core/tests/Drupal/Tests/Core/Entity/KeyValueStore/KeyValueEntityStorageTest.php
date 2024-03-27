@@ -101,7 +101,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
    * @param string $uuid_key
    *   (optional) The entity key used for the UUID. Defaults to 'uuid'.
    */
-  protected function setUpKeyValueEntityStorage($uuid_key = 'uuid') {
+  protected function setUpKeyValueEntityStorage(string $uuid_key = 'uuid') {
     $this->entityType->expects($this->atLeastOnce())
       ->method('getKey')
       ->willReturnMap([
@@ -636,7 +636,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
    *
    * @return \Drupal\Core\Entity\EntityInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  public function getMockEntity($class = EntityBaseTest::class, array $arguments = [], $methods = []) {
+  public function getMockEntity(string $class = EntityBaseTest::class, array $arguments = [], $methods = []) {
     // Ensure the entity is passed at least an array of values and an entity
     // type ID
     if (!isset($arguments[0])) {

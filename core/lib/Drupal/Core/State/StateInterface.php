@@ -20,7 +20,7 @@ interface StateInterface {
    * @return mixed
    *   The stored value, or NULL if no value exists.
    */
-  public function get($key, $default = NULL);
+  public function get(string $key, $default = NULL);
 
   /**
    * Returns the stored key/value pairs for a given set of keys.
@@ -41,7 +41,7 @@ interface StateInterface {
    * @param mixed $value
    *   The data to store.
    */
-  public function set($key, $value);
+  public function set(string $key, $value);
 
   /**
    * Saves key/value pairs.
@@ -57,7 +57,7 @@ interface StateInterface {
    * @param string $key
    *   The item name to delete.
    */
-  public function delete($key);
+  public function delete(string $key);
 
   /**
    * Deletes multiple items.

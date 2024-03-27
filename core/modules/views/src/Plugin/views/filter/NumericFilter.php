@@ -382,7 +382,7 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
    * @param string $field
    *   The expression pointing to the queries field, for example "foo.bar".
    */
-  protected function opRegex($field) {
+  protected function opRegex(string $field) {
     $this->query->addWhere($this->options['group'], $field, $this->value['value'], 'REGEXP');
   }
 
@@ -392,7 +392,7 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
    * @param string $field
    *   The expression pointing to the queries field, for example "foo.bar".
    */
-  protected function opNotRegex($field) {
+  protected function opNotRegex(string $field) {
     $this->query->addWhere($this->options['group'], $field, $this->value['value'], 'NOT REGEXP');
   }
 

@@ -370,7 +370,7 @@ class ViewExecutableTest extends UnitTestCase {
    * @param $handler_type
    *   The handler type to set.
    */
-  public function testAddHandler($option, $handler_type) {
+  public function testAddHandler(string $option, $handler_type) {
     /** @var \Drupal\views\ViewExecutable|\PHPUnit\Framework\MockObject\MockObject $view */
     /** @var \Drupal\views\Plugin\views\display\DisplayPluginBase|\PHPUnit\Framework\MockObject\MockObject $display */
     [$view, $display] = $this->setupBaseViewAndDisplay();
@@ -412,7 +412,7 @@ class ViewExecutableTest extends UnitTestCase {
    * @param $handler_type
    *   The handler type to set.
    */
-  public function testAddHandlerWithEntityField($option, $handler_type) {
+  public function testAddHandlerWithEntityField(string $option, $handler_type) {
     /** @var \Drupal\views\ViewExecutable|\PHPUnit\Framework\MockObject\MockObject $view */
     /** @var \Drupal\views\Plugin\views\display\DisplayPluginBase|\PHPUnit\Framework\MockObject\MockObject $display */
     [$view, $display] = $this->setupBaseViewAndDisplay();

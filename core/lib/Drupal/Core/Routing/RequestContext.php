@@ -57,7 +57,7 @@ class RequestContext extends SymfonyRequestContext {
    * @param string $complete_base_url
    *   The complete base URL.
    */
-  public function setCompleteBaseUrl($complete_base_url) {
+  public function setCompleteBaseUrl(string $complete_base_url) {
     $this->completeBaseUrl = $complete_base_url;
   }
 

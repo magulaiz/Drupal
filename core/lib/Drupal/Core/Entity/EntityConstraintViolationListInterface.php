@@ -31,7 +31,7 @@ interface EntityConstraintViolationListInterface extends ConstraintViolationList
    * @return \Symfony\Component\Validator\ConstraintViolationListInterface
    *   The violations of the given field.
    */
-  public function getByField($field_name);
+  public function getByField(string $field_name);
 
   /**
    * Gets the violations of the given fields.

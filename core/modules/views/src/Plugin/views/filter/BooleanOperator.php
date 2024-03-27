@@ -248,7 +248,7 @@ class BooleanOperator extends FilterPluginBase implements FilterOperatorsInterfa
    *   (optional) Either self::EQUAL or self::NOT_EQUAL. Defaults to
    *   self::EQUAL.
    */
-  protected function queryOpBoolean($field, $query_operator = self::EQUAL) {
+  protected function queryOpBoolean(string $field, string $query_operator = self::EQUAL) {
     if (empty($this->value)) {
       if ($this->accept_null) {
         if ($query_operator === self::EQUAL) {

@@ -509,7 +509,7 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    * @param string $class
    *   The class to check.
    */
-  protected function checkStorageClass($class) {
+  protected function checkStorageClass(string $class) {
     // Nothing to check by default.
   }
 

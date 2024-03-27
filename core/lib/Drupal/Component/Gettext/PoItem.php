@@ -79,7 +79,7 @@ class PoItem {
    * @param string $langcode
    *   The language code of the current language.
    */
-  public function setLangcode($langcode) {
+  public function setLangcode(string $langcode) {
     $this->langcode = $langcode;
   }
 
@@ -98,7 +98,7 @@ class PoItem {
    * @param string $context
    *   The context this translation belongs to.
    */
-  public function setContext($context) {
+  public function setContext(string $context) {
     $this->context = $context;
   }
 
@@ -175,7 +175,7 @@ class PoItem {
    * @param string $comment
    *   The comment of this translation.
    */
-  public function setComment($comment) {
+  public function setComment(string $comment) {
     $this->comment = $comment;
   }
 

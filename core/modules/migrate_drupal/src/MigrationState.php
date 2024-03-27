@@ -240,7 +240,7 @@ class MigrationState {
    *   An associative array of data with keys of state, source modules and a
    *   value which is a comma separated list of destination modules.
    */
-  public function getUpgradeStates($version, array $source_system_data, array $migrations) {
+  public function getUpgradeStates(string $version, array $source_system_data, array $migrations) {
     return $this->buildUpgradeState($version, $source_system_data, $migrations);
   }
 
@@ -295,7 +295,7 @@ class MigrationState {
    * ]
    * @endcode
    */
-  protected function buildUpgradeState($version, array $source_system_data, array $migrations) {
+  protected function buildUpgradeState(string $version, array $source_system_data, array $migrations) {
     // Remove core profiles from the system data.
     unset($source_system_data['module']['standard'], $source_system_data['module']['minimal']);
     $this->buildDiscoveredDestinationsBySource($version, $migrations, $source_system_data);
@@ -328,7 +328,7 @@ class MigrationState {
    * @param array $source_system_data
    *   The data from the source site system table.
    */
-  protected function buildDiscoveredDestinationsBySource($version, array $migrations, array $source_system_data) {
+  protected function buildDiscoveredDestinationsBySource(string $version, array $migrations, array $source_system_data) {
     $discovered_upgrade_paths = [];
     $table_data = [];
     foreach ($migrations as $migration) {
@@ -376,7 +376,7 @@ class MigrationState {
    * @param string $version
    *   The legacy Drupal version.
    */
-  protected function buildDeclaredStateBySource($version) {
+  protected function buildDeclaredStateBySource(string $version) {
     $migration_states = $this->getMigrationStates();
 
     $state_by_source = [];
@@ -410,7 +410,7 @@ class MigrationState {
    * @return string
    *   Migration state, either 'finished' or 'not_finished'.
    */
-  protected function getSourceState($version, $source_module) {
+  protected function getSourceState(string $version, string $source_module) {
     // The state is finished only when no declarations of 'not_finished'
     // were found and each destination module is enabled.
     if (!$destinations = $this->getDestinationsForSource($version, $source_module)) {
@@ -442,7 +442,7 @@ class MigrationState {
    *   Destination modules either declared by {modulename}.migrate_drupal.yml
    *   files or discovered from migration plugins.
    */
-  protected function getDestinationsForSource($version, $source_module) {
+  protected function getDestinationsForSource(string $version, string $source_module) {
     if (!isset($this->destinations[$version][$source_module])) {
       $this->discoveredBySource[$version] += [$source_module => []];
       $this->declaredBySource[$version] += [$source_module => []];

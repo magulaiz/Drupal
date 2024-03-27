@@ -108,7 +108,7 @@ class EntityDefaultLanguageTest extends KernelTestBase {
    * @param string $langcode
    *   Default language code of the nodes of this type.
    */
-  protected function createContentType($name, $langcode) {
+  protected function createContentType(string $name, string $langcode) {
     $content_type = $this->container->get('entity_type.manager')->getStorage('node_type')->create([
       'name' => 'Test ' . $name,
       'title_label' => 'Title',
@@ -134,7 +134,7 @@ class EntityDefaultLanguageTest extends KernelTestBase {
    * @return \Drupal\node\NodeInterface
    *   The node created.
    */
-  protected function createNode($type, $langcode = NULL) {
+  protected function createNode(string $type, string $langcode = NULL) {
     $values = [
       'type' => $type,
       'title' => $this->randomString(),

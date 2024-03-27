@@ -23,7 +23,7 @@ class Element {
    * @return bool
    *   TRUE of the key is a property, FALSE otherwise.
    */
-  public static function property($key) {
+  public static function property(string $key) {
     return is_string($key) && $key[0] == '#';
   }
 
@@ -49,7 +49,7 @@ class Element {
    * @return bool
    *   TRUE if the element is a child, FALSE otherwise.
    */
-  public static function child($key) {
+  public static function child(string $key) {
     return !isset($key[0]) || $key[0] != '#';
   }
 

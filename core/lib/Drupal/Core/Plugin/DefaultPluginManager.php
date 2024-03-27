@@ -186,7 +186,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    *   clearCachedDefinitions() method. Only use cache tags when cached plugin
    *   definitions should be cleared along with other, related cache entries.
    */
-  public function setCacheBackend(CacheBackendInterface $cache_backend, $cache_key, array $cache_tags = []) {
+  public function setCacheBackend(CacheBackendInterface $cache_backend, string $cache_key, array $cache_tags = []) {
     assert(Inspector::assertAllStrings($cache_tags), 'Cache Tags must be strings.');
     $this->cacheBackend = $cache_backend;
     $this->cacheKey = $cache_key;
@@ -200,7 +200,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    *   Name of the alter hook; for example, to invoke
    *   hook_my_module_data_alter() pass in "my_module_data".
    */
-  protected function alterInfo($alter_hook) {
+  protected function alterInfo(string $alter_hook) {
     $this->alterHook = $alter_hook;
   }
 

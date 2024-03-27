@@ -173,7 +173,7 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
    * @return array
    *   An array of enabled detection methods for the provided language type.
    */
-  protected function getEnabledNegotiators($type) {
+  protected function getEnabledNegotiators(string $type) {
     return $this->configFactory->get('language.types')->get('negotiation.' . $type . '.enabled') ?: [];
   }
 
@@ -189,7 +189,7 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
    * @return \Drupal\Core\Language\LanguageInterface|null
    *   Negotiated language object for given type and method, FALSE otherwise.
    */
-  protected function negotiateLanguage($type, $method_id) {
+  protected function negotiateLanguage(string $type, string $method_id) {
     $langcode = NULL;
     $method = $this->negotiatorManager->getDefinition($method_id);
 

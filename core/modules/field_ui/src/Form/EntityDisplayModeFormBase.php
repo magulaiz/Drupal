@@ -218,7 +218,7 @@ abstract class EntityDisplayModeFormBase extends EntityForm {
    * @return \Drupal\Core\Entity\Display\EntityDisplayInterface
    *   An entity display.
    */
-  private function getEntityDisplay($entity_type_id, $bundle, $mode) {
+  private function getEntityDisplay(string $entity_type_id, string $bundle, string $mode) {
     return match($this->displayContext) {
       'view' => $this->entityDisplayRepository->getViewDisplay($entity_type_id, $bundle, $mode),
       'form' => $this->entityDisplayRepository->getFormDisplay($entity_type_id, $bundle, $mode),
@@ -236,7 +236,7 @@ abstract class EntityDisplayModeFormBase extends EntityForm {
    * @return \Drupal\Core\Url
    *   A Url object for the overview route.
    */
-  private function getOverviewUrl($mode, $bundle): Url {
+  private function getOverviewUrl(string $mode, string $bundle): Url {
     $entity_type = $this->entityTypeManager->getDefinition($this->targetEntityTypeId);
     return match($this->displayContext) {
       'view' => Url::fromRoute('entity.entity_view_display.' . $this->targetEntityTypeId . '.view_mode', [

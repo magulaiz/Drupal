@@ -36,7 +36,7 @@ trait ConfigFormBaseTrait {
    *   getEditableConfigNames() method or an immutable configuration object if
    *   not.
    */
-  protected function config($name) {
+  protected function config(string $name) {
     /** @var \Drupal\Core\Config\ConfigFactoryInterface $config_factory */
     if (method_exists($this, 'configFactory')) {
       $config_factory = $this->configFactory();

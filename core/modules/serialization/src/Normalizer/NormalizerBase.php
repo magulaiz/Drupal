@@ -81,7 +81,7 @@ abstract class NormalizerBase implements SerializerAwareInterface, CacheableNorm
    *   TRUE if the format is supported, FALSE otherwise. If no format is
    *   specified this will return TRUE.
    */
-  protected function checkFormat($format = NULL) {
+  protected function checkFormat(string $format = NULL) {
     if (!isset($format) || !isset($this->format)) {
       return TRUE;
     }

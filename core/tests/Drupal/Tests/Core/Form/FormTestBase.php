@@ -225,7 +225,7 @@ abstract class FormTestBase extends UnitTestCase {
    * @return \PHPUnit\Framework\MockObject\MockObject|\Drupal\Core\Form\FormInterface
    *   The mocked form object.
    */
-  protected function getMockForm($form_id, $expected_form = NULL, $count = 1) {
+  protected function getMockForm(string $form_id, $expected_form = NULL, $count = 1) {
     $form = $this->createMock('Drupal\Core\Form\FormInterface');
     $form->expects($this->once())
       ->method('getFormId')
@@ -259,7 +259,7 @@ abstract class FormTestBase extends UnitTestCase {
    * @return array
    *   The built form.
    */
-  protected function simulateFormSubmission($form_id, FormInterface $form_arg, FormStateInterface $form_state, $programmed = TRUE) {
+  protected function simulateFormSubmission(string $form_id, FormInterface $form_arg, FormStateInterface $form_state, $programmed = TRUE) {
     $input = $form_state->getUserInput();
     $input['op'] = 'Submit';
     $form_state
@@ -296,7 +296,7 @@ abstract class FormTestBase extends UnitTestCase {
    *   An array with dummy values to be used in tests. Defaults to an empty
    *   array.
    */
-  public function getInfo($type) {
+  public function getInfo(string $type) {
     $types['hidden'] = [
       '#input' => TRUE,
     ];

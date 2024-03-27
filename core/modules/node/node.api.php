@@ -73,7 +73,7 @@ use Drupal\Component\Utility\Xss;
  * @see node_access_rebuild()
  * @ingroup node_access
  */
-function hook_node_grants(\Drupal\Core\Session\AccountInterface $account, $operation) {
+function hook_node_grants(\Drupal\Core\Session\AccountInterface $account, string $operation) {
   if ($account->hasPermission('access private content')) {
     $grants['example'] = [1];
   }
@@ -261,7 +261,7 @@ function hook_node_access_records_alter(&$grants, \Drupal\node\NodeInterface $no
  * @see hook_node_access_records_alter()
  * @ingroup node_access
  */
-function hook_node_grants_alter(&$grants, \Drupal\Core\Session\AccountInterface $account, $operation) {
+function hook_node_grants_alter(&$grants, \Drupal\Core\Session\AccountInterface $account, string $operation) {
   // Our sample module never allows certain roles to edit or delete
   // content. Since some other node access modules might allow this
   // permission, we expressly remove it by returning an empty $grants

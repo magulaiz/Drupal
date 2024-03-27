@@ -82,7 +82,7 @@ class ImageTest extends UnitTestCase {
    *
    * @return \PHPUnit\Framework\MockObject\MockObject
    */
-  protected function getToolkitOperationMock($class_name, ImageToolkitInterface $toolkit) {
+  protected function getToolkitOperationMock(string $class_name, ImageToolkitInterface $toolkit) {
     $mock_builder = $this->getMockBuilder('Drupal\system\Plugin\ImageToolkit\Operation\gd\\' . $class_name);
     $logger = $this->createMock('Psr\Log\LoggerInterface');
     return $mock_builder
@@ -133,7 +133,7 @@ class ImageTest extends UnitTestCase {
    * @return \Drupal\Core\Image\Image
    *   An image object.
    */
-  protected function getTestImageForOperation($class_name) {
+  protected function getTestImageForOperation(string $class_name) {
     $this->toolkit = $this->getToolkitMock(['getToolkitOperation']);
     $this->toolkitOperation = $this->getToolkitOperationMock($class_name, $this->toolkit);
 

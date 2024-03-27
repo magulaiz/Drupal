@@ -82,6 +82,6 @@ interface RevisionLogInterface extends RevisionableInterface {
    *
    * @return $this
    */
-  public function setRevisionLogMessage($revision_log_message);
+  public function setRevisionLogMessage(string $revision_log_message);
 
 }

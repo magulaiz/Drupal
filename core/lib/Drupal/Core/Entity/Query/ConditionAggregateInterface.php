@@ -35,7 +35,7 @@ interface ConditionAggregateInterface extends \Countable {
    *
    * @see \Drupal\Core\Entity\Query\QueryInterface::condition()
    */
-  public function condition($field, $function = NULL, $value = NULL, $operator = NULL, $langcode = NULL);
+  public function condition($field, string $function = NULL, $value = NULL, string $operator = NULL, string $langcode = NULL);
 
   /**
    * Queries for the existence of a field.
@@ -52,7 +52,7 @@ interface ConditionAggregateInterface extends \Countable {
    *
    * @see \Drupal\Core\Entity\Query\QueryInterface::exists()
    */
-  public function exists($field, $function, $langcode = NULL);
+  public function exists(string $field, string $function, string $langcode = NULL);
 
   /**
    * Queries for the nonexistence of a field.
@@ -69,7 +69,7 @@ interface ConditionAggregateInterface extends \Countable {
    *
    * @see \Drupal\Core\Entity\Query\QueryInterface::notExists()
    */
-  public function notExists($field, $function, $langcode = NULL);
+  public function notExists(string $field, string $function, string $langcode = NULL);
 
   /**
    * Gets a complete list of all conditions in this conditional clause.

@@ -29,7 +29,7 @@ interface AliasRepositoryInterface {
    * @return string[]
    *   System paths (keys) to alias (values) mapping.
    */
-  public function preloadPathAlias($preloaded, $langcode);
+  public function preloadPathAlias($preloaded, string $langcode);
 
   /**
    * Searches a path alias for a given Drupal system path.
@@ -47,7 +47,7 @@ interface AliasRepositoryInterface {
    *   An array containing the 'id', 'path', 'alias' and 'langcode' properties
    *   of a path alias, or NULL if none was found.
    */
-  public function lookupBySystemPath($path, $langcode);
+  public function lookupBySystemPath(string $path, string $langcode);
 
   /**
    * Searches a path alias for a given alias.
@@ -65,7 +65,7 @@ interface AliasRepositoryInterface {
    *   An array containing the 'id', 'path', 'alias' and 'langcode' properties
    *   of a path alias, or NULL if none was found.
    */
-  public function lookupByAlias($alias, $langcode);
+  public function lookupByAlias(string $alias, string $langcode);
 
   /**
    * Check if any alias exists starting with $initial_substring.
@@ -76,6 +76,6 @@ interface AliasRepositoryInterface {
    * @return bool
    *   TRUE if any alias exists, FALSE otherwise.
    */
-  public function pathHasMatchingAlias($initial_substring);
+  public function pathHasMatchingAlias(string $initial_substring);
 
 }

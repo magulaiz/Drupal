@@ -49,7 +49,7 @@ class LinkWidget extends WidgetBase {
    *
    * @see static::getUserEnteredStringAsUri()
    */
-  protected static function getUriAsDisplayableString($uri) {
+  protected static function getUriAsDisplayableString(string $uri) {
     $scheme = parse_url($uri, PHP_URL_SCHEME);
 
     // By default, the displayable string is the URI.
@@ -102,7 +102,7 @@ class LinkWidget extends WidgetBase {
    *
    * @see static::getUriAsDisplayableString()
    */
-  protected static function getUserEnteredStringAsUri($string) {
+  protected static function getUserEnteredStringAsUri(string $string) {
     // By default, assume the entered string is a URI.
     $uri = trim($string);
 

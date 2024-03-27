@@ -330,7 +330,7 @@ class MoveBlockForm extends FormBase {
    * @return string
    *   The title for the move block form.
    */
-  public function title(SectionStorageInterface $section_storage, $delta, $uuid) {
+  public function title(SectionStorageInterface $section_storage, $delta, string $uuid) {
     $block_label = $section_storage
       ->getSection($delta)
       ->getComponent($uuid)

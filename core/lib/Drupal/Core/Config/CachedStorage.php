@@ -201,7 +201,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
    * @return array
    *   An array containing matching configuration object names.
    */
-  protected function findByPrefix($prefix) {
+  protected function findByPrefix(string $prefix) {
     $cache_key = $this->getCacheKey($prefix);
     if (!isset($this->findByPrefixCache[$cache_key])) {
       $this->findByPrefixCache[$cache_key] = $this->storage->listAll($prefix);
@@ -263,7 +263,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
    * @return string
    *   The cache key for the configuration name.
    */
-  protected function getCacheKey($name) {
+  protected function getCacheKey(string $name) {
     return $this->getCollectionPrefix() . $name;
   }
 

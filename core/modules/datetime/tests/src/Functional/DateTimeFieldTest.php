@@ -611,7 +611,7 @@ class DateTimeFieldTest extends DateTestBase {
    * @return array
    *   An array of datelist input permutations to test.
    */
-  protected function datelistDataProvider($field_label) {
+  protected function datelistDataProvider(string $field_label) {
     return [
       // Nothing selected.
       [

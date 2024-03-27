@@ -266,7 +266,7 @@ class ContextualDynamicContextTest extends BrowserTestBase {
    * @return \Psr\Http\Message\ResponseInterface
    *   The response object.
    */
-  protected function renderContextualLinks($ids, $current_path) {
+  protected function renderContextualLinks($ids, string $current_path) {
     $tokens = array_map([$this, 'createContextualIdToken'], $ids);
     $http_client = $this->getHttpClient();
     $url = Url::fromRoute('contextual.render', [], [
@@ -292,7 +292,7 @@ class ContextualDynamicContextTest extends BrowserTestBase {
    * @return string
    *   The contextual ID token.
    */
-  protected function createContextualIdToken($id) {
+  protected function createContextualIdToken(string $id) {
     return Crypt::hmacBase64($id, Settings::getHashSalt() . $this->container->get('private_key')->get());
   }
 

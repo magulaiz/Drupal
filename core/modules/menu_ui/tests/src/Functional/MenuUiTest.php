@@ -759,7 +759,7 @@ class MenuUiTest extends BrowserTestBase {
    * @return \Drupal\menu_link_content\Entity\MenuLinkContent
    *   A menu link entity.
    */
-  public function addMenuLink($parent = '', $path = '/', $menu_name = 'tools', $expanded = FALSE, $weight = '0') {
+  public function addMenuLink(string $parent = '', string $path = '/', string $menu_name = 'tools', $expanded = FALSE, string $weight = '0') {
     // View add menu link page.
     $this->drupalGet("admin/structure/menu/manage/$menu_name/add");
     $this->assertSession()->statusCodeEquals(200);
@@ -906,7 +906,7 @@ class MenuUiTest extends BrowserTestBase {
    * @param string $menu_name
    *   The menu the menu link will be moved to.
    */
-  public function moveMenuLink(MenuLinkContent $item, $parent, $menu_name) {
+  public function moveMenuLink(MenuLinkContent $item, $parent, string $menu_name) {
     $menu_link_id = $item->id();
 
     $edit = [

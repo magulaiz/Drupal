@@ -72,7 +72,7 @@ class ModuleRouteSubscriber extends RouteSubscriberBase {
    * @return array
    *   An array of exploded (and trimmed) values.
    */
-  protected function explodeString($string, $separator = ',') {
+  protected function explodeString(string $string, string $separator = ',') {
     return array_filter(array_map('trim', explode($separator, $string)));
   }
 

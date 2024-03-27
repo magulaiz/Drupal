@@ -134,7 +134,7 @@ class StreamWrapperManager implements StreamWrapperManagerInterface {
    * @return \Drupal\Core\StreamWrapper\StreamWrapperInterface|bool
    *   A stream wrapper object, or false if the scheme is not available.
    */
-  protected function getWrapper($scheme, $uri) {
+  protected function getWrapper(string $scheme, string $uri) {
     if (isset($this->info[$scheme]['service_id'])) {
       $instance = $this->container->get($this->info[$scheme]['service_id']);
       $instance->setUri($uri);
@@ -156,7 +156,7 @@ class StreamWrapperManager implements StreamWrapperManagerInterface {
    * @param string $scheme
    *   The scheme for which the wrapper should be registered.
    */
-  public function addStreamWrapper($service_id, $class, $scheme) {
+  public function addStreamWrapper(string $service_id, string $class, string $scheme) {
     $this->info[$scheme] = [
       'class' => $class,
       'type' => $class::getType(),

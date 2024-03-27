@@ -82,7 +82,7 @@ class MigrateControllerTest extends BrowserTestBase {
    * @return bool
    *   TRUE when link found and clicked, otherwise FALSE.
    */
-  public function clickViewsOperationsLink($label, $href_part) {
+  public function clickViewsOperationsLink(string $label, string $href_part) {
     $links = $this->xpath('//a[normalize-space(text())=:label]', [':label' => (string) $label]);
     foreach ($links as $link_index => $link) {
       $position = strpos($link->getAttribute('href'), $href_part);

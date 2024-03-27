@@ -177,7 +177,7 @@ class FieldDiscovery implements FieldDiscoveryInterface {
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    * @throws \InvalidArgumentException
    */
-  protected function getFieldPlugin($field_type, MigrationInterface $migration) {
+  protected function getFieldPlugin(string $field_type, MigrationInterface $migration) {
     $core = $this->getCoreVersion($migration);
     if (!isset($this->fieldPluginCache[$core][$field_type])) {
       try {
@@ -203,7 +203,7 @@ class FieldDiscovery implements FieldDiscoveryInterface {
    *   migration, keyed first by entity type, then by bundle and finally by
    *   field name.
    */
-  protected function getAllFields($core) {
+  protected function getAllFields(string $core) {
     if (empty($this->discoveredFieldsCache[$core])) {
       $this->discoveredFieldsCache[$core] = [];
       $source_plugin = $this->getSourcePlugin($core);
@@ -235,7 +235,7 @@ class FieldDiscovery implements FieldDiscoveryInterface {
    *   migration for the entity type, keyed first by bundle and then by field
    *   name.
    */
-  protected function getEntityFields($core, $entity_type_id) {
+  protected function getEntityFields(string $core, string $entity_type_id) {
     $fields = $this->getAllFields($core);
     if (!empty($fields[$entity_type_id])) {
       return $fields[$entity_type_id];
@@ -257,7 +257,7 @@ class FieldDiscovery implements FieldDiscoveryInterface {
    *   An array of source data from the relevant field instance migration for
    *   the bundle, keyed by field name.
    */
-  protected function getBundleFields($core, $entity_type_id, $bundle) {
+  protected function getBundleFields(string $core, string $entity_type_id, string $bundle) {
     $fields = $this->getEntityFields($core, $entity_type_id);
     if (!empty($fields[$bundle])) {
       return $fields[$bundle];
@@ -275,7 +275,7 @@ class FieldDiscovery implements FieldDiscoveryInterface {
    *   The source plugin, or an empty array if none can be found that meets
    *   requirements.
    */
-  protected function getSourcePlugin($core) {
+  protected function getSourcePlugin(string $core) {
     $definition = $this->getFieldInstanceStubMigrationDefinition($core);
     $source_plugin = $this->migrationPluginManager
       ->createStubMigration($definition)
@@ -308,7 +308,7 @@ class FieldDiscovery implements FieldDiscoveryInterface {
    * @return array
    *   The stub migration definition.
    */
-  protected function getFieldInstanceStubMigrationDefinition($core) {
+  protected function getFieldInstanceStubMigrationDefinition(string $core) {
     return [
       'destination' => ['plugin' => 'null'],
       'idMap' => ['plugin' => 'null'],

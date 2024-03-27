@@ -29,7 +29,7 @@ class BaseCommand implements CommandInterface {
    * @param string $data
    *   The data to pass on to the client side.
    */
-  public function __construct($command, $data) {
+  public function __construct(string $command, string $data) {
     $this->command = $command;
     $this->data = $data;
   }

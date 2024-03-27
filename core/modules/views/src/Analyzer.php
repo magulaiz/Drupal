@@ -118,7 +118,7 @@ class Analyzer {
    * @return array
    *   A single formatted message, consisting of a key message and a key type.
    */
-  public static function formatMessage($message, $type = 'error') {
+  public static function formatMessage(string $message, string $type = 'error') {
     return ['message' => $message, 'type' => $type];
   }
 

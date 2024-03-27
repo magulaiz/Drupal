@@ -60,7 +60,7 @@ class NodeAccessGrantsCacheContext extends UserCacheContextBase implements Calcu
    * @return string
    *   The string representation of the cache context.
    */
-  protected function checkNodeGrants($operation) {
+  protected function checkNodeGrants(string $operation) {
     // When checking the grants for the 'view' operation and the current user
     // has a global view grant (i.e. a view grant for node ID 0) — note that
     // this is automatically the case if no node access modules exist (no

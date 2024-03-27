@@ -413,7 +413,7 @@ abstract class BrowserTestBase extends TestCase {
    *
    * @see \Drupal\Core\File\FileSystemInterface::deleteRecursive()
    */
-  public static function filePreDeleteCallback($path) {
+  public static function filePreDeleteCallback(string $path) {
     // When the webserver runs with the same system user as phpunit, we can
     // make read-only files writable again. If not, chmod will fail while the
     // file deletion still works if file permissions have been configured
@@ -491,7 +491,7 @@ abstract class BrowserTestBase extends TestCase {
    * @return \Behat\Mink\Session
    *   The active Mink session object.
    */
-  public function getSession($name = NULL) {
+  public function getSession(string $name = NULL) {
     return $this->mink->getSession($name);
   }
 
@@ -622,7 +622,7 @@ abstract class BrowserTestBase extends TestCase {
    * @return \Behat\Mink\Element\NodeElement[]
    *   The list of elements matching the xpath expression.
    */
-  protected function xpath($xpath, array $arguments = []) {
+  protected function xpath(string $xpath, array $arguments = []) {
     $xpath = $this->assertSession()->buildXPathQuery($xpath, $arguments);
     return $this->getSession()->getPage()->findAll('xpath', $xpath);
   }
@@ -636,7 +636,7 @@ abstract class BrowserTestBase extends TestCase {
    * @return \Drupal\Core\Config\Config
    *   The configuration object with original configuration data.
    */
-  protected function config($name) {
+  protected function config(string $name) {
     return $this->container->get('config.factory')->getEditable($name);
   }
 

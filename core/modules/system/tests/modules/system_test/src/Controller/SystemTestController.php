@@ -235,7 +235,7 @@ class SystemTestController extends ControllerBase implements TrustedCallbackInte
    * @return string
    *   The text to display.
    */
-  public function lockPersist($lock_name) {
+  public function lockPersist(string $lock_name) {
     if ($this->persistentLock->acquire($lock_name)) {
       return ['#markup' => 'TRUE: Lock successfully acquired in SystemTestController::lockPersist()'];
     }
@@ -350,7 +350,7 @@ class SystemTestController extends ControllerBase implements TrustedCallbackInte
    *
    * @return string
    */
-  public function configureTitle($foo) {
+  public function configureTitle(string $foo) {
     return 'Bar.' . $foo;
   }
 
@@ -363,7 +363,7 @@ class SystemTestController extends ControllerBase implements TrustedCallbackInte
    * @return array
    *   A render array.
    */
-  public function simpleEcho($text) {
+  public function simpleEcho(string $text) {
     return [
       '#plain_text' => $text,
     ];

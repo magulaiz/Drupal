@@ -93,7 +93,7 @@ interface MigrateFieldInterface extends PluginInspectionInterface {
    * @param array $data
    *   The array of field data from FieldValues::fieldData().
    */
-  public function defineValueProcessPipeline(MigrationInterface $migration, $field_name, $data);
+  public function defineValueProcessPipeline(MigrationInterface $migration, string $field_name, $data);
 
   /**
    * Computes the destination type of a migrated field.

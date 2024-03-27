@@ -39,7 +39,7 @@ abstract class MediaSourceTestBase extends MediaJavascriptTestBase {
    * @param string $media_type_id
    *   The media type config entity ID.
    */
-  protected function createMediaTypeField($field_name, $field_type, $media_type_id) {
+  protected function createMediaTypeField(string $field_name, string $field_type, string $media_type_id) {
     $storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'media',
@@ -80,7 +80,7 @@ abstract class MediaSourceTestBase extends MediaJavascriptTestBase {
    * @param string $media_type_id
    *   The media type config entity ID.
    */
-  protected function createMediaTypeFields(array $fields, $media_type_id) {
+  protected function createMediaTypeFields(array $fields, string $media_type_id) {
     foreach ($fields as $field_name => $field_type) {
       $this->createMediaTypeField($field_name, $field_type, $media_type_id);
     }
@@ -94,7 +94,7 @@ abstract class MediaSourceTestBase extends MediaJavascriptTestBase {
    * @param string $media_type_id
    *   The media type config entity ID.
    */
-  protected function hideMediaTypeFieldWidget($field_name, $media_type_id) {
+  protected function hideMediaTypeFieldWidget(string $field_name, string $media_type_id) {
 
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
     $display_repository = \Drupal::service('entity_display.repository');
@@ -122,7 +122,7 @@ abstract class MediaSourceTestBase extends MediaJavascriptTestBase {
    * @return \Drupal\media\MediaTypeInterface
    *   The created media type.
    */
-  public function doTestCreateMediaType($media_type_id, $source_id, array $provided_fields = [], $source_label_visibility = 'visually_hidden') {
+  public function doTestCreateMediaType(string $media_type_id, string $source_id, array $provided_fields = [], string $source_label_visibility = 'visually_hidden') {
     $session = $this->getSession();
     $page = $session->getPage();
     $assert_session = $this->assertSession();

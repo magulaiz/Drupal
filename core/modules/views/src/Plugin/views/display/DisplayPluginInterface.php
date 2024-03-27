@@ -167,7 +167,7 @@ interface DisplayPluginInterface {
    * @param array $build
    *   The parent view render array.
    */
-  public function attachTo(ViewExecutable $view, $display_id, array &$build);
+  public function attachTo(ViewExecutable $view, string $display_id, array &$build);
 
   /**
    * Lists the 'defaultable' sections and what items each section contains.
@@ -272,7 +272,7 @@ interface DisplayPluginInterface {
    *
    * @return \Drupal\views\Plugin\views\ViewsPluginInterface
    */
-  public function getPlugin($type);
+  public function getPlugin(string $type);
 
   /**
    * Get the handler object for a single handler.
@@ -365,7 +365,7 @@ interface DisplayPluginInterface {
    *   - TRUE: Revert new state option to default.
    *   - FALSE: Mark it as overridden.
    */
-  public function setOverride($section, $new_state = NULL);
+  public function setOverride(string $section, $new_state = NULL);
 
   /**
    * Injects anything into the query that the display handler needs.
@@ -422,7 +422,7 @@ interface DisplayPluginInterface {
    * @return array
    *   A render array for the given area.
    */
-  public function renderArea($area, $empty = FALSE);
+  public function renderArea(string $area, $empty = FALSE);
 
   /**
    * Determines if the user has access to this display of the view.
@@ -476,7 +476,7 @@ interface DisplayPluginInterface {
    * @return array
    *   The view render array.
    */
-  public static function buildBasicRenderable($view_id, $display_id, array $args = []);
+  public static function buildBasicRenderable(string $view_id, string $display_id, array $args = []);
 
   /**
    * Builds a renderable array of the view.
@@ -551,7 +551,7 @@ interface DisplayPluginInterface {
    * @return bool
    *   Returns whether the identifier is unique on all handlers.
    */
-  public function isIdentifierUnique($id, $identifier);
+  public function isIdentifierUnique(string $id, string $identifier);
 
   /**
    * Is the output of the view empty.

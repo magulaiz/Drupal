@@ -182,7 +182,7 @@ class FormTestSelectForm extends FormBase {
    * @return array
    *   Options array, including option groups, for testing.
    */
-  protected function makeSortableOptions($prefix) {
+  protected function makeSortableOptions(string $prefix) {
     return [
       // Don't use $this->t() here, to avoid adding strings to
       // localize.drupal.org. Do use TranslatableMarkup in places, to test

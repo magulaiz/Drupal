@@ -67,7 +67,7 @@ class SectionComponent {
    * @param mixed[] $additional
    *   An additional values.
    */
-  public function __construct($uuid, $region, array $configuration = [], array $additional = []) {
+  public function __construct(string $uuid, string $region, array $configuration = [], array $additional = []) {
     $this->uuid = $uuid;
     $this->region = $region;
     $this->configuration = $configuration;
@@ -102,7 +102,7 @@ class SectionComponent {
    * @return mixed
    *   The value for that property, or NULL if the property does not exist.
    */
-  public function get($property) {
+  public function get(string $property) {
     if (property_exists($this, $property)) {
       $value = $this->{$property} ?? NULL;
     }
@@ -122,7 +122,7 @@ class SectionComponent {
    *
    * @return $this
    */
-  public function set($property, $value) {
+  public function set(string $property, $value) {
     if (property_exists($this, $property)) {
       $this->{$property} = $value;
     }
@@ -150,7 +150,7 @@ class SectionComponent {
    *
    * @return $this
    */
-  public function setRegion($region) {
+  public function setRegion(string $region) {
     $this->region = $region;
     return $this;
   }

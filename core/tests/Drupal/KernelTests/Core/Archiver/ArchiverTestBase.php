@@ -44,7 +44,7 @@ abstract class ArchiverTestBase extends FileTestBase {
    * @param array $configuration
    *   Optional configuration to pass to the archiver plugin.
    */
-  protected function assertArchiveContainsFile($path, $file, array $configuration = []) {
+  protected function assertArchiveContainsFile(string $path, string $file, array $configuration = []) {
     $configuration['filepath'] = $path;
     /** @var \Drupal\Core\Archiver\ArchiverManager $manager */
     $manager = $this->container->get('plugin.manager.archiver');
@@ -62,7 +62,7 @@ abstract class ArchiverTestBase extends FileTestBase {
    * @param array $configuration
    *   Optional configuration to pass to the archiver plugin.
    */
-  protected function assertArchiveNotContainsFile($path, $file, array $configuration = []) {
+  protected function assertArchiveNotContainsFile(string $path, string $file, array $configuration = []) {
     $configuration['filepath'] = $path;
     /** @var \Drupal\Core\Archiver\ArchiverManager $manager */
     $manager = $this->container->get('plugin.manager.archiver');

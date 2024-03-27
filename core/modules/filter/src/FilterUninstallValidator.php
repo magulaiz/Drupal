@@ -79,7 +79,7 @@ class FilterUninstallValidator implements ModuleUninstallValidatorInterface {
    * @return array
    *   The filter definitions for the specified provider.
    */
-  protected function getFilterDefinitionsByProvider($provider) {
+  protected function getFilterDefinitionsByProvider(string $provider) {
     return array_filter($this->filterManager->getDefinitions(), function ($definition) use ($provider) {
       return $definition['provider'] == $provider;
     });

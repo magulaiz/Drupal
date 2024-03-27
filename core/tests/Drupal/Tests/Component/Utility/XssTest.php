@@ -70,7 +70,7 @@ class XssTest extends TestCase {
    *
    * @dataProvider providerTestFilterXssNormalized
    */
-  public function testFilterXssNormalized($value, $expected, $message, array $allowed_tags = NULL) {
+  public function testFilterXssNormalized(string $value, string $expected, string $message, array $allowed_tags = NULL) {
     if ($allowed_tags === NULL) {
       $value = Xss::filter($value);
     }
@@ -137,7 +137,7 @@ class XssTest extends TestCase {
    *
    * @dataProvider providerTestFilterXssNotNormalized
    */
-  public function testFilterXssNotNormalized($value, $expected, $message, array $allowed_tags = NULL) {
+  public function testFilterXssNotNormalized(string $value, string $expected, string $message, array $allowed_tags = NULL) {
     if ($allowed_tags === NULL) {
       $value = Xss::filter($value);
     }
@@ -450,7 +450,7 @@ class XssTest extends TestCase {
    *
    * @dataProvider providerTestInvalidMultiByte
    */
-  public function testInvalidMultiByte($value, $expected, $message) {
+  public function testInvalidMultiByte(string $value, string $expected, string $message) {
     $this->assertEquals(Xss::filter($value), $expected, $message);
   }
 
@@ -586,7 +586,7 @@ class XssTest extends TestCase {
    *
    * @dataProvider providerTestFilterXssAdminNotNormalized
    */
-  public function testFilterXssAdminNotNormalized($value, $expected, $message) {
+  public function testFilterXssAdminNotNormalized(string $value, string $expected, string $message) {
     $this->assertNotNormalized(Xss::filterAdmin($value), $expected, $message);
   }
 

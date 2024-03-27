@@ -35,7 +35,7 @@ class Color {
    *
    * @throws \InvalidArgumentException
    */
-  public static function hexToRgb($hex) {
+  public static function hexToRgb(string $hex) {
     if (!self::validateHex($hex)) {
       throw new \InvalidArgumentException("'$hex' is not a valid hex value.");
     }
@@ -96,7 +96,7 @@ class Color {
    * @return string
    *   The 6 character hex color.
    */
-  public static function normalizeHexLength($hex) {
+  public static function normalizeHexLength(string $hex) {
     // Ignore '#' prefixes.
     $hex = ltrim($hex, '#');
 

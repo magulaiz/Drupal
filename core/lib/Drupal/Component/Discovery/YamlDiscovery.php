@@ -34,7 +34,7 @@ class YamlDiscovery implements DiscoverableInterface {
    * @param array $directories
    *   An array of directories to scan, keyed by the provider.
    */
-  public function __construct($name, array $directories) {
+  public function __construct(string $name, array $directories) {
     $this->name = $name;
     $this->directories = $directories;
   }
@@ -78,7 +78,7 @@ class YamlDiscovery implements DiscoverableInterface {
    *
    * @return array
    */
-  protected function decode($file) {
+  protected function decode(string $file) {
     try {
       return Yaml::decode(file_get_contents($file)) ?: [];
     }

@@ -89,7 +89,7 @@ abstract class CachePluginBase extends PluginBase {
    * @param string $type
    *   The cache type.
    */
-  protected function cacheSetMaxAge($type) {
+  protected function cacheSetMaxAge(string $type) {
     return Cache::PERMANENT;
   }
 

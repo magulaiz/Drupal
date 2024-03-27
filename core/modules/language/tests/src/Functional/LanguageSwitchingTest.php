@@ -110,7 +110,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
    *
    * @see self::testLanguageBlock()
    */
-  protected function doTestHomePageLinks($block_label) {
+  protected function doTestHomePageLinks(string $block_label) {
     // Create a node and set as home page.
     $this->createHomePage();
     // Go to home page.
@@ -172,7 +172,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
    *
    * @see self::testLanguageBlock()
    */
-  protected function doTestLanguageBlockAuthenticated($block_label) {
+  protected function doTestLanguageBlockAuthenticated(string $block_label) {
     // Assert that the language switching block is displayed on the frontpage.
     $this->drupalGet('');
     $this->assertSession()->pageTextContains($block_label);
@@ -221,7 +221,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
    *
    * @see self::testLanguageBlock()
    */
-  protected function doTestLanguageBlockAnonymous($block_label) {
+  protected function doTestLanguageBlockAnonymous(string $block_label) {
     $this->drupalLogout();
 
     // Assert that the language switching block is displayed on the frontpage
@@ -695,7 +695,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
    * @param string $label
    *   The native name of the language.
    */
-  protected function saveNativeLanguageName($langcode, $label) {
+  protected function saveNativeLanguageName(string $langcode, string $label) {
     \Drupal::service('language.config_factory_override')
       ->getOverride($langcode, 'language.entity.' . $langcode)->set('label', $label)->save();
   }

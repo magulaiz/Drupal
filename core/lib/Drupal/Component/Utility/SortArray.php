@@ -98,7 +98,7 @@ class SortArray {
    * @return int
    *   The comparison result for uasort().
    */
-  public static function sortByKeyString($a, $b, $key) {
+  public static function sortByKeyString($a, $b, string $key) {
     $a_title = (is_array($a) && isset($a[$key])) ? $a[$key] : '';
     $b_title = (is_array($b) && isset($b[$key])) ? $b[$key] : '';
 
@@ -118,7 +118,7 @@ class SortArray {
    * @return int
    *   The comparison result for uasort().
    */
-  public static function sortByKeyInt($a, $b, $key) {
+  public static function sortByKeyInt($a, $b, string $key) {
     $a_weight = (is_array($a) && isset($a[$key])) ? $a[$key] : 0;
     $b_weight = (is_array($b) && isset($b[$key])) ? $b[$key] : 0;
 

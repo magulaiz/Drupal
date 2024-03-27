@@ -166,7 +166,7 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
    * @return mixed
    *   The setting value.
    */
-  protected function getFieldSetting($setting_name) {
+  protected function getFieldSetting(string $setting_name) {
     return $this->fieldDefinition->getSetting($setting_name);
   }
 

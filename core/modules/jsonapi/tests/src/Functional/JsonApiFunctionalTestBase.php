@@ -216,7 +216,7 @@ abstract class JsonApiFunctionalTestBase extends BrowserTestBase {
    *
    * @see \GuzzleHttp\ClientInterface::request
    */
-  protected function request($method, Url $url, array $request_options) {
+  protected function request(string $method, Url $url, array $request_options) {
     try {
       $response = $this->httpClient->request($method, $url->toString(), $request_options);
     }

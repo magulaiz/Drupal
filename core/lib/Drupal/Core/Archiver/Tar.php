@@ -29,7 +29,7 @@ class Tar implements ArchiverInterface {
    *
    * @throws \Drupal\Core\Archiver\ArchiverException
    */
-  public function __construct($file_path, array $configuration = []) {
+  public function __construct(string $file_path, array $configuration = []) {
     $compress = $configuration['compress'] ?? NULL;
     $buffer = $configuration['buffer_length'] ?? 512;
     $this->tar = new ArchiveTar($file_path, $compress, $buffer);

@@ -41,7 +41,7 @@ class StorageReplaceDataWrapper implements StorageInterface {
    *   (optional) The collection to store configuration in. Defaults to the
    *   default collection.
    */
-  public function __construct(StorageInterface $storage, $collection = StorageInterface::DEFAULT_COLLECTION) {
+  public function __construct(StorageInterface $storage, string $collection = StorageInterface::DEFAULT_COLLECTION) {
     $this->storage = $storage;
     $this->collection = $collection;
     $this->replacementData[$collection] = [];

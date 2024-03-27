@@ -193,7 +193,7 @@ class StatisticsPopularBlock extends BlockBase implements ContainerFactoryPlugin
    * @return array
    *   A render array for the list.
    */
-  protected function nodeTitleList(array $nids, $title) {
+  protected function nodeTitleList(array $nids, string $title) {
     $nodes = $this->entityTypeManager->getStorage('node')->loadMultiple($nids);
 
     $items = [];

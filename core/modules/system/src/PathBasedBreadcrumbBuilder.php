@@ -206,7 +206,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    * @return \Symfony\Component\HttpFoundation\Request
    *   A populated request object or NULL if the path couldn't be matched.
    */
-  protected function getRequestForPath($path, array $exclude) {
+  protected function getRequestForPath(string $path, array $exclude) {
     if (!empty($exclude[$path])) {
       return NULL;
     }

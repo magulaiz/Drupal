@@ -48,7 +48,7 @@ trait I18nQueryTrait {
    *
    * @throws \Drupal\migrate\MigrateException
    */
-  protected function getPropertyNotInRowTranslation(Row $row, $property_not_in_row, $object_id_name, MigrateIdMapInterface $id_map) {
+  protected function getPropertyNotInRowTranslation(Row $row, string $property_not_in_row, string $object_id_name, MigrateIdMapInterface $id_map) {
     $language = $row->getSourceProperty('language');
     if (!$language) {
       throw new MigrateException('No language found.');

@@ -68,7 +68,7 @@ class Node extends FieldPluginBase {
    * @return string
    *   Returns a string for the link text.
    */
-  protected function renderLink($data, ResultRow $values) {
+  protected function renderLink(string $data, ResultRow $values) {
     if (!empty($this->options['link_to_node']) && !empty($this->additional_fields['nid'])) {
       if ($data !== NULL && $data !== '') {
         $this->options['alter']['make_link'] = TRUE;

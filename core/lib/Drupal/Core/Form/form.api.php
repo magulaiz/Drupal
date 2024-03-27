@@ -112,7 +112,7 @@ function callback_batch_operation($multiple_params, &$context) {
  *   A string representing the elapsed time for the batch process, e.g.,
  *   '1 min 30 secs'.
  */
-function callback_batch_finished($success, $results, $operations, $elapsed) {
+function callback_batch_finished($success, $results, $operations, string $elapsed) {
   if ($success) {
     // Here we do something meaningful with the results.
     $message = t("@count items were processed (@elapsed).", [

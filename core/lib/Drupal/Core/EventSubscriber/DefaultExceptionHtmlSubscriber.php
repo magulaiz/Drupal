@@ -132,7 +132,7 @@ class DefaultExceptionHtmlSubscriber extends HttpExceptionSubscriberBase {
    * @param int $status_code
    *   The status code for the error being handled.
    */
-  protected function makeSubrequest(ExceptionEvent $event, $url, $status_code) {
+  protected function makeSubrequest(ExceptionEvent $event, string $url, $status_code) {
     $request = $event->getRequest();
     $exception = $event->getThrowable();
 

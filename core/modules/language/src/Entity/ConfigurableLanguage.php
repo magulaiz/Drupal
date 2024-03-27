@@ -269,7 +269,7 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
    *
    * @see \Drupal\Core\Language\LanguageManager::getStandardLanguageList()
    */
-  public static function createFromLangcode($langcode) {
+  public static function createFromLangcode(string $langcode) {
     $standard_languages = LanguageManager::getStandardLanguageList();
     if (!isset($standard_languages[$langcode])) {
       // Drupal does not know about this language, so we set its values with the

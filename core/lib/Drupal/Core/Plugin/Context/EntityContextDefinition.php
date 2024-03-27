@@ -84,7 +84,7 @@ class EntityContextDefinition extends ContextDefinition {
    *
    * @return static
    */
-  public static function fromEntityTypeId($entity_type_id) {
+  public static function fromEntityTypeId(string $entity_type_id) {
     $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
     return static::fromEntityType($entity_type);
   }

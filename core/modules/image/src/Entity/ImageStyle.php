@@ -501,7 +501,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    *   The given path if this image style doesn't change its extension, or the
    *   path with the added extension if it does.
    */
-  protected function addExtension($path) {
+  protected function addExtension(string $path) {
     $original_extension = pathinfo($path, PATHINFO_EXTENSION);
     $extension = $this->getDerivativeExtension($original_extension);
     if ($original_extension !== $extension) {

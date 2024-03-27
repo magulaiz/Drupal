@@ -173,7 +173,7 @@ class StaticMenuLinkOverrides implements StaticMenuLinkOverridesInterface {
    * @return string
    *   The menu plugin ID with double underscore instead of dots.
    */
-  protected static function encodeId($id) {
+  protected static function encodeId(string $id) {
     return strtr($id, ['.' => '__', '__' => '___']);
   }
 

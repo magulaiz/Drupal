@@ -80,7 +80,7 @@ abstract class BlockContentTestBase extends BrowserTestBase {
    * @return \Drupal\block_content\Entity\BlockContent
    *   Created content block.
    */
-  protected function createBlockContent($title = FALSE, $bundle = 'basic', $save = TRUE) {
+  protected function createBlockContent($title = FALSE, string $bundle = 'basic', $save = TRUE) {
     $title = $title ?: $this->randomMachineName();
     $block_content = BlockContent::create([
       'info' => $title,

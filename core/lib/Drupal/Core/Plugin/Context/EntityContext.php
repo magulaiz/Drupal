@@ -20,7 +20,7 @@ class EntityContext extends Context {
    *
    * @return static
    */
-  public static function fromEntityTypeId($entity_type_id, $label = NULL) {
+  public static function fromEntityTypeId(string $entity_type_id, string $label = NULL) {
     $entity_type = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
     return static::fromEntityType($entity_type, $label);
   }
@@ -35,7 +35,7 @@ class EntityContext extends Context {
    *
    * @return static
    */
-  public static function fromEntityType(EntityTypeInterface $entity_type, $label = NULL) {
+  public static function fromEntityType(EntityTypeInterface $entity_type, string $label = NULL) {
     $definition = EntityContextDefinition::fromEntityType($entity_type);
     if ($label) {
       $definition->setLabel($label);
@@ -53,7 +53,7 @@ class EntityContext extends Context {
    *
    * @return static
    */
-  public static function fromEntity(EntityInterface $entity, $label = NULL) {
+  public static function fromEntity(EntityInterface $entity, string $label = NULL) {
     $context = static::fromEntityType($entity->getEntityType(), $label);
     $context->setContextValue($entity);
     return $context;

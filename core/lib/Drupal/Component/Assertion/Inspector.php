@@ -316,7 +316,7 @@ class Inspector {
    *   TRUE if $traversable can be traversed and all members are strings
    *   containing $pattern.
    */
-  public static function assertAllMatch($pattern, $traversable, $case_sensitive = FALSE) {
+  public static function assertAllMatch(string $pattern, $traversable, $case_sensitive = FALSE) {
     if (is_iterable($traversable)) {
       if ($case_sensitive) {
         foreach ($traversable as $member) {
@@ -349,7 +349,7 @@ class Inspector {
    *   TRUE if $traversable can be traversed and all members are strings
    *   matching $pattern.
    */
-  public static function assertAllRegularExpressionMatch($pattern, $traversable) {
+  public static function assertAllRegularExpressionMatch(string $pattern, $traversable) {
     if (is_iterable($traversable)) {
       foreach ($traversable as $member) {
         if (!is_string($member)) {

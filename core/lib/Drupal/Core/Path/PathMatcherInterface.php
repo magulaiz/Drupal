@@ -18,7 +18,7 @@ interface PathMatcherInterface {
    * @return bool
    *   TRUE if the path matches a pattern, FALSE otherwise.
    */
-  public function matchPath($path, $patterns);
+  public function matchPath(string $path, string $patterns);
 
   /**
    * Checks if the current page is the front page.

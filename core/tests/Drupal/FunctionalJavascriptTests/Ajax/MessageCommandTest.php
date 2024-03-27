@@ -179,7 +179,7 @@ class MessageCommandTest extends WebDriverTestBase {
    * @param string $type
    *   The expected type.
    */
-  protected function waitForMessageVisible($message, $selector = '[data-drupal-messages]', $type = 'status') {
+  protected function waitForMessageVisible(string $message, string $selector = '[data-drupal-messages]', string $type = 'status') {
     $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', $selector . ' .messages--' . $type . ':contains("' . $message . '")'));
   }
 
@@ -193,7 +193,7 @@ class MessageCommandTest extends WebDriverTestBase {
    * @param string $type
    *   The expected type.
    */
-  protected function waitForMessageRemoved($message, $selector = '[data-drupal-messages]', $type = 'status') {
+  protected function waitForMessageRemoved(string $message, string $selector = '[data-drupal-messages]', string $type = 'status') {
     $this->assertNotEmpty($this->assertSession()->waitForElementRemoved('css', $selector . ' .messages--' . $type . ':contains("' . $message . '")'));
   }
 

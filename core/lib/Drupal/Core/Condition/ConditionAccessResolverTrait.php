@@ -20,7 +20,7 @@ trait ConditionAccessResolverTrait {
    * @return bool
    *   Whether these conditions grant or deny access.
    */
-  protected function resolveConditions($conditions, $condition_logic) {
+  protected function resolveConditions($conditions, string $condition_logic) {
     foreach ($conditions as $condition) {
       try {
         $pass = $condition->execute();

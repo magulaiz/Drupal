@@ -32,7 +32,7 @@ class FormattableMarkupKernelTest extends KernelTestBase {
    *
    * @see \Drupal\Component\Render\FormattableMarkup
    */
-  protected static function getFormattableMarkupUriArgs($uri, $options = []) {
+  protected static function getFormattableMarkupUriArgs(string $uri, $options = []) {
     $args[':url'] = Url::fromUri($uri, $options)->toString();
     return $args;
   }

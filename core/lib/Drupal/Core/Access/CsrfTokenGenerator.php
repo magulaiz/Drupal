@@ -60,7 +60,7 @@ class CsrfTokenGenerator {
    * @see \Drupal\Core\Site\Settings::getHashSalt()
    * @see \Symfony\Component\HttpFoundation\Session\SessionInterface::start()
    */
-  public function get($value = '') {
+  public function get(string $value = '') {
     $seed = $this->sessionMetadata->getCsrfTokenSeed();
     if (empty($seed)) {
       $seed = Crypt::randomBytesBase64();
@@ -81,7 +81,7 @@ class CsrfTokenGenerator {
    * @return bool
    *   TRUE for a valid token, FALSE for an invalid token.
    */
-  public function validate($token, $value = '') {
+  public function validate(string $token, string $value = '') {
     $seed = $this->sessionMetadata->getCsrfTokenSeed();
     if (empty($seed)) {
       return FALSE;
@@ -111,7 +111,7 @@ class CsrfTokenGenerator {
    *
    * @see \Drupal\Core\Site\Settings::getHashSalt()
    */
-  protected function computeToken($seed, $value = '') {
+  protected function computeToken(string $seed, string $value = '') {
     return Crypt::hmacBase64($value, $seed . $this->privateKey->get() . Settings::getHashSalt());
   }
 

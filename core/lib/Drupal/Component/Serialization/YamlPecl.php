@@ -67,7 +67,7 @@ class YamlPecl implements SerializationInterface {
    *
    * @see \Drupal\Component\Serialization\YamlPecl::decode()
    */
-  public static function errorHandler($severity, $message) {
+  public static function errorHandler($severity, string $message) {
     restore_error_handler();
     throw new InvalidDataTypeException($message, $severity);
   }
@@ -93,7 +93,7 @@ class YamlPecl implements SerializationInterface {
    *   FALSE, false, TRUE and true are returned as booleans, everything else is
    *   returned as a string.
    */
-  public static function applyBooleanCallbacks($value, $tag, $flags) {
+  public static function applyBooleanCallbacks($value, string $tag, $flags) {
     // YAML 1.1 spec dictates that 'Y', 'N', 'y' and 'n' are booleans. But, we
     // want the 1.2 behavior, so we only consider 'false', 'FALSE', 'true' and
     // 'TRUE' as booleans.

@@ -299,7 +299,7 @@ class ViewsEntitySchemaSubscriber implements EntityTypeListenerInterface, EventS
    * @param string $new_base_table
    *   The new base table name.
    */
-  protected function baseTableRename($all_views, $entity_type_id, $old_base_table, $new_base_table) {
+  protected function baseTableRename($all_views, string $entity_type_id, string $old_base_table, string $new_base_table) {
     foreach ($all_views as $view) {
       if ($view->get('base_table') == $old_base_table) {
         $view->set('base_table', $new_base_table);
@@ -327,7 +327,7 @@ class ViewsEntitySchemaSubscriber implements EntityTypeListenerInterface, EventS
    * @param string $new_data_table
    *   The new data table name.
    */
-  protected function dataTableRename($all_views, $entity_type_id, $old_data_table, $new_data_table) {
+  protected function dataTableRename($all_views, string $entity_type_id, string $old_data_table, string $new_data_table) {
     foreach ($all_views as $view) {
       if ($view->get('base_table') == $old_data_table) {
         $view->set('base_table', $new_data_table);
@@ -355,7 +355,7 @@ class ViewsEntitySchemaSubscriber implements EntityTypeListenerInterface, EventS
    * @param string $base_table
    *   The base table.
    */
-  protected function dataTableAddition($all_views, EntityTypeInterface $entity_type, $new_data_table, $base_table) {
+  protected function dataTableAddition($all_views, EntityTypeInterface $entity_type, string $new_data_table, string $base_table) {
     /** @var \Drupal\Core\Entity\Sql\SqlContentEntityStorage $storage */
     $entity_type_id = $entity_type->id();
     $storage = $this->entityTypeManager->getStorage($entity_type_id);
@@ -389,7 +389,7 @@ class ViewsEntitySchemaSubscriber implements EntityTypeListenerInterface, EventS
    * @param string $base_table
    *   The name of the base table.
    */
-  protected function dataTableRemoval($all_views, $entity_type_id, $old_data_table, $base_table) {
+  protected function dataTableRemoval($all_views, string $entity_type_id, string $old_data_table, string $base_table) {
     // We move back the data table back to the base table.
     $this->processHandlers($all_views, function (&$handler_config, ViewEntityInterface $view) use ($entity_type_id, $old_data_table, $base_table) {
       if (isset($handler_config['entity_type']) && $handler_config['entity_type'] == $entity_type_id) {

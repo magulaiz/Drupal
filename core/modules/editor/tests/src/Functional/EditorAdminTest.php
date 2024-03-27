@@ -183,7 +183,7 @@ class EditorAdminTest extends BrowserTestBase {
    * @param string $format_name
    *   The format name.
    */
-  protected function addEditorToNewFormat($format_id, $format_name) {
+  protected function addEditorToNewFormat(string $format_id, string $format_name) {
     $this->enableUnicornEditor();
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/config/content/formats/add');
@@ -241,7 +241,7 @@ class EditorAdminTest extends BrowserTestBase {
    * @param bool $ponies_too
    *   The expected value of the ponies_too setting.
    */
-  protected function verifyUnicornEditorConfiguration($format_id, $ponies_too = TRUE) {
+  protected function verifyUnicornEditorConfiguration(string $format_id, $ponies_too = TRUE) {
     $editor = editor_load($format_id);
     $settings = $editor->getSettings();
     $this->assertSame('unicorn', $editor->getEditor(), 'The text editor is configured correctly.');

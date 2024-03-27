@@ -509,7 +509,7 @@ class UrlGeneratorTest extends UnitTestCase {
    *
    * @dataProvider providerTestNoPath
    */
-  public function testNoPath($options, $expected_url) {
+  public function testNoPath($options, string $expected_url) {
     $url = $this->generator->generateFromRoute('<none>', [], $options);
     $this->assertEquals($expected_url, $url);
   }

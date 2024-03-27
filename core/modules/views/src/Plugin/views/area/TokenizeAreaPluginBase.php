@@ -106,7 +106,7 @@ abstract class TokenizeAreaPluginBase extends AreaPluginBase {
    *   Tokenized value if tokenize option is enabled. In any case global tokens
    *   will be replaced.
    */
-  public function tokenizeValue($value) {
+  public function tokenizeValue(string $value) {
     if ($this->options['tokenize']) {
       $value = $this->view->getStyle()->tokenizeValue($value, 0);
     }

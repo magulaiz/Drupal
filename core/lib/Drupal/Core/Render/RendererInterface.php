@@ -85,7 +85,7 @@ interface RendererInterface {
    *
    * @see \Drupal\Core\Render\RendererInterface::render()
    */
-  public function renderPlaceholder($placeholder, array $elements);
+  public function renderPlaceholder(string $placeholder, array $elements);
 
   /**
    * Renders HTML given a structured array tree.

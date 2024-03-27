@@ -183,7 +183,7 @@ class NodeNewComments extends NumericField {
    * @return string
    *   Returns a string for the link text.
    */
-  protected function renderLink($data, ResultRow $values) {
+  protected function renderLink(string $data, ResultRow $values) {
     if (!empty($this->options['link_to_comment']) && $data !== NULL && $data !== '') {
       $node_type = $this->getValue($values, 'type');
       $node = Node::create([

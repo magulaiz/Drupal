@@ -153,7 +153,7 @@ class Workflow extends ConfigEntityBase implements WorkflowInterface, EntityWith
    *
    *  @see \Drupal\workflows\Annotation\WorkflowType
    */
-  public static function loadMultipleByType($type) {
+  public static function loadMultipleByType(string $type) {
     return self::loadMultiple(\Drupal::entityQuery('workflow')->condition('type', $type)->execute());
   }
 

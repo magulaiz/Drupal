@@ -27,7 +27,7 @@ class BlockBaseTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetMachineNameSuggestion
    */
-  public function testGetMachineNameSuggestion($label, $expected) {
+  public function testGetMachineNameSuggestion(string $label, string $expected) {
     $module_handler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $transliteration = $this->getMockBuilder('Drupal\Core\Transliteration\PhpTransliteration')
       ->setConstructorArgs([NULL, $module_handler])

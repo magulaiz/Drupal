@@ -102,7 +102,7 @@ class UpdateFetcherTest extends UnitTestCase {
    *
    * @see \Drupal\update\UpdateFetcher::buildFetchUrl()
    */
-  public function testUpdateBuildFetchUrl(array $project, $site_key, $expected) {
+  public function testUpdateBuildFetchUrl(array $project, string $site_key, string $expected) {
     $url = $this->updateFetcher->buildFetchUrl($project, $site_key);
     $this->assertEquals($url, $expected);
     $this->assertFalse($this->logger->hasErrorRecords());

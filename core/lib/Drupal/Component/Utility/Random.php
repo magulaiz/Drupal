@@ -326,7 +326,7 @@ class Random {
    * @return string
    *   Path to image file.
    */
-  public function image($destination, $min_resolution, $max_resolution) {
+  public function image(string $destination, string $min_resolution, string $max_resolution) {
     $extension = pathinfo($destination, PATHINFO_EXTENSION);
     $min = explode('x', $min_resolution);
     $max = explode('x', $max_resolution);

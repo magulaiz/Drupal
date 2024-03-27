@@ -369,7 +369,7 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
    * @return string|null
    *   The transition ID, or NULL if no transition exists.
    */
-  protected function getTransitionIdFromStateToState($from_state_id, $to_state_id) {
+  protected function getTransitionIdFromStateToState(string $from_state_id, string $to_state_id) {
     foreach ($this->configuration['transitions'] as $transition_id => $transition) {
       if (in_array($from_state_id, $transition['from'], TRUE) && $transition['to'] === $to_state_id) {
         return $transition_id;

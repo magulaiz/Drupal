@@ -59,7 +59,7 @@ class LocaleDefaultConfigStorage {
    * @param string $install_profile
    *   The current installation profile.
    */
-  public function __construct(StorageInterface $config_storage, ConfigurableLanguageManagerInterface $language_manager, $install_profile) {
+  public function __construct(StorageInterface $config_storage, ConfigurableLanguageManagerInterface $language_manager, string $install_profile) {
     $this->configStorage = $config_storage;
     $this->languageManager = $language_manager;
 
@@ -76,7 +76,7 @@ class LocaleDefaultConfigStorage {
    * @return array
    *   Configuration data from install storage or default language.
    */
-  public function read($name) {
+  public function read(string $name) {
     if ($this->requiredInstallStorage->exists($name)) {
       return $this->requiredInstallStorage->read($name);
     }
@@ -126,7 +126,7 @@ class LocaleDefaultConfigStorage {
    *   module this list is extended with configured languages that have
    *   predefined names as well.
    */
-  public function getComponentNames($type, array $list) {
+  public function getComponentNames(string $type, array $list) {
     $names = array_unique(
       array_merge(
         array_keys($this->requiredInstallStorage->getComponentNames($list)),

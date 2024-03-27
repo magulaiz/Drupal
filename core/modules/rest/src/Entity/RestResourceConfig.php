@@ -158,7 +158,7 @@ class RestResourceConfig extends ConfigEntityBase implements RestResourceConfigI
    * @return string[]
    *   A list of supported authentication provider IDs.
    */
-  public function getAuthenticationProvidersForMethodGranularity($method) {
+  public function getAuthenticationProvidersForMethodGranularity(string $method) {
     $method = $this->normalizeRestMethod($method);
     if (in_array($method, $this->getMethods()) && isset($this->configuration[$method]['supported_auth'])) {
       return $this->configuration[$method]['supported_auth'];
@@ -191,7 +191,7 @@ class RestResourceConfig extends ConfigEntityBase implements RestResourceConfigI
    * @return string[]
    *   A list of supported format IDs.
    */
-  protected function getFormatsForMethodGranularity($method) {
+  protected function getFormatsForMethodGranularity(string $method) {
     $method = $this->normalizeRestMethod($method);
     if (in_array($method, $this->getMethods()) && isset($this->configuration[$method]['supported_formats'])) {
       return $this->configuration[$method]['supported_formats'];
@@ -253,7 +253,7 @@ class RestResourceConfig extends ConfigEntityBase implements RestResourceConfigI
    * @return string
    *   The normalized request method.
    */
-  protected function normalizeRestMethod($method) {
+  protected function normalizeRestMethod(string $method) {
     return strtoupper($method);
   }
 

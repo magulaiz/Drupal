@@ -159,7 +159,7 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
    * @return \Drupal\views\ViewEntityInterface
    *   A loaded view, bypassing static caches.
    */
-  public function loadViewUnchanged($view_id) {
+  public function loadViewUnchanged(string $view_id) {
     $this->container->get('cache.config')->deleteAll();
     $this->container->get('config.factory')->reset();
     return $this->container->get('entity_type.manager')->getStorage('view')->loadUnchanged($view_id);

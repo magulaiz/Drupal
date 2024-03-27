@@ -231,7 +231,7 @@ class EntityTestDefinitionSubscriber implements EventSubscriberInterface, Entity
    * @return bool
    *   TRUE if the event has been dispatched, FALSE otherwise.
    */
-  public function hasEventFired($event_name) {
+  public function hasEventFired(string $event_name) {
     return (bool) $this->state->get($event_name);
   }
 
@@ -241,7 +241,7 @@ class EntityTestDefinitionSubscriber implements EventSubscriberInterface, Entity
    * @param string $event_name
    *   The event name.
    */
-  protected function storeEvent($event_name) {
+  protected function storeEvent(string $event_name) {
     if ($this->trackEvents) {
       $this->state->set($event_name, TRUE);
     }
@@ -257,7 +257,7 @@ class EntityTestDefinitionSubscriber implements EventSubscriberInterface, Entity
    *   TRUE if the last installed entity type of field storage definitions have
    *   been updated before the event was fired, FALSE otherwise.
    */
-  public function hasDefinitionBeenUpdated($event_name) {
+  public function hasDefinitionBeenUpdated(string $event_name) {
     return (bool) $this->state->get($event_name . '_updated_definition');
   }
 
@@ -267,7 +267,7 @@ class EntityTestDefinitionSubscriber implements EventSubscriberInterface, Entity
    * @param string $event_name
    *   The event name.
    */
-  protected function storeDefinitionUpdate($event_name) {
+  protected function storeDefinitionUpdate(string $event_name) {
     if ($this->trackEvents) {
       $this->state->set($event_name . '_updated_definition', TRUE);
     }

@@ -92,7 +92,7 @@ class CustomPageExceptionHtmlSubscriber extends DefaultExceptionHtmlSubscriber {
    * @param int $status_code
    *   The status code for the error being handled.
    */
-  protected function makeSubrequestToCustomPath(ExceptionEvent $event, $custom_path, $status_code) {
+  protected function makeSubrequestToCustomPath(ExceptionEvent $event, string $custom_path, $status_code) {
     $url = Url::fromUserInput($custom_path);
     if ($url->isRouted()) {
       $access_result = $this->accessManager->checkNamedRoute($url->getRouteName(), $url->getRouteParameters(), NULL, TRUE);

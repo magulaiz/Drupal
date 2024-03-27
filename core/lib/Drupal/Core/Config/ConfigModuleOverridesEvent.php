@@ -86,7 +86,7 @@ class ConfigModuleOverridesEvent extends Event {
    *
    * @return $this
    */
-  public function setOverride($name, array $values) {
+  public function setOverride(string $name, array $values) {
     if (in_array($name, $this->names)) {
       if (isset($this->overrides[$name])) {
         // Existing overrides take precedence since these will have been added

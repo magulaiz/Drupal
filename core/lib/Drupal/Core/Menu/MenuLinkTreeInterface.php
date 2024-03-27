@@ -45,7 +45,7 @@ interface MenuLinkTreeInterface {
    *
    * @see \Drupal\Core\Menu\MenuTreeParameters
    */
-  public function getCurrentRouteMenuTreeParameters($menu_name);
+  public function getCurrentRouteMenuTreeParameters(string $menu_name);
 
   /**
    * Loads a menu tree with a menu link plugin instance at each element.
@@ -58,7 +58,7 @@ interface MenuLinkTreeInterface {
    * @return \Drupal\Core\Menu\MenuLinkTreeElement[]
    *   A menu link tree.
    */
-  public function load($menu_name, MenuTreeParameters $parameters);
+  public function load(string $menu_name, MenuTreeParameters $parameters);
 
   /**
    * Applies menu link tree manipulators to transform the given tree.
@@ -111,7 +111,7 @@ interface MenuLinkTreeInterface {
    *   Returns the height of the subtree. This will be at least 1 if the ID
    *   exists, or 0 if the ID does not exist in the storage.
    */
-  public function getSubtreeHeight($id);
+  public function getSubtreeHeight(string $id);
 
   /**
    * Finds expanded links in a menu given a set of possible parents.
@@ -124,6 +124,6 @@ interface MenuLinkTreeInterface {
    * @return array
    *   The menu link IDs that are flagged as expanded in this menu.
    */
-  public function getExpanded($menu_name, array $parents);
+  public function getExpanded(string $menu_name, array $parents);
 
 }

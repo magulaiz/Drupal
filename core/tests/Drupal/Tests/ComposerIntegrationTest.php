@@ -186,7 +186,7 @@ class ComposerIntegrationTest extends UnitTestCase {
    *
    * @dataProvider providerTestExpectedScaffoldFiles
    */
-  public function testExpectedScaffoldFiles($destRelPath, $sourceRelPath, $expectedDestination = '[web-root]') {
+  public function testExpectedScaffoldFiles(string $destRelPath, string $sourceRelPath, string $expectedDestination = '[web-root]') {
     // Grab the 'file-mapping' section of the core composer.json file.
     $json = json_decode(file_get_contents($this->root . '/core/composer.json'));
     $scaffold_file_mapping = (array) $json->extra->{'drupal-scaffold'}->{'file-mapping'};
@@ -218,7 +218,7 @@ class ComposerIntegrationTest extends UnitTestCase {
    *
    * @return string
    */
-  protected static function getContentHash($composerFileContents)
+  protected static function getContentHash(string $composerFileContents)
   {
     $content = json_decode($composerFileContents, true);
 

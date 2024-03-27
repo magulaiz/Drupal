@@ -117,7 +117,7 @@ class Fixtures {
    * @return string
    *   Path to project fixture.
    */
-  public function projectFixtureDir($project_name) {
+  public function projectFixtureDir(string $project_name) {
     $dir = $this->allFixturesDir() . '/' . $project_name;
     if (!is_dir($dir)) {
       throw new \RuntimeException("Requested fixture project {$project_name} that does not exist.");
@@ -134,7 +134,7 @@ class Fixtures {
    * @return string
    *   Path to project fixture.
    */
-  public function binFixtureDir($bin_name) {
+  public function binFixtureDir(string $bin_name) {
     $dir = $this->allFixturesDir() . '/scripts/' . $bin_name;
     if (!is_dir($dir)) {
       throw new \RuntimeException("Requested fixture bin dir {$bin_name} that does not exist.");
@@ -158,7 +158,7 @@ class Fixtures {
    *
    * @see \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath::sourcePath()
    */
-  public function sourcePath($project_name, $source) {
+  public function sourcePath(string $project_name, string $source) {
     $package_name = "fixtures/{$project_name}";
     $source_rel_path = "assets/{$source}";
     $package_path = $this->projectFixtureDir($project_name);
@@ -194,7 +194,7 @@ class Fixtures {
    * @return \Drupal\Composer\Plugin\Scaffold\Operations\ReplaceOp
    *   A replace operation object.
    */
-  public function replaceOp($project_name, $source) {
+  public function replaceOp(string $project_name, string $source) {
     $source_path = $this->sourcePath($project_name, $source);
     return new ReplaceOp($source_path, TRUE);
   }
@@ -211,7 +211,7 @@ class Fixtures {
    * @return \Drupal\Composer\Plugin\Scaffold\Operations\AppendOp
    *   An append operation object.
    */
-  public function appendOp($project_name, $source) {
+  public function appendOp(string $project_name, string $source) {
     $source_path = $this->sourcePath($project_name, $source);
     return new AppendOp(NULL, $source_path);
   }
@@ -237,7 +237,7 @@ class Fixtures {
    *
    * @see \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath::destinationPath()
    */
-  public function destinationPath($destination, Interpolator $interpolator = NULL, $package_name = NULL) {
+  public function destinationPath(string $destination, Interpolator $interpolator = NULL, string $package_name = NULL) {
     $interpolator = $interpolator ?: $this->getLocationReplacements();
     $package_name = $package_name ?: $interpolator->interpolate('[package-name]');
     return ScaffoldFilePath::destinationPath($package_name, $destination, $interpolator);
@@ -252,7 +252,7 @@ class Fixtures {
    * @return string
    *   Path to temporary directory
    */
-  public function tmpDir($prefix) {
+  public function tmpDir(string $prefix) {
     $prefix .= static::persistentPrefix();
     $tmpDir = sys_get_temp_dir() . '/scaffold-' . $prefix . uniqid(md5($prefix . microtime()), TRUE);
     $this->tmpDirs[] = $tmpDir;
@@ -285,7 +285,7 @@ class Fixtures {
    * @return string
    *   Path to temporary directory
    */
-  public function mkTmpDir($prefix) {
+  public function mkTmpDir(string $prefix) {
     $tmpDir = $this->tmpDir($prefix);
     $filesystem = new Filesystem();
     $filesystem->ensureDirectoryExists($tmpDir);
@@ -331,7 +331,7 @@ class Fixtures {
    *   Key : value mappings for placeholders to replace in composer.json
    *   templates.
    */
-  public function cloneFixtureProjects($fixturesDir, array $replacements = []) {
+  public function cloneFixtureProjects(string $fixturesDir, array $replacements = []) {
     $filesystem = new Filesystem();
     // We will replace 'SYMLINK' with the string 'true' in our composer.json
     // fixture.
@@ -365,7 +365,7 @@ class Fixtures {
    * @return string
    *   Output captured from tests that write to Fixtures::io().
    */
-  public function runScaffold($cwd) {
+  public function runScaffold(string $cwd) {
     chdir($cwd);
     $handler = new Handler($this->getComposer(), $this->io());
     $handler->scaffold();
@@ -383,7 +383,7 @@ class Fixtures {
    * @return string
    *   Standard output and standard error from the command.
    */
-  public function runComposer($cmd, $cwd) {
+  public function runComposer(string $cmd, string $cwd) {
     chdir($cwd);
     $input = new StringInput($cmd);
     $output = new BufferedOutput();

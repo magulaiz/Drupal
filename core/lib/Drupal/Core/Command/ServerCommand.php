@@ -113,7 +113,7 @@ class ServerCommand extends Command {
    * @return int|false
    *   The available port or FALSE, if no available port found,
    */
-  protected function findAvailablePort($host) {
+  protected function findAvailablePort(string $host) {
     $port = 8888;
     while ($port >= 8888 && $port <= 9999) {
       $connection = @fsockopen($host, $port);
@@ -138,7 +138,7 @@ class ServerCommand extends Command {
    * @param \Symfony\Component\Console\Style\SymfonyStyle $io
    *   The IO.
    */
-  protected function openBrowser($url, SymfonyStyle $io) {
+  protected function openBrowser(string $url, SymfonyStyle $io) {
     $is_windows = defined('PHP_WINDOWS_VERSION_BUILD');
     if ($is_windows) {
       // Handle escaping ourselves.
@@ -207,7 +207,7 @@ class ServerCommand extends Command {
    * @return int
    *   The exit status of the PHP in-built webserver command.
    */
-  protected function start($host, $port, DrupalKernelInterface $kernel, InputInterface $input, SymfonyStyle $io) {
+  protected function start(string $host, $port, DrupalKernelInterface $kernel, InputInterface $input, SymfonyStyle $io) {
     $finder = new PhpExecutableFinder();
     $binary = $finder->find();
     if ($binary === FALSE) {

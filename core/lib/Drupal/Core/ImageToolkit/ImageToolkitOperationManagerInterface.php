@@ -21,6 +21,6 @@ interface ImageToolkitOperationManagerInterface {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    *   When no plugin is available.
    */
-  public function getToolkitOperation(ImageToolkitInterface $toolkit, $operation);
+  public function getToolkitOperation(ImageToolkitInterface $toolkit, string $operation);
 
 }

@@ -63,7 +63,7 @@ interface ModerationHandlerInterface {
    *
    * @see hook_form_alter()
    */
-  public function enforceRevisionsEntityFormAlter(array &$form, FormStateInterface $form_state, $form_id);
+  public function enforceRevisionsEntityFormAlter(array &$form, FormStateInterface $form_state, string $form_id);
 
   /**
    * Alters bundle forms to enforce revision handling.
@@ -77,6 +77,6 @@ interface ModerationHandlerInterface {
    *
    * @see hook_form_alter()
    */
-  public function enforceRevisionsBundleFormAlter(array &$form, FormStateInterface $form_state, $form_id);
+  public function enforceRevisionsBundleFormAlter(array &$form, FormStateInterface $form_state, string $form_id);
 
 }

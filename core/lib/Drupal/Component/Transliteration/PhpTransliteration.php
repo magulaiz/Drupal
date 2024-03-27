@@ -83,7 +83,7 @@ class PhpTransliteration implements TransliterationInterface {
    *   to subdirectory 'data' underneath the directory where the class's PHP
    *   file resides.
    */
-  public function __construct($data_directory = NULL) {
+  public function __construct(string $data_directory = NULL) {
     $this->dataDirectory = (isset($data_directory)) ? $data_directory : __DIR__ . '/data';
   }
 
@@ -184,7 +184,7 @@ class PhpTransliteration implements TransliterationInterface {
    * @return int
    *   The character code, or -1 if an illegal character is found.
    */
-  protected static function ordUTF8($character) {
+  protected static function ordUTF8(string $character) {
     $first_byte = ord($character[0]);
 
     if (($first_byte & 0x80) == 0) {
@@ -224,7 +224,7 @@ class PhpTransliteration implements TransliterationInterface {
    *   otherwise, $unknown_character is returned. The replacement can contain
    *   multiple characters.
    */
-  protected function replace($code, $langcode, $unknown_character) {
+  protected function replace($code, string $langcode, string $unknown_character) {
     if ($code < 0x80) {
       // Already lower ASCII.
       return chr($code);
@@ -255,7 +255,7 @@ class PhpTransliteration implements TransliterationInterface {
    *   otherwise, $unknown_character is returned. The replacement can contain
    *   multiple characters.
    */
-  protected function lookupReplacement($code, $unknown_character = '?') {
+  protected function lookupReplacement($code, string $unknown_character = '?') {
     // See if there is a generic mapping for this character.
     $bank = $code >> 8;
     if (!isset($this->genericMap[$bank])) {

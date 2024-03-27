@@ -20,7 +20,7 @@ trait SerializedColumnNormalizerTrait {
    * @param \Drupal\Core\Field\FieldItemInterface $field_item
    *   The field item.
    */
-  protected function checkForSerializedStrings($data, $class, FieldItemInterface $field_item) {
+  protected function checkForSerializedStrings($data, string $class, FieldItemInterface $field_item) {
     // Require specialized denormalizers for fields with 'serialize' columns.
     // Note: this cannot be checked in ::supportsDenormalization() because at
     // that time we only have the field item class. ::hasSerializeColumn()

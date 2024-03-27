@@ -101,7 +101,7 @@ class PrivateTempStore {
    * @return mixed
    *   The data associated with the key, or NULL if the key does not exist.
    */
-  public function get($key) {
+  public function get(string $key) {
     $key = $this->createKey($key);
     if (($object = $this->storage->get($key)) && ($object->owner == $this->getOwner())) {
       return $object->data;
@@ -119,7 +119,7 @@ class PrivateTempStore {
    * @throws \Drupal\Core\TempStore\TempStoreException
    *   Thrown when a lock for the backend storage could not be acquired.
    */
-  public function set($key, $value) {
+  public function set(string $key, $value) {
     if ($this->currentUser->isAnonymous()) {
       $session = $this->requestStack->getSession();
       if (!$session->has('core.tempstore.private.owner')) {
@@ -154,7 +154,7 @@ class PrivateTempStore {
    *   An object with the owner and updated time if the key has a value, or
    *   NULL otherwise.
    */
-  public function getMetadata($key) {
+  public function getMetadata(string $key) {
     $key = $this->createKey($key);
     // Fetch the key/value pair and its metadata.
     $object = $this->storage->get($key);
@@ -178,7 +178,7 @@ class PrivateTempStore {
    * @throws \Drupal\Core\TempStore\TempStoreException
    *   Thrown when a lock for the backend storage could not be acquired.
    */
-  public function delete($key) {
+  public function delete(string $key) {
     $key = $this->createKey($key);
     if (!$object = $this->storage->get($key)) {
       return TRUE;
@@ -206,7 +206,7 @@ class PrivateTempStore {
    * @return string
    *   The unique key for the user.
    */
-  protected function createKey($key) {
+  protected function createKey(string $key) {
     return $this->getOwner() . ':' . $key;
   }
 

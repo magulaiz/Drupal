@@ -111,7 +111,7 @@ abstract class ImageToolkitBase extends PluginBase implements ImageToolkitInterf
    * @return \Drupal\Core\ImageToolkit\ImageToolkitOperationInterface
    *   An instance of the requested toolkit operation plugin.
    */
-  protected function getToolkitOperation($operation) {
+  protected function getToolkitOperation(string $operation) {
     return $this->operationManager->getToolkitOperation($this, $operation);
   }
 

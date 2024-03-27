@@ -24,7 +24,7 @@ class SetFormCommand implements CommandInterface {
    * @param string $url
    *   The URL of the form.
    */
-  public function __construct($url) {
+  public function __construct(string $url) {
     $this->url = $url;
   }
 

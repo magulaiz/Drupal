@@ -336,7 +336,7 @@ class JoinPluginBase extends PluginBase implements JoinPluginInterface {
    * @param array $left_table
    *   The left table.
    */
-  protected function joinAddExtra(&$arguments, &$condition, $table, SelectInterface $select_query, $left_table = NULL) {
+  protected function joinAddExtra(&$arguments, string &$condition, $table, SelectInterface $select_query, $left_table = NULL) {
     if (is_array($this->extra)) {
       $extras = [];
       foreach ($this->extra as $info) {

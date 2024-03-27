@@ -62,7 +62,7 @@ class TestController {
    * @return array
    *   The render array
    */
-  public function variable($plugin_id) {
+  public function variable(string $plugin_id) {
     return [
       '#markup' => $plugin_id,
     ];

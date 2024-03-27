@@ -155,7 +155,7 @@ class EntityAccessChecker {
    * @return \Drupal\Core\Access\AccessResultInterface|\Drupal\Core\Access\AccessResultReasonInterface
    *   The access check result.
    */
-  public function checkEntityAccess(EntityInterface $entity, $operation, AccountInterface $account) {
+  public function checkEntityAccess(EntityInterface $entity, string $operation, AccountInterface $account) {
     $access = $entity->access($operation, $account, TRUE);
     if ($entity->getEntityType()->isRevisionable()) {
       $access = AccessResult::neutral()->addCacheContexts(['url.query_args:' . JsonApiSpec::VERSION_QUERY_PARAMETER])->orIf($access);

@@ -103,7 +103,7 @@ class FilterHtml extends FilterBase {
    * @return string
    *   Filtered HTML with attributes filtered according to the settings.
    */
-  public function filterAttributes($text) {
+  public function filterAttributes(string $text) {
     $restrictions = $this->getHTMLRestrictions();
     $global_allowed_attributes = array_filter($restrictions['allowed']['*']);
     unset($restrictions['allowed']['*']);
@@ -197,7 +197,7 @@ class FilterHtml extends FilterBase {
    *
    * @return bool|array
    */
-  protected function findAllowedValue(array $allowed, $name) {
+  protected function findAllowedValue(array $allowed, string $name) {
     if (isset($allowed['exact'][$name])) {
       return $allowed['exact'][$name];
     }

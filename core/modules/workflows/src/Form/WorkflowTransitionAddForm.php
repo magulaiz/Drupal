@@ -116,7 +116,7 @@ class WorkflowTransitionAddForm extends EntityForm {
    * @return bool
    *   TRUE if the workflow transition exists, FALSE otherwise.
    */
-  public function exists($transition_id) {
+  public function exists(string $transition_id) {
     /** @var \Drupal\workflows\WorkflowInterface $original_workflow */
     $original_workflow = \Drupal::entityTypeManager()->getStorage('workflow')->loadUnchanged($this->getEntity()->id());
     return $original_workflow->getTypePlugin()->hasTransition($transition_id);

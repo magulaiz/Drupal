@@ -187,7 +187,7 @@ class Token {
    *
    * @see static::replacePlain()
    */
-  public function replace($markup, array $data = [], array $options = [], BubbleableMetadata $bubbleable_metadata = NULL) {
+  public function replace(string $markup, array $data = [], array $options = [], BubbleableMetadata $bubbleable_metadata = NULL) {
     return $this->doReplace(TRUE, (string) $markup, $data, $options, $bubbleable_metadata);
   }
 
@@ -288,7 +288,7 @@ class Token {
    * @return array
    *   An associative array of discovered tokens, grouped by type.
    */
-  public function scan($text) {
+  public function scan(string $text) {
     if (!is_string($text)) {
       @trigger_error('Calling ' . __METHOD__ . '() with a $text parameter of type other than string is deprecated in drupal:10.1.0 and will cause an error in drupal:11.0.0. See https://www.drupal.org/node/3334317', E_USER_DEPRECATED);
       $text = (string) $text;
@@ -354,7 +354,7 @@ class Token {
    * @see hook_tokens()
    * @see hook_tokens_alter()
    */
-  public function generate($type, array $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
+  public function generate(string $type, array $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
     foreach ($data as $object) {
       if ($object instanceof CacheableDependencyInterface || $object instanceof AttachmentsInterface) {
         $bubbleable_metadata->addCacheableDependency($object);
@@ -402,7 +402,7 @@ class Token {
    *   An associative array of discovered tokens, with the prefix and delimiter
    *   stripped from the key.
    */
-  public function findWithPrefix(array $tokens, $prefix, $delimiter = ':') {
+  public function findWithPrefix(array $tokens, string $prefix, string $delimiter = ':') {
     $results = [];
     foreach ($tokens as $token => $raw) {
       $parts = explode($delimiter, $token, 2);

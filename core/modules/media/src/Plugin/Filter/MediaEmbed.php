@@ -212,7 +212,7 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
    * @return array
    *   A render array.
    */
-  protected function renderMedia(MediaInterface $media, $view_mode, $langcode) {
+  protected function renderMedia(MediaInterface $media, string $view_mode, string $langcode) {
     // Due to render caching and delayed calls, filtering happens later
     // in the rendering process through a '#pre_render' callback, so we
     // need to generate a counter for the media entity that is being embedded.
@@ -401,7 +401,7 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
    * @param string $content
    *   The text or HTML that will replace the contents of $node.
    */
-  protected static function replaceNodeContent(\DOMNode &$node, $content) {
+  protected static function replaceNodeContent(\DOMNode &$node, string $content) {
     if (strlen($content)) {
       // Load the content into a new DOMDocument and retrieve the DOM nodes.
       $replacement_nodes = Html::load($content)->getElementsByTagName('body')

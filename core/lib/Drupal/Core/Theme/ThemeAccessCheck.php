@@ -37,7 +37,7 @@ class ThemeAccessCheck implements AccessInterface {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function access($theme) {
+  public function access(string $theme) {
     // Cacheable until the theme settings are modified.
     return AccessResult::allowedIf($this->checkAccess($theme))->addCacheTags(['config:' . $theme . '.settings']);
   }
@@ -51,7 +51,7 @@ class ThemeAccessCheck implements AccessInterface {
    * @return bool
    *   TRUE if the theme is installed, FALSE otherwise.
    */
-  public function checkAccess($theme) {
+  public function checkAccess(string $theme) {
     $themes = $this->themeHandler->listInfo();
     return !empty($themes[$theme]->status);
   }

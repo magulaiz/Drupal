@@ -130,7 +130,7 @@ class AliasRepository implements AliasRepositoryInterface {
    *   Language code to search the path with. If there's no path defined for
    *   that language it will search paths without language.
    */
-  protected function addLanguageFallback(SelectInterface $query, $langcode) {
+  protected function addLanguageFallback(SelectInterface $query, string $langcode) {
     // Always get the language-specific alias before the language-neutral one.
     // For example 'de' is less than 'und' so the order needs to be ASC, while
     // 'xx-lolspeak' is more than 'und' so the order needs to be DESC.

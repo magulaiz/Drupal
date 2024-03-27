@@ -28,7 +28,7 @@ class PhpTransliterationTest extends TestCase {
    *
    * @dataProvider providerTestPhpTransliterationRemoveDiacritics
    */
-  public function testRemoveDiacritics($original, $expected) {
+  public function testRemoveDiacritics(string $original, string $expected) {
     $transliterator_class = new PhpTransliteration();
     $result = $transliterator_class->removeDiacritics($original);
     $this->assertEquals($expected, $result);

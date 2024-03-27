@@ -48,7 +48,7 @@ class ContentPreprocessTest extends UnitTestCase {
    * @return \Drupal\Core\Routing\CurrentRouteMatch
    *   The mocked current route match object.
    */
-  protected function setupCurrentRouteMatch($route_name, $nid) {
+  protected function setupCurrentRouteMatch(string $route_name, $nid) {
     $route_match = $this->prophesize(CurrentRouteMatch::class);
     $route_match->getRouteName()->willReturn($route_name);
     $route_match->getParameter('node')->willReturn($this->setupNode($nid));

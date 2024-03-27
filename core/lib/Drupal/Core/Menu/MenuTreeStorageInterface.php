@@ -44,7 +44,7 @@ interface MenuTreeStorageInterface {
    * @return array|false
    *   The plugin definition, or FALSE if no definition was found for the ID.
    */
-  public function load($id);
+  public function load(string $id);
 
   /**
    * Loads multiple plugin definitions from the storage.
@@ -86,7 +86,7 @@ interface MenuTreeStorageInterface {
    * @return array
    *   An array of menu link definitions keyed by ID and ordered by depth.
    */
-  public function loadByRoute($route_name, array $route_parameters = [], $menu_name = NULL);
+  public function loadByRoute(string $route_name, array $route_parameters = [], string $menu_name = NULL);
 
   /**
    * Saves a plugin definition to the storage.
@@ -114,7 +114,7 @@ interface MenuTreeStorageInterface {
    * @param string $id
    *   The menu link plugin ID.
    */
-  public function delete($id);
+  public function delete(string $id);
 
   /**
    * Loads a menu link tree from the storage.
@@ -140,7 +140,7 @@ interface MenuTreeStorageInterface {
    *     @see static::treeDataRecursive()
    *   - route_names: An array of all route names used in the tree.
    */
-  public function loadTreeData($menu_name, MenuTreeParameters $parameters);
+  public function loadTreeData(string $menu_name, MenuTreeParameters $parameters);
 
   /**
    * Loads all the enabled menu links that are below the given ID.
@@ -157,7 +157,7 @@ interface MenuTreeStorageInterface {
    * @return array
    *   An array of enabled link definitions, keyed by ID.
    */
-  public function loadAllChildren($id, $max_relative_depth = NULL);
+  public function loadAllChildren(string $id, $max_relative_depth = NULL);
 
   /**
    * Loads all the IDs for menu links that are below the given ID.
@@ -168,7 +168,7 @@ interface MenuTreeStorageInterface {
    * @return array
    *   An unordered array of plugin IDs corresponding to all children.
    */
-  public function getAllChildIds($id);
+  public function getAllChildIds(string $id);
 
   /**
    * Loads a subtree rooted by the given ID.
@@ -186,7 +186,7 @@ interface MenuTreeStorageInterface {
    *   - subtree: A fully built menu tree element or FALSE.
    *   - route_names: An array of all route names used in the subtree.
    */
-  public function loadSubtreeData($id, $max_relative_depth = NULL);
+  public function loadSubtreeData(string $id, $max_relative_depth = NULL);
 
   /**
    * Returns all the IDs that represent the path to the root of the tree.
@@ -215,7 +215,7 @@ interface MenuTreeStorageInterface {
    *   )
    * @endcode
    */
-  public function getRootPathIds($id);
+  public function getRootPathIds(string $id);
 
   /**
    * Finds expanded links in a menu given a set of possible parents.
@@ -228,7 +228,7 @@ interface MenuTreeStorageInterface {
    * @return array
    *   The menu link IDs that are flagged as expanded in this menu.
    */
-  public function getExpanded($menu_name, array $parents);
+  public function getExpanded(string $menu_name, array $parents);
 
   /**
    * Finds the height of a subtree rooted by the given ID.
@@ -240,7 +240,7 @@ interface MenuTreeStorageInterface {
    *   Returns the height of the subtree. This will be at least 1 if the ID
    *   exists, or 0 if the ID does not exist in the storage.
    */
-  public function getSubtreeHeight($id);
+  public function getSubtreeHeight(string $id);
 
   /**
    * Determines whether a specific menu name is used in the tree.
@@ -251,7 +251,7 @@ interface MenuTreeStorageInterface {
    * @return bool
    *   Returns TRUE if the given menu name is used, otherwise FALSE.
    */
-  public function menuNameInUse($menu_name);
+  public function menuNameInUse(string $menu_name);
 
   /**
    * Returns the used menu names in the tree storage.
@@ -271,6 +271,6 @@ interface MenuTreeStorageInterface {
    *   The number of menu links in the named menu, or in all menus if the menu
    *   name is NULL.
    */
-  public function countMenuLinks($menu_name = NULL);
+  public function countMenuLinks(string $menu_name = NULL);
 
 }

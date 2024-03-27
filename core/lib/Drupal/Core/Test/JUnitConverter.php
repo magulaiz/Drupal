@@ -25,7 +25,7 @@ class JUnitConverter {
    *
    * @internal
    */
-  public static function xmlToRows($test_id, $phpunit_xml_file) {
+  public static function xmlToRows($test_id, string $phpunit_xml_file) {
     $contents = @file_get_contents($phpunit_xml_file);
     if (!$contents) {
       return [];

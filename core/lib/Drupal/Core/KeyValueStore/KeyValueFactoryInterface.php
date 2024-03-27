@@ -16,6 +16,6 @@ interface KeyValueFactoryInterface {
    * @return \Drupal\Core\KeyValueStore\KeyValueStoreInterface
    *   A key/value store implementation for the given $collection.
    */
-  public function get($collection);
+  public function get(string $collection);
 
 }

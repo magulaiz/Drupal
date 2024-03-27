@@ -203,7 +203,7 @@ class ViewsSelection extends SelectionPluginBase implements ContainerFactoryPlug
    * @return bool
    *   Return TRUE if the view was initialized, FALSE otherwise.
    */
-  protected function initializeView($match = NULL, $match_operator = 'CONTAINS', $limit = 0, $ids = NULL) {
+  protected function initializeView($match = NULL, string $match_operator = 'CONTAINS', $limit = 0, $ids = NULL) {
     $view_name = $this->getConfiguration()['view']['view_name'];
     $display_name = $this->getConfiguration()['view']['display_name'];
 

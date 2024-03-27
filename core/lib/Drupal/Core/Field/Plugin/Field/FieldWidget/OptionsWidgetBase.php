@@ -210,7 +210,7 @@ abstract class OptionsWidgetBase extends WidgetBase {
    * @param string $label
    *   The label to sanitize.
    */
-  protected function sanitizeLabel(&$label) {
+  protected function sanitizeLabel(string &$label) {
     // Allow a limited set of HTML tags.
     $label = FieldFilteredMarkup::create($label);
   }

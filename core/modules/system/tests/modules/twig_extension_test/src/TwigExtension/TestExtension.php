@@ -95,7 +95,7 @@ class TestExtension extends AbstractExtension {
    *
    * @see \Drupal\system\Tests\Theme\TwigExtensionTest::testTwigExtensionFilter()
    */
-  public static function testFilter($string) {
+  public static function testFilter(string $string) {
     return str_replace(['animal'], ['plant'], $string);
   }
 

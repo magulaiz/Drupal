@@ -196,7 +196,7 @@ class DownloadTest extends FileManagedTestBase {
    * @param string $expected_url
    *   The expected URL.
    */
-  private function checkUrl($scheme, $directory, $filename, $expected_url) {
+  private function checkUrl(string $scheme, string $directory, string $filename, string $expected_url) {
     // Convert $filename to a valid filename, i.e. strip characters not
     // supported by the filesystem, and create the file in the specified
     // directory.

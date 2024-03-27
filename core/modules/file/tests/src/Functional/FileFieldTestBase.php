@@ -115,7 +115,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
    * @return int
    *   The node id.
    */
-  public function uploadNodeFile(FileInterface $file, $field_name, $nid_or_type, $new_revision = TRUE, array $extras = []) {
+  public function uploadNodeFile(FileInterface $file, string $field_name, $nid_or_type, $new_revision = TRUE, array $extras = []) {
     return $this->uploadNodeFiles([$file], $field_name, $nid_or_type, $new_revision, $extras);
   }
 
@@ -137,7 +137,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
    * @return int
    *   The node id.
    */
-  public function uploadNodeFiles(array $files, $field_name, $nid_or_type, $new_revision = TRUE, array $extras = []) {
+  public function uploadNodeFiles(array $files, string $field_name, $nid_or_type, $new_revision = TRUE, array $extras = []) {
     $edit = [
       'title[0][value]' => $this->randomMachineName(),
       'revision' => (string) (int) $new_revision,

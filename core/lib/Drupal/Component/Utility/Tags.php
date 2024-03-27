@@ -18,7 +18,7 @@ class Tags {
    * @return array
    *   An array of tags.
    */
-  public static function explode($tags) {
+  public static function explode(string $tags) {
     // This regexp allows the following types of user input:
     // this, "somecompany, llc", "and ""this"" w,o.rks", foo bar
     $regexp = '%(?:^|,\ *)("(?>[^"]*)(?>""[^"]* )*"|(?: [^",]*))%x';
@@ -48,7 +48,7 @@ class Tags {
    * @return string
    *   The encoded string.
    */
-  public static function encode($tag) {
+  public static function encode(string $tag) {
     if (str_contains($tag, ',') || str_contains($tag, '"')) {
       return '"' . str_replace('"', '""', $tag) . '"';
     }

@@ -71,7 +71,7 @@ class MediaLibraryState extends ParameterBag implements CacheableDependencyInter
    * @return static
    *   A state object.
    */
-  public static function create($opener_id, array $allowed_media_type_ids, $selected_type_id, $remaining_slots, array $opener_parameters = []) {
+  public static function create(string $opener_id, array $allowed_media_type_ids, string $selected_type_id, $remaining_slots, array $opener_parameters = []) {
     $state = new static([
       'media_library_opener_id' => $opener_id,
       'media_library_allowed_types' => $allowed_media_type_ids,
@@ -139,7 +139,7 @@ class MediaLibraryState extends ParameterBag implements CacheableDependencyInter
    *   If one of the passed arguments is missing or does not pass the
    *   validation.
    */
-  protected function validateRequiredParameters($opener_id, array $allowed_media_type_ids, $selected_type_id, $remaining_slots) {
+  protected function validateRequiredParameters(string $opener_id, array $allowed_media_type_ids, string $selected_type_id, $remaining_slots) {
     // The opener ID must be a non-empty string.
     if (!is_string($opener_id) || empty(trim($opener_id))) {
       throw new \InvalidArgumentException('The opener ID parameter is required and must be a string.');
@@ -205,7 +205,7 @@ class MediaLibraryState extends ParameterBag implements CacheableDependencyInter
    * @return string
    *   The hashed parameters.
    */
-  public function isValidHash($hash) {
+  public function isValidHash(string $hash) {
     return hash_equals($this->getHash(), $hash);
   }
 

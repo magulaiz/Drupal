@@ -42,7 +42,7 @@ class RssResponseRelativeUrlFilter implements EventSubscriberInterface {
    * @return string
    *   The updated RSS markup.
    */
-  protected function transformRootRelativeUrlsToAbsolute($rss_markup, Request $request) {
+  protected function transformRootRelativeUrlsToAbsolute(string $rss_markup, Request $request) {
     $rss_dom = new \DOMDocument();
 
     // Load the RSS, if there are parsing errors, abort and return the unchanged

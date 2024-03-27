@@ -129,7 +129,7 @@ class Row {
    * @return bool
    *   TRUE if the source has property; FALSE otherwise.
    */
-  public function hasSourceProperty($property) {
+  public function hasSourceProperty(string $property) {
     return NestedArray::keyExists($this->source, explode(static::PROPERTY_SEPARATOR, $property));
   }
 
@@ -149,7 +149,7 @@ class Row {
    * @return mixed|null
    *   The found returned property or NULL if not found.
    */
-  public function getSourceProperty($property) {
+  public function getSourceProperty(string $property) {
     $return = NestedArray::getValue($this->source, explode(static::PROPERTY_SEPARATOR, $property), $key_exists);
     if ($key_exists) {
       return $return;
@@ -181,7 +181,7 @@ class Row {
    *
    * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase::next
    */
-  public function setSourceProperty($property, $data) {
+  public function setSourceProperty(string $property, $data) {
     if ($this->frozen) {
       throw new \Exception("The source is frozen and can't be changed any more");
     }
@@ -230,7 +230,7 @@ class Row {
    * @param mixed $value
    *   The property value to set on the destination.
    */
-  public function setDestinationProperty($property, $value) {
+  public function setDestinationProperty(string $property, $value) {
     $this->rawDestination[$property] = $value;
     NestedArray::setValue($this->destination, explode(static::PROPERTY_SEPARATOR, $property), $value, TRUE);
   }
@@ -241,7 +241,7 @@ class Row {
    * @param string $property
    *   The name of the destination property.
    */
-  public function removeDestinationProperty($property) {
+  public function removeDestinationProperty(string $property) {
     unset($this->rawDestination[$property]);
     NestedArray::unsetValue($this->destination, explode(static::PROPERTY_SEPARATOR, $property));
   }
@@ -252,7 +252,7 @@ class Row {
    * @param string $property
    *   The destination property.
    */
-  public function setEmptyDestinationProperty($property) {
+  public function setEmptyDestinationProperty(string $property) {
     $this->emptyDestinationProperties[] = $property;
   }
 
@@ -305,7 +305,7 @@ class Row {
    * @return mixed
    *   The destination value.
    */
-  public function getDestinationProperty($property) {
+  public function getDestinationProperty(string $property) {
     return NestedArray::getValue($this->destination, explode(static::PROPERTY_SEPARATOR, $property));
   }
 
@@ -324,7 +324,7 @@ class Row {
    * @return mixed|null
    *   The requested property.
    */
-  public function get($property) {
+  public function get(string $property) {
     $values = $this->getMultiple([$property]);
     return reset($values);
   }

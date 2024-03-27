@@ -34,7 +34,7 @@ class FocusFirstCommand implements CommandInterface {
    * @param string $selector
    *   The selector of the container with tabbable elements.
    */
-  public function __construct($selector) {
+  public function __construct(string $selector) {
     $this->selector = $selector;
   }
 

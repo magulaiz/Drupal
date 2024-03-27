@@ -200,7 +200,7 @@ interface EntityStorageInterface {
    *
    * @see \Drupal\Core\Entity\EntityStorageBase::getQueryServiceName()
    */
-  public function getQuery($conjunction = 'AND');
+  public function getQuery(string $conjunction = 'AND');
 
   /**
    * Gets an aggregated query instance.
@@ -215,7 +215,7 @@ interface EntityStorageInterface {
    *
    * @see \Drupal\Core\Entity\EntityStorageBase::getQueryServiceName()
    */
-  public function getAggregateQuery($conjunction = 'AND');
+  public function getAggregateQuery(string $conjunction = 'AND');
 
   /**
    * Gets the entity type ID.

@@ -187,7 +187,7 @@ class EntityAutocompleteTest extends EntityKernelTestBase {
    * @return mixed
    *   The JSON value encoded in its appropriate PHP type.
    */
-  protected function getAutocompleteResult($input, $entity_id = NULL) {
+  protected function getAutocompleteResult(string $input, $entity_id = NULL) {
     // Use "entity_test_all_except_host" EntityReferenceSelection
     // to also test passing an entity to autocomplete requests.
     $request = Request::create('entity_reference_autocomplete/' . $this->entityType . '/entity_test_all_except_host');

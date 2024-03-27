@@ -37,7 +37,7 @@ trait MigrateMenuLinkTestTrait {
    * @return \Drupal\menu_link_content\MenuLinkContentInterface
    *   The menu link content.
    */
-  protected function assertEntity($id, $langcode, $title, $menu, $description, $enabled, $expanded, array $attributes, $uri, $weight) {
+  protected function assertEntity(string $id, string $langcode, string $title, string $menu, string $description, $enabled, $expanded, array $attributes, string $uri, $weight) {
     /** @var \Drupal\menu_link_content\MenuLinkContentInterface $menu_link */
     $menu_link = MenuLinkContent::load($id);
     $menu_link = $menu_link->getTranslation($langcode);

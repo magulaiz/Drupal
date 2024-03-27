@@ -232,7 +232,7 @@ class Node extends DrupalSqlBase {
    * @return array
    *   Field and instance information for the node type, keyed by field name.
    */
-  protected function getFieldInfo($node_type) {
+  protected function getFieldInfo(string $node_type) {
     if (!isset($this->fieldInfo)) {
       $this->fieldInfo = [];
 

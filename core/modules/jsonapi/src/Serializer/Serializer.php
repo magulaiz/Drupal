@@ -97,7 +97,7 @@ final class Serializer extends SymfonySerializer {
    * @return bool
    *   Whether this class supports normalization for the given data.
    */
-  private function selfSupportsNormalization($data, $format = NULL, array $context = []) {
+  private function selfSupportsNormalization($data, string $format = NULL, array $context = []) {
     return parent::supportsNormalization($data, $format, $context);
   }
 
@@ -123,7 +123,7 @@ final class Serializer extends SymfonySerializer {
    * @return bool
    *   Whether this class supports normalization for the given data and type.
    */
-  private function selfSupportsDenormalization($data, $type, $format = NULL, array $context = []) {
+  private function selfSupportsDenormalization($data, string $type, string $format = NULL, array $context = []) {
     return parent::supportsDenormalization($data, $type, $format, $context);
   }
 

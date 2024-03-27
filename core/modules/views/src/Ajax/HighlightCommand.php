@@ -24,7 +24,7 @@ class HighlightCommand implements CommandInterface {
    * @param string $selector
    *   A CSS selector.
    */
-  public function __construct($selector) {
+  public function __construct(string $selector) {
     $this->selector = $selector;
   }
 

@@ -138,7 +138,7 @@ class BookController extends ControllerBase {
    *
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
-  public function bookExport($type, NodeInterface $node) {
+  public function bookExport(string $type, NodeInterface $node) {
     $method = 'bookExport' . Container::camelize($type);
 
     // @todo Convert the custom export functionality to serializer.

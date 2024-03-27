@@ -44,6 +44,6 @@ interface VersionNegotiatorInterface {
    * @throws \Drupal\jsonapi\Revisions\InvalidVersionIdentifierException
    *   When the revision ID is invalid.
    */
-  public function getRevision(EntityInterface $entity, $version_argument);
+  public function getRevision(EntityInterface $entity, string $version_argument);
 
 }

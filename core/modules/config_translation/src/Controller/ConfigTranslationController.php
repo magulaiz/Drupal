@@ -130,7 +130,7 @@ class ConfigTranslationController extends ControllerBase {
    * @return array
    *   Page render array.
    */
-  public function itemPage(Request $request, RouteMatchInterface $route_match, $plugin_id) {
+  public function itemPage(Request $request, RouteMatchInterface $route_match, string $plugin_id) {
     /** @var \Drupal\config_translation\ConfigMapperInterface $mapper */
     $mapper = $this->configMapperManager->createInstance($plugin_id);
     $mapper->populateFromRouteMatch($route_match);

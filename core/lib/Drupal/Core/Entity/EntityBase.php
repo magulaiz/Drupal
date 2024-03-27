@@ -56,7 +56,7 @@ abstract class EntityBase implements EntityInterface {
    * @param string $entity_type
    *   The type of the entity to create.
    */
-  public function __construct(array $values, $entity_type) {
+  public function __construct(array $values, string $entity_type) {
     $this->entityTypeId = $entity_type;
     // Set initial values.
     foreach ($values as $key => $value) {
@@ -275,7 +275,7 @@ abstract class EntityBase implements EntityInterface {
    * @return array
    *   An array of URI placeholders.
    */
-  protected function urlRouteParameters($rel) {
+  protected function urlRouteParameters(string $rel) {
     $uri_route_parameters = [];
 
     if (!in_array($rel, ['collection', 'add-page', 'add-form'], TRUE)) {

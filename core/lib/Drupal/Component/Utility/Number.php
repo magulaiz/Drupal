@@ -94,7 +94,7 @@ class Number {
    *
    * @see \Drupal\Component\Utility\Number::intToAlphadecimal
    */
-  public static function alphadecimalToInt($string = '00') {
+  public static function alphadecimalToInt(string $string = '00') {
     return (int) base_convert(substr($string, 1), 36, 10);
   }
 

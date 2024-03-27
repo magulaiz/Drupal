@@ -26,7 +26,7 @@ class FieldTest extends FieldPluginBase {
    * @param string $value
    *   The test value to set.
    */
-  public function setTestValue($value) {
+  public function setTestValue(string $value) {
     $this->testValue = $value;
   }
 

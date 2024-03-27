@@ -461,7 +461,7 @@ class UrlConversionTest extends UnitTestCase {
    *
    * @dataProvider providerInvalidArgumentGetConnectionInfoAsUrl
    */
-  public function testGetInvalidArgumentGetConnectionInfoAsUrl(array $connection_options, $expected_exception_message) {
+  public function testGetInvalidArgumentGetConnectionInfoAsUrl(array $connection_options, string $expected_exception_message) {
     Database::addConnectionInfo('default', 'default', $connection_options);
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage($expected_exception_message);

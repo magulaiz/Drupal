@@ -397,7 +397,7 @@ class MenuTreeStorageTest extends KernelTestBase {
    * @param string $new_parent
    *   The ID of the new parent link.
    */
-  protected function moveMenuLink($id, $new_parent) {
+  protected function moveMenuLink(string $id, string $new_parent) {
     $menu_link = $this->treeStorage->load($id);
     $menu_link['parent'] = $new_parent;
     $this->treeStorage->save($menu_link);

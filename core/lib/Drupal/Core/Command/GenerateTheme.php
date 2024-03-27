@@ -299,7 +299,7 @@ class GenerateTheme extends Command {
    * @throws \RuntimeException
    *   Exception thrown if copying failed.
    */
-  private function copyRecursive($src, $dest): void {
+  private function copyRecursive(string $src, string $dest): void {
     // Copy all subdirectories and files.
     if (is_dir($src)) {
       if (!mkdir($dest, FileSystem::CHMOD_DIRECTORY, FALSE)) {

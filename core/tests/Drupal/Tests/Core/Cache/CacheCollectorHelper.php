@@ -52,7 +52,7 @@ class CacheCollectorHelper extends CacheCollector {
    * @param mixed $value
    *   The value to return.
    */
-  public function setCacheMissData($key, $value) {
+  public function setCacheMissData(string $key, $value) {
     $this->cacheMissData[$key] = $value;
   }
 

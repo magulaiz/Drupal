@@ -25,7 +25,7 @@ interface DeriverInterface {
    *   $base_plugin_definition with extra derivative-specific information. NULL
    *   if the derivative doesn't exist.
    */
-  public function getDerivativeDefinition($derivative_id, $base_plugin_definition);
+  public function getDerivativeDefinition(string $derivative_id, $base_plugin_definition);
 
   /**
    * Gets the definition of all derivatives of a base plugin.

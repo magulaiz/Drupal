@@ -430,7 +430,7 @@ class ConfigManager implements ConfigManagerInterface {
    *   TRUE if the entity has changed as a result of calling the
    *   onDependencyRemoval() method, FALSE if not.
    */
-  protected function callOnDependencyRemoval(ConfigEntityInterface $entity, array $dependent_entities, $type, array $names) {
+  protected function callOnDependencyRemoval(ConfigEntityInterface $entity, array $dependent_entities, string $type, array $names) {
     $entity_dependencies = $entity->getDependencies();
     if (empty($entity_dependencies)) {
       // No dependent entities nothing to do.

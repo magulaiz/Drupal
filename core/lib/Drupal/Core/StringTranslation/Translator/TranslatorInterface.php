@@ -20,7 +20,7 @@ interface TranslatorInterface {
    * @return string|false
    *   Translated string if there is a translation, FALSE if not.
    */
-  public function getStringTranslation($langcode, $string, $context);
+  public function getStringTranslation(string $langcode, string $string, string $context);
 
   /**
    * Resets translation cache.

@@ -427,7 +427,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
    * @return string
    *   Name of the button to hit.
    */
-  protected function getFormSubmitActionForNewTranslation(EntityInterface $entity, $langcode) {
+  protected function getFormSubmitActionForNewTranslation(EntityInterface $entity, string $langcode) {
     $entity->addTranslation($langcode, $entity->toArray());
     return $this->getFormSubmitAction($entity, $langcode);
   }
@@ -443,7 +443,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
    * @return string
    *   Name of the button to hit.
    */
-  protected function getFormSubmitAction(EntityInterface $entity, $langcode) {
+  protected function getFormSubmitAction(EntityInterface $entity, string $langcode) {
     return 'Save' . $this->getFormSubmitSuffix($entity, $langcode);
   }
 
@@ -458,7 +458,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
    * @return string
    *   Submit button suffix based on translatability.
    */
-  protected function getFormSubmitSuffix(EntityInterface $entity, $langcode) {
+  protected function getFormSubmitSuffix(EntityInterface $entity, string $langcode) {
     return '';
   }
 
@@ -473,7 +473,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
    * @return \Drupal\Core\TypedData\TranslatableInterface
    *   The translation object to act on.
    */
-  protected function getTranslation(EntityInterface $entity, $langcode) {
+  protected function getTranslation(EntityInterface $entity, string $langcode) {
     return $entity->getTranslation($langcode);
   }
 
@@ -490,7 +490,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
    * @return mixed
    *   The property value.
    */
-  protected function getValue(EntityInterface $translation, $property, $langcode) {
+  protected function getValue(EntityInterface $translation, string $property, string $langcode) {
     $key = $property == 'user_id' ? 'target_id' : 'value';
     return $translation->get($property)->{$key};
   }

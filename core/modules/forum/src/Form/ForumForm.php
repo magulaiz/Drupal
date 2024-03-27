@@ -125,7 +125,7 @@ class ForumForm extends TermForm {
    * @return array
    *   A select form element.
    */
-  protected function forumParentSelect($tid, $title) {
+  protected function forumParentSelect($tid, string $title) {
     $taxonomy_storage = $this->entityTypeManager->getStorage('taxonomy_term');
     $parents = $taxonomy_storage->loadParents($tid);
     if ($parents) {

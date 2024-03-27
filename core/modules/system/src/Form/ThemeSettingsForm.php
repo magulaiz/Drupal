@@ -523,7 +523,7 @@ class ThemeSettingsForm extends ConfigFormBase {
    *   A valid path that can be displayed through the theme system, or FALSE if
    *   the path could not be validated.
    */
-  protected function validatePath($path) {
+  protected function validatePath(string $path) {
     // Absolute local file paths are invalid.
     if ($this->fileSystem->realpath($path) == $path) {
       return FALSE;

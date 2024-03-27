@@ -222,7 +222,7 @@ class ConfigEntityImportTest extends KernelTestBase {
    * @param mixed $expected
    *   The expected default value of the plugin config setting.
    */
-  protected function checkSinglePluginConfigSync(EntityWithPluginCollectionInterface $entity, $config_key, $setting_key, $expected) {
+  protected function checkSinglePluginConfigSync(EntityWithPluginCollectionInterface $entity, string $config_key, string $setting_key, $expected) {
     $plugin_collection = $entity->getPluginCollections()[$config_key];
     $settings = $entity->get($config_key);
 

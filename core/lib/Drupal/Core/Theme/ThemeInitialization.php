@@ -59,7 +59,7 @@ class ThemeInitialization implements ThemeInitializationInterface {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to use to load modules.
    */
-  public function __construct($root, ThemeHandlerInterface $theme_handler, CacheBackendInterface $cache, ModuleHandlerInterface $module_handler) {
+  public function __construct(string $root, ThemeHandlerInterface $theme_handler, CacheBackendInterface $cache, ModuleHandlerInterface $module_handler) {
     $this->root = $root;
     $this->themeHandler = $theme_handler;
     $this->cache = $cache;
@@ -281,7 +281,7 @@ class ThemeInitialization implements ThemeInitializationInterface {
    *
    * @todo Remove in Drupal 9.0.x.
    */
-  protected function resolveStyleSheetPlaceholders($css_file) {
+  protected function resolveStyleSheetPlaceholders(string $css_file) {
     $token_candidate = explode('/', $css_file)[0];
     if (!preg_match('/@[A-z0-9_-]+/', $token_candidate)) {
       return $css_file;

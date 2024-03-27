@@ -33,7 +33,7 @@ class ConfigEntityDependency {
    * @param array $values
    *   (optional) The configuration entity's values.
    */
-  public function __construct($name, $values = []) {
+  public function __construct(string $name, $values = []) {
     $this->name = $name;
     if (isset($values['dependencies']) && isset($values['dependencies']['enforced'])) {
       // Merge the enforced dependencies into the list of dependencies.
@@ -56,7 +56,7 @@ class ConfigEntityDependency {
    * @return array
    *   The list of dependencies of the supplied type.
    */
-  public function getDependencies($type) {
+  public function getDependencies(string $type) {
     $dependencies = [];
     if (isset($this->dependencies[$type])) {
       $dependencies = $this->dependencies[$type];
@@ -82,7 +82,7 @@ class ConfigEntityDependency {
    *
    * @return bool
    */
-  public function hasDependency($type, $name) {
+  public function hasDependency(string $type, string $name) {
     // Add a dependency on the provider module (which defines this config
     // entity type, such as 'node' in the case of 'node.type' configuration).
     if ($type == 'module' && str_starts_with($this->name, $name . '.')) {

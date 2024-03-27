@@ -113,7 +113,7 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
    *
    * @return array
    */
-  protected function buildInfo($theme_name) {
+  protected function buildInfo(string $theme_name) {
     // Get cached definitions.
     $cid = $this->getCid($theme_name);
     if ($cache = $this->cacheBackend->get($cid)) {
@@ -191,7 +191,7 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
    *
    * @return string
    */
-  protected function getCid($theme_name) {
+  protected function getCid(string $theme_name) {
     return 'element_info_build:' . $theme_name;
   }
 

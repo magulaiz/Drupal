@@ -177,7 +177,7 @@ abstract class FilterFormatFormBase extends EntityForm {
    * @return bool
    *   TRUE if the format exists, FALSE otherwise.
    */
-  public function exists($format_id) {
+  public function exists(string $format_id) {
     return (bool) $this->entityTypeManager
       ->getStorage('filter_format')
       ->getQuery()

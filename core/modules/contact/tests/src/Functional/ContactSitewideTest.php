@@ -523,7 +523,7 @@ class ContactSitewideTest extends BrowserTestBase {
    * @param array $third_party_settings
    *   Array of third party settings to be added to the posted form data.
    */
-  public function addContactForm($id, $label, $recipients, $reply, $selected, $message = 'Your message has been sent.', $third_party_settings = []) {
+  public function addContactForm(string $id, string $label, string $recipients, string $reply, $selected, string $message = 'Your message has been sent.', $third_party_settings = []) {
     $edit = [];
     $edit['label'] = $label;
     $edit['id'] = $id;
@@ -560,7 +560,7 @@ class ContactSitewideTest extends BrowserTestBase {
    * @param string $redirect
    *   The path where user will be redirect after this form has been submitted..
    */
-  public function updateContactForm($id, $label, $recipients, $reply, $selected, $message = 'Your message has been sent.', $redirect = '/') {
+  public function updateContactForm(string $id, string $label, string $recipients, string $reply, $selected, string $message = 'Your message has been sent.', string $redirect = '/') {
     $edit = [];
     $edit['label'] = $label;
     $edit['recipients'] = $recipients;
@@ -586,7 +586,7 @@ class ContactSitewideTest extends BrowserTestBase {
    * @param string $message
    *   The message body.
    */
-  public function submitContact($name, $mail, $subject, $id, $message) {
+  public function submitContact(string $name, string $mail, string $subject, string $id, string $message) {
     $edit = [];
     $edit['name'] = $name;
     $edit['mail'] = $mail;

@@ -183,7 +183,7 @@ trait FunctionalTestSetupTrait {
    * @param string $value
    *   The value of the parameter.
    */
-  protected function setContainerParameter($name, $value) {
+  protected function setContainerParameter(string $name, string $value) {
     $filename = $this->siteDirectory . '/services.yml';
     chmod($filename, 0666);
 

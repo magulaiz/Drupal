@@ -90,8 +90,8 @@ class UpdateRegistry implements EventSubscriberInterface {
    *   The used update name.
    */
   public function __construct(
-    $root,
-    $site_path,
+    string $root,
+    string $site_path,
     $module_list,
     KeyValueStoreInterface $key_value,
     ThemeHandlerInterface|bool $theme_handler = NULL,
@@ -269,7 +269,7 @@ class UpdateRegistry implements EventSubscriberInterface {
    * @return callable[]
    *   A list of update functions.
    */
-  public function getUpdateFunctions($extension_name) {
+  public function getUpdateFunctions(string $extension_name) {
     $this->scanExtensionsAndLoadUpdateFiles($extension_name);
 
     $updates = [];

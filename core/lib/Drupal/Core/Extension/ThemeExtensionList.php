@@ -216,7 +216,7 @@ class ThemeExtensionList extends ExtensionList {
    *
    * @see https://www.drupal.org/node/3413187
    */
-  public function getBaseThemes(array $themes, $theme) {
+  public function getBaseThemes(array $themes, string $theme) {
     @trigger_error("\Drupal\Core\Extension\ThemeExtensionList::getBaseThemes() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. There is no direct replacement. See https://www.drupal.org/node/3413187", E_USER_DEPRECATED);
     return $this->doGetBaseThemes($themes, $theme);
   }
@@ -235,7 +235,7 @@ class ThemeExtensionList extends ExtensionList {
    * @return array
    *   An array of base themes.
    */
-  protected function doGetBaseThemes(array $themes, $theme, array $used_themes = []) {
+  protected function doGetBaseThemes(array $themes, string $theme, array $used_themes = []) {
     if (!isset($themes[$theme]->info['base theme'])) {
       return [];
     }

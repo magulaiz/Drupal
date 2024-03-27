@@ -206,7 +206,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
    *
    * @return string
    */
-  protected function generateDisplayId($plugin_id) {
+  protected function generateDisplayId(string $plugin_id) {
     // 'default' is singular and is unique, so just go with 'default'
     // for it. For all others, start counting.
     if ($plugin_id == 'default') {

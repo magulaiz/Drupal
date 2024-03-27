@@ -26,7 +26,7 @@ class TimezoneController {
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *   The time zone identifier or 'false' in JsonResponse object.
    */
-  public function getTimezone($abbreviation = '', $offset = -1, $is_daylight_saving_time = NULL) {
+  public function getTimezone(string $abbreviation = '', $offset = -1, $is_daylight_saving_time = NULL) {
     $offset = intval($offset);
     // Out of bounds check for offset. Offset +/- UTC is typically no
     // smaller/larger than -12/+14.

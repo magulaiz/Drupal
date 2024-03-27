@@ -100,7 +100,7 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    * @return \Drupal\Core\Config\Config|\Drupal\Core\Config\ImmutableConfig
    *   A configuration object.
    */
-  protected function doGet($name, $immutable = TRUE) {
+  protected function doGet(string $name, $immutable = TRUE) {
     if ($config = $this->doLoadMultiple([$name], $immutable)) {
       return $config[$name];
     }
@@ -219,7 +219,7 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    * @param string $name
    *   The name of the configuration object to construct.
    */
-  protected function propagateConfigOverrideCacheability($cache_key, $name) {
+  protected function propagateConfigOverrideCacheability(string $cache_key, string $name) {
     foreach ($this->configFactoryOverrides as $override) {
       $this->cache[$cache_key]->addCacheableDependency($override->getCacheableMetadata($name));
     }
@@ -289,7 +289,7 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    * @return string
    *   The cache key.
    */
-  protected function getConfigCacheKey($name, $immutable) {
+  protected function getConfigCacheKey(string $name, $immutable) {
     $suffix = '';
     if ($immutable) {
       $suffix = ':' . implode(':', $this->getCacheKeys());
@@ -306,7 +306,7 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    * @return array
    *   An array of cache keys that match the provided config name.
    */
-  protected function getConfigCacheKeys($name) {
+  protected function getConfigCacheKeys(string $name) {
     return array_filter(array_keys($this->cache), function ($key) use ($name) {
       // Return TRUE if the key is the name or starts with the configuration
       // name plus the delimiter.
@@ -407,7 +407,7 @@ class ConfigFactory implements ConfigFactoryInterface, EventSubscriberInterface 
    * @return \Drupal\Core\Config\Config|\Drupal\Core\Config\ImmutableConfig
    *   The configuration object.
    */
-  protected function createConfigObject($name, $immutable) {
+  protected function createConfigObject(string $name, $immutable) {
     if ($immutable) {
       return new ImmutableConfig($name, $this->storage, $this->eventDispatcher, $this->typedConfigManager);
     }

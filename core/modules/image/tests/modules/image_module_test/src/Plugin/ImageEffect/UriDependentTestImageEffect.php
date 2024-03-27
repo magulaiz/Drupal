@@ -42,7 +42,7 @@ class UriDependentTestImageEffect extends ImageEffectBase {
    *   - width: Integer with the derivative image width.
    *   - height: Integer with the derivative image height.
    */
-  protected function getUriDependentDimensions($uri) {
+  protected function getUriDependentDimensions(string $uri) {
     $dimensions = [];
     $extension = pathinfo($uri, PATHINFO_EXTENSION);
     switch (strtolower($extension)) {

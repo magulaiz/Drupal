@@ -157,7 +157,7 @@ final class ProjectCoreCompatibility {
    *   TRUE if the given constraint is satisfied by the currently installed
    *   version of Drupal core, otherwise FALSE.
    */
-  protected function isCoreCompatible($core_compatibility_constraint) {
+  protected function isCoreCompatible(string $core_compatibility_constraint) {
     return Semver::satisfies($this->existingCoreVersion, $core_compatibility_constraint);
   }
 
@@ -170,7 +170,7 @@ final class ProjectCoreCompatibility {
    * @return string
    *   The core compatibility message.
    */
-  protected function createMessageFromCoreCompatibility($core_compatibility_constraint) {
+  protected function createMessageFromCoreCompatibility(string $core_compatibility_constraint) {
     if (!isset($this->compatibilityMessages[$core_compatibility_constraint])) {
       $core_compatibility_ranges = $this->getCompatibilityRanges($core_compatibility_constraint);
       $range_messages = [];
@@ -199,7 +199,7 @@ final class ProjectCoreCompatibility {
    *   the range has 1 element then it denotes compatibility with a single
    *   version.
    */
-  protected function getCompatibilityRanges($core_compatibility_constraint) {
+  protected function getCompatibilityRanges(string $core_compatibility_constraint) {
     $compatibility_ranges = [];
     foreach ($this->possibleCoreUpdateVersions as $possible_core_update_version) {
       if (Semver::satisfies($possible_core_update_version, $core_compatibility_constraint)) {

@@ -148,7 +148,7 @@ EOD;
    * @return string|bool
    *   The name of the encoding, or FALSE if no byte order mark was present.
    */
-  public static function encodingFromBOM($data) {
+  public static function encodingFromBOM(string $data) {
     static $bomMap = [
       "\xEF\xBB\xBF" => 'UTF-8',
       "\xFE\xFF" => 'UTF-16BE',
@@ -183,7 +183,7 @@ EOD;
    * @return string|bool
    *   Converted data or FALSE.
    */
-  public static function convertToUtf8($data, $encoding) {
+  public static function convertToUtf8(string $data, string $encoding) {
     return @iconv($encoding, 'utf-8', $data);
   }
 
@@ -206,7 +206,7 @@ EOD;
    * @return string
    *   The truncated string.
    */
-  public static function truncateBytes($string, $len) {
+  public static function truncateBytes(string $string, $len) {
     if (strlen($string) <= $len) {
       return $string;
     }
@@ -230,7 +230,7 @@ EOD;
    * @return string
    *   The string with the first character as uppercase.
    */
-  public static function ucfirst($text) {
+  public static function ucfirst(string $text) {
     return mb_strtoupper(mb_substr($text, 0, 1)) . mb_substr($text, 1);
   }
 
@@ -245,7 +245,7 @@ EOD;
    *
    * @ingroup php_wrappers
    */
-  public static function lcfirst($text) {
+  public static function lcfirst(string $text) {
     // Note: no mbstring equivalent!
     return mb_strtolower(mb_substr($text, 0, 1)) . mb_substr($text, 1);
   }
@@ -261,7 +261,7 @@ EOD;
    *
    * @ingroup php_wrappers
    */
-  public static function ucwords($text) {
+  public static function ucwords(string $text) {
     $regex = '/(^|[' . static::PREG_CLASS_WORD_BOUNDARY . '])([^' . static::PREG_CLASS_WORD_BOUNDARY . '])/u';
     return preg_replace_callback($regex, function (array $matches) {
       return $matches[1] . mb_strtoupper($matches[2]);
@@ -302,7 +302,7 @@ EOD;
    * @return string
    *   The truncated string.
    */
-  public static function truncate($string, $max_length, $wordsafe = FALSE, $add_ellipsis = FALSE, $min_wordsafe_length = 1) {
+  public static function truncate(string $string, $max_length, $wordsafe = FALSE, $add_ellipsis = FALSE, $min_wordsafe_length = 1) {
     $ellipsis = '';
     $max_length = max($max_length, 0);
     $min_wordsafe_length = max($min_wordsafe_length, 0);
@@ -363,7 +363,7 @@ EOD;
    *   Returns < 0 if $str1 is less than $str2; > 0 if $str1 is greater than
    *   $str2, and 0 if they are equal.
    */
-  public static function strcasecmp($str1, $str2) {
+  public static function strcasecmp(string $str1, string $str2) {
     return strcmp(mb_strtoupper($str1), mb_strtoupper($str2));
   }
 
@@ -391,7 +391,7 @@ EOD;
    * @return bool
    *   TRUE if the text is valid UTF-8, FALSE if not.
    */
-  public static function validateUtf8($text) {
+  public static function validateUtf8(string $text) {
     if (strlen($text) == 0) {
       return TRUE;
     }

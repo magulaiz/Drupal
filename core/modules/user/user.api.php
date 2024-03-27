@@ -39,7 +39,7 @@ use Drupal\user\UserInterface;
  * @see user_cancel_methods()
  * @see hook_user_cancel_methods_alter()
  */
-function hook_user_cancel($edit, UserInterface $account, $method) {
+function hook_user_cancel($edit, UserInterface $account, string $method) {
   switch ($method) {
     case 'user_cancel_block_unpublish':
       // Unpublish nodes (current revisions).

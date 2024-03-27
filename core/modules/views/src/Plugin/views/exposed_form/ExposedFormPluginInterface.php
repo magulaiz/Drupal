@@ -83,7 +83,7 @@ interface ExposedFormPluginInterface extends ViewsPluginInterface {
    *
    * @see \Drupal\views\ViewExecutable::render()
    */
-  public function postRender(&$output);
+  public function postRender(string &$output);
 
   /**
    * Runs before the view has been executed.

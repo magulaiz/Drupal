@@ -36,7 +36,7 @@ class UserAgent {
    *   The selected language code or FALSE if no valid language can be
    *   identified.
    */
-  public static function getBestMatchingLangcode($http_accept_language, $langcodes, $mappings = []) {
+  public static function getBestMatchingLangcode(string $http_accept_language, $langcodes, $mappings = []) {
     // The Accept-Language header contains information about the language
     // preferences configured in the user's user agent / operating system.
     // RFC 2616 (section 14.4) defines the Accept-Language header as follows:

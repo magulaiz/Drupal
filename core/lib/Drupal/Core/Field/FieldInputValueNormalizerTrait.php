@@ -23,7 +23,7 @@ trait FieldInputValueNormalizerTrait {
    * @return array
    *   A field value normalized into a format keyed by delta.
    */
-  protected static function normalizeValue(&$value, $main_property_name) {
+  protected static function normalizeValue(&$value, string $main_property_name) {
     if (!isset($value) || $value === NULL) {
       return [];
     }

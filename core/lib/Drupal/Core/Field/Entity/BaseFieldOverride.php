@@ -68,7 +68,7 @@ class BaseFieldOverride extends FieldConfigBase {
    * @return \Drupal\Core\Field\Entity\BaseFieldOverride
    *   A new base field override object.
    */
-  public static function createFromBaseFieldDefinition(BaseFieldDefinition $base_field_definition, $bundle) {
+  public static function createFromBaseFieldDefinition(BaseFieldDefinition $base_field_definition, string $bundle) {
     $values = $base_field_definition->toArray();
     $values['bundle'] = $bundle;
     $values['baseFieldDefinition'] = $base_field_definition;
@@ -252,7 +252,7 @@ class BaseFieldOverride extends FieldConfigBase {
    *   The base field bundle override config entity if one exists for the
    *   provided field name, otherwise NULL.
    */
-  public static function loadByName($entity_type_id, $bundle, $field_name) {
+  public static function loadByName(string $entity_type_id, string $bundle, string $field_name) {
     return \Drupal::entityTypeManager()->getStorage('base_field_override')->load($entity_type_id . '.' . $bundle . '.' . $field_name);
   }
 

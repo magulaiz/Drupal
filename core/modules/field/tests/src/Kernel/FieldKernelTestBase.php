@@ -88,7 +88,7 @@ abstract class FieldKernelTestBase extends KernelTestBase {
    *   (optional) The entity type on which the field should be created.
    *   Defaults to the default bundle of the entity type.
    */
-  protected function createFieldWithStorage($suffix = '', $entity_type = 'entity_test', $bundle = NULL) {
+  protected function createFieldWithStorage(string $suffix = '', string $entity_type = 'entity_test', string $bundle = NULL) {
     if (empty($bundle)) {
       $bundle = $entity_type;
     }

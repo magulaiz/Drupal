@@ -42,7 +42,7 @@ class ConfigTranslationListController extends ControllerBase {
    *   Throws an exception if a mapper plugin could not be instantiated from the
    *   mapper definition in the constructor.
    */
-  public function listing($mapper_id) {
+  public function listing(string $mapper_id) {
     $mapper_definition = $this->mapperManager->getDefinition($mapper_id);
     $mapper = $this->mapperManager->createInstance($mapper_id, $mapper_definition);
     if (!$mapper) {

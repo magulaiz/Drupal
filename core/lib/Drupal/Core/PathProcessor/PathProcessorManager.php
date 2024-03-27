@@ -130,7 +130,7 @@ class PathProcessorManager implements InboundPathProcessorInterface, OutboundPat
    * @param string $type
    *   The processor type to sort, e.g. 'inboundProcessors'.
    */
-  protected function sortProcessors($type) {
+  protected function sortProcessors(string $type) {
     krsort($this->{$type});
     return array_merge(...$this->{$type});
   }

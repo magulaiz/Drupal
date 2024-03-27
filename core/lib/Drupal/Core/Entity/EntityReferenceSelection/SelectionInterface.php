@@ -35,7 +35,7 @@ interface SelectionInterface extends PluginFormInterface {
    *   entity bundle, which contains an array of entity labels (escaped),
    *   keyed by the entity ID.
    */
-  public function getReferenceableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0);
+  public function getReferenceableEntities($match = NULL, string $match_operator = 'CONTAINS', $limit = 0);
 
   /**
    * Counts entities that are referenceable.
@@ -49,7 +49,7 @@ interface SelectionInterface extends PluginFormInterface {
    * @return int
    *   The number of referenceable entities.
    */
-  public function countReferenceableEntities($match = NULL, $match_operator = 'CONTAINS');
+  public function countReferenceableEntities(string $match = NULL, string $match_operator = 'CONTAINS');
 
   /**
    * Validates which existing entities can be referenced.

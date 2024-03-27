@@ -79,7 +79,7 @@ class PrivateTempStoreFactory {
    * @return \Drupal\Core\TempStore\PrivateTempStore
    *   An instance of the key/value store.
    */
-  public function get($collection) {
+  public function get(string $collection) {
     // Store the data for this collection in the database.
     $storage = $this->storageFactory->get("tempstore.private.$collection");
     return new PrivateTempStore($storage, $this->lockBackend, $this->currentUser, $this->requestStack, $this->expire);

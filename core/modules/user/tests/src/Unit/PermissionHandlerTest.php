@@ -74,7 +74,7 @@ class PermissionHandlerTest extends UnitTestCase {
    * @return \Drupal\Core\Extension\Extension
    *   The extension object.
    */
-  protected function mockModuleExtension($module, $name) {
+  protected function mockModuleExtension(string $module, string $name) {
     $extension = new Extension('vfs:/', $module, "modules/$module");
     $extension->info['name'] = $name;
     return $extension;

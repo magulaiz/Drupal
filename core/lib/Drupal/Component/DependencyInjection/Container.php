@@ -223,7 +223,7 @@ class Container implements ContainerInterface, ResetInterface {
    *   Thrown when the service class takes more than 10 parameters to construct,
    *   and cannot be instantiated.
    */
-  protected function createService(array $definition, $id) {
+  protected function createService(array $definition, string $id) {
     if (isset($definition['synthetic']) && $definition['synthetic'] === TRUE) {
       throw new RuntimeException(sprintf('You have requested a synthetic service ("%s"). The service container does not know how to construct this service. The service will need to be set before it is first used.', $id));
     }
@@ -487,7 +487,7 @@ class Container implements ContainerInterface, ResetInterface {
    * @return string[]
    *   An array of strings with suitable alternatives.
    */
-  protected function getAlternatives($search_key, array $keys) {
+  protected function getAlternatives(string $search_key, array $keys) {
     $alternatives = [];
     foreach ($keys as $key) {
       $lev = levenshtein($search_key, $key);
@@ -508,7 +508,7 @@ class Container implements ContainerInterface, ResetInterface {
    * @return string[]
    *   An array of strings with suitable alternatives.
    */
-  protected function getServiceAlternatives($id) {
+  protected function getServiceAlternatives(string $id) {
     $all_service_keys = array_unique(array_merge(array_keys($this->services), array_keys($this->serviceDefinitions)));
     return $this->getAlternatives($id, $all_service_keys);
   }
@@ -522,7 +522,7 @@ class Container implements ContainerInterface, ResetInterface {
    * @return string[]
    *   An array of strings with suitable alternatives.
    */
-  protected function getParameterAlternatives($name) {
+  protected function getParameterAlternatives(string $name) {
     return $this->getAlternatives($name, array_keys($this->parameters));
   }
 

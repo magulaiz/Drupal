@@ -79,7 +79,7 @@ class Condition implements ConditionInterface, \Countable {
    * @param string $conjunction
    *   The operator to use to combine conditions: 'AND' or 'OR'.
    */
-  public function __construct($conjunction) {
+  public function __construct(string $conjunction) {
     $this->conditions['#conjunction'] = $conjunction;
   }
 
@@ -387,7 +387,7 @@ class Condition implements ConditionInterface, \Countable {
    *   The extra handling directives for the specified operator or an empty
    *   array if there are no extra handling directives.
    */
-  protected function mapConditionOperator($operator) {
+  protected function mapConditionOperator(string $operator) {
     if (isset(static::$conditionOperatorMap[$operator])) {
       $return = static::$conditionOperatorMap[$operator];
     }

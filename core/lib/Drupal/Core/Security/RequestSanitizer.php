@@ -78,7 +78,7 @@ class RequestSanitizer {
    * @return bool
    *   TRUE if the parameter bag has been sanitized, FALSE if not.
    */
-  protected static function processParameterBag(ParameterBag $bag, array $safe_keys, $log_sanitized_keys, $bag_name, $message) {
+  protected static function processParameterBag(ParameterBag $bag, array $safe_keys, $log_sanitized_keys, string $bag_name, string $message) {
     $sanitized = FALSE;
     $sanitized_keys = [];
     $bag->replace(static::stripDangerousValues($bag->all(), $safe_keys, $sanitized_keys));
@@ -127,7 +127,7 @@ class RequestSanitizer {
    * @return array
    *   The dangerous keys found in the destination parameter.
    */
-  protected static function checkDestination($destination, array $safe_keys) {
+  protected static function checkDestination(string $destination, array $safe_keys) {
     $dangerous_keys = [];
     $parts = UrlHelper::parse($destination);
     // If there is a query string, check its query parameters.

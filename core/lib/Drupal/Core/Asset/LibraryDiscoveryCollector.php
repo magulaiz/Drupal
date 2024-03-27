@@ -83,7 +83,7 @@ class LibraryDiscoveryCollector extends CacheCollector {
    *
    * @throws \Drupal\Core\Asset\Exception\InvalidLibrariesOverrideSpecificationException
    */
-  protected function getLibraryDefinitions($extension) {
+  protected function getLibraryDefinitions(string $extension) {
     $libraries = $this->discoveryParser->buildByExtension($extension);
     foreach ($libraries as $name => $definition) {
       // Handle libraries that are marked for override or removal.
@@ -132,7 +132,7 @@ class LibraryDiscoveryCollector extends CacheCollector {
    *
    * @throws \Drupal\Core\Asset\Exception\InvalidLibrariesExtendSpecificationException
    */
-  protected function applyLibrariesExtend($extension, $library_name, $library_definition) {
+  protected function applyLibrariesExtend(string $extension, string $library_name, $library_definition) {
     $libraries_extend = $this->themeManager->getActiveTheme()->getLibrariesExtend();
     if (!empty($libraries_extend["$extension/$library_name"])) {
       foreach ($libraries_extend["$extension/$library_name"] as $library_extend_name) {

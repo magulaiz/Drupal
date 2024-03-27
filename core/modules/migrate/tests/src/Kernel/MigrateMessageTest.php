@@ -132,7 +132,7 @@ class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterfa
    * @param string $name
    *   The event name.
    */
-  public function mapMessageRecorder(MigrateIdMapMessageEvent $event, $name) {
+  public function mapMessageRecorder(MigrateIdMapMessageEvent $event, string $name) {
     if ($event->getLevel() == MigrationInterface::MESSAGE_NOTICE ||
         $event->getLevel() == MigrationInterface::MESSAGE_INFORMATIONAL) {
       $type = 'status';

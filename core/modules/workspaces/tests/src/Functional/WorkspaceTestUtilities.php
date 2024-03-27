@@ -33,7 +33,7 @@ trait WorkspaceTestUtilities {
    * @return \Drupal\Core\Entity\EntityInterface
    *   The entity.
    */
-  protected function getOneEntityByLabel($type, $label) {
+  protected function getOneEntityByLabel(string $type, string $label) {
     /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
     $entity_type_manager = \Drupal::service('entity_type.manager');
     $property = $entity_type_manager->getDefinition($type)->getKey('label');
@@ -85,7 +85,7 @@ trait WorkspaceTestUtilities {
    * @return \Drupal\workspaces\WorkspaceInterface
    *   The workspace that was just created.
    */
-  protected function createWorkspaceThroughUi($label, $id, $parent = '_none') {
+  protected function createWorkspaceThroughUi(string $label, string $id, string $parent = '_none') {
     $this->drupalGet('/admin/config/workflow/workspaces/add');
     $this->submitForm([
       'id' => $id,
@@ -169,7 +169,7 @@ trait WorkspaceTestUtilities {
    *
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    */
-  protected function createNodeThroughUi($label, $bundle, $publish = TRUE) {
+  protected function createNodeThroughUi(string $label, string $bundle, $publish = TRUE) {
     $this->drupalGet('/node/add/' . $bundle);
 
     /** @var \Behat\Mink\Session $session */

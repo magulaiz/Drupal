@@ -216,7 +216,7 @@ abstract class ContentTranslationTestBase extends BrowserTestBase {
    * @return string
    *   The entity id.
    */
-  protected function createEntity($values, $langcode, $bundle_name = NULL) {
+  protected function createEntity($values, string $langcode, string $bundle_name = NULL) {
     $entity_values = $values;
     $entity_values['langcode'] = $langcode;
     $entity_type = \Drupal::entityTypeManager()->getDefinition($this->entityTypeId);

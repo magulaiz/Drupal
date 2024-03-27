@@ -161,7 +161,7 @@ class QueryFactory implements QueryFactoryInterface, EventSubscriberInterface {
    *   The provided $key cannot end with a wildcard. This makes no sense since
    *   you cannot do fast lookups against this.
    */
-  protected function getKeys(Config $config, $key, $get_method, ConfigEntityTypeInterface $entity_type) {
+  protected function getKeys(Config $config, string $key, string $get_method, ConfigEntityTypeInterface $entity_type) {
     if (str_ends_with($key, '*')) {
       throw new InvalidLookupKeyException(strtr('%entity_type lookup key %key ends with a wildcard this can not be used as a lookup', ['%entity_type' => $entity_type->id(), '%key' => $key]));
     }
@@ -204,7 +204,7 @@ class QueryFactory implements QueryFactoryInterface, EventSubscriberInterface {
    *   the configuration object does not have a value that corresponds to the
    *   key.
    */
-  protected function getValues(Config $config, $key, $get_method, array $parts, $start = 0) {
+  protected function getValues(Config $config, string $key, string $get_method, array $parts, $start = 0) {
     $value = $config->$get_method($key);
     if (is_array($value)) {
       $new_value = [];

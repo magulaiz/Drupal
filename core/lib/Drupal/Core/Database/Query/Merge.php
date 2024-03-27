@@ -326,7 +326,7 @@ class Merge extends Query implements ConditionInterface {
    *
    * @see \Drupal\Core\Database\Query\Merge::keys()
    */
-  public function key($field, $value = NULL) {
+  public function key(string $field, $value = NULL) {
     assert(is_string($field));
     $this->keys([$field => $value]);
     return $this;

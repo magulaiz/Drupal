@@ -135,7 +135,7 @@ class FieldLayoutBuilder implements ContainerInjectionInterface {
    * @return array
    *   An array of configurable fields present in the build.
    */
-  protected function getFields(array $build, EntityDisplayWithLayoutInterface $display, $display_context) {
+  protected function getFields(array $build, EntityDisplayWithLayoutInterface $display, string $display_context) {
     $components = $display->getComponents();
 
     // Ignore any extra fields from the list of field definitions. Field

@@ -434,7 +434,7 @@ class ForumTest extends BrowserTestBase {
    * @return \Drupal\Core\Database\StatementInterface
    *   The created taxonomy term data.
    */
-  public function createForum($type, $parent = 0) {
+  public function createForum(string $type, $parent = 0) {
     // Generate a random name/description.
     $name = $this->randomMachineName(10);
     $description = $this->randomMachineName(100);

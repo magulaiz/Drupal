@@ -72,7 +72,7 @@ abstract class FileManagedTestBase extends BrowserTestBase {
    * @param string|null $message
    *   Optional translated string message.
    */
-  public function assertFileHookCalled($hook, $expected_count = 1, $message = NULL) {
+  public function assertFileHookCalled(string $hook, $expected_count = 1, $message = NULL) {
     $actual_count = count(file_test_get_calls($hook));
 
     if (!isset($message)) {
@@ -149,7 +149,7 @@ abstract class FileManagedTestBase extends BrowserTestBase {
    * @return \Drupal\file\FileInterface
    *   File entity.
    */
-  public function createFile($filepath = NULL, $contents = NULL, $scheme = NULL) {
+  public function createFile(string $filepath = NULL, string $contents = NULL, string $scheme = NULL) {
     // Don't count hook invocations caused by creating the file.
     \Drupal::state()->set('file_test.count_hook_invocations', FALSE);
     $file = File::create([
@@ -182,7 +182,7 @@ abstract class FileManagedTestBase extends BrowserTestBase {
    * @return string
    *   File URI.
    */
-  public function createUri($filepath = NULL, $contents = NULL, $scheme = NULL) {
+  public function createUri(string $filepath = NULL, string $contents = NULL, string $scheme = NULL) {
     if (!isset($filepath)) {
       // Prefix with non-latin characters to ensure that all file-related
       // tests work with international filenames.
