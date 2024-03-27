@@ -2,6 +2,7 @@
 
 namespace Drupal\workspaces\Entity;
 
+use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -14,7 +15,56 @@ use Drupal\workspaces\WorkspaceInterface;
 /**
  * The workspace entity class.
  */
-#[\Drupal\Core\Entity\Attribute\ContentEntityType(id: 'workspace', label: new TranslatableMarkup('Workspace'), label_collection: new TranslatableMarkup('Workspaces'), label_singular: new TranslatableMarkup('workspace'), label_plural: new TranslatableMarkup('workspaces'), label_count: ['singular' => '@count workspace', 'plural' => '@count workspaces'], handlers: ['list_builder' => '\Drupal\workspaces\WorkspaceListBuilder', 'view_builder' => 'Drupal\workspaces\WorkspaceViewBuilder', 'access' => 'Drupal\workspaces\WorkspaceAccessControlHandler', 'views_data' => 'Drupal\views\EntityViewsData', 'route_provider' => ['html' => '\Drupal\Core\Entity\Routing\AdminHtmlRouteProvider'], 'form' => ['default' => '\Drupal\workspaces\Form\WorkspaceForm', 'add' => '\Drupal\workspaces\Form\WorkspaceForm', 'edit' => '\Drupal\workspaces\Form\WorkspaceForm', 'delete' => '\Drupal\workspaces\Form\WorkspaceDeleteForm', 'activate' => '\Drupal\workspaces\Form\WorkspaceActivateForm'], 'workspace' => '\Drupal\workspaces\Entity\Handler\IgnoredWorkspaceHandler'], admin_permission: 'administer workspaces', base_table: 'workspace', revision_table: 'workspace_revision', data_table: 'workspace_field_data', revision_data_table: 'workspace_field_revision', field_ui_base_route: 'entity.workspace.collection', entity_keys: ['id' => 'id', 'revision' => 'revision_id', 'uuid' => 'uuid', 'label' => 'label', 'uid' => 'uid', 'owner' => 'uid'], links: ['canonical' => '/admin/config/workflow/workspaces/manage/{workspace}', 'add-form' => '/admin/config/workflow/workspaces/add', 'edit-form' => '/admin/config/workflow/workspaces/manage/{workspace}/edit', 'delete-form' => '/admin/config/workflow/workspaces/manage/{workspace}/delete', 'activate-form' => '/admin/config/workflow/workspaces/manage/{workspace}/activate', 'collection' => '/admin/config/workflow/workspaces'])]
+#[ContentEntityType(
+  id: 'workspace',
+  label: new TranslatableMarkup('Workspace'),
+  label_collection: new TranslatableMarkup('Workspaces'),
+  label_singular: new TranslatableMarkup('workspace'),
+  label_plural: new TranslatableMarkup('workspaces'),
+  entity_keys: [
+    'id' => 'id',
+    'revision' => 'revision_id',
+    'uuid' => 'uuid',
+    'label' => 'label',
+    'uid' => 'uid',
+    'owner' => 'uid',
+  ],
+  handlers: [
+    'list_builder' => '\Drupal\workspaces\WorkspaceListBuilder',
+    'view_builder' => 'Drupal\workspaces\WorkspaceViewBuilder',
+    'access' => 'Drupal\workspaces\WorkspaceAccessControlHandler',
+    'views_data' => 'Drupal\views\EntityViewsData',
+    'route_provider' => [
+      'html' => '\Drupal\Core\Entity\Routing\AdminHtmlRouteProvider',
+    ],
+    'form' => [
+      'default' => '\Drupal\workspaces\Form\WorkspaceForm',
+      'add' => '\Drupal\workspaces\Form\WorkspaceForm',
+      'edit' => '\Drupal\workspaces\Form\WorkspaceForm',
+      'delete' => '\Drupal\workspaces\Form\WorkspaceDeleteForm',
+      'activate' => '\Drupal\workspaces\Form\WorkspaceActivateForm',
+    ],
+    'workspace' => '\Drupal\workspaces\Entity\Handler\IgnoredWorkspaceHandler',
+  ],
+  links: [
+    'canonical' => '/admin/config/workflow/workspaces/manage/{workspace}',
+    'add-form' => '/admin/config/workflow/workspaces/add',
+    'edit-form' => '/admin/config/workflow/workspaces/manage/{workspace}/edit',
+    'delete-form' => '/admin/config/workflow/workspaces/manage/{workspace}/delete',
+    'activate-form' => '/admin/config/workflow/workspaces/manage/{workspace}/activate',
+    'collection' => '/admin/config/workflow/workspaces',
+  ],
+  admin_permission: 'administer workspaces',
+  base_table: 'workspace',
+  data_table: 'workspace_field_data',
+  revision_table: 'workspace_revision',
+  revision_data_table: 'workspace_field_revision',
+  label_count: [
+    'singular' => '@count workspace',
+    'plural' => '@count workspaces',
+  ],
+  field_ui_base_route: 'entity.workspace.collection',
+)]
 class Workspace extends ContentEntityBase implements WorkspaceInterface {
 
   use EntityChangedTrait;

@@ -4,12 +4,27 @@ declare(strict_types=1);
 
 namespace Drupal\entity_test\Entity;
 
+use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Test entity class.
  */
-#[\Drupal\Core\Entity\Attribute\ContentEntityType(id: 'entity_test_no_label', label: new TranslatableMarkup('Entity Test without label'), internal: TRUE, persistent_cache: FALSE, base_table: 'entity_test_no_label', handlers: ['access' => 'Drupal\entity_test\EntityTestAccessControlHandler'], entity_keys: ['id' => 'id', 'uuid' => 'uuid', 'bundle' => 'type'])]
+#[ContentEntityType(
+  id: 'entity_test_no_label',
+  label: new TranslatableMarkup('Entity Test without label'),
+  persistent_cache: FALSE,
+  entity_keys: [
+    'id' => 'id',
+    'uuid' => 'uuid',
+    'bundle' => 'type',
+  ],
+  handlers: [
+    'access' => 'Drupal\entity_test\EntityTestAccessControlHandler',
+  ],
+  base_table: 'entity_test_no_label',
+  internal: TRUE,
+)]
 class EntityTestNoLabel extends EntityTest {
 
   /**

@@ -2,6 +2,7 @@
 
 namespace Drupal\user\Entity;
 
+use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
@@ -21,7 +22,50 @@ use Drupal\user\UserInterface;
  * The base table name here is plural, despite Drupal table naming standards,
  * because "user" is a reserved word in many databases.
  */
-#[\Drupal\Core\Entity\Attribute\ContentEntityType(id: 'user', label: new TranslatableMarkup('User'), label_collection: new TranslatableMarkup('Users'), label_singular: new TranslatableMarkup('user'), label_plural: new TranslatableMarkup('users'), label_count: ['singular' => '@count user', 'plural' => '@count users'], handlers: ['storage' => 'Drupal\user\UserStorage', 'storage_schema' => 'Drupal\user\UserStorageSchema', 'access' => 'Drupal\user\UserAccessControlHandler', 'list_builder' => 'Drupal\user\UserListBuilder', 'views_data' => 'Drupal\user\UserViewsData', 'route_provider' => ['html' => 'Drupal\user\Entity\UserRouteProvider'], 'form' => ['default' => 'Drupal\user\ProfileForm', 'cancel' => 'Drupal\user\Form\UserCancelForm', 'register' => 'Drupal\user\RegisterForm'], 'translation' => 'Drupal\user\ProfileTranslationHandler'], admin_permission: 'administer users', base_table: 'users', data_table: 'users_field_data', translatable: TRUE, entity_keys: ['id' => 'uid', 'langcode' => 'langcode', 'uuid' => 'uuid'], links: ['canonical' => '/user/{user}', 'edit-form' => '/user/{user}/edit', 'cancel-form' => '/user/{user}/cancel', 'collection' => '/admin/people'], field_ui_base_route: 'entity.user.admin_form', common_reference_target: TRUE)]
+#[ContentEntityType(
+  id: 'user',
+  label: new TranslatableMarkup('User'),
+  label_collection: new TranslatableMarkup('Users'),
+  label_singular: new TranslatableMarkup('user'),
+  label_plural: new TranslatableMarkup('users'),
+  entity_keys: [
+    'id' => 'uid',
+    'langcode' => 'langcode',
+    'uuid' => 'uuid',
+  ],
+  handlers: [
+    'storage' => 'Drupal\user\UserStorage',
+    'storage_schema' => 'Drupal\user\UserStorageSchema',
+    'access' => 'Drupal\user\UserAccessControlHandler',
+    'list_builder' => 'Drupal\user\UserListBuilder',
+    'views_data' => 'Drupal\user\UserViewsData',
+    'route_provider' => [
+      'html' => 'Drupal\user\Entity\UserRouteProvider',
+    ],
+    'form' => [
+      'default' => 'Drupal\user\ProfileForm',
+      'cancel' => 'Drupal\user\Form\UserCancelForm',
+      'register' => 'Drupal\user\RegisterForm',
+    ],
+    'translation' => 'Drupal\user\ProfileTranslationHandler',
+  ],
+  links: [
+    'canonical' => '/user/{user}',
+    'edit-form' => '/user/{user}/edit',
+    'cancel-form' => '/user/{user}/cancel',
+    'collection' => '/admin/people',
+  ],
+  admin_permission: 'administer users',
+  base_table: 'users',
+  data_table: 'users_field_data',
+  translatable: TRUE,
+  label_count: [
+    'singular' => '@count user',
+    'plural' => '@count users',
+  ],
+  field_ui_base_route: 'entity.user.admin_form',
+  common_reference_target: TRUE,
+)]
 class User extends ContentEntityBase implements UserInterface {
 
   use EntityChangedTrait;

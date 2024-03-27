@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\entity_test\Entity;
 
+use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -15,7 +16,23 @@ use Drupal\entity_test\Plugin\Field\ComputedTestFieldItemList;
 /**
  * An entity used for testing computed field values.
  */
-#[\Drupal\Core\Entity\Attribute\ContentEntityType(id: 'entity_test_computed_field', label: new TranslatableMarkup('Entity Test computed field'), base_table: 'entity_test_computed_field', handlers: ['views_data' => 'Drupal\entity_test\EntityTestViewsData'], entity_keys: ['id' => 'id', 'uuid' => 'uuid', 'label' => 'name'], admin_permission: 'administer entity_test content', links: ['canonical' => '/entity_test_computed_field/{entity_test_computed_field}'])]
+#[ContentEntityType(
+  id: 'entity_test_computed_field',
+  label: new TranslatableMarkup('Entity Test computed field'),
+  entity_keys: [
+    'id' => 'id',
+    'uuid' => 'uuid',
+    'label' => 'name',
+  ],
+  handlers: [
+    'views_data' => 'Drupal\entity_test\EntityTestViewsData',
+  ],
+  links: [
+    'canonical' => '/entity_test_computed_field/{entity_test_computed_field}',
+  ],
+  admin_permission: 'administer entity_test content',
+  base_table: 'entity_test_computed_field',
+)]
 class EntityTestComputedField extends EntityTest {
 
   /**

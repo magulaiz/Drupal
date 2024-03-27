@@ -21,11 +21,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 #[\Drupal\Core\Entity\Attribute\ContentEntityType(
   id: 'entity_test_update',
   label: new TranslatableMarkup('Test entity update'),
-  handlers: [
-    'storage_schema' => 'Drupal\entity_test_update\EntityTestUpdateStorageSchema',
-    'storage' => 'Drupal\entity_test_update\EntityTestUpdateStorage',
-  ],
-  base_table: 'entity_test_update',
   persistent_cache: FALSE,
   entity_keys: [
     'id' => 'id',
@@ -34,6 +29,11 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
     'label' => 'name',
     'langcode' => 'langcode',
   ],
+  handlers: [
+    'storage_schema' => 'Drupal\entity_test_update\EntityTestUpdateStorageSchema',
+    'storage' => 'Drupal\entity_test_update\EntityTestUpdateStorage',
+  ],
+  base_table: 'entity_test_update',
   additional: [
     'content_translation_ui_skip' => TRUE,
   ],

@@ -4,6 +4,7 @@ namespace Drupal\user\Entity;
 
 use Drupal\Core\Config\Action\Attribute\ActionMethod;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\user\RoleInterface;
@@ -11,7 +12,47 @@ use Drupal\user\RoleInterface;
 /**
  * Defines the user role entity class.
  */
-#[\Drupal\Core\Entity\Attribute\ConfigEntityType(id: 'user_role', label: new TranslatableMarkup('Role'), label_collection: new TranslatableMarkup('Roles'), label_singular: new TranslatableMarkup('role'), label_plural: new TranslatableMarkup('roles'), label_count: ['singular' => '@count role', 'plural' => '@count roles'], handlers: ['storage' => 'Drupal\user\RoleStorage', 'access' => 'Drupal\user\RoleAccessControlHandler', 'list_builder' => 'Drupal\user\RoleListBuilder', 'form' => ['default' => 'Drupal\user\RoleForm', 'delete' => 'Drupal\Core\Entity\EntityDeleteForm']], admin_permission: 'administer permissions', config_prefix: 'role', static_cache: TRUE, entity_keys: ['id' => 'id', 'weight' => 'weight', 'label' => 'label'], links: ['delete-form' => '/admin/people/roles/manage/{user_role}/delete', 'edit-form' => '/admin/people/roles/manage/{user_role}', 'edit-permissions-form' => '/admin/people/permissions/{user_role}', 'collection' => '/admin/people/roles'], config_export: ['id', 'label', 'weight', 'is_admin', 'permissions'])]
+#[ConfigEntityType(
+  id: 'user_role',
+  label: new TranslatableMarkup('Role'),
+  label_collection: new TranslatableMarkup('Roles'),
+  label_singular: new TranslatableMarkup('role'),
+  label_plural: new TranslatableMarkup('roles'),
+  config_prefix: 'role',
+  static_cache: TRUE,
+  entity_keys: [
+    'id' => 'id',
+    'weight' => 'weight',
+    'label' => 'label',
+  ],
+  handlers: [
+    'storage' => 'Drupal\user\RoleStorage',
+    'access' => 'Drupal\user\RoleAccessControlHandler',
+    'list_builder' => 'Drupal\user\RoleListBuilder',
+    'form' => [
+      'default' => 'Drupal\user\RoleForm',
+      'delete' => 'Drupal\Core\Entity\EntityDeleteForm',
+    ],
+  ],
+  links: [
+    'delete-form' => '/admin/people/roles/manage/{user_role}/delete',
+    'edit-form' => '/admin/people/roles/manage/{user_role}',
+    'edit-permissions-form' => '/admin/people/permissions/{user_role}',
+    'collection' => '/admin/people/roles',
+  ],
+  admin_permission: 'administer permissions',
+  label_count: [
+    'singular' => '@count role',
+    'plural' => '@count roles',
+  ],
+  config_export: [
+    'id',
+    'label',
+    'weight',
+    'is_admin',
+    'permissions',
+  ],
+)]
 class Role extends ConfigEntityBase implements RoleInterface {
 
   /**

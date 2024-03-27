@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\entity_test\Entity;
 
+use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -12,7 +13,43 @@ use Drupal\Core\Field\BaseFieldDefinition;
 /**
  * Defines the Test entity with bundle entity class.
  */
-#[\Drupal\Core\Entity\Attribute\ContentEntityType(id: 'entity_test_with_bundle', label: new TranslatableMarkup('Test entity with bundle'), handlers: ['list_builder' => 'Drupal\entity_test\EntityTestListBuilder', 'view_builder' => 'Drupal\entity_test\EntityTestViewBuilder', 'access' => 'Drupal\entity_test\EntityTestAccessControlHandler', 'form' => ['default' => '\Drupal\Core\Entity\ContentEntityForm', 'delete' => '\Drupal\Core\Entity\EntityDeleteForm'], 'route_provider' => ['html' => 'Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider']], base_table: 'entity_test_with_bundle', data_table: 'entity_test_with_bundle_field_data', admin_permission: 'administer entity_test_with_bundle content', persistent_cache: FALSE, translatable: TRUE, entity_keys: ['id' => 'id', 'uuid' => 'uuid', 'bundle' => 'type', 'label' => 'name', 'langcode' => 'langcode'], bundle_entity_type: 'entity_test_bundle', links: ['canonical' => '/entity_test_with_bundle/{entity_test_with_bundle}', 'add-page' => '/entity_test_with_bundle/add', 'add-form' => '/entity_test_with_bundle/add/{entity_test_bundle}', 'edit-form' => '/entity_test_with_bundle/{entity_test_with_bundle}/edit', 'delete-form' => '/entity_test_with_bundle/{entity_test_with_bundle}/delete', 'create' => '/entity_test_with_bundle'])]
+#[ContentEntityType(
+  id: 'entity_test_with_bundle',
+  label: new TranslatableMarkup('Test entity with bundle'),
+  persistent_cache: FALSE,
+  entity_keys: [
+    'id' => 'id',
+    'uuid' => 'uuid',
+    'bundle' => 'type',
+    'label' => 'name',
+    'langcode' => 'langcode',
+  ],
+  handlers: [
+    'list_builder' => 'Drupal\entity_test\EntityTestListBuilder',
+    'view_builder' => 'Drupal\entity_test\EntityTestViewBuilder',
+    'access' => 'Drupal\entity_test\EntityTestAccessControlHandler',
+    'form' => [
+      'default' => '\Drupal\Core\Entity\ContentEntityForm',
+      'delete' => '\Drupal\Core\Entity\EntityDeleteForm',
+    ],
+    'route_provider' => [
+      'html' => 'Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider',
+    ],
+  ],
+  links: [
+    'canonical' => '/entity_test_with_bundle/{entity_test_with_bundle}',
+    'add-page' => '/entity_test_with_bundle/add',
+    'add-form' => '/entity_test_with_bundle/add/{entity_test_bundle}',
+    'edit-form' => '/entity_test_with_bundle/{entity_test_with_bundle}/edit',
+    'delete-form' => '/entity_test_with_bundle/{entity_test_with_bundle}/delete',
+    'create' => '/entity_test_with_bundle',
+  ],
+  admin_permission: 'administer entity_test_with_bundle content',
+  bundle_entity_type: 'entity_test_bundle',
+  base_table: 'entity_test_with_bundle',
+  data_table: 'entity_test_with_bundle_field_data',
+  translatable: TRUE,
+)]
 class EntityTestWithBundle extends ContentEntityBase {
 
   /**

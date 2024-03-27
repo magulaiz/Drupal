@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\entity_test\Entity;
 
+use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\EntityChangedTrait;
@@ -13,7 +14,39 @@ use Drupal\Core\Field\BaseFieldDefinition;
 /**
  * Defines the test entity class.
  */
-#[\Drupal\Core\Entity\Attribute\ContentEntityType(id: 'entity_test_mul_changed', label: new TranslatableMarkup('Test entity - multiple changed and data table'), handlers: ['view_builder' => 'Drupal\entity_test\EntityTestViewBuilder', 'access' => 'Drupal\entity_test\EntityTestAccessControlHandler', 'form' => ['default' => 'Drupal\entity_test\EntityTestForm', 'delete' => 'Drupal\entity_test\EntityTestDeleteForm'], 'route_provider' => ['html' => 'Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider'], 'views_data' => 'Drupal\views\EntityViewsData'], base_table: 'entity_test_mul_changed', data_table: 'entity_test_mul_changed_property', translatable: TRUE, entity_keys: ['id' => 'id', 'uuid' => 'uuid', 'bundle' => 'type', 'label' => 'name', 'langcode' => 'langcode'], links: ['add-form' => '/entity_test_mul_changed/add', 'canonical' => '/entity_test_mul_changed/manage/{entity_test_mul_changed}', 'edit-form' => '/entity_test_mul_changed/manage/{entity_test_mul_changed}/edit', 'delete-form' => '/entity_test/delete/entity_test_mul_changed/{entity_test_mul_changed}'], field_ui_base_route: 'entity.entity_test_mul_changed.admin_form')]
+#[ContentEntityType(
+  id: 'entity_test_mul_changed',
+  label: new TranslatableMarkup('Test entity - multiple changed and data table'),
+  entity_keys: [
+    'id' => 'id',
+    'uuid' => 'uuid',
+    'bundle' => 'type',
+    'label' => 'name',
+    'langcode' => 'langcode',
+  ],
+  handlers: [
+    'view_builder' => 'Drupal\entity_test\EntityTestViewBuilder',
+    'access' => 'Drupal\entity_test\EntityTestAccessControlHandler',
+    'form' => [
+      'default' => 'Drupal\entity_test\EntityTestForm',
+      'delete' => 'Drupal\entity_test\EntityTestDeleteForm',
+    ],
+    'route_provider' => [
+      'html' => 'Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider',
+    ],
+    'views_data' => 'Drupal\views\EntityViewsData',
+  ],
+  links: [
+    'add-form' => '/entity_test_mul_changed/add',
+    'canonical' => '/entity_test_mul_changed/manage/{entity_test_mul_changed}',
+    'edit-form' => '/entity_test_mul_changed/manage/{entity_test_mul_changed}/edit',
+    'delete-form' => '/entity_test/delete/entity_test_mul_changed/{entity_test_mul_changed}',
+  ],
+  base_table: 'entity_test_mul_changed',
+  data_table: 'entity_test_mul_changed_property',
+  translatable: TRUE,
+  field_ui_base_route: 'entity.entity_test_mul_changed.admin_form',
+)]
 class EntityTestMulChanged extends EntityTestMul implements EntityChangedInterface {
 
   use EntityChangedTrait;
