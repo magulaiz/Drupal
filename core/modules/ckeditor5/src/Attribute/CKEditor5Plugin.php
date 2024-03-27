@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\ckeditor5\Attribute;
 
 use Drupal\ckeditor5\Annotation\CKEditor5AspectsOfCKEditor5Plugin;
@@ -47,7 +49,11 @@ class CKEditor5Plugin extends Plugin {
    * {@inheritdoc}
    */
   public function get(): CKEditor5PluginDefinition {
-    // @todo Figure out how to do this.
+    return new CKEditor5PluginDefinition([
+      'id' => $this->id,
+      'ckeditor' => $this->ckeditor5,
+      'drupal' => $this->drupal,
+    ]);
   }
 
 }
