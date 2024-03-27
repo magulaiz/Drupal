@@ -51,7 +51,8 @@ user.settings:
       type: string
       label: 'When cancelling a user account'
       constraints:
-        NotNull: []
+        NotBlank:
+          allowNull: true
     password_reset_timeout:
       type: integer
       label: 'Password reset timeout'
