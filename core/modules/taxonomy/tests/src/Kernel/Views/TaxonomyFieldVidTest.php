@@ -134,6 +134,18 @@ class TaxonomyFieldVidTest extends ViewsKernelTestBase {
     });
     $expected = $vocabulary->label();
     $this->assertEquals($expected, $actual);
+
+    // Test with user with 'administer taxonomy' and 'access taxonomy overview'
+    // permissions. Label should be displayed for either permission.
+    $this->setUpCurrentUser([], [
+      'administer taxonomy',
+      'access taxonomy overview',
+    ]);
+    $actual = $renderer->executeInRenderContext(new RenderContext(), function () use ($view) {
+      return $view->field['vid']->advancedRender($view->result[0]);
+    });
+    $expected = $vocabulary->label();
+    $this->assertEquals($expected, $actual);
   }
 
 }
