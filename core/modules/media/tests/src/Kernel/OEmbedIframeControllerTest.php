@@ -77,6 +77,8 @@ class OEmbedIframeControllerTest extends MediaKernelTestBase {
       ->getHash('', 0, 0);
 
     $url_resolver = $this->prophesize('\Drupal\media\OEmbed\UrlResolverInterface');
+    $url_resolver->getResourceUrl(Argument::cetera())
+      ->willReturn('https://example.com/foo');
     $resource_fetcher = $this->prophesize('\Drupal\media\OEmbed\ResourceFetcherInterface');
 
     $provider = new Provider('YouTube', 'https://youtube.com', [
@@ -86,7 +88,7 @@ class OEmbedIframeControllerTest extends MediaKernelTestBase {
     ]);
     $resource = Resource::rich('<iframe src="https://youtube.com/watch?feature=oembed"></iframe>', 320, 240, $provider);
 
-    $resource_fetcher->fetchResource(Argument::cetera())->willReturn($resource);
+    $resource_fetcher->fetchResource('https://example.com/foo')->willReturn($resource);
 
     $this->container->set('media.oembed.url_resolver', $url_resolver->reveal());
     $this->container->set('media.oembed.resource_fetcher', $resource_fetcher->reveal());
