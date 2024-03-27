@@ -547,8 +547,11 @@ class ConfigNamesMapperTest extends UnitTestCase {
    * @dataProvider providerTestHasTranslatable
    */
   public function testHasTranslatable(array $mock_return_values, $expected) {
-    // As the configuration names are arbitrary, simply use integers.
-    $config_names = range(1, count($mock_return_values));
+    $config_names = [];
+    // Config names are arbitrary, but they must be strings.
+    for ($i = 0; $i < count($mock_return_values); $i++) {
+      $config_names[] = $this->randomMachineName();
+    }
     $this->configNamesMapper->setConfigNames($config_names);
 
     $map = [];
@@ -598,8 +601,11 @@ class ConfigNamesMapperTest extends UnitTestCase {
   public function testHasTranslation(array $mock_return_values, $expected) {
     $language = new Language();
 
-    // As the configuration names are arbitrary, simply use integers.
-    $config_names = range(1, count($mock_return_values));
+    $config_names = [];
+    // Config names are arbitrary, but they must be strings.
+    for ($i = 0; $i < count($mock_return_values); $i++) {
+      $config_names[] = $this->randomMachineName();
+    }
     $this->configNamesMapper->setConfigNames($config_names);
 
     $map = [];
