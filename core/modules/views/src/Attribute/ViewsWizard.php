@@ -22,7 +22,8 @@ class ViewsWizard extends Plugin {
    * @param string $id
    *   The plugin ID.
    * @param string|null $base_table
-   *   (optional) The base table on which this wizard is used.
+   *   (optional) The base table on which this wizard is used. The base_table
+   *   is required when a deriver class is not defined.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $title
    *   The plugin title used in the views UI.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $short_title
