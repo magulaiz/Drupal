@@ -26,7 +26,7 @@ class ViewsPager extends Plugin {
    *   (optional) The short title used in the views UI.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $help
    *   (optional) A short help string; this is displayed in the views UI.
-   * @param string $theme
+   * @param string|null $theme
    *   The theme function used to render the pager's output.
    * @param string[]|null $display_types
    *   (optional) The types of the display this plugin can be used with.
@@ -49,7 +49,7 @@ class ViewsPager extends Plugin {
     public readonly TranslatableMarkup $title,
     public readonly ?TranslatableMarkup $short_title = NULL,
     public readonly ?TranslatableMarkup $help = NULL,
-    public readonly string $theme = '',
+    public readonly ?string $theme = NULL,
     public readonly ?array $display_types = NULL,
     public readonly array $base = [],
     public readonly bool $no_ui = FALSE,

@@ -16,7 +16,6 @@ use Drupal\views\Attribute\ViewsPager;
   title: new TranslatableMarkup("Display a specified number of items"),
   help: new TranslatableMarkup("Display a limited number items that this view might find."),
   display_types: ["basic"],
-  register_theme: FALSE,
 )]
 class Some extends PagerPluginBase {
 

@@ -18,7 +18,6 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
   title: new TranslatableMarkup("Display all items"),
   help: new TranslatableMarkup("Display all items that this view might find."),
   display_types: ["basic"],
-  register_theme: FALSE,
 )]
 class None extends PagerPluginBase {
 
