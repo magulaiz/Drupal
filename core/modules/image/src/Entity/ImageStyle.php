@@ -51,8 +51,7 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
     'storage' => 'Drupal\image\ImageStyleStorage',
   ],
   links: [
-    '
-  flush-form' => '/admin/config/media/image-styles/manage/{image_style}/flush',
+    'flush-form' => '/admin/config/media/image-styles/manage/{image_style}/flush',
     'edit-form' => '/admin/config/media/image-styles/manage/{image_style}',
     'delete-form' => '/admin/config/media/image-styles/manage/{image_style}/delete',
     'collection' => '/admin/config/media/image-styles',
