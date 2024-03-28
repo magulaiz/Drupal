@@ -12,7 +12,7 @@ text.settings:
       constraints:
         NotNull: [ ]
         Range:
-          min: 1
+          min: 0
 
 field.storage_settings.text:
   type: mapping
