@@ -56,6 +56,8 @@ class Layout extends Plugin {
    *   The layout plugin class.
    * @param array $context_definitions
    *   The context definition.
+   * @param array $config_dependencies
+   *   The config dependencies.
    */
   public function __construct(
     public readonly string $id,
@@ -73,6 +75,7 @@ class Layout extends Plugin {
     public readonly ?string $deriver = NULL,
     public string $class = LayoutDefault::class,
     public readonly array $context_definitions = [],
+    public readonly array $config_dependencies = [],
   ) {}
 
   /**
@@ -94,6 +97,8 @@ class Layout extends Plugin {
       'default_region' => $this->default_region,
       'deriver' => $this->deriver,
       'class' => $this->class,
+      'context_definitions' => $this->context_definitions,
+      'config_dependencies' => $this->config_dependencies,
     ]);
   }
 
