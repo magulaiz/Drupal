@@ -3,7 +3,19 @@
 field_ui.settings:
   type: config_object
   label: 'Field UI settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     field_prefix:
       type: string
       label: 'The prefix for new fields created via Field UI'
+      translatable: true
+      constraints:
+        Regex:
+          # Forbid any kind of control character.
+          # @see https://stackoverflow.com/a/66587087
+          pattern: '/([^\PC])/u'
+          match: false
+          message: 'Prefix are not allowed to span multiple lines or contain control characters.'
+        Length:
+          max: 32
