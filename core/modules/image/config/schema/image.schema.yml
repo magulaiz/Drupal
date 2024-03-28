@@ -95,7 +95,7 @@ image.settings:
       label: 'Preview image'
       constraints:
         NotBlank: []
-        Image: []
+        FileIsImage: []
     allow_insecure_derivatives:
       type: boolean
       label: 'Allow insecure image derivatives'

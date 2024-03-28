@@ -12,7 +12,6 @@ use Drupal\Core\Validation\Plugin\Validation\Constraint\EmailConstraint;
 use Symfony\Component\Validator\Constraints\Blank;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\Choice;
-use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -116,11 +115,6 @@ class ConstraintManager extends DefaultPluginManager {
       'label' => new TranslatableMarkup('Choice'),
       'class' => Choice::class,
       'type' => FALSE,
-    ]);
-    $this->getDiscovery()->setDefinition('Image', [
-      'label' => new TranslatableMarkup('Image'),
-      'class' => Image::class,
-      'type' => ['string'],
     ]);
   }
 
