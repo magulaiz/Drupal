@@ -5,6 +5,7 @@ namespace Drupal\Core\ParamConverter;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Symfony\Component\Routing\Route;
@@ -136,20 +137,21 @@ class EntityConverter implements ParamConverterInterface {
     // it will be removed once both the todo items below are fixed.
     /** @var \Drupal\Core\Plugin\Context\ContextRepositoryInterface $contexts_repository */
     $contexts_repository = \Drupal::service('context.repository');
+    $contexts = [];
+
+    // @todo Consider removing this in https://www.drupal.org/node/2951294
+    if (\Drupal::service('language_manager')->isMultilingual()) {
+      $contexts = $contexts_repository->getRuntimeContexts([
+        '@language.current_language_context:' . LanguageInterface::TYPE_CONTENT,
+        '@language.current_language_context:' . LanguageInterface::TYPE_INTERFACE,
+      ]);
+    }
+
     // @todo Consider deprecating the legacy context operation altogether in
     //   https://www.drupal.org/node/3031124.
-    $contexts = $contexts_repository->getAvailableContexts();
     $contexts[EntityRepositoryInterface::CONTEXT_ID_LEGACY_CONTEXT_OPERATION] =
       new Context(new ContextDefinition('string'), 'entity_upcast');
-    // @todo At the moment we do not need the current user context, which is
-    //   triggering some test failures. We can remove these lines once
-    //   https://www.drupal.org/node/2934192 is fixed.
-    $context_id = '@user.current_user_context:current_user';
-    if (isset($contexts[$context_id])) {
-      $account = $contexts[$context_id]->getContextValue();
-      unset($account->_skipProtectedUserFieldConstraint);
-      unset($contexts[$context_id]);
-    }
+
     $entity = $this->entityRepository->getCanonical($entity_type_id, $value, $contexts);
 
     if (
