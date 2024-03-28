@@ -1,0 +1,5 @@
+services:
+  escape_test:
+    modules:
+      paths:
+        - '/../module_discovery_attribute_service_test/src/'

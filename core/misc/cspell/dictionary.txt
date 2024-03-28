@@ -283,6 +283,8 @@ fulltext
 funic
 gabilondo
 gids
+glob
+globbing
 gloop
 googleapis
 greeking

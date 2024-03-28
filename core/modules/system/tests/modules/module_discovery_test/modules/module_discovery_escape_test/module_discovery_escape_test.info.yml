@@ -1,0 +1,5 @@
+name: Module discovery escape test
+description: Module referencing something outside of its directory.
+type: module
+package: Testing
+version: VERSION

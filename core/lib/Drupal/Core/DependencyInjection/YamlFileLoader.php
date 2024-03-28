@@ -9,11 +9,12 @@ use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Drupal\Core\Serialization\Yaml;
 use Symfony\Component\DependencyInjection\Alias;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\ChildDefinition;
-use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
+use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\Finder\Finder;
 
 /**
  * YamlFileLoader loads YAML files service definitions.
@@ -396,7 +397,130 @@ class YamlFileLoader
             $definition->setAutowired($service['autowire']);
         }
 
-        $this->container->setDefinition($id, $definition);
+        if (isset($service['autoconfigure'])) {
+           $definition->setAutoconfigured($service['autoconfigure']);
+        }
+
+        if (array_key_exists('module', $service) || array_key_exists('modules', $service)) {
+            if (array_key_exists('resource', $service)) {
+              throw new \InvalidArgumentException('Service definitions may not have a `module` or `modules` definition simultaneously with a `resource` definition.');
+            }
+
+            [$provider] = explode('.', basename($file), 2);
+            $this->registerModuleDiscovery(
+                (array) $this->container->get('container.namespaces'),
+                $definition,
+                $provider,
+                array_intersect_key($service['module'] ?? [], array_flip(['paths'])),
+                array_intersect_key($service['modules'] ?? [], array_flip(['paths'])),
+            );
+        }
+        else {
+            $this->container->setDefinition($id, $definition);
+        }
+    }
+
+    /**
+     * Merges discovery paths, globs paths, and adds classes to container.
+     *
+     * @param \Symfony\Component\DependencyInjection\Definition $prototype
+     *   A definition to use as template
+     * @param array{paths?: string[]} $thisModuleConfiguration
+     *   Configures automatic service creation for all classes in paths for the
+     *   module in context.
+     * @param array{paths?: string[]} $allModulesConfiguration
+     *   Configures automatic service creation for all classes in paths for all
+     *   enabled modules.
+     */
+    private function registerModuleDiscovery(array $namespaces, Definition $prototype, string $provider, array $thisModuleConfiguration, array $allModulesConfiguration): void {
+        $discovery = static function (array $namespaces, string $scopePath, ContainerInterface $container, bool $isAllNamespaces) {
+            $classes = [];
+
+            foreach ($namespaces as $moduleNamespace => $moduleSrcPath) {
+                $absoluteModuleSrcPath = DRUPAL_ROOT .  '/' . $moduleSrcPath;
+                $prefix = dirname($moduleSrcPath) . '/' . ltrim($scopePath, '/');
+
+                // This strcspn conditional is the same one implemented by
+                // \Symfony\Component\Config\Loader\FileLoader::glob().
+                if (\strlen($prefix) !== strcspn($prefix, '*?{[')) {
+                    throw new \Exception('Globbing is not supported in patterns.');
+                }
+
+                // Normalize the path by removing redundant slashes and ensuring
+                // the path exists.
+                $prefix = realpath($prefix);
+                if ($prefix === FALSE) {
+                    // Skip when module doesn't have a matching path.
+                    continue;
+                }
+
+                if ($isAllNamespaces === TRUE && $prefix === $absoluteModuleSrcPath) {
+                    throw new \Exception('Paths for all modules must be a subdirectory of src/.');
+                }
+
+                $files = (new Finder())
+                   ->followLinks()
+                   ->in($prefix);
+
+                $prefixLen = \strlen($absoluteModuleSrcPath);
+                foreach ($files as $path => $info) {
+                    if (!str_starts_with($path, $absoluteModuleSrcPath)) {
+                        throw new \Exception('Paths may not escape extension src/ directories with relative paths.');
+                    }
+
+                    if (!str_ends_with($path, '.php')) {
+                        continue;
+                    }
+
+                    $class = $moduleNamespace . '\\' . ltrim(str_replace('/', '\\', substr($path, $prefixLen, -4)), '\\');
+
+                    try {
+                        $r = $container->getReflectionClass($class);
+                    }
+                    catch (\ReflectionException $e) {
+                        $classes[$class] = $e->getMessage();
+                        continue;
+                    }
+
+                  // check to make sure the expected class exists
+                  if (!$r) {
+                      throw new InvalidArgumentException(sprintf('Expected to find class "%s" in file "%s".', $class, $path));
+                  }
+
+                  if ($r->isInstantiable() || $r->isInterface()) {
+                      $classes[$class] = null;
+                  }
+                }
+            }
+
+            return $classes;
+        };
+
+        $classes = [];
+        foreach ($thisModuleConfiguration['paths'] ?? [] as $path) {
+            $classes += $discovery(array_intersect_key($namespaces, array_flip(['Drupal\\' . $provider])), $path, $this->container, FALSE);
+        }
+        foreach ($allModulesConfiguration['paths'] ?? [] as $path) {
+            $classes += $discovery($namespaces, $path, $this->container, TRUE);
+        }
+
+        $existingClasses = array_map(static fn(Definition $definition): ?string => $definition->getClass(), $this->container->getDefinitions());
+        $getPrototype = static fn () => clone $prototype;
+        foreach ($classes as $class => $errorMessage) {
+            // Ignore services if they already exist:
+            if ($this->container->has($class) || in_array($class, $existingClasses, TRUE)) {
+                continue;
+            }
+
+            $definition = $getPrototype();
+            $this->container->setDefinition($class, $definition);
+            if (null !== $errorMessage) {
+                $definition->addError($errorMessage);
+
+                continue;
+            }
+            $definition->setClass($class);
+        }
     }
 
     /**

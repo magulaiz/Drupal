@@ -1,0 +1,5 @@
+services:
+  src_in_modules:
+    modules:
+      paths:
+        - '/src/'

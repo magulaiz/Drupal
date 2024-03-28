@@ -1,0 +1,5 @@
+name: Module discovery service definition template
+description: Tests service definition defaults are copied to created services.
+type: module
+package: Testing
+version: VERSION

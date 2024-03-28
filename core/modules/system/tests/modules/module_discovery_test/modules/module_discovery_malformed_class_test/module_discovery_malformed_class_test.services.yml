@@ -1,0 +1,5 @@
+services:
+  bad_class:
+    module:
+      paths:
+        - '/src/'

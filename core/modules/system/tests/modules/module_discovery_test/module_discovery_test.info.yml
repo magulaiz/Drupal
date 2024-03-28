@@ -1,0 +1,5 @@
+name: Container module discovery tests
+type: module
+description: Contains service definitions with `module` and `modules` entries.
+package: Testing
+version: VERSION

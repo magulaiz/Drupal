@@ -1,0 +1,18 @@
+services:
+  service_by_id:
+    class: Drupal\module_discovery_collision_test\ExistingServiceById
+    arguments:
+      - 'definition_from_yaml'
+
+  Drupal\module_discovery_collision_test\ExistingServiceByClass:
+    class: Drupal\module_discovery_collision_test\ExistingServiceByClass
+    arguments:
+      - 'definition_from_yaml'
+
+  collision_test:
+    arguments:
+      - 'definition_from_discovery'
+
+    module:
+      paths:
+        - '/src/'

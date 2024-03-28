@@ -1,0 +1,6 @@
+services:
+  with_resource:
+    resource: 'src/'
+    module:
+      paths:
+        - '/src/'

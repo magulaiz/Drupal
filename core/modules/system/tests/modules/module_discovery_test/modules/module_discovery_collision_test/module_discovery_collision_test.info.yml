@@ -1,0 +1,5 @@
+name: Module collision test
+description: Tests existing services are not re-created.
+type: module
+package: Testing
+version: VERSION
