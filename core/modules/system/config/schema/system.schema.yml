@@ -69,14 +69,12 @@ system.cron:
           type: integer
           label: 'Requirements warning period'
           constraints:
-            NotNull: []
             Range:
               min: 1
         requirements_error:
           type: integer
           label: 'Requirements error period'
           constraints:
-            NotNull: [ ]
             Range:
               min: 1
     logging:
