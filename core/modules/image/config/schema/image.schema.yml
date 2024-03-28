@@ -95,6 +95,9 @@ image.settings:
       label: 'Preview image'
       constraints:
         NotBlank: []
+        # We need to use Symfony's Image constraint because it will accept a file
+        # path as a string, whereas the File module's FileIsImage constraint expects
+        # a full file entity.
         Image: []
     allow_insecure_derivatives:
       type: boolean
