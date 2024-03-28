@@ -25,6 +25,10 @@
   overflow: auto;
 }
 
+.ck.ck-balloon-panel {
+  z-index: 1300 !important;
+}
+
 /* Enhance visibility of selected/active buttons on the toolbar. */
 .ck-toolbar__items .ck.ck-button.ck-on {
   border: 1px solid var(--ck-color-button-on-color);
