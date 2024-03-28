@@ -352,7 +352,7 @@ trait PerformanceTestTrait {
     $script_bytes = 0;
     foreach ($messages as $message) {
       if ($message['method'] === 'Network.responseReceived') {
-        if ($message['params']['type']  === 'Stylesheet') {
+        if ($message['params']['type'] === 'Stylesheet') {
           $stylesheet_count++;
         }
         if ($message['params']['type'] === 'Script') {
