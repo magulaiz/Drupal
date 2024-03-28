@@ -371,13 +371,13 @@ trait PerformanceTestTrait {
     $style_elements = $page->findAll('xpath', '//link[@href and @rel="stylesheet"]');
     $style_urls = [];
     foreach ($style_elements as $element) {
-      $filename = parse_url(ltrim($element->getAttribute('href'), '/'), PHP_URL_PATH);
+      $filename = \Drupal::root() . parse_url($element->getAttribute('href'), PHP_URL_PATH);
       $stylesheet_bytes += filesize($filename);
     }
     $script_elements = $page->findAll('xpath', '//script[@src]');
     $script_urls = [];
     foreach ($script_elements as $element) {
-      $filename = parse_url(ltrim($element->getAttribute('src'), '/'), PHP_URL_PATH);
+      $filename = \Drupal::root() . parse_url($element->getAttribute('src'), PHP_URL_PATH);
       $script_bytes += filesize($filename);
     }
 
