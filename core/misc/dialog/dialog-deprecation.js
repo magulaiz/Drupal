@@ -1,3 +1,8 @@
+/**
+ * @file
+ * Maintains and deprecates Dialog jQuery events.
+ */
+
 (function ($, Drupal, once) {
   if (once('drupal-dialog-deprecation-listener', 'html').length) {
     const eventSpecial = {
@@ -5,10 +10,7 @@
         const $element = $($event.target);
         const event = $event.originalEvent;
         const dialog = event.dialog;
-        const dialogArguments = [$event, dialog, $element];
-        if (event?.settings) {
-          dialogArguments.push(event.settings);
-        }
+        const dialogArguments = [$event, dialog, $element, event?.settings];
         $event.handleObj.handler.apply(this, dialogArguments);
       },
     };
