@@ -378,7 +378,7 @@ trait PerformanceTestTrait {
       else {
         $filename = str_replace($GLOBALS['base_path'], '', parse_url($element->getAttribute('href'), PHP_URL_PATH));
         // Strip the basepath from the contents of the file so that tests
-        // running in a subdirectory get thes same results.
+        // running in a subdirectory get the same results.
         $stylesheet_bytes += strlen(str_replace($GLOBALS['base_path'], '/', file_get_contents($filename)));
       }
     }
