@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Plugin\Context;
 
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\TypedData\TypedDataTrait;
 use Symfony\Component\Validator\ConstraintViolationList;
 
@@ -10,6 +11,7 @@ use Symfony\Component\Validator\ConstraintViolationList;
  */
 class ContextDefinition implements ContextDefinitionInterface {
 
+  use DependencySerializationTrait;
   use TypedDataTrait;
 
   /**
