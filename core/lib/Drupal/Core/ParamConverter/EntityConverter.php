@@ -5,7 +5,6 @@ namespace Drupal\Core\ParamConverter;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Symfony\Component\Routing\Route;
@@ -133,18 +132,12 @@ class EntityConverter implements ParamConverterInterface {
       return $entity;
     }
 
-    // Do not inject the context repository as it is not an actual dependency:
-    // it will be removed once both the todo items below are fixed.
-    /** @var \Drupal\Core\Plugin\Context\ContextRepositoryInterface $contexts_repository */
-    $contexts_repository = \Drupal::service('context.repository');
-    $contexts = [];
-
     // @todo Consider removing this in https://www.drupal.org/node/2951294
     if (\Drupal::service('language_manager')->isMultilingual()) {
-      $contexts = $contexts_repository->getRuntimeContexts([
-        '@language.current_language_context:' . LanguageInterface::TYPE_CONTENT,
-        '@language.current_language_context:' . LanguageInterface::TYPE_INTERFACE,
-      ]);
+      $language_contexts = \Drupal::service('language.current_language_context')->getAvailableContexts();
+      foreach ($language_contexts as $context_id => $context) {
+        $contexts['@language.current_language_context:' . $context_id] = $context;
+      }
     }
 
     // @todo Consider deprecating the legacy context operation altogether in
