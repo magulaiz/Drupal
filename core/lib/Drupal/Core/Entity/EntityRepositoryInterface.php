@@ -62,7 +62,8 @@ interface EntityRepositoryInterface {
    *   content language.
    * @param array $context
    *   (optional) An associative array of arbitrary data that can be useful to
-   *   determine the proper fallback sequence.
+   *   determine the proper fallback sequence. See
+   *   \Drupal\Core\Language\LanguageManagerInterface::getFallbackCandidates()
    *
    * @return \Drupal\Core\Entity\EntityInterface|null
    *   An entity object for the translated data, or NULL if the requested
@@ -93,9 +94,9 @@ interface EntityRepositoryInterface {
    *   The entity type identifier.
    * @param int|string $entity_id
    *   An entity identifier.
-   * @param \Drupal\Core\Plugin\Context\ContextInterface[] $contexts
-   *   (optional) An associative array of objects representing the contexts the
-   *   entity will be edited in keyed by fully qualified context ID.
+   * @param array|null $contexts
+   *   The langcode key can be used to request the entity in a specific language,
+   *   respects fallbacks. All other contexts are deprecated.
    *
    * @return \Drupal\Core\Entity\EntityInterface|null
    *   An entity object variant or NULL if the entity does not exist.
@@ -109,10 +110,9 @@ interface EntityRepositoryInterface {
    *   The entity type identifier.
    * @param int[]|string[] $entity_ids
    *   An array of entity identifiers.
-   * @param \Drupal\Core\Plugin\Context\ContextInterface[] $contexts
-   *   (optional) An associative array of objects representing the contexts the
-   *   entity will be edited in keyed by fully qualified context ID. Defaults to
-   *   the currently available contexts.
+   * @param array|null $contexts
+   *   The langcode key can be used to request the entity in a specific language,
+   *   respects fallbacks. All other contexts are deprecated.
    *
    * @return \Drupal\Core\Entity\EntityInterface[]
    *   An array of entity object variants keyed by entity ID.
@@ -138,10 +138,9 @@ interface EntityRepositoryInterface {
    *   The entity type identifier.
    * @param int|string $entity_id
    *   An entity identifier.
-   * @param \Drupal\Core\Plugin\Context\ContextInterface[] $contexts
-   *   (optional) An associative array of objects representing the contexts the
-   *   entity will be edited in keyed by fully qualified context ID. Defaults to
-   *   the currently available contexts.
+   * @param array|null $contexts
+   *   The langcode key can be used to request the entity in a specific language,
+   *   respects fallbacks. All other contexts are deprecated.
    *
    * @return \Drupal\Core\Entity\EntityInterface|null
    *   An entity object variant or NULL if the entity does not exist.
@@ -155,10 +154,9 @@ interface EntityRepositoryInterface {
    *   The entity type identifier.
    * @param int[]|string[] $entity_ids
    *   An array of entity identifiers.
-   * @param \Drupal\Core\Plugin\Context\ContextInterface[] $contexts
-   *   (optional) An associative array of objects representing the contexts the
-   *   entity will be edited in keyed by fully qualified context ID. Defaults to
-   *   the currently available contexts.
+   * @param array|null $contexts
+   *   The langcode key can be used to request the entity in a specific language,
+   *   respects fallbacks. All other contexts are deprecated.
    *
    * @return \Drupal\Core\Entity\EntityInterface[]
    *   An array of entity object variants keyed by entity ID.

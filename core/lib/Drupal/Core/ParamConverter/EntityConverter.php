@@ -132,12 +132,7 @@ class EntityConverter implements ParamConverterInterface {
       return $entity;
     }
 
-    // @todo Consider deprecating the legacy context operation altogether in
-    //   https://www.drupal.org/node/3031124.
-    $contexts = [];
-    $contexts[EntityRepositoryInterface::CONTEXT_ID_LEGACY_CONTEXT_OPERATION] =
-      new Context(new ContextDefinition('string'), 'entity_upcast');
-    $entity = $this->entityRepository->getCanonical($entity_type_id, $value, $contexts);
+    $entity = $this->entityRepository->getCanonical($entity_type_id, $value);
 
     if (
       !empty($definition['bundle']) &&
