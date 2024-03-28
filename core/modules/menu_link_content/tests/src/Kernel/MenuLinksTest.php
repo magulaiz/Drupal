@@ -460,7 +460,7 @@ class MenuLinksTest extends KernelTestBase {
   }
 
   /**
-   * Tests that the form doesn't break for links with invalid menu names.
+   * Tests that the form doesn't break for links with arbitrary menu names.
    */
   public function testMenuLinkContentFormInvalidParentMenu(): void {
     $menu_link = MenuLinkContent::create([
