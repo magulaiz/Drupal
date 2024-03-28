@@ -26,6 +26,8 @@ use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -36,7 +38,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *
  * @internal
  */
-class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
+class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase implements CompilerPassInterface {
 
   use ImageFieldCreationTrait;
 
@@ -55,7 +57,6 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     'user',
     'file',
     'image',
-    'jsonapi_test_normalizers_kernel',
     'jsonapi_test_resource_type_building',
   ];
 
@@ -126,6 +127,25 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
    * @var \Drupal\file\Entity\File
    */
   private $file;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function register(ContainerBuilder $container): void {
+    parent::register($container);
+    $container->addCompilerPass($this);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function process(ContainerBuilder $container): void {
+    // RegisterSerializationClassesCompilerPass makes all normalizers private.
+    // Make the jsonapi_document_toplevel normalizer public again so we can test
+    // it directly.
+    $container->getDefinition('serializer.normalizer.jsonapi_document_toplevel.jsonapi')
+      ->setPublic(TRUE);
+  }
 
   /**
    * {@inheritdoc}
@@ -683,7 +703,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     $payload = Json::encode($payload_data);
     $resource_type = $this->container->get('jsonapi.resource_type.repository')->get('node', 'article');
     try {
-      $this->container->get('jsonapi_test_normalizers_kernel.jsonapi_document_toplevel')
+      $this->container->get('serializer.normalizer.jsonapi_document_toplevel.jsonapi')
         ->denormalize(Json::decode($payload), NULL, 'api_json', [
           'resource_type' => $resource_type,
         ]);
@@ -795,7 +815,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
    * Helper to load the normalizer.
    */
   protected function getNormalizer() {
-    $normalizer_service = $this->container->get('jsonapi_test_normalizers_kernel.jsonapi_document_toplevel');
+    $normalizer_service = $this->container->get('serializer.normalizer.jsonapi_document_toplevel.jsonapi');
     // Simulate what happens when this normalizer service is used via the
     // serializer service, as it is meant to be used.
     $normalizer_service->setSerializer($this->container->get('jsonapi.serializer'));
