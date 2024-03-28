@@ -87,3 +87,14 @@ function views_post_update_table_css_class(?array &$sandbox = NULL): void {
     return $view_config_updater->needsTableCssClassUpdate($view);
   });
 }
+
+/**
+ * Updates views table alignment classes to use generic core classes.
+ */
+function views_post_update_table_alignment_classes(?array &$sandbox = NULL): void {
+  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
+  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater): bool {
+    return $view_config_updater->updateTableAlignmentClasses($view);
+  });
+}
