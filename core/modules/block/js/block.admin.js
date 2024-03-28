@@ -288,6 +288,7 @@
           return;
         }
 
+        const blockFoundCount = {};
         listItems.forEach((tr) => {
           try {
             // Query the block label and region name.
@@ -300,7 +301,16 @@
 
             const textMatched = textToBeQueried.toLowerCase().includes(query);
             tr.classList.toggle('js-filter-block-visible', textMatched);
-            tr.style.display = textMatched || isVisibleByFilter ? '' : 'none';
+            let displayStatus = 'none';
+            if (textMatched || isVisibleByFilter) {
+              displayStatus = '';
+              const region = tr.dataset.parentRegion;
+              if (blockFoundCount[region] === undefined) {
+                blockFoundCount[region] = 0;
+              }
+              blockFoundCount[region]++;
+            }
+            tr.style.display = displayStatus
           } catch (error) {
             // If a problem occurs, default to showing the row.
             tr.style.display = '';
@@ -310,14 +320,17 @@
         // Update all regions status after update blocks visibility.
         updateBlocksFilteredStatus(query, table);
 
-        // Update goto element.
-        const visibleItems = Array.from(listItems).filter(
-          (tr) => tr.style.display !== 'none',
+        const blocksVisible = Object.values(blockFoundCount).reduce(
+          (acc, item) => acc + item,
+          0,
         );
 
         // Update status of goto filtered element.
         if (query !== '') {
-          if (visibleItems.length === 0) {
+          let announcement = Drupal.t(
+            'There are no blocks matching the filter conditions.',
+          );
+          if (blocksVisible === 0) {
             gotoFiltered.textContent = Drupal.t(
               'There are no blocks matching the filter conditions.',
             );
@@ -327,7 +340,21 @@
             gotoFiltered.classList.add('has-block-results');
             gotoFiltered.textContent = Drupal.t('Go to items found.');
             gotoFiltered.style.display = 'block';
+            const regionsFound = Object.keys(blockFoundCount);
+            announcement = Drupal.t('1 block found on the region: @region', {
+              '@region': regionsFound,
+            });
+            if (blocksVisible > 1) {
+              announcement = Drupal.t(
+                `@blocks blocks were found on the following ${regionsFound.length > 1 ? 'regions' : 'region'}: @regions`,
+                {
+                  '@blocks': blocksVisible,
+                  '@regions': regionsFound.join(', ').replaceAll('_', ' '),
+                },
+              );
+            }
           }
+          Drupal.announce(announcement);
         }
       };
 
