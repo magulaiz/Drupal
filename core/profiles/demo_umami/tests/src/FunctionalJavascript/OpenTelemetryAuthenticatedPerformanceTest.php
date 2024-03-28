@@ -37,7 +37,7 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
     }, 'authenticatedFrontPage');
     $this->assertSame(2, $performance_data->getStylesheetCount());
     $this->assertSame(47968, $performance_data->getStylesheetBytes());
-    $this->assertSame(2, $performance_data->getScriptCount());
+    $this->assertSame(1, $performance_data->getScriptCount());
     $this->assertSame(0, $performance_data->getScriptBytes());
 
     $expected_queries = [
