@@ -69,18 +69,21 @@ system.cron:
           type: integer
           label: 'Requirements warning period'
           constraints:
+            # @see system_requirements()
             Range:
               min: 1
         requirements_error:
           type: integer
           label: 'Requirements error period'
           constraints:
+            # @see system_requirements()
             Range:
               min: 1
     logging:
       type: integer
       label: 'Detailed cron logging'
       constraints:
+        # @see \Drupal\system\Form\CronForm::buildForm()
         Choice:
           choices:
             - 0
