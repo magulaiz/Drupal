@@ -44,6 +44,26 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
   protected $workspaceRepository;
 
   /**
+   * A multidimensional array of entity IDs that are associated to a workspace.
+   *
+   * The first level keys are workspace IDs, the second level keys are entity
+   * * type IDs, and the third level array are entity IDs, keyed by revision IDs.
+   *
+   * @var array
+   */
+  protected array $associatedRevisions = [];
+
+  /**
+   * A multidimensional array of entity IDs that were created in a workspace.
+   *
+   * The first level keys are workspace IDs, the second level keys are entity
+   * type IDs, and the third level array are entity IDs, keyed by revision IDs.
+   *
+   * @var array
+   */
+  protected array $associatedInitialRevisions = [];
+
+  /**
    * Constructs a WorkspaceAssociation object.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -127,6 +147,8 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       Error::logException($this->logger, $e);
       throw $e;
     }
+
+    $this->associatedRevisions = $this->associatedInitialRevisions = [];
   }
 
   /**
@@ -170,6 +192,15 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
    * {@inheritdoc}
    */
   public function getAssociatedRevisions($workspace_id, $entity_type_id, $entity_ids = NULL) {
+    if (isset($this->associatedRevisions[$workspace_id][$entity_type_id])) {
+      if ($entity_ids) {
+        return array_intersect($this->associatedRevisions[$workspace_id][$entity_type_id], $entity_ids);
+      }
+      else {
+        return $this->associatedRevisions[$workspace_id][$entity_type_id];
+      }
+    }
+
     /** @var \Drupal\Core\Entity\EntityStorageInterface $storage */
     $storage = $this->entityTypeManager->getStorage($entity_type_id);
 
@@ -208,13 +239,29 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       $query->condition("revision.$id_field", $entity_ids, 'IN');
     }
 
-    return $query->execute()->fetchAllKeyed();
+    $result = $query->execute()->fetchAllKeyed();
+
+    // Cache the list of associated entity IDs if the full list was requested.
+    if (!$entity_ids) {
+      $this->associatedRevisions[$workspace_id][$entity_type_id] = $result;
+    }
+
+    return $result;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getAssociatedInitialRevisions(string $workspace_id, string $entity_type_id, array $entity_ids = []) {
+    if (isset($this->associatedInitialRevisions[$workspace_id][$entity_type_id])) {
+      if ($entity_ids) {
+        return array_intersect($this->associatedInitialRevisions[$workspace_id][$entity_type_id], $entity_ids);
+      }
+      else {
+        return $this->associatedInitialRevisions[$workspace_id][$entity_type_id];
+      }
+    }
+
     /** @var \Drupal\Core\Entity\EntityStorageInterface $storage */
     $storage = $this->entityTypeManager->getStorage($entity_type_id);
 
@@ -244,7 +291,14 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       $query->condition("base.$id_field", $entity_ids, 'IN');
     }
 
-    return $query->execute()->fetchAllKeyed();
+    $result = $query->execute()->fetchAllKeyed();
+
+    // Cache the list of associated entity IDs if the full list was requested.
+    if (!$entity_ids) {
+      $this->associatedInitialRevisions[$workspace_id][$entity_type_id] = $result;
+    }
+
+    return $result;
   }
 
   /**
@@ -254,7 +308,8 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
     $query = $this->database->select(static::TABLE)
       ->fields(static::TABLE, ['workspace'])
       ->condition('target_entity_type_id', $entity->getEntityTypeId())
-      ->condition('target_entity_id', $entity->id());
+      ->condition('target_entity_id', $entity->id())
+      ->orderBy('target_entity_revision_id', 'DESC');
 
     return $query->execute()->fetchCol();
   }
@@ -298,6 +353,8 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
     }
 
     $query->execute();
+
+    $this->associatedRevisions = $this->associatedInitialRevisions = [];
   }
 
   /**
@@ -317,6 +374,8 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       $indexed_rows->condition('workspace', $parent_id);
       $this->database->insert(static::TABLE)->from($indexed_rows)->execute();
     }
+
+    $this->associatedRevisions = $this->associatedInitialRevisions = [];
   }
 
   /**

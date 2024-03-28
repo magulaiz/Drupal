@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\statistics\Functional\migrate_drupal\d7;
 
 use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
@@ -66,7 +68,7 @@ class UpgradeTest extends MigrateUpgradeExecuteTestBase {
    */
   protected function getEntityCounts() {
     return [
-      'action' => 27,
+      'action' => 24,
       'base_field_override' => 3,
       'block' => 27,
       'block_content' => 1,
