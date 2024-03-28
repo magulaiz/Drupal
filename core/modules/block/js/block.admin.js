@@ -310,7 +310,7 @@
               }
               blockFoundCount[region]++;
             }
-            tr.style.display = displayStatus
+            tr.style.display = displayStatus;
           } catch (error) {
             // If a problem occurs, default to showing the row.
             tr.style.display = '';
