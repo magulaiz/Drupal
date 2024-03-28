@@ -363,8 +363,9 @@ trait PerformanceTestTrait {
     // The performance log has 'encodedDataLength' for network requests, however
     // in the case that the file has already been requested by the browser, this
     // will be the length of a HEAD response for 304 not modified or similar. To
-    // get consistent results for assertions, get the actual disk size of the
-    // files from the filesystem.
+    // get consistent results for assertions, get the actual size of the file.
+    // Because filesize() can differ depending on filesystem, use strlen() for
+    // consistent results.
     $session = $this->getSession();
     $page = $session->getPage();
 
@@ -377,7 +378,7 @@ trait PerformanceTestTrait {
       else {
         $filename = str_replace($GLOBALS['base_path'], '', parse_url($element->getAttribute('href'), PHP_URL_PATH));
       }
-      $stylesheet_bytes += filesize($filename);
+      $stylesheet_bytes += strlen(file_get_contents($filename));
     }
     $script_elements = $page->findAll('xpath', '//script[@src]');
     $script_urls = [];
@@ -388,7 +389,7 @@ trait PerformanceTestTrait {
       else {
         $filename = str_replace($GLOBALS['base_path'], '', parse_url($element->getAttribute('src'), PHP_URL_PATH));
       }
-      $script_bytes += filesize($filename);
+      $script_bytes += strlen(file_get_contents($filename));
     }
 
     $performance_data->setStylesheetCount($stylesheet_count);
