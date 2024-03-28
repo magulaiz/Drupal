@@ -31,7 +31,7 @@ class NumericField extends FieldPluginBase {
     $options['decimal'] = ['default' => '.'];
     $options['separator'] = ['default' => ','];
     $options['format_plural'] = ['default' => FALSE];
-    $options['format_plural_string'] = ['default' => '1' . PoItem::DELIMITER . '@count'];
+    $options['format_plural_string'] = ['default' => ['1', '@count']];
     $options['prefix'] = ['default' => ''];
     $options['suffix'] = ['default' => ''];
 
@@ -90,14 +90,14 @@ class NumericField extends FieldPluginBase {
       '#default_value' => $this->options['format_plural'],
     ];
     $form['format_plural_string'] = [
-      '#type' => 'value',
-      '#default_value' => $this->options['format_plural_string'],
+      '#type' => 'container',
+      '#tree' => TRUE,
     ];
 
-    $plural_array = explode(PoItem::DELIMITER, $this->options['format_plural_string']);
+    $plural_array = $this->options['format_plural_string'];
     $plurals = $this->getNumberOfPlurals($this->view->storage->get('langcode'));
     for ($i = 0; $i < $plurals; $i++) {
-      $form['format_plural_values'][$i] = [
+      $form['format_plural_string'][$i] = [
         '#type' => 'textfield',
         // @todo Should use better labels https://www.drupal.org/node/2499639
         '#title' => ($i == 0 ? $this->t('Singular form') : $this->formatPlural($i, 'First plural form', '@count. plural form')),
@@ -112,9 +112,9 @@ class NumericField extends FieldPluginBase {
     }
     if ($plurals == 2) {
       // Simplify interface text for the most common case.
-      $form['format_plural_values'][0]['#description'] = $this->t('Text to use for the singular form, @count will be replaced with the value.');
-      $form['format_plural_values'][1]['#title'] = $this->t('Plural form');
-      $form['format_plural_values'][1]['#description'] = $this->t('Text to use for the plural form, @count will be replaced with the value.');
+      $form['format_plural_string'][0]['#description'] = $this->t('Text to use for the singular form, @count will be replaced with the value.');
+      $form['format_plural_string'][1]['#title'] = $this->t('Plural form');
+      $form['format_plural_string'][1]['#description'] = $this->t('Text to use for the plural form, @count will be replaced with the value.');
     }
 
     $form['prefix'] = [
@@ -131,18 +131,6 @@ class NumericField extends FieldPluginBase {
     ];
 
     parent::buildOptionsForm($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function submitOptionsForm(&$form, FormStateInterface $form_state) {
-    // Merge plural format options into one string and drop the individual
-    // option values.
-    $options = &$form_state->getValue('options');
-    $options['format_plural_string'] = implode(PoItem::DELIMITER, $options['format_plural_values']);
-    unset($options['format_plural_values']);
-    parent::submitOptionsForm($form, $form_state);
   }
 
   /**
@@ -181,7 +169,7 @@ class NumericField extends FieldPluginBase {
     // If we should format as plural, take the (possibly) translated plural
     // setting and format with the current language.
     if (!empty($this->options['format_plural'])) {
-      $value = PluralTranslatableMarkup::createFromTranslatedString($value, $this->options['format_plural_string']);
+      $value = PluralTranslatableMarkup::createFromTranslatedString($value, implode(PoItem::DELIMITER, $this->options['format_plural_string']));
     }
 
     return $this->sanitizeValue($this->options['prefix'], 'xss')

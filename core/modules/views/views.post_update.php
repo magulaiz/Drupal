@@ -5,6 +5,7 @@
  * Post update functions for Views.
  */
 
+use Drupal\Component\Gettext\PoItem;
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\views\ViewEntityInterface;
 use Drupal\views\ViewsConfigUpdater;
@@ -157,5 +158,29 @@ function views_post_update_rendered_entity_field_cache_metadata(?array &$sandbox
   $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater): bool {
     return $view_config_updater->needsRenderedEntityFieldUpdate($view);
+  });
+}
+
+/**
+ * Update the schema type for plural labels.
+ */
+function views_post_update_plural_variants(array &$sandbox = NULL): void {
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function (ViewEntityInterface $view) {
+    $changed = FALSE;
+    $displays = $view->get('display');
+    foreach ($displays as $display_id => $display) {
+      if (isset($display['display_options']['fields'])) {
+        foreach ($display['display_options']['fields'] as $field_name => $field) {
+          if (isset($field['format_plural_string'])) {
+            $displays[$display_id]['display_options']['fields'][$field_name]['format_plural_string'] = explode(PoItem::DELIMITER, $display['display_options']['fields'][$field_name]['format_plural_string']);
+            $changed = TRUE;
+          }
+        }
+      }
+    }
+    if ($changed) {
+      $view->set('display', $displays);
+    }
+    return $changed;
   });
 }

@@ -117,7 +117,7 @@ views.field.numeric:
       type: boolean
       label: 'Format plural'
     format_plural_string:
-      type: plural_label
+      type: label_with_plural_variants
       label: 'Plural variants'
       constraints:
         Regex:
