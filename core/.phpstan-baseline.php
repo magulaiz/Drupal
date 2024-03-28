@@ -1057,11 +1057,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/language/src/Plugin/LanguageNegotiation/LanguageNegotiationContentEntity.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/language/tests/src/Unit/ContentLanguageSettingsUnitTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Constructor of class Drupal\\\\link\\\\Plugin\\\\migrate\\\\process\\\\FieldLink has an unused parameter \\$migration\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/link/src/Plugin/migrate/process/FieldLink.php',
@@ -1447,11 +1442,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/responsive_image/src/ResponsiveImageStyleForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/responsive_image/tests/src/Unit/ResponsiveImageStyleConfigEntityUnitTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$created_entity might not be defined\\.$#',
 	'count' => 4,
 	'path' => __DIR__ . '/modules/rest/tests/src/Functional/EntityResource/EntityResourceTestBase.php',
@@ -1787,11 +1777,6 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$result in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/tests/src/Unit/UserAccessControlHandlerTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Unit/Views/Argument/RolesRidTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views\\\\Form\\\\ViewsFormMainForm\\:\\:getFormId\\(\\) should return string but return statement is missing\\.$#',
@@ -2320,16 +2305,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Component/PhpStorage/FileStorageTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Plugin/Context/ContextTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Plugin/Discovery/StaticDiscoveryDecoratorTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Constructor of class Drupal\\\\Tests\\\\Component\\\\Plugin\\\\Factory\\\\ArgumentsAllNull has an unused parameter \\$charismatic\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Plugin/Factory/ReflectionFactoryTest.php',
@@ -2391,7 +2366,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
-	'count' => 3,
+	'count' => 2,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Plugin/PluginManagerBaseTest.php',
 ];
 $ignoreErrors[] = [
@@ -2403,21 +2378,6 @@ $ignoreErrors[] = [
 	'message' => '#^Result of static method Drupal\\\\Composer\\\\Composer\\:\\:ensureComposerVersion\\(\\) \\(void\\) is used\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Composer/ComposerTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Composer/Plugin/ProjectMessage/ConfigTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Composer/Plugin/VendorHardening/ConfigTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Composer/Plugin/VendorHardening/VendorHardeningPluginTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^@dataProvider providerTestResolveConditions related method must be static in PHPUnit 10 and newer\\.$#',
@@ -2471,7 +2431,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
-	'count' => 4,
+	'count' => 3,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Entity/ContentEntityBaseUnitTest.php',
 ];
 $ignoreErrors[] = [
@@ -2501,7 +2461,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
-	'count' => 4,
+	'count' => 2,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Entity/EntityStorageBaseTest.php',
 ];
 $ignoreErrors[] = [
@@ -2513,11 +2473,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Entity/EntityTypeTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Entity/EntityUnitTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
@@ -2556,7 +2511,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
-	'count' => 2,
+	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Entity/TypedData/EntityAdapterUnitTest.php',
 ];
 $ignoreErrors[] = [
@@ -2616,16 +2571,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Plugin/CategorizingPluginManagerTraitTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Plugin/Context/ContextDefinitionTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Plugin/Context/ContextTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^@dataProvider providerTestCheckRequirements related method must be static in PHPUnit 10 and newer\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Plugin/ContextHandlerTest.php',
@@ -2656,6 +2601,11 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Plugin/TestPluginManager.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^@dataProvider dataProviderIsRenderArray related method must be static in PHPUnit 10 and newer\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Render/ElementTest.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Render\\\\ElementTest\\:\\:expectError\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Render/ElementTest.php',
@@ -2679,6 +2629,21 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Security\\\\DoTrustedCallbackTraitTest\\:\\:expectWarningMessage\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Security/DoTrustedCallbackTraitTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^@dataProvider alterPermissionsProvider related method must be static in PHPUnit 10 and newer\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Session/SuperUserAccessPolicyTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^@dataProvider calculatePermissionsProvider related method must be static in PHPUnit 10 and newer\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Session/SuperUserAccessPolicyTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^@dataProvider calculatePermissionsProvider related method must be static in PHPUnit 10 and newer\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Session/UserRolesAccessPolicyTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#',
