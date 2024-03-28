@@ -19,7 +19,7 @@ interface RevisionableStorageInterface extends EntityStorageInterface {
    * @return \Drupal\Core\Entity\RevisionableInterface
    *   A new entity revision object.
    */
-  public function createRevision(RevisionableInterface $entity, $default = TRUE);
+  public function createRevision(RevisionableInterface $entity, bool $default = TRUE);
 
   /**
    * Loads a specific entity revision.
@@ -63,6 +63,6 @@ interface RevisionableStorageInterface extends EntityStorageInterface {
    * @return int|string|null
    *   The latest revision identifier or NULL if no revision could be found.
    */
-  public function getLatestRevisionId($entity_id);
+  public function getLatestRevisionId(int|string $entity_id);
 
 }

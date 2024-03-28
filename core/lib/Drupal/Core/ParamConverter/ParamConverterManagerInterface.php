@@ -19,7 +19,7 @@ interface ParamConverterManagerInterface {
    *
    * @return $this
    */
-  public function addConverter(ParamConverterInterface $param_converter, $id);
+  public function addConverter(ParamConverterInterface $param_converter, string $id);
 
   /**
    * Lazy-loads converter services.
@@ -33,7 +33,7 @@ interface ParamConverterManagerInterface {
    * @throws \InvalidArgumentException
    *   If the given service id is not a registered converter.
    */
-  public function getConverter($id);
+  public function getConverter(string $id);
 
   /**
    * Saves a list of applicable converters to each route.

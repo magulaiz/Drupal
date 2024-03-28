@@ -86,7 +86,7 @@ interface ConditionInterface {
    * @return $this
    *   The called object.
    */
-  public function where($snippet, $args = []);
+  public function where(string $snippet, $args = []);
 
   /**
    * Sets a condition that the specified field be NULL.

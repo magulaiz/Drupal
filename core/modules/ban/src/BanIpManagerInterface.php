@@ -16,7 +16,7 @@ interface BanIpManagerInterface {
    * @return bool
    *   TRUE if the IP address is banned, FALSE otherwise.
    */
-  public function isBanned($ip);
+  public function isBanned(string $ip);
 
   /**
    * Finds all banned IP addresses.
@@ -32,7 +32,7 @@ interface BanIpManagerInterface {
    * @param string $ip
    *   The IP address to ban.
    */
-  public function banIp($ip);
+  public function banIp(string $ip);
 
   /**
    * Removes the ban of an IP address.
@@ -40,7 +40,7 @@ interface BanIpManagerInterface {
    * @param string $id
    *   The IP address to unban.
    */
-  public function unbanIp($id);
+  public function unbanIp(string $id);
 
   /**
    * Finds a banned IP address by its ID.
@@ -51,6 +51,6 @@ interface BanIpManagerInterface {
    * @return string|false
    *   Either the banned IP address or FALSE if none exist with that ID.
    */
-  public function findById($ban_id);
+  public function findById(int $ban_id);
 
 }

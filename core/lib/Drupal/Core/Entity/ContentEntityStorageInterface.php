@@ -21,6 +21,6 @@ interface ContentEntityStorageInterface extends TranslatableRevisionableStorageI
    * @throws \Drupal\Core\Entity\EntityStorageException
    *   Thrown if the bundle does not exist or was needed but not specified.
    */
-  public function createWithSampleValues($bundle = FALSE, array $values = []);
+  public function createWithSampleValues(bool|string $bundle = FALSE, array $values = []);
 
 }

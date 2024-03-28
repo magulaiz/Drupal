@@ -49,7 +49,7 @@ interface FieldDiscoveryInterface {
    *
    * @throws \InvalidArgumentException
    */
-  public function addEntityFieldProcesses(MigrationInterface $migration, $entity_type_id);
+  public function addEntityFieldProcesses(MigrationInterface $migration, string $entity_type_id);
 
   /**
    * Adds the field processes for a bundle to a migration.
@@ -63,6 +63,6 @@ interface FieldDiscoveryInterface {
    *
    * @throws \InvalidArgumentException
    */
-  public function addBundleFieldProcesses(MigrationInterface $migration, $entity_type_id, $bundle);
+  public function addBundleFieldProcesses(MigrationInterface $migration, string $entity_type_id, string $bundle);
 
 }

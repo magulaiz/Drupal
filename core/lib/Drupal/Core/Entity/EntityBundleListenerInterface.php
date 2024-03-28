@@ -15,7 +15,7 @@ interface EntityBundleListenerInterface {
    * @param string $entity_type_id
    *   The entity type to which the bundle is bound; e.g. 'node' or 'user'.
    */
-  public function onBundleCreate($bundle, $entity_type_id);
+  public function onBundleCreate(string $bundle, string $entity_type_id);
 
   /**
    * Reacts to a bundle being deleted.
@@ -27,6 +27,6 @@ interface EntityBundleListenerInterface {
    * @param string $entity_type_id
    *   The entity type to which the bundle is bound; e.g. 'node' or 'user'.
    */
-  public function onBundleDelete($bundle, $entity_type_id);
+  public function onBundleDelete(string $bundle, string $entity_type_id);
 
 }

@@ -20,7 +20,7 @@ interface ThemeInitializationInterface {
    * @return \Drupal\Core\Theme\ActiveTheme
    *   An active theme object instance for the given theme.
    */
-  public function initTheme($theme_name);
+  public function initTheme(string $theme_name);
 
   /**
    * Builds an active theme object.
@@ -34,7 +34,7 @@ interface ThemeInitializationInterface {
    * @throws \Drupal\Core\Theme\MissingThemeDependencyException
    *   Thrown when base theme for installed theme is not installed.
    */
-  public function getActiveThemeByName($theme_name);
+  public function getActiveThemeByName(string $theme_name);
 
   /**
    * Loads a theme, so it is ready to be used.

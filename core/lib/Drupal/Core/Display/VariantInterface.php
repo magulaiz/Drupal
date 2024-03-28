@@ -59,7 +59,7 @@ interface VariantInterface extends PluginInspectionInterface, ConfigurableInterf
    * @param int $weight
    *   The weight to set.
    */
-  public function setWeight($weight);
+  public function setWeight(int $weight);
 
   /**
    * Determines if this display variant is accessible.

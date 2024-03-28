@@ -116,7 +116,7 @@ interface MediaSourceInterface extends PluginInspectionInterface, ConfigurableIn
    * @return mixed|null
    *   Metadata attribute value or NULL if unavailable.
    */
-  public function getMetadata(MediaInterface $media, $attribute_name);
+  public function getMetadata(MediaInterface $media, string $attribute_name);
 
   /**
    * Get the source field definition for a media type.

@@ -57,6 +57,6 @@ interface BareHtmlPageRendererInterface {
    * @return \Drupal\Core\Render\HtmlResponse
    *   The rendered HTML response, ready to be sent.
    */
-  public function renderBarePage(array $content, $title, $page_theme_property, array $page_additions = []);
+  public function renderBarePage(array $content, string $title, string $page_theme_property, array $page_additions = []);
 
 }

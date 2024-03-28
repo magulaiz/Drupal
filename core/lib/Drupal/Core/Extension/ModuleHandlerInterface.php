@@ -22,7 +22,7 @@ interface ModuleHandlerInterface {
    * @return bool
    *   TRUE if the item is loaded or has already been loaded.
    */
-  public function load($name);
+  public function load(string $name);
 
   /**
    * Loads all enabled modules.
@@ -64,7 +64,7 @@ interface ModuleHandlerInterface {
    * @throws \Drupal\Core\Extension\Exception\UnknownExtensionException
    *   Thrown when the requested module does not exist.
    */
-  public function getModule($name);
+  public function getModule(string $name);
 
   /**
    * Sets an explicit list of currently active modules.
@@ -83,7 +83,7 @@ interface ModuleHandlerInterface {
    * @param string $path
    *   The module path; e.g., 'core/modules/node'.
    */
-  public function addModule($name, $path);
+  public function addModule(string $name, string $path);
 
   /**
    * Adds an installation profile to the list of currently active modules.
@@ -93,7 +93,7 @@ interface ModuleHandlerInterface {
    * @param string $path
    *   The profile path; e.g., 'core/profiles/standard'.
    */
-  public function addProfile($name, $path);
+  public function addProfile(string $name, string $path);
 
   /**
    * Determines which modules require and are required by each module.
@@ -123,7 +123,7 @@ interface ModuleHandlerInterface {
    * @return bool
    *   TRUE if the module is both installed and enabled.
    */
-  public function moduleExists($module);
+  public function moduleExists(string $module);
 
   /**
    * Loads an include file for each enabled module.
@@ -134,7 +134,7 @@ interface ModuleHandlerInterface {
    *   (optional) The base file name (without the $type extension). If omitted,
    *   each module's name is used; i.e., "$module.$type" by default.
    */
-  public function loadAllIncludes($type, $name = NULL);
+  public function loadAllIncludes(string $type, string $name = NULL);
 
   /**
    * Loads a module include file.
@@ -158,7 +158,7 @@ interface ModuleHandlerInterface {
    * @return string|false
    *   The name of the included file, if successful; FALSE otherwise.
    */
-  public function loadInclude($module, $type, $name = NULL);
+  public function loadInclude(string $module, string $type, string $name = NULL);
 
   /**
    * Retrieves a list of hooks that are declared through hook_hook_info().
@@ -229,7 +229,7 @@ interface ModuleHandlerInterface {
    * @return mixed
    *   The return value of the hook implementation.
    */
-  public function invoke($module, $hook, array $args = []);
+  public function invoke(string $module, string $hook, array $args = []);
 
   /**
    * Invokes a hook in all enabled modules that implement it.
@@ -245,7 +245,7 @@ interface ModuleHandlerInterface {
    *   recursively. Note: integer keys in arrays will be lost, as the merge is
    *   done using Drupal\Component\Utility\NestedArray::mergeDeepArray().
    */
-  public function invokeAll($hook, array $args = []);
+  public function invokeAll(string $hook, array $args = []);
 
   /**
    * Invokes a deprecated hook in a particular module.
@@ -271,7 +271,7 @@ interface ModuleHandlerInterface {
    * @see \Drupal\Core\Extension\ModuleHandlerInterface::invoke()
    * @see https://www.drupal.org/core/deprecation#how-hook
    */
-  public function invokeDeprecated($description, $module, $hook, array $args = []);
+  public function invokeDeprecated(string $description, string $module, string $hook, array $args = []);
 
   /**
    * Invokes a deprecated hook in all enabled modules that implement it.
@@ -298,7 +298,7 @@ interface ModuleHandlerInterface {
    * @see \Drupal\Core\Extension\ModuleHandlerInterface::invokeAll()
    * @see https://www.drupal.org/core/deprecation#how-hook
    */
-  public function invokeAllDeprecated($description, $hook, array $args = []);
+  public function invokeAllDeprecated(string $description, string $hook, array $args = []);
 
   /**
    * Passes alterable variables to specific hook_TYPE_alter() implementations.
@@ -385,7 +385,7 @@ interface ModuleHandlerInterface {
    * @see \Drupal\Core\Extension\ModuleHandlerInterface::alter()
    * @see https://www.drupal.org/core/deprecation#how-hook
    */
-  public function alterDeprecated($description, $type, &$data, &$context1 = NULL, &$context2 = NULL);
+  public function alterDeprecated(string $description, $type, &$data, &$context1 = NULL, &$context2 = NULL);
 
   /**
    * Returns an array of directories for all enabled modules.
@@ -412,6 +412,6 @@ interface ModuleHandlerInterface {
    *
    * @see https://www.drupal.org/node/3310017
    */
-  public function getName($module);
+  public function getName(string $module);
 
 }

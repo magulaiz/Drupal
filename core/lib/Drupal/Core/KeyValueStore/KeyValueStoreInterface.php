@@ -24,7 +24,7 @@ interface KeyValueStoreInterface {
    * @return bool
    *   TRUE if the key exists, FALSE otherwise.
    */
-  public function has($key);
+  public function has(string $key);
 
   /**
    * Returns the stored value for a given key.
@@ -37,7 +37,7 @@ interface KeyValueStoreInterface {
    * @return mixed
    *   The stored value, or the default value if no value exists.
    */
-  public function get($key, $default = NULL);
+  public function get(string $key, $default = NULL);
 
   /**
    * Returns the stored key/value pairs for a given set of keys.
@@ -69,7 +69,7 @@ interface KeyValueStoreInterface {
    * @param mixed $value
    *   The data to store.
    */
-  public function set($key, $value);
+  public function set(string $key, $value);
 
   /**
    * Saves a value for a given key if it does not exist yet.
@@ -82,7 +82,7 @@ interface KeyValueStoreInterface {
    * @return bool
    *   TRUE if the data was set, FALSE if it already existed.
    */
-  public function setIfNotExists($key, $value);
+  public function setIfNotExists(string $key, $value);
 
   /**
    * Saves key/value pairs.
@@ -100,7 +100,7 @@ interface KeyValueStoreInterface {
    * @param string $new_key
    *   The new key name.
    */
-  public function rename($key, $new_key);
+  public function rename(string $key, string $new_key);
 
   /**
    * Deletes an item from the key/value store.
@@ -108,7 +108,7 @@ interface KeyValueStoreInterface {
    * @param string $key
    *   The item name to delete.
    */
-  public function delete($key);
+  public function delete(string $key);
 
   /**
    * Deletes multiple items from the key/value store.

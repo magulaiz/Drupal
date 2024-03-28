@@ -48,7 +48,7 @@ interface ModuleInstallerInterface {
    * @see hook_install()
    * @see hook_modules_installed()
    */
-  public function install(array $module_list, $enable_dependencies = TRUE);
+  public function install(array $module_list, bool $enable_dependencies = TRUE);
 
   /**
    * Uninstalls a given list of modules.
@@ -70,7 +70,7 @@ interface ModuleInstallerInterface {
    * @see hook_uninstall()
    * @see hook_modules_uninstalled()
    */
-  public function uninstall(array $module_list, $uninstall_dependents = TRUE);
+  public function uninstall(array $module_list, bool $uninstall_dependents = TRUE);
 
   /**
    * Adds a module uninstall validator.

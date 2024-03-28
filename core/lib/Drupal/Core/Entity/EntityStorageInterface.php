@@ -87,7 +87,7 @@ interface EntityStorageInterface {
    * @see https://www.drupal.org/node/2927226
    * @see https://www.drupal.org/node/3294237
    */
-  public function loadRevision($revision_id);
+  public function loadRevision(int|string $revision_id);
 
   /**
    * Delete a specific entity revision.
@@ -104,7 +104,7 @@ interface EntityStorageInterface {
    * @see https://www.drupal.org/node/2927226
    * @see https://www.drupal.org/node/3294237
    */
-  public function deleteRevision($revision_id);
+  public function deleteRevision(int $revision_id);
 
   /**
    * Load entities by their property values without any access checks.
@@ -200,7 +200,7 @@ interface EntityStorageInterface {
    *
    * @see \Drupal\Core\Entity\EntityStorageBase::getQueryServiceName()
    */
-  public function getQuery($conjunction = 'AND');
+  public function getQuery(string $conjunction = 'AND');
 
   /**
    * Gets an aggregated query instance.
@@ -215,7 +215,7 @@ interface EntityStorageInterface {
    *
    * @see \Drupal\Core\Entity\EntityStorageBase::getQueryServiceName()
    */
-  public function getAggregateQuery($conjunction = 'AND');
+  public function getAggregateQuery(string $conjunction = 'AND');
 
   /**
    * Gets the entity type ID.

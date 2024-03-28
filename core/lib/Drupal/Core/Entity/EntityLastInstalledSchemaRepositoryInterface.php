@@ -39,7 +39,7 @@ interface EntityLastInstalledSchemaRepositoryInterface {
    *
    * @see \Drupal\Core\Entity\EntityTypeListenerInterface
    */
-  public function getLastInstalledDefinition($entity_type_id);
+  public function getLastInstalledDefinition(string $entity_type_id);
 
   /**
    * Gets the entity type definitions in their most recently installed state.
@@ -87,7 +87,7 @@ interface EntityLastInstalledSchemaRepositoryInterface {
    *
    * @return $this
    */
-  public function deleteLastInstalledDefinition($entity_type_id);
+  public function deleteLastInstalledDefinition(string $entity_type_id);
 
   /**
    * Gets the entity type's most recently installed field storage definitions.
@@ -122,7 +122,7 @@ interface EntityLastInstalledSchemaRepositoryInterface {
    *
    * @see \Drupal\Core\Entity\EntityTypeListenerInterface
    */
-  public function getLastInstalledFieldStorageDefinitions($entity_type_id);
+  public function getLastInstalledFieldStorageDefinitions(string $entity_type_id);
 
   /**
    * Stores the entity type's field storage definitions in the application state.
@@ -132,7 +132,7 @@ interface EntityLastInstalledSchemaRepositoryInterface {
    * @param \Drupal\Core\Field\FieldStorageDefinitionInterface[] $storage_definitions
    *   An array of field storage definitions.
    */
-  public function setLastInstalledFieldStorageDefinitions($entity_type_id, array $storage_definitions);
+  public function setLastInstalledFieldStorageDefinitions(string $entity_type_id, array $storage_definitions);
 
   /**
    * Stores the field storage definition in the application state.

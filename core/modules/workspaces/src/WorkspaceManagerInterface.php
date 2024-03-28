@@ -85,7 +85,7 @@ interface WorkspaceManagerInterface {
    * @return mixed
    *   The callable's return value.
    */
-  public function executeInWorkspace($workspace_id, callable $function);
+  public function executeInWorkspace(string $workspace_id, callable $function);
 
   /**
    * Executes the given callback function without any workspace context.

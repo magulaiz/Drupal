@@ -56,7 +56,7 @@ interface ContentTranslationHandlerInterface {
    *   (optional) The language code of the updated language: all the other
    *   translations will be marked as outdated. Defaults to the entity language.
    */
-  public function retranslate(EntityInterface $entity, $langcode = NULL);
+  public function retranslate(EntityInterface $entity, string $langcode = NULL);
 
   /**
    * Performs the needed alterations to the entity form.

@@ -23,6 +23,6 @@ interface LanguageSwitcherInterface {
    * @return array
    *   An array of link arrays keyed by language code.
    */
-  public function getLanguageSwitchLinks(Request $request, $type, Url $url);
+  public function getLanguageSwitchLinks(Request $request, string $type, Url $url);
 
 }

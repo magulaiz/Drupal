@@ -26,7 +26,7 @@ interface ShortcutInterface extends ContentEntityInterface {
    * @return $this
    *   The called shortcut entity.
    */
-  public function setTitle($title);
+  public function setTitle(string $title);
 
   /**
    * Returns the weight among shortcuts with the same depth.
@@ -45,7 +45,7 @@ interface ShortcutInterface extends ContentEntityInterface {
    * @return $this
    *   The called shortcut entity.
    */
-  public function setWeight($weight);
+  public function setWeight(int $weight);
 
   /**
    * Returns the URL object pointing to the configured route.

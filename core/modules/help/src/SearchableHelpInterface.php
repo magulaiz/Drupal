@@ -36,6 +36,6 @@ interface SearchableHelpInterface {
    *   - cacheable_metadata: (optional) An object to add as a cache dependency
    *     if this topic is shown in search results.
    */
-  public function renderTopicForSearch($topic_id, LanguageInterface $language);
+  public function renderTopicForSearch(string $topic_id, LanguageInterface $language);
 
 }

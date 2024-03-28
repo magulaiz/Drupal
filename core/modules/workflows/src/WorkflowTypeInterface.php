@@ -105,7 +105,7 @@ interface WorkflowTypeInterface extends PluginWithFormsInterface, DerivativeInsp
    * @throws \InvalidArgumentException
    *   Thrown if a state already exists or state ID is invalid.
    */
-  public function addState($state_id, $label);
+  public function addState(string $state_id, string $label);
 
   /**
    * Determines if the workflow has a state with the provided ID.
@@ -116,7 +116,7 @@ interface WorkflowTypeInterface extends PluginWithFormsInterface, DerivativeInsp
    * @return bool
    *   TRUE if the workflow has a state with the provided ID, FALSE if not.
    */
-  public function hasState($state_id);
+  public function hasState(string $state_id);
 
   /**
    * Gets state objects for the provided state IDs.
@@ -144,7 +144,7 @@ interface WorkflowTypeInterface extends PluginWithFormsInterface, DerivativeInsp
    * @throws \InvalidArgumentException
    *   Thrown if $state_id does not exist.
    */
-  public function getState($state_id);
+  public function getState(string $state_id);
 
   /**
    * Sets a state's label.
@@ -156,7 +156,7 @@ interface WorkflowTypeInterface extends PluginWithFormsInterface, DerivativeInsp
    *
    * @return $this
    */
-  public function setStateLabel($state_id, $label);
+  public function setStateLabel(string $state_id, string $label);
 
   /**
    * Sets a state's weight value.
@@ -168,7 +168,7 @@ interface WorkflowTypeInterface extends PluginWithFormsInterface, DerivativeInsp
    *
    * @return $this
    */
-  public function setStateWeight($state_id, $weight);
+  public function setStateWeight(string $state_id, int $weight);
 
   /**
    * Deletes a state from the workflow.
@@ -182,7 +182,7 @@ interface WorkflowTypeInterface extends PluginWithFormsInterface, DerivativeInsp
    * @throws \InvalidArgumentException
    *   Thrown if $state_id does not exist.
    */
-  public function deleteState($state_id);
+  public function deleteState(string $state_id);
 
   /**
    * Adds a transition to the workflow.
@@ -201,7 +201,7 @@ interface WorkflowTypeInterface extends PluginWithFormsInterface, DerivativeInsp
    * @throws \InvalidArgumentException
    *   Thrown if either state does not exist.
    */
-  public function addTransition($id, $label, array $from_state_ids, $to_state_id);
+  public function addTransition(string $id, string $label, array $from_state_ids, string $to_state_id);
 
   /**
    * Gets a transition object for the provided transition ID.
@@ -215,7 +215,7 @@ interface WorkflowTypeInterface extends PluginWithFormsInterface, DerivativeInsp
    * @throws \InvalidArgumentException
    *   Thrown if $transition_id does not exist.
    */
-  public function getTransition($transition_id);
+  public function getTransition(string $transition_id);
 
   /**
    * Determines if a transition exists.
@@ -226,7 +226,7 @@ interface WorkflowTypeInterface extends PluginWithFormsInterface, DerivativeInsp
    * @return bool
    *   TRUE if the transition exists, FALSE if not.
    */
-  public function hasTransition($transition_id);
+  public function hasTransition(string $transition_id);
 
   /**
    * Gets transition objects for the provided transition IDs.
@@ -260,7 +260,7 @@ interface WorkflowTypeInterface extends PluginWithFormsInterface, DerivativeInsp
    * @see \Drupal\workflows\TransitionInterface::DIRECTION_FROM
    * @see \Drupal\workflows\TransitionInterface::DIRECTION_TO
    */
-  public function getTransitionsForState($state_id, $direction = TransitionInterface::DIRECTION_FROM);
+  public function getTransitionsForState($state_id, string $direction = TransitionInterface::DIRECTION_FROM);
 
   /**
    * Gets a transition from state to state.
@@ -276,7 +276,7 @@ interface WorkflowTypeInterface extends PluginWithFormsInterface, DerivativeInsp
    * @throws \InvalidArgumentException
    *   Thrown if the transition does not exist.
    */
-  public function getTransitionFromStateToState($from_state_id, $to_state_id);
+  public function getTransitionFromStateToState(string $from_state_id, string $to_state_id);
 
   /**
    * Determines if a transition from state to state exists.
@@ -289,7 +289,7 @@ interface WorkflowTypeInterface extends PluginWithFormsInterface, DerivativeInsp
    * @return bool
    *   TRUE if the transition exists, FALSE if not.
    */
-  public function hasTransitionFromStateToState($from_state_id, $to_state_id);
+  public function hasTransitionFromStateToState(string $from_state_id, string $to_state_id);
 
   /**
    * Sets a transition's label.
@@ -304,7 +304,7 @@ interface WorkflowTypeInterface extends PluginWithFormsInterface, DerivativeInsp
    * @throws \InvalidArgumentException
    *   Thrown if the transition does not exist.
    */
-  public function setTransitionLabel($transition_id, $label);
+  public function setTransitionLabel(string $transition_id, string $label);
 
   /**
    * Sets a transition's weight.
@@ -319,7 +319,7 @@ interface WorkflowTypeInterface extends PluginWithFormsInterface, DerivativeInsp
    * @throws \InvalidArgumentException
    *   Thrown if the transition does not exist.
    */
-  public function setTransitionWeight($transition_id, $weight);
+  public function setTransitionWeight(string $transition_id, int $weight);
 
   /**
    * Sets a transition's from states.
@@ -334,7 +334,7 @@ interface WorkflowTypeInterface extends PluginWithFormsInterface, DerivativeInsp
    * @throws \InvalidArgumentException
    *   Thrown if the transition does not exist or the states do not exist.
    */
-  public function setTransitionFromStates($transition_id, array $from_state_ids);
+  public function setTransitionFromStates(string $transition_id, array $from_state_ids);
 
   /**
    * Deletes a transition.
@@ -347,6 +347,6 @@ interface WorkflowTypeInterface extends PluginWithFormsInterface, DerivativeInsp
    * @throws \InvalidArgumentException
    *   Thrown if the transition does not exist.
    */
-  public function deleteTransition($transition_id);
+  public function deleteTransition(string $transition_id);
 
 }

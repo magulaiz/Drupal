@@ -51,7 +51,7 @@ interface CommentStorageInterface extends ContentEntityStorageInterface {
    * @return array|null
    *   The page number where first new comment appears. (First page returns 0.)
    */
-  public function getNewCommentPageNumber($total_comments, $new_comments, FieldableEntityInterface $entity, $field_name);
+  public function getNewCommentPageNumber(int $total_comments, int $new_comments, FieldableEntityInterface $entity, string $field_name);
 
   /**
    * Gets the display ordinal or page number for a comment.
@@ -70,7 +70,7 @@ interface CommentStorageInterface extends ContentEntityStorageInterface {
    *   The display ordinal or page number for the comment. It is 0-based, so
    *   will represent the number of items before the given comment/page.
    */
-  public function getDisplayOrdinal(CommentInterface $comment, $comment_mode, $divisor = 1);
+  public function getDisplayOrdinal(CommentInterface $comment, int $comment_mode, int $divisor = 1);
 
   /**
    * Gets the comment ids of the passed comment entities' children.
@@ -103,7 +103,7 @@ interface CommentStorageInterface extends ContentEntityStorageInterface {
    * @return array
    *   Ordered array of comment objects, keyed by comment id.
    */
-  public function loadThread(EntityInterface $entity, $field_name, $mode, $comments_per_page = 0, $pager_id = 0);
+  public function loadThread(EntityInterface $entity, string $field_name, int $mode, int $comments_per_page = 0, int $pager_id = 0);
 
   /**
    * Returns the number of unapproved comments.

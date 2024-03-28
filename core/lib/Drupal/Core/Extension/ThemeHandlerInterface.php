@@ -104,7 +104,7 @@ interface ThemeHandlerInterface {
    *
    * @see https://www.drupal.org/node/3413187
    */
-  public function getBaseThemes(array $themes, $theme);
+  public function getBaseThemes(array $themes, string $theme);
 
   /**
    * Gets the human readable name of a given theme.
@@ -118,7 +118,7 @@ interface ThemeHandlerInterface {
    * @throws \Drupal\Core\Extension\Exception\UnknownExtensionException
    *   When the specified theme does not exist.
    */
-  public function getName($theme);
+  public function getName(string $theme);
 
   /**
    * Returns the default theme.
@@ -147,7 +147,7 @@ interface ThemeHandlerInterface {
    * @return bool
    *   TRUE if the theme is installed.
    */
-  public function themeExists($theme);
+  public function themeExists(string $theme);
 
   /**
    * Returns a theme extension object from the currently active theme list.
@@ -161,7 +161,7 @@ interface ThemeHandlerInterface {
    * @throws \Drupal\Core\Extension\Exception\UnknownExtensionException
    *   Thrown when the requested theme does not exist.
    */
-  public function getTheme($name);
+  public function getTheme(string $name);
 
   /**
    * Determines if a theme should be shown in the user interface.
@@ -175,6 +175,6 @@ interface ThemeHandlerInterface {
    * @return bool
    *   TRUE if the theme should be shown in the UI, FALSE if not.
    */
-  public function hasUi($name);
+  public function hasUi(string $name);
 
 }

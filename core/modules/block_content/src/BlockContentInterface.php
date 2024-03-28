@@ -22,7 +22,7 @@ interface BlockContentInterface extends ContentEntityInterface, EntityChangedInt
    * @return $this
    *   The class instance that this method is called on.
    */
-  public function setInfo($info);
+  public function setInfo(string $info);
 
   /**
    * Determines if the block is reusable or not.
@@ -59,7 +59,7 @@ interface BlockContentInterface extends ContentEntityInterface, EntityChangedInt
    * @return $this
    *   The class instance that this method is called on.
    */
-  public function setTheme($theme);
+  public function setTheme(string $theme);
 
   /**
    * Gets the theme value.

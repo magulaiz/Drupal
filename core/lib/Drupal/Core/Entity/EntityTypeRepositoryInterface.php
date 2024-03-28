@@ -17,7 +17,7 @@ interface EntityTypeRepositoryInterface {
    * @return array
    *   An array of entity type labels, keyed by entity type name.
    */
-  public function getEntityTypeLabels($group = FALSE);
+  public function getEntityTypeLabels(bool $group = FALSE);
 
   /**
    * Gets the entity type ID based on the class that is called on.
@@ -42,6 +42,6 @@ interface EntityTypeRepositoryInterface {
    * @see \Drupal\Core\Entity\Entity::load()
    * @see \Drupal\Core\Entity\Entity::loadMultiple()
    */
-  public function getEntityTypeFromClass($class_name);
+  public function getEntityTypeFromClass(string $class_name);
 
 }

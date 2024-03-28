@@ -112,14 +112,15 @@ class OEmbedSourceTest extends MediaKernelTestBase {
 
     // There's no need to resolve the resource URL in this test; we just need
     // to fetch the resource.
-    $this->container->set(
-      'media.oembed.url_resolver',
-      $this->prophesize(UrlResolverInterface::class)->reveal()
-    );
+    $url_resolver = $this->prophesize(UrlResolverInterface::class);
+    $url_resolver->getResourceUrl(Argument::cetera())
+      ->willReturn('https://example.com/foo');
+
+    $this->container->set('media.oembed.url_resolver', $url_resolver->reveal());
 
     // Mock the resource fetcher so that it will return our fake resource.
     $resource_fetcher = $this->prophesize(ResourceFetcherInterface::class);
-    $resource_fetcher->fetchResource(Argument::any())
+    $resource_fetcher->fetchResource('https://example.com/foo')
       ->willReturn($resource);
     $this->container->set('media.oembed.resource_fetcher', $resource_fetcher->reveal());
 

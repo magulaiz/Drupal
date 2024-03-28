@@ -16,7 +16,7 @@ interface WriteSafeSessionHandlerInterface {
    * @param bool $flag
    *   TRUE if the session is allowed to be written, FALSE otherwise.
    */
-  public function setSessionWritable($flag);
+  public function setSessionWritable(bool $flag);
 
   /**
    * Returns whether or not a session may be written to storage.

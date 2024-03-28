@@ -39,7 +39,7 @@ interface ParamConverterInterface {
    * @return mixed|null
    *   The converted parameter value.
    */
-  public function convert($value, $definition, $name, array $defaults);
+  public function convert($value, $definition, string $name, array $defaults);
 
   /**
    * Determines if the converter applies to a specific route and variable.
@@ -55,6 +55,6 @@ interface ParamConverterInterface {
    *   TRUE if the converter applies to the passed route and parameter, FALSE
    *   otherwise.
    */
-  public function applies($definition, $name, Route $route);
+  public function applies($definition, string $name, Route $route);
 
 }

@@ -21,7 +21,7 @@ interface SectionStorageManagerInterface extends DiscoveryInterface {
    * @return \Drupal\layout_builder\SectionStorageInterface|null
    *   The section storage or NULL if its context requirements are not met.
    */
-  public function load($type, array $contexts = []);
+  public function load(string $type, array $contexts = []);
 
   /**
    * Finds the section storage to load based on available contexts.
@@ -57,6 +57,6 @@ interface SectionStorageManagerInterface extends DiscoveryInterface {
    *   collaborators of the plugins in build-time situations when section
    *   storage type must be consulted.
    */
-  public function loadEmpty($type);
+  public function loadEmpty(string $type);
 
 }

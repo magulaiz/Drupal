@@ -32,6 +32,6 @@ interface TranslationStatusInterface {
    *   One of the TRANSLATION_* constants or NULL if the given translation does
    *   not exist.
    */
-  public function getTranslationStatus($langcode);
+  public function getTranslationStatus(string $langcode);
 
 }

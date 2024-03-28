@@ -76,7 +76,7 @@ interface FieldStorageDefinitionInterface extends CacheableDependencyInterface {
    * @return mixed
    *   The setting value or NULL if the setting name doesn't exist.
    */
-  public function getSetting($setting_name);
+  public function getSetting(string $setting_name);
 
   /**
    * Returns whether the field supports translation.
@@ -94,7 +94,7 @@ interface FieldStorageDefinitionInterface extends CacheableDependencyInterface {
    *
    * @return $this
    */
-  public function setTranslatable($translatable);
+  public function setTranslatable(bool $translatable);
 
   /**
    * Returns whether the field storage is revisionable.
@@ -139,7 +139,7 @@ interface FieldStorageDefinitionInterface extends CacheableDependencyInterface {
    * @return \Drupal\Core\TypedData\OptionsProviderInterface|null
    *   An options provider, or NULL if no options are defined.
    */
-  public function getOptionsProvider($property_name, FieldableEntityInterface $entity);
+  public function getOptionsProvider(string $property_name, FieldableEntityInterface $entity);
 
   /**
    * Returns whether the field can contain multiple items.
@@ -169,7 +169,7 @@ interface FieldStorageDefinitionInterface extends CacheableDependencyInterface {
    * @return \Drupal\Core\TypedData\DataDefinitionInterface|null
    *   The definition of the property or NULL if the property does not exist.
    */
-  public function getPropertyDefinition($name);
+  public function getPropertyDefinition(string $name);
 
   /**
    * Gets an array of property definitions of contained properties.
@@ -288,7 +288,7 @@ interface FieldStorageDefinitionInterface extends CacheableDependencyInterface {
    *
    * @see \Symfony\Component\Validator\Constraint
    */
-  public function getConstraint($constraint_name);
+  public function getConstraint(string $constraint_name);
 
   /**
    * Returns the name of the provider of this field.

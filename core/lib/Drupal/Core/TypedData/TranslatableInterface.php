@@ -56,7 +56,7 @@ interface TranslatableInterface {
    * @return \Drupal\Core\Language\LanguageInterface[]
    *   An associative array of language objects, keyed by language codes.
    */
-  public function getTranslationLanguages($include_default = TRUE);
+  public function getTranslationLanguages(bool $include_default = TRUE);
 
   /**
    * Gets a translation of the data.
@@ -94,7 +94,7 @@ interface TranslatableInterface {
    * @return bool
    *   TRUE if the translation exists, FALSE otherwise.
    */
-  public function hasTranslation($langcode);
+  public function hasTranslation(string $langcode);
 
   /**
    * Adds a new translation to the translatable object.
@@ -116,7 +116,7 @@ interface TranslatableInterface {
    * @throws \InvalidArgumentException
    *   If an invalid or existing translation language is specified.
    */
-  public function addTranslation($langcode, array $values = []);
+  public function addTranslation(string $langcode, array $values = []);
 
   /**
    * Removes the translation identified by the given language code.
@@ -124,7 +124,7 @@ interface TranslatableInterface {
    * @param string $langcode
    *   The language code identifying the translation to be removed.
    */
-  public function removeTranslation($langcode);
+  public function removeTranslation(string $langcode);
 
   /**
    * Returns the translation support status.

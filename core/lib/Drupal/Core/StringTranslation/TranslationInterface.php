@@ -45,7 +45,7 @@ interface TranslationInterface {
    *
    * @ingroup sanitization
    */
-  public function translate($string, array $args = [], array $options = []);
+  public function translate(string $string, array $args = [], array $options = []);
 
   /**
    * Translates a TranslatableMarkup object to a string.
@@ -107,6 +107,6 @@ interface TranslationInterface {
    * @see \Drupal\Component\Render\FormattableMarkup
    * @see \Drupal\Core\StringTranslation\PluralTranslatableMarkup::createFromTranslatedString()
    */
-  public function formatPlural($count, $singular, $plural, array $args = [], array $options = []);
+  public function formatPlural(int $count, string $singular, string $plural, array $args = [], array $options = []);
 
 }

@@ -54,7 +54,7 @@ interface ListInterface extends TraversableTypedDataInterface, \ArrayAccess, \Co
    * @throws \Drupal\Core\TypedData\Exception\MissingDataException
    *   If the complex data structure is unset and no item can be created.
    */
-  public function get($index);
+  public function get(int $index);
 
   /**
    * Sets the value of the item at a given position in the list.
@@ -78,7 +78,7 @@ interface ListInterface extends TraversableTypedDataInterface, \ArrayAccess, \Co
    * @throws \Drupal\Core\TypedData\Exception\MissingDataException
    *   If the complex data structure is unset and no item can be set.
    */
-  public function set($index, $value);
+  public function set(int $index, $value);
 
   /**
    * Returns the first item in this list.
@@ -110,7 +110,7 @@ interface ListInterface extends TraversableTypedDataInterface, \ArrayAccess, \Co
    *
    * @return $this
    */
-  public function removeItem($index);
+  public function removeItem(int $index);
 
   /**
    * Filters the items in the list using a custom callback.

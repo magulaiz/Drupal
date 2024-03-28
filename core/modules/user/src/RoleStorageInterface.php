@@ -20,6 +20,6 @@ interface RoleStorageInterface extends ConfigEntityStorageInterface {
    * @return bool
    *   TRUE is the permission is in at least one of the roles. FALSE otherwise.
    */
-  public function isPermissionInRoles($permission, array $rids);
+  public function isPermissionInRoles(string $permission, array $rids);
 
 }

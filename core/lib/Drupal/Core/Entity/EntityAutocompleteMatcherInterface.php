@@ -25,6 +25,6 @@ interface EntityAutocompleteMatcherInterface {
    *
    * @see \Drupal\system\Controller\EntityAutocompleteController
    */
-  public function getMatches($target_type, $selection_handler, $selection_settings, $string = '');
+  public function getMatches(string $target_type, string $selection_handler, $selection_settings, string $string = '');
 
 }

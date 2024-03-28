@@ -26,7 +26,7 @@ interface ImageStyleInterface extends ConfigEntityInterface {
    * @return $this
    *   The class instance this method is called on.
    */
-  public function setName($name);
+  public function setName(string $name);
 
   /**
    * Returns the URI of this image when using this style.
@@ -41,7 +41,7 @@ interface ImageStyleInterface extends ConfigEntityInterface {
    * @return string
    *   The URI to the image derivative for this style.
    */
-  public function buildUri($uri);
+  public function buildUri(string $uri);
 
   /**
    * Returns the URL of this image derivative for an original image path or URI.
@@ -58,7 +58,7 @@ interface ImageStyleInterface extends ConfigEntityInterface {
    * @see \Drupal\image\Controller\ImageStyleDownloadController::deliver()
    * @see \Drupal\Core\File\FileUrlGeneratorInterface::transformRelative()
    */
-  public function buildUrl($path, $clean_urls = NULL);
+  public function buildUrl(string $path, $clean_urls = NULL);
 
   /**
    * Generates a token to protect an image style derivative.
@@ -73,7 +73,7 @@ interface ImageStyleInterface extends ConfigEntityInterface {
    *   An eight-character token which can be used to protect image style
    *   derivatives against denial-of-service attacks.
    */
-  public function getPathToken($uri);
+  public function getPathToken(string $uri);
 
   /**
    * Flushes cached media for this style.
@@ -84,7 +84,7 @@ interface ImageStyleInterface extends ConfigEntityInterface {
    *
    * @return $this
    */
-  public function flush($path = NULL);
+  public function flush(string $path = NULL);
 
   /**
    * Creates a new image derivative based on this image style.
@@ -101,7 +101,7 @@ interface ImageStyleInterface extends ConfigEntityInterface {
    *   TRUE if an image derivative was generated, or FALSE if the image
    *   derivative could not be generated.
    */
-  public function createDerivative($original_uri, $derivative_uri);
+  public function createDerivative(string $original_uri, string $derivative_uri);
 
   /**
    * Determines the dimensions of this image style.
@@ -125,7 +125,7 @@ interface ImageStyleInterface extends ConfigEntityInterface {
    *
    * @see ImageEffectInterface::transformDimensions
    */
-  public function transformDimensions(array &$dimensions, $uri);
+  public function transformDimensions(array &$dimensions, string $uri);
 
   /**
    * Determines the extension of the derivative without generating it.
@@ -137,7 +137,7 @@ interface ImageStyleInterface extends ConfigEntityInterface {
    *   The extension the derivative image will have, given the extension of the
    *   original.
    */
-  public function getDerivativeExtension($extension);
+  public function getDerivativeExtension(string $extension);
 
   /**
    * Returns a specific image effect.
@@ -148,7 +148,7 @@ interface ImageStyleInterface extends ConfigEntityInterface {
    * @return \Drupal\image\ImageEffectInterface
    *   The image effect object.
    */
-  public function getEffect($effect);
+  public function getEffect(string $effect);
 
   /**
    * Returns the image effects for this style.
@@ -188,6 +188,6 @@ interface ImageStyleInterface extends ConfigEntityInterface {
    * @return bool
    *   TRUE if the image is supported, FALSE otherwise.
    */
-  public function supportsUri($uri);
+  public function supportsUri(string $uri);
 
 }

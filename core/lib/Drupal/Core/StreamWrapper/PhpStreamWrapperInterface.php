@@ -40,7 +40,7 @@ interface PhpStreamWrapperInterface {
    * @see opendir()
    * @see http://php.net/manual/en/streamwrapper.dir-opendir.php
    */
-  public function dir_opendir($path, $options);
+  public function dir_opendir(string $path, int $options);
 
   /**
    * Read entry from directory handle.
@@ -98,7 +98,7 @@ interface PhpStreamWrapperInterface {
    * @see PhpStreamWrapperInterface::rmdir()
    * @see http://php.net/manual/en/streamwrapper.mkdir.php
    */
-  public function mkdir($path, $mode, $options);
+  public function mkdir(string $path, int $mode, int $options);
 
   /**
    * Renames a file or directory.
@@ -123,7 +123,7 @@ interface PhpStreamWrapperInterface {
    * @see rename()
    * @see http://php.net/manual/en/streamwrapper.rename.php
    */
-  public function rename($path_from, $path_to);
+  public function rename(string $path_from, string $path_to);
 
   /**
    * Removes a directory.
@@ -149,7 +149,7 @@ interface PhpStreamWrapperInterface {
    * @see PhpStreamWrapperInterface::unlink()
    * @see http://php.net/manual/en/streamwrapper.rmdir.php
    */
-  public function rmdir($path, $options);
+  public function rmdir(string $path, int $options);
 
   /**
    * Retrieve the underlying stream resource.
@@ -168,7 +168,7 @@ interface PhpStreamWrapperInterface {
    * @see stream_select()
    * @see http://php.net/manual/streamwrapper.stream-cast.php
    */
-  public function stream_cast($cast_as);
+  public function stream_cast(int $cast_as);
 
   /**
    * Closes stream.
@@ -244,7 +244,7 @@ interface PhpStreamWrapperInterface {
    * @see stream_set_blocking()
    * @see http://php.net/manual/en/streamwrapper.stream-lock.php
    */
-  public function stream_lock($operation);
+  public function stream_lock(int $operation);
 
   /**
    * Sets metadata on the stream.
@@ -276,7 +276,7 @@ interface PhpStreamWrapperInterface {
    *
    * @see http://php.net/manual/streamwrapper.stream-metadata.php
    */
-  public function stream_metadata($path, $option, $value);
+  public function stream_metadata(string $path, int $option, $value);
 
   /**
    * Opens file or URL.
@@ -315,7 +315,7 @@ interface PhpStreamWrapperInterface {
    * @see parse_url()
    * @see http://php.net/manual/en/streamwrapper.stream-open.php
    */
-  public function stream_open($path, $mode, $options, &$opened_path);
+  public function stream_open(string $path, string $mode, int $options, string &$opened_path);
 
   /**
    * Read from stream.
@@ -347,7 +347,7 @@ interface PhpStreamWrapperInterface {
    * @see fgets()
    * @see http://php.net/manual/en/streamwrapper.stream-read.php
    */
-  public function stream_read($count);
+  public function stream_read(int $count);
 
   /**
    * Seeks to specific location in a stream.
@@ -371,7 +371,7 @@ interface PhpStreamWrapperInterface {
    *
    * @see http://php.net/manual/streamwrapper.stream-seek.php
    */
-  public function stream_seek($offset, $whence = SEEK_SET);
+  public function stream_seek(int $offset, int $whence = SEEK_SET);
 
   /**
    * Change stream options.
@@ -404,7 +404,7 @@ interface PhpStreamWrapperInterface {
    *   TRUE on success, FALSE otherwise. If $option is not implemented, FALSE
    *   should be returned.
    */
-  public function stream_set_option($option, $arg1, $arg2);
+  public function stream_set_option(int $option, int $arg1, int $arg2);
 
   /**
    * Retrieve information about a file resource.
@@ -448,7 +448,7 @@ interface PhpStreamWrapperInterface {
    * @see ftruncate()
    * @see http://php.net/manual/en/streamwrapper.stream-truncate.php
    */
-  public function stream_truncate($new_size);
+  public function stream_truncate(int $new_size);
 
   /**
    * Write to stream.
@@ -468,7 +468,7 @@ interface PhpStreamWrapperInterface {
    * @see fwrite()
    * @see http://php.net/manual/en/streamwrapper.stream-write.php
    */
-  public function stream_write($data);
+  public function stream_write(string $data);
 
   /**
    * Delete a file.
@@ -491,7 +491,7 @@ interface PhpStreamWrapperInterface {
    * @see PhpStreamWrapperInterface::rmdir()
    * @see http://php.net/manual/en/streamwrapper.unlink.php
    */
-  public function unlink($path);
+  public function unlink(string $path);
 
   /**
    * Retrieve information about a file.
@@ -525,6 +525,6 @@ interface PhpStreamWrapperInterface {
    * @see PhpStreamWrapperInterface::stream_stat()
    * @see http://php.net/manual/en/streamwrapper.url-stat.php
    */
-  public function url_stat($path, $flags);
+  public function url_stat(string $path, int $flags);
 
 }

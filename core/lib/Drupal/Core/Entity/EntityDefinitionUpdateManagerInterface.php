@@ -110,7 +110,7 @@ interface EntityDefinitionUpdateManagerInterface {
    * @return \Drupal\Core\Entity\EntityTypeInterface|null
    *   The entity type definition. Or NULL if not found.
    */
-  public function getEntityType($entity_type_id);
+  public function getEntityType(string $entity_type_id);
 
   /**
    * Returns all the entity type definitions, ready to be manipulated.
@@ -191,7 +191,7 @@ interface EntityDefinitionUpdateManagerInterface {
    * @todo Make this return a mutable storage definition interface when we have
    *   one. See https://www.drupal.org/node/2346329.
    */
-  public function getFieldStorageDefinition($name, $entity_type_id);
+  public function getFieldStorageDefinition(string $name, string $entity_type_id);
 
   /**
    * Installs a new field storage definition.
@@ -205,7 +205,7 @@ interface EntityDefinitionUpdateManagerInterface {
    * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $storage_definition
    *   The field storage definition.
    */
-  public function installFieldStorageDefinition($name, $entity_type_id, $provider, FieldStorageDefinitionInterface $storage_definition);
+  public function installFieldStorageDefinition(string $name, string $entity_type_id, string $provider, FieldStorageDefinitionInterface $storage_definition);
 
   /**
    * Applies any change performed to the passed field storage definition.

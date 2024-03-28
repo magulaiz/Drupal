@@ -80,6 +80,6 @@ interface UrlGeneratorInterface extends SymfonyUrlGeneratorInterface {
    *   Should not be used in user code.
    *   Use \Drupal\Core\Url instead.
    */
-  public function generateFromRoute($name, $parameters = [], $options = [], $collect_bubbleable_metadata = FALSE);
+  public function generateFromRoute($name, $parameters = [], $options = [], bool $collect_bubbleable_metadata = FALSE);
 
 }

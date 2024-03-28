@@ -55,7 +55,7 @@ interface NodeStorageInterface extends ContentEntityStorageInterface {
    * @return int
    *   The number of nodes whose node type field was modified.
    */
-  public function updateType($old_type, $new_type);
+  public function updateType(string $old_type, string $new_type);
 
   /**
    * Unsets the language for all nodes with the given language.

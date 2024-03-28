@@ -35,7 +35,7 @@ interface ResourceTypeRepositoryInterface {
    *
    * @see \Drupal\Core\Entity\EntityInterface::bundle()
    */
-  public function get($entity_type_id, $bundle);
+  public function get(string $entity_type_id, string $bundle);
 
   /**
    * Gets a specific JSON:API resource type based on a supplied typename.
@@ -46,6 +46,6 @@ interface ResourceTypeRepositoryInterface {
    * @return \Drupal\jsonapi\ResourceType\ResourceType|null
    *   The resource type, or NULL if none found.
    */
-  public function getByTypeName($type_name);
+  public function getByTypeName(string $type_name);
 
 }

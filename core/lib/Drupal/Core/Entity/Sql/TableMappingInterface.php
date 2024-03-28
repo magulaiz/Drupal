@@ -42,7 +42,7 @@ interface TableMappingInterface {
    *   An array of database column names for this table. Both field columns and
    *   extra columns are returned.
    */
-  public function getAllColumns($table_name);
+  public function getAllColumns(string $table_name);
 
   /**
    * Gets a list of names for entity fields stored in the specified table.
@@ -57,7 +57,7 @@ interface TableMappingInterface {
    * @return string[]
    *   An array of field names for the given table.
    */
-  public function getFieldNames($table_name);
+  public function getFieldNames(string $table_name);
 
   /**
    * Gets a mapping of field columns to database columns for a given field.
@@ -70,7 +70,7 @@ interface TableMappingInterface {
    *   FieldStorageDefinitionInterface::getColumns() while the respective values
    *   are the names of the database columns for this table mapping.
    */
-  public function getColumnNames($field_name);
+  public function getColumnNames(string $field_name);
 
   /**
    * Gets a list of extra database columns, which store denormalized data.
@@ -84,7 +84,7 @@ interface TableMappingInterface {
    * @return string[]
    *   An array of column names for the given table.
    */
-  public function getExtraColumns($table_name);
+  public function getExtraColumns(string $table_name);
 
   /**
    * Gets the list of columns that can not be used as field type columns.
@@ -105,7 +105,7 @@ interface TableMappingInterface {
    *   A string containing a generated column name for a field data table that is
    *   unique among all other fields.
    */
-  public function getFieldColumnName(FieldStorageDefinitionInterface $storage_definition, $property_name);
+  public function getFieldColumnName(FieldStorageDefinitionInterface $storage_definition, string $property_name);
 
   /**
    * Gets the table name for a given column.
@@ -118,7 +118,7 @@ interface TableMappingInterface {
    *
    * @throws \Drupal\Core\Entity\Sql\SqlContentEntityStorageException
    */
-  public function getFieldTableName($field_name);
+  public function getFieldTableName(string $field_name);
 
   /**
    * Gets all the table names in which an entity field is stored.
@@ -140,6 +140,6 @@ interface TableMappingInterface {
    *
    * @throws \Drupal\Core\Entity\Sql\SqlContentEntityStorageException
    */
-  public function getAllFieldTableNames($field_name);
+  public function getAllFieldTableNames(string $field_name);
 
 }

@@ -18,7 +18,7 @@ interface ConfigFactoryInterface {
    * @return \Drupal\Core\Config\ImmutableConfig
    *   A configuration object.
    */
-  public function get($name);
+  public function get(string $name);
 
   /**
    * Returns a mutable configuration object for a given name.
@@ -32,7 +32,7 @@ interface ConfigFactoryInterface {
    * @return \Drupal\Core\Config\Config
    *   A configuration object.
    */
-  public function getEditable($name);
+  public function getEditable(string $name);
 
   /**
    * Returns a list of configuration objects for the given names.
@@ -71,7 +71,7 @@ interface ConfigFactoryInterface {
    *
    * @return $this
    */
-  public function rename($old_name, $new_name);
+  public function rename(string $old_name, string $new_name);
 
   /**
    * The cache keys associated with the state of the config factory.
@@ -106,7 +106,7 @@ interface ConfigFactoryInterface {
    * @return array
    *   An array containing matching configuration object names.
    */
-  public function listAll($prefix = '');
+  public function listAll(string $prefix = '');
 
   /**
    * Adds config factory override services.

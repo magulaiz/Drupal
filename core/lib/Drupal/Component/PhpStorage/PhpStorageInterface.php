@@ -22,7 +22,7 @@ interface PhpStorageInterface {
    * @return bool
    *   TRUE if the virtual file exists, FALSE otherwise.
    */
-  public function exists($name);
+  public function exists(string $name);
 
   /**
    * Loads PHP code from storage.
@@ -36,7 +36,7 @@ interface PhpStorageInterface {
    * @param string $name
    *   The virtual file name. Can be a relative path.
    */
-  public function load($name);
+  public function load(string $name);
 
   /**
    * Saves PHP code to storage.
@@ -49,7 +49,7 @@ interface PhpStorageInterface {
    * @return bool
    *   TRUE if the save succeeded, FALSE if it failed.
    */
-  public function save($name, $code);
+  public function save(string $name, string $code);
 
   /**
    * Whether this is a writable storage.
@@ -73,7 +73,7 @@ interface PhpStorageInterface {
    * @return bool
    *   TRUE if the delete succeeded, FALSE if it failed.
    */
-  public function delete($name);
+  public function delete(string $name);
 
   /**
    * Removes all files in this bin.
@@ -90,7 +90,7 @@ interface PhpStorageInterface {
    *   The full file path for the provided name. Return FALSE if the
    *   implementation needs to prevent access to the file.
    */
-  public function getFullPath($name);
+  public function getFullPath(string $name);
 
   /**
    * Lists all the files in the storage.

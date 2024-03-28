@@ -35,6 +35,6 @@ interface ProviderRepositoryInterface {
    * @throws \InvalidArgumentException
    *   If there is no known oEmbed provider with the specified name.
    */
-  public function get($provider_name);
+  public function get(string $provider_name);
 
 }

@@ -31,6 +31,6 @@ interface FilteredPluginManagerInterface extends PluginManagerInterface {
    * @see hook_plugin_filter_TYPE_alter()
    * @see hook_plugin_filter_TYPE__CONSUMER_alter()
    */
-  public function getFilteredDefinitions($consumer, $contexts = NULL, array $extra = []);
+  public function getFilteredDefinitions(string $consumer, $contexts = NULL, array $extra = []);
 
 }

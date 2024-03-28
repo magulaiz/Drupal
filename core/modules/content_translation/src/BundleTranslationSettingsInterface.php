@@ -18,7 +18,7 @@ interface BundleTranslationSettingsInterface {
    * @return array
    *   An associative array of values keyed by setting name.
    */
-  public function getBundleTranslationSettings($entity_type_id, $bundle);
+  public function getBundleTranslationSettings(string $entity_type_id, string $bundle);
 
   /**
    * Sets translation settings for the specified bundle.
@@ -30,6 +30,6 @@ interface BundleTranslationSettingsInterface {
    * @param array $settings
    *   An associative array of values keyed by setting name.
    */
-  public function setBundleTranslationSettings($entity_type_id, $bundle, array $settings);
+  public function setBundleTranslationSettings(string $entity_type_id, string $bundle, array $settings);
 
 }

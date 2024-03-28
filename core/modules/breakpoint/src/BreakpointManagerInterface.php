@@ -16,7 +16,7 @@ interface BreakpointManagerInterface {
    * @return \Drupal\breakpoint\BreakpointInterface[]
    *   Array of breakpoint plugins keyed by machine name.
    */
-  public function getBreakpointsByGroup($group);
+  public function getBreakpointsByGroup(string $group);
 
   /**
    * Gets all the existing breakpoint groups.
@@ -36,6 +36,6 @@ interface BreakpointManagerInterface {
    *   An array keyed by provider name with values of provider type (module or
    *   theme).
    */
-  public function getGroupProviders($group);
+  public function getGroupProviders(string $group);
 
 }

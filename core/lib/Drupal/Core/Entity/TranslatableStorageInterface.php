@@ -25,6 +25,6 @@ interface TranslatableStorageInterface extends EntityStorageInterface {
    * @todo Consider accepting \Drupal\Core\Entity\TranslatableInterface as first
    *   parameter. See https://www.drupal.org/project/drupal/issues/2932049.
    */
-  public function createTranslation(ContentEntityInterface $entity, $langcode, array $values = []);
+  public function createTranslation(ContentEntityInterface $entity, string $langcode, array $values = []);
 
 }

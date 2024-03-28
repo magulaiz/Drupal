@@ -85,7 +85,8 @@ class ContentTranslationManageAccessCheckTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
     $entity->expects($this->once())
-      ->method('getEntityTypeId');
+      ->method('getEntityTypeId')
+      ->willReturn('node');
     $entity->expects($this->once())
       ->method('getTranslationLanguages')
       ->with()

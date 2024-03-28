@@ -66,7 +66,7 @@ interface ResponsiveImageStyleInterface extends ConfigEntityInterface {
    *
    * @return $this
    */
-  public function setBreakpointGroup($breakpoint_group);
+  public function setBreakpointGroup(string $breakpoint_group);
 
   /**
    * Returns the breakpoint group for the responsive image style.
@@ -84,7 +84,7 @@ interface ResponsiveImageStyleInterface extends ConfigEntityInterface {
    *
    * @return $this
    */
-  public function setFallbackImageStyle($fallback_image_style);
+  public function setFallbackImageStyle(string $fallback_image_style);
 
   /**
    * Returns the fallback image style ID for the responsive image style.
@@ -115,7 +115,7 @@ interface ResponsiveImageStyleInterface extends ConfigEntityInterface {
    *     - breakpoint_id: The breakpoint ID for this image style mapping.
    *     - multiplier: The multiplier for this image style mapping.
    */
-  public function getImageStyleMapping($breakpoint_id, $multiplier);
+  public function getImageStyleMapping(string $breakpoint_id, string $multiplier);
 
   /**
    * Checks if there is at least one image style mapping defined.
@@ -140,7 +140,7 @@ interface ResponsiveImageStyleInterface extends ConfigEntityInterface {
    *
    * @return $this
    */
-  public function addImageStyleMapping($breakpoint_id, $multiplier, array $image_style_mapping);
+  public function addImageStyleMapping(string $breakpoint_id, string $multiplier, array $image_style_mapping);
 
   /**
    * Removes all image style mappings from the responsive image style.

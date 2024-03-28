@@ -71,7 +71,7 @@ interface FormatterInterface extends PluginSettingsInterface {
    * @return array
    *   A renderable array for a themed field with its label and all its values.
    */
-  public function view(FieldItemListInterface $items, $langcode = NULL);
+  public function view(FieldItemListInterface $items, string $langcode = NULL);
 
   /**
    * Builds a renderable array for a field value.
@@ -85,7 +85,7 @@ interface FormatterInterface extends PluginSettingsInterface {
    *   A renderable array for $items, as an array of child elements keyed by
    *   consecutive numeric indexes starting from 0.
    */
-  public function viewElements(FieldItemListInterface $items, $langcode);
+  public function viewElements(FieldItemListInterface $items, string $langcode);
 
   /**
    * Returns if the formatter can be used for the provided field.

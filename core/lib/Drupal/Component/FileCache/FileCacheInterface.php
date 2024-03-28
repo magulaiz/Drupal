@@ -25,7 +25,7 @@ interface FileCacheInterface {
    *   The data that was persisted with set() or NULL if there is no data
    *   or the file has been modified.
    */
-  public function get($filepath);
+  public function get(string $filepath);
 
   /**
    * Gets data based on filenames.
@@ -46,7 +46,7 @@ interface FileCacheInterface {
    * @param mixed $data
    *   The data that should be cached.
    */
-  public function set($filepath, $data);
+  public function set(string $filepath, $data);
 
   /**
    * Deletes data from the cache.
@@ -54,6 +54,6 @@ interface FileCacheInterface {
    * @param string $filepath
    *   Path of the file that the cached data is based on.
    */
-  public function delete($filepath);
+  public function delete(string $filepath);
 
 }

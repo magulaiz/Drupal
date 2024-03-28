@@ -25,6 +25,6 @@ interface TestPreinstallInterface {
    *
    * @see \Drupal\TestSite\TestSiteInstallTestScript
    */
-  public function preinstall($db_prefix, $site_directory);
+  public function preinstall(string $db_prefix, string $site_directory);
 
 }

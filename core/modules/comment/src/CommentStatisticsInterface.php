@@ -35,7 +35,7 @@ interface CommentStatisticsInterface {
    * @return object[]
    *   Array of statistics records.
    */
-  public function read($entities, $entity_type, $accurate = TRUE);
+  public function read($entities, string $entity_type, bool $accurate = TRUE);
 
   /**
    * Delete comment statistics records for an entity.
@@ -66,7 +66,7 @@ interface CommentStatisticsInterface {
    *
    * @see comment_update_index()
    */
-  public function getMaximumCount($entity_type);
+  public function getMaximumCount(string $entity_type);
 
   /**
    * Insert an empty record for the given entity.

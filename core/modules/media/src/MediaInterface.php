@@ -29,7 +29,7 @@ interface MediaInterface extends ContentEntityInterface, EntityChangedInterface,
    *
    * @return $this
    */
-  public function setName($name);
+  public function setName(string $name);
 
   /**
    * Returns the media item creation timestamp.
@@ -54,7 +54,7 @@ interface MediaInterface extends ContentEntityInterface, EntityChangedInterface,
    * @return $this
    *   The called media item.
    */
-  public function setCreatedTime($timestamp);
+  public function setCreatedTime(int $timestamp);
 
   /**
    * Returns the media source.

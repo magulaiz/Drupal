@@ -16,6 +16,6 @@ interface VariationCacheFactoryInterface {
    * @return \Drupal\Core\Cache\VariationCacheInterface
    *   The variation cache backend associated with the specified bin.
    */
-  public function get($bin);
+  public function get(string $bin);
 
 }

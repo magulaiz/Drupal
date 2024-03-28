@@ -20,7 +20,7 @@ interface QueryFactoryInterface {
    * @return \Drupal\Core\Entity\Query\QueryInterface
    *   An entity query for a specific configuration entity type.
    */
-  public function get(EntityTypeInterface $entity_type, $conjunction);
+  public function get(EntityTypeInterface $entity_type, string $conjunction);
 
   /**
    * Instantiates an aggregation query object for a given entity type.
@@ -36,6 +36,6 @@ interface QueryFactoryInterface {
    *
    * @throws \Drupal\Core\Entity\Query\QueryException
    */
-  public function getAggregate(EntityTypeInterface $entity_type, $conjunction);
+  public function getAggregate(EntityTypeInterface $entity_type, string $conjunction);
 
 }

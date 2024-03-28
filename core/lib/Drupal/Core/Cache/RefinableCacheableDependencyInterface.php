@@ -46,7 +46,7 @@ interface RefinableCacheableDependencyInterface extends CacheableDependencyInter
    * @throws \InvalidArgumentException
    *   Thrown if a non-integer value is supplied.
    */
-  public function mergeCacheMaxAge($max_age);
+  public function mergeCacheMaxAge(int $max_age);
 
   /**
    * Adds a dependency on an object: merges its cacheability metadata.

@@ -23,6 +23,6 @@ interface ResponseDisplayPluginInterface extends DisplayPluginInterface {
    * @return \Symfony\Component\HttpFoundation\Response
    *   The built response.
    */
-  public static function buildResponse($view_id, $display_id, array $args = []);
+  public static function buildResponse(string $view_id, string $display_id, array $args = []);
 
 }

@@ -18,7 +18,7 @@ interface FilterFormatInterface extends ConfigEntityInterface {
    * @return \Drupal\filter\FilterPluginCollection|\Drupal\filter\Plugin\FilterInterface
    *   Either the filter collection or a specific filter plugin instance.
    */
-  public function filters($instance_id = NULL);
+  public function filters(string $instance_id = NULL);
 
   /**
    * Sets the configuration for a filter plugin instance.
@@ -32,7 +32,7 @@ interface FilterFormatInterface extends ConfigEntityInterface {
    * @param array $configuration
    *   The filter plugin configuration to set.
    */
-  public function setFilterConfig($instance_id, array $configuration);
+  public function setFilterConfig(string $instance_id, array $configuration);
 
   /**
    * Returns if this format is the fallback format.
@@ -83,6 +83,6 @@ interface FilterFormatInterface extends ConfigEntityInterface {
    * @param string $instance_id
    *   The ID of a filter plugin to be removed.
    */
-  public function removeFilter($instance_id);
+  public function removeFilter(string $instance_id);
 
 }

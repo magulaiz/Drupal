@@ -24,7 +24,7 @@ interface SearchInterface extends PluginInspectionInterface {
    * @return $this
    *   A search plugin object for chaining.
    */
-  public function setSearch($keywords, array $parameters, array $attributes);
+  public function setSearch(string $keywords, array $parameters, array $attributes);
 
   /**
    * Returns the currently set keywords of the plugin instance.

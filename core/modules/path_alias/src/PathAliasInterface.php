@@ -26,7 +26,7 @@ interface PathAliasInterface extends ContentEntityInterface, EntityPublishedInte
    *
    * @return $this
    */
-  public function setPath($path);
+  public function setPath(string $path);
 
   /**
    * Gets the alias for this path.
@@ -44,6 +44,6 @@ interface PathAliasInterface extends ContentEntityInterface, EntityPublishedInte
    *
    * @return $this
    */
-  public function setAlias($alias);
+  public function setAlias(string $alias);
 
 }

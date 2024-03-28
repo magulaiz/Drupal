@@ -15,6 +15,6 @@ interface CacheableRouteProviderInterface extends RouteProviderInterface {
    * @param string $cache_key_part
    *   A string to be used as a cache key part.
    */
-  public function addExtraCacheKeyPart($cache_key_provider, $cache_key_part);
+  public function addExtraCacheKeyPart(string $cache_key_provider, string $cache_key_part);
 
 }

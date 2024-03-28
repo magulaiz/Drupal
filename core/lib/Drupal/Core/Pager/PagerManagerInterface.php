@@ -107,7 +107,7 @@ interface PagerManagerInterface {
    * @return \Drupal\Core\Pager\Pager
    *   The pager.
    */
-  public function createPager($total, $limit, $element = 0);
+  public function createPager(int $total, int $limit, int $element = 0);
 
   /**
    * Gets a pager from the static cache.
@@ -118,7 +118,7 @@ interface PagerManagerInterface {
    * @return \Drupal\Core\Pager\Pager|null
    *   The pager, or null if not found.
    */
-  public function getPager($element = 0);
+  public function getPager(int $element = 0);
 
   /**
    * Returns the current page being requested for display within a pager.
@@ -161,7 +161,7 @@ interface PagerManagerInterface {
    * @return array
    *   The altered $query parameter array.
    */
-  public function getUpdatedParameters(array $query, $element, $index);
+  public function getUpdatedParameters(array $query, int $element, int $index);
 
   /**
    * Gets the extent of the pager page element IDs.

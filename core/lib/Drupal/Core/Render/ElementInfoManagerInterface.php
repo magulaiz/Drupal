@@ -44,7 +44,7 @@ interface ElementInfoManagerInterface extends DiscoveryInterface {
    * @see \Drupal\Core\Render\Element\ElementInterface
    * @see \Drupal\Core\Render\Element\ElementInterface::getInfo()
    */
-  public function getInfo($type);
+  public function getInfo(string $type);
 
   /**
    * Retrieves a single property for the defined element type.
@@ -61,6 +61,6 @@ interface ElementInfoManagerInterface extends DiscoveryInterface {
    *   The property value of the defined element type. Or the provided
    *   default value, which can be NULL.
    */
-  public function getInfoProperty($type, $property_name, $default = NULL);
+  public function getInfoProperty(string $type, string $property_name, $default = NULL);
 
 }

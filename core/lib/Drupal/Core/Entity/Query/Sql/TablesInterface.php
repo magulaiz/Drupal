@@ -28,7 +28,7 @@ interface TablesInterface {
    * @throws \Drupal\Core\Entity\Query\QueryException
    *   If $field specifies an invalid relationship.
    */
-  public function addField($field, $type, $langcode);
+  public function addField(string $field, string $type, string $langcode);
 
   /**
    * Determines whether the given field is case sensitive.
@@ -42,6 +42,6 @@ interface TablesInterface {
    *   TRUE if the field is case sensitive, FALSE if not. Returns NULL when the
    *   field did not define if it is case sensitive or not.
    */
-  public function isFieldCaseSensitive($field_name);
+  public function isFieldCaseSensitive(string $field_name);
 
 }

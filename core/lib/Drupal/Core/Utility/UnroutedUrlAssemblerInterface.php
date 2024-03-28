@@ -52,6 +52,6 @@ interface UnroutedUrlAssemblerInterface {
    * @throws \InvalidArgumentException
    *   Thrown when the passed in path has no scheme.
    */
-  public function assemble($uri, array $options = [], $collect_bubbleable_metadata = FALSE);
+  public function assemble(string $uri, array $options = [], bool $collect_bubbleable_metadata = FALSE);
 
 }

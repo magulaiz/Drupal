@@ -39,7 +39,7 @@ interface AccountInterface {
    * @return array
    *   List of role IDs.
    */
-  public function getRoles($exclude_locked_roles = FALSE);
+  public function getRoles(bool $exclude_locked_roles = FALSE);
 
   /**
    * Checks whether a user has a certain permission.
@@ -50,7 +50,7 @@ interface AccountInterface {
    * @return bool
    *   TRUE if the user has the permission, FALSE otherwise.
    */
-  public function hasPermission(/* string */$permission);
+  public function hasPermission(/* string */string $permission);
 
   /**
    * Returns TRUE if the account is authenticated.
@@ -83,7 +83,7 @@ interface AccountInterface {
    *   - If the user has no preferred language and $fallback_to_default is FALSE
    *     then empty string is returned.
    */
-  public function getPreferredLangcode($fallback_to_default = TRUE);
+  public function getPreferredLangcode(bool $fallback_to_default = TRUE);
 
   /**
    * Returns the preferred administrative language code of the account.
@@ -100,7 +100,7 @@ interface AccountInterface {
    *   configured anymore on the site, the site default is returned or an empty
    *   string is returned (if $fallback_to_default is FALSE).
    */
-  public function getPreferredAdminLangcode($fallback_to_default = TRUE);
+  public function getPreferredAdminLangcode(bool $fallback_to_default = TRUE);
 
   /**
    * Returns the unaltered login name of this account.

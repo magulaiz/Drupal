@@ -29,7 +29,7 @@ interface LibraryDiscoveryInterface {
    *
    * @see self::getLibraryByName()
    */
-  public function getLibrariesByExtension($extension);
+  public function getLibrariesByExtension(string $extension);
 
   /**
    * Gets a single library defined by an extension by name.
@@ -43,7 +43,7 @@ interface LibraryDiscoveryInterface {
    *   The definition of the requested library, if $name was passed and it
    *   exists, otherwise FALSE.
    */
-  public function getLibraryByName($extension, $name);
+  public function getLibraryByName(string $extension, string $name);
 
   /**
    * Clears static and persistent library definition caches.

@@ -21,7 +21,7 @@ interface EntityFormInterface extends BaseFormIdInterface {
    *
    * @return $this
    */
-  public function setOperation($operation);
+  public function setOperation(string $operation);
 
   /**
    * Gets the operation identifying the form.
@@ -68,7 +68,7 @@ interface EntityFormInterface extends BaseFormIdInterface {
    * @return \Drupal\Core\Entity\EntityInterface
    *   The entity object as determined from the passed-in route match.
    */
-  public function getEntityFromRouteMatch(RouteMatchInterface $route_match, $entity_type_id);
+  public function getEntityFromRouteMatch(RouteMatchInterface $route_match, string $entity_type_id);
 
   /**
    * Builds an updated entity object based upon the submitted form values.

@@ -61,6 +61,6 @@ interface MigrationPluginManagerInterface extends PluginManagerInterface {
    *   An array of migration objects with the given tag, or an empty array if no
    *   migrations with that tag exist.
    */
-  public function createInstancesByTag($tag);
+  public function createInstancesByTag(string $tag);
 
 }

@@ -25,7 +25,7 @@ interface DateFormatInterface extends ConfigEntityInterface {
    *
    * @return $this
    */
-  public function setPattern($pattern);
+  public function setPattern(string $pattern);
 
   /**
    * Determines if this date format is locked.

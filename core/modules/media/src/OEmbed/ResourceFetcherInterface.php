@@ -27,6 +27,6 @@ interface ResourceFetcherInterface {
    *   If the oEmbed endpoint is not reachable or the response returns an
    *   unexpected Content-Type header.
    */
-  public function fetchResource($url);
+  public function fetchResource(string $url);
 
 }

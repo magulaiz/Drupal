@@ -18,7 +18,7 @@ interface LocaleProjectStorageInterface {
    * @return mixed
    *   The stored value, or the default value if no value exists.
    */
-  public function get($key, $default = NULL);
+  public function get(string $key, $default = NULL);
 
   /**
    * Returns a list of project records.
@@ -39,7 +39,7 @@ interface LocaleProjectStorageInterface {
    * @param mixed $value
    *   The data to store.
    */
-  public function set($key, $value);
+  public function set(string $key, $value);
 
   /**
    * Creates or updates multiple project records.
@@ -55,7 +55,7 @@ interface LocaleProjectStorageInterface {
    * @param string $key
    *   The key of the data to delete.
    */
-  public function delete($key);
+  public function delete(string $key);
 
   /**
    * Deletes multiple project records.

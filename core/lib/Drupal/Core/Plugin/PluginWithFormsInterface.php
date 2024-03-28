@@ -21,7 +21,7 @@ interface PluginWithFormsInterface extends PluginInspectionInterface {
    * @return string|null
    *   The form class if defined, NULL otherwise.
    */
-  public function getFormClass($operation);
+  public function getFormClass(string $operation);
 
   /**
    * Gets whether the plugin has a form class for the given operation.
@@ -32,6 +32,6 @@ interface PluginWithFormsInterface extends PluginInspectionInterface {
    * @return bool
    *   TRUE if the plugin has a form class for the given operation.
    */
-  public function hasFormClass($operation);
+  public function hasFormClass(string $operation);
 
 }

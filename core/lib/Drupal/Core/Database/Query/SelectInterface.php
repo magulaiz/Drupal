@@ -149,7 +149,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    * @return string
    *   The sanitized field name string.
    */
-  public function escapeField($string);
+  public function escapeField(string $string);
 
   /**
    * Compiles and returns an associative array of the arguments for this prepared statement.

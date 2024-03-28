@@ -17,7 +17,7 @@ interface InlineBlockUsageInterface {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The layout entity.
    */
-  public function addUsage($block_content_id, EntityInterface $entity);
+  public function addUsage(int $block_content_id, EntityInterface $entity);
 
   /**
    * Gets unused inline block IDs.
@@ -28,7 +28,7 @@ interface InlineBlockUsageInterface {
    * @return int[]
    *   The entity IDs.
    */
-  public function getUnused($limit = 100);
+  public function getUnused(int $limit = 100);
 
   /**
    * Remove usage record by layout entity.
@@ -56,6 +56,6 @@ interface InlineBlockUsageInterface {
    *   The usage record with properties layout_entity_id and layout_entity_type
    *   or FALSE if there is no usage.
    */
-  public function getUsage($block_content_id);
+  public function getUsage(int $block_content_id);
 
 }

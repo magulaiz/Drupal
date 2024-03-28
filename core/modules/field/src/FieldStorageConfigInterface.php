@@ -58,7 +58,7 @@ interface FieldStorageConfigInterface extends ConfigEntityInterface, FieldStorag
    *
    * @return $this
    */
-  public function setLocked($locked);
+  public function setLocked(bool $locked);
 
   /**
    * Sets the maximum number of items allowed for the field.
@@ -68,7 +68,7 @@ interface FieldStorageConfigInterface extends ConfigEntityInterface, FieldStorag
    *
    * @return $this
    */
-  public function setCardinality($cardinality);
+  public function setCardinality(int $cardinality);
 
   /**
    * Sets the value for a field setting by name.
@@ -80,7 +80,7 @@ interface FieldStorageConfigInterface extends ConfigEntityInterface, FieldStorag
    *
    * @return $this
    */
-  public function setSetting($setting_name, $value);
+  public function setSetting(string $setting_name, $value);
 
   /**
    * Sets field storage settings.

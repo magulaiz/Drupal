@@ -27,6 +27,6 @@ interface AssetOptimizerInterface {
    * @return string
    *   The cleaned asset's contents.
    */
-  public function clean($content);
+  public function clean(string $content);
 
 }

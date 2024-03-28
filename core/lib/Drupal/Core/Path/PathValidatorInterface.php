@@ -16,7 +16,7 @@ interface PathValidatorInterface {
    * @return \Drupal\Core\Url|false
    *   The \Drupal\Core\Url object, or FALSE if the path is not valid.
    */
-  public function getUrlIfValid($path);
+  public function getUrlIfValid(string $path);
 
   /**
    * Returns a URL object, if the path is valid.
@@ -30,7 +30,7 @@ interface PathValidatorInterface {
    * @return \Drupal\Core\Url|false
    *   The \Drupal\Core\Url object, or FALSE if the path is not valid.
    */
-  public function getUrlIfValidWithoutAccessCheck($path);
+  public function getUrlIfValidWithoutAccessCheck(string $path);
 
   /**
    * Checks if the URL path is valid and accessible by the current user.
@@ -41,6 +41,6 @@ interface PathValidatorInterface {
    * @return bool
    *   TRUE if the path is valid.
    */
-  public function isValid($path);
+  public function isValid(string $path);
 
 }

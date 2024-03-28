@@ -34,6 +34,6 @@ interface SupportsTemporaryTablesInterface {
    * @return string
    *   The name of the temporary table.
    */
-  public function queryTemporary($query, array $args = [], array $options = []);
+  public function queryTemporary(string $query, array $args = [], array $options = []);
 
 }

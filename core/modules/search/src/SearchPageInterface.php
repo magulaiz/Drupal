@@ -23,7 +23,7 @@ interface SearchPageInterface extends ConfigEntityInterface {
    * @param string $plugin_id
    *   The search plugin ID.
    */
-  public function setPlugin($plugin_id);
+  public function setPlugin(string $plugin_id);
 
   /**
    * Determines if this search page entity is currently the default search.

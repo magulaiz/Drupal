@@ -16,6 +16,6 @@ interface CacheFactoryInterface {
    * @return \Drupal\Core\Cache\CacheBackendInterface
    *   The cache backend object associated with the specified bin.
    */
-  public function get($bin);
+  public function get(string $bin);
 
 }

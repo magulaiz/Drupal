@@ -16,6 +16,6 @@ interface EmailValidatorInterface {
    * @return bool
    *   TRUE if the address is valid.
    */
-  public function isValid($email);
+  public function isValid(string $email);
 
 }

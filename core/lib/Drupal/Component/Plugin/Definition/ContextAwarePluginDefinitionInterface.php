@@ -20,7 +20,7 @@ interface ContextAwarePluginDefinitionInterface extends PluginDefinitionInterfac
    * @return bool
    *   TRUE if the plugin defines the given context, otherwise FALSE.
    */
-  public function hasContextDefinition($name);
+  public function hasContextDefinition(string $name);
 
   /**
    * Returns all context definitions for this plugin.
@@ -42,7 +42,7 @@ interface ContextAwarePluginDefinitionInterface extends PluginDefinitionInterfac
    * @throws \Drupal\Component\Plugin\Exception\ContextException
    *   Thrown if the plugin does not define the given context.
    */
-  public function getContextDefinition($name);
+  public function getContextDefinition(string $name);
 
   /**
    * Adds a context to this plugin definition.
@@ -55,7 +55,7 @@ interface ContextAwarePluginDefinitionInterface extends PluginDefinitionInterfac
    * @return $this
    *   The called object.
    */
-  public function addContextDefinition($name, ContextDefinitionInterface $definition);
+  public function addContextDefinition(string $name, ContextDefinitionInterface $definition);
 
   /**
    * Removes a context definition from this plugin.
@@ -66,6 +66,6 @@ interface ContextAwarePluginDefinitionInterface extends PluginDefinitionInterfac
    * @return $this
    *   The called object.
    */
-  public function removeContextDefinition($name);
+  public function removeContextDefinition(string $name);
 
 }

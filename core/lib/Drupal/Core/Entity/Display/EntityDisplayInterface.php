@@ -22,7 +22,7 @@ interface EntityDisplayInterface extends ConfigEntityInterface, EntityWithPlugin
    * @return static
    *   A duplicate of this object with the given view mode.
    */
-  public function createCopy($view_mode);
+  public function createCopy(string $view_mode);
 
   /**
    * Gets the display options for all components.
@@ -42,7 +42,7 @@ interface EntityDisplayInterface extends ConfigEntityInterface, EntityWithPlugin
    *   The display options for the component, or NULL if the component is not
    *   displayed.
    */
-  public function getComponent($name);
+  public function getComponent(string $name);
 
   /**
    * Sets the display options for a component.
@@ -54,7 +54,7 @@ interface EntityDisplayInterface extends ConfigEntityInterface, EntityWithPlugin
    *
    * @return $this
    */
-  public function setComponent($name, array $options = []);
+  public function setComponent(string $name, array $options = []);
 
   /**
    * Sets a component to be hidden.
@@ -64,7 +64,7 @@ interface EntityDisplayInterface extends ConfigEntityInterface, EntityWithPlugin
    *
    * @return $this
    */
-  public function removeComponent($name);
+  public function removeComponent(string $name);
 
   /**
    * Gets the highest weight of the components in the display.
@@ -84,7 +84,7 @@ interface EntityDisplayInterface extends ConfigEntityInterface, EntityWithPlugin
    * @return \Drupal\Core\Field\PluginSettingsInterface|null
    *   A widget or formatter plugin or NULL if the field does not exist.
    */
-  public function getRenderer($field_name);
+  public function getRenderer(string $field_name);
 
   /**
    * Gets the entity type for which this display is used.
@@ -126,6 +126,6 @@ interface EntityDisplayInterface extends ConfigEntityInterface, EntityWithPlugin
    *
    * @return $this
    */
-  public function setTargetBundle($bundle);
+  public function setTargetBundle(string $bundle);
 
 }

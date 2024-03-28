@@ -26,7 +26,7 @@ interface FileCacheBackendInterface {
    * @param mixed $data
    *   The data to store.
    */
-  public function store($cid, $data);
+  public function store(string $cid, $data);
 
   /**
    * Deletes data from a cache backend.
@@ -34,6 +34,6 @@ interface FileCacheBackendInterface {
    * @param string $cid
    *   The cache ID to delete.
    */
-  public function delete($cid);
+  public function delete(string $cid);
 
 }

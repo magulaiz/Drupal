@@ -68,7 +68,7 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
    *
    * @see \Drupal\Core\Entity\EntityInterface::isNew()
    */
-  public function enforceIsNew($value = TRUE);
+  public function enforceIsNew(bool $value = TRUE);
 
   /**
    * Gets the ID of the type of the entity.
@@ -133,7 +133,7 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
    * @throws \Drupal\Core\Entity\EntityMalformedException
    * @throws \Drupal\Core\Entity\Exception\UndefinedLinkTemplateException
    */
-  public function toUrl($rel = NULL, array $options = []);
+  public function toUrl(string $rel = NULL, array $options = []);
 
   /**
    * Generates the HTML for a link to this entity.
@@ -153,7 +153,7 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
    * @throws \Drupal\Core\Entity\EntityMalformedException
    * @throws \Drupal\Core\Entity\Exception\UndefinedLinkTemplateException
    */
-  public function toLink($text = NULL, $rel = 'canonical', array $options = []);
+  public function toLink($text = NULL, string $rel = 'canonical', array $options = []);
 
   /**
    * Indicates if a link template exists for a given key.
@@ -164,7 +164,7 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
    * @return bool
    *   TRUE if the link template exists, FALSE otherwise.
    */
-  public function hasLinkTemplate($key);
+  public function hasLinkTemplate(string $key);
 
   /**
    * Gets a list of URI relationships supported by this entity.
@@ -265,7 +265,7 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
    * @param bool $update
    *   TRUE if the entity has been updated, or FALSE if it has been inserted.
    */
-  public function postSave(EntityStorageInterface $storage, $update = TRUE);
+  public function postSave(EntityStorageInterface $storage, bool $update = TRUE);
 
   /**
    * Changes the values of an entity before it is created.

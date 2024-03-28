@@ -44,7 +44,7 @@ interface IconBuilderInterface {
    *
    * @return $this
    */
-  public function setId($id);
+  public function setId(string $id);
 
   /**
    * Sets the label.
@@ -54,7 +54,7 @@ interface IconBuilderInterface {
    *
    * @return $this
    */
-  public function setLabel($label);
+  public function setLabel(string $label);
 
   /**
    * Sets the width.
@@ -64,7 +64,7 @@ interface IconBuilderInterface {
    *
    * @return $this
    */
-  public function setWidth($width);
+  public function setWidth(int $width);
 
   /**
    * Sets the height.
@@ -74,7 +74,7 @@ interface IconBuilderInterface {
    *
    * @return $this
    */
-  public function setHeight($height);
+  public function setHeight(int $height);
 
   /**
    * Sets the padding.
@@ -84,7 +84,7 @@ interface IconBuilderInterface {
    *
    * @return $this
    */
-  public function setPadding($padding);
+  public function setPadding(int $padding);
 
   /**
    * Sets the stroke width.

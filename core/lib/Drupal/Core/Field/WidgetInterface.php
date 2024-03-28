@@ -101,7 +101,7 @@ interface WidgetInterface extends WidgetBaseInterface {
    * @see hook_field_widget_single_element_form_alter()
    * @see hook_field_widget_single_element_WIDGET_TYPE_form_alter()
    */
-  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state);
+  public function formElement(FieldItemListInterface $items, int $delta, array $element, array &$form, FormStateInterface $form_state);
 
   /**
    * Assigns a field-level validation error to the right widget sub-element.

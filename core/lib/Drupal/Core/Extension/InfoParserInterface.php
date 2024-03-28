@@ -68,6 +68,6 @@ interface InfoParserInterface {
    *
    * @see install_profile_info()
    */
-  public function parse($filename);
+  public function parse(string $filename);
 
 }

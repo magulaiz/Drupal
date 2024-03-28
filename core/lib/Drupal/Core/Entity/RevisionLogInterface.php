@@ -27,7 +27,7 @@ interface RevisionLogInterface extends RevisionableInterface {
    *
    * @return $this
    */
-  public function setRevisionCreationTime($timestamp);
+  public function setRevisionCreationTime(int $timestamp);
 
   /**
    * Gets the entity revision author.
@@ -64,7 +64,7 @@ interface RevisionLogInterface extends RevisionableInterface {
    *
    * @return $this
    */
-  public function setRevisionUserId($user_id);
+  public function setRevisionUserId(int $user_id);
 
   /**
    * Returns the entity revision log message.
@@ -82,6 +82,6 @@ interface RevisionLogInterface extends RevisionableInterface {
    *
    * @return $this
    */
-  public function setRevisionLogMessage($revision_log_message);
+  public function setRevisionLogMessage(string $revision_log_message);
 
 }

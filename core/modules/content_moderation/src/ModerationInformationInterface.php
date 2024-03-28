@@ -45,7 +45,7 @@ interface ModerationInformationInterface {
    *   TRUE if an entity type/bundle entities should be moderated, FALSE
    *   otherwise.
    */
-  public function shouldModerateEntitiesOfBundle(EntityTypeInterface $entity_type, $bundle);
+  public function shouldModerateEntitiesOfBundle(EntityTypeInterface $entity_type, string $bundle);
 
   /**
    * Determines if an entity type has at least one moderated bundle.
@@ -70,7 +70,7 @@ interface ModerationInformationInterface {
    *   The revision ID of the default revision, or NULL if the entity was
    *   not found.
    */
-  public function getDefaultRevisionId($entity_type_id, $entity_id);
+  public function getDefaultRevisionId(string $entity_type_id, int $entity_id);
 
   /**
    * Returns the revision translation affected translation of a revision.
@@ -145,7 +145,7 @@ interface ModerationInformationInterface {
    * @return \Drupal\workflows\WorkflowInterface|null
    *   The associated workflow. NULL if there is no workflow.
    */
-  public function getWorkflowForEntityTypeAndBundle($entity_type_id, $bundle_id);
+  public function getWorkflowForEntityTypeAndBundle(string $entity_type_id, string $bundle_id);
 
   /**
    * Gets unsupported features for a given entity type.

@@ -108,7 +108,7 @@ interface ViewsPluginInterface extends PluginInspectionInterface, DerivativeInsp
    * @return array
    *   An array of available token replacement info or tokens, grouped by type.
    */
-  public function getAvailableGlobalTokens($prepared = FALSE, array $types = []);
+  public function getAvailableGlobalTokens(bool $prepared = FALSE, array $types = []);
 
   /**
    * Flattens the structure of form elements.
@@ -136,7 +136,7 @@ interface ViewsPluginInterface extends PluginInspectionInterface, DerivativeInsp
    * @return string
    *   The tokenized string.
    */
-  public function globalTokenReplace($string = '', array $options = []);
+  public function globalTokenReplace(string $string = '', array $options = []);
 
   /**
    * Clears a plugin.

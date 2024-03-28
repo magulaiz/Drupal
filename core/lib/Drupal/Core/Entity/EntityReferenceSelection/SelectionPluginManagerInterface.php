@@ -22,7 +22,7 @@ interface SelectionPluginManagerInterface extends PluginManagerInterface {
    * @return string
    *   The plugin ID.
    */
-  public function getPluginId($target_type, $base_plugin_id);
+  public function getPluginId(string $target_type, string $base_plugin_id);
 
   /**
    * Gets the selection plugins that can reference a specific entity type.
@@ -33,7 +33,7 @@ interface SelectionPluginManagerInterface extends PluginManagerInterface {
    * @return array
    *   An array of selection plugins grouped by selection group.
    */
-  public function getSelectionGroups($entity_type_id);
+  public function getSelectionGroups(string $entity_type_id);
 
   /**
    * Gets the selection handler for a given entity_reference field.

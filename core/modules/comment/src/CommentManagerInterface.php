@@ -32,7 +32,7 @@ interface CommentManagerInterface {
    *   - bundles: The bundles in which the field appears, as an array with entity
    *     types as keys and the array of bundle names as values.
    */
-  public function getFields($entity_type_id);
+  public function getFields(string $entity_type_id);
 
   /**
    * Creates a comment_body field.
@@ -40,7 +40,7 @@ interface CommentManagerInterface {
    * @param string $comment_type
    *   The comment bundle.
    */
-  public function addBodyField($comment_type);
+  public function addBodyField(string $comment_type);
 
   /**
    * Provides a message if posting comments is forbidden.
@@ -57,7 +57,7 @@ interface CommentManagerInterface {
    * @return string
    *   HTML for a "you can't post comments" notice.
    */
-  public function forbiddenMessage(EntityInterface $entity, $field_name);
+  public function forbiddenMessage(EntityInterface $entity, string $field_name);
 
   /**
    * Returns the number of new comments available on a given entity for a user.
@@ -73,6 +73,6 @@ interface CommentManagerInterface {
    * @return int|false
    *   The number of new comments or FALSE if the user is not authenticated.
    */
-  public function getCountNewComments(EntityInterface $entity, $field_name = NULL, $timestamp = 0);
+  public function getCountNewComments(EntityInterface $entity, string $field_name = NULL, int $timestamp = 0);
 
 }

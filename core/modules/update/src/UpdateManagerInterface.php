@@ -128,6 +128,6 @@ interface UpdateManagerInterface {
    *   storage is cleared.
    *   array when the storage is cleared.
    */
-  public function projectStorage($key);
+  public function projectStorage(string $key);
 
 }

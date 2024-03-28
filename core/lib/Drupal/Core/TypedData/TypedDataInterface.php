@@ -63,7 +63,7 @@ interface TypedDataInterface {
    * @throws \Drupal\Core\TypedData\Exception\ReadOnlyException
    *   If the data is read-only.
    */
-  public function setValue($value, $notify = TRUE);
+  public function setValue($value, bool $notify = TRUE);
 
   /**
    * Returns a string representation of the data.
@@ -102,7 +102,7 @@ interface TypedDataInterface {
    * @return $this
    *   Returns itself to allow for chaining.
    */
-  public function applyDefaultValue($notify = TRUE);
+  public function applyDefaultValue(bool $notify = TRUE);
 
   /**
    * Returns the name of a property or item.

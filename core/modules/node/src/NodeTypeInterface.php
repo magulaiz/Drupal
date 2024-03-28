@@ -24,7 +24,7 @@ interface NodeTypeInterface extends ConfigEntityInterface, RevisionableEntityBun
    * @param bool $new_revision
    *   TRUE if a new revision should be created by default.
    */
-  public function setNewRevision($new_revision);
+  public function setNewRevision(bool $new_revision);
 
   /**
    * Gets whether 'Submitted by' information should be shown.
@@ -40,7 +40,7 @@ interface NodeTypeInterface extends ConfigEntityInterface, RevisionableEntityBun
    * @param bool $display_submitted
    *   TRUE if the submitted by information should be shown.
    */
-  public function setDisplaySubmitted($display_submitted);
+  public function setDisplaySubmitted(bool $display_submitted);
 
   /**
    * Gets the preview mode.
@@ -56,7 +56,7 @@ interface NodeTypeInterface extends ConfigEntityInterface, RevisionableEntityBun
    * @param int $preview_mode
    *   DRUPAL_DISABLED, DRUPAL_OPTIONAL or DRUPAL_REQUIRED.
    */
-  public function setPreviewMode($preview_mode);
+  public function setPreviewMode(int $preview_mode);
 
   /**
    * Gets the help information.

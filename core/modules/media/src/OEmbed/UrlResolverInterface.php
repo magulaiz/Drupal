@@ -25,7 +25,7 @@ interface UrlResolverInterface {
    * @throws \Drupal\media\OEmbed\ProviderException
    *   If tne oEmbed provider causes an error.
    */
-  public function getProviderByUrl($url);
+  public function getProviderByUrl(string $url);
 
   /**
    * Builds the resource URL for a media asset URL.
@@ -40,6 +40,6 @@ interface UrlResolverInterface {
    * @return string
    *   Returns the resource URL corresponding to the given media item URL.
    */
-  public function getResourceUrl($url, $max_width = NULL, $max_height = NULL);
+  public function getResourceUrl(string $url, int $max_width = NULL, int $max_height = NULL);
 
 }

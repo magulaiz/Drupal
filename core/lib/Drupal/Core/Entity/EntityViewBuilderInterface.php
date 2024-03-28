@@ -25,7 +25,7 @@ interface EntityViewBuilderInterface {
    * @param string $view_mode
    *   The view mode in which the entity is being viewed.
    */
-  public function buildComponents(array &$build, array $entities, array $displays, $view_mode);
+  public function buildComponents(array &$build, array $entities, array $displays, string $view_mode);
 
   /**
    * Builds the render array for the provided entity.
@@ -47,7 +47,7 @@ interface EntityViewBuilderInterface {
    *   comment belongs to, or not passing one, and having the comment node not
    *   be available for loading.
    */
-  public function view(EntityInterface $entity, $view_mode = 'full', $langcode = NULL);
+  public function view(EntityInterface $entity, string $view_mode = 'full', string $langcode = NULL);
 
   /**
    * Builds the render array for the provided entities.
@@ -70,7 +70,7 @@ interface EntityViewBuilderInterface {
    *   comments belongs to, or not passing one, and having the comments node not
    *   be available for loading.
    */
-  public function viewMultiple(array $entities = [], $view_mode = 'full', $langcode = NULL);
+  public function viewMultiple(array $entities = [], string $view_mode = 'full', string $langcode = NULL);
 
   /**
    * Resets the entity render cache.

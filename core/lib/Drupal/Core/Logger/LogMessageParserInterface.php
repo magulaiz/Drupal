@@ -31,6 +31,6 @@ interface LogMessageParserInterface {
    *
    * @see \Drupal\Component\Render\FormattableMarkup
    */
-  public function parseMessagePlaceholders(&$message, array &$context);
+  public function parseMessagePlaceholders(string &$message, array &$context);
 
 }

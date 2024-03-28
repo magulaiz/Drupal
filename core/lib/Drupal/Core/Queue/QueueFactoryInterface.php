@@ -16,6 +16,6 @@ interface QueueFactoryInterface {
    * @return \Drupal\Core\Queue\QueueInterface
    *   The queue object.
    */
-  public function get($name);
+  public function get(string $name);
 
 }

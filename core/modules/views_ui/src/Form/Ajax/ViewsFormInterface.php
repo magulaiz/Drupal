@@ -30,7 +30,7 @@ interface ViewsFormInterface extends FormInterface {
    * @return \Drupal\Core\Form\FormStateInterface
    *   The current state of the form.
    */
-  public function getFormState(ViewEntityInterface $view, $display_id, $js);
+  public function getFormState(ViewEntityInterface $view, $display_id, string $js);
 
   /**
    * Creates a new instance of this form.
@@ -50,6 +50,6 @@ interface ViewsFormInterface extends FormInterface {
    * @todo When https://www.drupal.org/node/1843224 is in, this will return
    *   \Drupal\Core\Ajax\AjaxResponse instead of the array of AJAX commands.
    */
-  public function getForm(ViewEntityInterface $view, $display_id, $js);
+  public function getForm(ViewEntityInterface $view, $display_id, string $js);
 
 }

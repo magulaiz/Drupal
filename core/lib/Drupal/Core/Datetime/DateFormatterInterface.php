@@ -37,7 +37,7 @@ interface DateFormatterInterface {
    *   A translated date string in the requested format. Since the format may
    *   contain user input, this value should be escaped when output.
    */
-  public function format($timestamp, $type = 'medium', $format = '', $timezone = NULL, $langcode = NULL);
+  public function format(int $timestamp, string $type = 'medium', string $format = '', $timezone = NULL, $langcode = NULL);
 
   /**
    * Formats a time interval with the requested granularity.
@@ -63,7 +63,7 @@ interface DateFormatterInterface {
    *
    * @see \Drupal\Core\Datetime\DateFormatterInterface::formatDiff()
    */
-  public function formatInterval($interval, $granularity = 2, $langcode = NULL);
+  public function formatInterval(int $interval, int $granularity = 2, $langcode = NULL);
 
   /**
    * Provides values for all date formatting characters for a given timestamp.
@@ -174,6 +174,6 @@ interface DateFormatterInterface {
    * @see \Drupal\Core\Datetime\DateFormatterInterface::formatTimeDiffSince()
    * @see \Drupal\Core\Datetime\DateFormatterInterface::formatTimeDiffUntil()
    */
-  public function formatDiff($from, $to, $options = []);
+  public function formatDiff(int $from, int $to, $options = []);
 
 }

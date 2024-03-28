@@ -25,7 +25,7 @@ interface CommentTypeInterface extends ConfigEntityInterface {
    *
    * @return $this
    */
-  public function setDescription($description);
+  public function setDescription(string $description);
 
   /**
    * Gets the target entity type id for this comment type.

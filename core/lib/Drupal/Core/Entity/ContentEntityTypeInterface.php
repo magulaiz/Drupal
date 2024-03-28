@@ -33,7 +33,7 @@ interface ContentEntityTypeInterface extends EntityTypeInterface {
    *
    * @see self::getRevisionMetadataKeys()
    */
-  public function getRevisionMetadataKey($key);
+  public function getRevisionMetadataKey(string $key);
 
   /**
    * Indicates if a given entity revision metadata key exists.
@@ -44,7 +44,7 @@ interface ContentEntityTypeInterface extends EntityTypeInterface {
    * @return bool
    *   TRUE if a given entity revision metadata key exists, FALSE otherwise.
    */
-  public function hasRevisionMetadataKey($key);
+  public function hasRevisionMetadataKey(string $key);
 
   /**
    * Sets a revision metadata key.
@@ -57,6 +57,6 @@ interface ContentEntityTypeInterface extends EntityTypeInterface {
    *
    * @return $this
    */
-  public function setRevisionMetadataKey($key, $field_name);
+  public function setRevisionMetadataKey(string $key, $field_name);
 
 }

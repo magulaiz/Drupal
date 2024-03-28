@@ -32,7 +32,7 @@ interface WorkspaceInterface extends ContentEntityInterface, EntityChangedInterf
    *
    * @return $this
    */
-  public function setCreatedTime($timestamp);
+  public function setCreatedTime(int $timestamp);
 
   /**
    * Determines whether the workspace has a parent.

@@ -41,6 +41,6 @@ interface TranslatableRevisionableStorageInterface extends RevisionableStorageIn
    *   A revision ID or NULL if no revision affecting the specified translation
    *   could be found.
    */
-  public function getLatestTranslationAffectedRevisionId($entity_id, $langcode);
+  public function getLatestTranslationAffectedRevisionId(int|string $entity_id, string $langcode);
 
 }

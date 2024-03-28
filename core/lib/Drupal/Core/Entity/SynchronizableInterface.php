@@ -15,7 +15,7 @@ interface SynchronizableInterface extends EntityInterface {
    *
    * @return $this
    */
-  public function setSyncing($status);
+  public function setSyncing(bool $status);
 
   /**
    * Returns whether this entity is being changed as part of a synchronization.

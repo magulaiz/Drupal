@@ -153,7 +153,7 @@ interface FilterInterface extends ConfigurableInterface, DependentPluginInterfac
    * @return string
    *   The prepared, escaped text.
    */
-  public function prepare($text, $langcode);
+  public function prepare(string $text, string $langcode);
 
   /**
    * Performs the filter processing.
@@ -169,7 +169,7 @@ interface FilterInterface extends ConfigurableInterface, DependentPluginInterfac
    *
    * @see \Drupal\filter\FilterProcessResult
    */
-  public function process($text, $langcode);
+  public function process(string $text, string $langcode);
 
   /**
    * Returns HTML allowed by this filter's configuration.
@@ -267,6 +267,6 @@ interface FilterInterface extends ConfigurableInterface, DependentPluginInterfac
    *
    * @todo Split into getSummaryItem() and buildGuidelines().
    */
-  public function tips($long = FALSE);
+  public function tips(bool $long = FALSE);
 
 }

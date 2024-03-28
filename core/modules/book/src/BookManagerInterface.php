@@ -33,7 +33,7 @@ interface BookManagerInterface {
    * @return array
    *   A tree of menu links in an array, in the order they should be rendered.
    */
-  public function bookTreeAllData($bid, $link = NULL, $max_depth = NULL);
+  public function bookTreeAllData(int $bid, $link = NULL, $max_depth = NULL);
 
   /**
    * Gets the active trail IDs for the specified book at the provided path.
@@ -46,7 +46,7 @@ interface BookManagerInterface {
    * @return array
    *   An array containing the active trail: a list of menu link IDs.
    */
-  public function getActiveTrailIds($bid, $link);
+  public function getActiveTrailIds(string $bid, $link);
 
   /**
    * Loads a single book entry.
@@ -67,7 +67,7 @@ interface BookManagerInterface {
    *
    * @see \Drupal\book\BookOutlineStorageInterface::loadMultiple
    */
-  public function loadBookLink($nid, $translate = TRUE);
+  public function loadBookLink(int $nid, bool $translate = TRUE);
 
   /**
    * Loads multiple book entries.
@@ -88,7 +88,7 @@ interface BookManagerInterface {
    *
    * @see \Drupal\book\BookOutlineStorageInterface::loadMultiple
    */
-  public function loadBookLinks($nids, $translate = TRUE);
+  public function loadBookLinks($nids, bool $translate = TRUE);
 
   /**
    * Returns an array of book pages in table of contents order.
@@ -107,7 +107,7 @@ interface BookManagerInterface {
    *   An array of (menu link ID, title) pairs for use as options for selecting
    *   a book page.
    */
-  public function getTableOfContents($bid, $depth_limit, array $exclude = []);
+  public function getTableOfContents(int $bid, int $depth_limit, array $exclude = []);
 
   /**
    * Finds the depth limit for items in the parent select.
@@ -198,7 +198,7 @@ interface BookManagerInterface {
    * @see \Drupal\book\BookManagerInterface::getLinkDefaults()
    * @see \Drupal\book\BookOutlineStorageInterface::loadMultiple()
    */
-  public function saveBookLink(array $link, $new);
+  public function saveBookLink(array $link, bool $new);
 
   /**
    * Returns an array with default values for a book page's menu link.
@@ -209,7 +209,7 @@ interface BookManagerInterface {
    * @return array
    *   The default values for the menu link.
    */
-  public function getLinkDefaults($nid);
+  public function getLinkDefaults(int|string $nid);
 
   public function getBookParents(array $item, array $parent = []);
 
@@ -230,7 +230,7 @@ interface BookManagerInterface {
    * @return array
    *   The form structure, with the book elements added.
    */
-  public function addFormElements(array $form, FormStateInterface $form_state, NodeInterface $node, AccountInterface $account, $collapsed = TRUE);
+  public function addFormElements(array $form, FormStateInterface $form_state, NodeInterface $node, AccountInterface $account, bool $collapsed = TRUE);
 
   /**
    * Deletes node's entry from book table.
@@ -238,7 +238,7 @@ interface BookManagerInterface {
    * @param int $nid
    *   The nid to delete.
    */
-  public function deleteFromBook($nid);
+  public function deleteFromBook(int $nid);
 
   /**
    * Returns a rendered menu tree.

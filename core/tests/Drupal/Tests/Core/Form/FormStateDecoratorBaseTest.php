@@ -297,7 +297,8 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
   /**
    * @covers ::setMethod
    *
-   * @dataProvider providerSingleBooleanArgument
+   * @testWith ["GET"]
+   *   ["POST"]
    */
   public function testSetMethod($method) {
     $this->decoratedFormState->setMethod($method)

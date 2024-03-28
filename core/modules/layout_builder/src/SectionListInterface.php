@@ -26,7 +26,7 @@ interface SectionListInterface extends \Countable {
    * @return \Drupal\layout_builder\Section
    *   The layout section.
    */
-  public function getSection($delta);
+  public function getSection(int $delta);
 
   /**
    * Appends a new section to the end of the list.
@@ -51,7 +51,7 @@ interface SectionListInterface extends \Countable {
    *
    * @return $this
    */
-  public function insertSection($delta, Section $section);
+  public function insertSection(int $delta, Section $section);
 
   /**
    * Removes the section at the given delta.
@@ -64,7 +64,7 @@ interface SectionListInterface extends \Countable {
    *
    * @return $this
    */
-  public function removeSection($delta);
+  public function removeSection(int $delta);
 
   /**
    * Removes all of the sections.
@@ -79,6 +79,6 @@ interface SectionListInterface extends \Countable {
    *
    * @return $this
    */
-  public function removeAllSections($set_blank = FALSE);
+  public function removeAllSections(bool $set_blank = FALSE);
 
 }

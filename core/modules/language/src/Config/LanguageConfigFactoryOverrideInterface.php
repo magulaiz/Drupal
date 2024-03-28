@@ -39,7 +39,7 @@ interface LanguageConfigFactoryOverrideInterface extends ConfigFactoryOverrideIn
    * @return \Drupal\Core\Config\Config
    *   Configuration override object.
    */
-  public function getOverride($langcode, $name);
+  public function getOverride(string $langcode, string $name);
 
   /**
    * Returns the storage instance for a particular langcode.
@@ -50,7 +50,7 @@ interface LanguageConfigFactoryOverrideInterface extends ConfigFactoryOverrideIn
    * @return \Drupal\Core\Config\StorageInterface
    *   The storage instance for a particular langcode.
    */
-  public function getStorage($langcode);
+  public function getStorage(string $langcode);
 
   /**
    * Installs available language configuration overrides for a given langcode.
@@ -58,6 +58,6 @@ interface LanguageConfigFactoryOverrideInterface extends ConfigFactoryOverrideIn
    * @param string $langcode
    *   Language code.
    */
-  public function installLanguageOverrides($langcode);
+  public function installLanguageOverrides(string $langcode);
 
 }

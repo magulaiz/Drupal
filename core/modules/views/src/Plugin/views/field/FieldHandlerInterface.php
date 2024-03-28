@@ -16,7 +16,7 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * @param string $order
    *   Either ASC or DESC
    */
-  public function clickSort($order);
+  public function clickSort(string $order);
 
   /**
    * Determines if this field is click sortable.
@@ -42,7 +42,7 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * @param bool $inline
    *   Whether or not this HTML element is inline.
    */
-  public function elementType($none_supported = FALSE, $default_empty = FALSE, $inline = FALSE);
+  public function elementType(bool $none_supported = FALSE, bool $default_empty = FALSE, bool $inline = FALSE);
 
   /**
    * Returns an HTML element for the label based upon the field's element type.
@@ -52,7 +52,7 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * @param bool $default_empty
    *   Whether or not this HTML element is empty by default.
    */
-  public function elementLabelType($none_supported = FALSE, $default_empty = FALSE);
+  public function elementLabelType(bool $none_supported = FALSE, bool $default_empty = FALSE);
 
   /**
    * Returns an HTML element for the wrapper based upon the field's element type.
@@ -62,7 +62,7 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * @param bool $default_empty
    *   Whether or not this HTML element is empty by default.
    */
-  public function elementWrapperType($none_supported = FALSE, $default_empty = FALSE);
+  public function elementWrapperType(bool $none_supported = FALSE, bool $default_empty = FALSE);
 
   /**
    * Provides a list of elements valid for field HTML.
@@ -79,7 +79,7 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * @param bool $row_index
    *   The index of current row.
    */
-  public function elementClasses($row_index = NULL);
+  public function elementClasses(bool $row_index = NULL);
 
   /**
    * Replaces a value with tokens from the last field.
@@ -92,7 +92,7 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * @param bool $row_index
    *   The index of current row.
    */
-  public function tokenizeValue($value, $row_index = NULL);
+  public function tokenizeValue(string $value, bool $row_index = NULL);
 
   /**
    * Returns the class of the field's label.
@@ -100,7 +100,7 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * @param bool $row_index
    *   The index of current row.
    */
-  public function elementLabelClasses($row_index = NULL);
+  public function elementLabelClasses(bool $row_index = NULL);
 
   /**
    * Returns the class of the field's wrapper.
@@ -108,7 +108,7 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * @param bool $row_index
    *   The index of current row.
    */
-  public function elementWrapperClasses($row_index = NULL);
+  public function elementWrapperClasses(bool $row_index = NULL);
 
   /**
    * Gets the entity matching the current row and relationship.
@@ -133,7 +133,7 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * @param string $field
    *   Optional name of the field where the value is stored.
    */
-  public function getValue(ResultRow $values, $field = NULL);
+  public function getValue(ResultRow $values, string $field = NULL);
 
   /**
    * Determines if this field can be grouped in the results.
@@ -216,7 +216,7 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    * @return bool
    *   TRUE if the value is considered empty, FALSE otherwise.
    */
-  public function isValueEmpty($value, $empty_zero, $no_skip_empty = TRUE);
+  public function isValueEmpty($value, bool $empty_zero, bool $no_skip_empty = TRUE);
 
   /**
    * Performs an advanced text render for the item.

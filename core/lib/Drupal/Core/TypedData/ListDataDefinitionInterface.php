@@ -36,7 +36,7 @@ interface ListDataDefinitionInterface extends DataDefinitionInterface {
    *   If an unsupported data type gets passed to the class; e.g., 'string' to a
    *   definition class handling lists of 'field_item:* data types.
    */
-  public static function createFromItemType($item_type);
+  public static function createFromItemType(string $item_type);
 
   /**
    * Gets the data definition of an item of the list.

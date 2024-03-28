@@ -23,7 +23,7 @@ interface AliasManagerInterface {
    * @throws \InvalidArgumentException
    *   Thrown when the path does not start with a slash.
    */
-  public function getPathByAlias($alias, $langcode = NULL);
+  public function getPathByAlias(string $alias, string $langcode = NULL);
 
   /**
    * Given a path, return the alias.
@@ -39,7 +39,7 @@ interface AliasManagerInterface {
    * @throws \InvalidArgumentException
    *   Thrown when the path does not start with a slash.
    */
-  public function getAliasByPath($path, $langcode = NULL);
+  public function getAliasByPath(string $path, string $langcode = NULL);
 
   /**
    * Clears the static caches in alias manager and rebuilds the whitelist.

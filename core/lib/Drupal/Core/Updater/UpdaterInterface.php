@@ -27,7 +27,7 @@ interface UpdaterInterface {
    * @param string $directory
    *   A directory containing a project.
    */
-  public static function getProjectName($directory);
+  public static function getProjectName(string $directory);
 
   /**
    * Returns the path to the default install location for the current project.
@@ -54,7 +54,7 @@ interface UpdaterInterface {
    * @return bool
    *   TRUE if the project is installed, FALSE if not.
    */
-  public static function canUpdateDirectory($directory);
+  public static function canUpdateDirectory(string $directory);
 
   /**
    * Actions to run after an install has occurred.

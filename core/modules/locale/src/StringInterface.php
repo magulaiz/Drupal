@@ -23,7 +23,7 @@ interface StringInterface {
    *
    * @return $this
    */
-  public function setId($id);
+  public function setId(int $id);
 
   /**
    * Gets the string version.
@@ -41,7 +41,7 @@ interface StringInterface {
    *
    * @return $this
    */
-  public function setVersion($version);
+  public function setVersion(string $version);
 
   /**
    * Gets plain string contained in this object.
@@ -59,7 +59,7 @@ interface StringInterface {
    *
    * @return $this
    */
-  public function setString($string);
+  public function setString(string $string);
 
   /**
    * Splits string to work with plural values.
@@ -134,7 +134,7 @@ interface StringInterface {
    *
    * @return $this
    */
-  public function setValues(array $values, $override = TRUE);
+  public function setValues(array $values, bool $override = TRUE);
 
   /**
    * Gets field values that are set for given field names.
@@ -164,7 +164,7 @@ interface StringInterface {
    * @return array
    *   Location ids indexed by type and name.
    */
-  public function getLocations($check_only = FALSE);
+  public function getLocations(bool $check_only = FALSE);
 
   /**
    * Adds a location for this string.
@@ -179,7 +179,7 @@ interface StringInterface {
    *
    * @return $this
    */
-  public function addLocation($type, $name);
+  public function addLocation(string $type, string $name);
 
   /**
    * Checks whether the string has a given location.
@@ -192,7 +192,7 @@ interface StringInterface {
    * @return bool
    *   TRUE if the string has a location with this type and name.
    */
-  public function hasLocation($type, $name);
+  public function hasLocation(string $type, string $name);
 
   /**
    * Saves string object to storage.

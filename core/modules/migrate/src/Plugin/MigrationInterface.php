@@ -139,7 +139,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    * @return \Drupal\migrate\Plugin\MigrateDestinationInterface
    *   The destination plugin.
    */
-  public function getDestinationPlugin($stub_being_requested = FALSE);
+  public function getDestinationPlugin(bool $stub_being_requested = FALSE);
 
   /**
    * Returns the initialized id_map plugin.
@@ -163,7 +163,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    * @param int $status
    *   One of the STATUS_* constants.
    */
-  public function setStatus($status);
+  public function setStatus(int $status);
 
   /**
    * Get the current migration status.
@@ -200,7 +200,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    * @param int $result
    *   One of the MigrationInterface::RESULT_* constants.
    */
-  public function interruptMigration($result);
+  public function interruptMigration(int $result);
 
   /**
    * Gets the normalized process plugin configuration.
@@ -239,7 +239,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    * @return $this
    *   The migration entity.
    */
-  public function setProcessOfProperty($property, $process_of_property);
+  public function setProcessOfProperty(string $property, $process_of_property);
 
   /**
    * Merge the process pipeline configuration for a single property.
@@ -254,7 +254,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    * @return $this
    *   The migration entity.
    */
-  public function mergeProcessOfProperty($property, array $process_of_property);
+  public function mergeProcessOfProperty(string $property, array $process_of_property);
 
   /**
    * Checks if the migration should track time of last import.
@@ -282,7 +282,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    *
    * @see https://www.drupal.org/node/3282894
    */
-  public function setTrackLastImported($track_last_imported);
+  public function setTrackLastImported(bool $track_last_imported);
 
   /**
    * Get the dependencies for this migration.

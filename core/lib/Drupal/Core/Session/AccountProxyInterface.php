@@ -46,6 +46,6 @@ interface AccountProxyInterface extends AccountInterface {
    * @param int $account_id
    *   The id of the initial account.
    */
-  public function setInitialAccountId($account_id);
+  public function setInitialAccountId(int $account_id);
 
 }

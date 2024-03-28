@@ -47,7 +47,7 @@ interface RouteProviderInterface {
    * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
    *   If a matching route cannot be found.
    */
-  public function getRouteByName($name);
+  public function getRouteByName(string $name);
 
   /**
    * Find many routes by their names using the provided list of names.
@@ -85,7 +85,7 @@ interface RouteProviderInterface {
    *   empty and will be sorted from highest to lowest fit (match of path parts)
    *   and then in ascending order by route name for routes with the same fit.
    */
-  public function getRoutesByPattern($pattern);
+  public function getRoutesByPattern(string $pattern);
 
   /**
    * Returns all the routes on the system.

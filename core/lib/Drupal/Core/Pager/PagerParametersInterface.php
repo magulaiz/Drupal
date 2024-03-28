@@ -34,7 +34,7 @@ interface PagerParametersInterface {
    *   even though the default pager implementation adjusts for this and still
    *   displays the third page of search results at that URL.
    */
-  public function findPage($pager_id = 0);
+  public function findPage(int $pager_id = 0);
 
   /**
    * Gets the request query parameter.

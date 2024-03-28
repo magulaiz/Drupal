@@ -25,7 +25,7 @@ interface EntityDataDefinitionInterface extends ComplexDataDefinitionInterface {
    *
    * @return $this
    */
-  public function setEntityTypeId($entity_type_id);
+  public function setEntityTypeId(string $entity_type_id);
 
   /**
    * Gets the array of possible entity bundles.

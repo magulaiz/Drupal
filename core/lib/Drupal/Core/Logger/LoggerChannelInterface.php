@@ -66,6 +66,6 @@ interface LoggerChannelInterface extends LoggerInterface {
    * @param int $priority
    *   The priority of the logger being added.
    */
-  public function addLogger(LoggerInterface $logger, $priority = 0);
+  public function addLogger(LoggerInterface $logger, int $priority = 0);
 
 }

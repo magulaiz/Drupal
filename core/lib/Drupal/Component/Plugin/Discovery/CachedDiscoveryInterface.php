@@ -27,6 +27,6 @@ interface CachedDiscoveryInterface extends DiscoveryInterface {
    * @param bool $use_caches
    *   FALSE to not use any caches.
    */
-  public function useCaches($use_caches = FALSE);
+  public function useCaches(bool $use_caches = FALSE);
 
 }

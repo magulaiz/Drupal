@@ -24,6 +24,6 @@ interface ContainerFactoryPluginInterface {
    * @return static
    *   Returns an instance of this plugin.
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition);
+  public static function create(ContainerInterface $container, array $configuration, string $plugin_id, $plugin_definition);
 
 }

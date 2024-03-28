@@ -198,6 +198,10 @@ class ForumNodeBreadcrumbBuilderTest extends UnitTestCase {
     $forum_node = $this->getMockBuilder('Drupal\node\Entity\Node')
       ->disableOriginalConstructor()
       ->getMock();
+    $forum_node->expects($this->any())
+      ->method('__get')
+      ->with('forum_tid')
+      ->willReturn(1);
 
     // Our data set.
     $route_match = $this->createMock('Drupal\Core\Routing\RouteMatchInterface');
