@@ -10,6 +10,7 @@ use Drupal\Core\Entity\ContentEntityStorageInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\ParamConverter\EntityConverter;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\Plugin\Context\Context;
@@ -131,9 +132,15 @@ class EntityConverterTest extends UnitTestCase {
       ->method('createDataDefinition')
       ->willReturn($context_definition);
 
+    $language_manager = $this->createMock(LanguageManagerInterface::class);
+    $language_manager->expects($this->any())
+      ->method('isMultilingual')
+      ->willReturn(TRUE);
+
     $service_map += [
       'context.repository' => $context_repository,
       'typed_data_manager' => $typed_data_manager,
+      'language_manager' => $language_manager,
     ];
 
     /** @var \Symfony\Component\DependencyInjection\ContainerInterface|\PHPUnit\Framework\MockObject\MockObject $container */
