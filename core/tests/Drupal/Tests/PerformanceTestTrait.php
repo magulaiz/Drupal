@@ -351,17 +351,36 @@ trait PerformanceTestTrait {
     $stylesheet_bytes = 0;
     $script_bytes = 0;
     foreach ($messages as $message) {
-      if ($message['method'] === 'Tracing.dataCollected' && $message['params']['name'] === 'ResourceReceiveResponse') {
-        if ($message['params']['args']['data']['mimeType'] ?? '' === 'text/css') {
+      if ($message['method'] === 'Network.responseReceived') {
+        if ($message['params']['type']  === 'Stylesheet') {
           $stylesheet_count++;
-          $stylesheet_bytes += $message['params']['args']['data']['encodedDataLength'];
         }
-        if (in_array($message['params']['args']['data']['mimeType'] ?? '', ['text/javascript', 'application/javascript'], TRUE)) {
+        if ($message['params']['type'] === 'Script') {
           $script_count++;
-          $script_bytes += $message['params']['args']['data']['encodedDataLength'];
         }
       }
     }
+    // The performance log has 'encodedDataLength' for network requests, however
+    // in the case that the file has already been requested by the browser, this
+    // will be the length of a HEAD response for 304 not modified or similar. To
+    // get consistent results for assertions, get the actual disk size of the
+    // files from the filesystem.
+    $session = $this->getSession();
+    $page = $session->getPage();
+
+    $style_elements = $page->findAll('xpath', '//link[@href and @rel="stylesheet"]');
+    $style_urls = [];
+    foreach ($style_elements as $element) {
+      $filename = parse_url(ltrim($element->getAttribute('href'), '/'), PHP_URL_PATH);
+      $stylesheet_bytes += filesize($filename);
+    }
+    $script_elements = $page->findAll('xpath', '//script[@src]');
+    $script_urls = [];
+    foreach ($script_elements as $element) {
+      $filename = parse_url(ltrim($element->getAttribute('src'), '/'), PHP_URL_PATH);
+      $script_bytes += filesize($filename);
+    }
+
     $performance_data->setStylesheetCount($stylesheet_count);
     $performance_data->setStylesheetBytes($stylesheet_bytes);
     $performance_data->setScriptCount($script_count);
