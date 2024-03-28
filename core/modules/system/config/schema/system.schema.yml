@@ -58,6 +58,8 @@ system.maintenance:
 system.cron:
   type: config_object
   label: 'Cron settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     threshold:
       type: mapping
@@ -66,12 +68,25 @@ system.cron:
         requirements_warning:
           type: integer
           label: 'Requirements warning period'
+          constraints:
+            NotNull: []
+            Range:
+              min: 1
         requirements_error:
           type: integer
           label: 'Requirements error period'
+          constraints:
+            NotNull: [ ]
+            Range:
+              min: 1
     logging:
       type: integer
       label: 'Detailed cron logging'
+      constraints:
+        Choice:
+          choices:
+            - 0
+            - 1
 
 system.date:
   type: config_object
