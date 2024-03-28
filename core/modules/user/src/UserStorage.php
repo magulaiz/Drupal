@@ -30,7 +30,6 @@ class UserStorage extends SqlContentEntityStorage implements UserStorageInterfac
         $database->query("SET sql_mode = '$sql_mode,NO_AUTO_VALUE_ON_ZERO'");
       }
     }
-
     parent::doSaveFieldItems($entity, $names);
 
     // Reset the SQL mode if we've changed it.

@@ -2682,7 +2682,6 @@ class Select extends QuerySelect {
                 $last_dot = strrpos($field, '.');
                 if ($last_dot !== FALSE) {
                   $embedded_table = substr($field, 0, $last_dot);
-dump('group by $embedded_table: ' . $embedded_table);
                   if (!in_array($embedded_table, $this->mongodbUnwind, TRUE)) {
                     $this->mongodbUnwind[] = '$' . $embedded_table;
                   }

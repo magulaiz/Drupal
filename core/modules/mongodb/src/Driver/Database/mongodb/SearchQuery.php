@@ -292,18 +292,11 @@ class SearchQuery extends CoreSearchQuery {
     }
 
     // Add conditions to the query.
-    $extra = [
-      [
-        'field' => 'type',
-        'left_field' => 'type',
-      ],
-      [
-        'field' => 'langcode',
-        'left_field' => 'langcode',
-      ],
-    ];
-
-    $this->addMongodbJoin('INNER', 'search_dataset', 'sid', 'search_index', 'sid', '=', 'd', $extra);
+    $this->addJoin('INNER', 'search_dataset', 'd', $this->joinCondition('AND')
+      ->compare('d.sid', 'i.sid')
+      ->compare('d.type', 'i.type')
+      ->compare('d.langcode', 'i.langcode')
+    );
     if (count($this->conditions)) {
       $this->condition($this->conditions);
     }
@@ -365,14 +358,11 @@ class SearchQuery extends CoreSearchQuery {
     $inner = clone $this->query;
 
     // Add conditions to query.
-    $extra = [
-      [
-        'field' => 'type',
-        'left_field' => 'type',
-      ],
-    ];
+    $this->addJoin('INNER', 'search_dataset', 'd', $this->joinCondition('AND')
+      ->compare('d.sid', 'i.sid')
+      ->compare('d.type', 'i.type')
+    );
 
-    $inner->addMongodbJoin('INNER', 'search_dataset', 'sid', 'search_index', 'sid', '=', 'd', $extra);
     if (count($this->conditions)) {
       $inner->condition($this->conditions);
     }

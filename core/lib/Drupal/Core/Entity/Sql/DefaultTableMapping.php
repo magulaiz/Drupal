@@ -623,6 +623,7 @@ class DefaultTableMapping implements TableMappingInterface {
    */
   public function getFieldColumnName(FieldStorageDefinitionInterface $storage_definition, $property_name) {
     $field_name = $storage_definition->getName();
+
     if ($this->allowsSharedTableStorage($storage_definition)) {
       $column_name = count($storage_definition->getColumns()) == 1 ? $field_name : $field_name . '__' . $property_name;
     }

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\field\Kernel\Views;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -77,8 +78,6 @@ class HandlerFieldFieldTest extends KernelTestBase {
 
     // Setup basic fields.
     $this->createFields();
-
-    $this->container->get('views.views_data')->clear();
 
     // For MongoDB to update the views correctly the views must be loaded after
     // the creation of the fields.
@@ -326,10 +325,17 @@ class HandlerFieldFieldTest extends KernelTestBase {
   protected function prepareView(ViewExecutable $view) {
     $view->storage->invalidateCaches();
     $view->initDisplay();
+    $connection = Database::getConnection();
     foreach ($this->fieldStorages as $field_storage) {
       $field_name = $field_storage->getName();
       $view->display_handler->options['fields'][$field_name]['id'] = $field_name;
-      $view->display_handler->options['fields'][$field_name]['table'] = 'node__' . $field_name;
+      if ($connection->driver() == 'mongodb') {
+        $table = 'node';
+      }
+      else {
+        $table = 'node__' . $field_name;
+      }
+      $view->display_handler->options['fields'][$field_name]['table'] = $table;
       $view->display_handler->options['fields'][$field_name]['field'] = $field_name;
     }
   }

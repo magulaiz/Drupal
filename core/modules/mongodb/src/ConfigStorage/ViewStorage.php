@@ -173,7 +173,7 @@ class ViewStorage extends ConfigEntityStorage {
       }
     }
 
-//    if ($values['id'] == 'moderated_content') {
+//    if ($values['id'] == 'test_view_fieldapi') {
 //      dump($values);
 //    }
 

@@ -337,8 +337,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
               next($this->treeChildren[$vid][$parent]);
               break;
             }
-          }
-          while ($child = next($this->treeChildren[$vid][$parent]));
+          } while ($child = next($this->treeChildren[$vid][$parent]));
 
           if (!$has_children) {
             // We processed all terms in this hierarchy-level, reset pointer
@@ -349,7 +348,6 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
       }
       $this->trees[$cache_key] = $tree;
     }
-
     return $this->trees[$cache_key];
   }
 

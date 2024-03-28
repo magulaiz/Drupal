@@ -78,13 +78,11 @@ class TermStorageSchema extends SqlContentEntityStorageSchema {
       // Date fields in MongoDB are stored as a date value.
       $schema['taxonomy_index']['fields']['created']['type'] = 'date';
     }
-    else {
-      if ($data_table = $this->storage->getDataTable()) {
-        $schema[$data_table]['indexes'] += [
-          'taxonomy_term__tree' => ['vid', 'weight', 'name'],
-          'taxonomy_term__vid_name' => ['vid', 'name'],
-        ];
-      }
+    elseif ($data_table = $this->storage->getDataTable()) {
+      $schema[$data_table]['indexes'] += [
+        'taxonomy_term__tree' => ['vid', 'weight', 'name'],
+        'taxonomy_term__vid_name' => ['vid', 'name'],
+      ];
     }
 
     return $schema;

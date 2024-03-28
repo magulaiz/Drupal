@@ -91,6 +91,7 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
    * Tests using the views relationship.
    */
   public function testNoDataTableRelationship() {
+
     // Create some test entities which link each other.
     $referenced_entity = EntityTestMul::create();
     $referenced_entity->save();
@@ -196,6 +197,7 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
    * @see entity_reference_field_views_data()
    */
   public function testDataTableRelationship() {
+
     // Create some test entities which link each other.
     $referenced_entity = EntityTest::create();
     $referenced_entity->save();
@@ -271,6 +273,7 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
       // Test that the correct relationship entity is on the row.
       $this->assertEquals(1, $row->_relationship_entities['field_data_test']->id());
       $this->assertEquals('entity_test', $row->_relationship_entities['field_data_test']->bundle());
+
     }
 
     // MongoDB does not need reverse relationships.

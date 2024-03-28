@@ -13,6 +13,7 @@ class BlockContentViewsData extends EntityViewsData {
    * {@inheritdoc}
    */
   public function getViewsData() {
+
     $data = parent::getViewsData();
 
     if ($this->connection->driver() == 'mongodb') {

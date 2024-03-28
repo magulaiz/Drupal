@@ -79,7 +79,6 @@ class Textfield extends FormElement {
       if (!is_scalar($input)) {
         $input = '';
       }
-
       return str_replace(["\r", "\n"], '', $input);
     }
     return NULL;

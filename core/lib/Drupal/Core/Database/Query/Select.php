@@ -720,11 +720,9 @@ class Select extends Query implements SelectInterface {
     }
     $alias = $alias_candidate;
 
-    // Start of BC layer.
     if (is_string($condition)) {
       $condition = str_replace('%alias', $alias, $condition);
     }
-    // End of BC layer.
     if ($condition instanceof ConditionInterface) {
       $condition->updateAliasPlaceholder('%alias', $alias);
     }
