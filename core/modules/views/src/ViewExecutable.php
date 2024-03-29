@@ -16,14 +16,8 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 /**
  * Represents a view as a whole.
  *
- * An object to contain all of the data to generate a view, plus the member
+ * An object to contain all the data to generate a view, plus the member
  * functions to build the view query, execute the query and render the output.
- *
- * This class does not implement the Serializable interface since problems
- * occurred when using the serialize method.
- *
- * @see https://www.drupal.org/node/2849674
- * @see https://bugs.php.net/bug.php?id=66052
  */
 #[\AllowDynamicProperties]
 class ViewExecutable {
