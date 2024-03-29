@@ -67,7 +67,7 @@ class Date extends FormElementBase {
     static::setAttributes($element, ['form-' . $element['#attributes']['type']]);
     // Do not show seconds part if step is multiple of 60.
     if ($element['#attributes']['type'] == 'time' && !empty($element['#attributes']['step']) && ($element['#attributes']['step'] % 60) == 0 && preg_match('/\d{1,2}:\d{1,2}:\d{1,2}/', $element['#attributes']['value'])) {
-      list($hours, $minutes, $seconds) = explode(':', $element['#attributes']['value']);
+      list($hours, $minutes) = explode(':', $element['#attributes']['value']);
       $element['#attributes']['value'] = "$hours:$minutes";
     }
 
