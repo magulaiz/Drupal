@@ -80,14 +80,8 @@ system.cron:
             Range:
               min: 300
     logging:
-      type: integer
+      type: boolean
       label: 'Detailed cron logging'
-      constraints:
-        # @see \Drupal\system\Form\CronForm::buildForm()
-        Choice:
-          choices:
-            - 0
-            - 1
 
 system.date:
   type: config_object
