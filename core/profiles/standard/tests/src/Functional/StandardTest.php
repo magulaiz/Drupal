@@ -18,6 +18,7 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\RequirementsPageTrait;
 use Drupal\user\Entity\Role;
+use Drupal\user\Entity\User;
 use Symfony\Component\Validator\ConstraintViolation;
 
 /**
@@ -38,6 +39,22 @@ class StandardTest extends BrowserTestBase {
    * @var \Drupal\user\UserInterface
    */
   protected $adminUser;
+
+  /**
+   * Tests that user 1 does not have an all-access pass.
+   */
+  public function testSuperUser() {
+    $this->drupalget('admin');
+    $this->assertSession()->statusCodeEquals(403);
+
+    $user = User::load(1);
+    $user->removeRole('administrator');
+    $user->save();
+
+    $this->drupalLogin($this->rootUser);
+    $this->drupalget('admin');
+    $this->assertSession()->statusCodeEquals(403);
+  }
 
   /**
    * Tests Standard installation profile.

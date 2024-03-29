@@ -149,7 +149,7 @@ trait FunctionalTestSetupTrait {
     $services['parameters']['session.storage.options']['gc_probability'] = 0;
     // Disable the super user access policy so that we are sure our tests check
     // for the right permissions.
-    $services['parameters']['security']['enable_super_user'] = $this->usesSuperUserAccessPolicy;
+    $services['parameters']['security.enable_super_user'] = $this->usesSuperUserAccessPolicy;
     if ($this->strictConfigSchema) {
       // Add a listener to validate configuration schema on save.
       $test_file_name = (new \ReflectionClass($this))->getFileName();
