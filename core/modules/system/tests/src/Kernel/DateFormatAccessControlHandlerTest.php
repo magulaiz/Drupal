@@ -31,6 +31,13 @@ class DateFormatAccessControlHandlerTest extends KernelTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   *
+   * @todo Remove and fix test to not rely on super user.
+   */
+  protected $usesSuperUserAccessPolicy = TRUE;
+
+  /**
    * The date_format access control handler.
    *
    * @var \Drupal\Core\Entity\EntityAccessControlHandlerInterface

@@ -32,6 +32,13 @@ class EntityStateChangeValidationTest extends KernelTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   *
+   * @todo Remove and fix test to not rely on super user.
+   */
+  protected $usesSuperUserAccessPolicy = TRUE;
+
+  /**
    * An admin user.
    *
    * @var \Drupal\Core\Session\AccountInterface

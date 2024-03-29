@@ -34,6 +34,13 @@ class TaxonomyFieldVidTest extends ViewsKernelTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   *
+   * @todo Remove and fix test to not rely on super user.
+   */
+  protected $usesSuperUserAccessPolicy = TRUE;
+
+  /**
    * Views used by this test.
    *
    * @var array

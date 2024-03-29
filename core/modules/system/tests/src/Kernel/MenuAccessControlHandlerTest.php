@@ -30,6 +30,13 @@ class MenuAccessControlHandlerTest extends KernelTestBase {
   ];
 
   /**
+   * {@inheritdoc}
+   *
+   * @todo Remove and fix test to not rely on super user.
+   */
+  protected $usesSuperUserAccessPolicy = TRUE;
+
+  /**
    * The menu access control handler.
    *
    * @var \Drupal\Core\Entity\EntityAccessControlHandlerInterface

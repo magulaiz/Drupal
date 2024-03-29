@@ -24,6 +24,13 @@ class NodeAccessLanguageAwareTest extends NodeAccessTestBase {
   protected static $modules = ['language', 'node_access_test_language'];
 
   /**
+   * {@inheritdoc}
+   *
+   * @todo Remove and fix test to not rely on super user.
+   */
+  protected $usesSuperUserAccessPolicy = TRUE;
+
+  /**
    * A set of nodes to use in testing.
    *
    * @var \Drupal\node\NodeInterface[]

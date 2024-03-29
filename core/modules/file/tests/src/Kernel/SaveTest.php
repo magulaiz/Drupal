@@ -11,6 +11,13 @@ use Drupal\file\Entity\File;
  */
 class SaveTest extends FileManagedUnitTestBase {
 
+  /**
+   * {@inheritdoc}
+   *
+   * @todo Remove and fix test to not rely on super user.
+   */
+  protected $usesSuperUserAccessPolicy = TRUE;
+
   public function testFileSave() {
     // Create a new file entity.
     $file = File::create([

@@ -22,6 +22,13 @@ class NodeViewsFieldAccessTest extends FieldFieldAccessTestBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @todo Remove and fix test to not rely on super user.
+   */
+  protected $usesSuperUserAccessPolicy = TRUE;
+
+  /**
+   * {@inheritdoc}
    */
   protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);

@@ -35,6 +35,13 @@ class FieldFieldTest extends ViewsKernelTestBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @todo Remove and fix test to not rely on super user.
+   */
+  protected $usesSuperUserAccessPolicy = TRUE;
+
+  /**
+   * {@inheritdoc}
    */
   public static $testViews = ['test_field_field_test', 'test_field_alias_test', 'test_field_field_complex_test', 'test_field_field_attachment_test', 'test_field_field_revision_test', 'test_field_field_revision_complex_test'];
 
