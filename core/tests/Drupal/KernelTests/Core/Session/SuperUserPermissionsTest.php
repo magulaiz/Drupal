@@ -8,6 +8,7 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 /**
  * Test case for getting all permissions as a super user.
  *
+ * @covers \Drupal\Core\DependencyInjection\Compiler\SuperUserAccessPolicyPass
  * @group Session
  */
 class SuperUserPermissionsTest extends KernelTestBase {
@@ -33,13 +34,19 @@ class SuperUserPermissionsTest extends KernelTestBase {
   }
 
   /**
-   * Tests that assigning a role grants that role's permissions.
+   * Tests the super user access policy grants all permissions.
    */
   public function testPermissionChange(): void {
-    // Create two accounts to avoid dealing with user 1.
     $account = $this->createUser();
     $this->assertSame('1', $account->id());
     $this->assertTrue($account->hasPermission('administer modules'));
+    $this->assertTrue($account->hasPermission('non-existent permission'));
+
+    // Turn off the super user access policy and try again.
+    $this->usesSuperUserAccessPolicy = FALSE;
+    $this->bootKernel();
+    $this->assertFalse($account->hasPermission('administer modules'));
+    $this->assertFalse($account->hasPermission('non-existent permission'));
   }
 
 }
