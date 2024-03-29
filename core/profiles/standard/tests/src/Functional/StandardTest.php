@@ -44,7 +44,7 @@ class StandardTest extends BrowserTestBase {
    * Tests that user 1 does not have an all-access pass.
    */
   public function testSuperUser() {
-    $this->drupalget('admin');
+    $this->drupalGet('admin');
     $this->assertSession()->statusCodeEquals(403);
 
     $user = User::load(1);
@@ -52,7 +52,7 @@ class StandardTest extends BrowserTestBase {
     $user->save();
 
     $this->drupalLogin($this->rootUser);
-    $this->drupalget('admin');
+    $this->drupalGet('admin');
     $this->assertSession()->statusCodeEquals(403);
   }
 
