@@ -237,6 +237,15 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   ];
 
   /**
+   * Set to TRUE to make user 1 a super user.
+   *
+   * @see \Drupal\Core\Session\SuperUserAccessPolicy
+   *
+   * @var bool
+   */
+  protected $usesSuperUserAccessPolicy = FALSE;
+
+  /**
    * {@inheritdoc}
    */
   public static function setUpBeforeClass(): void {
@@ -394,6 +403,10 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $kernel->preHandle($request);
 
     $this->container = $kernel->getContainer();
+
+    // Disable the super user access policy so that we are sure our tests check
+    // for the right permissions.
+    $this->container->setParameter('security.enable_super_user', $this->usesSuperUserAccessPolicy);
 
     // Run database tasks and check for errors.
     $installer_class = $namespace . "\\Install\\Tasks";
