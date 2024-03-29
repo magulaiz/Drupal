@@ -97,7 +97,7 @@ class MenuLinkContentForm extends ContentEntityForm {
     $menu = $this->entityTypeManager->getStorage('menu')->load($menu_id);
     if ($menu instanceof MenuInterface && $this->entity->isNew()) {
       $form['menu_parent'] = $this->menuParentSelector->parentSelectElement($default, $id, [
-        $menu_id => $menu ? $menu->label() : '',
+        $menu_id => $menu->label(),
       ]);
     }
     else {
