@@ -74,7 +74,7 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
    *
    * @var \Psr\Log\LoggerInterface
    */
-  protected $logger;
+  protected LoggerInterface $logger;
 
   /**
    * Constructs a new InlineBlock.
@@ -101,7 +101,7 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
     $this->entityDisplayRepository = $entity_display_repository;
     $this->currentUser = $current_user;
     if (!$logger) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $logger argument is deprecated in drupal:11.0.0 amd will be required in drupal:12.0.0. See https://www.drupal.org/node/3436810', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $logger argument is deprecated in drupal:10.3 amd will be required in drupal:11.0.0. See https://www.drupal.org/node/3436810', E_USER_DEPRECATED);
       $logger = \Drupal::service('logger.channel.layout_builder');
     }
     $this->logger = $logger;
