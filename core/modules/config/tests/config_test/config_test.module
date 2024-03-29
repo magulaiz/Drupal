@@ -52,6 +52,6 @@ function config_test_entity_type_alter(array &$entity_types) {
  *
  * @see Drupal\KernelTests\Core\Entity\ConfigEntityQueryTest::testAlterHook
  */
-function config_test_entity_query_tag_config_query_test_config_entity_query_alter_hook_test_alter(QueryInterface &$query): void {
+function config_test_entity_query_tag_config_query_test_config_entity_query_alter_hook_test_alter(QueryInterface $query): void {
   $query->condition('id', '7', '<>');
 }

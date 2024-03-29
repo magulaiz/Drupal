@@ -2290,10 +2290,7 @@ function hook_entity_extra_field_info_alter(&$info) {
 }
 
 /**
- * Alter any entity query.
- *
- * Implemented in core for config entities, and content entities using sql
- * storage.
+ * Alter an entity query.
  *
  * @param \Drupal\Core\Entity\Query\QueryInterface $query
  *   The entity query.
@@ -2310,10 +2307,7 @@ function hook_entity_query_alter(\Drupal\Core\Entity\Query\QueryInterface $query
 }
 
 /**
- * Alter entity queries for a specific entity type.
- *
- * Implemented in core for config entities, and content entities using sql
- * storage.
+ * Alter an entity query for a specific entity type.
  *
  * @param \Drupal\Core\Entity\Query\QueryInterface $query
  *   The entity query.
@@ -2328,9 +2322,6 @@ function hook_entity_query_ENTITY_TYPE_alter(\Drupal\Core\Entity\Query\QueryInte
 /**
  * Alter an entity query that has a specific tag.
  *
- * Implemented in core for config entities, and content entities using sql
- * storage.
- *
  * @param \Drupal\Core\Entity\Query\QueryInterface $query
  *   The entity query.
  *
@@ -2344,10 +2335,7 @@ function hook_entity_query_tag_TAG_alter(\Drupal\Core\Entity\Query\QueryInterfac
 }
 
 /**
- * Alter entity queries for a specific entity type that have a specific tag.
- *
- * Implemented in core for config entities, and content entities using sql
- * storage.
+ * Alter an entity query for a specific entity type that has a specific tag.
  *
  * @param \Drupal\Core\Entity\Query\QueryInterface $query
  *   The entity query.
