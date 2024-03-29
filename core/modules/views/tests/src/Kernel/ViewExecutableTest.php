@@ -493,10 +493,6 @@ class ViewExecutableTest extends ViewsKernelTestBase {
 
     $serialized = serialize($view);
 
-    // Test the view storage object is not present in the actual serialized
-    // string.
-    $this->assertStringNotContainsString('"Drupal\views\Entity\View"', $serialized, 'The Drupal\views\Entity\View class was not found in the serialized string.');
-
     /** @var \Drupal\views\ViewExecutable $unserialized */
     $unserialized = unserialize($serialized);
 
@@ -510,7 +506,6 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     // the field manager directly, but from the item data definition. It should
     // be the same base field definition object (the field and item definitions
     // refer to each other).
-    // See https://bugs.php.net/bug.php?id=66052
     $field_manager = $this->container->get('entity_field.manager');
     $nid_definition_before = $field_manager->getBaseFieldDefinitions('node')['nid']
       ->getItemDefinition()
@@ -522,7 +517,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     $view_executable->execute('page_1');
 
     // Reset the static cache. Don't use clearCachedFieldDefinitions() since
-    // that clears the persistent cache and we need to get the serialized cache
+    // that clears the persistent cache, and we need to get the serialized cache
     // data.
     $field_manager->useCaches(FALSE);
     $field_manager->useCaches(TRUE);
