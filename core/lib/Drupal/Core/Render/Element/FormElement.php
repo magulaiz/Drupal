@@ -2,9 +2,11 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Url;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a base class for form element plugins.
@@ -96,6 +98,32 @@ use Drupal\Core\Url;
 abstract class FormElement extends RenderElement implements FormElementInterface {
 
   /**
+   * The access manager service.
+   *
+   * @var \Drupal\Core\Access\AccessManagerInterface
+   */
+  protected $accessManager;
+
+  /**
+   * Constructs a YourFormElement object.
+   *
+   * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
+   *   The access manager service.
+   */
+  public function __construct(AccessManagerInterface $access_manager) {
+    $this->accessManager = $access_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('access_manager')
+    );
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
@@ -103,7 +131,7 @@ abstract class FormElement extends RenderElement implements FormElementInterface
   }
 
   /**
-   * #process callback for #pattern form element property.
+   * Process callback for #pattern form element property.
    *
    * @param array $element
    *   An associative array containing the properties and children of the
@@ -126,12 +154,12 @@ abstract class FormElement extends RenderElement implements FormElementInterface
   }
 
   /**
-   * #element_validate callback for #pattern form element property.
+   * Element_validate callback for #pattern form element property.
    *
-   * @param $element
+   * @param array $element
    *   An associative array containing the properties and children of the
    *   generic form element.
-   * @param $form_state
+   * @param array $form_state
    *   The current state of the form.
    * @param array $complete_form
    *   The complete form structure.
@@ -165,7 +193,7 @@ abstract class FormElement extends RenderElement implements FormElementInterface
    * field with properties:
    * @code
    * '#autocomplete_route_name' => 'my_module.autocomplete',
-   * '#autocomplete_route_parameters' => array('a' => $some_key, 'b' => $some_id),
+   * '#autocomplete_route_parameters' => ['a' => $some_key, 'b' => $some_id],
    * @endcode
    * If the user types "keywords" in that field, the full path called would be:
    * 'my_module_autocomplete/$some_key/$some_id?q=keywords'
@@ -177,7 +205,7 @@ abstract class FormElement extends RenderElement implements FormElementInterface
    *   - #autocomplete_route_parameters: The parameters to be used in
    *     conjunction with the route name.
    *   - #autocomplete_query_parameters: The parameters to be used in
-   *     query string
+   *     query string.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    * @param array $complete_form
@@ -197,9 +225,7 @@ abstract class FormElement extends RenderElement implements FormElementInterface
         $options['query'] = $element['#autocomplete_query_parameters'];
       }
       $url = Url::fromRoute($element['#autocomplete_route_name'], $parameters, $options)->toString(TRUE);
-      /** @var \Drupal\Core\Access\AccessManagerInterface $access_manager */
-      $access_manager = \Drupal::service('access_manager');
-      $access = $access_manager->checkNamedRoute($element['#autocomplete_route_name'], $parameters, \Drupal::currentUser(), TRUE);
+      $access = $this->accessManager->checkNamedRoute($element['#autocomplete_route_name'], $parameters, \Drupal::currentUser(), TRUE);
     }
 
     if ($access) {
