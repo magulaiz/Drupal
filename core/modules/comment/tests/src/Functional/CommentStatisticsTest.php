@@ -16,6 +16,13 @@ use Drupal\comment\Entity\Comment;
 class CommentStatisticsTest extends CommentTestBase {
 
   /**
+   * {@inheritdoc}
+   *
+   * @todo Remove and fix test to not rely on super user.
+   */
+  protected $usesSuperUserAccessPolicy = TRUE;
+
+  /**
    * A secondary user for posting comments.
    *
    * @var \Drupal\user\UserInterface
