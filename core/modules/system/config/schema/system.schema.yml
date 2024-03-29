@@ -71,14 +71,14 @@ system.cron:
           constraints:
             # @see system_requirements()
             Range:
-              min: 1
+              min: 60
         requirements_error:
           type: integer
           label: 'Requirements error period'
           constraints:
             # @see system_requirements()
             Range:
-              min: 1
+              min: 300
     logging:
       type: integer
       label: 'Detailed cron logging'
