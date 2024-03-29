@@ -170,6 +170,7 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
       '#alt' => $this->t('Home'),
       '#width' => $width,
       '#height' => $height,
+      '#attributes' => ['loading' => 'eager', 'fetchpriority' => 'high'],
       '#access' => $this->configuration['use_site_logo'],
     ];
 
