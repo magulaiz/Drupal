@@ -16,9 +16,9 @@
  */
 #}
 {% block content %}
-  {% if site_logo %}
+  {% if site_logo_full %}
     <a href="{{ path('<front>') }}" rel="home">
-      <img src="{{ site_logo }}" alt="{{ 'Home'|t }}" fetchpriority="high" />
+     {{ site_logo_full }}
     </a>
   {% endif %}
   {% if site_name %}

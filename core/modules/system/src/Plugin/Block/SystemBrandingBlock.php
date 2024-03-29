@@ -151,10 +151,25 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
     $build = [];
     $site_config = $this->configFactory->get('system.site');
 
+    $logo_uri = theme_get_setting('logo.url');
+    $extension = pathinfo($logo_uri, PATHINFO_EXTENSION);
+    // getimagesize() doesn't support svg, load the XML instead.
+    if ($extension === 'svg') {
+      $svg = simplexml_load_file(\Drupal::root() . $logo_uri);
+      $attributes = $svg->attributes();
+      $width = strval($attributes->width);
+      $height = strval($attributes->height);
+    }
+    else {
+      [$width, $height] = getimagesize(\Drupal::root() . $logo_uri);
+    }
+
     $build['site_logo'] = [
       '#theme' => 'image',
-      '#uri' => theme_get_setting('logo.url'),
+      '#uri' => $logo_uri,
       '#alt' => $this->t('Home'),
+      '#width' => $width,
+      '#height' => $height,
       '#access' => $this->configuration['use_site_logo'],
     ];
 

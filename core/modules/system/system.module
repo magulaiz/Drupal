@@ -799,6 +799,9 @@ function system_preprocess_block(&$variables) {
       $variables['site_logo'] = '';
       if ($variables['content']['site_logo']['#access'] && $variables['content']['site_logo']['#uri']) {
         $variables['site_logo'] = $variables['content']['site_logo']['#uri'];
+      if ($variables['content']['site_logo']['#access'] && $variables['content']['site_logo']['#uri']) {
+        $variables['site_logo_full'] = $variables['content']['site_logo'];
+      }
       }
       $variables['site_name'] = '';
       if ($variables['content']['site_name']['#access'] && $variables['content']['site_name']['#markup']) {
