@@ -15,7 +15,8 @@ class SuperUserAccessPolicyPass implements CompilerPassInterface {
    */
   public function process(ContainerBuilder $container): void {
     if ($container->getParameter('security.enable_super_user') === FALSE) {
-      $container->set('access_policy.super_user', NULL);
+      $container->removeDefinition('access_policy.super_user');
+      $container->removeAlias('Drupal\Core\Session\SuperUserAccessPolicy');
     }
   }
 
