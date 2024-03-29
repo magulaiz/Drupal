@@ -113,6 +113,7 @@ class DateRangeDefaultWidget extends DateRangeWidgetBase {
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
+    $element = [];
     $datetime_type = $this->getFieldSetting('datetime_type');
 
     if ($datetime_type === DateTimeItem::DATETIME_TYPE_DATETIME) {
