@@ -259,8 +259,8 @@ class FileListingTest extends FileFieldTestBase {
   }
 
   /**
-   * Test file deletion with multi-language & domain setup
-   * Issue: https://www.drupal.org/project/drupal/issues/3424701
+   * Test file deletion with multi-language & domain setup.
+   * Issue: https://www.drupal.org/project/drupal/issues/3424701.
    */
   public function testFileDeleteWithMultipleDomain() {
 
@@ -333,7 +333,6 @@ class FileListingTest extends FileFieldTestBase {
     $this->assertSession()->pageTextContains('The file image-test.png has been deleted.');
     $this->assertFileDoesNotExist($file_uri);
   }
-
 
   /**
    * Creates and saves a test file.
