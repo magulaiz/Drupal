@@ -132,24 +132,19 @@ class EntityConverter implements ParamConverterInterface {
       return $entity;
     }
 
-    // Do not inject the context repository as it is not an actual dependency:
-    // it will be removed once both the todo items below are fixed.
-    /** @var \Drupal\Core\Plugin\Context\ContextRepositoryInterface $contexts_repository */
-    $contexts_repository = \Drupal::service('context.repository');
+    // @todo Consider removing this in https://www.drupal.org/node/2951294
+    if (\Drupal::service('language_manager')->isMultilingual()) {
+      $language_contexts = \Drupal::service('language.current_language_context')->getAvailableContexts();
+      foreach ($language_contexts as $context_id => $context) {
+        $contexts['@language.current_language_context:' . $context_id] = $context;
+      }
+    }
+
     // @todo Consider deprecating the legacy context operation altogether in
     //   https://www.drupal.org/node/3031124.
-    $contexts = $contexts_repository->getAvailableContexts();
     $contexts[EntityRepositoryInterface::CONTEXT_ID_LEGACY_CONTEXT_OPERATION] =
       new Context(new ContextDefinition('string'), 'entity_upcast');
-    // @todo At the moment we do not need the current user context, which is
-    //   triggering some test failures. We can remove these lines once
-    //   https://www.drupal.org/node/2934192 is fixed.
-    $context_id = '@user.current_user_context:current_user';
-    if (isset($contexts[$context_id])) {
-      $account = $contexts[$context_id]->getContextValue();
-      unset($account->_skipProtectedUserFieldConstraint);
-      unset($contexts[$context_id]);
-    }
+
     $entity = $this->entityRepository->getCanonical($entity_type_id, $value, $contexts);
 
     if (
