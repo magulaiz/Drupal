@@ -87,10 +87,14 @@ image.effect.image_scale_and_crop:
 
 image.settings:
   type: config_object
+  constraints:
+    FullyValidatable: ~
   mapping:
     preview_image:
       type: string
       label: 'Preview image'
+      constraints:
+        NotBlank: {}
     allow_insecure_derivatives:
       type: boolean
       label: 'Allow insecure image derivatives'
