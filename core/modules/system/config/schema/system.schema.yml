@@ -3,13 +3,12 @@
 system.site:
   type: config_object
   label: 'Site information'
+  constraints:
+    FullyValidatable: ~
   mapping:
     uuid:
       type: uuid
       label: 'Site UUID'
-      constraints:
-        Uuid: []
-        NotNull: []
     name:
       type: label
       label: 'Site name'
@@ -38,12 +37,17 @@ system.site:
     weight_select_max:
       type: integer
       label: 'Weight element maximum value'
+      constraints:
+        Range:
+          # @see PHP_INT_MAX
+          max: 2147483647
     default_langcode:
       type: langcode
       label: 'Site default language code'
     mail_notification:
-      type: string
+      type: email
       label: 'Notification email address'
+      nullable: true
 
 system.maintenance:
   type: config_object
@@ -111,6 +115,8 @@ system.date:
 system.diff:
   type: config_object
   label: 'Diff settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     context:
       type: mapping
@@ -119,17 +125,35 @@ system.diff:
         lines_leading:
           type: integer
           label: 'Number of leading lines in a diff'
+          constraints:
+            Range:
+              min: 0
         lines_trailing:
           type: integer
           label: 'Number of trailing lines in a diff'
+          constraints:
+            Range:
+              min: 0
 
 system.logging:
   type: config_object
   label: 'Logging settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     error_level:
       type: string
       label: 'Error messages to display'
+      constraints:
+        Choice:
+          # @see ERROR_REPORTING_HIDEs
+          - hide
+          # @see ERROR_REPORTING_DISPLAY_SOME
+          - some
+          # @see ERROR_REPORTING_DISPLAY_ALL
+          - all
+          # @see ERROR_REPORTING_DISPLAY_VERBOSE
+          - verbose
 
 system.performance:
   type: config_object
@@ -198,13 +222,24 @@ system.rss:
 system.theme:
   type: config_object
   label: 'Theme settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     admin:
       type: string
       label: 'Administration theme'
+      nullable: true
+      constraints:
+        ExtensionName: []
+        ExtensionExists: theme
+      # @see \Drupal\user\Theme\AdminNegotiator::determineActiveTheme()
+      requiredKey: false
     default:
       type: string
       label: 'Default theme'
+      constraints:
+        ExtensionName: []
+        ExtensionExists: theme
 
 system.menu.*:
   type: config_entity

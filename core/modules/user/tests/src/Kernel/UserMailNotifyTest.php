@@ -81,7 +81,7 @@ class UserMailNotifyTest extends EntityKernelTestBase {
    * @dataProvider userMailsProvider
    */
   public function testUserMailsSent($op, array $mail_keys) {
-    $this->installConfig('user');
+    $this->installConfig(['system', 'user']);
     $this->config('system.site')->set('mail', 'test@example.com')->save();
     $this->config('user.settings')->set('notify.' . $op, TRUE)->save();
     $return = _user_mail_notify($op, $this->createUser());
@@ -125,7 +125,7 @@ class UserMailNotifyTest extends EntityKernelTestBase {
     ConfigurableLanguage::createFromLangcode('fr')->save();
 
     // Install configs.
-    $this->installConfig(['language', 'locale', 'user']);
+    $this->installConfig(['language', 'locale', 'system', 'user']);
 
     locale_system_set_config_langcodes();
     $langcodes = array_keys(\Drupal::languageManager()->getLanguages());

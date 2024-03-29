@@ -54,7 +54,7 @@ class LanguageTest extends KernelTestBase {
       'editor' => 'ckeditor5',
     ])->save();
 
-    $this->installConfig(['language']);
+    $this->installConfig(['language', 'system']);
   }
 
   /**

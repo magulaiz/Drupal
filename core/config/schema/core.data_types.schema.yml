@@ -89,6 +89,10 @@ plural_label:
 path:
   type: string
   label: 'Path'
+  constraints:
+    Regex:
+      # @see \Drupal\Component\Utility\UrlHelper::isValid()
+      pattern: /^(?:[\w#!:\.\?\+=&@$'~*,;\/\(\)\[\]\-]|%[0-9a-f]{2})+$/i
 
 # Human readable string that can contain multiple lines of text or HTML.
 text:

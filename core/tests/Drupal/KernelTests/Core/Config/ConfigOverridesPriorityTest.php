@@ -31,6 +31,8 @@ class ConfigOverridesPriorityTest extends KernelTestBase {
   ];
 
   public function testOverridePriorities() {
+    $this->installConfig(['system']);
+
     $GLOBALS['config_test_run_module_overrides'] = FALSE;
 
     $non_overridden_mail = 'site@example.com';

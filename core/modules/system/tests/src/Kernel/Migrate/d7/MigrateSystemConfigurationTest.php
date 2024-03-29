@@ -53,6 +53,8 @@ class MigrateSystemConfigurationTest extends MigrateDrupal7TestBase {
       'toolkit' => 'gd',
     ],
     'system.logging' => [
+      // langcode is not handled by the migration.
+      'langcode' => 'en',
       'error_level' => 'some',
     ],
     'system.mail' => [

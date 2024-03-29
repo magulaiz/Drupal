@@ -22,6 +22,8 @@ class MigrateConfigRollbackTest extends MigrateTestBase {
    * Tests rolling back configuration.
    */
   public function testConfigRollback() {
+    $this->installConfig(['system']);
+
     // Use system.site configuration to demonstrate importing and rolling back
     // configuration.
     $variable = [
