@@ -112,9 +112,7 @@ class DateTimeDefaultWidget extends DateTimeWidgetBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $element = [];
-    $datetime_type = $this->getFieldSetting('datetime_type');
-
-    if ($datetime_type === DateTimeItem::DATETIME_TYPE_DATETIME) {
+    if ($this->getFieldSetting('datetime_type') === DateTimeItem::DATETIME_TYPE_DATETIME) {
       // Create the date increment element. Default to one second.
       $element['date_increment'] = [
         '#type' => 'number',
@@ -130,9 +128,7 @@ class DateTimeDefaultWidget extends DateTimeWidgetBase {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $datetime_type = $this->getFieldSetting('datetime_type');
-
-    if ($datetime_type === DateTimeItem::DATETIME_TYPE_DATETIME) {
+    if ($this->getFieldSetting('datetime_type') === DateTimeItem::DATETIME_TYPE_DATETIME) {
       return [$this->t('Step: @step', ['@step' => $this->getSetting('date_increment')])];
     }
     return [];
