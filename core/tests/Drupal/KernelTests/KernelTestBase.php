@@ -404,10 +404,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
 
     $this->container = $kernel->getContainer();
 
-    // Disable the super user access policy so that we are sure our tests check
-    // for the right permissions.
-    $this->container->setParameter('security.enable_super_user', $this->usesSuperUserAccessPolicy);
-
     // Run database tasks and check for errors.
     $installer_class = $namespace . "\\Install\\Tasks";
     $errors = (new $installer_class())->runTasks();
@@ -583,6 +579,10 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $container
       ->register('cache_factory', 'Drupal\Core\Cache\MemoryBackendFactory')
       ->addArgument(new Reference('datetime.time'));
+
+    // Disable the super user access policy so that we are sure our tests check
+    // for the right permissions.
+    $container->setParameter('security.enable_super_user', $this->usesSuperUserAccessPolicy);
 
     // Use memory for key value storages to avoid database queries. Store the
     // key value factory on the test object so that key value storages persist
