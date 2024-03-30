@@ -374,7 +374,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
       $project_data['extra'][] = [
         'class' => ['release-revoked'],
         'label' => t('Release revoked'),
-        'data' => t('Your currently installed release has been revoked, and is no longer available for download. Disabling everything included in this release or upgrading is strongly recommended!'),
+        'data' => t('Your currently installed release has been revoked, and is no longer available for download. Uninstalling everything included in this release or upgrading is strongly recommended!'),
       ];
     }
     elseif ($release->isUnsupported()) {
@@ -385,7 +385,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
       $project_data['extra'][] = [
         'class' => ['release-not-supported'],
         'label' => t('Release not supported'),
-        'data' => t('Your currently installed release is now unsupported, and is no longer available for download. Disabling everything included in this release or upgrading is strongly recommended!'),
+        'data' => t('Your currently installed release is now unsupported, and is no longer available for download. Uninstalling everything included in this release or upgrading is strongly recommended!'),
       ];
     }
   }
