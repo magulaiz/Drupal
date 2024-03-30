@@ -252,12 +252,23 @@ class SessionTest extends BrowserTestBase {
     $this->drupalLogin($user);
     $connection = Database::getConnection();
 
-    $query = $connection->select('users_field_data', 'u');
-    $query->innerJoin('sessions', 's', $query->joinCondition()->compare('u.uid', 's.uid'));
-    $query->fields('u', ['access'])
-      ->fields('s', ['timestamp'])
-      ->condition('u.uid', $user->id());
-    $times1 = $query->execute()->fetchObject();
+    if ($connection->driver() == 'mongodb') {
+      $query = $connection->select('users', 'u');
+      $query->innerJoin('sessions', 's', $query->joinCondition()->compare('u.uid', 's.uid'));
+      $query->fields('u', ['user_translations'])
+        ->fields('s', ['timestamp'])
+        ->condition('u.uid', (int) $user->id());
+      $times1 = $query->execute()->fetchObject();
+      $times1->access = $times1->user_translations[0]['access'];
+    }
+    else {
+      $query = $connection->select('users_field_data', 'u');
+      $query->innerJoin('sessions', 's', $query->joinCondition()->compare('u.uid', 's.uid'));
+      $query->fields('u', ['access'])
+        ->fields('s', ['timestamp'])
+        ->condition('u.uid', $user->id());
+      $times1 = $query->execute()->fetchObject();
+    }
 
     // Before every request we sleep one second to make sure that if the session
     // is saved, its timestamp will change.
@@ -266,6 +277,9 @@ class SessionTest extends BrowserTestBase {
     sleep(1);
     $this->drupalGet('session-test/set/foo');
     $times2 = $query->execute()->fetchObject();
+    if ($connection->driver() == 'mongodb') {
+      $times2->access = $times2->user_translations[0]['access'];
+    }
     $this->assertEquals($times1->access, $times2->access, 'Users table was not updated.');
     $this->assertNotEquals($times1->timestamp, $times2->timestamp, 'Sessions table was updated.');
 
@@ -273,6 +287,9 @@ class SessionTest extends BrowserTestBase {
     sleep(1);
     $this->drupalGet('session-test/set/foo');
     $times3 = $query->execute()->fetchObject();
+    if ($connection->driver() == 'mongodb') {
+      $times3->access = $times3->user_translations[0]['access'];
+    }
     $this->assertEquals($times1->access, $times3->access, 'Users table was not updated.');
     $this->assertEquals($times2->timestamp, $times3->timestamp, 'Sessions table was not updated.');
 
@@ -280,6 +297,9 @@ class SessionTest extends BrowserTestBase {
     sleep(1);
     $this->drupalGet('');
     $times4 = $query->execute()->fetchObject();
+    if ($connection->driver() == 'mongodb') {
+      $times4->access = $times4->user_translations[0]['access'];
+    }
     $this->assertEquals($times3->access, $times4->access, 'Users table was not updated.');
     $this->assertEquals($times3->timestamp, $times4->timestamp, 'Sessions table was not updated.');
 
@@ -291,6 +311,9 @@ class SessionTest extends BrowserTestBase {
     $this->writeSettings($settings);
     $this->drupalGet('');
     $times5 = $query->execute()->fetchObject();
+    if ($connection->driver() == 'mongodb') {
+      $times5->access = $times5->user_translations[0]['access'];
+    }
     $this->assertNotEquals($times4->access, $times5->access, 'Users table was updated.');
     $this->assertNotEquals($times4->timestamp, $times5->timestamp, 'Sessions table was updated.');
   }
@@ -363,6 +386,13 @@ class SessionTest extends BrowserTestBase {
    * Test exception thrown during session write close.
    */
   public function testSessionWriteError() {
+    if (Database::getConnection()->driver() == 'mongodb') {
+      // Renaming the sessions table will not trigger a database exception.
+      // MongoDB does not throw an exception when you try to read from a
+      // non-existing table. It is just how MongoDB works.
+      $this->markTestSkipped();
+    }
+
     // Login to ensure a session exists.
     $user = $this->drupalCreateUser([]);
     $this->drupalLogin($user);

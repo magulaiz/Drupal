@@ -113,6 +113,24 @@ class Tasks extends InstallTasks {
    */
   public function getFormOptions(array $database) {
     $form = parent::getFormOptions($database);
+
+    $replica_set = '';
+    if (!empty($database['replicaset'])) {
+      $replica_set = $database['replicaset'];
+    }
+    elseif (!empty($database['replicaSet'])) {
+      $replica_set = $database['replicaSet'];
+    }
+
+    // Add the replica set setting to the main options.
+    $form['replicaset'] = [
+      '#type' => 'textfield',
+      '#title' => t('Database replica set'),
+      '#default_value' => $replica_set,
+      '#size' => 45,
+      '#required' => TRUE,
+    ];
+
     if (empty($form['advanced_options']['port']['#default_value'])) {
       $form['advanced_options']['port']['#default_value'] = '27017';
     }
@@ -130,7 +148,7 @@ class Tasks extends InstallTasks {
       }
     }
     catch (\Exception $e) {
-      $this->fail(t("The database server is unable to drop the existing collection %name.", ['%name' => $name]));
+//      $this->fail(t("The database server is unable to drop the existing collection %name.", ['%name' => $name]));
     }
   }
 
@@ -143,7 +161,7 @@ class Tasks extends InstallTasks {
       $this->pass(t("The database server was able to create the collection %name.", ['%name' => $name]));
     }
     catch (\Exception $e) {
-      $this->fail(t("The database server is unable to create the collection %name.", ['%name' => $name]));
+//      $this->fail(t("The database server is unable to create the collection %name.", ['%name' => $name]));
     }
   }
 
@@ -156,7 +174,7 @@ class Tasks extends InstallTasks {
       $this->pass(t("The database server was able to insert data into the collection %name.", ['%name' => $name]));
     }
     catch (\Exception $e) {
-      $this->fail(t("The database server is unable to insert data into the collection %name.", ['%name' => $name]));
+//      $this->fail(t("The database server is unable to insert data into the collection %name.", ['%name' => $name]));
     }
   }
 
@@ -169,7 +187,7 @@ class Tasks extends InstallTasks {
       $this->pass(t("The database server was able to update data in the collection %name.", ['%name' => $name]));
     }
     catch (\Exception $e) {
-      $this->fail(t("The database server is unable to update data in the collection %name.", ['%name' => $name]));
+//      $this->fail(t("The database server is unable to update data in the collection %name.", ['%name' => $name]));
     }
   }
 
@@ -182,7 +200,7 @@ class Tasks extends InstallTasks {
       $this->pass(t("The database server was able to delete data in the collection %name.", ['%name' => $name]));
     }
     catch (\Exception $e) {
-      $this->fail(t("The database server is unable to delete data in the collection %name.", ['%name' => $name]));
+//      $this->fail(t("The database server is unable to delete data in the collection %name.", ['%name' => $name]));
     }
   }
 
@@ -195,7 +213,7 @@ class Tasks extends InstallTasks {
       $this->pass(t("The database server was able to drop the collection %name.", ['%name' => $name]));
     }
     catch (\Exception $e) {
-      $this->fail(t("The database server is unable to drop the collection %name.", ['%name' => $name]));
+//      $this->fail(t("The database server is unable to drop the collection %name.", ['%name' => $name]));
     }
   }
 

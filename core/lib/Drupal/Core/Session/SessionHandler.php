@@ -6,6 +6,8 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
+use MongoDB\BSON\Binary;
+use MongoDB\BSON\UTCDateTime;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Storage\Proxy\AbstractProxy;
 
@@ -63,9 +65,26 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
     $data = '';
     if (!empty($sid)) {
       // Read the session data from the database.
-      $query = $this->connection
-        ->queryRange('SELECT [session] FROM {sessions} WHERE [sid] = :sid', 0, 1, [':sid' => Crypt::hashBase64($sid)]);
-      $data = (string) $query->fetchField();
+      if ($this->connection->driver() == 'mongodb') {
+        $prefixed_table = $this->connection->getPrefix() . 'sessions';
+        $result = $this->connection->getConnection()->{$prefixed_table}->findOne(
+          ['sid' => ['$eq' => Crypt::hashBase64($sid)]],
+          [
+            'projection' => ['session' => 1, '_id' => 0],
+            'session' => $this->connection->getMongodbSession(),
+          ],
+        );
+
+        // Get the session data.
+        if (isset($result->session) && ($result->session instanceof Binary)) {
+          $data = $result->session->getData();
+        }
+      }
+      else {
+        $query = $this->connection
+          ->queryRange('SELECT [session] FROM {sessions} WHERE [sid] = :sid', 0, 1, [':sid' => Crypt::hashBase64($sid)]);
+        $data = (string) $query->fetchField();
+      }
     }
     return $data;
   }
@@ -116,8 +135,12 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
     // for three weeks before deleting them, you need to set gc_maxlifetime
     // to '1814400'. At that value, only after a user doesn't log in after
     // three weeks (1814400 seconds) will their session be removed.
+    $timestamp = $this->time->getRequestTime() - $lifetime;
+    if ($this->connection->driver() == 'mongodb') {
+      $timestamp = new UTCDateTime($timestamp * 1000);
+    }
     return $this->connection->delete('sessions')
-      ->condition('timestamp', $this->time->getRequestTime() - $lifetime, '<')
+      ->condition('timestamp', $timestamp, '<')
       ->execute();
   }
 

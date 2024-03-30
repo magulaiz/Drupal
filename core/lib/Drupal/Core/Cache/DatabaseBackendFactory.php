@@ -6,6 +6,7 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Serialization\ObjectAwareSerializationInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Site\Settings;
+use Drupal\mongodb\Driver\Database\mongodb\Cache\DatabaseBackend as MongodbDatabaseBackend;
 
 class DatabaseBackendFactory implements CacheFactoryInterface {
 
@@ -73,7 +74,12 @@ class DatabaseBackendFactory implements CacheFactoryInterface {
    */
   public function get($bin) {
     $max_rows = $this->getMaxRowsForBin($bin);
-    return new DatabaseBackend($this->connection, $this->checksumProvider, $bin, $this->serializer, $this->time, $max_rows);
+    if ($this->connection->driver() == 'mongodb') {
+      return new MongodbDatabaseBackend($this->connection, $this->checksumProvider, $bin, $this->serializer, $this->time, $max_rows);
+    }
+    else {
+      return new DatabaseBackend($this->connection, $this->checksumProvider, $bin, $this->serializer, $this->time, $max_rows);
+    }
   }
 
   /**

@@ -21,38 +21,6 @@ services:
   batch.storage:
     alias: mongodb.batch.storage
 
-  # MongoDB overrides Cache.
-  mongodb.cache.backend.database:
-    class: Drupal\mongodb\Driver\Database\mongodb\Cache\DatabaseBackendFactory
-    arguments: ['@database', '@cache_tags.invalidator.checksum', '@settings', '@serialization.phpserialize', '@datetime.time']
-    tags:
-      - { name: backend_overridable }
-  cache.backend.database:
-    alias: mongodb.cache.backend.database
-
-  mongodb.cache_tags.invalidator.checksum:
-    class: Drupal\mongodb\Driver\Database\mongodb\Cache\DatabaseCacheTagsChecksum
-    arguments: ['@database']
-    tags:
-      - { name: cache_tags_invalidator}
-      - { name: backend_overridable }
-  cache_tags.invalidator.checksum:
-    alias: mongodb.cache_tags.invalidator.checksum
-
-  # MongoDB overrides Config.
-  mongodb.config.storage.active:
-    class: Drupal\mongodb\Driver\Database\mongodb\Config\DatabaseStorage
-    arguments: ['@database', 'config']
-    public: false
-  config.storage.active:
-    alias: mongodb.config.storage.active
-
-  mongodb.config.storage.snapshot:
-    class: Drupal\mongodb\Driver\Database\mongodb\Config\DatabaseStorage
-    arguments: ['@database', config_snapshot]
-  config.storage.snapshot:
-    alias: mongodb.config.storage.snapshot
-
   # MongoDB overrides EntityQuery.
   mongodb.entity.query.sql:
     class: Drupal\mongodb\EntityQuery\QueryFactory

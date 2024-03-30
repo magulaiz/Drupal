@@ -3,6 +3,7 @@
 namespace Drupal\mongodb\Batch;
 
 use Drupal\Core\Batch\BatchStorage as CoreBatchStorage;
+use MongoDB\BSON\UTCDateTime;
 
 /**
  * The MongoDB implementation of \Drupal\Core\Batch\BatchStorage.
@@ -69,6 +70,23 @@ class BatchStorage extends CoreBatchStorage {
   /**
    * {@inheritdoc}
    */
+  public function cleanup() {
+    try {
+      $timestamp = new UTCDateTime(($this->getRequestTime() - 864000) * 1000);
+
+      // Cleanup the batch table and the queue for failed batches.
+      $this->connection->delete('batch')
+        ->condition('timestamp', $timestamp, '<')
+        ->execute();
+    }
+    catch (\Exception $e) {
+      $this->catchException($e);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function create(array $batch) {
     // For MongoDB the table need to exists. Otherwise MongoDB creates one
     // without the correct validation.
@@ -76,9 +94,22 @@ class BatchStorage extends CoreBatchStorage {
       $this->tableExists = $this->ensureTableExists();
     }
 
-    // Ensure that a session is started before using the CSRF token generator.
-    $this->session->start();
-    $this->doCreate($batch);
+    // For MongoDB an integer value should be a real integer.
+    $batch['id'] = (int) $batch['id'];
+
+    parent::create($batch);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function schemaDefinition() {
+    $schema = parent::schemaDefinition();
+
+    // For MongoDB timestamps are stored as real dates.
+    $schema['fields']['timestamp']['type'] = 'date';
+
+    return $schema;
   }
 
 }

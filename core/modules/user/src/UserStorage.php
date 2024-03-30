@@ -44,7 +44,7 @@ class UserStorage extends SqlContentEntityStorage implements UserStorageInterfac
   public function updateLastLoginTimestamp(UserInterface $account) {
     $this->database->update($this->getDataTable())
       ->fields(['login' => $account->getLastLoginTime()])
-      ->condition('uid', (int) $account->id())
+      ->condition('uid', $account->id())
       ->execute();
     // Ensure that the entity cache is cleared.
     $this->resetCache([$account->id()]);

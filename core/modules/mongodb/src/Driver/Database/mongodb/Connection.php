@@ -139,8 +139,14 @@ class Connection extends DatabaseConnection {
       $uri .= $connection_options['host'] . ':' . $connection_options['port'];
     }
 
-    if (!empty($connection_options['replicaSet'])) {
-      $uri .= '/?replicaSet=' . $connection_options['replicaSet'];
+    // Add the module to the connection string
+    $uri .= '/?module=mongodb';
+
+    if (!empty($connection_options['replicaset'])) {
+      $uri .= '&amp;replicaSet=' . $connection_options['replicaset'];
+    }
+    elseif (!empty($connection_options['replicaSet'])) {
+      $uri .= '&amp;replicaSet=' . $connection_options['replicaSet'];
     }
 
     try {

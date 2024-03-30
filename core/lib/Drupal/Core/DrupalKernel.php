@@ -10,6 +10,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\DatabaseBackend;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
 use Drupal\Core\Config\NullStorage;
+use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Component\DependencyInjection\ReverseContainer;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
@@ -507,6 +508,13 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     }
     FileCacheFactory::setConfiguration($configuration);
     FileCacheFactory::setPrefix(Settings::getApcuPrefix('file_cache', $this->root));
+
+    if (Database::getConnectionInfo() && Database::getConnection()->databaseType() == 'mongodb') {
+      // MongoDB uses different classes for caching. Both services are used to
+      // store the request data. See Symfony\Component\HttpFoundation\Request.
+      $this->defaultBootstrapContainerDefinition['services']['cache.container']['class'] = 'Drupal\mongodb\Driver\Database\mongodb\Cache\DatabaseBackend';
+      $this->defaultBootstrapContainerDefinition['services']['cache_tags_provider.container']['class'] = 'Drupal\mongodb\Driver\Database\mongodb\Cache\DatabaseCacheTagsChecksum';
+    }
 
     $this->bootstrapContainer = new $this->bootstrapContainerClass(Settings::get('bootstrap_container_definition', $this->defaultBootstrapContainerDefinition));
 

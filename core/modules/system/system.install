@@ -1680,7 +1680,9 @@ function system_schema() {
     ],
   ];
 
-  if (Database::getConnection()->driver() == 'mongodb') {
+  // We need to test for an active connection or a fail will be generated during
+  // the install process.
+  if (Database::isActiveConnection() && (Database::getConnection()->driver() == 'mongodb')) {
     $schema['sessions']['fields']['timestamp']['type'] = 'date';
   }
 

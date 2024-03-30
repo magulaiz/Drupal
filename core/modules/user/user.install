@@ -85,7 +85,7 @@ function user_install() {
   $storage
     ->create([
       'uid' => 0,
-      'status' => FALSE,
+      'status' => 0,
       'name' => '',
     ])
     ->save();
