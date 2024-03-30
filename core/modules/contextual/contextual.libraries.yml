@@ -39,6 +39,7 @@ drupal.contextual-toolbar:
   css:
     component:
       css/contextual.toolbar.css: {}
+      css/contextual.icons.toolbar.css: {}
   dependencies:
     - core/jquery
     - core/drupal
