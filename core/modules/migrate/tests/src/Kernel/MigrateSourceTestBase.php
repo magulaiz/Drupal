@@ -143,7 +143,6 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
    *   (optional) The value of the high water field.
    *
    * @dataProvider providerSource
-   * @phpstan-ignore-next-line
    */
   public function testSource(array $source_data, array $expected_data, $expected_count = NULL, array $configuration = [], $high_water = NULL) {
     $plugin = $this->getPlugin($configuration);
