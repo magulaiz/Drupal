@@ -147,6 +147,9 @@ function drupal_install_profile_distribution_version() {
  *
  * @return array
  *   The list of modules to install.
+ *
+ * @todo https://www.drupal.org/i/3005959 Rework this method as it is not only
+ *   about profiles.
  */
 function drupal_verify_profile($install_state) {
   $profile = $install_state['parameters']['profile'];
