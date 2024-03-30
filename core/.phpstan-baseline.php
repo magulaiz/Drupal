@@ -1137,6 +1137,11 @@ $ignoreErrors[] = [
   'path' => __DIR__ . '/modules/migrate/tests/src/Kernel/MigrateSourceTestBase.php',
 ];
 $ignoreErrors[] = [
+  'message' => '#^@dataProvider providerSource related method not found\\.$#',
+  'count' => 1,
+  'path' => __DIR__ . '/modules/migrate/tests/src/Kernel/MigrateSqlSourceTestBase.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Call to an undefined static method Drupal\\\\Tests\\\\migrate\\\\Kernel\\\\MigrateTestBase\\:\\:migrateDumpAlter\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate/tests/src/Kernel/MigrateTestBase.php',
