@@ -170,23 +170,11 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
     $field_name = $this->fieldDefinition->getName();
     $cardinality = $this->fieldDefinition->getFieldStorageDefinition()->getCardinality();
     $is_multiple = $this->fieldDefinition->getFieldStorageDefinition()->isMultiple();
-    $is_unlimited_not_programmed = FALSE;
     $parents = $form['#parents'];
 
     // Determine the number of widgets to display.
     $field_state = static::getWidgetState($parents, $field_name, $form_state);
-    $max = $field_state['items_count'];
-    switch ($cardinality) {
-      case FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED:
-        $field_state = static::getWidgetState($parents, $field_name, $form_state);
-        $max = $field_state['items_count'];
-        $is_unlimited_not_programmed = !$form_state->isProgrammed();
-        break;
-
-      default:
-        $max = min($max, $cardinality - 1);
-        break;
-    }
+    $max = $cardinality === FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED ? $field_state['items_count'] : min($field_state['items_count'], $cardinality - 1);
 
     $title = $this->fieldDefinition->getLabel();
     $description = $this->getFilteredDescription();
@@ -236,8 +224,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
           ];
 
           // Add 'remove' button, if not working with a programmed form.
-          $is_unlimited = $cardinality == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED;
-          if (($is_unlimited || $max < $cardinality - 1) && !$form_state->isProgrammed()) {
+          if (!$form_state->isProgrammed()) {
             $remove_button = [
               '#delta' => $delta,
               '#name' => str_replace('-', '_', $id_prefix) . "_{$delta}_remove_button",
@@ -277,7 +264,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
       ];
 
       // Add 'add more' button, if not working with a programmed form.
-      if ($is_unlimited_not_programmed) {
+      if ($is_multiple && !$form_state->isProgrammed()) {
         $elements['#prefix'] = '<div id="' . $wrapper_id . '">';
         $elements['#suffix'] = '</div>';
 
@@ -293,6 +280,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
             'wrapper' => $wrapper_id,
             'effect' => 'fade',
           ],
+          '#access' => $cardinality === FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED || $max < $cardinality - 1,
         ];
       }
     }
@@ -324,8 +312,6 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
     $button = $form_state->getTriggeringElement();
 
     // Go one level up in the form, to the widgets container.
-    $cardinality = $element['#cardinality'];
-    $delta = $element['#max_delta'];
     $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
     $field_name = $element['#field_name'];
     $parents = $element['#field_parents'];
@@ -351,11 +337,12 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
     $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
 
     // Ensure the widget allows adding additional items.
-    if ($cardinality != FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED && $delta > $cardinality - 1) {
+    if ($element['#cardinality'] != FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED && $element['#delta'] >= $element['#cardinality']) {
       return;
     }
 
     // Add a DIV around the delta receiving the Ajax effect.
+    $delta = $element['#max_delta'];
     // Construct an attribute to add to div for use as selector to set the focus on.
     $button_parent = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
     $focus_attribute = 'data-drupal-selector="field-' . $button_parent['#field_name'] . '-more-focus-target"';
