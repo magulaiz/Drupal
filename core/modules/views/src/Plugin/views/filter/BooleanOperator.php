@@ -148,9 +148,7 @@ class BooleanOperator extends FilterPluginBase implements FilterOperatorsInterfa
     }
 
     // Provide a fallback if the above didn't set anything.
-    if (!isset($this->valueOptions)) {
-      $this->valueOptions = [1 => $this->t('True'), 0 => $this->t('False')];
-    }
+    $this->valueOptions ??= [1 => $this->t('True'), 0 => $this->t('False')];
 
     return $this->valueOptions;
   }

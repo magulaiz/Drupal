@@ -232,13 +232,11 @@ class TypedDataManager extends DefaultPluginManager implements TypedDataManagerI
    * {@inheritdoc}
    */
   public function getValidator() {
-    if (!isset($this->validator)) {
-      $this->validator = new RecursiveValidator(
-        new ExecutionContextFactory(new DrupalTranslator()),
-        new ConstraintValidatorFactory($this->classResolver),
-        $this
-      );
-    }
+    $this->validator ??= new RecursiveValidator(
+      new ExecutionContextFactory(new DrupalTranslator()),
+      new ConstraintValidatorFactory($this->classResolver),
+      $this
+    );
     return $this->validator;
   }
 

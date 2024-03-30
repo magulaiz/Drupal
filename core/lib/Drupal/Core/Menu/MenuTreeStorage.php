@@ -352,9 +352,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     // If no corresponding parent link was found, move the link to the
     // top-level.
     foreach ($schema_defaults as $name => $default) {
-      if (!isset($link[$name])) {
-        $link[$name] = $default;
-      }
+      $link[$name] ??= $default;
     }
     $fields = array_intersect_key($link, $schema_fields);
     // Sort the route parameters so that the query string will be the same.

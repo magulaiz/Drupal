@@ -111,9 +111,7 @@ class MenuLinkManager implements MenuLinkManagerInterface {
    * @return \Drupal\Component\Plugin\Factory\FactoryInterface
    */
   protected function getFactory() {
-    if (!isset($this->factory)) {
-      $this->factory = new ContainerFactory($this);
-    }
+    $this->factory ??= new ContainerFactory($this);
     return $this->factory;
   }
 

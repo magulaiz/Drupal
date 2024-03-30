@@ -203,9 +203,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
    */
   protected function findByPrefix($prefix) {
     $cache_key = $this->getCacheKey($prefix);
-    if (!isset($this->findByPrefixCache[$cache_key])) {
-      $this->findByPrefixCache[$cache_key] = $this->storage->listAll($prefix);
-    }
+    $this->findByPrefixCache[$cache_key] ??= $this->storage->listAll($prefix);
     return $this->findByPrefixCache[$cache_key];
   }
 

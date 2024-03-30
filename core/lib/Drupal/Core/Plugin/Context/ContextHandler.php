@@ -25,10 +25,8 @@ class ContextHandler implements ContextHandlerInterface {
         // allow calling checkRequirements() once for all plugins that have the
         // same context definitions.
         $context_definitions_key = hash('sha256', serialize($context_definitions));
-        if (!isset($checked_requirements[$context_definitions_key])) {
-          // Check the set of contexts against the requirements.
-          $checked_requirements[$context_definitions_key] = $this->checkRequirements($contexts, $context_definitions);
-        }
+        // Check the set of contexts against the requirements.
+        $checked_requirements[$context_definitions_key] ??= $this->checkRequirements($contexts, $context_definitions);
         return $checked_requirements[$context_definitions_key];
       }
       // If this plugin doesn't need any context, it is available to use.

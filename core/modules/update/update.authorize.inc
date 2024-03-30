@@ -131,16 +131,10 @@ function update_authorize_run_install($filetransfer, $project, $updater_name, $l
 function update_authorize_batch_copy_project($project, $updater_name, $local_url, $filetransfer, &$context) {
 
   // Initialize some variables in the Batch API $context array.
-  if (!isset($context['results']['log'])) {
-    $context['results']['log'] = [];
-  }
-  if (!isset($context['results']['log'][$project])) {
-    $context['results']['log'][$project] = [];
-  }
+  $context['results']['log'] ??= [];
+  $context['results']['log'][$project] ??= [];
 
-  if (!isset($context['results']['tasks'])) {
-    $context['results']['tasks'] = [];
-  }
+  $context['results']['tasks'] ??= [];
 
   // The batch API uses a session, and since all the arguments are serialized
   // and unserialized between requests, although the FileTransfer object itself

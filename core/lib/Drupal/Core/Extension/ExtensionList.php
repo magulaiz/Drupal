@@ -562,9 +562,7 @@ abstract class ExtensionList {
     // Merge extension type-specific defaults, making sure to replace NULL
     // values.
     foreach ($this->defaults as $key => $default_value) {
-      if (!isset($info[$key])) {
-        $info[$key] = $default_value;
-      }
+      $info[$key] ??= $default_value;
     }
 
     return $info;

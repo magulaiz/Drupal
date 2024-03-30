@@ -82,9 +82,7 @@ class Time implements TimeInterface {
    *   A value returned by time().
    */
   protected function getProxyRequestTime(): int {
-    if (!isset($this->proxyRequestTime)) {
-      $this->proxyRequestTime = $this->getCurrentMicroTime();
-    }
+    $this->proxyRequestTime ??= $this->getCurrentMicroTime();
     return (int) $this->proxyRequestTime;
   }
 
@@ -95,9 +93,7 @@ class Time implements TimeInterface {
    *   A value returned by microtime().
    */
   protected function getProxyRequestMicroTime(): float {
-    if (!isset($this->proxyRequestTime)) {
-      $this->proxyRequestTime = $this->getCurrentMicroTime();
-    }
+    $this->proxyRequestTime ??= $this->getCurrentMicroTime();
     return $this->proxyRequestTime;
   }
 

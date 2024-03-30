@@ -70,9 +70,7 @@ class Dropbutton extends RenderElementBase {
       $element['#attributes']['class'][] = 'dropbutton--' . $element['#dropbutton_type'];
     }
 
-    if (!isset($element['#theme_wrappers'])) {
-      $element['#theme_wrappers'] = [];
-    }
+    $element['#theme_wrappers'] ??= [];
     array_unshift($element['#theme_wrappers'], 'dropbutton_wrapper');
 
     // Enable targeted theming of specific dropbuttons (e.g., 'operations' or

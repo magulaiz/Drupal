@@ -23,9 +23,7 @@ abstract class Random {
    *   The random generator.
    */
   public static function getGenerator(): RandomUtility {
-    if (!isset(static::$randomGenerator)) {
-      static::$randomGenerator = new RandomUtility();
-    }
+    static::$randomGenerator ??= new RandomUtility();
     return static::$randomGenerator;
   }
 

@@ -528,9 +528,7 @@ class AccessManagerTest extends UnitTestCase {
    * Add default expectations to the access arguments resolver factory.
    */
   protected function setupAccessArgumentsResolverFactory($constraint = NULL) {
-    if (!isset($constraint)) {
-      $constraint = $this->any();
-    }
+    $constraint ??= $this->any();
     return $this->argumentsResolverFactory->expects($constraint)
       ->method('getArgumentsResolver')
       ->willReturnCallback(function ($route_match, $account) {

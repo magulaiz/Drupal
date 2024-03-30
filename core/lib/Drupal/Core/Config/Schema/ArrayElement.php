@@ -81,9 +81,7 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Typed
    * {@inheritdoc}
    */
   public function getElements() {
-    if (!isset($this->elements)) {
-      $this->elements = $this->parse();
-    }
+    $this->elements ??= $this->parse();
     return $this->elements;
   }
 

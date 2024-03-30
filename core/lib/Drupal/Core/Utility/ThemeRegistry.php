@@ -120,9 +120,7 @@ class ThemeRegistry extends CacheCollector implements DestructableInterface {
    * {@inheritdoc}
    */
   public function resolveCacheMiss($key) {
-    if (!isset($this->completeRegistry)) {
-      $this->completeRegistry = \Drupal::service('theme.registry')->get();
-    }
+    $this->completeRegistry ??= \Drupal::service('theme.registry')->get();
     $this->storage[$key] = $this->completeRegistry[$key];
     if ($this->persistable) {
       $this->persist($key);

@@ -442,9 +442,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
    *   The configuration storage that provides the default configuration.
    */
   protected function getActiveStorages($collection = StorageInterface::DEFAULT_COLLECTION) {
-    if (!isset($this->activeStorages[$collection])) {
-      $this->activeStorages[$collection] = reset($this->activeStorages)->createCollection($collection);
-    }
+    $this->activeStorages[$collection] ??= reset($this->activeStorages)->createCollection($collection);
     return $this->activeStorages[$collection];
   }
 

@@ -139,9 +139,7 @@ class EntityFieldRenderer extends RendererBase {
     // The method is called for each field in each result row. In order to
     // leverage multiple-entity building of formatter output, we build the
     // render arrays for all fields in all rows on the first call.
-    if (!isset($this->build)) {
-      $this->build = $this->buildFields($this->view->result);
-    }
+    $this->build ??= $this->buildFields($this->view->result);
 
     if (isset($field)) {
       $field_id = $field->options['id'];

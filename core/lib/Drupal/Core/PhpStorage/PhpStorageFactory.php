@@ -39,15 +39,9 @@ class PhpStorageFactory {
     }
     // Make sure all the necessary configuration values are set.
     $class = $configuration['class'] ?? 'Drupal\Component\PhpStorage\MTimeProtectedFileStorage';
-    if (!isset($configuration['secret'])) {
-      $configuration['secret'] = Settings::getHashSalt();
-    }
-    if (!isset($configuration['bin'])) {
-      $configuration['bin'] = $name;
-    }
-    if (!isset($configuration['directory'])) {
-      $configuration['directory'] = PublicStream::basePath() . '/php';
-    }
+    $configuration['secret'] ??= Settings::getHashSalt();
+    $configuration['bin'] ??= $name;
+    $configuration['directory'] ??= PublicStream::basePath() . '/php';
     return new $class($configuration);
   }
 

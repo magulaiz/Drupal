@@ -50,12 +50,10 @@ function template_preprocess_update_report(&$variables) {
     ];
 
     // Build project rows.
-    if (!isset($rows[$project['project_type']])) {
-      $rows[$project['project_type']] = [
-        '#type' => 'table',
-        '#attributes' => ['class' => ['update']],
-      ];
-    }
+    $rows[$project['project_type']] ??= [
+      '#type' => 'table',
+      '#attributes' => ['class' => ['update']],
+    ];
     $row_key = !empty($project['title']) ? mb_strtolower($project['title']) : mb_strtolower($project['name']);
 
     // Add the project status row and details.

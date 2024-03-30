@@ -92,11 +92,9 @@ class Actions extends Container {
       if (isset($element[$key]['#dropbutton'])) {
         $dropbutton = $element[$key]['#dropbutton'];
         // If there is no dropbutton for this button group yet, create one.
-        if (!isset($dropbuttons[$dropbutton])) {
-          $dropbuttons[$dropbutton] = [
-            '#type' => 'dropbutton',
-          ];
-        }
+        $dropbuttons[$dropbutton] ??= [
+          '#type' => 'dropbutton',
+        ];
         // Add this button to the corresponding dropbutton.
         // @todo Change #type 'dropbutton' to be based on item-list.html.twig
         //   instead of links.html.twig to avoid this preemptive rendering.

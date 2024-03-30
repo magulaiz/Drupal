@@ -73,9 +73,7 @@ class Html {
    */
   public static function getClass($class) {
     $class = (string) $class;
-    if (!isset(static::$classes[$class])) {
-      static::$classes[$class] = static::cleanCssIdentifier(mb_strtolower($class));
-    }
+    static::$classes[$class] ??= static::cleanCssIdentifier(mb_strtolower($class));
     return static::$classes[$class];
   }
 
@@ -181,12 +179,8 @@ class Html {
 
     // @todo Remove all that code once we switch over to random IDs only,
     // see https://www.drupal.org/node/1090592.
-    if (!isset(static::$seenIdsInit)) {
-      static::$seenIdsInit = [];
-    }
-    if (!isset(static::$seenIds)) {
-      static::$seenIds = static::$seenIdsInit;
-    }
+    static::$seenIdsInit ??= [];
+    static::$seenIds ??= static::$seenIdsInit;
 
     $id = static::getId($id);
 

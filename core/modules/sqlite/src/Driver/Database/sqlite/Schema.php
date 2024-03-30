@@ -122,9 +122,7 @@ class Schema extends DatabaseSchema {
    *   A field description array, as specified in the schema documentation.
    */
   protected function processField($field) {
-    if (!isset($field['size'])) {
-      $field['size'] = 'normal';
-    }
+    $field['size'] ??= 'normal';
 
     // Set the correct database-engine specific datatype.
     // In case one is already provided, force it to uppercase.

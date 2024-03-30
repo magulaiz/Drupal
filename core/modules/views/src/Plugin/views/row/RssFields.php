@@ -124,9 +124,7 @@ class RssFields extends RowPluginBase {
 
   public function render($row) {
     static $row_index;
-    if (!isset($row_index)) {
-      $row_index = 0;
-    }
+    $row_index ??= 0;
 
     // Create the RSS item object.
     $item = new \stdClass();

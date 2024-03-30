@@ -70,9 +70,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    * {@inheritdoc}
    */
   protected function getDiscovery() {
-    if (!isset($this->discovery)) {
-      $this->discovery = new ConfigSchemaDiscovery($this->schemaStorage);
-    }
+    $this->discovery ??= new ConfigSchemaDiscovery($this->schemaStorage);
     return $this->discovery;
   }
 
@@ -121,9 +119,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
 
     // Pass remaining values from definition array to data definition.
     foreach ($definition as $key => $value) {
-      if (!isset($data_definition[$key])) {
-        $data_definition[$key] = $value;
-      }
+      $data_definition[$key] ??= $value;
     }
 
     // All values are optional by default (meaning they can be NULL), except for

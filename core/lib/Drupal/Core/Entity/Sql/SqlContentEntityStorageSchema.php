@@ -137,9 +137,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *   https://www.drupal.org/node/2332857.
    */
   protected function installedStorageSchema() {
-    if (!isset($this->installedStorageSchema)) {
-      $this->installedStorageSchema = \Drupal::keyValue('entity.storage_schema.sql');
-    }
+    $this->installedStorageSchema ??= \Drupal::keyValue('entity.storage_schema.sql');
     return $this->installedStorageSchema;
   }
 
@@ -154,9 +152,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *   https://www.drupal.org/node/2332857.
    */
   protected function deletedFieldsRepository() {
-    if (!isset($this->deletedFieldsRepository)) {
-      $this->deletedFieldsRepository = \Drupal::service('entity_field.deleted_fields_repository');
-    }
+    $this->deletedFieldsRepository ??= \Drupal::service('entity_field.deleted_fields_repository');
     return $this->deletedFieldsRepository;
   }
 
@@ -171,9 +167,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *   @see https://www.drupal.org/node/2332857
    */
   protected function updateBackupRepository() {
-    if (!isset($this->updateBackupRepository)) {
-      $this->updateBackupRepository = \Drupal::keyValue('entity.update_backup');
-    }
+    $this->updateBackupRepository ??= \Drupal::keyValue('entity.update_backup');
     return $this->updateBackupRepository;
   }
 
@@ -963,9 +957,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       // We need to act only on shared entity schema tables.
       $table_names = array_diff($table_mapping->getTableNames(), $table_mapping->getDedicatedTableNames());
       foreach ($table_names as $table_name) {
-        if (!isset($schema[$table_name])) {
-          $schema[$table_name] = [];
-        }
+        $schema[$table_name] ??= [];
         foreach ($table_mapping->getFieldNames($table_name) as $field_name) {
           if (!isset($this->fieldStorageDefinitions[$field_name])) {
             throw new FieldException("Field storage definition for '$field_name' could not be found.");

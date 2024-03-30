@@ -150,9 +150,7 @@ class PoDatabaseReader implements PoReaderInterface {
    * Get the database result resource for the given language and options.
    */
   private function readString() {
-    if (!isset($this->result)) {
-      $this->result = $this->loadStrings();
-    }
+    $this->result ??= $this->loadStrings();
     return array_shift($this->result);
   }
 

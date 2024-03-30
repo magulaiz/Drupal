@@ -1470,9 +1470,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     }
 
     if ($status !== FALSE) {
-      if (!isset($views_session[$this->view->storage->id()][$display_id])) {
-        $views_session[$this->view->storage->id()][$display_id] = [];
-      }
+      $views_session[$this->view->storage->id()][$display_id] ??= [];
       $views_session[$this->view->storage->id()][$display_id][$this->options['group_info']['identifier']] = $input[$this->options['group_info']['identifier']];
     }
     if (!empty($views_session)) {
@@ -1583,9 +1581,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     }
 
     if ($status) {
-      if (!isset($views_session[$this->view->storage->id()][$display_id])) {
-        $views_session[$this->view->storage->id()][$display_id] = [];
-      }
+      $views_session[$this->view->storage->id()][$display_id] ??= [];
 
       $session_ref = &$views_session[$this->view->storage->id()][$display_id];
 

@@ -251,9 +251,7 @@ class NegotiationConfigureForm extends ConfigFormBase {
 
     // Add missing data to the methods lists.
     foreach ($negotiation_info as $method_id => $method) {
-      if (!isset($methods_weight[$method_id])) {
-        $methods_weight[$method_id] = $method['weight'] ?? 0;
-      }
+      $methods_weight[$method_id] ??= $method['weight'] ?? 0;
     }
 
     // Order methods list by weight.

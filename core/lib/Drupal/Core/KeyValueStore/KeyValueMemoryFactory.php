@@ -18,9 +18,7 @@ class KeyValueMemoryFactory implements KeyValueFactoryInterface {
    * {@inheritdoc}
    */
   public function get($collection) {
-    if (!isset($this->collections[$collection])) {
-      $this->collections[$collection] = new MemoryStorage($collection);
-    }
+    $this->collections[$collection] ??= new MemoryStorage($collection);
     return $this->collections[$collection];
   }
 

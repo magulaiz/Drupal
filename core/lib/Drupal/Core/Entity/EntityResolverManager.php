@@ -197,9 +197,7 @@ class EntityResolverManager {
         }
       }
 
-      if (!isset($parameter_definitions[$entity_type])) {
-        $parameter_definitions[$entity_type] = [];
-      }
+      $parameter_definitions[$entity_type] ??= [];
       $parameter_definitions[$entity_type] += [
         'type' => 'entity:' . $entity_type,
       ];
@@ -233,9 +231,7 @@ class EntityResolverManager {
    * @return \Drupal\Core\Entity\EntityTypeInterface[]
    */
   protected function getEntityTypes() {
-    if (!isset($this->entityTypes)) {
-      $this->entityTypes = $this->entityTypeManager->getDefinitions();
-    }
+    $this->entityTypes ??= $this->entityTypeManager->getDefinitions();
     return $this->entityTypes;
   }
 

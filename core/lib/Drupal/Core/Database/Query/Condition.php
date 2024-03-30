@@ -270,9 +270,7 @@ class Condition implements ConditionInterface, \Countable {
           // associated data structure by first doing a database specific
           // lookup, followed by a specification according to the SQL standard.
           $operator = $connection->mapConditionOperator($condition['operator']);
-          if (!isset($operator)) {
-            $operator = $this->mapConditionOperator($condition['operator']);
-          }
+          $operator ??= $this->mapConditionOperator($condition['operator']);
           $operator += ['operator' => $condition['operator']];
         }
         // Add defaults.

@@ -44,12 +44,10 @@ class TranslationString extends StringBase {
    */
   public function __construct($values = []) {
     parent::__construct($values);
-    if (!isset($this->isNew)) {
-      // We mark the string as not new if it is a complete translation.
-      // This will work when loading from database, otherwise the storage
-      // controller that creates the string object must handle it.
-      $this->isNew = !$this->isTranslation();
-    }
+    // We mark the string as not new if it is a complete translation.
+    // This will work when loading from database, otherwise the storage
+    // controller that creates the string object must handle it.
+    $this->isNew ??= !$this->isTranslation();
   }
 
   /**

@@ -134,9 +134,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
 
     if (isset($options['field'])) {
       $this->field = $options['field'];
-      if (!isset($this->realField)) {
-        $this->realField = $options['field'];
-      }
+      $this->realField ??= $options['field'];
     }
 
     $this->query = &$view->query;
@@ -547,9 +545,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    * {@inheritdoc}
    */
   public function ensureMyTable() {
-    if (!isset($this->tableAlias)) {
-      $this->tableAlias = $this->query->ensureTable($this->table, $this->relationship);
-    }
+    $this->tableAlias ??= $this->query->ensureTable($this->table, $this->relationship);
     return $this->tableAlias;
   }
 

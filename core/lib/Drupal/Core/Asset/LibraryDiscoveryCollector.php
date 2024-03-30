@@ -52,9 +52,7 @@ class LibraryDiscoveryCollector extends CacheCollector {
    * {@inheritdoc}
    */
   protected function getCid() {
-    if (!isset($this->cid)) {
-      $this->cid = 'library_info:' . $this->themeManager->getActiveTheme()->getName();
-    }
+    $this->cid ??= 'library_info:' . $this->themeManager->getActiveTheme()->getName();
 
     return $this->cid;
   }

@@ -125,9 +125,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
    *   The source.
    */
   protected function getSource() {
-    if (!isset($this->source)) {
-      $this->source = $this->migration->getSourcePlugin();
-    }
+    $this->source ??= $this->migration->getSourcePlugin();
     return $this->source;
   }
 

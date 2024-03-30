@@ -236,14 +236,12 @@ class EntityFieldManager implements EntityFieldManagerInterface {
         $base_field_definitions[$keys['langcode']]->setTranslatable(TRUE);
       }
       // A default_langcode field should always be defined.
-      if (!isset($base_field_definitions[$keys['default_langcode']])) {
-        $base_field_definitions[$keys['default_langcode']] = BaseFieldDefinition::create('boolean')
-          ->setLabel($this->t('Default translation'))
-          ->setDescription($this->t('A flag indicating whether this is the default translation.'))
-          ->setTranslatable(TRUE)
-          ->setRevisionable(TRUE)
-          ->setDefaultValue(TRUE);
-      }
+      $base_field_definitions[$keys['default_langcode']] ??= BaseFieldDefinition::create('boolean')
+        ->setLabel($this->t('Default translation'))
+        ->setDescription($this->t('A flag indicating whether this is the default translation.'))
+        ->setTranslatable(TRUE)
+        ->setRevisionable(TRUE)
+        ->setDefaultValue(TRUE);
     }
 
     // Make sure that revisionable entity types are correctly defined.
@@ -484,9 +482,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
    * @internal
    */
   public function getActiveFieldStorageDefinitions($entity_type_id) {
-    if (!isset($this->activeFieldStorageDefinitions[$entity_type_id])) {
-      $this->activeFieldStorageDefinitions[$entity_type_id] = $this->entityLastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions($entity_type_id);
-    }
+    $this->activeFieldStorageDefinitions[$entity_type_id] ??= $this->entityLastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions($entity_type_id);
     return $this->activeFieldStorageDefinitions[$entity_type_id] ?: $this->getFieldStorageDefinitions($entity_type_id);
   }
 

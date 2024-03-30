@@ -164,9 +164,7 @@ class CommentViewBuilder extends EntityViewBuilder {
         ];
       }
 
-      if (!isset($build[$id]['#attached'])) {
-        $build[$id]['#attached'] = [];
-      }
+      $build[$id]['#attached'] ??= [];
       $build[$id]['#attached']['library'][] = 'comment/drupal.comment-by-viewer';
       if ($attach_history && $is_node) {
         $build[$id]['#attached']['library'][] = 'comment/drupal.comment-new-indicator';

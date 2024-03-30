@@ -18,13 +18,11 @@ class NodeComment extends InOperator {
    * {@inheritdoc}
    */
   public function getValueOptions() {
-    if (!isset($this->valueOptions)) {
-      $this->valueOptions = [
-        CommentItemInterface::HIDDEN => $this->t('Hidden'),
-        CommentItemInterface::CLOSED => $this->t('Closed'),
-        CommentItemInterface::OPEN => $this->t('Open'),
-      ];
-    }
+    $this->valueOptions ??= [
+      CommentItemInterface::HIDDEN => $this->t('Hidden'),
+      CommentItemInterface::CLOSED => $this->t('Closed'),
+      CommentItemInterface::OPEN => $this->t('Open'),
+    ];
     return $this->valueOptions;
   }
 

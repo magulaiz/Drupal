@@ -119,9 +119,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
    */
   public function getExecutable() {
     // Ensure that an executable View is available.
-    if (!isset($this->executable)) {
-      $this->executable = Views::executableFactory()->get($this);
-    }
+    $this->executable ??= Views::executableFactory()->get($this);
 
     return $this->executable;
   }

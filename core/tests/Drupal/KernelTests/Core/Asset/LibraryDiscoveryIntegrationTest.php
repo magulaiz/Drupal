@@ -305,9 +305,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
    * @internal
    */
   protected function assertAssetInLibrary(string $asset, string $extension, string $library_name, string $sub_key, string $message = NULL): void {
-    if (!isset($message)) {
-      $message = sprintf('Asset %s found in library "%s/%s"', $asset, $extension, $library_name);
-    }
+    $message ??= sprintf('Asset %s found in library "%s/%s"', $asset, $extension, $library_name);
     $library = $this->libraryDiscovery->getLibraryByName($extension, $library_name);
     foreach ($library[$sub_key] as $definition) {
       if ($asset == $definition['data']) {
@@ -334,9 +332,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
    * @internal
    */
   protected function assertNoAssetInLibrary(string $asset, string $extension, string $library_name, string $sub_key, string $message = NULL): void {
-    if (!isset($message)) {
-      $message = sprintf('Asset %s not found in library "%s/%s"', $asset, $extension, $library_name);
-    }
+    $message ??= sprintf('Asset %s not found in library "%s/%s"', $asset, $extension, $library_name);
     $library = $this->libraryDiscovery->getLibraryByName($extension, $library_name);
     foreach ($library[$sub_key] as $definition) {
       if ($asset == $definition['data']) {

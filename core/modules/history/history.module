@@ -105,9 +105,7 @@ function history_read_multiple($nids) {
  */
 function history_write($nid, $account = NULL) {
 
-  if (!isset($account)) {
-    $account = \Drupal::currentUser();
-  }
+  $account ??= \Drupal::currentUser();
 
   if ($account->isAuthenticated()) {
     $request_time = \Drupal::time()->getRequestTime();

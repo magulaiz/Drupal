@@ -151,14 +151,12 @@ class CommentManager implements CommentManagerInterface {
    * {@inheritdoc}
    */
   public function forbiddenMessage(EntityInterface $entity, $field_name) {
-    if (!isset($this->authenticatedCanPostComments)) {
-      // We only output a link if we are certain that users will get the
-      // permission to post comments by logging in.
-      $this->authenticatedCanPostComments = $this->entityTypeManager
-        ->getStorage('user_role')
-        ->load(RoleInterface::AUTHENTICATED_ID)
-        ->hasPermission('post comments');
-    }
+    // We only output a link if we are certain that users will get the
+    // permission to post comments by logging in.
+    $this->authenticatedCanPostComments ??= $this->entityTypeManager
+      ->getStorage('user_role')
+      ->load(RoleInterface::AUTHENTICATED_ID)
+      ->hasPermission('post comments');
 
     if ($this->authenticatedCanPostComments) {
       // We cannot use the redirect.destination service here because these links

@@ -171,9 +171,7 @@ class ConfigController implements ContainerInjectionInterface {
    *   Table showing a two-way diff between the active and staged configuration.
    */
   public function diff($source_name, $target_name = NULL, $collection = NULL) {
-    if (!isset($collection)) {
-      $collection = StorageInterface::DEFAULT_COLLECTION;
-    }
+    $collection ??= StorageInterface::DEFAULT_COLLECTION;
     $syncStorage = $this->importTransformer->transform($this->syncStorage);
     $diff = $this->configManager->diff($this->targetStorage, $syncStorage, $source_name, $target_name, $collection);
     $this->diffFormatter->show_header = FALSE;

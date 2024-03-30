@@ -131,9 +131,7 @@ function shortcut_set_switch_access($account = NULL) {
 function shortcut_current_displayed_set($account = NULL) {
   $shortcut_sets = &drupal_static(__FUNCTION__, []);
   $user = \Drupal::currentUser();
-  if (!isset($account)) {
-    $account = $user;
-  }
+  $account ??= $user;
   // Try to return a shortcut set from the static cache.
   if (isset($shortcut_sets[$account->id()])) {
     return $shortcut_sets[$account->id()];
@@ -168,9 +166,7 @@ function shortcut_current_displayed_set($account = NULL) {
  */
 function shortcut_default_set($account = NULL) {
   $user = \Drupal::currentUser();
-  if (!isset($account)) {
-    $account = $user;
-  }
+  $account ??= $user;
 
   // Allow modules to return a default shortcut set name. Since we can only
   // have one, we allow the last module which returns a valid result to take
@@ -200,9 +196,7 @@ function shortcut_default_set($account = NULL) {
 function shortcut_renderable_links($shortcut_set = NULL) {
   $shortcut_links = [];
 
-  if (!isset($shortcut_set)) {
-    $shortcut_set = shortcut_current_displayed_set();
-  }
+  $shortcut_set ??= shortcut_current_displayed_set();
 
   $cache_tags = [];
   foreach ($shortcut_set->getShortcuts() as $shortcut) {

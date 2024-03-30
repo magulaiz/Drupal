@@ -25,9 +25,7 @@ class Condition extends ConditionBase {
         $condition_groups[] = $condition;
       }
       else {
-        if (!isset($condition['operator'])) {
-          $condition['operator'] = is_array($condition['value']) ? 'IN' : '=';
-        }
+        $condition['operator'] ??= is_array($condition['value']) ? 'IN' : '=';
 
         // Process the value for operator that use it.
         if (!in_array($condition['operator'], ['IS NULL', 'IS NOT NULL'], TRUE)) {
@@ -119,9 +117,7 @@ class Condition extends ConditionBase {
     }
     else {
       // Avoid a notice when calling match() later.
-      if (!isset($data[$parent])) {
-        $data[$parent] = NULL;
-      }
+      $data[$parent] ??= NULL;
       $candidates = [$parent];
     }
     foreach ($candidates as $key) {

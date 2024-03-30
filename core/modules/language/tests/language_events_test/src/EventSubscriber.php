@@ -37,9 +37,7 @@ class EventSubscriber implements EventSubscriberInterface {
     // Record all events that occur.
     $all_events = $this->state->get('language_events_test.all_events', []);
     $override_name = $override->getName();
-    if (!isset($all_events[$event_name][$override_name])) {
-      $all_events[$event_name][$override_name] = [];
-    }
+    $all_events[$event_name][$override_name] ??= [];
     $all_events[$event_name][$override_name][] = $event_info;
     $this->state->set('language_events_test.all_events', $all_events);
   }

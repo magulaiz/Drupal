@@ -49,12 +49,8 @@ class CurrentPathStack {
    *   Returns the path, without leading slashes.
    */
   public function getPath(Request $request = NULL) {
-    if (!isset($request)) {
-      $request = $this->requestStack->getCurrentRequest();
-    }
-    if (!isset($this->paths[$request])) {
-      $this->paths[$request] = $request->getPathInfo();
-    }
+    $request ??= $this->requestStack->getCurrentRequest();
+    $this->paths[$request] ??= $request->getPathInfo();
 
     return $this->paths[$request];
   }
@@ -70,9 +66,7 @@ class CurrentPathStack {
    * @return $this
    */
   public function setPath($path, Request $request = NULL) {
-    if (!isset($request)) {
-      $request = $this->requestStack->getCurrentRequest();
-    }
+    $request ??= $this->requestStack->getCurrentRequest();
     $this->paths[$request] = $path;
 
     return $this;

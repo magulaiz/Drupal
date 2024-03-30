@@ -15,12 +15,10 @@ use Drupal\views\Plugin\views\filter\InOperator;
 class Status extends InOperator {
 
   public function getValueOptions() {
-    if (!isset($this->valueOptions)) {
-      $this->valueOptions = [
-        0 => $this->t('Temporary'),
-        FileInterface::STATUS_PERMANENT => $this->t('Permanent'),
-      ];
-    }
+    $this->valueOptions ??= [
+      0 => $this->t('Temporary'),
+      FileInterface::STATUS_PERMANENT => $this->t('Permanent'),
+    ];
     return $this->valueOptions;
   }
 

@@ -130,9 +130,7 @@ class ExtensionInstallStorage extends InstallStorage {
         // this by replacing the config file path from the module/theme with the
         // install profile version if there are any duplicates.
         if ($this->installProfile) {
-          if (!isset($profile_list)) {
-            $profile_list = $listing->scan('profile');
-          }
+          $profile_list ??= $listing->scan('profile');
           if (isset($profile_list[$this->installProfile])) {
             $profile_folders = $this->getComponentNames([$profile_list[$this->installProfile]]);
             $this->folders = $profile_folders + $this->folders;

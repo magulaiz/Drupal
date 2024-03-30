@@ -72,9 +72,7 @@ trait FieldAPIHandlerTrait {
    *   The entity field manager.
    */
   protected function getEntityFieldManager() {
-    if (!isset($this->entityFieldManager)) {
-      $this->entityFieldManager = \Drupal::service('entity_field.manager');
-    }
+    $this->entityFieldManager ??= \Drupal::service('entity_field.manager');
     return $this->entityFieldManager;
   }
 

@@ -84,9 +84,7 @@ class DrupalDateTime extends DateTimePlus {
    *     date object for debugging purposes. Defaults to FALSE.
    */
   public function __construct($time = 'now', $timezone = NULL, $settings = []) {
-    if (!isset($settings['langcode'])) {
-      $settings['langcode'] = \Drupal::languageManager()->getCurrentLanguage()->getId();
-    }
+    $settings['langcode'] ??= \Drupal::languageManager()->getCurrentLanguage()->getId();
 
     // Instantiate the parent class.
     parent::__construct($time, $timezone, $settings);

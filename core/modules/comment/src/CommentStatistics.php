@@ -141,11 +141,9 @@ class CommentStatistics implements CommentStatisticsInterface {
       if ($entity instanceof EntityOwnerInterface) {
         $last_comment_uid = $entity->getOwnerId();
       }
-      if (!isset($last_comment_uid)) {
-        // Default to current user when entity does not implement
-        // EntityOwnerInterface or author is not set.
-        $last_comment_uid = $this->currentUser->id();
-      }
+      // Default to current user when entity does not implement
+      // EntityOwnerInterface or author is not set.
+      $last_comment_uid ??= $this->currentUser->id();
       // Default to request time when entity does not have a changed property.
       $last_comment_timestamp = $this->time->getRequestTime();
       // @todo Make comment statistics language aware and add some tests. See
@@ -258,11 +256,9 @@ class CommentStatistics implements CommentStatisticsInterface {
       if ($entity instanceof EntityOwnerInterface) {
         $last_comment_uid = $entity->getOwnerId();
       }
-      if (!isset($last_comment_uid)) {
-        // Default to current user when entity does not implement
-        // EntityOwnerInterface or author is not set.
-        $last_comment_uid = $this->currentUser->id();
-      }
+      // Default to current user when entity does not implement
+      // EntityOwnerInterface or author is not set.
+      $last_comment_uid ??= $this->currentUser->id();
       $this->database->update('comment_entity_statistics')
         ->fields([
           'cid' => 0,

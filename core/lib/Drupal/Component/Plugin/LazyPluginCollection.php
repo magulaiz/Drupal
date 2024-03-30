@@ -116,9 +116,7 @@ abstract class LazyPluginCollection implements \IteratorAggregate, \Countable {
    *   (optional) The configuration used by this instance. Defaults to NULL.
    */
   public function addInstanceId($id, $configuration = NULL) {
-    if (!isset($this->instanceIds[$id])) {
-      $this->instanceIds[$id] = $id;
-    }
+    $this->instanceIds[$id] ??= $id;
   }
 
   /**

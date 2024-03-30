@@ -239,9 +239,7 @@ class DateTimePlus {
    *   If the created date does not match the input value.
    */
   public static function createFromFormat($format, $time, $timezone = NULL, $settings = []) {
-    if (!isset($settings['validate_format'])) {
-      $settings['validate_format'] = TRUE;
-    }
+    $settings['validate_format'] ??= TRUE;
 
     // Tries to create a date from the format and use it if possible.
     // A regular try/catch won't work right here, if the value is

@@ -138,9 +138,7 @@ class EntityOperations extends FieldPluginBase {
     $operations = $this->entityTypeManager->getListBuilder($entity->getEntityTypeId())->getOperations($entity);
     if ($this->options['destination']) {
       foreach ($operations as &$operation) {
-        if (!isset($operation['query'])) {
-          $operation['query'] = [];
-        }
+        $operation['query'] ??= [];
         $operation['query'] += $this->getDestinationArray();
       }
     }

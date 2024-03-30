@@ -2061,9 +2061,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       return;
     }
 
-    if (!isset($new_state)) {
-      $new_state = empty($this->options['defaults'][$section]);
-    }
+    $new_state ??= empty($this->options['defaults'][$section]);
 
     // For each option that is part of this group, fix our settings.
     foreach ($options as $option) {
@@ -2299,9 +2297,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
    * {@inheritdoc}
    */
   public function access(AccountInterface $account = NULL) {
-    if (!isset($account)) {
-      $account = \Drupal::currentUser();
-    }
+    $account ??= \Drupal::currentUser();
 
     $plugin = $this->getPlugin('access');
     /** @var \Drupal\views\Plugin\views\access\AccessPluginBase $plugin */

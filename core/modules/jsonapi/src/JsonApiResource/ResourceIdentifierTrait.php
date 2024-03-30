@@ -47,9 +47,7 @@ trait ResourceIdentifierTrait {
    * {@inheritdoc}
    */
   public function getResourceType() {
-    if (!isset($this->resourceType)) {
-      $this->resourceType = $this->resourceIdentifier->getResourceType();
-    }
+    $this->resourceType ??= $this->resourceIdentifier->getResourceType();
     return $this->resourceType;
   }
 

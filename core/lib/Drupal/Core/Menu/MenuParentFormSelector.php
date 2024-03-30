@@ -50,9 +50,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
    * {@inheritdoc}
    */
   public function getParentSelectOptions($id = '', array $menus = NULL, CacheableMetadata &$cacheability = NULL) {
-    if (!isset($menus)) {
-      $menus = $this->getMenuOptions();
-    }
+    $menus ??= $this->getMenuOptions();
 
     $options = [];
     $depth_limit = $this->getParentDepthLimit($id);

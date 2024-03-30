@@ -31,9 +31,7 @@ trait MessengerTrait {
    *   The messenger.
    */
   public function messenger() {
-    if (!isset($this->messenger)) {
-      $this->messenger = \Drupal::messenger();
-    }
+    $this->messenger ??= \Drupal::messenger();
     return $this->messenger;
   }
 

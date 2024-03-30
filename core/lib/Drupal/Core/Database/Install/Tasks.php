@@ -149,9 +149,7 @@ abstract class Tasks {
     // We need to establish a connection before we can run tests.
     if ($this->connect()) {
       foreach ($this->tasks as $task) {
-        if (!isset($task['function'])) {
-          $task['function'] = 'runTestQuery';
-        }
+        $task['function'] ??= 'runTestQuery';
         if (method_exists($this, $task['function'])) {
           // Returning false is fatal. No other tasks can run.
           if (FALSE === call_user_func_array([$this, $task['function']], $task['arguments'])) {

@@ -137,9 +137,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   }
 
   public function isException($arg = NULL) {
-    if (!isset($arg)) {
-      $arg = $this->argument ?? NULL;
-    }
+    $arg ??= $this->argument ?? NULL;
     return !empty($this->options['exception']['value']) && $this->options['exception']['value'] === $arg;
   }
 
@@ -751,9 +749,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
    *   building the view will be aborted here.
    */
   public function defaultAction($info = NULL) {
-    if (!isset($info)) {
-      $info = $this->defaultActions($this->options['default_action']);
-    }
+    $info ??= $this->defaultActions($this->options['default_action']);
 
     if (!$info) {
       return FALSE;

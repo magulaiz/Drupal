@@ -101,14 +101,10 @@ class DateFormatter implements DateFormatterInterface {
    * {@inheritdoc}
    */
   public function format($timestamp, $type = 'medium', $format = '', $timezone = NULL, $langcode = NULL) {
-    if (!isset($timezone)) {
-      $timezone = date_default_timezone_get();
-    }
+    $timezone ??= date_default_timezone_get();
     // Store DateTimeZone objects in an array rather than repeatedly
     // constructing identical objects over the life of a request.
-    if (!isset($this->timezones[$timezone])) {
-      $this->timezones[$timezone] = timezone_open($timezone);
-    }
+    $this->timezones[$timezone] ??= timezone_open($timezone);
 
     if (empty($langcode)) {
       $langcode = $this->languageManager->getCurrentLanguage()->getId();

@@ -200,9 +200,7 @@ class TwigEnvironment extends Environment {
     // rendering 50 nodes without any node template overrides will use the same
     // node.html.twig for the output of each node and the same compiled class.
     $cache_index = $name . (NULL === $index ? '' : '_' . $index);
-    if (!isset($this->templateClasses[$cache_index])) {
-      $this->templateClasses[$cache_index] = parent::getTemplateClass($name, $index);
-    }
+    $this->templateClasses[$cache_index] ??= parent::getTemplateClass($name, $index);
     return $this->templateClasses[$cache_index];
   }
 

@@ -178,9 +178,7 @@ function search_excerpt($keys, $text, $langcode = NULL) {
 
       // Remember where we last found $key, in case we are coming through a
       // second time.
-      if (!isset($look_start[$key])) {
-        $look_start[$key] = 0;
-      }
+      $look_start[$key] ??= 0;
 
       // See if we can find $key after where we found it the last time. Since
       // we are requiring a match on a word boundary, make sure $text starts

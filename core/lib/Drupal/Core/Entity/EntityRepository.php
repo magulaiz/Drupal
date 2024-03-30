@@ -136,9 +136,7 @@ class EntityRepository implements EntityRepositoryInterface {
   public function getActiveMultiple($entity_type_id, array $entity_ids, array $contexts = NULL) {
     $active = [];
 
-    if (!isset($contexts)) {
-      $contexts = $this->contextRepository->getAvailableContexts();
-    }
+    $contexts ??= $this->contextRepository->getAvailableContexts();
 
     // @todo Consider implementing a more performant version of this logic fully
     //   supporting multiple entities in https://www.drupal.org/node/3031082.
@@ -185,9 +183,7 @@ class EntityRepository implements EntityRepositoryInterface {
       return $entities;
     }
 
-    if (!isset($contexts)) {
-      $contexts = $this->contextRepository->getAvailableContexts();
-    }
+    $contexts ??= $this->contextRepository->getAvailableContexts();
 
     // @todo Consider deprecating the legacy context operation altogether in
     //   https://www.drupal.org/node/3031124.

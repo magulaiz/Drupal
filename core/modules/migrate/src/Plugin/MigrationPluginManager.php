@@ -227,9 +227,7 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
    */
   protected function addDependency(array &$graph, $id, $dependency, $dynamic_ids) {
     $dependencies = $dynamic_ids[$dependency] ?? [$dependency];
-    if (!isset($graph[$id]['edges'])) {
-      $graph[$id]['edges'] = [];
-    }
+    $graph[$id]['edges'] ??= [];
     $graph[$id]['edges'] += array_combine($dependencies, $dependencies);
   }
 

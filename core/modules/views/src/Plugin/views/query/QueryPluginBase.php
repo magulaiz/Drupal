@@ -177,9 +177,7 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
     // Set an alias.
     $groups = &$this->$where;
 
-    if (!isset($group)) {
-      $group = empty($groups) ? 1 : max(array_keys($groups)) + 1;
-    }
+    $group ??= empty($groups) ? 1 : max(array_keys($groups)) + 1;
 
     // Create an empty group
     if (empty($groups[$group])) {

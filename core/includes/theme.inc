@@ -211,9 +211,7 @@ function theme_get_setting($setting_name, $theme = NULL) {
   $cache = &drupal_static(__FUNCTION__, []);
 
   // If no key is given, use the current theme if we can determine it.
-  if (!isset($theme)) {
-    $theme = \Drupal::theme()->getActiveTheme()->getName();
-  }
+  $theme ??= \Drupal::theme()->getActiveTheme()->getName();
 
   if (empty($cache[$theme])) {
     // Create a theme settings object.
@@ -1026,9 +1024,7 @@ function template_preprocess_container(&$variables) {
   // Special handling for form elements.
   if (isset($element['#array_parents'])) {
     // Assign an html ID.
-    if (!isset($element['#attributes']['id'])) {
-      $element['#attributes']['id'] = $element['#id'];
-    }
+    $element['#attributes']['id'] ??= $element['#id'];
     $variables['has_parent'] = TRUE;
   }
 
@@ -1089,9 +1085,7 @@ function template_preprocess(&$variables, $hook, $info) {
     $drupal_static_fast['default_variables'] = &drupal_static(__FUNCTION__);
   }
   $default_variables = &$drupal_static_fast['default_variables'];
-  if (!isset($default_variables)) {
-    $default_variables = _template_preprocess_default_variables();
-  }
+  $default_variables ??= _template_preprocess_default_variables();
   $variables += $default_variables;
 
   // When theming a render element, merge its #attributes into
@@ -1232,9 +1226,7 @@ function template_preprocess_page(&$variables) {
   $language_interface = \Drupal::languageManager()->getCurrentLanguage();
 
   foreach (\Drupal::theme()->getActiveTheme()->getRegions() as $region) {
-    if (!isset($variables['page'][$region])) {
-      $variables['page'][$region] = [];
-    }
+    $variables['page'][$region] ??= [];
   }
 
   $variables['base_path'] = base_path();
@@ -1431,9 +1423,7 @@ function template_preprocess_field(&$variables, $hook) {
   $variables['multiple'] = $element['#is_multiple'];
 
   static $default_attributes;
-  if (!isset($default_attributes)) {
-    $default_attributes = new Attribute();
-  }
+  $default_attributes ??= new Attribute();
 
   // Merge attributes when a single-value field has a hidden label.
   if ($element['#label_display'] == 'hidden' && !$variables['multiple'] && !empty($element['#items'][0]->_attributes)) {

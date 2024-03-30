@@ -203,9 +203,7 @@ class BigPipeTestController implements TrustedCallbackInterface {
     // once with the same parameters.
     static $count;
 
-    if (!isset($count)) {
-      $count = 0;
-    }
+    $count ??= 0;
 
     $count++;
 

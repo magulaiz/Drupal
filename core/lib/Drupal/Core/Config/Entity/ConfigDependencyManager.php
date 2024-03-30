@@ -256,12 +256,10 @@ class ConfigDependencyManager {
       $graph = [];
       foreach ($this->data as $entity) {
         $graph_key = $entity->getConfigDependencyName();
-        if (!isset($graph[$graph_key])) {
-          $graph[$graph_key] = [
-            'edges' => [],
-            'name' => $graph_key,
-          ];
-        }
+        $graph[$graph_key] ??= [
+          'edges' => [],
+          'name' => $graph_key,
+        ];
         // Include all dependencies in the graph so that topographical sorting
         // works.
         foreach (array_merge($entity->getDependencies('config'), $entity->getDependencies('module'), $entity->getDependencies('theme')) as $dependency) {

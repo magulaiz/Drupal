@@ -59,9 +59,7 @@ class KeyValueDatabaseExpirableFactory implements KeyValueExpirableFactoryInterf
    * {@inheritdoc}
    */
   public function get($collection) {
-    if (!isset($this->storages[$collection])) {
-      $this->storages[$collection] = new DatabaseStorageExpirable($collection, $this->serializer, $this->connection, $this->time);
-    }
+    $this->storages[$collection] ??= new DatabaseStorageExpirable($collection, $this->serializer, $this->connection, $this->time);
     return $this->storages[$collection];
   }
 

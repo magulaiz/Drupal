@@ -260,9 +260,7 @@ class PhpBackend implements CacheBackendInterface {
    * @return \Drupal\Component\PhpStorage\PhpStorageInterface
    */
   protected function storage() {
-    if (!isset($this->storage)) {
-      $this->storage = PhpStorageFactory::get($this->bin);
-    }
+    $this->storage ??= PhpStorageFactory::get($this->bin);
     return $this->storage;
   }
 

@@ -176,9 +176,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
     $this->eventDispatcher = $event_dispatcher;
     $this->message = new MigrateMessage();
 
-    if (!isset($this->database)) {
-      $this->database = \Drupal::database();
-    }
+    $this->database ??= \Drupal::database();
 
     // Default generated table names, limited to 63 characters.
     $machine_name = str_replace(':', '__', $this->migration->id());

@@ -101,10 +101,8 @@ class WorkspaceInformation implements WorkspaceInformationInterface {
    * {@inheritdoc}
    */
   public function isEntityTypeIgnored(EntityTypeInterface $entity_type): bool {
-    if (!isset($this->ignored[$entity_type->id()])) {
-      $this->ignored[$entity_type->id()] = $entity_type->hasHandlerClass('workspace')
-        && is_a($entity_type->getHandlerClass('workspace'), IgnoredWorkspaceHandler::class, TRUE);
-    }
+    $this->ignored[$entity_type->id()] ??= $entity_type->hasHandlerClass('workspace')
+      && is_a($entity_type->getHandlerClass('workspace'), IgnoredWorkspaceHandler::class, TRUE);
 
     return $this->ignored[$entity_type->id()];
   }

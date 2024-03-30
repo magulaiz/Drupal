@@ -280,9 +280,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
    *   The module handler.
    */
   protected function getModuleHandler() {
-    if (!isset($this->moduleHandler)) {
-      $this->moduleHandler = \Drupal::moduleHandler();
-    }
+    $this->moduleHandler ??= \Drupal::moduleHandler();
     return $this->moduleHandler;
   }
 
@@ -334,9 +332,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
    *   The iterator that will yield the row arrays to be processed.
    */
   protected function getIterator() {
-    if (!isset($this->iterator)) {
-      $this->iterator = $this->initializeIterator();
-    }
+    $this->iterator ??= $this->initializeIterator();
     return $this->iterator;
   }
 
@@ -516,9 +512,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
    *   The cache object.
    */
   protected function getCache() {
-    if (!isset($this->cache)) {
-      $this->cache = \Drupal::cache('migrate');
-    }
+    $this->cache ??= \Drupal::cache('migrate');
     return $this->cache;
   }
 
@@ -541,9 +535,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
    *   The storage object.
    */
   protected function getHighWaterStorage() {
-    if (!isset($this->highWaterStorage)) {
-      $this->highWaterStorage = \Drupal::keyValue('migrate:high_water');
-    }
+    $this->highWaterStorage ??= \Drupal::keyValue('migrate:high_water');
     return $this->highWaterStorage;
   }
 

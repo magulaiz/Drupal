@@ -266,9 +266,7 @@ class CacheContextsManager {
     }
 
     // Initialize the set of valid context tokens with the container's contexts.
-    if (!isset($this->validContextTokens)) {
-      $this->validContextTokens = array_flip($this->contexts);
-    }
+    $this->validContextTokens ??= array_flip($this->contexts);
 
     foreach ($context_tokens as $context_token) {
       if (!is_string($context_token)) {

@@ -26,9 +26,7 @@ class MemoryBackendFactory implements CacheFactoryInterface {
    * {@inheritdoc}
    */
   public function get($bin) {
-    if (!isset($this->bins[$bin])) {
-      $this->bins[$bin] = new MemoryBackend($this->time);
-    }
+    $this->bins[$bin] ??= new MemoryBackend($this->time);
     return $this->bins[$bin];
   }
 

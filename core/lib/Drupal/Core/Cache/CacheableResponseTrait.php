@@ -22,9 +22,7 @@ trait CacheableResponseTrait {
   public function addCacheableDependency($dependency) {
     // A trait doesn't have a constructor, so initialize the cacheability
     // metadata if that hasn't happened yet.
-    if (!isset($this->cacheabilityMetadata)) {
-      $this->cacheabilityMetadata = new CacheableMetadata();
-    }
+    $this->cacheabilityMetadata ??= new CacheableMetadata();
 
     $this->cacheabilityMetadata = $this->cacheabilityMetadata->merge(CacheableMetadata::createFromObject($dependency));
 
@@ -37,9 +35,7 @@ trait CacheableResponseTrait {
   public function getCacheableMetadata() {
     // A trait doesn't have a constructor, so initialize the cacheability
     // metadata if that hasn't happened yet.
-    if (!isset($this->cacheabilityMetadata)) {
-      $this->cacheabilityMetadata = new CacheableMetadata();
-    }
+    $this->cacheabilityMetadata ??= new CacheableMetadata();
 
     return $this->cacheabilityMetadata;
   }

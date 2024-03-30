@@ -320,13 +320,11 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
         $user_input[$identifier]['max'] = $this->value['max'];
       }
 
-      if (!isset($form['value'])) {
-        // Ensure there is something in the 'value'.
-        $form['value'] = [
-          '#type' => 'value',
-          '#value' => NULL,
-        ];
-      }
+      // Ensure there is something in the 'value'.
+      $form['value'] ??= [
+        '#type' => 'value',
+        '#value' => NULL,
+      ];
     }
   }
 

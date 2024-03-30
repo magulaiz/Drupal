@@ -189,12 +189,8 @@ function update_do_one($module, $number, $dependency_map, &$context) {
     unset($context['sandbox']['#finished']);
   }
 
-  if (!isset($context['results'][$module])) {
-    $context['results'][$module] = [];
-  }
-  if (!isset($context['results'][$module][$number])) {
-    $context['results'][$module][$number] = [];
-  }
+  $context['results'][$module] ??= [];
+  $context['results'][$module][$number] ??= [];
   $context['results'][$module][$number] = array_merge($context['results'][$module][$number], $ret);
 
   if (!empty($ret['#abort'])) {
@@ -259,9 +255,7 @@ function update_invoke_post_update($function, &$context) {
     $context['finished'] = $context['sandbox']['#finished'];
     unset($context['sandbox']['#finished']);
   }
-  if (!isset($context['results'][$extension][$name])) {
-    $context['results'][$extension][$name] = [];
-  }
+  $context['results'][$extension][$name] ??= [];
   $context['results'][$extension][$name] = array_merge($context['results'][$extension][$name], $ret);
 
   if (!empty($ret['#abort'])) {
@@ -357,9 +351,7 @@ function update_get_update_list() {
           $replacements = ['', '$2', '', ''];
           $description = preg_replace($patterns, $replacements, $func->getDocComment());
           $ret[$module]['pending'][$update] = "$update - $description";
-          if (!isset($ret[$module]['start'])) {
-            $ret[$module]['start'] = $update;
-          }
+          $ret[$module]['start'] ??= $update;
         }
       }
       if (!isset($ret[$module]['start']) && isset($ret[$module]['pending'])) {

@@ -405,9 +405,7 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
     $head = [];
     foreach ($html_head as $item) {
       [$data, $key] = $item;
-      if (!isset($data['#type'])) {
-        $data['#type'] = 'html_tag';
-      }
+      $data['#type'] ??= 'html_tag';
       $head[$key] = $data;
     }
     return $head;

@@ -57,10 +57,8 @@ class AccountSwitcher implements AccountSwitcherInterface {
    */
   public function switchTo(AccountInterface $account) {
     // Prevent session information from being saved and push previous account.
-    if (!isset($this->originalSessionSaving)) {
-      // Ensure that only the first session saving status is saved.
-      $this->originalSessionSaving = $this->writeSafeHandler->isSessionWritable();
-    }
+    // Ensure that only the first session saving status is saved.
+    $this->originalSessionSaving ??= $this->writeSafeHandler->isSessionWritable();
     $this->writeSafeHandler->setSessionWritable(FALSE);
     array_push($this->accountStack, $this->currentUser->getAccount());
     $this->currentUser->setAccount($account);

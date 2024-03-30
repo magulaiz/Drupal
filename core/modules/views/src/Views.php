@@ -394,14 +394,12 @@ class Views {
           // Key first by the plugin type, then the name.
           $key = $type . ':' . $name;
           // Add info for this plugin.
-          if (!isset($plugins[$key])) {
-            $plugins[$key] = [
-              'type' => $type,
-              'title' => $info[$name]['title'],
-              'provider' => $info[$name]['provider'],
-              'views' => [],
-            ];
-          }
+          $plugins[$key] ??= [
+            'type' => $type,
+            'title' => $info[$name]['title'],
+            'provider' => $info[$name]['provider'],
+            'views' => [],
+          ];
 
           // Add this view to the list for this plugin.
           $plugins[$key]['views'][$view->id()] = $view->id();
@@ -429,73 +427,71 @@ class Views {
   public static function getHandlerTypes() {
     // Statically cache this so translation only occurs once per request for all
     // of these values.
-    if (!isset(static::$handlerTypes)) {
-      static::$handlerTypes = [
-        'field' => [
-          // title
-          'title' => static::t('Fields'),
-          // Lowercase title for mid-sentence.
-          'ltitle' => static::t('fields'),
-          // Singular title.
-          'stitle' => static::t('Field'),
-          // Singular lowercase title for mid sentence
-          'lstitle' => static::t('field'),
-          'plural' => 'fields',
-        ],
-        'argument' => [
-          'title' => static::t('Contextual filters'),
-          'ltitle' => static::t('contextual filters'),
-          'stitle' => static::t('Contextual filter'),
-          'lstitle' => static::t('contextual filter'),
-          'plural' => 'arguments',
-        ],
-        'sort' => [
-          'title' => static::t('Sort criteria'),
-          'ltitle' => static::t('sort criteria'),
-          'stitle' => static::t('Sort criterion'),
-          'lstitle' => static::t('sort criterion'),
-          'plural' => 'sorts',
-        ],
-        'filter' => [
-          'title' => static::t('Filter criteria'),
-          'ltitle' => static::t('filter criteria'),
-          'stitle' => static::t('Filter criterion'),
-          'lstitle' => static::t('filter criterion'),
-          'plural' => 'filters',
-        ],
-        'relationship' => [
-          'title' => static::t('Relationships'),
-          'ltitle' => static::t('relationships'),
-          'stitle' => static::t('Relationship'),
-          'lstitle' => static::t('Relationship'),
-          'plural' => 'relationships',
-        ],
-        'header' => [
-          'title' => static::t('Header'),
-          'ltitle' => static::t('header'),
-          'stitle' => static::t('Header'),
-          'lstitle' => static::t('Header'),
-          'plural' => 'header',
-          'type' => 'area',
-        ],
-        'footer' => [
-          'title' => static::t('Footer'),
-          'ltitle' => static::t('footer'),
-          'stitle' => static::t('Footer'),
-          'lstitle' => static::t('Footer'),
-          'plural' => 'footer',
-          'type' => 'area',
-        ],
-        'empty' => [
-          'title' => static::t('No results behavior'),
-          'ltitle' => static::t('no results behavior'),
-          'stitle' => static::t('No results behavior'),
-          'lstitle' => static::t('No results behavior'),
-          'plural' => 'empty',
-          'type' => 'area',
-        ],
-      ];
-    }
+    static::$handlerTypes ??= [
+      'field' => [
+        // title
+        'title' => static::t('Fields'),
+        // Lowercase title for mid-sentence.
+        'ltitle' => static::t('fields'),
+        // Singular title.
+        'stitle' => static::t('Field'),
+        // Singular lowercase title for mid sentence
+        'lstitle' => static::t('field'),
+        'plural' => 'fields',
+      ],
+      'argument' => [
+        'title' => static::t('Contextual filters'),
+        'ltitle' => static::t('contextual filters'),
+        'stitle' => static::t('Contextual filter'),
+        'lstitle' => static::t('contextual filter'),
+        'plural' => 'arguments',
+      ],
+      'sort' => [
+        'title' => static::t('Sort criteria'),
+        'ltitle' => static::t('sort criteria'),
+        'stitle' => static::t('Sort criterion'),
+        'lstitle' => static::t('sort criterion'),
+        'plural' => 'sorts',
+      ],
+      'filter' => [
+        'title' => static::t('Filter criteria'),
+        'ltitle' => static::t('filter criteria'),
+        'stitle' => static::t('Filter criterion'),
+        'lstitle' => static::t('filter criterion'),
+        'plural' => 'filters',
+      ],
+      'relationship' => [
+        'title' => static::t('Relationships'),
+        'ltitle' => static::t('relationships'),
+        'stitle' => static::t('Relationship'),
+        'lstitle' => static::t('Relationship'),
+        'plural' => 'relationships',
+      ],
+      'header' => [
+        'title' => static::t('Header'),
+        'ltitle' => static::t('header'),
+        'stitle' => static::t('Header'),
+        'lstitle' => static::t('Header'),
+        'plural' => 'header',
+        'type' => 'area',
+      ],
+      'footer' => [
+        'title' => static::t('Footer'),
+        'ltitle' => static::t('footer'),
+        'stitle' => static::t('Footer'),
+        'lstitle' => static::t('Footer'),
+        'plural' => 'footer',
+        'type' => 'area',
+      ],
+      'empty' => [
+        'title' => static::t('No results behavior'),
+        'ltitle' => static::t('no results behavior'),
+        'stitle' => static::t('No results behavior'),
+        'lstitle' => static::t('No results behavior'),
+        'plural' => 'empty',
+        'type' => 'area',
+      ],
+    ];
 
     return static::$handlerTypes;
   }

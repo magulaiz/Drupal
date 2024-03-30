@@ -218,9 +218,7 @@ class Query extends QueryBase implements QueryInterface {
         // Simple queries, and the grouped columns of complicated queries
         // can be ordered normally, without the aggregation function.
         $this->sqlQuery->orderBy($sql_alias, $direction);
-        if (!isset($this->sqlFields[$sql_alias])) {
-          $this->sqlFields[$sql_alias] = explode('.', $sql_alias);
-        }
+        $this->sqlFields[$sql_alias] ??= explode('.', $sql_alias);
       }
       else {
         // Order based on the smallest element of each group if the
@@ -284,9 +282,7 @@ class Query extends QueryBase implements QueryInterface {
    *   a SELECT query, such as 'base_table.id'.
    */
   protected function getSqlField($field, $langcode) {
-    if (!isset($this->tables)) {
-      $this->tables = $this->getTables($this->sqlQuery);
-    }
+    $this->tables ??= $this->getTables($this->sqlQuery);
     $base_property = "base_table.$field";
     if (isset($this->sqlFields[$base_property])) {
       return $base_property;

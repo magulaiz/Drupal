@@ -35,9 +35,7 @@ class MemoryBackend implements FloodInterface, PrefixFloodInterface {
    * {@inheritdoc}
    */
   public function register($name, $window = 3600, $identifier = NULL) {
-    if (!isset($identifier)) {
-      $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
-    }
+    $identifier ??= $this->requestStack->getCurrentRequest()->getClientIp();
     // We can't use REQUEST_TIME here, because that would not guarantee
     // uniqueness.
     $time = microtime(TRUE);
@@ -48,9 +46,7 @@ class MemoryBackend implements FloodInterface, PrefixFloodInterface {
    * {@inheritdoc}
    */
   public function clear($name, $identifier = NULL) {
-    if (!isset($identifier)) {
-      $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
-    }
+    $identifier ??= $this->requestStack->getCurrentRequest()->getClientIp();
     unset($this->events[$name][$identifier]);
   }
 
@@ -72,9 +68,7 @@ class MemoryBackend implements FloodInterface, PrefixFloodInterface {
    * {@inheritdoc}
    */
   public function isAllowed($name, $threshold, $window = 3600, $identifier = NULL) {
-    if (!isset($identifier)) {
-      $identifier = $this->requestStack->getCurrentRequest()->getClientIp();
-    }
+    $identifier ??= $this->requestStack->getCurrentRequest()->getClientIp();
     if (!isset($this->events[$name][$identifier])) {
       return $threshold > 0;
     }

@@ -37,9 +37,7 @@ class LibraryDependencyResolver implements LibraryDependencyResolverInterface {
   public function getLibrariesWithDependencies(array $libraries) {
     $return = [];
     foreach ($libraries as $library) {
-      if (!isset($this->librariesDependencies[$library])) {
-        $this->librariesDependencies[$library] = $this->doGetDependencies([$library]);
-      }
+      $this->librariesDependencies[$library] ??= $this->doGetDependencies([$library]);
       $return += $this->librariesDependencies[$library];
     }
     return array_values($return);

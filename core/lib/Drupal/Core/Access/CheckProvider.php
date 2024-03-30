@@ -168,9 +168,7 @@ class CheckProvider implements CheckProviderInterface {
    * Compiles a mapping of requirement keys to access checker service IDs.
    */
   protected function loadDynamicRequirementMap() {
-    if (!isset($this->dynamicRequirementMap)) {
-      $this->dynamicRequirementMap = $this->container->getParameter('dynamic_access_check_services');
-    }
+    $this->dynamicRequirementMap ??= $this->container->getParameter('dynamic_access_check_services');
   }
 
 }

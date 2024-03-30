@@ -172,9 +172,7 @@ class FileSystem implements FileSystemInterface {
    * {@inheritdoc}
    */
   public function mkdir($uri, $mode = NULL, $recursive = FALSE, $context = NULL) {
-    if (!isset($mode)) {
-      $mode = $this->settings->get('file_chmod_directory', static::CHMOD_DIRECTORY);
-    }
+    $mode ??= $this->settings->get('file_chmod_directory', static::CHMOD_DIRECTORY);
 
     // If the URI has a scheme, don't override the umask - schemes can handle
     // this issue in their own implementation.

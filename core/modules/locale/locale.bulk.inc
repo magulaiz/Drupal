@@ -246,9 +246,7 @@ function locale_translate_batch_import($file, array $options, &$context) {
       }
       foreach ($report as $key => $value) {
         if (is_numeric($report[$key])) {
-          if (!isset($context['results']['stats'][$file->uri][$key])) {
-            $context['results']['stats'][$file->uri][$key] = 0;
-          }
+          $context['results']['stats'][$file->uri][$key] ??= 0;
           $context['results']['stats'][$file->uri][$key] += $report[$key];
         }
         elseif (is_array($value)) {
@@ -632,9 +630,7 @@ function locale_config_batch_set_config_langcodes(&$context) {
  * @see locale_config_batch_build()
  */
 function locale_config_batch_refresh_name(array $names, array $langcodes, &$context) {
-  if (!isset($context['results']['stats']['config'])) {
-    $context['results']['stats']['config'] = 0;
-  }
+  $context['results']['stats']['config'] ??= 0;
   $context['results']['stats']['config'] += Locale::config()->updateConfigTranslations($names, $langcodes);
   foreach ($names as $name) {
     $context['results']['names'][] = $name;

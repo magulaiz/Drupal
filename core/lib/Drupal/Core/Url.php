@@ -804,9 +804,7 @@ class Url implements TrustedCallbackInterface {
       throw new \UnexpectedValueException('Unrouted URIs do not have internal representations.');
     }
 
-    if (!isset($this->internalPath)) {
-      $this->internalPath = $this->urlGenerator()->getPathFromRoute($this->getRouteName(), $this->getRouteParameters());
-    }
+    $this->internalPath ??= $this->urlGenerator()->getPathFromRoute($this->getRouteName(), $this->getRouteParameters());
     return $this->internalPath;
   }
 
@@ -857,9 +855,7 @@ class Url implements TrustedCallbackInterface {
    * @return \Drupal\Core\Access\AccessManagerInterface
    */
   protected function accessManager() {
-    if (!isset($this->accessManager)) {
-      $this->accessManager = \Drupal::service('access_manager');
-    }
+    $this->accessManager ??= \Drupal::service('access_manager');
     return $this->accessManager;
   }
 

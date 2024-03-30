@@ -126,12 +126,8 @@ class MTimeProtectedFastFileStorage extends FileStorage {
    *   The full path where the file is or should be stored.
    */
   public function getFullPath($name, &$directory = NULL, &$directory_mtime = NULL) {
-    if (!isset($directory)) {
-      $directory = $this->getContainingDirectoryFullPath($name);
-    }
-    if (!isset($directory_mtime)) {
-      $directory_mtime = file_exists($directory) ? filemtime($directory) : 0;
-    }
+    $directory ??= $this->getContainingDirectoryFullPath($name);
+    $directory_mtime ??= file_exists($directory) ? filemtime($directory) : 0;
     return $directory . '/' . Crypt::hmacBase64($name, $this->secret . $directory_mtime) . '.php';
   }
 

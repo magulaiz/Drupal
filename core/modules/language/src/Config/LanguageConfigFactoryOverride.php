@@ -115,9 +115,7 @@ class LanguageConfigFactoryOverride extends ConfigFactoryOverrideBase implements
    * {@inheritdoc}
    */
   public function getStorage($langcode) {
-    if (!isset($this->storages[$langcode])) {
-      $this->storages[$langcode] = $this->baseStorage->createCollection($this->createConfigCollectionName($langcode));
-    }
+    $this->storages[$langcode] ??= $this->baseStorage->createCollection($this->createConfigCollectionName($langcode));
     return $this->storages[$langcode];
   }
 

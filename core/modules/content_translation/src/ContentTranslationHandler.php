@@ -596,9 +596,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
 
     // @todo Find a more reliable way to determine if a form element concerns a
     //   multilingual value.
-    if (!isset($ignored_types)) {
-      $ignored_types = array_flip(['actions', 'value', 'hidden', 'vertical_tabs', 'token', 'details', 'link']);
-    }
+    $ignored_types ??= array_flip(['actions', 'value', 'hidden', 'vertical_tabs', 'token', 'details', 'link']);
 
     /** @var \Drupal\Core\Entity\ContentEntityForm $form_object */
     $form_object = $form_state->getFormObject();

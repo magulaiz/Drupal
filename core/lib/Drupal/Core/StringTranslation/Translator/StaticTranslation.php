@@ -31,9 +31,7 @@ class StaticTranslation implements TranslatorInterface {
    * {@inheritdoc}
    */
   public function getStringTranslation($langcode, $string, $context) {
-    if (!isset($this->translations[$langcode])) {
-      $this->translations[$langcode] = $this->getLanguage($langcode);
-    }
+    $this->translations[$langcode] ??= $this->getLanguage($langcode);
     if (isset($this->translations[$langcode][$context][$string])) {
       return $this->translations[$langcode][$context][$string];
     }

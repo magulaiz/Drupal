@@ -43,9 +43,7 @@ trait RedirectDestinationTrait {
    *   The redirect destination helper.
    */
   protected function getRedirectDestination() {
-    if (!isset($this->redirectDestination)) {
-      $this->redirectDestination = \Drupal::destination();
-    }
+    $this->redirectDestination ??= \Drupal::destination();
 
     return $this->redirectDestination;
   }

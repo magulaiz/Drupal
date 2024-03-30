@@ -292,9 +292,7 @@ abstract class QueryBase implements QueryInterface {
   public function pager($limit = 10, $element = NULL) {
     // Even when not using SQL, storing the element PagerSelectExtender is as
     // good as anywhere else.
-    if (!isset($element)) {
-      $element = \Drupal::service('pager.manager')->getMaxPagerElementId() + 1;
-    }
+    $element ??= \Drupal::service('pager.manager')->getMaxPagerElementId() + 1;
 
     $this->pager = [
       'limit' => $limit,
@@ -397,9 +395,7 @@ abstract class QueryBase implements QueryInterface {
    * {@inheritdoc}
    */
   public function aggregate($field, $function, $langcode = NULL, &$alias = NULL) {
-    if (!isset($alias)) {
-      $alias = $this->getAggregationAlias($field, $function);
-    }
+    $alias ??= $this->getAggregationAlias($field, $function);
 
     $this->aggregate[$alias] = [
       'field' => $field,

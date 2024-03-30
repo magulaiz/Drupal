@@ -327,9 +327,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * @todo: Remove in https://www.drupal.org/node/1928868.
    */
   public function &offsetGet($offset): mixed {
-    if (!isset($this->definition[$offset])) {
-      $this->definition[$offset] = NULL;
-    }
+    $this->definition[$offset] ??= NULL;
     return $this->definition[$offset];
   }
 

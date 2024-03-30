@@ -182,9 +182,7 @@ class Link implements RenderableInterface {
    *   The link generator
    */
   protected function getLinkGenerator() {
-    if (!isset($this->linkGenerator)) {
-      $this->linkGenerator = \Drupal::service('link_generator');
-    }
+    $this->linkGenerator ??= \Drupal::service('link_generator');
     return $this->linkGenerator;
   }
 

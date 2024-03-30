@@ -662,9 +662,7 @@ trait AssertContentTrait {
    *   TRUE on pass.
    */
   protected function assertTextPattern($pattern, $message = NULL) {
-    if (!isset($message)) {
-      $message = new FormattableMarkup('Pattern "@pattern" found', ['@pattern' => $pattern]);
-    }
+    $message ??= new FormattableMarkup('Pattern "@pattern" found', ['@pattern' => $pattern]);
     $this->assertMatchesRegularExpression($pattern, $this->getTextContent(), $message);
     return TRUE;
   }

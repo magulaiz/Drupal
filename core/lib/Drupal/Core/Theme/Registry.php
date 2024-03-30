@@ -287,9 +287,7 @@ class Registry implements DestructableInterface {
    */
   public function getRuntime() {
     $this->init($this->themeName);
-    if (!isset($this->runtimeRegistry[$this->theme->getName()])) {
-      $this->runtimeRegistry[$this->theme->getName()] = new ThemeRegistry('theme_registry:runtime:' . $this->theme->getName(), $this->runtimeCache ?: $this->cache, $this->lock, [], $this->moduleHandler->isLoaded());
-    }
+    $this->runtimeRegistry[$this->theme->getName()] ??= new ThemeRegistry('theme_registry:runtime:' . $this->theme->getName(), $this->runtimeCache ?: $this->cache, $this->lock, [], $this->moduleHandler->isLoaded());
     return $this->runtimeRegistry[$this->theme->getName()];
   }
 
