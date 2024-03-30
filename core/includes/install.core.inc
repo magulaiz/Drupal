@@ -306,8 +306,10 @@ function install_begin_request($class_loader, &$install_state) {
   if (array_key_exists('profile', $install_state['parameters'])) {
     $install_state['parameters']['profile'] = preg_replace('/[^a-zA-Z_0-9]/', '', $install_state['parameters']['profile']);
     // If the site is not using an install profile then profile will be set to
-    // an empty string in the query parameters, and will need converting back to
-    // a FALSE value.
+    // an empty string in the query parameters. Convert this to a FALSE value so
+    // that \Drupal\Core\Installer\InstallerKernel::getInstallProfile() returns
+    // the same value as \Drupal\Core\DrupalKernel::getInstallProfile() when the
+    // site does not have an install profile.
     if ($install_state['parameters']['profile'] === '') {
       $install_state['parameters']['profile'] = FALSE;
     }
