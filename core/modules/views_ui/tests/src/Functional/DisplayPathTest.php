@@ -187,13 +187,13 @@ class DisplayPathTest extends UITestBase {
     }, $menu_options);
 
     $this->assertEquals([
-      '<User account menu>',
+      'User account menu',
       '-- My account',
       '-- Log out',
-      '<Administration>',
-      '<Footer>',
-      '<Main navigation>',
-      '<Tools>',
+      'Administration',
+      'Footer',
+      'Main navigation',
+      'Tools',
       '-- Compose tips (disabled)',
       '-- Test menu link',
     ], $menu_options);

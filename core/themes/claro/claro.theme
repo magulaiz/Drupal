@@ -690,10 +690,9 @@ function claro_form_menu_link_content_form_alter(&$form, FormStateInterface $for
     '#weight' => 10,
     '#accordion' => TRUE,
   ];
-  $form['menu_parent']['#wrapper_attributes'] = ['class' => ['accordion__item', 'entity-meta__header']];
-  $form['menu_parent']['#prefix'] = '<div class="accordion">';
-  $form['menu_parent']['#suffix'] = '</div>';
-  $form['menu_parent']['#group'] = 'advanced';
+
+  $form['menu_parent_wrapper']['#group'] = 'advanced';
+  $form['menu_parent_wrapper']['#attributes']['class'][] = 'entity-meta__header';
 
   $form['menu_link_display_settings'] = [
     '#type' => 'details',

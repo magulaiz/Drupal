@@ -3,6 +3,7 @@
 namespace Drupal\Core\Menu\Form;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Menu\MenuLinkInterface;
@@ -12,6 +13,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
 /**
  * Provides an edit form for static menu links.
@@ -21,6 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionInterface {
 
   use StringTranslationTrait;
+  use DependencySerializationTrait;
 
   /**
    * The edited menu link.
@@ -63,8 +66,10 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
    *   The module handler;
    * @param \Drupal\Core\Extension\ModuleExtensionList|null $moduleExtensionList
    *   The module extension list.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface|null $entityTypeManager
+   *   The entity type manager service.
    */
-  public function __construct(MenuLinkManagerInterface $menu_link_manager, MenuParentFormSelectorInterface $menu_parent_selector, TranslationInterface $string_translation, ModuleHandlerInterface $module_handler, protected ?ModuleExtensionList $moduleExtensionList = NULL) {
+  public function __construct(MenuLinkManagerInterface $menu_link_manager, MenuParentFormSelectorInterface $menu_parent_selector, TranslationInterface $string_translation, ModuleHandlerInterface $module_handler, protected ?ModuleExtensionList $moduleExtensionList = NULL, protected ?EntityTypeManagerInterface $entityTypeManager = NULL) {
     $this->menuLinkManager = $menu_link_manager;
     $this->menuParentSelector = $menu_parent_selector;
     $this->stringTranslation = $string_translation;
@@ -72,6 +77,9 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
     if ($this->moduleExtensionList === NULL) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $moduleExtensionList argument is deprecated in drupal:10.3.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3310017', E_USER_DEPRECATED);
       $this->moduleExtensionList = \Drupal::service('extension.list.module');
+    }
+    if ($this->entityTypeManager === NULL) {
+      $this->entityTypeManager = \Drupal::service('entity_type.manager');
     }
   }
 
@@ -127,6 +135,9 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
       '#description' => $this->t('Menu links that are not enabled will not be listed in any menu.'),
       '#default_value' => $this->menuLink->isEnabled(),
     ];
+    $form['#attached']['library'] = [
+      'core/drupal.ajax',
+    ];
 
     $form['expanded'] = [
       '#type' => 'checkbox',
@@ -136,10 +147,16 @@ class MenuLinkDefaultForm implements MenuLinkFormInterface, ContainerInjectionIn
     ];
 
     $menu_parent = $this->menuLink->getMenuName() . ':' . $this->menuLink->getParent();
-    $form['menu_parent'] = $this->menuParentSelector->parentSelectElement($menu_parent, $this->menuLink->getPluginId());
-    $form['menu_parent']['#title'] = $this->t('Parent link');
-    $form['menu_parent']['#description'] = $this->t('The maximum depth for a link and all its children is fixed. Some menu links may not be available as parents if selecting them would exceed this limit.');
-    $form['menu_parent']['#attributes']['class'][] = 'menu-title-select';
+    $default_menu_id = $this->menuLink->getMenuName();
+    $default_menu = $this->entityTypeManager->getStorage('menu')->load($default_menu_id);
+
+    $form += $this->menuParentSelector->parentSelectElement($form_state->getValue('menu') ?: $default_menu_id, '', NULL, $form_state->getValue('menu') ?: $menu_parent . ':');
+
+    $form['menu_parent_wrapper']['menu_parent'] = $this->menuParentSelector->parentSelectElement($form_state->getValue('menu') ?: $menu_parent, $this->menuLink->getPluginId(), $form_state->getValue('menus') ?: [$default_menu_id => $default_menu->label()]);
+    $form['menu_parent_wrapper']['menu_parent']['#title'] = $this->t('Parent link');
+    $form['menu_parent_wrapper']['menu_parent']['#weight'] = 10;
+    $form['menu_parent_wrapper']['menu_parent']['#description'] = $this->t("Links located in a menu's maximum depth will not be available.");
+    $form['menu_parent_wrapper']['menu_parent']['#attributes']['class'][] = 'menu-title-select';
 
     $delta = max(abs($this->menuLink->getWeight()), 50);
     $form['weight'] = [

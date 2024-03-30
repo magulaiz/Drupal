@@ -2,9 +2,12 @@
 
 namespace Drupal\Core\Menu;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 
@@ -15,6 +18,7 @@ use Drupal\Core\StringTranslation\TranslationInterface;
  */
 class MenuParentFormSelector implements MenuParentFormSelectorInterface {
   use StringTranslationTrait;
+  use DependencySerializationTrait;
 
   /**
    * The menu link tree service.
@@ -49,6 +53,21 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
   /**
    * {@inheritdoc}
    */
+  public function getMenuSelectOptions(array $menus = NULL) {
+    if (!isset($menus)) {
+      $menus = $this->getMenuOptions();
+    }
+
+    $options = [];
+    foreach ($menus as $menu_name => $menu_title) {
+      $options[$menu_name . ':'] = $menu_title;
+    }
+    return $options;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getParentSelectOptions($id = '', array $menus = NULL, CacheableMetadata &$cacheability = NULL) {
     if (!isset($menus)) {
       $menus = $this->getMenuOptions();
@@ -57,7 +76,7 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
     $options = [];
     $depth_limit = $this->getParentDepthLimit($id);
     foreach ($menus as $menu_name => $menu_title) {
-      $options[$menu_name . ':'] = '<' . $menu_title . '>';
+      $options[$menu_name . ':'] = $menu_title;
 
       $parameters = new MenuTreeParameters();
       $parameters->setMaxDepth($depth_limit);
@@ -76,11 +95,11 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
   /**
    * {@inheritdoc}
    */
-  public function parentSelectElement($menu_parent, $id = '', array $menus = NULL) {
+  public function parentSelectElement($menu_parent, $id = '', array $menus = NULL, $menu_name = 'parent_select') {
     $options_cacheability = new CacheableMetadata();
     $options = $this->getParentSelectOptions($id, $menus, $options_cacheability);
     // If no options were found, there is nothing to select.
-    if ($options) {
+    if ($options && $menu_name === 'parent_select') {
       $element = [
         '#type' => 'select',
         '#options' => $options,
@@ -98,7 +117,75 @@ class MenuParentFormSelector implements MenuParentFormSelectorInterface {
       $options_cacheability->applyTo($element);
       return $element;
     }
+    else {
+      $options = $this->getMenuSelectOptions($menus);
+      if ($options) {
+        $menu_parent_wrapper = Html::getUniqueId('menu-parent-wrapper');
+        $elements['menu'] = [
+          '#title' => $this->t('Menu'),
+          '#type' => 'select',
+          '#options' => $options,
+          '#attributes' => ['class' => ['menu-title-select']],
+          '#ajax' => [
+            'callback' => [$this, 'updateParentLinks'],
+            'wrapper' => $menu_parent_wrapper,
+            'trigger_as' => ['name' => 'update_parent_links'],
+            'event' => 'change',
+          ],
+        ];
+        if (isset($options[$menu_parent])) {
+          // Only provide the default value if it is valid among the options.
+          $elements['menu'] += ['#default_value' => $menu_parent];
+        }
+        $elements['menu_submit'] = [
+          '#type' => 'submit',
+          '#name' => 'update_parent_links',
+          '#value' => $this->t('Change menu'),
+          '#submit' => [[$this, 'updateParentLinksSubmit']],
+          '#attributes' => ['class' => ['js-hide']],
+          '#ajax' => [
+            'callback' => [$this, 'updateParentLinks'],
+            'wrapper' => $menu_parent_wrapper,
+          ],
+        ];
+        $elements['menu_parent'] = [];
+        $elements_wrapper = [
+          'menu_parent_wrapper' => [
+            '#type' => 'container',
+            '#attributes' => [
+              'id' => $menu_parent_wrapper,
+              'aria-label' => 'Select menu and parent link.',
+            ],
+            'menu_parent' => $elements['menu_parent'],
+            'menu' => $elements['menu'],
+            'submit' => $elements['menu_submit'],
+            '#ajax' => [
+              'callback' => [$this, 'updateParentLinks'],
+              'wrapper' => $menu_parent_wrapper,
+            ],
+          ],
+        ];
+        return $elements_wrapper;
+      }
+    }
     return [];
+  }
+
+  /**
+   * AJAX callback for updating menu parent options.
+   */
+  public function updateParentLinks(array $form, FormStateInterface $form_state) : array {
+    return $form['menu_parent_wrapper'];
+  }
+
+  /**
+   * Submit handler for the 'Change menu' element.
+   */
+  public function updateParentLinksSubmit(array $form, FormStateInterface $form_state) : void {
+    // @todo why do we need to rtrim?
+    $menu_name = rtrim($form_state->getValue('menu'), ':');
+    $form_state->setValue('menus', $this->getMenuOptions([$menu_name]));
+    $form_state->setRebuild();
   }
 
   /**
