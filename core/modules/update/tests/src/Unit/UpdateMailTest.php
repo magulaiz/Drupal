@@ -6,6 +6,7 @@ namespace Drupal\Tests\update\Unit;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
+use Drupal\update\UpdateFetcherInterface;
 use Drupal\update\UpdateManagerInterface;
 
 /**
@@ -76,11 +77,12 @@ class UpdateMailTest extends UnitTestCase {
    *
    * @dataProvider providerTestUpdateEmail
    */
-  public function testUpdateEmail($notification_threshold, $params, $authorized, array $expected_body) {
+  public function testUpdateEmail($notification_threshold, $params, $authorized, $expected_subject, array $expected_body) {
+    $site_name = 'Test site';
+    $expected_subject .= $site_name;
     $langcode = 'en';
     $available_updates_url = 'https://example.com/admin/reports/updates';
     $update_settings_url = 'https://example.com/admin/reports/updates/settings';
-    $site_name = 'Test site';
 
     // Initialize update_mail input parameters.
     $key = NULL;
@@ -100,7 +102,7 @@ class UpdateMailTest extends UnitTestCase {
     // Create three config entities.
     $config_site_name = $this->createMock('Drupal\Core\Config\Config');
     $config_site_name
-      ->expects($this->once())
+      ->expects($this->any())
       ->method('get')
       ->with('name')
       ->willReturn($site_name);
@@ -112,7 +114,7 @@ class UpdateMailTest extends UnitTestCase {
       ->willReturn($notification_threshold);
 
     $this->configFactory
-      ->expects($this->exactly(2))
+      ->expects($this->any())
       ->method('get')
       ->willReturnMap([
         ['system.site', $config_site_name],
@@ -120,23 +122,22 @@ class UpdateMailTest extends UnitTestCase {
       ]);
 
     // The calls to generateFromRoute differ if authorized.
-    $count = 2;
     if ($authorized) {
       $this->currentUser
         ->expects($this->once())
         ->method('hasPermission')
         ->with('administer software updates')
         ->willReturn(TRUE);
-      $count = 3;
     }
-    // When authorized also get the URL for the route 'update.report_update'.
+
     $this->urlGenerator
-      ->expects($this->exactly($count))
+      ->expects($this->any())
       ->method('generateFromRoute')
       ->willReturnMap([
         ['update.status', [], ['absolute' => TRUE, 'language' => $langcode], FALSE, $update_settings_url],
         ['update.settings', [], ['absolute' => TRUE], FALSE, $available_updates_url],
         ['update.report_update', [], ['absolute' => TRUE, 'language' => $langcode], FALSE, $available_updates_url],
+        ['update.status', [], [], FALSE, $update_settings_url],
       ]);
 
     // Set the container.
@@ -150,25 +151,11 @@ class UpdateMailTest extends UnitTestCase {
     update_mail($key, $message, $params);
 
     // Confirm the subject.
-    $this->assertSame("New release(s) available for $site_name", $message['subject']);
+    is_string($message['subject']) ? $this->assertSame($expected_subject, $message['subject']) : $this->assertSame($expected_subject, $message['subject']->render());
 
     // Confirm each part of the body.
-    if ($authorized) {
-      $this->assertSame($expected_body[0], $message['body'][0]);
-      $this->assertSame($expected_body[1], $message['body'][1]);
-      $this->assertSame($expected_body[2], $message['body'][2]->render());
-    }
-    else {
-      if (empty($params)) {
-        $this->assertSame($expected_body[0], $message['body'][0]);
-        $this->assertSame($expected_body[1], $message['body'][1]->render());
-      }
-      else {
-        $this->assertSame($expected_body[0], $message['body'][0]->render());
-        $this->assertSame($expected_body[1], $message['body'][1]);
-        $this->assertSame($expected_body[2], $message['body'][2]);
-        $this->assertSame($expected_body[3], $message['body'][3]->render());
-      }
+    for ($i = 0; $i < count($expected_body); $i++) {
+      is_string($message['body'][$i]) ? $this->assertSame($expected_body[$i], $message['body'][$i]) : $this->assertSame($expected_body[$i], $message['body'][$i]->render());
     }
   }
 
@@ -179,6 +166,7 @@ class UpdateMailTest extends UnitTestCase {
    *   - The value of the update setting 'notification.threshold'.
    *   - An array of parameters for update_mail.
    *   - TRUE if the user is authorized.
+   *   - The subject string without the trailing site name.
    *   - An array of message body strings.
    */
   public static function providerTestUpdateEmail(): array {
@@ -187,21 +175,22 @@ class UpdateMailTest extends UnitTestCase {
         'all',
         [],
         FALSE,
-        [
-          "See the available updates page for more information:\nhttps://example.com/admin/reports/updates/settings",
-          'Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, https://example.com/admin/reports/updates.',
-        ],
+        "Site notice for ",
+      [
+        "See the available updates page for more information:\nhttps://example.com/admin/reports/updates/settings",
+        'Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, https://example.com/admin/reports/updates.',
+      ],
       ],
       'security' => [
         'security',
         [],
         FALSE,
+        "Site notice for ",
         [
           "See the available updates page for more information:\nhttps://example.com/admin/reports/updates/settings",
-          'Your site is currently configured to send these emails only when security updates are available. To get notified for any available updates, https://example.com/admin/reports/updates.',
+          "Your site is currently configured to send these emails only when security updates are available. To get notified for any available updates, https://example.com/admin/reports/updates.",
         ],
       ],
-      // Choose parameters that do not require changes to the mocks.
       'not secure' => [
         'security',
         [
@@ -209,6 +198,7 @@ class UpdateMailTest extends UnitTestCase {
           'contrib' => NULL,
         ],
         FALSE,
+        "Security notice for ",
         [
           "There is a security update available for your version of Drupal. To ensure the security of your server, you should update immediately!",
           '',
@@ -220,10 +210,56 @@ class UpdateMailTest extends UnitTestCase {
         'all',
         [],
         TRUE,
+        "Site notice for ",
         [
           "See the available updates page for more information:\nhttps://example.com/admin/reports/updates/settings",
           "You can automatically download your missing updates using the Update manager:\nhttps://example.com/admin/reports/updates",
           'Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, https://example.com/admin/reports/updates.',
+        ],
+      ],
+      'multiple current' => [
+        'all',
+        [
+          'core' => UpdateManagerInterface::CURRENT,
+          'contrib' => UpdateManagerInterface::CURRENT,
+        ],
+        FALSE,
+        "Site notice for ",
+        [
+          "",
+          "",
+          "See the available updates page for more information:\nhttps://example.com/admin/reports/updates/settings",
+          "Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, https://example.com/admin/reports/updates.",
+        ],
+      ],
+      'multiple not current' => [
+        'all',
+        [
+          'core' => UpdateManagerInterface::NOT_CURRENT,
+          'contrib' => UpdateManagerInterface::NOT_CURRENT,
+        ],
+        FALSE,
+        "Site notice for ",
+        [
+          "There are updates available for your version of Drupal. To ensure the proper functioning of your site, you should update as soon as possible.",
+          "There are updates available for one or more of your modules or themes. To ensure the proper functioning of your site, you should update as soon as possible.",
+          "See the available updates page for more information:\nhttps://example.com/admin/reports/updates/settings",
+          "Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, https://example.com/admin/reports/updates.",
+        ],
+      ],
+      'fetcher failed' => [
+        'all',
+        [
+          'core' => UpdateManagerInterface::NOT_CURRENT,
+          'contrib' => UpdateFetcherInterface::UNKNOWN,
+        ],
+        FALSE,
+        "Site notice for ",
+        [
+          "There are updates available for your version of Drupal. To ensure the proper functioning of your site, you should update as soon as possible.",
+          'There was a problem checking <a href="https://example.com/admin/reports/updates/settings">available updates</a> for your modules or themes.',
+          "See the available updates page for more information:\nhttps://example.com/admin/reports/updates/settings",
+          "Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, https://example.com/admin/reports/updates.",
         ],
       ],
     ];

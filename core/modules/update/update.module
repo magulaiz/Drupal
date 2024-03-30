@@ -392,8 +392,11 @@ function update_fetch_data_finished($success, $results) {
 function update_mail($key, &$message, $params) {
   $langcode = $message['langcode'];
   $language = \Drupal::languageManager()->getLanguage($langcode);
-  $message['subject'] .= t('New release(s) available for @site_name', ['@site_name' => \Drupal::config('system.site')->get('name')], ['langcode' => $langcode]);
+  $message['subject'] .= t('Site notice for @site_name', ['@site_name' => \Drupal::config('system.site')->get('name'), 'langcode' => $langcode]);
   foreach ($params as $msg_type => $msg_reason) {
+    if (in_array($msg_reason, [UpdateManagerInterface::NOT_SECURE, UpdateManagerInterface::REVOKED])) {
+      $message['subject'] = t('Security notice for @site_name', ['@site_name' => \Drupal::config('system.site')->get('name'), 'langcode' => $langcode]);
+    }
     $message['body'][] = _update_message_text($msg_type, $msg_reason, $langcode);
   }
   $message['body'][] = t('See the available updates page for more information:', [], ['langcode' => $langcode]) . "\n" . Url::fromRoute('update.status', [], ['absolute' => TRUE, 'language' => $language])->toString();
