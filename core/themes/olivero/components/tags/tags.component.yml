@@ -1,0 +1,23 @@
+name: Tags
+props:
+  type: object
+  required:
+    - label
+  properties:
+    attributes:
+      type: Drupal\Core\Template\Attribute
+    label_hidden:
+      type: boolean
+    title_attributes:
+      type: Drupal\Core\Template\Attribute
+    label:
+      type: string
+    items:
+      type: array
+      items:
+        type: object
+        properties:
+          content:
+            type: object
+          attributes:
+            type: string
