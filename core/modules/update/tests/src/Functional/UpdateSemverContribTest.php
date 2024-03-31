@@ -40,13 +40,22 @@ class UpdateSemverContribTest extends UpdateSemverTestBase {
         'hidden' => FALSE,
       ],
       // Ensure Drupal core on the same version for all test runs.
-      'drupal' => [
-        'project' => 'drupal',
+      '#all' => [
         'version' => '8.0.0',
-        'hidden' => FALSE,
       ],
     ];
     $this->config('update_test.settings')->set('system_info', $system_info)->save();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function standardTests(): void {
+    parent::standardTests();
+    // Ensure we are always testing with the same version of Drupal Core.
+    $core_update_table_selector = 'table.update:nth-of-type(1)';
+    $this->assertSession()->elementContains('css', $core_update_table_selector, 'Up to date');
+    $this->assertSession()->elementContains('css', $core_update_table_selector, '8.0.0');
   }
 
 }
