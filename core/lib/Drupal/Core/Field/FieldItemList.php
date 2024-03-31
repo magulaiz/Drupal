@@ -265,19 +265,13 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
     // widgets.
     $cardinality = $this->getFieldDefinition()->getFieldStorageDefinition()->getCardinality();
     if ($cardinality != FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
-      $label = $this->getFieldDefinition()->getLabel();
-      if ($label === NULL) {
-        $maxMessage = $this->formatPlural($cardinality, 'This field cannot hold more than 1 value.', 'This field cannot hold more than %limit values.');
-      }
-      else {
-        $maxMessage = $this->formatPlural($cardinality, '%name: this field cannot hold more than 1 value.', '%name: this field cannot hold more than %limit values.', ['%name' => $label]);
+      $options['max'] = $cardinality;
+      if ($label = $this->getFieldDefinition()->getLabel()) {
+        $options['maxMessage'] = $this->formatPlural($cardinality, '%name: this field cannot hold more than 1 value.', '%name: this field cannot hold more than %limit values.', ['%name' => $label]);
       }
       $constraints[] = $this->getTypedDataManager()
         ->getValidationConstraintManager()
-        ->create('Count', [
-          'max' => $cardinality,
-          'maxMessage' => $maxMessage,
-        ]);
+        ->create('Count', $options);
     }
 
     return $constraints;

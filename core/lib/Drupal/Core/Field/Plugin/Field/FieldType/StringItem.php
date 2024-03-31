@@ -59,12 +59,13 @@ class StringItem extends StringItemBase {
 
     if ($max_length = $this->getSetting('max_length')) {
       $constraint_manager = \Drupal::typedDataManager()->getValidationConstraintManager();
+      $options['max'] = $max_length;
+      if ($label = $this->getFieldDefinition()->getLabel()) {
+        $options['maxMessage'] = $this->formatPlural($max_length, '%name: may not be longer than 1 character.', '%name: may not be longer than %limit characters.', ['%name' => $label]);
+      }
       $constraints[] = $constraint_manager->create('ComplexData', [
         'value' => [
-          'Length' => [
-            'max' => $max_length,
-            'maxMessage' => $this->t('%name: may not be longer than @max characters.', ['%name' => $this->getFieldDefinition()->getLabel(), '@max' => $max_length]),
-          ],
+          'Length' => $options,
         ],
       ]);
     }
