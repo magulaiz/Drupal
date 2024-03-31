@@ -1477,16 +1477,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/serialization/src/Normalizer/EntityNormalizer.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/tests/src/Unit/Normalizer/ContentEntityNormalizerTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/serialization/tests/src/Unit/Normalizer/EntityNormalizerTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/serialization/tests/src/Unit/Normalizer/NormalizerBaseTest.php',
@@ -2059,6 +2049,11 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/tests/src/Unit/Plugin/views/field/EntityOperationsUnitTest.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^@dataProvider provideAcceptExposedInput related method must be static in PHPUnit 10 and newer\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/views/tests/src/Unit/Plugin/views/filter/NumericFilterTest.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Variable \\$relationship_handler in empty\\(\\) always exists and is not falsy\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views_ui/src/Form/Ajax/ConfigHandler.php',
@@ -2426,12 +2421,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Entity/ContentEntityBaseUnitTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
-	'count' => 3,
+	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Entity/ContentEntityBaseUnitTest.php',
 ];
 $ignoreErrors[] = [
@@ -2501,13 +2491,8 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
-	'count' => 4,
+	'count' => 3,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Entity/Sql/SqlContentEntityStorageTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Entity/TypedData/EntityAdapterUnitTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^@dataProvider provideFatalExitCodeData related method must be static in PHPUnit 10 and newer\\.$#',
