@@ -185,7 +185,7 @@ class ViewsQuery extends Sql {
    * @return string
    *   The unique alias that was assigned for this table.
    *
-   * @see \Drupal\mongodb\Driver\Select::addMongodbJoin()
+   * @see \Drupal\mongodb\Driver\Select::addJoin()
    */
   public function addUnrelatedJoin($type, $table, $field, $left_table, $left_field, $operator = '=', $alias = NULL, $extra = []) {
     if (empty($alias)) {

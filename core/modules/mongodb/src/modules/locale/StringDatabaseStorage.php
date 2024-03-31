@@ -86,11 +86,23 @@ class StringDatabaseStorage extends CoreStringDatabaseStorage {
    */
   public function countTranslations() {
     $query = $this->connection->select('locales_source', 's');
-    $query->addMongodbJoin('INNER', 'locales_target', 'lid', 'locales_source', 'lid', '=', 't');
-    $query->unwindJoinAndAddFields('t', ['lid', 'language']);
-    // $result = $query->execute()->fetchAll();
-    // TODO needs work on the correct return values.
-    return [];
+    $query->addJoin('INNER', 'locales_target', 't', $query->joinCondition()->compare('s.lid', 't.lid'));
+    $result = $query->execute()->fetchAll();
+
+    $translations = [];
+    foreach ($result as $source) {
+      if (isset($source->t['language'])) {
+        $language = $source->t['language'];
+        if (isset($translations[$language])) {
+          $translations[$language]++;
+        }
+        else {
+          $translations[$language] = 1;
+        }
+      }
+    }
+
+    return $translations;
   }
 
   /**

@@ -207,7 +207,6 @@ class SearchQuery extends CoreSearchQuery {
     $this->condition($or);
 
     // Add keyword normalization information to the query.
-//    $this->addMongodbJoin('INNER', 'search_total', 'word', 'search_index', 'word', '=', 't');
     $this->join('search_total', 't', $this->joinCondition()->compare('i.word', 't.word'));
     $this
       ->condition('i.type', $this->type)

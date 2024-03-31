@@ -68,14 +68,14 @@ class Tasks extends InstallTasks {
    * {@inheritdoc}
    */
   public function name() {
-    return t('MongoDB');
+    return t('MongoDB (Experimental)');
   }
 
   /**
    * {@inheritdoc}
    */
   public function minimumVersion() {
-    return '3.6';
+    return '7.0';
   }
 
   /**
@@ -148,7 +148,7 @@ class Tasks extends InstallTasks {
       }
     }
     catch (\Exception $e) {
-//      $this->fail(t("The database server is unable to drop the existing collection %name.", ['%name' => $name]));
+      $this->fail(t("The database server is unable to drop the existing collection %name.", ['%name' => $name]));
     }
   }
 
@@ -161,7 +161,7 @@ class Tasks extends InstallTasks {
       $this->pass(t("The database server was able to create the collection %name.", ['%name' => $name]));
     }
     catch (\Exception $e) {
-//      $this->fail(t("The database server is unable to create the collection %name.", ['%name' => $name]));
+      $this->fail(t("The database server is unable to create the collection %name.", ['%name' => $name]));
     }
   }
 
@@ -174,7 +174,7 @@ class Tasks extends InstallTasks {
       $this->pass(t("The database server was able to insert data into the collection %name.", ['%name' => $name]));
     }
     catch (\Exception $e) {
-//      $this->fail(t("The database server is unable to insert data into the collection %name.", ['%name' => $name]));
+      $this->fail(t("The database server is unable to insert data into the collection %name.", ['%name' => $name]));
     }
   }
 
@@ -187,7 +187,7 @@ class Tasks extends InstallTasks {
       $this->pass(t("The database server was able to update data in the collection %name.", ['%name' => $name]));
     }
     catch (\Exception $e) {
-//      $this->fail(t("The database server is unable to update data in the collection %name.", ['%name' => $name]));
+      $this->fail(t("The database server is unable to update data in the collection %name.", ['%name' => $name]));
     }
   }
 
@@ -200,7 +200,7 @@ class Tasks extends InstallTasks {
       $this->pass(t("The database server was able to delete data in the collection %name.", ['%name' => $name]));
     }
     catch (\Exception $e) {
-//      $this->fail(t("The database server is unable to delete data in the collection %name.", ['%name' => $name]));
+      $this->fail(t("The database server is unable to delete data in the collection %name.", ['%name' => $name]));
     }
   }
 
@@ -213,7 +213,7 @@ class Tasks extends InstallTasks {
       $this->pass(t("The database server was able to drop the collection %name.", ['%name' => $name]));
     }
     catch (\Exception $e) {
-//      $this->fail(t("The database server is unable to drop the collection %name.", ['%name' => $name]));
+      $this->fail(t("The database server is unable to drop the collection %name.", ['%name' => $name]));
     }
   }
 
