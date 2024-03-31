@@ -25,6 +25,7 @@ use Drupal\Component\EventDispatcher\Event;
  * synchronizations.
  *
  * @group EventDispatcher
+ * @group legacy
  */
 class ContainerAwareEventDispatcherTest extends TestCase {
 
