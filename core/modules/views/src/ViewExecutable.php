@@ -16,14 +16,8 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 /**
  * Represents a view as a whole.
  *
- * An object to contain all of the data to generate a view, plus the member
+ * An object to contain all the data to generate a view, plus the member
  * functions to build the view query, execute the query and render the output.
- *
- * This class does not implement the Serializable interface since problems
- * occurred when using the serialize method.
- *
- * @see https://www.drupal.org/node/2849674
- * @see https://bugs.php.net/bug.php?id=66052
  */
 #[\AllowDynamicProperties]
 class ViewExecutable {
@@ -2491,70 +2485,6 @@ class ViewExecutable {
    */
   public function getDependencies() {
     return $this->storage->calculateDependencies()->getDependencies();
-  }
-
-  /**
-   * Magic method implementation to serialize the view executable.
-   *
-   * @return array
-   *   The names of all variables that should be serialized.
-   */
-  public function __sleep() {
-    // Limit to only the required data which is needed to properly restore the
-    // state during unserialization.
-    $this->serializationData = [
-      'storage' => $this->storage->id(),
-      'current_display' => $this->current_display,
-      'args' => $this->args,
-      'current_page' => $this->current_page,
-      'exposed_input' => $this->exposed_input,
-      'exposed_raw_input' => $this->exposed_raw_input,
-      'exposed_data' => $this->exposed_data,
-      'dom_id' => $this->dom_id,
-      'executed' => $this->executed,
-    ];
-    return ['serializationData'];
-  }
-
-  /**
-   * Magic method implementation to unserialize the view executable.
-   */
-  public function __wakeup() {
-    // There are cases, like in testing where we don't have a container
-    // available.
-    if (\Drupal::hasContainer() && !empty($this->serializationData)) {
-      // Load and reference the storage.
-      $this->storage = \Drupal::entityTypeManager()->getStorage('view')
-        ->load($this->serializationData['storage']);
-      $this->storage->set('executable', $this);
-
-      // Attach all necessary services.
-      $this->user = \Drupal::currentUser();
-      $this->viewsData = \Drupal::service('views.views_data');
-      $this->routeProvider = \Drupal::service('router.route_provider');
-      $this->displayPluginManager = \Drupal::service('plugin.manager.views.display');
-
-      // Restore the state of this executable.
-      if ($request = \Drupal::request()) {
-        $this->setRequest($request);
-      }
-      $this->setDisplay($this->serializationData['current_display']);
-      $this->setArguments($this->serializationData['args']);
-      $this->setCurrentPage($this->serializationData['current_page']);
-      $this->setExposedInput($this->serializationData['exposed_input']);
-      $this->exposed_data = $this->serializationData['exposed_data'];
-      $this->exposed_raw_input = $this->serializationData['exposed_raw_input'];
-      $this->dom_id = $this->serializationData['dom_id'];
-
-      $this->initHandlers();
-
-      // If the display was previously executed, execute it now.
-      if ($this->serializationData['executed']) {
-        $this->execute($this->current_display);
-      }
-    }
-    // Unset serializationData since it serves no further purpose.
-    unset($this->serializationData);
   }
 
 }
