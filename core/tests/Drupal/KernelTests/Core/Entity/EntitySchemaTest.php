@@ -431,6 +431,8 @@ class EntitySchemaTest extends EntityKernelTestBase {
   }
 
   /**
+   * Test missing tables on uninstall.
+   *
    * Manually drop one of the test entity type tables to simulate a scenario
    * where a table was not created or an entity type is new.
    */
