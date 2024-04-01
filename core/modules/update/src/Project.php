@@ -9,6 +9,8 @@ use Drupal\Core\Utility\Error;
 
 /**
  * Provides a project release value object.
+ *
+ * @internal
  */
 final class Project {
 
@@ -17,21 +19,21 @@ final class Project {
    *
    * @var string
    */
-  protected $existingVersion;
+  protected string $existingVersion;
 
   /**
    * The releases of this project that can be installed safely.
    *
    * @var array
    */
-  private $installableReleases;
+  private array $installableReleases;
 
   /**
    * The update server project information.
    *
    * @var \Drupal\update\UpdateServerProjectInfo
    */
-  private $updateServerProjectInfo;
+  private UpdateServerProjectInfo $updateServerProjectInfo;
 
   /**
    * Constructs a ProjectStatusCalculator object.

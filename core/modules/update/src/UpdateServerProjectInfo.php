@@ -21,14 +21,14 @@ class UpdateServerProjectInfo {
    *
    * @var array
    */
-  private $supportedBranches;
+  private array $supportedBranches;
 
   /**
    * The project releases.
    *
    * @var array
    */
-  private $releases;
+  private array $releases;
 
   /**
    * Constructs a UpdateServerProjectInfo object.
