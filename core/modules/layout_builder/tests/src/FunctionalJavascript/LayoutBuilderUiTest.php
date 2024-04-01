@@ -297,4 +297,20 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
     $assert_session->assertNoElementAfterWait('css', '.is-layout-builder-highlighted');
   }
 
+  /**
+   * Tests the discard changes cancel button behaviour.
+   */
+  public function testCancelDiscardChanges() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    // Make and then discard changes.
+    $this->assertModifiedLayout(static::FIELD_UI_PREFIX . '/display/default/layout');
+    $page->pressButton('Discard changes');
+    // Cancel the discard.
+    $page->clickLink('Cancel');
+    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
+    $assert_session->pageTextContainsOnce('You have unsaved changes.');
+  }
+
 }
