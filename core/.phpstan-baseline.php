@@ -489,7 +489,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$sort in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Render/Element/RenderElement.php',
+	'path' => __DIR__ . '/lib/Drupal/Core/Render/Element/RenderElementBase.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$output in empty\\(\\) always exists and is not falsy\\.$#',
@@ -1132,6 +1132,16 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/migrate/src/Plugin/migrate/destination/NullDestination.php',
 ];
 $ignoreErrors[] = [
+  'message' => '#^@dataProvider providerSource related method not found\\.$#',
+  'count' => 1,
+  'path' => __DIR__ . '/modules/migrate/tests/src/Kernel/MigrateSourceTestBase.php',
+];
+$ignoreErrors[] = [
+  'message' => '#^@dataProvider providerSource related method not found\\.$#',
+  'count' => 1,
+  'path' => __DIR__ . '/modules/migrate/tests/src/Kernel/MigrateSqlSourceTestBase.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Call to an undefined static method Drupal\\\\Tests\\\\migrate\\\\Kernel\\\\MigrateTestBase\\:\\:migrateDumpAlter\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate/tests/src/Kernel/MigrateTestBase.php',
@@ -1190,11 +1200,6 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$statement might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate_drupal/tests/src/Unit/MigrationConfigurationTraitTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$connection might not be defined\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/migrate_drupal_ui/src/Form/CredentialForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$version might not be defined\\.$#',
@@ -1802,11 +1807,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$source might not be defined\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/views/src/Plugin/views/filter/NumericFilter.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$value might not be defined\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/modules/views/src/Plugin/views/filter/NumericFilter.php',
 ];
