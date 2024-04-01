@@ -238,4 +238,49 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->assertSession()->linkByHrefExists($block->toUrl()->toString());
   }
 
+  /**
+   * Tests block condition logic plugin.
+   */
+  public function testBlockConditionLogicToggle() {
+    $this->drupalLogin($this->adminUser);
+    $this->drupalCreateNode(['type' => 'page', 'path[0][alias]' => '/test']);
+    $this->drupalCreateNode(['type' => 'article']);
+    $this->drupalCreateNode(['type' => 'page']);
+
+    $block_name = 'system_powered_by_block';
+    // Create a random title for the block.
+    $title = $this->randomMachineName();
+    // Enable a standard block.
+    $default_theme = $this->config('system.theme')->get('default');
+    $edit = [
+      'id' => $this->randomMachineName(),
+      'region' => 'sidebar_first',
+      'settings[label]' => $title,
+      'settings[label_display]' => TRUE,
+      'settings[condition_logic]' => 'or',
+      'visibility[entity_bundle:node][bundles][article]' => 'article',
+      'visibility[request_path][pages]' => '/test',
+    ];
+    $this->drupalGet('admin/structure/block/add/' . $block_name . '/' . $default_theme);
+    $this->submitForm($edit, 'Save block');
+    $this->assertSession()->statusMessageContains('The block configuration has been saved.', 'status');
+
+    $this->clickLink('Configure');
+    $this->assertSession()->checkboxChecked('edit-visibility-and-or-all-or');
+    $this->assertSession()->checkboxChecked('edit-visibility-entity-bundlenode-bundles-article');
+    $this->assertSession()->fieldValueEquals('edit-visibility-request-path-pages', '/test');
+
+    // Test that basic page with URL /test has block.
+    $this->drupalGet('/test');
+    $this->assertSession()->pageTextContains($title);
+
+    // Test that random article node has block.
+    $this->drupalGet('/node/2');
+    $this->assertSession()->pageTextContains($title);
+
+    // Test that basic page without URL /test doesn't have block.
+    $this->drupalGet('/node/3');
+    $this->assertSession()->pageTextNotContains($title);
+  }
+
 }
