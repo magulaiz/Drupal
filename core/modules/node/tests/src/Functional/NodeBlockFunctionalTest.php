@@ -241,7 +241,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
   /**
    * Tests block condition logic plugin.
    */
-  public function testBlockConditionLogicToggle() {
+  public function testBlockConditionLogicToggle(): void {
     $this->drupalLogin($this->adminUser);
     $this->drupalCreateNode(['type' => 'page', 'path[0][alias]' => '/test']);
     $this->drupalCreateNode(['type' => 'article']);

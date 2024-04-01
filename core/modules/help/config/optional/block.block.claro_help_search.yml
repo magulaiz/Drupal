@@ -21,6 +21,7 @@ settings:
   label_display: visible
   provider: search
   page_id: help_search
+  condition_logic: and
 visibility:
   request_path:
     id: request_path

@@ -16,4 +16,5 @@ settings:
   label: Help
   label_display: '0'
   provider: help
+  condition_logic: and
 visibility: {  }

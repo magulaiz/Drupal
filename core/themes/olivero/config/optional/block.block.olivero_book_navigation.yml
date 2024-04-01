@@ -17,4 +17,5 @@ settings:
   label_display: visible
   provider: book
   block_mode: 'book pages'
+  condition_logic: and
 visibility: {  }
