@@ -38,8 +38,8 @@ class UpdateSettingsForm extends ConfigFormBase {
       '#title' => $this->t('Check for updates'),
       '#config_target' => 'update.settings:check.interval_days',
       '#options' => [
-        '1' => $this->t('Daily'),
-        '7' => $this->t('Weekly'),
+        1 => $this->t('Daily'),
+        7 => $this->t('Weekly'),
       ],
       '#description' => $this->t('Select how frequently you want to automatically check for new releases of your currently installed modules and themes.'),
     ];
