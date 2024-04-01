@@ -1172,21 +1172,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/migrate_drupal_ui/src/Form/MigrateUpgradeFormBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\migrate_drupal_ui\\\\Functional\\\\CredentialFormTest\\:\\:installEntitySchema\\(\\)\\.$#',
-	'count' => 8,
-	'path' => __DIR__ . '/modules/migrate_drupal_ui/tests/src/Functional/CredentialFormTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\migrate_drupal_ui\\\\Functional\\\\MigrateUpgradeExecuteTestBase\\:\\:installEntitySchema\\(\\)\\.$#',
-	'count' => 8,
-	'path' => __DIR__ . '/modules/migrate_drupal_ui/tests/src/Functional/MigrateUpgradeExecuteTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\migrate_drupal_ui\\\\Functional\\\\MigrateUpgradeFormStepsTest\\:\\:installEntitySchema\\(\\)\\.$#',
-	'count' => 8,
-	'path' => __DIR__ . '/modules/migrate_drupal_ui/tests/src/Functional/MigrateUpgradeFormStepsTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$patterns might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate_drupal_ui/tests/src/Functional/MigrateUpgradeFormStepsTest.php',
@@ -1200,11 +1185,6 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$patterns might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate_drupal_ui/tests/src/Functional/MigrateUpgradeTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\migrate_drupal_ui\\\\Functional\\\\MultilingualReviewPageTestBase\\:\\:installEntitySchema\\(\\)\\.$#',
-	'count' => 8,
-	'path' => __DIR__ . '/modules/migrate_drupal_ui/tests/src/Functional/MultilingualReviewPageTestBase.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$last_insert_id might not be defined\\.$#',
