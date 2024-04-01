@@ -192,15 +192,15 @@ trait MigrationConfigurationTrait {
   }
 
   /**
-  * Determines what version of Drupal the source database contains.
-  *
-  * @param \Drupal\Core\Database\Connection $connection
-  *   The database connection object.
-  *
-  * @return string|false
-  *   A string representing the major branch of Drupal core (e.g. '6' for
-  *   Drupal 6.x), or FALSE if no valid version is matched.
-  */
+   * Determines what version of Drupal the source database contains.
+   *
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection object.
+   *
+   * @return string|false
+   *   A string representing the major branch of Drupal core (e.g. '6' for
+   *   Drupal 6.x), or FALSE if no valid version is matched.
+   */
   public static function getLegacyDrupalVersion(Connection $connection) {
     // Don't assume because a table of that name exists, that it has the columns
     // we're querying. Catch exceptions and report that the source database is
