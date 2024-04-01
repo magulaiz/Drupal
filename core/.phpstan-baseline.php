@@ -2515,16 +2515,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/EventSubscriber/SpecialAttributesRouteSubscriberTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^@dataProvider providerTestEquals related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Field/FieldItemListTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
-	'count' => 16,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Field/FieldItemListTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getConfig\\(\\) of class GuzzleHttp\\\\Client\\:
 Client\\:\\:getConfig will be removed in guzzlehttp/guzzle\\:8\\.0\\.$#',
 	'count' => 1,
