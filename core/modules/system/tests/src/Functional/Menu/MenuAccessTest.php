@@ -128,23 +128,31 @@ class MenuAccessTest extends BrowserTestBase {
     // -menu_test.child1_test
     // --menu_test.super_child1_test
     // -menu_test.child2_test
-    // --menu_test.super_child2_test
-    // --menu_test.super_child3_test
-    // -menu_test.child3_test
-    // All routes in this tree except the "super_child" routes should have the
-    // '_access_admin_menu_block_page' requirement which denies access unless
-    // the user has access to a menu item under that route. Route
-    // 'menu_test.child3_test' has no menu items underneath it so no user should
-    // have access to this route even though it has the requirement
+    // --menu_test.grand_child2_test
+    // --menu_test.grand_child3_test
+    // -menu_test.child3_test_block
+    // -menu_test.child4_test_overview
+    // -menu_test.child4_test
+    // --menu_test.grand_child4_test
+    // All routes in this tree except the "grand_child" and "child4_test" routes
+    // should have the '_access_admin_menu_block_page' requirement which denies
+    // access unless the user has access to a menu item under that route. Route
+    // 'menu_test.child3_test_block' and 'menu_test.child4_test_overview' have
+    // no menu items underneath it so no user should have access to these routes
+    // even though they have the requirement:
     // `_access: 'TRUE'`.
     $tree_routes = [
       'menu_test.parent_test',
       'menu_test.child1_test',
       'menu_test.child2_test',
-      'menu_test.child3_test',
-      'menu_test.super_child1_test',
-      'menu_test.super_child2_test',
-      'menu_test.super_child3_test',
+      'menu_test.child3_test_block',
+      'menu_test.child4_test',
+      'menu_test.child4_test_overview',
+      'menu_test.grand_child1_test',
+      'menu_test.grand_child2_test',
+      'menu_test.grand_child3_test',
+      'menu_test.great_grand_child1_test',
+      'menu_test.grand_child4_test',
     ];
 
     // Create a user with access to only the top level parent.
@@ -178,27 +186,47 @@ class MenuAccessTest extends BrowserTestBase {
       'access child2 test page',
       'access super child3 test page',
     ]);
+
+    // Create a user with access only to a single child, non overview page along
+    // with its child (a grand child).
+    $grandChild4User = $this->drupalCreateUser([
+      'access parent test page',
+      'access child4 test page',
+      'access grand child4 test page',
+    ]);
+    // Create a user with access only to a non overview child page.
+    $child4NoGrandChild4User = $this->drupalCreateUser([
+      'access parent test page',
+      'access child4 test page',
+    ]);
+
     $noParentAccessUser = $this->drupalCreateUser([
       'access child1 test page',
       'access child2 test page',
-      'access super child1 test page',
-      'access super child2 test page',
-      'access super child3 test page',
+      'access child4 test page',
+      'access grand child1 test page',
+      'access grand child2 test page',
+      'access grand child3 test page',
+      'access great grand child1 test page',
+      'access grand child4 test page',
     ]);
 
-    // Users that do not have access to any of the 'super_child' routes will
-    // not have access to any of the routes in the tree.
-    $this->assertUserRoutesAccess($parentUser, [], ...$tree_routes);
-    $this->assertUserRoutesAccess($childOnlyUser, [], ...$tree_routes);
-
+    // Users that do not have access to any of the 'grand_child' routes where
+    // the 'child' routes have the '_access_admin_menu_block_page' requirement
+    // will not have access to any of the routes in the tree.
+    $this->assertUserRoutesAccess($parentUser, [], $tree_routes);
+    $this->assertUserRoutesAccess($childOnlyUser, [], $tree_routes);
     // A user that does not have access to the top level parent but has access
     // to all the other routes will have access to all routes except the parent
     // and 'menu_test.child3_test', because it has no items underneath in the
     // menu.
     $this->assertUserRoutesAccess(
       $noParentAccessUser,
-      array_diff($tree_routes, ['menu_test.parent_test', 'menu_test.child3_test']),
-      ...$tree_routes
+      array_diff($tree_routes, [
+        'menu_test.parent_test',
+        'menu_test.child3_test_block',
+      ]),
+      $tree_routes
     );
     // Users who have only access to one super child route should have access
     // only to that route and its parents.
@@ -215,8 +243,29 @@ class MenuAccessTest extends BrowserTestBase {
       // The 'menu_test.super_child3_test' menu item is nested under
       // 'menu_test.child2_test' to ensure access is correct when there are
       // multiple items nested at the same level.
-      ['menu_test.parent_test', 'menu_test.child2_test', 'menu_test.super_child3_test'],
-      ...$tree_routes);
+      ['menu_test.parent_test', 'menu_test.child2_test', 'menu_test.grand_child3_test'],
+      $tree_routes);
+
+    // Users who have only access to one grand child route should have access
+    // only to that route and its parents.
+    $this->assertUserRoutesAccess(
+      $grandChild4User, [
+        'menu_test.parent_test',
+        'menu_test.child4_test',
+        'menu_test.child4_test_overview',
+        'menu_test.grand_child4_test',
+      ],
+      $tree_routes);
+    // Users who don't have access to a grand child route, but where the child
+    // route does not have the '_access_admin_menu_block_page' requirement,
+    // should have access to that child route, but not the grand child.
+    $this->assertUserRoutesAccess(
+      $child4NoGrandChild4User, [
+        'menu_test.parent_test',
+        'menu_test.child4_test',
+        'menu_test.child4_test_overview',
+      ],
+      $tree_routes);
 
     // Test a route that has parameter defined in the menu item.
     $this->drupalLogin($parentUser);
