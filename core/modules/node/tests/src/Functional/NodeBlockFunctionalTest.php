@@ -266,8 +266,8 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->assertSession()->statusMessageContains('The block configuration has been saved.', 'status');
 
     $this->clickLink('Configure');
-    $this->assertSession()->checkboxChecked('edit-visibility-and-or-all-or');
     $this->assertSession()->checkboxChecked('edit-visibility-entity-bundlenode-bundles-article');
+    $this->assertSession()->fieldValueEquals('edit-settings-condition-logic', 'or');
     $this->assertSession()->fieldValueEquals('edit-visibility-request-path-pages', '/test');
 
     // Test that basic page with URL /test has block.

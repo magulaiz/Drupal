@@ -16,6 +16,7 @@ settings:
   label: Breadcrumbs
   label_display: '0'
   provider: system
+  condition_logic: and
 visibility:
   request_path:
     id: request_path

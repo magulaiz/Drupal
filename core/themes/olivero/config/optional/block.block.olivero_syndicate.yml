@@ -17,4 +17,5 @@ settings:
   label_display: '0'
   provider: node
   block_count: 10
+  condition_logic: and
 visibility: {  }

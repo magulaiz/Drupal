@@ -21,4 +21,5 @@ settings:
   level: 1
   depth: 2
   expand_all_items: true
+  condition_logic: and
 visibility: {  }

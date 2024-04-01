@@ -25,6 +25,7 @@ settings:
   status: true
   info: ''
   view_mode: full
+  condition_logic: and
 visibility:
   request_path:
     id: request_path

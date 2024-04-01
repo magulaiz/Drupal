@@ -21,7 +21,7 @@ function block_removed_post_updates() {
 }
 
 /**
- * Updates all blocks with new settings for condition logic
+ * Updates all blocks with new settings for condition logic.
  */
 function block_post_update_move_custom_block_library(&$sandbox = NULL): void {
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'block', function (BlockInterface $block) {

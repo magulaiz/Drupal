@@ -16,4 +16,5 @@ settings:
   label: 'Status messages'
   label_display: '0'
   provider: system
+  condition_logic: and
 visibility: {  }

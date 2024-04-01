@@ -83,6 +83,15 @@ class BlockInterfaceTest extends KernelTestBase {
         '#title' => 'Display message',
         '#default_value' => 'My custom display message.',
       ],
+      'condition_logic' => [
+        '#type' => 'select',
+        '#title' => 'Conditions logic',
+        '#options' => [
+          'and' => 'And',
+          'or' => 'Or',
+        ],
+        '#default_value' => 'and',
+      ],
     ];
     $form_state = new FormState();
     // Ensure there are no form elements that do not belong to the plugin.

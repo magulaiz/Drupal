@@ -16,4 +16,5 @@ settings:
   provider: core
   primary: false
   secondary: true
+  condition_logic: and
 visibility: {  }
