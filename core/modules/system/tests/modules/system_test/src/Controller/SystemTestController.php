@@ -13,8 +13,8 @@ use Drupal\Core\Render\Markup;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\LocalRedirectResponse;
 use Drupal\Core\Routing\TrustedRedirectResponse;
-use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Controller routines for system_test routes.
  */
-class SystemTestController extends ControllerBase implements TrustedCallbackInterface {
+class SystemTestController extends ControllerBase {
 
   /**
    * The lock service.
@@ -279,6 +279,7 @@ class SystemTestController extends ControllerBase implements TrustedCallbackInte
   /**
    * Sets a cache tag on an element to help test #pre_render and cache tags.
    */
+  #[TrustedCallback]
   public static function preRenderCacheTags($elements) {
     $elements['#cache']['tags'][] = 'pre_render';
     return $elements;

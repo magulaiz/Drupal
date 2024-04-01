@@ -5,12 +5,12 @@ namespace Drupal\node;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
 use Drupal\Core\Render\Element\Link;
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * View builder handler for nodes.
  */
-class NodeViewBuilder extends EntityViewBuilder implements TrustedCallbackInterface {
+class NodeViewBuilder extends EntityViewBuilder {
 
   /**
    * {@inheritdoc}
@@ -86,6 +86,7 @@ class NodeViewBuilder extends EntityViewBuilder implements TrustedCallbackInterf
    * @return array
    *   A renderable array representing the node links.
    */
+  #[TrustedCallback]
   public static function renderLinks($node_entity_id, $view_mode, $langcode, $is_in_preview, $revision_id = NULL) {
     $links = [
       '#theme' => 'links__node',
@@ -148,15 +149,6 @@ class NodeViewBuilder extends EntityViewBuilder implements TrustedCallbackInterf
       '#links' => $links,
       '#attributes' => ['class' => ['links', 'inline']],
     ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    $callbacks = parent::trustedCallbacks();
-    $callbacks[] = 'renderLinks';
-    return $callbacks;
   }
 
 }

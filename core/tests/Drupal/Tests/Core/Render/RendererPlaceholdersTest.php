@@ -10,7 +10,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Render\RenderContext;
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * @coversDefaultClass \Drupal\Core\Render\Renderer
@@ -1128,7 +1128,7 @@ EOS;
 /**
  * @see \Drupal\Tests\Core\Render\RendererPlaceholdersTest::testRecursivePlaceholder()
  */
-class RecursivePlaceholdersTest implements TrustedCallbackInterface {
+class RecursivePlaceholdersTest {
 
   /**
    * #lazy_builder callback; bubbles another placeholder.
@@ -1139,6 +1139,7 @@ class RecursivePlaceholdersTest implements TrustedCallbackInterface {
    * @return array
    *   A renderable array.
    */
+  #[TrustedCallback]
   public static function callback($animal) {
     return [
       'another' => [
@@ -1146,13 +1147,6 @@ class RecursivePlaceholdersTest implements TrustedCallbackInterface {
         '#lazy_builder' => [PlaceholdersTest::class . '::callback', [$animal]],
       ],
     ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['callback'];
   }
 
 }

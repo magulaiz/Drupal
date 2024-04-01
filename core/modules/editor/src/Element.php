@@ -2,16 +2,16 @@
 
 namespace Drupal\editor;
 
-use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Defines a service for Text Editor's render elements.
  */
-class Element implements TrustedCallbackInterface {
+class Element {
 
   /**
    * The Text Editor plugin manager service.
@@ -31,15 +31,9 @@ class Element implements TrustedCallbackInterface {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['preRenderTextFormat'];
-  }
-
-  /**
    * Additional #pre_render callback for 'text_format' elements.
    */
+  #[TrustedCallback]
   public function preRenderTextFormat(array $element) {
     // Allow modules to programmatically enforce no client-side editor by
     // setting the #editor property to FALSE.
@@ -63,7 +57,7 @@ class Element implements TrustedCallbackInterface {
         unset($editors[$key]);
       }
     }
-    if (count($editors) === 0) {
+    if (empty($editors)) {
       return $element;
     }
 
@@ -97,7 +91,10 @@ class Element implements TrustedCallbackInterface {
     $element['#attached']['library'][] = 'editor/drupal.editor';
 
     // Attach attachments for all available editors.
-    $element['#attached'] = BubbleableMetadata::mergeAttachments($element['#attached'], $this->pluginManager->getAttachments($format_ids));
+    $element['#attached'] = BubbleableMetadata::mergeAttachments(
+      $element['#attached'],
+      $this->pluginManager->getAttachments($format_ids)
+    );
 
     // Apply XSS filters when editing content if necessary. Some types of text
     // editors cannot guarantee that the end user won't become a victim of XSS.

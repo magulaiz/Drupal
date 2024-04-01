@@ -2,12 +2,12 @@
 
 namespace Drupal\views_test_data\Controller;
 
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Controller class for views_test_data callbacks.
  */
-class ViewsTestDataController implements TrustedCallbackInterface {
+class ViewsTestDataController {
 
   /**
    * Renders an error form page.
@@ -29,6 +29,7 @@ class ViewsTestDataController implements TrustedCallbackInterface {
   /**
    * #lazy_builder callback; for testing purposes only.
    */
+  #[TrustedCallback]
   public static function placeholderLazyBuilder() {
     // No-op.
     return [];
@@ -43,16 +44,10 @@ class ViewsTestDataController implements TrustedCallbackInterface {
    * @return array
    *   The changed render array.
    */
+  #[TrustedCallback]
   public static function preRender($element) {
     $element['#markup'] = '\Drupal\views_test_data\Controller\ViewsTestDataController::preRender executed';
     return $element;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['placeholderLazyBuilder', 'preRender'];
   }
 
 }

@@ -2,10 +2,10 @@
 
 namespace Drupal\filter_test\Plugin\Filter;
 
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\filter\Attribute\Filter;
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 use Drupal\filter\Plugin\FilterInterface;
@@ -19,14 +19,17 @@ use Drupal\filter\Plugin\FilterInterface;
   description: new TranslatableMarkup("Appends a placeholder to the content; associates #lazy_builder callback."),
   type: FilterInterface::TYPE_TRANSFORM_REVERSIBLE
 )]
-class FilterTestPlaceholders extends FilterBase implements TrustedCallbackInterface {
+class FilterTestPlaceholders extends FilterBase {
 
   /**
    * {@inheritdoc}
    */
   public function process($text, $langcode) {
     $result = new FilterProcessResult($text);
-    $placeholder = $result->createPlaceholder('\Drupal\filter_test\Plugin\Filter\FilterTestPlaceholders::renderDynamicThing', ['llama']);
+    $placeholder = $result->createPlaceholder(
+      '\Drupal\filter_test\Plugin\Filter\FilterTestPlaceholders::renderDynamicThing',
+      ['llama']
+    );
     $result->setProcessedText($text . '<p>' . $placeholder . '</p>');
     return $result;
   }
@@ -40,17 +43,11 @@ class FilterTestPlaceholders extends FilterBase implements TrustedCallbackInterf
    * @return array
    *   A renderable array.
    */
+  #[TrustedCallback]
   public static function renderDynamicThing($thing) {
     return [
       '#markup' => new FormattableMarkup('This is a dynamic @thing.', ['@thing' => $thing]),
     ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['renderDynamicThing'];
   }
 
 }

@@ -13,7 +13,6 @@ use Drupal\Core\Render\HtmlResponse;
 use Drupal\Core\Render\PlaceholderGeneratorInterface;
 use Drupal\Core\Render\RenderCacheInterface;
 use Drupal\Core\Render\Renderer;
-use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Core\Utility\CallableResolver;
 use Drupal\Tests\UnitTestCase;
@@ -23,6 +22,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * @coversDefaultClass \Drupal\big_pipe\Render\BigPipe
@@ -104,7 +104,7 @@ class FiberPlaceholderTest extends UnitTestCase {
 
 }
 
-class TurtleLazyBuilder implements TrustedCallbackInterface {
+class TurtleLazyBuilder {
 
   /**
    * #lazy_builder callback.
@@ -113,6 +113,7 @@ class TurtleLazyBuilder implements TrustedCallbackInterface {
    *
    * @return array
    */
+  #[TrustedCallback]
   public static function turtle(): array {
     if (\Fiber::getCurrent() !== NULL) {
       \Fiber::suspend();
@@ -123,13 +124,6 @@ class TurtleLazyBuilder implements TrustedCallbackInterface {
     return [
       '#markup' => '<span>Turtle is finally here. But how?</span>',
     ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['turtle'];
   }
 
 }

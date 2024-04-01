@@ -4,10 +4,9 @@ namespace Drupal\big_pipe_regression_test;
 
 use Drupal\big_pipe\Render\BigPipeMarkup;
 use Drupal\Component\Utility\Random;
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
-class BigPipeRegressionTestController implements TrustedCallbackInterface {
-
+class BigPipeRegressionTestController {
   const MARKER_2678662 = '<script>var hitsTheFloor = "</body>";</script>';
 
   const PLACEHOLDER_COUNT = 3000;
@@ -71,6 +70,7 @@ class BigPipeRegressionTestController implements TrustedCallbackInterface {
    *
    * @see \Drupal\Tests\big_pipe\FunctionalJavascript\BigPipeRegressionTest::testBigPipeLargeContent
    */
+  #[TrustedCallback]
   public static function largeContentBuilder() {
     return [
       '#theme' => 'big_pipe_test_large_content',
@@ -83,6 +83,7 @@ class BigPipeRegressionTestController implements TrustedCallbackInterface {
    *
    * @return array
    */
+  #[TrustedCallback]
   public static function currentTime() {
     return [
       '#markup' => '<time datetime="' . date('Y-m-d', time()) . '"></time>',
@@ -99,15 +100,9 @@ class BigPipeRegressionTestController implements TrustedCallbackInterface {
    * @return array
    *   Render array.
    */
+  #[TrustedCallback]
   public static function renderRandomSentence(int $length): array {
     return ['#cache' => ['max-age' => 0], '#markup' => (new Random())->sentences($length)];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['currentTime', 'largeContentBuilder', 'renderRandomSentence'];
   }
 
 }
