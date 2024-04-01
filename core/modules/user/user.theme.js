@@ -62,7 +62,7 @@
    *   Markup for password suggestions.
    */
   Drupal.theme.passwordSuggestions = ({ hasWeaknesses }, tips) =>
-    `<div class="password-suggestions">${
+    `<div class="password-suggestions" aria-live="polite">${
       tips.length
         ? `${hasWeaknesses}<ul><li>${tips.join('</li><li>')}</li></ul>`
         : ''

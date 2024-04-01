@@ -80,7 +80,7 @@
           .find('[data-drupal-selector="password-match-status-text"]')
           .first();
 
-        const $confirmInputParent = $confirmInput
+        $confirmInput
           .parent()
           .addClass('confirm-parent')
           .append($passwordConfirmMessage);
@@ -132,10 +132,15 @@
           password.$suggestions = $(
             Drupal.theme('passwordSuggestions', settings.password, []),
           );
+          password.$suggestions.attr(
+            'id',
+            $mainInput[0].id + '-suggestions',
+          );
 
           password.$suggestions.hide();
           $mainInputParent.append($passwordStrength);
-          $confirmInputParent.after(password.$suggestions);
+          $mainInputParent.before(password.$suggestions);
+          $mainInput.attr('aria-details', $mainInput[0].id + '-suggestions')
         }
 
         /**
@@ -204,11 +209,13 @@
 
             // Update the suggestions for how to improve the password if needed.
             if (
-              password.$suggestions.html() !==
-              $currentPasswordSuggestions.html()
+              password.$suggestions.contents() !==
+              $currentPasswordSuggestions.contents()
             ) {
-              password.$suggestions.replaceWith($currentPasswordSuggestions);
-              password.$suggestions = $currentPasswordSuggestions.toggle(
+              password.$suggestions
+                .empty()
+                .append($currentPasswordSuggestions.contents());
+              password.$suggestions = password.$suggestions.toggle(
                 // Only show the description box if a weakness exists in the
                 // password.
                 result.strength !== 100,
