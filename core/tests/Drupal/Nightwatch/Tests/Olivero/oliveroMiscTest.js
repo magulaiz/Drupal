@@ -1,3 +1,5 @@
+const { testPerTheme } = require('../../globals');
+
 const preloadFontPaths = [
   'core/themes/olivero/fonts/metropolis/Metropolis-Regular.woff2',
   'core/themes/olivero/fonts/metropolis/Metropolis-SemiBold.woff2',
@@ -18,49 +20,51 @@ module.exports = {
     browser.drupalUninstall();
   },
   'Verify font loading': (browser) => {
-    browser
-      .drupalRelativeURL('/')
-      .waitForElementVisible('body')
-      // Check that <link rel="preload"> tags properly reference font.
-      .execute(
-        // eslint-disable-next-line func-names, prefer-arrow-callback, no-shadow
-        function (preloadFontPaths) {
-          const basePath = drupalSettings.path.baseUrl;
-          let selectorsExist = true;
-          preloadFontPaths.forEach((path) => {
-            if (!document.head.querySelector(`[href="${basePath + path}"]`)) {
-              selectorsExist = false;
-            }
-          });
+    testPerTheme(browser, (browser, theme, title) => {
+      browser
+        .drupalRelativeURL('/')
+        .waitForElementVisible('body')
+        // Check that <link rel="preload"> tags properly reference font.
+        .execute(
+          // eslint-disable-next-line func-names, prefer-arrow-callback, no-shadow
+          function (preloadFontPaths) {
+            const basePath = drupalSettings.path.baseUrl;
+            let selectorsExist = true;
+            preloadFontPaths.forEach((path) => {
+              if (!document.head.querySelector(`[href="${basePath + path}"]`)) {
+                selectorsExist = false;
+              }
+            });
 
-          return selectorsExist;
-        },
-        [preloadFontPaths],
-        (result) => {
-          browser.assert.ok(
-            result.value,
-            'Check that <link rel="preload"> tags properly reference font.',
-          );
-        },
-      )
-      // Check that the CSS @font-face declaration has loaded the font.
-      .execute(
-        // eslint-disable-next-line func-names, prefer-arrow-callback, no-shadow
-        function () {
-          document.fonts.load('16px metropolis');
-          document.fonts.load('16px Lora');
-          return (
-            document.fonts.check('16px metropolis') &&
-            document.fonts.check('16px Lora')
-          );
-        },
-        [],
-        (result) => {
-          browser.assert.ok(
-            result.value,
-            'Check that the CSS @font-face declaration has loaded the font.',
-          );
-        },
-      );
+            return selectorsExist;
+          },
+          [preloadFontPaths],
+          (result) => {
+            browser.assert.ok(
+              result.value,
+              'Check that <link rel="preload"> tags properly reference font.',
+            );
+          },
+        )
+        // Check that the CSS @font-face declaration has loaded the font.
+        .execute(
+          // eslint-disable-next-line func-names, prefer-arrow-callback, no-shadow
+          function () {
+            document.fonts.load('16px metropolis');
+            document.fonts.load('16px Lora');
+            return (
+              document.fonts.check('16px metropolis') &&
+              document.fonts.check('16px Lora')
+            );
+          },
+          [],
+          (result) => {
+            browser.assert.ok(
+              result.value,
+              'Check that the CSS @font-face declaration has loaded the font.',
+            );
+          },
+        );
+    });
   },
 };

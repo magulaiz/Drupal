@@ -10,6 +10,33 @@ const commandAsWebserver = (command) => {
   return command;
 };
 
+const oliveroTestThemes = {
+  test_custom_theme: 'Test Custom Theme',
+  olivero: 'Olivero',
+};
+
+const testPerTheme = (browser, fn) => {
+  Object.entries(oliveroTestThemes).forEach(([theme, title]) => {
+    // Button uses title, if available, machine name otherwise
+    const setAsDefault = `a[title="Set ${theme} as default theme"], a[title="Set ${title} as default theme"]`;
+
+    browser
+      .drupalEnableTheme(theme, false)
+      .drupalRelativeURL('/admin/appearance')
+      .waitForElementVisible('main')
+      .element('css selector', setAsDefault, (result) => {
+        // Set current theme to default, if it isn't already.
+        if (result.status !== -1) {
+          browser.click(setAsDefault);
+        }
+
+        // Run the test on this theme.
+        fn.call({}, browser, theme, title);
+      });
+  });
+};
+
+
 module.exports = {
   afterEach: (browser, done) => {
     // Writes the console log - used by the "logAndEnd" command.
@@ -47,4 +74,5 @@ module.exports = {
     }
   },
   commandAsWebserver,
+  testPerTheme,
 };
