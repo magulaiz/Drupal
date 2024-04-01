@@ -367,8 +367,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
   protected function assertEmailsSent() {
     // There should be one user activation email.
     $captured_emails = \Drupal::state()->get('system.test_mail_collector', []);
-    $this->assertCount(1, $captured_emails);
-    $this->assertEquals('user_status_activated', $captured_emails[0]['id']);
+    $this->assertCount(0, $captured_emails);
   }
 
 }

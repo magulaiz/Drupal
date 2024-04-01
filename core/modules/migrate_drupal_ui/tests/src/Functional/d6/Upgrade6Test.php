@@ -42,15 +42,6 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    // @todo remove in https://www.drupal.org/project/drupal/issues/3267040
-    // Delete the existing content made to test the ID Conflict form. Migrations
-    // are to be done on a site without content. The test of the ID Conflict
-    // form is being moved to its own issue which will remove the deletion
-    // of the created nodes.
-    // See https://www.drupal.org/project/drupal/issues/3087061.
-    $this->nodeStorage = $this->container->get('entity_type.manager')
-      ->getStorage('node');
-    $this->nodeStorage->delete($this->nodeStorage->loadMultiple());
 
     $this->loadFixture($this->getModulePath('migrate_drupal') . '/tests/fixtures/drupal6.php');
 
@@ -86,7 +77,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'editor' => 2,
       'field_config' => 102,
       'field_storage_config' => 71,
-      'file' => 7,
+      'file' => 6,
       'filter_format' => 7,
       'image_style' => 6,
       'language_content_settings' => 15,
@@ -104,7 +95,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'taxonomy_vocabulary' => 7,
       'user' => 7,
       'user_role' => 7,
-      'menu_link_content' => 10,
+      'menu_link_content' => 9,
       'view' => 14,
       'date_format' => 12,
       'entity_form_display' => 29,
@@ -122,8 +113,8 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     $counts = $this->getEntityCounts();
     $counts['block_content'] = 3;
     $counts['comment'] = 9;
-    $counts['file'] = 8;
-    $counts['menu_link_content'] = 11;
+    $counts['file'] = 7;
+    $counts['menu_link_content'] = 10;
     $counts['node'] = 19;
     $counts['taxonomy_term'] = 16;
     $counts['user'] = 8;

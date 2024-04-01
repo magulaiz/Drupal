@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate_drupal_ui\Functional\d6;
 
+use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;
 use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
 
 /**
@@ -12,6 +13,8 @@ use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
  * @group migrate_drupal_ui
  */
 class IdConflictTest extends MigrateUpgradeExecuteTestBase {
+
+  use CreateTestContentEntitiesTrait;
 
   /**
    * {@inheritdoc}
@@ -29,6 +32,10 @@ class IdConflictTest extends MigrateUpgradeExecuteTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+
+    // Create content.
+    $this->createContent();
+
     $this->loadFixture($this->getModulePath('migrate_drupal') . '/tests/fixtures/drupal6.php');
   }
 

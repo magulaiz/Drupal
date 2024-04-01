@@ -13,7 +13,7 @@ use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;
  * Test the credential form for both Drupal 6 and Drupal 7 sources.
  *
  * The credential form is tested with incorrect credentials, correct
- * credentials, and incorrect file paths.
+ * credentials, and incorrect file paths. This is foo.
  *
  * @group migrate_drupal_ui
  */
