@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\StringTranslation;
 
 use Drupal\Component\Utility\Bytes;
@@ -27,7 +29,7 @@ class ByteSizeMarkupTest extends UnitTestCase {
   /**
    * Provides a list of byte size to test.
    */
-  public function providerTestCommonFormatSize() {
+  public static function providerTestCommonFormatSize() {
     $kb = Bytes::KILOBYTE;
     return [
       ['0 bytes', 0],

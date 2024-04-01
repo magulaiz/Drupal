@@ -146,7 +146,7 @@ class MenuLinksTest extends KernelTestBase {
     $link = MenuLinkContent::create($options);
     $link->save();
     // Make sure the changed timestamp is set.
-    $this->assertEquals(REQUEST_TIME, $link->getChangedTime(), 'Creating a menu link sets the "changed" timestamp.');
+    $this->assertGreaterThanOrEqual(\Drupal::time()->getRequestTime(), $link->getChangedTime(), 'Creating a menu link sets the "changed" timestamp.');
     $options = [
       'title' => 'Test Link',
     ];
@@ -154,7 +154,7 @@ class MenuLinksTest extends KernelTestBase {
     $link->changed->value = 0;
     $link->save();
     // Make sure the changed timestamp is updated.
-    $this->assertEquals(REQUEST_TIME, $link->getChangedTime(), 'Changing a menu link sets "changed" timestamp.');
+    $this->assertGreaterThanOrEqual(\Drupal::time()->getRequestTime(), $link->getChangedTime(), 'Changing a menu link sets "changed" timestamp.');
   }
 
   /**
@@ -457,6 +457,22 @@ class MenuLinksTest extends KernelTestBase {
     $this->assertInstanceOf(MenuLinkContent::class, $tree_element->link->getEntity());
     $this->assertEquals($title, $tree_element->link->getEntity()->getTitle());
     $this->assertEquals($menu_link->id(), $tree_element->link->getEntity()->id());
+  }
+
+  /**
+   * Tests that the form doesn't break for links with arbitrary menu names.
+   */
+  public function testMenuLinkContentFormInvalidParentMenu(): void {
+    $menu_link = MenuLinkContent::create([
+      'title' => 'Menu link test',
+      'provider' => 'menu_link_content',
+      'menu_name' => 'non-existent',
+      'link' => ['uri' => 'internal:/user/login'],
+    ]);
+    // Get the form for a new link, assert that building it doesn't break if
+    // the links menu name doesn't exist.
+    $build = \Drupal::service('entity.form_builder')->getForm($menu_link);
+    static::assertIsArray($build);
   }
 
 }

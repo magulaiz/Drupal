@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\book\Unit;
 
 use Drupal\book\BookManager;
@@ -102,7 +104,7 @@ class BookManagerTest extends UnitTestCase {
    * @return array
    *   The test data.
    */
-  public function providerTestGetBookParents() {
+  public static function providerTestGetBookParents() {
     $empty = [
       'p1' => 0,
       'p2' => 0,

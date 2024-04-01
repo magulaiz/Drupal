@@ -160,8 +160,19 @@
     ajax.commands.insert(ajax, response, status);
 
     // Move the buttons to the jQuery UI dialog buttons area.
-    if (!response.dialogOptions.buttons) {
+    response.dialogOptions = response.dialogOptions || {};
+    if (typeof response.dialogOptions.drupalAutoButtons === 'undefined') {
       response.dialogOptions.drupalAutoButtons = true;
+    } else if (response.dialogOptions.drupalAutoButtons === 'false') {
+      response.dialogOptions.drupalAutoButtons = false;
+    } else {
+      response.dialogOptions.drupalAutoButtons =
+        !!response.dialogOptions.drupalAutoButtons;
+    }
+    if (
+      !response.dialogOptions.buttons &&
+      response.dialogOptions.drupalAutoButtons
+    ) {
       response.dialogOptions.buttons =
         Drupal.behaviors.dialog.prepareDialogButtons($dialog);
     }
@@ -280,4 +291,27 @@
   $(window).on('dialog:beforeclose', (e, dialog, $element) => {
     $element.off('.dialog');
   });
+
+  /**
+   * Ajax command to open URL in a modal dialog.
+   *
+   * @param {Drupal.Ajax} [ajax]
+   *   An Ajax object.
+   * @param {object} response
+   *   The Ajax response.
+   */
+  Drupal.AjaxCommands.prototype.openModalDialogWithUrl = function (
+    ajax,
+    response,
+  ) {
+    const dialogOptions = response.dialogOptions || {};
+    const elementSettings = {
+      progress: { type: 'throbber' },
+      dialogType: 'modal',
+      dialog: dialogOptions,
+      url: response.url,
+      httpMethod: 'GET',
+    };
+    Drupal.ajax(elementSettings).execute();
+  };
 })(jQuery, Drupal, window.tabbable);

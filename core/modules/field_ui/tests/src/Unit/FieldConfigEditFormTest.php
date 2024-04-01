@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field_ui\Unit;
 
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
@@ -50,7 +52,7 @@ class FieldConfigEditFormTest extends UnitTestCase {
   /**
    * Provides test cases with required and optional elements.
    */
-  public function providerRequired(): \Generator {
+  public static function providerRequired(): \Generator {
     yield 'required' => [
       [['#required' => TRUE]],
       TRUE,
