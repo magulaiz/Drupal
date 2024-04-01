@@ -95,6 +95,7 @@ module.exports = {
         .perform(function () {
           return this.actions().keyUp(browser.Keys.SHIFT);
         });
+    });
   },
   'search narrow form is accessible': (browser) => {
     testPerTheme(browser, (browser, theme, title) => {

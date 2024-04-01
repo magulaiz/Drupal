@@ -36,7 +36,6 @@ const testPerTheme = (browser, fn) => {
   });
 };
 
-
 module.exports = {
   afterEach: (browser, done) => {
     // Writes the console log - used by the "logAndEnd" command.

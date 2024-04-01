@@ -11,7 +11,6 @@ use Drupal\comment\Entity\Comment;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\PhpExecutableFinder;
 
-
 /**
  * Setup file used by TestSiteInstallTestScript.
  *
@@ -57,7 +56,6 @@ class TestSiteOliveroInstallTestScript implements TestSetupInterface {
     assert($module_installer instanceof ModuleInstallerInterface);
     $module_installer->install(['olivero_test']);
     $module_installer->install(['nightwatch_theme_install_utility']);
-
 
     // Install Olivero and set it as the default theme.
     $theme_installer = \Drupal::service('theme_installer');

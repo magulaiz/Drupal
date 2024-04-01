@@ -1,4 +1,5 @@
 const { testPerTheme } = require('../../globals');
+
 const tableSelector = '#edit-field-multiple-value-form-field-wrapper table';
 const tableHeaderSelector = '#edit-field-multiple-value-form-field-wrapper th';
 const headerSelector = '#edit-field-multiple-value-form-field-wrapper h4';

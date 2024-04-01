@@ -43,7 +43,10 @@ module.exports = {
         .assert.elementPresent(mainMessagesContainer)
 
         // We should load 3 messages on page load from \Drupal::messenger()
-        .assert.elementCount(`${mainMessagesContainer} > .messages-list__item`, 3)
+        .assert.elementCount(
+          `${mainMessagesContainer} > .messages-list__item`,
+          3,
+        )
 
         // We should have one message of each type
         .assert.elementCount(`${mainMessagesContainer} > .messages--status`, 1)
@@ -56,7 +59,10 @@ module.exports = {
         .click(mainButtons.addError)
 
         // We should have 6 total messages
-        .assert.elementCount(`${mainMessagesContainer} > .messages-list__item`, 6)
+        .assert.elementCount(
+          `${mainMessagesContainer} > .messages-list__item`,
+          6,
+        )
 
         // We should have 2 messages of each type
         .assert.elementCount(`${mainMessagesContainer} > .messages--status`, 2)

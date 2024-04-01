@@ -46,7 +46,7 @@ yarn watch:css // compile PostCSS per save
 
 ## Reporting Starterkit Bugs
 
-Should you encounter a bug while generating a new theme, please
+Should you encounter a bug while generating a new theme,
 [create a new issue](https://www.drupal.org/node/add/project-issue/drupal), and
 be sure to select the correct version of Drupal Core, as well as "Olivero theme"
 as the component.

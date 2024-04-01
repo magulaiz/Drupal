@@ -47,7 +47,9 @@ module.exports = {
           'true',
         )
         // Verify tertiary menu item exists.
-        .assert.visible('#primary-menu-item-11 .primary-nav__menu-link--level-3')
+        .assert.visible(
+          '#primary-menu-item-11 .primary-nav__menu-link--level-3',
+        )
         // Test interactions for route:<button> menu links.
         .assert.not.visible(`#${buttonSubMenuId}`)
         .assert.attributeEquals(
