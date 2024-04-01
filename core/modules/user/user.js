@@ -123,6 +123,7 @@
           const $passwordStrength = $(
             Drupal.theme('passwordStrength', settings.password),
           );
+          const suggestionId = `${$mainInput[0].id}-suggestions`;
           password.$strengthBar = $passwordStrength
             .find('[data-drupal-selector="password-strength-indicator"]')
             .first();
@@ -132,15 +133,12 @@
           password.$suggestions = $(
             Drupal.theme('passwordSuggestions', settings.password, []),
           );
-          password.$suggestions.attr(
-            'id',
-            $mainInput[0].id + '-suggestions',
-          );
+          password.$suggestions.attr('id', suggestionId);
 
           password.$suggestions.hide();
           $mainInputParent.append($passwordStrength);
           $mainInputParent.before(password.$suggestions);
-          $mainInput.attr('aria-details', $mainInput[0].id + '-suggestions')
+          $mainInput.attr('aria-details', suggestionId);
         }
 
         /**
