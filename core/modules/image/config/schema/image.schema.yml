@@ -116,6 +116,11 @@ field.field_settings.image:
     resize_policy:
       type: string
       label: 'Image resize policy'
+      constraints:
+        Choice:
+          choices:
+            - 'resize_larger_images'
+            - 'reject_larger_images_with_error'
     min_resolution:
       type: string
       label: 'Minimum image dimensions'
