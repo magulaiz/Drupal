@@ -263,7 +263,7 @@ class FileListingTest extends FileFieldTestBase {
    *
    * Issue: https://www.drupal.org/project/drupal/issues/3424701.
    */
-  public function testFileDeleteWithMultipleDomain() {
+  public function testFileDeleteWithMultipleDomain(): void {
 
     // Enable language module.
     \Drupal::service('module_installer')->install(['language']);
