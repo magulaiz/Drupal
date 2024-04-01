@@ -9,9 +9,9 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Markup;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Template\Attribute;
 
 // cspell:ignore fooalert
@@ -602,25 +602,29 @@ class RendererTest extends RendererTestBase {
 
     switch ($access) {
       case AccessResult::allowed():
-        $method = 'accessResultAllowed';
+        $build = [
+          '#access_callback' => 'Drupal\Tests\Core\Render\TestAccessClass::accessResultAllowed',
+        ];
         break;
 
       case AccessResult::forbidden():
-        $method = 'accessResultForbidden';
+        $build = [
+          '#access_callback' => 'Drupal\Tests\Core\Render\TestAccessClass::accessResultForbidden',
+        ];
         break;
 
       case FALSE:
-        $method = 'accessFalse';
+        $build = [
+          '#access_callback' => 'Drupal\Tests\Core\Render\TestAccessClass::accessFalse',
+        ];
         break;
 
       case TRUE:
-        $method = 'accessTrue';
+        $build = [
+          '#access_callback' => 'Drupal\Tests\Core\Render\TestAccessClass::accessTrue',
+        ];
         break;
     }
-
-    $build = [
-      '#access_callback' => 'Drupal\Tests\Core\Render\TestAccessClass::' . $method,
-    ];
 
     $this->assertAccess($build, $access);
   }
@@ -1065,45 +1069,36 @@ class RendererTest extends RendererTestBase {
 
 }
 
-class TestAccessClass implements TrustedCallbackInterface {
+class TestAccessClass {
 
+  #[TrustedCallback]
   public static function accessTrue() {
     return TRUE;
   }
 
+  #[TrustedCallback]
   public static function accessFalse() {
     return FALSE;
   }
 
+  #[TrustedCallback]
   public static function accessResultAllowed() {
     return AccessResult::allowed();
   }
 
+  #[TrustedCallback]
   public static function accessResultForbidden() {
     return AccessResult::forbidden();
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['accessTrue', 'accessFalse', 'accessResultAllowed', 'accessResultForbidden'];
-  }
-
 }
 
-class TestCallables implements TrustedCallbackInterface {
+class TestCallables {
 
+  #[TrustedCallback]
   public function preRenderPrinted($elements) {
     $elements['#printed'] = TRUE;
     return $elements;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['preRenderPrinted'];
   }
 
 }

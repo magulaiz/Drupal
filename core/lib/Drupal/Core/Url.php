@@ -6,13 +6,13 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
-use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Utility\UnroutedUrlAssemblerInterface;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 // cspell:ignore abempty
 
@@ -27,9 +27,8 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @see \Drupal\Core\Entity\EntityBase::toUrl()
  */
-class Url implements TrustedCallbackInterface {
+class Url {
   use DependencySerializationTrait;
-
   /**
    * The URL generator.
    *
@@ -848,6 +847,7 @@ class Url implements TrustedCallbackInterface {
    *
    * @see https://www.drupal.org/node/3342977
    */
+  #[TrustedCallback]
   public static function renderAccess(array $element) {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3342977', E_USER_DEPRECATED);
     return $element['#url']->access();
@@ -914,14 +914,6 @@ class Url implements TrustedCallbackInterface {
   public function setUnroutedUrlAssembler(UnroutedUrlAssemblerInterface $url_assembler) {
     $this->urlAssembler = $url_assembler;
     return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    // @todo Clean-up in https://www.drupal.org/i/3343153
-    return ['renderAccess'];
   }
 
 }

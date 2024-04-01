@@ -9,6 +9,7 @@
 namespace Drupal\big_pipe_test;
 
 use Drupal\big_pipe\Render\BigPipeMarkup;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -35,6 +36,7 @@ class BigPipePlaceholderTestCases {
    *
    * @return \Drupal\big_pipe_test\BigPipePlaceholderTestCase[]
    */
+  #[TrustedCallback]
   public static function cases(ContainerInterface $container = NULL, AccountInterface $user = NULL) {
     // Define the two types of cacheability that we expect to see. These will be
     // used in the expectations.

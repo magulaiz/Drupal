@@ -135,12 +135,9 @@ class InvokableUntrustedObject {
 
 }
 
-class TrustedMethods implements TrustedCallbackInterface {
+class TrustedMethods {
 
-  public static function trustedCallbacks() {
-    return ['callback'];
-  }
-
+  #[TrustedCallback]
   public static function callback() {
     return 'test';
   }
