@@ -60,4 +60,5 @@ class UserShortcutSetCacheContext extends UserCacheContextBase implements CacheC
       ->getStorage('shortcut_set')
       ->getDisplayedToUser($this->user);
   }
+
 }
