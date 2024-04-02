@@ -45,17 +45,25 @@ body.is-fixed {
   background-position: top right;
 }
 
-a:link {
+a {
   color: var(--color-text-primary-medium);
 }
 
-a:link:hover {
+a:hover {
   color: var(--color--primary-50);
 }
 
-a:link:focus {
+a:focus {
   outline: solid 2px currentColor;
   outline-offset: 2px;
+}
+
+a:not([href]) {
+  cursor: default; /* Change cursor to default */
+  -webkit-text-decoration: none;
+  text-decoration: none; /* Remove underline */
+  pointer-events: none; /* Disable pointer events for these links */
+  box-shadow: none; /* Remove box shadow */
 }
 
 button {
