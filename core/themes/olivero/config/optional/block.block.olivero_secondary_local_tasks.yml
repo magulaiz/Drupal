@@ -13,8 +13,8 @@ settings:
   id: local_tasks_block
   label: 'Secondary tabs'
   label_display: '0'
+  condition_logic: and
   provider: core
   primary: false
   secondary: true
-  condition_logic: and
 visibility: {  }

@@ -21,11 +21,11 @@ settings:
   id: 'block_content:4c7d58a3-a45d-412d-9068-259c57e40541'
   label: 'Umami Recipes Banner'
   label_display: '0'
+  condition_logic: and
   provider: block_content
   status: true
   info: ''
   view_mode: full
-  condition_logic: and
 visibility:
   request_path:
     id: request_path

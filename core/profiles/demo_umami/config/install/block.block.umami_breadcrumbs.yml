@@ -15,8 +15,8 @@ settings:
   id: system_breadcrumb_block
   label: Breadcrumbs
   label_display: '0'
-  provider: system
   condition_logic: and
+  provider: system
 visibility:
   request_path:
     id: request_path

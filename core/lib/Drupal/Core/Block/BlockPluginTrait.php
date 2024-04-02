@@ -95,6 +95,7 @@ trait BlockPluginTrait {
       'id' => $this->getPluginId(),
       'label' => '',
       'label_display' => BlockPluginInterface::BLOCK_LABEL_VISIBLE,
+      'condition_logic' => 'and',
       'provider' => $this->pluginDefinition['provider'],
     ];
   }

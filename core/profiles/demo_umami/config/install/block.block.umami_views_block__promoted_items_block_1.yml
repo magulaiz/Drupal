@@ -18,10 +18,10 @@ settings:
   id: 'views_block:promoted_items-block_1'
   label: ''
   label_display: '0'
+  condition_logic: and
   provider: views
   views_label: ''
   items_per_page: none
-  condition_logic: and
 visibility:
   request_path:
     id: request_path
