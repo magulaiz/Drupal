@@ -35,7 +35,8 @@ class TestSiteUserLoginCommand extends Command {
     $this->setName('user-login')
       ->setDescription('Generate a one time login link for an user.')
       ->addArgument('uid', InputArgument::REQUIRED, 'The ID of the user for whom the link will be generated')
-      ->addOption('site-path', NULL, InputOption::VALUE_REQUIRED, 'The path for the test site.');
+      ->addOption('site-path', NULL, InputOption::VALUE_REQUIRED, 'The path for the test site.')
+      ->addOption('assign-admin', NULL, InputOption::VALUE_NONE, 'Whether to assign the user admin rights.');
   }
 
   /**
@@ -63,9 +64,28 @@ class TestSiteUserLoginCommand extends Command {
     if (!is_numeric($uid)) {
       throw new InvalidArgumentException(sprintf('The "uid" argument needs to be an integer, but it is "%s".', $uid));
     }
-    $userEntity = $container->get('entity_type.manager')
-      ->getStorage('user')
-      ->load($uid);
+    $entityTypeManager = $container->get('entity_type.manager');
+    $userStorage = $entityTypeManager->getStorage('user');
+    $userEntity = $userStorage->load($uid);
+
+    if ($input->hasOption('assign-admin')) {
+      $roleStorage = $entityTypeManager->getStorage('user_role');
+      if ($adminRoles = $roleStorage->loadByProperties(['is_admin' => TRUE])) {
+        $adminRoleId = reset($adminRoles)->id();
+      }
+      else {
+        $roleStorage->save($roleStorage->create([
+          'id' => 'administrator',
+          'label' => 'Administrator',
+          'weight' => 3,
+          'is_admin' => TRUE,
+        ]));
+        $adminRoleId = 'administrator';
+      }
+      $userEntity->addRole($adminRoleId);
+      $userStorage->save($userEntity);
+    }
+
     $url = user_pass_reset_url($userEntity) . '/login';
     $output->writeln($url);
 
