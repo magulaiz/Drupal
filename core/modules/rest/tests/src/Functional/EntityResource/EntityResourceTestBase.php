@@ -693,7 +693,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $this->initAuthentication();
     $has_canonical_url = $this->entity->hasLinkTemplate('canonical');
 
-    // Try with all of the following request bodies.
+    // Try with all the following request bodies.
     $not_parseable_request_body = '!{>}<';
     $parseable_valid_request_body = $this->serializer->encode($this->getNormalizedPostEntity(), static::$format);
     $parseable_invalid_request_body = $this->serializer->encode($this->makeNormalizationInvalid($this->getNormalizedPostEntity(), 'label'), static::$format);
@@ -821,7 +821,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $created_entity = $this->entityStorage->loadUnchanged(static::$firstCreatedEntityId);
       $created_entity_normalization = $this->serializer->normalize($created_entity, static::$format, ['account' => $this->account]);
       $this->assertSame($created_entity_normalization, $this->serializer->decode((string) $response->getBody(), static::$format));
-      $this->assertStoredEntityMatchesSentNormalization($valid_entity, $created_entity);
+      $this->assertStoredEntityMatchesSentNormalization($this->getNormalizedPostEntity(), $created_entity);
     }
 
     if ($this->entity->getEntityType()->getStorageClass() !== ContentEntityNullStorage::class && $this->entity->getEntityType()->hasKey('uuid')) {

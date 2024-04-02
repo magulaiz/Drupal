@@ -44,7 +44,6 @@ class UniquePathAliasConstraintValidator extends ConstraintValidator implements 
    */
   public function validate($entity, Constraint $constraint): void {
     /** @var \Drupal\path_alias\PathAliasInterface $entity */
-    $path = $entity->getPath();
     $alias = $entity->getAlias();
     $langcode = $entity->language()->getId();
 

@@ -152,7 +152,8 @@ class PathAliasTest extends PathTestBase {
     $this->assertSession()->statusCodeEquals(404);
 
     // Create the same alias again, using the same source.
-    $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
+    $this->drupalGet('admin/config/search/path/add');
+    $this->submitForm($edit, t('Save'));
     $this->assertSession()->responseContains(new FormattableMarkup('The alias %alias is already in use in this language.', ['%alias' => $edit['alias[0][value]']]));
 
     // Create second test node.
