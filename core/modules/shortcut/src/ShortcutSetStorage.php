@@ -3,7 +3,6 @@
 namespace Drupal\shortcut;
 
 use Drupal\Component\Uuid\UuidInterface;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
