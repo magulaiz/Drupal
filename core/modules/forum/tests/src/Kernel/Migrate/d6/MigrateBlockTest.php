@@ -107,6 +107,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
       'label' => '',
       'provider' => 'forum',
       'label_display' => '0',
+      'condition_logic' => 'and',
       'block_count' => 3,
       'properties' => [
         'administrative' => '1',
@@ -119,6 +120,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
       'label' => '',
       'provider' => 'forum',
       'label_display' => '0',
+      'condition_logic' => 'and',
       'block_count' => 4,
       'properties' => [
         'administrative' => '1',

@@ -259,7 +259,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
       'settings[label_display]' => TRUE,
       'settings[condition_logic]' => 'or',
       'visibility[entity_bundle:node][bundles][article]' => 'article',
-      'visibility[request_path][pages]' => $page1->toUrl()->toString(),
+      'visibility[request_path][pages]' => '/node/1',
     ];
     $this->drupalGet('admin/structure/block/add/' . $block_name . '/' . $default_theme);
     $this->submitForm($edit, 'Save block');

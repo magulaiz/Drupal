@@ -40,6 +40,7 @@ class BlockInterfaceTest extends KernelTestBase {
       'id' => 'test_block_instantiation',
       'label' => 'Custom Display Message',
       'label_display' => BlockPluginInterface::BLOCK_LABEL_VISIBLE,
+      'condition_logic' => 'and',
       'provider' => 'block_test',
       'display_message' => 'no message set',
     ];
@@ -77,12 +78,6 @@ class BlockInterfaceTest extends KernelTestBase {
         '#default_value' => TRUE,
         '#return_value' => 'visible',
       ],
-      'context_mapping' => [],
-      'display_message' => [
-        '#type' => 'textfield',
-        '#title' => 'Display message',
-        '#default_value' => 'My custom display message.',
-      ],
       'condition_logic' => [
         '#type' => 'select',
         '#title' => 'Conditions logic',
@@ -91,6 +86,12 @@ class BlockInterfaceTest extends KernelTestBase {
           'or' => 'Or',
         ],
         '#default_value' => 'and',
+      ],
+      'context_mapping' => [],
+      'display_message' => [
+        '#type' => 'textfield',
+        '#title' => 'Display message',
+        '#default_value' => 'My custom display message.',
       ],
     ];
     $form_state = new FormState();
