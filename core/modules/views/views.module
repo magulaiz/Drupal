@@ -830,4 +830,3 @@ function views_block_build_views_block_alter(array &$build, BlockPluginInterface
   // are aggregated separately where possible.
   $build['#create_placeholder'] = TRUE;
 }
-
