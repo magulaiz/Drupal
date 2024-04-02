@@ -295,7 +295,7 @@ function shortcut_toolbar() {
           '#create_placeholder' => TRUE,
           '#cache' => [
             'keys' => ['shortcut_set_toolbar_links'],
-            'contexts' => ['user'],
+            'contexts' => ['user.shortcut_set'],
           ],
           '#lazy_builder_preview' => [
             '#markup' => '<a href="#" class="toolbar-tray-lazy-placeholder-link">&nbsp;</a>',
