@@ -18,11 +18,6 @@ use Drupal\Core\TypedData\TypedDataManagerInterface;
  */
 class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePluginManagerInterface {
 
-  /**
-   * Default category for field types.
-   */
-  const DEFAULT_CATEGORY = 'general';
-
   use CategorizingPluginManagerTrait {
     getGroupedDefinitions as protected getGroupedDefinitionsTrait;
   }
@@ -106,12 +101,12 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
     }
 
     if ($definition['category'] instanceof TranslatableMarkup) {
-      @trigger_error('Using a translatable string as a category for field type is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3364271', E_USER_DEPRECATED);
-      $definition['category'] = static::DEFAULT_CATEGORY;
+      @trigger_error('Using a translatable string as a category for field type is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3375748', E_USER_DEPRECATED);
+      $definition['category'] = FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY;
     }
     elseif (empty($definition['category'])) {
       // Ensure that every field type has a category.
-      $definition['category'] = static::DEFAULT_CATEGORY;
+      $definition['category'] = FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY;
     }
   }
 
@@ -164,20 +159,45 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
   }
 
   /**
-   * {@inheritdoc}
+   * Gets sorted field type definitions grouped by category.
+   *
+   * In addition to grouping, both categories and its entries are sorted,
+   * whereas plugin definitions are sorted by label.
+   *
+   * @param array[]|null $definitions
+   *   (optional) The plugin definitions to group. If omitted, all plugin
+   *   definitions are used.
+   * @param string $label_key
+   *   (optional) The array key to use as the label of the field type.
+   * @param string $category_label_key
+   *   (optional) The array key to use as the label of the category.
+   *
+   * @return array[]
+   *   Keys are category names, and values are arrays of which the keys are
+   *   plugin IDs and the values are plugin definitions.
    */
-  public function getGroupedDefinitions(array $definitions = NULL, $label_key = 'label') {
+  public function getGroupedDefinitions(array $definitions = NULL, $label_key = 'label', $category_label_key = 'label') {
     $grouped_categories = $this->getGroupedDefinitionsTrait($definitions, $label_key);
     $category_info = $this->fieldTypeCategoryManager->getDefinitions();
+
+    // Ensure that all the referenced categories exist.
     foreach ($grouped_categories as $group => $definitions) {
-      if (!isset($category_info[$group]) && $group !== static::DEFAULT_CATEGORY) {
+      if (!isset($category_info[$group])) {
         assert(FALSE, "\"$group\" must be defined in MODULE_NAME.field_type_categories.yml");
-        $grouped_categories[static::DEFAULT_CATEGORY] += $definitions;
+        if (!isset($grouped_categories[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY])) {
+          $grouped_categories[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY] = [];
+        }
+        $grouped_categories[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY] += $definitions;
         unset($grouped_categories[$group]);
       }
     }
 
-    return $grouped_categories;
+    $normalized_grouped_categories = [];
+    foreach ($grouped_categories as $group => $definitions) {
+      $normalized_grouped_categories[(string) $category_info[$group][$category_label_key]] = $definitions;
+    }
+
+    return $normalized_grouped_categories;
   }
 
   /**
@@ -204,6 +224,15 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
     }
 
     return $definitions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEntityTypeUiDefinitions(string $entity_type_id): array {
+    $ui_definitions = $this->getUiDefinitions();
+    $this->moduleHandler->alter('field_info_entity_type_ui_definitions', $ui_definitions, $entity_type_id);
+    return $ui_definitions;
   }
 
   /**

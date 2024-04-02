@@ -34,7 +34,7 @@ class FileViewsFieldAccessTest extends FieldFieldAccessTestBase {
   public function testFileFields() {
     ConfigurableLanguage::create([
       'id' => 'fr',
-      'name' => 'French',
+      'label' => 'French',
     ])->save();
 
     $user = User::create([
@@ -64,7 +64,7 @@ class FileViewsFieldAccessTest extends FieldFieldAccessTestBase {
     $this->assertFieldAccess('file', 'filesize', '4 bytes');
     $this->assertFieldAccess('file', 'status', 'Permanent');
     // $this->assertFieldAccess('file', 'created', \Drupal::service('date.formatter')->format(123456));
-    // $this->assertFieldAccess('file', 'changed', \Drupal::service('date.formatter')->format(REQUEST_TIME));
+    // $this->assertFieldAccess('file', 'changed', \Drupal::service('date.formatter')->format(\Drupal::time()->getRequestTime()));
   }
 
 }

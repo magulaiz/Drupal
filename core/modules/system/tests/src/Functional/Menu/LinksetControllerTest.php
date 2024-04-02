@@ -69,6 +69,7 @@ final class LinksetControllerTest extends LinksetControllerTestBase {
 
     NodeType::create([
       'type' => 'page',
+      'name' => 'Page',
     ])->save();
 
     $home_page_link = $this->createMenuItem([
@@ -279,12 +280,10 @@ final class LinksetControllerTest extends LinksetControllerTestBase {
     $this->enableEndpoint(TRUE);
     $expected_cacheability = new CacheableMetadata();
     $expected_cacheability->addCacheContexts([
-      'user.permissions',
       'user.roles:authenticated',
     ]);
     $expected_cacheability->addCacheTags([
       'config:system.menu.account',
-      'config:user.role.anonymous',
       'http_response',
     ]);
     $response = $this->doRequest('GET', Url::fromUri('base:/system/menu/account/linkset'));

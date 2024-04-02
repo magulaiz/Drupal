@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Component\Gettext\PoItem;
@@ -34,6 +36,9 @@ class LocaleLocaleLookupTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    // The \Drupal\locale\LocaleTranslation service stores localization cache
+    // data after the response is flushed to the client. We do not want to race
+    // with any string translations that may be saving from the login below.
     $this->setWaitForTerminate();
 
     // Change the language default object to different values.
@@ -101,7 +106,7 @@ class LocaleLocaleLookupTest extends BrowserTestBase {
    *     - translation value
    *     - expected result
    */
-  public function providerTestFixOldPluralStyle() {
+  public static function providerTestFixOldPluralStyle() {
     return [
       'non-plural translation' => ['@count[2] non-plural test', '@count[2] non-plural test'],
       'plural translation' => ['@count[2] plural test' . PoItem::DELIMITER, '@count plural test'],

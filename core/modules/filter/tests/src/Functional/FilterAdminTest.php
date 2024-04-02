@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\filter\Functional;
 
 use Drupal\Component\Utility\Html;
@@ -15,6 +17,7 @@ use Drupal\user\RoleInterface;
  * Thoroughly test the administrative interface of the filter module.
  *
  * @group filter
+ * @group #slow
  */
 class FilterAdminTest extends BrowserTestBase {
 
@@ -412,7 +415,10 @@ class FilterAdminTest extends BrowserTestBase {
    */
   public function testDisabledFormat() {
     // Create a node type and add a standard body field.
-    $node_type = NodeType::create(['type' => $this->randomMachineName()]);
+    $node_type = NodeType::create([
+      'type' => $this->randomMachineName(),
+      'name' => $this->randomString(),
+    ]);
     $node_type->save();
     node_add_body_field($node_type, $this->randomString());
 

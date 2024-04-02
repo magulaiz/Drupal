@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\search\Functional;
 
 use Drupal\Core\Cache\Cache;
@@ -157,7 +159,7 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
     ]);
     $this->drupalLogin($admin_user);
 
-    $this->fieldUIAddNewField($bundle_path, 'test__ref', 'Test label', 'entity_reference', [], [], FALSE);
+    $this->fieldUIAddNewField($bundle_path, 'test__ref', 'Test label', 'entity_reference', [], ['settings[handler_settings][target_bundles][page]' => TRUE]);
     // Create a new node of our newly created node type and fill in the entity
     // reference field.
     $edit = [
@@ -183,6 +185,7 @@ class SearchPageCacheTagsTest extends BrowserTestBase {
       'search_index',
       'search_index:node_search',
       'http_response',
+      'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form',
       'rendered',
       'node_list',
     ];

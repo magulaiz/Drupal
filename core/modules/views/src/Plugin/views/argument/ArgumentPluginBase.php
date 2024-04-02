@@ -177,7 +177,6 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
     $options['title'] = ['default' => ''];
     $options['default_argument_type'] = ['default' => 'fixed'];
     $options['default_argument_options'] = ['default' => []];
-    $options['default_argument_skip_url'] = ['default' => FALSE];
     $options['summary_options'] = ['default' => []];
     $options['summary'] = [
       'contains' => [
@@ -605,13 +604,6 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
   public function defaultArgumentForm(&$form, FormStateInterface $form_state) {
     $plugins = Views::pluginManager('argument_default')->getDefinitions();
     $options = [];
-
-    $form['default_argument_skip_url'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Skip default argument for view URL'),
-      '#default_value' => $this->options['default_argument_skip_url'],
-      '#description' => $this->t('Select whether to include this default argument when constructing the URL for this view. Skipping default arguments is useful e.g. in the case of feeds.'),
-    ];
 
     $form['default_argument_type'] = [
       '#prefix' => '<div id="edit-options-default-argument-type-wrapper">',
@@ -1146,30 +1138,20 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
    */
   public function getPlugin($type = 'argument_default', $name = NULL) {
     $options = [];
-    switch ($type) {
-      case 'argument_default':
-        if (!isset($this->options['default_argument_type'])) {
-          return;
-        }
-        $plugin_name = $this->options['default_argument_type'];
-        $options_name = 'default_argument_options';
-        break;
-
-      case 'argument_validator':
-        if (!isset($this->options['validate']['type'])) {
-          return;
-        }
-        $plugin_name = $this->options['validate']['type'];
-        $options_name = 'validate_options';
-        break;
-
-      case 'style':
-        if (!isset($this->options['summary']['format'])) {
-          return;
-        }
-        $plugin_name = $this->options['summary']['format'];
-        $options_name = 'summary_options';
+    $plugin_name = match ($type) {
+      'argument_default' => $this->options['default_argument_type'] ?? NULL,
+      'argument_validator' => $this->options['validate']['type'] ?? NULL,
+      'style' => $this->options['summary']['format'] ?? NULL,
+    };
+    if ($plugin_name === NULL) {
+      return NULL;
     }
+
+    $options_name = match ($type) {
+      'argument_default' => 'default_argument_options',
+      'argument_validator' => 'validate_options',
+      'style' => 'summary_options',
+    };
 
     if (!$name) {
       $name = $plugin_name;
@@ -1408,6 +1390,21 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
    */
   public function getContextDefinition() {
     return $this->getPlugin('argument_validator')->getContextDefinition();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function adminSummary() {
+    // If an argument default has been set, show which argument default has been
+    // set.
+    if ($this->options['default_action'] === 'default') {
+      $plugin = $this->getPlugin();
+      if ($plugin) {
+        return $this->t('Default: @plugin_title', ['@plugin_title' => $plugin->pluginTitle()]);
+      }
+    }
+    return '';
   }
 
 }

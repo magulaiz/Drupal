@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\shortcut\Functional;
 
 use Drupal\block_content\Entity\BlockContentType;
@@ -15,6 +17,7 @@ use Drupal\views\Entity\View;
  * Create, view, edit, delete, and change shortcut links.
  *
  * @group shortcut
+ * @group #slow
  */
 class ShortcutLinksTest extends ShortcutTestBase {
 
@@ -412,8 +415,8 @@ class ShortcutLinksTest extends ShortcutTestBase {
       'customize shortcut links',
       'switch shortcut sets',
     ];
-    $noaccess_user = $this->drupalCreateUser($test_permissions);
-    $this->drupalLogin($noaccess_user);
+    $no_access_user = $this->drupalCreateUser($test_permissions);
+    $this->drupalLogin($no_access_user);
 
     // Verify that set administration pages are inaccessible without the
     // 'access shortcuts' permission.
@@ -421,7 +424,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $this->assertSession()->statusCodeEquals(403);
     $this->drupalGet('admin/config/user-interface/shortcut/manage/default');
     $this->assertSession()->statusCodeEquals(403);
-    $this->drupalGet('user/' . $noaccess_user->id() . '/shortcuts');
+    $this->drupalGet('user/' . $no_access_user->id() . '/shortcuts');
     $this->assertSession()->statusCodeEquals(403);
   }
 
@@ -465,7 +468,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
    */
   protected function assertShortcutQuickLink(string $label, int $index = 0, string $message = ''): void {
     $links = $this->xpath('//a[normalize-space()=:label]', [':label' => $label]);
-    $message = ($message ? $message : new FormattableMarkup('Shortcut quick link with label %label found.', ['%label' => $label]));
+    $message = ($message ? $message : (string) new FormattableMarkup('Shortcut quick link with label %label found.', ['%label' => $label]));
     $this->assertArrayHasKey($index, $links, $message);
   }
 

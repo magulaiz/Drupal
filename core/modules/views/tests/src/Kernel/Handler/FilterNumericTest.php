@@ -9,6 +9,7 @@ use Drupal\views\Views;
  * Tests the numeric filter handler.
  *
  * @group views
+ * @group #slow
  */
 class FilterNumericTest extends ViewsKernelTestBase {
 
@@ -129,7 +130,7 @@ class FilterNumericTest extends ViewsKernelTestBase {
    *   An array of arrays, each containing the parameters for
    *   self::testFilterNumericBetween().
    */
-  public function providerTestFilterNumericBetween() {
+  public static function providerTestFilterNumericBetween() {
     $all_result = [
       ['name' => 'John', 'age' => 25],
       ['name' => 'George', 'age' => 27],

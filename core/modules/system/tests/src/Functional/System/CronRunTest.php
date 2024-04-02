@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\CronRunTrait;
+use Drupal\Tests\WaitTerminateTestTrait;
 
 /**
  * Tests cron runs.
@@ -13,6 +16,7 @@ use Drupal\Tests\Traits\Core\CronRunTrait;
 class CronRunTest extends BrowserTestBase {
 
   use CronRunTrait;
+  use WaitTerminateTestTrait;
 
   /**
    * Modules to enable.
@@ -52,11 +56,16 @@ class CronRunTest extends BrowserTestBase {
   /**
    * Ensure that the automated cron run module is working.
    *
-   * In these tests we do not use REQUEST_TIME to track start time, because we
+   * In these tests we do not use \Drupal::time()->getRequestTime() to track start time, because we
    * need the exact time when cron is triggered.
    */
   public function testAutomatedCron() {
-    // Test with a logged in user; anonymous users likely don't cause Drupal to
+    // To prevent race conditions between the admin_user login triggering cron
+    // and updating its state, and this test doing the same thing, we use
+    // \Drupal\Tests\WaitTerminateTestTrait::setWaitForTerminate.
+    $this->setWaitForTerminate();
+
+    // Test with a logged-in user; anonymous users likely don't cause Drupal to
     // fully bootstrap, because of the internal page cache or an external
     // reverse proxy. Reuse this user for disabling cron later in the test.
     $admin_user = $this->drupalCreateUser(['administer site configuration']);

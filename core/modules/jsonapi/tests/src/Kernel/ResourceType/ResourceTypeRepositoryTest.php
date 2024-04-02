@@ -10,6 +10,7 @@ use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
 /**
  * @coversDefaultClass \Drupal\jsonapi\ResourceType\ResourceTypeRepository
  * @group jsonapi
+ * @group #slow
  *
  * @internal
  */
@@ -48,12 +49,15 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
     $this->installSchema('user', ['users_data']);
     NodeType::create([
       'type' => 'article',
+      'name' => 'Article',
     ])->save();
     NodeType::create([
       'type' => 'page',
+      'name' => 'Page',
     ])->save();
     NodeType::create([
       'type' => '42',
+      'name' => '42',
     ])->save();
 
     $this->resourceTypeRepository = $this->container->get('jsonapi.resource_type.repository');
@@ -90,10 +94,10 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
   /**
    * Data provider for testGet.
    *
-   * @returns array
+   * @return array
    *   The data for the test method.
    */
-  public function getProvider() {
+  public static function getProvider() {
     return [
       ['node', 'article', 'Drupal\node\Entity\Node'],
       ['node', '42', 'Drupal\node\Entity\Node'],
@@ -109,7 +113,10 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
     $this->assertEmpty($this->resourceTypeRepository->get('node', 'article')->getRelatableResourceTypesByField('field_relationship'));
     $this->createEntityReferenceField('node', 'article', 'field_relationship', 'Related entity', 'node');
     $this->assertCount(3, $this->resourceTypeRepository->get('node', 'article')->getRelatableResourceTypesByField('field_relationship'));
-    NodeType::create(['type' => 'camelids'])->save();
+    NodeType::create([
+      'type' => 'camelids',
+      'name' => 'Camelids',
+    ])->save();
     $this->assertCount(4, $this->resourceTypeRepository->get('node', 'article')->getRelatableResourceTypesByField('field_relationship'));
   }
 
@@ -137,10 +144,10 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
    * mapping: the special-cased names "type" or "id", and the name
    * "{$entity_type_id}_type" or "{$entity_type_id}_id", respectively.
    *
-   * @returns array
+   * @return array
    *   The data for the test method.
    */
-  public function getFieldsProvider() {
+  public static function getFieldsProvider() {
     return [
       [['type', 'node_type']],
       [['id', 'node_id']],

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Theme\TwigMarkupInterfaceTest.
- */
-
 namespace Drupal\KernelTests\Core\Theme;
 
 use Drupal\Component\Render\FormattableMarkup;
@@ -43,7 +38,7 @@ class TwigMarkupInterfaceTest extends KernelTestBase {
   /**
    * Provide test examples.
    */
-  public function providerTestMarkupInterfaceEmpty() {
+  public static function providerTestMarkupInterfaceEmpty() {
     return [
       // The first argument to \Drupal\Core\StringTranslation\TranslatableMarkup
       // is not supposed to be an empty string.

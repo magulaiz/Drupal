@@ -13,6 +13,8 @@ use Drupal\file\Entity\File;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system_mail_failure_test\Plugin\Mail\TestPhpMailFailure;
 
+// cspell:ignore drépal
+
 /**
  * Performs tests on the pluggable mailing framework.
  *
@@ -64,10 +66,10 @@ class MailTest extends KernelTestBase {
     $this->assertInstanceOf(TestPhpMailFailure::class, $mail_backend);
 
     // Add a module-specific mail backend.
-    $this->config('system.mail')->set('interface.mymodule_testkey', 'test_mail_collector')->save();
+    $this->config('system.mail')->set('interface.my_module_testkey', 'test_mail_collector')->save();
 
     // Get the added MailInterface class instance.
-    $mail_backend = \Drupal::service('plugin.manager.mail')->getInstance(['module' => 'mymodule', 'key' => 'testkey']);
+    $mail_backend = \Drupal::service('plugin.manager.mail')->getInstance(['module' => 'my_module', 'key' => 'testkey']);
 
     // Assert whether the added mail backend is an instance of the expected
     // class.
@@ -324,7 +326,7 @@ class MailTest extends KernelTestBase {
         '#theme' => 'image',
         '#uri' => $input_path,
       ];
-      $expected_html = "<img src=\"$expected_path\" alt=\"\" />";
+      $expected_html = "<img src=\"$expected_path\" alt>\n";
 
       // Send a test message that mail_cancel_test_mail_alter should cancel.
       \Drupal::service('plugin.manager.mail')->mail('mail_html_test', 'render_from_message_param', 'relative_url@example.com', $language_interface->getId(), ['message' => $render]);

@@ -64,10 +64,12 @@ class RelatedResourceTypesTest extends JsonapiKernelTestBase {
 
     NodeType::create([
       'type' => 'foo',
+      'name' => 'Foo',
     ])->save();
 
     NodeType::create([
       'type' => 'bar',
+      'name' => 'Bar',
     ])->save();
 
     $this->createEntityReferenceField(
@@ -142,7 +144,7 @@ class RelatedResourceTypesTest extends JsonapiKernelTestBase {
    * @covers ::getRelatableResourceTypes
    * @dataProvider getRelatableResourceTypesProvider
    */
-  public function getRelatableResourceTypesProvider() {
+  public static function getRelatableResourceTypesProvider() {
     return [
       [
         'node--foo',
@@ -172,7 +174,7 @@ class RelatedResourceTypesTest extends JsonapiKernelTestBase {
   /**
    * Provides cases to test getRelatableTypesByField.
    */
-  public function getRelatableResourceTypesByFieldProvider() {
+  public static function getRelatableResourceTypesByFieldProvider() {
     return [
       ['node', 'foo', 'field_ref_foo'],
       ['node', 'foo', 'field_ref_bar'],

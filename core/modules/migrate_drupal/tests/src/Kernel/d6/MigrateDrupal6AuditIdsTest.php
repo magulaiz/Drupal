@@ -35,6 +35,7 @@ class MigrateDrupal6AuditIdsTest extends MigrateDrupal6TestBase {
     $this->installEntitySchemas();
 
     // Install required schemas.
+    // @todo Remove book in https://www.drupal.org/project/drupal/issues/3376101
     $this->installSchema('book', ['book']);
     $this->installSchema('dblog', ['watchdog']);
     // @todo Remove forum in https://www.drupal.org/project/drupal/issues/3261653
@@ -47,7 +48,10 @@ class MigrateDrupal6AuditIdsTest extends MigrateDrupal6TestBase {
     // Enable content moderation for nodes of type page.
     $this->installEntitySchema('content_moderation_state');
     $this->installConfig('content_moderation');
-    NodeType::create(['type' => 'page'])->save();
+    NodeType::create([
+      'type' => 'page',
+      'name' => 'Page',
+    ])->save();
     $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'page');
     $workflow->save();

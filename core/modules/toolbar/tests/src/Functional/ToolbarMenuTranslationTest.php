@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\toolbar\Functional;
 
 use Drupal\Tests\BrowserTestBase;
@@ -28,6 +30,7 @@ class ToolbarMenuTranslationTest extends BrowserTestBase {
     'toolbar_test',
     'locale',
     'locale_test',
+    'block',
   ];
 
   /**
@@ -47,6 +50,7 @@ class ToolbarMenuTranslationTest extends BrowserTestBase {
       'translate interface',
       'administer languages',
       'access administration pages',
+      'administer blocks',
     ]);
     $this->drupalLogin($this->adminUser);
   }

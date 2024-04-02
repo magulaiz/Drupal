@@ -29,11 +29,8 @@ class TestViewsTest extends KernelTestBase {
    * @var array
    */
   protected static $modules = [
-    // `node.type.book` config entity is a config dependency.
-    // @see core/modules/book/tests/modules/book_test_views/test_views/views.view.test_book_view.yml
-    'book',
+    'views',
     // For NodeType config entities to exist, its module must be installed.
-    // @see book_entity_type_build()
     'node',
     // The `DRUPAL_OPTIONAL` constant is used by the NodeType config entity type
     // and only available if the system module is installed.
@@ -120,6 +117,9 @@ class TestViewsTest extends KernelTestBase {
     // `history` is a module dependency.
     // @see core/modules/views/tests/modules/views_test_config/test_views/views.view.test_history.yml
     'history',
+    // The `image` module is required by at least one of the Node module's
+    // views.
+    'image',
   ];
 
   /**
@@ -127,9 +127,6 @@ class TestViewsTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    // `node.type.book` config entity is a config dependency.
-    // @see core/modules/book/tests/modules/book_test_views/test_views/views.view.test_book_view.yml
-    $this->installConfig('book');
     // `field.storage.node.body` config entity is a config dependency. It is one
     // of the default config of the Node module.
     // @see core/modules/node/tests/modules/node_test_views/test_views/views.view.test_node_tokens.yml
@@ -144,20 +141,21 @@ class TestViewsTest extends KernelTestBase {
     $this->installConfig('system');
     // `node.type.article` is a config dependency.
     // @see core/modules/options/tests/options_test_views/test_views/views.view.test_options_list_argument_numeric.yml
-    NodeType::create(['type' => 'article'])->save();
+    NodeType::create(['type' => 'article', 'name' => 'Article'])->save();
     // `node.type.page` is a config dependency.
     // @see core/modules/views/tests/modules/views_test_config/test_views/views.view.test_argument_default_node.yml
-    NodeType::create(['type' => 'page'])->save();
+    NodeType::create(['type' => 'page', 'name' => 'Page'])->save();
     // `taxonomy.vocabulary.tags` is a config dependency.
     // @see core/modules/taxonomy/tests/modules/taxonomy_test_views/test_views/views.view.test_taxonomy_exposed_grouped_filter.yml
-    Vocabulary::create(['vid' => 'tags'])->save();
+    Vocabulary::create(['vid' => 'tags', 'name' => 'Tags'])->save();
     // `taxonomy.vocabulary.test_exposed_checkboxes` is a config dependency.
     // @see core/modules/views/tests/modules/views_test_config/test_views/views.view.test_exposed_form_checkboxes.yml
-    Vocabulary::create(['vid' => 'test_exposed_checkboxes'])->save();
+    Vocabulary::create(['vid' => 'test_exposed_checkboxes', 'name' => 'Exposed checkboxes test'])->save();
     // `core.entity_view_mode.node.default` is a config dependency.
     // @see core/modules/views/tests/modules/views_test_config/test_views/views.view.test_entity_field_renderered_entity.yml
     EntityViewMode::create([
       'id' => 'node.default',
+      'label' => 'Default',
       'targetEntityType' => 'node',
     ])->save();
     // `field.storage.node.field_link` is a config dependency.

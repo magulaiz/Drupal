@@ -13,7 +13,7 @@ contact.form.*:
           # @see \Drupal\contact\ContactFormEditForm::form()
           max: 32
     label:
-      type: label
+      type: required_label
       label: 'Label'
     recipients:
       type: sequence
@@ -25,7 +25,7 @@ contact.form.*:
       type: text
       label: 'Auto-reply'
     weight:
-      type: integer
+      type: weight
       label: 'Weight'
     message:
       type: text
