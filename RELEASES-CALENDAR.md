@@ -2,8 +2,6 @@
 
 [View it in GitLab](https://git.drupalcode.org/project/drupal/-/blob/11.x/RELEASES-CALENDAR.md)
 
-[comment]: # (Green for fully support, yellow for maintenance, and red for end of life.)
-
 ```mermaid
 ---
 displayMode: compact
@@ -16,14 +14,15 @@ displayMode: compact
       'primaryTextColor': '#FFFFFF',
       'tertiaryColor': '#ffbd1f',
       'tertiaryTextColor': '#000000',
-      'doneTaskBkgColor': '#edcbcb',
+      'doneTaskBkgColor': '#ffbd1f',
       'textColor': '#000000'
     }
   }
 }%%
 gantt
-    title Drupal Release Schedule
+    title Drupal Release Calendar
     dateFormat  YYYY-MM
+    todayMarker off
     axisFormat %Y %b
     section Drupal 10.2
     10.2 Security   :active, 102sec, 2024-06, 6M
