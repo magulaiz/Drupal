@@ -11,6 +11,7 @@ field_ui.settings:
       label: 'The prefix for new fields created via Field UI'
       constraints:
         Regex:
+          # @see \Drupal\field\Entity\FieldStorageConfig::__construct()
           pattern: '/^[_a-z]+[_a-z0-9]*$/'
           message: "The %value prefix is not valid."
         Length:
