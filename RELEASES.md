@@ -72,4 +72,4 @@ gantt
 
  - Go to the [Mermaid Live](https://mermaid.live) editor
    - Paste the code you just copied.
-   - Find the `Actions` dropdown, then select the `PNG` button to download an export of the graph in PNG format.
+   - Find the `Actions` dropdown, then select the desired format button to download an export of the graph.
