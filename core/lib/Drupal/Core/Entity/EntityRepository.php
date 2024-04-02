@@ -193,7 +193,7 @@ class EntityRepository implements EntityRepositoryInterface {
     $legacy_context = [];
     $key = static::CONTEXT_ID_LEGACY_CONTEXT_OPERATION;
     if (isset($contexts[$key])) {
-      @trigger_error('Providing an operation context to EntityRepository::getCanonicalMultiple() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3158130', E_USER_DEPRECATED);
+      @trigger_error('Providing an operation context to EntityRepository::getCanonicalMultiple() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3437685', E_USER_DEPRECATED);
       $legacy_context['operation'] = $contexts[$key]->getContextValue();
     }
 
@@ -231,7 +231,7 @@ class EntityRepository implements EntityRepositoryInterface {
     foreach ([LanguageInterface::TYPE_CONTENT, LanguageInterface::TYPE_INTERFACE] as $language_type) {
       $context_id = '@language.current_language_context:' . $language_type;
       if (isset($contexts[$context_id]) && $contexts[$context_id] instanceof ContextInterface) {
-        @trigger_error('Providing the language as ' . $context_id . ' context to EntityRepository is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use the langcode key instead. See https://www.drupal.org/node/3158130', E_USER_DEPRECATED);
+        @trigger_error('Providing the language as ' . $context_id . ' context to EntityRepository is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use the langcode key instead. See https://www.drupal.org/node/3437685', E_USER_DEPRECATED);
         return $contexts[$context_id]->getContextValue()->getId();
       }
     }
