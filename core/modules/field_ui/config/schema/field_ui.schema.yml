@@ -11,7 +11,7 @@ field_ui.settings:
       label: 'The prefix for new fields created via Field UI'
       constraints:
         Regex:
-          pattern: '/^[a-z0-9_]+$/'
+          pattern: '/^[_a-z]+[_a-z0-9]*$/'
           message: "The %value prefix is not valid."
         Length:
           # FieldStorageConfig::NAME_MAX_LENGTH is 32, which includes max:30.
