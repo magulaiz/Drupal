@@ -63,7 +63,7 @@ class UserShortcutSetCacheContextTest extends KernelTestBase {
 
     $this->user = User::create([
       'name' => 'first',
-      'mail' => 'first@example.com'
+      'mail' => 'first@example.com',
     ]);
     $this->user->save();
 
