@@ -63,7 +63,7 @@ gantt
     12.1 Security   :active, after 121sup, 6M
 ```
 
-Dates are subject to change. Visit the [schedule](https://www.drupal.org/about/core/policies/core-release-cycles/schedule) page for the most up to date information.
+_Dates are subject to change. Visit the [schedule](https://www.drupal.org/about/core/policies/core-release-cycles/schedule) page for the most up to date information._
 
 ---
 
