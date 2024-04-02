@@ -54,6 +54,7 @@ class MappingTest extends KernelTestBase {
             'use_site_name' => TRUE,
             'use_site_slogan' => TRUE,
             'label_display' => FALSE,
+            'condition_logic' => 'and',
             // TRICKY: these 4 are inherited from `type: block_settings`.
             'status' => TRUE,
             'info' => '',
@@ -100,6 +101,7 @@ class MappingTest extends KernelTestBase {
           'status' => TRUE,
           'settings' => [
             'label_display' => FALSE,
+            'condition_logic' => 'and',
             // TRICKY: these 4 are inherited from `type: block_settings`.
             'status' => TRUE,
             'info' => '',
@@ -320,6 +322,7 @@ class MappingTest extends KernelTestBase {
         'id',
         'label',
         'label_display',
+        'condition_logic',
         'provider',
         'status',
         'info',
@@ -342,6 +345,7 @@ class MappingTest extends KernelTestBase {
         'id',
         'label',
         'label_display',
+        'condition_logic',
         'provider',
         'status',
         'info',

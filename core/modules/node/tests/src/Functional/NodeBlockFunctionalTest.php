@@ -268,7 +268,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->clickLink('Configure');
     $this->assertSession()->checkboxChecked('edit-visibility-entity-bundlenode-bundles-article');
     $this->assertSession()->fieldValueEquals('edit-settings-condition-logic', 'or');
-    $this->assertSession()->fieldValueEquals('edit-visibility-request-path-pages', '/node/1');
+    $this->assertSession()->fieldValueEquals('edit-visibility-request-path-pages', $page1->toUrl()->toString());
 
     // Test that basic page with URL /test has block.
     $this->drupalGet($page1->toUrl());
