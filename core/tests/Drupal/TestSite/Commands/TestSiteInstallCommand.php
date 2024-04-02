@@ -91,7 +91,7 @@ class TestSiteInstallCommand extends Command {
    *
    * @todo Remove and fix test to not rely on super user.
    */
-  public function __construct(string $name = null) {
+  public function __construct(string $name = NULL) {
     parent::__construct($name);
     $this->usesSuperUserAccessPolicy = TRUE;
   }
