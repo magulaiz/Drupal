@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Config;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -92,7 +94,7 @@ class ConfigTest extends UnitTestCase {
    *
    * @see \Drupal\Tests\Core\Config\ConfigTest::testSetName()
    */
-  public function setNameProvider() {
+  public static function setNameProvider() {
     return [
       // Valid name with dot.
       [
@@ -398,7 +400,7 @@ class ConfigTest extends UnitTestCase {
    *
    * @see \Drupal\Tests\Core\Config\ConfigTest::testMerge()
    */
-  public function mergeDataProvider() {
+  public static function mergeDataProvider() {
     return [
       [
         // Data.
@@ -433,7 +435,7 @@ class ConfigTest extends UnitTestCase {
    *
    * @see \Drupal\Tests\Core\Config\ConfigTest::testValidateNameException()
    */
-  public function validateNameProvider() {
+  public static function validateNameProvider() {
     $return = [
       // Name missing namespace (dot).
       [
@@ -463,7 +465,7 @@ class ConfigTest extends UnitTestCase {
    * @see \Drupal\Tests\Core\Config\ConfigTest::testOverrideData()
    * @see \Drupal\Tests\Core\Config\ConfigTest::testDelete()
    */
-  public function overrideDataProvider() {
+  public static function overrideDataProvider() {
     $test_cases = [
       [
         // Original data.
@@ -537,7 +539,7 @@ class ConfigTest extends UnitTestCase {
    *
    * @see \Drupal\Tests\Core\Config\ConfigTest::testClear()
    */
-  public function simpleDataProvider() {
+  public static function simpleDataProvider() {
     return [
       [
         [
@@ -558,7 +560,7 @@ class ConfigTest extends UnitTestCase {
    * @see \Drupal\Tests\Core\Config\ConfigTest::testInitWithData()
    * @see \Drupal\Tests\Core\Config\ConfigTest::testNestedClear()
    */
-  public function nestedDataProvider() {
+  public static function nestedDataProvider() {
     return [
       [
         [

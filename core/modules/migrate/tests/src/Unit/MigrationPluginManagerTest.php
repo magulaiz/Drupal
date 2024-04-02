@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Unit;
 
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -88,7 +90,7 @@ class MigrationPluginManagerTest extends UnitTestCase {
   /**
    * Provide dependency data for testing.
    */
-  public function dependencyProvider() {
+  public static function dependencyProvider() {
     return [
       // Just one migration, with no dependencies.
       [

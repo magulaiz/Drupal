@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\content_translation\Functional;
 
 use Drupal\Core\Url;
@@ -33,6 +35,7 @@ class ContentTranslationNewTranslationWithExistingRevisionsTest extends ContentT
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->doSetup();
     $this->enableContentModeration();
   }
 

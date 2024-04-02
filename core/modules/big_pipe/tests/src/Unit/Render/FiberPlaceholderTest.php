@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\big_pipe\Unit\Render;
 
 use Drupal\big_pipe\Render\BigPipe;
 use Drupal\big_pipe\Render\BigPipeResponse;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Render\HtmlResponse;
 use Drupal\Core\Render\PlaceholderGeneratorInterface;
@@ -52,7 +55,7 @@ class FiberPlaceholderTest extends UnitTestCase {
           'languages:language_interface',
           'theme',
         ],
-      ]
+      ],
     );
 
     $session = $this->prophesize(SessionInterface::class);
@@ -65,6 +68,7 @@ class FiberPlaceholderTest extends UnitTestCase {
       $this->prophesize(HttpKernelInterface::class)->reveal(),
       $this->createMock(EventDispatcherInterface::class),
       $this->prophesize(ConfigFactoryInterface::class)->reveal(),
+      $this->prophesize(MessengerInterface::class)->reveal(),
     );
     $response = new BigPipeResponse(new HtmlResponse());
 

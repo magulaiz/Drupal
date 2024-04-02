@@ -55,9 +55,24 @@ class DbLogTest extends KernelTestBase {
     $this->assertEquals($expected_count, $cron_detailed_count, "Cron added $cron_detailed_count of $expected_count new log entries");
 
     // Test disabling of detailed cron logging.
-    $this->config('system.cron')->set('logging', 0)->save();
+    $this->config('system.cron')->set('logging', FALSE)->save();
     $cron_count = $this->runCron();
     $this->assertEquals(1, $cron_count, "Cron added $cron_count of 1 new log entries");
+  }
+
+  /**
+   * Tests that only valid placeholders are stored in the variables column.
+   */
+  public function testInvalidPlaceholders() {
+    \Drupal::logger('my_module')->warning('Hello @string @array @object', ['@string' => '', '@array' => [], '@object' => new \stdClass()]);
+    $variables = \Drupal::database()
+      ->select('watchdog', 'w')
+      ->fields('w', ['variables'])
+      ->orderBy('wid', 'DESC')
+      ->range(0, 1)
+      ->execute()
+      ->fetchField();
+    $this->assertSame(serialize(['@string' => '']), $variables);
   }
 
   /**
