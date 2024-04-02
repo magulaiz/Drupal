@@ -28,7 +28,7 @@ function block_post_update_move_custom_block_library(&$sandbox = NULL): void {
     $settings = $block->get('settings');
     if (!isset($settings['condition_logic'])) {
       $settings['condition_logic'] = 'and';
-      $block->set('settings', $settings)->save();
+      $block->set('settings', $settings);
       return TRUE;
     }
     return FALSE;
