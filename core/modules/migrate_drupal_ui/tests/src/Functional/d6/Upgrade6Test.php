@@ -198,7 +198,6 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
 
     $this->assertFollowUpMigrationResults();
     $this->assertEntityRevisionsCount('node', 26);
-    $this->assertEmailsSent();
     $this->assertLogError();
   }
 

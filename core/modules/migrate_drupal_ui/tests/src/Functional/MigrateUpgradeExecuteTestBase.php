@@ -77,6 +77,9 @@ abstract class MigrateUpgradeExecuteTestBase extends MigrateUpgradeTestBase {
     // Run the incremental migration and check the results.
     $this->submitForm([], 'Perform upgrade');
     $this->assertUpgrade($this->getEntityCountsIncremental());
+
+    // Confirm that no email was sent.
+    $this->assertCount(0, \Drupal::state()->get('system.test_mail_collector', []));
   }
 
   /**
