@@ -84,10 +84,8 @@ class NodeStorage extends SqlContentEntityStorage implements NodeStorageInterfac
    * {@inheritdoc}
    */
   public function clearRevisionsLanguage(LanguageInterface $language) {
-    return $this->database->update($this->getRevisionTable())
-      ->fields(['langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED])
-      ->condition('langcode', $language->getId())
-      ->execute();
+    // @todo This is something that is not easy to do with MongoDB. We need to
+    // check every revision from every node to see if it needs to be updated.
   }
 
 }

@@ -178,6 +178,13 @@ class Connection extends DatabaseConnection {
     // Add the query variables to the connection options.
     $options += $query;
 
+    // The MongoDB connection string uses the key "replicaSet" and Drupal has
+    // all form keys in lowercase.
+    if (isset($options['replicaSet'])) {
+      $options['replicaset'] = $options['replicaSet'];
+      unset($options['replicaSet']);
+    }
+
     return $options;
   }
 

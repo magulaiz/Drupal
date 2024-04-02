@@ -40,7 +40,7 @@ class MongodbServiceProvider extends ServiceProviderBase {
       $definition->setClass('Drupal\mongodb\Driver\Database\mongodb\Cache\DatabaseCacheTagsChecksum');
     }
 
-    // Override the default cache storage classes.
+    // Override the default config storage classes.
     if ($container->has('config.storage.active')) {
       $definition = $container->getDefinition('config.storage.active');
       $definition->setClass('Drupal\mongodb\Driver\Database\mongodb\Config\DatabaseStorage');

@@ -260,13 +260,6 @@ abstract class InstallerTestBase extends BrowserTestBase {
     $driver = $parameters['driver'];
     unset($parameters[$driver]['dependencies']);
 
-    // The MongoDB connection string uses the key "replicaSet" and Drupal has
-    // all form keys in lowercase.
-    if ($driver == 'Drupal\mongodb\Driver\Database\mongodb') {
-      $parameters[$driver]['replicaset'] = $parameters[$driver]['replicaSet'];
-      unset($parameters[$driver]['replicaSet']);
-    }
-
     $edit = $this->translatePostValues($parameters);
     $this->submitForm($edit, $this->translations['Save and continue']);
   }

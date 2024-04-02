@@ -531,6 +531,12 @@ trait FunctionalTestSetupTrait {
       unset($formInput['host']);
       unset($formInput['port']);
     }
+    // The MongoDB connection string uses the key "replicaSet" and Drupal has
+    // all form keys in lowercase.
+    if ($driverName == "mongodb" && isset($formInput['replicaSet'])) {
+      $formInput['replicaset'] = $formInput['replicaSet'];
+      unset($formInput['replicaSet']);
+    }
 
     $parameters = [
       'interactive' => FALSE,

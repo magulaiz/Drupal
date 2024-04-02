@@ -5,9 +5,11 @@ namespace Drupal\taxonomy\Plugin\views\filter;
 use Drupal\Core\Entity\Element\EntityAutocomplete;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\mongodb\modules\views\ManyToOneHelper;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermStorageInterface;
 use Drupal\taxonomy\VocabularyStorageInterface;
+use Drupal\views\Plugin\views\filter\InOperator;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\filter\ManyToOne;
@@ -51,6 +53,13 @@ class TaxonomyIndexTid extends ManyToOne {
   protected $currentUser;
 
   /**
+   * The MongoDB field.
+   *
+   * @var string
+   */
+//  protected $mongodbField;
+
+  /**
    * Constructs a TaxonomyIndexTid object.
    *
    * @param array $configuration
@@ -91,7 +100,14 @@ class TaxonomyIndexTid extends ManyToOne {
    * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
-    parent::init($view, $display, $options);
+//    if ($this->view->getDatabaseDriver() == 'mongodb') {
+//      InOperator::init($view, $display, $options);
+//
+//      $this->helper = new ManyToOneHelper($this);
+//    }
+//    else {
+      parent::init($view, $display, $options);
+//    }
 
     if (!empty($this->definition['vocabulary'])) {
       $this->options['vid'] = $this->definition['vocabulary'];
@@ -117,6 +133,19 @@ class TaxonomyIndexTid extends ManyToOne {
     $options['vid'] = ['default' => ''];
     $options['hierarchy'] = ['default' => FALSE];
     $options['error_message'] = ['default' => TRUE];
+
+//    if ($this->view->getDatabaseDriver() == 'mongodb') {
+//      $options['operator']['default'] = 'or';
+//      $options['value']['default'] = [];
+//
+//      if (isset($this->helper)) {
+//        $this->helper->defineOptions($options);
+//      }
+//      else {
+//        $helper = new ManyToOneHelper($this);
+//        $helper->defineOptions($options);
+//      }
+//    }
 
     return $options;
   }
@@ -399,6 +428,71 @@ class TaxonomyIndexTid extends ManyToOne {
     }
     return parent::adminSummary();
   }
+
+//  /**
+//   * {@inheritdoc}
+//   */
+//  public function query() {
+//    if ($this->view->getDatabaseDriver() == 'mongodb') {
+//      if ($this->table == $this->view->storage->get('base_table')) {
+//        $this->mongodbField = $this->realField;
+//      }
+//      elseif (!empty($this->relationship)) {
+//        $this->mongodbField = "$this->relationship.$this->realField";
+//      }
+//      else {
+//        // Throw an exception.
+//        $this->mongodbField = $this->realField;
+//      }
+//
+//      $info = $this->operators();
+//      if (!empty($info[$this->operator]['method'])) {
+//        $this->{$info[$this->operator]['method']}();
+//      }
+//    }
+//    else {
+//      parent::query();
+//    }
+//  }
+//
+//  /**
+//   * {@inheritdoc}
+//   */
+//  protected function opSimple() {
+//    if ($this->view->getDatabaseDriver() == 'mongodb') {
+//      if (empty($this->value)) {
+//        return;
+//      }
+//      $this->ensureMyTable();
+//
+//      // We use array_values() because the checkboxes keep keys and that can cause
+//      // array addition problems.
+//      $this->query->addCondition($this->options['group'], $this->mongodbField, array_values($this->value), $this->operator);
+//    }
+//    else {
+//      parent::opSimple();
+//    }
+//  }
+//
+//  /**
+//   * {@inheritdoc}
+//   */
+//  protected function opEmpty() {
+//    if ($this->view->getDatabaseDriver() == 'mongodb') {
+//      $this->ensureMyTable();
+//      if ($this->operator == 'empty') {
+//        $operator = "IS NULL";
+//      }
+//      else {
+//        $operator = "IS NOT NULL";
+//      }
+//
+//      $this->query->addCondition($this->options['group'], $this->mongodbField, NULL, $operator);
+//    }
+//    else {
+//      parent::opSimple();
+//    }
+//  }
 
   /**
    * {@inheritdoc}

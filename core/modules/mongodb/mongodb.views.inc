@@ -847,6 +847,13 @@ function mongodb_views_plugins_row_alter(array &$plugins) {
         $plugins[$id]['provider'] = 'mongodb';
         $plugins[$id]['base'] = ['users'];
         break;
+
+      case 'node_rss':
+        $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\row\NodeRss';
+        $plugins[$id]['provider'] = 'mongodb';
+        $plugins[$id]['base'] = ['node'];
+        break;
+
     }
   }
 }

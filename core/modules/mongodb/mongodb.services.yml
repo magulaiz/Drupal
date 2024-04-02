@@ -82,14 +82,14 @@ services:
     alias: mongodb.queue.database
   Drupal\mongodb\Queue\QueueDatabaseFactory: '@mongodb.queue.database'
 
-  # MongoDB overrides Routing.
-  mongodb.router.route_provider:
-    class: Drupal\mongodb\Routing\RouteProvider
-    arguments: ['@database', '@state', '@path.current', '@cache.data', '@path_processor_manager', '@cache_tags.invalidator', 'router', '@language_manager']
-    tags:
-      - { name: event_subscriber }
-  router.route_provider:
-    alias: mongodb.router.route_provider
+#  # MongoDB overrides Routing.
+#  mongodb.router.route_provider:
+#    class: Drupal\mongodb\Routing\RouteProvider
+#    arguments: ['@database', '@state', '@path.current', '@cache.data', '@path_processor_manager', '@cache_tags.invalidator', 'router', '@language_manager']
+#    tags:
+#      - { name: event_subscriber }
+#  router.route_provider:
+#    alias: mongodb.router.route_provider
 
   # MongoDB overrides module ban.
   mongodb.ban.ip_manager:
@@ -125,11 +125,11 @@ services:
     alias: mongodb.locale.storage
 
   # MongoDB overrides module node.
-  # mongodb.node.grant_storage:
-  # class: Drupal\mongodb\modules\node\NodeGrantDatabaseStorage
-  # arguments: ['@database', '@module_handler', '@language_manager']
-  # node.grant_storage:
-  # alias: mongodb.node.grant_storage
+#  mongodb.node.grant_storage:
+#    class: Drupal\mongodb\modules\node\NodeGrantDatabaseStorage
+#    arguments: ['@database', '@module_handler', '@language_manager']
+#  node.grant_storage:
+#    alias: mongodb.node.grant_storage
 
   # MongoDB overrides module path_alias.
   # mongodb.path_alias.repository:

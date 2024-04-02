@@ -23,7 +23,7 @@ class NodeGrantDatabaseStorage extends CoreNodeGrantDatabaseStorage {
 
     // If no module implements the hook or the node does not have an id there is
     // no point in querying the database for access grants.
-    if (!$this->moduleHandler->getImplementations('node_grants') || !$node->id()) {
+    if (!$this->moduleHandler->hasImplementations('node_grants') || !$node->id()) {
       // Return the equivalent of the default grant, defined by
       // self::writeDefault().
       if ($operation === 'view') {
@@ -42,8 +42,13 @@ class NodeGrantDatabaseStorage extends CoreNodeGrantDatabaseStorage {
 
     // Check for grants for this node and the correct langcode.
     $nids = $query->andConditionGroup()
-      ->condition('nid', (int) $node->id())
-      ->condition('langcode', $node->language()->getId());
+      ->condition('nid', (int) $node->id());
+    if (!$node->isNewTranslation()) {
+      $nids->condition('langcode', $node->language()->getId());
+    }
+    else {
+      $nids->condition('fallback', TRUE);
+    }
 
     // If the node is published, also take the default grant into account. The
     // default is saved with a node ID of 0.
@@ -107,7 +112,7 @@ class NodeGrantDatabaseStorage extends CoreNodeGrantDatabaseStorage {
   /**
    * {@inheritdoc}
    */
-  public function alterQuery($query, array $tables, $op, AccountInterface $account, $base_table) {
+  public function alterQuery($query, array $tables, $operation, AccountInterface $account, $base_table) {
     if (!$langcode = $query->getMetaData('langcode')) {
       $langcode = FALSE;
     }
@@ -131,7 +136,7 @@ class NodeGrantDatabaseStorage extends CoreNodeGrantDatabaseStorage {
           $query->condition($grant_conditions);
         }
 
-        $query->condition('grant_' . $op, TRUE);
+        $query->condition('grant_' . $operation, TRUE);
 
         if ($is_multilingual) {
           // If no specific langcode to check for is given, use the grant entry
@@ -145,8 +150,7 @@ class NodeGrantDatabaseStorage extends CoreNodeGrantDatabaseStorage {
           }
         }
 
-        $query->addMongodbJoin('INNER', 'node_access', 'nid', $base_table, 'nid', '=', 'na');
-        $query->unwindJoinAndAddFields('na', ['nid', 'langcode', 'fallback', 'gid', 'realm', 'grant_' . $op]);
+        $query->addJoin('INNER', 'node_access', 'na', $query->joinCondition()->compare('na.nid', "$base_table.nid"));
       }
     }
   }
@@ -164,7 +168,7 @@ class NodeGrantDatabaseStorage extends CoreNodeGrantDatabaseStorage {
       $query->execute();
     }
     // Only perform work when node_access modules are active.
-    if (!empty($grants) && count($this->moduleHandler->getImplementations('node_grants'))) {
+    if (!empty($grants) && $this->moduleHandler->hasImplementations('node_grants')) {
       $query = $this->database->insert('node_access')->fields(['nid', 'langcode', 'fallback', 'realm', 'gid', 'grant_view', 'grant_update', 'grant_delete']);
       // If we have defined a granted langcode, use it. But if not, add a grant
       // for every language this node is translated to.

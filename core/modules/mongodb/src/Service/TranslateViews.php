@@ -86,6 +86,9 @@ class TranslateViews {
     'node__field_no_view_access' => [
       'base table' => 'node',
     ],
+    'node__related_article' => [
+      'base table' => 'node',
+    ],
     'entity_test__field_test' => [
       'base table' => 'entity_test',
     ],

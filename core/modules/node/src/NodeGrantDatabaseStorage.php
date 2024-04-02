@@ -79,9 +79,16 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
 
     // Check the database for potential access grants.
     $query = $this->database->select('node_access');
-    $query->addExpressionConstant('1');
-    // Only interested for granting in the current operation.
-    $query->condition('grant_' . $operation, TRUE, '>=');
+    if ($this->database->driver() == 'mongodb') {
+      $query->fields('node_access', ['nid', 'langcode', 'gid', 'realm']);
+      // Only interested for granting in the current operation.
+      $query->condition('grant_' . $operation, TRUE);
+    }
+    else {
+      $query->addExpressionConstant('1');
+      // Only interested for granting in the current operation.
+      $query->condition('grant_' . $operation, TRUE, '>=');
+    }
     // Check for grants for this node and the correct langcode. New translations
     // do not yet have a langcode and must check the fallback node record.
     $nids = $query->andConditionGroup()
@@ -123,7 +130,15 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
       return $access_result;
     };
 
-    if ($query->execute()->fetchField()) {
+    if ($this->database->driver() == 'mongodb') {
+      $count = $query->execute()->fetchAll();
+      $query_result = count($count);
+    }
+    else {
+      $query_result = $query->execute()->fetchField();
+    }
+
+    if ($query_result) {
       return $set_cacheability(AccessResult::allowed());
     }
     else {
@@ -136,17 +151,32 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
    */
   public function checkAll(AccountInterface $account) {
     $query = $this->database->select('node_access');
-    $query->addExpressionCountAll();
-    $query
-      ->condition('nid', 0)
-      ->condition('grant_view', TRUE, '>=');
+    if ($this->database->driver() == 'mongodb') {
+      $query->fields('node_access', ['nid', 'langcode', 'gid', 'realm']);
+      $query
+        ->condition('nid', 0)
+        ->condition('grant_view', TRUE);
+    }
+    else {
+      $query->addExpressionCountAll();
+      $query
+        ->condition('nid', 0)
+        ->condition('grant_view', TRUE, '>=');
+    }
 
     $grants = $this->buildGrantsQueryCondition(node_access_grants('view', $account));
 
     if (count($grants) > 0) {
       $query->condition($grants);
     }
-    return $query->execute()->fetchField();
+
+    if ($this->database->driver() == 'mongodb') {
+      $count = $query->execute()->fetchAll();
+      return count($count);
+    }
+    else {
+      return $query->execute()->fetchField();
+    }
   }
 
   /**
@@ -315,7 +345,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
    */
   public function count() {
     if ($this->database->driver() == 'mongodb') {
-      $prefixed_table = $this->database->getMongodbPrefixedTable('node_access');
+      $prefixed_table = $this->database->getPrefix() . 'node_access';
 
       return (string) $this->database->getConnection()->{$prefixed_table}->count();
     }

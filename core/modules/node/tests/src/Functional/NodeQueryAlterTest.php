@@ -80,6 +80,11 @@ class NodeQueryAlterTest extends NodeTestBase {
    * node access can view the nodes.
    */
   public function testNodeQueryAlterLowLevelWithAccess() {
+    if (Database::getConnection()->driver() == 'mongodb') {
+      // @todo MongoDB does not support SQL queries.
+      $this->markTestSkipped();
+    }
+
     // User with access should be able to view 4 nodes.
     try {
       $query = Database::getConnection()->select('node', 'n')
@@ -100,6 +105,11 @@ class NodeQueryAlterTest extends NodeTestBase {
    * Tests 'node_access' query alter with revision-enabled nodes.
    */
   public function testNodeQueryAlterWithRevisions() {
+    if (Database::getConnection()->driver() == 'mongodb') {
+      // @todo MongoDB does not support SQL queries.
+      $this->markTestSkipped();
+    }
+
     // Execute a query that only deals with the 'node_revision' table.
     try {
       $query = \Drupal::entityTypeManager()->getStorage('node')->getQuery();

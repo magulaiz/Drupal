@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\node\Functional\Views\Wizard;
 
+use Drupal\Core\Database\Database;
 use Drupal\Tests\views\Functional\Wizard\WizardTestBase;
 use Drupal\views\Views;
 
@@ -22,6 +23,11 @@ class NodeRevisionWizardTest extends WizardTestBase {
    * Tests creating a node revision view.
    */
   public function testViewAdd() {
+    if (Database::getConnection()->driver() == 'mongodb') {
+      // @todo MongoDB should support this functionality.
+      $this->markTestSkipped();
+    }
+
     $this->drupalCreateContentType(['type' => 'article']);
     // Create two nodes with two revision.
     $node_storage = \Drupal::entityTypeManager()->getStorage('node');

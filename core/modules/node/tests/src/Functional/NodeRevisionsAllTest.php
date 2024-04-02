@@ -181,12 +181,26 @@ class NodeRevisionsAllTest extends NodeTestBase {
     // Set the revision timestamp to an older date to make sure that the
     // confirmation message correctly displays the stored revision date.
     $old_revision_date = \Drupal::time()->getRequestTime() - 86400;
-    Database::getConnection()->update('node_revision')
-      ->condition('vid', $nodes[2]->getRevisionId())
-      ->fields([
-        'revision_timestamp' => $old_revision_date,
-      ])
-      ->execute();
+
+    $connection = Database::getConnection();
+    if ($connection->driver() == 'mongodb') {
+      $prefixed_table = $connection->getPrefix() . 'node';
+      $connection->getConnection()->{$prefixed_table}->updateMany(
+        [],
+        [ '$set' => [
+          'node_all_revisions.$[revision].revision_timestamp' => (int) $old_revision_date,
+        ]],
+        [ 'arrayFilters' => [[ 'revision.vid' => (int) $nodes[2]->getRevisionId()]]]
+      );
+    }
+    else {
+      $connection->update('node_revision')
+        ->condition('vid', $nodes[2]->getRevisionId())
+        ->fields([
+          'revision_timestamp' => $old_revision_date,
+        ])
+        ->execute();
+    }
     $this->drupalGet("node/" . $node->id() . "/revisions/" . $nodes[2]->getRevisionId() . "/revert");
     $this->submitForm([], 'Revert');
     $this->assertSession()->pageTextContains("Basic page {$nodes[2]->getTitle()} has been reverted to the revision from {$this->container->get('date.formatter')->format($old_revision_date)}.");

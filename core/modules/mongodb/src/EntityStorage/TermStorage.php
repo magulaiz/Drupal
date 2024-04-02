@@ -2,14 +2,13 @@
 
 namespace Drupal\mongodb\EntityStorage;
 
-use Drupal\taxonomy\TermStorageInterface;
+use Drupal\Core\Entity\Sql\TableMappingInterface;
+use Drupal\taxonomy\TermStorage as CoreTermStorage;
 
 /**
  * The MongoDB implementation of \Drupal\taxonomy\TermStorage.
  */
-class TermStorage extends ContentEntityStorage implements TermStorageInterface {
-
-  use TermStorageTrait;
+class TermStorage extends CoreTermStorage {
 
   /**
    * {@inheritdoc}
