@@ -1,4 +1,4 @@
-# Drupal Release Schedule
+# Drupal Release Calendar
 
 [View it in GitLab](https://git.drupalcode.org/project/drupal/-/blob/11.x/RELEASES-CALENDAR.md)
 
