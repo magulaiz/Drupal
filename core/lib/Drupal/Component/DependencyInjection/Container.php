@@ -130,9 +130,8 @@ class Container implements ContainerInterface, ResetInterface {
     if (isset($this->parameters['_deprecated_service_list'][$id])) {
       @trigger_error($this->parameters['_deprecated_service_list'][$id], E_USER_DEPRECATED);
     }
-    if (isset($this->aliases[$id])) {
-      $id = $this->aliases[$id];
-    }
+
+    $id = $this->aliases[$id] ?? $id;
 
     // Re-use shared service instance if it exists.
     if (isset($this->services[$id]) || ($invalid_behavior === ContainerInterface::NULL_ON_INVALID_REFERENCE && array_key_exists($id, $this->services))) {
