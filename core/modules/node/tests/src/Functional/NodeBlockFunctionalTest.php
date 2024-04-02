@@ -243,9 +243,9 @@ class NodeBlockFunctionalTest extends NodeTestBase {
    */
   public function testBlockConditionLogicToggle(): void {
     $this->drupalLogin($this->adminUser);
-    $this->drupalCreateNode(['type' => 'page', 'path[0][alias]' => '/test']);
-    $this->drupalCreateNode(['type' => 'article']);
-    $this->drupalCreateNode(['type' => 'page']);
+    $page1 = $this->drupalCreateNode(['type' => 'page']);
+    $page2 = $this->drupalCreateNode(['type' => 'page']);
+    $article1 = $this->drupalCreateNode(['type' => 'article']);
 
     $block_name = 'system_powered_by_block';
     // Create a random title for the block.
@@ -259,7 +259,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
       'settings[label_display]' => TRUE,
       'settings[condition_logic]' => 'or',
       'visibility[entity_bundle:node][bundles][article]' => 'article',
-      'visibility[request_path][pages]' => '/test',
+      'visibility[request_path][pages]' => $page1->toUrl()->toString(),
     ];
     $this->drupalGet('admin/structure/block/add/' . $block_name . '/' . $default_theme);
     $this->submitForm($edit, 'Save block');
@@ -268,18 +268,19 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->clickLink('Configure');
     $this->assertSession()->checkboxChecked('edit-visibility-entity-bundlenode-bundles-article');
     $this->assertSession()->fieldValueEquals('edit-settings-condition-logic', 'or');
-    $this->assertSession()->fieldValueEquals('edit-visibility-request-path-pages', '/test');
+    $this->assertSession()->fieldValueEquals('edit-visibility-request-path-pages', '/node/1');
 
     // Test that basic page with URL /test has block.
-    $this->drupalGet('/test');
+    $this->drupalGet($page1->toUrl());
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains($title);
 
     // Test that random article node has block.
-    $this->drupalGet('/node/2');
+    $this->drupalGet($article1->toUrl());
     $this->assertSession()->pageTextContains($title);
 
     // Test that basic page without URL /test doesn't have block.
-    $this->drupalGet('/node/3');
+    $this->drupalGet($page2->toUrl());
     $this->assertSession()->pageTextNotContains($title);
   }
 
