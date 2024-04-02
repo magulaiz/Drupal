@@ -127,10 +127,8 @@ class Container implements ContainerInterface, ResetInterface {
    * {@inheritdoc}
    */
   public function get($id, $invalid_behavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE): ?object {
-    if ($this->hasParameter('_deprecated_service_list')) {
-      if ($deprecation = $this->getParameter('_deprecated_service_list')[$id] ?? '') {
-        @trigger_error($deprecation, E_USER_DEPRECATED);
-      }
+    if (isset($this->parameters['_deprecated_service_list'][$id])) {
+      @trigger_error($this->parameters['_deprecated_service_list'][$id], E_USER_DEPRECATED);
     }
     if (isset($this->aliases[$id])) {
       $id = $this->aliases[$id];
