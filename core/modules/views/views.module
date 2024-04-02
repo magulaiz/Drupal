@@ -5,6 +5,7 @@
  * Primarily Drupal hooks and global API functions to manipulate views.
  */
 
+use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Entity\EntityInterface;
