@@ -16,8 +16,8 @@ use Drupal\views\Plugin\views\wizard\WizardPluginBase;
  */
 #[ViewsWizard(
   id: 'node_revision',
-  base_table: 'node_field_revision',
-  title: new TranslatableMarkup('Content revisions')
+  title: new TranslatableMarkup('Content revisions'),
+  base_table: 'node_field_revision'
 )]
 class NodeRevision extends WizardPluginBase {
 

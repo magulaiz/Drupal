@@ -11,8 +11,8 @@ use Drupal\views\Plugin\views\wizard\WizardPluginBase;
  */
 #[ViewsWizard(
   id: 'block_content',
-  base_table: 'block_content_field_data',
-  title: new TranslatableMarkup('Content Block')
+  title: new TranslatableMarkup('Content Block'),
+  base_table: 'block_content_field_data'
 )]
 class BlockContent extends WizardPluginBase {
 

@@ -11,8 +11,8 @@ use Drupal\views\Plugin\views\wizard\WizardPluginBase;
  */
 #[ViewsWizard(
   id: 'file_managed',
-  base_table: 'file_managed',
-  title: new TranslatableMarkup('Files')
+  title: new TranslatableMarkup('Files'),
+  base_table: 'file_managed'
 )]
 class File extends WizardPluginBase {
 

@@ -15,8 +15,8 @@ use Drupal\views\Plugin\views\wizard\WizardPluginBase;
  */
 #[ViewsWizard(
   id: 'users',
-  base_table: 'users_field_data',
-  title: new TranslatableMarkup('Users')
+  title: new TranslatableMarkup('Users'),
+  base_table: 'users_field_data'
 )]
 class Users extends WizardPluginBase {
 

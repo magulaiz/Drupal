@@ -11,8 +11,8 @@ use Drupal\views\Plugin\views\wizard\WizardPluginBase;
  */
 #[ViewsWizard(
   id: 'taxonomy_term',
-  base_table: 'taxonomy_term_field_data',
-  title: new TranslatableMarkup('Taxonomy terms')
+  title: new TranslatableMarkup('Taxonomy terms'),
+  base_table: 'taxonomy_term_field_data'
 )]
 class TaxonomyTerm extends WizardPluginBase {
 

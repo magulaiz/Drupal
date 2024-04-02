@@ -11,8 +11,8 @@ use Drupal\views\Plugin\views\wizard\WizardPluginBase;
  */
 #[ViewsWizard(
   id: 'watchdog',
-  base_table: 'watchdog',
-  title: new TranslatableMarkup('Log entries')
+  title: new TranslatableMarkup('Log entries'),
+  base_table: 'watchdog'
 )]
 class Watchdog extends WizardPluginBase {
 

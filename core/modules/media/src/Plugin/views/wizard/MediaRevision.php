@@ -11,8 +11,8 @@ use Drupal\views\Plugin\views\wizard\WizardPluginBase;
  */
 #[ViewsWizard(
   id: 'media_revision',
-  base_table: 'media_field_revision',
-  title: new TranslatableMarkup('Media revisions')
+  title: new TranslatableMarkup('Media revisions'),
+  base_table: 'media_field_revision'
 )]
 class MediaRevision extends WizardPluginBase {
 
