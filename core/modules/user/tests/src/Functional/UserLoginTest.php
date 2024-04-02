@@ -46,8 +46,9 @@ class UserLoginTest extends BrowserTestBase {
   }
 
   /**
-   * Tests whether a particular error message is displayed to unauthenticated users if the url
-   * contains the query parameter 'check_logged_in' with the value set to 1.
+   * Tests whether a particular error message is displayed to unauthenticated users.
+   *
+   * The error message is displayed if the url contains the query parameter 'check_logged_in' with the value set to 1.
    *
    *  @see https://www.drupal.org/project/drupal/issues/3255711
    */
