@@ -300,7 +300,7 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
   /**
    * Tests the discard changes cancel button behavior.
    */
-  public function testCancelDiscardChanges() {
+  public function testCancelDiscardChanges(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
