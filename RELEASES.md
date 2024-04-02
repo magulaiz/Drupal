@@ -66,9 +66,10 @@ gantt
 
 ### Export graph as image
 
-Copy the mermaid markdown code above:
-- Use the `Copy to Clipboard` button when viewing the file via GitLab UI
-- Or if you are editing code, copy the mermaid markdown (do not include the wrapping backticks)
+- Copy the mermaid markdown code
+  - If you are viewing the file via the GitLab UI, use the `Copy to Clipboard` button.
+  - If you are editing this file, copy the mermaid markdown (do not include the wrapping backticks).
 
-Then go to the [Mermaid Live](https://mermaid.live) editor, and paste the code you just copied.
-You can see the `Actions` dropdown, and you can click on the `PNG` button to download an export of the graph in PNG format.
+ - Go to the [Mermaid Live](https://mermaid.live) editor
+   - Paste the code you just copied.
+   - Find the `Actions` dropdown, then select the `PNG` button to download an export of the graph in PNG format.
