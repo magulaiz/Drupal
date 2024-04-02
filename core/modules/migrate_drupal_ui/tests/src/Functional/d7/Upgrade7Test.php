@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate_drupal_ui\Functional\d7;
 
 use Drupal\node\Entity\Node;
@@ -54,6 +56,11 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
     $this->nodeStorage->delete($this->nodeStorage->loadMultiple());
 
     $this->loadFixture($this->getModulePath('migrate_drupal') . '/tests/fixtures/drupal7.php');
+
+    // Enable saving the logs and set the post migration admin user name.
+    $this->outputLogs = TRUE;
+    $this->migratedAdminUserName = 'admin';
+    $this->expectedLoggedErrors = 27;
   }
 
   /**
@@ -92,7 +99,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'search_page' => 3,
       'shortcut' => 6,
       'shortcut_set' => 2,
-      'action' => 27,
+      'action' => 24,
       'menu' => 7,
       'taxonomy_term' => 25,
       'taxonomy_vocabulary' => 8,
