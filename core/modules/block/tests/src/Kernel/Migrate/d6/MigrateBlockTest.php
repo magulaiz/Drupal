@@ -110,6 +110,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
       'label' => '',
       'provider' => 'user',
       'label_display' => '0',
+      'condition_logic' => 'and',
     ];
     $this->assertEntity('user', $visibility, 'sidebar', 'olivero', -10, $settings);
 
