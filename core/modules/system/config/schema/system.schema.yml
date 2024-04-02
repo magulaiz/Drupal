@@ -58,6 +58,8 @@ system.maintenance:
 system.cron:
   type: config_object
   label: 'Cron settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     threshold:
       type: mapping
@@ -66,11 +68,19 @@ system.cron:
         requirements_warning:
           type: integer
           label: 'Requirements warning period'
+          constraints:
+            # @see system_requirements()
+            Range:
+              min: 60
         requirements_error:
           type: integer
           label: 'Requirements error period'
+          constraints:
+            # @see system_requirements()
+            Range:
+              min: 300
     logging:
-      type: integer
+      type: boolean
       label: 'Detailed cron logging'
 
 system.date:
@@ -375,14 +385,6 @@ system.advisories:
     interval_hours:
       type: integer
       label: 'How often to check for security advisories, in hours'
-
-block.settings.page_title_block:
-  type: block_settings
-  label: 'Page title block'
-  mapping:
-    base_route_title:
-      type: boolean
-      label: 'Display section title instead of current title'
 
 block.settings.system_branding_block:
   type: block_settings
