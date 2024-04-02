@@ -150,7 +150,18 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
    *   The title based on base route.
    */
   private function getTitleBasedOnBaseRoute(): array|string|null|\Stringable {
-    $controller_title = $this->titleResolver->getTitle($this->requestStack->getCurrentRequest(), $this->routeMatch->getRouteObject());
+    try {
+      $controller_title = $this->titleResolver->getTitle($this->requestStack->getCurrentRequest(), $this->routeMatch->getRouteObject());
+    }
+    catch (\InvalidArgumentException $e) {
+      // If the route controller returns a render array with #title it is
+      // possible the route's title callback is broken because it is not called
+      // unless a page title block is using section page titles.
+      if (!isset($this->title)) {
+        throw $e;
+      }
+      $controller_title = NULL;
+    }
 
     // Controller render arrays using `#title` take precedent over the title
     // resolvers.
