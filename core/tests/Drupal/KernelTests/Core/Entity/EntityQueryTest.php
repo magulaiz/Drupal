@@ -1298,7 +1298,7 @@ class EntityQueryTest extends EntityKernelTestBase {
    * Hook functions in field_test.module add additional conditions to the query
    * removing entities with specific ids.
    */
-  public function testAlterHook() {
+  public function testAlterHook(): void {
     $basicQuery = $this->storage
       ->getQuery()
       ->accessCheck(FALSE)

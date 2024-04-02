@@ -762,7 +762,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
    *
    * @see config_test_entity_query_tag_config_query_test_config_entity_query_alter_hook_test_alter()
    */
-  public function testAlterHook() {
+  public function testAlterHook(): void {
     // Run a test without any condition.
     $this->queryResults = $this->entityStorage->getQuery()
       ->execute();
