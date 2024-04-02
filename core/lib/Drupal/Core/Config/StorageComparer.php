@@ -10,7 +10,7 @@ use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 /**
  * Defines a config storage comparer.
  */
-class StorageComparer implements StorageComparerInterface {
+class StorageComparer {
   use DependencySerializationTrait {
     __sleep as defaultSleep;
     __wakeup as defaultWakeup;
