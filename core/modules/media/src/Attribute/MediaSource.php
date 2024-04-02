@@ -43,9 +43,6 @@ class MediaSource extends Plugin {
    *   (optional) The classes used to define media source-specific forms. An
    *   array of form class names, keyed by ID. The ID represents the operation
    *   the form is used for, for example, 'media_library_add'.
-   * @param string[] $providers
-   *   (optional) A set of provider names, exactly as they appear in the
-   *   canonical oEmbed provider database at https://oembed.com/providers.json.
    * @param string $default_thumbnail_filename
    *   (optional) A filename for the default thumbnail.
    *   The thumbnails are placed in the directory defined by the config setting
@@ -77,7 +74,6 @@ class MediaSource extends Plugin {
     public readonly ?TranslatableMarkup $description = NULL,
     public readonly array $allowed_field_types = [],
     public readonly array $forms = [],
-    public readonly array $providers = [],
     public readonly string $default_thumbnail_filename = 'generic.png',
     public readonly string $thumbnail_uri_metadata_attribute = 'thumbnail_uri',
     public readonly string $thumbnail_width_metadata_attribute = 'thumbnail_width',

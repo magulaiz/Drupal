@@ -73,7 +73,6 @@ use Symfony\Component\Mime\MimeTypes;
   label: new TranslatableMarkup("oEmbed source"),
   description: new TranslatableMarkup("Use oEmbed URL for reusable media."),
   allowed_field_types: ["string"],
-  providers: [],
   default_thumbnail_filename: "no-thumbnail.png",
   deriver: OEmbedDeriver::class,
 )]
