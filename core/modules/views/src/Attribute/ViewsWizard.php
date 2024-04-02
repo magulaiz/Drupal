@@ -26,8 +26,6 @@ class ViewsWizard extends Plugin {
    *   is required when a deriver class is not defined.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $title
    *   The plugin title used in the views UI.
-   * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $short_title
-   *   (optional) The short title used in the views UI.
    * @param class-string|null $deriver
    *   (optional) The deriver class.
    */
@@ -35,7 +33,6 @@ class ViewsWizard extends Plugin {
     public readonly string $id,
     public readonly ?string $base_table = NULL,
     public readonly ?TranslatableMarkup $title = NULL,
-    public readonly ?TranslatableMarkup $short_title = NULL,
     public readonly ?string $deriver = NULL
   ) {}
 
