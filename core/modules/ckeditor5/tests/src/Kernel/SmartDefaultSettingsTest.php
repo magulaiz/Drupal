@@ -1039,7 +1039,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => array_merge(
               $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_sourceEditing']['allowed_tags'],
-              ['<drupal-media data-view-mode>'],
+              ['<drupal-media data-view-mode>', '<drupal-media-inline data-view-mode>'],
             ),
           ],
           'media_media' => ['allow_view_mode_override' => FALSE],
@@ -1082,7 +1082,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => array_merge(
               $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_sourceEditing']['allowed_tags'],
-              ['<drupal-media data-view-mode>'],
+              ['<drupal-media data-view-mode>', '<drupal-media-inline data-view-mode>'],
             ),
           ],
           'media_media' => ['allow_view_mode_override' => FALSE],
