@@ -15,6 +15,13 @@ use Drupal\Tests\BrowserTestBase;
 class ClassLoaderTest extends BrowserTestBase {
 
   /**
+   * {@inheritdoc}
+   *
+   * @todo Remove and fix test to not rely on super user.
+   */
+  protected $usesSuperUserAccessPolicy = TRUE;
+
+  /**
    * The expected result from calling the module-provided class' method.
    *
    * @var string

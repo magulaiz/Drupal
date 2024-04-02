@@ -18,6 +18,13 @@ class MaintenanceThemeUpdateRegistryTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @todo Remove and fix test to not rely on super user.
+   */
+  protected $usesSuperUserAccessPolicy = TRUE;
+
+  /**
+   * {@inheritdoc}
    */
   protected $profile = 'theme_test_profile';
 

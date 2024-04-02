@@ -14,7 +14,17 @@ use Drupal\Tests\BrowserTestBase;
  */
 class FileSaveHtaccessLoggingTest extends BrowserTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['dblog'];
+
+  /**
+   * {@inheritdoc}
+   *
+   * @todo Remove and fix test to not rely on super user.
+   */
+  protected $usesSuperUserAccessPolicy = TRUE;
 
   /**
    * {@inheritdoc}

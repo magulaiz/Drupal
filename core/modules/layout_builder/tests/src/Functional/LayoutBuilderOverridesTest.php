@@ -16,6 +16,13 @@ use Drupal\node\Entity\Node;
 class LayoutBuilderOverridesTest extends LayoutBuilderTestBase {
 
   /**
+   * {@inheritdoc}
+   *
+   * @todo Remove and fix test to not rely on super user.
+   */
+  protected $usesSuperUserAccessPolicy = TRUE;
+
+  /**
    * Tests deleting a field in-use by an overridden layout.
    */
   public function testDeleteField() {
