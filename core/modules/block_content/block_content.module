@@ -71,7 +71,7 @@ function block_content_entity_type_alter(array &$entity_types) {
 /**
  * Implements hook_block_build_BASE_BLOCK_ID_alter().
  */
-function block_content_block_build_block_content_alter(array &$build, \Drupal\Core\Block\BlockPluginInterface $block) {
+function block_content_block_build_block_content_alter(array &$build, BlockPluginInterface $block) {
   // Always create placeholders for content blocks so that any associated assets
   // are aggregated separately where possible.
   $build['#create_placeholder'] = TRUE;
