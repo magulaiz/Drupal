@@ -50,10 +50,6 @@ global-styling:
       css/components/table--file-multiple-widget.css: {}
       css/components/search-admin-settings.css: {}
       css/components/tablesort-indicator.css: {}
-      css/components/system-status-report-general-info.css: {}
-      css/components/system-status-report.css: {}
-      css/components/system-status-report-counters.css: {}
-      css/components/system-status-counter.css: {}
       css/components/tableselect.css: {}
       css/components/tabs.css: {}
       css/components/views-ui.css: {}
@@ -350,3 +346,23 @@ classy.search-results:
   css:
     component:
       css/classy/components/search-results.css: {}
+
+system-status-counter:
+  css:
+    component:
+      css/components/system-status-counter.css: {}
+
+system-status-report:
+  css:
+    component:
+      css/components/system-status-report.css: {}
+
+system-status-report-general-info:
+  css:
+    component:
+      css/components/system-status-report-general-info.css: {}
+
+system-status-report-counters:
+  css:
+    component:
+      css/components/system-status-report-counters.css: {}
