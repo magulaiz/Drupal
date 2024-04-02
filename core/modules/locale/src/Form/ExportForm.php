@@ -147,7 +147,10 @@ class ExportForm extends FormBase {
     $content_options = $form_state->getValue('content_options', []);
     $reader = new PoDatabaseReader();
     $language_name = '';
+    $pluralCount = 2;
     if ($language != NULL) {
+      $pluralCount = \Drupal::service('locale.plural.formula')->getNumberOfPlurals($language->getId());
+      $reader->setPluralCount($pluralCount);
       $reader->setLangcode($language->getId());
       $reader->setOptions($content_options);
       $languages = $this->languageManager->getLanguages();
@@ -157,6 +160,9 @@ class ExportForm extends FormBase {
     else {
       // Template required.
       $filename = 'drupal.pot';
+      // We need the default language plural count.
+      $pluralCount = \Drupal::service('locale.plural.formula')->getNumberOfPlurals();
+      $reader->setPluralCount($pluralCount);
     }
 
     $item = $reader->readItem();
@@ -169,6 +175,7 @@ class ExportForm extends FormBase {
       $writer = new PoStreamWriter();
       $writer->setURI($uri);
       $writer->setHeader($header);
+      $writer->setPluralCount($pluralCount);
 
       $writer->open();
       $writer->writeItem($item);

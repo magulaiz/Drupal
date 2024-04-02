@@ -5,7 +5,7 @@ namespace Drupal\Component\Gettext;
 /**
  * Defines a Gettext PO stream writer.
  */
-class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
+class PoStreamWriter implements PoWriterInterface, PoStreamInterface, PoPluralCountAwareInterface {
 
   /**
    * URI of the PO stream that is being written.
@@ -34,6 +34,13 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
    * @var string
    */
   protected $langcode;
+
+  /**
+   * Plural count of the related language.
+   *
+   * @var int
+   */
+  protected $pluralCount = 2;
 
   /**
    * Gets the PO header of the current stream.
@@ -73,6 +80,21 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
    */
   public function setLangcode($langcode) {
     $this->langcode = $langcode;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPluralCount(): int {
+    return $this->pluralCount;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setPluralCount(int $pluralCount) {
+    $this->pluralCount = $pluralCount;
+    return $this;
   }
 
   /**

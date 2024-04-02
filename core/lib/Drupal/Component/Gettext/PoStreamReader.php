@@ -10,7 +10,7 @@ use Drupal\Component\Render\FormattableMarkup;
  * The PO file format parsing is implemented according to the documentation at
  * http://www.gnu.org/software/gettext/manual/gettext.html#PO-Files
  */
-class PoStreamReader implements PoStreamInterface, PoReaderInterface {
+class PoStreamReader implements PoStreamInterface, PoReaderInterface, PoPluralCountAwareInterface {
 
   /**
    * Source line number of the stream being parsed.
@@ -61,6 +61,13 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
    * @var string
    */
   protected $langcode = NULL;
+
+  /**
+   * Plural count of the related language.
+   *
+   * @var int
+   */
+  protected $pluralCount = 2;
 
   /**
    * File handle of the current PO stream.
@@ -124,6 +131,21 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
    * Not applicable to stream reading and therefore not implemented.
    */
   public function setHeader(PoHeader $header) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPluralCount(): int {
+    return $this->pluralCount;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setPluralCount(int $pluralCount) {
+    $this->pluralCount = $pluralCount;
+    return $this;
   }
 
   /**
@@ -526,12 +548,19 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
     }
 
     $item = new PoItem();
+    $item->setLangcode($this->langcode);
     $item->setContext($value['msgctxt'] ?? '');
     $item->setSource($value['msgid']);
     $item->setTranslation($value['msgstr']);
+    if (isset($value['msgstr'])) {
+      $item->setTranslation($value['msgstr']);
+    }
+    else {
+      $item->setTranslation(array_fill(0, $this->pluralCount, NULL));
+    }
     $item->setPlural($plural);
+    $item->setPluralCount($this->pluralCount);
     $item->setComment($comments);
-    $item->setLangcode($this->langcode);
 
     $this->lastItem = $item;
 
