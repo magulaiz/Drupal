@@ -54,11 +54,8 @@ class UniquePathAliasConstraintValidator extends ConstraintValidator implements 
       ->condition('alias', $alias, '=')
       ->condition('langcode', $langcode, '=');
 
-    if (!$entity->isNew()) {
+    if ($entity->id()) {
       $query->condition('id', $entity->id(), '<>');
-    }
-    if ($path) {
-      $query->condition('path', $path, '<>');
     }
 
     if ($result = $query->range(0, 1)->execute()) {
