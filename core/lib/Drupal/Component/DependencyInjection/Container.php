@@ -119,6 +119,8 @@ class Container implements ContainerInterface, ResetInterface {
     $this->parameters = $container_definition['parameters'] ?? [];
     $this->serviceDefinitions = $container_definition['services'] ?? [];
     $this->frozen = $container_definition['frozen'] ?? FALSE;
+
+    $this->reset();
   }
 
   /**
@@ -137,10 +139,6 @@ class Container implements ContainerInterface, ResetInterface {
     // Re-use shared service instance if it exists.
     if (isset($this->services[$id]) || ($invalid_behavior === ContainerInterface::NULL_ON_INVALID_REFERENCE && array_key_exists($id, $this->services))) {
       return $this->services[$id];
-    }
-
-    if ($id === 'service_container') {
-      return $this;
     }
 
     if (isset($this->loading[$id])) {
@@ -202,6 +200,7 @@ class Container implements ContainerInterface, ResetInterface {
    */
   public function reset(): void {
     $this->services = [];
+    $this->services['service_container'] = $this;
   }
 
   /**
@@ -313,7 +312,7 @@ class Container implements ContainerInterface, ResetInterface {
    * {@inheritdoc}
    */
   public function has($id): bool {
-    return isset($this->aliases[$id]) || isset($this->services[$id]) || isset($this->serviceDefinitions[$id]) || $id === 'service_container';
+    return isset($this->aliases[$id]) || isset($this->services[$id]) || isset($this->serviceDefinitions[$id]);
   }
 
   /**
@@ -541,7 +540,7 @@ class Container implements ContainerInterface, ResetInterface {
    * {@inheritdoc}
    */
   public function getServiceIds() {
-    return array_merge(['service_container'], array_keys($this->serviceDefinitions + $this->services));
+    return array_keys($this->serviceDefinitions + $this->services);
   }
 
   /**
