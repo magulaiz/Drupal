@@ -88,6 +88,16 @@ class TestSiteInstallCommand extends Command {
 
   /**
    * {@inheritdoc}
+   *
+   * @todo Remove and fix test to not rely on super user.
+   */
+  public function __construct(string $name = null) {
+    parent::__construct($name);
+    $this->usesSuperUserAccessPolicy = TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
    */
   protected function configure() {
     $this->setName('install')
