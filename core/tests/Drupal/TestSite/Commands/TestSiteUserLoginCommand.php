@@ -68,23 +68,22 @@ class TestSiteUserLoginCommand extends Command {
     $userStorage = $entityTypeManager->getStorage('user');
     $userEntity = $userStorage->load($uid);
 
-    if ($input->hasOption('assign-admin')) {
-      $roleStorage = $entityTypeManager->getStorage('user_role');
-      if ($adminRoles = $roleStorage->loadByProperties(['is_admin' => TRUE])) {
-        $adminRoleId = reset($adminRoles)->id();
-      }
-      else {
-        $roleStorage->save($roleStorage->create([
-          'id' => 'administrator',
-          'label' => 'Administrator',
-          'weight' => 3,
-          'is_admin' => TRUE,
-        ]));
-        $adminRoleId = 'administrator';
-      }
-      $userEntity->addRole($adminRoleId);
-      $userStorage->save($userEntity);
+    // @todo Should check for assign-admin option.
+    $roleStorage = $entityTypeManager->getStorage('user_role');
+    if ($adminRoles = $roleStorage->loadByProperties(['is_admin' => TRUE])) {
+      $adminRoleId = array_key_first($adminRoles);
     }
+    else {
+      $roleStorage->save($roleStorage->create([
+        'id' => 'administrator',
+        'label' => 'Administrator',
+        'weight' => 3,
+        'is_admin' => TRUE,
+      ]));
+      $adminRoleId = 'administrator';
+    }
+    $userEntity->addRole($adminRoleId);
+    $userStorage->save($userEntity);
 
     $url = user_pass_reset_url($userEntity) . '/login';
     $output->writeln($url);
