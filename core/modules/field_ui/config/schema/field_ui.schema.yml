@@ -15,7 +15,10 @@ field_ui.settings:
           pattern: '/^[_a-z]+[_a-z0-9]*$/'
           message: "The %value prefix is not valid."
         Length:
-          # FieldStorageConfig::NAME_MAX_LENGTH is 32, which includes max:30.
-          # Consider using it appropriately.
+          # The maximum length of the field name is 32 characters. This maximum
+          # length also encompasses the length of the field_prefix, which is
+          # capped at 30 characters here. By setting the field_ui.settings:field_prefix config
+          # to its maximum length, only two characters will remain available
+          # for the actual field name based on the above specified pattern.
           # @see \Drupal\field\Entity\FieldStorageConfig::NAME_MAX_LENGTH
           max: 30
