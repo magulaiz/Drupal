@@ -7,7 +7,7 @@
 #   It exists only for core development purposes.
 #
 
-# Set defauit values
+# Set default values
 # The commit hash when most extensions were moved to core/extension_type.
 MODULE_COMMIT_HASH=06fb770bd340e5a18555e0da55a4dd6ba22f76ba
 THEME_COMMIT_HASH=06fb770bd340e5a18555e0da55a4dd6ba22f76ba
@@ -22,7 +22,7 @@ echo -e "This script assumes the extension was moved to core/modules or core/the
 echo -e "If not you can find the commit using  git log -- modules/MODULE_NAME and save the commit hash."
 echo -e "You will be prompted to change this commit, if needed.".
 
-# Get user input for the extenstion name and type.
+# Get user input for the extention name and type.
 echo -e "\nEnter the extension name:"
 read EXTENSION
 
