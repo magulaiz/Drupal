@@ -1,6 +1,8 @@
 # Drupal Release Schedule
 
-[View it in GitLab](https://git.drupalcode.org/project/drupal/-/blob/11.x/RELEASES.md)
+[View it in GitLab](https://git.drupalcode.org/project/drupal/-/blob/11.x/RELEASES-CALENDAR.md)
+
+[comment]: # (Green for fully support, yellow for maintenance, and red for end of life.)
 
 ```mermaid
 ---
@@ -10,11 +12,11 @@ displayMode: compact
   init: {
     'theme': 'base',
     'themeVariables': {
-      'primaryColor': '#0077C0',
+      'primaryColor': '#75c831',
       'primaryTextColor': '#FFFFFF',
-      'tertiaryColor': '#81CEFF',
+      'tertiaryColor': '#ffbd1f',
       'tertiaryTextColor': '#000000',
-      'doneTaskBkgColor': '#7cbc48',
+      'doneTaskBkgColor': '#edcbcb',
       'textColor': '#000000'
     }
   }
@@ -61,6 +63,8 @@ gantt
     12.1 Support    :121sup, after 120sup, 6M
     12.1 Security   :active, after 121sup, 6M
 ```
+
+Dates are subject to change. Visit the [schedule](https://www.drupal.org/about/core/policies/core-release-cycles/schedule) page for the most up to date information.
 
 ---
 
