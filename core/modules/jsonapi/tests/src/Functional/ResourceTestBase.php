@@ -1462,10 +1462,9 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @see ::testRelationships
    */
   protected function doTestRelationshipMutation(array $request_options) {
-    $serialized_options = serialize($request_options);
-    $hash = hash('sha256', $serialized_options) . rand(0, 100);
+    $rand = $this->randomMachineName(20);
     /** @var \Drupal\Core\Entity\FieldableEntityInterface $resource */
-    $resource = $this->createAnotherEntity($hash);
+    $resource = $this->createAnotherEntity($rand);
     $resource->set('field_jsonapi_test_entity_ref', NULL);
     $violations = $resource->validate();
     assert($violations->count() === 0, (string) $violations);
