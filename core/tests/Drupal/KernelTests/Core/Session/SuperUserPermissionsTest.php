@@ -23,7 +23,7 @@ class SuperUserPermissionsTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $usesSuperUserAccessPolicy = TRUE;
+  protected bool $usesSuperUserAccessPolicy = TRUE;
 
   /**
    * {@inheritdoc}
