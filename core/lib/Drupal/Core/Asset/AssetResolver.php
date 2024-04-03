@@ -143,10 +143,10 @@ class AssetResolver implements AssetResolverInterface {
       'preprocess' => TRUE,
     ];
 
-    foreach ($libraries_to_load as $library) {
+    foreach ($libraries_to_load as $key => $library) {
       [$extension, $name] = explode('/', $library, 2);
       $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
-      if (isset($definition['css'])) {
+      if (!empty($definition['css'])) {
         foreach ($definition['css'] as $options) {
           $options += $default_options;
           // Copy the asset library license information to each file.
@@ -165,6 +165,9 @@ class AssetResolver implements AssetResolverInterface {
           $css[$options['data']] = $options;
         }
       }
+      else {
+        unset($libraries_to_load[$key]);
+      }
     }
 
     // Allow modules and themes to alter the CSS assets.
@@ -176,7 +179,7 @@ class AssetResolver implements AssetResolverInterface {
       uasort($css, [static::class, 'sort']);
 
       if ($optimize) {
-        $css = \Drupal::service('asset.css.collection_optimizer')->optimize($css, $libraries_to_load, $language);
+        $css = \Drupal::service('asset.css.collection_optimizer')->optimize($css, array_values($libraries_to_load), $language);
       }
     }
     $this->cache->set($cid, $css, CacheBackendInterface::CACHE_PERMANENT, ['library_info']);
@@ -253,6 +256,7 @@ class AssetResolver implements AssetResolverInterface {
           unset($libraries_to_load[$key]);
         }
       }
+      $libraries_to_load = array_values($libraries_to_load);
       // The current list of header JS libraries are only those libraries that
       // are in the header, but their dependencies must also be loaded for them
       // to function correctly, so update the list with those.
