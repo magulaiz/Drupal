@@ -5,7 +5,7 @@ namespace Drupal\Core\Config;
 /**
  * Defines an interface for comparison of configuration storage objects.
  *
- * @deprecated in drupal:11.0.0 and will be removed in drupal:12.0.0. Use "StorageComparer" instead.
+ * @deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Use "StorageComparer" instead.
  *
  * @see https://www.drupal.org/project/drupal/issues/3410037
  */
