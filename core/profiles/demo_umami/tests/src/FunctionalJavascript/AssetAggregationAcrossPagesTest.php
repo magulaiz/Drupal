@@ -24,12 +24,15 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
   public function testFrontAndRecipesPages() {
     $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('<front>');
+      // Give additional time for the request and all assets to be returned
+      // before making the next request.
+      sleep(2);
       $this->drupalGet('recipes');
     }, 'umamiFrontAndRecipePages');
     $this->assertSame(2, $performance_data->getStylesheetCount());
     $this->assertSame(45495, $performance_data->getStylesheetBytes());
     $this->assertSame(1, $performance_data->getScriptCount());
-    $this->assertSame(14150, $performance_data->getScriptBytes());
+    $this->assertSame(7075, $performance_data->getScriptBytes());
   }
 
 }
