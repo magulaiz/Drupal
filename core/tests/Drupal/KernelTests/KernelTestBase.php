@@ -243,7 +243,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    *
    * @var bool
    */
-  protected $usesSuperUserAccessPolicy = FALSE;
+  protected $usesSuperUserAccessPolicy;
 
   /**
    * {@inheritdoc}
@@ -582,6 +582,12 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
 
     // Disable the super user access policy so that we are sure our tests check
     // for the right permissions.
+    if ($this->usesSuperUserAccessPolicy === NULL) {
+      $test_file_name = (new \ReflectionClass($this))->getFileName();
+      // @todo Decide in https://www.drupal.org/project/drupal/issues/3437926
+      //   how to remove this fallback behavior.
+      $this->usesSuperUserAccessPolicy = str_starts_with($test_file_name, $this->root . DIRECTORY_SEPARATOR . 'core');
+    }
     $container->setParameter('security.enable_super_user', $this->usesSuperUserAccessPolicy);
 
     // Use memory for key value storages to avoid database queries. Store the
