@@ -24,6 +24,7 @@ class ContentTranslationEnableTest extends BrowserTestBase {
    * {@inheritdoc}
    *
    * @todo Remove and fix test to not rely on super user.
+   * @see https://www.drupal.org/project/drupal/issues/3437620
    */
   protected $usesSuperUserAccessPolicy = TRUE;
 
