@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\mongodb\ConfigStorage;
+namespace Drupal\mongodb\modules\views;
 
 use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\Core\Cache\Cache;

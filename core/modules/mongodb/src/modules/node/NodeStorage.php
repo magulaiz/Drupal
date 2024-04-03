@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\mongodb\EntityStorage;
+namespace Drupal\mongodb\modules\node;
 
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Language\LanguageInterface;

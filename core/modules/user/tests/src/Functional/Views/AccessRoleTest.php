@@ -3,6 +3,7 @@
 namespace Drupal\Tests\user\Functional\Views;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Database\Database;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\user\Plugin\views\access\Role;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -49,9 +50,15 @@ class AccessRoleTest extends AccessTestBase {
     ];
     $view->save();
     $this->container->get('router.builder')->rebuildIfNeeded();
+    if (Database::getConnection()->driver() == 'mongodb') {
+      $modules = ['mongodb', 'user', 'views_test_data'];
+    }
+    else {
+      $modules = ['user', 'views_test_data'];
+    }
     $expected = [
       'config' => ['user.role.' . $this->normalRole],
-      'module' => ['user', 'views_test_data'],
+      'module' => $modules,
     ];
     $this->assertSame($expected, $view->calculateDependencies()->getDependencies());
 
@@ -91,7 +98,7 @@ class AccessRoleTest extends AccessTestBase {
     sort($roles);
     $expected = [
       'config' => $roles,
-      'module' => ['user', 'views_test_data'],
+      'module' => $modules,
     ];
     $this->assertSame($expected, $view->calculateDependencies()->getDependencies());
     $this->drupalLogin($this->webUser);

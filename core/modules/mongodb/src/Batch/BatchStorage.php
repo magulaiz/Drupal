@@ -18,6 +18,28 @@ class BatchStorage extends CoreBatchStorage {
   protected $tableExists = FALSE;
 
   /**
+   * Returns a new batch id.
+   *
+   * @return int
+   *   A batch id.
+   */
+  public function getId(): int {
+    // For MongoDB the table needs to exist. Otherwise MongoDB creates one
+    // without the correct validation.
+    if (!$this->tableExists) {
+      $this->tableExists = $this->ensureTableExists();
+    }
+
+    return $this->connection->insert(static::TABLE_NAME)
+      ->fields([
+        'timestamp' => new UTCDateTime($this->time->getRequestTime() * 1000),
+        'token' => '',
+        'batch' => NULL,
+      ])
+      ->execute();
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function load($id) {
@@ -54,7 +76,7 @@ class BatchStorage extends CoreBatchStorage {
    * {@inheritdoc}
    */
   public function update(array $batch) {
-    // For MongoDB the table need to exists. Otherwise MongoDB creates one
+    // For MongoDB the table needs to exist. Otherwise MongoDB creates one
     // without the correct validation.
     if (!$this->tableExists) {
       $this->tableExists = $this->ensureTableExists();
@@ -72,7 +94,7 @@ class BatchStorage extends CoreBatchStorage {
    */
   public function cleanup() {
     try {
-      $timestamp = new UTCDateTime(($this->getRequestTime() - 864000) * 1000);
+      $timestamp = new UTCDateTime(($this->time->getRequestTime() - 864000) * 1000);
 
       // Cleanup the batch table and the queue for failed batches.
       $this->connection->delete('batch')

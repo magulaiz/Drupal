@@ -179,17 +179,11 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
       // the join operation will overwrite its value.
       $query->addPreJoinField('c1_comment_translations', 'comment_translations');
 
-      $join_extra = [
-        [
-          'field' => 'comment_translations.entity_type',
-          'left_field' => 'comment_translations.entity_type',
-        ],
-        [
-          'field' => 'comment_translations.field_name',
-          'left_field' => 'comment_translations.field_name',
-        ]
-      ];
-      $query->addMongodbJoin('INNER', 'comment', 'comment_translations.entity_id', ['table' => 'comment', 'alias' => 'c1'], 'comment_translations.entity_id', '=', 'c2', $join_extra);
+      $query->addJoin('INNER', 'comment', 'c2', $query->joinCondition()
+        ->compare('c1.comment_translations.entity_id', 'c2.comment_translations.entity_id')
+        ->compare('c1.comment_translations.entity_type', 'c2.comment_translations.entity_type')
+        ->compare('c1.comment_translations.field_name', 'c2.comment_translations.field_name')
+      );
 
       $query->condition('c2.comment_translations.cid', (int) $comment->id());
       if (!$this->currentUser->hasPermission('administer comments')) {

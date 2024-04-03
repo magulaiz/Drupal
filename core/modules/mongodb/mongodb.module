@@ -21,104 +21,25 @@ function mongodb_entity_type_alter(array &$entity_types) {
   }
 
   if ($connection && $connection->driver() == 'mongodb') {
-    /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
-    foreach ($entity_types as &$entity_type) {
-      if ($entity_type instanceof ContentEntityType) {
-        // Change the views data class to the MongoDB version if the
-        // ContentEntityType uses SQL views data class.
-        // if ($entity_type->getHandlerClass('views_data') == 'Drupal\views\EntityViewsData') {
-        // $entity_type->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityViewsData');
-        // }
-      }
-    }
-
-    // Some content entity types have their specific subclassed version of
-    // ContentEntityStorage, ContentEntityStorageSchema and/or EntityViewsData.
-    // Override those with the MongoDB version of those subclassed versions.
-    if (!empty($entity_types['block_content'])) {
-      // $entity_types['block_content']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\BlockContentViewsData');
-    }
-
-    if (!empty($entity_types['comment'])) {
-      // $entity_types['comment']->setStorageClass('Drupal\mongodb\EntityStorage\CommentStorage');
-      // $entity_types['comment']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentEntityStorageSchema');
-      // $entity_types['comment']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\CommentViewsData');
-    }
-
-    if (!empty($entity_types['content_moderation_state'])) {
-      $entity_types['content_moderation_state']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentModerationStateStorageSchema');
-    }
-
-    if (!empty($entity_types['file'])) {
-      // $entity_types['file']->setStorageClass('Drupal\mongodb\EntityStorage\FileStorage');
-      // $entity_types['file']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentEntityStorageSchema');
-      // $entity_types['file']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\FileViewsData');
-    }
-
-    if (!empty($entity_types['media'])) {
-      // $entity_types['media']->setStorageClass('Drupal\mongodb\EntityStorage\MediaStorage');
-      // $entity_types['media']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\MediaViewsData');
-    }
-
     if (!empty($entity_types['menu_link_content'])) {
-      $entity_types['menu_link_content']->setStorageClass('Drupal\mongodb\EntityStorage\MenuLinkContentStorage');
-      // $entity_types['menu_link_content']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentEntityStorageSchema');
+      $entity_types['menu_link_content']->setStorageClass('Drupal\mongodb\modules\menu_link_content\MenuLinkContentStorage');
     }
 
     if (!empty($entity_types['node'])) {
-      $entity_types['node']->setStorageClass('Drupal\mongodb\EntityStorage\NodeStorage');
-      // $entity_types['node']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\ContentEntityStorageSchema');
-      // $entity_types['node']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\NodeViewsData');
-    }
-
-    if (!empty($entity_types['path_alias'])) {
-      // $entity_types['path_alias']->setStorageClass('Drupal\mongodb\EntityStorage\PathAliasStorage');
-      $entity_types['path_alias']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\PathAliasStorageSchema');
-    }
-
-    if (!empty($entity_types['shortcut_set'])) {
-      // $entity_types['shortcut_set']->setStorageClass('Drupal\mongodb\EntityStorage\ShortcutSetStorage');
-    }
-
-    if (!empty($entity_types['taxonomy_term'])) {
-      // $entity_types['taxonomy_term']->setStorageClass('Drupal\mongodb\EntityStorage\TermStorage');
-      // $entity_types['taxonomy_term']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\TermStorageSchema');
-      // $entity_types['taxonomy_term']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\TermViewsData');
-    }
-
-    if (!empty($entity_types['taxonomy_vocabulary'])) {
-      // $entity_types['taxonomy_vocabulary']->setStorageClass('Drupal\mongodb\EntityStorage\VocabularyStorage');
+      $entity_types['node']->setStorageClass('Drupal\mongodb\modules\node\NodeStorage');
     }
 
     if (!empty($entity_types['user'])) {
-      $entity_types['user']->setStorageClass('Drupal\mongodb\EntityStorage\UserStorage');
-      // $entity_types['user']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\UserStorageSchema');
-      // $entity_types['user']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\UserViewsData');
+      $entity_types['user']->setStorageClass('Drupal\mongodb\modules\user\UserStorage');
     }
 
     if (!empty($entity_types['view'])) {
-      $entity_types['view']->setStorageClass('Drupal\mongodb\ConfigStorage\ViewStorage');
+      $entity_types['view']->setStorageClass('Drupal\mongodb\modules\views\ViewStorage');
       $entity_types['view']->setClass('Drupal\mongodb\modules\views\View');
     }
 
     if (!empty($entity_types['workspace_association'])) {
-      $entity_types['workspace_association']->setStorageClass('Drupal\mongodb\EntityStorage\WorkspaceAssociationStorage');
-    }
-
-    // Testing content entity types.
-    if (!empty($entity_types['entity_test'])) {
-      // $entity_types['entity_test']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityTestViewsData');
-    }
-    if (!empty($entity_types['entity_test_update'])) {
-      // $entity_types['entity_test_update']->setStorageClass('Drupal\mongodb\EntityStorage\EntityTestUpdateStorage');
-      // $entity_types['entity_test_update']->setHandlerClass('storage_schema', 'Drupal\mongodb\EntityStorage\EntityTestUpdateStorageSchema');
-      // $entity_types['entity_test_update']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityViewsData');
-    }
-    if (!empty($entity_types['no_language_entity_test'])) {
-      // $entity_types['no_language_entity_test']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityTestViewsData');
-    }
-    if (!empty($entity_types['entity_test_multivalue_basefield'])) {
-      // $entity_types['entity_test_multivalue_basefield']->setHandlerClass('views_data', 'Drupal\mongodb\ViewsData\EntityTestViewsData');
+      // $entity_types['workspace_association']->setStorageClass('Drupal\mongodb\EntityStorage\WorkspaceAssociationStorage');
     }
   }
 }
