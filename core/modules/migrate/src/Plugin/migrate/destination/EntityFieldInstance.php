@@ -2,6 +2,8 @@
 
 namespace Drupal\migrate\Plugin\migrate\destination;
 
+use Drupal\migrate\Row;
+
 /**
  * Provides destination plugin for field_config configuration entities.
  *
@@ -58,6 +60,19 @@ class EntityFieldInstance extends EntityConfigBase {
       $ids['langcode']['type'] = 'string';
     }
     return $ids;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEntity(Row $row, array $old_destination_id_values) {
+    // The parent::getEntity() method uses the first part of the id to load the
+    // destination entity.
+    if ($old_destination_id_values[2] ?? NULL) {
+      [$entity_type, $bundle, $field_name] = $old_destination_id_values;
+      $old_destination_id_values = ["$entity_type.$bundle.$field_name"];
+    }
+    return parent::getEntity($row, $old_destination_id_values);
   }
 
 }
