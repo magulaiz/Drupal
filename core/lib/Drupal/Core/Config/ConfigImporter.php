@@ -47,7 +47,7 @@ class ConfigImporter {
   /**
    * The storage comparer used to discover configuration changes.
    *
-   * @var \Drupal\Core\Config\StorageComparerInterface|\Drupal\Core\Config\StorageComparer
+   * @var \Drupal\Core\Config\StorageComparer
    */
   protected $storageComparer;
 
@@ -177,7 +177,7 @@ class ConfigImporter {
   /**
    * Constructs a configuration import object.
    *
-   * @param \Drupal\Core\Config\StorageComparerInterface|\Drupal\Core\Config\StorageComparer $storage_comparer
+   * @param \Drupal\Core\Config\StorageComparer $storage_comparer
    *   A storage comparer object used to determine configuration changes and
    *   access the source and target storage objects.
    * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
@@ -201,7 +201,7 @@ class ConfigImporter {
    * @param \Drupal\Core\Extension\ThemeExtensionList $extension_list_theme
    *   The theme extension list.
    */
-  public function __construct(StorageComparerInterface|StorageComparer $storage_comparer, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, LockBackendInterface $lock, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, TranslationInterface $string_translation, ModuleExtensionList $extension_list_module, ThemeExtensionList $extension_list_theme = NULL) {
+  public function __construct(StorageComparer $storage_comparer, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, LockBackendInterface $lock, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, TranslationInterface $string_translation, ModuleExtensionList $extension_list_module, ThemeExtensionList $extension_list_theme = NULL) {
     $this->moduleExtensionList = $extension_list_module;
     $this->storageComparer = $storage_comparer;
     $this->eventDispatcher = $event_dispatcher;

@@ -272,7 +272,7 @@ class StorageComparer {
    * Calculates the differences.
    *
    * @return $this
-   *   An object which implements the StorageComparerInterface.
+   *   The StorageComparer object.
    */
   public function createChangelist() {
     foreach ($this->getAllCollectionNames() as $collection) {
@@ -448,7 +448,7 @@ class StorageComparer {
    * Recalculates the differences.
    *
    * @return $this
-   *   An object which implements the StorageComparerInterface.
+   *   The StorageComparer object.
    */
   public function reset() {
     $this->changelist = [StorageInterface::DEFAULT_COLLECTION => $this->getEmptyChangelist()];
@@ -467,7 +467,7 @@ class StorageComparer {
    * @return bool
    *   TRUE if there are changes to process and FALSE if not.
    *
-   * @see \Drupal\Core\Config\StorageComparerInterface::createChangelist()
+   * @see \Drupal\Core\Config\StorageComparer::createChangelist()
    */
   public function hasChanges() {
     foreach ($this->getAllCollectionNames() as $collection) {
@@ -530,7 +530,7 @@ class StorageComparer {
    * @return string
    *   The configuration change name that encodes both the old and the new name.
    *
-   * @see \Drupal\Core\Config\StorageComparerInterface::extractRenameNames()
+   * @see \Drupal\Core\Config\StorageComparer::extractRenameNames()
    */
   protected function createRenameName($old_name, $new_name) {
     return $old_name . '::' . $new_name;
