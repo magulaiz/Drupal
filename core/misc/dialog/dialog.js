@@ -80,6 +80,7 @@
         bodyScrollLock.lock($element.get(0));
       }
 
+      $($element.get(0).parentElement).removeAttr('tabindex');
       $(window).trigger('dialog:aftercreate', [dialog, $element, settings]);
     }
 
