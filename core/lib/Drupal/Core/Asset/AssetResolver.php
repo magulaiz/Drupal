@@ -240,12 +240,17 @@ class AssetResolver implements AssetResolverInterface {
       ];
 
       // Collect all libraries that contain JS assets and are in the header.
+      // Also remove any libraries with no JavaScript from the libraries to
+      // load.
       $header_js_libraries = [];
-      foreach ($libraries_to_load as $library) {
+      foreach ($libraries_to_load as $key => $library) {
         [$extension, $name] = explode('/', $library, 2);
         $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
         if (isset($definition['js']) && !empty($definition['header'])) {
           $header_js_libraries[] = $library;
+        }
+        if (empty($definition['js'])) {
+          unset($libraries_to_load[$key]);
         }
       }
       // The current list of header JS libraries are only those libraries that
@@ -256,28 +261,26 @@ class AssetResolver implements AssetResolverInterface {
       foreach ($libraries_to_load as $library) {
         [$extension, $name] = explode('/', $library, 2);
         $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
-        if (isset($definition['js'])) {
-          foreach ($definition['js'] as $options) {
-            $options += $default_options;
-            // Copy the asset library license information to each file.
-            $options['license'] = $definition['license'];
+        foreach ($definition['js'] as $options) {
+          $options += $default_options;
+          // Copy the asset library license information to each file.
+          $options['license'] = $definition['license'];
 
-            // 'scope' is a calculated option, based on which libraries are
-            // marked to be loaded from the header (see above).
-            $options['scope'] = in_array($library, $header_js_libraries) ? 'header' : 'footer';
+          // 'scope' is a calculated option, based on which libraries are
+          // marked to be loaded from the header (see above).
+          $options['scope'] = in_array($library, $header_js_libraries) ? 'header' : 'footer';
 
-            // Preprocess can only be set if caching is enabled and no
-            // attributes are set.
-            $options['preprocess'] = $options['cache'] && empty($options['attributes']) ? $options['preprocess'] : FALSE;
+          // Preprocess can only be set if caching is enabled and no
+          // attributes are set.
+          $options['preprocess'] = $options['cache'] && empty($options['attributes']) ? $options['preprocess'] : FALSE;
 
-            // Always add a tiny value to the weight, to conserve the insertion
-            // order.
-            $options['weight'] += count($javascript) / 30000;
+          // Always add a tiny value to the weight, to conserve the insertion
+          // order.
+          $options['weight'] += count($javascript) / 30000;
 
-            // Local and external files must keep their name as the associative
-            // key so the same JavaScript file is not added twice.
-            $javascript[$options['data']] = $options;
-          }
+          // Local and external files must keep their name as the associative
+          // key so the same JavaScript file is not added twice.
+          $javascript[$options['data']] = $options;
         }
       }
 
