@@ -586,7 +586,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
       $test_file_name = (new \ReflectionClass($this))->getFileName();
       // @todo Decide in https://www.drupal.org/project/drupal/issues/3437926
       //   how to remove this fallback behavior.
-      $this->usesSuperUserAccessPolicy = str_starts_with($test_file_name, $this->root . DIRECTORY_SEPARATOR . 'core');
+      $this->usesSuperUserAccessPolicy = !str_starts_with($test_file_name, $this->root . DIRECTORY_SEPARATOR . 'core');
     }
     $container->setParameter('security.enable_super_user', $this->usesSuperUserAccessPolicy);
 
