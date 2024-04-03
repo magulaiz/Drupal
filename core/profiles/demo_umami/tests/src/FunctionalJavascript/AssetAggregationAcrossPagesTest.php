@@ -27,11 +27,11 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
       // Give additional time for the request and all assets to be returned
       // before making the next request.
       sleep(2);
-      $this->drupalGet('recipes');
+      $this->drupalGet('articles');
     }, 'umamiFrontAndRecipePages');
-    $this->assertSame(2, $performance_data->getStylesheetCount());
-    $this->assertSame(45495, $performance_data->getStylesheetBytes());
-    $this->assertSame(1, $performance_data->getScriptCount());
+    $this->assertSame(4, $performance_data->getStylesheetCount());
+    $this->assertSame(90241, $performance_data->getStylesheetBytes());
+    $this->assertSame(2, $performance_data->getScriptCount());
     $this->assertSame(7075, $performance_data->getScriptBytes());
   }
 
