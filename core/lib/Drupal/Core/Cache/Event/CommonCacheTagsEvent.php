@@ -18,7 +18,7 @@ class CommonCacheTagsEvent extends Event {
    * Adds cache tags to the list of common cache tags.
    *
    * @param array $tags
-   *  The cache tags to add.
+   *   The cache tags to add.
    */
   public function addCacheTags(array $tags): void {
     $this->tags = array_unique(array_merge($this->tags, $tags));
