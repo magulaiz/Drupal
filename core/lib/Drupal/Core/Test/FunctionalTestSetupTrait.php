@@ -67,7 +67,7 @@ trait FunctionalTestSetupTrait {
    *
    * @var bool
    */
-  protected $usesSuperUserAccessPolicy;
+  protected bool $usesSuperUserAccessPolicy;
 
   /**
    * Prepares site settings and services before installation.
@@ -149,7 +149,7 @@ trait FunctionalTestSetupTrait {
     $services['parameters']['session.storage.options']['gc_probability'] = 0;
     // Disable the super user access policy so that we are sure our tests check
     // for the right permissions.
-    if ($this->usesSuperUserAccessPolicy === NULL) {
+    if (!isset($this->usesSuperUserAccessPolicy)) {
       $test_file_name = (new \ReflectionClass($this))->getFileName();
       // @todo Decide in https://www.drupal.org/project/drupal/issues/3437926
       //   how to remove this fallback behavior.
