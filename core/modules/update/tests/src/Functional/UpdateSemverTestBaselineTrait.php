@@ -124,7 +124,7 @@ trait UpdateSemverTestBaselineTrait {
    *   releases supported, 8 and 9.
    */
   public function testMajorUpdateAvailable() {
-    foreach (['9', 'current'] as $release_history) {
+    foreach (['9', '8.0.0-9.0.0'] as $release_history) {
       foreach ([0, 1] as $minor_version) {
         foreach ([0, 1] as $patch_version) {
           foreach (['-alpha1', '-beta1', ''] as $extra_version) {
