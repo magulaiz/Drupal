@@ -7,9 +7,11 @@ user.settings:
     FullyValidatable: ~
   mapping:
     anonymous:
+      requiredKey: false
       type: required_label
       label: 'Name'
     verify_mail:
+      requiredKey: false
       type: boolean
       label: 'Require email verification when a visitor creates an account'
     notify:
@@ -25,9 +27,11 @@ user.settings:
           type: boolean
           label: 'Notify user when password reset'
         status_activated:
+          requiredKey: false
           type: boolean
           label: 'Notify user when account is activated'
         status_blocked:
+          requiredKey: false
           type: boolean
           label: 'Account blocked'
         status_canceled:
@@ -47,6 +51,7 @@ user.settings:
           type: boolean
           label: 'Welcome (awaiting approval)'
     register:
+      requiredKey: false
       type: string
       label: 'Who can register accounts?'
       # @see \Drupal\user\UserInterface
