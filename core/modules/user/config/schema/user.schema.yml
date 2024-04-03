@@ -17,9 +17,11 @@ user.settings:
       label: 'Notify user'
       mapping:
         cancel_confirm:
+          requiredKey: false
           type: boolean
           label: 'Account cancellation confirmation'
         password_reset:
+          requiredKey: false
           type: boolean
           label: 'Notify user when password reset'
         status_activated:
@@ -29,15 +31,19 @@ user.settings:
           type: boolean
           label: 'Account blocked'
         status_canceled:
+          requiredKey: false
           type: boolean
           label: 'Account canceled'
         register_admin_created:
+          requiredKey: false
           type: boolean
           label: 'Welcome (new user created by administrator)'
         register_no_approval_required:
+          requiredKey: false
           type: boolean
           label: 'Welcome (no approval required)'
         register_pending_approval:
+          requiredKey: false
           type: boolean
           label: 'Welcome (awaiting approval)'
     register:
@@ -51,15 +57,22 @@ user.settings:
             - 'admin_only'
             - 'visitors_admin_approval'
     cancel_method:
+      requiredKey: false
       type: string
       label: 'When cancelling a user account'
+      nullable: true
       constraints:
         NotBlank:
           allowNull: true
     password_reset_timeout:
+      requiredKey: false
       type: integer
       label: 'Password reset timeout'
+      constraints:
+        Range:
+          min: 0
     password_strength:
+      requiredKey: false
       type: boolean
       label: 'Enable password strength indicator'
 
