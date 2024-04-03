@@ -115,11 +115,12 @@ class PathAliasTest extends ResourceTestBase {
    * {@inheritdoc}
    */
   protected function getPostDocument() {
+    $alias = '/frontpage' . rand(0, 1000);
     return [
       'data' => [
         'type' => static::$resourceTypeName,
         'attributes' => [
-          'alias' => '/frontpage1',
+          'alias' => $alias,
           'path' => '/<front>',
           'langcode' => 'en',
         ],
