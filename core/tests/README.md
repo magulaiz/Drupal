@@ -3,7 +3,7 @@
 ## Setting up
 
 ### PHP dependencies
-b
+
 You need the Drupal core development dependencies installed, in order to run
 any tests. You can install them using Composer by running
 ```
