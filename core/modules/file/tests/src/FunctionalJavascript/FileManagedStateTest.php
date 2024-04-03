@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\file\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -24,7 +26,7 @@ class FileManagedStateTest extends WebDriverTestBase {
   /**
    * Tests if managed file is correctly hidden with states.
    */
-  public function testFileStateVisible() {
+  public function testFileStateVisible(): void {
     $this->drupalLogin($this->drupalCreateUser());
     $this->drupalGet('file-test-states-form');
 
