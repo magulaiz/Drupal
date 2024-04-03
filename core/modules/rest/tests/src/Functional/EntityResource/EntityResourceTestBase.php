@@ -873,7 +873,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // Try with all of the following request bodies.
     $not_parseable_request_body       = '!{>}<';
-    $normalized_entity = $this->getNormalizedPatchEntity();
+    $normalized_entity                = $this->getNormalizedPatchEntity();
     $parseable_valid_request_body     = $this->serializer->encode($normalized_entity, static::$format);
     $parseable_invalid_request_body   = $this->serializer->encode($this->makeNormalizationInvalid($this->getNormalizedPatchEntity(), 'label'), static::$format);
     $parseable_invalid_request_body_2 = $this->serializer->encode($this->getNormalizedPatchEntity() + ['field_rest_test' => [['value' => $this->randomString()]]], static::$format);
