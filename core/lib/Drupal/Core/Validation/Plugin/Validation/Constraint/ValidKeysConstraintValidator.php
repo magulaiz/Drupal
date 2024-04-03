@@ -22,7 +22,7 @@ class ValidKeysConstraintValidator extends ConstraintValidator {
   /**
    * {@inheritdoc}
    */
-  public function validate(mixed $value, Constraint $constraint) {
+  public function validate(mixed $value, Constraint $constraint): void {
     assert($constraint instanceof ValidKeysConstraint);
 
     // Every config entity is represented as a `type: mapping` at the root. That
