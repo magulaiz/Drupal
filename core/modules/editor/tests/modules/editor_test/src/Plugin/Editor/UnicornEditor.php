@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\editor\Attribute\Editor;
 use Drupal\editor\Entity\Editor as EditorEntity;
 use Drupal\editor\Plugin\EditorBase;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**

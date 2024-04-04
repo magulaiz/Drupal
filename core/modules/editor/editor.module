@@ -5,18 +5,19 @@
  * Adds bindings for client-side "text editors" to text formats.
  */
 
-use Drupal\Component\Utility\Html;
-use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Form\SubformState;
-use Drupal\Core\Render\Element;
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Form\SubformState;
 use Drupal\editor\EditorInterface;
 use Drupal\editor\Entity\Editor;
 use Drupal\editor\Form\EditorFormCallbacks;
+use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\filter\Plugin\FilterInterface;
 use Drupal\text\Plugin\Field\FieldType\TextItemBase;

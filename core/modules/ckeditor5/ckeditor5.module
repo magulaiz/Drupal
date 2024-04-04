@@ -8,6 +8,7 @@
 declare(strict_types = 1);
 
 use Drupal\ckeditor5\Form\CKEditor5FormCallbacks;
+use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Ajax\AjaxResponse;

@@ -89,6 +89,15 @@ class EditorFormCallbacks {
       if ($settings = $form_state->getValue(['editor', 'settings'])) {
         $editor->setSettings($settings);
       }
+      // When image uploads are disabled (status = FALSE), the schema for image
+      // upload settings does not allow other keys to be present.
+      // @see editor.image_upload_settings.*
+      // @see editor.image_upload_settings.1
+      // @see editor.schema.yml
+      $image_upload_settings = $editor->getImageUploadSettings();
+      if (!$image_upload_settings['status']) {
+        $editor->setImageUploadSettings(['status' => FALSE]);
+      }
       $editor->save();
     }
   }

@@ -3,6 +3,7 @@
 namespace Drupal\ajax_test\Form;
 
 use Drupal\ajax_test\Controller\AjaxTestController;
+use Drupal\Core\Form\FormBase;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\OpenDialogCommand;
 use Drupal\Core\Ajax\OpenModalDialogCommand;

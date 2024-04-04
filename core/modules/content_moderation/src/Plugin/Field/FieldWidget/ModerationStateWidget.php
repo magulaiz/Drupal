@@ -2,9 +2,7 @@
 
 namespace Drupal\content_moderation\Plugin\Field\FieldWidget;
 
-use Drupal\content_moderation\ModerationInformation;
 use Drupal\content_moderation\Plugin\Field\ModerationStateFieldItemList;
-use Drupal\content_moderation\StateTransitionValidationInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldDefinitionInterface;
