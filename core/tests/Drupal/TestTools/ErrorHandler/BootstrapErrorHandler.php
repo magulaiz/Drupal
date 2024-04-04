@@ -14,13 +14,12 @@ use PHPUnit\Runner\ErrorHandler as PhpUnitErrorHandler;
  */
 final class BootstrapErrorHandler {
 
-  private ErrorHandler $phpUnitErrorHandler;
-
   /**
    * @todo
    */
-  public function __construct() {
-    $this->phpUnitErrorHandler = new PhpUnitErrorHandler();
+  public function __construct(
+    private PhpUnitErrorHandler $phpUnitErrorHandler,
+  ) {
   }
 
   /**

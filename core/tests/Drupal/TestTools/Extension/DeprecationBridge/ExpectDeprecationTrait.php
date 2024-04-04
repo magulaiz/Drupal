@@ -32,6 +32,7 @@ trait ExpectDeprecationTrait {
       return;
     }
 
+    $handler = Error::currentErrorHandler();
     if (!$handler instanceof TestErrorHandler) {
       throw new \RuntimeException(sprintf('%s registered its own error handler (%s) without restoring the previous one before tear down. This can cause unpredictable test results. Ensure the test cleans up after itself.',
         $this->name(),

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\TestTools\Extension\DeprecationBridge;
 
-use Drupal\Core\Utility\Error;
 use PHPUnit\Framework\TestCase;
 
 /**

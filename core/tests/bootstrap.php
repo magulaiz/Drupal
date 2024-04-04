@@ -10,6 +10,7 @@
 use Drupal\TestTools\ErrorHandler\BootstrapErrorHandler;
 use Drupal\TestTools\Extension\DeprecationBridge\DeprecationHandler;
 use Drupal\TestTools\Extension\HtmlLogging\HtmlOutputLogger;
+use PHPUnit\Runner\ErrorHandler as PhpUnitErrorHandler;
 use Symfony\Component\ErrorHandler\DebugClassLoader;
 
 /**
@@ -168,7 +169,9 @@ if ($deprecationBridgeConfiguration = DeprecationHandler::getConfiguration()) {
 
   // Need to have an early error handler to manage deprecations triggered by
   // DebugClassLoader, that occur before tests' setUp() methods are called.
-  set_error_handler(new BootstrapErrorHandler());
+  // We pass an instance of the PHPUnit error handler to redirect any error not
+  // managed by our layer back to PHPUnit.
+  set_error_handler(new BootstrapErrorHandler(new PhpUnitErrorHandler()));
 
   // Enable the DebugClassLoader to get deprecations for methods' signature
   // changes.
