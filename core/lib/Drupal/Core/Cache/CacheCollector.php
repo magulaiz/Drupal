@@ -244,6 +244,13 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
           $this->lock->release($lock_name);
           return;
         }
+        // If there wasn't a cache item at the beginning of the request, but
+        // there is now, then there has been a cache write in the interim.
+        // Discard our data if so since the cache may have been written by
+        // a request that was also setting data.
+        if (!$this->cacheCreated) {
+          return;
+        }
         $data = array_merge($cache->data, $data);
       }
       elseif ($this->cacheCreated) {

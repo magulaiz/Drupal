@@ -119,11 +119,9 @@ class State extends CacheCollector implements StateInterface {
     // the cache immediately before calling parent::set(), we can trigger that
     // detection since the other request will then get an invalid item in
     // static::updateCache().
-    if (!$this->cacheCreated) {
-      static::updateCache();
-    }
     parent::set($key, $value);
     $this->persist($key);
+    static::updateCache();
   }
 
   /**
