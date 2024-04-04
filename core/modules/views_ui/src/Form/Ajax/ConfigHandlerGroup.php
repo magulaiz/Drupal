@@ -3,6 +3,7 @@
 namespace Drupal\views_ui\Form\Ajax;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\views\Views;
 use Drupal\views\ViewEntityInterface;
 use Drupal\views\ViewExecutable;
@@ -94,6 +95,7 @@ class ConfigHandlerGroup extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $view = $form_state->get('view');
     $item = &$form_state->get('handler')->options;

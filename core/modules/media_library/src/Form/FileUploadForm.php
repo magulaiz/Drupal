@@ -12,6 +12,7 @@ use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 use Drupal\file\FileRepositoryInterface;
 use Drupal\file\FileInterface;
@@ -202,6 +203,7 @@ class FileUploadForm extends AddFormBase {
    * @return array
    *   The processed upload element.
    */
+  #[TrustedCallback]
   public function validateUploadElement(array $element, FormStateInterface $form_state) {
     if ($form_state::hasAnyErrors()) {
       // When an error occurs during uploading files, remove all files so the
@@ -230,6 +232,7 @@ class FileUploadForm extends AddFormBase {
    * @return array
    *   The processed upload element.
    */
+  #[TrustedCallback]
   public function processUploadElement(array $element, FormStateInterface $form_state) {
     $element['upload_button']['#submit'] = ['::uploadButtonSubmit'];
     // Limit the validation errors to make sure
@@ -282,6 +285,7 @@ class FileUploadForm extends AddFormBase {
    * @return array
    *   The processed form element.
    */
+  #[TrustedCallback]
   public static function hideExtraSourceFieldComponents($element, FormStateInterface $form_state, $form) {
     // Remove original button added by ManagedFile::processManagedFile().
     if (!empty($element['remove_button'])) {

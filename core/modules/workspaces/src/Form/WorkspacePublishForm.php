@@ -6,6 +6,7 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 use Drupal\workspaces\WorkspaceAccessException;
 use Drupal\workspaces\WorkspaceInterface;
@@ -139,6 +140,7 @@ class WorkspacePublishForm extends ConfirmFormBase implements WorkspaceFormInter
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $workspace = $this->workspace;
 

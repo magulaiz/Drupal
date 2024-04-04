@@ -4,6 +4,7 @@ namespace Drupal\search\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 use Drupal\search\SearchPageInterface;
 
@@ -83,6 +84,7 @@ class SearchPageForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Redirect to the search page with keywords in the GET parameters.
     // Plugins with additional search parameters will need to provide their

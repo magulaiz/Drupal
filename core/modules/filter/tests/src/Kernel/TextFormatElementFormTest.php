@@ -4,6 +4,7 @@ namespace Drupal\Tests\filter\Kernel;
 
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\Role;
@@ -103,6 +104,7 @@ class TextFormatElementFormTest extends KernelTestBase implements FormInterface 
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {}
 
   /**
@@ -113,6 +115,7 @@ class TextFormatElementFormTest extends KernelTestBase implements FormInterface 
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {}
 
   /**

@@ -2,6 +2,7 @@
 
 namespace Drupal\workflows\Form;
 
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\workflows\WorkflowInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -90,6 +91,7 @@ class WorkflowStateDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
     $workflow_label = $this->workflow->getTypePlugin()->getState($this->stateId)->label();

@@ -6,11 +6,15 @@ use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\views\Render\ViewsRenderPipelineMarkup;
 use Drupal\views\ViewExecutable;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 
+/**
+ * The default step controller in ViewsForm.
+ */
 class ViewsFormMainForm implements FormInterface, TrustedCallbackInterface {
 
   use StringTranslationTrait;
@@ -79,8 +83,8 @@ class ViewsFormMainForm implements FormInterface, TrustedCallbackInterface {
 
     $form['#pre_render'][] = [static::class, 'preRenderViewsForm'];
 
-    // Add the output markup to the form array so that it's included when the form
-    // array is passed to the theme function.
+    // Add the output markup to the form array so that it's included when the
+    // form array is passed to the theme function.
     $form['output'] = $output;
     // This way any additional form elements will go before the view
     // (below the exposed widgets).
@@ -151,6 +155,7 @@ class ViewsFormMainForm implements FormInterface, TrustedCallbackInterface {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $view = $form_state->getBuildInfo()['args'][0];
 
@@ -174,6 +179,7 @@ class ViewsFormMainForm implements FormInterface, TrustedCallbackInterface {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $view = $form_state->getBuildInfo()['args'][0];
 

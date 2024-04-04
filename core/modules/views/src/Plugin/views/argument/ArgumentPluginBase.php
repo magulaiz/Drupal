@@ -9,6 +9,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\HandlerBase;
@@ -1194,6 +1195,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
    *
    * @see \Drupal\Core\Render\Element\Radios::processRadios()
    */
+  #[TrustedCallback]
   public static function processContainerRadios($element) {
     if (count($element['#options']) > 0) {
       foreach ($element['#options'] as $key => $choice) {

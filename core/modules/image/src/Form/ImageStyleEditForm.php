@@ -5,6 +5,7 @@ namespace Drupal\image\Form;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 use Drupal\image\ConfigurableImageEffectInterface;
 use Drupal\image\ImageEffectManager;
@@ -195,6 +196,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
   /**
    * Validate handler for image effect.
    */
+  #[TrustedCallback]
   public function effectValidate($form, FormStateInterface $form_state) {
     if (!$form_state->getValue('new')) {
       $form_state->setErrorByName('new', $this->t('Select an effect to add.'));
@@ -240,6 +242,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
     // Update image effect weights.

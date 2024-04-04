@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\media\Entity\MediaType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -281,6 +282,7 @@ class MediaTypeForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 
@@ -293,6 +295,7 @@ class MediaTypeForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state->setValue('field_map', array_filter(
       $form_state->getValue('field_map', []),

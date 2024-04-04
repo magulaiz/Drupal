@@ -7,6 +7,7 @@ use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -98,6 +99,7 @@ class ConfigImportForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $all_files = $this->getRequest()->files->get('files', []);
     if (!empty($all_files['import_tarball'])) {
@@ -114,6 +116,7 @@ class ConfigImportForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     if ($path = $form_state->getValue('import_tarball')) {
       $this->configStorage->deleteAll();

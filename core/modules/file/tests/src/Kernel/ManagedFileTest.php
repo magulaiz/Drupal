@@ -5,6 +5,7 @@ namespace Drupal\Tests\file\Kernel;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Managed file element test.
@@ -35,11 +36,13 @@ class ManagedFileTest extends FileManagedUnitTestBase implements FormInterface {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {}
 
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {}
 
   /**

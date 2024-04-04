@@ -8,6 +8,7 @@ use Drupal\Core\Datetime\DateHelper;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Attribute\FormElement;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Security\DoTrustedCallbackTrait;
 use Drupal\Core\Security\StaticTrustedCallbackHelper;
 
@@ -48,6 +49,7 @@ class Datelist extends DateElementBase {
    * Validates the date type to adjust 12 hour time and prevent invalid dates.
    * If the date is valid, the date is set in the form.
    */
+  #[TrustedCallback]
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
     $parts = $element['#date_part_order'];
     $increment = $element['#date_increment'];
@@ -178,6 +180,7 @@ class Datelist extends DateElementBase {
    *
    * @return array
    */
+  #[TrustedCallback]
   public static function processDatelist(&$element, FormStateInterface $form_state, &$complete_form) {
     // Load translated date part labels from the appropriate calendar plugin.
     $date_helper = new DateHelper();
@@ -289,6 +292,7 @@ class Datelist extends DateElementBase {
    * @param array $complete_form
    *   The complete form structure.
    */
+  #[TrustedCallback]
   public static function validateDatelist(&$element, FormStateInterface $form_state, &$complete_form) {
     $input_exists = FALSE;
     $input = NestedArray::getValue($form_state->getValues(), $element['#parents'], $input_exists);

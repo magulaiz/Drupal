@@ -4,6 +4,7 @@ namespace Drupal\block_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Form that performs base block form test.
@@ -39,6 +40,7 @@ class TestForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if (!str_contains($form_state->getValue('email'), '.com')) {
       $form_state->setErrorByName('email', $this->t('This is not a .com email address.'));
@@ -48,6 +50,7 @@ class TestForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->messenger()->addStatus($this->t('Your email address is @email', ['@email' => $form['email']['#value']]));
   }

@@ -20,6 +20,7 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RedirectDestinationInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
@@ -591,6 +592,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    *
    * @see \Drupal\content_translation\ContentTranslationHandler::entityFormAlter()
    */
+  #[TrustedCallback]
   public function entityFormSharedElements($element, FormStateInterface $form_state, $form) {
     static $ignored_types;
 
@@ -738,6 +740,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    *
    * Validates the submitted content translation metadata.
    */
+  #[TrustedCallback]
   public function entityFormValidate($form, FormStateInterface $form_state) {
     if (!$form_state->isValueEmpty('content_translation')) {
       $translation = $form_state->getValue('content_translation');
@@ -758,6 +761,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    * Updates metadata fields, which should be updated only after the validation
    * has run and before the entity is saved.
    */
+  #[TrustedCallback]
   public function entityFormSubmit($form, FormStateInterface $form_state) {
     /** @var \Drupal\Core\Entity\ContentEntityFormInterface $form_object */
     $form_object = $form_state->getFormObject();
@@ -781,6 +785,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    *
    * Takes care of the source language change.
    */
+  #[TrustedCallback]
   public function entityFormSourceChange($form, FormStateInterface $form_state) {
     $form_object = $form_state->getFormObject();
     $entity = $form_object->getEntity();
@@ -801,6 +806,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    *
    * Takes care of entity deletion.
    */
+  #[TrustedCallback]
   public function entityFormDelete($form, FormStateInterface $form_state) {
     $form_object = $form_state->getFormObject();
     $entity = $form_object->getEntity();

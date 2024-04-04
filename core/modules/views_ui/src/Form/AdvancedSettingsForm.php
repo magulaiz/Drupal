@@ -4,6 +4,7 @@ namespace Drupal\views_ui\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\views\Views;
 
 /**
@@ -81,6 +82,7 @@ class AdvancedSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('views.settings')
       ->set('sql_signature', $form_state->getValue('sql_signature'))

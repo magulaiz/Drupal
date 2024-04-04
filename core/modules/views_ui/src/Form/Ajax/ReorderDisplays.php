@@ -4,6 +4,7 @@ namespace Drupal\views_ui\Form\Ajax;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 
 /**
@@ -145,6 +146,7 @@ class ReorderDisplays extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     /** @var \Drupal\views_ui\ViewUI $view */
     $view = $form_state->get('view');

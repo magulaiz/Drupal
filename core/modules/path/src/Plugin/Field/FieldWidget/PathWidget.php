@@ -7,6 +7,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
@@ -80,6 +81,7 @@ class PathWidget extends WidgetBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
+  #[TrustedCallback]
   public static function validateFormElement(array &$element, FormStateInterface $form_state) {
     // Trim the submitted value of whitespace and slashes.
     $alias = rtrim(trim($element['alias']['#value']), " \\/");

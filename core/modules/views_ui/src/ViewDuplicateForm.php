@@ -5,6 +5,7 @@ namespace Drupal\views_ui;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -100,6 +101,7 @@ class ViewDuplicateForm extends ViewFormBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   A reference to a keyed array containing the current state of the form.
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // The original ID gets set to NULL when duplicating, so we need to store it
     // here.

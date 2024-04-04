@@ -3,6 +3,7 @@
 namespace Drupal\user;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Form handler for the user register forms.
@@ -67,6 +68,7 @@ class RegisterForm extends AccountForm {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $admin = $form_state->getValue('administer_users');
 

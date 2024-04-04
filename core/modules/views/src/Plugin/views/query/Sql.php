@@ -5,15 +5,16 @@ namespace Drupal\views\Plugin\views\query;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\views\Form\ViewsFormCallbacks;
 use Drupal\views\Attribute\ViewsQuery;
-use Drupal\views\Plugin\views\join\JoinPluginBase;
 use Drupal\views\Plugin\views\HandlerBase;
+use Drupal\views\Plugin\views\join\JoinPluginBase;
 use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
@@ -324,7 +325,7 @@ class Sql extends QueryPluginBase {
       '#title' => $this->t('Query Tags'),
       '#description' => $this->t('If set, these tags will be appended to the query and can be used to identify the query in a module. This can be helpful for altering queries.'),
       '#default_value' => implode(', ', $this->options['query_tags']),
-      '#element_validate' => ['views_element_validate_tags'],
+      '#element_validate' => [[ViewsFormCallbacks::class, 'elementValidateTags']],
     ];
   }
 

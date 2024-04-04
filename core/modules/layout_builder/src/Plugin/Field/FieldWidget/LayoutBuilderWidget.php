@@ -6,6 +6,7 @@ use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
@@ -44,6 +45,7 @@ class LayoutBuilderWidget extends WidgetBase {
    *
    * @see \Drupal\layout_builder\Controller\LayoutBuilderHtmlEntityFormController
    */
+  #[TrustedCallback]
   public static function layoutBuilderElementGetKeys(array $element, FormStateInterface $form_state, &$form) {
     $form['#layout_builder_element_keys'] = $element['#array_parents'];
     return $element;

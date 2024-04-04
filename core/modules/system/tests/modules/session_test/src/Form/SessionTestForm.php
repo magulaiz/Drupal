@@ -5,6 +5,7 @@ namespace Drupal\session_test\Form;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Form controller for the test config edit forms.
@@ -42,6 +43,7 @@ class SessionTestForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->messenger()->addStatus(new FormattableMarkup('Ok: @input', ['@input' => $form_state->getValue('input')]));
   }

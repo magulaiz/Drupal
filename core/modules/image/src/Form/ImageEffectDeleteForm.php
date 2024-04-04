@@ -4,6 +4,7 @@ namespace Drupal\image\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\image\ImageStyleInterface;
 
 /**
@@ -68,6 +69,7 @@ class ImageEffectDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->imageStyle->deleteImageEffect($this->imageEffect);
     $this->messenger()->addStatus($this->t('The image effect %name has been deleted.', ['%name' => $this->imageEffect->label()]));

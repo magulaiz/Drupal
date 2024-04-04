@@ -6,6 +6,7 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -141,6 +142,7 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
     // Update the changed timestamp of the entity.
@@ -180,6 +182,7 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
    * invoked from the button-level validation handler, otherwise an exception
    * will be thrown.
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */

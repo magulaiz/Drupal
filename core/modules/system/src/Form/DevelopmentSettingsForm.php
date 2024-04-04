@@ -5,6 +5,7 @@ namespace Drupal\system\Form;
 use Drupal\Core\DrupalKernelInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -117,6 +118,7 @@ class DevelopmentSettingsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $disable_rendered_output_cache_bins_previous = $this->state->get('disable_rendered_output_cache_bins', FALSE);
     $disable_rendered_output_cache_bins = (bool) $form_state->getValue('disable_rendered_output_cache_bins');

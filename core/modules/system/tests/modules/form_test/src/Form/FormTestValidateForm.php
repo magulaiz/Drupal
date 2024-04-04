@@ -4,10 +4,11 @@ namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\form_test\Callbacks;
 
 /**
- * Form builder for testing \Drupal\Core\Form\FormValidatorInterface::validateForm().
+ * Form builder for testing FormValidatorInterface::validateForm().
  *
  * Serves for testing form processing and alterations by form validation
  * handlers, especially for the case of a validation error:
@@ -52,6 +53,7 @@ class FormTestValidateForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if ($form_state->getValue('name') == 'validate') {
       // Alter the form element.
@@ -59,7 +61,10 @@ class FormTestValidateForm extends FormBase {
       // Alter the submitted value in $form_state.
       $form_state->setValueForElement($form['name'], 'value changed by setValueForElement() in #validate');
       // Output the element's value from $form_state.
-      $this->messenger()->addStatus($this->t('@label value: @value', ['@label' => $form['name']['#title'], '@value' => $form_state->getValue('name')]));
+      $this->messenger()->addStatus($this->t('@label value: @value', [
+        '@label' => $form['name']['#title'],
+        '@value' => $form_state->getValue('name'),
+      ]));
 
       // Trigger a form validation error to see our changes.
       $form_state->setErrorByName('');
@@ -73,6 +78,7 @@ class FormTestValidateForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 

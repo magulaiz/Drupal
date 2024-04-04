@@ -5,6 +5,7 @@ namespace Drupal\Core\FileTransfer\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -156,6 +157,7 @@ class FileTransferAuthorizeForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // Only validate the form if we have collected all of the user input and are
     // ready to proceed with updating or installing.
@@ -186,6 +188,7 @@ class FileTransferAuthorizeForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_connection_settings = $form_state->getValue('connection_settings');
     switch ($form_state->getTriggeringElement()['#name']) {

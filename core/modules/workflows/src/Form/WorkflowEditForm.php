@@ -2,14 +2,15 @@
 
 namespace Drupal\workflows\Form;
 
-use Drupal\Core\Form\SubformState;
-use Drupal\Core\Plugin\PluginFormFactoryInterface;
-use Drupal\workflows\Entity\Workflow;
-use Drupal\workflows\State;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\SubformState;
+use Drupal\Core\Plugin\PluginFormFactoryInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
+use Drupal\workflows\Entity\Workflow;
+use Drupal\workflows\State;
 use Drupal\workflows\WorkflowTypeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -115,7 +116,10 @@ class WorkflowEditForm extends EntityForm {
       $links = [
         'edit' => [
           'title' => $this->t('Edit'),
-          'url' => Url::fromRoute('entity.workflow.edit_state_form', ['workflow' => $workflow->id(), 'workflow_state' => $state->id()]),
+          'url' => Url::fromRoute(
+            'entity.workflow.edit_state_form',
+            ['workflow' => $workflow->id(), 'workflow_state' => $state->id()]
+          ),
         ],
       ];
       if ($this->entity->access('delete-state:' . $state->id())) {
@@ -180,11 +184,17 @@ class WorkflowEditForm extends EntityForm {
     foreach ($transitions as $transition) {
       $links['edit'] = [
         'title' => $this->t('Edit'),
-        'url' => Url::fromRoute('entity.workflow.edit_transition_form', ['workflow' => $workflow->id(), 'workflow_transition' => $transition->id()]),
+        'url' => Url::fromRoute(
+          'entity.workflow.edit_transition_form',
+          ['workflow' => $workflow->id(), 'workflow_transition' => $transition->id()]
+        ),
       ];
       $links['delete'] = [
         'title' => $this->t('Delete'),
-        'url' => Url::fromRoute('entity.workflow.delete_transition_form', ['workflow' => $workflow->id(), 'workflow_transition' => $transition->id()]),
+        'url' => Url::fromRoute(
+          'entity.workflow.delete_transition_form',
+          ['workflow' => $workflow->id(), 'workflow_transition' => $transition->id()]
+        ),
       ];
       $form['transitions_container']['transitions'][$transition->id()] = [
         '#attributes' => ['class' => ['draggable']],
@@ -230,6 +240,7 @@ class WorkflowEditForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     /** @var \Drupal\workflows\WorkflowInterface $workflow */
     $workflow = $this->entity;

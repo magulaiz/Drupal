@@ -14,6 +14,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\ElementInfoManagerInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
@@ -266,6 +267,7 @@ class FieldConfigEditForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function afterBuild(array $element, FormStateInterface $form_state) {
     // Delegate ::afterBuild to the subform.
     // @todo remove after https://www.drupal.org/i/3385205 has been addressed.
@@ -361,6 +363,7 @@ class FieldConfigEditForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 
@@ -386,6 +389,7 @@ class FieldConfigEditForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
@@ -499,6 +503,7 @@ class FieldConfigEditForm extends EntityForm {
   /**
    * Process handler for subform submit.
    */
+  #[TrustedCallback]
   public static function processFieldStorageSubmit(array $element, FormStateInterface $form_state, &$complete_form) {
     // Limit validation errors to the field storage form while the field storage
     // form is being edited.
@@ -514,6 +519,7 @@ class FieldConfigEditForm extends EntityForm {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
+  #[TrustedCallback]
   public function fieldStorageSubmit(&$form, FormStateInterface $form_state) {
     // The default value widget needs to be regenerated.
     $form_storage = &$form_state->getStorage();

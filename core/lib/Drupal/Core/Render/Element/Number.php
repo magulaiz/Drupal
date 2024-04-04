@@ -2,10 +2,11 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Component\Utility\Number as NumberUtility;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
-use Drupal\Component\Utility\Number as NumberUtility;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Provides a form element for numeric input, with special numeric validation.
@@ -59,6 +60,7 @@ class Number extends FormElementBase {
    *
    * Note that #required is validated by _form_validate() already.
    */
+  #[TrustedCallback]
   public static function validateNumber(&$element, FormStateInterface $form_state, &$complete_form) {
     $value = $element['#value'];
     if ($value === '') {

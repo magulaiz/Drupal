@@ -5,6 +5,7 @@ namespace Drupal\form_test\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -63,6 +64,7 @@ class FormTestLanguageSelectForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state->setResponse(new JsonResponse($form_state->getValues()));
   }

@@ -16,8 +16,10 @@ use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountProxyInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -154,12 +156,7 @@ class FormBuilderTest extends FormTestBase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $form_arg = $this->getMockForm($form_id, $expected_form);
-    $form_arg->expects($this->any())
-      ->method('submitForm')
-      ->willReturnCallback(function ($form, FormStateInterface $form_state) use ($response, $form_state_key) {
-        $form_state->setFormState([$form_state_key => $response]);
-      });
+    $form_arg = new TestFormResponse($response, $form_state_key);
 
     $form_state = new FormState();
     try {
@@ -581,7 +578,19 @@ class FormBuilderTest extends FormTestBase {
     $request_stack = new RequestStack();
     $request_stack->push($request);
     $this->formBuilder = $this->getMockBuilder('\Drupal\Core\Form\FormBuilder')
-      ->setConstructorArgs([$this->formValidator, $this->formSubmitter, $this->formCache, $this->moduleHandler, $this->eventDispatcher, $request_stack, $this->classResolver, $this->elementInfo, $this->themeManager, $this->csrfToken])
+      ->setConstructorArgs([
+        $this->formValidator,
+        $this->formSubmitter,
+        $this->formCache,
+        $this->moduleHandler,
+        $this->eventDispatcher,
+        $request_stack,
+        $this->classResolver,
+        $this->elementInfo,
+        $this->themeManager,
+        $this->callableResolver,
+        $this->csrfToken,
+      ])
       ->onlyMethods(['getFileUploadMaxSize'])
       ->getMock();
     $this->formBuilder->expects($this->once())
@@ -978,11 +987,36 @@ class TestForm implements FormInterface {
     return test_form_id();
   }
 
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {}
 
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {}
 
 }
+
+class TestFormResponse implements FormInterface {
+
+  public function __construct(protected MockObject $response, protected string $key) {}
+
+  public function getFormId() {
+    return 'test_form';
+  }
+
+  public function buildForm(array $form, FormStateInterface $form_state) {
+    return test_form_id();
+  }
+
+  #[TrustedCallback]
+  public function validateForm(array &$form, FormStateInterface $form_state) {}
+
+  #[TrustedCallback]
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    $form_state->setFormState([$this->key => $this->response]);
+  }
+
+}
+
 class TestFormInjected extends TestForm implements ContainerInjectionInterface {
 
   public static function create(ContainerInterface $container) {

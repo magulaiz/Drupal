@@ -5,6 +5,7 @@ namespace Drupal\Core\Render\Element;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Component\Utility\Html as HtmlUtility;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Provides a form element for a set of radio buttons.
@@ -58,6 +59,7 @@ class Radios extends FormElementBase {
   /**
    * Expands a radios element into individual radio elements.
    */
+  #[TrustedCallback]
   public static function processRadios(&$element, FormStateInterface $form_state, &$complete_form) {
     if (count($element['#options']) > 0) {
       $weight = 0;
@@ -96,6 +98,7 @@ class Radios extends FormElementBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
     if ($input !== FALSE) {
       // When there's user input (including NULL), return it as the value.

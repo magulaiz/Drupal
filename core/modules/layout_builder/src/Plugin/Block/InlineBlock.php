@@ -13,6 +13,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -159,6 +160,7 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
    * @return array
    *   The containing element, with the Content Block form inserted.
    */
+  #[TrustedCallback]
   public static function processBlockForm(array $element, FormStateInterface $form_state) {
     /** @var \Drupal\block_content\BlockContentInterface $block */
     $block = $element['#block'];

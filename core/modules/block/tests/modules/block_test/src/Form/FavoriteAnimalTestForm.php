@@ -4,6 +4,7 @@ namespace Drupal\block_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Form that performs favorite animal test.
@@ -39,6 +40,7 @@ class FavoriteAnimalTestForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->messenger()->addStatus($this->t('Your favorite animal is: @favorite_animal', ['@favorite_animal' => $form['favorite_animal']['#value']]));
   }

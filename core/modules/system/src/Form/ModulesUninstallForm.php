@@ -10,6 +10,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Update\UpdateHookRegistry;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -217,6 +218,7 @@ class ModulesUninstallForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // Form submitted, but no modules selected.
     if (!array_filter($form_state->getValue('uninstall'))) {
@@ -228,6 +230,7 @@ class ModulesUninstallForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Save all the values in an expirable key value store.
     $modules = $form_state->getValue('uninstall');

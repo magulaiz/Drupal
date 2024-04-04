@@ -3,6 +3,7 @@
 namespace Drupal\filter;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Provides a form for adding a filter format.
@@ -21,6 +22,7 @@ class FilterFormatAddForm extends FilterFormatFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
     $this->messenger()->addStatus($this->t('Added text format %format.', ['%format' => $this->entity->label()]));

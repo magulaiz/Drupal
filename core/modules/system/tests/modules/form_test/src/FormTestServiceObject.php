@@ -4,6 +4,7 @@ namespace Drupal\form_test;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Provides a test form object.
@@ -49,6 +50,7 @@ class FormTestServiceObject extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $this->messenger()->addStatus($this->t('The FormTestServiceObject::validateForm() method was used for this form.'));
   }
@@ -56,6 +58,7 @@ class FormTestServiceObject extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->messenger()->addStatus($this->t('The FormTestServiceObject::submitForm() method was used for this form.'));
     $this->config('form_test.object')

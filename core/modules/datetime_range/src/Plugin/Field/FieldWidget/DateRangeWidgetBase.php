@@ -5,6 +5,7 @@ namespace Drupal\datetime_range\Plugin\Field\FieldWidget;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\datetime\Plugin\Field\FieldWidget\DateTimeWidgetBase;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
@@ -112,6 +113,7 @@ class DateRangeWidgetBase extends DateTimeWidgetBase {
    * @param array $complete_form
    *   The complete form structure.
    */
+  #[TrustedCallback]
   public function validateStartEnd(array &$element, FormStateInterface $form_state, array &$complete_form) {
     $start_date = $element['value']['#value']['object'];
     $end_date = $element['end_value']['#value']['object'];

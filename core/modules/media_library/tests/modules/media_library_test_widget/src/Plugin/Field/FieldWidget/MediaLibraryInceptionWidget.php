@@ -2,10 +2,11 @@
 
 namespace Drupal\media_library_test_widget\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Field\Attribute\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\media_library\Plugin\Field\FieldWidget\MediaLibraryWidget;
 
@@ -39,6 +40,7 @@ class MediaLibraryInceptionWidget extends MediaLibraryWidget {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function elementValidate($element, FormStateInterface $form_state, $form) {
     $field_name = $element['#field_name'];
     $entity = $form_state->getFormObject()->getEntity();

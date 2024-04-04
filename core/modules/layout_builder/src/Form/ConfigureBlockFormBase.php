@@ -16,6 +16,7 @@ use Drupal\Core\Plugin\ContextAwarePluginAssignmentTrait;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Plugin\PluginFormFactoryInterface;
 use Drupal\Core\Plugin\PluginWithFormsInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\layout_builder\Context\LayoutBuilderContextTrait;
 use Drupal\layout_builder\Controller\LayoutRebuildTrait;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
@@ -205,6 +206,7 @@ abstract class ConfigureBlockFormBase extends FormBase implements BaseFormIdInte
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $subform_state = SubformState::createForSubform($form['settings'], $form, $form_state);
     $this->getPluginForm($this->block)->validateConfigurationForm($form['settings'], $subform_state);
@@ -213,6 +215,7 @@ abstract class ConfigureBlockFormBase extends FormBase implements BaseFormIdInte
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Call the plugin submit handler.
     $subform_state = SubformState::createForSubform($form['settings'], $form, $form_state);

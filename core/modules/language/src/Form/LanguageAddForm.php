@@ -5,6 +5,7 @@ namespace Drupal\language\Form;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 use Drupal\language\Entity\ConfigurableLanguage;
 
@@ -110,6 +111,7 @@ class LanguageAddForm extends LanguageFormBase {
   /**
    * Validates the language addition form on custom language button.
    */
+  #[TrustedCallback]
   public function validateCustom(array $form, FormStateInterface $form_state) {
     if ($form_state->getValue('predefined_langcode') == 'custom') {
       $langcode = $form_state->getValue('langcode');
@@ -128,6 +130,7 @@ class LanguageAddForm extends LanguageFormBase {
   /**
    * Element specific validator for the Add language button.
    */
+  #[TrustedCallback]
   public function validatePredefined($form, FormStateInterface $form_state) {
     $langcode = $form_state->getValue('predefined_langcode');
     if ($langcode == 'custom') {

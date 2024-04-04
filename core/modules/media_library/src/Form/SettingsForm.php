@@ -4,6 +4,7 @@ namespace Drupal\media_library\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Defines a form for configuring the Media Library module.
@@ -43,6 +44,7 @@ class SettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('media_library.settings')
       ->set('advanced_ui', (bool) $form_state->getValue('advanced_ui'))

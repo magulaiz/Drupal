@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\editor\Attribute\Editor;
 use Drupal\editor\Entity\Editor as EditorEntity;
 use Drupal\editor\Plugin\EditorBase;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
@@ -53,6 +54,7 @@ class UnicornEditor extends EditorBase {
    *
    * @see editor_image_upload_settings_form()
    */
+  #[TrustedCallback]
   public function validateImageUploadSettings(array $element, FormStateInterface $form_state) {
     $settings = &$form_state->getValue(['editor', 'settings', 'image_upload']);
     $form_state->get('editor')->setImageUploadSettings($settings);

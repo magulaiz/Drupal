@@ -3,6 +3,7 @@
 namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Form constructor for testing #type 'table' elements.
@@ -46,6 +47,7 @@ class FormTestTableForm extends FormTestTableSelectFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 

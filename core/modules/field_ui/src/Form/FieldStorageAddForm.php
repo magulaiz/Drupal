@@ -12,6 +12,7 @@ use Drupal\Core\Field\FieldTypeCategoryManagerInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field_ui\FieldUI;
@@ -409,6 +410,7 @@ class FieldStorageAddForm extends FormBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
+  #[TrustedCallback]
   public function validateGroupOrField(array &$form, FormStateInterface $form_state) {
     if (!$form_state->getValue('new_storage_type')) {
       $form_state->setErrorByName('add', $this->t('You need to select a field type.'));
@@ -423,6 +425,7 @@ class FieldStorageAddForm extends FormBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
+  #[TrustedCallback]
   public function validateFieldType(array $form, FormStateInterface $form_state) {
     // Missing label.
     if (!$form_state->getValue('label')) {
@@ -449,6 +452,7 @@ class FieldStorageAddForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValues();
     $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
@@ -605,6 +609,7 @@ class FieldStorageAddForm extends FormBase {
   /**
    * Submit handler for displaying fields after a group is selected.
    */
+  #[TrustedCallback]
   public static function rebuildWithOptions($form, FormStateInterface &$form_state) {
     $form_state->setRebuild();
   }
@@ -612,6 +617,7 @@ class FieldStorageAddForm extends FormBase {
   /**
    * Submit handler for resetting the form.
    */
+  #[TrustedCallback]
   public static function startOver($form, FormStateInterface &$form_state) {
     $form_state->unsetValue('new_storage_type');
     $form_state->setRebuild();

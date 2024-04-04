@@ -6,6 +6,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Provides a wrapper element to group one or more buttons in a form.
@@ -57,6 +58,7 @@ class Actions extends Container {
    * @return array
    *   The processed element.
    */
+  #[TrustedCallback]
   public static function processActions(&$element, FormStateInterface $form_state, &$complete_form) {
     $element['#attributes']['class'][] = 'form-actions';
     return $element;
@@ -86,6 +88,7 @@ class Actions extends Container {
    *   The processed #type 'actions' element, including individual buttons grouped
    *   into new #type 'dropbutton' elements.
    */
+  #[TrustedCallback]
   public static function preRenderActionsDropbutton(&$element, FormStateInterface $form_state, &$complete_form) {
     $dropbuttons = [];
     foreach (Element::children($element, TRUE) as $key) {

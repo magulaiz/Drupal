@@ -15,6 +15,7 @@ use Drupal\Core\Form\BaseFormIdInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Url;
 use Drupal\media\MediaInterface;
@@ -644,6 +645,7 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     foreach ($this->getAddedMediaItems($form_state) as $delta => $media) {
       $this->validateMediaEntity($media, $form, $form_state, $delta);
@@ -671,6 +673,7 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     foreach ($this->getAddedMediaItems($form_state) as $delta => $media) {
       EntityFormDisplay::collectRenderDisplay($media, 'media_library')

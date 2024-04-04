@@ -3,6 +3,7 @@
 namespace Drupal\user\Form;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Url;
@@ -68,6 +69,7 @@ class UserPasswordResetForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // This form works by submitting the hash and timestamp to the user.reset
     // route with a 'login' action.

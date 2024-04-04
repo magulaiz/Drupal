@@ -5,6 +5,7 @@ namespace Drupal\Core\Render\Element;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Provides a form input element for entering an email address.
@@ -71,6 +72,7 @@ class Email extends FormElementBase {
    *
    * Note that #maxlength and #required is validated by _form_validate() already.
    */
+  #[TrustedCallback]
   public static function validateEmail(&$element, FormStateInterface $form_state, &$complete_form) {
     $value = trim($element['#value']);
     $form_state->setValueForElement($element, $value);

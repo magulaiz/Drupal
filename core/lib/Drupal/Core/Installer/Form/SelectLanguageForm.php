@@ -6,6 +6,7 @@ use Drupal\Component\Utility\UserAgent;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -91,6 +92,7 @@ class SelectLanguageForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $build_info = $form_state->getBuildInfo();
     $build_info['args'][0]['parameters']['langcode'] = $form_state->getValue('langcode');

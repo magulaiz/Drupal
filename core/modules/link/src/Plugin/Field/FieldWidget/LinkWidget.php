@@ -9,6 +9,7 @@ use Drupal\Core\Entity\Element\EntityAutocomplete;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\link\LinkItemInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
@@ -137,6 +138,7 @@ class LinkWidget extends WidgetBase {
    *
    * Disallows saving inaccessible or untrusted URLs.
    */
+  #[TrustedCallback]
   public static function validateUriElement($element, FormStateInterface $form_state, $form) {
     $uri = static::getUserEnteredStringAsUri($element['#value']);
     $form_state->setValueForElement($element, $uri);
@@ -156,6 +158,7 @@ class LinkWidget extends WidgetBase {
    *
    * Conditionally requires the link title if a URL value was filled in.
    */
+  #[TrustedCallback]
   public static function validateTitleElement(&$element, FormStateInterface $form_state, $form) {
     if ($element['uri']['#value'] !== '' && $element['title']['#value'] === '') {
       // We expect the field name placeholder value to be wrapped in $this->t() here,
@@ -169,6 +172,7 @@ class LinkWidget extends WidgetBase {
    *
    * Requires the URL value if a link title was filled in.
    */
+  #[TrustedCallback]
   public static function validateTitleNoLink(&$element, FormStateInterface $form_state, $form) {
     if ($element['uri']['#value'] === '' && $element['title']['#value'] !== '') {
       $form_state->setError($element['uri'], new TranslatableMarkup('The @uri field is required when the @title field is specified.', ['@title' => $element['title']['#title'], '@uri' => $element['uri']['#title']]));

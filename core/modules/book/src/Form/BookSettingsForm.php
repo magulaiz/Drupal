@@ -5,6 +5,7 @@ namespace Drupal\book\Form;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\ConfigTarget;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Configure book settings for this site.
@@ -54,6 +55,7 @@ class BookSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $child_type = $form_state->getValue('book_child_type');
     if ($form_state->isValueEmpty(['book_allowed_types', $child_type])) {

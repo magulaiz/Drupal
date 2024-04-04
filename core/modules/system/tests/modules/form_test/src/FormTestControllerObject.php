@@ -4,6 +4,7 @@ namespace Drupal\form_test;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -64,6 +65,7 @@ class FormTestControllerObject extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $this->messenger()->addStatus($this->t('The FormTestControllerObject::validateForm() method was used for this form.'));
   }
@@ -71,6 +73,7 @@ class FormTestControllerObject extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->messenger()->addStatus($this->t('The FormTestControllerObject::submitForm() method was used for this form.'));
     $this->config('form_test.object')

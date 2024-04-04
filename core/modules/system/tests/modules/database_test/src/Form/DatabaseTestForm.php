@@ -7,6 +7,7 @@ use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\Database\Query\TableSortExtender;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\user\Entity\User;
 
 /**
@@ -74,6 +75,7 @@ class DatabaseTestForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 

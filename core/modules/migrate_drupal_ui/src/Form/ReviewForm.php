@@ -10,6 +10,7 @@ use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
@@ -261,6 +262,7 @@ class ReviewForm extends MigrateUpgradeFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config['source_base_path'] = $this->store->get('source_base_path');
     $config['source_private_file_path'] = $this->store->get('source_private_file_path');

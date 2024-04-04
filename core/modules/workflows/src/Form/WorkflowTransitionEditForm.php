@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
 use Drupal\Core\Plugin\PluginFormFactoryInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 use Drupal\workflows\State;
 use Drupal\workflows\TransitionInterface;
@@ -128,6 +129,7 @@ class WorkflowTransitionEditForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     /** @var \Drupal\workflows\WorkflowInterface $workflow */
     $workflow = $this->getEntity();

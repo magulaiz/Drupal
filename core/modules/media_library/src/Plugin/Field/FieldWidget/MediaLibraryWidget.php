@@ -18,6 +18,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -236,6 +237,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
    * @return mixed
    *   The value to assign to the element.
    */
+  #[TrustedCallback]
   public static function setMediaTypesValue(array &$element, $input, FormStateInterface $form_state) {
     if ($input === FALSE) {
       return $element['#default_value'] ?? [];
@@ -834,6 +836,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
+  #[TrustedCallback]
   public static function validateItems(array $form, FormStateInterface $form_state) {
     $button = $form_state->getTriggeringElement();
     $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
@@ -996,6 +999,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
    * @param array $form
    *   The form array.
    */
+  #[TrustedCallback]
   public static function validateRequired(array $element, FormStateInterface $form_state, array $form) {
     // If a remove button triggered submit, this validation isn't needed.
     if (in_array([static::class, 'removeItem'], $form_state->getSubmitHandlers(), TRUE)) {

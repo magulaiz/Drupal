@@ -14,6 +14,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\filter\Attribute\Filter;
@@ -193,6 +194,7 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
    */
+  #[TrustedCallback]
   public static function validateOptions(array &$element, FormStateInterface $form_state) {
     // Filters the #value property so only selected values appear in the
     // config.

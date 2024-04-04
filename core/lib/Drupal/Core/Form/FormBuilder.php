@@ -14,14 +14,18 @@ use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\Exception\BrokenPostRequestException;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Element\RenderCallbackInterface;
 use Drupal\Core\Render\ElementInfoManagerInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
+use Drupal\Core\Security\DoTrustedCallbackTrait;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Drupal\Core\Utility\CallableResolver;
 use Symfony\Component\HttpFoundation\FileBag;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Provides form building and processing.
@@ -29,6 +33,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @ingroup form_api
  */
 class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormSubmitterInterface, FormCacheInterface, TrustedCallbackInterface {
+  use DoTrustedCallbackTrait;
 
   /**
    * The module handler.
@@ -169,10 +174,12 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    *   The element info manager.
    * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
    *   The theme manager.
-   * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
+   * @param \Drupal\Core\Utility\CallableResolver $callableResolver
+   *   The service for resolving callables.
+   * @param \Drupal\Core\Access\CsrfTokenGenerator|null $csrf_token
    *   The CSRF token generator.
    */
-  public function __construct(FormValidatorInterface $form_validator, FormSubmitterInterface $form_submitter, FormCacheInterface $form_cache, ModuleHandlerInterface $module_handler, EventDispatcherInterface $event_dispatcher, RequestStack $request_stack, ClassResolverInterface $class_resolver, ElementInfoManagerInterface $element_info, ThemeManagerInterface $theme_manager, CsrfTokenGenerator $csrf_token = NULL) {
+  public function __construct(FormValidatorInterface $form_validator, FormSubmitterInterface $form_submitter, FormCacheInterface $form_cache, ModuleHandlerInterface $module_handler, EventDispatcherInterface $event_dispatcher, RequestStack $request_stack, ClassResolverInterface $class_resolver, ElementInfoManagerInterface $element_info, ThemeManagerInterface $theme_manager, protected CallableResolver $callableResolver, CsrfTokenGenerator $csrf_token = NULL) {
     $this->formValidator = $form_validator;
     $this->formSubmitter = $form_submitter;
     $this->formCache = $form_cache;
@@ -468,6 +475,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm($form_arg, FormStateInterface &$form_state, mixed ...$args) {
     $build_info = $form_state->getBuildInfo();
     if (empty($build_info['args'])) {
@@ -863,6 +871,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm($form_id, &$form, FormStateInterface &$form_state) {
     $this->formValidator->validateForm($form_id, $form, $form_state);
   }
@@ -995,7 +1004,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     if (isset($element['#process']) && !$element['#processed']) {
       foreach ($element['#process'] as $callback) {
         $complete_form = &$form_state->getCompleteForm();
-        $element = call_user_func_array($form_state->prepareCallback($callback), [&$element, &$form_state, &$complete_form]);
+        $element = $this->doCallback($form_state, '#process', $callback, [&$element, &$form_state, &$complete_form]);
       }
       $element['#processed'] = TRUE;
     }
@@ -1066,7 +1075,8 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // after normal input parsing has been completed.
     if (isset($element['#after_build']) && !isset($element['#after_build_done'])) {
       foreach ($element['#after_build'] as $callback) {
-        $element = call_user_func_array($form_state->prepareCallback($callback), [$element, &$form_state]);
+        $complete_form = &$form_state->getCompleteForm();
+        $element = $this->doCallback($form_state, '#after_build', $callback, [&$element, &$form_state, &$complete_form]);
       }
       $element['#after_build_done'] = TRUE;
     }
@@ -1248,7 +1258,12 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
           // Skip all value callbacks except safe ones like text if the CSRF
           // token was invalid.
           if (!$form_state->hasInvalidToken() || $this->valueCallableIsSafe($value_callable)) {
-            $element['#value'] = call_user_func_array($value_callable, [&$element, $input, &$form_state]);
+            $element['#value'] = $this->doCallback(
+              $form_state,
+              '#value_callback',
+              $value_callable,
+              [&$element, $input, &$form_state]
+            );
           }
           else {
             $input = NULL;
@@ -1401,6 +1416,36 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       $this->currentUser = \Drupal::currentUser();
     }
     return $this->currentUser;
+  }
+
+  /**
+   * Performs a callback.
+   *
+   * @param \Drupal\Core\Form\FormStateInterface $formState
+   *   The current form state.
+   * @param string $callback_type
+   *   The type of the callback. For example, '#process'.
+   * @param string|callable $callback
+   *   The callback to perform.
+   * @param array $args
+   *   The arguments to pass to the callback.
+   *
+   * @return mixed
+   *   The callback's return value.
+   *
+   * @see \Drupal\Core\Security\DoTrustedCallbackTrait
+   */
+  protected function doCallback(FormStateInterface $formState, $callback_type, $callback, array $args) {
+    $callback = $formState->prepareCallback($callback);
+    $callback = $this->callableResolver->getCallableFromDefinition($callback);
+
+    $message = sprintf('Render %s callbacks must be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface, be annotated as a TrustedCallback, or be an anonymous function. The callback was %s. See https://www.drupal.org/project/drupal/issues/2966711', $callback_type, '%s');
+    // Add \Drupal\Core\Render\Element\RenderCallbackInterface as an extra
+    // trusted interface so that:
+    // - All public methods on Render elements are considered trusted.
+    // - Helper classes that contain only callback methods can implement this
+    //   instead of TrustedCallbackInterface.
+    return $this->doTrustedCallback($callback, $args, $message, extra_trusted_interface: RenderCallbackInterface::class);
   }
 
   /**

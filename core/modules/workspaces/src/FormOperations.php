@@ -5,6 +5,7 @@ namespace Drupal\workspaces;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\views\Form\ViewsExposedForm;
 use Drupal\workspaces\Form\WorkspaceFormInterface;
@@ -109,6 +110,7 @@ class FormOperations implements ContainerInjectionInterface {
   /**
    * Validation handler which sets a validation error for all unsupported forms.
    */
+  #[TrustedCallback]
   public static function validateDefaultWorkspace(array &$form, FormStateInterface $form_state) {
     if ($form_state->get('workspace_safe') !== TRUE) {
       $form_state->setError($form, new TranslatableMarkup('This form can only be submitted in the default workspace.'));

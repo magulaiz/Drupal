@@ -3,6 +3,7 @@
 namespace Drupal\views_ui\Form\Ajax;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\views\ViewEntityInterface;
 use Drupal\views\ViewExecutable;
 
@@ -93,6 +94,7 @@ class ConfigHandlerExtra extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $form_state->get('handler')->validateExtraOptionsForm($form['options'], $form_state);
   }
@@ -100,6 +102,7 @@ class ConfigHandlerExtra extends ViewsFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $view = $form_state->get('view');
     $handler = $form_state->get('handler');

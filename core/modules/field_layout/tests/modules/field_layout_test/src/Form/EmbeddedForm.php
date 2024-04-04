@@ -6,6 +6,7 @@ use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field_layout\FieldLayoutBuilder;
 
@@ -48,6 +49,7 @@ class EmbeddedForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Do nothing.
   }

@@ -5,6 +5,7 @@ namespace Drupal\search\Form;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\search\SearchPageRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -128,6 +129,7 @@ abstract class SearchPageFormBase extends EntityForm {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 
@@ -148,6 +150,7 @@ abstract class SearchPageFormBase extends EntityForm {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 

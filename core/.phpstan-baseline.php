@@ -722,16 +722,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/content_translation/content_translation.admin.inc',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$locked_languages might not be defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/content_translation.admin.inc',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$locked_languages might not be defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/content_translation.module',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$source_name might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_translation/src/Controller/ContentTranslationController.php',

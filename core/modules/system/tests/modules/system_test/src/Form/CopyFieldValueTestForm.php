@@ -4,6 +4,7 @@ namespace Drupal\system_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Provides a form to test Drupal.behaviors.copyFieldValue.
@@ -45,6 +46,7 @@ class CopyFieldValueTestForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // We are only testing the JavaScript part of form. We are not submitting
     // form.

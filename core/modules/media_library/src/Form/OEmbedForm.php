@@ -5,6 +5,7 @@ namespace Drupal\media_library\Form;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 use Drupal\media\OEmbed\ResourceException;
 use Drupal\media\OEmbed\ResourceFetcherInterface;
@@ -150,6 +151,7 @@ class OEmbedForm extends AddFormBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current form state.
    */
+  #[TrustedCallback]
   public function validateUrl(array &$form, FormStateInterface $form_state) {
     $url = $form_state->getValue('url');
     if ($url) {

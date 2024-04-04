@@ -4,6 +4,7 @@ namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -43,6 +44,7 @@ class FormTestResponseForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValues();
     $form_state->setResponse(new JsonResponse($values['content'], (int) $values['status']));

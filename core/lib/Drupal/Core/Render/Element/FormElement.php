@@ -3,6 +3,7 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Provides a base class for form element plugins.
@@ -65,6 +66,7 @@ abstract class FormElement extends FormElementBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
     @trigger_error('\Drupal\Core\Render\Element\FormElement::valueCallback() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Render\Element\FormElementBase::valueCallback() instead. See https://www.drupal.org/node/3436275', E_USER_DEPRECATED);
     return parent::valueCallback($element, $input, $form_state);
@@ -73,6 +75,7 @@ abstract class FormElement extends FormElementBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public static function processPattern(&$element, FormStateInterface $form_state, &$complete_form) {
     @trigger_error('\Drupal\Core\Render\Element\FormElement::processPattern() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Render\Element\FormElementBase::processPattern() instead. See https://www.drupal.org/node/3436275', E_USER_DEPRECATED);
     return parent::processPattern($element, $form_state, $complete_form);
@@ -81,6 +84,7 @@ abstract class FormElement extends FormElementBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public static function validatePattern(&$element, FormStateInterface $form_state, &$complete_form) {
     @trigger_error('\Drupal\Core\Render\Element\FormElement::validatePattern() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Render\Element\FormElementBase::validatePattern() instead. See https://www.drupal.org/node/3436275', E_USER_DEPRECATED);
     parent::validatePattern($element, $form_state, $complete_form);
@@ -89,6 +93,7 @@ abstract class FormElement extends FormElementBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public static function processAutocomplete(&$element, FormStateInterface $form_state, &$complete_form) {
     @trigger_error('\Drupal\Core\Render\Element\FormElement::processAutocomplete() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Render\Element\FormElementBase::processAutocomplete() instead. See https://www.drupal.org/node/3436275', E_USER_DEPRECATED);
     return parent::processAutocomplete($element, $form_state, $complete_form);

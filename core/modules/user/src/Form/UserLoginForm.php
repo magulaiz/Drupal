@@ -4,14 +4,15 @@ namespace Drupal\user\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Render\BareHtmlPageRendererInterface;
+use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 use Drupal\user\UserAuthenticationInterface;
 use Drupal\user\UserAuthInterface;
+use Drupal\user\UserFloodControlInterface;
 use Drupal\user\UserInterface;
 use Drupal\user\UserStorageInterface;
-use Drupal\user\UserFloodControlInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -147,6 +148,7 @@ class UserLoginForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     if (empty($uid = $form_state->get('uid'))) {
       return;
@@ -173,6 +175,7 @@ class UserLoginForm extends FormBase {
    * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement.
    * @see https://www.drupal.org/node/3410706
    */
+  #[TrustedCallback]
   public function validateName(array &$form, FormStateInterface $form_state) {
     @trigger_error(__METHOD__ . ' is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3410706', E_USER_DEPRECATED);
     if (!$form_state->isValueEmpty('name') && user_is_blocked($form_state->getValue('name'))) {
@@ -186,6 +189,7 @@ class UserLoginForm extends FormBase {
    *
    * If successful, $form_state->get('uid') is set to the matching user ID.
    */
+  #[TrustedCallback]
   public function validateAuthentication(array &$form, FormStateInterface $form_state) {
     $password = trim($form_state->getValue('pass'));
     $flood_config = $this->config('user.flood');
@@ -259,6 +263,7 @@ class UserLoginForm extends FormBase {
    *
    * This validation function should always be the last one.
    */
+  #[TrustedCallback]
   public function validateFinal(array &$form, FormStateInterface $form_state) {
     $flood_config = $this->config('user.flood');
     if (!$form_state->get('uid')) {

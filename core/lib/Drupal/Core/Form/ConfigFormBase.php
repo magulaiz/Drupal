@@ -6,6 +6,7 @@ use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -104,6 +105,7 @@ abstract class ConfigFormBase extends FormBase {
    * @return array
    *   The form element, with its default value populated.
    */
+  #[TrustedCallback]
   public function loadDefaultValuesFromConfig(array $element): array {
     if (array_key_exists('#config_target', $element) && !array_key_exists('#default_value', $element)) {
       $target = $element['#config_target'];
@@ -142,6 +144,7 @@ abstract class ConfigFormBase extends FormBase {
    *
    * @see \Drupal\Core\Form\ConfigFormBase::buildForm()
    */
+  #[TrustedCallback]
   public function storeConfigKeyToFormElementMap(array $element, FormStateInterface $form_state): array {
     // Empty the map to ensure the information is always correct after
     // rebuilding the form.
@@ -200,6 +203,7 @@ abstract class ConfigFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
     foreach (array_keys($map) as $config_name) {
@@ -300,6 +304,7 @@ abstract class ConfigFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
     foreach (array_keys($map) as $config_name) {

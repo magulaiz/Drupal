@@ -6,6 +6,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Render\Attribute\FormElement;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Provides a machine name render element.
@@ -103,6 +104,7 @@ class MachineName extends Textfield {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
     if ($input !== FALSE && $input !== NULL) {
       // This should be a string, but allow other scalars since they might be
@@ -125,6 +127,7 @@ class MachineName extends Textfield {
    * @return array
    *   The processed element.
    */
+  #[TrustedCallback]
   public static function processMachineName(&$element, FormStateInterface $form_state, &$complete_form) {
     // We need to pass the langcode to the client.
     $language = \Drupal::languageManager()->getCurrentLanguage();
@@ -243,6 +246,7 @@ class MachineName extends Textfield {
    * - Does not exceed the maximum length (via #maxlength).
    * - Cannot be changed after creation (via #disabled).
    */
+  #[TrustedCallback]
   public static function validateMachineName(&$element, FormStateInterface $form_state, &$complete_form) {
     // Verify that the machine name not only consists of replacement tokens.
     if (preg_match('@^' . $element['#machine_name']['replace'] . '+$@', $element['#value'])) {

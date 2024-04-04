@@ -5,6 +5,7 @@ namespace Drupal\book\Form;
 use Drupal\book\BookManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -100,6 +101,7 @@ class BookRemoveForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     if ($this->bookManager->checkNodeIsRemovable($this->node)) {
       $this->bookManager->deleteFromBook($this->node->id());

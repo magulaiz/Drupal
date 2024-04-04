@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Render\Element\Checkboxes;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 use Drupal\views\ExposedFormCache;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -154,6 +155,7 @@ class ViewsExposedForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $view = $form_state->get('view');
 
@@ -172,6 +174,7 @@ class ViewsExposedForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Form input keys that will not be included in $view->exposed_raw_data.
     $exclude = ['submit', 'form_build_id', 'form_id', 'form_token', 'exposed_form_plugin', 'reset'];

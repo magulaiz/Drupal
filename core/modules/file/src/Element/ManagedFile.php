@@ -11,9 +11,11 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\FormElementBase;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
+use Drupal\file\Form\FileFormCallbacks;
 use Symfony\Component\HttpFoundation\Request;
 
 // cspell:ignore filefield
@@ -59,6 +61,7 @@ class ManagedFile extends FormElementBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
     // Find the current value of this field.
     $fids = !empty($input['fids']) ? explode(' ', $input['fids']) : [];
@@ -211,6 +214,7 @@ class ManagedFile extends FormElementBase {
    * Expands the file type to include Upload and Remove buttons, as well as
    * support for a default value.
    */
+  #[TrustedCallback]
   public static function processManagedFile(&$element, FormStateInterface $form_state, &$complete_form) {
 
     // This is used sometimes so let's implode it just once.
@@ -248,7 +252,7 @@ class ManagedFile extends FormElementBase {
       '#value' => t('Upload'),
       '#attributes' => ['class' => ['js-hide']],
       '#validate' => [],
-      '#submit' => ['file_managed_file_submit'],
+      '#submit' => [[FileFormCallbacks::class, 'managedFileSubmit']],
       '#limit_validation_errors' => [$element['#parents']],
       '#ajax' => $ajax_settings,
       '#weight' => -5,
@@ -264,7 +268,7 @@ class ManagedFile extends FormElementBase {
       '#type' => 'submit',
       '#value' => $element['#multiple'] ? t('Remove selected') : t('Remove'),
       '#validate' => [],
-      '#submit' => ['file_managed_file_submit'],
+      '#submit' => [[FileFormCallbacks::class, 'managedFileSubmit']],
       '#limit_validation_errors' => [$element['#parents']],
       '#ajax' => $ajax_settings,
       '#weight' => 1,
@@ -415,6 +419,7 @@ class ManagedFile extends FormElementBase {
   /**
    * Render API callback: Validates the managed_file element.
    */
+  #[TrustedCallback]
   public static function validateManagedFile(&$element, FormStateInterface $form_state, &$complete_form) {
     $triggering_element = $form_state->getTriggeringElement();
     $clicked_button = isset($triggering_element['#parents']) ? end($triggering_element['#parents']) : '';

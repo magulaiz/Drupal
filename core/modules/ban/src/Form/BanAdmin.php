@@ -2,9 +2,10 @@
 
 namespace Drupal\ban\Form;
 
-use Drupal\Core\Form\FormBase;
 use Drupal\ban\BanIpManagerInterface;
+use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -16,18 +17,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class BanAdmin extends FormBase {
 
   /**
-   * @var \Drupal\ban\BanIpManagerInterface
-   */
-  protected $ipManager;
-
-  /**
    * Constructs a new BanAdmin object.
    *
-   * @param \Drupal\ban\BanIpManagerInterface $ip_manager
+   * @param \Drupal\ban\BanIpManagerInterface $ipManager
    *   The ban IP manager.
    */
-  public function __construct(BanIpManagerInterface $ip_manager) {
-    $this->ipManager = $ip_manager;
+  public function __construct(protected BanIpManagerInterface $ipManager) {
   }
 
   /**
@@ -106,6 +101,7 @@ class BanAdmin extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $ip = trim($form_state->getValue('ip'));
     if ($this->ipManager->isBanned($ip)) {
@@ -122,6 +118,7 @@ class BanAdmin extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $ip = trim($form_state->getValue('ip'));
     $this->ipManager->banIp($ip);

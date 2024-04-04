@@ -12,24 +12,26 @@
 
 use Drupal\Component\Gettext\PoItem;
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Installer\InstallerKernel;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
-use Drupal\Core\Asset\AttachedAssetsInterface;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\ConfigurableLanguageInterface;
-use Drupal\Component\Utility\Crypt;
+use Drupal\locale\Form\LocaleFormCallbacks;
 use Drupal\locale\Locale;
 use Drupal\locale\LocaleEvent;
 use Drupal\locale\LocaleEvents;
+use Drupal\system\Form\SystemFormCallbacks;
 
 /**
  * Regular expression pattern used to localize JavaScript strings.
@@ -721,7 +723,7 @@ function locale_form_system_file_system_settings_alter(&$form, FormStateInterfac
     '#maxlength' => 255,
     '#description' => t('A local file system path where interface translation files will be stored.'),
     '#required' => TRUE,
-    '#after_build' => ['system_check_directory'],
+    '#after_build' => [[SystemFormCallbacks::class, 'checkDirectory']],
     '#weight' => 10,
   ];
   if ($form['file_default_scheme']) {
@@ -1334,7 +1336,6 @@ function _locale_rebuild_js($langcode = NULL) {
       $logger->warning('JavaScript translation file %file.js was lost.', ['%file' => $locale_javascripts[$language->getId()]]);
       // Proceed to the 'created' case as the JavaScript translation file has
       // been created again.
-
     case 'created':
       $logger->notice('Created JavaScript translation file for the language %language.', ['%language' => $language->getName()]);
       return TRUE;
@@ -1358,13 +1359,14 @@ function _locale_rebuild_js($langcode = NULL) {
  *
  * Adds labels to the languages and removes checkboxes from languages from which
  * translation files could not be found.
+ *
+ * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ *   LocaleFormCallbacks::translationLanguageTable()
+ *   instead.
+ *
+ * @todo Replace with CR url for issue 2966711
+ * @see https://www.drupal.org/project/drupal/issues/2966711
  */
 function locale_translation_language_table($form_element) {
-  // Remove checkboxes of languages without updates.
-  if ($form_element['#not_found']) {
-    foreach ($form_element['#not_found'] as $langcode) {
-      $form_element[$langcode] = [];
-    }
-  }
-  return $form_element;
+  return LocaleFormCallbacks::translationLanguageTable($form_element);
 }

@@ -10,6 +10,7 @@ use Drupal\Core\Menu\MenuActiveTrailInterface;
 use Drupal\Core\Menu\MenuLinkTreeInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\system\Form\SystemMenuOffCanvasForm;
 use Drupal\system\Plugin\Derivative\SystemMenuBlock as SystemMenuBlockDeriver;
@@ -129,6 +130,7 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
    *
    * Adjusts the #parents of menu_levels to save its children at the top level.
    */
+  #[TrustedCallback]
   public static function processMenuLevelParents(&$element, FormStateInterface $form_state, &$complete_form) {
     array_pop($element['#parents']);
     return $element;

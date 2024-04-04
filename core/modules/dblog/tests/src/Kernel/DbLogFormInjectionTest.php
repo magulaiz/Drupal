@@ -6,6 +6,7 @@ use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
 
@@ -43,11 +44,12 @@ class DbLogFormInjectionTest extends KernelTestBase implements FormInterface {
    * Process callback.
    *
    * @param array $element
-   *   Form element
+   *   Form element.
    *
    * @return array
    *   Processed element.
    */
+  #[TrustedCallback]
   public function process($element) {
     return $element;
   }
@@ -63,11 +65,13 @@ class DbLogFormInjectionTest extends KernelTestBase implements FormInterface {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {}
 
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state->setRebuild();
   }

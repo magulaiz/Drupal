@@ -4,6 +4,7 @@ namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Form builder for testing preservation of values during a rebuild.
@@ -92,6 +93,7 @@ class FormTestRebuildPreserveValuesForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Finish the workflow. Do not rebuild.
     $this->messenger()->addStatus($this->t('Form values: %values', ['%values' => var_export($form_state->getValues(), TRUE)]));

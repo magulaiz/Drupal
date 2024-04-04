@@ -3,7 +3,10 @@
 namespace Drupal\Core\Form;
 
 use Drupal\Core\EventSubscriber\RedirectResponseSubscriber;
+use Drupal\Core\Render\Element\RenderCallbackInterface;
+use Drupal\Core\Security\DoTrustedCallbackTrait;
 use Drupal\Core\Url;
+use Drupal\Core\Utility\CallableResolver;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +16,8 @@ use Drupal\Core\Routing\UrlGeneratorInterface;
  * Provides submission processing for forms.
  */
 class FormSubmitter implements FormSubmitterInterface {
+
+  use DoTrustedCallbackTrait;
 
   /**
    * The URL generator.
@@ -42,10 +47,12 @@ class FormSubmitter implements FormSubmitterInterface {
    *   The request stack.
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The URL generator.
+   * @param \Drupal\Core\Utility\CallableResolver $callableResolver
+   *   The service for resolving callables.
    * @param \Drupal\Core\EventSubscriber\RedirectResponseSubscriber|null $redirect_response_subscriber
    *   The redirect response subscriber.
    */
-  public function __construct(RequestStack $request_stack, UrlGeneratorInterface $url_generator, ?RedirectResponseSubscriber $redirect_response_subscriber = NULL) {
+  public function __construct(RequestStack $request_stack, UrlGeneratorInterface $url_generator, protected CallableResolver $callableResolver, ?RedirectResponseSubscriber $redirect_response_subscriber = NULL) {
     $this->requestStack = $request_stack;
     $this->urlGenerator = $url_generator;
     if (is_null($redirect_response_subscriber)) {
@@ -126,7 +133,7 @@ class FormSubmitter implements FormSubmitterInterface {
         $batch['has_form_submits'] = TRUE;
       }
       else {
-        call_user_func_array($form_state->prepareCallback($callback), [&$form, &$form_state]);
+        $this->doCallback($form_state, '#submit', $callback, [&$form, &$form_state]);
       }
     }
   }
@@ -168,6 +175,36 @@ class FormSubmitter implements FormSubmitterInterface {
    */
   protected function &batchGet() {
     return batch_get();
+  }
+
+  /**
+   * Performs a callback.
+   *
+   * @param \Drupal\Core\Form\FormStateInterface $formState
+   *   The current form state.
+   * @param string $callback_type
+   *   The type of the callback. For example, '#process'.
+   * @param string|callable $callback
+   *   The callback to perform.
+   * @param array $args
+   *   The arguments to pass to the callback.
+   *
+   * @return mixed
+   *   The callback's return value.
+   *
+   * @see \Drupal\Core\Security\TrustedCallbackInterface
+   */
+  protected function doCallback(FormStateInterface $formState, $callback_type, $callback, array $args) {
+    $callback = $formState->prepareCallback($callback);
+    $callback = $this->callableResolver->getCallableFromDefinition($callback);
+
+    $message = sprintf('Render %s callbacks must be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface, be annotated as a TrustedCallback, or be an anonymous function. The callback was %s. See https://www.drupal.org/project/drupal/issues/2966711', $callback_type, '%s');
+    // Add \Drupal\Core\Render\Element\RenderCallbackInterface as an extra
+    // trusted interface so that:
+    // - All public methods on Render elements are considered trusted.
+    // - Helper classes that contain only callback methods can implement this
+    //   instead of TrustedCallbackInterface.
+    return $this->doTrustedCallback($callback, $args, $message, extra_trusted_interface: RenderCallbackInterface::class);
   }
 
 }

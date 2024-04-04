@@ -7,6 +7,7 @@ namespace Drupal\Tests\Core\Form;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -442,8 +443,10 @@ class PrepareCallbackTestForm implements FormInterface {
     return [];
   }
 
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {}
 
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {}
 
 }

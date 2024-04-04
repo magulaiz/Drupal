@@ -2,10 +2,11 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Component\Utility\Color as ColorUtility;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
-use Drupal\Component\Utility\Color as ColorUtility;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Provides a form element for choosing a color.
@@ -49,6 +50,7 @@ class Color extends FormElementBase {
   /**
    * Form element validation handler for #type 'color'.
    */
+  #[TrustedCallback]
   public static function validateColor(&$element, FormStateInterface $form_state, &$complete_form) {
     $value = trim($element['#value']);
 

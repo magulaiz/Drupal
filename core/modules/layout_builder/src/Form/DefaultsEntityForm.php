@@ -6,6 +6,7 @@ use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\layout_builder\SectionStorageInterface;
@@ -91,6 +92,7 @@ class DefaultsEntityForm extends EntityForm {
    *
    * @see \Drupal\layout_builder\Controller\LayoutBuilderHtmlEntityFormController
    */
+  #[TrustedCallback]
   public static function layoutBuilderElementGetKeys(array $element, FormStateInterface $form_state, &$form) {
     $form['#layout_builder_element_keys'] = $element['#array_parents'];
     return $element;

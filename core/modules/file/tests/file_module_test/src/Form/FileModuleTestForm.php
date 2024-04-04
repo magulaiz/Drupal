@@ -4,6 +4,7 @@ namespace Drupal\file_module_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Form controller for file_module_test module.
@@ -68,6 +69,7 @@ class FileModuleTestForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     if ($form['#tree']) {
       $uploads = $form_state->getValue(['nested', 'file']);

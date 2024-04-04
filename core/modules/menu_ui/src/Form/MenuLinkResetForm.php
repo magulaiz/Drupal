@@ -4,6 +4,7 @@ namespace Drupal\menu_ui\Form;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Menu\MenuLinkManagerInterface;
@@ -100,6 +101,7 @@ class MenuLinkResetForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->link = $this->menuLinkManager->resetLink($this->link->getPluginId());
     $this->messenger()->addStatus($this->t('The menu link was reset to its default settings.'));

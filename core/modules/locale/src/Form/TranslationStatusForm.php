@@ -6,6 +6,7 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -167,7 +168,9 @@ class TranslationStatusForm extends FormBase {
       '#multiple' => TRUE,
       '#required' => TRUE,
       '#not_found' => $languages_not_found,
-      '#after_build' => ['locale_translation_language_table'],
+      '#after_build' => [
+        [LocaleFormCallbacks::class, 'translationLanguageTable'],
+      ],
     ];
 
     $form['#attached']['library'][] = 'locale/drupal.locale.admin';
@@ -263,6 +266,7 @@ class TranslationStatusForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // Check if a language has been selected. 'tableselect' doesn't.
     if (!array_filter($form_state->getValue('langcodes'))) {
@@ -273,6 +277,7 @@ class TranslationStatusForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->moduleHandler->loadInclude('locale', 'fetch.inc');
     $this->moduleHandler->loadInclude('locale', 'bulk.inc');

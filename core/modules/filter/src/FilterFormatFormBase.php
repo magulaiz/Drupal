@@ -5,6 +5,7 @@ namespace Drupal\filter;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\filter\Plugin\Filter\FilterNull;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
@@ -188,6 +189,7 @@ abstract class FilterFormatFormBase extends EntityForm {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 
@@ -213,6 +215,7 @@ abstract class FilterFormatFormBase extends EntityForm {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 

@@ -4,6 +4,7 @@ namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Attribute\FormElement;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Provides a form element for a set of checkboxes.
@@ -58,6 +59,7 @@ class Checkboxes extends FormElementBase {
   /**
    * Processes a checkboxes form element.
    */
+  #[TrustedCallback]
   public static function processCheckboxes(&$element, FormStateInterface $form_state, &$complete_form) {
     $value = is_array($element['#value']) ? $element['#value'] : [];
     $element['#tree'] = TRUE;
@@ -106,6 +108,7 @@ class Checkboxes extends FormElementBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
     if ($input === FALSE) {
       $value = [];

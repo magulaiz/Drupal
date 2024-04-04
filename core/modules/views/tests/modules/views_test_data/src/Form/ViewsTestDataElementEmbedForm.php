@@ -4,6 +4,7 @@ namespace Drupal\views_test_data\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Simple form page callback to test the view element.
@@ -37,6 +38,7 @@ class ViewsTestDataElementEmbedForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
   }
 

@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -143,6 +144,7 @@ class LanguageListBuilder extends DraggableListBuilder {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if (!isset($this->entities[$form_state->getValue('site_default_language')])) {
       $form_state->setErrorByName('site_default_language', $this->t('Selected default language no longer exists.'));
@@ -152,6 +154,7 @@ class LanguageListBuilder extends DraggableListBuilder {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 

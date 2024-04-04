@@ -6,6 +6,7 @@ use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
 
@@ -112,6 +113,7 @@ class ListStringItem extends ListItemBase {
   /**
    * Sets the machine name source to be the label.
    */
+  #[TrustedCallback]
   public static function processAllowedValuesKey(array &$element): array {
     $parents = $element['#parents'];
     array_pop($parents);

@@ -3,6 +3,7 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Provides a base class for render element plugins.
@@ -41,6 +42,7 @@ abstract class RenderElement extends RenderElementBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public static function processAjaxForm(&$element, FormStateInterface $form_state, &$complete_form) {
     @trigger_error('\Drupal\Core\Render\Element\RenderElement::processAjaxForm() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Render\Element\RenderElementBase::processAjaxForm() instead. See https://www.drupal.org/node/3436275', E_USER_DEPRECATED);
     return parent::processAjaxForm($element, $form_state, $complete_form);
@@ -57,6 +59,7 @@ abstract class RenderElement extends RenderElementBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public static function processGroup(&$element, FormStateInterface $form_state, &$complete_form) {
     @trigger_error('\Drupal\Core\Render\Element\RenderElement::processGroup() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Render\Element\RenderElementBase::processGroup() instead. See https://www.drupal.org/node/3436275', E_USER_DEPRECATED);
     return parent::processGroup($element, $form_state, $complete_form);

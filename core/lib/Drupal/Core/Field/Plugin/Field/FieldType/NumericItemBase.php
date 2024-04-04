@@ -4,6 +4,7 @@ namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Base class for numeric configurable field types.
@@ -135,6 +136,7 @@ abstract class NumericItemBase extends FieldItemBase {
    * @param array[] $complete_form
    *   The complete form structure.
    */
+  #[TrustedCallback]
   public static function validateMinAndMaxConfig(array &$element, FormStateInterface &$form_state, array &$complete_form): void {
     $settingsValue = $form_state->getValue('settings');
 

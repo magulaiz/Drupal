@@ -7,6 +7,7 @@ use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -48,6 +49,7 @@ class DateTimeFormInjectionTest extends KernelTestBase implements FormInterface 
    * @return array
    *   Processed element.
    */
+  #[TrustedCallback]
   public function process($element) {
     return $element;
   }
@@ -55,6 +57,7 @@ class DateTimeFormInjectionTest extends KernelTestBase implements FormInterface 
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['datelist_element'] = [
       '#title' => 'datelist test',
@@ -78,11 +81,13 @@ class DateTimeFormInjectionTest extends KernelTestBase implements FormInterface 
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {}
 
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->assertTrue(TRUE);
     $form_state->setRebuild();

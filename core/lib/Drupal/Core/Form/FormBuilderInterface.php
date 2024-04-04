@@ -245,19 +245,19 @@ interface FormBuilderInterface {
    * RendererInterface::render() (for rendering each element).
    * Each of these three pipelines provides ample opportunity for modules to
    * customize what happens. For example, during this function's life cycle,
-   * the following functions get called for each element:
+   * the following callables get called for each element:
    * - $element['#value_callback']: A callable that implements how user input is
    *   mapped to an element's #value property.
    * - $element['#process']: An array of functions called after user input has
    *   been mapped to the element's #value property. These functions can be used
    *   to dynamically add child elements: for example, for the 'date' element
-   *   type, one of the functions in this array is form_process_datetime(),
+   *   type, one of the methods in this array is Datetime::processDatetime,
    *   which adds the individual 'date', and 'time'. child elements. These
-   *   functions can also be used to set additional properties or implement
+   *   callables can also be used to set additional properties or implement
    *   special logic other than adding child elements: for example, for the
    *   'details' element type, one of the functions in this array is
    *   form_process_details(), which adds the attributes and JavaScript needed
-   *   to make the details work in older browsers. The #process functions are
+   *   to make the details work in older browsers. The #process callables are
    *   called in preorder traversal, meaning they are called for the parent
    *   element first, then for the child elements.
    * - $element['#after_build']: An array of callables called after
@@ -266,7 +266,12 @@ interface FormBuilderInterface {
    *   elements first, then for the parent element.
    * There are similar properties containing callback functions invoked by
    * self::doValidateForm() and RendererInterface::render(),
-   * appropriate for those operations.
+   * appropriate for those operations. These callables must be a closure or
+   * object methods annotated with a TrustedCallback attribute.
+   * or RenderCallbackInterface.
+   *
+   * @todo Replace with CR url for issue 2966711
+   * @see https://www.drupal.org/project/drupal/issues/2966711
    *
    * Developers are strongly encouraged to integrate the functionality needed by
    * their form or module within one of these three pipelines, using the

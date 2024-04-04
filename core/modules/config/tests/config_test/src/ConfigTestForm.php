@@ -6,6 +6,7 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Form controller for the test config edit forms.
@@ -127,6 +128,7 @@ class ConfigTestForm extends EntityForm {
   /**
    * Element submit handler for non-JS testing.
    */
+  #[TrustedCallback]
   public static function changeSize(array $form, FormStateInterface $form_state) {
     $form_state->setRebuild();
   }

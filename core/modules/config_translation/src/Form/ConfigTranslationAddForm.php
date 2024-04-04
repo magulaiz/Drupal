@@ -4,6 +4,7 @@ namespace Drupal\config_translation\Form;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Defines a form for adding configuration translations.
@@ -34,6 +35,7 @@ class ConfigTranslationAddForm extends ConfigTranslationFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
   }

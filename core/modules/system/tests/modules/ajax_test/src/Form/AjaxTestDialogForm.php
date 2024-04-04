@@ -9,6 +9,7 @@ use Drupal\Core\Ajax\OpenDialogCommand;
 use Drupal\Core\Ajax\OpenModalDialogCommand;
 use Drupal\Core\Ajax\OpenModalDialogWithUrl;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 
 /**
@@ -60,6 +61,7 @@ class AjaxTestDialogForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
 
   }
@@ -67,6 +69,7 @@ class AjaxTestDialogForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state->setRedirect('ajax_test.dialog_contents');
   }

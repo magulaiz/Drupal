@@ -5,8 +5,11 @@ namespace Drupal\Core\Form;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Element\RenderCallbackInterface;
+use Drupal\Core\Security\DoTrustedCallbackTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Core\Utility\CallableResolver;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -16,6 +19,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class FormValidator implements FormValidatorInterface {
 
   use StringTranslationTrait;
+  use DoTrustedCallbackTrait;
+
 
   /**
    * The CSRF token generator to validate the form token.
@@ -58,8 +63,10 @@ class FormValidator implements FormValidatorInterface {
    *   A logger instance.
    * @param \Drupal\Core\Form\FormErrorHandlerInterface $form_error_handler
    *   The form error handler.
+   * @param \Drupal\Core\Utility\CallableResolver $callableResolver
+   *   The service for resolving callables.
    */
-  public function __construct(RequestStack $request_stack, TranslationInterface $string_translation, CsrfTokenGenerator $csrf_token, LoggerInterface $logger, FormErrorHandlerInterface $form_error_handler) {
+  public function __construct(RequestStack $request_stack, TranslationInterface $string_translation, CsrfTokenGenerator $csrf_token, LoggerInterface $logger, FormErrorHandlerInterface $form_error_handler, protected CallableResolver $callableResolver) {
     $this->requestStack = $request_stack;
     $this->stringTranslation = $string_translation;
     $this->csrfToken = $csrf_token;
@@ -79,7 +86,7 @@ class FormValidator implements FormValidatorInterface {
     }
 
     foreach ($handlers as $callback) {
-      call_user_func_array($form_state->prepareCallback($callback), [&$form, &$form_state]);
+      $this->doCallback($form_state, '#validate', $callback, [&$form, &$form_state]);
     }
   }
 
@@ -278,7 +285,7 @@ class FormValidator implements FormValidatorInterface {
       elseif (isset($elements['#element_validate'])) {
         foreach ($elements['#element_validate'] as $callback) {
           $complete_form = &$form_state->getCompleteForm();
-          call_user_func_array($form_state->prepareCallback($callback), [&$elements, &$form_state, &$complete_form]);
+          $this->doCallback($form_state, '#element_validate', $callback, [&$elements, &$form_state, &$complete_form]);
         }
       }
 
@@ -415,6 +422,36 @@ class FormValidator implements FormValidatorInterface {
     else {
       return NULL;
     }
+  }
+
+  /**
+   * Performs a callback.
+   *
+   * @param \Drupal\Core\Form\FormStateInterface $formState
+   *   The current form state.
+   * @param string $callback_type
+   *   The type of the callback. For example, '#process'.
+   * @param string|callable $callback
+   *   The callback to perform.
+   * @param array $args
+   *   The arguments to pass to the callback.
+   *
+   * @return mixed
+   *   The callback's return value.
+   *
+   * @see \Drupal\Core\Security\TrustedCallbackInterface
+   */
+  protected function doCallback(FormStateInterface $formState, $callback_type, $callback, array $args) {
+    $callback = $formState->prepareCallback($callback);
+    $callback = $this->callableResolver->getCallableFromDefinition($callback);
+
+    $message = sprintf('Render %s callbacks must be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface, be annotated as a TrustedCallback, or be an anonymous function. The callback was %s. See https://www.drupal.org/project/drupal/issues/2966711', $callback_type, '%s');
+    // Add \Drupal\Core\Render\Element\RenderCallbackInterface as an extra
+    // trusted interface so that:
+    // - All public methods on Render elements are considered trusted.
+    // - Helper classes that contain only callback methods can implement this
+    //   instead of TrustedCallbackInterface.
+    return $this->doTrustedCallback($callback, $args, $message, extra_trusted_interface: RenderCallbackInterface::class);
   }
 
 }

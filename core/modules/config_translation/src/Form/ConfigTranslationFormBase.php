@@ -5,6 +5,7 @@ namespace Drupal\config_translation\Form;
 use Drupal\config_translation\ConfigMapperManagerInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\Form\BaseFormIdInterface;
@@ -195,6 +196,7 @@ abstract class ConfigTranslationFormBase extends FormBase implements BaseFormIdI
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_values = $form_state->getValue(['translation', 'config_names']);
 

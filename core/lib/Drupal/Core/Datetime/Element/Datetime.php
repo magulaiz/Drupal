@@ -8,6 +8,7 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Render\Attribute\FormElement;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Security\DoTrustedCallbackTrait;
 use Drupal\Core\Security\StaticTrustedCallbackHelper;
 
@@ -75,6 +76,7 @@ class Datetime extends DateElementBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
     $element += ['#date_timezone' => date_default_timezone_get()];
 
@@ -223,6 +225,7 @@ class Datetime extends DateElementBase {
    *
    * @see \Drupal\Core\Datetime\DateFormatterInterface::format()
    */
+  #[TrustedCallback]
   public static function processDatetime(&$element, FormStateInterface $form_state, &$complete_form) {
     $format_settings = [];
     // The value callback has populated the #value array.
@@ -313,6 +316,7 @@ class Datetime extends DateElementBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public static function processAjaxForm(&$element, FormStateInterface $form_state, &$complete_form) {
     $element = parent::processAjaxForm($element, $form_state, $complete_form);
 
@@ -344,6 +348,7 @@ class Datetime extends DateElementBase {
    * @param array $complete_form
    *   The complete form structure.
    */
+  #[TrustedCallback]
   public static function validateDatetime(&$element, FormStateInterface $form_state, &$complete_form) {
     $input_exists = FALSE;
     $input = NestedArray::getValue($form_state->getValues(), $element['#parents'], $input_exists);

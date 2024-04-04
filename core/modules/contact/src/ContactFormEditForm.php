@@ -4,13 +4,14 @@ namespace Drupal\contact;
 
 use Drupal\Component\Utility\EmailValidatorInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\ConfigFormBaseTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Path\PathValidatorInterface;
 use Drupal\Core\Render\Element\PathElement;
+use Drupal\Core\Security\Attribute\TrustedCallback;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base form for contact form edit forms.
@@ -134,6 +135,7 @@ class ContactFormEditForm extends EntityForm implements ContainerInjectionInterf
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 

@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
 use Drupal\Core\Plugin\PluginFormFactoryInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\workflows\StateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -128,6 +129,7 @@ class WorkflowStateAddForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
     /** @var \Drupal\workflows\WorkflowTypeInterface $workflow_type */

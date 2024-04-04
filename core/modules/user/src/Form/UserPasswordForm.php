@@ -10,6 +10,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\Element\Email;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\user\UserInterface;
 use Drupal\user\UserStorageInterface;
@@ -152,6 +153,7 @@ class UserPasswordForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $flood_config = $this->configFactory->get('user.flood');
     if (!$this->flood->isAllowed('user.password_request_ip', $flood_config->get('ip_limit'), $flood_config->get('ip_window'))) {
@@ -197,6 +199,7 @@ class UserPasswordForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $account = $form_state->getValue('account');
     if ($account) {

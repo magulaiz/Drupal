@@ -3,6 +3,7 @@
 namespace Drupal\migrate_drupal_ui\Form;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 
 /**
@@ -77,6 +78,7 @@ class OverviewForm extends MigrateUpgradeFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->store->set('step', 'credential');
     $form_state->setRedirect('migrate_drupal_ui.upgrade_credential');

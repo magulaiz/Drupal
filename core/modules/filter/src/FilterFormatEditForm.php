@@ -3,6 +3,7 @@
 namespace Drupal\filter;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -29,6 +30,7 @@ class FilterFormatEditForm extends FilterFormatFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
     $this->messenger()->addStatus($this->t('The text format %format has been updated.', ['%format' => $this->entity->label()]));

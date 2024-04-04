@@ -2,12 +2,13 @@
 
 namespace Drupal\image\Form;
 
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\image\ConfigurableImageEffectInterface;
 use Drupal\image\ImageStyleInterface;
-use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -105,6 +106,7 @@ abstract class ImageEffectFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // The image effect configuration is stored in the 'data' key in the form,
     // pass that through for validation.
@@ -114,6 +116,7 @@ abstract class ImageEffectFormBase extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $form_state->cleanValues();
 

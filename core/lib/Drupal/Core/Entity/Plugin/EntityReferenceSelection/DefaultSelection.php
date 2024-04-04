@@ -18,6 +18,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\user\EntityOwnerInterface;
@@ -335,6 +336,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
   /**
    * Form element validation handler; Filters the #value property of an element.
    */
+  #[TrustedCallback]
   public static function elementValidateFilter(&$element, FormStateInterface $form_state) {
     $element['#value'] = array_filter($element['#value']);
     $form_state->setValueForElement($element, $element['#value']);

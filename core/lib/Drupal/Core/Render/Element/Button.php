@@ -5,6 +5,7 @@ namespace Drupal\Core\Render\Element;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Provides an action button form element.
@@ -57,6 +58,7 @@ class Button extends FormElementBase {
   /**
    * Processes a form button element.
    */
+  #[TrustedCallback]
   public static function processButton(&$element, FormStateInterface $form_state, &$complete_form) {
     // If this is a button intentionally allowing incomplete form submission
     // (e.g., a "Previous" or "Add another item" button), then also skip

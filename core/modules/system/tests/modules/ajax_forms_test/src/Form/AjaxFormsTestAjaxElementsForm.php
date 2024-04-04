@@ -5,6 +5,7 @@ namespace Drupal\ajax_forms_test\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\ajax_forms_test\Callbacks;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 
 /**
  * Builds a form where each Form API element triggers a simple Ajax callback.
@@ -53,6 +54,7 @@ class AjaxFormsTestAjaxElementsForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {}
 
 }

@@ -2,20 +2,21 @@
 
 namespace Drupal\system\Form;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
+use Drupal\Core\Theme\ThemeManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Form\ConfigFormBase;
-use Drupal\Core\Theme\ThemeManagerInterface;
 
 // cspell:ignore apng
 
@@ -140,7 +141,7 @@ class ThemeSettingsForm extends ConfigFormBase {
 
     $themes = $this->themeHandler->listInfo();
 
-    // Default settings are defined in theme_get_setting() in includes/theme.inc
+    // Default settings are defined in theme_get_setting().
     if ($theme) {
       if (!$this->themeHandler->hasUi($theme)) {
         throw new NotFoundHttpException();
@@ -168,7 +169,7 @@ class ThemeSettingsForm extends ConfigFormBase {
       '#value' => $config_key,
     ];
 
-    // Toggle settings
+    // Toggle settings.
     $toggles = [
       'node_user_picture' => $this->t('User pictures in posts'),
       'comment_user_picture' => $this->t('User pictures in comments'),
@@ -176,7 +177,7 @@ class ThemeSettingsForm extends ConfigFormBase {
       'favicon' => $this->t('Shortcut icon'),
     ];
 
-    // Some features are not always available
+    // Some features are not always available.
     $disabled = [];
     if (!user_picture_enabled()) {
       $disabled['toggle_node_user_picture'] = TRUE;
@@ -194,8 +195,13 @@ class ThemeSettingsForm extends ConfigFormBase {
     ];
     foreach ($toggles as $name => $title) {
       if ((!$theme) || in_array($name, $features)) {
-        $form['theme_settings']['toggle_' . $name] = ['#type' => 'checkbox', '#title' => $title, '#default_value' => theme_get_setting('features.' . $name, $theme)];
-        // Disable checkboxes for features not supported in the current configuration.
+        $form['theme_settings']['toggle_' . $name] = [
+          '#type' => 'checkbox',
+          '#title' => $title,
+          '#default_value' => theme_get_setting('features.' . $name, $theme),
+        ];
+        // Disable checkboxes for features not supported
+        // in the current configuration.
         if (isset($disabled['toggle_' . $name])) {
           $form['theme_settings']['toggle_' . $name]['#disabled'] = TRUE;
         }
@@ -400,6 +406,7 @@ class ThemeSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 
@@ -433,8 +440,8 @@ class ThemeSettingsForm extends ConfigFormBase {
         $form_state->unsetValue('favicon_path');
       }
 
-      // If the user provided a path for a logo or favicon file, make sure a file
-      // exists at that path.
+      // If the user provided a path for a logo or favicon file, make sure a
+      // file exists at that path.
       if ($form_state->getValue('logo_path')) {
         $path = $this->validatePath($form_state->getValue('logo_path'));
         if (!$path) {
@@ -453,6 +460,7 @@ class ThemeSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
@@ -467,8 +475,8 @@ class ThemeSettingsForm extends ConfigFormBase {
 
     $values = $form_state->getValues();
 
-    // If the user uploaded a new logo or favicon, save it to a permanent location
-    // and use it in place of the default theme-provided file.
+    // If the user uploaded a new logo or favicon, save it to a permanent
+    // location and use it in place of the default theme-provided file.
     $default_scheme = $this->config('system.file')->get('default_scheme');
     try {
       if (!empty($values['logo_upload'])) {
@@ -495,7 +503,8 @@ class ThemeSettingsForm extends ConfigFormBase {
     unset($values['favicon_upload']);
 
     // If the user entered a path relative to the system files directory for
-    // a logo or favicon, store a public:// URI so the theme system can handle it.
+    // a logo or favicon, store a public:// URI so the theme system
+    // can handle it.
     if (!empty($values['logo_path'])) {
       $values['logo_path'] = $this->validatePath($values['logo_path']);
     }
@@ -513,9 +522,9 @@ class ThemeSettingsForm extends ConfigFormBase {
   /**
    * Helper function for the system_theme_settings form.
    *
-   * Attempts to validate normal system paths, paths relative to the public files
-   * directory, or stream wrapper URIs. If the given path is any of the above,
-   * returns a valid path or URI that the theme system can display.
+   * Attempts to validate normal system paths, paths relative to the public
+   * files directory, or stream wrapper URIs. If the given path is any of the
+   * above, returns a valid path or URI that the theme system can display.
    *
    * @param string $path
    *   A path relative to the Drupal root or to the public files directory, or

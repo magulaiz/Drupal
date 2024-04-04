@@ -4,6 +4,7 @@ namespace Drupal\shortcut\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Url;
 use Drupal\shortcut\Entity\ShortcutSet;
 use Drupal\shortcut\ShortcutSetStorageInterface;
@@ -157,6 +158,7 @@ class SwitchShortcutSet extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if ($form_state->getValue('set') == 'new') {
       // Check to prevent creating a shortcut set with an empty title.
@@ -169,6 +171,7 @@ class SwitchShortcutSet extends FormBase {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $account = $this->currentUser();
 

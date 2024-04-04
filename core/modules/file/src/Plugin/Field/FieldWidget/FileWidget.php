@@ -11,6 +11,7 @@ use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\ElementInfoManagerInterface;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\file\Element\ManagedFile;
 use Drupal\file\Entity\File;
@@ -314,6 +315,7 @@ class FileWidget extends WidgetBase {
    *
    * This method is assigned as a #value_callback in formElement() method.
    */
+  #[TrustedCallback]
   public static function value($element, $input, FormStateInterface $form_state) {
     if ($input) {
       if (empty($input['display'])) {
@@ -349,6 +351,7 @@ class FileWidget extends WidgetBase {
    *
    * This validator is used only when cardinality not set to 1 or unlimited.
    */
+  #[TrustedCallback]
   public static function validateMultipleCount($element, FormStateInterface $form_state, $form) {
     $values = NestedArray::getValue($form_state->getValues(), $element['#parents']);
 
@@ -389,6 +392,7 @@ class FileWidget extends WidgetBase {
    *
    * This method is assigned as a #process callback in formElement() method.
    */
+  #[TrustedCallback]
   public static function process($element, FormStateInterface $form_state, $form) {
     $item = $element['#value'];
     $item['fids'] = $element['fids']['#value'];
@@ -467,6 +471,7 @@ class FileWidget extends WidgetBase {
    * This method on is assigned as a #process callback in formMultipleElements()
    * method.
    */
+  #[TrustedCallback]
   public static function processMultiple($element, FormStateInterface $form_state, $form) {
     $element_children = Element::children($element, TRUE);
     $count = count($element_children);
