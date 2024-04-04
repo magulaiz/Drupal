@@ -143,7 +143,7 @@ class Handler {
     }
 
     // Call any pre-scaffold scripts that may be defined.
-    $dispatcher = new EventDispatcher($this->composer, $this->io);
+    $dispatcher = $this->composer->getEventDispatcher();
     $dispatcher->dispatch(self::PRE_DRUPAL_SCAFFOLD_CMD);
 
     // Fetch the list of file mappings from each allowed package and normalize
