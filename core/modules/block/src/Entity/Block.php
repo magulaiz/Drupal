@@ -2,6 +2,11 @@
 
 namespace Drupal\block\Entity;
 
+use Drupal\block\BlockAccessControlHandler;
+use Drupal\block\BlockForm;
+use Drupal\block\BlockListBuilder;
+use Drupal\block\BlockViewBuilder;
+use Drupal\block\Form\BlockDeleteForm;
 use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Cache\Cache;
@@ -30,12 +35,12 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
     'status' => 'status',
   ],
   handlers: [
-    'access' => 'Drupal\block\BlockAccessControlHandler',
-    'view_builder' => 'Drupal\block\BlockViewBuilder',
-    'list_builder' => 'Drupal\block\BlockListBuilder',
+    'access' => BlockAccessControlHandler::class,
+    'view_builder' => BlockViewBuilder::class,
+    'list_builder' => BlockListBuilder::class,
     'form' => [
-      'default' => 'Drupal\block\BlockForm',
-      'delete' => 'Drupal\block\Form\BlockDeleteForm',
+      'default' => BlockForm::class,
+      'delete' => BlockDeleteForm::class,
     ],
   ],
   links: [

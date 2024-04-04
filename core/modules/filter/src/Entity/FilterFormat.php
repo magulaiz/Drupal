@@ -2,15 +2,21 @@
 
 namespace Drupal\filter\Entity;
 
-use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Config\Action\Attribute\ActionMethod;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\filter\FilterFormatAccessControlHandler;
+use Drupal\filter\FilterFormatAddForm;
+use Drupal\filter\FilterFormatEditForm;
 use Drupal\filter\FilterFormatInterface;
+use Drupal\filter\FilterFormatListBuilder;
 use Drupal\filter\FilterPluginCollection;
+use Drupal\filter\Form\FilterDisableForm;
+use Drupal\filter\Form\FilterEnableForm;
 use Drupal\filter\Plugin\FilterInterface;
 use Drupal\user\Entity\Role;
 
@@ -32,13 +38,13 @@ use Drupal\user\Entity\Role;
   ],
   handlers: [
     'form' => [
-      'add' => 'Drupal\filter\FilterFormatAddForm',
-      'edit' => 'Drupal\filter\FilterFormatEditForm',
-      'disable' => 'Drupal\filter\Form\FilterDisableForm',
-      'enable' => 'Drupal\filter\Form\FilterEnableForm',
+      'add' => FilterFormatAddForm::class,
+      'edit' => FilterFormatEditForm::class,
+      'disable' => FilterDisableForm::class,
+      'enable' => FilterEnableForm::class,
     ],
-    'list_builder' => 'Drupal\filter\FilterFormatListBuilder',
-    'access' => 'Drupal\filter\FilterFormatAccessControlHandler',
+    'list_builder' => FilterFormatListBuilder::class,
+    'access' => FilterFormatAccessControlHandler::class,
   ],
   links: [
     'edit-form' => '/admin/config/content/formats/manage/{filter_format}',

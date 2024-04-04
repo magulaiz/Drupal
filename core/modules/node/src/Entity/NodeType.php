@@ -7,7 +7,12 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\node\Form\NodeTypeDeleteConfirm;
+use Drupal\node\NodeTypeAccessControlHandler;
+use Drupal\node\NodeTypeForm;
 use Drupal\node\NodeTypeInterface;
+use Drupal\node\NodeTypeListBuilder;
+use Drupal\user\Entity\EntityPermissionsRouteProvider;
 
 /**
  * Defines the Node type configuration entity.
@@ -24,16 +29,16 @@ use Drupal\node\NodeTypeInterface;
     'label' => 'name',
   ],
   handlers: [
-    'access' => 'Drupal\node\NodeTypeAccessControlHandler',
+    'access' => NodeTypeAccessControlHandler::class,
     'form' => [
-      'add' => 'Drupal\node\NodeTypeForm',
-      'edit' => 'Drupal\node\NodeTypeForm',
-      'delete' => 'Drupal\node\Form\NodeTypeDeleteConfirm',
+      'add' => NodeTypeForm::class,
+      'edit' => NodeTypeForm::class,
+      'delete' => NodeTypeDeleteConfirm::class,
     ],
     'route_provider' => [
-      'permissions' => 'Drupal\user\Entity\EntityPermissionsRouteProvider',
+      'permissions' => EntityPermissionsRouteProvider::class,
     ],
-    'list_builder' => 'Drupal\node\NodeTypeListBuilder',
+    'list_builder' => NodeTypeListBuilder::class,
   ],
   links: [
     'edit-form' => '/admin/structure/types/manage/{node_type}',

@@ -3,6 +3,8 @@
 namespace Drupal\Core\Field\Entity;
 
 use Drupal\Core\Entity\Attribute\ConfigEntityType;
+use Drupal\Core\Field\BaseFieldOverrideAccessControlHandler;
+use Drupal\Core\Field\BaseFieldOverrideStorage;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -23,8 +25,8 @@ use Drupal\Core\Field\FieldException;
     'label' => 'label',
   ],
   handlers: [
-    'storage' => 'Drupal\Core\Field\BaseFieldOverrideStorage',
-    'access' => 'Drupal\Core\Field\BaseFieldOverrideAccessControlHandler',
+    'storage' => BaseFieldOverrideStorage::class,
+    'access' => BaseFieldOverrideAccessControlHandler::class,
   ],
   constraints: [
     'ImmutableProperties' => [

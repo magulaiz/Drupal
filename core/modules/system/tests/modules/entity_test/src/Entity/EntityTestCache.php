@@ -6,6 +6,8 @@ namespace Drupal\entity_test\Entity;
 
 use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\entity_test\EntityTestAccessControlHandler;
+use Drupal\entity_test\EntityTestForm;
 
 /**
  * Defines the test entity class.
@@ -19,9 +21,9 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
     'bundle' => 'type',
   ],
   handlers: [
-    'access' => 'Drupal\entity_test\EntityTestAccessControlHandler',
+    'access' => EntityTestAccessControlHandler::class,
     'form' => [
-      'default' => 'Drupal\entity_test\EntityTestForm',
+      'default' => EntityTestForm::class,
     ],
   ],
   base_table: 'entity_test_cache',

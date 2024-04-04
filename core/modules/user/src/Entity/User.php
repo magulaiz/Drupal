@@ -11,10 +11,19 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Flood\PrefixFloodInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\user\Form\UserCancelForm;
+use Drupal\user\ProfileForm;
+use Drupal\user\ProfileTranslationHandler;
+use Drupal\user\RegisterForm;
 use Drupal\user\RoleInterface;
 use Drupal\user\StatusItem;
 use Drupal\user\TimeZoneItem;
+use Drupal\user\UserAccessControlHandler;
 use Drupal\user\UserInterface;
+use Drupal\user\UserListBuilder;
+use Drupal\user\UserStorage;
+use Drupal\user\UserStorageSchema;
+use Drupal\user\UserViewsData;
 
 /**
  * Defines the user entity class.
@@ -34,20 +43,20 @@ use Drupal\user\UserInterface;
     'uuid' => 'uuid',
   ],
   handlers: [
-    'storage' => 'Drupal\user\UserStorage',
-    'storage_schema' => 'Drupal\user\UserStorageSchema',
-    'access' => 'Drupal\user\UserAccessControlHandler',
-    'list_builder' => 'Drupal\user\UserListBuilder',
-    'views_data' => 'Drupal\user\UserViewsData',
+    'storage' => UserStorage::class,
+    'storage_schema' => UserStorageSchema::class,
+    'access' => UserAccessControlHandler::class,
+    'list_builder' => UserListBuilder::class,
+    'views_data' => UserViewsData::class,
     'route_provider' => [
-      'html' => 'Drupal\user\Entity\UserRouteProvider',
+      'html' => UserRouteProvider::class,
     ],
     'form' => [
-      'default' => 'Drupal\user\ProfileForm',
-      'cancel' => 'Drupal\user\Form\UserCancelForm',
-      'register' => 'Drupal\user\RegisterForm',
+      'default' => ProfileForm::class,
+      'cancel' => UserCancelForm::class,
+      'register' => RegisterForm::class,
     ],
-    'translation' => 'Drupal\user\ProfileTranslationHandler',
+    'translation' => ProfileTranslationHandler::class,
   ],
   links: [
     'canonical' => '/user/{user}',

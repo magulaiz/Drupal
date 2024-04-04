@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Drupal\entity_test\Entity;
 
 use Drupal\Core\Entity\Attribute\ConfigEntityType;
+use Drupal\Core\Entity\BundleEntityFormBase;
+use Drupal\Core\Entity\EntityAccessControlHandler;
+use Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\EntityDescriptionInterface;
@@ -21,12 +24,12 @@ use Drupal\Core\Entity\EntityDescriptionInterface;
     'label' => 'label',
   ],
   handlers: [
-    'access' => '\Drupal\Core\Entity\EntityAccessControlHandler',
+    'access' => EntityAccessControlHandler::class,
     'form' => [
-      'default' => '\Drupal\Core\Entity\BundleEntityFormBase',
+      'default' => BundleEntityFormBase::class,
     ],
     'route_provider' => [
-      'html' => 'Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider',
+      'html' => DefaultHtmlRouteProvider::class,
     ],
   ],
   links: [

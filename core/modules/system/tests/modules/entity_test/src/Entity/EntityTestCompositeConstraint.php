@@ -7,6 +7,7 @@ namespace Drupal\entity_test\Entity;
 use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\entity_test\EntityTestForm;
 
 /**
  * Defines a test class for testing composite constraints.
@@ -23,7 +24,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
   ],
   handlers: [
     'form' => [
-      'default' => 'Drupal\entity_test\EntityTestForm',
+      'default' => EntityTestForm::class,
     ],
   ],
   base_table: 'entity_test_composite_constraint',

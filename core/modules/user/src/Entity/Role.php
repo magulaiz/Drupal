@@ -5,9 +5,14 @@ namespace Drupal\user\Entity;
 use Drupal\Core\Config\Action\Attribute\ActionMethod;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\Attribute\ConfigEntityType;
+use Drupal\Core\Entity\EntityDeleteForm;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\user\RoleAccessControlHandler;
+use Drupal\user\RoleForm;
 use Drupal\user\RoleInterface;
+use Drupal\user\RoleListBuilder;
+use Drupal\user\RoleStorage;
 
 /**
  * Defines the user role entity class.
@@ -26,12 +31,12 @@ use Drupal\user\RoleInterface;
     'label' => 'label',
   ],
   handlers: [
-    'storage' => 'Drupal\user\RoleStorage',
-    'access' => 'Drupal\user\RoleAccessControlHandler',
-    'list_builder' => 'Drupal\user\RoleListBuilder',
+    'storage' => RoleStorage::class,
+    'access' => RoleAccessControlHandler::class,
+    'list_builder' => RoleListBuilder::class,
     'form' => [
-      'default' => 'Drupal\user\RoleForm',
-      'delete' => 'Drupal\Core\Entity\EntityDeleteForm',
+      'default' => RoleForm::class,
+      'delete' => EntityDeleteForm::class,
     ],
   ],
   links: [

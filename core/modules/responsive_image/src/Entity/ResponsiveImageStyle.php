@@ -3,10 +3,13 @@
 namespace Drupal\responsive_image\Entity;
 
 use Drupal\Core\Entity\Attribute\ConfigEntityType;
+use Drupal\Core\Entity\EntityDeleteForm;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\responsive_image\ResponsiveImageStyleForm;
 use Drupal\responsive_image\ResponsiveImageStyleInterface;
+use Drupal\responsive_image\ResponsiveImageStyleListBuilder;
 
 /**
  * Defines the responsive image style entity.
@@ -23,12 +26,12 @@ use Drupal\responsive_image\ResponsiveImageStyleInterface;
     'label' => 'label',
   ],
   handlers: [
-    'list_builder' => 'Drupal\responsive_image\ResponsiveImageStyleListBuilder',
+    'list_builder' => ResponsiveImageStyleListBuilder::class,
     'form' => [
-      'edit' => 'Drupal\responsive_image\ResponsiveImageStyleForm',
-      'add' => 'Drupal\responsive_image\ResponsiveImageStyleForm',
-      'delete' => 'Drupal\Core\Entity\EntityDeleteForm',
-      'duplicate' => 'Drupal\responsive_image\ResponsiveImageStyleForm',
+      'edit' => ResponsiveImageStyleForm::class,
+      'add' => ResponsiveImageStyleForm::class,
+      'delete' => EntityDeleteForm::class,
+      'duplicate' => ResponsiveImageStyleForm::class,
     ],
   ],
   links: [

@@ -3,6 +3,7 @@
 namespace Drupal\Core\Entity\Entity;
 
 use Drupal\Core\Entity\Attribute\ConfigEntityType;
+use Drupal\Core\Entity\Entity\Access\EntityFormDisplayAccessControlHandler;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EntityConstraintViolationListInterface;
 use Drupal\Core\Entity\EntityDisplayPluginCollection;
@@ -28,7 +29,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
     'status' => 'status',
   ],
   handlers: [
-    'access' => '\Drupal\Core\Entity\Entity\Access\EntityFormDisplayAccessControlHandler',
+    'access' => EntityFormDisplayAccessControlHandler::class,
   ],
   constraints: [
     'ImmutableProperties' => [

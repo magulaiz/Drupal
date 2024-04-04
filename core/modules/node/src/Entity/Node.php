@@ -9,7 +9,17 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\node\Form\DeleteMultiple;
+use Drupal\node\Form\NodeDeleteForm;
+use Drupal\node\NodeAccessControlHandler;
+use Drupal\node\NodeForm;
 use Drupal\node\NodeInterface;
+use Drupal\node\NodeListBuilder;
+use Drupal\node\NodeStorage;
+use Drupal\node\NodeStorageSchema;
+use Drupal\node\NodeTranslationHandler;
+use Drupal\node\NodeViewBuilder;
+use Drupal\node\NodeViewsData;
 use Drupal\user\EntityOwnerTrait;
 
 /**
@@ -34,22 +44,22 @@ use Drupal\user\EntityOwnerTrait;
     'owner' => 'uid',
   ],
   handlers: [
-    'storage' => 'Drupal\node\NodeStorage',
-    'storage_schema' => 'Drupal\node\NodeStorageSchema',
-    'view_builder' => 'Drupal\node\NodeViewBuilder',
-    'access' => 'Drupal\node\NodeAccessControlHandler',
-    'views_data' => 'Drupal\node\NodeViewsData',
+    'storage' => NodeStorage::class,
+    'storage_schema' => NodeStorageSchema::class,
+    'view_builder' => NodeViewBuilder::class,
+    'access' => NodeAccessControlHandler::class,
+    'views_data' => NodeViewsData::class,
     'form' => [
-      'default' => 'Drupal\node\NodeForm',
-      'delete' => 'Drupal\node\Form\NodeDeleteForm',
-      'edit' => 'Drupal\node\NodeForm',
-      'delete-multiple-confirm' => 'Drupal\node\Form\DeleteMultiple',
+      'default' => NodeForm::class,
+      'delete' => NodeDeleteForm::class,
+      'edit' => NodeForm::class,
+      'delete-multiple-confirm' => DeleteMultiple::class,
     ],
     'route_provider' => [
-      'html' => 'Drupal\node\Entity\NodeRouteProvider',
+      'html' => NodeRouteProvider::class,
     ],
-    'list_builder' => 'Drupal\node\NodeListBuilder',
-    'translation' => 'Drupal\node\NodeTranslationHandler',
+    'list_builder' => NodeListBuilder::class,
+    'translation' => NodeTranslationHandler::class,
   ],
   links: [
     'canonical' => '/node/{node}',

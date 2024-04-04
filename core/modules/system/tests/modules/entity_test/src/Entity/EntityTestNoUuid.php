@@ -6,6 +6,7 @@ namespace Drupal\entity_test\Entity;
 
 use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\entity_test\EntityTestAccessControlHandler;
 
 /**
  * Test entity class with revisions but without UUIDs.
@@ -22,7 +23,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
     'langcode' => 'langcode',
   ],
   handlers: [
-    'access' => 'Drupal\entity_test\EntityTestAccessControlHandler',
+    'access' => EntityTestAccessControlHandler::class,
   ],
   admin_permission: 'administer entity_test content',
   base_table: 'entity_test_no_uuid',

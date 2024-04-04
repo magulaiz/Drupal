@@ -11,6 +11,8 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\path_alias\PathAliasInterface;
+use Drupal\path_alias\PathAliasStorage;
+use Drupal\path_alias\PathAliasStorageSchema;
 
 /**
  * Defines the path_alias entity class.
@@ -29,8 +31,8 @@ use Drupal\path_alias\PathAliasInterface;
     'published' => 'status',
   ],
   handlers: [
-    'storage' => 'Drupal\path_alias\PathAliasStorage',
-    'storage_schema' => 'Drupal\path_alias\PathAliasStorageSchema',
+    'storage' => PathAliasStorage::class,
+    'storage_schema' => PathAliasStorageSchema::class,
   ],
   admin_permission: 'administer url aliases',
   base_table: 'path_alias',

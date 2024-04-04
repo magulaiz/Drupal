@@ -8,6 +8,11 @@ use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\entity_test\EntityTestAccessControlHandler;
+use Drupal\entity_test\EntityTestDeleteForm;
+use Drupal\entity_test\EntityTestForm;
+use Drupal\entity_test\EntityTestViewBuilder as TestViewBuilder;
+use Drupal\views\EntityViewsData;
 
 /**
  * Defines the test entity class.
@@ -23,13 +28,13 @@ use Drupal\Core\Field\BaseFieldDefinition;
     'langcode' => 'langcode',
   ],
   handlers: [
-    'view_builder' => 'Drupal\entity_test\EntityTestViewBuilder',
-    'access' => 'Drupal\entity_test\EntityTestAccessControlHandler',
+    'view_builder' => TestViewBuilder::class,
+    'access' => EntityTestAccessControlHandler::class,
     'form' => [
-      'default' => 'Drupal\entity_test\EntityTestForm',
-      'delete' => 'Drupal\entity_test\EntityTestDeleteForm',
+      'default' => EntityTestForm::class,
+      'delete' => EntityTestDeleteForm::class,
     ],
-    'views_data' => 'Drupal\views\EntityViewsData',
+    'views_data' => EntityViewsData::class,
   ],
   links: [
     'canonical' => '/entity_test_mul_default_value/manage/{entity_test_mul_default_value}',

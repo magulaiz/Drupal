@@ -3,12 +3,18 @@
 namespace Drupal\media\Entity;
 
 use Drupal\Core\Config\Action\Attribute\ActionMethod;
-use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
+use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
+use Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider;
 use Drupal\Core\Plugin\DefaultSingleLazyPluginCollection;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\media\Form\MediaTypeDeleteConfirmForm;
+use Drupal\media\MediaTypeAccessControlHandler;
+use Drupal\media\MediaTypeForm;
 use Drupal\media\MediaTypeInterface;
+use Drupal\media\MediaTypeListBuilder;
+use Drupal\user\Entity\EntityPermissionsRouteProvider;
 
 /**
  * Defines the Media type configuration entity.
@@ -24,16 +30,16 @@ use Drupal\media\MediaTypeInterface;
     'plural' => '@count media types',
   ],
   handlers: [
-    'access' => 'Drupal\media\MediaTypeAccessControlHandler',
+    'access' => MediaTypeAccessControlHandler::class,
     'form' => [
-      'add' => 'Drupal\media\MediaTypeForm',
-      'edit' => 'Drupal\media\MediaTypeForm',
-      'delete' => 'Drupal\media\Form\MediaTypeDeleteConfirmForm',
+      'add' => MediaTypeForm::class,
+      'edit' => MediaTypeForm::class,
+      'delete' => MediaTypeDeleteConfirmForm::class,
     ],
-    'list_builder' => 'Drupal\media\MediaTypeListBuilder',
+    'list_builder' => MediaTypeListBuilder::class,
     'route_provider' => [
-      'html' => 'Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider',
-      'permissions' => 'Drupal\user\Entity\EntityPermissionsRouteProvider',
+      'html' => DefaultHtmlRouteProvider::class,
+      'permissions' => EntityPermissionsRouteProvider::class,
     ],
   ],
   admin_permission: 'administer media types',

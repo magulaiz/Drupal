@@ -8,6 +8,7 @@ use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\entity_test\EntityTestForm;
 
 /**
  * Defines the test entity class for testing entity constraint violations.
@@ -24,7 +25,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
   ],
   handlers: [
     'form' => [
-      'default' => 'Drupal\entity_test\EntityTestForm',
+      'default' => EntityTestForm::class,
     ],
   ],
   base_table: 'entity_test_constraint_violation',

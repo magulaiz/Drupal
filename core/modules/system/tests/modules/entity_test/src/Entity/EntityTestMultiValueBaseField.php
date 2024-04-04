@@ -7,6 +7,7 @@ namespace Drupal\entity_test\Entity;
 use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\views\EntityViewsData;
 
 // cspell:ignore basefield
 
@@ -24,7 +25,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
     'langcode' => 'langcode',
   ],
   handlers: [
-    'views_data' => 'Drupal\views\EntityViewsData',
+    'views_data' => EntityViewsData::class,
   ],
   base_table: 'entity_test_multivalue_basefield',
   data_table: 'entity_test_multivalue_basefield_field_data',

@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\entity_test\Entity;
 
+use Drupal\content_translation\ContentTranslationHandler;
 use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\entity_test\EntityTestAccessControlHandler;
+use Drupal\entity_test\EntityTestForm;
+use Drupal\entity_test\EntityTestViewBuilder as TestViewBuilder;
 
 /**
  * Defines a test entity class for unique constraint.
@@ -20,12 +24,12 @@ use Drupal\Core\Field\BaseFieldDefinition;
     'uuid' => 'uuid',
   ],
   handlers: [
-    'view_builder' => 'Drupal\entity_test\EntityTestViewBuilder',
-    'access' => 'Drupal\entity_test\EntityTestAccessControlHandler',
+    'view_builder' => TestViewBuilder::class,
+    'access' => EntityTestAccessControlHandler::class,
     'form' => [
-      'default' => 'Drupal\entity_test\EntityTestForm',
+      'default' => EntityTestForm::class,
     ],
-    'translation' => 'Drupal\content_translation\ContentTranslationHandler',
+    'translation' => ContentTranslationHandler::class,
   ],
   base_table: 'entity_test_unique_constraint',
   data_table: 'entity_test_unique_constraint_data',

@@ -6,7 +6,9 @@ use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\system\MenuAccessControlHandler;
 use Drupal\system\MenuInterface;
+use Drupal\system\MenuStorage;
 
 /**
  * Defines the Menu configuration entity class.
@@ -22,8 +24,8 @@ use Drupal\system\MenuInterface;
     'label' => 'label',
   ],
   handlers: [
-    'access' => 'Drupal\system\MenuAccessControlHandler',
-    'storage' => 'Drupal\system\MenuStorage',
+    'access' => MenuAccessControlHandler::class,
+    'storage' => MenuStorage::class,
   ],
   admin_permission: 'administer menu',
   label_count: [

@@ -13,7 +13,9 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldException;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\OptionsProviderInterface;
+use Drupal\field\FieldStorageConfigAccessControlHandler;
 use Drupal\field\FieldStorageConfigInterface;
+use Drupal\field\FieldStorageConfigStorage;
 
 /**
  * Defines the Field storage configuration entity.
@@ -30,8 +32,8 @@ use Drupal\field\FieldStorageConfigInterface;
     'label' => 'id',
   ],
   handlers: [
-    'access' => 'Drupal\field\FieldStorageConfigAccessControlHandler',
-    'storage' => 'Drupal\field\FieldStorageConfigStorage',
+    'access' => FieldStorageConfigAccessControlHandler::class,
+    'storage' => FieldStorageConfigStorage::class,
   ],
   label_count: [
     'singular' => '@count field storage',

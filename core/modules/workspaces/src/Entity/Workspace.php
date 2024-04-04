@@ -7,10 +7,19 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\Routing\AdminHtmlRouteProvider;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\user\EntityOwnerTrait;
+use Drupal\views\EntityViewsData;
+use Drupal\workspaces\Entity\Handler\IgnoredWorkspaceHandler;
+use Drupal\workspaces\Form\WorkspaceActivateForm;
+use Drupal\workspaces\Form\WorkspaceDeleteForm;
+use Drupal\workspaces\Form\WorkspaceForm;
+use Drupal\workspaces\WorkspaceAccessControlHandler;
 use Drupal\workspaces\WorkspaceInterface;
+use Drupal\workspaces\WorkspaceListBuilder;
+use Drupal\workspaces\WorkspaceViewBuilder;
 
 /**
  * The workspace entity class.
@@ -30,21 +39,21 @@ use Drupal\workspaces\WorkspaceInterface;
     'owner' => 'uid',
   ],
   handlers: [
-    'list_builder' => '\Drupal\workspaces\WorkspaceListBuilder',
-    'view_builder' => 'Drupal\workspaces\WorkspaceViewBuilder',
-    'access' => 'Drupal\workspaces\WorkspaceAccessControlHandler',
-    'views_data' => 'Drupal\views\EntityViewsData',
+    'list_builder' => WorkspaceListBuilder::class,
+    'view_builder' => WorkspaceViewBuilder::class,
+    'access' => WorkspaceAccessControlHandler::class,
+    'views_data' => EntityViewsData::class,
     'route_provider' => [
-      'html' => '\Drupal\Core\Entity\Routing\AdminHtmlRouteProvider',
+      'html' => AdminHtmlRouteProvider::class,
     ],
     'form' => [
-      'default' => '\Drupal\workspaces\Form\WorkspaceForm',
-      'add' => '\Drupal\workspaces\Form\WorkspaceForm',
-      'edit' => '\Drupal\workspaces\Form\WorkspaceForm',
-      'delete' => '\Drupal\workspaces\Form\WorkspaceDeleteForm',
-      'activate' => '\Drupal\workspaces\Form\WorkspaceActivateForm',
+      'default' => WorkspaceForm::class,
+      'add' => WorkspaceForm::class,
+      'edit' => WorkspaceForm::class,
+      'delete' => WorkspaceDeleteForm::class,
+      'activate' => WorkspaceActivateForm::class,
     ],
-    'workspace' => '\Drupal\workspaces\Entity\Handler\IgnoredWorkspaceHandler',
+    'workspace' => IgnoredWorkspaceHandler::class,
   ],
   links: [
     'canonical' => '/admin/config/workflow/workspaces/manage/{workspace}',

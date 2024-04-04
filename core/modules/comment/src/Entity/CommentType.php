@@ -2,10 +2,14 @@
 
 namespace Drupal\comment\Entity;
 
+use Drupal\comment\CommentTypeForm;
+use Drupal\comment\CommentTypeListBuilder;
+use Drupal\comment\Form\CommentTypeDeleteForm;
 use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\comment\CommentTypeInterface;
+use Drupal\user\Entity\EntityPermissionsRouteProvider;
 
 /**
  * Defines the comment type entity.
@@ -22,15 +26,15 @@ use Drupal\comment\CommentTypeInterface;
   ],
   handlers: [
     'form' => [
-      'default' => 'Drupal\comment\CommentTypeForm',
-      'add' => 'Drupal\comment\CommentTypeForm',
-      'edit' => 'Drupal\comment\CommentTypeForm',
-      'delete' => 'Drupal\comment\Form\CommentTypeDeleteForm',
+      'default' => CommentTypeForm::class,
+      'add' => CommentTypeForm::class,
+      'edit' => CommentTypeForm::class,
+      'delete' => CommentTypeDeleteForm::class,
     ],
     'route_provider' => [
-      'permissions' => 'Drupal\user\Entity\EntityPermissionsRouteProvider',
+      'permissions' => EntityPermissionsRouteProvider::class,
     ],
-    'list_builder' => 'Drupal\comment\CommentTypeListBuilder',
+    'list_builder' => CommentTypeListBuilder::class,
   ],
   links: [
     'delete-form' => '/admin/structure/comment/manage/{comment_type}/delete',

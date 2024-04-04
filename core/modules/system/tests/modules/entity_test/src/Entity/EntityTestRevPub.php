@@ -14,6 +14,10 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityPublishedTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\entity_test\EntityTestAccessControlHandler;
+use Drupal\entity_test\EntityTestDeleteForm;
+use Drupal\entity_test\EntityTestForm;
+use Drupal\entity_test\EntityTestViewBuilder as TestViewBuilder;
 
 /**
  * Defines the test entity class.
@@ -31,11 +35,11 @@ use Drupal\Core\Entity\EntityTypeInterface;
     'published' => 'status',
   ],
   handlers: [
-    'access' => 'Drupal\entity_test\EntityTestAccessControlHandler',
-    'view_builder' => 'Drupal\entity_test\EntityTestViewBuilder',
+    'access' => EntityTestAccessControlHandler::class,
+    'view_builder' => TestViewBuilder::class,
     'form' => [
-      'default' => 'Drupal\entity_test\EntityTestForm',
-      'delete' => 'Drupal\entity_test\EntityTestDeleteForm',
+      'default' => EntityTestForm::class,
+      'delete' => EntityTestDeleteForm::class,
       'delete-multiple-confirm' => DeleteMultipleForm::class,
       'revision-delete' => RevisionDeleteForm::class,
       'revision-revert' => RevisionRevertForm::class,

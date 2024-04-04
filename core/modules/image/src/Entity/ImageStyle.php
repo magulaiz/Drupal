@@ -17,12 +17,18 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
+use Drupal\image\Form\ImageStyleAddForm;
+use Drupal\image\Form\ImageStyleDeleteForm;
+use Drupal\image\Form\ImageStyleEditForm;
+use Drupal\image\Form\ImageStyleFlushForm;
 use Drupal\image\ImageEffectPluginCollection;
 use Drupal\image\ImageEffectInterface;
 use Drupal\image\ImageStyleInterface;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
+use Drupal\image\ImageStyleListBuilder;
+use Drupal\image\ImageStyleStorage;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 
@@ -42,13 +48,13 @@ use Drupal\Core\Entity\Entity\EntityViewDisplay;
   ],
   handlers: [
     'form' => [
-      'add' => 'Drupal\image\Form\ImageStyleAddForm',
-      'edit' => 'Drupal\image\Form\ImageStyleEditForm',
-      'delete' => 'Drupal\image\Form\ImageStyleDeleteForm',
-      'flush' => 'Drupal\image\Form\ImageStyleFlushForm',
+      'add' => ImageStyleAddForm::class,
+      'edit' => ImageStyleEditForm::class,
+      'delete' => ImageStyleDeleteForm::class,
+      'flush' => ImageStyleFlushForm::class,
     ],
-    'list_builder' => 'Drupal\image\ImageStyleListBuilder',
-    'storage' => 'Drupal\image\ImageStyleStorage',
+    'list_builder' => ImageStyleListBuilder::class,
+    'storage' => ImageStyleStorage::class,
   ],
   links: [
     'flush-form' => '/admin/config/media/image-styles/manage/{image_style}/flush',

@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace Drupal\entity_test\Entity;
 
 use Drupal\Core\Entity\Attribute\ContentEntityType;
+use Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\entity_test\EntityTestAccessControlHandler;
+use Drupal\entity_test\EntityTestForm;
 use Drupal\entity_test\FieldStorageDefinition;
 
 /**
@@ -24,9 +27,9 @@ use Drupal\entity_test\FieldStorageDefinition;
     'langcode' => 'langcode',
   ],
   handlers: [
-    'access' => 'Drupal\entity_test\EntityTestAccessControlHandler',
-    'form' => ['default' => 'Drupal\entity_test\EntityTestForm'],
-    'route_provider' => ['html' => 'Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider'],
+    'access' => EntityTestAccessControlHandler::class,
+    'form' => ['default' => EntityTestForm::class],
+    'route_provider' => ['html' => DefaultHtmlRouteProvider::class],
   ],
   links: [
     'canonical' => '/entity_test_base_field_display/{entity_test_base_field_display}/edit',

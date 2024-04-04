@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Drupal\views_config_entity_test\Entity;
 
 use Drupal\Core\Entity\Attribute\ConfigEntityType;
+use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\views_config_entity_test\ViewsConfigEntityTestViewsData;
 
 /**
  * Defines a configuration-based entity type used for testing Views data.
@@ -20,8 +22,8 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
     'label' => 'name',
   ],
   handlers: [
-    'list_builder' => 'Drupal\Core\Entity\EntityListBuilder',
-    'views_data' => 'Drupal\views_config_entity_test\ViewsConfigEntityTestViewsData',
+    'list_builder' => EntityListBuilder::class,
+    'views_data' => ViewsConfigEntityTestViewsData::class,
   ],
   admin_permission: 'administer modules',
   config_export: [

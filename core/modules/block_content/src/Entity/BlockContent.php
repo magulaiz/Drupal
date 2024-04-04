@@ -2,10 +2,19 @@
 
 namespace Drupal\block_content\Entity;
 
+use Drupal\block_content\BlockContentAccessControlHandler;
+use Drupal\block_content\BlockContentForm;
+use Drupal\block_content\BlockContentListBuilder;
+use Drupal\block_content\BlockContentStorageSchema;
+use Drupal\block_content\BlockContentTranslationHandler;
+use Drupal\block_content\BlockContentViewBuilder;
+use Drupal\block_content\BlockContentViewsData;
+use Drupal\block_content\Form\BlockContentDeleteForm;
 use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider;
 use Drupal\Core\Entity\Form\RevisionRevertForm;
 use Drupal\Core\Entity\Form\RevisionDeleteForm;
+use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\block_content\Access\RefinableDependentAccessTrait;
 use Drupal\Core\Entity\EditorialContentEntityBase;
@@ -39,22 +48,22 @@ use Drupal\block_content\BlockContentInterface;
     'published' => 'status',
   ],
   handlers: [
-    'storage' => 'Drupal\Core\Entity\Sql\SqlContentEntityStorage',
-    'storage_schema' => 'Drupal\block_content\BlockContentStorageSchema',
-    'access' => 'Drupal\block_content\BlockContentAccessControlHandler',
-    'list_builder' => 'Drupal\block_content\BlockContentListBuilder',
-    'view_builder' => 'Drupal\block_content\BlockContentViewBuilder',
-    'views_data' => 'Drupal\block_content\BlockContentViewsData',
+    'storage' => SqlContentEntityStorage::class,
+    'storage_schema' => BlockContentStorageSchema::class,
+    'access' => BlockContentAccessControlHandler::class,
+    'list_builder' => BlockContentListBuilder::class,
+    'view_builder' => BlockContentViewBuilder::class,
+    'views_data' => BlockContentViewsData::class,
     'form' => [
-      'add' => 'Drupal\block_content\BlockContentForm',
-      'edit' => 'Drupal\block_content\BlockContentForm',
-      'delete' => 'Drupal\block_content\Form\BlockContentDeleteForm',
-      'default' => 'Drupal\block_content\BlockContentForm',
+      'add' => BlockContentForm::class,
+      'edit' => BlockContentForm::class,
+      'delete' => BlockContentDeleteForm::class,
+      'default' => BlockContentForm::class,
       'revision-delete' => RevisionDeleteForm::class,
       'revision-revert' => RevisionRevertForm::class,
     ],
     'route_provider' => ['revision' => RevisionHtmlRouteProvider::class],
-    'translation' => 'Drupal\block_content\BlockContentTranslationHandler',
+    'translation' => BlockContentTranslationHandler::class,
   ],
   links: [
     'canonical' => '/admin/content/block/{block_content}',

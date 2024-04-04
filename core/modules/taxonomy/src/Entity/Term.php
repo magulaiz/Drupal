@@ -3,6 +3,8 @@
 namespace Drupal\taxonomy\Entity;
 
 use Drupal\Core\Entity\Attribute\ContentEntityType;
+use Drupal\Core\Entity\EntityListBuilder;
+use Drupal\Core\Entity\EntityViewBuilder;
 use Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider;
 use Drupal\Core\Entity\Form\RevisionRevertForm;
 use Drupal\Core\Entity\Form\RevisionDeleteForm;
@@ -11,7 +13,14 @@ use Drupal\Core\Entity\EditorialContentEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\taxonomy\Form\TermDeleteForm;
+use Drupal\taxonomy\TermAccessControlHandler;
+use Drupal\taxonomy\TermForm;
 use Drupal\taxonomy\TermInterface;
+use Drupal\taxonomy\TermStorage;
+use Drupal\taxonomy\TermStorageSchema;
+use Drupal\taxonomy\TermTranslationHandler;
+use Drupal\taxonomy\TermViewsData;
 use Drupal\user\StatusItem;
 
 /**
@@ -33,22 +42,22 @@ use Drupal\user\StatusItem;
     'published' => 'status',
   ],
   handlers: [
-    'storage' => 'Drupal\taxonomy\TermStorage',
-    'storage_schema' => 'Drupal\taxonomy\TermStorageSchema',
-    'view_builder' => 'Drupal\Core\Entity\EntityViewBuilder',
-    'list_builder' => 'Drupal\Core\Entity\EntityListBuilder',
-    'access' => 'Drupal\taxonomy\TermAccessControlHandler',
-    'views_data' => 'Drupal\taxonomy\TermViewsData',
+    'storage' => TermStorage::class,
+    'storage_schema' => TermStorageSchema::class,
+    'view_builder' => EntityViewBuilder::class,
+    'list_builder' => EntityListBuilder::class,
+    'access' => TermAccessControlHandler::class,
+    'views_data' => TermViewsData::class,
     'form' => [
-      'default' => 'Drupal\taxonomy\TermForm',
-      'delete' => 'Drupal\taxonomy\Form\TermDeleteForm',
+      'default' => TermForm::class,
+      'delete' => TermDeleteForm::class,
       'revision-delete' => RevisionDeleteForm::class,
       'revision-revert' => RevisionRevertForm::class,
     ],
     'route_provider' => [
       'revision' => RevisionHtmlRouteProvider::class,
     ],
-    'translation' => 'Drupal\taxonomy\TermTranslationHandler',
+    'translation' => TermTranslationHandler::class,
   ],
   links: [
     'canonical' => '/taxonomy/term/{taxonomy_term}',

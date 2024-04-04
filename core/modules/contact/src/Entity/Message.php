@@ -2,7 +2,11 @@
 
 namespace Drupal\contact\Entity;
 
+use Drupal\contact\ContactMessageAccessControlHandler;
+use Drupal\contact\MessageForm;
+use Drupal\contact\MessageViewBuilder;
 use Drupal\Core\Entity\Attribute\ContentEntityType;
+use Drupal\Core\Entity\ContentEntityNullStorage;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\contact\MessageInterface;
@@ -24,10 +28,10 @@ use Drupal\Core\Field\BaseFieldDefinition;
     'langcode' => 'langcode',
   ],
   handlers: [
-    'access' => 'Drupal\contact\ContactMessageAccessControlHandler',
-    'storage' => 'Drupal\Core\Entity\ContentEntityNullStorage',
-    'view_builder' => 'Drupal\contact\MessageViewBuilder',
-    'form' => ['default' => 'Drupal\contact\MessageForm'],
+    'access' => ContactMessageAccessControlHandler::class,
+    'storage' => ContentEntityNullStorage::class,
+    'view_builder' => MessageViewBuilder::class,
+    'form' => ['default' => MessageForm::class],
   ],
   admin_permission: 'administer contact forms',
   bundle_entity_type: 'contact_form',

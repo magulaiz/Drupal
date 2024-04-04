@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\config_test\Entity;
 
+use Drupal\config_test\ConfigTestForm;
+use Drupal\config_test\ConfigTestStorage;
+use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
@@ -22,10 +25,10 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
     'label' => 'label',
   ],
   handlers: [
-    'storage' => 'Drupal\config_test\ConfigTestStorage',
-    'list_builder' => 'Drupal\Core\Config\Entity\ConfigEntityListBuilder',
+    'storage' => ConfigTestStorage::class,
+    'list_builder' => ConfigEntityListBuilder::class,
     'form' => [
-      'default' => 'Drupal\config_test\ConfigTestForm',
+      'default' => ConfigTestForm::class,
     ],
   ],
   config_export: [

@@ -7,6 +7,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
+use Drupal\editor\EditorAccessControlHandler;
 use Drupal\editor\EditorInterface;
 
 /**
@@ -27,7 +28,7 @@ use Drupal\editor\EditorInterface;
     'id' => 'format',
   ],
   handlers: [
-    'access' => 'Drupal\editor\EditorAccessControlHandler',
+    'access' => EditorAccessControlHandler::class,
   ],
   label_count: [
     'singular' => '@count text editor',

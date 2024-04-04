@@ -14,6 +14,11 @@ use Drupal\language\ConfigurableLanguageManager;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\Exception\DeleteDefaultLanguageException;
 use Drupal\language\ConfigurableLanguageInterface;
+use Drupal\language\Form\LanguageAddForm;
+use Drupal\language\Form\LanguageDeleteForm;
+use Drupal\language\Form\LanguageEditForm;
+use Drupal\language\LanguageAccessControlHandler;
+use Drupal\language\LanguageListBuilder;
 
 /**
  * Defines the ConfigurableLanguage entity.
@@ -30,12 +35,12 @@ use Drupal\language\ConfigurableLanguageInterface;
     'label' => 'label',
     'weight' => 'weight',
   ], handlers: [
-    'list_builder' => 'Drupal\language\LanguageListBuilder',
-    'access' => 'Drupal\language\LanguageAccessControlHandler',
+    'list_builder' => LanguageListBuilder::class,
+    'access' => LanguageAccessControlHandler::class,
     'form' => [
-      'add' => 'Drupal\language\Form\LanguageAddForm',
-      'edit' => 'Drupal\language\Form\LanguageEditForm',
-      'delete' => 'Drupal\language\Form\LanguageDeleteForm',
+      'add' => LanguageAddForm::class,
+      'edit' => LanguageEditForm::class,
+      'delete' => LanguageDeleteForm::class,
     ],
   ],
   links: [

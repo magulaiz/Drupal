@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Drupal\content_translation_test\Entity;
 
 use Drupal\Core\Entity\Attribute\ContentEntityType;
+use Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\entity_test\Entity\EntityTest;
+use Drupal\entity_test\EntityTestForm;
 
 /**
  * Defines the test entity class.
@@ -22,9 +24,9 @@ use Drupal\entity_test\Entity\EntityTest;
     'langcode' => 'langcode',
   ],
   handlers: [
-    'form' => ['default' => 'Drupal\entity_test\EntityTestForm'],
+    'form' => ['default' => EntityTestForm::class],
     'route_provider' => [
-      'html' => 'Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider',
+      'html' => DefaultHtmlRouteProvider::class,
     ],
   ],
   links: [

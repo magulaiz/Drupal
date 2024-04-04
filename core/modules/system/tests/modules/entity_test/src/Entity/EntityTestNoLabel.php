@@ -6,6 +6,7 @@ namespace Drupal\entity_test\Entity;
 
 use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\entity_test\EntityTestAccessControlHandler;
 
 /**
  * Test entity class.
@@ -20,7 +21,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
     'bundle' => 'type',
   ],
   handlers: [
-    'access' => 'Drupal\entity_test\EntityTestAccessControlHandler',
+    'access' => EntityTestAccessControlHandler::class,
   ],
   base_table: 'entity_test_no_label',
   internal: TRUE,

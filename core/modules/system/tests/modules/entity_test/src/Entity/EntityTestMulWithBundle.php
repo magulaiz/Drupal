@@ -4,8 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\entity_test\Entity;
 
+use Drupal\content_translation\ContentTranslationHandler;
 use Drupal\Core\Entity\Attribute\ContentEntityType;
+use Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\entity_test\EntityTestAccessControlHandler;
+use Drupal\entity_test\EntityTestDeleteForm;
+use Drupal\entity_test\EntityTestForm;
+use Drupal\entity_test\EntityTestViewBuilder as TestViewBuilder;
+use Drupal\views\EntityViewsData;
 
 /**
  * Defines the multilingual test entity class with bundles.
@@ -21,16 +28,16 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
     'langcode' => 'langcode',
   ],
   handlers: [
-    'view_builder' => 'Drupal\entity_test\EntityTestViewBuilder',
-    'access' => 'Drupal\entity_test\EntityTestAccessControlHandler',
+    'view_builder' => TestViewBuilder::class,
+    'access' => EntityTestAccessControlHandler::class,
     'form' => [
-      'default' => 'Drupal\entity_test\EntityTestForm',
-      'delete' => 'Drupal\entity_test\EntityTestDeleteForm',
+      'default' => EntityTestForm::class,
+      'delete' => EntityTestDeleteForm::class,
     ],
-    'translation' => 'Drupal\content_translation\ContentTranslationHandler',
-    'views_data' => 'Drupal\views\EntityViewsData',
+    'translation' => ContentTranslationHandler::class,
+    'views_data' => EntityViewsData::class,
     'route_provider' => [
-      'html' => 'Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider',
+      'html' => DefaultHtmlRouteProvider::class,
     ],
   ],
   links: [

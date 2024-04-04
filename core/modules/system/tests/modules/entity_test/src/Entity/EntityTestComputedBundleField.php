@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\entity_test\EntityTestViewsData;
 use Drupal\entity_test\FieldStorageDefinition;
 use Drupal\entity_test\Plugin\Field\ComputedReferenceTestFieldItemList;
 use Drupal\entity_test\Plugin\Field\ComputedTestBundleFieldItemList;
@@ -28,7 +29,7 @@ use Drupal\entity_test\Plugin\Field\ComputedTestFieldItemList;
     'bundle' => 'type',
   ],
   handlers: [
-    'views_data' => 'Drupal\entity_test\EntityTestViewsData',
+    'views_data' => EntityTestViewsData::class,
   ],
   admin_permission: 'administer entity_test content',
   base_table: 'entity_test_comp_bund_fld',

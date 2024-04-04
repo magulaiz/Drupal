@@ -5,8 +5,14 @@ declare(strict_types=1);
 namespace Drupal\entity_test\Entity;
 
 use Drupal\Core\Entity\Attribute\ContentEntityType;
+use Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\entity_test\EntityTestAccessControlHandler;
+use Drupal\entity_test\EntityTestDeleteForm;
+use Drupal\entity_test\EntityTestForm;
+use Drupal\entity_test\EntityTestViewBuilder as TestViewBuilder;
+use Drupal\views\EntityViewsData;
 
 /**
  * Defines the test entity class.
@@ -22,14 +28,14 @@ use Drupal\Core\Entity\EntityTypeInterface;
     'langcode' => 'langcode',
   ],
   handlers: [
-    'view_builder' => 'Drupal\entity_test\EntityTestViewBuilder',
-    'access' => 'Drupal\entity_test\EntityTestAccessControlHandler',
+    'view_builder' => TestViewBuilder::class,
+    'access' => EntityTestAccessControlHandler::class,
     'form' => [
-      'default' => 'Drupal\entity_test\EntityTestForm',
-      'delete' => 'Drupal\entity_test\EntityTestDeleteForm',
+      'default' => EntityTestForm::class,
+      'delete' => EntityTestDeleteForm::class,
     ],
-    'views_data' => 'Drupal\views\EntityViewsData',
-    'route_provider' => ['html' => 'Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider'],
+    'views_data' => EntityViewsData::class,
+    'route_provider' => ['html' => DefaultHtmlRouteProvider::class],
   ],
   links: [
     'add-page' => '/entity_test_mul/add',

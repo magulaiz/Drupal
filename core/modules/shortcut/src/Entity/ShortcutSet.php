@@ -6,7 +6,13 @@ use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\shortcut\Form\SetCustomize;
+use Drupal\shortcut\Form\ShortcutSetDeleteForm;
+use Drupal\shortcut\ShortcutSetAccessControlHandler;
+use Drupal\shortcut\ShortcutSetForm;
 use Drupal\shortcut\ShortcutSetInterface;
+use Drupal\shortcut\ShortcutSetListBuilder;
+use Drupal\shortcut\ShortcutSetStorage;
 
 /**
  * Defines the Shortcut set configuration entity.
@@ -22,15 +28,15 @@ use Drupal\shortcut\ShortcutSetInterface;
     'id' => 'id',
     'label' => 'label',
   ], handlers: [
-    'storage' => 'Drupal\shortcut\ShortcutSetStorage',
-    'access' => 'Drupal\shortcut\ShortcutSetAccessControlHandler',
-    'list_builder' => 'Drupal\shortcut\ShortcutSetListBuilder',
+    'storage' => ShortcutSetStorage::class,
+    'access' => ShortcutSetAccessControlHandler::class,
+    'list_builder' => ShortcutSetListBuilder::class,
     'form' => [
-      'default' => 'Drupal\shortcut\ShortcutSetForm',
-      'add' => 'Drupal\shortcut\ShortcutSetForm',
-      'edit' => 'Drupal\shortcut\ShortcutSetForm',
-      'customize' => 'Drupal\shortcut\Form\SetCustomize',
-      'delete' => 'Drupal\shortcut\Form\ShortcutSetDeleteForm',
+      'default' => ShortcutSetForm::class,
+      'add' => ShortcutSetForm::class,
+      'edit' => ShortcutSetForm::class,
+      'customize' => SetCustomize::class,
+      'delete' => ShortcutSetDeleteForm::class,
     ],
   ],
   links: [

@@ -14,6 +14,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\entity_test_revlog\EntityTestRevlogAccessControlHandler;
 
 /**
  * Defines the test entity class.
@@ -29,7 +30,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
     'label' => 'name',
   ],
   handlers: [
-    'access' => 'Drupal\entity_test_revlog\EntityTestRevlogAccessControlHandler',
+    'access' => EntityTestRevlogAccessControlHandler::class,
     'form' => [
       'default' => ContentEntityForm::class,
       'revision-delete' => RevisionDeleteForm::class,

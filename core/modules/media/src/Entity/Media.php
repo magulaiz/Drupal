@@ -3,6 +3,9 @@
 namespace Drupal\media\Entity;
 
 use Drupal\Core\Entity\Attribute\ContentEntityType;
+use Drupal\Core\Entity\ContentEntityDeleteForm;
+use Drupal\Core\Entity\EntityViewBuilder;
+use Drupal\Core\Entity\Form\DeleteMultipleForm;
 use Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider;
 use Drupal\Core\Entity\Form\RevisionRevertForm;
 use Drupal\Core\Entity\Form\RevisionDeleteForm;
@@ -12,9 +15,15 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\media\MediaAccessControlHandler;
+use Drupal\media\MediaForm;
 use Drupal\media\MediaInterface;
+use Drupal\media\MediaListBuilder;
 use Drupal\media\MediaSourceEntityConstraintsInterface;
 use Drupal\media\MediaSourceFieldConstraintsInterface;
+use Drupal\media\MediaStorage;
+use Drupal\media\MediaViewsData;
+use Drupal\media\Routing\MediaRouteProvider;
 use Drupal\user\EntityOwnerTrait;
 
 /**
@@ -39,22 +48,22 @@ use Drupal\user\EntityOwnerTrait;
     'owner' => 'uid',
   ],
   handlers: [
-    'storage' => 'Drupal\media\MediaStorage',
-    'view_builder' => 'Drupal\Core\Entity\EntityViewBuilder',
-    'list_builder' => 'Drupal\media\MediaListBuilder',
-    'access' => 'Drupal\media\MediaAccessControlHandler',
+    'storage' => MediaStorage::class,
+    'view_builder' => EntityViewBuilder::class,
+    'list_builder' => MediaListBuilder::class,
+    'access' => MediaAccessControlHandler::class,
     'form' => [
-      'default' => 'Drupal\media\MediaForm',
-      'add' => 'Drupal\media\MediaForm',
-      'edit' => 'Drupal\media\MediaForm',
-      'delete' => 'Drupal\Core\Entity\ContentEntityDeleteForm',
-      'delete-multiple-confirm' => 'Drupal\Core\Entity\Form\DeleteMultipleForm',
+      'default' => MediaForm::class,
+      'add' => MediaForm::class,
+      'edit' => MediaForm::class,
+      'delete' => ContentEntityDeleteForm::class,
+      'delete-multiple-confirm' => DeleteMultipleForm::class,
       'revision-delete' => RevisionDeleteForm::class,
       'revision-revert' => RevisionRevertForm::class,
     ],
-    'views_data' => 'Drupal\media\MediaViewsData',
+    'views_data' => MediaViewsData::class,
     'route_provider' => [
-      'html' => 'Drupal\media\Routing\MediaRouteProvider',
+      'html' => MediaRouteProvider::class,
       'revision' => RevisionHtmlRouteProvider::class,
     ],
   ],

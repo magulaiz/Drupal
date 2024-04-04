@@ -9,6 +9,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\entity_test\EntityTestViewsData;
 
 /**
  * Defines the test entity class.
@@ -22,7 +23,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
     'uuid' => 'uuid',
   ],
   handlers: [
-    'views_data' => 'Drupal\entity_test\EntityTestViewsData',
+    'views_data' => EntityTestViewsData::class,
   ],
   base_table: 'no_language_entity_test'
 )]

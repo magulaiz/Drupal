@@ -2,6 +2,8 @@
 
 namespace Drupal\content_moderation\Entity;
 
+use Drupal\content_moderation\ContentModerationStateAccessControlHandler;
+use Drupal\content_moderation\ContentModerationStateStorageSchema;
 use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\ContentEntityBase;
@@ -10,6 +12,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\user\EntityOwnerTrait;
+use Drupal\views\EntityViewsData;
 
 /**
  * Defines the Content moderation state entity.
@@ -34,9 +37,9 @@ use Drupal\user\EntityOwnerTrait;
     'langcode' => 'langcode',
   ],
   handlers: [
-    'storage_schema' => 'Drupal\content_moderation\ContentModerationStateStorageSchema',
-    'views_data' => '\Drupal\views\EntityViewsData',
-    'access' => 'Drupal\content_moderation\ContentModerationStateAccessControlHandler',
+    'storage_schema' => ContentModerationStateStorageSchema::class,
+    'views_data' => EntityViewsData::class,
+    'access' => ContentModerationStateAccessControlHandler::class,
   ],
   base_table: 'content_moderation_state',
   data_table: 'content_moderation_state_field_data',

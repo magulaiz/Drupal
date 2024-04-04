@@ -3,6 +3,7 @@
 namespace Drupal\Core\Entity\Entity;
 
 use Drupal\Core\Entity\Attribute\ConfigEntityType;
+use Drupal\Core\Entity\Entity\Access\EntityViewDisplayAccessControlHandler;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
@@ -27,7 +28,7 @@ use Drupal\Core\TypedData\TranslatableInterface as TranslatableDataInterface;
     'status' => 'status',
   ],
   handlers: [
-    'access' => '\Drupal\Core\Entity\Entity\Access\EntityViewDisplayAccessControlHandler',
+    'access' => EntityViewDisplayAccessControlHandler::class,
   ],
   constraints: [
     'ImmutableProperties' => [

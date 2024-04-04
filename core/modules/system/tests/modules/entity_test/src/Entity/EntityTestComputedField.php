@@ -8,6 +8,7 @@ use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\entity_test\EntityTestViewsData;
 use Drupal\entity_test\Plugin\Field\ComputedReferenceTestFieldItemList;
 use Drupal\entity_test\Plugin\Field\ComputedTestCacheableIntegerItemList;
 use Drupal\entity_test\Plugin\Field\ComputedTestCacheableStringItemList;
@@ -25,7 +26,7 @@ use Drupal\entity_test\Plugin\Field\ComputedTestFieldItemList;
     'label' => 'name',
   ],
   handlers: [
-    'views_data' => 'Drupal\entity_test\EntityTestViewsData',
+    'views_data' => EntityTestViewsData::class,
   ],
   links: [
     'canonical' => '/entity_test_computed_field/{entity_test_computed_field}',

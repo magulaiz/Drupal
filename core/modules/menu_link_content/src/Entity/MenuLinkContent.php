@@ -9,7 +9,13 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\link\LinkItemInterface;
+use Drupal\menu_link_content\Form\MenuLinkContentDeleteForm;
+use Drupal\menu_link_content\Form\MenuLinkContentForm;
+use Drupal\menu_link_content\MenuLinkContentAccessControlHandler;
 use Drupal\menu_link_content\MenuLinkContentInterface;
+use Drupal\menu_link_content\MenuLinkContentStorage;
+use Drupal\menu_link_content\MenuLinkContentStorageSchema;
+use Drupal\menu_link_content\MenuLinkListBuilder;
 
 /**
  * Defines the menu link content entity class.
@@ -33,14 +39,14 @@ use Drupal\menu_link_content\MenuLinkContentInterface;
     'published' => 'enabled',
   ],
   handlers: [
-    'storage' => '\Drupal\menu_link_content\MenuLinkContentStorage',
-    'storage_schema' => 'Drupal\menu_link_content\MenuLinkContentStorageSchema',
-    'access' => 'Drupal\menu_link_content\MenuLinkContentAccessControlHandler',
+    'storage' => MenuLinkContentStorage::class,
+    'storage_schema' => MenuLinkContentStorageSchema::class,
+    'access' => MenuLinkContentAccessControlHandler::class,
     'form' => [
-      'default' => 'Drupal\menu_link_content\Form\MenuLinkContentForm',
-      'delete' => 'Drupal\menu_link_content\Form\MenuLinkContentDeleteForm',
+      'default' => MenuLinkContentForm::class,
+      'delete' => MenuLinkContentDeleteForm::class,
     ],
-    'list_builder' => 'Drupal\menu_link_content\MenuLinkListBuilder',
+    'list_builder' => MenuLinkListBuilder::class,
   ],
   links: [
     'canonical' => '/admin/structure/menu/item/{menu_link_content}/edit',

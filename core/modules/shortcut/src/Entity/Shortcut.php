@@ -10,6 +10,9 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\link\LinkItemInterface;
+use Drupal\shortcut\Form\ShortcutDeleteForm;
+use Drupal\shortcut\ShortcutAccessControlHandler;
+use Drupal\shortcut\ShortcutForm;
 use Drupal\shortcut\ShortcutInterface;
 
 /**
@@ -31,12 +34,12 @@ use Drupal\shortcut\ShortcutInterface;
     'langcode' => 'langcode',
   ],
   handlers: [
-    'access' => 'Drupal\shortcut\ShortcutAccessControlHandler',
+    'access' => ShortcutAccessControlHandler::class,
     'form' => [
-      'default' => 'Drupal\shortcut\ShortcutForm',
-      'add' => 'Drupal\shortcut\ShortcutForm',
-      'edit' => 'Drupal\shortcut\ShortcutForm',
-      'delete' => 'Drupal\shortcut\Form\ShortcutDeleteForm',
+      'default' => ShortcutForm::class,
+      'add' => ShortcutForm::class,
+      'edit' => ShortcutForm::class,
+      'delete' => ShortcutDeleteForm::class,
     ],
   ],
   links: [

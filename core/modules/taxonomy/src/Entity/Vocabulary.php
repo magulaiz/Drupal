@@ -6,7 +6,16 @@ use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\taxonomy\Entity\Routing\VocabularyRouteProvider;
+use Drupal\taxonomy\Form\OverviewTerms;
+use Drupal\taxonomy\Form\VocabularyDeleteForm;
+use Drupal\taxonomy\Form\VocabularyResetForm;
+use Drupal\taxonomy\VocabularyAccessControlHandler;
+use Drupal\taxonomy\VocabularyForm;
 use Drupal\taxonomy\VocabularyInterface;
+use Drupal\taxonomy\VocabularyListBuilder;
+use Drupal\taxonomy\VocabularyStorage;
+use Drupal\user\Entity\EntityPermissionsRouteProvider;
 
 /**
  * Defines the taxonomy vocabulary entity.
@@ -24,18 +33,18 @@ use Drupal\taxonomy\VocabularyInterface;
     'weight' => 'weight',
   ],
   handlers: [
-    'storage' => 'Drupal\taxonomy\VocabularyStorage',
-    'list_builder' => 'Drupal\taxonomy\VocabularyListBuilder',
-    'access' => 'Drupal\taxonomy\VocabularyAccessControlHandler',
+    'storage' => VocabularyStorage::class,
+    'list_builder' => VocabularyListBuilder::class,
+    'access' => VocabularyAccessControlHandler::class,
     'form' => [
-      'default' => 'Drupal\taxonomy\VocabularyForm',
-      'reset' => 'Drupal\taxonomy\Form\VocabularyResetForm',
-      'delete' => 'Drupal\taxonomy\Form\VocabularyDeleteForm',
-      'overview' => 'Drupal\taxonomy\Form\OverviewTerms',
+      'default' => VocabularyForm::class,
+      'reset' => VocabularyResetForm::class,
+      'delete' => VocabularyDeleteForm::class,
+      'overview' => OverviewTerms::class,
     ],
     'route_provider' => [
-      'html' => 'Drupal\taxonomy\Entity\Routing\VocabularyRouteProvider',
-      'permissions' => 'Drupal\user\Entity\EntityPermissionsRouteProvider',
+      'html' => VocabularyRouteProvider::class,
+      'permissions' => EntityPermissionsRouteProvider::class,
     ],
   ],
   links: [

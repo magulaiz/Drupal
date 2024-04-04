@@ -6,6 +6,7 @@ namespace Drupal\entity_test\Entity;
 
 use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\EntityViewsData;
 
 /**
  * Test entity class with no bundle.
@@ -18,7 +19,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
     'revision' => 'revision_id',
   ],
   handlers: [
-    'views_data' => 'Drupal\views\EntityViewsData',
+    'views_data' => EntityViewsData::class,
   ],
   links: [
     'add-form' => '/entity_test_no_bundle/add',

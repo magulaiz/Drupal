@@ -7,6 +7,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Datetime\DateFormatInterface;
+use Drupal\system\DateFormatAccessControlHandler;
 
 /**
  * Defines the Date Format configuration entity class.
@@ -18,7 +19,7 @@ use Drupal\Core\Datetime\DateFormatInterface;
     'id' => 'id',
     'label' => 'label',
   ],
-  handlers: ['access' => 'Drupal\system\DateFormatAccessControlHandler'],
+  handlers: ['access' => DateFormatAccessControlHandler::class],
   admin_permission: 'administer site configuration',
   list_cache_tags: ['rendered'],
   config_export: [

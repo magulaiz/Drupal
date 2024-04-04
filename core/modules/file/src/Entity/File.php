@@ -3,6 +3,8 @@
 namespace Drupal\file\Entity;
 
 use Drupal\Core\Entity\Attribute\ContentEntityType;
+use Drupal\Core\Entity\ContentEntityDeleteForm;
+use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\ContentEntityBase;
@@ -11,7 +13,11 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\File\Exception\FileException;
+use Drupal\file\FileAccessControlHandler;
 use Drupal\file\FileInterface;
+use Drupal\file\FileStorage;
+use Drupal\file\FileStorageSchema;
+use Drupal\file\FileViewsData;
 use Drupal\user\EntityOwnerTrait;
 
 /**
@@ -33,13 +39,13 @@ use Drupal\user\EntityOwnerTrait;
     'owner' => 'uid',
   ],
   handlers: [
-    'storage' => 'Drupal\file\FileStorage',
-    'storage_schema' => 'Drupal\file\FileStorageSchema',
-    'access' => 'Drupal\file\FileAccessControlHandler',
-    'views_data' => 'Drupal\file\FileViewsData',
-    'list_builder' => 'Drupal\Core\Entity\EntityListBuilder',
-    'form' => ['delete' => 'Drupal\Core\Entity\ContentEntityDeleteForm'],
-    'route_provider' => ['html' => 'Drupal\file\Entity\FileRouteProvider'],
+    'storage' => FileStorage::class,
+    'storage_schema' => FileStorageSchema::class,
+    'access' => FileAccessControlHandler::class,
+    'views_data' => FileViewsData::class,
+    'list_builder' => EntityListBuilder::class,
+    'form' => ['delete' => ContentEntityDeleteForm::class],
+    'route_provider' => ['html' => FileRouteProvider::class],
   ],
   links: [
     'delete-form' => '/file/{file}/delete',

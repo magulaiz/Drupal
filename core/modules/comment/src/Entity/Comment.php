@@ -2,7 +2,16 @@
 
 namespace Drupal\comment\Entity;
 
+use Drupal\comment\CommentAccessControlHandler;
+use Drupal\comment\CommentForm;
+use Drupal\comment\CommentStorage;
+use Drupal\comment\CommentStorageSchema;
+use Drupal\comment\CommentTranslationHandler;
+use Drupal\comment\CommentViewBuilder;
+use Drupal\comment\CommentViewsData;
+use Drupal\comment\Form\DeleteForm;
 use Drupal\Core\Entity\Attribute\ContentEntityType;
+use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Component\Utility\Number;
 use Drupal\Core\Cache\Cache;
@@ -35,17 +44,17 @@ use Drupal\user\EntityOwnerTrait;
     'owner' => 'uid',
   ],
   handlers: [
-    'storage' => 'Drupal\comment\CommentStorage',
-    'storage_schema' => 'Drupal\comment\CommentStorageSchema',
-    'access' => 'Drupal\comment\CommentAccessControlHandler',
-    'list_builder' => 'Drupal\Core\Entity\EntityListBuilder',
-    'view_builder' => 'Drupal\comment\CommentViewBuilder',
-    'views_data' => 'Drupal\comment\CommentViewsData',
+    'storage' => CommentStorage::class,
+    'storage_schema' => CommentStorageSchema::class,
+    'access' => CommentAccessControlHandler::class,
+    'list_builder' => EntityListBuilder::class,
+    'view_builder' => CommentViewBuilder::class,
+    'views_data' => CommentViewsData::class,
     'form' => [
-      'default' => 'Drupal\comment\CommentForm',
-      'delete' => 'Drupal\comment\Form\DeleteForm',
+      'default' => CommentForm::class,
+      'delete' => DeleteForm::class,
     ],
-    'translation' => 'Drupal\comment\CommentTranslationHandler',
+    'translation' => CommentTranslationHandler::class,
   ],
   links: [
     'canonical' => '/comment/{comment}',

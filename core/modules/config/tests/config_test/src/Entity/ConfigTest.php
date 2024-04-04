@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\config_test\Entity;
 
-use Drupal\Core\Config\Action\Attribute\ActionMethod;
-use Drupal\Core\Entity\Attribute\ConfigEntityType;
-use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\config_test\ConfigTestAccessControlHandler;
+use Drupal\config_test\ConfigTestForm;
 use Drupal\config_test\ConfigTestInterface;
+use Drupal\config_test\ConfigTestListBuilder;
+use Drupal\config_test\ConfigTestStorage;
+use Drupal\Core\Config\Action\Attribute\ActionMethod;
+use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Entity\Attribute\ConfigEntityType;
+use Drupal\Core\Entity\EntityDeleteForm;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
@@ -25,13 +30,13 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
     'status' => 'status',
   ],
   handlers: [
-    'storage' => 'Drupal\config_test\ConfigTestStorage',
-    'list_builder' => 'Drupal\config_test\ConfigTestListBuilder',
+    'storage' => ConfigTestStorage::class,
+    'list_builder' => ConfigTestListBuilder::class,
     'form' => [
-      'default' => 'Drupal\config_test\ConfigTestForm',
-      'delete' => 'Drupal\Core\Entity\EntityDeleteForm',
+      'default' => ConfigTestForm::class,
+      'delete' => EntityDeleteForm::class,
     ],
-    'access' => 'Drupal\config_test\ConfigTestAccessControlHandler',
+    'access' => ConfigTestAccessControlHandler::class,
   ],
   links: [
     'edit-form' => '/admin/structure/config_test/manage/{config_test}',

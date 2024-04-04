@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\entity_test\Entity;
 
 use Drupal\Core\Entity\Attribute\ContentEntityType;
+use Drupal\Core\Entity\ContentEntityNullStorage;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
@@ -17,7 +18,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
     'bundle' => 'type',
   ],
   handlers: [
-    'storage' => 'Drupal\Core\Entity\ContentEntityNullStorage',
+    'storage' => ContentEntityNullStorage::class,
   ],
   links: [
     'add-form' => '/entity_test_no_id/add',

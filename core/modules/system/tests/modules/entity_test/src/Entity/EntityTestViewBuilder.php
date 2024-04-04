@@ -6,6 +6,8 @@ namespace Drupal\entity_test\Entity;
 
 use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\entity_test\EntityTestAccessControlHandler;
+use Drupal\entity_test\EntityTestViewBuilderOverriddenView;
 
 /**
  * Test entity class for testing a view builder.
@@ -22,8 +24,8 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
     'langcode' => 'langcode',
   ],
   handlers: [
-    'access' => 'Drupal\entity_test\EntityTestAccessControlHandler',
-    'view_builder' => 'Drupal\entity_test\EntityTestViewBuilderOverriddenView',
+    'access' => EntityTestAccessControlHandler::class,
+    'view_builder' => EntityTestViewBuilderOverriddenView::class,
   ],
   base_table: 'entity_test_view_builder',
 )]

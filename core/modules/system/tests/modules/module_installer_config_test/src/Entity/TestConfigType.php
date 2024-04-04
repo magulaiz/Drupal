@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\module_installer_config_test\Entity;
 
 use Drupal\Core\Entity\Attribute\ConfigEntityType;
+use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 
@@ -20,7 +21,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
     'label' => 'name',
   ],
   handlers: [
-    'list_builder' => 'Drupal\Core\Entity\EntityListBuilder',
+    'list_builder' => EntityListBuilder::class,
   ],
   admin_permission: 'administer modules',
   config_export: [

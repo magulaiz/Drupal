@@ -2,12 +2,17 @@
 
 namespace Drupal\contact\Entity;
 
+use Drupal\contact\ContactFormAccessControlHandler;
+use Drupal\contact\ContactFormEditForm;
+use Drupal\contact\ContactFormInterface;
+use Drupal\contact\ContactFormListBuilder;
 use Drupal\Core\Config\Action\Attribute\ActionMethod;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\Attribute\ConfigEntityType;
-use Drupal\contact\ContactFormInterface;
+use Drupal\Core\Entity\EntityDeleteForm;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
+use Drupal\user\Entity\EntityPermissionsRouteProvider;
 
 /**
  * Defines the contact form entity.
@@ -24,14 +29,14 @@ use Drupal\Core\Url;
     'label' => 'label',
   ],
   handlers: [
-    'access' => 'Drupal\contact\ContactFormAccessControlHandler',
-    'list_builder' => 'Drupal\contact\ContactFormListBuilder',
+    'access' => ContactFormAccessControlHandler::class,
+    'list_builder' => ContactFormListBuilder::class,
     'form' => [
-      'add' => 'Drupal\contact\ContactFormEditForm',
-      'edit' => 'Drupal\contact\ContactFormEditForm',
-      'delete' => 'Drupal\Core\Entity\EntityDeleteForm',
+      'add' => ContactFormEditForm::class,
+      'edit' => ContactFormEditForm::class,
+      'delete' => EntityDeleteForm::class,
     ],
-    'route_provider' => ['permissions' => 'Drupal\user\Entity\EntityPermissionsRouteProvider'],
+    'route_provider' => ['permissions' => EntityPermissionsRouteProvider::class],
   ],
   links: [
     'delete-form' => '/admin/structure/contact/manage/{contact_form}/delete',
