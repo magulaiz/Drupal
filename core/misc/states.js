@@ -694,19 +694,13 @@
     const tagsSupportDisable =
       'button, fieldset, optgroup, option, select, textarea, input';
     if (e.trigger) {
+      // eslint-disable-next-line jquery/no-class
       $(e.target)
         .closest('.js-form-item, .js-form-submit, .js-form-wrapper')
         .toggleClass('form-disabled', e.value)
         .find(tagsSupportDisable)
         .addBack(tagsSupportDisable)
         .prop('disabled', e.value);
-
-      $(e.target)
-        .closest('.js-form-item, .js-form-submit, .js-form-wrapper')
-        .toArray()
-        .forEach((element) => {
-          element.classList.toggle('form-disabled', e.value);
-        });
     }
   });
 

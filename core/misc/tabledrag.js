@@ -514,7 +514,7 @@
     // Create the handle.
     const $handle = $(Drupal.theme('tableDragHandle', this.dragOrientation));
     if (this.dragOrientation === 'drag-y') {
-      $handle.addClass('tabledrag-handle-y');
+      $handle[0].classList.add('tabledrag-handle-y');
     }
     // Insert the handle after indentations (if any).
     const $indentationLast = $item
