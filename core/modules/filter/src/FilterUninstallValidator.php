@@ -59,7 +59,7 @@ class FilterUninstallValidator implements ModuleUninstallValidatorInterface {
         $filters = $filter_format->filters();
         foreach ($filter_plugins as $filter_plugin) {
           if ($filters->has($filter_plugin['id']) && $filters->get($filter_plugin['id'])->status) {
-            $used_in[] = Link::createFromRoute($filter_format->label(), 'entity.filter_format.edit_form', ['filter_format' => $filter_format->id()]);
+            $used_in[] = Link::createFromRoute($filter_format->label(), 'entity.filter_format.edit_form', ['filter_format' => $filter_format->id()])->toString();
             break;
           }
         }
