@@ -426,19 +426,19 @@ class FieldConfigEditForm extends EntityForm {
       // See \Drupal\field_ui\Form\FieldStorageAddForm::submitForm() for context
       // of retrieval.
       $existing_values = $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->tempStore->get('temp_name'))['field_config_values'] ?: $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName())['field_config_values'];
+      // Fetch field_storage entity.
+      $field_storage = $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->tempStore->get('temp_name'))['field_storage'];
+      // Update the field_name.
+      $field_storage = $field_storage->set('field_name', $form_state->getValue('field_name'));
+      // Start building the new entity.
       $new_entity_values = $existing_values;
+      $new_entity_values['field_storage'] = $field_storage;
       $new_entity_values['field_name'] = $form_state->getValue('field_name');
-      // Make field storage translatable as we are fetching field_config_values
-      // and not field_storage values.
-      $new_entity_values['translatable'] = TRUE;
       $new_entity_values['type'] = $this->entity->getType();
       unset($new_entity_values['label']);
-      $new_entity_values['field_storage'] = $this->entityTypeManager->getStorage('field_storage_config')->create($new_entity_values);
       // Delete temporary entity and create a new field instance as machine name
       // is immutable.
       $this->entity->delete();
-      // We don't want the field instance to be translatable by default.
-      $new_entity_values['translatable'] = FALSE;
       $this->entity = $this->entityTypeManager->getStorage('field_config')->create($new_entity_values);
       $this->copyFormValuesToEntity($this->entity, $form, $form_state);
     }
