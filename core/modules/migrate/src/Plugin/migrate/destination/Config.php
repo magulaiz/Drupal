@@ -4,7 +4,6 @@ namespace Drupal\migrate\Plugin\migrate\destination;
 
 use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Config\Schema\ArrayElement;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Entity\DependencyTrait;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -149,7 +148,7 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface,
     // Ensure that translatable config has `langcode` specified.
     // @see \Drupal\Core\Config\Plugin\Validation\Constraint\LangcodeRequiredIfTranslatableValuesConstraint
     if ($this->typedConfigManager->hasConfigSchema($name)
-      && self::containsTranslatableValue($this->typedConfigManager->createFromNameAndData($name, $this->config->getRawData()))
+      && $this->typedConfigManager->createFromNameAndData($name, $this->config->getRawData())->hasTranslatableElements()
       && !$this->config->get('langcode')
     ) {
       $this->config->set('langcode', $this->language_manager->getDefaultLanguage()->getId());
@@ -160,23 +159,6 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface,
       $ids[] = $row->getDestinationProperty('langcode');
     }
     return $ids;
-  }
-
-  private static function containsTranslatableValue(ArrayElement $elements): bool {
-    foreach ($elements as $element) {
-      // Early return if found.
-      if ($element->getDataDefinition()['translatable'] === TRUE) {
-        return TRUE;
-      }
-      if ($element instanceof ArrayElement) {
-        $is_translatable = self::containsTranslatableValue($element);
-        // Early return if found.
-        if ($is_translatable) {
-          return TRUE;
-        }
-      }
-    }
-    return FALSE;
   }
 
   /**
