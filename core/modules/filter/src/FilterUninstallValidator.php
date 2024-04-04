@@ -6,6 +6,7 @@ use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleUninstallValidatorInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 
@@ -65,7 +66,7 @@ class FilterUninstallValidator implements ModuleUninstallValidatorInterface {
         }
       }
       if (!empty($used_in)) {
-        $reasons[] = $this->t('Provides a filter plugin that is in use in the following text formats: %formats', ['%formats' => implode(', ', $used_in)]);
+        $reasons[] = $this->t('Provides a filter plugin that is in use in the following text formats: %formats', ['%formats' => Markup::create(implode(', ', $used_in))]);
       }
     }
     return $reasons;
