@@ -419,6 +419,10 @@ class UserController extends ControllerBase {
       if (!$token || !$this->csrfToken->validate($token, 'user/logout')) {
         return $this->formBuilder()->getForm(UserLogoutConfirm::class);
       }
+      else {
+        // If there is a valid token, log the user out.
+        user_logout();
+      }
     }
     return $this->redirect('<front>');
   }
