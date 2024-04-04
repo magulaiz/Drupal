@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
-use Drupal\Core\Config\Schema\ArrayElement;
 use Drupal\Core\Config\Schema\Mapping;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -29,7 +28,7 @@ final class LangcodeRequiredIfTranslatableValuesConstraintValidator extends Cons
     assert($mapping instanceof Mapping);
     assert(in_array('langcode', $mapping->getValidKeys(), TRUE));
 
-    $is_translatable = self::containsTranslatableValue($mapping);
+    $is_translatable = $mapping->hasTranslatableElements();
 
     if ($is_translatable && !array_key_exists('langcode', $value)) {
       $this->context->buildViolation($constraint->missingMessage)
@@ -43,27 +42,6 @@ final class LangcodeRequiredIfTranslatableValuesConstraintValidator extends Cons
       // $this->context->buildViolation($constraint->superfluousMessage)->addViolation();
       // phpcs:enable
     }
-  }
-
-  /**
-   * Determines if there is a translatable value.
-   * @param ArrayElement $elements
-   *  The elements to check.
-   *
-   * @return bool
-   *  Returns true if translatable element is found.
-   */
-  private static function containsTranslatableValue(ArrayElement $elements): bool {
-    foreach ($elements as $element) {
-      // Early return if found.
-      if ($element->getDataDefinition()['translatable'] === TRUE) {
-        return TRUE;
-      }
-      if ($element instanceof ArrayElement && self::containsTranslatableValue($element)) {
-        return TRUE;
-      }
-    }
-    return FALSE;
   }
 
 }

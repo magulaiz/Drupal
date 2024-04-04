@@ -6,6 +6,8 @@
  */
 
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
+use Drupal\Core\Config\Schema\Mapping;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityFormModeInterface;
 use Drupal\Core\Entity\EntityViewModeInterface;
@@ -230,5 +232,34 @@ function system_post_update_set_cron_logging_setting_to_boolean(): void {
 function system_post_update_sdc_uninstall() {
   if (\Drupal::moduleHandler()->moduleExists('sdc')) {
     \Drupal::service('module_installer')->uninstall(['sdc'], FALSE);
+  }
+}
+
+/**
+ * Adds a langcode to all simple config which needs it.
+ */
+function system_post_update_add_langcode_to_all_translatable_config(): void {
+  $list = \Drupal::configFactory()->listAll();
+  foreach ($list as $name) {
+    $config = \Drupal::configFactory()->getEditable($name);
+
+    /** @var \Drupal\Core\TypedData\TypedDataInterface $typed_config */
+    $typed_config = \Drupal::service(TypedConfigManagerInterface::class)
+      ->createFromNameAndData($name, $config->getRawData());
+
+    // We only want to deal with simple config, which has the `config_object`
+    // schema type.
+    if ($typed_config->getDataDefinition()->getDataType() !== 'config_object') {
+      continue;
+    }
+
+    // Simple config is always a mapping.
+    assert($typed_config instanceof Mapping);
+    // If this config contains any elements (at any level of nesting) which
+    // are translatable, but the config hasn't got a langcode, assign one.
+    if ($typed_config->hasTranslatableElements() && empty($config->get('langcode'))) {
+      $config->set('langcode', \Drupal::languageManager()->getDefaultLanguage()->getId())
+        ->save();
+    }
   }
 }
