@@ -17,7 +17,7 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\Token;
-use Drupal\media\Attribute\MediaSource;
+use Drupal\media\Attribute\OEmbedMediaSource;
 use Drupal\media\IFrameUrlHelper;
 use Drupal\media\OEmbed\Resource;
 use Drupal\media\OEmbed\ResourceException;
@@ -68,7 +68,7 @@ use Symfony\Component\Mime\MimeTypes;
  * create media types which use the "Artwork" source plugin, and use those media
  * types to link to assets on Deviantart and Flickr.
  */
-#[MediaSource(
+#[OEmbedMediaSource(
   id: "oembed",
   label: new TranslatableMarkup("oEmbed source"),
   description: new TranslatableMarkup("Use oEmbed URL for reusable media."),
