@@ -6,6 +6,7 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\user\Form\UserLogoutConfirm;
 use Drupal\views\Form\ViewsExposedForm;
 use Drupal\workspaces\Form\WorkspaceFormInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -80,7 +81,8 @@ class FormOperations implements ContainerInjectionInterface {
     $is_workspace_form = $form_object instanceof WorkspaceFormInterface;
     $is_search_form = in_array($form_object->getFormId(), ['search_block_form', 'search_form'], TRUE);
     $is_views_exposed_form = $form_object instanceof ViewsExposedForm;
-    if ($is_workspace_form || $is_search_form || $is_views_exposed_form) {
+    $is_logout_confirm_form = $form_object instanceof UserLogoutConfirm;
+    if ($is_workspace_form || $is_search_form || $is_views_exposed_form || $is_logout_confirm_form) {
       $workspace_safe = TRUE;
     }
 
