@@ -28,15 +28,14 @@ class UserLogoutTest extends BrowserTestBase {
    */
   protected function setUp() : void {
     parent::setUp();
-
     $this->placeBlock('system_menu_block:account');
   }
 
   /**
    * Tests user logout functionality.
    */
-  public function testLogout() {
-    $account = $this->createUser([]);
+  public function testLogout(): void {
+    $account = $this->createUser();
     $this->drupalLogin($account);
 
     // Test invalid csrf token.

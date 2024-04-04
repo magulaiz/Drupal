@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\user\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
@@ -51,7 +53,6 @@ class UserLogoutConfirm extends ConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     user_logout();
-
     $form_state->setRedirect('<front>');
   }
 
