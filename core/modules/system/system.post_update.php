@@ -239,20 +239,24 @@ function system_post_update_sdc_uninstall() {
  * Adds a langcode to all simple config which needs it.
  */
 function system_post_update_add_langcode_to_all_translatable_config(): void {
+  /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config_manager */
+  $typed_config_manager = \Drupal::service(TypedConfigManagerInterface::class);
+
   $list = \Drupal::configFactory()->listAll();
   foreach ($list as $name) {
-    $config = \Drupal::configFactory()->getEditable($name);
+    // If this config object has no schema, we can't do anything useful here.
+    if (!$typed_config_manager->hasConfigSchema($name)) {
+      continue;
+    }
 
-    /** @var \Drupal\Core\TypedData\TypedDataInterface $typed_config */
-    $typed_config = \Drupal::service(TypedConfigManagerInterface::class)
-      ->createFromNameAndData($name, $config->getRawData());
+    $config = \Drupal::configFactory()->getEditable($name);
+    $typed_config = $typed_config_manager->createFromNameAndData($name, $config->getRawData());
 
     // We only want to deal with simple config, which has the `config_object`
     // schema type.
     if ($typed_config->getDataDefinition()->getDataType() !== 'config_object') {
       continue;
     }
-
     // Simple config is always a mapping.
     assert($typed_config instanceof Mapping);
     // If this config contains any elements (at any level of nesting) which
