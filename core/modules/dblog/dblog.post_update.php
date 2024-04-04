@@ -6,15 +6,9 @@
  */
 
 /**
- * Ensures the `dblog.settings` config has a langcode.
+ * Not used.
  */
 function dblog_post_update_add_langcode_to_settings(): void {
-  $config = \Drupal::configFactory()->getEditable('dblog.settings');
-  if ($config->get('langcode')) {
-    return;
-  }
-  $config->set('langcode', \Drupal::languageManager()->getDefaultLanguage()->getId())
-    ->save();
 }
 
 /**
