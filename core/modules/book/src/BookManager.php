@@ -218,78 +218,111 @@ class BookManager implements BookManagerInterface {
     if ($form_state->hasValue('book')) {
       $node->book = $form_state->getValue('book');
     }
-    $form['book'] = [
-      '#type' => 'details',
-      '#title' => $this->t('Book outline'),
-      '#weight' => 10,
-      '#open' => !$collapsed,
-      '#group' => 'advanced',
-      '#attributes' => [
-        'class' => ['book-outline-form'],
-      ],
-      '#attached' => [
-        'library' => ['book/drupal.book'],
-      ],
-      '#tree' => TRUE,
-    ];
-    foreach (['nid', 'has_children', 'original_bid', 'parent_depth_limit'] as $key) {
-      $form['book'][$key] = [
-        '#type' => 'value',
-        '#value' => $node->book[$key],
+
+    $config = \Drupal::configFactory()->getEditable('book.settings');
+    $allowed_types = $config->get('allowed_types');
+
+    if (in_array($node->getType(), $allowed_types)) {
+      $form['book'] = [
+        '#type' => 'details',
+        '#title' => $this->t('Book outline'),
+        '#weight' => 10,
+        '#open' => !$collapsed,
+        '#group' => 'advanced',
+        '#attributes' => [
+          'class' => ['book-outline-form'],
+        ],
+        '#attached' => [
+          'library' => ['book/drupal.book'],
+        ],
+        '#tree' => TRUE,
+      ];
+
+      foreach (['nid', 'has_children', 'original_bid', 'parent_depth_limit'] as $key) {
+        $form['book'][$key] = [
+          '#type' => 'value',
+          '#value' => $node->book[$key],
+        ];
+      }
+
+      $form['book']['pid'] = $this->addParentSelectFormElements($node->book);
+
+      // @see \Drupal\book\Form\BookAdminEditForm::bookAdminTableTree(). The
+      // weight may be larger than 15.
+      $form['book']['weight'] = [
+        '#type' => 'weight',
+        '#title' => $this->t('Weight'),
+        '#default_value' => $node->book['weight'],
+        '#delta' => max(15, abs($node->book['weight'])),
+        '#weight' => 5,
+        '#description' => $this->t('Pages at a given level are ordered first by weight and then by title.'),
+      ];
+      $options = [];
+      $nid = !$node->isNew() ? $node->id() : 'new';
+      if ($node->id() && ($nid == $node->book['original_bid']) && ($node->book['parent_depth_limit'] == 0)) {
+        // This is the top level node in a maximum depth book and thus cannot be
+        // moved.
+        $options[$node->id()] = $node->label();
+      }
+      else {
+        foreach ($this->getAllBooks() as $book) {
+          $options[$book['nid']] = $book['title'];
+        }
+      }
+      $form['book']['pid'] = $this->addParentSelectFormElements($node->book);
+
+      // @see \Drupal\book\Form\BookAdminEditForm::bookAdminTableTree(). The
+      // weight may be larger than 15.
+      $form['book']['weight'] = [
+        '#type' => 'weight',
+        '#title' => $this->t('Weight'),
+        '#default_value' => $node->book['weight'],
+        '#delta' => max(15, abs($node->book['weight'])),
+        '#weight' => 5,
+        '#description' => $this->t('Pages at a given level are ordered first by weight and then by title.'),
+      ];
+      $options = [];
+      $nid = !$node->isNew() ? $node->id() : 'new';
+
+      if ($node->id() && ($nid == $node->book['original_bid']) && ($node->book['parent_depth_limit'] == 0)) {
+        // This is the top level node in a maximum depth book and thus cannot be
+        // moved.
+        $options[$node->id()] = $node->label();
+      }
+      else {
+        foreach ($this->getAllBooks() as $book) {
+          $options[$book['nid']] = $book['title'];
+        }
+      }
+
+      if ($account->hasPermission('create new books') && ($nid == 'new' || ($nid != $node->book['original_bid']))) {
+        // The node can become a new book, if it is not one already.
+        $options = [$nid => $this->t('- Create a new book -')] + $options;
+      }
+      if (!$node->book['bid'] || $nid === 'new' || $node->book['original_bid'] === 0) {
+        // The node is not currently in the hierarchy.
+        $options = [0 => $this->t('- None -')] + $options;
+      }
+
+      // Add a drop-down to select the destination book.
+      $form['book']['bid'] = [
+        '#type' => 'select',
+        '#title' => $this->t('Book'),
+        '#default_value' => $node->book['bid'],
+        '#options' => $options,
+        '#access' => (bool) $options,
+        '#description' => $this->t('Your page will be a part of the selected book.'),
+        '#weight' => -5,
+        '#attributes' => ['class' => ['book-title-select']],
+        '#ajax' => [
+          'callback' => 'book_form_update',
+          'wrapper' => 'edit-book-plid-wrapper',
+          'effect' => 'fade',
+          'speed' => 'fast',
+        ],
       ];
     }
 
-    $form['book']['pid'] = $this->addParentSelectFormElements($node->book);
-
-    // @see \Drupal\book\Form\BookAdminEditForm::bookAdminTableTree(). The
-    // weight may be larger than 15.
-    $form['book']['weight'] = [
-      '#type' => 'weight',
-      '#title' => $this->t('Weight'),
-      '#default_value' => $node->book['weight'],
-      '#delta' => max(15, abs($node->book['weight'])),
-      '#weight' => 5,
-      '#description' => $this->t('Pages at a given level are ordered first by weight and then by title.'),
-    ];
-    $options = [];
-    $nid = !$node->isNew() ? $node->id() : 'new';
-    if ($node->id() && ($nid == $node->book['original_bid']) && ($node->book['parent_depth_limit'] == 0)) {
-      // This is the top level node in a maximum depth book and thus cannot be
-      // moved.
-      $options[$node->id()] = $node->label();
-    }
-    else {
-      foreach ($this->getAllBooks() as $book) {
-        $options[$book['nid']] = $book['title'];
-      }
-    }
-
-    if ($account->hasPermission('create new books') && ($nid == 'new' || ($nid != $node->book['original_bid']))) {
-      // The node can become a new book, if it is not one already.
-      $options = [$nid => $this->t('- Create a new book -')] + $options;
-    }
-    if (!$node->book['bid'] || $nid === 'new' || $node->book['original_bid'] === 0) {
-      // The node is not currently in the hierarchy.
-      $options = [0 => $this->t('- None -')] + $options;
-    }
-
-    // Add a drop-down to select the destination book.
-    $form['book']['bid'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Book'),
-      '#default_value' => $node->book['bid'],
-      '#options' => $options,
-      '#access' => (bool) $options,
-      '#description' => $this->t('Your page will be a part of the selected book.'),
-      '#weight' => -5,
-      '#attributes' => ['class' => ['book-title-select']],
-      '#ajax' => [
-        'callback' => 'book_form_update',
-        'wrapper' => 'edit-book-plid-wrapper',
-        'effect' => 'fade',
-        'speed' => 'fast',
-      ],
-    ];
     return $form;
   }
 
