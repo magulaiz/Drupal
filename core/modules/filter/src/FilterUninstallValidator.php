@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleUninstallValidatorInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Core\Url;
 
 /**
  * Prevents uninstallation of modules providing used filter plugins.
@@ -58,13 +59,13 @@ class FilterUninstallValidator implements ModuleUninstallValidatorInterface {
         $filters = $filter_format->filters();
         foreach ($filter_plugins as $filter_plugin) {
           if ($filters->has($filter_plugin['id']) && $filters->get($filter_plugin['id'])->status) {
-            $used_in[] = $filter_format->label();
+            $used_in[] = $filter_format->label() . ' (<a href="' . Url::fromRoute('entity.filter_format.edit_form', ['filter_format' => $filter_format->id()]) . '>' . $this->t('configure') . ')</a>';
             break;
           }
         }
       }
       if (!empty($used_in)) {
-        $reasons[] = $this->t('Provides a filter plugin that is in use in the following filter formats: %formats', ['%formats' => implode(', ', $used_in)]);
+        $reasons[] = $this->t('Provides a filter plugin that is in use in the following text formats: %formats', ['%formats' => implode(', ', $used_in)]);
       }
     }
     return $reasons;
