@@ -39,7 +39,7 @@ class ConfigTest extends UnitTestCase {
     }
     $config->expects($this->once())
       ->method('save');
-    $config->expects($this->any())
+    $config->expects($this->atLeastOnce())
       ->method('getName')
       ->willReturn('d8_config');
     $config_factory = $this->createMock('Drupal\Core\Config\ConfigFactoryInterface');

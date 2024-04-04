@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
@@ -45,18 +45,22 @@ final class LangcodeRequiredIfTranslatableValuesConstraintValidator extends Cons
     }
   }
 
+  /**
+   * Determines if there is a translatable value.
+   * @param ArrayElement $elements
+   *  The elements to check.
+   *
+   * @return bool
+   *  Returns true if translatable element is found.
+   */
   private static function containsTranslatableValue(ArrayElement $elements): bool {
     foreach ($elements as $element) {
       // Early return if found.
       if ($element->getDataDefinition()['translatable'] === TRUE) {
         return TRUE;
       }
-      if ($element instanceof ArrayElement) {
-        $is_translatable = self::containsTranslatableValue($element);
-        // Early return if found.
-        if ($is_translatable) {
-          return TRUE;
-        }
+      if ($element instanceof ArrayElement && self::containsTranslatableValue($element)) {
+        return TRUE;
       }
     }
     return FALSE;

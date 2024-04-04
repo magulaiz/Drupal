@@ -127,7 +127,7 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface,
       $migration,
       $container->get('config.factory'),
       $container->get('language_manager'),
-      $container->get('config.typed')
+      $container->get(TypedConfigManagerInterface::class)
     );
   }
 

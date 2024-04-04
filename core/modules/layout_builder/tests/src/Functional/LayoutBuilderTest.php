@@ -704,7 +704,7 @@ class LayoutBuilderTest extends LayoutBuilderTestBase {
     $this->container->get('config.factory')->getEditable('layout_builder_test.test_simple_config.existing')
       ->set('sections', [(new Section('layout_twocol'))->toArray()])
       // `layout_builder_test.test_simple_config.existing.sections.0.layout_settings.label`
-      // contains a translatable label, hence a `langcode` is required.
+      // contains a translatable label, so a `langcode` is required.
       // @see \Drupal\Core\Validation\Plugin\Validation\Constraint\LangcodeRequiredIfTranslatableValuesConstraint
       ->set('langcode', 'en')
       ->save();
