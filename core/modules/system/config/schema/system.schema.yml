@@ -204,25 +204,18 @@ system.performance:
           label: 'Regular expression to not match'
           constraints:
             Regex:
-              # Validates a string that starts and ends with a forward slash /,
-              # with one or more characters between them that are not a forward slash.
+              # Paths to exclude.
               # @see \Drupal\Core\EventSubscriber\Fast404ExceptionHtmlSubscriber
-              pattern: '/\/[^\/]+\//'
+              pattern: '/\/(?:[^\\\/\w_]+)\//'
               match: false
               message: 'This is not a valid regex.'
         html:
           type: string
           label: 'Fast 404 page html'
           constraints:
-            Regex:
-              # Validates the structure of a complete HTML document with the
-              # specified tags (<!DOCTYPE html>, <html>, <head>, <title>, <body>,
-              # and their corresponding closing tags). It allows for any content
-              # within these tags, including nested tags and text.
+            Callback:
               # @see \Drupal\Core\EventSubscriber\Fast404ExceptionHtmlSubscriber
-              pattern: '/^<!DOCTYPE html>[\s\S]*<html>[\s\S]*<head>[\s\S]*<title>[\s\S]*<\/title>[\s\S]*<\/head>[\s\S]*<body>[\s\S]*<\/body>[\s\S]*<\/html>$/'
-              match: false
-              message: "The %value html is not valid."
+              callback: [\Drupal\system\Fast404ConfigValidation, validatehtml]
     js:
       type: mapping
       label: 'JavaScript performance settings'
