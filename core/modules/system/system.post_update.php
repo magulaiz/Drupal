@@ -242,16 +242,16 @@ function system_post_update_sdc_uninstall() {
 function system_post_update_add_langcode_to_all_translatable_config(): void {
   /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config_manager */
   $typed_config_manager = \Drupal::service(TypedConfigManagerInterface::class);
+  /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
+  $config_manager = \Drupal::service(ConfigManagerInterface::class);
 
   $list = \Drupal::configFactory()->listAll();
   foreach ($list as $name) {
     // We're only dealing with simple config, which won't map to an entity type.
-    if (\Drupal::service(ConfigManagerInterface::class)->getEntityTypeIdByName($name)) {
-      continue;
-    }
-
-    // If this config object has no schema, we can't do anything useful here.
-    if (!$typed_config_manager->hasConfigSchema($name)) {
+    // On the other hand, if this is a simple config object that has no schema,
+    // we can't do anything useful here since we can't tell if it has
+    // any translatable elements.
+    if ($config_manager->getEntityTypeIdByName($name) || !$typed_config_manager->hasConfigSchema($name)) {
       continue;
     }
 
@@ -261,9 +261,9 @@ function system_post_update_add_langcode_to_all_translatable_config(): void {
     assert($typed_config instanceof Mapping);
 
     // If this config contains any elements (at any level of nesting) which
-    // are translatable, but the config hasn't got a langcode, assign one. On
-    // the other hand, if nothing in the config structure is translatable, the
-    // config shouldn't have a langcode at all.
+    // are translatable, but the config hasn't got a langcode, assign one. But
+    // if nothing in the config structure is translatable, the config shouldn't
+    // have a langcode at all.
     if ($typed_config->hasTranslatableElements()) {
       if ($config->get('langcode')) {
         continue;

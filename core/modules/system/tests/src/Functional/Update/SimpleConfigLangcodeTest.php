@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Update;
 
 use Drupal\Core\Database\Connection;
@@ -52,7 +54,7 @@ class SimpleConfigLangcodeTest extends UpdatePathTestBase {
 
     $this->runUpdates();
     $this->assertSame('en', $this->config('user.mail')->get('langcode'));
-    $this->assertArrayNotHasKey('langcode', $this->config('node.setings')->getRawData());
+    $this->assertArrayNotHasKey('langcode', $this->config('node.settings')->getRawData());
   }
 
 }
