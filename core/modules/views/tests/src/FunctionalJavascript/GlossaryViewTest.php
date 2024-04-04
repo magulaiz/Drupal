@@ -129,7 +129,7 @@ class GlossaryViewTest extends WebDriverTestBase {
     $web_assert->assertWaitOnAjaxRequest();
 
     $rows = $page->findAll('css', '.view-test-glossary tr');
-    $this->assertCount(5, $rows);
+    $this->assertCount(19, $rows);
   }
 
 }
