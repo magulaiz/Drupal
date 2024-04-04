@@ -18,7 +18,7 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Typed
    * Determines if there is a translatable value.
    *
    * @return bool
-   *  Returns true if translatable element is found.
+   *   Returns true if a translatable element is found.
    */
   public function hasTranslatableElements(): bool {
     foreach ($this as $element) {
