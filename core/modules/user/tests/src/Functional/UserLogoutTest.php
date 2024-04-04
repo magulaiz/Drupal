@@ -38,12 +38,16 @@ class UserLogoutTest extends BrowserTestBase {
     $account = $this->createUser();
     $this->drupalLogin($account);
 
-    // Test invalid csrf token.
+    // Test missing csrf token does not log the user out.
+    $this->drupalGet('user/logout');
+    $this->assertTrue($this->drupalUserIsLoggedIn($account));
+
+    // Test invalid csrf token does not log the user out.
     $this->drupalGet('user/logout', ['query' => ['token' => '123']]);
-    $this->assertSession()->buttonExists('Log out');
-    $this->getSession()->getPage()->clickLink('Log out');
-    $this->drupalGet('user/login');
-    $this->assertSession()->fieldExists('name');
+    $this->assertTrue($this->drupalUserIsLoggedIn($account));
+    // Submitting the confirmation form correctly logs the user out.
+    $this->submitForm([], 'Log out');
+    $this->assertFalse($this->drupalUserIsLoggedIn($account));
 
     $this->drupalResetSession();
     $this->drupalLogin($account);
@@ -51,8 +55,7 @@ class UserLogoutTest extends BrowserTestBase {
     // Test with valid logout link.
     $this->drupalGet('user');
     $this->getSession()->getPage()->clickLink('Log out');
-    $this->drupalGet('user/login');
-    $this->assertSession()->fieldExists('name');
+    $this->assertFalse($this->drupalUserIsLoggedIn($account));
   }
 
 }
