@@ -13,8 +13,7 @@
 exports.command = function drupalLogout({ silent = false } = {}, callback) {
   const self = this;
 
-  this.drupalRelativeURL('/user/logout')
-    .submitForm('#user-logout-confirm');
+  this.drupalRelativeURL('/user/logout').submitForm('#user-logout-confirm');
 
   this.drupalUserIsLoggedIn((sessionExists) => {
     if (silent) {
