@@ -7,7 +7,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Defines a content entity type for plugin discovery.
  *
- * Content entity type plugins use an object-based annotation method, rather
+ * Content entity type plugins use an object-based attribute method, rather
  * than an array-type (as commonly used on other plugin types). The attribute
  * properties of content entity types are found on
  * \Drupal\Core\Entity\ContentEntityType and are accessed using get/set methods
@@ -30,7 +30,7 @@ class ContentEntityType extends EntityType {
     public readonly ?TranslatableMarkup $label_plural = NULL,
     public readonly string $entity_type_class = 'Drupal\Core\Entity\ContentEntityType',
     public readonly string $group = 'content',
-    public readonly ?TranslatableMarkup $group_label = new TranslatableMarkup('Content', [], ['context' => 'Entity type group']),
+    public readonly TranslatableMarkup $group_label = new TranslatableMarkup('Content', [], ['context' => 'Entity type group']),
     public readonly bool $static_cache = TRUE,
     public readonly bool $render_cache = TRUE,
     public readonly bool $persistent_cache = TRUE,

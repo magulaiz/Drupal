@@ -7,7 +7,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Defines a config entity type for plugin discovery.
  *
- * Config entity type plugins use an object-based annotation method, rather than
+ * Config entity type plugins use an object-based attribute method, rather than
  * an array-type (as commonly used on other plugin types). The attribute
  * properties of config entity types are found on
  * \Drupal\Core\Config\Entity\ConfigEntityType and are accessed using get/set
@@ -31,7 +31,7 @@ class ConfigEntityType extends EntityType {
     public readonly ?string $config_prefix = NULL,
     public readonly string $entity_type_class = 'Drupal\Core\Config\Entity\ConfigEntityType',
     public readonly string $group = 'configuration',
-    public readonly ?TranslatableMarkup $group_label = new TranslatableMarkup('Configuration', [], ['context' => 'Entity type group']),
+    public readonly TranslatableMarkup $group_label = new TranslatableMarkup('Configuration', [], ['context' => 'Entity type group']),
     public readonly bool $static_cache = FALSE,
     public readonly bool $render_cache = TRUE,
     public readonly bool $persistent_cache = TRUE,
