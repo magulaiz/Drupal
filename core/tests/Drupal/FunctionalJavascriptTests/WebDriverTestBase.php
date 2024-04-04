@@ -10,7 +10,6 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Runner\BaseTestRunner;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Throwable;
 
 /**
  * Runs a browser test using a driver that supports JavaScript.
@@ -116,6 +115,15 @@ abstract class WebDriverTestBase extends BrowserTestBase {
       if ($status === BaseTestRunner::STATUS_ERROR || $status === BaseTestRunner::STATUS_WARNING || $status === BaseTestRunner::STATUS_FAILURE) {
         // Ensure we capture the output at point of failure.
         @$this->htmlOutput();
+        $directory = getenv('SCREENSHOT_REPORT_DIRECTORY') ?: '/sites/simpletest/screenshots';
+        // Ensure directory exists.
+        if (!is_dir($directory)) {
+          mkdir($directory, 0777, TRUE);
+        }
+        $current_url = Html::cleanCssIdentifier($this->getSession()->getCurrentUrl());
+        $filenameScreenshotOnFail = \Drupal::service('file_system')->createFilename(uniqid() . '_' . $current_url . '_test-failure.png', $directory);
+        $this->createScreenshot($filenameScreenshotOnFail);
+
       }
       // Wait for all requests to finish. It is possible that an AJAX request is
       // still on-going.
@@ -266,38 +274,6 @@ EndOfScript;
   protected function getHtmlOutputHeaders() {
     // The webdriver API does not support fetching headers.
     return '';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function tearDownMinkSession(): void {
-    // Capture a screenshot before Mink is torn down. We can't test for test
-    // failure here because the test status has not been set at this point.
-    $session = $this->getSession();
-    $this->screenshotOnExit = $session->getScreenshot();
-    $url_on_exit = $this->getSession()->getCurrentUrl();
-    $directory = getenv('SCREENSHOT_REPORT_DIRECTORY') ?: '/sites/simpletest/screenshots';
-
-    // Ensure directory exists.
-    if (!is_dir($directory)) {
-      mkdir($directory, 0777, TRUE);
-    }
-    $current_url = Html::cleanCssIdentifier($url_on_exit);
-    $this->filenameScreenshotOnFail = \Drupal::service('file_system')->createFilename(uniqid() . '_' . $current_url . '_test-failure.png', $directory);
-
-    parent::tearDownMinkSession();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function onNotSuccessfulTest(Throwable $t): void {
-    // If the test was not successful, print out the captured screenshot.
-    if ($this->filenameScreenshotOnFail && $this->getResult() !== BaseTestRunner::STATUS_PASSED) {
-      file_put_contents($this->filenameScreenshotOnFail, $this->screenshotOnExit);
-    }
-    parent::onNotSuccessfulTest($t);
   }
 
 }
