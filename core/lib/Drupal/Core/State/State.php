@@ -114,6 +114,15 @@ class State extends CacheCollector implements StateInterface {
     $this->keyValueStore->set($key, $value);
     parent::set($key, $value);
     $this->persist($key);
+    // If another request had a cache miss before this request, and also hasn't
+    // written to cache yet, this set may circumvent the race condition
+    // protection in CacheCollector, which detects when a cache hit has become
+    // stale, but can't detect when a cache hit has become stale. By writing to
+    // the cache immediately, we can trigger that detection.
+    // Immediately write to the cache.
+    if (!$this->cacheCreated) {
+      static::updateCache();
+    }
   }
 
   /**
