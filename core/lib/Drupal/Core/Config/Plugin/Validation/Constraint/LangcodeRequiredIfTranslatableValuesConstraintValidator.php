@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
+namespace Drupal\Core\Config\Plugin\Validation\Constraint;
 
 use Drupal\Core\Config\Schema\Mapping;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use Symfony\Component\Validator\Exception\UnexpectedTypeException;
+use Symfony\Component\Validator\Exception\LogicException;
 
 /**
  * Validates the LangcodeRequiredIfTranslatableValues constraint.
@@ -21,7 +21,7 @@ final class LangcodeRequiredIfTranslatableValuesConstraintValidator extends Cons
     assert($constraint instanceof LangcodeRequiredIfTranslatableValuesConstraint);
 
     if ($this->context->getObject() !== $this->context->getRoot()) {
-      throw new UnexpectedTypeException($value, 'config.object');
+      throw new LogicException('The LangcodeRequiredIfTranslatableValues constraint can only operate on the root object being validated.');
     }
 
     $mapping = $this->context->getObject();

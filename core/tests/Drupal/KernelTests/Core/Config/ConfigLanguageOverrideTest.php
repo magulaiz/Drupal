@@ -77,7 +77,7 @@ class ConfigLanguageOverrideTest extends KernelTestBase {
       ->set('value', ['key' => 'original'])
       ->set('label', 'Original')
       // `label` is translatable, hence a `langcode` is required.
-      // @see \Drupal\Core\Validation\Plugin\Validation\Constraint\LangcodeRequiredIfTranslatableValuesConstraint
+      // @see \Drupal\Core\Config\Plugin\Validation\Constraint\LangcodeRequiredIfTranslatableValuesConstraint
       ->set('langcode', 'en')
       ->save();
     \Drupal::languageManager()

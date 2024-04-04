@@ -31,7 +31,7 @@ class ConfigModuleOverridesTest extends KernelTestBase {
       ->set('name', $non_overridden_name)
       ->set('slogan', $non_overridden_slogan)
       // `name` and `slogan` are translatable, hence a `langcode` is required.
-      // @see \Drupal\Core\Validation\Plugin\Validation\Constraint\LangcodeRequiredIfTranslatableValuesConstraint
+      // @see \Drupal\Core\Config\Plugin\Validation\Constraint\LangcodeRequiredIfTranslatableValuesConstraint
       ->set('langcode', 'en')
       ->save();
 
