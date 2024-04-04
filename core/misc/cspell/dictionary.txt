@@ -792,6 +792,7 @@ upscaling
 urandom
 userinfo
 userref
+validatehtml
 vampirize
 varchar
 versionable
