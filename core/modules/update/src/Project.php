@@ -16,22 +16,16 @@ final class Project {
 
   /**
    * The existing version of project on the site.
-   *
-   * @var string
    */
   protected string $existingVersion;
 
   /**
    * The releases of this project that can be installed safely.
-   *
-   * @var array
    */
   private array $installableReleases;
 
   /**
    * The update server project information.
-   *
-   * @var \Drupal\update\UpdateServerProjectInfo
    */
   private UpdateServerProjectInfo $updateServerProjectInfo;
 

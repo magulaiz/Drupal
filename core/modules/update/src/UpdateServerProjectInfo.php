@@ -11,22 +11,16 @@ class UpdateServerProjectInfo {
 
   /**
    * The project status.
-   *
-   * @var string|null
    */
-  private $status;
+  private string|null $status;
 
   /**
    * The supported branches.
-   *
-   * @var array
    */
   private array $supportedBranches;
 
   /**
    * The project releases.
-   *
-   * @var array
    */
   private array $releases;
 
