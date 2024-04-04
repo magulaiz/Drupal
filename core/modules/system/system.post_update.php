@@ -5,6 +5,7 @@
  * Post update functions for System.
  */
 
+use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\Core\Config\Schema\Mapping;
 use Drupal\Core\Config\TypedConfigManagerInterface;
@@ -244,6 +245,11 @@ function system_post_update_add_langcode_to_all_translatable_config(): void {
 
   $list = \Drupal::configFactory()->listAll();
   foreach ($list as $name) {
+    // We're only dealing with simple config, which won't map to an entity type.
+    if (\Drupal::service(ConfigManagerInterface::class)->getEntityTypeIdByName($name)) {
+      continue;
+    }
+
     // If this config object has no schema, we can't do anything useful here.
     if (!$typed_config_manager->hasConfigSchema($name)) {
       continue;
@@ -251,14 +257,9 @@ function system_post_update_add_langcode_to_all_translatable_config(): void {
 
     $config = \Drupal::configFactory()->getEditable($name);
     $typed_config = $typed_config_manager->createFromNameAndData($name, $config->getRawData());
-
-    // We only want to deal with simple config, which has the `config_object`
-    // schema type.
-    if ($typed_config->getDataDefinition()->getDataType() !== 'config_object') {
-      continue;
-    }
     // Simple config is always a mapping.
     assert($typed_config instanceof Mapping);
+
     // If this config contains any elements (at any level of nesting) which
     // are translatable, but the config hasn't got a langcode, assign one. On
     // the other hand, if nothing in the config structure is translatable, the
