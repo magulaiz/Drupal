@@ -256,10 +256,17 @@ function system_post_update_add_langcode_to_all_translatable_config(): void {
     // Simple config is always a mapping.
     assert($typed_config instanceof Mapping);
     // If this config contains any elements (at any level of nesting) which
-    // are translatable, but the config hasn't got a langcode, assign one.
-    if ($typed_config->hasTranslatableElements() && empty($config->get('langcode'))) {
-      $config->set('langcode', \Drupal::languageManager()->getDefaultLanguage()->getId())
-        ->save();
+    // are translatable, but the config hasn't got a langcode, assign one. On
+    // the other hand, if nothing in the config structure is translatable, the
+    // config shouldn't have a langcode at all.
+    if ($typed_config->hasTranslatableElements()) {
+      if ($config->get('langcode')) {
+        continue;
+      }
+      $config->set('langcode', \Drupal::languageManager()->getDefaultLanguage()->getId());
+    }
+    else {
+      $config->clear('langcode');
     }
   }
 }
