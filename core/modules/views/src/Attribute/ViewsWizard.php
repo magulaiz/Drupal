@@ -21,7 +21,7 @@ class ViewsWizard extends Plugin {
    *
    * @param string $id
    *   The plugin ID.
-   * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $title
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup $title
    *   The plugin title used in the views UI.
    * @param string|null $base_table
    *   (optional) The base table on which this wizard is used. The base_table is
@@ -31,7 +31,7 @@ class ViewsWizard extends Plugin {
    */
   public function __construct(
     public readonly string $id,
-    public readonly ?TranslatableMarkup $title = NULL,
+    public readonly TranslatableMarkup $title,
     public readonly ?string $base_table = NULL,
     public readonly ?string $deriver = NULL
   ) {}
