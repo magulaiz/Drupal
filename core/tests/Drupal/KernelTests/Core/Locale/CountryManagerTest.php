@@ -41,4 +41,5 @@ class CountryManagerTest extends KernelTestBase {
     ];
     self::assertSame($expected_iso3_codes, $iso3_codes);
   }
+
 }

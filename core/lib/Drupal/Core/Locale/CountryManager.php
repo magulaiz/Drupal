@@ -574,7 +574,7 @@ class CountryManager implements CountryManagerInterface {
       'YT' => 'MYT',
       'ZA' => 'ZAF',
       'ZM' => 'ZMB',
-      'ZW' => 'ZWE'
+      'ZW' => 'ZWE',
     ];
     // cSpell:enable
 
@@ -583,7 +583,6 @@ class CountryManager implements CountryManagerInterface {
 
     return $countries;
   }
-
 
   /**
    * Get an array of country code => country name pairs, altered by alter hooks.
