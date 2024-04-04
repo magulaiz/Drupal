@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
+use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -304,6 +305,29 @@ class NodeForm extends ContentEntityForm {
       $this->messenger()->addError($this->t('The post could not be saved.'));
       $form_state->setRebuild();
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    $original_node = $form_state->getFormObject()->getEntity();
+
+    if (
+      $original_node
+      && !$original_node->isNew()
+      && ($new_node_label = $form_state->getValue(['title', 0, 'value']))
+      && $original_node->label() !== $new_node_label
+      && ($menu_link_content_id = $form_state->getValue(['menu', 'entity_id']))
+      && ($menu_link_content = MenuLinkContent::load($menu_link_content_id))
+      && ($menu_title = $form_state->getValue(['menu', 'title']))
+      && $menu_link_content->label() === $menu_title
+    ) {
+      $this->messenger()
+        ->addWarning($this->t('You have changed the content title. Consider also updating the menu link title so that the text in the navigation reflects the new content title.'));
+    }
+
+    return parent::validateForm($form, $form_state);
   }
 
 }
