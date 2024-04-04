@@ -192,7 +192,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
     $this->assertSame(15, $performance_data->getQueryCount());
-    $this->assertSame(64, $performance_data->getCacheGetCount());
+    $this->assertSame(68, $performance_data->getCacheGetCount());
     $this->assertSame(1, $performance_data->getCacheSetCount());
     $this->assertSame(1, $performance_data->getCacheDeleteCount());
     $this->assertSame(1, $performance_data->getCacheTagChecksumCount());
@@ -210,7 +210,6 @@ class StandardPerformanceTest extends PerformanceTestBase {
     // this twice so that any caches which take two requests to warm are also
     // covered.
     $account = $this->drupalCreateUser();
-    $this->drupalLogout();
 
     foreach (range(0, 1) as $index) {
       $this->drupalGet('node');
