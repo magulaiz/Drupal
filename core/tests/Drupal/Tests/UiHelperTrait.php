@@ -181,12 +181,8 @@ trait UiHelperTrait {
     // screen.
     $assert_session = $this->assertSession();
     $destination = Url::fromRoute('user.page')->toString();
-    $this->drupalGet('user/logout');
-    $this->submitForm(
-      [],
-      'Log out',
-      ['query' => ['destination' => $destination]],
-    );
+    $this->drupalGet('user/logout', ['query' => ['destination' => $destination]]);
+    $this->submitForm([], 'Log out');
     $assert_session->fieldExists('name');
     $assert_session->fieldExists('pass');
 
