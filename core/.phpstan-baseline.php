@@ -2189,11 +2189,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/BuildTests/Framework/Tests/BuildTestTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Caught class PHPUnit\\\\Framework\\\\Error\\\\Error not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Config/TypedConfigTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$found might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Cache/ApcuBackendTest.php',

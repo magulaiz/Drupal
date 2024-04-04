@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\TestTools\Extension\DeprecationBridge;
 
+use Drupal\Core\Utility\Error;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -159,19 +160,10 @@ final class DeprecationHandler {
   }
 
   /**
-   * @todo
-   */
-  public static function currentErrorHandler(): ?callable {
-    $currentHandler = set_error_handler('var_dump');
-    restore_error_handler();
-    return $currentHandler;
-  }
-
-  /**
    * @todo for debugging. Remove eventually.
    */
   public static function dumpErrorHandler($msg): void {
-    $handler = self::currentErrorHandler();
+    $handler = Error::currentErrorHandler();
     dump([$msg, (is_object($handler) ? get_class($handler) : $handler)]);
   }
 

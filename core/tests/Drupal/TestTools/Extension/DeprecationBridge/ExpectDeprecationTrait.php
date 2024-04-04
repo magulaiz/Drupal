@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\TestTools\Extension\DeprecationBridge;
 
+use Drupal\Core\Utility\Error;
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\Before;
 
@@ -21,7 +22,7 @@ trait ExpectDeprecationTrait {
     }
 
     DeprecationHandler::reset();
-    set_error_handler(new TestErrorHandler(DeprecationHandler::currentErrorHandler(), $this));
+    set_error_handler(new TestErrorHandler(Error::currentErrorHandler(), $this));
   }
 
   #[After]
@@ -30,7 +31,7 @@ trait ExpectDeprecationTrait {
       return;
     }
 
-    if (DeprecationHandler::currentErrorHandler() instanceof TestErrorHandler) {
+    if (Error::currentErrorHandler() instanceof TestErrorHandler) {
       restore_error_handler();
     }
 
