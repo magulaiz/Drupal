@@ -159,12 +159,4 @@ final class DeprecationHandler {
     return in_array('legacy', $groups, TRUE);
   }
 
-  /**
-   * @todo for debugging. Remove eventually.
-   */
-  public static function dumpErrorHandler($msg): void {
-    $handler = Error::currentErrorHandler();
-    dump([$msg, (is_object($handler) ? get_class($handler) : $handler)]);
-  }
-
 }

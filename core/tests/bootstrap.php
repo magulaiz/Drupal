@@ -7,7 +7,7 @@
  * @see phpunit.xml.dist
  */
 
-use Drupal\TestTools\Extension\DeprecationBridge\BootstrapErrorHandler;
+use Drupal\TestTools\ErrorHandler\BootstrapErrorHandler;
 use Drupal\TestTools\Extension\DeprecationBridge\DeprecationHandler;
 use Drupal\TestTools\Extension\HtmlLogging\HtmlOutputLogger;
 use Symfony\Component\ErrorHandler\DebugClassLoader;

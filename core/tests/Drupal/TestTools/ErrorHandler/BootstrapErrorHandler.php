@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Drupal\TestTools\Extension\DeprecationBridge;
+namespace Drupal\TestTools\ErrorHandler;
 
 use PHPUnit\Event\Code\NoTestCaseObjectOnCallStackException;
-use PHPUnit\Runner\ErrorHandler;
+use PHPUnit\Runner\ErrorHandler as PhpUnitErrorHandler;
 
 /**
  * @todo
@@ -20,7 +20,7 @@ final class BootstrapErrorHandler {
    * @todo
    */
   public function __construct() {
-    $this->phpUnitErrorHandler = new ErrorHandler();
+    $this->phpUnitErrorHandler = new PhpUnitErrorHandler();
   }
 
   /**

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\TestTools\Extension\DeprecationBridge;
+namespace Drupal\TestTools\ErrorHandler;
 
 /**
  * @todo

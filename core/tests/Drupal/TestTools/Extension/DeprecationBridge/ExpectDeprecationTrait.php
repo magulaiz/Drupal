@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\TestTools\Extension\DeprecationBridge;
 
 use Drupal\Core\Utility\Error;
+use Drupal\TestTools\ErrorHandler\TestErrorHandler;
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\Before;
 
@@ -31,9 +32,13 @@ trait ExpectDeprecationTrait {
       return;
     }
 
-    if (Error::currentErrorHandler() instanceof TestErrorHandler) {
-      restore_error_handler();
+    if (!$handler instanceof TestErrorHandler) {
+      throw new \RuntimeException(sprintf('%s registered its own error handler (%s) without restoring the previous one before tear down. This can cause unpredictable test results. Ensure the test cleans up after itself.',
+        $this->name(),
+        is_object($handler) ? get_class($handler) : $handler,
+      ));
     }
+    restore_error_handler();
 
     // Checks if collected deprecations match the expectations.
     if (DeprecationHandler::getExpectedDeprecations()) {
