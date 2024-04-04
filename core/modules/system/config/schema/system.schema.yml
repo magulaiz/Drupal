@@ -154,6 +154,8 @@ system.logging:
 system.performance:
   type: config_object
   label: 'Performance settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     cache:
       type: mapping
@@ -189,12 +191,38 @@ system.performance:
         paths:
           type: string
           label: 'Regular expression to match'
+          constraints:
+            Regex:
+              # Validates any file extension composed of alphanumeric characters,
+              # regardless of its name or length.
+              # @see \Drupal\Core\EventSubscriber\Fast404ExceptionHtmlSubscriber
+              pattern: '/\.[a-zA-Z0-9]+$/'
+              match: false
+              message: 'This is not a valid regex.'
         exclude_paths:
           type: string
           label: 'Regular expression to not match'
+          constraints:
+            Regex:
+              # Validates a string that starts and ends with a forward slash /,
+              # with one or more characters between them that are not a forward slash.
+              # @see \Drupal\Core\EventSubscriber\Fast404ExceptionHtmlSubscriber
+              pattern: '/\/[^\/]+\//'
+              match: false
+              message: 'This is not a valid regex.'
         html:
           type: string
           label: 'Fast 404 page html'
+          constraints:
+            Regex:
+              # Validates the structure of a complete HTML document with the
+              # specified tags (<!DOCTYPE html>, <html>, <head>, <title>, <body>,
+              # and their corresponding closing tags). It allows for any content
+              # within these tags, including nested tags and text.
+              # @see \Drupal\Core\EventSubscriber\Fast404ExceptionHtmlSubscriber
+              pattern: '/^<!DOCTYPE html>[\s\S]*<html>[\s\S]*<head>[\s\S]*<title>[\s\S]*<\/title>[\s\S]*<\/head>[\s\S]*<body>[\s\S]*<\/body>[\s\S]*<\/html>$/'
+              match: false
+              message: "The %value html is not valid."
     js:
       type: mapping
       label: 'JavaScript performance settings'
