@@ -268,5 +268,6 @@ function system_post_update_add_langcode_to_all_translatable_config(): void {
     else {
       $config->clear('langcode');
     }
+    $config->save();
   }
 }
