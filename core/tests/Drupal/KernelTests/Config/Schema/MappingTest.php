@@ -214,7 +214,11 @@ class MappingTest extends KernelTestBase {
         'theme',
         'profile',
       ],
-      ['_core', 'langcode'],
+      [
+        '_core',
+        'langcode',
+        'profile',
+      ],
       [],
     ];
 
