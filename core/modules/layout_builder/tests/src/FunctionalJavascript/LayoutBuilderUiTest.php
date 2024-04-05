@@ -94,10 +94,17 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
-    // Make and then discard changes.
     $this->assertModifiedLayout(static::FIELD_UI_PREFIX . '/display/default/layout');
+    // Discard then cancel.
+    $page->pressButton('Discard changes');
+    $page->clickLink('Cancel');
+    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
+    $assert_session->pageTextContainsOnce('You have unsaved changes.');
+
+    // Discard then confirm.
     $page->pressButton('Discard changes');
     $page->pressButton('Confirm');
+    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default');
     $assert_session->pageTextNotContains('You have unsaved changes.');
 
     // Make and then save changes.
@@ -295,22 +302,6 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
 
     $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
     $assert_session->assertNoElementAfterWait('css', '.is-layout-builder-highlighted');
-  }
-
-  /**
-   * Tests the discard changes cancel button behavior.
-   */
-  public function testCancelDiscardChanges(): void {
-    $assert_session = $this->assertSession();
-    $page = $this->getSession()->getPage();
-
-    // Make and then discard changes.
-    $this->assertModifiedLayout(static::FIELD_UI_PREFIX . '/display/default/layout');
-    $page->pressButton('Discard changes');
-    // Cancel the discard.
-    $page->clickLink('Cancel');
-    $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
-    $assert_session->pageTextContainsOnce('You have unsaved changes.');
   }
 
 }
