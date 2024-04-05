@@ -102,7 +102,7 @@ class PrepareModulesEntityUninstallForm extends ConfirmFormBase {
    * @return \Drupal\Core\StringTranslation\TranslatableMarkup
    *   The form title.
    *
-   * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    *   Thrown when the entity-type does not exist.
    */
   public function formTitle(string $entity_type_id): TranslatableMarkup {
