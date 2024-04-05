@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -8,6 +10,7 @@ use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
+use Drupal\user\UserInterface;
 use Drupal\views\Plugin\views\filter\EntityReference;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
@@ -47,28 +50,28 @@ class FilterEntityReferenceTest extends ViewsKernelTestBase {
    *
    * @var \Drupal\node\NodeInterface[]
    */
-  protected $hostNodes;
+  protected array $hostNodes;
 
   /**
    * Test target nodes referenced by the entity reference.
    *
    * @var \Drupal\node\NodeInterface[]
    */
-  protected $targetNodes;
+  protected array $targetNodes;
 
   /**
    * First test user as node author.
    *
    * @var \Drupal\user\UserInterface
    */
-  protected $user1;
+  protected UserInterface $user1;
 
   /**
    * Second test user as node author.
    *
    * @var \Drupal\user\UserInterface
    */
-  protected $user2;
+  protected UserInterface $user2;
 
   /**
    * {@inheritdoc}
@@ -147,7 +150,7 @@ class FilterEntityReferenceTest extends ViewsKernelTestBase {
   /**
    * Tests that results are successfully filtered by the select list widget.
    */
-  public function testViewEntityReferenceAsSelectList() {
+  public function testViewEntityReferenceAsSelectList(): void {
     $view = Views::getView('test_filter_entity_reference');
     $view->setDisplay();
     $view->preExecute([]);
@@ -214,8 +217,7 @@ class FilterEntityReferenceTest extends ViewsKernelTestBase {
   /**
    * Tests that results are successfully filtered by the autocomplete widget.
    */
-  public function testViewEntityReferenceAsAutocomplete() {
-
+  public function testViewEntityReferenceAsAutocomplete(): void {
     // Change the widget to autocomplete.
     $view = Views::getView('test_filter_entity_reference');
     $view->setDisplay();
@@ -243,7 +245,7 @@ class FilterEntityReferenceTest extends ViewsKernelTestBase {
   /**
    * Tests that content dependencies are added to the view.
    */
-  public function testViewContentDependencies() {
+  public function testViewContentDependencies(): void {
     $view = Views::getView('test_filter_entity_reference');
     $value = [
       $this->targetNodes[0]->id(),

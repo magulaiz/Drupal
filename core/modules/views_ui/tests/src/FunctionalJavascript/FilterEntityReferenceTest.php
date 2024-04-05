@@ -57,7 +57,7 @@ class FilterEntityReferenceTest extends WebDriverTestBase {
   /**
    * Tests end to end creation of a Content Entity Reference filter.
    */
-  public function testAddEntityReferenceFieldWithDefaultSelectionHandler() {
+  public function testAddEntityReferenceFieldWithDefaultSelectionHandler(): void {
     $this->drupalGet('admin/structure/views/view/content');
     $assert = $this->assertSession();
     $page = $this->getSession()->getPage();
@@ -179,7 +179,7 @@ class FilterEntityReferenceTest extends WebDriverTestBase {
   /**
    * Tests end to end creation of a Config Entity Reference filter.
    */
-  public function testAddConfigEntityReferenceFieldWithDefaultSelectionHandler() {
+  public function testAddConfigEntityReferenceFieldWithDefaultSelectionHandler(): void {
     $this->drupalGet('admin/structure/views/view/content');
     $assert = $this->assertSession();
     $page = $this->getSession()->getPage();

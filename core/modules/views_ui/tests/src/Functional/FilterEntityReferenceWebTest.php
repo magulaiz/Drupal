@@ -67,7 +67,7 @@ class FilterEntityReferenceWebTest extends UITestBase {
     krsort($this->targetEntities);
     $options = $this->getUiOptions();
     $i = 0;
-    foreach ($this->targetEntities as $id => $entity) {
+    foreach ($this->targetEntities as $entity) {
       $message = (string) new FormattableMarkup('Expected target entity label found for option :option', [':option' => $i]);
       $this->assertEquals($options[$i]['label'], $entity->label(), $message);
       $i++;
@@ -76,41 +76,19 @@ class FilterEntityReferenceWebTest extends UITestBase {
     // Change bundle types.
     $this->drupalGet('admin/structure/views/nojs/handler-extra/test_filter_entity_reference/default/filter/field_test_target_id');
     $edit = [
-      "options[reference_default:node][target_bundles][{$this->hostEntityType->id()}]" => TRUE,
-      "options[reference_default:node][target_bundles][{$this->targetEntityType->id()}]" => TRUE,
+      "options[reference_default:node][target_bundles][{$this->hostBundle->id()}]" => TRUE,
+      "options[reference_default:node][target_bundles][{$this->targetBundle->id()}]" => TRUE,
     ];
     $this->submitForm($edit, 'Apply');
 
     $this->drupalGet('admin/structure/views/nojs/handler/test_filter_entity_reference/default/filter/field_test_target_id');
     $options = $this->getUiOptions();
     $i = 0;
-    foreach ($this->hostEntities + $this->targetEntities as $id => $entity) {
+    foreach ($this->hostEntities + $this->targetEntities as $entity) {
       $message = (string) new FormattableMarkup('Expected target entity label found for option :option', [':option' => $i]);
       $this->assertEquals($options[$i]['label'], $entity->label(), $message);
       $i++;
     }
-  }
-
-  /**
-   * Helper method to parse options from the UI.
-   *
-   * @return array
-   *   Array of keyed arrays containing the id and label of each option.
-   */
-  protected function getUiOptions() {
-    /** @var \Behat\Mink\Element\TraversableElement[] $result */
-    $result = $this->xpath('//select[@name="options[value][]"]/option');
-    $this->assertNotEmpty($result, 'Options found');
-
-    $options = [];
-    foreach ($result as $option) {
-      $options[] = [
-        'id' => (int) $option->getValue(),
-        'label' => (string) $option->getText(),
-      ];
-    }
-
-    return $options;
   }
 
   /**
@@ -122,6 +100,28 @@ class FilterEntityReferenceWebTest extends UITestBase {
     $options = $this->getUiOptions();
     // We should the content types defined as options.
     $this->assertEquals(['article', 'page'], array_column($options, 'label'));
+  }
+
+  /**
+   * Helper method to parse options from the UI.
+   *
+   * @return array
+   *   Array of keyed arrays containing the id and label of each option.
+   */
+  protected function getUiOptions(): array {
+    /** @var \Behat\Mink\Element\TraversableElement[] $result */
+    $result = $this->xpath('//select[@name="options[value][]"]/option');
+    $this->assertNotEmpty($result, 'Options found');
+
+    $options = [];
+    foreach ($result as $option) {
+      $options[] = [
+        'id' => (int) $option->getValue(),
+        'label' => $option->getText(),
+      ];
+    }
+
+    return $options;
   }
 
 }

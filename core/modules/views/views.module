@@ -832,7 +832,7 @@ function views_view_presave(ViewEntityInterface $view) {
  *   A Views table data array for an entity reference field to add the new
  *   Entity Reference filter data.
  */
-function _views_add_entity_reference_filter_data(string $field_name, array &$field_table_data) {
+function _views_add_entity_reference_filter_data(string $field_name, array &$field_table_data): void {
   // Copy the field data.
   $entity_reference = $field_table_data[$field_name];
   if (isset($entity_reference['filter']) && $entity_reference['filter']['id'] != 'entity_reference') {
