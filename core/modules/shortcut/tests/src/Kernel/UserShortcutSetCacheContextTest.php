@@ -76,7 +76,7 @@ class UserShortcutSetCacheContextTest extends KernelTestBase {
    * @covers ::getContext
    * @covers ::getCacheableMetadata
    */
-  public function testCacheContext() {
+  public function testCacheContext(): void {
     $shortcut_set_storage = $this->entityTypeManager->getStorage('shortcut_set');
     $context = new UserShortcutSetCacheContext($this->user, $this->entityTypeManager);
 

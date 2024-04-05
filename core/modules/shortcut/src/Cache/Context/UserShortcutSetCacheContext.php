@@ -38,14 +38,14 @@ class UserShortcutSetCacheContext extends UserCacheContextBase implements CacheC
   /**
    * {@inheritdoc}
    */
-  public function getContext() {
+  public function getContext(): string {
     return $this->displayedShortcutSet()->id();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getCacheableMetadata() {
+  public function getCacheableMetadata(): CacheableMetadata {
     return (new CacheableMetadata())->addCacheableDependency($this->displayedShortcutSet());
   }
 
