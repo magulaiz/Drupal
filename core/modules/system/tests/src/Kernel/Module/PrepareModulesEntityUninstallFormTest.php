@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Kernel\Module;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
-use Drupal\Tests\key_value_field\Kernel\KernelTestBase;
+use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Symfony\Component\HttpFoundation\Request;
 
