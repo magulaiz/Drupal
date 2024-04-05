@@ -184,8 +184,6 @@ class FilterEntityReferenceTest extends WebDriverTestBase {
     $assert = $this->assertSession();
     $page = $this->getSession()->getPage();
 
-    // Open the dialog.
-
     // Open the 'Add filter dialog'.
     $page->clickLink('views-add-filter');
 
@@ -193,17 +191,12 @@ class FilterEntityReferenceTest extends WebDriverTestBase {
     $assert->waitForField('override[controls][group]');
 
     // Test that the both entity_reference and numeric options are visible.
-    $this->assertTrue($page->findField('name[node__field_test_config.field_test_config_target_id]')
-      ->isVisible());
-    $this->assertTrue($page->findField('name[node__field_test_config.field_test_config_target_id_reference]')
-      ->isVisible());
-    $page->findField('name[node__field_test_config.field_test_config_target_id_reference]')
-      ->click();
-    $this->assertTrue($page->find('css', 'button.button.button--primary.form-submit.ui-button')
-      ->isVisible());
-    $this->htmlOutput($page->getHtml());
-    $page->find('css', 'button.button.button--primary.form-submit.ui-button')
-      ->click();
+    $this->assertTrue($page->findField('name[node__field_test_config.field_test_config_target_id]')->isVisible());
+    $this->assertTrue($page->findField('name[node__field_test_config.field_test_config_target_id_reference]')->isVisible());
+    $page->findField('name[node__field_test_config.field_test_config_target_id_reference]')->click();
+    $submitButton = $page->find('css', 'button.button.button--primary.form-submit.ui-button');
+    $this->assertTrue($submitButton->isVisible());
+    $submitButton->click();
 
     // Wait for the selection handler to show up.
     $assert->waitForField('options[sub_handler]');
@@ -213,10 +206,8 @@ class FilterEntityReferenceTest extends WebDriverTestBase {
     // Choose the default handler using the select widget with article type
     // checked.
     $page->selectFieldOption('options[widget]', 'select');
-    $this->assertSame($page->findField('options[widget]')
-      ->getValue(), 'select');
-    $page->find('xpath', "//*[contains(text(), 'Apply and continue')]")
-      ->press();
+    $this->assertSame('select', $page->findField('options[widget]')->getValue());
+    $page->find('xpath', "//*[contains(text(), 'Apply and continue')]")->press();
 
     // Test the exposed filter options show up correctly.
     $assert->waitForField('options[expose_button][checkbox][checkbox]');
@@ -232,10 +223,8 @@ class FilterEntityReferenceTest extends WebDriverTestBase {
 
     // Wait for the Views Preview to show up with the new reference field.
     $assert->waitForField('field_test_config_target_id_reference[]');
-    $this->assertTrue($page->findField('field_test_config_target_id_reference[]')
-      ->isVisible());
-    $this->assertTrue($page->find('css', 'select[name="field_test_config_target_id_reference[]"]')
-      ->hasAttribute('multiple'));
+    $this->assertTrue($page->findField('field_test_config_target_id_reference[]')->isVisible());
+    $this->assertTrue($page->find('css', 'select[name="field_test_config_target_id_reference[]"]')->hasAttribute('multiple'));
 
     // Check references config options.
     $options = $page->findAll('css', 'select[name="field_test_config_target_id_reference[]"] option');
@@ -248,21 +237,17 @@ class FilterEntityReferenceTest extends WebDriverTestBase {
     $extra_settings_selector = 'a[href="' . $url . '"]';
 
     // Change to an autocomplete filter.
-    $page->find('css', $extra_settings_selector)
-      ->click();
+    $page->find('css', $extra_settings_selector)->click();
     $assert->waitForField('options[widget]');
     $page->selectFieldOption('options[widget]', 'autocomplete');
-    $this->assertSame($page->findField('options[widget]')
-      ->getValue(), 'autocomplete');
+    $this->assertSame('autocomplete', $page->findField('options[widget]')->getValue());
     $page->find('css', '.ui-dialog .ui-dialog-buttonpane')->pressButton('Apply');
     $this->assertSession()->assertWaitOnAjaxRequest();
 
     // Check that it is now an autocomplete input.
     $assert->waitForField('field_test_config_target_id_reference');
-    $this->assertTrue($page->findField('field_test_config_target_id_reference')
-      ->isVisible());
-    $this->assertTrue($page->find('css', 'input[name="field_test_config_target_id_reference"]')
-      ->hasAttribute('data-autocomplete-path'));
+    $this->assertTrue($page->findField('field_test_config_target_id_reference')->isVisible());
+    $this->assertTrue($page->find('css', 'input[name="field_test_config_target_id_reference"]')->hasAttribute('data-autocomplete-path'));
   }
 
 }

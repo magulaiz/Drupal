@@ -57,9 +57,9 @@ class EntityReference extends ManyToOne {
   /**
    * The selection handlers available for the target entity ID of the filter.
    *
-   * @var array
+   * @var array|null
    */
-  protected array $handlerOptions;
+  protected ?array $handlerOptions = NULL;
 
   /**
    * Validated exposed input that will be set as the input value.
