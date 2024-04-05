@@ -11,9 +11,7 @@ displayMode: compact
     'theme': 'base',
     'themeVariables': {
       'primaryColor': '#75c831',
-      'primaryTextColor': '#FFFFFF',
-      'tertiaryColor': '#ffbd1f',
-      'tertiaryTextColor': '#000000',
+      'tertiaryColor': '#75c831',
       'doneTaskBkgColor': '#ffbd1f',
       'textColor': '#000000'
     }
