@@ -76,7 +76,6 @@
           // checkbox' state.
           checkboxes.each(function () {
             const $checkbox = $(this);
-            const closestRow = this.closest('tr');
             const stateChanged =
               $checkbox.prop('checked') !== event.target.checked;
 
@@ -92,7 +91,7 @@
             /**
              * @checkbox {HTMLElement}
              */
-            $(closestRow).toggleClass('selected', this.checked);
+            $checkbox.closest('tr').toggleClass('selected', this.checked);
           });
           // Update the title and the state of the check all box.
           updateSelectAll(event.target.checked);

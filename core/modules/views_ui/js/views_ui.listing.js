@@ -37,8 +37,7 @@
             sourcesConcat += item.textContent;
           });
           const textMatch = sourcesConcat.toLowerCase().includes(query);
-          const closestElement = row.closest('tr');
-          $(closestElement).toggle(textMatch);
+          $(row).closest('tr').toggle(textMatch);
         }
 
         // Filter if the length of the query is at least 2 characters.
