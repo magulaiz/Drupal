@@ -381,11 +381,11 @@ class FieldConfigEditForm extends EntityForm {
     // Change message, visible only when client-side HTML form validation
     // doesn't work.
     if (!$form_state->getValue('label')) {
-      $form_state->setErrorByName('label', $this->t('Add new field: you need to provide a label.'));
+      $form_state->setErrorByName('label', $this->t('Label is required'));
     }
     if (empty($form_state->getValue('field_name'))) {
       if ($this->entity->isNew()) {
-        $form_state->setErrorByName('field_name', $this->t('Add new field: you need to provide a machine name for the field.'));
+        $form_state->setErrorByName('field_name', $this->t('A machine name for the field is required.'));
       }
     }
     // Field name validation.
