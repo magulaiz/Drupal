@@ -173,13 +173,8 @@ class ImageStyleDownloadController extends FileDownloadController {
 
     $headers = [];
 
-    // If it is default sample.png, ignore scheme.
-    if ($image_uri === $sample_image_uri) {
-      $image_uri = $target;
-    }
-
     // Don't try to generate file if source is missing.
-    if (!$this->sourceImageExists($image_uri, $token_is_valid)) {
+    if ($image_uri !== $sample_image_uri && !$this->sourceImageExists($image_uri, $token_is_valid)) {
       // If the image style converted the extension, it has been added to the
       // original file, resulting in filenames like image.png.jpeg. So to find
       // the actual source image, we remove the extension and check if that
@@ -203,6 +198,13 @@ class ImageStyleDownloadController extends FileDownloadController {
       if (in_array(-1, $headers) || empty($headers)) {
         throw new AccessDeniedHttpException();
       }
+    }
+
+    // If it is default sample.png, ignore scheme.
+    // This value swap must be done after hook_file_download is called since
+    // the hooks are expecting a URI, not a file path.
+    if ($image_uri === $sample_image_uri) {
+      $image_uri = $target;
     }
 
     // Don't start generating the image if the derivative already exists or if
