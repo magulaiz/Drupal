@@ -7,11 +7,11 @@ namespace Drupal\Tests\system\Functional\Module;
 use Drupal\entity_test\Entity\EntityTest;
 
 /**
- * Tests PrepareModulesEntityUninstallForm::formTitle().
+ * Tests PrepareModulesEntityUninstallForm.
  *
  * @group Module
  */
-class PrepareModulesEntityUninstallFormTitleTest extends ModuleTestBase {
+class PrepareModulesEntityUninstallFormTest extends ModuleTestBase {
 
   /**
    * {@inheritdoc}
