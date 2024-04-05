@@ -113,12 +113,11 @@ class State extends CacheCollector implements StateInterface {
     }
     $this->keyValueStore->set($key, $value);
     // If another request had a cache miss before this request, and also hasn't
-    // written to cache yet, this set may circumvent the race condition
-    // protection in CacheCollector, which detects when a cache hit has become
-    // stale, but can't detect when a cache miss has become stale. By writing to
-    // the cache immediately before calling parent::set(), we can trigger that
-    // detection since the other request will then get an invalid item in
-    // static::updateCache().
+    // written to cache yet, then it may already have read this value from the
+    // database and could write that value to the cache to the end of the
+    // request. To avoid this race condition, write to the cache immediately
+    // after calling parent::set(). This allows the race condition detection in
+    // CacheCollector::set() to work.
     parent::set($key, $value);
     $this->persist($key);
     static::updateCache();
