@@ -19,7 +19,7 @@ class PrepareModulesEntityUninstallFormTest extends ModuleTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Tests PrepareModulesEntityUninstallForm::formTitle.
+   * Tests PrepareModulesEntityUninstallForm.
    */
   public function testModuleEntityUninstall(): void {
     // Test the page title of entity uninstall form.
@@ -27,7 +27,7 @@ class PrepareModulesEntityUninstallFormTest extends ModuleTestBase {
     $this->assertSession()->pageTextContains('Are you sure you want to delete all users?');
 
     $this->drupalGet('admin/modules/uninstall/entity/' . $this->randomMachineName());
-    $this->assertSession()->statusCodeEquals(404);
+    $this->assertSession()->statusCodeEquals(403);
 
     $this->container->get('module_installer')->install(['entity_test']);
     EntityTest::create(['name' => $this->randomMachineName()])->save();
