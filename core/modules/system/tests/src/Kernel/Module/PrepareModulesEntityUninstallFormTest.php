@@ -21,7 +21,7 @@ class PrepareModulesEntityUninstallFormTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['user', 'system'];
+  protected static $modules = ['user', 'system'];
 
   /**
    * Tests PrepareModulesEntityUninstallForm::formTitle.
