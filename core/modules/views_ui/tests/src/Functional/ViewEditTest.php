@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views_ui\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -9,6 +11,7 @@ use Drupal\views\Entity\View;
  * Tests some general functionality of editing views, like deleting a view.
  *
  * @group views_ui
+ * @group #slow
  */
 class ViewEditTest extends UITestBase {
 

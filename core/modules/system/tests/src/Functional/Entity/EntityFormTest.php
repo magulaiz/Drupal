@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Entity;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
@@ -12,6 +14,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests the entity form.
  *
  * @group Entity
+ * @group #slow
  */
 class EntityFormTest extends BrowserTestBase {
 

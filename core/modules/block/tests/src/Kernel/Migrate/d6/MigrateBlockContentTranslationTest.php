@@ -15,7 +15,6 @@ class MigrateBlockContentTranslationTest extends MigrateDrupal6TestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'book',
     'block',
     'comment',
     'views',
@@ -24,7 +23,6 @@ class MigrateBlockContentTranslationTest extends MigrateDrupal6TestBase {
     'language',
     'locale',
     'path_alias',
-    'statistics',
     'taxonomy',
   ];
 

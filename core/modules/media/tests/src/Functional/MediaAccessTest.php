@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\media\Functional;
 
 use Drupal\field\Entity\FieldConfig;
@@ -13,6 +15,7 @@ use Drupal\user\RoleInterface;
  * Basic access tests for Media.
  *
  * @group media
+ * @group #slow
  */
 class MediaAccessTest extends MediaFunctionalTestBase {
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\menu_ui\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -277,7 +279,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     // Assert that it is not possible to set the parent of the first node to itself or the second node.
     $this->assertSession()->optionNotExists('edit-menu-menu-parent', 'tools:' . $item->getPluginId());
     $this->assertSession()->optionNotExists('edit-menu-menu-parent', 'tools:' . $child_item->getPluginId());
-    // Assert that unallowed Administration menu is not available in options.
+    // Assert that disallowed Administration menu is not available in options.
     $this->assertSession()->optionNotExists('edit-menu-menu-parent', 'admin:');
   }
 

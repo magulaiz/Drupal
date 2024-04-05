@@ -45,7 +45,7 @@ class UpdateReportTest extends KernelTestBase {
    * @return array
    *   Array of $variables for template_preprocess_update_report().
    */
-  public function providerTemplatePreprocessUpdateReport() {
+  public static function providerTemplatePreprocessUpdateReport() {
     return [
       '$variables with data not set' => [
         [],
@@ -60,7 +60,7 @@ class UpdateReportTest extends KernelTestBase {
   }
 
   /**
-   * Tests the error message when failing to fetch data without dblog enabled.
+   * Tests the error message when failing to fetch data without dblog installed.
    *
    * @see template_preprocess_update_fetch_error_message()
    */
@@ -82,7 +82,7 @@ class UpdateReportTest extends KernelTestBase {
   }
 
   /**
-   * Tests the error message when failing to fetch data with dblog enabled.
+   * Tests the error message when failing to fetch data with dblog installed.
    *
    * @see template_preprocess_update_fetch_error_message()
    */
