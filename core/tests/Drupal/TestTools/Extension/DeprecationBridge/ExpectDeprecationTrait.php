@@ -87,7 +87,7 @@ trait ExpectDeprecationTrait {
       case is_array($callable):
         return '[static] ' . $callable[0] . '::' . $callable[1];
 
-      case $callable instanceof Closure:
+      case $callable instanceof \Closure:
         return '[closure]';
 
       case is_object($callable):
