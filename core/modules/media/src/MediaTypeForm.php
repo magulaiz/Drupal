@@ -341,6 +341,7 @@ class MediaTypeForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
+  #[TrustedCallback]
   public function save(array $form, FormStateInterface $form_state) {
     $status = parent::save($form, $form_state);
     /** @var \Drupal\media\MediaTypeInterface $media_type */
