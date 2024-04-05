@@ -63,13 +63,15 @@ trait ExpectDeprecationTrait {
   }
 
   /**
-   * Returns a callable as a string suitable for inclusion in a message,
+   * Returns a callable as a string suitable for inclusion in a message.
    *
    * @param callable $callable
    *   The callable.
    *
    * @return string
-   *   The string suitable for inclusion in a message,
+   *   The string suitable for inclusion in a message.
+   * 
+   * @see https://stackoverflow.com/questions/34324576/print-name-or-definition-of-callable-in-php
    */
   private static function getCallableName(callable $callable): string {
     switch (true) {
