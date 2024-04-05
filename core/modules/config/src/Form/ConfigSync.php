@@ -8,6 +8,7 @@ use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\Importer\ConfigImporterBatch;
 use Drupal\Core\Config\ImportStorageTransformer;
 use Drupal\Core\Config\TypedConfigManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ModuleInstallerInterface;
@@ -130,6 +131,13 @@ class ConfigSync extends FormBase {
   protected $themeExtensionList;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected EntityTypeManagerInterface $entityTypeManager;
+
+  /**
    * Constructs the object.
    *
    * @param \Drupal\Core\Config\StorageInterface $sync_storage
@@ -160,8 +168,10 @@ class ConfigSync extends FormBase {
    *   The import transformer service.
    * @param \Drupal\Core\Extension\ThemeExtensionList $extension_list_theme
    *   The theme extension list.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(StorageInterface $sync_storage, StorageInterface $active_storage, StorageInterface $snapshot_storage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, RendererInterface $renderer, ModuleExtensionList $extension_list_module, ImportStorageTransformer $import_transformer, ThemeExtensionList $extension_list_theme = NULL) {
+  public function __construct(StorageInterface $sync_storage, StorageInterface $active_storage, StorageInterface $snapshot_storage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigManagerInterface $config_manager, TypedConfigManagerInterface $typed_config, ModuleHandlerInterface $module_handler, ModuleInstallerInterface $module_installer, ThemeHandlerInterface $theme_handler, RendererInterface $renderer, ModuleExtensionList $extension_list_module, ImportStorageTransformer $import_transformer, ThemeExtensionList $extension_list_theme = NULL, EntityTypeManagerInterface $entity_type_manager = NULL) {
     $this->syncStorage = $sync_storage;
     $this->activeStorage = $active_storage;
     $this->snapshotStorage = $snapshot_storage;
@@ -180,6 +190,11 @@ class ConfigSync extends FormBase {
       $extension_list_theme = \Drupal::service('extension.list.theme');
     }
     $this->themeExtensionList = $extension_list_theme;
+    if ($entity_type_manager === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $entity_type_manager argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3412302', E_USER_DEPRECATED);
+      $entity_type_manager = \Drupal::service('entity_type.manager');
+    }
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -200,7 +215,8 @@ class ConfigSync extends FormBase {
       $container->get('renderer'),
       $container->get('extension.list.module'),
       $container->get('config.import_transformer'),
-      $container->get('extension.list.theme')
+      $container->get('extension.list.theme'),
+      $container->get('entity_type.manager'),
     );
   }
 
@@ -333,6 +349,8 @@ class ConfigSync extends FormBase {
           else {
             $route_name = 'config.diff';
           }
+          // Initialize links array.
+          $links = [];
           $links['view_diff'] = [
             'title' => $this->t('View differences'),
             'url' => Url::fromRoute($route_name, $route_options),
@@ -344,6 +362,25 @@ class ConfigSync extends FormBase {
               ]),
             ],
           ];
+          // Get config type from config name.
+          $config_type = $this->configManager->getEntityTypeIdByName($config_name) ?? 'system.simple';
+
+          // Get config name URL parameter.
+          $config_name_url_param = $this->getConfigNameUrlParam($config_type, $config_name);
+
+          // Add export config link.
+          $links['export_config'] = [
+            'title' => $this->t('Export this config'),
+            'url' => Url::fromRoute('config.export_single', ['config_type' => $config_type, 'config_name' => $config_name_url_param]),
+          ];
+          // Add import config link for all config change type
+          // Other than 'delete'.
+          if ($config_change_type != 'delete') {
+            $links['import_config'] = [
+              'title' => $this->t('Import this config'),
+              'url' => Url::fromRoute('config.import_single', ['config_type' => $config_type, 'config_name' => $config_name_url_param]),
+            ];
+          }
           $form[$collection][$config_change_type]['list']['#rows'][] = [
             'name' => $config_name,
             'operations' => [
@@ -402,6 +439,38 @@ class ConfigSync extends FormBase {
         }
       }
     }
+  }
+
+  /**
+   * Helper function to get Config name url param.
+   *
+   * @param string $config_type
+   *   The config type.
+   * @param string $config_name
+   *   The config name.
+   *
+   * @return string
+   *   Returns the config name URL parameter.
+   */
+  public function getConfigNameUrlParam(string $config_type, string $config_name) {
+
+    // Initialize config name url param.
+    $config_name_url_param = $config_name;
+
+    // If config type is not empty and is not 'system.simple',
+    // Remove config prefix from config name.
+    if (!empty($config_type) && $config_type != 'system.simple') {
+      // Get config type definition and append config prefix.
+      $definition = $this->entityTypeManager->getDefinition($config_type);
+      $config_prefix = $definition->getConfigPrefix() . ".";
+      // Check if config name starts with the config prefix.
+      if (strpos($config_name, $config_prefix) === 0) {
+        // Remove config prefix from config name.
+        $config_name_url_param = substr($config_name, strlen($config_prefix));
+      }
+    }
+    return $config_name_url_param;
+
   }
 
 }

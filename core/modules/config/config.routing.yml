@@ -46,10 +46,12 @@ config.import_full:
     _permission: 'import configuration'
 
 config.import_single:
-  path: '/admin/config/development/configuration/single/import'
+  path: '/admin/config/development/configuration/single/import/{config_type}/{config_name}'
   defaults:
     _title: 'Single import'
     _form: '\Drupal\config\Form\ConfigSingleImportForm'
+    config_type: NULL
+    config_name: NULL
   requirements:
     _permission: 'import configuration'
 
