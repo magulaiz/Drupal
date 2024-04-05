@@ -8,7 +8,7 @@ use Drupal\Core\Extension\ExtensionVersion;
 use Drupal\Core\Utility\Error;
 
 /**
- * Provides a project release value object.
+ * Provides a project value object.
  *
  * @internal
  */
@@ -120,9 +120,9 @@ final class Project {
 
     foreach ($this->updateServerProjectInfo->getReleases() as $version => $release_info) {
       if ($version === $this->existingVersion) {
-        // Because \Drupal\update\UpdateServerProjectInfo::getReleases() returns
-        // releases ordered by descending version number we can exit after we
-        // find the existing version as everything after this would be a
+        // \Drupal\update\UpdateServerProjectInfo::getReleases() returns
+        // releases ordered by descending version number. That means when
+        // reaching the existing version we can exit. Everything after that is a
         // downgrade.
         break;
       }
