@@ -261,6 +261,10 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       $field_definition = $this->getFieldStorageDefinition();
 
       foreach ($options as $column) {
+        // Don't map the column names for computed fields.
+        if ($this->getFieldStorageDefinition()->hasCustomStorage()) {
+          continue;
+        }
         $fields[$column] = $table_mapping->getFieldColumnName($field_definition, $column);
       }
 
