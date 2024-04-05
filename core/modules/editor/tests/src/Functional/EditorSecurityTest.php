@@ -97,7 +97,7 @@ class EditorSecurityTest extends BrowserTestBase {
       'name' => 'Restricted HTML, without text editor',
       'weight' => 0,
       'filters' => [
-        // A filter of the FilterInterface::TYPE_HTML_RESTRICTOR type.
+        // A filter of the FilterType::HtmlRestrictor type.
         'filter_html' => [
           'status' => 1,
           'settings' => [
@@ -112,7 +112,7 @@ class EditorSecurityTest extends BrowserTestBase {
       'name' => 'Restricted HTML, with text editor',
       'weight' => 1,
       'filters' => [
-        // A filter of the FilterInterface::TYPE_HTML_RESTRICTOR type.
+        // A filter of the FilterType::HtmlRestrictor type.
         'filter_html' => [
           'status' => 1,
           'settings' => [
@@ -132,7 +132,7 @@ class EditorSecurityTest extends BrowserTestBase {
       'name' => 'Restricted HTML, dangerous tag allowed, with text editor',
       'weight' => 1,
       'filters' => [
-        // A filter of the FilterInterface::TYPE_HTML_RESTRICTOR type.
+        // A filter of the FilterType::HtmlRestrictor type.
         'filter_html' => [
           'status' => 1,
           'settings' => [

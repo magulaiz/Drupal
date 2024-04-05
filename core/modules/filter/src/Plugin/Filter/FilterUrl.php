@@ -6,8 +6,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
+use Drupal\filter\FilterType;
 use Drupal\filter\Plugin\FilterBase;
-use Drupal\filter\Plugin\FilterInterface;
 
 /**
  * Provides a filter to convert URLs into links.
@@ -15,7 +15,7 @@ use Drupal\filter\Plugin\FilterInterface;
 #[Filter(
   id: "filter_url",
   title: new TranslatableMarkup("Convert URLs into links"),
-  type: FilterInterface::TYPE_MARKUP_LANGUAGE,
+  type: FilterType::MarkupLanguage,
   settings: [
     "filter_url_length" => 72,
   ]

@@ -8,6 +8,7 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Element\RenderElementBase;
 use Drupal\filter\Entity\FilterFormat;
+use Drupal\filter\FilterType;
 use Drupal\filter\Plugin\FilterInterface;
 use Drupal\filter\Render\FilteredMarkup;
 
@@ -55,8 +56,8 @@ class ProcessedText extends RenderElementBase {
    *   - #filter_types_to_skip: an array of filter types to skip, or an empty
    *     array (default) to skip no filter types. All of the format's filters
    *     will be applied, except for filters of the types that are marked to be
-   *     skipped. FilterInterface::TYPE_HTML_RESTRICTOR is the only type that
-   *     cannot be skipped.
+   *     skipped. FilterType::HtmlRestrictor is the only type that cannot be
+   *     skipped.
    *
    * @return array
    *   The passed-in element with the filtered text in '#markup'.
@@ -91,8 +92,8 @@ class ProcessedText extends RenderElementBase {
     $filter_must_be_applied = function (FilterInterface $filter) use ($filter_types_to_skip) {
       $enabled = $filter->status === TRUE;
       $type = $filter->getType();
-      // Prevent FilterInterface::TYPE_HTML_RESTRICTOR from being skipped.
-      $filter_type_must_be_applied = $type == FilterInterface::TYPE_HTML_RESTRICTOR || !in_array($type, $filter_types_to_skip);
+      // Prevent FilterType::HtmlRestrictor from being skipped.
+      $filter_type_must_be_applied = $type == FilterType::HtmlRestrictor || !in_array($type, $filter_types_to_skip);
       return $enabled && $filter_type_must_be_applied;
     };
 

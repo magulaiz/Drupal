@@ -18,7 +18,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\filter\FilterFormatInterface;
-use Drupal\filter\Plugin\FilterInterface;
+use Drupal\filter\FilterType;
 use Drupal\text\Plugin\Field\FieldType\TextItemBase;
 
 /**
@@ -327,7 +327,7 @@ function editor_filter_xss($html, FilterFormatInterface $format = NULL, FilterFo
   // format switching happens; in this case, no text editor XSS filtering is
   // desirable, because it would strip style attributes, amongst others.
   $current_filter_types = $format->getFilterTypes();
-  if (!in_array(FilterInterface::TYPE_HTML_RESTRICTOR, $current_filter_types, TRUE)) {
+  if (!in_array(FilterType::HtmlRestrictor, $current_filter_types, TRUE)) {
     if ($original_format === NULL) {
       return FALSE;
     }
@@ -340,7 +340,7 @@ function editor_filter_xss($html, FilterFormatInterface $format = NULL, FilterFo
     // we must apply XSS filtering to protect the admin user.
     else {
       $original_filter_types = $original_format->getFilterTypes();
-      if (!in_array(FilterInterface::TYPE_HTML_RESTRICTOR, $original_filter_types, TRUE)) {
+      if (!in_array(FilterType::HtmlRestrictor, $original_filter_types, TRUE)) {
         return FALSE;
       }
     }

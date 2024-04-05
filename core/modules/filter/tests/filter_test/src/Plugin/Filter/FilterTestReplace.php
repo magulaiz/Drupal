@@ -5,8 +5,8 @@ namespace Drupal\filter_test\Plugin\Filter;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
+use Drupal\filter\FilterType;
 use Drupal\filter\Plugin\FilterBase;
-use Drupal\filter\Plugin\FilterInterface;
 
 /**
  * Provides a test filter to replace all content.
@@ -14,8 +14,8 @@ use Drupal\filter\Plugin\FilterInterface;
 #[Filter(
   id: "filter_test_replace",
   title: new TranslatableMarkup("Testing filter"),
-  description: new TranslatableMarkup("Replaces all content with filter and text format information."),
-  type: FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE
+  type: FilterType::TransformIrreversible,
+  description: new TranslatableMarkup("Replaces all content with filter and text format information.")
 )]
 class FilterTestReplace extends FilterBase {
 

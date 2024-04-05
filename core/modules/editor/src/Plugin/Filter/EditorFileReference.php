@@ -10,8 +10,8 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\file\FileInterface;
 use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
+use Drupal\filter\FilterType;
 use Drupal\filter\Plugin\FilterBase;
-use Drupal\filter\Plugin\FilterInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -22,8 +22,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 #[Filter(
   id: "editor_file_reference",
   title: new TranslatableMarkup("Track images uploaded via a Text Editor"),
-  description: new TranslatableMarkup("Ensures that the latest versions of images uploaded via a Text Editor are displayed, along with their dimensions."),
-  type: FilterInterface::TYPE_TRANSFORM_REVERSIBLE
+  type: FilterType::TransformReversible,
+  description: new TranslatableMarkup("Ensures that the latest versions of images uploaded via a Text Editor are displayed, along with their dimensions.")
 )]
 class EditorFileReference extends FilterBase implements ContainerFactoryPluginInterface {
 

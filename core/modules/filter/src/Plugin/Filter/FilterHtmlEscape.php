@@ -5,8 +5,8 @@ namespace Drupal\filter\Plugin\Filter;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
+use Drupal\filter\FilterType;
 use Drupal\filter\Plugin\FilterBase;
-use Drupal\filter\Plugin\FilterInterface;
 
 /**
  * Provides a filter to display any HTML as plain text.
@@ -14,7 +14,7 @@ use Drupal\filter\Plugin\FilterInterface;
 #[Filter(
   id: "filter_html_escape",
   title: new TranslatableMarkup("Display any HTML as plain text"),
-  type: FilterInterface::TYPE_HTML_RESTRICTOR,
+  type: FilterType::HtmlRestrictor,
   weight: -10
 )]
 class FilterHtmlEscape extends FilterBase {

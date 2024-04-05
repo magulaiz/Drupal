@@ -5,9 +5,9 @@ namespace Drupal\filter_test\Plugin\Filter;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
+use Drupal\filter\FilterType;
 use Drupal\filter\Plugin\FilterBase;
 use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\filter\Plugin\FilterInterface;
 
 /**
  * Provides a test filter to merge with CacheableMetadata.
@@ -15,8 +15,8 @@ use Drupal\filter\Plugin\FilterInterface;
 #[Filter(
   id: "filter_test_cache_merge",
   title: new TranslatableMarkup("Testing filter"),
-  description: new TranslatableMarkup("Does not change content; merges cacheable metadata."),
-  type: FilterInterface::TYPE_TRANSFORM_REVERSIBLE
+  type: FilterType::TransformReversible,
+  description: new TranslatableMarkup("Does not change content; merges cacheable metadata.")
 )]
 class FilterTestCacheMerge extends FilterBase {
 

@@ -6,8 +6,8 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\filter\Attribute\Filter;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\filter\FilterProcessResult;
+use Drupal\filter\FilterType;
 use Drupal\filter\Plugin\FilterBase;
-use Drupal\filter\Plugin\FilterInterface;
 
 /**
  * Provides a test filter to associate cache contexts.
@@ -15,8 +15,8 @@ use Drupal\filter\Plugin\FilterInterface;
 #[Filter(
   id: "filter_test_cache_contexts",
   title: new TranslatableMarkup("Testing filter"),
-  description: new TranslatableMarkup("Does not change content; associates cache contexts."),
-  type: FilterInterface::TYPE_TRANSFORM_REVERSIBLE
+  type: FilterType::TransformReversible,
+  description: new TranslatableMarkup("Does not change content; associates cache contexts.")
 )]
 class FilterTestCacheContexts extends FilterBase {
 

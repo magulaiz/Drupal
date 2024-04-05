@@ -8,7 +8,7 @@ use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\filter\FilterPluginCollection;
-use Drupal\filter\Plugin\FilterInterface;
+use Drupal\filter\FilterType;
 use Drupal\user\Entity\Role;
 
 /**
@@ -272,13 +272,15 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
     $filter_types = [];
 
     $filters = $this->filters();
+    /** @var \Drupal\filter\Plugin\FilterInterface $filter */
     foreach ($filters as $filter) {
       if ($filter->status) {
-        $filter_types[] = $filter->getType();
+        $filter_type = $filter->getType();
+        $filter_types[$filter_type->name] = $filter_type;
       }
     }
 
-    return array_unique($filter_types);
+    return array_values($filter_types);
   }
 
   /**
@@ -290,7 +292,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
       if (!$filter->status) {
         return FALSE;
       }
-      if ($filter->getType() === FilterInterface::TYPE_HTML_RESTRICTOR && $filter->getHTMLRestrictions() !== FALSE) {
+      if ($filter->getType() === FilterType::HtmlRestrictor && $filter->getHTMLRestrictions() !== FALSE) {
         return TRUE;
       }
       return FALSE;

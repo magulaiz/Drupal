@@ -62,7 +62,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $assert_session = $this->assertSession();
 
     $incompatible_filter_name = 'filters[filter_incompatible][status]';
-    $filter_warning = 'CKEditor 5 only works with HTML-based text formats. The "A TYPE_MARKUP_LANGUAGE filter incompatible with CKEditor 5" (filter_incompatible) filter implies this text format is not HTML anymore.';
+    $filter_warning = 'CKEditor 5 only works with HTML-based text formats. The "A MarkupLanguage filter incompatible with CKEditor 5" (filter_incompatible) filter implies this text format is not HTML anymore.';
 
     $this->createNewTextFormat($page, $assert_session, 'unicorn');
     $page->checkField('filters[filter_html][status]');

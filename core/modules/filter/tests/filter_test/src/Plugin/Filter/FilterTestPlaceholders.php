@@ -7,8 +7,8 @@ use Drupal\filter\Attribute\Filter;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\filter\FilterProcessResult;
+use Drupal\filter\FilterType;
 use Drupal\filter\Plugin\FilterBase;
-use Drupal\filter\Plugin\FilterInterface;
 
 /**
  * Provides a test filter to use placeholders.
@@ -16,8 +16,8 @@ use Drupal\filter\Plugin\FilterInterface;
 #[Filter(
   id: "filter_test_placeholders",
   title: new TranslatableMarkup("Testing filter"),
-  description: new TranslatableMarkup("Appends a placeholder to the content; associates #lazy_builder callback."),
-  type: FilterInterface::TYPE_TRANSFORM_REVERSIBLE
+  type: FilterType::TransformReversible,
+  description: new TranslatableMarkup("Appends a placeholder to the content; associates #lazy_builder callback.")
 )]
 class FilterTestPlaceholders extends FilterBase implements TrustedCallbackInterface {
 

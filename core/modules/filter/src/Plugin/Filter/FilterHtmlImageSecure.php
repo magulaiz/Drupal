@@ -5,8 +5,8 @@ namespace Drupal\filter\Plugin\Filter;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
+use Drupal\filter\FilterType;
 use Drupal\filter\Plugin\FilterBase;
-use Drupal\filter\Plugin\FilterInterface;
 
 /**
  * Provides a filter to restrict images to site.
@@ -14,9 +14,9 @@ use Drupal\filter\Plugin\FilterInterface;
 #[Filter(
   id: "filter_html_image_secure",
   title: new TranslatableMarkup("Restrict images to this site"),
+  type: FilterType::TransformIrreversible,
   description: new TranslatableMarkup("Disallows usage of &lt;img&gt; tag sources that are not hosted on this site by replacing them with a placeholder image."),
-  type: FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE,
-  weight: 9
+  weight: 9,
 )]
 class FilterHtmlImageSecure extends FilterBase {
 

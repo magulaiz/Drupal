@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Drupal\Tests\editor\Unit\EditorXssFilter;
 
 use Drupal\editor\EditorXssFilter\Standard;
+use Drupal\filter\FilterType;
 use Drupal\Tests\UnitTestCase;
-use Drupal\filter\Plugin\FilterInterface;
 
 // cspell:ignore ascript attributename bgsound bscript ckers cript datafld
 // cspell:ignore dataformatas datasrc dynsrc ession livescript msgbox nmouseover
@@ -37,7 +37,7 @@ class StandardTest extends UnitTestCase {
       ->getMock();
     $this->format->expects($this->any())
       ->method('getFilterTypes')
-      ->willReturn([FilterInterface::TYPE_HTML_RESTRICTOR]);
+      ->willReturn([FilterType::HtmlRestrictor]);
     $restrictions = [
       'allowed' => [
         'p' => TRUE,
