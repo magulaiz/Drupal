@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views_ui\Traits;
 
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
