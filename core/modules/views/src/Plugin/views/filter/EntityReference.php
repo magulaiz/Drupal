@@ -59,7 +59,7 @@ class EntityReference extends ManyToOne {
    *
    * @var array
    */
-  protected $handlerOptions;
+  protected array $handlerOptions;
 
   /**
    * Validated exposed input that will be set as the input value.
@@ -68,28 +68,7 @@ class EntityReference extends ManyToOne {
    *
    * @var array
    */
-  protected $validatedExposedInput;
-
-  /**
-   * The selection plugin manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface
-   */
-  protected $selectionPluginManager;
-
-  /**
-   * The entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The messenger service.
-   *
-   * @var \Drupal\Core\Messenger\MessengerInterface
-   */
-  protected $messenger;
+  protected array $validatedExposedInput;
 
   /**
    * {@inheritdoc}
@@ -105,33 +84,18 @@ class EntityReference extends ManyToOne {
   }
 
   /**
-   * Constructs a Handler object.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface $selection_plugin_manager
-   *   The selection plugin manager service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager service.
-   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
-   *   The messenger service.
+   * Constructs an EntityReference object.
    */
   public function __construct(
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    SelectionPluginManagerInterface $selection_plugin_manager,
-    EntityTypeManagerInterface $entity_type_manager,
-    MessengerInterface $messenger
+    protected SelectionPluginManagerInterface $selectionPluginManager,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    MessengerInterface $messenger,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->selectionPluginManager = $selection_plugin_manager;
-    $this->entityTypeManager = $entity_type_manager;
-    $this->messenger = $messenger;
+    $this->setMessenger($messenger);
 
     // @todo Unify 'entity field'/'field_name' instead of converting back and
     // forth. https://www.drupal.org/node/2410779
@@ -150,26 +114,25 @@ class EntityReference extends ManyToOne {
       $plugin_definition,
       $container->get('plugin.manager.entity_reference_selection'),
       $container->get('entity_type.manager'),
-      $container->get('messenger')
+      $container->get('messenger'),
     );
   }
 
   /**
    * Gets the entity reference selection handler.
    *
-   * @param string $sub_handler
+   * @param string|null $sub_handler
    *   The sub handler to get an instance of or NULL for the current selection.
    *
    * @return \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface
    *   The selection handler plugin instance.
    */
-  protected function getSelectionHandler($sub_handler = NULL): SelectionInterface {
-
+  protected function getSelectionHandler(?string $sub_handler = NULL): SelectionInterface {
     // Default values for the handler.
     $handler_settings = $this->options['sub_handler_settings'] ?? [];
     $handler_settings['handler'] = $sub_handler;
     $handler_settings['target_type'] = $this->getReferencedEntityType()->id();
-
+    /** @var \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface */
     return $this->selectionPluginManager->getInstance($handler_settings);
   }
 
@@ -178,13 +141,11 @@ class EntityReference extends ManyToOne {
    */
   protected function defineOptions(): array {
     $options = parent::defineOptions();
-
     $options['sub_handler'] = [
       'default' => 'default:' . $this->getReferencedEntityType()->id(),
     ];
     $options['sub_handler_settings'] = ['default' => []];
     $options['widget'] = ['default' => static::WIDGET_AUTOCOMPLETE];
-
     return $options;
   }
 
@@ -224,7 +185,7 @@ class EntityReference extends ManyToOne {
   /**
    * {@inheritdoc}
    */
-  public function buildExtraOptionsForm(&$form, FormStateInterface $form_state) {
+  public function buildExtraOptionsForm(&$form, FormStateInterface $form_state): void {
     $form['sub_handler'] = [
       '#type' => 'select',
       '#title' => $this->t('Reference method'),
@@ -325,7 +286,7 @@ class EntityReference extends ManyToOne {
    * @param array $element
    *   The form element.
    */
-  protected function cleanUpSubformChildren(array &$element) {
+  protected function cleanUpSubformChildren(array &$element): void {
     // Remove the required property to prevent focus errors.
     if (isset($element['#required']) && $element['#required']) {
       $element['#required'] = FALSE;
@@ -364,7 +325,7 @@ class EntityReference extends ManyToOne {
   /**
    * {@inheritdoc}
    */
-  public function validateExtraOptionsForm($form, FormStateInterface $form_state) {
+  public function validateExtraOptionsForm($form, FormStateInterface $form_state): void {
     $options = $form_state->getValue('options');
     $sub_handler = $options['sub_handler'];
     $subform = $form[static::SUBFORM_PREFIX . $sub_handler];
@@ -398,7 +359,7 @@ class EntityReference extends ManyToOne {
   /**
    * {@inheritdoc}
    */
-  public function submitExtraOptionsForm($form, FormStateInterface $form_state) {
+  public function submitExtraOptionsForm($form, FormStateInterface $form_state): void {
     $sub_handler = $form_state->getValue('options')['sub_handler'];
 
     // Ensure that only the select sub handler option is saved.
@@ -421,7 +382,7 @@ class EntityReference extends ManyToOne {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    */
-  protected function alternateWidgetsDefaultNormalize(array &$form, FormStateInterface $form_state) {
+  protected function alternateWidgetsDefaultNormalize(array &$form, FormStateInterface $form_state): void {
     $field_id = '_' . $this->getFieldDefinition()->getName() . '-widget';
     $form[$field_id] = [
       '#type' => 'hidden',
@@ -439,7 +400,7 @@ class EntityReference extends ManyToOne {
   /**
    * {@inheritdoc}
    */
-  protected function valueForm(&$form, FormStateInterface $form_state) {
+  protected function valueForm(&$form, FormStateInterface $form_state): void {
     if (!isset($this->options['sub_handler'])) {
       return;
     }
@@ -617,8 +578,7 @@ class EntityReference extends ManyToOne {
   /**
    * {@inheritdoc}
    */
-  public function validate() {
-
+  public function validate(): array {
     // InOperator validation logic is not appropriate for entity reference
     // autocomplete or select, so prevent parent class validation from
     // occurring.
@@ -671,7 +631,7 @@ class EntityReference extends ManyToOne {
   /**
    * {@inheritdoc}
    */
-  public function validateExposed(&$form, FormStateInterface $form_state) {
+  public function validateExposed(&$form, FormStateInterface $form_state): void {
     if (empty($this->options['exposed'])) {
       return;
     }
@@ -704,7 +664,7 @@ class EntityReference extends ManyToOne {
   /**
    * {@inheritdoc}
    */
-  protected function valueSubmit($form, FormStateInterface $form_state) {
+  protected function valueSubmit($form, FormStateInterface $form_state): void {
     // Prevent the parent class InOperator from altering the array.
     // @see \Drupal\views\Plugin\views\filter\InOperator::valueSubmit().
   }
