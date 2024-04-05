@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -819,4 +820,13 @@ function views_view_presave(ViewEntityInterface $view) {
   /** @var \Drupal\views\ViewsConfigUpdater $config_updater */
   $config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
   $config_updater->updateAll($view);
+}
+
+/**
+ * Implements hook_block_build_BASE_BLOCK_ID_alter().
+ */
+function views_block_build_views_block_alter(array &$build, BlockPluginInterface $block) {
+  // Always create placeholders for views blocks so that any associated assets
+  // are aggregated separately where possible.
+  $build['#create_placeholder'] = TRUE;
 }
