@@ -1578,7 +1578,7 @@ function install_profile_modules(&$install_state) {
     }
   }
   // The System module has already been installed by install_base_system().
-  $modules = array_diff(array_unique($modules), ['system']);
+  $modules = array_diff(array_unique($modules), ['system', 'user']);
   foreach ($modules as $module) {
     if (!empty($files[$module]->info['required'])) {
       $required[$module] = $files[$module]->sort;

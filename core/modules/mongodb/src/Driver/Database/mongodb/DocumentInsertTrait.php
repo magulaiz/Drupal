@@ -133,7 +133,7 @@ trait DocumentInsertTrait {
             }
           }
 
-          $prefixed_table = $this->connection->getMongodbPrefixedTable($table);
+          $prefixed_table = $this->connection->getPrefix() . $table;
           $result = $this->connection->getConnection()->{$prefixed_table}->findOne(
             [
               $auto_increment_field => ['$eq' => $insert_document[$auto_increment_field]],

@@ -13,7 +13,7 @@ class Truncate extends QueryTruncate {
    * {@inheritdoc}
    */
   public function execute() {
-    $prefixed_table = $this->connection->getMongodbPrefixedTable($this->table);
+    $prefixed_table = $this->connection->getPrefix() . $this->table;
 
     try {
       // DeleteMany with an empty filter and limit set to zero truncates the

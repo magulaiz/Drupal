@@ -9,6 +9,7 @@ use Drupal\Core\Cache\DatabaseBackend as CoreDatabaseBackend;
 use Drupal\mongodb\Driver\Database\mongodb\Statement;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\Decimal128;
+use MongoDB\BSON\UTCDateTime;
 
 /**
  * The MongoDB implementation of \Drupal\Core\Cache\DatabaseBackend.
@@ -40,7 +41,7 @@ class DatabaseBackend extends CoreDatabaseBackend {
     // ::select() is a much smaller proportion of the request.
     $result = [];
     try {
-      $prefixed_table = $this->connection->getMongodbPrefixedTable($this->bin);
+      $prefixed_table = $this->connection->getPrefix() . $this->bin;
       $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
         ['cid' => ['$in' => array_keys($cid_mapping)]],
         [
@@ -192,7 +193,7 @@ class DatabaseBackend extends CoreDatabaseBackend {
 
       $this->connection->delete($this->bin)
         ->condition('expire', Cache::PERMANENT, '<>')
-        ->condition('expire', REQUEST_TIME, '<')
+        ->condition('expire', new UTCDateTime(REQUEST_TIME * 1000), '<')
         ->execute();
     }
     catch (\Exception $e) {

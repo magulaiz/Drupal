@@ -15,11 +15,11 @@ services:
   Drupal\mongodb\Driver\Database\mongodb\TranslateSql: '@mongodb.translate_sql'
 
   # MongoDB overrides Batch.
-  mongodb.batch.storage:
-    class: Drupal\mongodb\Batch\BatchStorage
-    arguments: ['@database', '@session', '@csrf_token', '@datetime.time']
-  batch.storage:
-    alias: mongodb.batch.storage
+#  mongodb.batch.storage:
+#    class: Drupal\mongodb\Batch\BatchStorage
+#    arguments: ['@database', '@session', '@csrf_token', '@datetime.time']
+#  batch.storage:
+#    alias: mongodb.batch.storage
 
   # MongoDB overrides EntityQuery.
   mongodb.entity.query.sql:
@@ -69,18 +69,18 @@ services:
     alias: mongodb.menu.tree_storage
 
   # MongoDB overrides Queue.
-  mongodb.queue:
-    class: Drupal\mongodb\Queue\QueueFactory
-    arguments: ['@settings']
-    calls:
-      - [setContainer, ['@service_container']]
-  Drupal\mongodb\Queue\QueueFactory: '@mongodb.queue'
-  mongodb.queue.database:
-    class: Drupal\mongodb\Queue\QueueDatabaseFactory
-    arguments: ['@database']
-  queue.database:
-    alias: mongodb.queue.database
-  Drupal\mongodb\Queue\QueueDatabaseFactory: '@mongodb.queue.database'
+#  mongodb.queue:
+#    class: Drupal\mongodb\Queue\QueueFactory
+#    arguments: ['@settings']
+#    calls:
+#      - [setContainer, ['@service_container']]
+#  Drupal\mongodb\Queue\QueueFactory: '@mongodb.queue'
+#  mongodb.queue.database:
+#    class: Drupal\mongodb\Queue\QueueDatabaseFactory
+#    arguments: ['@database']
+#  queue.database:
+#    alias: mongodb.queue.database
+#  Drupal\mongodb\Queue\QueueDatabaseFactory: '@mongodb.queue.database'
 
 #  # MongoDB overrides Routing.
 #  mongodb.router.route_provider:

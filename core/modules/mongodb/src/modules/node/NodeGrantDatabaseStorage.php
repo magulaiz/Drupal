@@ -207,7 +207,7 @@ class NodeGrantDatabaseStorage extends CoreNodeGrantDatabaseStorage {
    * {@inheritdoc}
    */
   public function count() {
-    $prefixed_table = $this->database->getMongodbPrefixedTable('node_access');
+    $prefixed_table = $this->database->getPrefix() . 'node_access';
 
     return (string) $this->database->getConnection()->{$prefixed_table}->count();
   }

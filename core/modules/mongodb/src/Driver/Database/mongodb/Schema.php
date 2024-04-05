@@ -412,7 +412,7 @@ class Schema extends DatabaseSchema {
   public function tableExists($table, $add_prefix = TRUE) {
     // @TODO Add the $add_prefix functionality.
     try {
-      $prefixed_table = $this->connection->getMongodbPrefixedTable($table);
+      $prefixed_table = $this->connection->getPrefix() . $table;
       $options = [
         'maxTimeMS' => 1000,
         'filter' => ['name' => $prefixed_table],

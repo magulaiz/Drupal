@@ -95,6 +95,9 @@ class TranslateViews {
     'entity_test__field_test_data' => [
       'base table' => 'entity_test',
     ],
+    'entity_test__field_foobar' => [
+      'base table' => 'entity_test',
+    ],
     'entity_test_mul_changed_property' => [
       'base table' => 'entity_test_mul_changed',
     ],

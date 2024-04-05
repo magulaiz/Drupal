@@ -29,7 +29,7 @@ class RouteProvider extends CoreRouteProvider {
       }
       else {
         try {
-          $prefixed_table = $this->connection->getMongodbPrefixedTable($this->tableName);
+          $prefixed_table = $this->connection->getPrefix() . $this->tableName;
           $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
             ['name' => ['$in' => $routes_to_load]],
             ['projection' => ['name' => 1, 'route' => 1, '_id' => 0]]
@@ -65,7 +65,7 @@ class RouteProvider extends CoreRouteProvider {
     }
 
     try {
-      $prefixed_table = $this->connection->getMongodbPrefixedTable($this->tableName);
+      $prefixed_table = $this->connection->getPrefix() . $this->tableName;
       $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
         ['pattern_outline' => ['$in' => $ancestors], 'number_parts' => ['$gte' => count($parts)]],
         ['projection' => ['name' => 1, 'route' => 1, 'fit' => 1, '_id' => 0]]

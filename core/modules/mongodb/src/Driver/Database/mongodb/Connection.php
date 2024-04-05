@@ -297,6 +297,15 @@ class Connection extends DatabaseConnection {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getFullQualifiedTableName($table) {
+    // The MongoDB database driver does not support queries from other
+    // databases.
+    return $this->getPrefix() . $table;
+  }
+
+  /**
    * Get a MongoDB prefixed table name.
    *
    * @param string $table
@@ -433,7 +442,7 @@ class Connection extends DatabaseConnection {
     @trigger_error('Drupal\Core\Database\Connection::nextId() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Modules should use instead the keyvalue storage for the last used id. See https://www.drupal.org/node/3349345', E_USER_DEPRECATED);
 
     $existing_id = (int) $existing_id;
-    $prefixed_table = $this->getMongodbPrefixedTable('sequences');
+    $prefixed_table = $this->getPrefix() . 'sequences';
 
     // Update the sequence.
     $result = $this->getConnection()->{$prefixed_table}->findOneAndUpdate(

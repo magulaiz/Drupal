@@ -98,7 +98,7 @@ class DatabaseLockBackend extends CoreDatabaseLockBackend {
     $name = $this->normalizeName($name);
 
     try {
-      $prefixed_table = $this->database->getMongodbPrefixedTable(static::TABLE_NAME);
+      $prefixed_table = $this->database->getPrefix() . static::TABLE_NAME;
       $cursor = $this->database->getConnection()->{$prefixed_table}->find(
         ['name' => ['$eq' => $name]],
         ['projection' => ['expire' => 1, 'value' => 1, '_id' => 0]]

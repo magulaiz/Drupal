@@ -15,7 +15,7 @@ class DatabaseFileUsageBackend extends CoreDatabaseFileUsageBackend {
    * {@inheritdoc}
    */
   public function add(FileInterface $file, $module, $type, $id, $count = 1) {
-    $prefixed_table = $this->connection->getMongodbPrefixedTable($this->tableName);
+    $prefixed_table = $this->connection->getPrefix() . $this->tableName;
     $this->connection->getConnection()->{$prefixed_table}->updateMany(
       [
         'fid' => (int) $file->id(),
@@ -62,7 +62,7 @@ class DatabaseFileUsageBackend extends CoreDatabaseFileUsageBackend {
         $conditions['type'] = (string) $type;
         $conditions['id'] = (string) $id;
       }
-      $prefixed_table = $this->connection->getMongodbPrefixedTable($this->tableName);
+      $prefixed_table = $this->connection->getPrefix() . $this->tableName;
       $this->connection->getConnection()->{$prefixed_table}->updateMany(
         $conditions,
         [

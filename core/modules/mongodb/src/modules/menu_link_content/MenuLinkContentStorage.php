@@ -25,7 +25,7 @@ class MenuLinkContentStorage extends CoreMenuLinkContentStorage {
     $revision_default_field = $table_mapping->getColumnNames($this->entityType->getRevisionMetadataKey('revision_default'))['value'];
 //dump('$revision_default_field: ' . $revision_default_field);
 
-dump('getMenuLinkIdsWithPendingRevisions() This query needs to be fixed.');
+//dump('getMenuLinkIdsWithPendingRevisions() This query needs to be fixed.');
     $query = $this->database->select($this->getBaseTable(), 'mlfr');
     $query->fields('mlfr', [$id_field]);
 //    $query->addExpression("MAX([mlfr].[$revision_field])", $revision_field);

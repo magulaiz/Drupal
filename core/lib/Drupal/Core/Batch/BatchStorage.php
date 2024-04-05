@@ -6,6 +6,7 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseException;
+use MongoDB\BSON\UTCDateTime;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class BatchStorage implements BatchStorageInterface {
@@ -42,6 +43,15 @@ class BatchStorage implements BatchStorageInterface {
   protected readonly TimeInterface $time;
 
   /**
+   * Indicator for the existence of the database table.
+   *
+   * This variable is only used by the database driver for MongoDB.
+   *
+   * @var bool
+   */
+  protected $tableExists = FALSE;
+
+  /**
    * Constructs the database batch storage service.
    *
    * @param \Drupal\Core\Database\Connection $connection
@@ -71,10 +81,20 @@ class BatchStorage implements BatchStorageInterface {
     // Ensure that a session is started before using the CSRF token generator.
     $this->session->start();
     try {
-      $batch = $this->connection->query("SELECT [batch] FROM {batch} WHERE [bid] = :bid AND [token] = :token", [
-        ':bid' => $id,
-        ':token' => $this->csrfToken->get($id),
-      ])->fetchField();
+      if ($this->connection->driver() == 'mongodb') {
+        $batch = $this->connection->select('batch', 'b')
+          ->fields('b', ['batch'])
+          ->condition('bid', (int) $id)
+          ->condition('token', $this->csrfToken->get($id))
+          ->execute()
+          ->fetchField();
+      }
+      else {
+        $batch = $this->connection->query("SELECT [batch] FROM {batch} WHERE [bid] = :bid AND [token] = :token", [
+          ':bid' => $id,
+          ':token' => $this->csrfToken->get($id),
+        ])->fetchField();
+      }
     }
     catch (\Exception $e) {
       $this->catchException($e);
@@ -92,7 +112,7 @@ class BatchStorage implements BatchStorageInterface {
   public function delete($id) {
     try {
       $this->connection->delete('batch')
-        ->condition('bid', $id)
+        ->condition('bid', (int) $id)
         ->execute();
     }
     catch (\Exception $e) {
@@ -104,10 +124,16 @@ class BatchStorage implements BatchStorageInterface {
    * {@inheritdoc}
    */
   public function update(array $batch) {
+    if ($this->connection->driver() == 'mongodb' && !$this->tableExists) {
+      // For MongoDB the table needs to exist. Otherwise MongoDB creates one
+      // without the correct validation.
+      $this->tableExists = $this->ensureTableExists();
+    }
+
     try {
       $this->connection->update('batch')
         ->fields(['batch' => serialize($batch)])
-        ->condition('bid', $batch['id'])
+        ->condition('bid', (int) $batch['id'])
         ->execute();
     }
     catch (\Exception $e) {
@@ -120,9 +146,14 @@ class BatchStorage implements BatchStorageInterface {
    */
   public function cleanup() {
     try {
+      $timestamp = $this->time->getRequestTime() - 864000;
+      if ($this->connection->driver() == 'mongodb') {
+        $timestamp = new UTCDateTime($timestamp * 1000);
+      }
+
       // Cleanup the batch table and the queue for failed batches.
       $this->connection->delete('batch')
-        ->condition('timestamp', $this->time->getRequestTime() - 864000, '<')
+        ->condition('timestamp', $timestamp, '<')
         ->execute();
     }
     catch (\Exception $e) {
@@ -134,6 +165,12 @@ class BatchStorage implements BatchStorageInterface {
    * {@inheritdoc}
    */
   public function create(array $batch) {
+    if ($this->connection->driver() == 'mongodb' && !$this->tableExists) {
+      // For MongoDB the table needs to exist. Otherwise MongoDB creates one
+      // without the correct validation.
+      $this->tableExists = $this->ensureTableExists();
+    }
+
     // Ensure that a session is started before using the CSRF token generator,
     // and update the database record.
     $this->session->start();
@@ -142,7 +179,7 @@ class BatchStorage implements BatchStorageInterface {
         'token' => $this->csrfToken->get($batch['id']),
         'batch' => serialize($batch),
       ])
-      ->condition('bid', $batch['id'])
+      ->condition('bid', (int) $batch['id'])
       ->execute();
   }
 
@@ -153,22 +190,39 @@ class BatchStorage implements BatchStorageInterface {
    *   A batch id.
    */
   public function getId(): int {
-    $try_again = FALSE;
-    try {
-      // The batch table might not yet exist.
-      return $this->doInsertBatchRecord();
-    }
-    catch (\Exception $e) {
-      // If there was an exception, try to create the table.
-      if (!$try_again = $this->ensureTableExists()) {
-        // If the exception happened for other reason than the missing table,
-        // propagate the exception.
-        throw $e;
+    if ($this->connection->driver() == 'mongodb') {
+      // For MongoDB the table needs to exist. Otherwise MongoDB creates one
+      // without the correct validation.
+      if (!$this->tableExists) {
+        $this->tableExists = $this->ensureTableExists();
       }
+
+      return $this->connection->insert('batch')
+        ->fields([
+          'timestamp' => new UTCDateTime($this->time->getRequestTime() * 1000),
+          'token' => '',
+          'batch' => NULL,
+        ])
+        ->execute();
     }
-    // Now that the table has been created, try again if necessary.
-    if ($try_again) {
-      return $this->doInsertBatchRecord();
+    else {
+      $try_again = FALSE;
+      try {
+        // The batch table might not yet exist.
+        return $this->doInsertBatchRecord();
+      }
+      catch (\Exception $e) {
+        // If there was an exception, try to create the table.
+        if (!$try_again = $this->ensureTableExists()) {
+          // If the exception happened for other reason than the missing table,
+          // propagate the exception.
+          throw $e;
+        }
+      }
+      // Now that the table has been created, try again if necessary.
+      if ($try_again) {
+        return $this->doInsertBatchRecord();
+      }
     }
   }
 
@@ -232,7 +286,7 @@ class BatchStorage implements BatchStorageInterface {
    * @internal
    */
   public function schemaDefinition() {
-    return [
+    $schema = [
       'description' => 'Stores details about batches (processes that run in multiple HTTP requests).',
       'fields' => [
         'bid' => [
@@ -264,6 +318,13 @@ class BatchStorage implements BatchStorageInterface {
         'token' => ['token'],
       ],
     ];
+
+    if ($this->connection->driver() == 'mongodb') {
+      // For MongoDB timestamps are stored as real dates.
+      $schema['fields']['timestamp']['type'] = 'date';
+    }
+
+    return $schema;
   }
 
 }

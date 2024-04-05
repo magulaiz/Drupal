@@ -233,7 +233,7 @@ class TranslateSql {
 
       // The SQL queries that need special handling.
       if (preg_match('/^SELECT MAX\(\[id\]\) FROM {(.*)}$/', $query, $matches)) {
-        $prefixed_table = $connection->getMongodbPrefixedTable($matches[1]);
+        $prefixed_table = $connection->getPrefix() . $matches[1];
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
@@ -254,7 +254,7 @@ class TranslateSql {
       }
       // The SQL queries that need special handling.
       if (preg_match('/^SELECT MAX\(\[nid\]\) FROM {(.*)}$/', $query, $matches)) {
-        $prefixed_table = $connection->getMongodbPrefixedTable($matches[1]);
+        $prefixed_table = $connection->getPrefix() . $matches[1];
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
@@ -274,7 +274,7 @@ class TranslateSql {
         return $statement;
       }
       elseif (preg_match('/^SELECT \[name\] FROM {(.*)} WHERE \[age\] > :age$/', $query, $matches)) {
-        $prefixed_table = $connection->getMongodbPrefixedTable($matches[1]);
+        $prefixed_table = $connection->getPrefix() . $matches[1];
         $age = $args[':age'];
 
         if ($connection->isEventEnabled(StatementExecutionStartEvent::class)) {
@@ -311,7 +311,7 @@ class TranslateSql {
         return $statement;
       }
       elseif (preg_match('/^SELECT \* FROM {test} WHERE \[age\] > :age$/', $query, $matches)) {
-        $prefixed_table = $connection->getMongodbPrefixedTable('test');
+        $prefixed_table = $connection->getPrefix() . 'test';
         $age = $args[':age'];
 
         $startEvent = $this->startEvent($connection, $query, $args);
@@ -328,7 +328,7 @@ class TranslateSql {
         return $statement;
       }
       elseif (preg_match('/^SELECT \* FROM {test_one_blob} WHERE \[id\] = :id$/', $query, $matches)) {
-        $prefixed_table = $connection->getMongodbPrefixedTable('test_one_blob');
+        $prefixed_table = $connection->getPrefix() . 'test_one_blob';
         $id = (int) $args[':id'];
 
         $startEvent = $this->startEvent($connection, $query, $args);
@@ -345,7 +345,7 @@ class TranslateSql {
         return $statement;
       }
       elseif (preg_match('/^SELECT \* FROM {test_two_blobs} WHERE \[id\] = :id$/', $query, $matches)) {
-        $prefixed_table = $connection->getMongodbPrefixedTable('test_two_blobs');
+        $prefixed_table = $connection->getPrefix() . 'test_two_blobs';
         $id = (int) $args[':id'];
 
         $startEvent = $this->startEvent($connection, $query, $args);
@@ -362,7 +362,7 @@ class TranslateSql {
         return $statement;
       }
       elseif (preg_match('/^SELECT \* FROM {test_special_columns} WHERE id = :id$/', $query, $matches)) {
-        $prefixed_table = $connection->getMongodbPrefixedTable('test_special_columns');
+        $prefixed_table = $connection->getPrefix() . 'test_special_columns';
         $id = (int) $args[':id'];
 
         $startEvent = $this->startEvent($connection, $query, $args);
@@ -379,7 +379,7 @@ class TranslateSql {
         return $statement;
       }
       elseif (preg_match('/^SELECT \[name\] FROM {(.*)} ORDER BY \[name\]$/', $query, $matches)) {
-        $prefixed_table = $connection->getMongodbPrefixedTable($matches[1]);
+        $prefixed_table = $connection->getPrefix() . $matches[1];
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
@@ -400,7 +400,7 @@ class TranslateSql {
         return $statement;
       }
       elseif (preg_match('/^SELECT \[vid\] FROM {(.*)} WHERE \[uid\] = :uid ORDER BY \[vid\]$/', $query, $matches)) {
-        $prefixed_table = $connection->getMongodbPrefixedTable($matches[1]);
+        $prefixed_table = $connection->getPrefix() . $matches[1];
         $uid = (int) $args[':uid'];
 
         $startEvent = $this->startEvent($connection, $query, $args);
@@ -422,7 +422,7 @@ class TranslateSql {
         return $statement;
       }
       elseif (preg_match("/^SELECT \* FROM {test_task} WHERE \[task\] = 'sleep' ORDER BY \[tid\]$/", $query, $matches)) {
-        $prefixed_table = $connection->getMongodbPrefixedTable('test_task');
+        $prefixed_table = $connection->getPrefix() . 'test_task';
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
@@ -443,7 +443,7 @@ class TranslateSql {
         return $statement;
       }
       elseif (preg_match("/^SELECT \[data\], \[created\], \[item_id\] FROM {queue} q WHERE \[expire\] = 0 AND \[name\] = :name ORDER BY \[created\], \[item_id\] ASC$/", $query, $matches)) {
-        $prefixed_table = $connection->getMongodbPrefixedTable('queue');
+        $prefixed_table = $connection->getPrefix() . 'queue';
         $name = $args[':name'];
 
         $startEvent = $this->startEvent($connection, $query, $args);
@@ -465,7 +465,7 @@ class TranslateSql {
         return $statement;
       }
       elseif (preg_match('/^SELECT MAX\(\[test_serial\]\) FROM {(.*)}$/', $query, $matches)) {
-        $prefixed_table = $connection->getMongodbPrefixedTable($matches[1]);
+        $prefixed_table = $connection->getPrefix() . $matches[1];
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
@@ -486,7 +486,7 @@ class TranslateSql {
         return $statement;
       }
       elseif (preg_match('/^SELECT COUNT\(\*\) \+ 3 FROM {(.*)}$/', $query, $matches) || preg_match('/^SELECT COUNT\(\*\) \+ :count FROM {(.*)}$/', $query, $matches)) {
-        $prefixed_table = $connection->getMongodbPrefixedTable($matches[1]);
+        $prefixed_table = $connection->getPrefix() . $matches[1];
         $arg_count = isset($args[':count']) ? intval($args[':count']) : 3;
 
         $startEvent = $this->startEvent($connection, $query, $args);
@@ -511,7 +511,7 @@ class TranslateSql {
         return new StatementCountQuery($connection, $arg_count + $query_count, $query_options);
       }
       elseif (preg_match('/^SELECT name, value FROM {(.*)} WHERE collection = :collection AND expire > :now$/', $query, $matches)) {
-        $prefixed_table = $connection->getMongodbPrefixedTable($matches[1]);
+        $prefixed_table = $connection->getPrefix() . $matches[1];
         $collection = $args[':collection'];
         $now = $args[':now'];
 
@@ -529,7 +529,7 @@ class TranslateSql {
         return $statement;
       }
       elseif (preg_match('/^SELECT CONCAT\(:a1, CONCAT\(:a2, CONCAT\(:a3, CONCAT\(:a4, :a5\)\)\)\)$/', $query, $matches)) {
-        $prefixed_table = $connection->getMongodbPrefixedTable('test');
+        $prefixed_table = $connection->getPrefix() . 'test';
         $a1 = $args[':a1'];
         $a2 = $args[':a2'];
         $a3 = $args[':a3'];
@@ -558,7 +558,7 @@ class TranslateSql {
         return $statement;
       }
       elseif (preg_match('/^SELECT CONCAT\(:a1, CONCAT\(\[job\], CONCAT\(:a2, CONCAT\(\[age\], :a3\)\)\)\) FROM {(.*)} WHERE \[age\] = :age$/', $query, $matches)) {
-        $prefixed_table = $connection->getMongodbPrefixedTable($matches[1]);
+        $prefixed_table = $connection->getPrefix() . $matches[1];
         $a1 = $args[':a1'];
         $a2 = $args[':a2'];
         $age = $args[':age'];
@@ -587,7 +587,7 @@ class TranslateSql {
         return $statement;
       }
       elseif (preg_match('/^SELECT CONCAT_WS\(\', \', :a1, NULL, :a2, :a3, :a4\)$/', $query, $matches)) {
-        $prefixed_table = $connection->getMongodbPrefixedTable('test');
+        $prefixed_table = $connection->getPrefix() . 'test';
         $a1 = $args[':a1'];
         $a2 = $args[':a2'];
         $a3 = $args[':a3'];
@@ -616,7 +616,7 @@ class TranslateSql {
         return $statement;
       }
       elseif (preg_match('/^SELECT CONCAT_WS\(\'\-\', :a1, \[name\], :a2, \[age\]\) FROM {(.*)} WHERE \[age\] = :age$/', $query, $matches)) {
-        $prefixed_table = $connection->getMongodbPrefixedTable($matches[1]);
+        $prefixed_table = $connection->getPrefix() . $matches[1];
         $a1 = $args[':a1'];
         $a2 = $args[':a2'];
         $age = $args[':age'];
@@ -645,7 +645,7 @@ class TranslateSql {
         return $statement;
       }
       elseif (preg_match('/^select name from {(.*)} where name = \'\[square\]\'$/', $query, $matches)) {
-        $prefixed_table = $connection->getMongodbPrefixedTable($matches[1]);
+        $prefixed_table = $connection->getPrefix() . $matches[1];
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
@@ -662,7 +662,7 @@ class TranslateSql {
         return $statement;
       }
       elseif (preg_match('/^SELECT LEAST\(:values\[\]\)$/', $query, $matches)) {
-        $prefixed_table = $connection->getMongodbPrefixedTable('test');
+        $prefixed_table = $connection->getPrefix() . 'test';
         $values = $args[':values[]'];
 
         $startEvent = $this->startEvent($connection, $query, $args);
@@ -691,7 +691,7 @@ class TranslateSql {
         return $statement;
       }
       elseif (preg_match('/^SELECT \* FROM \{test\} WHERE 1 = 0$/', $query, $matches)) {
-        $prefixed_table = $connection->getMongodbPrefixedTable('test');
+        $prefixed_table = $connection->getPrefix() . 'test';
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
@@ -709,7 +709,7 @@ class TranslateSql {
         return $statement;
       }
       elseif (preg_match('/^SELECT DISTINCT \[collection\] FROM {(.*)} WHERE \[collection\] <> :collection ORDER by \[collection\]$/', $query, $matches)) {
-        $prefixed_table = $connection->getMongodbPrefixedTable($matches[1]);
+        $prefixed_table = $connection->getPrefix() . $matches[1];
         $collection = $args[':collection'];
 
         $startEvent = $this->startEvent($connection, $query, $args);
@@ -747,7 +747,7 @@ class TranslateSql {
         return $statement;
       }
       elseif (preg_match('/^UPDATE {(.*)} SET uid = 1 WHERE id = 1$/', $query, $matches)) {
-        $prefixed_table = $connection->getMongodbPrefixedTable($matches[1]);
+        $prefixed_table = $connection->getPrefix() . $matches[1];
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
@@ -764,7 +764,7 @@ class TranslateSql {
         }
       }
       elseif (preg_match('/^UPDATE {(.*)} SET uid = 2 WHERE id <> 1$/', $query, $matches)) {
-        $prefixed_table = $connection->getMongodbPrefixedTable($matches[1]);
+        $prefixed_table = $connection->getPrefix() . $matches[1];
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
@@ -781,7 +781,7 @@ class TranslateSql {
         }
       }
       elseif (preg_match('/^UPDATE {(.*)} SET uid = :uid WHERE id = (\d)$/', $query, $matches)) {
-        $prefixed_table = $connection->getMongodbPrefixedTable($matches[1]);
+        $prefixed_table = $connection->getPrefix() . $matches[1];
         $uid = (int) $args[':uid'];
         $id = (int) $matches[2];
 
@@ -800,7 +800,7 @@ class TranslateSql {
         }
       }
       elseif (preg_match('/^UPDATE {(.*)} SET uid = :uid WHERE id IN \((\d),(\d)\)$/', $query, $matches)) {
-        $prefixed_table = $connection->getMongodbPrefixedTable($matches[1]);
+        $prefixed_table = $connection->getPrefix() . $matches[1];
         $uid = (int) $args[':uid'];
         $first_id = (int) $matches[2];
         $second_id = (int) $matches[3];
@@ -857,7 +857,7 @@ class TranslateSql {
             $options['projection']['_id'] = 0;
           }
 
-          $prefixed_table = $connection->getMongodbPrefixedTable($matches[1]);
+          $prefixed_table = $connection->getPrefix() . $matches[1];
 
           if (!empty($translation['count'])) {
             $startEvent = $this->startEvent($connection, $query, $args);

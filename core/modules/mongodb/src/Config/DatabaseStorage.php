@@ -22,7 +22,7 @@ class DatabaseStorage extends CoreDatabaseStorage {
    * {@inheritdoc}
    */
   public function exists($name) {
-    $prefixed_table = $this->connection->getMongodbPrefixedTable($this->table);
+    $prefixed_table = $this->connection->getPrefix() . $this->table;
     $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
       ['collection' => ['$eq' => $this->collection], 'name' => ['$eq' => $name]],
       ['projection' => ['_id' => 1]]
@@ -39,7 +39,7 @@ class DatabaseStorage extends CoreDatabaseStorage {
    * {@inheritdoc}
    */
   public function read($name) {
-    $prefixed_table = $this->connection->getMongodbPrefixedTable($this->table);
+    $prefixed_table = $this->connection->getPrefix() . $this->table;
     $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
       ['collection' => ['$eq' => $this->collection], 'name' => ['$eq' => $name]],
       ['projection' => ['data' => 1, '_id' => 0]]
@@ -58,7 +58,7 @@ class DatabaseStorage extends CoreDatabaseStorage {
    * {@inheritdoc}
    */
   public function readMultiple(array $names) {
-    $prefixed_table = $this->connection->getMongodbPrefixedTable($this->table);
+    $prefixed_table = $this->connection->getPrefix() . $this->table;
     $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
       ['collection' => ['$eq' => $this->collection], 'name' => ['$in' => $names]],
       ['projection' => ['name' => 1, 'data' => 1, '_id' => 0]]
@@ -104,7 +104,7 @@ class DatabaseStorage extends CoreDatabaseStorage {
    * {@inheritdoc}
    */
   public function getAllCollectionNames() {
-    $prefixed_table = $this->connection->getMongodbPrefixedTable($this->table);
+    $prefixed_table = $this->connection->getPrefix() . $this->table;
     $collections = $this->connection->getConnection()->{$prefixed_table}->distinct(
       'collection',
       ['collection' => ['$ne' => StorageInterface::DEFAULT_COLLECTION]]

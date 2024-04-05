@@ -393,7 +393,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
    */
   public function resetWeights($vid) {
     if ($this->database->driver() == 'mongodb') {
-      $prefixed_table = $this->database->getMongodbPrefixedTable('taxonomy_term_data');
+      $prefixed_table = $this->database->getPrefix() . 'taxonomy_term_data';
       $this->database->getConnection()->{$prefixed_table}->updateMany(
         [
           'vid' => $vid,

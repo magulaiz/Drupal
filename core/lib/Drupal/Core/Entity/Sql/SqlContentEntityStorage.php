@@ -1163,7 +1163,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $entity_id = (string) $revision->id();
       }
 
-      $prefixed_table = $this->database->getMongodbPrefixedTable($this->baseTable);
+      $prefixed_table = $this->database->getPrefix() . $this->baseTable;
       $update_operations = [];
       $update_operations['$pull'] = [$this->jsonStorageAllRevisionsTable => [$this->revisionKey => $revision_id]];
 
@@ -1837,7 +1837,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           $entity_id = (string) $entity_id;
         }
 
-        $prefixed_table = $this->database->getMongodbPrefixedTable($this->baseTable);
+        $prefixed_table = $this->database->getPrefix() . $this->baseTable;
         $entity_data = $this->database->getConnection()->{$prefixed_table}->findOne(
           [$this->idKey => ['$eq' => $entity_id]],
           [
@@ -2759,7 +2759,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         }
 
         foreach ($dedicated_tables as $embedded_to_table => $dedicated_table) {
-          $prefixed_table = $this->database->getMongodbPrefixedTable($this->getBaseTable());
+          $prefixed_table = $this->database->getPrefix() . $this->getBaseTable();
           if ($embedded_to_table == $this->getBaseTable()) {
             $this->database->getConnection()->{$prefixed_table}->updateMany(
               ["$dedicated_table" => ['$exists' => TRUE]],
@@ -2832,7 +2832,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     // Mark field data as deleted.
     if ($table_mapping->requiresDedicatedTableStorage($storage_definition)) {
       if ($this->database->driver() == 'mongodb') {
-        $prefixed_table = $this->database->getMongodbPrefixedTable($this->getBaseTable());
+        $prefixed_table = $this->database->getPrefix() . $this->getBaseTable();
 
         if ($this->entityType->isRevisionable()) {
           $all_revisions_table = $this->getJsonStorageAllRevisionsTable();
@@ -3108,7 +3108,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $id = (int) $id;
       }
 
-      $prefixed_table = $this->database->getMongodbPrefixedTable($this->getBaseTable());
+      $prefixed_table = $this->database->getPrefix() . $this->getBaseTable();
       foreach ($dedicated_tables as $embedded_to_table => $dedicated_table) {
         if ($embedded_to_table == $this->getBaseTable()) {
           $this->database->getConnection()->{$prefixed_table}->updateMany(

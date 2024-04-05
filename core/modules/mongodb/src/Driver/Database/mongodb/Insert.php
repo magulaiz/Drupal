@@ -62,7 +62,7 @@ class Insert extends QueryInsert {
       return NULL;
     }
 
-    $prefixed_table = $this->connection->getMongodbPrefixedTable($this->table);
+    $prefixed_table = $this->connection->getPrefix() . $this->table;
 
     $last_insert_id = 0;
 

@@ -34,7 +34,7 @@ class DatabaseQueue extends CoreDatabaseQueue {
    */
   public function numberOfItems() {
     try {
-      $prefixed_table = $this->connection->getMongodbPrefixedTable(static::TABLE_NAME);
+      $prefixed_table = $this->connection->getPrefix() . static::TABLE_NAME;
       return $this->connection->getConnection()->{$prefixed_table}->count(
         ['name' => ['$eq' => $this->name]],
         []

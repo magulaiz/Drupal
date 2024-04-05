@@ -18,7 +18,7 @@ class Delete extends QueryDelete {
     }
 
     try {
-      $prefixed_table = $this->connection->getMongodbPrefixedTable($this->table);
+      $prefixed_table = $this->connection->getPrefix() . $this->table;
       $result = $this->connection->getConnection()->{$prefixed_table}->deleteMany(
         $this->condition->toMongoArray(),
         [

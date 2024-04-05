@@ -44,7 +44,7 @@ class UserStorage extends CoreUserStorage {
    * {@inheritdoc}
    */
   public function updateLastLoginTimestamp(UserInterface $account) {
-    $prefixed_table = $this->database->getMongodbPrefixedTable('users');
+    $prefixed_table = $this->database->getPrefix() . 'users';
     $this->database->getConnection()->{$prefixed_table}->updateMany(
       [
         'uid' => ['$eq' => (int) $account->id()],
@@ -64,7 +64,7 @@ class UserStorage extends CoreUserStorage {
    * {@inheritdoc}
    */
   public function updateLastAccessTimestamp(AccountInterface $account, $timestamp) {
-    $prefixed_table = $this->database->getMongodbPrefixedTable('users');
+    $prefixed_table = $this->database->getPrefix() . 'users';
     $this->database->getConnection()->{$prefixed_table}->updateMany(
       [
         'uid' => ['$eq' => (int) $account->id()],
@@ -84,7 +84,7 @@ class UserStorage extends CoreUserStorage {
    * {@inheritdoc}
    */
   public function deleteRoleReferences(array $rids) {
-    $prefixed_table = $this->database->getMongodbPrefixedTable('users');
+    $prefixed_table = $this->database->getPrefix() . 'users';
     $this->database->getConnection()->{$prefixed_table}->updateMany(
       [],
       [

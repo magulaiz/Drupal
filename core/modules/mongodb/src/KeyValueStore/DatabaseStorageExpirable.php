@@ -4,6 +4,7 @@ namespace Drupal\mongodb\KeyValueStore;
 
 use Drupal\Core\KeyValueStore\DatabaseStorageExpirable as CoreDatabaseStorageExpirable;
 use Drupal\mongodb\Driver\Database\mongodb\Statement;
+use MongoDB\BSON\UTCDateTime;
 
 /**
  * The MongoDB implementation of \Drupal\Core\KeyValueStore\DatabaseStorageExpirable.
@@ -23,9 +24,9 @@ class DatabaseStorageExpirable extends CoreDatabaseStorageExpirable {
    * {@inheritdoc}
    */
   public function has($key) {
-    $prefixed_table = $this->connection->getMongodbPrefixedTable($this->table);
+    $prefixed_table = $this->connection->getPrefix() . $this->table;
     $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
-      ['collection' => ['$eq' => (string) $this->collection], 'expire' => ['$gt' => REQUEST_TIME], 'name' => ['$eq' => (string) $key]],
+      ['collection' => ['$eq' => (string) $this->collection], 'expire' => ['$gt' => new UTCDateTime(REQUEST_TIME * 1000)], 'name' => ['$eq' => (string) $key]],
       ['projection' => ['_id' => 1]]
     );
 
@@ -42,9 +43,9 @@ class DatabaseStorageExpirable extends CoreDatabaseStorageExpirable {
     foreach ($keys as &$key) {
       $key = (string) $key;
     }
-    $prefixed_table = $this->connection->getMongodbPrefixedTable($this->table);
+    $prefixed_table = $this->connection->getPrefix() . $this->table;
     $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
-      ['collection' => ['$eq' => (string) $this->collection], 'expire' => ['$gt' => REQUEST_TIME], 'name' => ['$in' => $keys]],
+      ['collection' => ['$eq' => (string) $this->collection], 'expire' => ['$gt' => new UTCDateTime(REQUEST_TIME * 1000)], 'name' => ['$in' => $keys]],
       ['projection' => ['name' => 1, 'value' => 1, '_id' => 0]]
     );
 
@@ -58,9 +59,9 @@ class DatabaseStorageExpirable extends CoreDatabaseStorageExpirable {
    * {@inheritdoc}
    */
   public function getAll() {
-    $prefixed_table = $this->connection->getMongodbPrefixedTable($this->table);
+    $prefixed_table = $this->connection->getPrefix() . $this->table;
     $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
-      ['collection' => ['$eq' => (string) $this->collection], 'expire' => ['$gt' => REQUEST_TIME]],
+      ['collection' => ['$eq' => (string) $this->collection], 'expire' => ['$gt' => new UTCDateTime(REQUEST_TIME * 1000)]],
       ['projection' => ['name' => 1, 'value' => 1, '_id' => 0]]
     );
 

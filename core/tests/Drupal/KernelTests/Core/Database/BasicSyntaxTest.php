@@ -134,6 +134,11 @@ class BasicSyntaxTest extends DatabaseTestBase {
    */
   public function testGetFullQualifiedTableName() {
     $database = \Drupal::database();
+    if ($database->driver() == 'mongodb') {
+      // The Mongodb database driver does not support this functionality.
+      $this->markTestSkipped();
+    }
+
     $num_matches = $database->select($database->getFullQualifiedTableName('test'), 't')
       ->countQuery()
       ->execute()

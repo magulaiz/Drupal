@@ -43,7 +43,7 @@ class Upsert extends QueryUpsert {
       return NULL;
     }
 
-    $prefixed_table = $this->connection->getMongodbPrefixedTable($this->table);
+    $prefixed_table = $this->connection->getPrefix() . $this->table;
 
     $affected_rows = 0;
     foreach ($this->insertValues as $insert_values) {

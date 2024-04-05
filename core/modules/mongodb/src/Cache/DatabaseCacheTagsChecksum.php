@@ -27,7 +27,7 @@ class DatabaseCacheTagsChecksum extends CoreDatabaseCacheTagsChecksum {
     if ($query_tags) {
       $db_tags = [];
       try {
-        $prefixed_table = $this->connection->getMongodbPrefixedTable('cachetags');
+        $prefixed_table = $this->connection->getPrefix() . 'cachetags';
         $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
           ['tag' => ['$in' => array_values($query_tags)]],
           ['projection' => ['tag' => 1, 'invalidations' => 1, 'created' => 1, 'expire' => 1, 'serialized' => 1, 'tags' => 1, 'checksum' => 1, '_id' => 0]]

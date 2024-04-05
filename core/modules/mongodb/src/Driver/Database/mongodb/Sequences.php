@@ -267,7 +267,7 @@ class Sequences {
    *   The prefixed table name for the sequences table.
    */
   protected function getPrefixedSequencesTableName() {
-    return $this->connection->getMongodbPrefixedTable(static::TABLE_NAME);
+    return $this->connection->getPrefix() . static::TABLE_NAME;
   }
 
 }

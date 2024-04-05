@@ -123,7 +123,7 @@ class ContentEntityStorageSchema extends SqlContentEntityStorageSchema {
     $table_mapping = $this->getTableMapping($this->entityType, [$storage_definition]);
     if ($table_mapping->requiresDedicatedTableStorage($storage_definition)) {
       $base_table = $this->storage->getBaseTable();
-      $prefixed_table = $this->database->getMongodbPrefixedTable($base_table);
+      $prefixed_table = $this->database->getPrefix() . $base_table;
       $schema = $this->getDedicatedTableSchema($storage_definition);
       $id_key = $this->entityType->getKey('id');
 

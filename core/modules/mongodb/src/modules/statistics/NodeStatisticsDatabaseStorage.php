@@ -28,7 +28,7 @@ class NodeStatisticsDatabaseStorage extends CoreNodeStatisticsDatabaseStorage {
       return TRUE;
     }
     catch (\Exception $e) {
-      $prefixed_table = $this->connection->getMongodbPrefixedTable('node_counter');
+      $prefixed_table = $this->connection->getPrefix() . 'node_counter';
       $this->connection->getConnection()->{$prefixed_table}->updateOne(
         [
           'nid' => $id,

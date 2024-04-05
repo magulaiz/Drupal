@@ -1207,7 +1207,7 @@ class Select extends QuerySelect {
       throw new MongodbSQLException('The mongodbBaseTable is not set. MongoDB needs this for selecting data from the database.');
     }
 
-    $prefixed_table = $this->connection->getMongodbPrefixedTable($this->mongodbBaseTable);
+    $prefixed_table = $this->connection->getPrefix() . $this->mongodbBaseTable;
 
     $options = $this->queryOptions;
 
@@ -1452,7 +1452,7 @@ class Select extends QuerySelect {
         // The creation of a temporary table must always be the last step in the
         // aggregation pipeline.
         if (isset($this->mongodbTemporaryTable)) {
-          $pipeline[] = ['$out' => $this->connection->getMongodbPrefixedTable($this->mongodbTemporaryTable)];
+          $pipeline[] = ['$out' => $this->connection->getPrefix() . $this->mongodbTemporaryTable];
         }
 
         // Return the query as its string value.
@@ -2132,7 +2132,7 @@ class Select extends QuerySelect {
 */
       $lookup = [
         '$lookup' => [
-          'from' => $this->connection->getMongodbPrefixedTable($mongodbJoin['table']),
+          'from' => $this->connection->getPrefix() . $mongodbJoin['table'],
           'let' => $lookup_let,
           'pipeline' => $lookup_pipeline,
           'as' => $mongodbJoin['alias'],

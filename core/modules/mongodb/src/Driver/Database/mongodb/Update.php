@@ -379,7 +379,7 @@ class Update extends QueryUpdate {
       $this->condition->compile($this->connection, $this);
     }
 
-    $prefixed_table = $this->connection->getMongodbPrefixedTable($this->table);
+    $prefixed_table = $this->connection->getPrefix() . $this->table;
 
     try {
       if (!empty($update_values)) {

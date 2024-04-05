@@ -563,7 +563,7 @@ class ContentEntityStorage extends SqlContentEntityStorage {
       $entity_id = (string) $revision->id();
     }
 
-    $prefixed_table = $this->database->getMongodbPrefixedTable($this->baseTable);
+    $prefixed_table = $this->database->getPrefix() . $this->baseTable;
     $update_operations = [];
     $update_operations['$pull'] = [$this->allRevisionsTable => [$this->revisionKey => $revision_id]];
 
@@ -895,7 +895,7 @@ class ContentEntityStorage extends SqlContentEntityStorage {
           $entity_id = (string) $entity_id;
         }
 
-        $prefixed_table = $this->database->getMongodbPrefixedTable($this->baseTable);
+        $prefixed_table = $this->database->getPrefix() . $this->baseTable;
         $entity_data = $this->database->getConnection()->{$prefixed_table}->findOne(
           [$this->idKey => ['$eq' => $entity_id]],
           ['projection' => [$this->allRevisionsTable => 1]],
@@ -1198,7 +1198,7 @@ class ContentEntityStorage extends SqlContentEntityStorage {
       }
 
       foreach ($dedicated_tables as $embedded_to_table => $dedicated_table) {
-        $prefixed_table = $this->database->getMongodbPrefixedTable($this->getBaseTable());
+        $prefixed_table = $this->database->getPrefix() . $this->getBaseTable();
         if ($embedded_to_table == $this->getBaseTable()) {
           $this->database->getConnection()->{$prefixed_table}->updateMany(
             ["$dedicated_table" => ['$exists' => TRUE]],
@@ -1228,7 +1228,7 @@ class ContentEntityStorage extends SqlContentEntityStorage {
     $storage_definition = $field_definition->getFieldStorageDefinition();
     // Mark field data as deleted.
     if ($table_mapping->requiresDedicatedTableStorage($storage_definition)) {
-      $prefixed_table = $this->database->getMongodbPrefixedTable($this->getBaseTable());
+      $prefixed_table = $this->database->getPrefix() . $this->getBaseTable();
 
       if ($this->entityType->isRevisionable()) {
         $all_revisions_table = $this->getAllRevisionsTable();
@@ -1421,7 +1421,7 @@ class ContentEntityStorage extends SqlContentEntityStorage {
       $id = (int) $id;
     }
 
-    $prefixed_table = $this->database->getMongodbPrefixedTable($this->getBaseTable());
+    $prefixed_table = $this->database->getPrefix() . $this->getBaseTable();
     foreach ($dedicated_tables as $embedded_to_table => $dedicated_table) {
       if ($embedded_to_table == $this->getBaseTable()) {
         $this->database->getConnection()->{$prefixed_table}->updateMany(

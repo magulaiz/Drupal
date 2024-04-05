@@ -65,7 +65,7 @@ class TableInformation {
    */
   public function load($reload = FALSE) {
     if (empty($this->tableInformation) || $reload) {
-      $prefixed_table_information_table = $this->connection->getMongodbPrefixedTable(static::TABLE_NAME);
+      $prefixed_table_information_table = $this->connection->getPrefix() . static::TABLE_NAME;
 
       $result = $this->connection->getConnection()->{$prefixed_table_information_table}->findOne(
         ['_id' => $this->id],
@@ -973,7 +973,7 @@ class TableInformation {
    *   The boolean value indicating if the database save was successful.
    */
   public function save($reload = FALSE) {
-    $prefixed_table_information_table = $this->connection->getMongodbPrefixedTable(static::TABLE_NAME);
+    $prefixed_table_information_table = $this->connection->getPrefix() . static::TABLE_NAME;
 
     $set = [];
     $unset = [];

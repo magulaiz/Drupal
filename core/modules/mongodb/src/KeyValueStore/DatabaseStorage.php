@@ -24,7 +24,7 @@ class DatabaseStorage extends CoreDatabaseStorage {
    * {@inheritdoc}
    */
   public function has($key) {
-    $prefixed_table = $this->connection->getMongodbPrefixedTable($this->table);
+    $prefixed_table = $this->connection->getPrefix() . $this->table;
     $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
       ['collection' => ['$eq' => (string) $this->collection], 'name' => ['$eq' => (string) $key]],
       ['projection' => ['_id' => 1]]
@@ -47,7 +47,7 @@ class DatabaseStorage extends CoreDatabaseStorage {
     // Check that key values are string values.
     assert(Inspector::assertAllStrings($keys), 'All keys must be strings.');
 
-    $prefixed_table = $this->connection->getMongodbPrefixedTable($this->table);
+    $prefixed_table = $this->connection->getPrefix() . $this->table;
     $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
       [
         'collection' => ['$eq' => (string) $this->collection],
@@ -72,7 +72,7 @@ class DatabaseStorage extends CoreDatabaseStorage {
    * {@inheritdoc}
    */
   public function getAll() {
-    $prefixed_table = $this->connection->getMongodbPrefixedTable($this->table);
+    $prefixed_table = $this->connection->getPrefix() . $this->table;
     $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
       ['collection' => ['$eq' => (string) $this->collection]],
       ['projection' => ['name' => 1, 'value' => 1, '_id' => 0]]

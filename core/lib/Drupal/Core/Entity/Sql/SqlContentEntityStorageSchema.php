@@ -806,7 +806,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     if ($table_mapping->requiresDedicatedTableStorage($storage_definition)) {
       if ($this->database->driver() == 'mongodb') {
         $base_table = $this->storage->getBaseTable();
-        $prefixed_table = $this->database->getMongodbPrefixedTable($base_table);
+        $prefixed_table = $this->database->getPrefix() . $base_table;
         $schema = $this->getDedicatedTableSchema($storage_definition);
         $id_key = $this->entityType->getKey('id');
 

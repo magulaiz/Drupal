@@ -13,7 +13,7 @@ class BanIpManager extends CoreBanIpManager {
    * {@inheritdoc}
    */
   public function isBanned($ip) {
-    $prefixed_table = $this->connection->getMongodbPrefixedTable('ban_ip');
+    $prefixed_table = $this->connection->getPrefix() . 'ban_ip';
     return (bool) $this->connection->getConnection()->{$prefixed_table}->count(
       [
         'ip' => [

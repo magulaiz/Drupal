@@ -3,6 +3,7 @@
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Component\Serialization\Yaml;
+use Drupal\Core\Database\Database;
 
 // cSpell:ignore Anónimo Aplicar
 
@@ -73,6 +74,20 @@ class InstallerExistingConfigSyncDirectoryMultilingualTest extends InstallerExis
       'delete' => [],
       'rename' => [],
     ];
+    if (Database::getConnection()->driver() == 'mongodb') {
+      $expected_changelist_default_collection['update'] = [
+        'system.mail',
+        'views.view.archive',
+        'views.view.content',
+        'views.view.content_recent',
+        'views.view.frontpage',
+        'views.view.glossary',
+        'views.view.user_admin_people',
+        'views.view.watchdog',
+        'views.view.who_s_new',
+        'views.view.who_s_online',
+      ];
+    }
     $this->assertEquals($expected_changelist_default_collection, $comparer->getChangelist());
     $expected_changelist_spanish_collection = [
       'create' => [],
