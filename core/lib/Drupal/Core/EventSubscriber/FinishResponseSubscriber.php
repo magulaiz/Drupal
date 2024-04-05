@@ -257,8 +257,10 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
   }
 
   /**
+   * Set cache control header to no-cache.
+   *
    * Force the proxy caches and browsers to revalidate the cache before
-   * downloading the request body.  This means a HTTP request occurs each time,
+   * downloading the request body. This means a HTTP request occurs each time,
    * but the browser may skip retrieving the HTTP body if the content is valid.
    *
    * @param \Symfony\Component\HttpFoundation\Response $response
