@@ -80,7 +80,7 @@ class NodeForm extends ContentEntityForm {
     $this->currentUser = $current_user;
     $this->dateFormatter = $date_formatter;
     if ($language_manager === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $language_manager argument is deprecated in drupal:11.0.0 and will be required in drupal:11.1.0', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . ' without the $language_manager argument is deprecated in drupal:10.4.0 and will be required in drupal:11.1.0. See https://www.drupal.org/node/3438992', E_USER_DEPRECATED);
       $this->languageManager = \Drupal::service('language_manager');
     }
     $this->languageManager = $language_manager;
