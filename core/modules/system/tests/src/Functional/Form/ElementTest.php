@@ -110,7 +110,7 @@ class ElementTest extends BrowserTestBase {
   /**
    * Tests required attribute for radios element.
    */
-  public function testRadiosRequired() {
+  public function testRadiosRequired(): void {
     // Verify that there is require attributes.
     $this->drupalGet('form-test/radios-required');
     $elements = $this->xpath('//fieldset[@id="edit-radios-required--wrapper" and @aria-required="true"]');

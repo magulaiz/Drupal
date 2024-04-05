@@ -45,7 +45,7 @@ class Radios extends FormElementBase {
    * fieldset for radio groups. These are applied to the child radio
    * elements instead.
    */
-  public static function setAttributes(&$element, $class = []) {
+  public static function setAttributes(&$element, $class = []): void {
     if (!empty($class)) {
       if (!isset($element['#attributes']['class'])) {
         $element['#attributes']['class'] = [];
@@ -128,7 +128,7 @@ class Radios extends FormElementBase {
   /**
    * Adds role "radiogroup" to radios fieldset wrapper.
    */
-  public static function preRenderRadiosFormElement($element) {
+  public static function preRenderRadiosFormElement(array $element): array {
     $element['#attributes']['role'] = 'radiogroup';
     return $element;
   }

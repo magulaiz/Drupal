@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
@@ -11,19 +13,19 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  *
  * @internal
  */
-class FormTestRadiosRequiredForm extends FormBase {
+final class FormTestRadiosRequiredForm extends FormBase {
 
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
+  public function getFormId(): string {
     return 'form_test_radios_required';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state): array {
     $form['radios-required'] = [
       '#type' => 'radios',
       '#title' => 'Radios required',
@@ -53,7 +55,7 @@ class FormTestRadiosRequiredForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     $form_state->setResponse(new JsonResponse($form_state->getValues()));
   }
 
