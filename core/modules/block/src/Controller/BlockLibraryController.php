@@ -122,7 +122,7 @@ class BlockLibraryController extends ControllerBase {
       $row['title']['data'] = [
         '#prefix' => '<div class="block-filter-text-source">',
         '#suffix' => '</div>',
-        '#plain_text' =>  $plugin_definition['admin_label'],
+        '#plain_text' => $plugin_definition['admin_label'],
       ];
       $row['category']['data'] = [
         '#plain_text' => $plugin_definition['category'],
