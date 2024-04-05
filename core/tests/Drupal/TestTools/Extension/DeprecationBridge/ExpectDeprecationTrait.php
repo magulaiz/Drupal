@@ -34,9 +34,9 @@ trait ExpectDeprecationTrait {
 
     $handler = Error::currentErrorHandler();
     if (!$handler instanceof TestErrorHandler) {
-      throw new \RuntimeException(sprintf('%s registered its own error handler (%s) without restoring the previous one before tear down. This can cause unpredictable test results. Ensure the test cleans up after itself.',
+      throw new \RuntimeException(sprintf('%s registered its own error handler (%s) without restoring the previous one before or during tear down. This can cause unpredictable test results. Ensure the test cleans up after itself.',
         $this->name(),
-        self::getCallableName($handler);
+        self::getCallableName($handler),
       ));
     }
     restore_error_handler();
