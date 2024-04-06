@@ -348,6 +348,8 @@ trait PerformanceTestTrait {
   private function collectNetworkData(array $messages, PerformanceData $performance_data): void {
     $stylesheet_count = 0;
     $script_count = 0;
+    $stylesheet_bytes = 0;
+    $script_bytes = 0;
     foreach ($messages as $message) {
       if ($message['method'] === 'Network.responseReceived') {
         if ($message['params']['type'] === 'Stylesheet') {
@@ -358,8 +360,44 @@ trait PerformanceTestTrait {
         }
       }
     }
+    // The performance log has 'encodedDataLength' for network requests, however
+    // in the case that the file has already been requested by the browser, this
+    // will be the length of a HEAD response for 304 not modified or similar. To
+    // get consistent results for assertions, get the actual size of the file,
+    // minus the basepath to account for tests running inside subdirectories.
+    $session = $this->getSession();
+    $page = $session->getPage();
+
+    $style_elements = $page->findAll('xpath', '//link[@href and @rel="stylesheet"]');
+    $style_urls = [];
+    foreach ($style_elements as $element) {
+      if ($GLOBALS['base_path'] === '/') {
+        $filename = ltrim(parse_url($element->getAttribute('href'), PHP_URL_PATH), '/');
+        $stylesheet_bytes += strlen(file_get_contents($filename));
+      }
+      else {
+        $filename = str_replace($GLOBALS['base_path'], '', parse_url($element->getAttribute('href'), PHP_URL_PATH));
+        // Strip the basepath from the contents of the file so that tests
+        // running in a subdirectory get the same results.
+        $stylesheet_bytes += strlen(str_replace($GLOBALS['base_path'], '/', file_get_contents($filename)));
+      }
+    }
+    $script_elements = $page->findAll('xpath', '//script[@src]');
+    $script_urls = [];
+    foreach ($script_elements as $element) {
+      if ($GLOBALS['base_path'] === '/') {
+        $filename = ltrim(parse_url($element->getAttribute('src'), PHP_URL_PATH), '/');
+      }
+      else {
+        $filename = str_replace($GLOBALS['base_path'], '', parse_url($element->getAttribute('src'), PHP_URL_PATH));
+      }
+      $script_bytes += strlen(file_get_contents($filename));
+    }
+
     $performance_data->setStylesheetCount($stylesheet_count);
+    $performance_data->setStylesheetBytes($stylesheet_bytes);
     $performance_data->setScriptCount($script_count);
+    $performance_data->setScriptBytes($script_bytes);
   }
 
   /**
