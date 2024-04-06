@@ -84,6 +84,15 @@ required_label:
 plural_label:
   type: label
   label: 'Plural variants'
+  deprecated: "The 'plural_label' config schema is deprecated in drupal:10.3.0 and is removed from drupal 11.0.0. Use the 'label_with_plural_variants' config schema instead. See https://www.drupal.org/node/3129216"
+
+# Sequence containing the label plural variants.
+label_with_plural_variants:
+  type: sequence
+  label: 'Plural variants'
+  sequence:
+    type: label
+    label: 'Plural variant'
 
 # Internal Drupal path
 path:

@@ -5,10 +5,11 @@
  * Configuration Translation module.
  */
 
-use Drupal\Core\Url;
+use Drupal\config_translation\FormElement\PluralVariantsElement;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 use Drupal\field\FieldConfigInterface;
 
 /**
@@ -187,6 +188,7 @@ function config_translation_config_schema_info_alter(&$definitions) {
     'mapping' => '\Drupal\config_translation\FormElement\ListElement',
     'sequence' => '\Drupal\config_translation\FormElement\ListElement',
     'plural_label' => '\Drupal\config_translation\FormElement\PluralVariants',
+    'label_with_plural_variants' => PluralVariantsElement::class,
   ];
 
   // Enhance the text and date type definitions with classes to generate proper
