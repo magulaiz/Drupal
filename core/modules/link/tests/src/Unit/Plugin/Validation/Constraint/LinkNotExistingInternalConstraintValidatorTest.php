@@ -21,26 +21,9 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
 
   /**
    * @covers ::validate
-   * @dataProvider providerValidate
    */
-  public function testValidate(string $mode, string $value, mixed $urlGeneratorReturn, bool $valid): void {
-    switch ($mode) {
-      case 'uri':
-        $url = Url::fromUri($value);
-        break;
-
-      case 'route':
-      default:
-        $url = Url::fromRoute($value);
-        $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
-        $urlGenerator->expects($this->any())
-          ->method('generateFromRoute')
-          ->with($value, [], [])
-          ->willReturn($urlGeneratorReturn);
-        $url->setUrlGenerator($urlGenerator);
-        break;
-
-    }
+  public function testValidateFromUri(): void {
+    $url = Url::fromUri('https://www.drupal.org');
 
     $link = $this->createMock(LinkItemInterface::class);
     $link->expects($this->any())
@@ -48,30 +31,69 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
       ->willReturn($url);
 
     $context = $this->createMock(ExecutionContextInterface::class);
-
-    if ($valid) {
-      $context->expects($this->never())
-        ->method('addViolation');
-    }
-    else {
-      $context->expects($this->once())
-        ->method('addViolation');
-    }
+    $context->expects($this->never())
+      ->method('addViolation');
 
     $constraint = new LinkNotExistingInternalConstraint();
-
     $validator = new LinkNotExistingInternalConstraintValidator();
     $validator->initialize($context);
     $validator->validate($link, $constraint);
   }
 
   /**
-   * Data provider for ::testValidate.
+   * @covers ::validate
    */
-  public static function providerValidate(): \Generator {
-    yield ['uri', 'https://www.drupal.org', NULL, TRUE];
-    yield ['route', 'example.existing_route', '/example/existing', TRUE];
-    yield ['route', 'example.not_existing_route', new RouteNotFoundException(), FALSE];
+  public function testValidateFromRoute(): void {
+    $url = Url::fromRoute('example.existing_route');
+
+    $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
+    $urlGenerator->expects($this->any())
+      ->method('generateFromRoute')
+      ->with('example.existing_route', [], [])
+      ->willReturn('/example/existing');
+    $url->setUrlGenerator($urlGenerator);
+
+    $link = $this->createMock(LinkItemInterface::class);
+    $link->expects($this->any())
+      ->method('getUrl')
+      ->willReturn($url);
+
+    $context = $this->createMock(ExecutionContextInterface::class);
+    $context->expects($this->never())
+      ->method('addViolation');
+
+    $constraint = new LinkNotExistingInternalConstraint();
+    $validator = new LinkNotExistingInternalConstraintValidator();
+    $validator->initialize($context);
+    $validator->validate($link, $constraint);
+  }
+
+  /**
+   * @covers ::validate
+   */
+  public function testValidateFromNonExistingRoute(): void {
+    $url = Url::fromRoute('example.not_existing_route');
+
+    $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
+    $urlGenerator->expects($this->any())
+      ->method('generateFromRoute')
+      ->with('example.not_existing_route', [], [])
+      ->willReturn(new RouteNotFoundException());
+    $url->setUrlGenerator($urlGenerator);
+
+    $link = $this->createMock(LinkItemInterface::class);
+    $link->expects($this->any())
+      ->method('getUrl')
+      ->willReturn($url);
+
+    $context = $this->createMock(ExecutionContextInterface::class);
+    $context->expects($this->never())
+      ->method('addViolation');
+
+    $constraint = new LinkNotExistingInternalConstraint();
+    $validator = new LinkNotExistingInternalConstraintValidator();
+    $validator->initialize($context);
+    $validator->validate($link, $constraint);
   }
 
   /**
@@ -90,7 +112,6 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
       ->method('addViolation');
 
     $constraint = new LinkNotExistingInternalConstraint();
-
     $validator = new LinkNotExistingInternalConstraintValidator();
     $validator->initialize($context);
     $validator->validate($link, $constraint);
