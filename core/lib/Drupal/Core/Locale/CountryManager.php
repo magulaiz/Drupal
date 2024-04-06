@@ -314,7 +314,7 @@ class CountryManager implements CountryManagerInterface {
    * @return array
    *   An array of countries  ISO 3166-1 alpha-2 =>  ISO 3166-1 alpha-3.
    */
-  public static function iso2ToIso3() {
+  public static function iso2ToIso3(): array {
     // cSpell:disable
     $countries = [
       'AC' => 'ASC',
