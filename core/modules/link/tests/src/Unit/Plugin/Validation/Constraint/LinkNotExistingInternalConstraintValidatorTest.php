@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\link\Unit\Plugin\Validation\Constraint;
 
+use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Url;
+use Drupal\link\LinkItemInterface;
 use Drupal\link\Plugin\Validation\Constraint\LinkNotExistingInternalConstraint;
 use Drupal\link\Plugin\Validation\Constraint\LinkNotExistingInternalConstraintValidator;
 use Drupal\Tests\UnitTestCase;
@@ -21,7 +23,30 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
    * @covers ::validate
    * @dataProvider providerValidate
    */
-  public function testValidate($value, $valid) {
+  public function testValidate(string $mode, string $value, mixed $urlGeneratorReturn, bool $valid): void {
+    switch ($mode) {
+      case 'uri':
+        $url = Url::fromUri($value);
+        break;
+
+      case 'route':
+      default:
+        $url = Url::fromRoute($value);
+        $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
+        $urlGenerator->expects($this->any())
+          ->method('generateFromRoute')
+          ->with($value, [], [])
+          ->willReturn($urlGeneratorReturn);
+        $url->setUrlGenerator($urlGenerator);
+        break;
+
+    }
+
+    $link = $this->createMock(LinkItemInterface::class);
+    $link->expects($this->any())
+      ->method('getUrl')
+      ->willReturn($url);
+
     $context = $this->createMock(ExecutionContextInterface::class);
 
     if ($valid) {
@@ -37,52 +62,16 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
 
     $validator = new LinkNotExistingInternalConstraintValidator();
     $validator->initialize($context);
-    $validator->validate($value, $constraint);
+    $validator->validate($link, $constraint);
   }
 
   /**
    * Data provider for ::testValidate.
    */
-  public function providerValidate() {
-    $data = [];
-
-    // External URL
-    $data[] = [Url::fromUri('https://www.drupal.org'), TRUE];
-
-    // Existing routed URL.
-    $url = Url::fromRoute('example.existing_route');
-
-    $url_generator = $this->createMock('Drupal\Core\Routing\UrlGeneratorInterface');
-    $url_generator->expects($this->any())
-      ->method('generateFromRoute')
-      ->with('example.existing_route', [], [])
-      ->willReturn('/example/existing');
-    $url->setUrlGenerator($url_generator);
-
-    $data[] = [$url, TRUE];
-
-    // Non-existent routed URL.
-    $url = Url::fromRoute('example.not_existing_route');
-
-    $url_generator = $this->createMock('Drupal\Core\Routing\UrlGeneratorInterface');
-    $url_generator->expects($this->any())
-      ->method('generateFromRoute')
-      ->with('example.not_existing_route', [], [])
-      ->willThrowException(new RouteNotFoundException());
-    $url->setUrlGenerator($url_generator);
-
-    $data[] = [$url, FALSE];
-
-    foreach ($data as &$single_data) {
-      $link = $this->createMock('Drupal\link\LinkItemInterface');
-      $link->expects($this->any())
-        ->method('getUrl')
-        ->willReturn($single_data[0]);
-
-      $single_data[0] = $link;
-    }
-
-    return $data;
+  public static function providerValidate(): \Generator {
+    yield ['uri', 'https://www.drupal.org', NULL, TRUE];
+    yield ['route', 'example.existing_route', '/example/existing', TRUE];
+    yield ['route', 'example.not_existing_route', new RouteNotFoundException(), FALSE];
   }
 
   /**
@@ -90,8 +79,8 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
    *
    * @see \Drupal\Core\Url::fromUri
    */
-  public function testValidateWithMalformedUri() {
-    $link = $this->createMock('Drupal\link\LinkItemInterface');
+  public function testValidateWithMalformedUri(): void {
+    $link = $this->createMock(LinkItemInterface::class);
     $link->expects($this->any())
       ->method('getUrl')
       ->willThrowException(new \InvalidArgumentException());
