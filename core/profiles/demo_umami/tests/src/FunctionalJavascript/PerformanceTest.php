@@ -46,7 +46,7 @@ class PerformanceTest extends PerformanceTestBase {
       $this->drupalGet('<front>');
     });
     $this->assertSession()->pageTextContains('Umami');
-    $this->assertSame(2, $performance_data->getStylesheetCount());
+    $this->assertSame(3, $performance_data->getStylesheetCount());
     $this->assertSame(2, $performance_data->getScriptCount());
   }
 

@@ -5,6 +5,7 @@
  * Allows the creation of content blocks through the user interface.
  */
 
+use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\block_content\BlockContentInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -65,6 +66,15 @@ function block_content_entity_type_alter(array &$entity_types) {
   unset($constraints['EntityChanged']);
   $constraints['BlockContentEntityChanged'] = NULL;
   $entity_types['block_content']->setConstraints($constraints);
+}
+
+/**
+ * Implements hook_block_build_BASE_BLOCK_ID_alter().
+ */
+function block_content_block_build_block_content_alter(array &$build, BlockPluginInterface $block) {
+  // Always create placeholders for content blocks so that any associated assets
+  // are aggregated separately where possible.
+  $build['#create_placeholder'] = TRUE;
 }
 
 /**
