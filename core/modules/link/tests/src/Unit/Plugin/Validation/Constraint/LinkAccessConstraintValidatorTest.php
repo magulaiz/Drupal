@@ -32,7 +32,7 @@ class LinkAccessConstraintValidatorTest extends UnitTestCase {
       ->method('access')
       ->willReturn($urlAccess);
 
-      // Mock a link object that returns the URL object.
+    // Mock a link object that returns the URL object.
     $link = $this->createMock('Drupal\link\LinkItemInterface');
     $link->expects($this->any())
       ->method('getUrl')
