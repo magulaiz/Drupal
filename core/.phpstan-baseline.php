@@ -2500,11 +2500,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Entity/Sql/SqlContentEntityStorageTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^@dataProvider provideFatalExitCodeData related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Error/DrupalLogErrorTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\EventSubscriber\\\\SpecialAttributesRouteSubscriberTest\\:\\:expectWarning\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/EventSubscriber/SpecialAttributesRouteSubscriberTest.php',
@@ -2624,11 +2619,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Test/WebDriverTestBaseTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^@dataProvider providerTestValidatePropertyWithInvalidObjects related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/TypedData/RecursiveContextualValidatorTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^@dataProvider callableResolverTestCases related method must be static in PHPUnit 10 and newer\\.$#',
