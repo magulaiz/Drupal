@@ -760,7 +760,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
   /**
    * Test the entity query alter hooks are invoked.
    *
-   * @see config_test_entity_query_tag_config_query_test_config_entity_query_alter_hook_test_alter()
+   * @see config_test_entity_query_tag__config_query_test__config_entity_query_alter_hook_test_alter()
    */
   public function testAlterHook(): void {
     // Run a test without any condition.

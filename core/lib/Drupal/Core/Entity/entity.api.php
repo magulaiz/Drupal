@@ -2296,7 +2296,7 @@ function hook_entity_extra_field_info_alter(&$info) {
  *   The entity query.
  *
  * @see hook_entity_query_ENTITY_TYPE_alter()
- * @see hook_entity_query_tag_TAG_alter()
+ * @see hook_entity_query_tag__TAG_alter()
  * @see \Drupal\Core\Entity\Query\QueryInterface
  */
 function hook_entity_query_alter(\Drupal\Core\Entity\Query\QueryInterface $query): void {
@@ -2326,10 +2326,10 @@ function hook_entity_query_ENTITY_TYPE_alter(\Drupal\Core\Entity\Query\QueryInte
  *   The entity query.
  *
  * @see hook_entity_query_alter()
- * @see hook_entity_query_tag_ENTITY_TYPE_TAG_alter()
+ * @see hook_entity_query_tag__ENTITY_TYPE__TAG_alter()
  * @see \Drupal\Core\Entity\Query\QueryInterface
  */
-function hook_entity_query_tag_TAG_alter(\Drupal\Core\Entity\Query\QueryInterface $query): void {
+function hook_entity_query_tag__TAG_alter(\Drupal\Core\Entity\Query\QueryInterface $query): void {
   $entityType = \Drupal::entityTypeManager()->getDefinition($query->getEntityTypeId());
   $query->sort($entityType->getKey('id'), 'desc');
 }
@@ -2341,10 +2341,10 @@ function hook_entity_query_tag_TAG_alter(\Drupal\Core\Entity\Query\QueryInterfac
  *   The entity query.
  *
  * @see hook_entity_query_ENTITY_TYPE_alter()
- * @see hook_entity_query_tag_TAG_alter()
+ * @see hook_entity_query_tag__TAG_alter()
  * @see \Drupal\Core\Entity\Query\QueryInterface
  */
-function hook_entity_query_tag_ENTITY_TYPE_TAG_alter(\Drupal\Core\Entity\Query\QueryInterface $query): void {
+function hook_entity_query_tag__ENTITY_TYPE__TAG_alter(\Drupal\Core\Entity\Query\QueryInterface $query): void {
   $query->condition('id', '1', '<>');
 }
 

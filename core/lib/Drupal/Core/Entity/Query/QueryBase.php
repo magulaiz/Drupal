@@ -524,8 +524,11 @@ abstract class QueryBase implements QueryInterface {
     $hooks = ['entity_query', 'entity_query_' . $this->getEntityTypeId()];
     if ($this->alterTags) {
       foreach ($this->alterTags as $tag => $value) {
-        $hooks[] = 'entity_query_tag_' . $tag;
-        $hooks[] = 'entity_query_tag_' . $this->getEntityTypeId() . '_' . $tag;
+        // Tags and entity type ids may well contain single underscores, and
+        // 'tag' is a possible entity type id. Therefore use double underscores
+        //  to avoid collisions.
+        $hooks[] = 'entity_query_tag__' . $tag;
+        $hooks[] = 'entity_query_tag__' . $this->getEntityTypeId() . '__' . $tag;
       }
     }
     \Drupal::moduleHandler()->alter($hooks, $this);
