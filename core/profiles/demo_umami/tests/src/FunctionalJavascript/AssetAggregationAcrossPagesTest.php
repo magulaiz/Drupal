@@ -50,7 +50,7 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
   /**
    * Helper to do requests so the above test methods stay in sync.
    */
-  protected function doRequests(): null {
+  protected function doRequests(): void {
     $this->drupalGet('<front>');
     // Give additional time for the request and all assets to be returned
     // before making the next request.
