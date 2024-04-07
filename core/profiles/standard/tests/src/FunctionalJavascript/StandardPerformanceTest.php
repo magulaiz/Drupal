@@ -48,6 +48,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     // Request a page that we're not otherwise explicitly testing to warm some
     // caches.
     $this->drupalGet('search');
+    $this->drupalGet('search');
 
     // Test frontpage.
     $performance_data = $this->collectPerformanceData(function () {
