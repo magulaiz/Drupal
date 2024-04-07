@@ -54,6 +54,10 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
       // before making the next request.
       sleep(2);
       $this->drupalGet('articles');
+      sleep(2);
+      $this->drupalGet('recipes');
+      sleep(2);
+      $this->drupalGet('recipes/deep-mediterranean-quiche');
     }, 'umamiFrontAndRecipePages');
     return $performance_data;
   }
