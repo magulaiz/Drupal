@@ -6,6 +6,7 @@ namespace Drupal\Tests\block_content\Functional;
 
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
+use Drupal\user\Entity\Role;
 
 /**
  * Create a block and test block edit functionality.
@@ -20,6 +21,8 @@ class PageEditTest extends BlockContentTestBase {
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
+
+  protected static $modules = ['layout_builder', 'field_ui'];
 
   /**
    * {@inheritdoc}
@@ -93,6 +96,51 @@ class PageEditTest extends BlockContentTestBase {
     $this->assertBreadcrumb(
       'admin/content/block/' . $revised_block->id() . '/delete', $trail
     );
+  }
+
+  public function testLayoutBuilderEditing(): void {
+    // Create a new role for additional permissions needed.
+    $role = Role::create([
+      'id' => 'layout_builder_tester',
+      'label' => 'Layout Builder Tester',
+    ]);
+    $role->grantPermission('administer block_content display')
+      ->grantPermission('configure any layout')
+      ->grantPermission('view the administration theme')
+      ->grantPermission('edit any basic block content')
+      ->save();
+    $this->adminUser->addRole($role->id());
+    $this->adminUser->save();
+    $this->drupalLogin($this->adminUser);
+
+    // Set a different theme for the admin pages. So we can assert the theme
+    // in Layout Builder is not the same as the admin theme.
+    \Drupal::service('theme_installer')->install(['claro']);
+    $this->config('system.theme')->set('admin', 'claro')->save();
+
+    // Enable layout builder for the block content display.
+    $this->drupalGet('admin/structure/block-content/manage/basic/display');
+    $this->submitForm([
+      'layout[enabled]' => TRUE,
+    ], 'Save');
+    $this->submitForm([
+      'layout[allow_custom]' => TRUE,
+    ], 'Save');
+    $role->grantPermission('configure all basic block_content layout overrides');
+    $role->save();
+
+    // Create a block content and test the themes used.
+    $block = $this->createBlockContent();
+    $this->drupalGet('admin/content/block/' . $block->id() . '/layout');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->elementNotExists('css', '#block-claro-content');
+    $this->drupalGet('admin/structure/block-content/manage/basic/display/default/layout');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->elementNotExists('css', '#block-claro-content');
+    $this->drupalGet('admin/content/block/' . $block->id());
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->elementExists('css', '#block-claro-content');
+
   }
 
 }
