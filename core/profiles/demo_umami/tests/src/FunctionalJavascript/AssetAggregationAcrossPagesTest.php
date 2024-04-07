@@ -40,7 +40,7 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
     $performance_data = $this->collectPerformanceData(function () {
       $this->doRequests();
     }, 'umamiFrontAndRecipePagesAuthenticated');
-    $this->assertSame(4, $performance_data->getStylesheetCount());
+    $this->assertSame(6, $performance_data->getStylesheetCount());
     $this->assertSame(94355, $performance_data->getStylesheetBytes());
     $this->assertSame(1, $performance_data->getScriptCount());
     $this->assertSame(132083, $performance_data->getScriptBytes());
