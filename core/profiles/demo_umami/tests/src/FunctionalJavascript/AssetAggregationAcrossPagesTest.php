@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\demo_umami\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
-use Drupal\Tests\PerformanceData;
 
 /**
  * Tests demo_umami profile performance.
@@ -23,11 +22,13 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
    * Checks the asset requests made when the front and recipe pages are visited.
    */
   public function testFrontAndRecipesPages() {
-    $performance_data = $this->doRequests();
+    $performance_data = $this->collectPerformanceData(function () {
+      $this->doRequests();
+    }, 'umamiFrontAndRecipePages');
     $this->assertSame(6, $performance_data->getStylesheetCount());
     $this->assertSame(137375, $performance_data->getStylesheetBytes());
-    $this->assertSame(3, $performance_data->getScriptCount());
-    $this->assertSame(21225, $performance_data->getScriptBytes());
+    $this->assertSame(1, $performance_data->getScriptCount());
+    $this->assertSame(7075, $performance_data->getScriptBytes());
   }
 
   /**
@@ -37,29 +38,28 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
     $user = $this->createUser();
     $this->drupalLogin($user);
     $this->rebuildAll();
-    $performance_data = $this->doRequests();
-    $this->assertSame(6, $performance_data->getStylesheetCount());
-    $this->assertSame(143546, $performance_data->getStylesheetBytes());
-    $this->assertSame(3, $performance_data->getScriptCount());
-    $this->assertSame(398200, $performance_data->getScriptBytes());
+    $performance_data = $this->collectPerformanceData(function () {
+      $this->doRequests();
+    }, 'umamiFrontAndRecipePagesAuthenticated');
+    $this->assertSame(4, $performance_data->getStylesheetCount());
+    $this->assertSame(94355, $performance_data->getStylesheetBytes());
+    $this->assertSame(1, $performance_data->getScriptCount());
+    $this->assertSame(132083, $performance_data->getScriptBytes());
   }
 
   /**
    * Helper to do requests so the above test methods stay in sync.
    */
-  protected function doRequests(): PerformanceData {
-    $performance_data = $this->collectPerformanceData(function () {
-      $this->drupalGet('<front>');
-      // Give additional time for the request and all assets to be returned
-      // before making the next request.
-      sleep(2);
-      $this->drupalGet('articles');
-      sleep(2);
-      $this->drupalGet('recipes');
-      sleep(2);
-      $this->drupalGet('recipes/deep-mediterranean-quiche');
-    }, 'umamiFrontAndRecipePages');
-    return $performance_data;
+  protected function doRequests(): null {
+    $this->drupalGet('<front>');
+    // Give additional time for the request and all assets to be returned
+    // before making the next request.
+    sleep(2);
+    $this->drupalGet('articles');
+    sleep(2);
+    $this->drupalGet('recipes');
+    sleep(2);
+    $this->drupalGet('recipes/deep-mediterranean-quiche');
   }
 
 }
