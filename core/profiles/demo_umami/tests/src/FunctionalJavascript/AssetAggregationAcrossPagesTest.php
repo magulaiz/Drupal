@@ -26,8 +26,8 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
     $performance_data = $this->doRequests();
     $this->assertSame(4, $performance_data->getStylesheetCount());
     $this->assertLessThan(82500, $performance_data->getStylesheetBytes());
-    $this->assertSame(2, $performance_data->getScriptCount());
-    $this->assertLessThan(14500, $performance_data->getScriptBytes());
+    $this->assertSame(1, $performance_data->getScriptCount());
+    $this->assertLessThan(7500, $performance_data->getScriptBytes());
   }
 
   /**
@@ -39,9 +39,19 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
     $this->rebuildAll();
     $performance_data = $this->doRequests();
     $this->assertSame(4, $performance_data->getStylesheetCount());
+<<<<<<< HEAD
     $this->assertLessThan(89500, $performance_data->getStylesheetBytes());
     $this->assertSame(2, $performance_data->getScriptCount());
     $this->assertLessThan(250000, $performance_data->getScriptBytes());
+=======
+    $this->assertSame(89167, $performance_data->getStylesheetBytes());
+    $this->assertSame(1, $performance_data->getScriptCount());
+<<<<<<< HEAD
+    $this->assertSame(132083, $performance_data->getScriptBytes());
+>>>>>>> 0f7d442276 (Update assertions to reflect less file downloads.)
+=======
+    $this->assertSame(132067, $performance_data->getScriptBytes());
+>>>>>>> 01db883bf5 (Fix merge conflicts.)
   }
 
   /**
