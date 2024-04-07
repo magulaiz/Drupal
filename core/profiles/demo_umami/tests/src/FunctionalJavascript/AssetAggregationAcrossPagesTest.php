@@ -37,7 +37,6 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
   public function testFrontAndRecipesPagesAuthenticated() {
     $user = $this->createUser();
     $this->drupalLogin($user);
-    $this->rebuildAll();
     $performance_data = $this->collectPerformanceData(function () {
       $this->doRequests();
     }, 'umamiFrontAndRecipePagesAuthenticated');
