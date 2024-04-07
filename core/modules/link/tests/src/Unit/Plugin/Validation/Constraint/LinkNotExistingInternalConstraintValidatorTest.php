@@ -10,6 +10,7 @@ use Drupal\link\LinkItemInterface;
 use Drupal\link\Plugin\Validation\Constraint\LinkNotExistingInternalConstraint;
 use Drupal\link\Plugin\Validation\Constraint\LinkNotExistingInternalConstraintValidator;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
@@ -34,10 +35,7 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
     $context->expects($this->never())
       ->method('addViolation');
 
-    $constraint = new LinkNotExistingInternalConstraint();
-    $validator = new LinkNotExistingInternalConstraintValidator();
-    $validator->initialize($context);
-    $validator->validate($link, $constraint);
+    $this->validate($link, $context);
   }
 
   /**
@@ -62,10 +60,7 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
     $context->expects($this->never())
       ->method('addViolation');
 
-    $constraint = new LinkNotExistingInternalConstraint();
-    $validator = new LinkNotExistingInternalConstraintValidator();
-    $validator->initialize($context);
-    $validator->validate($link, $constraint);
+    $this->validate($link, $context);
   }
 
   /**
@@ -90,10 +85,7 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
     $context->expects($this->never())
       ->method('addViolation');
 
-    $constraint = new LinkNotExistingInternalConstraint();
-    $validator = new LinkNotExistingInternalConstraintValidator();
-    $validator->initialize($context);
-    $validator->validate($link, $constraint);
+    $this->validate($link, $context);
   }
 
   /**
@@ -111,10 +103,16 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
     $context->expects($this->never())
       ->method('addViolation');
 
-    $constraint = new LinkNotExistingInternalConstraint();
+    $this->validate($link, $context);
+  }
+
+  /**
+   * Validate the link.
+   */
+  protected function validate(LinkItemInterface&MockObject $link, ExecutionContextInterface&MockObject $context): void {
     $validator = new LinkNotExistingInternalConstraintValidator();
     $validator->initialize($context);
-    $validator->validate($link, $constraint);
+    $validator->validate($link, new LinkNotExistingInternalConstraint());
   }
 
 }

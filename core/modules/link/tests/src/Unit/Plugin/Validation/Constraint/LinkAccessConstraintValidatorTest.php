@@ -28,9 +28,15 @@ class LinkAccessConstraintValidatorTest extends UnitTestCase {
     $url = $this->getMockBuilder('Drupal\Core\Url')
       ->disableOriginalConstructor()
       ->getMock();
-    $url->expects($this->once())
-      ->method('access')
-      ->willReturn($urlAccess);
+    if ($mayLinkAnyPage) {
+      $url->expects($this->never())
+        ->method('access');
+    }
+    else {
+      $url->expects($this->once())
+        ->method('access')
+        ->willReturn($urlAccess);
+    }
 
     // Mock a link object that returns the URL object.
     $link = $this->createMock('Drupal\link\LinkItemInterface');
