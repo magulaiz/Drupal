@@ -35,7 +35,7 @@
         // Remove and replace the dialog buttons with those from the new form.
         if ($dialog.dialog('option', 'drupalAutoButtons')) {
           // Trigger an event to detect/sync changes to buttons.
-          $dialog.trigger('dialogButtonsChange');
+          $dialog[0].dispatchEvent(new CustomEvent('dialogButtonsChange'));
         }
 
         setTimeout(function () {
@@ -109,10 +109,9 @@
             if ($originalButton[0].tagName === 'A') {
               $originalButton[0].click();
             } else {
-              $originalButton
-                .trigger('mousedown')
-                .trigger('mouseup')
-                .trigger('click');
+              $originalButton[0].dispatchEvent(new Event('mousedown'));
+              $originalButton[0].dispatchEvent(new Event('mouseup'));
+              $originalButton[0].dispatchEvent(new Event('click'));
             }
             e.preventDefault();
           },
@@ -270,7 +269,9 @@
    * @param {object} [settings]
    *   Dialog settings.
    */
-  $(window).on('dialog:aftercreate', (e, dialog, $element, settings) => {
+  window.addEventListener('dialog:aftercreate', (event) => {
+    const $element = $(event.target);
+    const { dialog } = event;
     $element.on('click.dialog', '.dialog-cancel', (e) => {
       dialog.close('cancel');
       e.preventDefault();
@@ -288,7 +289,8 @@
    * @param {jQuery} $element
    *   jQuery collection of the dialog element.
    */
-  $(window).on('dialog:beforeclose', (e, dialog, $element) => {
+  window.addEventListener('dialog:beforeclose', (e) => {
+    const $element = $(e.target);
     $element.off('.dialog');
   });
 
