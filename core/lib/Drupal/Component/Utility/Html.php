@@ -4,6 +4,7 @@ namespace Drupal\Component\Utility;
 
 use Masterminds\HTML5;
 use Masterminds\HTML5\Serializer\Traverser;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Provides DOMDocument helpers for parsing and serializing HTML strings.
@@ -495,4 +496,20 @@ class Html {
     return Html::serialize($html_dom);
   }
 
+  /**
+   * Validates an HTML document.
+   *
+   * @param string $html
+   *   The HTML to validate.
+   * @param \Symfony\Component\Validator\Context\ExecutionContextInterface $context
+   *   The validation execution context.
+   */
+  public static function validatehtml($html, ExecutionContextInterface $context) {
+    $html5 = new HTML5();
+    $document = $html5->parse($html);
+
+    if ($document === FALSE) {
+      $context->addViolation('HTML is not valid');
+    }
+  }
 }
