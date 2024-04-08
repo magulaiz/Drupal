@@ -115,7 +115,7 @@ abstract class WebDriverTestBase extends BrowserTestBase {
       if ($status === BaseTestRunner::STATUS_ERROR || $status === BaseTestRunner::STATUS_WARNING || $status === BaseTestRunner::STATUS_FAILURE) {
         // Ensure we capture the output at point of failure.
         @$this->htmlOutput();
-        $directory = getenv('SCREENSHOT_REPORT_DIRECTORY') ?: '/sites/simpletest/screenshots';
+        $directory = getenv('SCREENSHOT_REPORT_DIRECTORY') ?: './sites/default/files/simpletest/screenshots';
         // Ensure directory exists.
         if (!is_dir($directory)) {
           mkdir($directory, 0777, TRUE);

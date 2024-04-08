@@ -127,6 +127,7 @@ class GlossaryViewTest extends WebDriverTestBase {
     // Click on the P link, this should show 4 rows plus the header row.
     $page->clickLink('P');
     $web_assert->assertWaitOnAjaxRequest();
+    $this->createScreenshot('./sites/default/files/simpletest/test_screen.png');
 
     $rows = $page->findAll('css', '.view-test-glossary tr');
     $this->assertCount(19, $rows);
