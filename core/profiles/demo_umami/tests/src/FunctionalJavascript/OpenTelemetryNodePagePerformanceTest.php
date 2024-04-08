@@ -44,13 +44,13 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
     $url = Url::fromUserInput('/node/1')->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     // Request the page twice so that asset aggregates are definitely cached in
     // the browser cache.
-    $this->drupalGet('/node/1');
-    $this->drupalGet('/node/1');
+    $this->drupalGet('node/1');
+    $this->drupalGet('node/1');
     $cached = \Drupal::cache('page')->get($url . ':');
     $this->assertIsObject($cached->data);
 
     $performance_data = $this->collectPerformanceData(function () {
-      $this->drupalGet('/node/1');
+      $this->drupalGet('node/1');
     }, 'umamiNodePageHotCache');
     $this->assertSession()->pageTextContains('quiche');
     $this->assertSame($performance_data->getQueryCount(), 1);
