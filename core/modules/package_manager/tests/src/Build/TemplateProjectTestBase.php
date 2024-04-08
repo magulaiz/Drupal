@@ -7,7 +7,6 @@ namespace Drupal\Tests\package_manager\Build;
 use Composer\Autoload\ClassLoader;
 use Composer\InstalledVersions;
 use Drupal\BuildTests\QuickStart\QuickStartTestBase;
-use Drupal\Component\Serialization\Yaml;
 use Drupal\Composer\Composer;
 use Drupal\package_manager\Event\CollectPathsToExcludeEvent;
 use Drupal\package_manager_test_event_logger\EventSubscriber\EventLogSubscriber;
