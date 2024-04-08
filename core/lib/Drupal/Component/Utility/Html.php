@@ -512,4 +512,5 @@ class Html {
       $context->addViolation('HTML is not valid');
     }
   }
+
 }
