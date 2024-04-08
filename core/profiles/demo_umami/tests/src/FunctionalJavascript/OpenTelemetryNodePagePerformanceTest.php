@@ -57,7 +57,7 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
     $this->assertSame($performance_data->getCacheGetCount(), 1);
     $this->assertSame($performance_data->getCacheSetCount(), 0);
     $this->assertSame($performance_data->getCacheDeleteCount(), 0);
-    $this->assertSame(1, $performance_data->getCacheTagChecksumCount());
+    $this->assertSame(0, $performance_data->getCacheTagChecksumCount());
     $this->assertSame(1, $performance_data->getCacheTagIsValidCount());
   }
 
