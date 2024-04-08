@@ -87,18 +87,6 @@ class RouteSubscriber extends RouteSubscriberBase {
         $this->addRedirectRoute($route_name);
       }
     }
-    if ($this->moduleHandler->moduleExists('layout_builder')) {
-      $route_name = 'layout_builder.overrides.block_content.view';
-      $route = $this->collection->get($route_name);
-      if (!$route) {
-        return;
-      }
-      // This route is now in the admin section, so we need to set the
-      // admin route to FALSE so that the front end theme is used for
-      // editing in Layout Builder.
-      $route->setOption('_admin_route', FALSE);
-      $this->collection->add($route_name, $route);
-    }
   }
 
   /**

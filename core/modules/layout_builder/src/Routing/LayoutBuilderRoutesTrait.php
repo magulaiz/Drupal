@@ -98,6 +98,7 @@ trait LayoutBuilderRoutesTrait {
         ->setOptions($disable_options);
       $collection->add("$route_name_prefix.disable", $route);
     }
+
   }
 
 }
