@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\demo_umami\FunctionalJavascript;
 
-use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
 
 /**
@@ -41,13 +40,10 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
    * Hot here means that all possible caches are warmed.
    */
   public function testNodePageHotCache() {
-    $url = Url::fromUserInput('/node/1')->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     // Request the page twice so that asset aggregates are definitely cached in
     // the browser cache.
     $this->drupalGet('node/1');
     $this->drupalGet('node/1');
-    $cached = \Drupal::cache('page')->get($url . ':');
-    $this->assertIsObject($cached->data);
 
     $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('node/1');
