@@ -347,6 +347,9 @@ class DateFormatter implements DateFormatterInterface {
    *
    * @return string
    *   The config setting for country.default.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0.
+   *
    */
   protected function country() {
     if ($this->country === NULL) {
