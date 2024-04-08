@@ -21,8 +21,6 @@ class PageEditTest extends BlockContentTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected static $modules = ['layout_builder', 'field_ui'];
-
   /**
    * {@inheritdoc}
    */
