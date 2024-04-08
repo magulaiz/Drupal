@@ -103,21 +103,23 @@ class WorkspaceMerger implements WorkspaceMergerInterface {
     try {
       $transaction = $this->database->startTransaction();
       foreach ($this->getDifferringRevisionIdsOnSource() as $entity_type_id => $revision_difference) {
+        $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
         $revisions_on_source = $this->entityTypeManager->getStorage($entity_type_id)
           ->loadMultipleRevisions(array_keys($revision_difference));
 
-        /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+        /** @var \Drupal\Core\Entity\ContentEntityInterface $revision */
         foreach ($revisions_on_source as $revision) {
           // Track all the differing revisions from the source workspace in
           // the context of the target workspace. This will automatically
           // update all the descendants of the target workspace as well.
           $this->workspaceAssociation->trackEntity($revision, $this->targetWorkspace);
-        }
 
-        // Since we're not saving entity objects, we need to invalidate the list
-        // cache tags manually.
-        $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
-        $this->cacheTagsInvalidator->invalidateTags($entity_type->getListCacheTags());
+          // Set the workspace in which the revision was merged.
+          $field_name = $entity_type->getRevisionMetadataKey('workspace');
+          $revision->{$field_name}->target_id = $this->targetWorkspace->id();
+          $revision->setSyncing(TRUE);
+          $revision->save();
+        }
       }
     }
     catch (\Exception $e) {
