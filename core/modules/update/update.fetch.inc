@@ -31,7 +31,7 @@ function _update_cron_notify() {
   }
   if (!empty($params)) {
     $notify_list = $update_config->get('notification.emails');
-    if (!is_null($notify_list)) {
+    if ($notify_list) {
       $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
       $request_time = \Drupal::time()->getRequestTime();
       foreach ($notify_list as $target) {
