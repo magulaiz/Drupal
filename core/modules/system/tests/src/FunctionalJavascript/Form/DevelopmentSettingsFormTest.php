@@ -44,8 +44,8 @@ class DevelopmentSettingsFormTest extends WebDriverTestBase {
    * @dataProvider twigDevelopmentData
    */
   public function testTwigDevelopmentMode(bool $twig_development_mode, ?bool $twig_debug, ?bool $twig_cache_disable): void {
-    $twig_debug = $twig_debug ?? $twig_development_mode;
-    $twig_cache_disable = $twig_cache_disable ?? $twig_development_mode;
+    $twig_debug ??= $twig_development_mode;
+    $twig_cache_disable ??= $twig_development_mode;
 
     $twig_config = \Drupal::getContainer()->getParameter('twig.config');
     self::assertFalse($twig_config['debug']);

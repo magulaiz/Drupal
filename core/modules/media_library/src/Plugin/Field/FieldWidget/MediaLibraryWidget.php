@@ -965,7 +965,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
     $selection = $values['selection'] ?? [];
 
     $widget_state = static::getWidgetState($element['#field_parents'], $element['#field_name'], $form_state);
-    $widget_state['items'] = $widget_state['items'] ?? $selection;
+    $widget_state['items'] ??= $selection;
     return $widget_state;
   }
 

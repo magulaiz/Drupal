@@ -438,9 +438,9 @@ class Renderer implements RendererInterface {
     }
 
     // Defaults for bubbleable rendering metadata.
-    $elements['#cache']['tags'] = $elements['#cache']['tags'] ?? [];
-    $elements['#cache']['max-age'] = $elements['#cache']['max-age'] ?? Cache::PERMANENT;
-    $elements['#attached'] = $elements['#attached'] ?? [];
+    $elements['#cache']['tags'] ??= [];
+    $elements['#cache']['max-age'] ??= Cache::PERMANENT;
+    $elements['#attached'] ??= [];
 
     // Allow #pre_render to abort rendering.
     if (!empty($elements['#printed'])) {

@@ -60,7 +60,7 @@ class SecurityFileUploadEventSubscriberTest extends UnitTestCase {
     $subscriber->sanitizeName($event);
 
     // Check the results of the configured sanitization.
-    $expected_filename_with_insecure_uploads = $expected_filename_with_insecure_uploads ?? $expected_filename;
+    $expected_filename_with_insecure_uploads ??= $expected_filename;
     $this->assertSame($expected_filename_with_insecure_uploads, $event->getFilename());
     $this->assertSame($expected_filename_with_insecure_uploads !== $filename, $event->isSecurityRename());
   }

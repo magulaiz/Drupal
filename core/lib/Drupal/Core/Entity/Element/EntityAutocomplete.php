@@ -167,7 +167,7 @@ class EntityAutocomplete extends Textfield {
         throw new \InvalidArgumentException("Missing required #autocreate['bundle'] parameter.");
       }
       // Default the autocreate user ID to the current user.
-      $element['#autocreate']['uid'] = $element['#autocreate']['uid'] ?? \Drupal::currentUser()->id();
+      $element['#autocreate']['uid'] ??= \Drupal::currentUser()->id();
     }
 
     // Store the selection settings in the key/value store and pass a hashed key

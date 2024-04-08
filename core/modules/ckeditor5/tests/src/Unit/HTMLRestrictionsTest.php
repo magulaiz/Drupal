@@ -224,7 +224,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
    * @dataProvider providerConvenienceConstructors
    */
   public function testConvenienceConstructors($input, array $expected, ?array $expected_raw = NULL): void {
-    $expected_raw = $expected_raw ?? $expected;
+    $expected_raw ??= $expected;
 
     // ::fromString()
     $this->assertSame($expected, HTMLRestrictions::fromString($input)->getAllowedElements());
