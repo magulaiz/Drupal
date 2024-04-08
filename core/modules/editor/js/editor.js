@@ -299,8 +299,7 @@
   Drupal.editorAttach = function (field, format) {
     if (format.editor) {
       // Attach the text editor.
-      Drupal.editors[format.editor]
-        .attach(field, format)
+      Promise.resolve(Drupal.editors[format.editor].attach(field, format))
         .then((editor) => {
           $(document).trigger('editor:attached', [editor]);
         })
