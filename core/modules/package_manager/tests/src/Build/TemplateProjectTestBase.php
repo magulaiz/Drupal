@@ -401,13 +401,15 @@ END;
       // versions that are newer than the ones being polyfilled, which means we
       // won't be able to build our test project because these polyfills aren't
       // available in the local code base. Since we're guaranteed to be on PHP
-      // 8.1 or later, no package should need to polyfill older versions.
+      // 8.3 or later, no package should need to polyfill older versions.
       unset(
         $requirements['symfony/polyfill-php72'],
         $requirements['symfony/polyfill-php73'],
         $requirements['symfony/polyfill-php74'],
         $requirements['symfony/polyfill-php80'],
         $requirements['symfony/polyfill-php81'],
+        $requirements['symfony/polyfill-php82'],
+        $requirements['symfony/polyfill-php83'],
       );
       // If this package requires any Drupal core packages, ensure it allows
       // any version.
