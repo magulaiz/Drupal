@@ -105,7 +105,9 @@
     status,
   ) {
     if ($('input#edit-displays-live-preview')[0].checked) {
-      $('#preview-submit').trigger('click');
+      document
+        .getElementById('preview-submit')
+        .dispatchEvent(new Event('click'));
     }
   };
 
@@ -174,7 +176,9 @@
         'click',
         function () {
           if (this.checked) {
-            $('#preview-submit').trigger('click');
+            document
+              .getElementById('preview-submit')
+              .dispatchEvent(new Event('click'));
           }
         },
       );
