@@ -1,9 +1,0 @@
-name: 'Automatic Updates'
-type: module
-description: 'Automatically updates Drupal core.'
-package: Core
-version: VERSION
-lifecycle: experimental
-dependencies:
-  - drupal:package_manager
-  - drupal:update
