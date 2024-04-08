@@ -1,3 +1,4 @@
+Syncer
 absolutezero
 adamson
 addedline
@@ -535,8 +536,8 @@ prerendered
 presave
 pretransaction
 preuninstall
-processlist
 proc_open
+processlist
 proname
 prophesize
 prophesized
@@ -691,7 +692,6 @@ sulaco
 supercede
 svgz
 syncer
-Syncer
 syncers
 synchronizable
 syrop
