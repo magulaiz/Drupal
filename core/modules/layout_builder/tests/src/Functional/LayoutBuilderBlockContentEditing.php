@@ -6,6 +6,8 @@ namespace Drupal\Tests\layout_builder\Functional;
 
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+use Drupal\Tests\layout_builder\Traits\EnableLayoutBuilderTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\UserInterface;
 
@@ -15,6 +17,8 @@ use Drupal\user\UserInterface;
  * @group layout_builder
  */
 class LayoutBuilderBlockContentEditing extends LayoutBuilderTestBase {
+
+  use EnableLayoutBuilderTrait;
 
   /**
    * {@inheritdoc}
@@ -65,25 +69,26 @@ class LayoutBuilderBlockContentEditing extends LayoutBuilderTestBase {
       'id' => 'layout_builder_tester',
       'label' => 'Layout Builder Tester',
     ]);
-    $this->drupalLogin($this->adminUser);
-
     // Set a different theme for the admin pages. So we can assert the theme
     // in Layout Builder is not the same as the admin theme.
     \Drupal::service('theme_installer')->install(['claro']);
     $this->config('system.theme')->set('admin', 'claro')->save();
 
     // Enable layout builder for the block content display.
-    $this->drupalGet('admin/structure/block-content/manage/basic/display');
-    $this->submitForm([
-      'layout[enabled]' => TRUE,
-    ], 'Save');
-    $this->submitForm([
-      'layout[allow_custom]' => TRUE,
-    ], 'Save');
+    $display = LayoutBuilderEntityViewDisplay::create([
+      'targetEntityType' => 'block_content',
+      'bundle' => 'basic',
+      'mode' => 'default',
+      'status' => TRUE,
+    ]);
+    $display->save();
+    $this->enableLayoutBuilder($display);
     $role->grantPermission('configure all basic block_content layout overrides');
     $role->save();
-    $this->adminUser->addRole($role->id());
-
+    $this->adminUser
+      ->addRole($role->id())
+      ->save();
+    $this->drupalLogin($this->adminUser);
     // Create a block content and test the themes used.
     $blockContent = BlockContent::create([
       'info' => $this->randomMachineName(),
