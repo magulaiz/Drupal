@@ -46,8 +46,9 @@ class LayoutBuilderRoutes implements EventSubscriberInterface {
     // This route is now in the admin section, so we need to set the
     // admin route to FALSE so that the front end theme is used for
     // editing in Layout Builder.
-    $route = $collection->get('layout_builder.overrides.block_content.view');
-    $route?->setOption('_admin_route', FALSE);
+    $collection
+      ->get('layout_builder.overrides.block_content.view')
+      ?->setOption('_admin_route', FALSE);
   }
 
   /**
