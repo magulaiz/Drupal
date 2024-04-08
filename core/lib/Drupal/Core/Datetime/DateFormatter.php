@@ -117,7 +117,6 @@ class DateFormatter implements DateFormatterInterface {
     // Create a DrupalDateTime object from the timestamp and timezone.
     $create_settings = [
       'langcode' => $langcode,
-      'country' => $this->country(),
     ];
     $date = DrupalDateTime::createFromTimestamp($timestamp, $this->timezones[$timezone], $create_settings);
 
@@ -348,8 +347,9 @@ class DateFormatter implements DateFormatterInterface {
    * @return string
    *   The config setting for country.default.
    *
-   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0.
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There will be a contrib replacement.
    *
+   * @see https://www.drupal.org/node/3439440
    */
   protected function country() {
     @trigger_error('Calling ' . __METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3439440', E_USER_DEPRECATED);
