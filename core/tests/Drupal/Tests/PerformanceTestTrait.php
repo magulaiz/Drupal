@@ -611,8 +611,11 @@ trait PerformanceTestTrait {
    *   Whether the event was triggered by the database cache implementation.
    */
   protected static function isDatabaseCache(DatabaseEvent $event): bool {
-    $class = str_replace('\\\\', '\\', $event->caller['class']);
-    return is_a($class, '\Drupal\Core\Cache\DatabaseBackend', TRUE) || is_a($class, '\Drupal\Core\Cache\DatabaseCacheTagsChecksum', TRUE);
+    if (isset($event->caller['class'])) {
+      $class = str_replace('\\\\', '\\', $event->caller['class']);
+      return is_a($class, '\Drupal\Core\Cache\DatabaseBackend', TRUE) || is_a($class, '\Drupal\Core\Cache\DatabaseCacheTagsChecksum', TRUE);
+    }
+    return TRUE;
   }
 
 }
