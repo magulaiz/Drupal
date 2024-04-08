@@ -526,7 +526,7 @@ abstract class QueryBase implements QueryInterface {
       foreach ($this->alterTags as $tag => $value) {
         // Tags and entity type ids may well contain single underscores, and
         // 'tag' is a possible entity type id. Therefore use double underscores
-        //  to avoid collisions.
+        // to avoid collisions.
         $hooks[] = 'entity_query_tag__' . $tag;
         $hooks[] = 'entity_query_tag__' . $this->getEntityTypeId() . '__' . $tag;
       }

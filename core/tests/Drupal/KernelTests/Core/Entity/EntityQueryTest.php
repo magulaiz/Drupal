@@ -1323,7 +1323,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     // entity with id '7'.
     $query = clone $basicQuery;
     $this->queryResults = $query
-      // Add a tag that no hook function matches. 
+      // Add a tag that no hook function matches.
       ->addTag('entity_query_entity_test_mulrev_alter_hook_test')
       ->execute();
     $this->assertResult(5, 13, 15);
