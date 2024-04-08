@@ -116,6 +116,10 @@
       });
     }
 
+    if (config === null) {
+      return null;
+    }
+
     return Object.entries(config).reduce((processed, [key, value]) => {
       if (typeof value === 'object') {
         // Check for null values.
@@ -447,22 +451,9 @@
           editor.model.document.on('change:data', () => {
             const callback = callbacks.get(id);
             if (callback) {
-              if (editor.plugins.has('SourceEditing')) {
-                // If the change:data is being called while in source editing
-                // mode, it means that the form is being submitted. To avoid
-                // race conditions, in this case the callback gets called
-                // without decorating the callback with debounce.
-                // @see https://www.drupal.org/i/3229174
-                // @see Drupal.editorDetach
-                if (editor.plugins.get('SourceEditing').isSourceEditingMode) {
-                  callback();
-                  return;
-                }
-              }
-
               // Marks the field as changed.
               // @see Drupal.editorAttach
-              debounce(callback, 400)();
+              callback();
             }
           });
 
@@ -538,7 +529,7 @@
      *   Callback called with the value of the editor.
      */
     onChange(element, callback) {
-      callbacks.set(getElementId(element), callback);
+      callbacks.set(getElementId(element), debounce(callback, 400, true));
     },
 
     /**
@@ -578,7 +569,7 @@
             const callback = callbacks.get(id);
             if (callback) {
               // Allow modules to update EditorModel by providing the current data.
-              debounce(callback, 400)(editor.getData());
+              callback(editor.getData());
             }
           });
         })
@@ -645,7 +636,7 @@
 
   // Redirect on hash change when the original hash has an associated CKEditor 5.
   function redirectTextareaFragmentToCKEditor5Instance() {
-    const hash = window.location.hash.substr(1);
+    const hash = window.location.hash.substring(1);
     const element = document.getElementById(hash);
     if (element) {
       const editorID = getElementId(element);

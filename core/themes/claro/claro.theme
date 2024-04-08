@@ -1176,9 +1176,7 @@ function claro_preprocess_table(&$variables) {
           $variables['attributes']['class'][] = 'draggable-table';
           $draggable_row_found = TRUE;
         }
-
-        reset($row['cells']);
-        $first_cell_key = key($row['cells']);
+        $first_cell_key = array_key_first($row['cells']);
         // The 'attributes' key is always here and it is an
         // \Drupal\Core\Template\Attribute.
         // @see template_preprocess_table();
@@ -1846,5 +1844,15 @@ function claro_form_user_admin_permissions_alter(&$form, FormStateInterface $for
       unset($form['filters']['text']['#title_display']);
       $form['filters']['text']['#title'] = t('Filter');
     }
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function claro_form_node_preview_form_select_alter(array &$form, FormStateInterface $form_state) {
+  if (isset($form['backlink'])) {
+    $form['backlink']['#options']['attributes']['class'][] = 'action-link';
+    $form['backlink']['#options']['attributes']['class'][] = 'action-link--icon-chevron-left';
   }
 }

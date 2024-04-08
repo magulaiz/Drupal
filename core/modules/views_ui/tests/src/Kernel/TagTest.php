@@ -11,6 +11,7 @@ use Drupal\views\Entity\View;
  * Tests the views ui tagging functionality.
  *
  * @group views_ui
+ * @group #slow
  */
 class TagTest extends ViewsKernelTestBase {
 
@@ -99,7 +100,7 @@ class TagTest extends ViewsKernelTestBase {
    * @return array[]
    *   The data set.
    */
-  public function providerViewsUiAutocompleteIndividualTags() {
+  public static function providerViewsUiAutocompleteIndividualTags() {
     return [
       'tag' => ['comma', 'comma'],
       'case insensitive tag' => ['comma', 'COMMA'],

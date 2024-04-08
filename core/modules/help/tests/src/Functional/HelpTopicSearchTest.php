@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\help\Functional;
 
 use Drupal\Tests\Traits\Core\CronRunTrait;
@@ -12,6 +14,7 @@ use Drupal\help\Plugin\Search\HelpSearch;
  * Verifies help topic search.
  *
  * @group help
+ * @group #slow
  */
 class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
 

@@ -155,7 +155,7 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
   /**
    * Test cases for basic moderation test.
    */
-  public function basicModerationTestCases() {
+  public static function basicModerationTestCases() {
     return [
       'Nodes' => [
         'node',
@@ -173,6 +173,17 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
         'entity_test_revpub',
       ],
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testContentModerationStateDataRemoval($entity_type_id = NULL): void {
+    // This test creates published default revisions in Live, which can not be
+    // deleted in a workspace. A test scenario for the case when Content
+    // Moderation and Workspaces are used together is covered in
+    // parent::testContentModerationStateRevisionDataRemoval().
+    $this->markTestSkipped();
   }
 
   /**
@@ -256,7 +267,7 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
     // In the context of a workspace, the default revision ID is always the
     // latest workspace-specific revision, so we need to adjust the expectation
     // of the parent assertion.
-    $revision_id = $this->entityTypeManager->getStorage($entity->getEntityTypeId())->load($entity->id())->getRevisionId();
+    $revision_id = (int) $this->entityTypeManager->getStorage($entity->getEntityTypeId())->load($entity->id())->getRevisionId();
 
     // Additionally, the publishing status of the default revision is not
     // relevant in a workspace, because getting an entity to a "published"

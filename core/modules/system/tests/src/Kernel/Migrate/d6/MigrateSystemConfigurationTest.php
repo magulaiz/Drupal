@@ -23,7 +23,7 @@ class MigrateSystemConfigurationTest extends MigrateDrupal6TestBase {
         'requirements_error' => 1209600,
       ],
       // logging is not handled by the migration.
-      'logging' => 1,
+      'logging' => TRUE,
     ],
     'system.date' => [
       'first_day' => 4,
@@ -109,6 +109,7 @@ class MigrateSystemConfigurationTest extends MigrateDrupal6TestBase {
       'admin_compact_mode' => FALSE,
       'weight_select_max' => 100,
       'default_langcode' => 'en',
+      'mail_notification' => NULL,
     ],
   ];
 

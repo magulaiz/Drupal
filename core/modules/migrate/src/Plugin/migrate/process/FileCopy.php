@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate\Plugin\migrate\process;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -46,11 +47,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @endcode
  *
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
- *
- * @MigrateProcessPlugin(
- *   id = "file_copy"
- * )
  */
+#[MigrateProcess('file_copy')]
 class FileCopy extends FileProcessBase implements ContainerFactoryPluginInterface {
 
   /**
@@ -210,7 +208,7 @@ class FileCopy extends FileProcessBase implements ContainerFactoryPluginInterfac
    */
   protected function getDirectory($uri) {
     $dir = $this->fileSystem->dirname($uri);
-    if (substr($dir, -3) == '://') {
+    if (str_ends_with($dir, '://')) {
       return $this->fileSystem->realpath($dir);
     }
     return $dir;

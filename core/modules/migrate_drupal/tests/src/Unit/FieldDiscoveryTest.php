@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate_drupal\Unit;
 
 use Drupal\Core\Logger\LoggerChannelInterface;
@@ -77,7 +79,7 @@ class FieldDiscoveryTest extends UnitTestCase {
    * @return array
    *   The data.
    */
-  public function getEntityFieldsData() {
+  public static function getEntityFieldsData() {
     return [
       'Node' => [
         'entity_type_id' => 'node',
@@ -154,7 +156,7 @@ class FieldDiscoveryTest extends UnitTestCase {
    * @return array
    *   The data.
    */
-  public function getBundleFieldsData() {
+  public static function getBundleFieldsData() {
     return [
       'Node - Content Type 1' => [
         'entity_type_id' => 'node',
@@ -240,7 +242,7 @@ class FieldDiscoveryTest extends UnitTestCase {
    * @return array
    *   The test data.
    */
-  public function getCoreVersionData() {
+  public static function getCoreVersionData() {
     return [
       'Drupal 7' => [
         'tags' => ['Drupal 7'],
@@ -329,7 +331,7 @@ class FieldDiscoveryTest extends UnitTestCase {
    * @return array
    *   The data.
    */
-  public function getFieldInstanceStubMigrationDefinition() {
+  public static function getFieldInstanceStubMigrationDefinition() {
     return [
       'Drupal 6' => [
         'core' => FieldDiscoveryInterface::DRUPAL_6,

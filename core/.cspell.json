@@ -8,6 +8,7 @@
       ".*ignore",
       "composer.lock",
       "assets/vendor/**",
+      "misc/jquery.form.js",
       "lib/Drupal/Component/Diff/**",
       "lib/Drupal/Component/Transliteration/data/**",
       "lib/Drupal/Core/File/MimeType/ExtensionMimeTypeGuesser.php",
@@ -23,6 +24,8 @@
       "modules/migrate_drupal/tests/fixtures/drupal6.php",
       "modules/migrate_drupal/tests/fixtures/drupal7.php",
       "modules/search/tests/UnicodeTest.txt",
+      "modules/statistics/tests/fixtures/drupal6.php",
+      "modules/statistics/tests/fixtures/drupal7.php",
       "modules/system/tests/logo.svgz",
       "modules/tracker/tests/fixtures/drupal7.php",
       "node_modules/*",
@@ -34,6 +37,8 @@
       "MAINTAINERS.txt",
       "package.json",
       "yarn.lock",
+      ".yarnrc.yml",
+      ".yarn/*",
       "misc/cspell/dictionary.txt",
       "phpstan*"
     ],
@@ -68,7 +73,8 @@
       "grey",
       "hte",
       "ist",
-      "please"
+      "please",
+      "queuing"
     ],
     "overrides": [
       {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\content_translation\Functional;
 
 /**
@@ -41,6 +43,14 @@ class ContentTranslationMetadataFieldsTest extends ContentTranslationTestBase {
   protected function setupBundle() {
     parent::setupBundle();
     $this->createContentType(['type' => $this->bundle]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    $this->doSetup();
   }
 
   /**
