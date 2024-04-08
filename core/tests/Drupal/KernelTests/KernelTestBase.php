@@ -339,20 +339,19 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     return $this->databasePrefix;
   }
 
-    /**
-     * Bootstraps a kernel for a test.
-     */
-    protected function bootKernel()
-    {
-        $this->setSetting('container_yamls', []);
-        // Allow for test-specific overrides.
-        $settings_services_file = $this->root . '/sites/default/testing.services.yml';
-        if (file_exists($settings_services_file)) {
-            // Copy the testing-specific service overrides in place.
-            $testing_services_file = $this->siteDirectory . '/services.yml';
-            copy($settings_services_file, $testing_services_file);
-            $this->setSetting('container_yamls', [$testing_services_file]);
-        }
+  /**
+   * Bootstraps a kernel for a test.
+   */
+  protected function bootKernel() {
+    $this->setSetting('container_yamls', []);
+    // Allow for test-specific overrides.
+    $settings_services_file = $this->root . '/sites/default/testing.services.yml';
+    if (file_exists($settings_services_file)) {
+      // Copy the testing-specific service overrides in place.
+      $testing_services_file = $this->siteDirectory . '/services.yml';
+      copy($settings_services_file, $testing_services_file);
+      $this->setSetting('container_yamls', [$testing_services_file]);
+    }
 
     // Allow for global test environment overrides.
     if (file_exists($test_env = $this->root . '/sites/default/testing.services.yml')) {
@@ -361,7 +360,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // Add this test class as a service provider.
     $GLOBALS['conf']['container_service_providers']['test'] = $this;
 
-        $modules = self::getModulesToEnable(static::class);
+    $modules = self::getModulesToEnable(static::class);
 
     // When a module is providing the database driver, then enable that module.
     $connection_info = Database::getConnectionInfo();
@@ -376,6 +375,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
         array_unshift($modules, $second);
       }
     }
+<<<<<<< HEAD
 
     // Bootstrap the kernel. Do not use createFromRequest() to retain Settings.
     $kernel = new DrupalKernel('testing', $this->classLoader, FALSE);
@@ -717,47 +717,45 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
             }
         }
 
-        // Bootstrap the kernel. Do not use createFromRequest() to retain Settings.
-        $kernel = new DrupalKernel('testing', $this->classLoader, false);
-        $kernel->setSitePath($this->siteDirectory);
-        // Boot a new one-time container from scratch. Set the module list upfront
-        // to avoid a subsequent rebuild or setting the kernel into the
-        // pre-installer mode.
-        $extensions = $modules ? $this->getExtensionsForModules($modules) : [];
-        $kernel->updateModules($extensions, $extensions);
+    // Bootstrap the kernel. Do not use createFromRequest() to retain Settings.
+    $kernel = new DrupalKernel('testing', $this->classLoader, FALSE);
+    $kernel->setSitePath($this->siteDirectory);
+    // Boot a new one-time container from scratch. Set the module list upfront
+    // to avoid a subsequent rebuild or setting the kernel into the
+    // pre-installer mode.
+    $extensions = $modules ? $this->getExtensionsForModules($modules) : [];
+    $kernel->updateModules($extensions, $extensions);
 
-        // DrupalKernel::boot() is not sufficient as it does not invoke preHandle(),
-        // which is required to initialize legacy global variables.
-        $request = Request::create('/');
-        $kernel->boot();
-        $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('<none>'));
-        $request->attributes->set(RouteObjectInterface::ROUTE_NAME, '<none>');
-        $kernel->preHandle($request);
+    // DrupalKernel::boot() is not sufficient as it does not invoke preHandle(),
+    // which is required to initialize legacy global variables.
+    $request = Request::create('/');
+    $kernel->boot();
+    $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, new Route('<none>'));
+    $request->attributes->set(RouteObjectInterface::ROUTE_NAME, '<none>');
+    $kernel->preHandle($request);
 
-        $this->container = $kernel->getContainer();
+    $this->container = $kernel->getContainer();
 
-        // Run database tasks and check for errors.
-        $installer_class = $namespace . "\\Install\\Tasks";
-        $errors = (new $installer_class())->runTasks();
-        if (!empty($errors)) {
-            $this->fail('Failed to run installer database tasks: ' . implode(', ', $errors));
-        }
+    // Run database tasks and check for errors.
+    $installer_class = $namespace . "\\Install\\Tasks";
+    $errors = (new $installer_class())->runTasks();
+    if (!empty($errors)) {
+      $this->fail('Failed to run installer database tasks: ' . implode(', ', $errors));
+    }
 
-        if ($modules) {
-            $this->container->get('module_handler')->loadAll();
-        }
+    if ($modules) {
+      $this->container->get('module_handler')->loadAll();
+    }
 
-        // Setup the destination to the be frontpage by default.
-        \Drupal::destination()->set('/');
+    // Setup the destination to the be frontpage by default.
+    \Drupal::destination()->set('/');
 
-        // Write the core.extension configuration.
-        // Required for ConfigInstaller::installDefaultConfig() to work.
-        $this->container->get('config.storage')->write(
-            'core.extension', [
-            'module' => array_fill_keys($modules, 0),
-            'theme' => [],
-          ]
-      );
+    // Write the core.extension configuration.
+    // Required for ConfigInstaller::installDefaultConfig() to work.
+    $this->container->get('config.storage')->write('core.extension', [
+      'module' => array_fill_keys($modules, 0),
+      'theme' => [],
+    ]);
 
     $settings = Settings::getAll();
     $settings['php_storage']['default'] = [
@@ -955,168 +953,158 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $definition->clearTag('needs_destruction');
     $container->setDefinition("test.$route_provider_service_name", $definition);
 
-        $route_provider_definition = new Definition(RouteProvider::class);
-        $route_provider_definition->setPublic(true);
-        $container->setDefinition($id, $route_provider_definition);
+    $route_provider_definition = new Definition(RouteProvider::class);
+    $route_provider_definition->setPublic(TRUE);
+    $container->setDefinition($id, $route_provider_definition);
 
-        // Remove the stored configuration importer so if used again it will be
-        // built with up-to-date services.
-        $this->configImporter = null;
+    // Remove the stored configuration importer so if used again it will be
+    // built with up-to-date services.
+    $this->configImporter = NULL;
+  }
+
+  /**
+   * Gets the config schema exclusions for this test.
+   *
+   * @return string[]
+   *   An array of config object names that are excluded from schema checking.
+   */
+  protected function getConfigSchemaExclusions() {
+    $class = static::class;
+    $exceptions = [];
+    while ($class) {
+      if (property_exists($class, 'configSchemaCheckerExclusions')) {
+        $exceptions = array_merge($exceptions, $class::$configSchemaCheckerExclusions);
+      }
+      $class = get_parent_class($class);
+    }
+    // Filter out any duplicates.
+    return array_unique($exceptions);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function assertPostConditions(): void {
+    // Execute registered Drupal shutdown functions prior to tearing down.
+    // @see _drupal_shutdown_function()
+    $callbacks = &drupal_register_shutdown_function();
+    while ($callback = array_shift($callbacks)) {
+      call_user_func_array($callback['callback'], $callback['arguments']);
     }
 
-    /**
-     * Gets the config schema exclusions for this test.
-     *
-     * @return string[]
-     *   An array of config object names that are excluded from schema checking.
-     */
-    protected function getConfigSchemaExclusions()
-    {
-        $class = static::class;
-        $exceptions = [];
-        while ($class) {
-            if (property_exists($class, 'configSchemaCheckerExclusions')) {
-                $exceptions = array_merge($exceptions, $class::$configSchemaCheckerExclusions);
-            }
-            $class = get_parent_class($class);
-        }
-        // Filter out any duplicates.
-        return array_unique($exceptions);
+    // Shut down the kernel (if bootKernel() was called).
+    // @see \Drupal\KernelTests\Core\DrupalKernel\DrupalKernelTest
+    if ($this->container) {
+      $this->container->get('kernel')->shutdown();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function assertPostConditions(): void
-    {
-        // Execute registered Drupal shutdown functions prior to tearing down.
-        // @see _drupal_shutdown_function()
-        $callbacks = &drupal_register_shutdown_function();
-        while ($callback = array_shift($callbacks)) {
-            call_user_func_array($callback['callback'], $callback['arguments']);
-        }
+    parent::assertPostConditions();
+  }
 
-        // Shut down the kernel (if bootKernel() was called).
-        // @see \Drupal\KernelTests\Core\DrupalKernel\DrupalKernelTest
-        if ($this->container) {
-            $this->container->get('kernel')->shutdown();
-        }
-
-        parent::assertPostConditions();
+  /**
+   * {@inheritdoc}
+   */
+  protected function tearDown(): void {
+    if ($this->container) {
+      // Clean up mock session started in DrupalKernel::preHandle().
+      try {
+        /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
+        $session = $this->container->get('request_stack')->getSession();
+        $session->clear();
+        $session->save();
+      }
+      catch (SessionNotFoundException) {
+        @trigger_error('Pushing requests without a session onto the request_stack is deprecated in drupal:10.3.0 and an error will be thrown from drupal:11.0.0. See https://www.drupal.org/node/3337193', E_USER_DEPRECATED);
+      }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function tearDown(): void
-    {
-        if ($this->container) {
-            // Clean up mock session started in DrupalKernel::preHandle().
-            try {
-                /**
-     * @var \Symfony\Component\HttpFoundation\Session\Session $session
-*/
-                $session = $this->container->get('request_stack')->getSession();
-                $session->clear();
-                $session->save();
-            }
-            catch (SessionNotFoundException) {
-                @trigger_error('Pushing requests without a session onto the request_stack is deprecated in drupal:10.3.0 and an error will be thrown from drupal:11.0.0. See https://www.drupal.org/node/3337193', E_USER_DEPRECATED);
-            }
-        }
-
-        // Destroy the testing kernel.
-        if (isset($this->kernel)) {
-            $this->kernel->shutdown();
-        }
-
-        // Remove all prefixed tables.
-        $original_connection_info = Database::getConnectionInfo('simpletest_original_default');
-        $original_prefix = $original_connection_info['default']['prefix'] ?? null;
-        $test_connection_info = Database::getConnectionInfo('default');
-        $test_prefix = $test_connection_info['default']['prefix'] ?? null;
-        if ($original_prefix != $test_prefix) {
-            $tables = Database::getConnection()->schema()->findTables('%');
-            foreach ($tables as $table) {
-                if (Database::getConnection()->schema()->dropTable($table)) {
-                    unset($tables[$table]);
-                }
-            }
-        }
-
-        // Free up memory: Own properties.
-        $this->classLoader = null;
-        $this->vfsRoot = null;
-        $this->configImporter = null;
-
-        // Clean FileCache cache.
-        FileCache::reset();
-
-        // Clean up statics, container, and settings.
-        if (function_exists('drupal_static_reset')) {
-            drupal_static_reset();
-        }
-        \Drupal::unsetContainer();
-        $this->container = null;
-        new Settings([]);
-
-        parent::tearDown();
+    // Destroy the testing kernel.
+    if (isset($this->kernel)) {
+      $this->kernel->shutdown();
     }
 
-    /**
-     * @after
-     *
-     * Additional tear down method to close the connection at the end.
-     */
-    public function tearDownCloseDatabaseConnection()
-    {
-        // Destroy the database connection, which for example removes the memory
-        // from sqlite in memory.
-        foreach (Database::getAllConnectionInfo() as $key => $targets) {
-            Database::removeConnection($key);
+    // Remove all prefixed tables.
+    $original_connection_info = Database::getConnectionInfo('simpletest_original_default');
+    $original_prefix = $original_connection_info['default']['prefix'] ?? NULL;
+    $test_connection_info = Database::getConnectionInfo('default');
+    $test_prefix = $test_connection_info['default']['prefix'] ?? NULL;
+    if ($original_prefix != $test_prefix) {
+      $tables = Database::getConnection()->schema()->findTables('%');
+      foreach ($tables as $table) {
+        if (Database::getConnection()->schema()->dropTable($table)) {
+          unset($tables[$table]);
         }
+      }
     }
 
-    /**
-     * Installs default configuration for a given list of modules.
-     *
-     * @param string|string[] $modules
-     *   A module or list of modules for which to install default configuration.
-     *
-     * @throws \LogicException
-     *   If any module in $modules is not enabled.
-     */
-    protected function installConfig($modules)
-    {
-        foreach ((array) $modules as $module) {
-            if (!$this->container->get('module_handler')->moduleExists($module)) {
-                throw new \LogicException("$module module is not installed.");
-            }
-            try {
-                $this->container->get('config.installer')->installDefaultConfig('module', $module);
-            }
-            catch (\Exception $e) {
-                throw new \Exception(sprintf('Exception when installing config for module %s, message was: %s', $module, $e->getMessage()), 0, $e);
-            }
-        }
-    }
+    // Free up memory: Own properties.
+    $this->classLoader = NULL;
+    $this->vfsRoot = NULL;
+    $this->configImporter = NULL;
 
-    /**
-     * Installs database tables from a module schema definition.
-     *
-     * @param string       $module
-     *   The name of the module that defines the table's schema.
-     * @param string|array $tables
-     *   The name or an array of the names of the tables to install.
-     *
-     * @throws \LogicException
-     *   If $module is not enabled or the table schema cannot be found.
-     */
-    protected function installSchema($module, $tables)
-    {
-        /**
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-*/
+    // Clean FileCache cache.
+    FileCache::reset();
+
+    // Clean up statics, container, and settings.
+    if (function_exists('drupal_static_reset')) {
+      drupal_static_reset();
+    }
+    \Drupal::unsetContainer();
+    $this->container = NULL;
+    new Settings([]);
+
+    parent::tearDown();
+  }
+
+  /**
+   * @after
+   *
+   * Additional tear down method to close the connection at the end.
+   */
+  public function tearDownCloseDatabaseConnection() {
+    // Destroy the database connection, which for example removes the memory
+    // from sqlite in memory.
+    foreach (Database::getAllConnectionInfo() as $key => $targets) {
+      Database::removeConnection($key);
+    }
+  }
+
+  /**
+   * Installs default configuration for a given list of modules.
+   *
+   * @param string|string[] $modules
+   *   A module or list of modules for which to install default configuration.
+   *
+   * @throws \LogicException
+   *   If any module in $modules is not enabled.
+   */
+  protected function installConfig($modules) {
+    foreach ((array) $modules as $module) {
+      if (!$this->container->get('module_handler')->moduleExists($module)) {
+        throw new \LogicException("$module module is not installed.");
+      }
+      try {
+        $this->container->get('config.installer')->installDefaultConfig('module', $module);
+      }
+      catch (\Exception $e) {
+        throw new \Exception(sprintf('Exception when installing config for module %s, message was: %s', $module, $e->getMessage()), 0, $e);
+      }
+    }
+  }
+
+  /**
+   * Installs database tables from a module schema definition.
+   *
+   * @param string $module
+   *   The name of the module that defines the table's schema.
+   * @param string|array $tables
+   *   The name or an array of the names of the tables to install.
+   *
+   * @throws \LogicException
+   *   If $module is not enabled or the table schema cannot be found.
+   */
+  protected function installSchema($module, $tables) {
+    /** @var \Drupal\Core\Extension\ModuleHandlerInterface $module_handler */
     $module_handler = $this->container->get('module_handler');
     // Database connection schema is technically able to create database tables
     // using any valid specification, for example of a non-enabled module. But
@@ -1128,9 +1116,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
       throw new \LogicException("$module module is not installed.");
     }
     $specification = SchemaInspector::getTablesSpecification($module_handler, $module);
-    /**
-* @var \Drupal\Core\Database\Schema $schema
-*/
+    /** @var \Drupal\Core\Database\Schema $schema */
     $schema = $this->container->get('database')->schema();
     $tables = (array) $tables;
     foreach ($tables as $table) {
@@ -1144,251 +1130,241 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     }
   }
 
-    /**
-     * Installs the storage schema for a specific entity type.
-     *
-     * @param string $entity_type_id
-     *   The ID of the entity type.
-     */
-    protected function installEntitySchema($entity_type_id)
-    {
-        $entity_type_manager = \Drupal::entityTypeManager();
-        $entity_type = $entity_type_manager->getDefinition($entity_type_id);
-        \Drupal::service('entity_type.listener')->onEntityTypeCreate($entity_type);
+  /**
+   * Installs the storage schema for a specific entity type.
+   *
+   * @param string $entity_type_id
+   *   The ID of the entity type.
+   */
+  protected function installEntitySchema($entity_type_id) {
+    $entity_type_manager = \Drupal::entityTypeManager();
+    $entity_type = $entity_type_manager->getDefinition($entity_type_id);
+    \Drupal::service('entity_type.listener')->onEntityTypeCreate($entity_type);
 
-        // For test runs, the most common storage backend is a SQL database. For
-        // this case, ensure the tables got created.
-        $storage = $entity_type_manager->getStorage($entity_type_id);
-        if ($storage instanceof SqlEntityStorageInterface) {
-            $tables = $storage->getTableMapping()->getTableNames();
-            $db_schema = $this->container->get('database')->schema();
-            foreach ($tables as $table) {
-                $this->assertTrue($db_schema->tableExists($table), "The entity type table '$table' for the entity type '$entity_type_id' should exist.");
-            }
+    // For test runs, the most common storage backend is a SQL database. For
+    // this case, ensure the tables got created.
+    $storage = $entity_type_manager->getStorage($entity_type_id);
+    if ($storage instanceof SqlEntityStorageInterface) {
+      $tables = $storage->getTableMapping()->getTableNames();
+      $db_schema = $this->container->get('database')->schema();
+      foreach ($tables as $table) {
+        $this->assertTrue($db_schema->tableExists($table), "The entity type table '$table' for the entity type '$entity_type_id' should exist.");
+      }
+    }
+  }
+
+  /**
+   * Enables modules for this test.
+   *
+   * This method does not install modules fully. Services and hooks for the
+   * module are available, but the install process is not performed.
+   *
+   * To install test modules outside of the testing environment, add
+   * @code
+   * $settings['extension_discovery_scan_tests'] = TRUE;
+   * @endcode
+   * to your settings.php.
+   *
+   * @param string[] $modules
+   *   A list of modules to enable. Dependencies are not resolved; i.e.,
+   *   multiple modules have to be specified individually. The modules are only
+   *   added to the active module list and loaded; i.e., their database schema
+   *   is not installed. hook_install() is not invoked. A custom module weight
+   *   is not applied.
+   *
+   * @throws \LogicException
+   *   If any module in $modules is already enabled.
+   * @throws \RuntimeException
+   *   If a module is not enabled after enabling it.
+   */
+  protected function enableModules(array $modules) {
+    // Perform an ExtensionDiscovery scan as this function may receive a
+    // profile that is not the current profile, and we don't yet have a cached
+    // way to receive inactive profile information.
+    // @todo Remove as part of https://www.drupal.org/node/2186491
+    $listing = new ExtensionDiscovery($this->root);
+    $module_list = $listing->scan('module');
+    // In ModuleHandlerTest we pass in a profile as if it were a module.
+    $module_list += $listing->scan('profile');
+
+    // Set the list of modules in the extension handler.
+    $module_handler = $this->container->get('module_handler');
+
+    // Write directly to active storage to avoid early instantiation of
+    // the event dispatcher which can prevent modules from registering events.
+    $active_storage = $this->container->get('config.storage');
+    $extension_config = $active_storage->read('core.extension');
+
+    foreach ($modules as $module) {
+      if ($module_handler->moduleExists($module)) {
+        continue;
+      }
+      $module_handler->addModule($module, $module_list[$module]->getPath());
+      // Maintain the list of enabled modules in configuration.
+      $extension_config['module'][$module] = 0;
+    }
+    $active_storage->write('core.extension', $extension_config);
+
+    // Update the kernel to make their services available.
+    $extensions = $module_handler->getModuleList();
+    $this->container->get('kernel')->updateModules($extensions, $extensions);
+
+    // Ensure isLoaded() is TRUE in order to make
+    // \Drupal\Core\Theme\ThemeManagerInterface::render() work.
+    // Note that the kernel has rebuilt the container; this $module_handler is
+    // no longer the $module_handler instance from above.
+    $module_handler = $this->container->get('module_handler');
+    $module_handler->reload();
+    foreach ($modules as $module) {
+      if (!$module_handler->moduleExists($module)) {
+        throw new \RuntimeException("$module module is not installed after installing it.");
+      }
+    }
+  }
+
+  /**
+   * Disables modules for this test.
+   *
+   * @param string[] $modules
+   *   A list of modules to disable. Dependencies are not resolved; i.e.,
+   *   multiple modules have to be specified with dependent modules first.
+   *   Code of previously enabled modules is still loaded. The modules are only
+   *   removed from the active module list.
+   *
+   * @throws \LogicException
+   *   If any module in $modules is already disabled.
+   * @throws \RuntimeException
+   *   If a module is not disabled after disabling it.
+   */
+  protected function disableModules(array $modules) {
+    // Unset the list of modules in the extension handler.
+    $module_handler = $this->container->get('module_handler');
+    $module_filenames = $module_handler->getModuleList();
+    $extension_config = $this->config('core.extension');
+    foreach ($modules as $module) {
+      if (!$module_handler->moduleExists($module)) {
+        throw new \LogicException("$module module cannot be uninstalled because it is not installed.");
+      }
+      unset($module_filenames[$module]);
+      $extension_config->clear('module.' . $module);
+    }
+    $extension_config->save();
+    $module_handler->setModuleList($module_filenames);
+    $module_handler->resetImplementations();
+    // Update the kernel to remove their services.
+    $this->container->get('kernel')->updateModules($module_filenames, $module_filenames);
+
+    // Ensure isLoaded() is TRUE in order to make
+    // \Drupal\Core\Theme\ThemeManagerInterface::render() work.
+    // Note that the kernel has rebuilt the container; this $module_handler is
+    // no longer the $module_handler instance from above.
+    $module_handler = $this->container->get('module_handler');
+    $module_handler->reload();
+    foreach ($modules as $module) {
+      if ($module_handler->moduleExists($module)) {
+        throw new \RuntimeException("$module module is not uninstalled after uninstalling it.");
+      }
+    }
+  }
+
+  /**
+   * Renders a render array.
+   *
+   * @param array $elements
+   *   The elements to render.
+   *
+   * @return string
+   *   The rendered string output (typically HTML).
+   */
+  protected function render(array &$elements) {
+    // \Drupal\Core\Render\BareHtmlPageRenderer::renderBarePage calls out to
+    // system_page_attachments() directly.
+    if (!\Drupal::moduleHandler()->moduleExists('system')) {
+      throw new \Exception(__METHOD__ . ' requires system module to be installed.');
+    }
+
+    // Use the bare HTML page renderer to render our links.
+    $renderer = $this->container->get('bare_html_page_renderer');
+    $response = $renderer->renderBarePage($elements, '', 'maintenance_page');
+
+    // Glean the content from the response object.
+    $content = $response->getContent();
+    $this->setRawContent($content);
+    return $content;
+  }
+
+  /**
+   * Sets an in-memory Settings variable.
+   *
+   * @param string $name
+   *   The name of the setting to set.
+   * @param bool|string|int|array|null $value
+   *   The value to set. Note that array values are replaced entirely; use
+   *   \Drupal\Core\Site\Settings::get() to perform custom merges.
+   */
+  protected function setSetting($name, $value) {
+    $settings = Settings::getInstance() ? Settings::getAll() : [];
+    $settings[$name] = $value;
+    new Settings($settings);
+  }
+
+  /**
+   * Sets the install profile and rebuilds the container to update it.
+   *
+   * @param string $profile
+   *   The install profile to set.
+   */
+  protected function setInstallProfile($profile) {
+    $this->container->get('config.factory')
+      ->getEditable('core.extension')
+      ->set('profile', $profile)
+      ->save();
+
+    // The installation profile is provided by a container parameter. Saving
+    // the configuration doesn't automatically trigger invalidation
+    $this->container->get('kernel')->rebuildContainer();
+  }
+
+  /**
+   * Stops test execution.
+   */
+  protected function stop() {
+    $this->getTestResultObject()->stop();
+  }
+
+  /**
+   * Dumps the current state of the virtual filesystem to STDOUT.
+   */
+  protected function vfsDump() {
+    vfsStream::inspect(new vfsStreamPrintVisitor());
+  }
+
+  /**
+   * Returns the modules to enable for this test.
+   *
+   * @param string $class
+   *   The fully-qualified class name of this test.
+   *
+   * @return array
+   */
+  private static function getModulesToEnable($class) {
+    $modules = [];
+    while ($class) {
+      if (property_exists($class, 'modules')) {
+        // Only add the modules, if the $modules property was not inherited.
+        $rp = new \ReflectionProperty($class, 'modules');
+        if ($rp->class == $class) {
+          $modules[$class] = $class::$modules;
         }
+      }
+      $class = get_parent_class($class);
     }
-
-    /**
-     * Enables modules for this test.
-     *
-     * This method does not install modules fully. Services and hooks for the
-     * module are available, but the install process is not performed.
-     *
-     * To install test modules outside of the testing environment, add
-     *
-     * @code
-     * $settings['extension_discovery_scan_tests'] = TRUE;
-     * @endcode
-     * to your settings.php.
-     *
-     * @param string[] $modules
-     *   A list of modules to enable. Dependencies are not resolved; i.e.,
-     *   multiple modules have to be specified individually. The modules are only
-     *   added to the active module list and loaded; i.e., their database schema
-     *   is not installed. hook_install() is not invoked. A custom module weight
-     *   is not applied.
-     *
-     * @throws \LogicException
-     *   If any module in $modules is already enabled.
-     * @throws \RuntimeException
-     *   If a module is not enabled after enabling it.
-     */
-    protected function enableModules(array $modules)
-    {
-        // Perform an ExtensionDiscovery scan as this function may receive a
-        // profile that is not the current profile, and we don't yet have a cached
-        // way to receive inactive profile information.
-        // @todo Remove as part of https://www.drupal.org/node/2186491
-        $listing = new ExtensionDiscovery($this->root);
-        $module_list = $listing->scan('module');
-        // In ModuleHandlerTest we pass in a profile as if it were a module.
-        $module_list += $listing->scan('profile');
-
-        // Set the list of modules in the extension handler.
-        $module_handler = $this->container->get('module_handler');
-
-        // Write directly to active storage to avoid early instantiation of
-        // the event dispatcher which can prevent modules from registering events.
-        $active_storage = $this->container->get('config.storage');
-        $extension_config = $active_storage->read('core.extension');
-
-        foreach ($modules as $module) {
-            if ($module_handler->moduleExists($module)) {
-                continue;
-            }
-            $module_handler->addModule($module, $module_list[$module]->getPath());
-            // Maintain the list of enabled modules in configuration.
-            $extension_config['module'][$module] = 0;
-        }
-        $active_storage->write('core.extension', $extension_config);
-
-        // Update the kernel to make their services available.
-        $extensions = $module_handler->getModuleList();
-        $this->container->get('kernel')->updateModules($extensions, $extensions);
-
-        // Ensure isLoaded() is TRUE in order to make
-        // \Drupal\Core\Theme\ThemeManagerInterface::render() work.
-        // Note that the kernel has rebuilt the container; this $module_handler is
-        // no longer the $module_handler instance from above.
-        $module_handler = $this->container->get('module_handler');
-        $module_handler->reload();
-        foreach ($modules as $module) {
-            if (!$module_handler->moduleExists($module)) {
-                throw new \RuntimeException("$module module is not installed after installing it.");
-            }
-        }
-    }
-
-    /**
-     * Disables modules for this test.
-     *
-     * @param string[] $modules
-     *   A list of modules to disable. Dependencies are not resolved; i.e.,
-     *   multiple modules have to be specified with dependent modules first.
-     *   Code of previously enabled modules is still loaded. The modules are only
-     *   removed from the active module list.
-     *
-     * @throws \LogicException
-     *   If any module in $modules is already disabled.
-     * @throws \RuntimeException
-     *   If a module is not disabled after disabling it.
-     */
-    protected function disableModules(array $modules)
-    {
-        // Unset the list of modules in the extension handler.
-        $module_handler = $this->container->get('module_handler');
-        $module_filenames = $module_handler->getModuleList();
-        $extension_config = $this->config('core.extension');
-        foreach ($modules as $module) {
-            if (!$module_handler->moduleExists($module)) {
-                throw new \LogicException("$module module cannot be uninstalled because it is not installed.");
-            }
-            unset($module_filenames[$module]);
-            $extension_config->clear('module.' . $module);
-        }
-        $extension_config->save();
-        $module_handler->setModuleList($module_filenames);
-        $module_handler->resetImplementations();
-        // Update the kernel to remove their services.
-        $this->container->get('kernel')->updateModules($module_filenames, $module_filenames);
-
-        // Ensure isLoaded() is TRUE in order to make
-        // \Drupal\Core\Theme\ThemeManagerInterface::render() work.
-        // Note that the kernel has rebuilt the container; this $module_handler is
-        // no longer the $module_handler instance from above.
-        $module_handler = $this->container->get('module_handler');
-        $module_handler->reload();
-        foreach ($modules as $module) {
-            if ($module_handler->moduleExists($module)) {
-                throw new \RuntimeException("$module module is not uninstalled after uninstalling it.");
-            }
-        }
-    }
-
-    /**
-     * Renders a render array.
-     *
-     * @param array $elements
-     *   The elements to render.
-     *
-     * @return string
-     *   The rendered string output (typically HTML).
-     */
-    protected function render(array &$elements)
-    {
-        // \Drupal\Core\Render\BareHtmlPageRenderer::renderBarePage calls out to
-        // system_page_attachments() directly.
-        if (!\Drupal::moduleHandler()->moduleExists('system')) {
-            throw new \Exception(__METHOD__ . ' requires system module to be installed.');
-        }
-
-        // Use the bare HTML page renderer to render our links.
-        $renderer = $this->container->get('bare_html_page_renderer');
-        $response = $renderer->renderBarePage($elements, '', 'maintenance_page');
-
-        // Glean the content from the response object.
-        $content = $response->getContent();
-        $this->setRawContent($content);
-        return $content;
-    }
-
-    /**
-     * Sets an in-memory Settings variable.
-     *
-     * @param string                     $name
-     *   The name of the setting to set.
-     * @param bool|string|int|array|null $value
-     *   The value to set. Note that array values are replaced entirely; use
-     *   \Drupal\Core\Site\Settings::get() to perform custom merges.
-     */
-    protected function setSetting($name, $value)
-    {
-        $settings = Settings::getInstance() ? Settings::getAll() : [];
-        $settings[$name] = $value;
-        new Settings($settings);
-    }
-
-    /**
-     * Sets the install profile and rebuilds the container to update it.
-     *
-     * @param string $profile
-     *   The install profile to set.
-     */
-    protected function setInstallProfile($profile)
-    {
-        $this->container->get('config.factory')
-            ->getEditable('core.extension')
-            ->set('profile', $profile)
-            ->save();
-
-        // The installation profile is provided by a container parameter. Saving
-        // the configuration doesn't automatically trigger invalidation
-        $this->container->get('kernel')->rebuildContainer();
-    }
-
-    /**
-     * Stops test execution.
-     */
-    protected function stop()
-    {
-        $this->getTestResultObject()->stop();
-    }
-
-    /**
-     * Dumps the current state of the virtual filesystem to STDOUT.
-     */
-    protected function vfsDump()
-    {
-        vfsStream::inspect(new vfsStreamPrintVisitor());
-    }
-
-    /**
-     * Returns the modules to enable for this test.
-     *
-     * @param string $class
-     *   The fully-qualified class name of this test.
-     *
-     * @return array
-     */
-    private static function getModulesToEnable($class)
-    {
-        $modules = [];
-        while ($class) {
-            if (property_exists($class, 'modules')) {
-                // Only add the modules, if the $modules property was not inherited.
-                $rp = new \ReflectionProperty($class, 'modules');
-                if ($rp->class == $class) {
-                    $modules[$class] = $class::$modules;
-                }
-            }
-            $class = get_parent_class($class);
-        }
-        // Modules have been collected in reverse class hierarchy order; modules
-        // defined by base classes should be sorted first. Then, merge the results
-        // together.
-        $modules = array_values(array_reverse($modules));
-        return call_user_func_array('array_merge_recursive', $modules);
-    }
+    // Modules have been collected in reverse class hierarchy order; modules
+    // defined by base classes should be sorted first. Then, merge the results
+    // together.
+    $modules = array_values(array_reverse($modules));
+    return call_user_func_array('array_merge_recursive', $modules);
+  }
 
   /**
    * Prevents serializing any properties.
