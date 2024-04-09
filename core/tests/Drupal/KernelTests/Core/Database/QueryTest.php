@@ -2,6 +2,8 @@
 
 namespace Drupal\KernelTests\Core\Database;
 
+use Drupal\Core\Database\InvalidQueryException;
+
 /**
  * Tests Drupal's extended prepared statement syntax.
  *
@@ -68,16 +70,6 @@ class QueryTest extends DatabaseTestBase {
   public function testConditionOperatorArgumentsSQLInjection() {
     $injection = "IS NOT NULL) ;INSERT INTO {test} (name) VALUES ('test12345678'); -- ";
 
-    $previous_error_handler = set_error_handler(function ($severity, $message, $filename, $lineno) use (&$previous_error_handler) {
-      // Normalize the filename to use UNIX directory separators.
-      if (preg_match('@core/lib/Drupal/Core/Database/Query/Condition.php$@', str_replace(DIRECTORY_SEPARATOR, '/', $filename))) {
-        // Convert errors to exceptions for testing purposes below.
-        throw new \ErrorException($message, 0, $severity, $filename, $lineno);
-      }
-      if ($previous_error_handler) {
-        return $previous_error_handler($severity, $message, $filename, $lineno);
-      }
-    });
     try {
       $result = $this->connection->select('test', 't')
         ->fields('t')
@@ -85,7 +77,8 @@ class QueryTest extends DatabaseTestBase {
         ->execute();
       $this->fail('Should not be able to attempt SQL injection via condition operator.');
     }
-    catch (\ErrorException $e) {
+    catch (InvalidQueryException $e) {
+      $this->assertSame("Query condition 'name IS NOT NULL) ;INSERT INTO {test} (name) VALUES ('test12345678'); --  1' has an invalid query operator.", $e->getMessage());
       // Expected exception; just continue testing.
     }
 
@@ -113,7 +106,8 @@ class QueryTest extends DatabaseTestBase {
         ->execute();
       $this->fail('Should not be able to attempt SQL injection via operator.');
     }
-    catch (\ErrorException $e) {
+    catch (InvalidQueryException $e) {
+      $this->assertSame("Query condition 'name = 1 UNION ALL SELECT password FROM user WHERE uid = 1' has an invalid query operator.", $e->getMessage());
       // Expected exception; just continue testing.
     }
 
@@ -130,10 +124,10 @@ class QueryTest extends DatabaseTestBase {
         ->execute();
       $this->fail('Should not be able to attempt SQL injection via operator.');
     }
-    catch (\ErrorException $e) {
+    catch (InvalidQueryException $e) {
+      $this->assertSame("Query condition 'name IS NOT NULL) UNION ALL SELECT name FROM {TEST_UPPERCASE} --  1' has an invalid query operator.", $e->getMessage());
       // Expected exception; just continue testing.
     }
-    restore_error_handler();
   }
 
   /**
