@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Update;
 
 use Drupal\Core\Site\Settings;
@@ -9,6 +11,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
  * Tests update to readme inside the configuration synchronization directory.
  *
  * @group Update
+ * @group #slow
  */
 class ConfigSyncReadmeUpdateTest extends UpdatePathTestBase {
 

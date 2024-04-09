@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\block\Functional;
 
 use Drupal\block_content\Entity\BlockContent;
@@ -22,6 +24,14 @@ class BlockXssTest extends BrowserTestBase {
    * @var array
    */
   protected static $modules = ['block', 'block_content', 'menu_ui', 'views'];
+
+  /**
+   * {@inheritdoc}
+   *
+   * @todo Remove and fix test to not rely on super user.
+   * @see https://www.drupal.org/project/drupal/issues/3437620
+   */
+  protected bool $usesSuperUserAccessPolicy = TRUE;
 
   /**
    * {@inheritdoc}

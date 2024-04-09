@@ -201,3 +201,48 @@ function system_post_update_amend_config_sync_readme_url() {
   file_put_contents($readme_path, $changed_content);
   return \t('Amended configuration synchronization readme file content.');
 }
+
+/**
+ * Adds default value for the mail_notification config parameter.
+ */
+function system_post_update_mail_notification_setting() {
+  $config = \Drupal::configFactory()->getEditable('system.site');
+  // If the value doesn't exist it always returns NULL.
+  if (is_null($config->get('mail_notification'))) {
+    $config->set('mail_notification', NULL)->save();
+  }
+}
+
+/**
+ * Fix system.cron:logging values to boolean.
+ */
+function system_post_update_set_cron_logging_setting_to_boolean(): void {
+  $config = \Drupal::configFactory()->getEditable('system.cron');
+  $logging = $config->get('logging');
+  if (!is_bool($logging)) {
+    $config->set('logging', (bool) $logging)->save();
+  }
+}
+
+/**
+ * Uninstall the sdc module if installed.
+ */
+function system_post_update_sdc_uninstall() {
+  if (\Drupal::moduleHandler()->moduleExists('sdc')) {
+    \Drupal::service('module_installer')->uninstall(['sdc'], FALSE);
+  }
+}
+
+/**
+ * Move development settings from state to raw key-value storage.
+ */
+function system_post_update_move_development_settings_to_keyvalue(): void {
+  $state = \Drupal::state();
+  $development_settings = $state->getMultiple([
+    'twig_debug',
+    'twig_cache_disable',
+    'disable_rendered_output_cache_bins',
+  ]);
+  \Drupal::keyValue('development_settings')->setMultiple($development_settings);
+  $state->deleteMultiple(array_keys($development_settings));
+}
