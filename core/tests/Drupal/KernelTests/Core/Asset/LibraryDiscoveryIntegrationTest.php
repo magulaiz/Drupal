@@ -61,7 +61,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
     $this->activateTheme('starterkit_theme');
     $this->assertAssetInLibrary('core/themes/starterkit_theme/css/components/button.css', 'starterkit_theme', 'base', 'css');
     $this->assertAssetInLibrary('core/themes/starterkit_theme/css/components/container-inline.css', 'starterkit_theme', 'base', 'css');
-    $this->assertAssetInLibrary('core/themes/starterkit_theme/css/components/details.css', 'starterkit_theme', 'base', 'css');
+    $this->assertAssetInLibrary('core/themes/starterkit_theme/css/components/details.css', 'starterkit_theme', 'details', 'css');
     $this->assertAssetInLibrary('core/themes/starterkit_theme/css/components/dialog.css', 'starterkit_theme', 'dialog', 'css');
 
     // Confirmatory assert on core library to be removed.
@@ -77,12 +77,12 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
     // removed.
     $this->assertNoAssetInLibrary('core/themes/starterkit_theme/css/components/button.css', 'starterkit_theme', 'base', 'css');
     $this->assertNoAssetInLibrary('core/themes/starterkit_theme/css/components/container-inline.css', 'starterkit_theme', 'base', 'css');
-    $this->assertNoAssetInLibrary('core/themes/starterkit_theme/css/components/details.css', 'starterkit_theme', 'base', 'css');
+    $this->assertNoAssetInLibrary('core/themes/starterkit_theme/css/components/details.css', 'starterkit_theme', 'details', 'css');
     $this->assertNoAssetInLibrary('core/themes/starterkit_theme/css/components/dialog.css', 'starterkit_theme', 'dialog', 'css');
 
     $this->assertAssetInLibrary('core/modules/system/tests/themes/test_theme/css/my-button.css', 'starterkit_theme', 'base', 'css');
     $this->assertAssetInLibrary('themes/my_theme/css/my-container-inline.css', 'starterkit_theme', 'base', 'css');
-    $this->assertAssetInLibrary('themes/my_theme/css/my-details.css', 'starterkit_theme', 'base', 'css');
+    $this->assertAssetInLibrary('themes/my_theme/css/my-details.css', 'starterkit_theme', 'details', 'css');
 
     // Assert that entire library was correctly removed.
     $this->assertFalse($this->libraryDiscovery->getLibraryByName('core', 'drupal.progress'), 'Entire library correctly removed.');
