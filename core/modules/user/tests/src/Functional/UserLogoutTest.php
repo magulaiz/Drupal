@@ -44,12 +44,12 @@ class UserLogoutTest extends BrowserTestBase {
     $confirmUrl = Url::fromRoute('user.logout.confirm');
     $this->drupalGet($logoutUrl);
     $this->assertTrue($this->drupalUserIsLoggedIn($account));
-    $this->assertSession()->addressEquals($confirmUrl->setAbsolute()->toString());
+    $this->assertSession()->addressEquals($confirmUrl);
 
     // Test invalid csrf token does not log the user out.
     $this->drupalGet($logoutUrl, ['query' => ['token' => '123']]);
     $this->assertTrue($this->drupalUserIsLoggedIn($account));
-    $this->assertSession()->addressEquals($confirmUrl->setAbsolute()->toString());
+    $this->assertSession()->addressEquals($confirmUrl);
     // Submitting the confirmation form correctly logs the user out.
     $this->submitForm([], 'Log out');
     $this->assertFalse($this->drupalUserIsLoggedIn($account));
@@ -65,7 +65,7 @@ class UserLogoutTest extends BrowserTestBase {
     // Test hitting the confirm form while logged out redirects to the
     // frontpage.
     $this->drupalGet($confirmUrl);
-    $this->assertSession()->addressEquals(Url::fromRoute('<front>')->toString());
+    $this->assertSession()->addressEquals(Url::fromRoute('<front>'));
   }
 
 }
