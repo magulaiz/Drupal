@@ -160,8 +160,7 @@
             userTagsWithoutOverrides[tag] = this.userTags[tag];
           });
         this.allowedHTMLFormItem.value = `${this._generateSetting(userTagsWithoutOverrides)},
-              ${this._generateSetting(this.autoTags)}`;
-
+                  ${this._generateSetting(this.autoTags)}`;
       }
       // Restore to original state.
       else {
