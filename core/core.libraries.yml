@@ -772,6 +772,22 @@ drupal.tableselect:
     - core/jquery
     - core/once
 
+drupal.tablesort:
+  version: VERSION
+  js:
+    misc/tabledrag.js: { weight: -1 }
+  css:
+    component:
+      misc/components/tablesort.module.css: { weight: -10 }
+  moved_files:
+    system/base:
+      deprecation_version: 10.3.0
+      removed_version: 11.0.0
+      deprecation_link: https://www.drupal.org/node/3432346
+      css:
+        component:
+          css/components/tablesort.module.css: misc/components/tablesort.module.css
+
 drupal.time-diff:
   version: VERSION
   js:

@@ -16,7 +16,6 @@ global-styling:
       css/classy/components/links.css: {}
       css/classy/components/menu.css: {}
       css/classy/components/more-link.css: {}
-      css/classy/components/tablesort.css: {}
       css/classy/components/textarea.css: {}
       css/classy/components/ui-dialog.css: {}
       css/components/accordion.css: {}
@@ -47,8 +46,6 @@ global-styling:
       css/components/tables.css: {}
       css/components/table--file-multiple-widget.css: {}
       css/components/search-admin-settings.css: {}
-      css/components/tablesort-indicator.css: {}
-      css/components/tableselect.css: {}
       css/components/tabs.css: {}
     theme:
       css/theme/colors.css: {}
@@ -212,6 +209,23 @@ icon-link:
     component:
       css/components/icon-link.css: {}
 
+
+tablesort:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/tablesort.css: {}
+      css/components/tablesort-indicator.css: {}
+  moved_files:
+    claro/global-styling:
+      deprecation_version: 10.3.0
+      removed_version: 11.0.0
+      deprecation_link: https://www.drupal.org/node/3432346
+      css:
+        component:
+          css/classy/components/tablesort.css: css/classy/components/tablesort.css
+          css/components/tablesort-indicator.css: css/components/tablesort-indicator.css
+
 dropbutton:
   version: VERSION
   js:
@@ -346,6 +360,9 @@ tableselect:
   version: VERSION
   js:
     js/tableselect.js: {}
+  css:
+    component:
+      css/components/tableselect.css: {}
   dependencies:
     - core/jquery
     - core/drupal
@@ -353,6 +370,14 @@ tableselect:
     - core/drupal.debounce
     - core/tabbable
     - core/once
+  moved_files:
+    claro/global-styling:
+      deprecation_version: 10.3.0
+      removed_version: 11.0.0
+      deprecation_link: https://www.drupal.org/node/3432346
+      css:
+        component:
+          css/components/tablesort.css: css/components/tablesort.css
 
 classy.book-navigation:
   version: VERSION
