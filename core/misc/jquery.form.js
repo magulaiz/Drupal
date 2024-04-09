@@ -1135,7 +1135,7 @@
 			if (semantic && form.clk && el.type === 'image') {
 				// handle image inputs on the fly when semantic == true
 				if (form.clk === el) {
-					a.push({name: n, value: $(el).val(), type: el.type});
+					a.push({ name: n, value: el.value, type: el.type });
 					a.push({name: n + '.x', value: form.clk_x}, {name: n + '.y', value: form.clk_y});
 				}
 				continue;
@@ -1181,7 +1181,7 @@
 			n = input.name;
 
 			if (n && !input.disabled && input.type === 'image') {
-				a.push({name: n, value: $input.val()});
+				a.push({name: n, value: input.value});
 				a.push({name: n + '.x', value: form.clk_x}, {name: n + '.y', value: form.clk_y});
 			}
 		}
@@ -1336,7 +1336,7 @@
 			return a;
 		}
 
-		return $(el).val().replace(rCRLF, '\r\n');
+		return el.value.replace(rCRLF, '\r\n');
 	};
 
 	/**
@@ -1375,7 +1375,7 @@
 				if (/MSIE/.test(navigator.userAgent)) {
 					$(this).replaceWith($(this).clone(true));
 				} else {
-					$(this).val('');
+					this.value = '';
 				}
 
 			} else if (includeHidden) {
