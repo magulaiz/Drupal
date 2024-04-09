@@ -39,6 +39,11 @@ class Textarea extends FormElementBase {
       '#cols' => 60,
       '#rows' => 5,
       '#resizable' => 'vertical',
+      '#attach' => [
+        'library' => [
+          'core/drupal.resize',
+        ],
+      ],
       '#process' => [
         [$class, 'processAjaxForm'],
         [$class, 'processGroup'],
