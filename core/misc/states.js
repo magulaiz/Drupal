@@ -534,11 +534,11 @@
       keyup() {
         // The function associated with that trigger returns the new value for
         // the state.
-        return this.val() === '';
+        return this[0].value === '';
       },
       // Listen to 'change' for number native "spinner" widgets.
       change() {
-        return this.val() === '';
+        return this[0].value === '';
       },
     },
 
@@ -565,17 +565,19 @@
         // Radio buttons share the same :input[name="key"] selector.
         if (this.length > 1) {
           // Initial checked value of radios is undefined, so we return false.
-          return this.filter(':checked').val() || false;
+          const checked = this.filter(':checked');
+          return checked.length ? checked[0].value || false : false;
         }
-        return this.val();
+        return this[0].value;
       },
       change() {
         // Radio buttons share the same :input[name="key"] selector.
         if (this.length > 1) {
           // Initial checked value of radios is undefined, so we return false.
-          return this.filter(':checked').val() || false;
+          const checked = this.filter(':checked');
+          return checked.length ? checked[0].value || false : false;
         }
-        return this.val();
+        return this[0].value;
       },
     },
 
