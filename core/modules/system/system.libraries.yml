@@ -67,7 +67,7 @@ drupal.system.date:
     - core/once
     - core/drupal.form
 
-drupal.system.status.report:
+status.report:
   version: VERSION
   css:
     component:
