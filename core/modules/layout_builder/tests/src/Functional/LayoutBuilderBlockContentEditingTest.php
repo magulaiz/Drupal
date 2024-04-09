@@ -16,7 +16,7 @@ use Drupal\user\UserInterface;
  *
  * @group layout_builder
  */
-class LayoutBuilderBlockContentEditing extends LayoutBuilderTestBase {
+class LayoutBuilderBlockContentEditingTest extends LayoutBuilderTestBase {
 
   use EnableLayoutBuilderTrait;
 
