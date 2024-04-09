@@ -90,6 +90,11 @@ libraries-override:
       component:
         misc/dropbutton/dropbutton.css: css/core/dropbutton/dropbutton.css
 
+  core/drupal.fieldgroup:
+    css:
+      component:
+        misc/components/fieldgroup.module.css: css/core/components/fieldgroup.module.css
+
   core/drupal.progress:
     css:
       component:
