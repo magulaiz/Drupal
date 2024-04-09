@@ -210,12 +210,9 @@ system.performance:
               match: false
               message: 'This is not a valid regex.'
         html:
-          type: string
+          # @see \Drupal\Core\EventSubscriber\Fast404ExceptionHtmlSubscriber
+          type: html
           label: 'Fast 404 page html'
-          constraints:
-            Callback:
-              # @see \Drupal\Core\EventSubscriber\Fast404ExceptionHtmlSubscriber
-              callback: [\Drupal\system\Fast404ConfigValidation, validatehtml]
     js:
       type: mapping
       label: 'JavaScript performance settings'
