@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\pgsql\Update10101;
 
 /**
@@ -20,7 +21,7 @@ function pgsql_requirements() {
     // Set the requirement just for postgres.
     if ($connection->driver() == 'pgsql') {
       $requirements['pgsql_extension_pg_trgm'] = [
-        'severity' => REQUIREMENT_OK,
+        'severity' => RequirementSeverity::Ok,
         'title' => t('PostgreSQL pg_trgm extension'),
         'value' => t('Available'),
         'description' => 'The pg_trgm PostgreSQL extension is present.',
@@ -28,7 +29,7 @@ function pgsql_requirements() {
 
       // If the extension is not available, set the requirement error.
       if (!$connection->schema()->extensionExists('pg_trgm')) {
-        $requirements['pgsql_extension_pg_trgm']['severity'] = REQUIREMENT_ERROR;
+        $requirements['pgsql_extension_pg_trgm']['severity'] = RequirementSeverity::Error;
         $requirements['pgsql_extension_pg_trgm']['value'] = t('Not created');
         $requirements['pgsql_extension_pg_trgm']['description'] = t('The <a href=":pg_trgm">pg_trgm</a> PostgreSQL extension is not present. The extension is required by Drupal 10 to improve performance when using PostgreSQL. See <a href=":requirements">Drupal database server requirements</a> for more information.', [
           ':pg_trgm' => 'https://www.postgresql.org/docs/current/pgtrgm.html',

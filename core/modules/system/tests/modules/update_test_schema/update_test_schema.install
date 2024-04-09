@@ -5,9 +5,10 @@
  * Update hooks and schema definition for the update_test_schema module.
  */
 
-use Drupal\Core\Database\Database;
-use Drupal\Core\Url;
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Database\Database;
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_requirements().
@@ -18,7 +19,7 @@ function update_test_schema_requirements($phase) {
     $requirements['path_alias_test'] = [
       'title' => 'Path alias test',
       'value' => 'Check a path alias for the admin page',
-      'severity' => REQUIREMENT_INFO,
+      'severity' => RequirementSeverity::Info,
       'description' => new FormattableMarkup('Visit <a href=":link">the structure page</a> to do many useful things.', [
         ':link' => Url::fromRoute('system.admin_structure')->toString(),
       ]),

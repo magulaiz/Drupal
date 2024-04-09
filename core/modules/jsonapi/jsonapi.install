@@ -5,6 +5,7 @@
  * Module install file.
  */
 
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\Url;
 
 /**
@@ -46,7 +47,7 @@ function jsonapi_requirements($phase) {
       $requirements['jsonapi_multilingual_support'] = [
         'title' => t('JSON:API multilingual support'),
         'value' => t('Limited'),
-        'severity' => REQUIREMENT_INFO,
+        'severity' => RequirementSeverity::Info,
         'description' => t('Some multilingual features currently do not work well with JSON:API. See the <a href=":jsonapi-docs">JSON:API multilingual support documentation</a> for more information on the current status of multilingual support.', [
           ':jsonapi-docs' => 'https://www.drupal.org/docs/8/modules/jsonapi/translations',
         ]),
@@ -55,7 +56,7 @@ function jsonapi_requirements($phase) {
     $requirements['jsonapi_revision_support'] = [
       'title' => t('JSON:API revision support'),
       'value' => t('Limited'),
-      'severity' => REQUIREMENT_INFO,
+      'severity' => RequirementSeverity::Info,
       'description' => t('Revision support is currently read-only and only for the "Content" and "Media" entity types in JSON:API. See the <a href=":jsonapi-docs">JSON:API revision support documentation</a> for more information on the current status of revision support.', [
         ':jsonapi-docs' => 'https://www.drupal.org/docs/8/modules/jsonapi/revisions',
       ]),
@@ -63,7 +64,7 @@ function jsonapi_requirements($phase) {
     $requirements['jsonapi_read_only_mode'] = [
       'title' => t('JSON:API allowed operations'),
       'value' => t('Read-only'),
-      'severity' => REQUIREMENT_INFO,
+      'severity' => RequirementSeverity::Info,
     ];
     if (!\Drupal::configFactory()->get('jsonapi.settings')->get('read_only')) {
       $requirements['jsonapi_read_only_mode']['value'] = t('All (create, read, update, delete)');

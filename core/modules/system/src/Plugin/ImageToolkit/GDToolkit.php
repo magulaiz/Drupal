@@ -4,6 +4,7 @@ namespace Drupal\system\Plugin\ImageToolkit;
 
 use Drupal\Component\Utility\Color;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -441,7 +442,7 @@ class GDToolkit extends ImageToolkitBase {
       );
     }
     if ($unsupported_formats) {
-      $requirements['version']['severity'] = REQUIREMENT_WARNING;
+      $requirements['version']['severity'] = RequirementSeverity::Warning;
       $unsupported = $this->formatPlural(
         count($unsupported_formats),
         'Unsupported image file format: %formats.',
@@ -457,7 +458,7 @@ class GDToolkit extends ImageToolkitBase {
 
     // Check for filter and rotate support.
     if (!function_exists('imagefilter') || !function_exists('imagerotate')) {
-      $requirements['version']['severity'] = REQUIREMENT_WARNING;
+      $requirements['version']['severity'] = RequirementSeverity::Warning;
       $descriptions[] = $this->t('The GD Library for PHP is enabled, but was compiled without support for functions used by the rotate and desaturate effects. It was probably compiled using the official GD libraries from the <a href="https://libgd.github.io/">gdLibrary site</a> instead of the GD library bundled with PHP. You should recompile PHP --with-gd using the bundled GD library. See <a href="https://www.php.net/manual/book.image.php">the PHP manual</a>.');
     }
 

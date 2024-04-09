@@ -5,6 +5,8 @@
  * Install hooks for test profile.
  */
 
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
+
 /**
  * Implements hook_requirements().
  */
@@ -14,7 +16,7 @@ function testing_requirements_requirements($phase) {
   if ($phase === 'install') {
     $requirements['testing_requirements'] = [
       'title' => t('Testing requirements'),
-      'severity' => REQUIREMENT_ERROR,
+      'severity' => RequirementSeverity::Error,
       'description' => t('Testing requirements failed requirements.'),
     ];
   }
