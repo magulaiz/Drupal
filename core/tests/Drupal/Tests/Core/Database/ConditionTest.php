@@ -169,7 +169,7 @@ class ConditionTest extends UnitTestCase {
 
     $condition = $connection->condition('AND');
     $condition->condition('name', 'value', $operator);
-    $this->expectWarning();
+    $this->expectException(\InvalidArgumentException::class);
     $condition->compile($connection, $query_placeholder);
   }
 
