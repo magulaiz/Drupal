@@ -223,3 +223,17 @@ function system_post_update_set_cron_logging_setting_to_boolean(): void {
     $config->set('logging', (bool) $logging)->save();
   }
 }
+
+/**
+ * Move development settings from state to raw key-value storage.
+ */
+function system_post_update_move_development_settings_to_keyvalue(): void {
+  $state = \Drupal::state();
+  $development_settings = $state->getMultiple([
+    'twig_debug',
+    'twig_cache_disable',
+    'disable_rendered_output_cache_bins',
+  ]);
+  \Drupal::keyValue('development_settings')->setMultiple($development_settings);
+  $state->deleteMultiple(array_keys($development_settings));
+}
