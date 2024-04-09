@@ -195,18 +195,6 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   protected $sourceRowStatus = MigrateIdMapInterface::STATUS_IMPORTED;
 
   /**
-   * Track time of last import if TRUE.
-   *
-   * @var bool
-   *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
-   * replacement.
-   *
-   * @see https://www.drupal.org/node/3282894
-   */
-  protected $trackLastImported = FALSE;
-
-  /**
    * These migrations must be already executed before this migration can run.
    *
    * @var array
@@ -332,10 +320,6 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
 
     foreach (NestedArray::mergeDeepArray([$plugin_definition, $configuration], TRUE) as $key => $value) {
       $this->$key = $value;
-    }
-
-    if (isset($plugin_definition['trackLastImported'])) {
-      @trigger_error("The key 'trackLastImported' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3282894", E_USER_DEPRECATED);
     }
 
     $this->migration_dependencies = ($this->migration_dependencies ?: []) + ['required' => [], 'optional' => []];
@@ -656,23 +640,6 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function isTrackLastImported() {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3282894', E_USER_DEPRECATED);
-    return $this->trackLastImported;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setTrackLastImported($track_last_imported) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3282894', E_USER_DEPRECATED);
-    $this->trackLastImported = (bool) $track_last_imported;
-    return $this;
-  }
-
-  /**
    * Get the dependencies for this migration.
    *
    * @param bool $expand
@@ -760,14 +727,6 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    */
   public function getSourceConfiguration() {
     return $this->source;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getTrackLastImported() {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3282894', E_USER_DEPRECATED);
-    return $this->trackLastImported;
   }
 
   /**
