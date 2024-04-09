@@ -352,7 +352,7 @@ class DateFormatter implements DateFormatterInterface {
    * @see https://www.drupal.org/node/3439484
    */
   protected function country() {
-    @trigger_error('Calling ' . __METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3439484', E_USER_DEPRECATED);
+    @trigger_error('Calling ' . __METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3439484', E_USER_DEPRECATED);
     if ($this->country === NULL) {
       $this->country = \Drupal::config('system.date')->get('country.default');
     }
