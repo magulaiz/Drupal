@@ -8,15 +8,12 @@ use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\destination\Config;
 use Drupal\Tests\UnitTestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
  * @coversDefaultClass \Drupal\migrate\Plugin\migrate\destination\Config
  * @group migrate
  */
 class ConfigTest extends UnitTestCase {
-
-  use ProphecyTrait;
 
   /**
    * Tests the import method.
@@ -60,8 +57,7 @@ class ConfigTest extends UnitTestCase {
       ->method('getLanguageConfigOverride')
       ->with('fr', 'd8_config')
       ->willReturn($config);
-    $typed_config_manager = $this->prophesize(TypedConfigManagerInterface::class);
-    $destination = new Config(['config_name' => 'd8_config'], 'd8_config', ['pluginId' => 'd8_config'], $migration, $config_factory, $language_manager, $typed_config_manager->reveal());
+    $destination = new Config(['config_name' => 'd8_config'], 'd8_config', ['pluginId' => 'd8_config'], $migration, $config_factory, $language_manager, $this->createMock(TypedConfigManagerInterface::class));
     $destination_id = $destination->import($row);
     $this->assertEquals(['d8_config'], $destination_id);
   }
@@ -111,8 +107,7 @@ class ConfigTest extends UnitTestCase {
       ->method('getLanguageConfigOverride')
       ->with('mi', 'd8_config')
       ->willReturn($config);
-    $typed_config_manager = $this->prophesize(TypedConfigManagerInterface::class);
-    $destination = new Config(['config_name' => 'd8_config', 'translations' => 'true'], 'd8_config', ['pluginId' => 'd8_config'], $migration, $config_factory, $language_manager, $typed_config_manager->reveal());
+    $destination = new Config(['config_name' => 'd8_config', 'translations' => 'true'], 'd8_config', ['pluginId' => 'd8_config'], $migration, $config_factory, $language_manager, $this->createMock(TypedConfigManagerInterface::class));
     $destination_id = $destination->import($row);
     $this->assertEquals(['d8_config', 'mi'], $destination_id);
   }
