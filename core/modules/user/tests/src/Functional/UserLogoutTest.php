@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Functional;
 
+use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -39,12 +40,16 @@ class UserLogoutTest extends BrowserTestBase {
     $this->drupalLogin($account);
 
     // Test missing csrf token does not log the user out.
-    $this->drupalGet('user/logout');
+    $logoutUrl = Url::fromRoute('user.logout');
+    $confirmUrl = Url::fromRoute('user.logout.confirm');
+    $this->drupalGet($logoutUrl);
     $this->assertTrue($this->drupalUserIsLoggedIn($account));
+    $this->assertSession()->addressEquals($confirmUrl->toString());
 
     // Test invalid csrf token does not log the user out.
-    $this->drupalGet('user/logout', ['query' => ['token' => '123']]);
+    $this->drupalGet($logoutUrl, ['query' => ['token' => '123']]);
     $this->assertTrue($this->drupalUserIsLoggedIn($account));
+    $this->assertSession()->addressEquals($confirmUrl->toString());
     // Submitting the confirmation form correctly logs the user out.
     $this->submitForm([], 'Log out');
     $this->assertFalse($this->drupalUserIsLoggedIn($account));
@@ -56,6 +61,11 @@ class UserLogoutTest extends BrowserTestBase {
     $this->drupalGet('user');
     $this->getSession()->getPage()->clickLink('Log out');
     $this->assertFalse($this->drupalUserIsLoggedIn($account));
+
+    // Test hitting the confirm form while logged out redirects to the
+    // frontpage.
+    $this->drupalGet($confirmUrl);
+    $this->assertSession()->addressEquals(Url::fromRoute('<front>')->toString());
   }
 
 }

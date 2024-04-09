@@ -10,9 +10,6 @@ use Symfony\Component\Routing\Route;
 
 /**
  * Processes the outbound route to handle the CSRF token.
- *
- * This class will add a token URL query parameter to all routes that have a
- * _csrf_token requirement or _csrf_token_or_confirm option set.
  */
 class RouteProcessorCsrf implements OutboundRouteProcessorInterface, TrustedCallbackInterface {
 
@@ -37,9 +34,7 @@ class RouteProcessorCsrf implements OutboundRouteProcessorInterface, TrustedCall
    * {@inheritdoc}
    */
   public function processOutbound($route_name, Route $route, array &$parameters, BubbleableMetadata $bubbleable_metadata = NULL) {
-    // Add a CSRF token URL query parameter to all routes that have a
-    // _csrf_token requirement or _csrf_token_or_confirm option set.
-    if ($route->hasRequirement('_csrf_token') || $route->hasOption('_csrf_token_or_confirm')) {
+    if ($route->hasRequirement('_csrf_token')) {
       $path = ltrim($route->getPath(), '/');
       // Replace the path parameters with values from the parameters array.
       foreach ($parameters as $param => $value) {
@@ -54,10 +49,7 @@ class RouteProcessorCsrf implements OutboundRouteProcessorInterface, TrustedCall
         // Generate a placeholder and a render array to replace it.
         $placeholder = Crypt::hashBase64($path);
         $placeholder_render_array = [
-          '#lazy_builder' => [
-            'route_processor_csrf:renderPlaceholderCsrfToken',
-            [$path],
-          ],
+          '#lazy_builder' => ['route_processor_csrf:renderPlaceholderCsrfToken', [$path]],
         ];
 
         // Instead of setting an actual CSRF token as the query string, we set

@@ -5,12 +5,10 @@ namespace Drupal\user\Controller;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Xss;
-use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\Core\Url;
-use Drupal\user\Form\UserLogoutConfirm;
 use Drupal\user\Form\UserPasswordResetForm;
 use Drupal\user\UserDataInterface;
 use Drupal\user\UserInterface;
@@ -76,8 +74,6 @@ class UserController extends ControllerBase {
    *   The flood service.
    * @param \Drupal\Component\Datetime\TimeInterface|null $time
    *   The time service.
-   * @param \Drupal\Core\Access\CsrfTokenGenerator|null $csrfToken
-   *   The CSRF token generator.
    */
   public function __construct(
     DateFormatterInterface $date_formatter,
@@ -86,7 +82,6 @@ class UserController extends ControllerBase {
     LoggerInterface $logger,
     FloodInterface $flood,
     protected ?TimeInterface $time = NULL,
-    protected ?CsrfTokenGenerator $csrfToken = NULL,
   ) {
     $this->dateFormatter = $date_formatter;
     $this->userStorage = $user_storage;
@@ -96,10 +91,6 @@ class UserController extends ControllerBase {
     if ($this->time === NULL) {
       @trigger_error('Calling ' . __METHOD__ . ' without the $time argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3112298', E_USER_DEPRECATED);
       $this->time = \Drupal::service('datetime.time');
-    }
-    if ($this->csrfToken === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $csrfToken parameter is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/2822514', E_USER_DEPRECATED);
-      $this->csrfToken = \Drupal::service('csrf_token');
     }
   }
 
@@ -114,7 +105,6 @@ class UserController extends ControllerBase {
       $container->get('logger.factory')->get('user'),
       $container->get('flood'),
       $container->get('datetime.time'),
-      $container->get('csrf_token'),
     );
   }
 
@@ -404,25 +394,12 @@ class UserController extends ControllerBase {
   /**
    * Logs the current user out.
    *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   *
-   * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
-   *   A redirect response if a CSRF token was provided, otherwise a logout
-   *   confirmation form render array.
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   A redirection to home page.
    */
-  public function logout(Request $request) {
+  public function logout() {
     if ($this->currentUser()->isAuthenticated()) {
-      $token = $request->query->get('token');
-
-      // Show confirm form when no valid CSRF token is present.
-      if (!$token || !$this->csrfToken->validate($token, 'user/logout')) {
-        return $this->formBuilder()->getForm(UserLogoutConfirm::class);
-      }
-      else {
-        // If there is a valid token, log the user out.
-        user_logout();
-      }
+      user_logout();
     }
     return $this->redirect('<front>');
   }
