@@ -566,7 +566,7 @@
         if (this.length > 1) {
           // Initial checked value of radios is undefined, so we return false.
           const checked = this.filter(':checked');
-          return checked.length ? checked[0].value || false : false;
+          return checked[0]?.value || false;
         }
         return this[0].value;
       },
@@ -575,7 +575,7 @@
         if (this.length > 1) {
           // Initial checked value of radios is undefined, so we return false.
           const checked = this.filter(':checked');
-          return checked.length ? checked[0].value || false : false;
+          return checked[0]?.value || false;
         }
         return this[0].value;
       },
