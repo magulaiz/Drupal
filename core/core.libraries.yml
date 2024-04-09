@@ -620,7 +620,7 @@ drupal.fieldgroup:
   version: VERSION
   css:
     component:
-      misc/component/fieldgroup.module.css: { weight: -10 }
+      misc/components/fieldgroup.module.css: { weight: -10 }
   moved_files:
     system/base:
       deprecation_version: 10.3.0
