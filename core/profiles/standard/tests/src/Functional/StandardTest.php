@@ -41,22 +41,6 @@ class StandardTest extends BrowserTestBase {
   protected $adminUser;
 
   /**
-   * Tests that user 1 does not have an all-access pass.
-   */
-  public function testSuperUser() {
-    $this->drupalGet('admin');
-    $this->assertSession()->statusCodeEquals(403);
-
-    $user = User::load(1);
-    $user->removeRole('administrator');
-    $user->save();
-
-    $this->drupalLogin($this->rootUser);
-    $this->drupalGet('admin');
-    $this->assertSession()->statusCodeEquals(403);
-  }
-
-  /**
    * Tests Standard installation profile.
    */
   public function testStandard() {
@@ -312,6 +296,20 @@ class StandardTest extends BrowserTestBase {
       }
 
     }
+
+    // Tests that user 1 does not have an all-access pass.
+    $this->drupalLogin($this->rootUser);
+    $this->drupalGet('admin');
+    $this->assertSession()->statusCodeEquals(200);
+
+    User::load(1)
+      ->removeRole('administrator')
+      ->save();
+    // Clear caches so change take effect in system under test.
+    $this->rebuildAll();
+
+    $this->drupalGet('admin');
+    $this->assertSession()->statusCodeEquals(403);
   }
 
 }
