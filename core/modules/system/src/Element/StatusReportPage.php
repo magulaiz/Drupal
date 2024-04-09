@@ -26,7 +26,9 @@ class StatusReportPage extends RenderElementBase {
         [$class, 'preRenderRequirements'],
       ],
       '#attached' => [
-        'library' => 'system.status.report',
+        'library' => [
+          'system.status.report'
+        ],
       ],
     ];
   }
