@@ -405,6 +405,8 @@ system.theme.global:
 system.advisories:
   type: config_object
   label: 'Security advisory settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     enabled:
       type: boolean
@@ -412,6 +414,9 @@ system.advisories:
     interval_hours:
       type: integer
       label: 'How often to check for security advisories, in hours'
+      constraints:
+        Range:
+          min: 0
 
 block.settings.system_branding_block:
   type: block_settings
