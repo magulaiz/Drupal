@@ -8,6 +8,7 @@ use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Entity\DependencyTrait;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\migrate\Attribute\MigrateDestination;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -65,11 +66,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * "d6_variable_translation" source plugin.
  *
  * @see \Drupal\migrate_drupal\Plugin\migrate\source\d6\VariableTranslation
- *
- * @MigrateDestination(
- *   id = "config"
- * )
  */
+#[MigrateDestination('config')]
 class Config extends DestinationBase implements ContainerFactoryPluginInterface, DependentPluginInterface {
 
   use DependencyTrait;

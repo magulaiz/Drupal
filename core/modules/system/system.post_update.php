@@ -268,11 +268,27 @@ function system_post_update_add_langcode_to_all_translatable_config(): void {
       if ($config->get('langcode')) {
         continue;
       }
-      $config->set('langcode', \Drupal::languageManager()->getDefaultLanguage()->getId());
+      $config->set('langcode', \Drupal::languageManager()
+        ->getDefaultLanguage()
+        ->getId());
     }
     else {
       $config->clear('langcode');
     }
     $config->save();
   }
+}
+
+/**
+ * Move development settings from state to raw key-value storage.
+ */
+function system_post_update_move_development_settings_to_keyvalue(): void {
+  $state = \Drupal::state();
+  $development_settings = $state->getMultiple([
+    'twig_debug',
+    'twig_cache_disable',
+    'disable_rendered_output_cache_bins',
+  ]);
+  \Drupal::keyValue('development_settings')->setMultiple($development_settings);
+  $state->deleteMultiple(array_keys($development_settings));
 }
