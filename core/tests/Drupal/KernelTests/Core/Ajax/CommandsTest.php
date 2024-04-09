@@ -52,27 +52,6 @@ class CommandsTest extends KernelTestBase {
       ];
       $this->assertCommand($response->getCommands(), $expected, $message);
     };
-<<<<<<< HEAD
-=======
-
-    $config = $this->config('system.performance');
-    $config->set('js', [
-      'preprocess' => FALSE,
-      'gzip' => TRUE,
-    ]);
-    $config->set('css', [
-      'preprocess' => FALSE,
-      'gzip' => TRUE,
-    ]);
-    $config->set('fast_404', [
-      'enabled' => FALSE,
-      'paths' => '/\.(?:txt|png|gif|jpe?g|css|js|ico|swf|flv|cgi|bat|pl|dll|exe|asp)$/i',
-      'exclude_paths' => '/\/(?:styles|imagecache)\//',
-      'html' => '<!DOCTYPE html><html><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL "@path" was not found on this server.</p></body></html>',
-    ]);
-    $config->set('cache.page.max_age', 0);
-    $config->save();
->>>>>>> 1e2dacd3a2fe760641bc9ea457027f6fdf962067
     $assert('Settings command exists when JS aggregation is disabled.');
 
     $this->installConfig(['system']);

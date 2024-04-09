@@ -203,24 +203,13 @@ system.performance:
           type: string
           label: 'Regular expression to not match'
           constraints:
-<<<<<<< HEAD
-            Regex:
-              # Paths to exclude.
-              # @see \Drupal\Core\EventSubscriber\Fast404ExceptionHtmlSubscriber
-              pattern: '/\/(?:[^\\\/\w_]+)\//'
-              match: false
-              message: 'This is not a valid regex.'
-=======
+            # Paths to exclude.
+            # @see \Drupal\Core\EventSubscriber\Fast404ExceptionHtmlSubscriber
             NotBlank: []
->>>>>>> 1e2dacd3a2fe760641bc9ea457027f6fdf962067
         html:
           # @see \Drupal\Core\EventSubscriber\Fast404ExceptionHtmlSubscriber
           type: html
           label: 'Fast 404 page html'
-          constraints:
-            Callback:
-              # @see \Drupal\Core\EventSubscriber\Fast404ExceptionHtmlSubscriber
-              callback: [\Drupal\Component\Utility\Html, validatehtml]
     js:
       type: mapping
       label: 'JavaScript performance settings'

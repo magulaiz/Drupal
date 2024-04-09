@@ -447,10 +447,11 @@ class Html {
 
     // Attach the provided HTML inside the body. Rely on the HTML5 parser to
     // close the body tag.
-    $parser->loadHTML('<body>' . $html);
+    $parser->loadHTML($html);
 
-    $errors = $parser->getErrors();
-    array_walk($errors, $context->addViolation(...));
+    foreach ($parser->getErrors() as $error) {
+      $context->addViolation($error);
+    }
   }
 
   /**
