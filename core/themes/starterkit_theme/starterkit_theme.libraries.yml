@@ -10,8 +10,6 @@ base:
         weight: -10
       css/components/container-inline.css:
         weight: -10
-      css/components/details.css:
-        weight: -10
       css/components/exposed-filters.css:
         weight: -10
       css/components/field.css:
@@ -21,8 +19,6 @@ base:
       css/components/icons.css:
         weight: -10
       css/components/inline-form.css:
-        weight: -10
-      css/components/item-list.css:
         weight: -10
       css/components/link.css:
         weight: -10
@@ -34,8 +30,6 @@ base:
         weight: -10
       css/components/pager.css:
         weight: -10
-      css/components/tabledrag.css:
-        weight: -10
       css/components/tableselect.css:
         weight: -10
       css/components/tablesort.css:
@@ -45,6 +39,12 @@ base:
       css/components/textarea.css:
         weight: -10
       css/components/ui-dialog.css:
+        weight: -10
+details:
+  version: VERSION
+  css:
+    component:
+      css/components/details.css:
         weight: -10
 dialog:
   version: VERSION
@@ -74,6 +74,12 @@ indented:
   css:
     component:
       css/components/indented.css: {  }
+item_list:
+  version: VERSION
+  css:
+    component:
+      css/components/item-list.css:
+        weight: -10
 messages:
   version: VERSION
   css:
@@ -97,6 +103,12 @@ search-results:
   css:
     component:
       css/components/search-results.css: {  }
+tabledrag:
+  version: VERSION
+  css:
+    component:
+      css/components/tabledrag.css:
+        weight: -10
 user:
   version: VERSION
   css:

@@ -12,7 +12,6 @@ global-styling:
       css/classy/components/field.css: {}
       css/classy/components/icons.css: {}
       css/classy/components/inline-form.css: {}
-      css/classy/components/item-list.css: {}
       css/classy/components/link.css: {}
       css/classy/components/links.css: {}
       css/classy/components/menu.css: {}
@@ -27,7 +26,6 @@ global-styling:
       css/components/container-inline.module.css: {}
       css/components/breadcrumb.css: {}
       css/components/button.css: {}
-      css/components/details.css: {}
       css/components/divider.css: {}
       css/components/messages.css: {}
       css/components/entity-meta.css: {}
@@ -50,10 +48,6 @@ global-styling:
       css/components/table--file-multiple-widget.css: {}
       css/components/search-admin-settings.css: {}
       css/components/tablesort-indicator.css: {}
-      css/components/system-status-report-general-info.css: {}
-      css/components/system-status-report.css: {}
-      css/components/system-status-report-counters.css: {}
-      css/components/system-status-counter.css: {}
       css/components/tableselect.css: {}
       css/components/tabs.css: {}
     theme:
@@ -171,12 +165,46 @@ system.admin:
   dependencies:
     - claro/card
 
+system.status.report:
+  version: VERSION
+  css:
+    component:
+      css/components/system-status-report-general-info.css: {}
+      css/components/system-status-report.css: {}
+      css/components/system-status-report-counters.css: {}
+      css/components/system-status-counter.css: {}
+  moved_files:
+    claro/global-styling:
+      deprecation_version: 10.3.0
+      removed_version: 11.0.0
+      deprecation_link: https://www.drupal.org/node/3432346
+      css:
+        component:
+          css/components/system-status-report-general-info.css: css/components/system-status-report-general-info.css
+          css/components/system-status-report.css: css/components/system-status-report.css
+          css/components/system-status-report-counters.css: css/components/system-status-report-counters.css
+          css/components/system-status-counter.css: css/components/system-status-counter.css
+
 checkbox:
   version: VERSION
   js:
     js/checkbox.js: {}
   dependencies:
     - core/drupal
+
+item_list:
+  version: VERSION
+  css:
+    component:
+      css/classy/components/item-list.css: {}
+  moved_files:
+    claro/global-styling:
+      deprecation_version: 10.3.0
+      removed_version: 11.0.0
+      deprecation_link: https://www.drupal.org/node/3432346
+      css:
+        component:
+          css/classy/components/item-list.css: css/classy/components/item-list.css
 
 icon-link:
   version: VERSION
@@ -210,6 +238,17 @@ drupal.shortcut:
 details-focus:
   js:
     js/details.js: {}
+  css:
+    component:
+      css/components/details.css: {}
+  moved_files:
+    claro/global-styling:
+      deprecation_version: 10.3.0
+      removed_version: 11.0.0
+      deprecation_link: https://www.drupal.org/node/3432346
+      css:
+        component:
+          css/components/details.css: css/components/details.css
 
 ajax:
   js:
