@@ -114,6 +114,11 @@ class Condition implements ConditionInterface, \Countable {
       }
     }
 
+    // Detect potentially dangerous operators.
+    if (stripos($operator, 'UNION') !== FALSE || strpbrk($operator, '[-\'"();') !== FALSE) {
+      throw new InvalidQueryException(sprintf("Query condition '%s %s %s' has an invalid query operator.", $field, $operator, $value));
+    }
+
     $this->conditions[] = [
       'field' => $field,
       'value' => $value,
@@ -245,26 +250,6 @@ class Condition implements ConditionInterface, \Countable {
           $operator = ['operator' => '', 'use_value' => FALSE];
         }
         else {
-          // Remove potentially dangerous characters.
-          // If something passed in an invalid character stop early, so we
-          // don't rely on a broken SQL statement when we would just replace
-          // those characters.
-          if (stripos($condition['operator'], 'UNION') !== FALSE || strpbrk($condition['operator'], '[-\'"();') !== FALSE) {
-            $this->changed = TRUE;
-            $this->arguments = [];
-            // Provide a string which will result into an empty query result.
-            $this->stringVersion = '( AND 1 = 0 )';
-
-            // Conceptually throwing an exception caused by user input is bad
-            // as you result into a 'white screen of death', which depending on
-            // your webserver configuration can result into the assumption that
-            // your site is broken.
-            // On top of that the database API relies on __toString() which
-            // does not allow to throw exceptions.
-            trigger_error('Invalid characters in query operator: ' . $condition['operator'], E_USER_ERROR);
-            return;
-          }
-
           // For simplicity, we convert all operators to a data structure to
           // allow to specify a prefix, a delimiter and such. Find the
           // associated data structure by first doing a database specific

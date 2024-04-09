@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Database;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\InvalidQueryException;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\Query\PlaceholderInterface;
 use Drupal\Tests\Core\Database\Stub\StubCondition;
@@ -158,19 +159,11 @@ class ConditionTest extends UnitTestCase {
     $connection->condition('AND')->willReturn(new Condition('AND'));
     $connection = $connection->reveal();
 
-    $query_placeholder = $this->prophesize(PlaceholderInterface::class);
-
-    $counter = 0;
-    $query_placeholder->nextPlaceholder()->will(function () use (&$counter) {
-      return $counter++;
-    });
-    $query_placeholder->uniqueIdentifier()->willReturn(4);
-    $query_placeholder = $query_placeholder->reveal();
-
     $condition = $connection->condition('AND');
+
+    $this->expectException(InvalidQueryException::class);
+    $this->expectExceptionMessage("Query condition 'name $operator value' has an invalid query operator.");
     $condition->condition('name', 'value', $operator);
-    $this->expectError();
-    $condition->compile($connection, $query_placeholder);
   }
 
   public static function providerTestCompileWithSqlInjectionForOperator() {
