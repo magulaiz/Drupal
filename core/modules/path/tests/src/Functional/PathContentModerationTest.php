@@ -18,6 +18,7 @@ class PathContentModerationTest extends BrowserTestBase {
 
   use ContentModerationTestTrait;
   use ContentTranslationTestTrait;
+  use LanguageTestTrait;
 
   /**
    * Modules to install.
@@ -34,6 +35,7 @@ class PathContentModerationTest extends BrowserTestBase {
     'language',
     'block',
     'content_translation',
+    'locale',
   ];
 
   /**
@@ -45,6 +47,7 @@ class PathContentModerationTest extends BrowserTestBase {
     'administer workflows',
     'access administration pages',
     'administer content types',
+    'administer content translation',
     'administer nodes',
     'view latest version',
     'view any unpublished content',
@@ -59,6 +62,8 @@ class PathContentModerationTest extends BrowserTestBase {
     'administer site configuration',
     'administer url aliases',
     'create url aliases',
+    'translate any entity',
+    'create content translations',
   ];
 
   /**
