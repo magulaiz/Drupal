@@ -32,12 +32,25 @@ class PathContentModerationTest extends BrowserTestBase {
   ];
 
   /**
-   * {@inheritdoc}
+   * Permissions to grant admin user.
    *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
+   * @var array
    */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
+  protected $permissions = [
+    'administer workflows',
+    'access administration pages',
+    'administer content types',
+    'administer nodes',
+    'view latest version',
+    'view any unpublished content',
+    'access content overview',
+    'use editorial transition create_new_draft',
+    'use editorial transition publish',
+    'use editorial transition archive',
+    'use editorial transition archived_draft',
+    'use editorial transition archived_published',
+    'administer taxonomy',
+  ];
 
   /**
    * {@inheritdoc}
@@ -63,7 +76,7 @@ class PathContentModerationTest extends BrowserTestBase {
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'moderated');
     $workflow->save();
 
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin = $this->drupalCreateUser($this->permissions);
 
     // Enable URL language detection and selection.
     $edit = ['language_interface[enabled][language-url]' => 1];
