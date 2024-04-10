@@ -321,34 +321,30 @@ class ImageItem extends FileItem {
   }
 
   /**
+   * Ensure that the width and height are set on the image item.
+   */
+  protected function ensureImageDimensions(): void {
+    if ($this->entity instanceof FileInterface &&
+        (!isset($this->width) || !isset($this->height))) {
+      $image = \Drupal::service('image.factory')->get($this->entity->getFileUri());
+      if ($image->isValid()) {
+        $this->width = $image->getWidth();
+        $this->height = $image->getHeight();
+      }
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
-  public function onChange($property_name, $notify = TRUE) {
+  public function onChange($property_name, $notify = TRUE): void {
     parent::onChange($property_name, $notify);
 
-    // Determine the dimensions if necessary.
-    if (!$this->entity instanceof EntityInterface) {
-      return;
+    // Ensure that the width and height are set when changing any property
+    // other than the width and height.
+    if ($property_name !== 'width' && $property_name !== 'height') {
+      $this->ensureImageDimensions();
     }
-
-    if ($property_name === 'width' || $property_name === 'height') {
-      return;
-    }
-
-    $width = $this->get('width')->getValue();
-    $height = $this->get('height')->getValue();
-
-    if ($width !== NULL && $height !== NULL) {
-      return;
-    }
-
-    $image = \Drupal::service('image.factory')->get($this->entity->getFileUri());
-    if (!$image->isValid()) {
-      return;
-    }
-
-    $this->set('width', $image->getWidth());
-    $this->set('height', $image->getHeight());
   }
 
   /**
@@ -357,11 +353,18 @@ class ImageItem extends FileItem {
   public function preSave() {
     parent::preSave();
 
-    if (!$this->entity instanceof EntityInterface) {
+    // Determine the dimensions if necessary.
+    if ($this->entity instanceof EntityInterface) {
+      $this->ensureImageDimensions();
+    }
+    else {
       $this->getLogger('image')->warning("Missing file with ID %id.", ['%id' => $this->target_id]);
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function setValue($values, $notify = TRUE) {
     // Avoid losing the width and height values when the same reference is
     // set again and there already is a width and height.
