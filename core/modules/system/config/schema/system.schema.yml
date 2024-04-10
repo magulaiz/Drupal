@@ -317,10 +317,16 @@ system.file:
 system.image:
   type: config_object
   label: 'Image settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     toolkit:
       type: string
       label: 'Toolkit'
+      constraints:
+        Choice:
+          callback: \Drupal\Core\ImageToolkit\ImageToolkitManager::getValidToolkitNames
+          message: 'The image toolkit you selected is not available. Possible choices: %choices.'
 
 system.image.gd:
   type: config_object
