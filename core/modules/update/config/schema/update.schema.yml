@@ -17,12 +17,9 @@ update.settings:
           type: integer
           label: 'Days since last check'
           constraints:
-            Choice:
-              # @see \Drupal\update\UpdateSettingsForm::buildForm()
-              # The options are daily and weekly.
-              choices:
-                - 1
-                - 7
+            # @see \Drupal\update\UpdateSettingsForm::buildForm()
+            # The options are daily and weekly.
+            Choice: [1, 7]
     fetch:
       type: mapping
       label: 'Fetch settings'
@@ -62,7 +59,4 @@ update.settings:
           label: 'Email notification threshold'
           constraints:
             # @see \Drupal\update\UpdateSettingsForm::buildForm()
-            Choice:
-              choices:
-                - all
-                - security
+            Choice: [all, security]
