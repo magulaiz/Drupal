@@ -52,6 +52,9 @@ class CommentStatisticsTest extends CommentTestBase {
       'access comments',
       'access user profiles',
       'access content',
+      'administer permissions',
+      'access administration pages',
+      'administer site configuration',
     ]);
     // Create a second user to post comments.
     $this->webUser2 = $this->drupalCreateUser([
