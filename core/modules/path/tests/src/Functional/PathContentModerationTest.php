@@ -76,7 +76,7 @@ class PathContentModerationTest extends BrowserTestBase {
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'moderated');
     $workflow->save();
 
-    $this->drupalLogin = $this->drupalCreateUser($this->permissions);
+    $this->drupalLogin($this->drupalCreateUser($this->permissions));
 
     // Enable URL language detection and selection.
     $edit = ['language_interface[enabled][language-url]' => 1];
