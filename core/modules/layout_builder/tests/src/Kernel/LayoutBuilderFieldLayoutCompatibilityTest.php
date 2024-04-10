@@ -65,9 +65,9 @@ class LayoutBuilderFieldLayoutCompatibilityTest extends LayoutBuilderCompatibili
     // outside the layout, the configurable field is not shown at all, and the
     // layout itself is rendered (but empty).
     $new_expected_fields = [
-      'field field--name-name field--type-string field--label-hidden field__item',
-      'clearfix text-formatted field field--name-test-display-non-configurable field--type-text field--label-above',
-      'clearfix text-formatted field field--name-test-display-multiple field--type-text field--label-above',
+      'field field--name-name field--type-string field--label-hidden field--single',
+      'clearfix text-formatted field field--name-test-display-non-configurable field--type-text field--label-above field--single',
+      'clearfix text-formatted field field--name-test-display-multiple field--type-text field--label-above field--multiple',
     ];
     $this->assertFieldAttributes($this->entity, $new_expected_fields);
     $this->assertNotEmpty($this->cssSelect('.layout--onecol'));

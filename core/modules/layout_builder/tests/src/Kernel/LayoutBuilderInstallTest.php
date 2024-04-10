@@ -24,7 +24,7 @@ class LayoutBuilderInstallTest extends LayoutBuilderCompatibilityTestBase {
       'field field--name-test-field-display-configurable field--type-boolean field--label-above field--single',
       'clearfix text-formatted field field--name-test-display-configurable field--type-text field--label-above field--single',
       'clearfix text-formatted field field--name-test-display-non-configurable field--type-text field--label-above field--single',
-      'clearfix text-formatted field field--name-test-display-multiple field--type-text field--label-above field--single',
+      'clearfix text-formatted field field--name-test-display-multiple field--type-text field--label-above field--multiple',
     ];
     $this->assertFieldAttributes($this->entity, $expected_fields);
 
