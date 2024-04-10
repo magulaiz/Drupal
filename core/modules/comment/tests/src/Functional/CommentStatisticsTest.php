@@ -42,12 +42,16 @@ class CommentStatisticsTest extends CommentTestBase {
 
     // Create test admin user.
     $this->adminUser = $this->drupalCreateUser([
+      'administer content types',
       'administer comments',
+      'administer comment types',
+      'administer comment fields',
+      'administer comment display',
       'skip comment approval',
       'post comments',
       'access comments',
-      'view test entity',
-      'administer entity_test content',
+      'access user profiles',
+      'access content',
     ]);
     // Create a second user to post comments.
     $this->webUser2 = $this->drupalCreateUser([
