@@ -149,10 +149,10 @@ class WorkspaceAssociationTest extends KernelTestBase {
 
     // Revision 7 was both an initial and latest revision in 'dev', so it is now
     // considered an initial revision in 'stage'.
-    $expected_initial_revisions['stage']  = [4, 5, 7];
+    $expected_initial_revisions['stage'] = [4, 5, 7];
 
     // Which leaves revision 8 as the only remaining initial revision in 'dev'.
-    $expected_initial_revisions['dev']  = [8];
+    $expected_initial_revisions['dev'] = [8];
 
     $this->assertWorkspaceAssociations('node', $expected_latest_revisions, $expected_all_revisions, $expected_initial_revisions);
   }
