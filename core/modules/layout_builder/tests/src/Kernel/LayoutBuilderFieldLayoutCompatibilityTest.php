@@ -39,11 +39,11 @@ class LayoutBuilderFieldLayoutCompatibilityTest extends LayoutBuilderCompatibili
     // Ensure that the configurable field is shown in the correct region and
     // that the non-configurable field is shown outside the layout.
     $expected_fields = [
-      'field field--name-name field--type-string field--label-hidden field--single-value-field',
-      'field field--name-test-field-display-configurable field--type-boolean field--label-above field--single-value-field',
-      'clearfix text-formatted field field--name-test-display-configurable field--type-text field--label-above field--single-value-field',
-      'clearfix text-formatted field field--name-test-display-non-configurable field--type-text field--label-above field--single-value-field',
-      'clearfix text-formatted field field--name-test-display-multiple field--type-text field--label-above field--multivalue-field field--has-single-item field--items-count-1',
+      'field field--name-name field--type-string field--label-hidden field--single',
+      'field field--name-test-field-display-configurable field--type-boolean field--label-above field--single',
+      'clearfix text-formatted field field--name-test-display-configurable field--type-text field--label-above field--single',
+      'clearfix text-formatted field field--name-test-display-non-configurable field--type-text field--label-above field--single',
+      'clearfix text-formatted field field--name-test-display-multiple field--type-text field--label-above field--multiple',
     ];
     $this->assertFieldAttributes($this->entity, $expected_fields);
     $this->assertNotEmpty($this->cssSelect('.layout__region--first .field--name-test-display-configurable'));
@@ -67,9 +67,9 @@ class LayoutBuilderFieldLayoutCompatibilityTest extends LayoutBuilderCompatibili
     // outside the layout, the configurable field is not shown at all, and the
     // layout itself is rendered (but empty).
     $new_expected_fields = [
-      'field field--name-name field--type-string field--label-hidden field--single-value-field',
-      'clearfix text-formatted field field--name-test-display-non-configurable field--type-text field--label-above field--single-value-field',
-      'clearfix text-formatted field field--name-test-display-multiple field--type-text field--label-above field--multivalue-field field--has-single-item field--items-count-1',
+      'field field--name-name field--type-string field--label-hidden field__item',
+      'clearfix text-formatted field field--name-test-display-non-configurable field--type-text field--label-above',
+      'clearfix text-formatted field field--name-test-display-multiple field--type-text field--label-above',
     ];
     $this->assertFieldAttributes($this->entity, $new_expected_fields);
     $this->assertNotEmpty($this->cssSelect('.layout--onecol'));
