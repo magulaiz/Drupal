@@ -3,6 +3,8 @@
 user.settings:
   type: config_object
   label: 'User settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     anonymous:
       type: required_label
@@ -41,12 +43,26 @@ user.settings:
     register:
       type: string
       label: 'Who can register accounts?'
+      # @see \Drupal\user\UserInterface
+      constraints:
+        Choice:
+          choices:
+            - 'visitors'
+            - 'admin_only'
+            - 'visitors_admin_approval'
     cancel_method:
       type: string
       label: 'When cancelling a user account'
+      nullable: true
+      constraints:
+        NotBlank:
+          allowNull: true
     password_reset_timeout:
       type: integer
       label: 'Password reset timeout'
+      constraints:
+        Range:
+          min: 0
     password_strength:
       type: boolean
       label: 'Enable password strength indicator'
