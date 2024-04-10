@@ -93,7 +93,7 @@ class CommentOnMultilingualContentTest extends BrowserTestBase {
   }
 
   /**
-   * Tests redirections with posting comments on multilingual content.
+   * Post comments on multilingual content.
    */
   public function testCommentOnMultilingualContent(): void {
     // Create multilingual content.
