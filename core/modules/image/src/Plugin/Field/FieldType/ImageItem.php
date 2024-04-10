@@ -324,12 +324,17 @@ class ImageItem extends FileItem {
    * Ensure that the width and height are set on the image item.
    */
   protected function ensureImageDimensions(): void {
-    if ($this->entity instanceof FileInterface &&
-        (!isset($this->width) || !isset($this->height))) {
+    if (!($this->entity instanceof FileInterface)) {
+      return;
+    }
+
+    $width = $this->get('width')->getValue();
+    $height = $this->get('height')->getValue();
+    if (!isset($width) || !isset($height)) {
       $image = \Drupal::service('image.factory')->get($this->entity->getFileUri());
       if ($image->isValid()) {
-        $this->width = $image->getWidth();
-        $this->height = $image->getHeight();
+        $this->set('width', $image->getWidth());
+        $this->set('height', $image->getHeight());
       }
     }
   }
