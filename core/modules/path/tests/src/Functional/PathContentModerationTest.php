@@ -29,6 +29,8 @@ class PathContentModerationTest extends BrowserTestBase {
     'path',
     'content_moderation',
     'content_translation',
+    'taxonomy',
+    'workflows',
   ];
 
   /**
