@@ -57,8 +57,6 @@ class PathContentModerationTest extends BrowserTestBase {
     'administer taxonomy',
     'administer languages',
     'administer site configuration',
-    'edit any page content',
-    'create page content',
     'administer url aliases',
     'create url aliases',
   ];
