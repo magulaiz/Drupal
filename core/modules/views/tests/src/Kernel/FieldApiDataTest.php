@@ -112,7 +112,6 @@ class FieldApiDataTest extends ViewsKernelTestBase {
       ->getTableMapping();
 
     $data = $this->getViewsData();
-//dump($data);
 
     if (Database::getConnection()->driver() == 'mongodb') {
       $current_table = 'node';

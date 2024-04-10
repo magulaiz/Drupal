@@ -40,13 +40,7 @@ class TermNode extends DrupalSqlBase {
   /**
    * The join options between the node and the term node table.
    */
-  const JOIN = [
-    [
-      'field' => 'tn.vid',
-      'field2' => 'n.vid',
-      'operator' => '=',
-    ],
-  ];
+  const JOIN = '[tn].[vid] = [n].[vid]';
 
   /**
    * {@inheritdoc}
@@ -62,24 +56,8 @@ class TermNode extends DrupalSqlBase {
         ->compare('td.tid', 'tn.tid')
         ->condition('td.vid', $this->configuration['vid'])
     );
-
-    // Start of BC layer.
-    if (is_string(static::JOIN)) {
-      $query->innerJoin('node', 'n', static::JOIN);
-    }
-    else {
-      // End of BC layer.
-      $condition = $query->joinCondition();
-      foreach (static::JOIN as $join) {
-        if (isset($join['field2'])) {
-          $condition->compare($join['field'], $join['field2'], $join['operator']);
-        }
-        else {
-          $condition->condition($join['field'], $join['value'], $join['operator']);
-        }
-      }
-      $query->innerJoin('node', 'n', $condition);
-    }
+    $query->innerJoin('term_data', 'td', '[td].[tid] = [tn].[tid] AND [td].[vid] = :vid', [':vid' => $this->configuration['vid']]);
+    $query->innerJoin('node', 'n', static::JOIN);
     return $query;
   }
 
@@ -102,29 +80,8 @@ class TermNode extends DrupalSqlBase {
     $query = $this->select('term_node', 'tn')
       ->fields('tn', ['tid'])
       ->condition('n.nid', $row->getSourceProperty('nid'));
-
-    // Start of BC layer.
-    if (is_string(static::JOIN)) {
-      $query->join('node', 'n', static::JOIN);
-    }
-    else {
-      // End of BC layer.
-      $condition = $query->joinCondition();
-      foreach (static::JOIN as $join) {
-        if (isset($join['field2'])) {
-          $condition->compare($join['field'], $join['field2'], $join['operator']);
-        }
-        else {
-          $condition->condition($join['field'], $join['value'], $join['operator']);
-        }
-      }
-      $query->join('node', 'n', $condition);
-    }
-    $query->innerJoin('term_data', 'td',
-      $query->joinCondition()
-        ->compare('td.tid', 'tn.tid')
-        ->condition('td.vid', $this->configuration['vid'])
-    );
+    $query->join('node', 'n', static::JOIN);
+    $query->innerJoin('term_data', 'td', '[td].[tid] = [tn].[tid] AND [td].[vid] = :vid', [':vid' => $this->configuration['vid']]);
     $row->setSourceProperty('tid', $query->execute()->fetchCol());
     return parent::prepareRow($row);
   }
