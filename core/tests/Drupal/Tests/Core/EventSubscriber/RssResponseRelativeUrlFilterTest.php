@@ -61,6 +61,47 @@ RSS;
 
     $data['valid-feed'] = [$valid_feed, $valid_expected_feed];
 
+    $valid_feed_cdata = <<<RSS
+<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0" xml:base="https://www.drupal.org">
+<channel>
+  <title>Drupal.org</title>
+  <link>https://www.drupal.org</link>
+  <description>Come for the software &amp; stay for the community
+Drupal is an open source content management platform powering millions of websites and applications. It’s built, used, and supported by an active and diverse community of people around the world.</description>
+  <language>en</language>
+  <item>
+     <title>Drupal 8 turns one!</title>
+     <link>https://www.drupal.org/blog/drupal-8-turns-one</link>
+     <description><![CDATA[<a href="localhost/node/1">Hello&nbsp;</a>]]>
+    </description>
+  </item>
+  </channel>
+</rss>
+RSS;
+
+    $valid_expected_feed_cdata = <<<RSS
+<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0" xml:base="https://www.drupal.org">
+<channel>
+  <title>Drupal.org</title>
+  <link>https://www.drupal.org</link>
+  <description>Come for the software &amp; stay for the community
+Drupal is an open source content management platform powering millions of websites and applications. It’s built, used, and supported by an active and diverse community of people around the world.</description>
+  <language>en</language>
+  <item>
+     <title>Drupal 8 turns one!</title>
+     <link>https://www.drupal.org/blog/drupal-8-turns-one</link>
+     <description><![CDATA[<a href="localhost/node/1">Hello&nbsp;</a>]]>
+    </description>
+  </item>
+  </channel>
+</rss>
+
+RSS;
+
+    $data['valid-feed-cdata'] = [$valid_feed_cdata, $valid_expected_feed_cdata];
+
     $invalid_feed = <<<RSS
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xml:base="https://www.drupal.org"  xmlns:dc="http://purl.org/dc/elements/1.1/">
