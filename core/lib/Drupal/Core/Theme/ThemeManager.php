@@ -478,14 +478,10 @@ class ThemeManager implements ThemeManagerInterface {
    */
   public static function validateRegion(string $region, ExecutionContextInterface $context): void {
     if ($theme = $context->getRoot()->get('theme')->getValue()) {
-      $theme_manager = \Drupal::service(ThemeManagerInterface::class);
-      $old_active_theme = $theme_manager->getActiveTheme();
-      $new_active_theme = \Drupal::service('theme.initialization')->initTheme($theme);
-      $regions = $theme_manager->setActiveTheme($new_active_theme)->getActiveTheme()->getRegions();
+      $regions = array_keys(system_region_list($theme));
       if (!in_array($region, $regions)) {
         $context->addViolation('This is not a valid region for %theme.', ['%theme' => $theme]);
       }
-      $theme_manager->setActiveTheme($old_active_theme);
     }
     else {
       $context->addViolation('Theme not defined in configuration');
