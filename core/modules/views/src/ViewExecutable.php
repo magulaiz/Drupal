@@ -1921,12 +1921,11 @@ class ViewExecutable {
       return FALSE;
     }
 
-    // Look up the route name to make sure it exists.  The name may exist, but
+    // Look up the route name to make sure it exists. The name may exist, but
     // not be available yet in some instances when editing a view and doing
     // a live preview.
-    $provider = \Drupal::service('router.route_provider');
     try {
-      $provider->getRouteByName($display_handler->getRouteName());
+      $this->routeProvider->getRouteByName($display_handler->getRouteName());
     }
     catch (RouteNotFoundException $e) {
       return FALSE;
@@ -2499,7 +2498,7 @@ class ViewExecutable {
    * @return array
    *   The names of all variables that should be serialized.
    */
-  public function __sleep() {
+  public function __sleep(): array {
     // Limit to only the required data which is needed to properly restore the
     // state during unserialization.
     $this->serializationData = [
@@ -2519,7 +2518,7 @@ class ViewExecutable {
   /**
    * Magic method implementation to unserialize the view executable.
    */
-  public function __wakeup() {
+  public function __wakeup(): void {
     // There are cases, like in testing where we don't have a container
     // available.
     if (\Drupal::hasContainer() && !empty($this->serializationData)) {

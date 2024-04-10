@@ -50,7 +50,7 @@ class State extends CacheCollector implements StateInterface {
   public function __construct(KeyValueFactoryInterface $key_value_factory, CacheBackendInterface $cache = NULL, LockBackendInterface $lock = NULL) {
     if (!$cache) {
       @trigger_error('Calling  ' . __METHOD__ . '() without the $cache argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3177901', E_USER_DEPRECATED);
-      $cache = \Drupal::cache('discovery');
+      $cache = \Drupal::cache('bootstrap');
     }
     if (!$lock) {
       @trigger_error('Calling  ' . __METHOD__ . '() without the $lock argument is deprecated in drupal:10.3.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3177901', E_USER_DEPRECATED);
@@ -112,8 +112,15 @@ class State extends CacheCollector implements StateInterface {
       $key = self::$deprecatedState[$key]['replacement'];
     }
     $this->keyValueStore->set($key, $value);
+    // If another request had a cache miss before this request, and also hasn't
+    // written to cache yet, then it may already have read this value from the
+    // database and could write that value to the cache to the end of the
+    // request. To avoid this race condition, write to the cache immediately
+    // after calling parent::set(). This allows the race condition detection in
+    // CacheCollector::set() to work.
     parent::set($key, $value);
     $this->persist($key);
+    static::updateCache();
   }
 
   /**
