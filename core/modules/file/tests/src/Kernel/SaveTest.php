@@ -14,13 +14,8 @@ use Drupal\file\Entity\File;
 class SaveTest extends FileManagedUnitTestBase {
 
   /**
-   * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
+   * Tests the file save function.
    */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
-
   public function testFileSave() {
     // Create a new file entity.
     $file = File::create([
@@ -86,7 +81,8 @@ class SaveTest extends FileManagedUnitTestBase {
     $this->assertCount(1, $violations);
     $this->assertEquals(sprintf('The file %s already exists. Enter a unique file URI.', $uppercase_file_duplicate->getFileUri()), $violations[0]->getMessage());
     // Ensure that file URI entity queries are case sensitive.
-    $fids = \Drupal::entityQuery('file')
+    $fids = \Drupal::entityTypeManager()->getStorage('file')
+      ->getQuery()
       ->accessCheck(FALSE)
       ->condition('uri', $uppercase_file->getFileUri())
       ->execute();
