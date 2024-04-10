@@ -284,6 +284,7 @@ class EntityViewsDataTest extends KernelTestBase {
 
     $this->assertEquals('entity_test_mulrev', $data['entity_test_mulrev_property_revision']['table']['entity type']);
     $this->assertEquals('Entity test revision', $data['entity_test_mulrev_revision']['table']['group']);
+    $this->assertTrue($data['entity_test_mulrev_revision']['table']['entity revision']);
     $this->assertEquals('entity_test', $data['entity_test']['table']['provider']);
 
     // Ensure the join information is set up properly.
@@ -340,6 +341,7 @@ class EntityViewsDataTest extends KernelTestBase {
 
     $this->assertEquals('entity_test_mulrev', $data['entity_test_mulrev_property_revision']['table']['entity type']);
     $this->assertEquals('Entity test revision', $data['entity_test_mulrev_revision']['table']['group']);
+    $this->assertTrue($data['entity_test_mulrev_revision']['table']['entity revision']);
     $this->assertEquals('entity_test', $data['entity_test']['table']['provider']);
 
     // Ensure the join information is set up properly.
@@ -769,7 +771,7 @@ class EntityViewsDataTest extends KernelTestBase {
    * @internal
    */
   protected function assertLanguageField(array $data): void {
-    $this->assertEquals('field', $data['field']['id']);
+    $this->assertEquals('field_language', $data['field']['id']);
     $this->assertEquals('language', $data['filter']['id']);
     $this->assertEquals('language', $data['argument']['id']);
     $this->assertEquals('standard', $data['sort']['id']);

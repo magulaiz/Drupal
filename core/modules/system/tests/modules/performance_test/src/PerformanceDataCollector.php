@@ -16,6 +16,16 @@ class PerformanceDataCollector implements EventSubscriberInterface, Destructable
   protected array $databaseEvents = [];
 
   /**
+   * Cache operations collected during the request.
+   */
+  protected array $cacheOperations = [];
+
+  /**
+   * Cache tag operations collected during the request.
+   */
+  protected array $cacheTagOperations = [];
+
+  /**
    * {@inheritdoc}
    */
   public static function getSubscribedEvents(): array {
@@ -33,6 +43,20 @@ class PerformanceDataCollector implements EventSubscriberInterface, Destructable
   }
 
   /**
+   * Adds a cache operation.
+   */
+  public function addCacheOperation(array $operation) {
+    $this->cacheOperations[] = $operation;
+  }
+
+  /**
+   * Adds a cache tag operation.
+   */
+  public function addCacheTagOperation(array $operation) {
+    $this->cacheTagOperations[] = $operation;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function destruct(): void {
@@ -40,12 +64,26 @@ class PerformanceDataCollector implements EventSubscriberInterface, Destructable
     // logging does not become part of the recorded data.
     $database_events = $this->databaseEvents;
 
-    // Deliberately do not use an injected key value service to avoid any
-    // overhead up until this point.
+    // Deliberately do not use an injected key value or lock service to avoid
+    // any overhead up until this point.
+    $lock = \Drupal::lock();
+
+    // This loop should be safe because we know a very finite number of requests
+    // will be trying to acquire a lock at any one time.
+    while (!$lock->acquire('performance_test')) {
+      $lock->wait();
+    }
     $collection = \Drupal::keyValue('performance_test');
-    $existing_data = $collection->get('performance_test_data') ?? ['database_events' => []];
+    $existing_data = $collection->get('performance_test_data') ?? [
+      'database_events' => [],
+      'cache_operations' => [],
+      'cache_tag_operations' => [],
+    ];
     $existing_data['database_events'] = array_merge($existing_data['database_events'], $database_events);
+    $existing_data['cache_operations'] = array_merge($existing_data['cache_operations'], $this->cacheOperations);
+    $existing_data['cache_tag_operations'] = array_merge($existing_data['cache_tag_operations'], $this->cacheTagOperations);
     $collection->set('performance_test_data', $existing_data);
+    $lock->release('performance_test');
   }
 
 }

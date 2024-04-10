@@ -26,6 +26,7 @@ use Symfony\Component\Yaml\Yaml;
  * Tests different ways of enabling CKEditor 5 plugins.
  *
  * @group ckeditor5
+ * @group #slow
  * @internal
  */
 class CKEditor5PluginManagerTest extends KernelTestBase {
@@ -201,7 +202,7 @@ YAML,
    * @return \Generator
    *   Test scenarios.
    */
-  public function providerTestInvalidPluginDefinitions(): \Generator {
+  public static function providerTestInvalidPluginDefinitions(): \Generator {
     yield 'invalid plugin ID with everything else okay' => [
       <<<YAML
 foo_bar:
@@ -1030,7 +1031,6 @@ PHP,
           $sneaky_plugin_id => ['configured_subset' => $configured_subset],
         ],
       ],
-      'image_upload' => [],
     ]);
 
     // Invalid subsets are allowed on unsaved Text Editor config entities,
@@ -1257,7 +1257,9 @@ PHP,
       'format' => 'dummy',
       'editor' => 'ckeditor5',
       'settings' => $text_editor_settings,
-      'image_upload' => [],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ]);
     FilterFormat::create([
       'format' => 'dummy',
@@ -1282,7 +1284,7 @@ PHP,
   /**
    * Provides uses cases enabling different elements and the expected results.
    */
-  public function providerTestProvidedElements(): array {
+  public static function providerTestProvidedElements(): array {
     $text_align_classes = [
       'text-align-left' => TRUE,
       'text-align-center' => TRUE,
@@ -1507,7 +1509,7 @@ PHP,
   /**
    * Provides use cases for findPluginSupportingElement().
    */
-  public function providerTestPluginSupportingElement() {
+  public static function providerTestPluginSupportingElement() {
     return [
       'tag that belongs to a superset' => [
         'tag' => 'h2',
@@ -1593,7 +1595,7 @@ PHP,
    * @return \Generator
    *   Test scenarios.
    */
-  public function providerTestDerivedPluginDefinitions(): \Generator {
+  public static function providerTestDerivedPluginDefinitions(): \Generator {
     // Defaults inherited from CKEditor5AspectsOfCKEditor5Plugin.
     $ckeditor5_aspects_defaults = get_class_vars(CKEditor5AspectsOfCKEditor5Plugin::class);
     // Defaults inherited from DrupalAspectsOfCKEditor5Plugin.

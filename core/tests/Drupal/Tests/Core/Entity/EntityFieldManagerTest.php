@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
@@ -359,7 +361,7 @@ class EntityFieldManagerTest extends UnitTestCase {
    * @return array
    *   Test data.
    */
-  public function providerTestGetBaseFieldDefinitionsTranslatableEntityTypeDefaultLangcode() {
+  public static function providerTestGetBaseFieldDefinitionsTranslatableEntityTypeDefaultLangcode() {
     return [
       ['default_langcode'],
       ['custom_default_langcode_key'],
@@ -403,7 +405,7 @@ class EntityFieldManagerTest extends UnitTestCase {
    * @return array
    *   Test data.
    */
-  public function providerTestGetBaseFieldDefinitionsTranslatableEntityTypeLangcode() {
+  public static function providerTestGetBaseFieldDefinitionsTranslatableEntityTypeLangcode() {
     return [
       [FALSE, TRUE, TRUE],
       [TRUE, FALSE, TRUE],

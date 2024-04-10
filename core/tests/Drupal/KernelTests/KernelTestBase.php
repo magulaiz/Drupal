@@ -237,6 +237,15 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   ];
 
   /**
+   * Set to TRUE to make user 1 a super user.
+   *
+   * @see \Drupal\Core\Session\SuperUserAccessPolicy
+   *
+   * @var bool
+   */
+  protected bool $usesSuperUserAccessPolicy;
+
+  /**
    * {@inheritdoc}
    */
   public static function setUpBeforeClass(): void {
@@ -414,7 +423,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $this->container->get('config.storage')->write('core.extension', [
       'module' => array_fill_keys($modules, 0),
       'theme' => [],
-      'profile' => '',
     ]);
 
     $settings = Settings::getAll();
@@ -539,7 +547,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $list = $discovery->scan('module');
     foreach ($modules as $name) {
       if (!isset($list[$name])) {
-        throw new Exception("Unavailable module: '$name'. If this module needs to be downloaded separately, annotate the test class with '@requires module $name'.");
+        throw new Exception("Unavailable module: '$name'. If this module needs to be downloaded for testing, include it in the 'require-dev' section of your composer.json file.");
       }
       $extensions[$name] = $list[$name];
     }
@@ -562,12 +570,25 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $this->container = $container;
 
     $container
+      ->register('datetime.time', 'Drupal\Component\Datetime\Time');
+    $container
       ->register('flood', 'Drupal\Core\Flood\MemoryBackend')
       ->addArgument(new Reference('request_stack'));
     $container
       ->register('lock', 'Drupal\Core\Lock\NullLockBackend');
     $container
-      ->register('cache_factory', 'Drupal\Core\Cache\MemoryBackendFactory');
+      ->register('cache_factory', 'Drupal\Core\Cache\MemoryBackendFactory')
+      ->addArgument(new Reference('datetime.time'));
+
+    // Disable the super user access policy so that we are sure our tests check
+    // for the right permissions.
+    if (!isset($this->usesSuperUserAccessPolicy)) {
+      $test_file_name = (new \ReflectionClass($this))->getFileName();
+      // @todo Decide in https://www.drupal.org/project/drupal/issues/3437926
+      //   how to remove this fallback behavior.
+      $this->usesSuperUserAccessPolicy = !str_starts_with($test_file_name, $this->root . DIRECTORY_SEPARATOR . 'core');
+    }
+    $container->setParameter('security.enable_super_user', $this->usesSuperUserAccessPolicy);
 
     // Use memory for key value storages to avoid database queries. Store the
     // key value factory on the test object so that key value storages persist
@@ -613,6 +634,10 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $route_provider_definition = new Definition(RouteProvider::class);
     $route_provider_definition->setPublic(TRUE);
     $container->setDefinition($id, $route_provider_definition);
+
+    // Remove the stored configuration importer so if used again it will be
+    // built with up-to-date services.
+    $this->configImporter = NULL;
   }
 
   /**
@@ -1033,7 +1058,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    *
    * @see vendor/phpunit/phpunit/src/Util/PHP/Template/TestCaseMethod.tpl.dist
    */
-  public function __sleep() {
+  public function __sleep(): array {
     return [];
   }
 

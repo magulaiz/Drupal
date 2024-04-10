@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests;
 
 use Behat\Mink\Driver\BrowserKitDriver;
@@ -31,8 +33,8 @@ use Symfony\Component\VarDumper\VarDumper;
  * Provides a test case for functional Drupal tests.
  *
  * Tests extending BrowserTestBase must exist in the
- * Drupal\Tests\yourmodule\Functional namespace and live in the
- * modules/yourmodule/tests/src/Functional directory.
+ * Drupal\Tests\your_module\Functional namespace and live in the
+ * modules/your_module/tests/src/Functional directory.
  *
  * Tests extending this base class should only translate text when testing
  * translation functionality. For example, avoid wrapping test text with t()
@@ -601,7 +603,7 @@ abstract class BrowserTestBase extends TestCase {
    *
    * @see vendor/phpunit/phpunit/src/Util/PHP/Template/TestCaseMethod.tpl.dist
    */
-  public function __sleep() {
+  public function __sleep(): array {
     return [];
   }
 

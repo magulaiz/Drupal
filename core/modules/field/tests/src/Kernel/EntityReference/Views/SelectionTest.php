@@ -73,6 +73,10 @@ class SelectionTest extends KernelTestBase {
       $this->nodes[$node->id()] = $node;
     }
 
+    // Ensure the bundle to which the field is attached actually exists, or we
+    // will get config validation errors.
+    entity_test_create_bundle('test_bundle');
+
     // Create an entity reference field.
     $handler_settings = [
       'view' => [
@@ -161,7 +165,7 @@ class SelectionTest extends KernelTestBase {
     foreach ($result as $node_type => $values) {
       foreach ($values as $nid => $label) {
         $this->assertSame($node_type, $this->nodes[$nid]->bundle());
-        $this->assertSame(trim(strip_tags($label)), Html::escape($this->nodes[$nid]->label()));
+        $this->assertSame(trim(strip_tags((string) $label)), Html::escape($this->nodes[$nid]->label()));
       }
     }
   }
