@@ -3,10 +3,11 @@
 namespace Drupal\Core\Theme;
 
 use Drupal\Component\Render\MarkupInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Template\Attribute;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Provides the default implementation of a theme manager.
@@ -465,6 +466,30 @@ class ThemeManager implements ThemeManagerInterface {
   public function alter($type, &$data, &$context1 = NULL, &$context2 = NULL) {
     $theme = $this->getActiveTheme();
     $this->alterForTheme($theme, $type, $data, $context1, $context2);
+  }
+
+  /**
+   * Validates a region for active theme.
+   *
+   * @param string $region
+   *   The region to validate.
+   * @param \Symfony\Component\Validator\Context\ExecutionContextInterface $context
+   *   The validation context.
+   */
+  public static function validateRegion(string $region, ExecutionContextInterface $context): void {
+    if ($theme = $context->getRoot()->get('theme')->getValue()) {
+      $theme_manager = \Drupal::service(ThemeManagerInterface::class);
+      $old_active_theme = $theme_manager->getActiveTheme();
+      $new_active_theme = \Drupal::service('theme.initialization')->initTheme($theme);
+      $regions = $theme_manager->setActiveTheme($new_active_theme)->getActiveTheme()->getRegions();
+      if (!in_array($region, $regions)) {
+        $context->addViolation('This is not a valid region for %theme.', ['%theme' => $theme]);
+      }
+      $theme_manager->setActiveTheme($old_active_theme);
+    }
+    else {
+      $context->addViolation('Theme not defined in configuration');
+    }
   }
 
 }
