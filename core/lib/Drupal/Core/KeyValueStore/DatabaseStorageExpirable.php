@@ -4,6 +4,8 @@ namespace Drupal\Core\KeyValueStore;
 
 use Drupal\Component\Serialization\SerializationInterface;
 use Drupal\Core\Database\Connection;
+use Drupal\mongodb\Driver\Database\mongodb\Statement;
+use MongoDB\BSON\UTCDateTime;
 
 /**
  * Defines a default key/value store implementation for expiring items.
@@ -33,16 +35,30 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
    * {@inheritdoc}
    */
   public function has($key) {
-    try {
-      return (bool) $this->connection->query('SELECT 1 FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] = :key AND [expire] > :now', [
-        ':collection' => $this->collection,
-        ':key' => $key,
-        ':now' => REQUEST_TIME,
-      ])->fetchField();
-    }
-    catch (\Exception $e) {
-      $this->catchException($e);
+    if ($this->connection->driver() == 'mongodb') {
+      $prefixed_table = $this->connection->getPrefix() . $this->table;
+      $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
+        ['collection' => ['$eq' => $this->collection], 'expire' => ['$gt' => new UTCDateTime(REQUEST_TIME * 1000)], 'name' => ['$eq' => (string) $key]],
+        ['projection' => ['_id' => 1]]
+      );
+
+      if ($cursor && !empty($cursor->toArray())) {
+        return TRUE;
+      }
       return FALSE;
+    }
+    else {
+      try {
+        return (bool) $this->connection->query('SELECT 1 FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] = :key AND [expire] > :now', [
+          ':collection' => $this->collection,
+          ':key' => $key,
+          ':now' => REQUEST_TIME,
+        ])->fetchField();
+      }
+      catch (\Exception $e) {
+        $this->catchException($e);
+        return FALSE;
+      }
     }
   }
 
@@ -51,13 +67,28 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
    */
   public function getMultiple(array $keys) {
     try {
-      $values = $this->connection->query(
-        'SELECT [name], [value] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [expire] > :now AND [name] IN ( :keys[] ) AND [collection] = :collection',
-        [
-          ':now' => REQUEST_TIME,
-          ':keys[]' => $keys,
-          ':collection' => $this->collection,
-        ])->fetchAllKeyed();
+      if ($this->connection->driver() == 'mongodb') {
+        foreach ($keys as &$key) {
+          $key = (string) $key;
+        }
+        $prefixed_table = $this->connection->getPrefix() . $this->table;
+        $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
+          ['collection' => ['$eq' => $this->collection], 'expire' => ['$gt' => new UTCDateTime(REQUEST_TIME * 1000)], 'name' => ['$in' => $keys]],
+          ['projection' => ['name' => 1, 'value' => 1, '_id' => 0]]
+        );
+
+        $statement = new Statement($this->connection, $cursor, ['name', 'value']);
+        $values = $statement->execute()->fetchAllKeyed();
+      }
+      else {
+        $values = $this->connection->query(
+          'SELECT [name], [value] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [expire] > :now AND [name] IN ( :keys[] ) AND [collection] = :collection',
+          [
+            ':now' => REQUEST_TIME,
+            ':keys[]' => $keys,
+            ':collection' => $this->collection,
+          ])->fetchAllKeyed();
+      }
       return array_map([$this->serializer, 'decode'], $values);
     }
     catch (\Exception $e) {
@@ -75,12 +106,24 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
    */
   public function getAll() {
     try {
-      $values = $this->connection->query(
-        'SELECT [name], [value] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [expire] > :now',
-        [
-          ':collection' => $this->collection,
-          ':now' => REQUEST_TIME,
-        ])->fetchAllKeyed();
+      if ($this->connection->driver() == 'mongodb') {
+        $prefixed_table = $this->connection->getPrefix() . $this->table;
+        $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
+          ['collection' => ['$eq' => (string) $this->collection], 'expire' => ['$gt' => new UTCDateTime(REQUEST_TIME * 1000)]],
+          ['projection' => ['name' => 1, 'value' => 1, '_id' => 0]]
+        );
+
+        $statement = new Statement($this->connection, $cursor, ['name', 'value']);
+        $values = $statement->execute()->fetchAllKeyed();
+      }
+      else {
+        $values = $this->connection->query(
+          'SELECT [name], [value] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [expire] > :now',
+          [
+            ':collection' => $this->collection,
+            ':now' => REQUEST_TIME,
+          ])->fetchAllKeyed();
+      }
       return array_map([$this->serializer, 'decode'], $values);
     }
     catch (\Exception $e) {
@@ -102,9 +145,13 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
    *   The time to live for items, in seconds.
    */
   protected function doSetWithExpire($key, $value, $expire) {
+    if (($this->connection->driver() == 'mongodb') && !$this->tableExists) {
+      $this->tableExists = $this->ensureTableExists();
+    }
+
     $this->connection->merge($this->table)
       ->keys([
-        'name' => $key,
+        'name' => (string) $key,
         'collection' => $this->collection,
       ])
       ->fields([
@@ -192,8 +239,8 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
   /**
    * Defines the schema for the key_value_expire table.
    */
-  public static function schemaDefinition() {
-    return [
+  public function schemaDefinition() {
+    $schema = [
       'description' => 'Generic key/value storage table with an expiration.',
       'fields' => [
         'collection' => [
@@ -229,6 +276,12 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
         'expire' => ['expire'],
       ],
     ];
+
+    if ($this->connection->driver() == 'mongodb') {
+      $schema['fields']['expire']['type'] = 'date';
+    }
+
+    return $schema;
   }
 
 }

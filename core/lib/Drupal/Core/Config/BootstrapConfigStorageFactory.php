@@ -4,7 +4,6 @@ namespace Drupal\Core\Config;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Site\Settings;
-use Drupal\mongodb\Driver\Database\mongodb\Config\DatabaseStorage as MongodbDatabaseStorage;
 
 /**
  * Defines a factory for retrieving the config storage used pre-kernel.
@@ -38,13 +37,7 @@ class BootstrapConfigStorageFactory {
    * @return \Drupal\Core\Config\DatabaseStorage
    */
   public static function getDatabaseStorage() {
-    $connection = Database::getConnection();
-    if ($connection->driver() == 'mongodb') {
-      return new MongodbDatabaseStorage($connection, 'config');
-    }
-    else {
-      return new DatabaseStorage($connection, 'config');
-    }
+    return new DatabaseStorage(Database::getConnection(), 'config');
   }
 
 }

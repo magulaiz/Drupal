@@ -74,12 +74,7 @@ class DatabaseBackendFactory implements CacheFactoryInterface {
    */
   public function get($bin) {
     $max_rows = $this->getMaxRowsForBin($bin);
-    if ($this->connection->driver() == 'mongodb') {
-      return new MongodbDatabaseBackend($this->connection, $this->checksumProvider, $bin, $this->serializer, $this->time, $max_rows);
-    }
-    else {
-      return new DatabaseBackend($this->connection, $this->checksumProvider, $bin, $this->serializer, $this->time, $max_rows);
-    }
+    return new DatabaseBackend($this->connection, $this->checksumProvider, $bin, $this->serializer, $this->time, $max_rows);
   }
 
   /**

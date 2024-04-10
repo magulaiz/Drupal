@@ -4,8 +4,6 @@ namespace Drupal\KernelTests\Core\Cache;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\DatabaseBackend;
-use Drupal\Core\Database\Database;
-use Drupal\mongodb\Cache\DatabaseBackend as MongodbDatabaseBackend;
 
 /**
  * Unit test of the database backend using the generic cache unit test base.
@@ -35,26 +33,14 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
    *   A new DatabaseBackend object.
    */
   protected function createCacheBackend($bin) {
-    if (Database::getConnection()->driver() == 'mongodb') {
-      return new MongodbDatabaseBackend(
-        $this->container->get('database'),
-        $this->container->get('cache_tags.invalidator.checksum'),
-        $bin,
-        $this->container->get('serialization.phpserialize'),
-        \Drupal::service(TimeInterface::class),
-        static::$maxRows,
-      );
-    }
-    else {
-      return new DatabaseBackend(
-        $this->container->get('database'),
-        $this->container->get('cache_tags.invalidator.checksum'),
-        $bin,
-        $this->container->get('serialization.phpserialize'),
-        \Drupal::service(TimeInterface::class),
-        static::$maxRows,
-      );
-    }
+    return new DatabaseBackend(
+      $this->container->get('database'),
+      $this->container->get('cache_tags.invalidator.checksum'),
+      $bin,
+      $this->container->get('serialization.phpserialize'),
+      \Drupal::service(TimeInterface::class),
+      static::$maxRows,
+    );
   }
 
   /**

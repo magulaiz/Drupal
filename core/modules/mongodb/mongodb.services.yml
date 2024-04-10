@@ -28,24 +28,24 @@ services:
   entity.query.sql:
     alias: mongodb.entity.query.sql
 
-  # MongoDB overrides KeyValue.
-  mongodb.keyvalue.database:
-    class: Drupal\mongodb\KeyValueStore\KeyValueDatabaseFactory
-    arguments: ['@serialization.phpserialize', '@database']
-  keyvalue.database:
-    alias: mongodb.keyvalue.database
-
-  mongodb.keyvalue.expirable.database:
-    class: Drupal\mongodb\KeyValueStore\KeyValueDatabaseExpirableFactory
-    arguments: ['@serialization.phpserialize', '@database', '@datetime.time']
-  keyvalue.expirable.database:
-    alias: mongodb.keyvalue.expirable.database
-
-  mongodb.keyvalue.expirable:
-    class: Drupal\mongodb\KeyValueStore\KeyValueExpirableFactory
-    arguments: ['@service_container', '%factory.keyvalue.expirable%']
-  keyvalue.expirable:
-    alias: mongodb.keyvalue.expirable
+#  # MongoDB overrides KeyValue.
+#  mongodb.keyvalue.database:
+#    class: Drupal\mongodb\KeyValueStore\KeyValueDatabaseFactory
+#    arguments: ['@serialization.phpserialize', '@database']
+#  keyvalue.database:
+#    alias: mongodb.keyvalue.database
+#
+#  mongodb.keyvalue.expirable.database:
+#    class: Drupal\mongodb\KeyValueStore\KeyValueDatabaseExpirableFactory
+#    arguments: ['@serialization.phpserialize', '@database', '@datetime.time']
+#  keyvalue.expirable.database:
+#    alias: mongodb.keyvalue.expirable.database
+#
+#  mongodb.keyvalue.expirable:
+#    class: Drupal\mongodb\KeyValueStore\KeyValueExpirableFactory
+#    arguments: ['@service_container', '%factory.keyvalue.expirable%']
+#  keyvalue.expirable:
+#    alias: mongodb.keyvalue.expirable
 
   # MongoDB overrides Lock.
   mongodb.lock:

@@ -98,14 +98,7 @@ class CronQueueTest extends KernelTestBase {
    * Tests that DelayedRequeueException behaves as expected when running cron.
    */
   public function testDelayException() {
-    if ($this->connection->driver() == 'mongodb') {
-      $queue = 'mongodb.queue';
-    }
-    else {
-      $queue = 'queue';
-    }
-
-    $database = $this->container->get($queue)->get('cron_queue_test_database_delay_exception');
+    $database = $this->container->get('queue')->get('cron_queue_test_database_delay_exception');
     $memory = $this->container->get('queue')->get('cron_queue_test_memory_delay_exception');
 
     // Ensure that the queues are of the correct type for this test.
@@ -289,20 +282,11 @@ class CronQueueTest extends KernelTestBase {
    * Tests that database queue implementation complies with interfaces specs.
    */
   public function testDatabaseQueueReturnTypes(): void {
-    if ($this->connection->driver() == 'mongodb') {
-      $queue_service = 'mongodb.queue';
-      $queue_class = MongodbDatabaseQueue::class;
-    }
-    else {
-      $queue_service = 'queue';
-      $queue_class = DatabaseQueue::class;
-    }
-
     /** @var \Drupal\Core\Queue\DatabaseQueue $queue */
     $queue = $this->container
-      ->get($queue_service)
+      ->get('queue')
       ->get('cron_queue_test_database_delay_exception');
-    static::assertInstanceOf($queue_class, $queue);
+    static::assertInstanceOf(DatabaseQueue::class, $queue);
 
     $queue->createItem(12);
     $item = $queue->claimItem();
