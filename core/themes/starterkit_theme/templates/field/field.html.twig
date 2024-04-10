@@ -39,19 +39,19 @@
 #}
 {%
   set classes = [
-  'field',
-  'field--name-' ~ field_name|clean_class,
-  'field--type-' ~ field_type|clean_class,
-  'field--label-' ~ label_display,
-  multiple ? 'field--multiple' : 'field--single',
-  label_display == 'inline' ? 'clearfix',
-]
+    'field',
+    'field--name-' ~ field_name|clean_class,
+    'field--type-' ~ field_type|clean_class,
+    'field--label-' ~ label_display,
+    multiple ? 'field--multiple' : 'field--single',
+    label_display == 'inline' ? 'clearfix',
+  ]
 %}
 {%
   set title_classes = [
-  'field__label',
-  label_display == 'visually_hidden' ? 'visually-hidden',
-]
+    'field__label',
+    label_display == 'visually_hidden' ? 'visually-hidden',
+  ]
 %}
 
 <div{{ attributes.addClass(classes) }}>
