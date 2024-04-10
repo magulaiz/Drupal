@@ -159,8 +159,9 @@
           .forEach((tag) => {
             userTagsWithoutOverrides[tag] = this.userTags[tag];
           });
-        this.allowedHTMLFormItem.value = `${this._generateSetting(userTagsWithoutOverrides)},
-              ${this._generateSetting(this.autoTags)}`;
+        const userSetting = this._generateSetting(userTagsWithoutOverrides);
+        const autoSetting = this._generateSetting(this.autoTags);
+        this.allowedHTMLFormItem.value = `${userSetting}, ${autoSetting}`;
       }
       // Restore to original state.
       else {
