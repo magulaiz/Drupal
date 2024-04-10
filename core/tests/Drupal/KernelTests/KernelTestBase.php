@@ -195,7 +195,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
 
   /**
    * @todo Move into Config test base class.
-   * @var  \Drupal\Core\Config\ConfigImporter
+   * @var \Drupal\Core\Config\ConfigImporter
    */
   protected $configImporter;
 
