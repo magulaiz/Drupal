@@ -907,16 +907,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/forum/src/ForumUninstallValidator.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^@dataProvider providerTestApplies related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/forum/tests/src/Unit/Breadcrumb/ForumListingBreadcrumbBuilderTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^@dataProvider providerTestApplies related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/forum/tests/src/Unit/Breadcrumb/ForumNodeBreadcrumbBuilderTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/help/tests/src/Unit/HelpTopicTwigTest.php',
