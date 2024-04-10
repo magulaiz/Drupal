@@ -50,6 +50,7 @@ use Drupal\user\EntityOwnerTrait;
  *   },
  *   links = {
  *     "delete-form" = "/file/{file}/delete",
+ *     "collection" = "/admin/content/files",
  *   }
  * )
  */
