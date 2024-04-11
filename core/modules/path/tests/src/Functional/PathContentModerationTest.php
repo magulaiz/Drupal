@@ -31,12 +31,6 @@ class PathContentModerationTest extends BrowserTestBase {
     'path',
     'content_moderation',
     'content_translation',
-    'taxonomy',
-    'workflows',
-    'language',
-    'block',
-    'content_translation',
-    'locale',
   ];
 
   /**
@@ -58,7 +52,6 @@ class PathContentModerationTest extends BrowserTestBase {
     'use editorial transition archive',
     'use editorial transition archived_draft',
     'use editorial transition archived_published',
-    'administer taxonomy',
     'administer languages',
     'administer site configuration',
     'administer url aliases',
