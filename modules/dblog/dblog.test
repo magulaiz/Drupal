@@ -128,12 +128,34 @@ class DBLogTestCase extends DrupalWebTestCase {
     $count = db_query('SELECT COUNT(wid) FROM {watchdog}')->fetchField();
     $this->assertTrue($count > $row_limit, format_string('Dblog row count of @count exceeds row limit of @limit', array('@count' => $count, '@limit' => $row_limit)));
 
+    // Get last ID to compare against; log entries get deleted, so we can't
+    // reliably add the number of newly created log entries to the current count
+    // to measure number of log entries created by cron.
+    $last_id = db_query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+
     // Run a cron job.
     $this->cronRun();
-    // Verify that the database log row count equals the row limit plus one
-    // because cron adds a record after it runs.
-    $count = db_query('SELECT COUNT(wid) FROM {watchdog}')->fetchField();
-    $this->assertTrue($count == $row_limit + 1, format_string('Dblog row count of @count equals row limit of @limit plus one', array('@count' => $count, '@limit' => $row_limit)));
+
+    // Get last ID after cron was run.
+    $current_id = db_query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+
+    // Cron adds two log entries for each module and one final "cron is
+    // finished" message.
+    $module_count = count(module_implements('cron'));
+    $cron_logs_expected = ($module_count * 2) + 1;
+
+    // The number of log entries created.
+    $logs_count = $current_id - $last_id;
+    $this->assertEqual($logs_count, $cron_logs_expected, format_string('Cron added @count of @expected new log entries', array('@count' => $logs_count, '@expected' => $cron_logs_expected)));
+
+    // Test the number of entries with "cron_logging_enabled" disabled.
+    variable_set('cron_logging_enabled', FALSE);
+    $last_id = db_query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+    $this->cronRun();
+    $current_id = db_query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+
+    // Only one final "cron is finished" message should be logged.
+    $this->assertEqual($current_id - $last_id, 1, format_string('Cron added one new log entry.'));
   }
 
   /**

@@ -886,3 +886,12 @@ $conf['mail_display_name_site_name'] = TRUE;
  * prevention and revert to the original behaviour.
  */
 # $conf['javascript_use_double_submit_protection'] = FALSE;
+
+/**
+ * Cron logging.
+ *
+ * By default drupal_cron_run() will log each execution of hook_cron() together
+ * with the execution time. Set this variable to FALSE in order to opt out of
+ * this behaviour.
+ */
+# $conf['cron_logging_enabled'] = TRUE;

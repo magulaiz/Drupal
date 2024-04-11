@@ -5546,12 +5546,27 @@ function drupal_cron_run() {
 
     // Iterate through the modules calling their cron handlers (if any):
     foreach (module_implements('cron') as $module) {
+      if (variable_get('cron_logging_enabled', TRUE)) {
+        // Log a message saying that the cron event started.
+        watchdog('cron', 'Starting execution of @module_cron().', array('@module' => $module), WATCHDOG_NOTICE);
+        timer_start('cron_' . $module);
+      }
+
       // Do not let an exception thrown by one module disturb another.
       try {
         module_invoke($module, 'cron');
       }
       catch (Exception $e) {
         watchdog_exception('cron', $e);
+      }
+
+      if (variable_get('cron_logging_enabled', TRUE)) {
+        timer_stop('cron_' . $module);
+        // Log a message saying that the cron event ended.
+        watchdog('cron', 'Execution of @module_cron() took @time.', array(
+          '@module' => $module,
+          '@time' => timer_read('cron_' . $module) . 'ms',
+        ), WATCHDOG_NOTICE);
       }
     }
 
