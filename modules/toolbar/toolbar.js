@@ -52,7 +52,8 @@ Drupal.toolbar.collapse = function() {
     'Drupal.toolbar.collapsed',
     1,
     {
-      // Workaround lack of support for the SameSite attribute in jQuery Cookie.
+      // Work around the lack of support for the SameSite attribute in jQuery
+      // Cookie.
       path: Drupal.settings.basePath + '; SameSite=Lax',
       expires: 31
     }
