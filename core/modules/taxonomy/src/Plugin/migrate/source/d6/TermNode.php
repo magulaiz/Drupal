@@ -51,11 +51,6 @@ class TermNode extends DrupalSqlBase {
       ->fields('tn', ['nid', 'vid'])
       ->fields('n', ['type']);
     // Because this is an inner join it enforces the current revision.
-    $query->innerJoin('term_data', 'td',
-      $query->joinCondition()
-        ->compare('td.tid', 'tn.tid')
-        ->condition('td.vid', $this->configuration['vid'])
-    );
     $query->innerJoin('term_data', 'td', '[td].[tid] = [tn].[tid] AND [td].[vid] = :vid', [':vid' => $this->configuration['vid']]);
     $query->innerJoin('node', 'n', static::JOIN);
     return $query;

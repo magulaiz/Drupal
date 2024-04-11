@@ -113,6 +113,7 @@ class Node extends FieldableEntity {
     $query->addField('n', 'uid', 'node_uid');
     $query->addField('nr', 'uid', 'revision_uid');
     $query->innerJoin('node', 'n', static::JOIN);
+
     // If the content_translation module is enabled, get the source langcode
     // to fill the content_translation_source field.
     if ($this->moduleHandler->moduleExists('content_translation')) {

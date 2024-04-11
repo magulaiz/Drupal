@@ -34,22 +34,6 @@ class MongodbServiceProvider extends ServiceProviderBase {
   public function alter(ContainerBuilder $container) {
     $modules = $container->getParameter('container.modules');
 
-//    // Override the default cache storage classes.
-//    if ($container->has('cache_tags.invalidator.checksum')) {
-//      $definition = $container->getDefinition('cache_tags.invalidator.checksum');
-//      $definition->setClass('Drupal\mongodb\Driver\Database\mongodb\Cache\DatabaseCacheTagsChecksum');
-//    }
-
-//    // Override the default config storage classes.
-//    if ($container->has('config.storage.active')) {
-//      $definition = $container->getDefinition('config.storage.active');
-//      $definition->setClass('Drupal\mongodb\Driver\Database\mongodb\Config\DatabaseStorage');
-//    }
-//    if ($container->has('config.storage.snapshot')) {
-//      $definition = $container->getDefinition('config.storage.snapshot');
-//      $definition->setClass('Drupal\mongodb\Driver\Database\mongodb\Config\DatabaseStorage');
-//    }
-
     if (isset($modules['forum'])) {
       $definition = $container->getDefinition('forum_manager');
       $definition->setClass('Drupal\mongodb\modules\forum\ForumManager')
