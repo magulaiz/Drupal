@@ -32,12 +32,11 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
   ];
 
   /**
-   * {@inheritdoc}
+   * User with permission to administer shortcuts.
    *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
+   * @var \Drupal\user\UserInterface
    */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
+  protected $adminUser;
 
   /**
    * {@inheritdoc}
@@ -49,6 +48,15 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+
+    $this->adminUser = $this->drupalCreateUser([
+      'access toolbar',
+      'administer shortcuts',
+      'view the administration theme',
+      'access content overview',
+      'administer users',
+      'administer site configuration',
+    ]);
 
     // Give anonymous users permission to customize shortcut links, so that we
     // can verify the cache tags of cached versions of shortcuts.
@@ -109,7 +117,7 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
 
     // Ensure that without enabling the shortcuts-in-page-title-link feature
     // in the theme, the shortcut_list cache tag is not added to the page.
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/config/system/cron');
     $expected_cache_tags = [
       'block_view',
@@ -286,7 +294,7 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
 
     // Ensure that without enabling the shortcuts-in-page-title-link feature
     // in the theme, the shortcut_list cache tag is not added to the page.
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/config/system/cron');
     $expected_cache_tags = [
       'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form',
