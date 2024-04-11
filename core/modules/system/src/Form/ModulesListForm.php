@@ -21,6 +21,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\user\PermissionHandlerInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Component\Utility\Xss;
 
 /**
  * Provides module installation interface.
@@ -142,7 +143,7 @@ class ModulesListForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     require_once DRUPAL_ROOT . '/core/includes/install.inc';
-    $distribution = drupal_install_profile_distribution_name();
+    $distribution = Xss::filter(drupal_install_profile_distribution_name());
 
     // Include system.admin.inc so we can use the sort callbacks.
     $this->moduleHandler->loadInclude('system', 'inc', 'system.admin');
@@ -207,7 +208,7 @@ class ModulesListForm extends FormBase {
     foreach (Element::children($form['modules']) as $package) {
       $form['modules'][$package] += [
         '#type' => 'details',
-        '#title' => $this->t($package),
+        '#title' => Xss::filter($this->t($package)),
         '#open' => TRUE,
         '#theme' => 'system_modules_details',
         '#attributes' => ['class' => ['package-listing']],
@@ -272,8 +273,9 @@ class ModulesListForm extends FormBase {
           ])
         )->toString();
     }
-    $row['description']['#markup'] = $this->t($module->info['description']);
-    $row['version']['#markup'] = $module->info['version'];
+    $row['name']['#markup'] = Xss::filter($module->info['name']);
+    $row['description']['#markup'] = Xss::filter($this->t($module->info['description']));
+    $row['version']['#markup'] = Xss::filter($module->info['version']);
 
     // Generate link for module's help page. Assume that if a hook_help()
     // implementation exists then the module provides an overview page, rather
@@ -326,7 +328,7 @@ class ModulesListForm extends FormBase {
     if (!empty($module->info['required'])) {
       // Used when displaying modules that are required by the installation profile
       $row['enable']['#disabled'] = TRUE;
-      $row['#required_by'][] = $distribution . (!empty($module->info['explanation']) ? ' (' . $module->info['explanation'] . ')' : '');
+      $row['#required_by'][] = Xss::filter($distribution . (!empty($module->info['explanation']) ? ' (' . $module->info['explanation'] . ')' : ''));
     }
 
     // Check the compatibilities.
