@@ -43,9 +43,9 @@ class LayoutBuilderInstallTest extends LayoutBuilderCompatibilityTestBase {
     // outside the layout, the configurable field is not shown at all, and the
     // layout itself is rendered (but empty).
     $new_expected_fields = [
-      'field field--name-name field--type-string field--label-hidden field__item',
-      'clearfix text-formatted field field--name-test-display-non-configurable field--type-text field--label-above',
-      'clearfix text-formatted field field--name-test-display-multiple field--type-text field--label-above',
+      'field field--name-name field--type-string field--label-hidden field--single',
+      'clearfix text-formatted field field--name-test-display-non-configurable field--type-text field--label-above field--single',
+      'clearfix text-formatted field field--name-test-display-multiple field--type-text field--label-above field--multiple',
     ];
     $this->assertFieldAttributes($this->entity, $new_expected_fields);
     $this->assertNotEmpty($this->cssSelect('.layout--onecol'));
@@ -78,12 +78,12 @@ class LayoutBuilderInstallTest extends LayoutBuilderCompatibilityTestBase {
       ->setComponent('test_field_display_post_install', ['weight' => 50])
       ->save();
     $new_expected_fields = [
-      'field field--name-name field--type-string field--label-hidden field__item',
-      'field field--name-test-field-display-configurable field--type-boolean field--label-above',
-      'clearfix text-formatted field field--name-test-display-configurable field--type-text field--label-above',
-      'clearfix text-formatted field field--name-test-field-display-post-install field--type-text field--label-above',
-      'clearfix text-formatted field field--name-test-display-non-configurable field--type-text field--label-above',
-      'clearfix text-formatted field field--name-test-display-multiple field--type-text field--label-above',
+      'field field--name-name field--type-string field--label-hidden field--single',
+      'field field--name-test-field-display-configurable field--type-boolean field--label-above field--single',
+      'clearfix text-formatted field field--name-test-display-configurable field--type-text field--label-above field--single',
+      'clearfix text-formatted field field--name-test-field-display-post-install field--type-text field--label-above field--single',
+      'clearfix text-formatted field field--name-test-display-non-configurable field--type-text field--label-above field--single',
+      'clearfix text-formatted field field--name-test-display-multiple field--type-text field--label-above field--multiple',
     ];
     $this->assertFieldAttributes($this->entity, $new_expected_fields);
     $this->assertNotEmpty($this->cssSelect('.layout--onecol'));
