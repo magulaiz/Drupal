@@ -273,7 +273,6 @@ class ModulesListForm extends FormBase {
           ])
         )->toString();
     }
-    $row['name']['#markup'] = Xss::filter($module->info['name']);
     $row['description']['#markup'] = Xss::filter($this->t($module->info['description']));
     $row['version']['#markup'] = Xss::filter($module->info['version']);
 
