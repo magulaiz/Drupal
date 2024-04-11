@@ -45,3 +45,10 @@ function media_post_update_set_blank_iframe_domain_to_null() {
       ->save(TRUE);
   }
 }
+
+/**
+ * Update media author views filter to use the user_name plugin.
+ */
+function media_post_update_media_author_views_filter_update(&$sandbox = NULL) {
+  // Empty update function to clear the Views data cache.
+}
