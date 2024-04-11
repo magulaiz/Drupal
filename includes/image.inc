@@ -431,5 +431,29 @@ function image_save(stdClass $image, $destination = NULL) {
 }
 
 /**
+ * Returns a list of image file extensions supported by the toolkit.
+ *
+ * @return array
+ *   An array of supported image file extensions (e.g. png/jpeg/gif).
+ */
+function image_get_supported_extensions() {
+  $toolkit = image_get_toolkit();
+  if ($toolkit) {
+    $image = new stdClass();
+    $image->toolkit = $toolkit;
+    $extensions = image_toolkit_invoke('get_supported_extensions', $image);
+    // If the get_supported_extensions() does not exists in the current image
+    // toolkit return default supported types instead of false returned by
+    // image_toolkit_invoke(). This should be backwards compatible with the
+    // toolkits defined by the contributed modules.
+    if (!empty($extensions)) {
+      return $extensions;
+    }
+  }
+  // Fallback as these types should be supported in all image toolkits.
+  return array('png', 'gif', 'jpg', 'jpeg');
+}
+
+/**
  * @} End of "defgroup image".
  */

@@ -401,8 +401,11 @@ function image_gd_get_info(stdClass $image) {
   $data = @getimagesize($image->source);
 
   if (isset($data) && is_array($data)) {
-    $extensions = array('1' => 'gif', '2' => 'jpg', '3' => 'png');
-    $extension = isset($extensions[$data[2]]) ?  $extensions[$data[2]] : '';
+    $extensions = image_gd_supported_types();
+    $extension = in_array($data[2], $extensions) ? mb_strtolower(image_type_to_extension($data[2], FALSE)) : '';
+    // For backward compatibility, replace jpeg with jpg.
+    $extension = str_replace('jpeg', 'jpg', $extension);
+
     $details = array(
       'width'     => $data[0],
       'height'    => $data[1],
@@ -412,6 +415,38 @@ function image_gd_get_info(stdClass $image) {
   }
 
   return $details;
+}
+
+/**
+ * Returns a list of image file extensions supported by the toolkit.
+ *
+ * @return array
+ *   An array of supported image file extensions (e.g. png/jpeg/gif).
+ */
+function image_gd_get_supported_extensions() {
+  $extensions = array();
+  foreach (image_gd_supported_types() as $image_type) {
+    $extension = mb_strtolower(image_type_to_extension($image_type, FALSE));
+    $extensions[] = $extension;
+    // Add some known similar extensions.
+    if ($extension === 'jpeg') {
+      $extensions[] = 'jpg';
+      $extensions[] = 'jpe';
+    }
+  }
+
+  return $extensions;
+}
+
+/**
+ * Returns a list of image types supported by the toolkit.
+ *
+ * @return array
+ *   An array of available image types. An image type is represented by a PHP
+ *   IMAGETYPE_* constant (e.g. IMAGETYPE_JPEG, IMAGETYPE_PNG, etc.).
+ */
+function image_gd_supported_types() {
+  return array(IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF);
 }
 
 /**

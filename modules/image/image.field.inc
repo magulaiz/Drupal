@@ -342,10 +342,13 @@ function image_field_widget_form(&$form, &$form_state, $field, $instance, $langc
       $elements[$delta]['#upload_validators']['file_validate_image_resolution'] = array($settings['max_resolution'], $settings['min_resolution']);
     }
 
-    // If not using custom extension validation, ensure this is an image.
-    $supported_extensions = array('png', 'gif', 'jpg', 'jpeg');
-    $extensions = isset($elements[$delta]['#upload_validators']['file_validate_extensions'][0]) ? $elements[$delta]['#upload_validators']['file_validate_extensions'][0] : implode(' ', $supported_extensions);
-    $extensions = array_intersect(explode(' ', $extensions), $supported_extensions);
+    $extensions = $settings['file_extensions'];
+    $supported_extensions = image_get_supported_extensions();
+
+    // If using custom extension validation, ensure that the extensions are
+    // supported by the current image toolkit. Otherwise, validate against all
+    // toolkit supported extensions.
+    $extensions = !empty($extensions) ? array_intersect(explode(' ', $extensions), $supported_extensions) : $supported_extensions;
     $elements[$delta]['#upload_validators']['file_validate_extensions'][0] = implode(' ', $extensions);
     $elements[$delta]['#upload_validators']['file_validate_is_image'] = array();
 
