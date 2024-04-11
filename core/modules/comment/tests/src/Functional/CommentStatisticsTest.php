@@ -16,18 +16,18 @@ use Drupal\comment\Entity\Comment;
 class CommentStatisticsTest extends CommentTestBase {
 
   /**
-   * A secondary user for posting comments.
-   *
-   * @var \Drupal\user\UserInterface
-   */
-  protected $webUser2;
-
-  /**
    * An administrative user with permission to configure comment settings.
    *
    * @var \Drupal\user\UserInterface
    */
   protected $adminUser;
+
+  /**
+   * A secondary user for posting comments.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $webUser2;
 
   /**
    * {@inheritdoc}
