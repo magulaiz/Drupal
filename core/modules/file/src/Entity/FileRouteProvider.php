@@ -28,13 +28,12 @@ class FileRouteProvider implements EntityRouteProviderInterface {
       ->setOption('_admin_route', TRUE);
     $route_collection->add('entity.file.delete_form', $route);
 
-    if (\Drupal::moduleHandler()->moduleExists('views')) {
-      // Add a collection route to handle deletion.
-      $collection_route = (new Route('/admin/content/files'))
-        ->setRequirement('_permission', 'access files overview')
-        ->setOption('_admin_route', TRUE);
-      $route_collection->add('entity.file.collection', $collection_route);
-    }
+    // Add a collection route to handle deletion.
+    $collection_route = (new Route('/admin/content/files'))
+      ->setRequirement('_permission', 'access files overview')
+      ->setOption('_admin_route', TRUE);
+    $route_collection->add('entity.file.collection', $collection_route);
+
     return $route_collection;
   }
 
