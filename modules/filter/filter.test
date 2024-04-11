@@ -1079,6 +1079,10 @@ class FilterUnitTestCase extends DrupalUnitTestCase {
     $f = filter_xss('<img src=javascript:alert(0)>', array('img'));
     $this->assertNoNormalized($f, 'javascript', 'HTML scheme clearing evasion -- no quotes.');
 
+    // Check that strings in HTML attributes are correctly processed.
+    $f = filter_xss('<img src="http://example.com/foo.jpg" title="Example: title" alt="Example: alt" class="example:class">', array('img'));
+    $this->assertIdentical($f, '<img src="http://example.com/foo.jpg" title="Example: title" alt="Example: alt" class="example:class">', 'No HTML scheme clearing on allowed attributes.');
+
     // A bit like CVE-2006-0070.
     $f = filter_xss('<img src="javascript:confirm(0)">', array('img'));
     $this->assertNoNormalized($f, 'javascript', 'HTML scheme clearing evasion -- no alert ;)');
