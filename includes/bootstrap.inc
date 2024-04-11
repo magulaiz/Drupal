@@ -1252,7 +1252,28 @@ function variable_initialize($conf = array()) {
     }
     else {
       // Load the variables from the table.
-      $variables = array_map('unserialize', db_query('SELECT name, value FROM {variable}')->fetchAllKeyed());
+      $err_variables = array();
+      $variables = array();
+      $rows = db_query('SELECT name, value FROM {variable}')->fetchAllKeyed();
+      $serialized_false = serialize(FALSE);
+      foreach ($rows as $name => $db_value) {
+        $value = @unserialize($db_value);
+        // If unserialize() returned FALSE and the stored value is NOT FALSE,
+        // list it in the report.
+        if ($value === FALSE && $db_value != $serialized_false && !isset($conf[$name])) {
+          $err_variables[] = $name;
+        }
+        $variables[$name] = $value;
+      }
+
+      if (count($err_variables)) {
+        if ($lock_acquired) {
+          lock_release($name);
+        }
+
+        throw new Exception("The %s variable(s) are unreadable and need to be fixed.", join (", ", $err_variables));
+      }
+
       if ($lock_acquired) {
         cache_set('variables', $variables, 'cache_bootstrap');
         lock_release($name);
