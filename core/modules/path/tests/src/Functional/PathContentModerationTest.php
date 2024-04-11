@@ -66,7 +66,8 @@ class PathContentModerationTest extends BrowserTestBase {
     'view the administration theme',
     'translate any entity',
     'create content translations',
-    'bypass node access',
+    'create moderated content',
+    'edit own moderated content',
   ];
   /**
    * {@inheritdoc}
