@@ -36,11 +36,9 @@ final class LangcodeRequiredIfTranslatableValuesConstraintValidator extends Cons
         ->addViolation();
     }
     elseif (!$is_translatable && array_key_exists('langcode', $value)) {
-      // phpcs:disable
+      // @todo Convert this deprecation to an actual validation error in
+      //   https://www.drupal.org/project/drupal/issues/3440238.
       @trigger_error(str_replace('@name', $mapping->getName(), $constraint->superfluousMessage), E_USER_DEPRECATED);
-      // @todo Convert this deprecation to an error in Drupal 11.
-      // $this->context->buildViolation($constraint->superfluousMessage)->addViolation();
-      // phpcs:enable
     }
   }
 
