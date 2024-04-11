@@ -1038,9 +1038,7 @@ function template_preprocess_file_managed_file(&$variables) {
   $element = $variables['element'];
 
   // Initialize only if the attributes is not already set.
-  if (!isset($variables['attributes'])) {
-    $variables['attributes'] = [];
-  }
+  $variables['attributes'] ??= [];
   if (isset($element['#id'])) {
     $variables['attributes']['id'] = $element['#id'];
   }
