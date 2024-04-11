@@ -324,9 +324,9 @@ system.image:
       type: string
       label: 'Toolkit'
       constraints:
-        Choice:
-          callback: \Drupal\Core\ImageToolkit\ImageToolkitManager::getValidToolkitNames
-          message: 'The image toolkit you selected is not available. Possible choices: %choices.'
+        PluginExists:
+          manager: 'image.toolkit.manager'
+          interface: '\Drupal\Core\ImageToolkit\ImageToolkitInterface'
 
 system.image.gd:
   type: config_object

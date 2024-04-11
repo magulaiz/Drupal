@@ -105,18 +105,4 @@ class ImageToolkitManager extends DefaultPluginManager {
     return $output;
   }
 
-  /**
-   * Gets all valid choices for the "system.image:toolkit" setting.
-   *
-   * @see system.schema.yml
-   *
-   * @return string[]
-   *   All valid choices.
-   *
-   * @internal
-   */
-  public static function getValidToolkitNames(): array {
-    return array_keys(\Drupal::service(ImageToolkitManager::class)->getAvailableToolkits());
-  }
-
 }
