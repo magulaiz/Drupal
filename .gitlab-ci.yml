@@ -192,6 +192,12 @@ default:
 # Main listing of jobs.
 # All of these are available on Merge Requests and also work as base jobs for
 # on-commit and daily jobs to extend from.
+'PHP 8.2 MySQL 8':
+  <<: [ *default-stage, *run-on-mr ]
+  variables:
+    _TARGET_PHP: "8.2"
+    _TARGET_DB: "mysql-8"
+
 'PHP 8.3 MySQL 5.7':
   <<: [ *default-stage, *run-on-mr ]
   variables:
