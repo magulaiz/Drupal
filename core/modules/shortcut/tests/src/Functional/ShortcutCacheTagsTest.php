@@ -29,6 +29,7 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
     'shortcut',
     'test_page_test',
     'block',
+    'node',
   ];
 
   /**
