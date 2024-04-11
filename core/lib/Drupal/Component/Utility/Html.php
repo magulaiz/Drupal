@@ -455,6 +455,8 @@ class Html {
    * Necessary for HTML that is served outside of a website, for example, RSS
    * and email.
    *
+   * Note that this method requires Symfony's Validator component.
+   *
    * @param string $html
    *   The partial HTML snippet to load. Invalid markup will be corrected on
    *   import.

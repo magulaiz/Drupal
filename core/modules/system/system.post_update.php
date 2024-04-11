@@ -249,8 +249,8 @@ function system_post_update_add_langcode_to_all_translatable_config(): void {
   foreach ($list as $name) {
     // We're only dealing with simple config, which won't map to an entity type.
     // On the other hand, if this is a simple config object that has no schema,
-    // we can't do anything useful here since we can't tell if it has
-    // any translatable elements.
+    // we can't do anything here, and we don't need to: config must have schema
+    // to be translatable.
     if ($config_manager->getEntityTypeIdByName($name) || !$typed_config_manager->hasConfigSchema($name)) {
       continue;
     }

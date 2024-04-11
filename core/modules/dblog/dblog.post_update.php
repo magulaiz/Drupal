@@ -6,12 +6,6 @@
  */
 
 /**
- * Not used.
- */
-function dblog_post_update_add_langcode_to_settings(): void {
-}
-
-/**
  * Implements hook_removed_post_updates().
  */
 function dblog_removed_post_updates() {
