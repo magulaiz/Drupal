@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Menu\MenuLinkBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Url;
 use Drupal\menu_link_content\MenuLinkContentInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -187,6 +188,20 @@ class MenuLinkContent extends MenuLinkBase implements ContainerFactoryPluginInte
       return $this->getEntity()->getDescription();
     }
     return $this->pluginDefinition['description'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getUrlObject($title_attribute = TRUE) {
+    // We only need to get the title from the actual entity if it may be a
+    // translation based on the current language context. This can only happen
+    // if the site is configured to be multilingual.
+    if ($this->languageManager->isMultilingual()) {
+      return $this->getEntity()->get('link')->first()->getUrl();
+    }
+
+    return parent::getUrlObject($title_attribute);
   }
 
   /**

@@ -334,6 +334,7 @@ class MenuLinkContent extends EditorialContentEntityBase implements MenuLinkCont
     $fields['link'] = BaseFieldDefinition::create('link')
       ->setLabel(t('Link'))
       ->setDescription(t('The location this menu link points to.'))
+      ->setTranslatable(TRUE)
       ->setRevisionable(TRUE)
       ->setRequired(TRUE)
       ->setSettings([
@@ -430,6 +431,27 @@ class MenuLinkContent extends EditorialContentEntityBase implements MenuLinkCont
   public function setRequiresRediscovery($rediscovery) {
     $this->set('rediscover', $rediscovery);
     return $this;
+  }
+
+  /**
+   * Disallow translation of internal links, and add a validation to
+   * avoid changing an internal to an external link and vice versa.
+   */
+  public function setTranslationConstraints() {
+    if (!$this->link->isEmpty()) {
+      // If the source link is internal we don't allow the translation.
+      $link_definition = $this->getFieldDefinition('link');
+
+      if (!$this->getUrlObject()->isExternal()) {
+        $link_definition->setTranslatable(FALSE);
+      }
+
+      $item_definition = $link_definition->getItemDefinition();
+      $item_definition->addConstraint('LinkType');
+      $link_definition->setItemDefinition($item_definition);
+
+      $this->fieldDefinitions['link'] = $link_definition;
+    }
   }
 
 }
