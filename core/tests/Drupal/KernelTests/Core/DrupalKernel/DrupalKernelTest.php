@@ -12,6 +12,8 @@ use org\bovigo\vfs\vfsStream;
 use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\Request;
 
+// cspell:ignore äöüßαβγδεζηθικλμνξοσὠ
+
 /**
  * Tests DIC compilation to disk.
  *
