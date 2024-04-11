@@ -286,7 +286,7 @@ class DbLogTest extends BrowserTestBase {
         ['foo' => 'bar', 'path' => '/baz', 'value' => 'horse']
       );
     // View the log page to verify it's correct.
-    $wid = \Drupal::database()->query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+    $wid = \Drupal::database()->query('SELECT MAX([wid]) FROM {watchdog}')->fetchField();
     $this->drupalGet('admin/reports/dblog/event/' . $wid);
     $this->assertSession()
       ->responseContains('Incorrect parameter {bar} in path /baz: horse');

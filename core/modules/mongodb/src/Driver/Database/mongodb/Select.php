@@ -2668,6 +2668,14 @@ class Select extends QuerySelect {
               $this->mongodbGroup[$alias] = ['$sum' => 1];
               break;
 
+            case 'max':
+              $this->mongodbGroup[$alias] = ['$max' => 1];
+              break;
+
+            case 'min':
+              $this->mongodbGroup[$alias] = ['$min' => 1];
+              break;
+
             case 'sum_multiply':
               $fields = $expression['fields'];
               foreach ($fields as &$field) {

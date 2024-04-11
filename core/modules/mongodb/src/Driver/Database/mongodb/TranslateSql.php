@@ -252,8 +252,7 @@ class TranslateSql {
         $statement->execute(NULL, $query_options);
         return $statement;
       }
-      // The SQL queries that need special handling.
-      if (preg_match('/^SELECT MAX\(\[nid\]\) FROM {(.*)}$/', $query, $matches)) {
+      elseif (preg_match('/^SELECT MAX\(\[nid\]\) FROM {(.*)}$/', $query, $matches)) {
         $prefixed_table = $connection->getPrefix() . $matches[1];
 
         $startEvent = $this->startEvent($connection, $query, $args);
@@ -270,6 +269,26 @@ class TranslateSql {
         $this->endEvent($connection, $startEvent);
 
         $statement = new Statement($connection, $cursor, ['id']);
+        $statement->execute(NULL, $query_options);
+        return $statement;
+      }
+      elseif (preg_match('/^SELECT MAX\(\[wid\]\) FROM {(.*)}$/', $query, $matches)) {
+        $prefixed_table = $connection->getPrefix() . $matches[1];
+
+        $startEvent = $this->startEvent($connection, $query, $args);
+
+        $cursor = $connection->getConnection()->{$prefixed_table}->find(
+          [],
+          [
+            'sort' => ['wid' => -1],
+            'limit' => 1,
+            'projection' => ['wid' => 1, '_id' => 0],
+          ],
+        );
+
+        $this->endEvent($connection, $startEvent);
+
+        $statement = new Statement($connection, $cursor, ['wid']);
         $statement->execute(NULL, $query_options);
         return $statement;
       }

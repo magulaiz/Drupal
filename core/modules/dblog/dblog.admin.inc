@@ -30,6 +30,9 @@ function dblog_filters() {
       'title' => t('Type'),
       'where' => "w.type = ?",
       'options' => $types,
+      'field' => 'w.type',
+      'value' => array_keys($types),
+      'operator' => 'IN',
     ];
   }
 
@@ -37,6 +40,9 @@ function dblog_filters() {
     'title' => t('Severity'),
     'where' => 'w.severity = ?',
     'options' => RfcLogLevel::getLevels(),
+    'field' => 'w.severity',
+    'value' => array_keys(RfcLogLevel::getLevels()),
+    'operator' => 'IN',
   ];
 
   return $filters;

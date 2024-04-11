@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\dblog\Functional;
 
+use Drupal\Core\Database\Database;
 use Drupal\views\Views;
 
 /**
@@ -65,6 +66,15 @@ class DbLogViewsTest extends DbLogTest {
     $this->assertEquals('text_custom', $area['plugin_id']);
     $this->assertEquals('area_text_custom', $area['field']);
     $this->assertEquals('No log messages available.', $area['content']);
+  }
+
+  /**
+   * Tests the database log filter functionality at admin/reports/dblog.
+   */
+  public function testFilter() {
+    if (Database::getConnection()->driver() == 'mongodb') {
+      $this->markTestSkipped();
+    }
   }
 
 }
