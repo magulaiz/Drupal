@@ -63,10 +63,11 @@ class PathContentModerationTest extends BrowserTestBase {
     'administer site configuration',
     'administer url aliases',
     'create url aliases',
+    'view the administration theme',
     'translate any entity',
     'create content translations',
+    'bypass node access',
   ];
-
   /**
    * {@inheritdoc}
    */
