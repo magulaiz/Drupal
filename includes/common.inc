@@ -5544,11 +5544,24 @@ function drupal_cron_run() {
       DrupalQueue::get($queue_name)->createQueue();
     }
 
+    $module_previous = '';
+
+    // If detailed logging isn't enabled, don't log individual execution times.
+    $time_logging_enabled = variable_get('cron_detailed_logging', DRUPAL_CRON_DETAILED_LOGGING);
+
     // Iterate through the modules calling their cron handlers (if any):
     foreach (module_implements('cron') as $module) {
-      if (variable_get('cron_logging_enabled', TRUE)) {
-        // Log a message saying that the cron event started.
-        watchdog('cron', 'Starting execution of @module_cron().', array('@module' => $module), WATCHDOG_NOTICE);
+      if ($time_logging_enabled) {
+        if (!$module_previous) {
+          watchdog('cron', 'Starting execution of @module_cron().', array('@module' => $module));
+        }
+        else {
+          watchdog('cron', 'Starting execution of @module_cron(), execution of @module_previous_cron() took @time.', array(
+            '@module' => $module,
+            '@module_previous' => $module_previous,
+            '@time' => timer_read('cron_' . $module_previous) . 'ms',
+          ));
+        }
         timer_start('cron_' . $module);
       }
 
@@ -5560,13 +5573,18 @@ function drupal_cron_run() {
         watchdog_exception('cron', $e);
       }
 
-      if (variable_get('cron_logging_enabled', TRUE)) {
+      if ($time_logging_enabled) {
         timer_stop('cron_' . $module);
-        // Log a message saying that the cron event ended.
-        watchdog('cron', 'Execution of @module_cron() took @time.', array(
-          '@module' => $module,
-          '@time' => timer_read('cron_' . $module) . 'ms',
-        ), WATCHDOG_NOTICE);
+        $module_previous = $module;
+      }
+    }
+
+    if ($time_logging_enabled) {
+      if ($module_previous) {
+        watchdog('cron', 'Execution of @module_previous_cron() took @time.', array(
+          '@module_previous' => $module_previous,
+          '@time' => timer_read('cron_' . $module_previous) . 'ms',
+        ));
       }
     }
 

@@ -139,23 +139,19 @@ class DBLogTestCase extends DrupalWebTestCase {
     // Get last ID after cron was run.
     $current_id = db_query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
 
-    // Cron adds two log entries for each module and one final "cron is
-    // finished" message.
+    // Only one final "cron is finished" message should be logged.
+    $this->assertEqual($current_id - $last_id, 1, format_string('Cron added @count of @expected new log entries', array('@count' => $current_id - $last_id, '@expected' => 1)));
+
+    // Test enabling of detailed cron logging.
+    // Get the number of enabled modules. Cron adds a log entry for each module.
     $module_count = count(module_implements('cron'));
-    $cron_logs_expected = ($module_count * 2) + 1;
-
-    // The number of log entries created.
-    $logs_count = $current_id - $last_id;
-    $this->assertEqual($logs_count, $cron_logs_expected, format_string('Cron added @count of @expected new log entries', array('@count' => $logs_count, '@expected' => $cron_logs_expected)));
-
-    // Test the number of entries with "cron_logging_enabled" disabled.
-    variable_set('cron_logging_enabled', FALSE);
+    variable_set('cron_detailed_logging', 1);
     $last_id = db_query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
     $this->cronRun();
     $current_id = db_query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
 
-    // Only one final "cron is finished" message should be logged.
-    $this->assertEqual($current_id - $last_id, 1, format_string('Cron added one new log entry.'));
+    // The number of log entries created.
+    $this->assertEqual($current_id - $last_id, $module_count + 2, format_string('Cron added @count of @expected new log entries', array('@count' => $current_id - $last_id, '@expected' => $module_count + 2)));
   }
 
   /**
