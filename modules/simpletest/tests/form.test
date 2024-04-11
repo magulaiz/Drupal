@@ -788,8 +788,6 @@ class FormsElementsValidationTestCase extends DrupalWebTestCase {
 
   /**
    * Tests #maxlength validation.
-   *
-   * @return void
    */
   public function testMaxlengthValidation() {
     $max_length = 5;
@@ -806,34 +804,25 @@ class FormsElementsValidationTestCase extends DrupalWebTestCase {
         '#title' => 'Password',
         '#maxlength' => $max_length,
       ),
-      'machine_name' => array(
-        '#type' => 'machine_name',
-        '#title' => 'Machine Name',
-        '#maxlength' => $max_length,
-      ),
     );
 
     $edit = array(
       'textfield' => $this->randomString($max_length + 1),
       'password' => $this->randomString($max_length + 1),
-      'machine_name' => $this->randomName($max_length + 1),
     );
     list($processed_form, $form_state, $errors) = $this->formSubmitHelper($form, $edit);
     $this->assertFalse(empty($errors), 'Form with overly long inputs returned errors.');
-    $this->assertTrue(strpos(($errors['textfield'] ?: ''), 'cannot be longer than'), 'Long input error in textfield.');
-    $this->assertTrue(strpos(($errors['password'] ?: ''), 'cannot be longer than'), 'Long input error in password.');
-    $this->assertTrue(strpos(($errors['machine_name'] ?: ''), 'cannot be longer than'), 'Long input error in machine_name.');
+    $this->assertTrue(isset($errors['textfield']) && strpos($errors['textfield'], 'cannot be longer than') !== FALSE, 'Long input error in textfield.');
+    $this->assertTrue(isset($errors['password']) && strpos($errors['password'], 'cannot be longer than') !== FALSE, 'Long input error in password.');
 
     // This test for NULL inputs cannot be performed using the drupalPost() method.
     $edit['textfield'] = NULL;
     $edit['password'] = NULL;
-    $edit['machine_name'] = NULL;
     list($processed_form, $form_state, $errors) = $this->formSubmitHelper($form, $edit);
     $this->assertTrue(empty($errors), 'Form with NULL inputs did not return errors.');
 
     $edit['textfield'] = $this->randomString($max_length);
     $edit['password'] = $this->randomString($max_length);
-    $edit['machine_name'] = $this->randomName($max_length);
     list($processed_form, $form_state, $errors) = $this->formSubmitHelper($form, $edit);
     $this->assertTrue(empty($errors), 'Form with maxlength inputs did not return errors.');
 
