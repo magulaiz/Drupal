@@ -114,11 +114,6 @@ class Condition implements ConditionInterface, \Countable {
       }
     }
 
-    // Detect potentially dangerous operators.
-    if (stripos($operator, 'UNION') !== FALSE || strpbrk($operator, '[-\'"();') !== FALSE) {
-      throw new InvalidQueryException(sprintf("Query condition '%s %s %s' has an invalid query operator.", $field, $operator, $value));
-    }
-
     $this->conditions[] = [
       'field' => $field,
       'value' => $value,
@@ -204,6 +199,13 @@ class Condition implements ConditionInterface, \Countable {
     // Re-compile if this condition changed or if we are compiled against a
     // different query placeholder object.
     if ($this->changed || isset($this->queryPlaceholderIdentifier) && ($this->queryPlaceholderIdentifier != $queryPlaceholder->uniqueIdentifier())) {
+       // Detect potentially dangerous operators during compilation.
+       foreach ($this->conditions as $condition) {
+        $operator = $condition['operator'];
+        if (stripos($operator, 'UNION') !== FALSE || strpbrk($operator, '[-\'"();') !== FALSE) {
+          throw new InvalidQueryException(sprintf("Query condition '%s %s %s' has an invalid query operator.", $condition['field'], $operator, $condition['value']));
+        }
+      }
       $this->queryPlaceholderIdentifier = $queryPlaceholder->uniqueIdentifier();
 
       $condition_fragments = [];
