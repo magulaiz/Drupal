@@ -434,8 +434,10 @@ class MenuLinkContent extends EditorialContentEntityBase implements MenuLinkCont
   }
 
   /**
-   * Disallow translation of internal links, and add a validation to
-   * avoid changing an internal to an external link and vice versa.
+   * Disallow translation of internal links.
+   *
+   * This method adds a validation to avoid changing an internal to an external
+   * link and vice versa.
    */
   public function setTranslationConstraints() {
     if (!$this->link->isEmpty()) {
