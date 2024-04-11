@@ -77,7 +77,10 @@ class LayoutBuilderOverridesTest extends LayoutBuilderTestBase {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
-    $this->drupalLogin($this->drupalCreateUser(['configure any layout']));
+    $permissions = [
+      'configure any layout',
+    ];
+    $this->drupalLogin($this->drupalCreateUser($permissions));
 
     LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
       ->enableLayoutBuilder()
