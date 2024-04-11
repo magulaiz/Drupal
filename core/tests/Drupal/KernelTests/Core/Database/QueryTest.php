@@ -78,7 +78,7 @@ class QueryTest extends DatabaseTestBase {
       $this->fail('Should not be able to attempt SQL injection via condition operator.');
     }
     catch (InvalidQueryException $e) {
-      $this->assertSame("Query condition 'name IS NOT NULL) ;INSERT INTO {test} (name) VALUES ('test12345678'); --  1' has an invalid query operator.", $e->getMessage());
+      $this->assertSame("Invalid characters in query operator: $injection", $e->getMessage());
       // Expected exception; just continue testing.
     }
 
@@ -107,7 +107,7 @@ class QueryTest extends DatabaseTestBase {
       $this->fail('Should not be able to attempt SQL injection via operator.');
     }
     catch (InvalidQueryException $e) {
-      $this->assertSame("Query condition 'name = 1 UNION ALL SELECT password FROM user WHERE uid = 1' has an invalid query operator.", $e->getMessage());
+      $this->assertSame("Invalid characters in query operator: $injection", $e->getMessage());
       // Expected exception; just continue testing.
     }
 
@@ -125,7 +125,7 @@ class QueryTest extends DatabaseTestBase {
       $this->fail('Should not be able to attempt SQL injection via operator.');
     }
     catch (InvalidQueryException $e) {
-      $this->assertSame("Query condition 'name IS NOT NULL) UNION ALL SELECT name FROM {TEST_UPPERCASE} --  1' has an invalid query operator.", $e->getMessage());
+      $this->assertSame("Invalid characters in query operator: $injection", $e->getMessage());
       // Expected exception; just continue testing.
     }
   }

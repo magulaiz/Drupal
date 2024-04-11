@@ -159,11 +159,20 @@ class ConditionTest extends UnitTestCase {
     $connection->condition('AND')->willReturn(new Condition('AND'));
     $connection = $connection->reveal();
 
-    $condition = $connection->condition('AND');
+    $query_placeholder = $this->prophesize(PlaceholderInterface::class);
 
-    $this->expectException(InvalidQueryException::class);
-    $this->expectExceptionMessage("Query condition 'name $operator value' has an invalid query operator.");
+    $counter = 0;
+    $query_placeholder->nextPlaceholder()->will(function () use (&$counter) {
+      return $counter++;
+    });
+    $query_placeholder->uniqueIdentifier()->willReturn(4);
+    $query_placeholder = $query_placeholder->reveal();
+
+    $condition = $connection->condition('AND');
     $condition->condition('name', 'value', $operator);
+    $this->expectException(InvalidQueryException::class);
+    $this->expectExceptionMessage('Invalid characters in query operator:');
+    $condition->compile($connection, $query_placeholder);
   }
 
   public static function providerTestCompileWithSqlInjectionForOperator() {

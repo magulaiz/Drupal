@@ -199,13 +199,6 @@ class Condition implements ConditionInterface, \Countable {
     // Re-compile if this condition changed or if we are compiled against a
     // different query placeholder object.
     if ($this->changed || isset($this->queryPlaceholderIdentifier) && ($this->queryPlaceholderIdentifier != $queryPlaceholder->uniqueIdentifier())) {
-      // Detect potentially dangerous operators during compilation.
-      foreach ($this->conditions as $condition) {
-        $operator = $condition['operator'];
-        if (stripos($operator, 'UNION') !== FALSE || strpbrk($operator, '[-\'"();') !== FALSE) {
-          throw new InvalidQueryException(sprintf("Query condition '%s %s %s' has an invalid query operator.", $condition['field'], $operator, $condition['value']));
-        }
-      }
       $this->queryPlaceholderIdentifier = $queryPlaceholder->uniqueIdentifier();
 
       $condition_fragments = [];
@@ -252,6 +245,19 @@ class Condition implements ConditionInterface, \Countable {
           $operator = ['operator' => '', 'use_value' => FALSE];
         }
         else {
+          // Remove potentially dangerous characters.
+          // If something passed in an invalid character stop early, so we
+          // don't rely on a broken SQL statement when we would just replace
+          // those characters.
+          if (stripos($condition['operator'], 'UNION') !== FALSE || strpbrk($condition['operator'], '[-\'"();') !== FALSE) {
+            $this->changed = TRUE;
+            $this->arguments = [];
+            // Provide a string which will result into an empty query result.
+            $this->stringVersion = '( AND 1 = 0 )';
+
+            throw new InvalidQueryException('Invalid characters in query operator: ' . $condition['operator']);
+          }
+
           // For simplicity, we convert all operators to a data structure to
           // allow to specify a prefix, a delimiter and such. Find the
           // associated data structure by first doing a database specific
