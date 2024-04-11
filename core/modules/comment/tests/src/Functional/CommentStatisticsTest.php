@@ -61,7 +61,6 @@ class CommentStatisticsTest extends CommentTestBase {
       'post comments',
       'create article content',
       'edit own comments',
-      'post comments',
       'skip comment approval',
       'access comments',
       'access content',
