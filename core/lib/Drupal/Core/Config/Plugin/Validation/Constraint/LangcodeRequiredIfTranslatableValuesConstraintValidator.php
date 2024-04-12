@@ -34,8 +34,9 @@ final class LangcodeRequiredIfTranslatableValuesConstraintValidator extends Cons
       $this->context->buildViolation($constraint->missingMessage)
         ->setParameter('@name', $mapping->getName())
         ->addViolation();
+      return;
     }
-    elseif (!$is_translatable && array_key_exists('langcode', $value)) {
+    if (!$is_translatable && array_key_exists('langcode', $value)) {
       // @todo Convert this deprecation to an actual validation error in
       //   https://www.drupal.org/project/drupal/issues/3440238.
       // phpcs:ignore
