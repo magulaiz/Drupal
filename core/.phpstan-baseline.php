@@ -997,16 +997,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/jsonapi/tests/src/Kernel/ResourceType/RelatedResourceTypesTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^@dataProvider linkComparisonProvider related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Unit/JsonApiResource/LinkTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^@dataProvider linkMergeProvider related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Unit/JsonApiResource/LinkTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$id in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/modules/jsonapi/tests/src/Unit/Normalizer/JsonApiDocumentTopLevelNormalizerTest.php',
