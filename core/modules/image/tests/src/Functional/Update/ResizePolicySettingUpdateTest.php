@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\image\Functional\Update;
 
+use Drupal\Core\Image\ImageResizePolicy;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 
 /**
