@@ -2355,11 +2355,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Controller/TitleResolverTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Database\\\\ConditionTest\\:\\:expectError\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Database/ConditionTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^@dataProvider providerTestProcess related method must be static in PHPUnit 10 and newer\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/DependencyInjection/Compiler/BackendCompilerPassTest.php',
