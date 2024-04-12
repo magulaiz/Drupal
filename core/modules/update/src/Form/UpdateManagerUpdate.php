@@ -2,6 +2,7 @@
 
 namespace Drupal\update\Form;
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
@@ -151,8 +152,8 @@ class UpdateManagerUpdate extends FormBase {
         '#template' => $recommended_version,
         '#context' => [
           'release_version' => $recommended_release->getVersion(),
-          'release_link' => $recommended_release->getReleaseUrl(),
-          'project_title' => $this->t('Release notes for @project_title', ['@project_title' => $project['title']]),
+          'release_link' => UrlHelper::stripDangerousProtocols($recommended_release->getReleaseUrl()),
+          'project_title' => $this->t('xxxx Release notes for @project_title', ['@project_title' => $project['title']]),
           'major_update_warning_title' => $this->t('Major upgrade warning'),
           'major_update_warning_text' => $this->t('This update is a major version update which means that it may not be backwards compatible with your currently running version. It is recommended that you read the release notes and proceed at your own risk.'),
           'release_notes' => $this->t('Release notes'),
