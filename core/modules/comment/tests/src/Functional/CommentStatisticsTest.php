@@ -17,12 +17,16 @@ use Drupal\comment\CommentManagerInterface;
 class CommentStatisticsTest extends CommentTestBase {
 
   /**
-   * An administrative user with permission to configure comment settings.
+   * A user with permission to access toolbar and access announcements.
+   *
+   * @var \Drupal\user\UserInterface
    */
   protected UserInterface $adminUser;
 
   /**
    * A secondary user for posting comments.
+   *
+   * @var \Drupal\user\UserInterface
    */
   protected UserInterface $webUser2;
 
