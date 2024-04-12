@@ -334,7 +334,7 @@ class NavigationRenderer {
 
     $this->contentEntityPaths = [];
     $entity_types = $this->entityTypeManager->getDefinitions();
-    foreach ($entity_types as $entity_type_id => $entity_type) {
+    foreach ($entity_types as $entity_type) {
       if ($entity_type->entityClassImplements(ContentEntityInterface::class)) {
         $entity_paths = $this->getContentEntityTypePaths($entity_type);
         $this->contentEntityPaths = array_merge($this->contentEntityPaths, $entity_paths);

@@ -141,15 +141,15 @@ class SystemMenuNavigationBlockTest extends KernelTestBase {
     // With link 6 being the only external link.
     // phpcs:disable
     $links = [
-      1 => MenuLinkMock::create(['id' => 'test.example1', 'route_name' => 'example1', 'title' => 'foo', 'parent' => '', 'weight' => 0]),
-      2 => MenuLinkMock::create(['id' => 'test.example2', 'route_name' => 'example2', 'title' => 'bar', 'parent' => '', 'route_parameters' => ['foo' => 'bar'], 'weight' => 1]),
-      3 => MenuLinkMock::create(['id' => 'test.example3', 'route_name' => 'example3', 'title' => 'baz', 'parent' => 'test.example2', 'weight' => 2]),
-      4 => MenuLinkMock::create(['id' => 'test.example4', 'route_name' => 'example4', 'title' => 'qux', 'parent' => 'test.example3', 'weight' => 3]),
-      5 => MenuLinkMock::create(['id' => 'test.example5', 'route_name' => 'example5', 'title' => 'foofoo', 'parent' => '', 'expanded' => TRUE, 'weight' => 4]),
-      6 => MenuLinkMock::create(['id' => 'test.example6', 'route_name' => '', 'url' => 'https://www.drupal.org/', 'title' => 'barbar', 'parent' => '', 'weight' => 5]),
-      7 => MenuLinkMock::create(['id' => 'test.example7', 'route_name' => 'example7', 'title' => 'bazbaz', 'parent' => 'test.example5', 'weight' => 6]),
-      8 => MenuLinkMock::create(['id' => 'test.example8', 'route_name' => 'example8', 'title' => 'quxqux', 'parent' => '', 'weight' => 7]),
-      9 => MenuLinkMock::create(['id' => 'test.example9', 'route_name' => 'example9', 'title' => 'foobar', 'parent' => 'test.example4', 'weight' => 7]),
+      1 => MenuLinkMock::create(['id' => 'test.example1', 'route_name' => 'example1', 'title' => 'title 1', 'parent' => '', 'weight' => 0]),
+      2 => MenuLinkMock::create(['id' => 'test.example2', 'route_name' => 'example2', 'title' => 'title 2', 'parent' => '', 'route_parameters' => ['foo' => 'bar'], 'weight' => 1]),
+      3 => MenuLinkMock::create(['id' => 'test.example3', 'route_name' => 'example3', 'title' => 'title 3', 'parent' => 'test.example2', 'weight' => 2]),
+      4 => MenuLinkMock::create(['id' => 'test.example4', 'route_name' => 'example4', 'title' => 'title 4', 'parent' => 'test.example3', 'weight' => 3]),
+      5 => MenuLinkMock::create(['id' => 'test.example5', 'route_name' => 'example5', 'title' => 'title 5', 'parent' => '', 'expanded' => TRUE, 'weight' => 4]),
+      6 => MenuLinkMock::create(['id' => 'test.example6', 'route_name' => '', 'url' => 'https://www.drupal.org/', 'title' => 'title 6', 'parent' => '', 'weight' => 5]),
+      7 => MenuLinkMock::create(['id' => 'test.example7', 'route_name' => 'example7', 'title' => 'title 7', 'parent' => 'test.example5', 'weight' => 6]),
+      8 => MenuLinkMock::create(['id' => 'test.example8', 'route_name' => 'example8', 'title' => 'title 8', 'parent' => '', 'weight' => 7]),
+      9 => MenuLinkMock::create(['id' => 'test.example9', 'route_name' => 'example9', 'title' => 'title 9', 'parent' => 'test.example4', 'weight' => 7]),
     ];
     // phpcs:enable
     foreach ($links as $instance) {

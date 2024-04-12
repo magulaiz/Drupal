@@ -164,7 +164,7 @@ final class SettingsForm extends ConfigFormBase {
       '#title' => t('Choose custom logo'),
       '#upload_validators' => $upload_validators,
       '#upload_location' => 'public://navigation-logo',
-      '#description' => $this->renderer->renderPlain($file_upload_help),
+      '#description' => $this->renderer->renderInIsolation($file_upload_help),
       '#default_value' => $current_logo_managed_fid,
       '#multiple' => FALSE,
     ];

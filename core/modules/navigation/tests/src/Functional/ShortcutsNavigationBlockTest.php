@@ -46,8 +46,7 @@ class ShortcutsNavigationBlockTest extends PageCacheTagsTestBase {
     $this->drupalLogin($this->rootUser);
     $this->drupalGet('admin/config/system/cron');
     $expected_cache_tags = [
-      // @todo Uncomment once tests are executed against 10.3.x.
-      // 'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form',
+      'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form',
       'block_view',
       'config:block.block.title',
       'config:block_list',
