@@ -467,7 +467,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
         // is not guaranteed during this period and may cause confusing and
         // unnecessary warnings.
         if (!InstallerKernel::installationAttempted()) {
-          trigger_error(
+          throw new \InvalidArgumentException(
             sprintf(
               'The "%s" at "%s:%s" references the "%s:%s" entity type that does not exist.',
               $field_definition->getName(),

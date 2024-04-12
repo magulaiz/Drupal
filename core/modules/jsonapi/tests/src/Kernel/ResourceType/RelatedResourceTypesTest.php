@@ -6,7 +6,6 @@ namespace Drupal\Tests\jsonapi\Kernel\ResourceType;
 
 use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
 use Drupal\node\Entity\NodeType;
-use PHPUnit\Framework\Error\Warning;
 
 /**
  * @coversDefaultClass \Drupal\jsonapi\ResourceType\ResourceType
@@ -207,7 +206,7 @@ class RelatedResourceTypesTest extends JsonapiKernelTestBase {
       $this->resourceTypeRepository->get('node', 'foo')->getRelatableResourceTypesByField('field_ref_with_missing_bundle');
       static::fail('The above code must produce a warning since the "missing_bundle" does not exist.');
     }
-    catch (Warning $e) {
+    catch (\InvalidArgumentException $e) {
       static::assertSame(
         'The "field_ref_with_missing_bundle" at "node:foo" references the "node:missing_bundle" entity type that does not exist.',
         $e->getMessage()
