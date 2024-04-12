@@ -217,36 +217,18 @@ trait MigrationConfigurationTrait {
         // Catch exceptions and report that the source database is not Drupal.
         return FALSE;
       }
-      if ($version_string && $version_string[0] == '1') {
-        if ((int) $version_string >= 1000) {
+      if ($version_string) {
+        if ($version_string[0] == '6' || $version_string[0] == '7') {
+          return $version_string[0];
+        }
+        if ($version_string[0] == '1' && (int) $version_string >= 1000) {
           return '5';
         }
-        else {
-          return FALSE;
-        }
-      }
-    }
-    elseif ($connection->schema()->tableExists('key_value')) {
-      try {
-        // For Drupal 8 (and beyond), the schema version is in the key_value store.
-        $result = $connection
-          ->query("SELECT [value] FROM {key_value} WHERE [collection] = :system_schema AND [name] = :module", [
-            ':system_schema' => 'system.schema',
-            ':module' => 'system',
-          ])
-          ->fetchField();
-        $version_string = unserialize($result);
-        return $version_string ? substr($version_string, 0, 1) : FALSE;
-      }
-      catch (DatabaseExceptionWrapper $e) {
-        // Catch exceptions and report that the source database is not Drupal.
-        return FALSE;
       }
     }
 
     // If neither 'system' nor 'key_value' tables exist, return FALSE.
     return FALSE;
-
   }
 
   /**
