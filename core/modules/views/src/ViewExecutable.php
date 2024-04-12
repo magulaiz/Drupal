@@ -2,7 +2,6 @@
 
 namespace Drupal\views;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Tags;
 use Drupal\Core\Routing\RouteProviderInterface;
@@ -821,8 +820,7 @@ class ViewExecutable {
 
     // Ensure the requested display exists.
     if (!$this->displayHandlers->has($display_id)) {
-      trigger_error(new FormattableMarkup('setDisplay() called with invalid display ID "@display".', ['@display' => $display_id]), E_USER_WARNING);
-      return FALSE;
+      throw new \InvalidArgumentException("setDisplay() called with invalid display ID '$display_id'");
     }
 
     // Reset if the display has changed. It could be called multiple times for

@@ -21,7 +21,6 @@ use Drupal\views\Plugin\views\query\Sql;
 use Drupal\views\Plugin\views\pager\PagerPluginBase;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views_test_data\Plugin\views\display\DisplayTest;
-use PHPUnit\Framework\Error\Warning;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -212,8 +211,8 @@ class ViewExecutableTest extends ViewsKernelTestBase {
       $view->setDisplay('invalid');
       $this->fail('Expected error, when setDisplay() called with invalid display ID');
     }
-    catch (Warning $e) {
-      $this->assertEquals('setDisplay() called with invalid display ID "invalid".', $e->getMessage());
+    catch (\InvalidArgumentException $e) {
+      $this->assertEquals("setDisplay() called with invalid display ID 'invalid'", $e->getMessage());
     }
 
     $this->assertEquals('default', $view->current_display, 'If setDisplay is called with an invalid display id the default display should be used.');
