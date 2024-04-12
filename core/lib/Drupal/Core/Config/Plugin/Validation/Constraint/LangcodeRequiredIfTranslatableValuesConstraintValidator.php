@@ -20,12 +20,12 @@ final class LangcodeRequiredIfTranslatableValuesConstraintValidator extends Cons
   public function validate(mixed $value, Constraint $constraint) {
     assert($constraint instanceof LangcodeRequiredIfTranslatableValuesConstraint);
 
-    if ($this->context->getObject() !== $this->context->getRoot()) {
+    $mapping = $this->context->getObject();
+    assert($mapping instanceof Mapping);
+    if ($mapping !== $this->context->getRoot()) {
       throw new LogicException('The LangcodeRequiredIfTranslatableValues constraint can only operate on the root object being validated.');
     }
 
-    $mapping = $this->context->getObject();
-    assert($mapping instanceof Mapping);
     assert(in_array('langcode', $mapping->getValidKeys(), TRUE));
 
     $is_translatable = $mapping->hasTranslatableElements();
