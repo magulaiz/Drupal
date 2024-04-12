@@ -12,13 +12,22 @@ use Drupal\user\Entity\Role;
 use Drupal\user\UserInterface;
 
 /**
- * Tests Block content editing with Layout Builder.
+ * Tests overrides editing uses the correct theme.
+ *
+ * Block content is used for this test as its canonical & editing routes
+ * are in the admin section, so we need to test that layout builder editing
+ * uses the front end theme.
  *
  * @group layout_builder
  */
-class LayoutBuilderBlockContentEditingTest extends LayoutBuilderTestBase {
+class LayoutBuilderOverridesEditingThemeTest extends LayoutBuilderTestBase {
 
   use EnableLayoutBuilderTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'test_theme';
 
   /**
    * {@inheritdoc}
@@ -96,15 +105,18 @@ class LayoutBuilderBlockContentEditingTest extends LayoutBuilderTestBase {
       'langcode' => 'en',
     ]);
     $blockContent->save();
+    // Assert the test_theme is being used for overrides.
     $this->drupalGet('admin/content/block/' . $blockContent->id() . '/layout');
     $this->assertSession()->statusCodeEquals(200);
+    // Assert the test_theme is being used.
+    $this->assertSession()->responseContains('test_theme/kitten.css');
+    // Assert the claro theme is not being used.
     $this->assertSession()->elementNotExists('css', '#block-claro-content');
+    // Assert the default still uses the test_theme.
     $this->drupalGet('admin/structure/block-content/manage/basic/display/default/layout');
     $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->responseContains('test_theme/kitten.css');
     $this->assertSession()->elementNotExists('css', '#block-claro-content');
-    $this->drupalGet('admin/content/block/' . $blockContent->id());
-    $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->elementExists('css', '#block-claro-content');
   }
 
 }
