@@ -257,8 +257,7 @@ function system_post_update_add_langcode_to_all_translatable_config(&$sandbox = 
   $config_manager = \Drupal::service(ConfigManagerInterface::class);
   $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
 
-  // Do 50 config objects per run.
-  $names = array_splice($sandbox['names'], 0, 50);
+  $names = array_splice($sandbox['names'], 0, Settings::get('entity_update_batch_size', 50));
   foreach ($names as $name) {
     // We're only dealing with simple config, which won't map to an entity type.
     // But if this is a simple config object that has no schema, we can't do
