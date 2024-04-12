@@ -33,6 +33,11 @@ class UserAdminSettingsFormTest extends ConfigFormTestBase {
         '#config_name' => 'user.settings',
         '#config_key' => 'anonymous',
       ],
+      'langcode' => [
+        '#value' => $this->randomString(2),
+        '#config_name' => 'user.settings',
+        '#config_key' => 'langcode',
+      ],
       'user_mail_cancel_confirm_body' => [
         '#value' => $this->randomString(),
         '#config_name' => 'user.mail',
