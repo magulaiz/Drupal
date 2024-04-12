@@ -38,7 +38,7 @@ class ResizePolicySettingUpdateTest extends UpdatePathTestBase {
 
     $this->runUpdates();
 
-    // Confirm that config settings was added and is FALSE by default.
+    // Confirm that config settings was added and is 'resize_larger_images' by default.
     $storage = \Drupal::entityTypeManager()->getStorage('field_config');
     $imageFields = $storage->loadMultiple();
     if (!empty($imageFields)) {

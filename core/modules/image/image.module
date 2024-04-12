@@ -500,6 +500,6 @@ function image_field_config_delete(FieldConfigInterface $field) {
  */
 function image_field_config_presave(FieldConfigInterface $field) {
   if ($field->getType() === 'image' && $field->getSetting('resize_policy') === NULL) {
-    $field->setSetting('resize_policy', FALSE);
+    $field->setSetting('resize_policy', 'resize_larger_images');
   }
 }

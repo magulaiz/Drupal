@@ -279,7 +279,7 @@ class ImageItem extends FileItem {
     ];
     $element['resize']['resize_policy'] = [
       '#type' => 'radios',
-      '#default_value' => $settings['resize_policy'] ?? FALSE,
+      '#default_value' => $settings['resize_policy'] ?? 'resize_larger_images',
       '#options' => [
         'resize_larger_images' => $this->t('Resize proportionally'),
         'reject_larger_images_with_error' => $this->t('Reject'),
