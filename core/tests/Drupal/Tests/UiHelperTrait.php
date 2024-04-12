@@ -300,6 +300,10 @@ trait UiHelperTrait {
       $length = strlen($base_path);
       if (substr($path, 0, $length) === $base_path) {
         $path = substr($path, $length);
+        // Additionally strip any forward slashes.
+        if (strlen($path) > 1) {
+          $path = ltrim($path, '/');
+        }
       }
 
       $force_internal = isset($options['external']) && $options['external'] == FALSE;
