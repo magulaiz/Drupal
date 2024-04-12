@@ -2313,7 +2313,7 @@ function user_authenticate($name, $password) {
  * login timestamp, calls hook_user_login(), and generates a new session.
  *
  * @param array $edit
- *   The array of form values submitted by the user.
+ *   A keyed array containing the current state of the login form.
  *
  * @see hook_user_login()
  */

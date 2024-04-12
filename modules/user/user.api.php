@@ -303,7 +303,7 @@ function hook_user_update(&$edit, $account, $category) {
  * The user just logged in.
  *
  * @param $edit
- *   The array of form values submitted by the user.
+ *   A keyed array containing the current state of the login form.
  * @param $account
  *   The user object on which the operation was just performed.
  */
