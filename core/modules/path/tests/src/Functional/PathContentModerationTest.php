@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\path\Functional;
 
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\language\Traits\LanguageTestTrait;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
 
