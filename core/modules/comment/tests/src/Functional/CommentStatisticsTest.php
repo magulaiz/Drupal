@@ -20,14 +20,14 @@ class CommentStatisticsTest extends CommentTestBase {
    *
    * @var \Drupal\user\UserInterface
    */
-  protected $adminUser;
+  protected UserInterface $adminUser;
 
   /**
    * A secondary user for posting comments.
    *
    * @var \Drupal\user\UserInterface
    */
-  protected $webUser2;
+  protected UserInterface $webUser2;
 
   /**
    * {@inheritdoc}
