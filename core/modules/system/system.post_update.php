@@ -255,6 +255,7 @@ function system_post_update_add_langcode_to_all_translatable_config(&$sandbox = 
   $typed_config_manager = \Drupal::service(TypedConfigManagerInterface::class);
   /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
   $config_manager = \Drupal::service(ConfigManagerInterface::class);
+  $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
 
   // Do 50 config objects per run.
   $names = array_splice($sandbox['names'], 0, 50);
@@ -280,9 +281,7 @@ function system_post_update_add_langcode_to_all_translatable_config(&$sandbox = 
       if ($config->get('langcode')) {
         continue;
       }
-      $config->set('langcode', \Drupal::languageManager()
-        ->getDefaultLanguage()
-        ->getId());
+      $config->set('langcode', $default_langcode);
     }
     else {
       $config->clear('langcode');
