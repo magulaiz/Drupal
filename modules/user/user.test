@@ -2319,6 +2319,38 @@ class UserEditTestCase extends DrupalWebTestCase {
     $this->drupalLogout();
     $user1->pass_raw = $new_pass;
     $this->drupalLogin($user1);
+
+    // Test that multiple failed password validations trigger flood control.
+    variable_set('user_failed_login_user_limit', 2);
+    flood_clear_event('failed_pass_validation_user', $user1->uid);
+    $edit = array();
+    $edit['mail'] = $this->randomName() . '@new.example.com';
+    $edit['current_pass'] = $this->randomName();
+    // For the first and second attempt the password is validated.
+    $this->drupalPost("user/$user1->uid/edit", $edit, t('Save'));
+    $this->assertRaw(t("Your current password is missing or incorrect; it's required to change the %name.", array('%name' => t('E-mail address'))));
+    $this->drupalPost("user/$user1->uid/edit", $edit, t('Save'));
+    $this->assertRaw(t("Your current password is missing or incorrect; it's required to change the %name.", array('%name' => t('E-mail address'))));
+    // For the third attempt error from the flood control is received.
+    $this->drupalPost("user/$user1->uid/edit", $edit, t('Save'));
+    $this->assertRaw(t('Sorry, you have entered incorrect password more than @count times. Changes to fields that require current password are temporarily blocked. Try again later.', array('@count' => variable_get('user_failed_login_user_limit', 2))));
+
+    // Test that multiple failed password validations with an empty password
+    // does not trigger flood control.
+    flood_clear_event('failed_pass_validation_user', $user1->uid);
+    $edit = array();
+    $edit['mail'] = $this->randomName() . '@new.example.com';
+    // For the first and second attempt the password is validated.
+    $this->drupalPost("user/$user1->uid/edit", $edit, t('Save'));
+    $this->assertRaw(t("Your current password is missing or incorrect; it's required to change the %name.", array('%name' => t('E-mail address'))));
+    $this->drupalPost("user/$user1->uid/edit", $edit, t('Save'));
+    $this->assertRaw(t("Your current password is missing or incorrect; it's required to change the %name.", array('%name' => t('E-mail address'))));
+    // For the third attempt the password is still validated as no password was
+    // entered.
+    $this->drupalPost("user/$user1->uid/edit", $edit, t('Save'));
+    $this->assertRaw(t("Your current password is missing or incorrect; it's required to change the %name.", array('%name' => t('E-mail address'))));
+    $this->assertNoRaw(t('Sorry, you have entered incorrect password more than @count times. Changes to fields that require current password are temporarily blocked. Try again later.', array('@count' => variable_get('user_failed_login_user_limit', 2))));
+
     $this->drupalLogout();
   }
 

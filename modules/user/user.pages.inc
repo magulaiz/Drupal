@@ -256,6 +256,9 @@ function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $a
           // to brute force other accounts.
           flood_clear_event('failed_login_attempt_user', $identifier);
 
+          // Clear any failed password validation flood events for this user.
+          flood_clear_event('failed_pass_validation_user', $account->uid);
+
           // Set the new user.
           $user = $account;
           // user_login_finalize() also updates the login timestamp of the
