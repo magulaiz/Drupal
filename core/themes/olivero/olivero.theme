@@ -541,9 +541,7 @@ function olivero_preprocess_field__comment(&$variables) {
     $variables['#cache']['contexts'][] = 'user';
   }
 
-  if (theme_get_setting('comment_form_after_comments') === TRUE) {
-    $variables['comment_form_after_comments'] = TRUE;
-  }
+  $variables['comment_form_after_comments'] = theme_get_setting('comment_form_after_comments');
 }
 
 /**
