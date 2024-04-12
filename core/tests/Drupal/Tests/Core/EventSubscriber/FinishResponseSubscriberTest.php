@@ -153,7 +153,7 @@ class FinishResponseSubscriberTest extends UnitTestCase {
    *
    * @covers ::onRespond
    */
-  public function testDebugHeaders() {
+  public function testDebugHeaders(): void {
     $finishSubscriber = new FinishResponseSubscriber(
       $this->languageManager,
       $this->getConfigFactoryStub(),
@@ -197,7 +197,7 @@ class FinishResponseSubscriberTest extends UnitTestCase {
    *
    * @covers ::onRespond
    */
-  public function testLargeTagsAndContexts() {
+  public function testLargeTagsAndContexts(): void {
     $finishSubscriber = new FinishResponseSubscriber(
       $this->languageManager,
       $this->getConfigFactoryStub(),
