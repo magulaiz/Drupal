@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the navigation module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function navigation_requirements($phase) {
+  $requirements = [];
+
+  if ($phase === 'runtime') {
+    if (\Drupal::moduleHandler()->moduleExists('toolbar')) {
+      $requirements['toolbar'] = [
+        'title' => t('Toolbar module enabled'),
+        'value' => t('Toolbar module has been replaced by Navigation. It should be uninstalled.'),
+        'severity' => REQUIREMENT_WARNING,
+      ];
+    }
+  }
+
+  return $requirements;
+}

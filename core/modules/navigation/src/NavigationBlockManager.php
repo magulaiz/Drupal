@@ -1,0 +1,93 @@
+<?php
+
+namespace Drupal\navigation;
+
+use Drupal\Component\Plugin\FallbackPluginManagerInterface;
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Plugin\CategorizingPluginManagerTrait;
+use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\Core\Plugin\FilteredPluginManagerTrait;
+use Drupal\navigation\Attribute\NavigationBlock;
+use Psr\Log\LoggerInterface;
+
+/**
+ * Defines a navigation block manager.
+ */
+class NavigationBlockManager extends DefaultPluginManager implements NavigationBlockManagerInterface, FallbackPluginManagerInterface {
+
+  use CategorizingPluginManagerTrait {
+    getSortedDefinitions as traitGetSortedDefinitions;
+  }
+  use FilteredPluginManagerTrait;
+
+  /**
+   * The logger.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
+   * Constructs a new NavigationBlockManager.
+   *
+   * @param \Traversable $namespaces
+   *   An object that implements \Traversable which contains the root paths
+   *   keyed by the corresponding namespace to look for plugin implementations.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   *   The cache backend.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   The logger.
+   */
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, LoggerInterface $logger) {
+    parent::__construct('Plugin/NavigationBlock', $namespaces, $module_handler, NavigationBlockPluginInterface::class, NavigationBlock::class);
+
+    $this->alterInfo($this->getType());
+    $this->setCacheBackend($cache_backend, 'navigation_plugins');
+    $this->logger = $logger;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getType() {
+    return 'navigation_block';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function processDefinition(&$definition, $plugin_id) {
+    parent::processDefinition($definition, $plugin_id);
+    $this->processDefinitionCategory($definition);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSortedDefinitions(array $definitions = NULL) {
+    // Sort the plugins first by category, then by admin label.
+    $definitions = $this->traitGetSortedDefinitions($definitions, 'admin_label');
+    // Do not display the 'broken' plugin in the UI.
+    unset($definitions['broken']);
+    return $definitions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFallbackPluginId($plugin_id, array $configuration = []) {
+    return 'broken';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function handlePluginNotFound($plugin_id, array $configuration) {
+    $this->logger->warning('The "%plugin_id" was not found', ['%plugin_id' => $plugin_id]);
+    return parent::handlePluginNotFound($plugin_id, $configuration);
+  }
+
+}

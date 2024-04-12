@@ -1,0 +1,10 @@
+name: Navigation
+description: New administration navigation
+package: Core (Experimental)
+lifecycle: experimental
+version: VERSION
+configure: navigation.settings
+type: module
+dependencies:
+  - drupal:block
+  - drupal:file

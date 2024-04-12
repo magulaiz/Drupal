@@ -1,0 +1,226 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for navigation module.
+ */
+
+use Drupal\Component\Utility\Html;
+use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\navigation\NavigationContentLinks;
+use Drupal\navigation\NavigationRenderer;
+use Drupal\system\MenuInterface;
+
+/**
+ * Implements hook_help().
+ */
+function navigation_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.navigation':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Navigation module provides mockup of a left-aligned, collapsible, vertical sidebar navigation. For more information, see the <a href=":docs">online documentation for the Navigation module</a>.', [
+        ':docs' => 'https://www.drupal.org/project/navigation',
+      ]) . '</p>';
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_page_top().
+ */
+function navigation_page_top(array &$page_top) {
+  $navigation_renderer = \Drupal::service('navigation.renderer');
+  assert($navigation_renderer instanceof NavigationRenderer);
+  $navigation_renderer->removeToolbar($page_top);
+  $navigation_renderer->buildNavigation($page_top);
+  $navigation_renderer->buildTopBar($page_top);
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function navigation_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'page_top') {
+    $group = $implementations['navigation'];
+    unset($implementations['navigation']);
+    $implementations['navigation'] = $group;
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function navigation_theme($existing, $type, $theme, $path) {
+  $module_path = \Drupal::service('extension.list.module')->getPath('navigation');
+  $logo_path = '/' . $module_path . '/assets/images/logo.svg';
+
+  $items['top_bar'] = [
+    'variables' => [
+      'local_tasks' => [],
+    ],
+  ];
+
+  $items['top_bar_local_tasks'] = [
+    'variables' => [
+      'local_tasks' => [],
+    ],
+  ];
+
+  $items['top_bar_local_task'] = [
+    'variables' => [
+      'link' => [],
+    ],
+  ];
+
+  $items['navigation'] = [
+    'variables' => [
+      'hide_logo' => FALSE,
+      'logo_path' => $logo_path,
+      'logo_width' => 40,
+      'logo_height' => 40,
+      'menu_content' => [],
+      'menu_footer' => [],
+    ],
+  ];
+
+  $items['navigation_block'] = [
+    'render element' => 'elements',
+  ];
+
+  $items['navigation_menu'] = [
+    'base hook' => 'menu',
+    'variables' => [
+      'menu_name' => NULL,
+      'items' => [],
+      'attributes' => [],
+    ],
+  ];
+
+  $items['menu_region__footer'] = [
+    'variables' => [
+      'help' => NULL,
+      'items' => [],
+      'title' => NULL,
+      'menu_name' => NULL,
+      'path' => \Drupal::service('extension.list.module')->getPath('navigation'),
+    ],
+  ];
+
+  return $items;
+}
+
+/**
+ * Implements hook_menu_links_discovered_alter().
+ */
+function navigation_menu_links_discovered_alter(&$links) {
+  $navigation_links = \Drupal::classResolver(NavigationContentLinks::class);
+  assert($navigation_links instanceof NavigationContentLinks);
+  $navigation_links->addMenuLinks($links);
+  $navigation_links->removeAdminContentLink($links);
+  $navigation_links->removeHelpLink($links);
+}
+
+/**
+ * Implements hook_block_build_BASE_BLOCK_ID_alter().
+ */
+function navigation_block_build_local_tasks_block_alter(array &$build, BlockPluginInterface $block) {
+  $navigation_renderer = \Drupal::service('navigation.renderer');
+  assert($navigation_renderer instanceof NavigationRenderer);
+  $navigation_renderer->removeLocalTasks($build, $block);
+}
+
+/**
+ * Prepares variables for navigation_block templates.
+ *
+ * Default template: navigation-block.html.twig.
+ *
+ * Prepares the values passed to the theme_navigation_block function to be
+ * passed into a pluggable template engine. Uses navigation_block properties
+ * to generate a series of template file suggestions. If none are found, the
+ * default navigation-block.html.twig is used.
+ *
+ * The default template is located inside
+ * "templates/navigation-block.html.twig". Look in there for the full list of
+ * available variables.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the properties of the element.
+ *     Properties used: #navigation_block, #configuration, #children,
+ *     #plugin_id.
+ */
+function template_preprocess_navigation_block(&$variables) {
+  $variables['configuration'] = $variables['elements']['#configuration'];
+  $variables['plugin_id'] = $variables['elements']['#plugin_id'];
+  $variables['base_plugin_id'] = $variables['elements']['#base_plugin_id'];
+  $variables['derivative_plugin_id'] = $variables['elements']['#derivative_plugin_id'];
+  $variables['label'] = !empty($variables['configuration']['label_display']) ? $variables['configuration']['label'] : '';
+  $variables['content'] = $variables['elements']['content'];
+  // A navigation_blocks label is configuration: it is static. Allow dynamic
+  // labels to be set in the render array.
+  if (isset($variables['elements']['content']['#title']) && !empty($variables['configuration']['label_display'])) {
+    $variables['label'] = $variables['elements']['content']['#title'];
+  }
+
+  // Create a valid HTML ID and make sure it is unique.
+  if (!empty($variables['elements']['#id'])) {
+    $variables['attributes']['id'] = Html::getUniqueId('navigation-block-' . $variables['elements']['#id']);
+  }
+
+  // Proactively add aria-describedby if possible to improve accessibility.
+  if ($variables['label'] && isset($variables['attributes']['role'])) {
+    $variables['title_attributes']['id'] = Html::getUniqueId($variables['label']);
+    $variables['attributes']['aria-describedby'] = $variables['title_attributes']['id'];
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert() for menu.
+ */
+function navigation_menu_insert(MenuInterface $menu) {
+  // @todo This code should be moved to Drupal\system\Entity\Menu::save() once
+  // Navigation lands in core, in a similar way BlockManager cache is
+  // invalidated there.
+  \Drupal::service('plugin.manager.navigation_block')
+    ->clearCachedDefinitions();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update() for menu.
+ */
+function navigation_menu_update(MenuInterface $menu) {
+  // @todo This code should be moved to Drupal\system\Entity\Menu::save() once
+  // Navigation lands in core, in a similar way BlockManager cache is
+  // invalidated there.
+  \Drupal::service('plugin.manager.navigation_block')
+    ->clearCachedDefinitions();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete() for menu.
+ */
+function navigation_menu_delete(MenuInterface $menu) {
+  // @todo This code should be moved to Drupal\system\Entity\Menu::delete() once
+  // Navigation lands in core, in a similar way BlockManager cache is
+  // invalidated there.
+  \Drupal::service('plugin.manager.navigation_block')
+    ->clearCachedDefinitions();
+}
+
+/**
+ * Implements hook_preprocess_html().
+ */
+function navigation_preprocess_html(&$variables) {
+  $module_path = \Drupal::request()->getBasePath() . '/' . \Drupal::service('extension.list.module')->getPath('navigation');
+  $asset_url = $module_path . '/assets/fonts/inter-var.woff2';
+  $variables['#attached']['html_head_link'][] = [
+    [
+      'rel' => 'preload',
+      'href' => $asset_url,
+      'as' => 'font',
+      'crossorigin' => 'anonymous',
+    ],
+  ];
+}

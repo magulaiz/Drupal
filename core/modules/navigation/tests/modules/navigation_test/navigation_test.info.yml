@@ -1,0 +1,7 @@
+name: 'Navigation test'
+type: module
+description: 'Provides test navigation blocks.'
+package: Testing
+version: VERSION
+dependencies:
+  - navigation:navigation

@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Provide test navigation blocks.
+ */
+
+/**
+ * Implements hook_navigation_block_alter().
+ */
+function navigation_test_navigation_block_alter(&$navigation_block_info) {
+  if (\Drupal::state()->get('navigation_test_info_alter') && isset($navigation_block_info['user'])) {
+    $navigation_block_info['user']['category'] = t('Custom category');
+  }
+}

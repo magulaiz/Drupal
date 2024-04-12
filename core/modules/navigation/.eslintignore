@@ -1,0 +1,4 @@
+# Ignore build scripts, these will not be part of the core inclusion MR.
+scripts/css/*.js
+# Ignore third party floating-ui library.
+assets/vendor/floating-ui/*.js
