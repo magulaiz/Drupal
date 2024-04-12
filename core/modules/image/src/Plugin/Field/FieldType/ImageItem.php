@@ -9,6 +9,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Image\ImageResizePolicy;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
@@ -78,7 +79,7 @@ class ImageItem extends FileItem {
       'title_field' => 0,
       'title_field_required' => 0,
       'max_resolution' => '',
-      'resize_policy' => 'resize_larger_images',
+      'resize_policy' => ImageResizePolicy::ResizeLargerImages->value,
       'min_resolution' => '',
       'default_image' => [
         'uuid' => NULL,
@@ -279,10 +280,10 @@ class ImageItem extends FileItem {
     ];
     $element['resize']['resize_policy'] = [
       '#type' => 'radios',
-      '#default_value' => $settings['resize_policy'] ?? 'resize_larger_images',
+      '#default_value' => $settings['resize_policy'] ?? ImageResizePolicy::ResizeLargerImages->value,
       '#options' => [
-        'resize_larger_images' => $this->t('Resize proportionally'),
-        'reject_larger_images_with_error' => $this->t('Reject'),
+        ImageResizePolicy::ResizeLargerImages->value => $this->t('Resize proportionally'),
+        ImageResizePolicy::RejectLargerImagesWithError->value => $this->t('Reject'),
       ],
       '#states' => [
         'visible' => $resize_visibility,

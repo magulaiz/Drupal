@@ -44,7 +44,7 @@ class ResizePolicySettingUpdateTest extends UpdatePathTestBase {
     if (!empty($imageFields)) {
       foreach ($imageFields as $field) {
         if ($field->getType() === 'image') {
-          $this->assertEquals('resize_larger_images', $field->getSetting('resize_policy'));
+          $this->assertEquals(ImageResizePolicy::ResizeLargerImages->value, $field->getSetting('resize_policy'));
         }
       }
     }

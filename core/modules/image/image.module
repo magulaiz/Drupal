@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
+use Drupal\Core\Image\ImageResizePolicy;
 use Drupal\Core\Url;
 use Drupal\field\FieldConfigInterface;
 use Drupal\field\FieldStorageConfigInterface;
@@ -500,6 +501,6 @@ function image_field_config_delete(FieldConfigInterface $field) {
  */
 function image_field_config_presave(FieldConfigInterface $field) {
   if ($field->getType() === 'image' && $field->getSetting('resize_policy') === NULL) {
-    $field->setSetting('resize_policy', 'resize_larger_images');
+    $field->setSetting('resize_policy', ImageResizePolicy::ResizeLargerImages->value);
   }
 }

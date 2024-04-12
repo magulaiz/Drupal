@@ -6,6 +6,7 @@ namespace Drupal\file\Plugin\Validation\Constraint;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Validation\Attribute\Constraint;
+use Drupal\Core\Image\ImageResizePolicy;
 use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 
 /**
@@ -37,7 +38,7 @@ class FileImageDimensionsConstraint extends SymfonyConstraint {
    *
    * @var string
    */
-  public string $resizePolicy = 'resize_larger_images';
+  public string $resizePolicy = ImageResizePolicy::ResizeLargerImages->value;
 
   /**
    * The image is too large message.
