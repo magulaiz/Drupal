@@ -19,7 +19,6 @@ class PathContentModerationTest extends BrowserTestBase {
 
   use ContentModerationTestTrait;
   use ContentTranslationTestTrait;
-  use LanguageTestTrait;
 
   /**
    * Modules to install.
