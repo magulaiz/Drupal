@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Functional;
 
+use Drupal\user\UserInterface;
+use Drupal\comment\Entity\Comment;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\CommentManagerInterface;
-use Drupal\comment\Entity\Comment;
 
 /**
  * Tests comment statistics on nodes.
@@ -17,15 +18,11 @@ class CommentStatisticsTest extends CommentTestBase {
 
   /**
    * An administrative user with permission to configure comment settings.
-   *
-   * @var \Drupal\user\UserInterface
    */
   protected UserInterface $adminUser;
 
   /**
    * A secondary user for posting comments.
-   *
-   * @var \Drupal\user\UserInterface
    */
   protected UserInterface $webUser2;
 
