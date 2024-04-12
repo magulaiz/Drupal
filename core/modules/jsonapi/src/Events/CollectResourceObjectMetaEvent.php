@@ -39,7 +39,9 @@ final class CollectResourceObjectMetaEvent extends Event implements RefinableCac
     private readonly ResourceObject $resourceObject,
     private array $context
   ) {
-    assert(!empty($context['resource_object']) && $context['resource_object'] instanceof ResourceObject);
+    if (empty($context['resource_object']) || !($context['resource_object'] instanceof ResourceObject) || $this->context['resource_object']->getId() !== $this->resourceObject->getId()) {
+      throw new \RuntimeException('The context must contain a valid resource object.');
+    }
   }
 
   /**
