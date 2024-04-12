@@ -17,13 +17,6 @@ use Drupal\comment\CommentManagerInterface;
 class CommentStatisticsTest extends CommentTestBase {
 
   /**
-   * A user with permission to access toolbar and access announcements.
-   *
-   * @var \Drupal\user\UserInterface
-   */
-  protected UserInterface $adminUser;
-
-  /**
    * A secondary user for posting comments.
    *
    * @var \Drupal\user\UserInterface
