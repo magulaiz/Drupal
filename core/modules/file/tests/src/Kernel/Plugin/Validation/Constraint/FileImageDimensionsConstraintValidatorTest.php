@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Kernel\Plugin\Validation\Constraint;
 
+use Drupal\Core\Image\ImageResizePolicy;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\Tests\file\Kernel\Validation\FileValidatorTestBase;
@@ -119,7 +120,7 @@ class FileImageDimensionsConstraintValidatorTest extends FileValidatorTestBase {
       $validators = [
         'FileImageDimensions' => [
           'maxDimensions' => '1x1',
-          'resizePolicy' => 'reject_larger_images_with_error',
+          'resizePolicy' => ImageResizePolicy::RejectLargerImagesWithError->value,
         ],
       ];
       $violations = $this->validator->validate($this->image, $validators);

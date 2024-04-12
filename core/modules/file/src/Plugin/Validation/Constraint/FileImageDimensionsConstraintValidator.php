@@ -4,6 +4,7 @@ namespace Drupal\file\Plugin\Validation\Constraint;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Image\ImageFactory;
+use Drupal\Core\Image\ImageResizePolicy;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -63,7 +64,7 @@ class FileImageDimensionsConstraintValidator extends BaseFileConstraintValidator
       // Check that it is smaller than the given dimensions.
       [$width, $height] = explode('x', $maxDimensions);
       if ($image->getWidth() > $width || $image->getHeight() > $height) {
-        if ($resizePolicy == 'reject_larger_images_with_error') {
+        if ($resizePolicy == ImageResizePolicy::RejectLargerImagesWithError->value) {
           $this->context->addViolation($constraint->messageImageTooLarge,
             [
               '%dimensions' => $maxDimensions,
