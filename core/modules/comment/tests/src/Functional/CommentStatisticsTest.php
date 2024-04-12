@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Drupal\Tests\comment\Functional;
 
 use Drupal\user\UserInterface;
-use Drupal\comment\Entity\Comment;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\CommentManagerInterface;
+use Drupal\comment\Entity\Comment;
+use Drupal\user\UserInterface;
 
 /**
  * Tests comment statistics on nodes.
