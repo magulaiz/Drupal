@@ -283,6 +283,9 @@ function system_post_update_add_langcode_to_all_translatable_config(&$sandbox = 
       $config->set('langcode', $default_langcode);
     }
     else {
+      if (!array_key_exists('langcode', $config->get())) {
+        continue;
+      }
       $config->clear('langcode');
     }
     $config->save();
