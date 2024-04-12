@@ -5,10 +5,13 @@ namespace Drupal\user\Plugin\rest\resource;
 use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Password\PasswordGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\rest\Attribute\RestResource;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
 use Drupal\rest\Plugin\rest\resource\EntityResourceAccessTrait;
 use Drupal\rest\Plugin\rest\resource\EntityResourceValidationTrait;
+use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -18,16 +21,15 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 /**
  * Represents user registration as a resource.
- *
- * @RestResource(
- *   id = "user_registration",
- *   label = @Translation("User registration"),
- *   serialization_class = "Drupal\user\Entity\User",
- *   uri_paths = {
- *     "create" = "/user/register",
- *   },
- * )
  */
+#[RestResource(
+  id: "user_registration",
+  label: new TranslatableMarkup("User registration"),
+  serialization_class: User::class,
+  uri_paths: [
+    "create" => "/user/register",
+  ],
+)]
 class UserRegistrationResource extends ResourceBase {
 
   use EntityResourceValidationTrait;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\help\Functional;
 
 use Drupal\Core\Extension\ExtensionLifecycle;
@@ -26,6 +28,14 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
     'help_topics_twig_tester',
     'locale',
   ];
+
+  /**
+   * {@inheritdoc}
+   *
+   * @todo Remove and fix test to not rely on super user.
+   * @see https://www.drupal.org/project/drupal/issues/3437620
+   */
+  protected bool $usesSuperUserAccessPolicy = TRUE;
 
   /**
    * {@inheritdoc}
@@ -342,7 +352,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
       '#type' => 'inline_template',
       '#template' => $content . "\n{# " . rand() . " #}",
     ];
-    return (string) \Drupal::service('renderer')->renderPlain($build);
+    return (string) \Drupal::service('renderer')->renderInIsolation($build);
   }
 
 }

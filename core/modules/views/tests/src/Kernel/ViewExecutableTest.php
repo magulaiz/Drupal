@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Kernel;
 
 use Drupal\comment\Tests\CommentTestTrait;
@@ -346,7 +348,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
   }
 
   /**
-   * Tests the deconstructor to be sure that necessary objects are removed.
+   * Tests the destructor to be sure that necessary objects are removed.
    */
   public function testDestroy() {
     $view = Views::getView('test_destroy');
@@ -374,6 +376,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
       $defaults['user'],
       $defaults['request'],
       $defaults['routeProvider'],
+      $defaults['displayPluginManager'],
       $defaults['viewsData']
     );
 
@@ -445,7 +448,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     $count = 0;
     foreach ($view->displayHandlers as $id => $display) {
       $match = function ($value) use ($display) {
-        return str_contains($value, $display->display['display_title']);
+        return str_contains((string) $value, $display->display['display_title']);
       };
       $this->assertNotEmpty(array_filter($validate[$id], $match), "Error message found for $id display");
       $count++;

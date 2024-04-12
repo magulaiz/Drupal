@@ -17,7 +17,7 @@ class UrlHelper {
   protected static $allowedProtocols = ['http', 'https'];
 
   /**
-   * Parses an array into a valid, rawurlencoded query string.
+   * Parses an array into a valid query string encoded with rawurlencode().
    *
    * Function rawurlencode() is RFC3986 compliant, and as a consequence RFC3987
    * compliant. The latter defines the required format of "URLs" in HTML5.
@@ -34,8 +34,8 @@ class UrlHelper {
    *   nested items. Defaults to an empty string.
    *
    * @return string
-   *   A rawurlencoded string which can be used as or appended to the URL query
-   *   string.
+   *   A string encoded with rawurlencode() which can be used as or appended to
+   *   the URL query string.
    *
    * @ingroup php_wrappers
    */
@@ -80,6 +80,9 @@ class UrlHelper {
    *   The data compressed into a URL-safe string.
    */
   public static function compressQueryParameter(string $data): string {
+    if (!\extension_loaded('zlib')) {
+      return $data;
+    }
     // Use 'base64url' encoding. Note that the '=' sign is only used for padding
     // on the right of the string, and is otherwise not part of the data.
     // @see https://datatracker.ietf.org/doc/html/rfc4648#section-5
@@ -100,6 +103,9 @@ class UrlHelper {
    *   The uncompressed data or FALSE on failure.
    */
   public static function uncompressQueryParameter(string $compressed): string|bool {
+    if (!\extension_loaded('zlib')) {
+      return $compressed;
+    }
     // Because this comes from user data, suppress the PHP warning that
     // gzcompress() throws if the base64-encoded string is invalid.
     return @gzuncompress(base64_decode(str_replace(['-', '_'], ['+', '/'], $compressed)));

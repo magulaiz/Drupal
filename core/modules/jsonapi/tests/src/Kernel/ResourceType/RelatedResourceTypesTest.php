@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Kernel\ResourceType;
 
 use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
@@ -144,7 +146,7 @@ class RelatedResourceTypesTest extends JsonapiKernelTestBase {
    * @covers ::getRelatableResourceTypes
    * @dataProvider getRelatableResourceTypesProvider
    */
-  public function getRelatableResourceTypesProvider() {
+  public static function getRelatableResourceTypesProvider() {
     return [
       [
         'node--foo',
@@ -174,7 +176,7 @@ class RelatedResourceTypesTest extends JsonapiKernelTestBase {
   /**
    * Provides cases to test getRelatableTypesByField.
    */
-  public function getRelatableResourceTypesByFieldProvider() {
+  public static function getRelatableResourceTypesByFieldProvider() {
     return [
       ['node', 'foo', 'field_ref_foo'],
       ['node', 'foo', 'field_ref_bar'],

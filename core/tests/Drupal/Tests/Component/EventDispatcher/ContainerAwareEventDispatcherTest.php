@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Component\EventDispatcher;
 
 use Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher;
@@ -23,6 +25,7 @@ use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
  * synchronizations.
  *
  * @group EventDispatcher
+ * @group legacy
  */
 class ContainerAwareEventDispatcherTest extends TestCase {
 

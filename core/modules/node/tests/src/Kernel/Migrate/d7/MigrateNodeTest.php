@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\node\Kernel\Migrate\d7;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
@@ -106,7 +108,7 @@ class MigrateNodeTest extends MigrateDrupal7TestBase {
    *
    * @internal
    */
-  protected function assertEntity(string $id, string $type, string $langcode, string $title, int $uid, bool $status, int $created, int $changed, bool $promoted, bool $sticky): void {
+  protected function assertEntity(int $id, string $type, string $langcode, string $title, int $uid, bool $status, int $created, int $changed, bool $promoted, bool $sticky): void {
     /** @var \Drupal\node\NodeInterface $node */
     $node = Node::load($id);
     $this->assertInstanceOf(NodeInterface::class, $node);

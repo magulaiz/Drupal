@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views_ui\Kernel;
 
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
@@ -11,6 +13,7 @@ use Drupal\views\Entity\View;
  * Tests the views ui tagging functionality.
  *
  * @group views_ui
+ * @group #slow
  */
 class TagTest extends ViewsKernelTestBase {
 
@@ -99,7 +102,7 @@ class TagTest extends ViewsKernelTestBase {
    * @return array[]
    *   The data set.
    */
-  public function providerViewsUiAutocompleteIndividualTags() {
+  public static function providerViewsUiAutocompleteIndividualTags() {
     return [
       'tag' => ['comma', 'comma'],
       'case insensitive tag' => ['comma', 'COMMA'],

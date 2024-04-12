@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Render;
 
 use Drupal\Component\Utility\UrlHelper;
@@ -68,7 +70,7 @@ class AjaxPageStateTest extends BrowserTestBase {
   public function testDrupalSettingsIsNotLoaded() {
     $this->drupalGet('node',
       [
-        "query" =>
+        'query' =>
           [
             'ajax_page_state' => [
               'libraries' => UrlHelper::compressQueryParameter('core/drupalSettings'),

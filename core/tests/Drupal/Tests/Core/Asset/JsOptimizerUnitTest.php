@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Asset;
 
 use Drupal\Core\Asset\JsOptimizer;
@@ -36,7 +38,7 @@ class JsOptimizerUnitTest extends UnitTestCase {
    * @return array
    *   An array of test data.
    */
-  public function providerTestClean() {
+  public static function providerTestClean() {
     $path = dirname(__FILE__) . '/js_test_files/';
     return [
       // File. Tests:
@@ -83,7 +85,7 @@ class JsOptimizerUnitTest extends UnitTestCase {
    * @return array
    *   An array of test data.
    */
-  public function providerTestOptimize() {
+  public static function providerTestOptimize() {
     $path = dirname(__FILE__) . '/js_test_files/';
     return [
       0 => [
