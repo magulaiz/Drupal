@@ -872,16 +872,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/file/tests/src/Functional/FileUploadJsonCookieTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^@dataProvider dataProvider related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/Functional/Formatter/FileAudioFormatterTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^@dataProvider dataProvider related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/Functional/Formatter/FileVideoFormatterTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$unexpected in empty\\(\\) always exists and is not falsy\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/file/tests/src/Kernel/FileManagedUnitTestBase.php',
@@ -1110,16 +1100,6 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$resource_url on left side of \\?\\? always exists and is not nullable\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media/src/OEmbed/UrlResolver.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^@dataProvider providerTestValidations related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/src/FunctionalJavascript/MediaEmbedFilterConfigurationUiAddTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^@dataProvider providerTestValidations related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/src/FunctionalJavascript/MediaEmbedFilterConfigurationUiEditTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$jpg_image might not be defined\\.$#',
@@ -1597,11 +1577,6 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$parent might not be defined\\.$#',
 	'count' => 3,
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/Menu/BreadcrumbTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\system\\\\Functional\\\\Menu\\\\MenuAccessTest\\:\\:getStatus\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Menu/MenuAccessTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$test_meta in empty\\(\\) always exists and is not falsy\\.$#',
