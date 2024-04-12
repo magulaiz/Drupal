@@ -5,7 +5,6 @@ namespace Drupal\jsonapi_test_meta_events\EventSubscriber;
 use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\jsonapi\Events\CollectRelationshipMetaEvent;
 use Drupal\jsonapi\Events\CollectResourceObjectMetaEvent;
-use Drupal\jsonapi\Events\MetaDataEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -15,8 +14,8 @@ class MetaEventSubscriber implements EventSubscriberInterface {
 
   public static function getSubscribedEvents() {
     return [
-      MetaDataEvents::COLLECT_RESOURCE_OBJECT_META => 'addResourceObjectMeta',
-      MetaDataEvents::COLLECT_RELATIONSHIP_META => 'addRelationshipMeta',
+      CollectResourceObjectMetaEvent::class => 'addResourceObjectMeta',
+      CollectRelationshipMetaEvent::class => 'addRelationshipMeta',
     ];
   }
 

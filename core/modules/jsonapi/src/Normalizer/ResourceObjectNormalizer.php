@@ -7,7 +7,6 @@ use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\jsonapi\Events\CollectRelationshipMetaEvent;
 use Drupal\jsonapi\Events\CollectResourceObjectMetaEvent;
-use Drupal\jsonapi\Events\MetaDataEvents;
 use Drupal\jsonapi\EventSubscriber\ResourceObjectNormalizationCacher;
 use Drupal\jsonapi\JsonApiResource\Relationship;
 use Drupal\jsonapi\JsonApiResource\ResourceObject;
@@ -34,11 +33,9 @@ class ResourceObjectNormalizer extends NormalizerBase {
   protected $cacher;
 
   /**
-   * The event dispatcher.
-   *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   * @var mixed|\Symfony\Component\EventDispatcher\EventDispatcherInterface|null
    */
-  protected EventDispatcherInterface $eventDispatcher;
+  private EventDispatcherInterface $eventDispatcher;
 
   /**
    * Constructs a ResourceObjectNormalizer object.
@@ -48,13 +45,14 @@ class ResourceObjectNormalizer extends NormalizerBase {
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
    */
-  public function __construct(ResourceObjectNormalizationCacher $cacher, protected readonly ?EventDispatcherInterface $event_dispatcher = NULL) {
+  public function __construct(ResourceObjectNormalizationCacher $cacher, ?EventDispatcherInterface $event_dispatcher = NULL) {
     $this->cacher = $cacher;
 
-    if (!isset($event_dispatcher)) {
+    if ($event_dispatcher === NULL) {
       @trigger_error(__METHOD__ . '() without the $event_dispatcher argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3280569', E_USER_DEPRECATED);
-      $this->eventDispatcher = \Drupal::service('event_dispatcher');
+      $event_dispatcher = \Drupal::service('event_dispatcher');
     }
+    $this->eventDispatcher = $event_dispatcher;
   }
 
   /**
@@ -95,7 +93,7 @@ class ResourceObjectNormalizer extends NormalizerBase {
     $relationships = array_intersect_key($field_normalizations, array_flip($relationship_field_names));
 
     $event = new CollectResourceObjectMetaEvent($object, $context);
-    $this->eventDispatcher->dispatch($event, MetaDataEvents::COLLECT_RESOURCE_OBJECT_META);
+    $this->eventDispatcher->dispatch($event);
 
     $entity_normalization = array_filter(
       $normalization_parts[ResourceObjectNormalizationCacher::RESOURCE_CACHE_SUBSET_BASE] + [
@@ -200,7 +198,7 @@ class ResourceObjectNormalizer extends NormalizerBase {
 
         $resource_field_name = $resource_object->getResourceType()->getFieldByInternalName($field->getName())->getPublicName();
         $collect_meta_event = new CollectRelationshipMetaEvent($resource_object, $resource_field_name);
-        $this->eventDispatcher->dispatch($collect_meta_event, MetaDataEvents::COLLECT_RELATIONSHIP_META);
+        $this->eventDispatcher->dispatch($collect_meta_event);
         $relationship = Relationship::createFromEntityReferenceField(context: $resource_object, field: $field, meta: $collect_meta_event->getMeta());
         $normalized_field = $this->serializer->normalize($relationship, $format, $context);
         $normalized_field = $normalized_field->withCacheableDependency($collect_meta_event);

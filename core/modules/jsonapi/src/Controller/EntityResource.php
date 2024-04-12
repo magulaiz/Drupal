@@ -32,7 +32,6 @@ use Drupal\jsonapi\Context\FieldResolver;
 use Drupal\jsonapi\Entity\EntityValidationTrait;
 use Drupal\jsonapi\Access\TemporaryQueryGuard;
 use Drupal\jsonapi\Events\CollectRelationshipMetaEvent;
-use Drupal\jsonapi\Events\MetaDataEvents;
 use Drupal\jsonapi\Exception\EntityAccessDeniedHttpException;
 use Drupal\jsonapi\IncludeResolver;
 use Drupal\jsonapi\JsonApiResource\IncludedData;
@@ -189,7 +188,7 @@ class EntityResource {
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $field_manager, ResourceTypeRepositoryInterface $resource_type_repository, RendererInterface $renderer, EntityRepositoryInterface $entity_repository, IncludeResolver $include_resolver, EntityAccessChecker $entity_access_checker, FieldResolver $field_resolver, SerializerInterface $serializer, TimeInterface $time, AccountInterface $user, protected readonly ?EventDispatcherInterface $event_dispatcher = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $field_manager, ResourceTypeRepositoryInterface $resource_type_repository, RendererInterface $renderer, EntityRepositoryInterface $entity_repository, IncludeResolver $include_resolver, EntityAccessChecker $entity_access_checker, FieldResolver $field_resolver, SerializerInterface $serializer, TimeInterface $time, AccountInterface $user, ?EventDispatcherInterface $event_dispatcher = NULL) {
     $this->entityTypeManager = $entity_type_manager;
     $this->fieldManager = $field_manager;
     $this->resourceTypeRepository = $resource_type_repository;
@@ -204,8 +203,9 @@ class EntityResource {
 
     if (!isset($event_dispatcher)) {
       @trigger_error(__METHOD__ . '() without the $event_dispatcher argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3280569', E_USER_DEPRECATED);
-      $this->eventDispatcher = \Drupal::service('event_dispatcher');
+      $event_dispatcher = \Drupal::service('event_dispatcher');
     }
+    $this->eventDispatcher = $event_dispatcher;
   }
 
   /**
@@ -604,7 +604,7 @@ class EntityResource {
     $resource_object = ResourceObject::createFromEntity($resource_type, $entity);
 
     $collect_meta_event = new CollectRelationshipMetaEvent($resource_object, $related);
-    $this->eventDispatcher->dispatch($collect_meta_event, MetaDataEvents::COLLECT_RELATIONSHIP_META);
+    $this->eventDispatcher->dispatch($collect_meta_event);
 
     $relationship = Relationship::createFromEntityReferenceField(context: $resource_object, field: $field_list, meta: $collect_meta_event->getMeta());
     $response = $this->buildWrappedResponse($relationship, $request, $this->getIncludes($request, $resource_object), $response_code);
