@@ -58,8 +58,6 @@ class WorkspaceMerger implements WorkspaceMergerInterface {
    *   Database connection.
    * @param \Drupal\workspaces\WorkspaceAssociationInterface $workspace_association
    *   The workspace association service.
-   * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tags_invalidator
-   *   The cache tags invalidator service.
    * @param \Drupal\workspaces\WorkspaceInterface $source
    *   The source workspace.
    * @param \Drupal\workspaces\WorkspaceInterface $target
