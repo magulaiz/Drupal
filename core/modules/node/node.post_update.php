@@ -5,6 +5,8 @@
  * Post update functions for Node.
  */
 
+use Drupal\Core\Config\Entity\ConfigEntityUpdater;
+
 /**
  * Implements hook_removed_post_updates().
  */
@@ -16,4 +18,13 @@ function node_removed_post_updates() {
     'node_post_update_rebuild_node_revision_routes' => '10.0.0',
     'node_post_update_modify_base_field_author_override' => '10.0.0',
   ];
+}
+
+/**
+ * Add plural label variants to node-type entities.
+ */
+function node_post_update_plural_variants(array &$sandbox): void {
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'node_type', function (): bool {
+    return TRUE;
+  });
 }
