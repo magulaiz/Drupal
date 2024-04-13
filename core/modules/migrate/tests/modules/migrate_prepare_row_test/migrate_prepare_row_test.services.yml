@@ -1,0 +1,5 @@
+services:
+  migrate_prepare_row_test.skip_row:
+    class: Drupal\migrate_prepare_row_test\TestSkipRowSubscriber
+    tags:
+      - { name: event_subscriber }

@@ -3,6 +3,7 @@ services:
     class: Drupal\migrate\Plugin\PluginEventSubscriber
     tags:
       - { name: event_subscriber }
+    arguments: ['@module_handler']
   cache.migrate:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
