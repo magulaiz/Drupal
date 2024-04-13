@@ -121,6 +121,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
       '#derivative_plugin_id' => NULL,
       'content' => $block_content,
       '#in_preview' => FALSE,
+      '#id' => 'block_plugin_id',
     ];
 
     $expected_build_with_expected_cache = $expected_build + [
@@ -197,6 +198,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
       '#derivative_plugin_id' => NULL,
       'content' => $block_content,
       '#in_preview' => FALSE,
+      '#id' => 'block_plugin_id',
     ];
 
     $expected_cache = $expected_build + [
@@ -327,6 +329,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
         'data-layout-content-preview-placeholder-label' => $placeholder_label,
       ],
       '#in_preview' => TRUE,
+      '#id' => 'block_plugin_id',
     ];
 
     $expected_cache = $expected_build + [
@@ -388,6 +391,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
         'data-layout-content-preview-placeholder-label' => $placeholder_string,
       ],
       '#in_preview' => TRUE,
+      '#id' => 'block_plugin_id',
     ];
     $expected_build['content']['#markup'] = $placeholder_string;
 

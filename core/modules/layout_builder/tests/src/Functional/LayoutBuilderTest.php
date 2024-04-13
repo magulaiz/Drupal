@@ -657,6 +657,8 @@ class LayoutBuilderTest extends BrowserTestBase {
     // Assert that the blocks are visible, and save the layout.
     $assert_session->pageTextContains('Powered by Drupal');
     $assert_session->pageTextContains('My Menu');
+    $assert_session->elementExists('xpath', "//nav/h2[contains(@id, 'block-system-menu-block-my-menu')]");
+    $assert_session->elementExists('xpath', "//nav[contains(@aria-labelledby, 'block-system-menu-block-my-menu')]");
     $assert_session->elementExists('css', '.block.menu--my-menu');
     $page->pressButton('Save layout');
 
