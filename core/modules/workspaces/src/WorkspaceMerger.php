@@ -2,7 +2,6 @@
 
 namespace Drupal\workspaces;
 
-use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Utility\Error;
@@ -51,13 +50,6 @@ class WorkspaceMerger implements WorkspaceMergerInterface {
   protected $workspaceAssociation;
 
   /**
-   * The cache tag invalidator.
-   *
-   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
-   */
-  protected $cacheTagsInvalidator;
-
-  /**
    * Constructs a new WorkspaceMerger.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -75,11 +67,10 @@ class WorkspaceMerger implements WorkspaceMergerInterface {
    * @param \Psr\Log\LoggerInterface|null $logger
    *   The logger.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, Connection $database, WorkspaceAssociationInterface $workspace_association, CacheTagsInvalidatorInterface $cache_tags_invalidator, WorkspaceInterface $source, WorkspaceInterface $target, protected ?LoggerInterface $logger = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, Connection $database, WorkspaceAssociationInterface $workspace_association, WorkspaceInterface $source, WorkspaceInterface $target, protected ?LoggerInterface $logger = NULL) {
     $this->entityTypeManager = $entity_type_manager;
     $this->database = $database;
     $this->workspaceAssociation = $workspace_association;
-    $this->cacheTagsInvalidator = $cache_tags_invalidator;
     $this->sourceWorkspace = $source;
     $this->targetWorkspace = $target;
     if ($this->logger === NULL) {
