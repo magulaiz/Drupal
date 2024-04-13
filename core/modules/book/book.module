@@ -136,6 +136,9 @@ function book_node_links_alter(array &$links, NodeInterface $node, array &$conte
  */
 function book_form_node_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   $node = $form_state->getFormObject()->getEntity();
+  if (!book_type_is_allowed($node->getType())) {
+    return;
+  }
   $account = \Drupal::currentUser();
   $access = $account->hasPermission('administer book outlines');
   if (!$access) {
@@ -290,6 +293,9 @@ function book_node_predelete(EntityInterface $node) {
  * Implements hook_ENTITY_TYPE_prepare_form() for node entities.
  */
 function book_node_prepare_form(NodeInterface $node, $operation, FormStateInterface $form_state) {
+  if (!book_type_is_allowed($node->getType())) {
+    return;
+  }
   /** @var \Drupal\book\BookManagerInterface $book_manager */
   $book_manager = \Drupal::service('book.manager');
 
