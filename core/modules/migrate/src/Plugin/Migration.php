@@ -323,9 +323,6 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
     }
 
     $this->migration_dependencies = ($this->migration_dependencies ?: []) + ['required' => [], 'optional' => []];
-    if (count($this->migration_dependencies) !== 2 || !is_array($this->migration_dependencies['required']) || !is_array($this->migration_dependencies['optional'])) {
-      @trigger_error("Invalid migration dependencies for {$this->id()} is deprecated in drupal:10.1.0 and will cause an error in drupal:11.0.0. See https://www.drupal.org/node/3266691", E_USER_DEPRECATED);
-    }
   }
 
   /**
@@ -581,7 +578,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    * {@inheritdoc}
    */
   public function set($property_name, $value) {
-    if ($property_name == 'source') {
+    if ($property_name === 'source') {
       // Invalidate the source plugin.
       unset($this->sourcePlugin);
     }
@@ -591,9 +588,6 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
     }
     elseif ($property_name === 'migration_dependencies') {
       $value = ($value ?: []) + ['required' => [], 'optional' => []];
-      if (count($value) !== 2 || !is_array($value['required']) || !is_array($value['optional'])) {
-        @trigger_error("Invalid migration dependencies for {$this->id()} is deprecated in drupal:10.1.0 and will cause an error in drupal:11.0.0. See https://www.drupal.org/node/3266691", E_USER_DEPRECATED);
-      }
     }
     $this->{$property_name} = $value;
     return $this;
@@ -643,18 +637,12 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    * Get the dependencies for this migration.
    *
    * @param bool $expand
-   *   Will issue a deprecation in Drupal 10 if set to FALSE. See
-   *   https://www.drupal.org/node/3266691.
+   *   Set TRUE if migration dependencies need to be expanded, otherwise FALSE.
    *
    * @return array
-   *   The dependencies for this migrations.
+   *   The dependencies for this migration.
    */
   public function getMigrationDependencies(bool $expand = FALSE) {
-    if (!$expand) {
-      @trigger_error('Calling Migration::getMigrationDependencies() without expanding the plugin IDs is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. In most cases, use getMigrationDependencies(TRUE). See https://www.drupal.org/node/3266691', E_USER_DEPRECATED);
-    }
-    // @todo Before Drupal 11.0.0, remove ::set() and these checks.
-    // @see https://www.drupal.org/project/drupal/issues/3262395
     $this->migration_dependencies = ($this->migration_dependencies ?: []) + ['required' => [], 'optional' => []];
     if (count($this->migration_dependencies) !== 2 || !is_array($this->migration_dependencies['required']) || !is_array($this->migration_dependencies['optional'])) {
       throw new InvalidPluginDefinitionException($this->id(), "Invalid migration dependencies configuration for migration {$this->id()}");
