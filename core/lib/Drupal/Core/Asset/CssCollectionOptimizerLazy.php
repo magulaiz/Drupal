@@ -143,7 +143,9 @@ class CssCollectionOptimizerLazy implements AssetCollectionGroupOptimizerInterfa
    */
   public function deleteAll() {
     $this->state->delete('drupal_css_cache_files');
-    $this->fileSystem->deleteRecursive('assets://css');
+    if (is_dir('assets://css')) {
+      $this->fileSystem->deleteRecursive('assets://css');
+    }
   }
 
   /**
