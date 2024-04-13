@@ -21,6 +21,13 @@ use Drupal\Core\Render\Element;
 class Section implements ThirdPartySettingsInterface {
 
   /**
+   * The UUID of the section.
+   *
+   * @var string|null
+   */
+  protected $uuid;
+
+  /**
    * The layout plugin ID.
    *
    * @var string
@@ -40,6 +47,13 @@ class Section implements ThirdPartySettingsInterface {
    * @var \Drupal\layout_builder\SectionComponent[]
    */
   protected $components = [];
+
+  /**
+   * The weight of the section.
+   *
+   * @var int
+   */
+  protected $weight = 0;
 
   /**
    * Third party settings.
@@ -69,6 +83,25 @@ class Section implements ThirdPartySettingsInterface {
       $this->setComponent($component);
     }
     $this->thirdPartySettings = $third_party_settings;
+  }
+
+  /**
+   * Creates a new section and sets the UUID for it.
+   *
+   * @param string $layout_id
+   *   The layout plugin ID.
+   * @param array $layout_settings
+   *   (optional) The layout plugin settings.
+   * @param \Drupal\layout_builder\SectionComponent[] $components
+   *   (optional) The components.
+   * @param array[] $third_party_settings
+   *   (optional) Any third party settings.
+   *
+   * @return Section
+   *   The section.
+   */
+  public static function create($layout_id, array $layout_settings = [], array $components = [], array $third_party_settings = []) {
+    return (new Section($layout_id, $layout_settings, $components, $third_party_settings))->setUuid(\Drupal::service('uuid')->generate());
   }
 
   /**
@@ -167,6 +200,50 @@ class Section implements ThirdPartySettingsInterface {
    */
   public function getDefaultRegion() {
     return $this->layoutPluginManager()->getDefinition($this->getLayoutId())->getDefaultRegion();
+  }
+
+  /**
+   * Gets the UUID for this section.
+   *
+   * @return string
+   *   The UUID.
+   */
+  public function getUuid() {
+    return $this->uuid;
+  }
+
+  /**
+   * Sets the UUID for this section.
+   *
+   * @return Section
+   *   The UUID.
+   */
+  public function setUuid($uuid) {
+    $this->uuid = $uuid;
+    return $this;
+  }
+
+  /**
+   * Gets the weight for this section.
+   *
+   * @return int
+   *   The weight.
+   */
+  public function getWeight() {
+    return $this->weight;
+  }
+
+  /**
+   * Sets the weight for the section.
+   *
+   * @param int $weight
+   *   The zero-based weight of the section.
+   *
+   * @return $this
+   */
+  public function setWeight($weight) {
+    $this->weight = $weight;
+    return $this;
   }
 
   /**
@@ -354,11 +431,13 @@ class Section implements ThirdPartySettingsInterface {
    */
   public function toArray() {
     return [
+      'uuid' => $this->getUuid(),
       'layout_id' => $this->getLayoutId(),
       'layout_settings' => $this->getLayoutSettings(),
       'components' => array_map(function (SectionComponent $component) {
         return $component->toArray();
       }, $this->getComponents()),
+      'weight' => $this->getWeight(),
       'third_party_settings' => $this->thirdPartySettings,
     ];
   }
@@ -377,17 +456,19 @@ class Section implements ThirdPartySettingsInterface {
   public static function fromArray(array $section) {
     // Ensure expected array keys are present.
     $section += [
+      'uuid' => \Drupal::service('uuid')->generate(),
       'layout_id' => '',
       'layout_settings' => [],
       'components' => [],
+      'weight' => 0,
       'third_party_settings' => [],
     ];
-    return new static(
+    return (new static(
       $section['layout_id'],
       $section['layout_settings'],
       array_map([SectionComponent::class, 'fromArray'], $section['components']),
-      $section['third_party_settings']
-    );
+      $section['third_party_settings'],
+    ))->setWeight($section['weight'])->setUuid($section['uuid']);
   }
 
   /**

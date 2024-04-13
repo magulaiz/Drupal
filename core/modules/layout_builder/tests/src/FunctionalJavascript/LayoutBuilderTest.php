@@ -185,11 +185,13 @@ class LayoutBuilderTest extends WebDriverTestBase {
     // Ensure the dragged block is still in the correct position after reload.
     $this->drupalGet($layout_url);
     $assert_session->elementExists('css', '.layout__region--second .block-system-powered-by-block');
+    $assert_session->elementExists('css', '.layout__region--content .block-field-blocknodebundle-with-section-fieldbody');
     $assert_session->elementTextContains('css', '.layout__region--second', 'Powered by Drupal');
 
     // Ensure the dragged block is still in the correct position after save.
     $page->pressButton('Save layout');
     $assert_session->elementExists('css', '.layout__region--second .block-system-powered-by-block');
+    $assert_session->elementExists('css', '.layout__region--content .block-field-blocknodebundle-with-section-fieldbody');
     $assert_session->elementTextContains('css', '.layout__region--second', 'Powered by Drupal');
 
     // Reconfigure a block and ensure that the layout content is updated.

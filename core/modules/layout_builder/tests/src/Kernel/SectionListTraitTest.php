@@ -53,8 +53,8 @@ class TestSectionList implements SectionListInterface {
   public function __construct(array $sections) {
     // Loop through each section and reconstruct it to ensure that all default
     // values are present.
-    foreach ($sections as $section) {
-      $this->sections[] = Section::fromArray($section->toArray());
+    foreach (array_values($sections) as $weight => $section) {
+      $this->sections[$section->getUuid()] = (Section::fromArray($section->toArray()))->setWeight($weight);
     }
   }
 
@@ -62,15 +62,28 @@ class TestSectionList implements SectionListInterface {
    * {@inheritdoc}
    */
   protected function setSections(array $sections) {
-    $this->sections = array_values($sections);
-    return $sections;
+    $this->sections = [];
+    foreach (array_values($sections) as $weight => $section) {
+      $this->sections[$section->getUuid()] = $section->setWeight($weight);
+    }
+    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getSections() {
-    return $this->sections;
+  public function getSections(bool $key_by_uuid = FALSE) {
+    $sections = $this->sections;
+    if ($key_by_uuid) {
+      return $sections;
+    }
+    else {
+      $sections_numerically_keyed = [];
+      foreach ($sections as $section) {
+        $sections_numerically_keyed[$section->getWeight()] = $section;
+      }
+      return $sections_numerically_keyed;
+    }
   }
 
 }

@@ -265,10 +265,10 @@ class ConfigureSectionForm extends FormBase {
   public function getCurrentSection(): Section {
     if (!isset($this->section)) {
       if ($this->isUpdate) {
-        $this->section = $this->sectionStorage->getSection($this->delta);
+        $this->section = $this->sectionStorage->getSections()[$this->delta];
       }
       else {
-        $this->section = new Section($this->pluginId);
+        $this->section = Section::create($this->pluginId);
       }
     }
 

@@ -19,15 +19,15 @@ class TestStateBasedSectionStorage extends SectionStorageBase {
   /**
    * {@inheritdoc}
    */
-  public function getSections() {
+  public function getSections(bool $key_by_uuid = FALSE) {
     // Return a custom section.
-    $section = new Section('layout_onecol');
+    $section = (Section::create('layout_onecol'))->setWeight(0);
     $section->appendComponent(new SectionComponent('fake-uuid', 'content', [
       'id' => 'system_powered_by_block',
       'label' => 'Test block title',
       'label_display' => 'visible',
     ]));
-    return [$section];
+    return $key_by_uuid ? [$section->getUuid() => $section] : [$section];
   }
 
   /**

@@ -63,7 +63,7 @@ class MoveBlockController implements ContainerInjectionInterface {
    *   An AJAX response.
    */
   public function build(SectionStorageInterface $section_storage, int $delta_from, int $delta_to, $region_to, $block_uuid, $preceding_block_uuid = NULL) {
-    $section = $section_storage->getSection($delta_from);
+    $section = $section_storage->getSections()[$delta_from];
 
     $component = $section->getComponent($block_uuid);
     $section->removeComponent($block_uuid);
@@ -71,7 +71,7 @@ class MoveBlockController implements ContainerInjectionInterface {
     // If the block is moving from one section to another, update the original
     // section and load the new one.
     if ($delta_from !== $delta_to) {
-      $section = $section_storage->getSection($delta_to);
+      $section = $section_storage->getSections()[$delta_to];
     }
 
     // If a preceding block was specified, insert after that. Otherwise add the

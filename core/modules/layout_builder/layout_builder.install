@@ -25,7 +25,7 @@ function layout_builder_install() {
       $field_layout += ['settings' => []];
       $display
         ->enableLayoutBuilder()
-        ->appendSection(new Section($field_layout['id'], $field_layout['settings']))
+        ->appendSection(Section::create($field_layout['id'], $field_layout['settings']))
         ->save();
       $display_changed = TRUE;
     }

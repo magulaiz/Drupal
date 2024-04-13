@@ -32,10 +32,10 @@ class LayoutSectionItemList extends FieldItemList implements SectionListInterfac
   /**
    * {@inheritdoc}
    */
-  public function getSections() {
+  public function getSections(bool $key_by_uuid = FALSE) {
     $sections = [];
-    foreach ($this->list as $delta => $item) {
-      $sections[$delta] = $item->section;
+    foreach ($this->list as $item) {
+      $sections[$key_by_uuid ? $item->section->getUuid() : $item->section->getWeight()] = $item->section;
     }
     return $sections;
   }
@@ -45,11 +45,13 @@ class LayoutSectionItemList extends FieldItemList implements SectionListInterfac
    */
   protected function setSections(array $sections) {
     $this->list = [];
-    $sections = array_values($sections);
-    /** @var \Drupal\layout_builder\Plugin\Field\FieldType\LayoutSectionItem $item */
-    foreach ($sections as $section) {
+    /**
+     * @var \Drupal\layout_builder\Section $section
+     * @var \Drupal\layout_builder\Plugin\Field\FieldType\LayoutSectionItem $item
+     */
+    foreach (array_values($sections) as $weight => $section) {
       $item = $this->appendItem();
-      $item->section = $section;
+      $item->section = $section->setWeight($weight);
     }
 
     return $this;

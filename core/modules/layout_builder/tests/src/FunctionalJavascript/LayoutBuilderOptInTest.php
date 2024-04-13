@@ -177,7 +177,7 @@ class LayoutBuilderOptInTest extends WebDriverTestBase {
     /** @var \Drupal\layout_builder\Entity\LayoutEntityDisplayInterface $display */
     $display = $this->container->get('entity_type.manager')->getStorage('entity_view_display')->load("$entity_type_id.$bundle.$view_mode");
     $body_component = NULL;
-    foreach ($display->getSection($delta)->getComponents() as $component) {
+    foreach ($display->getSections()[$delta]->getComponents() as $component) {
       if ($component->getPluginId() === "field_block:$entity_type_id:$bundle:$field_name") {
         $body_component = $component;
       }

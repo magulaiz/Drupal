@@ -227,7 +227,7 @@ class LayoutEntityHelperTraitTest extends KernelTestBase {
     $section_storage_manager->load('')->willReturn(NULL);
     $section_storage = $this->prophesize(SectionStorageInterface::class);
     $sections = [
-      new Section('layout_onecol'),
+      'first-section-uuid' => Section::create('layout_onecol'),
     ];
     $this->assertCount(1, $sections);
     $section_storage->getSections()->willReturn($sections);
