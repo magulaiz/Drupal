@@ -516,7 +516,7 @@ interface FormStateInterface {
    *   element is array('foo', 'bar', 'baz') then you may set an error on 'foo'
    *   or 'foo][bar][baz'. Setting an error on 'foo' sets an error for every
    *   element where the #parents array starts with 'foo'.
-   * @param string $message
+   * @param string|\Stringable $message
    *   (optional) The error message to present to the user.
    *
    * @return $this
@@ -528,7 +528,7 @@ interface FormStateInterface {
    *
    * @param array $element
    *   The form element.
-   * @param string $message
+   * @param string|\Stringable $message
    *   (optional) The error message to present to the user.
    *
    * @return $this
