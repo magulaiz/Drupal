@@ -1260,7 +1260,7 @@ function variable_initialize($conf = array()) {
         $value = @unserialize($db_value);
         // If unserialize() returned FALSE and the stored value is NOT FALSE,
         // list it in the report.
-        if ($value === FALSE && $db_value != $serialized_false && !isset($conf[$name])) {
+        if ($value === FALSE && $db_value != $serialized_false) {
           $err_variables[] = $name;
         }
         $variables[$name] = $value;
