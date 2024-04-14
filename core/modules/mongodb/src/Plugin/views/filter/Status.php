@@ -30,7 +30,12 @@ class Status extends CoreStatus {
     $or_condition->condition($and_condition);
     $or_condition->condition($field_status, TRUE);
     $or_condition->condition('***BYPASS_NODE_ACCESS***', 1);
+    if ($this->moduleHandler->moduleExists('content_moderation')) {
+      $or_condition->condition('***VIEW_ANY_UNPUBLISHED_NODES***', 1);
+    }
 
+//dump('$or_condition');
+//dump($or_condition);
     $this->query->addCondition($this->options['group'], $or_condition);
   }
 

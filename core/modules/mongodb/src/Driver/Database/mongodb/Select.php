@@ -1475,8 +1475,10 @@ class Select extends QuerySelect {
           );
           $this->connection->dispatchEvent($startEvent);
         }
-//dump('$pipeline');
-//dump($pipeline);
+//if ($this->mongodbBaseTable == 'node') {
+//  dump('$pipeline');
+//  dump($pipeline);
+//}
         $cursor = $this->connection->getConnection()->{$prefixed_table}->aggregate(
           $pipeline,
           [
@@ -1878,6 +1880,7 @@ class Select extends QuerySelect {
 //            $left_table_alias = $table['alias'];
 //          }
 //        }
+//      }
 //      }
 
 //      $lookup_conditions = [];

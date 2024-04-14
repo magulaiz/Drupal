@@ -3,6 +3,7 @@
 namespace Drupal\Tests\rest\Functional\Views;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Database\Database;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -169,6 +170,7 @@ class StyleSerializerTest extends ViewTestBase {
    * Tests the "Grouped rows" functionality.
    */
   public function testGroupRows() {
+    $connection = Database::getConnection();
     $this->drupalCreateContentType(['type' => 'page']);
     // Create a text field with cardinality set to unlimited.
     $field_name = 'field_group_rows';
@@ -198,7 +200,7 @@ class StyleSerializerTest extends ViewTestBase {
     $fields = [
       $field_name => [
         'id' => $field_name,
-        'table' => 'node__' . $field_name,
+        'table' => ($connection->driver() == 'mongodb' ? 'node' : 'node__' . $field_name),
         'field' => $field_name,
         'type' => 'string',
         'group_rows' => TRUE,
@@ -220,8 +222,13 @@ class StyleSerializerTest extends ViewTestBase {
     $build = $view->preview();
     // Check if the field_group_rows field is ungrouped and displayed per row.
     $expected = [];
-    foreach ($grouped_field_values as $grouped_field_value) {
-      $expected[] = [$field_name => $grouped_field_value];
+    if ($connection->driver() == 'mongodb') {
+      $expected[] = [$field_name => implode(', ', $grouped_field_values)];
+    }
+    else {
+      foreach ($grouped_field_values as $grouped_field_value) {
+        $expected[] = [$field_name => $grouped_field_value];
+      }
     }
     $this->assertEquals($serializer->serialize($expected, 'json'), (string) $this->renderer->renderRoot($build));
   }

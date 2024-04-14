@@ -135,7 +135,7 @@ class StatisticsAdminTest extends BrowserTestBase {
     $connection = Database::getConnection();
     $result = $connection->select('node_counter', 'n')
       ->fields('n', ['nid'])
-      ->condition('n.nid', $this->testNode->id())
+      ->condition('n.nid', (int) $this->testNode->id())
       ->execute()
       ->fetchAssoc();
     $this->assertEquals($result['nid'], $this->testNode->id(), 'Verifying that the node counter is incremented.');
@@ -144,7 +144,7 @@ class StatisticsAdminTest extends BrowserTestBase {
 
     $result = $connection->select('node_counter', 'n')
       ->fields('n', ['nid'])
-      ->condition('n.nid', $this->testNode->id())
+      ->condition('n.nid', (int) $this->testNode->id())
       ->execute()
       ->fetchAssoc();
     $this->assertFalse($result, 'Verifying that the node counter is deleted.');

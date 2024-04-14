@@ -2769,7 +2769,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           }
           else {
             $this->database->getConnection()->{$prefixed_table}->updateMany(
-              ["$embedded_to_table.$dedicated_table" => ['$exists' => TRUE]],
+              ["$embedded_to_table.$[].$dedicated_table" => ['$exists' => TRUE]],
               ['$set' => ["$embedded_to_table.$[].$dedicated_table.$[].deleted" => TRUE]],
               ['session' => $this->database->getMongodbSession()],
             );

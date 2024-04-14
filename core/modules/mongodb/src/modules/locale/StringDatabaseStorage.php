@@ -73,6 +73,29 @@ class StringDatabaseStorage extends CoreStringDatabaseStorage {
   /**
    * {@inheritdoc}
    */
+  public function getLocations(array $conditions = []) {
+    $query = $this->connection->select('locales_location', 'l', $this->options)
+      ->fields('l');
+    foreach ($conditions as $field => $values) {
+      if (is_array($values)) {
+        foreach ($values as &$value) {
+          if (in_array($field, ['lid', 'sid'], TRUE)) {
+            $value = (int) $value;
+          }
+        }
+      }
+      elseif (in_array($field, ['lid', 'sid'], TRUE)) {
+        $values = (int) $values;
+      }
+      // Cast scalars to array so we can consistently use an IN condition.
+      $query->condition($field, (array) $values, 'IN');
+    }
+    return $query->execute()->fetchAll();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function countStrings() {
     $result = $this->connection->select('locales_source', 'l')
       ->fields('l', ['lid'])

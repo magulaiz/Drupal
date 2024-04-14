@@ -83,7 +83,38 @@ class AssignOwnerNode extends ConfigurableActionBase implements ContainerFactory
     // Use dropdown for fewer than 200 users; textbox for more than that.
     if (intval($count) < 200) {
       $options = [];
-      $result = $this->connection->query("SELECT [uid], [name] FROM {users_field_data} WHERE [uid] > 0 AND [default_langcode] = 1 ORDER BY [name]");
+      if ($this->connection->driver() == 'mongodb') {
+        $rows = $this->connection->select('users')
+          ->fields('users', ['user_translations'])
+          ->condition('uid', 0, '>')
+          ->execute()
+          ->fetchAll();
+        $result_unsorted = [];
+        foreach ($rows as $row) {
+          foreach ($row as $user_translations) {
+            foreach ($user_translations as $user_translation) {
+              if (isset($user_translation['uid']) && isset($user_translation['name']) && isset($user_translation['default_langcode']) && ($user_translation['default_langcode'] === TRUE)) {
+                $uid = $user_translation['uid'];
+                $name = $user_translation['name'];
+                $result_unsorted[$uid] = $name;
+              }
+            }
+          }
+        }
+        // Sort the users.
+        ksort($result_unsorted);
+
+        $result = [];
+        foreach ($result_unsorted as $key => $value) {
+          $result[] = (object) [
+            'uid' => $key,
+            'name' => $value,
+          ];
+        }
+      }
+      else {
+        $result = $this->connection->query("SELECT [uid], [name] FROM {users_field_data} WHERE [uid] > 0 AND [default_langcode] = 1 ORDER BY [name]");
+      }
       foreach ($result as $data) {
         $options[$data->uid] = $data->name;
       }
@@ -118,7 +149,23 @@ class AssignOwnerNode extends ConfigurableActionBase implements ContainerFactory
    * {@inheritdoc}
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $exists = (bool) $this->connection->queryRange('SELECT 1 FROM {users_field_data} WHERE [uid] = :uid AND [default_langcode] = 1', 0, 1, [':uid' => $form_state->getValue('owner_uid')])->fetchField();
+    if ($this->connection->driver() == 'mongodb') {
+      $user_translations = $this->connection->select('users')
+        ->fields('users', ['user_translations'])
+        ->condition('uid', (int) $form_state->getValue('owner_uid'))
+        ->execute()
+        ->fetchField();
+
+      $exists = FALSE;
+      foreach ($user_translations as $user_translation) {
+        if (isset($user_translation['default_langcode']) && ($user_translation['default_langcode'] === TRUE)) {
+          $exists = TRUE;
+        }
+      }
+    }
+    else {
+      $exists = (bool) $this->connection->queryRange('SELECT 1 FROM {users_field_data} WHERE [uid] = :uid AND [default_langcode] = 1', 0, 1, [':uid' => $form_state->getValue('owner_uid')])->fetchField();
+    }
     if (!$exists) {
       $form_state->setErrorByName('owner_uid', $this->t('Enter a valid username.'));
     }

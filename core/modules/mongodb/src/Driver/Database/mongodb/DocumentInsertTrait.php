@@ -182,7 +182,7 @@ trait DocumentInsertTrait {
 
     if ($boolean_fields = $this->tableInformation->getTableBooleanFields($table)) {
       foreach ($boolean_fields as $boolean_field) {
-        // The array value must exists or an undefined index exception will be
+        // The array value must exist or an undefined index exception will be
         // thrown.
         if (!isset($insert_document[$boolean_field])) {
           $insert_document[$boolean_field] = NULL;
@@ -194,12 +194,23 @@ trait DocumentInsertTrait {
     // Change the big integer/LONG fields value in something that MongoDB can save.
     if ($long_fields = $this->tableInformation->getTableLongFields($table)) {
       foreach ($long_fields as $long_field) {
-        // The array value must exists or an undefined index exception will be
-        // thrown.
-        if (!isset($insert_document[$long_field])) {
+        if (!isset($insert_document[$long_field]) || is_null($insert_document[$long_field])) {
+          $long_field_data = $this->tableInformation->getTableField($table, $long_field);
+          if (isset($long_field_data['not null']) && $long_field_data['not null']) {
+            // If a field has the value NULL and the field setting not null,
+            // then give the field the value zero.
+            // TODO Use the $long_field_data['default'] value. Not zero!
+            $insert_document[$long_field] = 0;
+          }
+        }
+        elseif (!isset($insert_document[$long_field])) {
+          // The array value must exist or an undefined index exception will be
+          // thrown.
           $insert_document[$long_field] = NULL;
         }
-        $insert_document[$long_field] = (int) $insert_document[$long_field];
+        else {
+          $insert_document[$long_field] = (int) $insert_document[$long_field];
+        }
       }
     }
 
@@ -209,12 +220,16 @@ trait DocumentInsertTrait {
       foreach ($integer_fields as $integer_field) {
         if (!isset($insert_document[$integer_field]) || is_null($insert_document[$integer_field])) {
           $integer_field_data = $this->tableInformation->getTableField($table, $integer_field);
-
-          if (!empty($integer_field_data['not null'])) {
+          if (isset($integer_field_data['not null']) && $integer_field_data['not null']) {
             // If a field has the value NULL and the field setting not null,
             // then give the field the value zero.
             // TODO Use the $integer_field_data['default'] value. Not zero!
             $insert_document[$integer_field] = 0;
+          }
+          else {
+            // The array value must exist or an undefined index exception will be
+            // thrown.
+            $insert_document[$integer_field] = NULL;
           }
         }
 

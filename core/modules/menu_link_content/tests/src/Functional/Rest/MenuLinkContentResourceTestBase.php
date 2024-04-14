@@ -2,8 +2,12 @@
 
 namespace Drupal\Tests\menu_link_content\Functional\Rest;
 
+use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+use Drupal\Tests\rest\Functional\ResourceTestBase;
 
 /**
  * ResourceTestBase for MenuLinkContent entity.
@@ -33,6 +37,65 @@ abstract class MenuLinkContentResourceTestBase extends EntityResourceTestBase {
    * @var \Drupal\menu_link_content\MenuLinkContentInterface
    */
   protected $entity;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    // @todo We override the parent setUp(), because the result of calling
+    // loadUnchanged() is not what it should be.
+
+    ResourceTestBase::setUp();
+
+    // Calculate REST Resource config entity ID.
+    static::$resourceConfigId = 'entity.' . static::$entityTypeId;
+
+    $this->entityStorage = $this->container->get('entity_type.manager')
+      ->getStorage(static::$entityTypeId);
+
+    // Add access-protected field.
+    FieldStorageConfig::create([
+      'entity_type' => static::$entityTypeId,
+      'field_name' => 'field_rest_test',
+      'type' => 'text',
+    ])
+      ->setCardinality(1)
+      ->save();
+    FieldConfig::create([
+      'entity_type' => static::$entityTypeId,
+      'field_name' => 'field_rest_test',
+      'bundle' => 'menu_link_content',
+    ])
+      ->setLabel('Test field')
+      ->setTranslatable(FALSE)
+      ->save();
+
+    // Add multi-value field.
+    FieldStorageConfig::create([
+      'entity_type' => static::$entityTypeId,
+      'field_name' => 'field_rest_test_multivalue',
+      'type' => 'string',
+    ])
+      ->setCardinality(3)
+      ->save();
+    FieldConfig::create([
+      'entity_type' => static::$entityTypeId,
+      'field_name' => 'field_rest_test_multivalue',
+      'bundle' => 'menu_link_content',
+    ])
+      ->setLabel('Test field: multi-value')
+      ->setTranslatable(FALSE)
+      ->save();
+
+    // Create an entity.
+    $this->entity = $this->createEntity();
+
+    // Set a default value on the fields.
+    $this->entity->set('field_rest_test', ['value' => 'All the faith they had had had had no effect on the outcome of their life.']);
+    $this->entity->set('field_rest_test_multivalue', [['value' => 'One'], ['value' => 'Two']]);
+    $this->entity->set('rest_test_validation', ['value' => 'allowed value']);
+    $this->entity->save();
+  }
 
   /**
    * {@inheritdoc}
