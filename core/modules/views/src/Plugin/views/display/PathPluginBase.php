@@ -144,6 +144,8 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     $total_arguments = count($argument_ids);
 
     $argument_map = [];
+    $parameters = [];
+    $argument_stack = $this->getHandlers('argument');
 
     $bits = [];
     if (is_string($path)) {
@@ -165,6 +167,13 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
           $arg_id = 'arg_' . $arg_counter++;
           $argument_map[$arg_id] = $parameter_name;
           $bits[$pos] = '{' . $parameter_name . '}';
+          /** @var \Drupal\views\Plugin\views\argument\ArgumentPluginBase $argument */
+          if (($argument = array_shift($argument_stack)) && $context_definition = $argument->getContextDefinition()) {
+            $type = $context_definition->getDataType();
+            if (strpos($type, 'entity:') === 0) {
+              $parameters[$parameter_name]['type'] = $type;
+            }
+          }
         }
       }
     }
@@ -191,6 +200,11 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     $route_path = '/' . implode('/', $bits);
 
     $route = new Route($route_path, $defaults);
+
+    // Set type for named parameters.
+    if ($parameters) {
+      $route->setOption('parameters', $parameters);
+    }
 
     // Add access check parameters to the route.
     $access_plugin = $this->getPlugin('access');
