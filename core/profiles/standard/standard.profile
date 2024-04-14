@@ -14,7 +14,7 @@ use Drupal\standard\Form\StandardProfileFormCallbacks;
  * Allows the profile to alter the site configuration form.
  */
 function standard_form_install_configure_form_alter(&$form, FormStateInterface $form_state) {
-  $form['#submit'][] = [StandardProfileFormCallbacks::class, 'submitFormSubmitted'];
+  $form['#submit'][] = [StandardProfileFormCallbacks::class, 'installConfigureSubmit'];
 }
 
 /**
