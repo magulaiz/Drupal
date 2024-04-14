@@ -53,10 +53,6 @@ class ToolkitSetupFormTest extends BrowserTestBase {
     // Test that default toolkit is GD.
     $this->assertSession()->fieldValueEquals('image_toolkit', 'gd');
 
-    // @todo Remove these lines after https://drupal.org/i/3427564.
-    $this->config('system.image')->set('langcode', 'en')->save();
-    $this->config('system.image.gd')->set('langcode', 'en')->save();
-
     // Test changing the jpeg image quality.
     $edit = ['gd[image_jpeg_quality]' => '70'];
     $this->submitForm($edit, 'Save configuration');

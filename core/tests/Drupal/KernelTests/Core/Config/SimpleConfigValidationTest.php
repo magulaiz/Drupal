@@ -163,9 +163,7 @@ class SimpleConfigValidationTest extends KernelTestBase {
    *   ["system.image", "toolkit"]
    */
   public function testInvalidPluginId(string $config_name, string $property): void {
-    $config = $this->config($config_name)
-      // @todo Remove this line after https://drupal.org/i/3427564.
-      ->set('langcode', 'en');
+    $config = $this->config($config_name);
 
     $violations = $this->container->get('config.typed')
       ->createFromNameAndData($config_name, $config->set($property, 'non_existent')->get())
