@@ -10,6 +10,7 @@ use Drupal\Component\Utility\Environment;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -138,7 +139,7 @@ class CKEditor5ImageController extends ControllerBase {
     $validators = $this->getImageUploadValidators($settings);
 
     $file_uri = "{$destination}/{$filename}";
-    $file_uri = $this->fileSystem->getDestinationFilename($file_uri, FileSystemInterface::EXISTS_RENAME);
+    $file_uri = $this->fileSystem->getDestinationFilename($file_uri, FileExists::Rename);
 
     // Lock based on the prepared file URI.
     $lock_id = $this->generateLockIdFromFileUri($file_uri);
@@ -149,7 +150,7 @@ class CKEditor5ImageController extends ControllerBase {
 
     try {
       $uploadedFile = new FormUploadedFile($upload);
-      $uploadResult = $this->fileUploadHandler->handleFileUpload($uploadedFile, $validators, $destination, FileSystemInterface::EXISTS_RENAME, FALSE);
+      $uploadResult = $this->fileUploadHandler->handleFileUpload($uploadedFile, $validators, $destination, FileExists::Rename, FALSE);
       if ($uploadResult->hasViolations()) {
         throw new UnprocessableEntityHttpException((string) $uploadResult->getViolations());
       }
@@ -175,7 +176,9 @@ class CKEditor5ImageController extends ControllerBase {
    * Gets the image upload validators.
    */
   protected function getImageUploadValidators(array $settings): array {
-    $max_filesize = min(Bytes::toNumber($settings['max_size']), Environment::getUploadMaxSize());
+    $max_filesize = $settings['max_size']
+      ? Bytes::toNumber($settings['max_size'])
+      : Environment::getUploadMaxSize();
     $max_dimensions = 0;
     if (!empty($settings['max_dimensions']['width']) || !empty($settings['max_dimensions']['height'])) {
       $max_dimensions = $settings['max_dimensions']['width'] . 'x' . $settings['max_dimensions']['height'];

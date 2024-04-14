@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\shortcut\Functional;
 
 use Drupal\block_content\Entity\BlockContentType;
@@ -28,6 +30,14 @@ class ShortcutLinksTest extends ShortcutTestBase {
    * @var array
    */
   protected static $modules = ['router_test', 'views', 'block'];
+
+  /**
+   * {@inheritdoc}
+   *
+   * @todo Remove and fix test to not rely on super user.
+   * @see https://www.drupal.org/project/drupal/issues/3437620
+   */
+  protected bool $usesSuperUserAccessPolicy = TRUE;
 
   /**
    * {@inheritdoc}

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Plugin\field;
 
-use Drupal\Core\GeneratedUrl;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\GeneratedUrl;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Url;
@@ -15,11 +15,11 @@ use Drupal\Core\Utility\UnroutedUrlAssembler;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
+use Prophecy\Prophet;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Route;
-use Prophecy\Prophet;
 
 /**
  * @coversDefaultClass \Drupal\views\Plugin\views\field\FieldPluginBase
@@ -271,7 +271,7 @@ class FieldPluginBaseTest extends UnitTestCase {
    * @return array
    *   Test data.
    */
-  public function providerTestRenderTrimmedWithMoreLinkAndPath() {
+  public static function providerTestRenderTrimmedWithMoreLinkAndPath() {
     $data = [];
     // Simple path with default options.
     $data[] = ['test-path', '/test-path'];
@@ -548,7 +548,7 @@ class FieldPluginBaseTest extends UnitTestCase {
     ];
 
     $this->renderer->expects($this->once())
-      ->method('renderPlain')
+      ->method('renderInIsolation')
       ->with($build)
       ->willReturn('base:test-path/123');
 
@@ -562,7 +562,7 @@ class FieldPluginBaseTest extends UnitTestCase {
    * @return array
    *   Test data.
    */
-  public function providerTestRenderAsLinkWithPathAndTokens() {
+  public static function providerTestRenderAsLinkWithPathAndTokens() {
     $tokens = ['{{ foo }}' => 123];
     $link_html = '<a href="/test-path/123">value</a>';
 
@@ -612,7 +612,7 @@ class FieldPluginBaseTest extends UnitTestCase {
     ];
 
     $this->renderer->expects($this->once())
-      ->method('renderPlain')
+      ->method('renderInIsolation')
       ->with($build)
       ->willReturn($context['context_path']);
 
@@ -626,7 +626,7 @@ class FieldPluginBaseTest extends UnitTestCase {
    * @return array
    *   Test data.
    */
-  public function providerTestRenderAsExternalLinkWithPathAndTokens() {
+  public static function providerTestRenderAsExternalLinkWithPathAndTokens() {
     $data = [];
 
     $data[] = ['{{ foo }}', ['{{ foo }}' => 'http://www.example.com'], '<a href="http://www.example.com">value</a>', ['context_path' => 'http://www.example.com']];
@@ -640,18 +640,13 @@ class FieldPluginBaseTest extends UnitTestCase {
   /**
    * Sets up a test field.
    *
-   * @return \Drupal\Tests\views\Unit\Plugin\field\FieldPluginBaseTestField|\PHPUnit\Framework\MockObject\MockObject
+   * @return \Drupal\Tests\views\Unit\Plugin\field\FieldPluginBaseTestField
    *   The test field.
    */
   protected function setupTestField(array $options = []) {
-    /** @var \Drupal\Tests\views\Unit\Plugin\field\FieldPluginBaseTestField $field */
-    $field = $this->getMockBuilder('Drupal\Tests\views\Unit\Plugin\field\FieldPluginBaseTestField')
-      ->addMethods(['l'])
-      ->setConstructorArgs([$this->configuration, $this->pluginId, $this->pluginDefinition])
-      ->getMock();
+    $field = new FieldPluginBaseTestField($this->configuration, $this->pluginId, $this->pluginDefinition);
     $field->init($this->executable, $this->display, $options);
     $field->setLinkGenerator($this->linkGenerator);
-
     return $field;
   }
 
@@ -745,7 +740,7 @@ class FieldPluginBaseTest extends UnitTestCase {
    * @return array
    *   Test data.
    */
-  public function providerTestGetRenderTokensWithQuery(): array {
+  public static function providerTestGetRenderTokensWithQuery(): array {
     $data = [];
     // No query parameters.
     $data[] = [
@@ -846,7 +841,7 @@ class FieldPluginBaseTest extends UnitTestCase {
     // being tested correctly handles tokens when generating the element's class
     // attribute.
     $this->renderer->expects($this->any())
-      ->method('renderPlain')
+      ->method('renderInIsolation')
       ->with($build)
       ->willReturn($expected_result);
 
