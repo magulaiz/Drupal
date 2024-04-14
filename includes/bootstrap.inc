@@ -1244,8 +1244,8 @@ function variable_initialize($conf = array()) {
   else {
     // Cache miss. Avoid a stampede by acquiring a lock. If the lock fails to
     // acquire, optionally just continue with uncached processing.
-    $name = 'variable_init';
-    $lock_acquired = lock_acquire($name, 1);
+    $lock_name = 'variable_init';
+    $lock_acquired = lock_acquire($lock_name, 1);
     if (!$lock_acquired && variable_get('variable_initialize_wait_for_lock', FALSE)) {
       lock_wait($name);
       return variable_initialize($conf);
@@ -1268,15 +1268,15 @@ function variable_initialize($conf = array()) {
 
       if (count($err_variables)) {
         if ($lock_acquired) {
-          lock_release($name);
+          lock_release($lock_name);
         }
 
-        throw new Exception("The %s variable(s) are unreadable and need to be fixed.", join (", ", $err_variables));
+        throw new Exception(sprintf("The %s variable(s) are unreadable and need to be fixed.", join (", ", $err_variables)));
       }
 
       if ($lock_acquired) {
         cache_set('variables', $variables, 'cache_bootstrap');
-        lock_release($name);
+        lock_release($lock_name);
       }
     }
   }
