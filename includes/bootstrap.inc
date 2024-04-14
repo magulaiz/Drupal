@@ -1247,7 +1247,7 @@ function variable_initialize($conf = array()) {
     $lock_name = 'variable_init';
     $lock_acquired = lock_acquire($lock_name, 1);
     if (!$lock_acquired && variable_get('variable_initialize_wait_for_lock', FALSE)) {
-      lock_wait($name);
+      lock_wait($lock_name);
       return variable_initialize($conf);
     }
     else {
