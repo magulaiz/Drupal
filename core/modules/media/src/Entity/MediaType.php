@@ -25,9 +25,11 @@ use Drupal\user\Entity\EntityPermissionsRouteProvider;
   label_collection: new TranslatableMarkup('Media types'),
   label_singular: new TranslatableMarkup('media type'),
   label_plural: new TranslatableMarkup('media types'),
-  label_count: [
-    'singular' => '@cogunt media type',
-    'plural' => '@count media types',
+  config_prefix: 'type',
+  entity_keys: [
+    'id' => 'id',
+    'label' => 'label',
+    'status' => 'status',
   ],
   handlers: [
     'access' => MediaTypeAccessControlHandler::class,
@@ -42,13 +44,25 @@ use Drupal\user\Entity\EntityPermissionsRouteProvider;
       'permissions' => EntityPermissionsRouteProvider::class,
     ],
   ],
+  links: [
+    'add-form' => '/admin/structure/media/add',
+    'edit-form' => '/admin/structure/media/manage/{media_type}',
+    'delete-form' => '/admin/structure/media/manage/{media_type}/delete',
+    'entity-permissions-form' => '/admin/structure/media/manage/{media_type}/permissions',
+    'collection' => '/admin/structure/media',
+  ],
   admin_permission: 'administer media types',
-  config_prefix: 'type',
   bundle_of: 'media',
-  entity_keys: [
-    'id' => 'id',
-    'label' => 'label',
-    'status' => 'status',
+  label_count: [
+    'singular' => '@count media type',
+    'plural' => '@count media types',
+  ],
+  constraints: [
+    'ImmutableProperties' => [
+      'id',
+      'source',
+    ],
+    'MediaMappingsConstraint' => [],
   ],
   config_export: [
     'id',
@@ -60,17 +74,6 @@ use Drupal\user\Entity\EntityPermissionsRouteProvider;
     'source_configuration',
     'field_map',
     'status',
-  ],
-  links: [
-    'add-form' => '/admin/structure/media/add',
-    'edit-form' => '/admin/structure/media/manage/{media_type}',
-    'delete-form' => '/admin/structure/media/manage/{media_type}/delete',
-    'entity-permissions-form' => '/admin/structure/media/manage/{media_type}/permissions',
-    'collection' => '/admin/structure/media',
-  ],
-  constraints: [
-    'ImmutableProperties' => ['id', 'source'],
-    'MediaMappingsConstraint' => []
   ])]
 class MediaType extends ConfigEntityBundleBase implements MediaTypeInterface, EntityWithPluginCollectionInterface {
 
