@@ -14,5 +14,8 @@ function unversioned_assets_test_library_info_alter(&$libraries, $extension) {
     // contents of .
     unset($libraries['base']['version']);
     $libraries['base']['css']['component']['public://test.css'] = ['weight' => -10];
+
+    // Switch a library definition to use an absolute path.
+    $libraries['base']['css']['component']['/core/misc/print.css'] = ['weight' => -10];
   }
 }
