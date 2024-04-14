@@ -213,9 +213,10 @@ class EntityConverterTest extends UnitTestCase {
     $this->setUpMocks();
 
     $plugin_id = 'invalid_id';
+    $contexts = ['operation' => 'entity_upcast'];
     $this->entityRepository->expects($this->once())
       ->method('getCanonical')
-      ->with($plugin_id, 'id')
+      ->with($plugin_id, 'id', $contexts)
       ->willThrowException(new PluginNotFoundException($plugin_id));
 
     $this->expectException(PluginNotFoundException::class);

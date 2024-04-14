@@ -7,6 +7,10 @@ namespace Drupal\Core\Entity;
  */
 interface EntityRepositoryInterface {
 
+  /**
+   * @deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. There is no
+   *   replacement. See https://www.drupal.org/node/3437685
+   */
   const CONTEXT_ID_LEGACY_CONTEXT_OPERATION = '@entity.repository:legacy_context_operation';
 
   /**

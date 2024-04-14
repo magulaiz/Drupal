@@ -130,7 +130,8 @@ class EntityConverter implements ParamConverterInterface {
       return $entity;
     }
 
-    $entity = $this->entityRepository->getCanonical($entity_type_id, $value);
+    $contexts = ['operation' => 'entity_upcast'];
+    $entity = $this->entityRepository->getCanonical($entity_type_id, $value, $contexts);
 
     if (
       !empty($definition['bundle']) &&
