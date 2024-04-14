@@ -636,21 +636,20 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   /**
    * Get the dependencies for this migration.
    *
-   * @param bool $expand
-   *   Set TRUE if migration dependencies need to be expanded, otherwise FALSE.
-   *
    * @return array
    *   The dependencies for this migration.
    */
-  public function getMigrationDependencies(bool $expand = FALSE) {
+  public function getMigrationDependencies() {
+    if (func_num_args() > 0) {
+      @trigger_error('@TODO', E_USER_DEPRECATED);
+    }
+
     $this->migration_dependencies = ($this->migration_dependencies ?: []) + ['required' => [], 'optional' => []];
     if (count($this->migration_dependencies) !== 2 || !is_array($this->migration_dependencies['required']) || !is_array($this->migration_dependencies['optional'])) {
       throw new InvalidPluginDefinitionException($this->id(), "Invalid migration dependencies configuration for migration {$this->id()}");
     }
     $this->migration_dependencies['optional'] = array_unique(array_merge($this->migration_dependencies['optional'], $this->findMigrationDependencies($this->process)));
-    if (!$expand) {
-      return $this->migration_dependencies;
-    }
+
     return array_map(
       [$this->migrationPluginManager, 'expandPluginIds'],
       $this->migration_dependencies

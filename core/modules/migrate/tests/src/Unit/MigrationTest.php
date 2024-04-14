@@ -174,7 +174,7 @@ class MigrationTest extends UnitTestCase {
     if (!is_null($source)) {
       $migration->set('migration_dependencies', $source);
     }
-    $this->assertSame($migration->getMigrationDependencies(TRUE), $expected_value);
+    $this->assertSame($migration->getMigrationDependencies(), $expected_value);
   }
 
   /**
@@ -201,7 +201,7 @@ class MigrationTest extends UnitTestCase {
 
     $this->expectException(InvalidPluginDefinitionException::class);
     $this->expectExceptionMessage("Invalid migration dependencies configuration for migration {$plugin_id}");
-    $migration->getMigrationDependencies(TRUE);
+    $migration->getMigrationDependencies();
   }
 
   /**
