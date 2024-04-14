@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
+use Drupal\field\FieldConfigInterface;
 use Drupal\user\RoleInterface;
 
 /**
@@ -27,5 +28,14 @@ function file_post_update_add_permissions_to_roles(?array &$sandbox = NULL): voi
     }
     $role->grantPermission('delete own files');
     return TRUE;
+  });
+}
+
+/**
+ * Add the 'require description' file field setting.
+ */
+function file_post_update_description_required(array &$sandbox): void {
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'field_config', function (FieldConfigInterface $field_config): bool {
+    return $field_config->getType() === 'file';
   });
 }
