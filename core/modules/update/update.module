@@ -392,11 +392,37 @@ function update_fetch_data_finished($success, $results) {
 function update_mail($key, &$message, $params) {
   $langcode = $message['langcode'];
   $language = \Drupal::languageManager()->getLanguage($langcode);
-  $message['subject'] .= t('Site notice for @site_name', ['@site_name' => \Drupal::config('system.site')->get('name'), 'langcode' => $langcode]);
-  foreach ($params as $msg_type => $msg_reason) {
-    if (in_array($msg_reason, [UpdateManagerInterface::NOT_SECURE, UpdateManagerInterface::REVOKED])) {
-      $message['subject'] = t('Security notice for @site_name', ['@site_name' => \Drupal::config('system.site')->get('name'), 'langcode' => $langcode]);
+
+  // Set the message subject.
+  $subject = '';
+  $all_reasons = array_unique(array_values($params));
+  // If any reason is security then use the security subject.
+  $security = array_filter($all_reasons, function ($item) {
+    return in_array($item, [UpdateManagerInterface::NOT_SECURE, UpdateManagerInterface::REVOKED]);
+  });
+  if ($security) {
+    $subject = t('Security release(s) available for @site_name', ['@site_name' => \Drupal::config('system.site')->get('name'), 'langcode' => $langcode]);
+  }
+
+  // If no subject yet then check for fetch failures. If all the reasons
+  // are fetch failures the use the fetch subject.
+  if (empty($subject)) {
+    $fetch = array_filter($all_reasons, function ($item) {
+      return $item > 0;
+    });
+    if (empty($fetch) && !empty($all_reasons)) {
+      $subject = t('Failed to get release information for @site_name', ['@site_name' => \Drupal::config('system.site')->get('name'), 'langcode' => $langcode]);
     }
+  }
+
+  // If still no subject, then there are non-security updates and use the non-
+  // security subject. Then update the subject in the existing message.
+  if (empty($subject)) {
+    $subject = t('New release(s) available for @site_name', ['@site_name' => \Drupal::config('system.site')->get('name'), 'langcode' => $langcode]);
+  }
+  $message['subject'] .= $subject;
+
+  foreach ($params as $msg_type => $msg_reason) {
     $message['body'][] = _update_message_text($msg_type, $msg_reason, $langcode);
   }
   $message['body'][] = t('See the available updates page for more information:', [], ['langcode' => $langcode]) . "\n" . Url::fromRoute('update.status', [], ['absolute' => TRUE, 'language' => $language])->toString();
