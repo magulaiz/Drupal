@@ -2,9 +2,9 @@
 
 declare(strict_types = 1);
 
-namespace Drupal\ckeditor5\Annotation;
+namespace Drupal\ckeditor5\Attribute;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Component\Plugin\Attribute\Plugin;
 
 /**
  * Defines the "CKEditor 5 aspects of a CKEditor5Plugin" annotation object.
