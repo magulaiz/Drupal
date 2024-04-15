@@ -149,7 +149,12 @@ abstract class QueryPluginBase extends PluginBase implements CacheableDependency
    * Set an OFFSET on the query, specifying a number of results to skip.
    */
   public function setOffset($offset) {
-    $this->offset = $offset;
+    if (is_null($offset)) {
+      $this->offset = 0;
+    }
+    else {
+      $this->offset = $offset;
+    }
   }
 
   /**
