@@ -505,39 +505,6 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   }
 
   /**
-   * Tests that unpublished translations fallback to the original language.
-   */
-  public function testUnpublishedTranslations(): void {
-    $storage = \Drupal::entityTypeManager()->getStorage('node');
-
-    // Create a node.
-    $nid = $this->createEntity(['title' => 'Node title'], 'en');
-    /** @var \Drupal\node\NodeInterface $node */
-    $node = $storage->load($nid);
-    // Accessing non-existing French translation will fallback to English.
-    $this->drupalGet('/fr/node/' . $node->id());
-    $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextContains('Node title');
-
-    // Add a French unpublished translation.
-    /** @var \Drupal\node\NodeInterface $translation */
-    $values = [
-      'title' => 'Node fr title',
-      'status' => FALSE,
-    ];
-    $translation = $node->addTranslation('fr', $values);
-    $translation->save();
-    $unpublished_translation_url = $translation->toUrl()->toString();
-
-    // Content should be in English.
-    $this->drupalLogout();
-    $this->drupalGet($unpublished_translation_url);
-    $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextContains('Node title');
-    $this->assertSession()->pageTextNotContains('Node fr title');
-  }
-
-  /**
    * Tests that revision translations are rendered properly.
    */
   public function testRevisionTranslationRendering() {

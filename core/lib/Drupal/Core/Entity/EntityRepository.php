@@ -190,17 +190,16 @@ class EntityRepository implements EntityRepositoryInterface {
       $contexts = [];
     }
 
-    $legacy_context = [];
     $key = '@entity.repository:legacy_context_operation';
     if (isset($contexts[$key])) {
       @trigger_error('Providing an \Drupal\Core\Entity\EntityRepositoryInterface::CONTEXT_ID_LEGACY_CONTEXT_OPERATION context to EntityRepository::getCanonicalMultiple() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3437685', E_USER_DEPRECATED);
-      $legacy_context['operation'] = $contexts[$key]->getContextValue();
+      $contexts['operation'] = $contexts[$key]->getContextValue();
     }
 
     $canonical = [];
     $langcode = $this->getContentLanguageFromContexts($contexts);
     foreach ($entities as $id => $entity) {
-      $canonical[$id] = $this->getTranslationFromContext($entity, $langcode, $legacy_context);
+      $canonical[$id] = $this->getTranslationFromContext($entity, $langcode, $contexts);
     }
 
     return $canonical;
