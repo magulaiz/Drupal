@@ -3,6 +3,8 @@ status: true
 dependencies:
   config:
     - system.menu.content
+  module:
+    - system
 id: content_menu
 region: content
 weight: 1

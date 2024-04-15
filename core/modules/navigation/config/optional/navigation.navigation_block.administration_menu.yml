@@ -3,6 +3,8 @@ status: true
 dependencies:
   config:
     - system.menu.admin
+  module:
+    - system
 id: administration_menu
 region: content
 weight: 2
