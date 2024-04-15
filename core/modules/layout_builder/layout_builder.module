@@ -14,6 +14,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\field\FieldConfigInterface;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
@@ -97,6 +98,16 @@ function layout_builder_form_entity_form_display_edit_form_alter(&$form, FormSta
   if ($key !== FALSE) {
     unset($form['#fields'][$key]);
   }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter() for layout_builder_configure_block.
+ */
+function layout_builder_form_layout_builder_configure_block_alter(&$form, FormStateInterface $form_state, $form_id) {
+  // Change layout builder "Block description" label to "Block type", since
+  // Drupal\Core\Block\BlockPluginTrait::buildConfigurationForm()
+  // sets admin_label to the plugin's admin_label which in fact is the block's type.
+  $form['settings']['admin_label']['#title'] = new TranslatableMarkup('Block type');
 }
 
 /**
