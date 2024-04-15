@@ -25,7 +25,6 @@ user.settings:
         status_activated:
           type: boolean
           label: 'Notify user when account is activated'
-          requiredKey: false
         status_blocked:
           type: boolean
           label: 'Account blocked'
@@ -44,6 +43,7 @@ user.settings:
     register:
       type: string
       label: 'Who can register accounts?'
+      # Choices are derived from the constants.
       # @see \Drupal\user\UserInterface
       constraints:
         Choice:
