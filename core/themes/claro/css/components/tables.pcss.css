@@ -37,6 +37,8 @@ th {
     padding-inline: 0 1.5rem;
     text-decoration: none;
     color: inherit;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     &:focus,
     &:hover {
@@ -74,7 +76,7 @@ th {
       opacity: 0.5;
       background: url(../../images/icons/000f33/sort--inactive.svg) no-repeat 50% 50%;
       background-size: contain;
-      
+
       [dir="rtl"] & {
         /* Horizontally flip the element. */
         transform: scaleX(-1);
