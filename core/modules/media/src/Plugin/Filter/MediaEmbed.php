@@ -33,6 +33,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *     "default_view_mode" = "default",
  *     "allowed_view_modes" = {},
  *     "allowed_media_types" = {},
+ *     "default_view_mode_10101" = "default",
  *   },
  *   weight = 100,
  * )
@@ -180,6 +181,14 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
       '#element_validate' => [[static::class, 'validateOptions']],
     ];
 
+    // This is a fallback view mode that cannot be changed, it is only used in
+    // content authored prior to media_update_10101 to avoid issues with missing
+    // view mode data attributes.
+    $form['default_view_mode_10101'] = [
+      '#type' => 'value',
+      '#value' => $this->settings['default_view_mode_10101'],
+    ];
+
     return $form;
   }
 
@@ -286,7 +295,9 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
     foreach ($xpath->query('//drupal-media[@data-entity-type="media" and normalize-space(@data-entity-uuid)!=""]') as $node) {
       /** @var \DOMElement $node */
       $uuid = $node->getAttribute('data-entity-uuid');
-      $view_mode_id = $node->getAttribute('data-view-mode') ?: $this->settings['default_view_mode'];
+      // Fallback to default_view_mode_10101 because default_view_mode can be
+      // changed and using it could lead to unintended changes in display.
+      $view_mode_id = $node->getAttribute('data-view-mode') ?: $this->settings['default_view_mode_10101'];
 
       // Delete the consumed attributes.
       $node->removeAttribute('data-entity-type');
@@ -519,7 +530,10 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
   public function calculateDependencies() {
     $dependencies = [];
     // Combine the view modes from both config parameters.
-    $view_modes = $this->settings['allowed_view_modes'] + [$this->settings['default_view_mode']];
+    $view_modes = $this->settings['allowed_view_modes'] + [
+      $this->settings['default_view_mode'],
+      $this->settings['default_view_mode_10101'],
+    ];
     $view_modes = array_unique(array_values($view_modes));
     $dependencies += ['config' => []];
     $storage = $this->entityTypeManager->getStorage('entity_view_mode');

@@ -122,6 +122,7 @@ class MediaTest extends WebDriverTestBase {
               '22222' => '22222',
             ],
             'allowed_media_types' => [],
+            'default_view_mode_10101' => 'view_mode_1',
           ],
         ],
       ],
@@ -1451,6 +1452,7 @@ class MediaTest extends WebDriverTestBase {
           '22222' => '22222',
           'view_mode_3' => 'view_mode_3',
         ],
+        'default_view_mode_10101' => 'view_mode_4',
       ],
     ])->save();
 
@@ -1464,6 +1466,7 @@ class MediaTest extends WebDriverTestBase {
       'core.entity_view_mode.media.view_mode_1',
       'core.entity_view_mode.media.22222',
       'core.entity_view_mode.media.view_mode_3',
+      'core.entity_view_mode.media.view_mode_4',
     ];
 
     $dependencies = $filter_format->getDependencies();
@@ -1477,11 +1480,11 @@ class MediaTest extends WebDriverTestBase {
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.drupal-media img'));
     $this->click('.ck-widget.drupal-media');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
-    // Check that there is no data-view-mode set after embedding media.
+    // Check that the default data-view-mode is set after embedding media.
     $editor_dom = $this->getEditorDataAsDom();
     $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')
       ->item(0);
-    $this->assertFalse($drupal_media_element->hasAttribute('data-view-mode'));
+    $this->assertEquals('view_mode_1', $drupal_media_element->getAttribute('data-view-mode'));
     $this->click('.ck-widget.drupal-media');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
     $this->getBalloonButton('View Mode 1')->click();
@@ -1531,9 +1534,9 @@ class MediaTest extends WebDriverTestBase {
     $editor_dom = $this->getEditorDataAsDom();
     $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')
       ->item(0);
-    // Test that setting the view mode back to the default removes the
+    // Test that setting the view mode back to the default does not remove the
     // `data-view-mode` attribute.
-    $this->assertFalse($drupal_media_element->hasAttribute('data-view-mode'));
+    $this->assertTrue($drupal_media_element->hasAttribute('data-view-mode'));
     $assert_session->elementExists('css', 'article.media--view-mode-view-mode-1');
 
     // Check that the toolbar status matches "no view mode".
@@ -1550,6 +1553,7 @@ class MediaTest extends WebDriverTestBase {
         'allowed_view_modes' => [
           'view_mode_1' => 'view_mode_1',
         ],
+        'default_view_mode_10101' => '22222',
       ],
     ])->save();
 
@@ -1580,6 +1584,7 @@ class MediaTest extends WebDriverTestBase {
           'view_mode_1' => 'view_mode_1',
           '22222' => '22222',
         ],
+        'default_view_mode_10101' => 'view_mode_4',
       ],
     ])->save();
 
@@ -1587,6 +1592,7 @@ class MediaTest extends WebDriverTestBase {
     $expected_config_dependencies = [
       'core.entity_view_mode.media.view_mode_1',
       'core.entity_view_mode.media.22222',
+      'core.entity_view_mode.media.view_mode_4',
     ];
     $dependencies = $filter_format->getDependencies();
     $this->assertArrayHasKey('config', $dependencies);
@@ -1621,6 +1627,7 @@ class MediaTest extends WebDriverTestBase {
         'default_view_mode' => 'view_mode_1',
         'allowed_media_types' => [],
         'allowed_view_modes' => [],
+        'default_view_mode_10101' => 'view_mode_1',
       ],
     ])->save();
     $dependencies = $filter_format->getDependencies();
@@ -1644,6 +1651,7 @@ class MediaTest extends WebDriverTestBase {
           '22222' => '22222',
           'view_mode_4' => 'view_mode_4',
         ],
+        'default_view_mode_10101' => 'view_mode_4',
       ],
     ])->save();
 
