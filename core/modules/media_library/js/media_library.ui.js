@@ -62,7 +62,7 @@
           if (e.which === 32) {
             e.preventDefault();
             e.stopPropagation();
-            $(e.currentTarget).trigger('click');
+            e.currentTarget.dispatchEvent(new Event('click'));
           }
         })
         .on('click', (e) => {
@@ -344,7 +344,8 @@
         if (mediaLibraryModalSelection) {
           // Set the selection in the hidden form element.
           mediaLibraryModalSelection.value = currentSelection.join();
-          $(mediaLibraryModalSelection).trigger('change');
+          const $target = $(mediaLibraryModalSelection);
+          $target[0].dispatchEvent(new Event('change'));
         }
 
         // Set the selection in the media library add form. Since the form is
@@ -371,10 +372,10 @@
       // checkbox values triggers the change event for the media items. The
       // change event handles updating the hidden selection field for the form.
       currentSelection.forEach((value) => {
-        $form
+        const $ele = $form
           .find(`input[type="checkbox"][value="${value}"]`)
-          .prop('checked', true)
-          .trigger('change');
+          .prop('checked', true);
+        $ele[0].dispatchEvent(new Event('change'));
       });
 
       // Add the selection count to the button pane when a media library dialog

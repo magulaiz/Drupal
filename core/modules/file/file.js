@@ -195,10 +195,10 @@
      *   The event triggered. For example `change.autoFileUpload`.
      */
     triggerUploadButton(event) {
-      $(event.target)
+      const $ele = $(event.target)
         .closest('.js-form-managed-file')
-        .find('.js-form-submit[data-drupal-selector$="upload-button"]')
-        .trigger('mousedown');
+        .find('.js-form-submit[data-drupal-selector$="upload-button"]');
+      $ele[0].dispatchEvent(new Event('mousedown'));
     },
 
     /**
@@ -211,7 +211,7 @@
      */
     disableFields(event) {
       const $clickedButton = $(this);
-      $clickedButton.trigger('formUpdated');
+      $clickedButton[0].dispatchEvent(new CustomEvent('formUpdated'));
 
       // Check if we're working with an "Upload" button.
       let $enabledFields = [];
@@ -275,7 +275,7 @@
           .find('div.ajax-progress-bar')
           .slideDown();
       }, 500);
-      $clickedButton.trigger('fileUpload');
+      $clickedButton[0].dispatchEvent(new CustomEvent('fileUpload'));
     },
 
     /**

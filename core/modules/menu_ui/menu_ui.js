@@ -77,8 +77,9 @@
             $linkTitle[0].value = '';
             $linkTitle.removeData('menuLinkAutomaticTitleOverridden');
           }
-          $checkbox.closest('.vertical-tabs-pane').trigger('summaryUpdated');
-          $checkbox.trigger('formUpdated');
+          const $target = $checkbox.closest('.vertical-tabs-pane');
+          $target[0].dispatchEvent(new CustomEvent('summaryUpdated'));
+          $checkbox.dispatchEvent(new CustomEvent('formUpdated'));
         });
         // Take over any title change.
         $title.on('keyup', () => {
@@ -87,7 +88,7 @@
             $checkbox[0].checked
           ) {
             $linkTitle[0].value = $title[0].value;
-            $linkTitle.trigger('formUpdated');
+            $linkTitle.dispatchEvent(new CustomEvent('formUpdated'));
           }
         });
       });

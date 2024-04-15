@@ -133,9 +133,8 @@
     contextual.collection.add(model);
 
     // Let other JavaScript react to the adding of a new contextual link.
-    $(document).trigger(
-      'drupalContextualLinkAdded',
-      Drupal.deprecatedProperty({
+    const event = new CustomEvent('drupalContextualLinkAdded', {
+      detail: {
         target: {
           $el: $contextual,
           $region,
@@ -144,9 +143,9 @@
         deprecatedProperty: 'model',
         message:
           'The model property is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. There is no replacement.',
-      }),
-    );
-
+      },
+    });
+    document.dispatchEvent(event);
     // Fix visual collisions between contextual link triggers.
     adjustIfNestedAndOverlapping($contextual);
   }

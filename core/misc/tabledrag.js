@@ -402,9 +402,9 @@
 
     // Trigger an event to allow other scripts to react to this display change.
     // Force the extra parameter as a boolean.
-    $(once.filter('tabledrag', 'table')).trigger(
-      'columnschange',
-      !!displayWeight,
+    const $ele = $(once.filter('tabledrag', 'table'));
+    $ele[0].dispatchEvent(
+      new CustomEvent('columnschange', { detail: !!displayWeight }),
     );
   };
 

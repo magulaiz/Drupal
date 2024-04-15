@@ -25,15 +25,17 @@
           .show();
       }
 
-      $(once('filter-guidelines', '.js-filter-guidelines', context))
+      const $ele = $(
+        once('filter-guidelines', '.js-filter-guidelines', context),
+      )
         .find(':header')
         .hide()
         .closest('.js-filter-wrapper')
         .find('select.js-filter-list')
-        .on('change.filterGuidelines', updateFilterGuidelines)
-        // Need to trigger the namespaced event to avoid triggering formUpdated
-        // when initializing the select.
-        .trigger('change.filterGuidelines');
+        .on('change.filterGuidelines', updateFilterGuidelines);
+      // Need to trigger the namespaced event to avoid triggering formUpdated
+      // when initializing the select.
+      $ele[0].dispatchEvent(new CustomEvent('change.filterGuidelines'));
     },
   };
 })(jQuery, Drupal);
