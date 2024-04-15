@@ -93,7 +93,7 @@ class YamlTest extends YamlTestBase {
     YAML;
 
     Yaml::decode($yaml);
-   }
+  }
 
   /**
    * Tests decoding PHP constants.
@@ -105,22 +105,19 @@ class YamlTest extends YamlTestBase {
       foo:
         !php/const PHP_INT_MAX
       YAML;
-    $symfony = YamlSymfony::decode($yaml);
-    $yaml = YamlPecl::decode($yaml);
-    $this->assertSame($symfony['foo'], PHP_INT_MAX);
-    $this->assertSame($yaml['foo'], PHP_INT_MAX);
+    $this->assertSame(Yaml::decode($yaml)['foo'], PHP_INT_MAX);
   }
 
   /**
    * Tests that missing constants cause exception.
    */
-  public function testUnDefinedConstant($function) {
+  public function testUnDefinedConstant() {
     $this->expectExceptionMessage('The constant "DOES_NOT_EXIST" is not defined');
     $yaml = <<<YAML
       foo:
         !php/const DOES_NOT_EXIST
       YAML;
-    $function($yaml);
+    Yaml::decode($yaml);
   }
 
   /**
@@ -131,7 +128,7 @@ class YamlTest extends YamlTestBase {
       'foo' => EnumValue::Yes,
       'bar' => BackedEnumValue::Maybe,
     ];
-    $yaml = YamlSymfony::encode($data);
+    $yaml = Yaml::encode($data);
 
     // TRICKY: Symfony encodes enums as constants (`!php/const`) but supports
     // decoding enums (`!php/enum`).
@@ -141,15 +138,12 @@ bar: !php/const Drupal\Tests\Component\Serialization\BackedEnumValue::Maybe
 
 YAML, $yaml);
 
-    // Test both PECL and Symfony can decode the `!php/const` encoding of enums.
-    $symfony = YamlSymfony::decode($yaml);
-    $yaml = YamlPecl::decode($yaml);
-    $this->assertSame($symfony['foo'], EnumValue::Yes);
-    $this->assertSame($symfony['bar'], BackedEnumValue::Maybe);
-    $this->assertSame($yaml['foo'], EnumValue::Yes);
-    $this->assertSame($yaml['bar'], BackedEnumValue::Maybe);
+    // Test decoding of `!php/const`-encoded enums.
+    $decoded = Yaml::decode($yaml);
+    $this->assertSame($decoded['foo'], EnumValue::Yes);
+    $this->assertSame($decoded['bar'], BackedEnumValue::Maybe);
 
-    // Test both PECL and Symfony can decode the `!php/enum` encoding of enums.
+    // Test decoding of `!php/enum`-encoded enums.
     $yaml_alternative = <<<YAML
 foo: !php/enum Drupal\Tests\Component\Serialization\EnumValue::Yes
 bar: !php/enum Drupal\Tests\Component\Serialization\BackedEnumValue::Maybe->value
