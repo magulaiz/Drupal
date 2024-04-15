@@ -1,0 +1,63 @@
+/**
+ * @file
+ * Styles for Entity Link Suggestions in CKEditor 5.
+ *
+ * @todo Refactor classes to not mention "linkit"
+ */
+
+/* cspell:ignore linkit */
+
+/* Override the default jQuery UI theme */
+.linkit-ui-autocomplete {
+  overflow: auto;
+  max-height: calc((100vh - 80px)/2);
+}
+
+.linkit-ui-autocomplete.ui-widget {
+  font-size: 0.9em;
+}
+
+.linkit-ui-autocomplete.ui-menu .linkit-result-line-wrapper {
+  margin: 0;
+  padding: 5px 7px;
+}
+
+.linkit-ui-autocomplete.ui-menu .linkit-result-line-wrapper.ui-state-focus,
+.linkit-ui-autocomplete.ui-menu .linkit-result-line-wrapper.ui-state-active {
+  color: #fff;
+  border: 0;
+  border-bottom: 1px solid #bfbfbf;
+  background: #0075ba;
+}
+
+.linkit-result-line:not(:last-of-type) {
+  border-bottom: 1px solid #bfbfbf;
+}
+
+.ui-menu .linkit-result-line--group.ui-menu-divider {
+  height: auto;
+  margin: 0;
+  padding: 3px;
+  text-align: center;
+  color: #555;
+  border-bottom: 1px solid #bfbfbf;
+  background-color: #e7e7e7;
+  font-size: 0.9em;
+  font-weight: 600;
+  line-height: inherit;
+}
+
+.linkit-result-line--title {
+  display: block;
+  font-weight: 600;
+}
+
+.linkit-result-line--description {
+  display: block;
+  font-size: 0.9em;
+  line-height: 1.3;
+}
+
+.linkit-result-line--description img {
+  display: block;
+}

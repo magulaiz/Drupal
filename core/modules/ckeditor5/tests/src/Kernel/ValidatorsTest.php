@@ -1455,6 +1455,242 @@ class ValidatorsTest extends KernelTestBase {
       ],
       'violations' => [],
     ];
+
+    $data['INVALID: EntityLinkSuggestions plugin configured to have an empty list of suggestions'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'link',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_link_entity_suggestions' => [
+            'allow_download_links' => TRUE,
+            'suggestions' => [],
+          ],
+        ],
+      ],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
+      'filters' => [
+        'entity_links' => [
+          'id' => 'entity_links',
+          'provider' => 'filter',
+          'status' => TRUE,
+          'weight' => 0,
+          'settings' => [],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_link_entity_suggestions.suggestions' => 'Allow suggestions for at least one entity type, or specify null to allow suggestions for all.',
+      ],
+    ];
+    $data['INVALID: EntityLinkSuggestions plugin configured to allow a non-existent entity type'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'link',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_link_entity_suggestions' => [
+            'allow_download_links' => TRUE,
+            'suggestions' => [
+              [
+                'entity_type_id' => 'foobar',
+              ],
+            ],
+          ],
+        ],
+      ],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
+      'filters' => [
+        'entity_links' => [
+          'id' => 'entity_links',
+          'provider' => 'filter',
+          'status' => TRUE,
+          'weight' => 0,
+          'settings' => [],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_link_entity_suggestions.suggestions.0.entity_type_id' => "The 'foobar' plugin does not exist.",
+      ],
+    ];
+    $data['INVALID: EntityLinkSuggestions plugin configured to allow the same entity type twice'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'link',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_link_entity_suggestions' => [
+            'allow_download_links' => TRUE,
+            'suggestions' => [
+              [
+                'entity_type_id' => 'media',
+              ],
+              [
+                'entity_type_id' => 'media',
+              ],
+            ],
+          ],
+        ],
+      ],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
+      'filters' => [
+        'entity_links' => [
+          'id' => 'entity_links',
+          'provider' => 'filter',
+          'status' => TRUE,
+          'weight' => 0,
+          'settings' => [],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_link_entity_suggestions.suggestions' => 'The label <em class="placeholder">media</em> is not unique.',
+      ],
+    ];
+    $data['INVALID: EntityLinkSuggestions plugin configured with an empty list of bundles'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'link',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_link_entity_suggestions' => [
+            'allow_download_links' => TRUE,
+            'suggestions' => [
+              [
+                'entity_type_id' => 'media',
+                'bundles' => [],
+              ],
+            ],
+          ],
+        ],
+      ],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
+      'filters' => [
+        'entity_links' => [
+          'id' => 'entity_links',
+          'provider' => 'filter',
+          'status' => TRUE,
+          'weight' => 0,
+          'settings' => [],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_link_entity_suggestions.suggestions.0.bundles' => 'This value should not be blank.',
+      ],
+    ];
+
+    $data['VALID: EntityLinkSuggestions plugin configured to allow all linkable entity types'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'link',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_link_entity_suggestions' => [
+            'allow_download_links' => TRUE,
+            'suggestions' => NULL,
+          ],
+        ],
+      ],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
+      'filters' => [
+        'entity_links' => [
+          'id' => 'entity_links',
+          'provider' => 'filter',
+          'status' => TRUE,
+          'weight' => 0,
+          'settings' => [],
+        ],
+      ],
+      'violations' => [],
+    ];
+    $data['VALID: EntityLinkSuggestions plugin configured to allow only a single linkable entity type and no bundle restrictions'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'link',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_link_entity_suggestions' => [
+            'allow_download_links' => TRUE,
+            'suggestions' => [
+              [
+                'entity_type_id' => 'media',
+                'bundles' => NULL,
+              ],
+            ],
+          ],
+        ],
+      ],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
+      'filters' => [
+        'entity_links' => [
+          'id' => 'entity_links',
+          'provider' => 'filter',
+          'status' => TRUE,
+          'weight' => 0,
+          'settings' => [],
+        ],
+      ],
+      'violations' => [],
+    ];
+    $data['VALID: EntityLinkSuggestions plugin configured to allow only a single linkable entity type and multiple bundles'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'link',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_link_entity_suggestions' => [
+            'allow_download_links' => TRUE,
+            'suggestions' => [
+              [
+                'entity_type_id' => 'media',
+                'bundles' => [
+                  'document',
+                  'image',
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
+      'filters' => [
+        'entity_links' => [
+          'id' => 'entity_links',
+          'provider' => 'filter',
+          'status' => TRUE,
+          'weight' => 0,
+          'settings' => [],
+        ],
+      ],
+      'violations' => [],
+    ];
+
     return $data;
   }
 

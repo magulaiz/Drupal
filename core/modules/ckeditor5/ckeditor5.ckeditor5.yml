@@ -340,6 +340,22 @@ ckeditor5_link:
       - <a>
       - <a href>
 
+ckeditor5_link_entity_suggestions:
+  ckeditor5:
+    plugins:
+      - drupalEntityLinkSuggestions.DrupalEntityLinkSuggestions
+  drupal:
+    label: Entity link suggestions
+    class: \Drupal\ckeditor5\Plugin\CKEditor5Plugin\EntityLinkSuggestions
+    library: ckeditor5/internal.drupal.ckeditor5.link-entity-suggestions
+    elements:
+      - <a data-entity-type data-entity-uuid>
+      - <a download>
+    conditions:
+      filter: entity_links
+      plugins:
+        - ckeditor5_link
+
 ckeditor5_linkImage:
   ckeditor5:
     plugins:
