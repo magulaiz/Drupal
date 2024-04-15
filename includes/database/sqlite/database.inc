@@ -322,6 +322,10 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
 
   public function rollback($savepoint_name = 'drupal_transaction') {
     if ($this->savepointSupport) {
+      if (!$this->inTransaction()) {
+        // Allow callbacks to perform their own cleanup.
+        $this->executeRootTransactionEndCallbacks(FALSE);
+      }
       return parent::rollBack($savepoint_name);
     }
 
@@ -349,6 +353,10 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
         return;
       }
     }
+
+    // Allow callbacks to perform their own cleanup.
+    $this->executeRootTransactionEndCallbacks(FALSE);
+
     if ($this->supportsTransactions()) {
       $this->connection->rollBack();
     }
@@ -389,11 +397,14 @@ class DatabaseConnection_sqlite extends DatabaseConnection {
       if (empty($this->transactionLayers)) {
         // If there was any rollback() we should roll back whole transaction.
         if ($this->willRollback) {
+          // Allow callbacks to perform their own cleanup.
+          $this->executeRootTransactionEndCallbacks(FALSE);
+
           $this->willRollback = FALSE;
           $this->connection->rollBack();
         }
-        elseif (!$this->connection->commit()) {
-          throw new DatabaseTransactionCommitFailedException();
+        else {
+          $this->doCommit();
         }
       }
       else {
