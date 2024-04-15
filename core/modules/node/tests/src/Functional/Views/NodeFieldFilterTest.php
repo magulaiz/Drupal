@@ -121,4 +121,10 @@ class NodeFieldFilterTest extends NodeTestBase {
     }
   }
 
+  public function testNidGroupedFilter() {
+    $this->drupalGet('test-id-grouped-filter', ['query' => ['nid' => '1']]);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('Food in Paris');
+  }
+
 }

@@ -445,7 +445,7 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
       if (!empty($info[$this->operator]['values'])) {
         switch ($info[$this->operator]['values']) {
           case 1:
-            if ($value['value'] === '') {
+            if (empty($value['value'])) {
               return FALSE;
             }
             break;
