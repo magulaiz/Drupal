@@ -1,0 +1,23 @@
+{#
+/**
+ * @file
+ * Implementation for BigPipe JS placeholder interface preview for the Claro
+ * Local Actions block.
+ *
+ * @see \Drupal\big_pipe\Render\Placeholder\BigPipeStrategy::createBigPipeJsPlaceholder()
+ */
+#}
+
+{# BigPipe injects the local actions element shortly after pageload, which
+causes a layout shift. To mitigate this, we duplicate the approximate markup,
+while setting it to `visibility: hidden`, which hides it from both users and
+assistive technology, while maintaining space within the layout. #}
+<div style="visibility: hidden;">
+  <ul class="local-actions">
+    <li class="local-actions__item">
+      <a href="#" class="button button--action button--primary">
+        {{ preview }}
+      </a>
+    </li>
+  </ul>
+</div>
