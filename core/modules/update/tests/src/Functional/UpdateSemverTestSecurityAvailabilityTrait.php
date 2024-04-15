@@ -100,7 +100,7 @@ trait UpdateSemverTestSecurityAvailabilityTrait {
         'site_patch_version' => '0.0',
         'expected_security_releases' => ['0.1'],
         'expected_update_message_type' => static::UPDATE_AVAILABLE,
-        'fixture' => 'sec.0.0_0.1',
+        'fixture' => 'sec.8.0.0_8.0.1',
       ],
       // Security release available for site minor release 0.
       // No releases for next minor.
