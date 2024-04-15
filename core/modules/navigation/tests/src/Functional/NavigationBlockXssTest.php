@@ -112,8 +112,11 @@ class NavigationBlockXssTest extends BrowserTestBase {
   /**
    * Tests various modules that provide navigation blocks for XSS.
    */
-  public function testBlockXss() {
-    $this->drupalLogin($this->rootUser);
+  public function testNavigationBlockXss() {
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer navigation_block',
+      'access administration pages',
+    ]));
 
     $this->doMenuTest();
 

@@ -43,7 +43,12 @@ class ShortcutsNavigationBlockTest extends PageCacheTagsTestBase {
 
     // Ensure that without enabling the shortcuts-in-page-title-link feature
     // in the theme, the shortcut_list cache tag is not added to the page.
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer site configuration',
+      'access navigation',
+      'administer shortcuts',
+      'access shortcuts',
+    ]));
     $this->drupalGet('admin/config/system/cron');
     $expected_cache_tags = [
       'CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form',
@@ -57,8 +62,6 @@ class ShortcutsNavigationBlockTest extends PageCacheTagsTestBase {
       'config:navigation.settings',
       'config:navigation_block_list',
       'config:shortcut.set.default',
-      'config:system.menu.admin',
-      'config:system.menu.content',
       'navigation_block_view',
       'rendered',
     ];
