@@ -418,8 +418,10 @@ class Datetime extends DateElementBase {
 
       case 'datetime':
         return DateFormat::load('html_datetime')->getPattern();
+
       case 'datetime-local':
         return 'Y-m-d\TH:i';
+
       default:
         return $element['#date_date_format'];
     }
