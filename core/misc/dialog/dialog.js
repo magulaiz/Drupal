@@ -27,10 +27,119 @@
     // side), you may want to override this method and do
     // `jQuery(event.target).remove()` as well, to remove the dialog on
     // closing.
-    close(event) {
-      Drupal.dialog(event.target).close();
-      Drupal.detachBehaviors(event.target, null, 'unload');
+    close(dialog) {
+      Drupal.detachBehaviors(dialog, null, 'unload');
     },
+  };
+
+  Drupal.theme.dialogTemplate = () => `
+  <style>
+    dialog {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--dialog-background-color, #fff);
+    }
+    header {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    footer {
+      display: flex;
+      align-items: start;
+      justify-content: start;
+      gap: 10px;
+    }
+  </style>
+  <dialog>
+    <header>
+      <slot name="title"></slot>
+      <slot name="close"><button autofocus>X</button></slot>
+    </header>
+    <slot></slot>
+    <footer>
+      <slot name="actions"></slot>
+    </footer>
+  </dialog>`;
+
+  class DialogWrapper extends HTMLElement {
+    constructor() {
+      super();
+      this.attachShadow({ mode: 'open' });
+      this.shadowRoot.innerHTML = Drupal.theme('dialogTemplate');
+      this.dialog = this.shadowRoot.querySelector('dialog');
+    }
+    connectedCallback() {
+      this.shadowRoot.querySelector('slot[name="close"]').onclick = () => {
+        this.close();
+      };
+    }
+    setFocus() {
+      const focusTarget = this.dialog.querySelector('[autofocus]');
+      focusTarget
+        ? focusTarget.focus()
+        : this.dialog.querySelector('button').focus();
+    }
+    close(value) {
+      this.dialog.close();
+      bodyScrollLock.clearBodyLocks();
+      this.settings.close(this);
+      this.returnValue = value;
+    }
+    show() {
+      this.dialog.show();
+      this.setFocus();
+    }
+    showModal() {
+      this.dispatchEvent(
+        new CustomEvent('dialog:beforecreate', {
+          bubbles: true,
+        }),
+      );
+      this.dialog.showModal();
+      bodyScrollLock.lock(this);
+      this.setFocus();
+      this.dispatchEvent(
+        new CustomEvent('dialog:aftercreate', {
+          bubbles: true,
+        }),
+      );
+    }
+  }
+
+  customElements.define('drupal-dialog', DialogWrapper);
+
+  const createActions = (actions) =>
+    actions.map((action) => {
+      const button = document.createElement('button');
+      action.class.split(' ').map((className) => {
+        button.classList.add(className);
+      });
+      button.innerText = action.text;
+      button.addEventListener('click', action.click);
+      button.setAttribute('slot', 'actions');
+      return button;
+    });
+
+  const createDialog = (element, settings) => {
+    const dialog = document.createElement('drupal-dialog');
+    settings.dialogClass.split(' ').map((className) => {
+      dialog.classList.add(className);
+    });
+    const actions = createActions(settings.buttons);
+    dialog.innerHTML = `<h2 slot="title" class="ui-visual-focus">${settings.title}</h2>`;
+    element.setAttribute('data-default-slot', '');
+    dialog.append(element);
+    actions.map((action) => {
+      dialog.append(action);
+    });
+    dialog.settings = settings;
+    document.body.appendChild(dialog);
+    return dialog;
   };
 
   /**
@@ -60,47 +169,16 @@
    *   The dialog instance.
    */
   Drupal.dialog = function (element, options) {
-    let undef;
     const $element = $(element);
-    const dialog = {
-      open: false,
-      returnValue: undef,
-    };
-
-    function openDialog(settings) {
-      settings = $.extend({}, drupalSettings.dialog, options, settings);
-      // Trigger a global event to allow scripts to bind events to the dialog.
-      $(window).trigger('dialog:beforecreate', [dialog, $element, settings]);
-      $element.dialog(settings);
-      dialog.open = true;
-
-      // Locks the body scroll only when it opens in modal.
-      if (settings.modal) {
-        // Locks the body when the dialog opens.
-        bodyScrollLock.lock($element.get(0));
-      }
-
-      $(window).trigger('dialog:aftercreate', [dialog, $element, settings]);
-    }
+    const settings = Object.assign({}, drupalSettings.dialog, options);
+    const dialog = createDialog(element, settings);
 
     function closeDialog(value) {
       $(window).trigger('dialog:beforeclose', [dialog, $element]);
       // Unlocks the body when the dialog closes.
-      bodyScrollLock.clearBodyLocks();
 
-      $element.dialog('close');
-      dialog.returnValue = value;
-      dialog.open = false;
       $(window).trigger('dialog:afterclose', [dialog, $element]);
     }
-
-    dialog.show = () => {
-      openDialog({ modal: false });
-    };
-    dialog.showModal = () => {
-      openDialog({ modal: true });
-    };
-    dialog.close = closeDialog;
 
     return dialog;
   };

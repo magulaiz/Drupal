@@ -135,7 +135,9 @@
           '%text_format': $(select).find('option:selected')[0].textContent,
         },
       );
-      const confirmationDialog = Drupal.dialog(`<div>${message}</div>`, {
+      const dialog = document.createElement('div');
+      dialog.innerHTML = message;
+      const confirmationDialog = Drupal.dialog(dialog, {
         title: Drupal.t('Change text format?'),
         dialogClass: 'editor-change-text-format-modal',
         resizable: false,
@@ -170,13 +172,13 @@
           $(this).parent().find('.ui-dialog-titlebar-close').remove();
         },
         beforeClose: false,
-        close(event) {
+        close(dialog) {
           // Automatically destroy the DOM element that was used for the dialog.
-          $(event.target).remove();
+          dialog.remove();
         },
       });
 
-      confirmationDialog.showModal();
+      confirmationDialog.show();
     } else {
       changeTextEditor(field, newFormatID);
     }
