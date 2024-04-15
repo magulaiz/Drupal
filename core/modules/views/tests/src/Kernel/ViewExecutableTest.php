@@ -212,7 +212,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
       $this->fail('Expected error, when setDisplay() called with invalid display ID');
     }
     catch (\InvalidArgumentException $e) {
-      $this->assertEquals("setDisplay() called with invalid display ID 'invalid'", $e->getMessage());
+      $this->assertEquals('setDisplay() called with invalid display ID "invalid".', $e->getMessage());
     }
 
     $this->assertEquals('default', $view->current_display, 'If setDisplay is called with an invalid display id the default display should be used.');

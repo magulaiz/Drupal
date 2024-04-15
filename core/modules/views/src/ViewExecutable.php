@@ -820,7 +820,7 @@ class ViewExecutable {
 
     // Ensure the requested display exists.
     if (!$this->displayHandlers->has($display_id)) {
-      throw new \InvalidArgumentException("setDisplay() called with invalid display ID '$display_id'");
+      throw new \InvalidArgumentException(sprintf('setDisplay() called with invalid display ID "%s".', $display_id));
     }
 
     // Reset if the display has changed. It could be called multiple times for

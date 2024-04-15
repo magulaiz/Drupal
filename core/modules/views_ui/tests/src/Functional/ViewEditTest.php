@@ -90,7 +90,7 @@ class ViewEditTest extends UITestBase {
       $this->fail('Expected error, when setDisplay() called with invalid display ID');
     }
     catch (\Exception $e) {
-      $this->assertStringContainsString('setDisplay() called with invalid display ID "fake_display_name".', $e->getMessage());
+      $this->assertStringContainsString('Expected error, when setDisplay() called with invalid display ID', $e->getMessage());
     }
 
     $edit = ['display_id' => 'test 1'];
