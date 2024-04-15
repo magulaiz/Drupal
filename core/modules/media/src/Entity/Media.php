@@ -278,11 +278,13 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
       return NULL;
     }
     elseif ($thumbnails_queued && !$from_queue) {
-      return $this->get('thumbnail')->width;
+      $width = $this->get('thumbnail')->width;
+      return is_numeric($width) ? (int) $width : NULL;
     }
 
     $source = $this->getSource();
-    return $source->getMetadata($this, $source->getPluginDefinition()['thumbnail_width_metadata_attribute']);
+    $result = $source->getMetadata($this, $source->getPluginDefinition()['thumbnail_width_metadata_attribute']);
+    return is_numeric($result) ? (int) $result : NULL;
   }
 
   /**
@@ -303,11 +305,13 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
       return NULL;
     }
     elseif ($thumbnails_queued && !$from_queue) {
-      return $this->get('thumbnail')->height;
+      $height = $this->get('thumbnail')->height;
+      return is_numeric($height) ? (int) $height : NULL;
     }
 
     $source = $this->getSource();
-    return $source->getMetadata($this, $source->getPluginDefinition()['thumbnail_height_metadata_attribute']);
+    $result = $source->getMetadata($this, $source->getPluginDefinition()['thumbnail_height_metadata_attribute']);
+    return is_numeric($result) ? (int) $result : NULL;
   }
 
   /**
