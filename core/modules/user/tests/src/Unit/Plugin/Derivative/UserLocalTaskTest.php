@@ -4,8 +4,10 @@ namespace Drupal\Tests\user\Unit\Plugin\Derivative;
 
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Plugin\Derivative\UserLocalTask;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Tests the local tasks deriver class.
@@ -56,7 +58,14 @@ class UserLocalTaskTest extends UnitTestCase {
     ]);
     $entity_type_manager = $prophecy->reveal();
 
-    $this->deriver = new UserLocalTask($entity_type_manager, $this->getStringTranslationStub());
+    // The route provider is only used to check that the route exists, so make
+    // sure that getRoutesByNames() returns a non-empty array.
+    $prophecy = $this->prophesize(RouteProviderInterface::class);
+    $prophecy->getRoutesByNames(['entity.entity_bundle_of_id.entity_permissions_form'])
+      ->willReturn(['not empty']);
+    $routeProvider = $prophecy->reveal();
+
+    $this->deriver = new UserLocalTask($entity_type_manager, $this->getStringTranslationStub(), $routeProvider);
   }
 
   /**
@@ -74,6 +83,24 @@ class UserLocalTaskTest extends UnitTestCase {
       ],
     ];
     $this->assertEquals($expected, $this->deriver->getDerivativeDefinitions([]));
+  }
+
+  /**
+   * Tests UserLocalTask deprecation.
+   *
+   * @group legacy
+   */
+  public function testUserLocalTaskDeprecation() {
+    $prophecy = $this->prophesize(EntityTypeManagerInterface::class);
+    $entity_type_manager = $prophecy->reveal();
+    $prophecy = $this->prophesize(RouteProviderInterface::class);
+    $route_provider = $prophecy->reveal();
+    $prophecy = $this->prophesize(ContainerInterface::class);
+    $prophecy->get('router.route_provider')->willReturn($route_provider);
+    \Drupal::setContainer($prophecy->reveal());
+
+    $this->expectDeprecation('Calling Drupal\user\Plugin\Derivative\UserLocalTask::__construct without the $route_provider argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3302306');
+    $this->deriver = new UserLocalTask($entity_type_manager, $this->getStringTranslationStub());
   }
 
 }
