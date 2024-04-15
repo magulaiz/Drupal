@@ -3,7 +3,6 @@
 namespace Drupal\Core;
 
 use Composer\Autoload\ClassLoader;
-use Drupal\Component\EventDispatcher\Event;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Serialization\PhpSerialize;
 use Drupal\Component\Utility\UrlHelper;
@@ -34,6 +33,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * The DrupalKernel class is the core of Drupal itself.

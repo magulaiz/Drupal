@@ -6,10 +6,10 @@ namespace Drupal\Tests\Core\Routing;
 
 use Drupal\Core\Routing\RoutePreloader;
 use Drupal\Tests\UnitTestCase;
-use Drupal\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * @coversDefaultClass \Drupal\Core\Routing\RoutePreloader

@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Config;
 
-use Drupal\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Class StorageTransformEvent.

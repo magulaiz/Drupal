@@ -4,7 +4,7 @@ namespace Drupal\migrate\Event;
 
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateMessageInterface;
-use Drupal\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class EventBase extends Event {
 

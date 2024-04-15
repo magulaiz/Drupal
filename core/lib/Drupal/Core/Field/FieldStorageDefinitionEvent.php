@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Field;
 
-use Drupal\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Defines a base class for all field storage definition events.

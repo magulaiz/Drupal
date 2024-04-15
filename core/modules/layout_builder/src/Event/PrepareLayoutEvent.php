@@ -3,7 +3,7 @@
 namespace Drupal\layout_builder\Event;
 
 use Drupal\layout_builder\SectionStorageInterface;
-use Drupal\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Event fired in #pre_render of \Drupal\layout_builder\Element\LayoutBuilder.
