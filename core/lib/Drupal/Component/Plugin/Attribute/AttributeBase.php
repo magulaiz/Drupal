@@ -8,18 +8,6 @@ namespace Drupal\Component\Plugin\Attribute;
 abstract readonly class AttributeBase implements AttributeInterface {
 
   /**
-   * The class used for this attribute class.
-   *
-   * @var class-string
-   */
-  protected string $class;
-
-  /**
-   * The provider of the attribute class.
-   */
-  protected string|null $provider;
-
-  /**
    * @param string $id
    *   The attribute class ID.
    */

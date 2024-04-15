@@ -31,13 +31,6 @@ use Drupal\Component\Plugin\Attribute\Plugin;
 readonly class MigrateField extends Plugin {
 
   /**
-   * The plugin definition.
-   *
-   * @var array
-   */
-  protected array $definition;
-
-  /**
    * Constructs a migrate field attribute object.
    *
    * @param string $id
