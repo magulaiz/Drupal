@@ -16,10 +16,8 @@ final class LangcodeRequiredIfTranslatableValuesConstraintValidator extends Cons
 
   /**
    * {@inheritdoc}
-   * 
-   * @return void
    */
-  public function validate(mixed $value, Constraint $constraint) {
+  public function validate(mixed $value, Constraint $constraint): void {
     assert($constraint instanceof LangcodeRequiredIfTranslatableValuesConstraint);
 
     $mapping = $this->context->getObject();
