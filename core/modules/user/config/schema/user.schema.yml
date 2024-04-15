@@ -19,11 +19,9 @@ user.settings:
         cancel_confirm:
           type: boolean
           label: 'Account cancellation confirmation'
-          requiredKey: false
         password_reset:
           type: boolean
           label: 'Notify user when password reset'
-          requiredKey: false
         status_activated:
           type: boolean
           label: 'Notify user when account is activated'
@@ -31,23 +29,18 @@ user.settings:
         status_blocked:
           type: boolean
           label: 'Account blocked'
-          requiredKey: false
         status_canceled:
           type: boolean
           label: 'Account canceled'
-          requiredKey: false
         register_admin_created:
           type: boolean
           label: 'Welcome (new user created by administrator)'
-          requiredKey: false
         register_no_approval_required:
           type: boolean
           label: 'Welcome (no approval required)'
-          requiredKey: false
         register_pending_approval:
           type: boolean
           label: 'Welcome (awaiting approval)'
-          requiredKey: false
     register:
       type: string
       label: 'Who can register accounts?'
@@ -71,7 +64,6 @@ user.settings:
       constraints:
         Range:
           min: 0
-      requiredKey: false
     password_strength:
       type: boolean
       label: 'Enable password strength indicator'
