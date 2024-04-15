@@ -35,7 +35,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @ingroup queue
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class QueueWorker extends Plugin {
+readonly class QueueWorker extends Plugin {
 
   /**
    * @param string $id
@@ -51,10 +51,10 @@ class QueueWorker extends Plugin {
    *   (optional) The deriver class.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly ?TranslatableMarkup $title = NULL,
-    public readonly ?array $cron = NULL,
-    public readonly ?string $deriver = NULL
+    public string $id,
+    public ?TranslatableMarkup $title = NULL,
+    public ?array $cron = NULL,
+    public ?string $deriver = NULL
   ) {}
 
 }

@@ -13,7 +13,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @ingroup views_pager_plugins
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class ViewsPager extends Plugin {
+readonly class ViewsPager extends Plugin {
 
   /**
    * Constructs a ViewsPager attribute.
@@ -45,16 +45,16 @@ class ViewsPager extends Plugin {
    *   (optional) The deriver class.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly TranslatableMarkup $title,
-    public readonly ?TranslatableMarkup $short_title = NULL,
-    public readonly ?TranslatableMarkup $help = NULL,
-    public readonly ?string $theme = NULL,
-    public readonly ?array $display_types = NULL,
-    public readonly array $base = [],
-    public readonly bool $no_ui = FALSE,
-    public readonly bool $register_theme = TRUE,
-    public readonly ?string $deriver = NULL
+    public string $id,
+    public TranslatableMarkup $title,
+    public ?TranslatableMarkup $short_title = NULL,
+    public ?TranslatableMarkup $help = NULL,
+    public ?string $theme = NULL,
+    public ?array $display_types = NULL,
+    public array $base = [],
+    public bool $no_ui = FALSE,
+    public bool $register_theme = TRUE,
+    public ?string $deriver = NULL
   ) {}
 
 }

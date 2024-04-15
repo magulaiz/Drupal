@@ -29,7 +29,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @see plugin_api
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class DisplayVariant extends Plugin {
+readonly class DisplayVariant extends Plugin {
 
   /**
    * Constructs a DisplayVariant plugin attribute object.
@@ -42,9 +42,9 @@ class DisplayVariant extends Plugin {
    *   (optional) The deriver class.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly TranslatableMarkup $admin_label,
-    public readonly ?string $deriver = NULL
+    public string $id,
+    public TranslatableMarkup $admin_label,
+    public ?string $deriver = NULL
   ) {}
 
 }

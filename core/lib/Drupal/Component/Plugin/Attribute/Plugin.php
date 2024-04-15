@@ -12,7 +12,7 @@ namespace Drupal\Component\Plugin\Attribute;
  * @ingroup plugin_api
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class Plugin extends AttributeBase {
+readonly class Plugin extends AttributeBase {
 
   /**
    * Constructs a plugin attribute object.
@@ -23,8 +23,8 @@ class Plugin extends AttributeBase {
    *   (optional) The deriver class.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly ?string $deriver = NULL
+    public string $id,
+    public ?string $deriver = NULL
   ) {}
 
 }

@@ -22,7 +22,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @ingroup field_formatter
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class FieldFormatter extends Plugin {
+readonly class FieldFormatter extends Plugin {
 
   /**
    * Constructs a FieldFormatter attribute.
@@ -43,12 +43,12 @@ class FieldFormatter extends Plugin {
    *   (optional) The deriver class.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly ?TranslatableMarkup $label = NULL,
-    public readonly ?TranslatableMarkup $description = NULL,
-    public readonly array $field_types = [],
-    public readonly ?int $weight = NULL,
-    public readonly ?string $deriver = NULL,
+    public string $id,
+    public ?TranslatableMarkup $label = NULL,
+    public ?TranslatableMarkup $description = NULL,
+    public array $field_types = [],
+    public ?int $weight = NULL,
+    public ?string $deriver = NULL,
   ) {}
 
 }

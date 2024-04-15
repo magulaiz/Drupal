@@ -25,12 +25,12 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @see plugin_api
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class ImageToolkit extends Plugin {
+readonly class ImageToolkit extends Plugin {
 
   public function __construct(
-    public readonly string $id,
-    public readonly TranslatableMarkup $title,
-    public readonly ?string $deriver = NULL,
+    public string $id,
+    public TranslatableMarkup $title,
+    public ?string $deriver = NULL,
   ) {}
 
 }

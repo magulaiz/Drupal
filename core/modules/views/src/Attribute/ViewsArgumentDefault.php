@@ -15,7 +15,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @ingroup views_argument_default_plugins
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class ViewsArgumentDefault extends Plugin {
+readonly class ViewsArgumentDefault extends Plugin {
 
   /**
    * Constructs a ViewsArgument attribute.
@@ -33,11 +33,11 @@ class ViewsArgumentDefault extends Plugin {
    *   (optional) The deriver class.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly ?TranslatableMarkup $title = NULL,
-    public readonly ?TranslatableMarkup $short_title = NULL,
-    public readonly bool $no_ui = FALSE,
-    public readonly ?string $deriver = NULL
+    public string $id,
+    public ?TranslatableMarkup $title = NULL,
+    public ?TranslatableMarkup $short_title = NULL,
+    public bool $no_ui = FALSE,
+    public ?string $deriver = NULL
   ) {}
 
 }

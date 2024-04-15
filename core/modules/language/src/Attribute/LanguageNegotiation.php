@@ -20,7 +20,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @see plugin_api
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class LanguageNegotiation extends Plugin {
+readonly class LanguageNegotiation extends Plugin {
 
   /**
    * Constructs an LanguageNegotiation attribute.
@@ -43,12 +43,12 @@ class LanguageNegotiation extends Plugin {
    *   (optional) The route pointing to the plugin's configuration page.
    */
   public function __construct(
-      public readonly string $id,
-      public readonly TranslatableMarkup $name,
-      public readonly ?array $types = NULL,
-      public readonly int $weight = 0,
-      public readonly ?TranslatableMarkup $description = NULL,
-      public readonly ?string $config_route_name = NULL,
+      public string $id,
+      public TranslatableMarkup $name,
+      public ?array $types = NULL,
+      public int $weight = 0,
+      public ?TranslatableMarkup $description = NULL,
+      public ?string $config_route_name = NULL,
   ) {}
 
 }

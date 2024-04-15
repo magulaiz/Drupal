@@ -20,7 +20,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @see plugin_api
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class Filter extends Plugin {
+readonly class Filter extends Plugin {
 
   /**
    * Constructs a Filter attribute.
@@ -44,13 +44,13 @@ class Filter extends Plugin {
    *   (optional) The default settings for the filter.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly TranslatableMarkup $title,
-    public readonly int $type,
-    public readonly ?TranslatableMarkup $description = NULL,
-    public readonly int $weight = 0,
-    public readonly bool $status = FALSE,
-    public readonly array $settings = [],
+    public string $id,
+    public TranslatableMarkup $title,
+    public int $type,
+    public ?TranslatableMarkup $description = NULL,
+    public int $weight = 0,
+    public bool $status = FALSE,
+    public array $settings = [],
   ) {}
 
 }

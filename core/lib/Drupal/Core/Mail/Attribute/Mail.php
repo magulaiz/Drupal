@@ -19,7 +19,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @see plugin_api
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class Mail extends Plugin {
+readonly class Mail extends Plugin {
 
   /**
    * Constructs a Mail attribute.
@@ -34,10 +34,10 @@ class Mail extends Plugin {
    *   (optional) The deriver class.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly TranslatableMarkup $label,
-    public readonly ?TranslatableMarkup $description = NULL,
-    public readonly ?string $deriver = NULL,
+    public string $id,
+    public TranslatableMarkup $label,
+    public ?TranslatableMarkup $description = NULL,
+    public ?string $deriver = NULL,
   ) {}
 
 }

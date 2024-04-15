@@ -8,7 +8,7 @@ use Drupal\Component\Plugin\Attribute\Plugin;
  * Defines a custom PluginExample attribute.
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class PluginExample extends Plugin {
+readonly class PluginExample extends Plugin {
 
   /**
    * Constructs a PluginExample attribute.
@@ -19,8 +19,8 @@ class PluginExample extends Plugin {
    *   Some other sample plugin metadata.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly ?string $custom = NULL
+    public string $id,
+    public ?string $custom = NULL
   ) {}
 
 }

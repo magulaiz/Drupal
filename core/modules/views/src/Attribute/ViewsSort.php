@@ -12,6 +12,6 @@ use Drupal\Component\Plugin\Attribute\PluginID;
  * @ingroup views_sort_handlers
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class ViewsSort extends PluginID {
+readonly class ViewsSort extends PluginID {
 
 }

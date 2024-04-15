@@ -19,7 +19,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @see plugin_api
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class Editor extends Plugin {
+readonly class Editor extends Plugin {
 
   /**
    * Constructs an Editor object.
@@ -41,13 +41,13 @@ class Editor extends Plugin {
    *   (optional) The deriver class.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly TranslatableMarkup $label,
-    public readonly bool $supports_content_filtering,
-    public readonly bool $supports_inline_editing,
-    public readonly bool $is_xss_safe,
-    public readonly array $supported_element_types,
-    public readonly ?string $deriver = NULL,
+    public string $id,
+    public TranslatableMarkup $label,
+    public bool $supports_content_filtering,
+    public bool $supports_inline_editing,
+    public bool $is_xss_safe,
+    public array $supported_element_types,
+    public ?string $deriver = NULL,
   ) {}
 
 }

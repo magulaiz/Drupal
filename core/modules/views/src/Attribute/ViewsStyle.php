@@ -15,7 +15,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @ingroup views_style_plugins
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class ViewsStyle extends Plugin {
+readonly class ViewsStyle extends Plugin {
 
   /**
    * Constructs a ViewsStyle attribute.

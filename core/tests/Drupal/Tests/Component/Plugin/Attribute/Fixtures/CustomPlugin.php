@@ -10,7 +10,7 @@ use Drupal\Component\Plugin\Attribute\Plugin;
  * Custom plugin attribute.
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class CustomPlugin extends Plugin {
+readonly class CustomPlugin extends Plugin {
 
   /**
    * Constructs a CustomPlugin attribute object.
@@ -21,8 +21,8 @@ class CustomPlugin extends Plugin {
    *   The title.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly string $title
+    public string $id,
+    public string $title
   ) {}
 
 }
@@ -31,4 +31,4 @@ class CustomPlugin extends Plugin {
  * Custom plugin attribute.
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class CustomPlugin2 extends Plugin {}
+readonly class CustomPlugin2 extends Plugin {}

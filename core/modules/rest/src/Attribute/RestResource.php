@@ -22,7 +22,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @ingroup third_party
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class RestResource extends Plugin {
+readonly class RestResource extends Plugin {
 
   /**
    * Constructs a RestResource attribute.
@@ -44,11 +44,11 @@ class RestResource extends Plugin {
    * @see core/core.link_relation_types.yml
    */
   public function __construct(
-    public readonly string $id,
-    public readonly TranslatableMarkup $label,
-    public readonly ?string $serialization_class = NULL,
-    public readonly ?string $deriver = NULL,
-    public readonly array $uri_paths = [],
+    public string $id,
+    public TranslatableMarkup $label,
+    public ?string $serialization_class = NULL,
+    public ?string $deriver = NULL,
+    public array $uri_paths = [],
   ) {}
 
 }

@@ -15,7 +15,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @ingroup views_argument_validate_plugins
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class ViewsArgumentValidator extends Plugin {
+readonly class ViewsArgumentValidator extends Plugin {
 
   /**
    * Constructs a ViewsArgumentValidator attribute.
@@ -36,12 +36,12 @@ class ViewsArgumentValidator extends Plugin {
    *   (optional) The deriver class.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly ?TranslatableMarkup $title = NULL,
-    public readonly ?TranslatableMarkup $short_title = NULL,
-    public readonly ?string $entity_type = NULL,
-    public readonly bool $no_ui = FALSE,
-    public readonly ?string $deriver = NULL
+    public string $id,
+    public ?TranslatableMarkup $title = NULL,
+    public ?TranslatableMarkup $short_title = NULL,
+    public ?string $entity_type = NULL,
+    public bool $no_ui = FALSE,
+    public ?string $deriver = NULL
   ) {}
 
 }

@@ -21,7 +21,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @ingroup field_widget
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class FieldWidget extends Plugin {
+readonly class FieldWidget extends Plugin {
 
   /**
    * Constructs a FieldWidget attribute.
@@ -44,13 +44,13 @@ class FieldWidget extends Plugin {
    *   (optional) The deriver class.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly ?TranslatableMarkup $label = NULL,
-    public readonly ?TranslatableMarkup $description = NULL,
-    public readonly array $field_types = [],
-    public readonly bool $multiple_values = FALSE,
-    public readonly ?int $weight = NULL,
-    public readonly ?string $deriver = NULL,
+    public string $id,
+    public ?TranslatableMarkup $label = NULL,
+    public ?TranslatableMarkup $description = NULL,
+    public array $field_types = [],
+    public bool $multiple_values = FALSE,
+    public ?int $weight = NULL,
+    public ?string $deriver = NULL,
   ) {}
 
 }

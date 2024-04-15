@@ -16,7 +16,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @ingroup search
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class Search extends Plugin {
+readonly class Search extends Plugin {
 
   /**
    * Constructs a Search attribute.
@@ -31,10 +31,10 @@ class Search extends Plugin {
    *   (optional) The deriver class.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly ?TranslatableMarkup $title = NULL,
-    public readonly bool $use_admin_theme = FALSE,
-    public readonly ?string $deriver = NULL
+    public string $id,
+    public ?TranslatableMarkup $title = NULL,
+    public bool $use_admin_theme = FALSE,
+    public ?string $deriver = NULL
   ) {}
 
 }

@@ -23,7 +23,7 @@ use Drupal\Component\Plugin\Attribute\Plugin;
  * @ingroup migration
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class MigrateDestination extends Plugin {
+readonly class MigrateDestination extends Plugin {
 
   /**
    * Constructs a migrate destination plugin attribute object.
@@ -42,10 +42,10 @@ class MigrateDestination extends Plugin {
    *   (optional) The deriver class.
    */
   public function __construct(
-    public readonly string $id,
+    public string $id,
     public bool $requirements_met = TRUE,
-    public readonly ?string $destination_module = NULL,
-    public readonly ?string $deriver = NULL,
+    public ?string $destination_module = NULL,
+    public ?string $deriver = NULL,
   ) {
   }
 
