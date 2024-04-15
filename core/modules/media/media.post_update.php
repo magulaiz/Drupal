@@ -47,8 +47,8 @@ function media_post_update_set_blank_iframe_domain_to_null() {
 }
 
 /**
- * Update media author views filter to use the user_name plugin.
+ * Empty update function to clear the Views data cache.
  */
 function media_post_update_media_author_views_filter_update(): void {
-  // Update media author views filter to use the user_name plugin.
+  // Empty update function to clear the Views data cache.
 }
