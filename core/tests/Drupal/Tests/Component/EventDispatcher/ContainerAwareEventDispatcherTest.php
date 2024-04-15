@@ -575,6 +575,9 @@ class TestEventListener {
     $this->preFooInvoked = TRUE;
   }
 
+  /**
+   * @phpstan-ignore-next-line
+   */
   public function postFoo(Event $e) {
     $this->postFooInvoked = TRUE;
 
@@ -588,6 +591,9 @@ class TestWithDispatcher {
   public $name;
   public $dispatcher;
 
+  /**
+   * @phpstan-ignore-next-line
+   */
   public function foo(Event $e, $name, $dispatcher) {
     $this->name = $name;
     $this->dispatcher = $dispatcher;
