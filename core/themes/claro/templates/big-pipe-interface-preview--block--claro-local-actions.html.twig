@@ -16,7 +16,9 @@ assistive technology, while maintaining space within the layout. #}
   <ul class="local-actions">
     <li class="local-actions__item">
       <a href="#" class="button button--action button--primary">
-        {{ preview }}
+        {# Create (and translate) sample text so the link will be the same
+        approximate height of the BigPipe injected link. #}
+        {{ 'Add'|t }}
       </a>
     </li>
   </ul>
