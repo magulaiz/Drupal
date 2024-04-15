@@ -54,7 +54,7 @@ class FilterPermissionUiTest extends ViewTestBase {
     $this->drupalGet('admin/structure/views/view/test_filter_permission/edit/default');
     // Verify that the handler summary is correctly displaying the selected
     // permission.
-    $this->assertSession()->linkExists('User: Permission (= Access user profiles)');
+    $this->assertSession()->linkExists('User: Permission (= Access Any User Profile)');
     $this->submitForm([], 'Save');
     // Verify that we can save the view.
     $this->assertSession()->pageTextNotContains('No valid values found on filter: User: Permission.');
