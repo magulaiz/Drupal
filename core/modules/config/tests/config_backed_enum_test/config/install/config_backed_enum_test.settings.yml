@@ -1,0 +1,1 @@
+foo: !php/enum Drupal\config_backed_enum_test\BackedEnumValue::Maybe->value
