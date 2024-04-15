@@ -34,8 +34,8 @@ class CommentStatisticsTest extends CommentTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-     // Add more permissions the admin user.
-     $more_admin_role = $this->drupalCreateRole([
+    // Add more permissions the admin user.
+    $more_admin_role = $this->drupalCreateRole([
       'administer permissions',
       'access administration pages',
       'administer site configuration',
