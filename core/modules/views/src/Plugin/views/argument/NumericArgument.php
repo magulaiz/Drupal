@@ -93,7 +93,9 @@ class NumericArgument extends ArgumentPluginBase {
     if (!empty($this->options['break_phrase'])) {
       $break = static::breakString($this->argument, FALSE);
       $this->value = $break->value;
-      $this->operator = $break->operator;
+      if ($break->operator !== NULL) {
+        $this->operator = $break->operator;
+      }
     }
     else {
       $this->value = [$this->argument];
