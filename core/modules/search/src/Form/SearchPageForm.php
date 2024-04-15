@@ -4,6 +4,7 @@ namespace Drupal\search\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\WorkspaceSafeFormTrait;
 use Drupal\Core\Url;
 use Drupal\search\SearchPageInterface;
 
@@ -19,6 +20,8 @@ use Drupal\search\SearchPageInterface;
  * @internal
  */
 class SearchPageForm extends FormBase {
+
+  use WorkspaceSafeFormTrait;
 
   /**
    * The search page entity.

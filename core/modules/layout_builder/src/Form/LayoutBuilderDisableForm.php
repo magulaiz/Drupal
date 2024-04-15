@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class LayoutBuilderDisableForm extends ConfirmFormBase {
 
-  use WorkspaceSafeFormTrait;
+  use LayoutBuilderWorkspaceSafeFormTrait;
 
   /**
    * The layout tempstore repository.
@@ -94,7 +94,6 @@ class LayoutBuilderDisableForm extends ConfirmFormBase {
     }
 
     $this->sectionStorage = $section_storage;
-    $this->markWorkspaceSafe($form_state);
     // Mark this as an administrative page for JavaScript ("Back to site" link).
     $form['#attached']['drupalSettings']['path']['currentPathIsAdmin'] = TRUE;
     return parent::buildForm($form, $form_state);

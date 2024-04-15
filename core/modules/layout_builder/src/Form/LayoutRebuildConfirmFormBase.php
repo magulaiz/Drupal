@@ -22,7 +22,7 @@ abstract class LayoutRebuildConfirmFormBase extends ConfirmFormBase {
   use AjaxFormHelperTrait;
   use LayoutBuilderHighlightTrait;
   use LayoutRebuildTrait;
-  use WorkspaceSafeFormTrait;
+  use LayoutBuilderWorkspaceSafeFormTrait;
 
   /**
    * The layout tempstore repository.
@@ -78,7 +78,6 @@ abstract class LayoutRebuildConfirmFormBase extends ConfirmFormBase {
     $this->sectionStorage = $section_storage;
     $this->delta = $delta;
 
-    $this->markWorkspaceSafe($form_state);
     $form = parent::buildForm($form, $form_state);
 
     if ($this->isAjax()) {

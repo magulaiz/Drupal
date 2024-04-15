@@ -6,8 +6,6 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\views\Form\ViewsExposedForm;
-use Drupal\workspaces\Form\WorkspaceFormInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -61,27 +59,21 @@ class FormOperations implements ContainerInjectionInterface {
       return;
     }
 
-    // Add an additional validation step for every form if we are in a
-    // non-default workspace.
+    // Add a validation step for every form if we are in a workspace.
     $this->addWorkspaceValidation($form);
 
     // If a form has already been marked as safe or not to submit in a
-    // non-default workspace, we don't have anything else to do.
+    // workspace, we don't have anything else to do.
     if ($form_state->has('workspace_safe')) {
       return;
     }
 
-    // No forms are safe to submit in a non-default workspace by default, except
-    // for the whitelisted ones defined below.
-    $workspace_safe = FALSE;
-
-    // Whitelist a few forms that we know are safe to submit.
-    $form_object = $form_state->getFormObject();
-    $is_workspace_form = $form_object instanceof WorkspaceFormInterface;
-    $is_search_form = in_array($form_object->getFormId(), ['search_block_form', 'search_form'], TRUE);
-    $is_views_exposed_form = $form_object instanceof ViewsExposedForm;
-    if ($is_workspace_form || $is_search_form || $is_views_exposed_form) {
-      $workspace_safe = TRUE;
+    if (method_exists($form_state->getFormObject(), 'isWorkspaceSafeForm')) {
+      $workspace_safe = $form_state->getFormObject()->isWorkspaceSafeForm($form, $form_state);
+    }
+    else {
+      // No forms are safe to submit in a workspace by default.
+      $workspace_safe = FALSE;
     }
 
     $form_state->set('workspace_safe', $workspace_safe);

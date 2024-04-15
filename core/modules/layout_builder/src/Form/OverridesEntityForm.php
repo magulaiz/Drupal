@@ -25,7 +25,7 @@ class OverridesEntityForm extends ContentEntityForm {
 
   use PreviewToggleTrait;
   use LayoutBuilderEntityFormTrait;
-  use WorkspaceSafeFormTrait;
+  use LayoutBuilderWorkspaceSafeFormTrait;
 
   /**
    * Layout tempstore repository.
@@ -91,7 +91,6 @@ class OverridesEntityForm extends ContentEntityForm {
    */
   public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL) {
     $this->sectionStorage = $section_storage;
-    $this->markWorkspaceSafe($form_state);
     $form = parent::buildForm($form, $form_state);
     $form['#attributes']['class'][] = 'layout-builder-form';
 

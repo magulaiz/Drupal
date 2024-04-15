@@ -6,6 +6,7 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\WorkspaceSafeFormTrait;
 use Drupal\Core\Url;
 use Drupal\workspaces\WorkspaceAccessException;
 use Drupal\workspaces\WorkspaceInterface;
@@ -15,7 +16,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides the workspace publishing form.
  */
-class WorkspacePublishForm extends ConfirmFormBase implements WorkspaceFormInterface, ContainerInjectionInterface {
+class WorkspacePublishForm extends ConfirmFormBase implements ContainerInjectionInterface {
+
+  use WorkspaceSafeFormTrait;
 
   /**
    * The workspace that will be published.
