@@ -199,6 +199,10 @@ function theme_update_report($variables) {
       asort($project['base_themes']);
       $base_themes = array();
       foreach ($project['base_themes'] as $base_key => $base_theme) {
+        // $status[$base_key] will be undefined for themes that are disabled but
+        // depended on by enabled themes. Use a default value for these cases.
+        $status[$base_key] = isset($status[$base_key]) ? $status[$base_key] : UPDATE_NOT_FETCHED;
+
         switch ($status[$base_key]) {
           case UPDATE_NOT_SECURE:
           case UPDATE_REVOKED:
