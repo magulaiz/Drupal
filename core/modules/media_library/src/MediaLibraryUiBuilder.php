@@ -3,6 +3,7 @@
 namespace Drupal\media_library;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -20,7 +21,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  *   This service is an internal part of the modal media library dialog and
  *   does not provide any extension points.
  */
-class MediaLibraryUiBuilder {
+class MediaLibraryUiBuilder implements MediaLibraryUiBuilderInterface {
 
   use StringTranslationTrait;
 
@@ -82,12 +83,9 @@ class MediaLibraryUiBuilder {
   }
 
   /**
-   * Get media library dialog options.
-   *
-   * @return array
-   *   The media library dialog options.
+   * {@inheritdoc}
    */
-  public static function dialogOptions() {
+  public static function dialogOptions(): array {
     return [
       'dialogClass' => 'media-library-widget-modal',
       'title' => t('Add or select media'),
@@ -97,16 +95,9 @@ class MediaLibraryUiBuilder {
   }
 
   /**
-   * Build the media library UI.
-   *
-   * @param \Drupal\media_library\MediaLibraryState $state
-   *   (optional) The current state of the media library, derived from the
-   *   current request.
-   *
-   * @return array
-   *   The render array for the media library.
+   * {@inheritdoc}
    */
-  public function buildUi(MediaLibraryState $state = NULL) {
+  public function buildUi(MediaLibraryState $state = NULL): array {
     if (!$state) {
       $state = MediaLibraryState::fromRequest($this->request);
     }
@@ -163,18 +154,9 @@ class MediaLibraryUiBuilder {
   }
 
   /**
-   * Check access to the media library.
-   *
-   * @param \Drupal\Core\Session\AccountInterface $account
-   *   Run access checks for this account.
-   * @param \Drupal\media_library\MediaLibraryState $state
-   *   (optional) The current state of the media library, derived from the
-   *   current request.
-   *
-   * @return \Drupal\Core\Access\AccessResult
-   *   The access result.
+   * {@inheritdoc}
    */
-  public function checkAccess(AccountInterface $account, MediaLibraryState $state = NULL) {
+  public function checkAccess(AccountInterface $account, MediaLibraryState $state = NULL): AccessResultInterface {
     if (!$state) {
       try {
         $state = MediaLibraryState::fromRequest($this->request);

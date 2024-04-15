@@ -20,7 +20,7 @@ use Drupal\Core\Url;
 use Drupal\media\MediaInterface;
 use Drupal\media\MediaTypeInterface;
 use Drupal\media_library\Ajax\UpdateSelectionCommand;
-use Drupal\media_library\MediaLibraryUiBuilder;
+use Drupal\media_library\MediaLibraryUiBuilderInterface;
 use Drupal\media_library\OpenerResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -39,9 +39,9 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
   /**
    * The media library UI builder.
    *
-   * @var \Drupal\media_library\MediaLibraryUiBuilder
+   * @var \Drupal\media_library\MediaLibraryUiBuilderInterface
    */
-  protected $libraryUiBuilder;
+  protected MediaLibraryUiBuilderInterface $libraryUiBuilder;
 
   /**
    * The type of media items being created by this form.
@@ -69,12 +69,12 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param \Drupal\media_library\MediaLibraryUiBuilder $library_ui_builder
+   * @param \Drupal\media_library\MediaLibraryUiBuilderInterface $library_ui_builder
    *   The media library UI builder.
    * @param \Drupal\media_library\OpenerResolverInterface $opener_resolver
    *   The opener resolver.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, MediaLibraryUiBuilder $library_ui_builder, OpenerResolverInterface $opener_resolver) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, MediaLibraryUiBuilderInterface $library_ui_builder, OpenerResolverInterface $opener_resolver) {
     $this->entityTypeManager = $entity_type_manager;
     $this->libraryUiBuilder = $library_ui_builder;
     $this->viewBuilder = $this->entityTypeManager->getViewBuilder('media');
