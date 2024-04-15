@@ -641,7 +641,8 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    */
   public function getMigrationDependencies() {
     if (func_num_args() > 0) {
-      @trigger_error(sprintf('Passing parameters to %s is disallowed', __METHOD__), E_USER_DEPRECATED);
+      // phpcs:ignore Drupal.Semantics.FunctionTriggerError
+      @trigger_error(sprintf('Passing parameter to %s is disallowed', __METHOD__), E_USER_DEPRECATED);
     }
 
     $this->migration_dependencies = ($this->migration_dependencies ?: []) + ['required' => [], 'optional' => []];
