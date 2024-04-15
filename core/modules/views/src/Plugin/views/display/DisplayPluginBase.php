@@ -1752,7 +1752,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         // We have some options, so make a list.
         $description = [];
         $description[] = [
-          '#markup' => $this->t('A Drupal path or external URL the more link will point to. Note that this will override the link display setting above.'),
+          '#markup' => $this->t('A Drupal path or external URL the more link will point to. This field supports global tokens. Note that this will override the link display setting above.'),
         ];
         if (!empty($options)) {
           $description[] = [
@@ -2142,6 +2142,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       return $this->view->getUrl(NULL, $this->display['id']);
     }
 
+    $path = $this->globalTokenReplace($path);
     $parts = UrlHelper::parse($path);
     $options = $parts;
     $tokens = $this->getArgumentsTokens();

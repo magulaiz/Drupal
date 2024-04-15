@@ -253,6 +253,14 @@ class DisplayTest extends ViewTestBase {
     $output = $renderer->renderRoot($output);
     $this->assertStringContainsString('/node#target', $output, 'The read more link with href "/node#target" was found.');
 
+    // Test more link with tokens.
+    $view->display_handler->setOption('link_display', 'custom_url');
+    $view->display_handler->setOption('link_url', 'node/[view:id]');
+    $this->executeView($view);
+    $output = $view->preview();
+    $output = $renderer->renderRoot($output);
+    $this->assertStringContainsString('/node/test_display_more', $output);
+
     // Test more link with arguments.
     $view = Views::getView('test_simple_argument');
     $view->setDisplay('default');
