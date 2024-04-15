@@ -17,6 +17,46 @@ use PHPUnit\Framework\TestCase;
 class EnvironmentTest extends TestCase {
 
   /**
+   * Tests \Drupal\Component\Utility\Environment::setTimeLimit().
+   *
+   * @dataProvider providerTestSetTimeLimit
+   * @covers ::setTimeLimit
+   *
+   * @param int $max_execution_time
+   *   The max_execution_time to be set in php ini.
+   * @param int $time_limit
+   *   The required time_limit argument for
+   *   \Drupal\Component\Utility\Environment::setTimeLimit().
+   * @param bool $expected
+   *   The expected return value from
+   *   \Drupal\Component\Utility\Environment::setTimeLimit().
+   */
+  public function testSetTimeLimit(int $max_execution_time, int $time_limit, bool $expected): void {
+    ini_set('max_execution_time', $max_execution_time);
+    $actual = Environment::setTimeLimit($time_limit);
+    $this->assertEquals($expected, $actual);
+  }
+
+  /**
+   * Provides data for testSetTimeLimit()
+   *
+   * @return array
+   *   An array of arrays, each containing the arguments for setting
+   *   set_time_limit, \Drupal\Component\Utility\Environment::setTimeLimit():
+   *   $time_limit, and the expected return value.
+   */
+  public static function providerTestSetTimeLimit(): array {
+    return [
+      // Max execution time of 0.
+      [0, 1, FALSE],
+      // Max execution time not 0 but greater than time limit.
+      [10, 1, FALSE],
+      // Max execution time not 0 but less than time limit.
+      [1, 10, TRUE],
+    ];
+  }
+
+  /**
    * Tests \Drupal\Component\Utility\Environment::checkMemoryLimit().
    *
    * @dataProvider providerTestCheckMemoryLimit
