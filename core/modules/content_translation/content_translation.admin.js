@@ -88,9 +88,7 @@
       once(
         'translation-entity-admin-hide',
         // Keep jQuery because of the use of `:input`.
-        document.querySelectorAll(
-          `${context} table .bundle-settings .translatable input`,
-        ),
+        $(context).find('table .bundle-settings .translatable :input'),
       ).forEach((input) => {
         const $input = $(input);
         const $bundleSettings = $input.closest('.bundle-settings');
