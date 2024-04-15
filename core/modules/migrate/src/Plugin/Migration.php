@@ -578,7 +578,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    * {@inheritdoc}
    */
   public function set($property_name, $value) {
-    if ($property_name === 'source') {
+    if ($property_name == 'source') {
       // Invalidate the source plugin.
       unset($this->sourcePlugin);
     }
