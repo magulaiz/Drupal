@@ -4,8 +4,6 @@ declare(strict_types = 1);
 
 namespace Drupal\ckeditor5\Attribute;
 
-use Drupal\ckeditor5\Annotation\CKEditor5AspectsOfCKEditor5Plugin;
-use Drupal\ckeditor5\Annotation\DrupalAspectsOfCKEditor5Plugin;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
 use Drupal\Component\Plugin\Attribute\Plugin;
 
@@ -20,14 +18,14 @@ class CKEditor5Plugin extends Plugin {
    *
    * @param string $id
    *   The plugin ID.
-   * @param \Drupal\ckeditor5\Annotation\CKEditor5AspectsOfCKEditor5Plugin $ckeditor5
+   * @param \Drupal\ckeditor5\Attribute\CKEditor5AspectsIfCKEditor5Plugin $ckeditor5
    *   The CKEditor 5 aspects of the plugin definition.
-   * @param \Drupal\ckeditor5\Annotation\DrupalAspectsOfCKEditor5Plugin $drupal
+   * @param \Drupal\ckeditor5\Attribute\DrupalAspectsOfCKEditor5Plugin $drupal
    *   The Drupal aspects of the plugin definition.
    */
   public function __construct(
     public readonly string $id,
-    public readonly CKEditor5AspectsOfCKEditor5Plugin $ckeditor5,
+    public readonly CKEditor5AspectsIfCKEditor5Plugin $ckeditor5,
     public readonly DrupalAspectsOfCKEditor5Plugin $drupal,
   ) {}
 
