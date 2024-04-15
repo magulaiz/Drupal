@@ -404,10 +404,17 @@ class NumericFilter extends FilterPluginBase {
       return TRUE;
     }
 
+    if ($this->isAGroup() && isset($this->options['group_info']['identifier'])) {
+      $identifier = $this->options['group_info']['identifier'];
+    }
+    elseif (isset($this->options['expose']['identifier'])) {
+      $identifier = $this->options['expose']['identifier'];
+    }
+
     // rewrite the input value so that it's in the correct format so that
     // the parent gets the right data.
-    if (!empty($this->options['expose']['identifier'])) {
-      $value = &$input[$this->options['expose']['identifier']];
+    if (isset($identifier)) {
+      $value = &$input[$identifier];
       if (!is_array($value)) {
         $value = [
           'value' => $value,
