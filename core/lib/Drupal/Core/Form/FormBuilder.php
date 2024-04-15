@@ -30,6 +30,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormSubmitterInterface, FormCacheInterface, TrustedCallbackInterface {
 
+  const SKIP_ALTER_FORM_ID = 'skip_alter_form_id';
+
   /**
    * The module handler.
    *
@@ -822,7 +824,9 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     if (isset($build_info['base_form_id'])) {
       $hooks[] = 'form_' . $build_info['base_form_id'];
     }
-    $hooks[] = 'form_' . $form_id;
+    if (empty($build_info[self::SKIP_ALTER_FORM_ID])) {
+      $hooks[] = 'form_' . $form_id;
+    }
     $this->moduleHandler->alter($hooks, $form, $form_state, $form_id);
     $this->themeManager->alter($hooks, $form, $form_state, $form_id);
   }
