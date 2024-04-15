@@ -112,15 +112,12 @@ class ConfigureVisibilityForm extends FormBase {
    *   The uuid generator.
    * @param \Drupal\Core\Plugin\PluginFormFactoryInterface $plugin_form_manager
    *   The plugin form manager.
-   * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
-   *   The class resolver.
    */
-  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository, ConditionManager $condition_manager, UuidInterface $uuid_generator, PluginFormFactoryInterface $plugin_form_manager, ClassResolverInterface $class_resolver) {
+  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository, ConditionManager $condition_manager, UuidInterface $uuid_generator, PluginFormFactoryInterface $plugin_form_manager) {
     $this->layoutTempstoreRepository = $layout_tempstore_repository;
     $this->conditionManager = $condition_manager;
     $this->uuidGenerator = $uuid_generator;
     $this->pluginFormFactory = $plugin_form_manager;
-    $this->classResolver = $class_resolver;
   }
 
   /**
@@ -131,8 +128,7 @@ class ConfigureVisibilityForm extends FormBase {
       $container->get('layout_builder.tempstore_repository'),
       $container->get('plugin.manager.condition'),
       $container->get('uuid'),
-      $container->get('plugin_form.factory'),
-      $container->get('class_resolver')
+      $container->get('plugin_form.factory')
     );
   }
 
