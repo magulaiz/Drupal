@@ -170,10 +170,20 @@ system.diff:
 system.logging:
   type: config_object
   label: 'Logging settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     error_level:
       type: string
       label: 'Error messages to display'
+      # @see core/includes/bootstrap.inc
+      constraints:
+        Choice:
+          choices:
+            - 'hide'
+            - 'some'
+            - 'all'
+            - 'verbose'
 
 system.performance:
   type: config_object
