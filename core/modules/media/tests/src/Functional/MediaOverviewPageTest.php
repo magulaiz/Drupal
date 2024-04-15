@@ -188,7 +188,7 @@ class MediaOverviewPageTest extends MediaFunctionalTestBase {
   /**
    * Tests the author views filter uses the user_name plugin.
    */
-  public function testMediaOverviewAuthorFilter() {
+  public function testMediaOverviewAuthorFilter(): void {
     $this->drupalLogin($this->adminUser);
     // Create some content for the view.
     $media_type1 = $this->createMediaType('test');
