@@ -48,6 +48,8 @@ th {
   -webkit-text-decoration: none;
   text-decoration: none;
   color: inherit;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .sortable-heading > a:focus,
