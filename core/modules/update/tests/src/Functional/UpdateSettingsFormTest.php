@@ -62,7 +62,7 @@ class UpdateSettingsFormTest extends BrowserTestBase {
     $this->assertSession()->statusMessageNotExists(MessengerInterface::TYPE_WARNING);
     $this->assertSession()->statusMessageContains('"http://example.com" is not a valid email address.', MessengerInterface::TYPE_ERROR);
     $this->assertTrue($this->assertSession()->fieldExists('update_notify_emails')->hasClass('error'));
-    $this->assertSame(NULL, $this->config('update.settings')->get('notification.emails'));
+    $this->assertNull($this->config('update.settings')->get('notification.emails'));
 
     // Next, set an invalid email addresses, but make sure it's second entry.
     $this->assertSession()->fieldExists('update_notify_emails')->setValue(implode("\n", array_slice($values_to_enter, 1, 2)));
@@ -71,7 +71,7 @@ class UpdateSettingsFormTest extends BrowserTestBase {
     $this->assertSession()->statusMessageNotExists(MessengerInterface::TYPE_WARNING);
     $this->assertSession()->statusMessageContains('"http://example.com/also-not-an-email-address" is not a valid email address.', MessengerInterface::TYPE_ERROR);
     $this->assertTrue($this->assertSession()->fieldExists('update_notify_emails')->hasClass('error'));
-    $this->assertSame(NULL, $this->config('update.settings')->get('notification.emails'));
+    $this->assertNull($this->config('update.settings')->get('notification.emails'));
 
     // Next, set multiple invalid email addresses, and assert the same as above
     // except the message should be adjusted now.
@@ -81,7 +81,7 @@ class UpdateSettingsFormTest extends BrowserTestBase {
     $this->assertSession()->statusMessageNotExists(MessengerInterface::TYPE_WARNING);
     $this->assertSession()->statusMessageContains('http://example.com, http://example.com/also-not-an-email-address are not valid email addresses.', MessengerInterface::TYPE_ERROR);
     $this->assertTrue($this->assertSession()->fieldExists('update_notify_emails')->hasClass('error'));
-    $this->assertSame(NULL, $this->config('update.settings')->get('notification.emails'));
+    $this->assertNull($this->config('update.settings')->get('notification.emails'));
 
     // Now fill in valid email addresses, now the form should be saved
     // successfully.
