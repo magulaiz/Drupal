@@ -126,6 +126,26 @@ class CommentTypeForm extends EntityForm {
       ];
     }
 
+    $form['additional_settings'] = [
+      '#type' => 'vertical_tabs',
+    ];
+
+    $form['workflow'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Publishing options'),
+      '#group' => 'additional_settings',
+    ];
+
+    $form['workflow']['options'] = [
+      '#type' => 'checkboxes',
+      '#title' => $this->t('Default options'),
+      '#description' => $this->t('Automatically create new revisions.'),
+      '#default_value' => $this->getWorkflowOptions(),
+      '#options' => [
+        'new_revision' => $this->t('Create new revision'),
+      ],
+    ];
+
     if ($this->moduleHandler->moduleExists('content_translation')) {
       $form['language'] = [
         '#type' => 'details',
@@ -156,6 +176,21 @@ class CommentTypeForm extends EntityForm {
   }
 
   /**
+   * Prepares workflow options to be used in the 'checkboxes' form element.
+   *
+   * @return array
+   *   Array of options ready to be used in #options.
+   */
+  protected function getWorkflowOptions() {
+    $workflow_options = [
+      'new_revision' => $this->entity->shouldCreateNewRevision(),
+    ];
+    // Prepare workflow options to be used for 'checkboxes' form element.
+    $keys = array_keys(array_filter($workflow_options));
+    return array_combine($keys, $keys);
+  }
+
+  /**
    * Wraps _comment_entity_uses_integer_id().
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -166,6 +201,15 @@ class CommentTypeForm extends EntityForm {
    */
   protected function entityTypeSupportsComments(EntityTypeInterface $entity_type) {
     return $entity_type->entityClassImplements(FieldableEntityInterface::class) && _comment_entity_uses_integer_id($entity_type->id());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    parent::submitForm($form, $form_state);
+
+    $this->entity->setNewRevision((bool) $form_state->getValue(['options', 'new_revision']));
   }
 
   /**

@@ -3,11 +3,12 @@
 namespace Drupal\comment;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Entity\RevisionableEntityBundleInterface;
 
 /**
  * Provides an interface defining a comment type entity.
  */
-interface CommentTypeInterface extends ConfigEntityInterface {
+interface CommentTypeInterface extends ConfigEntityInterface, RevisionableEntityBundleInterface {
 
   /**
    * Returns the comment type description.
