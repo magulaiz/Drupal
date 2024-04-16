@@ -10,6 +10,7 @@ use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
+use Drupal\Core\Update\UpdateKernel;
 use Drupal\Core\Utility\ThemeRegistry;
 
 /**
@@ -252,11 +253,30 @@ class Registry implements DestructableInterface {
         return $cached;
       }
     }
-    $this->build();
-    // Only persist it if all modules are loaded to ensure it is complete.
-    if ($this->moduleHandler->isLoaded()) {
-      $this->setCache();
+
+    // Some theme hook implementations such as the one in Views request a lot of
+    // information such as field schemas. These might be broken until an update
+    // is run, so we need to build a limited registry while on update.php.
+    if (\Drupal::getContainer()->get('kernel') instanceof UpdateKernel) {
+      // Call ::build() with only the system module and then revert the list.
+      $module_list = $this->moduleHandler->getModuleList();
+      $system_only = array_intersect_key($module_list, ['system' => TRUE]);
+      $this->moduleHandler->setModuleList($system_only);
+      $return = $this->build();
+      $this->moduleHandler->setModuleList($module_list);
+
+      // We might have poisoned the cache with only info from 'system'.
+      $this->cache->delete("theme_registry:build:modules");
+        
+      return $return;
+    } else {
+      $this->build();
+      // Only persist it if all modules are loaded to ensure it is complete.
+      if ($this->moduleHandler->isLoaded()) {
+        $this->setCache();
+      }
     }
+
     return $this->registry[$this->theme->getName()];
   }
 
