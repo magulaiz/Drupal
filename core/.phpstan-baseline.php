@@ -2709,61 +2709,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/action/src/Plugin/Action/UnpublishByKeywordNode.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Session\\\\AccountInterface\\:\\:\\$name\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/action/tests/src/Functional/Rest/ActionJsonBasicAuthTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Session\\\\AccountInterface\\:\\:\\$passRaw\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/action/tests/src/Functional/Rest/ActionJsonBasicAuthTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Session\\\\AccountInterface\\:\\:\\$name\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/action/tests/src/Functional/Rest/ActionJsonCookieTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Session\\\\AccountInterface\\:\\:\\$passRaw\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/action/tests/src/Functional/Rest/ActionJsonCookieTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\system\\\\ActionConfigEntityInterface\\:\\:getFields\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/action/tests/src/Functional/Rest/ActionXmlAnonTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Session\\\\AccountInterface\\:\\:\\$name\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/action/tests/src/Functional/Rest/ActionXmlBasicAuthTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Session\\\\AccountInterface\\:\\:\\$passRaw\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/action/tests/src/Functional/Rest/ActionXmlBasicAuthTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\system\\\\ActionConfigEntityInterface\\:\\:getFields\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/action/tests/src/Functional/Rest/ActionXmlBasicAuthTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Session\\\\AccountInterface\\:\\:\\$name\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/action/tests/src/Functional/Rest/ActionXmlCookieTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Session\\\\AccountInterface\\:\\:\\$passRaw\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/action/tests/src/Functional/Rest/ActionXmlCookieTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\system\\\\ActionConfigEntityInterface\\:\\:getFields\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/action/tests/src/Functional/Rest/ActionXmlCookieTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Action\\\\ActionInterface\\:\\:getConfiguration\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/action/tests/src/FunctionalJavascript/ActionFormAjaxTest.php',
@@ -8754,11 +8699,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/file/tests/src/Kernel/MoveTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$validator in PHPDoc tag @var does not exist\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/Kernel/Validation/UploadedFileValidatorTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\filter\\\\Plugin\\\\FilterInterface\\:\\:\\$status\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/filter/src/Element/ProcessedText.php',
@@ -10549,11 +10489,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/layout_builder/src/Entity/LayoutBuilderSampleEntityGenerator.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Block\\\\BlockManagerInterface\\:\\:clearCachedDefinitions\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/src/EventSubscriber/LayoutBuilderConfigSubscriber.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Component\\\\Plugin\\\\PluginInspectionInterface\\:\\:getConfiguration\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/layout_builder/src/EventSubscriber/SetInlineBlockDependency.php',
@@ -10572,11 +10507,6 @@ $ignoreErrors[] = [
 	'message' => '#^PHPDoc tag @return with type Drupal\\\\Core\\\\Layout\\\\LayoutInterface\\|Drupal\\\\Core\\\\Plugin\\\\PluginFormInterface is not subtype of native type Drupal\\\\Core\\\\Layout\\\\LayoutInterface\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/layout_builder/src/Form/ConfigureSectionForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$config_factory in PHPDoc tag @var does not exist\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/src/Form/LayoutBuilderSettingsForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Component\\\\Plugin\\\\PluginInspectionInterface\\:\\:label\\(\\)\\.$#',
@@ -11389,6 +11319,11 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/link/tests/src/Kernel/LinkItemTest.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^PHPDoc tag @return with type array is incompatible with native type Generator\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/link/tests/src/Unit/Plugin/Validation/Constraint/LinkAccessConstraintValidatorTest.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Access to an undefined property hasProperty\\(files\\)\\:\\:\\$langcode\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/modules/locale/locale.batch.inc',
@@ -12049,6 +11984,11 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/media/tests/src/Functional/Rest/MediaXmlCookieTest.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Field\\\\FieldStorageDefinitionInterface\\:\\:save\\(\\)\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/media/tests/src/Functional/Update/MediaMappingUpdateTest.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media/tests/src/Functional/Update/MediaSettingsDefaultIframeDomainUpdateTest.php',
@@ -12197,6 +12137,11 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Field\\\\FieldStorageDefinitionInterface\\:\\:save\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media/tests/src/Kernel/MediaKernelTestBase.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Field\\\\FieldStorageDefinitionInterface\\:\\:save\\(\\)\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/media/tests/src/Kernel/MediaMappingsConstraintValidatorTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\FieldItemListInterface\\:\\:\\$alt\\.$#',
@@ -12480,6 +12425,11 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/WidgetViewsTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForLink\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/WidgetViewsTest.php',
 ];
@@ -12921,6 +12871,11 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Language\\\\LanguageManagerInterface\\:\\:getLanguageConfigOverride\\(\\)\\.$#',
 	'count' => 2,
+	'path' => __DIR__ . '/modules/migrate/src/Plugin/migrate/destination/Config.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:hasTranslatableElements\\(\\)\\.$#',
+	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate/src/Plugin/migrate/destination/Config.php',
 ];
 $ignoreErrors[] = [
@@ -13492,11 +13447,6 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$last_insert_id might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/mysql/src/Driver/Database/mysql/Insert.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Access to an undefined property Exception\\:\\:\\$errorInfo\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mysql/src/Driver/Database/mysql/Install/Tasks.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Database\\\\Connection\\:\\:isMariaDb\\(\\)\\.$#',
@@ -16996,6 +16946,11 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/entity_test/update/entity_definition_updates_8002.inc',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Variable \\$original_type in PHPDoc tag @var does not match assigned variable \\$cloned_type\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/modules/entity_test_bundle_class/entity_test_bundle_class.module',
+];
+$ignoreErrors[] = [
 	'message' => '#^Comparison operation "\\=\\=" between stdClass and 1 results in an error\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/error_test/src/Controller/ErrorTestController.php',
@@ -17254,6 +17209,61 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$test_meta in empty\\(\\) always exists and is not falsy\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/Render/HtmlResponseAttachmentsTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Session\\\\AccountInterface\\:\\:\\$name\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/src/Functional/Rest/ActionJsonBasicAuthTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Session\\\\AccountInterface\\:\\:\\$passRaw\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/src/Functional/Rest/ActionJsonBasicAuthTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Session\\\\AccountInterface\\:\\:\\$name\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/src/Functional/Rest/ActionJsonCookieTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Session\\\\AccountInterface\\:\\:\\$passRaw\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/src/Functional/Rest/ActionJsonCookieTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to an undefined method Drupal\\\\system\\\\ActionConfigEntityInterface\\:\\:getFields\\(\\)\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/src/Functional/Rest/ActionXmlAnonTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Session\\\\AccountInterface\\:\\:\\$name\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/src/Functional/Rest/ActionXmlBasicAuthTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Session\\\\AccountInterface\\:\\:\\$passRaw\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/src/Functional/Rest/ActionXmlBasicAuthTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to an undefined method Drupal\\\\system\\\\ActionConfigEntityInterface\\:\\:getFields\\(\\)\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/src/Functional/Rest/ActionXmlBasicAuthTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Session\\\\AccountInterface\\:\\:\\$name\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/src/Functional/Rest/ActionXmlCookieTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Session\\\\AccountInterface\\:\\:\\$passRaw\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/src/Functional/Rest/ActionXmlCookieTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to an undefined method Drupal\\\\system\\\\ActionConfigEntityInterface\\:\\:getFields\\(\\)\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/src/Functional/Rest/ActionXmlCookieTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Session\\\\AccountInterface\\:\\:\\$name\\.$#',
@@ -18757,6 +18767,11 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/user/src/Plugin/Validation/Constraint/UserMailRequiredValidator.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\TypedData\\\\TypedDataInterface\\:\\:\\$value\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/user/src/Plugin/Validation/Constraint/UserNameConstraintValidator.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Symfony\\\\Component\\\\Validator\\\\Constraint\\:\\:\\$emptyMessage\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/src/Plugin/Validation/Constraint/UserNameConstraintValidator.php',
@@ -19363,18 +19378,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\views\\\\Plugin\\\\views\\\\filter\\\\FilterPluginBase\\:\\:getValueOptions\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Views/HandlerFilterRolesTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method expectWarning\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Views/HandlerFilterRolesTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method expectWarningMessage\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Views/HandlerFilterRolesTest.php',
 ];
@@ -21697,11 +21700,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workspaces/src/EventSubscriber/EntitySchemaSubscriber.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\path_alias\\\\AliasManagerInterface\\:\\:setCacheKey\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/src/EventSubscriber/WorkspaceRequestSubscriber.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\workspaces\\\\Form\\\\WorkspaceForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/src/Form/WorkspaceForm.php',
@@ -21767,12 +21765,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workspaces/src/WorkspaceMerger.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\workspaces\\\\WorkspaceMerger\\:\\:checkConflictsOnTarget\\(\\) should return array but return statement is missing\\.$#',
+	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityTypeInterface\\:\\:getRevisionMetadataKey\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/src/WorkspaceMerger.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$entity in PHPDoc tag @var does not match any variable in the foreach loop\\: \\$revisions_on_source, \\$revision$#',
+	'message' => '#^Method Drupal\\\\workspaces\\\\WorkspaceMerger\\:\\:checkConflictsOnTarget\\(\\) should return array but return statement is missing\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/src/WorkspaceMerger.php',
 ];
@@ -21810,6 +21808,16 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityStorageInterface\\:\\:loadMultipleRevisions\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/src/WorkspaceViewBuilder.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to an undefined method Drupal\\\\path_alias\\\\AliasManagerInterface\\:\\:setCacheKey\\(\\)\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/workspaces/src/WorkspacesAliasManager.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to an undefined method Drupal\\\\path_alias\\\\AliasManagerInterface\\:\\:writeCache\\(\\)\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/workspaces/src/WorkspacesAliasManager.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\node\\\\NodeInterface\\:\\:\\$path\\.$#',
@@ -21955,6 +21963,11 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/FunctionalJavascript/WorkspaceToolbarIntegrationTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/workspaces/tests/src/FunctionalJavascript/WorkspacesLayoutBuilderIntegrationTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:validate\\(\\)\\.$#',
@@ -23084,18 +23097,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:getDependencies\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Config/ConfigInstallTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method expectWarning\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Config/ConfigInstallTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method expectWarningMessage\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Config/ConfigInstallTest.php',
 ];
@@ -24758,12 +24759,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Block/BlockManagerTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method expectError\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Config/ConfigTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Config\\\\Entity\\\\ConfigEntityBase&PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:\\$weight\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Config/Entity/ConfigEntityBaseUnitTest.php',
@@ -24872,12 +24867,6 @@ $ignoreErrors[] = [
 	'message' => '#^Cannot call method expects\\(\\) on array\\<string, float\\>\\|object\\.$#',
 	'count' => 3,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Cron/CronSuspendQueueDelayTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method expectError\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Database/ConditionTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Extension\\\\Extension\\:\\:getAutoloadInfo\\(\\)\\.$#',
@@ -25091,7 +25080,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Cannot call method willReturn\\(\\) on array\\.$#',
-	'count' => 1,
+	'count' => 3,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Entity/EntityTypeRepositoryTest.php',
 ];
 $ignoreErrors[] = [
@@ -25223,18 +25212,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Response\\:\\:getTargetUrl\\(\\)\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/EventSubscriber/RedirectResponseSubscriberTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method expectWarning\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/EventSubscriber/SpecialAttributesRouteSubscriberTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method expectWarningMessage\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/EventSubscriber/SpecialAttributesRouteSubscriberTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Extension\\\\Extension\\:\\:getDriverName\\(\\)\\.$#',
@@ -25473,18 +25450,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Plugin/TestPluginManager.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method expectError\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Render/ElementTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method expectErrorMessage\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Render/ElementTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Cannot access property \\$data on object\\|false\\.$#',
 	'count' => 5,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Render/RendererPlaceholdersTest.php',
@@ -25538,18 +25503,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Routing\\\\RoutePreloader\\:\\:onFinishedRoutes\\(\\) invoked with 1 parameter, 0 required\\.$#',
 	'count' => 3,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Routing/RoutePreloaderTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method expectWarning\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Security/DoTrustedCallbackTraitTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method expectWarningMessage\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Security/DoTrustedCallbackTraitTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Session\\\\SuperUserAccessPolicy\\:\\:getPersistentCacheContexts\\(\\) invoked with 1 parameter, 0 required\\.$#',
