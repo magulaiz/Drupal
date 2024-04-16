@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e9e92c48989add452a830f19cfc2b996",
+    "content-hash": "690f8b63779d026342e48aa0a725befa",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -5329,16 +5329,16 @@
         },
         {
             "name": "jangregor/phpstan-prophecy",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Jan0707/phpstan-prophecy.git",
-                "reference": "1db519bd865a7b464cf76e2a5ea5cb7b37bffc35"
+                "reference": "5ee56c7db1d58f0578c82a35e3c1befe840e85a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Jan0707/phpstan-prophecy/zipball/1db519bd865a7b464cf76e2a5ea5cb7b37bffc35",
-                "reference": "1db519bd865a7b464cf76e2a5ea5cb7b37bffc35",
+                "url": "https://api.github.com/repos/Jan0707/phpstan-prophecy/zipball/5ee56c7db1d58f0578c82a35e3c1befe840e85a9",
+                "reference": "5ee56c7db1d58f0578c82a35e3c1befe840e85a9",
                 "shasum": ""
             },
             "require": {
@@ -5347,7 +5347,7 @@
             },
             "conflict": {
                 "phpspec/prophecy": "<1.7.0 || >=2.0.0",
-                "phpunit/phpunit": "<6.0.0 || >=10.0.0"
+                "phpunit/phpunit": "<6.0.0 || >=12.0.0"
             },
             "require-dev": {
                 "ergebnis/composer-normalize": "^2.1.1",
@@ -5382,9 +5382,9 @@
             "description": "Provides a phpstan/phpstan extension for phpspec/prophecy",
             "support": {
                 "issues": "https://github.com/Jan0707/phpstan-prophecy/issues",
-                "source": "https://github.com/Jan0707/phpstan-prophecy/tree/1.0.1"
+                "source": "https://github.com/Jan0707/phpstan-prophecy/tree/1.0.2"
             },
-            "time": "2024-04-01T05:25:43+00:00"
+            "time": "2024-04-03T08:15:54+00:00"
         },
         {
             "name": "justinrainbow/json-schema",
