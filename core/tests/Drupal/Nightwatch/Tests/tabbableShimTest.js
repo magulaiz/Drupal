@@ -177,10 +177,9 @@ const dialogIntegrationTestScenarios = [
     options: {},
     // eslint-disable-next-line object-shorthand, func-names
     testActions: function ($element) {
-      const $input = $element
-        .find('input:last')
-        .trigger('focus')
-        .trigger('blur');
+      const $input = $element.find('input:last');
+      $input[0].dispatchEvent(new FocusEvent('focus'));
+      $input[0].dispatchEvent(new Event('blur'));
       $element.dialog('instance')._focusTabbable();
       return $input[0];
     },

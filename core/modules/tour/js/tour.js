@@ -36,9 +36,10 @@
         model
           // Allow other scripts to respond to tour events.
           .on('change:isActive', (tourModel, isActive) => {
-            $(document).trigger(
+            const event = new CustomEvent(
               isActive ? 'drupalTourStarted' : 'drupalTourStopped',
             );
+            document.dispatchEvent(event);
           });
         // Initialization: check whether a tour is available on the current
         // page.

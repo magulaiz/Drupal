@@ -33,14 +33,16 @@
    * Close any active toolbar tray before entering edit mode.
    */
   function closeToolbarTrays() {
-    $(Drupal.toolbar.models.toolbarModel.get('activeTab')).trigger('click');
+    const $ele = $(Drupal.toolbar.models.toolbarModel.get('activeTab'));
+    $ele[0].dispatchEvent(new Event('click'));
   }
 
   /**
    * Closes/removes off-canvas.
    */
   function closeOffCanvas() {
-    $('.ui-dialog-off-canvas .ui-dialog-titlebar-close').trigger('click');
+    const $ele = $('.ui-dialog-off-canvas .ui-dialog-titlebar-close');
+    $ele[0].dispatchEvent(new Event('click'));
   }
 
   /**
@@ -97,7 +99,8 @@
             ) {
               return;
             }
-            $(e.currentTarget).find(blockConfigureSelector).trigger('click');
+            const $ele = $(e.currentTarget).find(blockConfigureSelector);
+            $ele[0].dispatchEvent(new Event('click'));
           });
       }
     }
@@ -206,7 +209,9 @@
      */
     data.$el.find(blockConfigureSelector).on('click.settingstray', () => {
       if (!isInEditMode()) {
-        $(toggleEditSelector).trigger('click').trigger('click.settings_tray');
+        const $ele = $(toggleEditSelector);
+        $ele[0].dispatchEvent(new Event('click'));
+        $ele[0].dispatchEvent(new CustomEvent('click.settings_tray'));
       }
     });
   });

@@ -174,13 +174,21 @@
         // Broadcast model changes to other modules.
         model
           .on('change:orientation', (model, orientation) => {
-            $(document).trigger('drupalToolbarOrientationChange', orientation);
+            document.dispatchEvent(
+              new CustomEvent('drupalToolbarOrientationChange', {
+                detail: { orientation },
+              }),
+            );
           })
           .on('change:activeTab', (model, tab) => {
-            $(document).trigger('drupalToolbarTabChange', tab);
+            document.dispatchEvent(
+              new CustomEvent('drupalToolbarTabChange', { detail: { tab } }),
+            );
           })
           .on('change:activeTray', (model, tray) => {
-            $(document).trigger('drupalToolbarTrayChange', tray);
+            document.dispatchEvent(
+              new CustomEvent('drupalToolbarTrayChange', { detail: { tray } }),
+            );
           });
 
         const toolbarState = sessionStorage.getItem(

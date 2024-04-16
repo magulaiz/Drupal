@@ -94,7 +94,7 @@
       );
       if (autosubmit.length) {
         $(autosubmit).on('formUpdated.preview', function () {
-          $(this.form).trigger('submit');
+          this.form.dispatchEvent(new Event('submit'));
         });
       }
     },
