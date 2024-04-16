@@ -214,7 +214,6 @@ drupalmedia
 drupalmediaediting
 drupalmediatoolbar
 drupalorg
-eacute
 editables
 egulias
 elbonia
@@ -260,7 +259,6 @@ fieldgroups
 fieldlayout
 fieldlinks
 fieldnames
-fieldnid
 fieldsets
 filemime
 filesystems

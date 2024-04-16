@@ -40,7 +40,7 @@ class BlockVisibilityTest extends WebDriverTestBase {
    *
    * @var string
    */
-  const BODY_FIELDBLOCK_SELECTOR = '.block-field-blocknodebundle-with-section-fieldbody';
+  const BODY_FIELDBLOCK_SELECTOR = '.block-field-blocknodebundle-with-section-field-body';
 
   /**
    * {@inheritdoc}
@@ -115,7 +115,7 @@ class BlockVisibilityTest extends WebDriverTestBase {
       [
         'label' => 'ID',
         'region_selector' => '.layout__region--first',
-        'rendered_block_selector' => '.block-field-blocknodebundle-with-section-fieldnid',
+        'rendered_block_selector' => '.block-field-blocknodebundle-with-section-field-nid',
       ],
       [
         'label' => 'Powered by Drupal',
@@ -125,7 +125,7 @@ class BlockVisibilityTest extends WebDriverTestBase {
       [
         'label' => 'Body',
         'region_selector' => '.layout__region--third',
-        'rendered_block_selector' => '.block-field-blocknodebundle-with-section-fieldbody',
+        'rendered_block_selector' => '.block-field-blocknodebundle-with-section-field-body',
       ],
     ];
 
