@@ -52,11 +52,10 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
 
     $this->adminUser = $this->drupalCreateUser([
       'access toolbar',
-      'administer shortcuts',
-      'view the administration theme',
-      'access content overview',
-      'administer users',
+      'access shortcuts',
       'administer site configuration',
+      'administer shortcuts',
+      'administer themes',
     ]);
 
     // Give anonymous users permission to customize shortcut links, so that we
