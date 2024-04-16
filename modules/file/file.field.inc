@@ -462,6 +462,7 @@ function file_field_widget_settings_form($field, $instance) {
  */
 function file_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
 
+  $cardinality = $field['cardinality'];
   $defaults = array(
     'fid' => 0,
     'display' => !empty($field['settings']['display_default']),
@@ -489,7 +490,7 @@ function file_field_widget_form(&$form, &$form_state, $field, $instance, $langco
     '#extended' => TRUE,
   );
 
-  if ($field['cardinality'] == 1) {
+  if ($cardinality == 1) {
     // Set the default value.
     $element['#default_value'] = !empty($items) ? $items[0] : $defaults;
     // If there's only one field, return it as delta 0.
@@ -506,9 +507,13 @@ function file_field_widget_form(&$form, &$form_state, $field, $instance, $langco
       $elements[$delta]['#weight'] = $delta;
       $delta++;
     }
-    // And then add one more empty row for new uploads except when this is a
-    // programmed form as it is not necessary.
-    if (($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED || $delta < $field['cardinality']) && empty($form_state['programmed'])) {
+
+    $empty_single_allowed = $cardinality == 1 && $delta == 0;
+    $empty_multiple_allowed = ($cardinality == FIELD_CARDINALITY_UNLIMITED || $delta < $cardinality) && empty($form_state['programmed']);
+
+    // Add one more empty row for new uploads except when this is a programmed
+    // form as it is not necessary.
+    if ($empty_single_allowed || $empty_multiple_allowed) {
       $elements[$delta] = $element;
       $elements[$delta]['#default_value'] = $defaults;
       $elements[$delta]['#weight'] = $delta;
