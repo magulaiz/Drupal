@@ -42,22 +42,24 @@ class ElementTest extends BrowserTestBase {
     $this->drupalGet('form-test/form-weights');
 
     // Verify that the elements appear in the order of their weights.
-    $elements = $this->xpath('//input');
+    $elements = $this->xpath("//input[@type='text']");
     $expected_values = ['3', '1', '2'];
+    $this->assertEquals(count($expected_values), count($elements));
     foreach ($elements as $element) {
       $expected = array_shift($expected_values);
-      $this->assertSame($expected, (string) $element->getAttribute('value'));
+      $this->assertEquals($expected, (string) $element->getAttribute('value'));
     }
 
     // Enable the form alter hook for this form.
     $this->drupalGet('form-test/form-weights/alter');
 
     // The form alter hook moved element 1 to the end.
-    $elements = $this->xpath('//input');
+    $elements = $this->xpath("//input[@type='text']");
     $expected_values = ['3', '2', '1'];
+    $this->assertEquals(count($expected_values), count($elements));
     foreach ($elements as $element) {
       $expected = array_shift($expected_values);
-      $this->assertSame($expected, (string) $element->getAttribute('value'));
+      $this->assertEquals($expected, (string) $element->getAttribute('value'));
     }
   }
 
