@@ -2,6 +2,9 @@
 
 namespace Drupal\field_ui\Form;
 
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\OpenModalDialogCommand;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -72,6 +75,23 @@ class FieldStorageAddForm extends FormBase {
   protected $configFactory;
 
   /**
+   * The type of field to add.
+   *
+   * @var string
+   */
+  protected $fieldType;
+
+  /**
+   * @var \Drupal\field\FieldStorageConfigInterface
+   */
+  protected FieldStorageConfigInterface $fieldStorage;
+
+  /**
+   * @var \Drupal\field\FieldConfigInterface
+   */
+  protected $field;
+
+  /**
    * Constructs a new FieldStorageAddForm object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -116,7 +136,7 @@ class FieldStorageAddForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL, $bundle = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL, $bundle = NULL, $field_type = '') {
     if (!$form_state->get('entity_type_id')) {
       $form_state->set('entity_type_id', $entity_type_id);
     }
@@ -124,8 +144,17 @@ class FieldStorageAddForm extends FormBase {
       $form_state->set('bundle', $bundle);
     }
 
+    $form['#prefix'] = '<div id="field-ui-add-form">';
+    $form['#suffix'] = '</div>';
+
+    $form['status_messages'] = [
+      '#type' => 'status_messages',
+      '#weight' => -100,
+    ];
+
     $this->entityTypeId = $form_state->get('entity_type_id');
     $this->bundle = $form_state->get('bundle');
+    $this->fieldType = $field_type;
 
     // Gather valid field types.
     $field_type_options = [];
@@ -192,11 +221,43 @@ class FieldStorageAddForm extends FormBase {
       '#type' => 'submit',
       '#value' => $this->t('Save and continue'),
       '#button_type' => 'primary',
+      '#ajax' => [
+        'callback' => [$this, 'ajaxSubmitForm'],
+      ],
     ];
 
     $form['#attached']['library'][] = 'field_ui/drupal.field_ui';
 
     return $form;
+  }
+
+  /**
+   * Ajax callback for submit.
+   */
+  public function ajaxSubmitForm(array &$form, FormStateInterface $form_state) {
+    $response = new AjaxResponse();
+    if ($form_state::hasAnyErrors() || !$this->field) {
+      $response->addCommand(new ReplaceCommand('#field-ui-add-form', $form));
+      return $response;
+    }
+
+    // @todo This is duplicating the logic in submitForm, but since it's in an
+    //   AJAX request, the redirects are not respected.
+    /** @var \Drupal\Core\Entity\EntityFormBuilderInterface $entity_form_builder */
+    $entity_form_builder = \Drupal::service('entity.form_builder');
+    if ($form_state->getValue('existing_storage_name')) {
+      $next_form = $entity_form_builder->getForm($this->field, 'edit');
+    }
+    else {
+      $next_form = $entity_form_builder->getForm($this->fieldStorage, 'edit', ['build_info' => ['args' => ['field_config' => $this->field->id()]]]);
+    }
+
+    $dialog_options = [
+      'width' => '85vw',
+    ];
+    $response->addCommand(new OpenModalDialogCommand($this->t('Configure field'), $next_form, $dialog_options));
+
+    return $response;
   }
 
   /**
@@ -290,13 +351,19 @@ class FieldStorageAddForm extends FormBase {
 
     try {
       // Create the field storage.
-      $this->entityTypeManager->getStorage('field_storage_config')
-        ->create($field_storage_values)->save();
+      if ($is_new_field) {
+        assert(isset($field_storage_values));
+        $field_storage = $this->entityTypeManager->getStorage('field_storage_config')
+          ->create($field_storage_values);
+        $field_storage->save();
+        $this->fieldStorage = $field_storage;
+      }
 
       // Create the field.
       $field = $this->entityTypeManager->getStorage('field_config')
         ->create($field_values);
       $field->save();
+      $this->field = $field;
 
       // Configure the display modes.
       $this->configureEntityFormDisplay($field_name, $default_options['entity_form_display'] ?? []);

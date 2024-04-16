@@ -92,6 +92,8 @@ class FieldStorageConfigEditForm extends EntityForm {
     // Add the cardinality sub-form.
     $form['cardinality_container'] = $this->getCardinalityForm();
 
+    $form['#attached']['library'][] = 'field_ui/drupal.field_ui';
+    $form['#attached']['library'][] = 'core/drupal.dialog.ajax';
     return $form;
   }
 
@@ -222,6 +224,7 @@ class FieldStorageConfigEditForm extends EntityForm {
     try {
       $this->entity->save();
       $this->messenger()->addStatus($this->t('Updated field %label field settings.', ['%label' => $field_label]));
+      // @todo None of this code will be respected when this is running in AJAX.
       $request = $this->getRequest();
       if (($destinations = $request->query->all('destinations')) && $next_destination = FieldUI::getNextDestination($destinations)) {
         $request->query->remove('destinations');
