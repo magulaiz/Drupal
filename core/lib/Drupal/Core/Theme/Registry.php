@@ -262,13 +262,11 @@ class Registry implements DestructableInterface {
       $module_list = $this->moduleHandler->getModuleList();
       $system_only = array_intersect_key($module_list, ['system' => TRUE]);
       $this->moduleHandler->setModuleList($system_only);
-      $return = $this->build();
+      $this->build();
       $this->moduleHandler->setModuleList($module_list);
 
       // We might have poisoned the cache with only info from 'system'.
       $this->cache->delete("theme_registry:build:modules");
-        
-      return $return;
     } else {
       $this->build();
       // Only persist it if all modules are loaded to ensure it is complete.
