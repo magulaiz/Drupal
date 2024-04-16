@@ -202,9 +202,8 @@ class CKEditor5ImageController extends ControllerBase {
       $max_dimensions = $settings['max_dimensions']['width'] . 'x' . $settings['max_dimensions']['height'];
     }
 
-    $plugin_definitions = $this->pluginManager->getDefinitions();
     $mimetypes = MimeTypes::getDefault();
-    $imageUploadPlugin = $plugin_definitions['ckeditor5_imageUpload']->toArray();
+    $imageUploadPlugin = $this->pluginManager->getDefinition('ckeditor5_imageUpload')->toArray();
     $allowed_extensions = [];
     foreach ($imageUploadPlugin['ckeditor5']['config']['image']['upload']['types'] as $mime_type) {
       $allowed_extensions = array_merge($allowed_extensions, $mimetypes->getExtensions('image/' . $mime_type));
