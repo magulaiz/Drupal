@@ -6,6 +6,8 @@ use Drupal\Component\Plugin\Attribute\AttributeInterface;
 use Drupal\Component\Plugin\Attribute\Plugin;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\FileCache\FileCacheInterface;
+use Drupal\Component\Plugin\Attribute\PluginExtender;
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 
 /**
  * Defines a discovery mechanism to find plugins with attributes.
@@ -147,6 +149,28 @@ class AttributeClassDiscovery implements DiscoveryInterface {
       $id = $attribute->getId();
       $content = $attribute->get();
     }
+
+    // Get plugin extension attributes.
+    if ($extending_attributes = $reflection_class->getAttributes(PluginExtender::class, \ReflectionAttribute::IS_INSTANCEOF)) {
+      foreach ($extending_attributes as $attribute) {
+        $attribute_class = $attribute->getName();
+        // Attribute classes may come from modules which are not enabled, so
+        // skip these.
+        if (!class_exists($attribute_class)) {
+          continue;
+        }
+
+        $attribute_properties = $attribute->getArguments();
+        foreach ($attribute_properties as $name => $value) {
+          if (property_exists($content, $name)) {
+            throw new InvalidPluginDefinitionException("May not reuse $name.");
+          }
+        }
+
+        // TODO: decide how to add property $name to $content plugin definition.
+      }
+    }
+
     return ['id' => $id, 'content' => $content];
   }
 
