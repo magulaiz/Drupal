@@ -3,22 +3,24 @@
 namespace Drupal\views\Controller;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
-use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
-use Drupal\Core\Form\FormBuilderInterface;
-use Drupal\Core\Path\CurrentPathStack;
-use Drupal\Core\Render\RendererInterface;
-use Drupal\Core\Routing\RedirectDestinationInterface;
+use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Ajax\ScrollTopCommand;
+use Drupal\Core\Path\CurrentPathStack;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\views\Ajax\ViewAjaxResponse;
 use Drupal\views\ViewExecutableFactory;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Form\FormBuilderInterface;
+use Drupal\Core\Render\BubbleableMetadata;
 use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Routing\RedirectDestinationInterface;
+use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
+use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -127,6 +129,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
       $dom_id = isset($dom_id) ? preg_replace('/[^a-zA-Z0-9_-]+/', '-', $dom_id) : NULL;
       $pager_element = $request->get('pager_element');
       $pager_element = isset($pager_element) ? intval($pager_element) : NULL;
+      $exposed_form_display = $request->request->get('exposed_form_display');
 
       $response = new ViewAjaxResponse();
 
@@ -142,6 +145,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
         'view_dom_id',
         'pager_element',
         'view_base_path',
+        'exposed_form_display',
         AjaxResponseSubscriber::AJAX_REQUEST_PARAMETER,
         FormBuilderInterface::AJAX_FORM_REQUEST,
         MainContentViewSubscriber::WRAPPER_FORMAT,
@@ -195,15 +199,30 @@ class ViewAjaxController implements ContainerInjectionInterface {
         $response->addCommand(new ReplaceCommand(".js-view-dom-id-$dom_id", $preview));
         $response->addCommand(new PrependCommand(".js-view-dom-id-$dom_id", ['#type' => 'status_messages']));
 
+        // Views with ajax enabled aren't refreshing filters placed in blocks.
+        // Only <div> containing view is refreshed. ReplaceCommand is fixing
+        // that for view, if it uses ajax and exposed forms in block.
+        if ($exposed_form_display && $view->display_handler->usesExposed() && $view->display_handler->getOption('exposed_block')) {
+          $view_id = preg_replace('/[^a-zA-Z0-9-]+/', '-', $name . '-' . $display_id);
+          $context = new RenderContext();
+          $exposed_form = $this->renderer->executeInRenderContext($context, function () use ($view) {
+            return $view->display_handler->viewExposedFormBlocks();
+          });
+          if (!$context->isEmpty()) {
+            $bubbleable_metadata = $context->pop();
+            BubbleableMetadata::createFromRenderArray($exposed_form)
+              ->merge($bubbleable_metadata)
+              ->applyTo($exposed_form);
+          }
+          $response->addCommand(new ReplaceCommand("#views-exposed-form-" . $view_id, $this->renderer->render($exposed_form)));
+        }
+
         return $response;
-      }
-      else {
+      } else {
         throw new AccessDeniedHttpException();
       }
-    }
-    else {
+    } else {
       throw new NotFoundHttpException();
     }
   }
-
 }
