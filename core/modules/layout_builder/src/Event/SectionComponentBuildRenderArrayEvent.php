@@ -5,7 +5,7 @@ namespace Drupal\layout_builder\Event;
 use Drupal\Core\Cache\CacheableResponseTrait;
 use Drupal\Core\Plugin\PreviewAwarePluginInterface;
 use Drupal\layout_builder\SectionComponent;
-use Drupal\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Event fired when a section component's render array is being built.

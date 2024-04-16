@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Database\Event;
 
-use Drupal\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Represents a database event.

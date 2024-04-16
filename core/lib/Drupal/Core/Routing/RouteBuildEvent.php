@@ -2,8 +2,8 @@
 
 namespace Drupal\Core\Routing;
 
-use Drupal\Component\EventDispatcher\Event;
 use Symfony\Component\Routing\RouteCollection;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Represents route building information as event.

@@ -71,7 +71,7 @@ class MenuRouterRebuildSubscriber implements EventSubscriberInterface {
   /**
    * Rebuilds the menu links and deletes the local_task cache tag.
    *
-   * @param \Drupal\Component\EventDispatcher\Event $event
+   * @param \Symfony\Contracts\EventDispatcher\Event $event
    *   The event object.
    */
   public function onRouterRebuild($event) {

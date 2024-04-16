@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\File\Event;
 
-use Drupal\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * An event during file upload that lets subscribers sanitize the filename.

@@ -4,7 +4,7 @@ namespace Drupal\workspaces\Event;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\workspaces\WorkspaceInterface;
-use Drupal\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Defines the workspace publish event.
