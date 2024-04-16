@@ -254,18 +254,6 @@ class KernelTestBaseTest extends KernelTestBase {
   }
 
   /**
-   * Tests deprecation of modified request stack lacking a session.
-   *
-   * @covers ::tearDown
-   *
-   * @group legacy
-   */
-  public function testDeprecatedSessionMissing(): void {
-    $this->expectDeprecation('Pushing requests without a session onto the request_stack is deprecated in drupal:10.3.0 and an error will be thrown from drupal:11.0.0. See https://www.drupal.org/node/3337193');
-    $this->container->get('request_stack')->push(Request::create('/'));
-  }
-
-  /**
    * Tests the assumption that local time is in 'Australia/Sydney'.
    */
   public function testLocalTimeZone() {
