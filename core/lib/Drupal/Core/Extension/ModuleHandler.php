@@ -108,7 +108,7 @@ class ModuleHandler implements ModuleHandlerInterface, DestructableInterface {
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider
    */
-  public function __construct($root, array $module_list, CacheBackendInterface $cache_backend) {
+  public function __construct($root, array $module_list, CacheBackendInterface $cache_backend, protected HookEventDispatcher $hookEventDispatcher) {
     $this->root = $root;
     $this->moduleList = [];
     foreach ($module_list as $name => $module) {
@@ -395,17 +395,18 @@ class ModuleHandler implements ModuleHandlerInterface, DestructableInterface {
       $hookInvoker = \Closure::fromCallable($module . '_' . $hook);
       $callback($hookInvoker, $module);
     }
+    $this->hookEventDispatcher->invokeAllWith($hook, $callback);
   }
 
   /**
    * {@inheritdoc}
    */
   public function invoke($module, $hook, array $args = []) {
-    if (!$this->hasImplementations($hook, $module)) {
-      return;
+    if ($this->hasImplementations($hook, $module)) {
+      $hookInvoker = \Closure::fromCallable($module . '_' . $hook);
+      return call_user_func_array($hookInvoker, $args);
     }
-    $hookInvoker = \Closure::fromCallable($module . '_' . $hook);
-    return call_user_func_array($hookInvoker, $args);
+    return $this->hookEventDispatcher->invoke($module, $hook, $args);
   }
 
   /**

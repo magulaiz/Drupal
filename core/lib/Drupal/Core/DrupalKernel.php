@@ -17,6 +17,7 @@ use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DependencyInjection\YamlFileLoader;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\Extension\HookHelper;
 use Drupal\Core\Http\TrustedHostsRequestFactory;
 use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Installer\InstallerRedirectTrait;
@@ -150,7 +151,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *
    * @var array
    *   An associative array whose keys are module names and whose values are
-   *   ignored.
+   *   module weights.
    */
   protected $moduleList;
 
@@ -779,9 +780,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
   /**
    * Implements Drupal\Core\DrupalKernelInterface::updateModules().
-   *
-   * @todo Remove obsolete $module_list parameter. Only $module_filenames is
-   *   needed.
    */
   public function updateModules(array $module_list, array $module_filenames = []) {
     $pre_existing_module_namespaces = [];
@@ -1350,6 +1348,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         $provider->register($container);
       }
     }
+    HookHelper::registerHooks($container, $this->getModuleFileNames(), $this->moduleList);
 
     // Identify all services whose instances should be persisted when rebuilding
     // the container during the lifetime of the kernel (e.g., during a kernel
