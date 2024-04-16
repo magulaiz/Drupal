@@ -6,6 +6,7 @@ namespace Drupal\Tests\views\Kernel;
 
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Database\Database;
 use Drupal\node\Entity\NodeType;
 use Drupal\views\Entity\View;
 use Drupal\views\Views;
@@ -203,17 +204,22 @@ class ViewExecutableTest extends ViewsKernelTestBase {
   }
 
   public function testSetDisplayWithInvalidDisplay() {
+    \Drupal::service('module_installer')->install(['dblog']);
     $view = Views::getView('test_executable_displays');
     $view->initDisplay();
 
-    // Error is triggered while calling the wrong display.
-    try {
-      $view->setDisplay('invalid');
-      $this->fail('Expected error, when setDisplay() called with invalid display ID');
-    }
-    catch (\InvalidArgumentException $e) {
-      $this->assertEquals('setDisplay() called with invalid display ID "invalid".', $e->getMessage());
-    }
+    // Error is logged while calling the wrong display.
+    $view->setDisplay('invalid');
+    $arguments = [
+      '@display_id' => 'invalid',
+    ];
+    $logged = Database::getConnection()->select('watchdog')
+      ->fields('watchdog', ['variables'])
+      ->condition('type', 'views')
+      ->condition('message', 'setDisplay() called with invalid display ID "@display_id".')
+      ->execute()
+      ->fetchField();
+    $this->assertEquals(serialize($arguments), $logged);
 
     $this->assertEquals('default', $view->current_display, 'If setDisplay is called with an invalid display id the default display should be used.');
     $this->assertEquals(spl_object_hash($view->displayHandlers->get('default')), spl_object_hash($view->display_handler));
