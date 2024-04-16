@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalJavascriptTests\Ajax;
 
 use Drupal\ajax_test\Controller\AjaxTestController;
-use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Ajax\OpenModalDialogWithUrl;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
@@ -72,7 +74,7 @@ class DialogTest extends WebDriverTestBase {
     $dialog = $this->assertSession()->waitForElementVisible('css', 'div.ui-dialog');
     $this->assertNotNull($dialog, 'Link was used to open a dialog ( non-modal, with options )');
     $style = $dialog->getAttribute('style');
-    $this->assertStringContainsString('width: 400px;', $style, new FormattableMarkup('Modal respected the dialog-options width parameter.  Style = style', ['%style' => $style]));
+    $this->assertStringContainsString('width: 400px;', $style, "Modal respected the dialog-options width parameter.  Style = $style");
 
     // Reset: Return to the dialog links page.
     $this->drupalGet('ajax-test/dialog');
@@ -128,6 +130,22 @@ class DialogTest extends WebDriverTestBase {
     // Use a link to close the panel opened by button 2.
     $this->getSession()->getPage()->clickLink('Link 4 (close non-modal if open)');
 
+    // Test dialogs opened using OpenModalDialogWithUrl.
+    $this->getSession()->getPage()->findButton('Button 3 (modal from url)')->press();
+    // Check that title was fetched properly.
+    // @see \Drupal\ajax_test\Form\AjaxTestDialogForm::dialog.
+    $form_dialog_title = $this->assertSession()->waitForElement('css', "span.ui-dialog-title:contains('Ajax Form contents')");
+    $this->assertNotNull($form_dialog_title, 'Dialog form has the expected title.');
+    $button1_dialog->findButton('Close')->press();
+    // Test external URL.
+    $dialog_obj = new OpenModalDialogWithUrl('http://example.com', []);
+    try {
+      $dialog_obj->render();
+    }
+    catch (\LogicException $e) {
+      $this->assertEquals('External URLs are not allowed.', $e->getMessage());
+    }
+
     // Form modal.
     $this->clickLink('Link 5 (form)');
     // Two links have been clicked in succession - This time wait for a change
@@ -168,8 +186,12 @@ class DialogTest extends WebDriverTestBase {
     // Press buttons in the dialog to ensure there are no AJAX errors.
     $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Hello world');
     $this->assertSession()->assertWaitOnAjaxRequest();
+    $has_focus_text = $this->getSession()->evaluateScript('document.activeElement.textContent');
+    $this->assertEquals('Do it', $has_focus_text);
     $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Preview');
     $this->assertSession()->assertWaitOnAjaxRequest();
+    $has_focus_text = $this->getSession()->evaluateScript('document.activeElement.textContent');
+    $this->assertEquals('Do it', $has_focus_text);
 
     // Reset: close the form.
     $form_dialog->findButton('Close')->press();

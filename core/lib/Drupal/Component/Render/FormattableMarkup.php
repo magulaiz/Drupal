@@ -105,8 +105,7 @@ class FormattableMarkup implements MarkupInterface, \Countable {
    * @return int
    *   The length of the string.
    */
-  #[\ReturnTypeWillChange]
-  public function count() {
+  public function count(): int {
     return mb_strlen($this->string);
   }
 
@@ -116,8 +115,7 @@ class FormattableMarkup implements MarkupInterface, \Countable {
    * @return string
    *   The safe string content.
    */
-  #[\ReturnTypeWillChange]
-  public function jsonSerialize() {
+  public function jsonSerialize(): string {
     return $this->__toString();
   }
 
@@ -244,7 +242,7 @@ class FormattableMarkup implements MarkupInterface, \Countable {
         default:
           if (!ctype_alnum($key[0])) {
             // Warn for random placeholders that won't be replaced.
-            trigger_error(sprintf('Invalid placeholder (%s) with string: "%s"', $key, $string), E_USER_WARNING);
+            trigger_error(sprintf('Placeholders must begin with one of the following "@", ":" or "%%", invalid placeholder (%s) with string: "%s"', $key, $string), E_USER_WARNING);
           }
           // No replacement possible therefore we can discard the argument.
           unset($args[$key]);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Database\Database;
@@ -392,7 +394,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
    */
   public function testFieldUpdateIndexesWithData() {
     // Create a decimal field.
-    $field_name = 'testfield';
+    $field_name = 'test_field';
     $entity_type = 'entity_test_rev';
     $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
@@ -450,7 +452,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
   public function testFieldSqlStorageForeignKeys() {
     // Create a 'shape' field, with a configurable foreign key (see
     // field_test_field_schema()).
-    $field_name = 'testfield';
+    $field_name = 'test_field';
     $foreign_key_name = 'shape';
     $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,

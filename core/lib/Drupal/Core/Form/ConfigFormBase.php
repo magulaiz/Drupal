@@ -40,12 +40,13 @@ abstract class ConfigFormBase extends FormBase {
    */
   public function __construct(
     ConfigFactoryInterface $config_factory,
-    protected ?TypedConfigManagerInterface $typedConfigManager = NULL,
+    protected $typedConfigManager = NULL,
   ) {
     $this->setConfigFactory($config_factory);
-    if ($this->typedConfigManager === NULL) {
-      @trigger_error('Calling ConfigFormBase::__construct() without the $typedConfigManager argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3373502', E_USER_DEPRECATED);
-      $this->typedConfigManager = \Drupal::service('config.typed');
+
+    if (!$typedConfigManager instanceof TypedConfigManagerInterface) {
+      $type = get_debug_type($typedConfigManager);
+      @trigger_error("Passing $type to the \$typedConfigManager parameter of ConfigFormBase::__construct() is deprecated in drupal:10.2.0 and must be an instance of \Drupal\Core\Config\TypedConfigManagerInterface in drupal:11.0.0. See https://www.drupal.org/node/3404140", E_USER_DEPRECATED);
     }
   }
 
@@ -57,6 +58,19 @@ abstract class ConfigFormBase extends FormBase {
       $container->get('config.factory'),
       $container->get('config.typed')
     );
+  }
+
+  /**
+   * Returns the typed config manager service.
+   *
+   * @return \Drupal\Core\Config\TypedConfigManagerInterface
+   *   The typed config manager service.
+   */
+  protected function typedConfigManager(): TypedConfigManagerInterface {
+    if ($this->typedConfigManager instanceof TypedConfigManagerInterface) {
+      return $this->typedConfigManager;
+    }
+    return \Drupal::service('config.typed');
   }
 
   /**
@@ -97,11 +111,8 @@ abstract class ConfigFormBase extends FormBase {
         $target = ConfigTarget::fromString($target);
       }
 
-      $value = $this->configFactory()->getEditable($target->configName)->get($target->propertyPath);
-      if ($target->fromConfig) {
-        $value = ($target->fromConfig)($value);
-      }
-      $element['#default_value'] = $value;
+      $config = $this->configFactory()->getEditable($target->configName);
+      $element['#default_value'] = $target->getValue($config);
     }
 
     foreach (Element::children($element) as $key) {
@@ -128,8 +139,31 @@ abstract class ConfigFormBase extends FormBase {
    *
    * @return array
    *   The processed element.
+   *
+   * @see \Drupal\Core\Form\ConfigFormBase::buildForm()
    */
   public function storeConfigKeyToFormElementMap(array $element, FormStateInterface $form_state): array {
+    // Empty the map to ensure the information is always correct after
+    // rebuilding the form.
+    $form_state->set(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP, []);
+
+    return $this->doStoreConfigMap($element, $form_state);
+  }
+
+  /**
+   * Helper method for #after_build callback ::storeConfigKeyToFormElementMap().
+   *
+   * @param array $element
+   *   The element being processed.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current form state.
+   *
+   * @return array
+   *   The processed element.
+   *
+   * @see \Drupal\Core\Form\ConfigFormBase::storeConfigKeyToFormElementMap()
+   */
+  protected function doStoreConfigMap(array $element, FormStateInterface $form_state): array {
     if (array_key_exists('#config_target', $element)) {
       $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
 
@@ -138,11 +172,27 @@ abstract class ConfigFormBase extends FormBase {
       if (is_string($target)) {
         $target = ConfigTarget::fromString($target);
       }
-      $map[$target->configName][$target->propertyPath] = $element['#array_parents'];
+      elseif ($target->toConfig instanceof \Closure || $target->fromConfig instanceof \Closure) {
+        // If the form is using closures as toConfig or fromConfig callables
+        // then form cannot be cached.
+        $form_state->disableCache();
+      }
+
+      foreach ($target->propertyPaths as $property_path) {
+        if (isset($map[$target->configName][$property_path])) {
+          throw new \LogicException(sprintf('Two #config_targets both target "%s" in the "%s" config: `%s` and `%s`.',
+            $property_path,
+            $target->configName,
+            '$form[\'' . implode("']['", $map[$target->configName][$property_path]) . '\']',
+            '$form[\'' . implode("']['", $element['#array_parents']) . '\']',
+          ));
+        }
+        $map[$target->configName][$property_path] = $element['#array_parents'];
+      }
       $form_state->set(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP, $map);
     }
     foreach (Element::children($element) as $key) {
-      $element[$key] = $this->storeConfigKeyToFormElementMap($element[$key], $form_state);
+      $element[$key] = $this->doStoreConfigMap($element[$key], $form_state);
     }
     return $element;
   }
@@ -151,13 +201,11 @@ abstract class ConfigFormBase extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    assert($this->typedConfigManager instanceof TypedConfigManagerInterface);
-
     $map = $form_state->get(static::CONFIG_KEY_TO_FORM_ELEMENT_MAP) ?? [];
     foreach (array_keys($map) as $config_name) {
       $config = $this->configFactory()->getEditable($config_name);
       static::copyFormValuesToConfig($config, $form_state, $form);
-      $typed_config = $this->typedConfigManager->createFromNameAndData($config_name, $config->getRawData());
+      $typed_config = $this->typedConfigManager()->createFromNameAndData($config_name, $config->getRawData());
 
       $violations = $typed_config->validate();
       // Rather than immediately applying all violation messages to the
@@ -173,10 +221,10 @@ abstract class ConfigFormBase extends FormBase {
         $property_path = $violation->getPropertyPath();
         // Default to index 0.
         $index = 0;
-        // Detect if this is a sequence property path, and if so, determine the
-        // actual sequence index.
-        $matches = [];
-        if (preg_match("/.*\.(\d+)$/", $property_path, $matches) === 1) {
+
+        // Detect if this is a sequence item property path, and if so, attempt
+        // to fall back to the containing sequence's property path.
+        if (!isset($map[$config_name][$property_path]) && preg_match("/.*\.(\d+)$/", $property_path, $matches) === 1) {
           $index = intval($matches[1]);
           // The property path as known in the config key-to-form element map
           // will not have the sequence index in it.
@@ -282,13 +330,11 @@ abstract class ConfigFormBase extends FormBase {
 
     foreach ($map[$config->getName()] as $array_parents) {
       $target = ConfigTarget::fromForm($array_parents, $form);
-      if ($target->configName === $config->getName()) {
-        $value = $form_state->getValue($target->elementParents);
-        if ($target->toConfig) {
-          $value = ($target->toConfig)($value);
-        }
-        $config->set($target->propertyPath, $value);
+      if ($target->configName !== $config->getName()) {
+        continue;
       }
+      $value = $form_state->getValue($target->elementParents);
+      $target->setValue($config, $value, $form_state);
     }
   }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Test\Comparator;
 
 use Drupal\Component\Render\FormattableMarkup;
@@ -54,7 +56,7 @@ class MarkupInterfaceComparatorTest extends KernelTestBase {
    *     comparison should match, FALSE if error, or a class name of an object
    *     thrown.
    */
-  public function dataSetProvider() {
+  public static function dataSetProvider() {
     return [
       'FormattableMarkup vs FormattableMarkup, equal' => [
         new FormattableMarkup('GoldFinger', []),
@@ -162,7 +164,7 @@ class MarkupInterfaceComparatorTest extends KernelTestBase {
    *     thrown.
    *   - the expected deprecation message.
    */
-  public function dataSetProviderDeprecatedCases() {
+  public static function dataSetProviderDeprecatedCases() {
     return [
       'html string with tags vs FormattableMarkup, equal' => [
         '<em class="placeholder">For Your Eyes</em> Only',

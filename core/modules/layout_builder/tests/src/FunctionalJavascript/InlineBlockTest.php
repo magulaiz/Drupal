@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
@@ -184,7 +186,7 @@ class InlineBlockTest extends InlineBlockTestBase {
   /**
    * Provides test data for ::testNoLayoutSave().
    */
-  public function layoutNoSaveProvider() {
+  public static function layoutNoSaveProvider() {
     return [
       'discard_changes' => [
         'discard_changes',
@@ -506,7 +508,7 @@ class InlineBlockTest extends InlineBlockTestBase {
     $this->assertSaveLayout();
     $node_1_block_id = $this->getLatestBlockEntityId();
 
-    $this->drupalGet("block/$node_1_block_id");
+    $this->drupalGet("admin/content/block/$node_1_block_id");
     $assert_session->pageTextNotContains('You are not authorized to access this page');
 
     $this->drupalLogout();
@@ -514,13 +516,13 @@ class InlineBlockTest extends InlineBlockTestBase {
       'administer nodes',
     ]));
 
-    $this->drupalGet("block/$node_1_block_id");
+    $this->drupalGet("admin/content/block/$node_1_block_id");
     $assert_session->pageTextContains('You are not authorized to access this page');
 
     $this->drupalLogin($this->drupalCreateUser([
       'create and edit custom blocks',
     ]));
-    $this->drupalGet("block/$node_1_block_id");
+    $this->drupalGet("admin/content/block/$node_1_block_id");
     $assert_session->pageTextNotContains('You are not authorized to access this page');
   }
 
