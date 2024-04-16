@@ -5,6 +5,14 @@
  * @see http://www.whatwg.org/specs/web-apps/current-work/multipage/commands.html#the-dialog-element
  */
 
+class DialogEvent extends Event {
+  constructor(type, dialog, settings = null) {
+    super(`dialog:${type}`, { bubbles: true });
+    this.dialog = dialog;
+    this.settings = settings;
+  }
+}
+
 (function ($, Drupal, drupalSettings, bodyScrollLock) {
   /**
    * Default dialog options.
@@ -62,6 +70,7 @@
   Drupal.dialog = function (element, options) {
     let undef;
     const $element = $(element);
+    const elementInDom = $element.get(0);
     const dialog = {
       open: false,
       returnValue: undef,
@@ -70,7 +79,12 @@
     function openDialog(settings) {
       settings = $.extend({}, drupalSettings.dialog, options, settings);
       // Trigger a global event to allow scripts to bind events to the dialog.
-      $(window).trigger('dialog:beforecreate', [dialog, $element, settings]);
+      const dialogBeforeCreateEvent = new DialogEvent(
+        'beforecreate',
+        dialog,
+        settings,
+      );
+      elementInDom.dispatchEvent(dialogBeforeCreateEvent);
       $element.dialog(settings);
       dialog.open = true;
 
@@ -80,18 +94,22 @@
         bodyScrollLock.lock($element.get(0));
       }
 
-      $(window).trigger('dialog:aftercreate', [dialog, $element, settings]);
+      elementInDom.dispatchEvent(
+        new DialogEvent('aftercreate', dialog, settings),
+      );
     }
 
     function closeDialog(value) {
-      $(window).trigger('dialog:beforeclose', [dialog, $element]);
+      const dialogBeforeCloseEvent = new DialogEvent('beforeclose', dialog);
+      elementInDom.dispatchEvent(dialogBeforeCloseEvent);
       // Unlocks the body when the dialog closes.
       bodyScrollLock.clearBodyLocks();
 
       $element.dialog('close');
       dialog.returnValue = value;
       dialog.open = false;
-      $(window).trigger('dialog:afterclose', [dialog, $element]);
+      const dialogAfterCloseEvent = new DialogEvent('afterclose', dialog);
+      elementInDom.dispatchEvent(dialogAfterCloseEvent);
     }
 
     dialog.show = () => {

@@ -65,7 +65,7 @@
 
         // If no summary is set, hide the summary field.
         if (summary.value === '') {
-          $link.trigger('click');
+          $link.dispatchEvent(new Event('click'));
         }
       });
     },

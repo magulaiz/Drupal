@@ -320,7 +320,8 @@
             returnFocus = {};
           });
         });
-        $('input[data-drupal-selector="edit-refresh"]').trigger('mousedown');
+        const $target = $('input[data-drupal-selector="edit-refresh"]');
+        $target[0].dispatchEvent(new Event('mousedown'));
 
         // Disabled elements do not appear in POST ajax data, so we mark the
         // elements disabled only after firing the request.
@@ -525,7 +526,8 @@
       $(clickToSelectEl).on('click', (event) => {
         const clickToSelect = event.target.closest('.js-click-to-select');
         this.selectHandler(clickToSelect, input);
-        $(input).trigger('updateOptions');
+        const $ele = $(input);
+        $ele[0].dispatchEvent(new Event('updateOptions'));
       });
     },
     // Handles adding and removing classes for the different states.

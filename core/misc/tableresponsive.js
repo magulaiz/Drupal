@@ -46,12 +46,12 @@
     );
 
     // Attach a resize handler to the window.
-    $(window)
-      .on(
-        'resize.tableresponsive',
-        this.eventhandlerEvaluateColumnVisibility.bind(this),
-      )
-      .trigger('resize.tableresponsive');
+    $(window).on(
+      'resize.tableresponsive',
+      this.eventhandlerEvaluateColumnVisibility.bind(this),
+    );
+
+    window.dispatchEvent(new CustomEvent('resize.tableresponsive'));
   }
 
   /**
@@ -183,7 +183,7 @@
           this.$link[0].textContent = this.showText;
           this.$link.data('pegged', 0);
           // Refresh the toggle link.
-          $(window).trigger('resize.tableresponsive');
+          window.dispatchEvent(new Event('resize.tableresponsive'));
         }
       },
     },

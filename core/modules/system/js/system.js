@@ -76,7 +76,10 @@
     valueSourceBlurHandler(e) {
       const { value } = e.target;
       const targetIds = drupalSettings.copyFieldValue[e.target.id];
-      $(`#${targetIds.join(', #')}`).trigger('value:copy', value);
+      const $target = $(`#${targetIds.join(', #')}`);
+      $target[0].dispatchEvent(
+        new CustomEvent('value:copy', { detail: { value } }),
+      );
     },
   };
 })(jQuery, Drupal, drupalSettings);

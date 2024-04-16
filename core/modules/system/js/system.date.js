@@ -57,13 +57,12 @@
       /**
        * On given event triggers the date character replacement.
        */
-      $(source)
-        .on(
-          'keyup.dateFormat change.dateFormat input.dateFormat',
-          dateFormatHandler,
-        )
-        // Initialize preview.
-        .trigger('keyup');
+      const $target = $(source).on(
+        'keyup.dateFormat change.dateFormat input.dateFormat',
+        dateFormatHandler,
+      );
+      // Initialize preview.
+      $target[0].dispatchEvent(new Event('keyup'));
     },
   };
 })(jQuery, Drupal, drupalSettings);

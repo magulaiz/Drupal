@@ -21,7 +21,7 @@
         'click',
         (event) => {
           if (event.target.nodeName === 'SUMMARY') {
-            $(event.target).trigger('focus');
+            event.target.focus();
           }
         },
       );

@@ -47,7 +47,7 @@
     "jquery/no-submit": 2,
     "jquery/no-text": 2,
     "jquery/no-toggle": 0,
-    "jquery/no-trigger": 0,
+    "jquery/no-trigger": 2,
     "jquery/no-trim": 2,
     "jquery/no-val": 2,
     "jquery/no-when": 2,

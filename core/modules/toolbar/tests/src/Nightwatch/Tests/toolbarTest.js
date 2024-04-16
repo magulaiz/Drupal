@@ -237,7 +237,7 @@ module.exports = {
       function (done) {
         Drupal.announce = done;
         const $adminButton = jQuery('#toolbar-item-administration');
-        $adminButton.trigger('click');
+        $adminButton[0].dispatchEvent(new Event('click'));
       },
       (result) => {
         browser.assert.equal(
@@ -250,7 +250,7 @@ module.exports = {
       function (done) {
         Drupal.announce = done;
         const $adminButton = jQuery('#toolbar-item-administration');
-        $adminButton.trigger('click');
+        $adminButton[0].dispatchEvent(new Event('click'));
       },
       (result) => {
         browser.assert.equal(
@@ -300,11 +300,11 @@ module.exports = {
         const $adminButton = jQuery('#toolbar-item-administration');
         // Hide the admin menu first, this event is not firing reliably
         // otherwise.
-        $adminButton.trigger('click');
+        $adminButton[0].dispatchEvent(new Event('click'));
         jQuery(document).on('drupalToolbarTrayChange', function (event, tray) {
           done(tray.id);
         });
-        $adminButton.trigger('click');
+        $adminButton[0].dispatchEvent(new Event('click'));
       },
       (result) => {
         browser.assert.equal(result.value, 'toolbar-item-administration-tray');

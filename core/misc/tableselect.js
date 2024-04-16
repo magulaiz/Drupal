@@ -61,7 +61,8 @@
            * @checkbox {HTMLElement}
            */
           if (stateChanged) {
-            $checkbox.prop('checked', state).trigger('change');
+            const $val = $checkbox.prop('checked', state);
+            $val[0].dispatchEvent(new Event('change'));
           }
         });
     };
@@ -83,7 +84,8 @@
              * @checkbox {HTMLElement}
              */
             if (stateChanged) {
-              $checkbox.prop('checked', event.target.checked).trigger('change');
+              const $target = $checkbox.prop('checked', event.target.checked);
+              $target[0].dispatchEvent(new Event('change', { bubbles: true }));
             }
             // Either add or remove the selected class based on the state of the
             // check all checkbox.

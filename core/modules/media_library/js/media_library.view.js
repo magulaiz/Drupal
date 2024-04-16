@@ -27,9 +27,11 @@
             const $checkboxes = $(currentTarget)
               .closest('.js-media-library-view')
               .find('.js-media-library-item input[type="checkbox"]');
-            $checkboxes
-              .prop('checked', $(currentTarget).prop('checked'))
-              .trigger('change');
+            const $ele = $checkboxes.prop(
+              'checked',
+              $(currentTarget).prop('checked'),
+            );
+            $ele[0].dispatchEvent(new Event('change'));
             // Announce the selection.
             const announcement = $(currentTarget).prop('checked')
               ? Drupal.t('All @count items selected', {

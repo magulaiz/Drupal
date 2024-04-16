@@ -485,8 +485,9 @@
 
     // Click on the title checks the box.
     this.$form.on('click', 'td.title', (event) => {
-      const $target = $(event.currentTarget);
-      $target.closest('tr').find('input').trigger('click');
+      const $target = $(event.currentTarget).closest('tr').find('input');
+      const clickEvent = new Event('click');
+      $target[0].dispatchEvent(clickEvent);
     });
 
     const searchBoxSelector =
@@ -587,7 +588,8 @@
         });
 
         // Adapt dialog to content size.
-        $(event.target).trigger('dialogContentResize');
+        const diagEvent = new CustomEvent('dialogContentResize');
+        event.target.dispatchEvent(diagEvent);
       },
     },
   );
@@ -627,9 +629,11 @@
         once('edit-displays-live-preview', '#edit-displays-live-preview'),
       );
       if ($livePreview.length && $livePreview[0].checked) {
-        $(once('edit-displays-live-preview', '#preview-submit')).trigger(
-          'click',
+        const $target = $(
+          once('edit-displays-live-preview', '#preview-submit'),
         );
+        const clickEvent = new Event('click');
+        $target[0].dispatchEvent(clickEvent);
       }
     },
   };
@@ -1188,11 +1192,12 @@
       }
 
       // Update on widget change.
-      $context
+      const $target = $context
         .find('input[name="options[group_info][multiple]"]')
-        .on('change', changeDefaultWidget)
-        // Update the first time the form is rendered.
-        .trigger('change');
+        .on('change', changeDefaultWidget);
+      // Update the first time the form is rendered.
+      const changeEvent = new Event('change');
+      $target[0].dispatchEvent(changeEvent);
     },
   };
 
@@ -1254,22 +1259,23 @@
           },
         );
 
-        $(dropdown)
-          .on('change', function () {
-            if (!submit) {
-              return;
-            }
-            if (this.value === 'default') {
-              submit.value = Drupal.t('Apply (all displays)');
-            } else if (this.value === 'default_revert') {
-              submit.value = Drupal.t('Revert to default');
-            } else {
-              submit.value = Drupal.t('Apply (this display)');
-            }
-            const $dialog = $context.closest('.ui-dialog-content');
-            $dialog.trigger('dialogButtonsChange');
-          })
-          .trigger('change');
+        const $val = $(dropdown).on('change', function () {
+          if (!submit) {
+            return;
+          }
+          if (this.value === 'default') {
+            submit.value = Drupal.t('Apply (all displays)');
+          } else if (this.value === 'default_revert') {
+            submit.value = Drupal.t('Revert to default');
+          } else {
+            submit.value = Drupal.t('Apply (this display)');
+          }
+          const $dialog = $context.closest('.ui-dialog-content');
+          const diagBtnEvent = new CustomEvent('dialogButtonsChange');
+          $dialog[0].dispatchEvent(diagBtnEvent);
+        });
+        const changeEvent = new Event('change');
+        $val[0].dispatchEvent(changeEvent);
       });
     },
   };
