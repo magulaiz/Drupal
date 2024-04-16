@@ -48,7 +48,7 @@ class MinimalTest extends BrowserTestBase {
 
     // Ensure that there are no pending updates after installation.
     $this->drupalLogin($this->drupalCreateUser([
-      'administer software updates'
+      'administer software updates',
     ]));
     $this->drupalGet('update.php/selection');
     $this->updateRequirementsProblem();
