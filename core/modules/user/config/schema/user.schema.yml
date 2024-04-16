@@ -56,14 +56,20 @@ user.settings:
       label: 'When cancelling a user account'
       nullable: true
       constraints:
+        Choice:
+          - user_cancel_block
+          - user_cancel_block_unpublish
+          - user_cancel_reassign
+          - user_cancel_delete
         NotBlank:
           allowNull: true
     password_reset_timeout:
       type: integer
       label: 'Password reset timeout'
+      # A reasonable time would be 10 minutes.
       constraints:
         Range:
-          min: 0
+          min: 600
     password_strength:
       type: boolean
       label: 'Enable password strength indicator'
