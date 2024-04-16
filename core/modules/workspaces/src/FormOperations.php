@@ -75,6 +75,7 @@ class FormOperations implements ContainerInjectionInterface {
     // No forms are safe to submit in a non-default workspace by default, except
     // for the whitelisted ones defined below.
     // Whitelist a few forms that we know are safe to submit.
+    $form_object = $form_state->getFormObject();
     $form_state->set('workspace_safe', match(TRUE) {
       $form_object instanceof WorkspaceFormInterface => TRUE,
       $form_object instanceof ViewsExposedForm => TRUE,
