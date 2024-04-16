@@ -10,7 +10,7 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @internal
  *
- * @see \Drupal\Tests\system\Functional\Form\ElementTest::testFormDescriptions()
+ * @see \Drupal\Tests\system\Functional\Form\ElementTest::testElementOrder()
  */
 class FormTestWeightForm extends FormBase {
 
@@ -28,21 +28,21 @@ class FormTestWeightForm extends FormBase {
     $form['form_textfield_test_1'] = [
       '#type' => 'textfield',
       '#title' => 'Textfield 1',
-      '#value' => '1',
+      '#default_value' => '1',
       '#weight' => 20,
     ];
 
-    $form['form_textfield_test_test_2'] = [
+    $form['form_textfield_test_2'] = [
       '#type' => 'textfield',
       '#title' => 'Textfield 2',
-      '#value' => '2',
+      '#default_value' => '2',
       '#weight' => 30,
     ];
 
-    $form['form_textfield_test_test_3'] = [
+    $form['form_textfield_test_3'] = [
       '#type' => 'textfield',
-      '#title' => 'Textfield 2',
-      '#value' => '3',
+      '#title' => 'Textfield 3',
+      '#default_value' => '3',
       '#weight' => 10,
     ];
 
@@ -58,7 +58,7 @@ class FormTestWeightForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
-    // The test that uses this form does not submit the form so this is empty.
+    // The test that uses this form does not submit the form, so this is empty.
   }
 
 }
