@@ -947,11 +947,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/image/tests/src/Functional/ImageStyleFlushTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Class PHPUnit\\\\Framework\\\\Error\\\\Warning not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/tests/src/Kernel/ImageItemTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$reason in empty\\(\\) always exists and is not falsy\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/jsonapi/src/Context/FieldResolver.php',
@@ -990,11 +985,6 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$reason in empty\\(\\) always exists and is not falsy\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/ResourceTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Caught class PHPUnit\\\\Framework\\\\Error\\\\Warning not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Kernel/ResourceType/RelatedResourceTypesTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$id in isset\\(\\) always exists and is not nullable\\.$#',
