@@ -74,19 +74,14 @@ class FormOperations implements ContainerInjectionInterface {
 
     // No forms are safe to submit in a non-default workspace by default, except
     // for the whitelisted ones defined below.
-    $workspace_safe = FALSE;
-
     // Whitelist a few forms that we know are safe to submit.
-    $form_object = $form_state->getFormObject();
-    $is_workspace_form = $form_object instanceof WorkspaceFormInterface;
-    $is_search_form = in_array($form_object->getFormId(), ['search_block_form', 'search_form'], TRUE);
-    $is_views_exposed_form = $form_object instanceof ViewsExposedForm;
-    $is_logout_confirm_form = $form_object instanceof UserLogoutConfirm;
-    if ($is_workspace_form || $is_search_form || $is_views_exposed_form || $is_logout_confirm_form) {
-      $workspace_safe = TRUE;
-    }
-
-    $form_state->set('workspace_safe', $workspace_safe);
+    $form_state->set('workspace_safe', match(TRUE) {
+      $form_object instanceof WorkspaceFormInterface => TRUE,
+      $form_object instanceof ViewsExposedForm => TRUE,
+      $form_object instanceof UserLogoutConfirm => TRUE,
+      in_array($form_object->getFormId(), ['search_block_form', 'search_form'], TRUE) => TRUE,
+      default => FALSE,
+    });
   }
 
   /**
