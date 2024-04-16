@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Implements hook_file_validate for the CKEditor 5 File Validate Test module.
+ */
+
+declare(strict_types = 1);
+
+use Drupal\file\Entity\File;
+
+/**
+ * Implements hook_file_validate().
+ */
+function ckeditor5_file_validate_test_file_validate(File $file): array {
+  // An actual file may be needed for validation purposes.
+  assert(file_exists($file->getFileUri()));
+
+  // We just perform a passthrough validation.
+  return [];
+}
