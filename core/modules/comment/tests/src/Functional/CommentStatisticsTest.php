@@ -7,6 +7,7 @@ namespace Drupal\Tests\comment\Functional;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\Entity\Comment;
+use Drupal\user\UserInterface;
 
 /**
  * Tests comment statistics on nodes.
@@ -16,19 +17,11 @@ use Drupal\comment\Entity\Comment;
 class CommentStatisticsTest extends CommentTestBase {
 
   /**
-   * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
-
-  /**
    * A secondary user for posting comments.
    *
    * @var \Drupal\user\UserInterface
    */
-  protected $webUser2;
+  protected UserInterface $webUser2;
 
   /**
    * {@inheritdoc}
@@ -41,12 +34,18 @@ class CommentStatisticsTest extends CommentTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    // Add more permissions the admin user.
+    $more_admin_role = $this->drupalCreateRole([
+      'administer permissions',
+      'access administration pages',
+      'administer site configuration',
+    ]);
+    $this->adminUser->addRole($more_admin_role)->save();
     // Create a second user to post comments.
     $this->webUser2 = $this->drupalCreateUser([
       'post comments',
       'create article content',
       'edit own comments',
-      'post comments',
       'skip comment approval',
       'access comments',
       'access content',
@@ -88,7 +87,8 @@ class CommentStatisticsTest extends CommentTestBase {
     // Prepare for anonymous comment submission (comment approval enabled).
     // Note we don't use user_role_change_permissions(), because that caused
     // random test failures.
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($this->adminUser);
+
     $this->drupalGet('admin/people/permissions');
     $edit = [
       'anonymous[access comments]' => 1,
@@ -117,7 +117,7 @@ class CommentStatisticsTest extends CommentTestBase {
     // Prepare for anonymous comment submission (no approval required).
     // Note we don't use user_role_change_permissions(), because that caused
     // random test failures.
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/people/permissions');
     $edit = [
       'anonymous[skip comment approval]' => 1,
