@@ -193,9 +193,11 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
       if ($user->get('uid')->access('view', $user)) {
         $response_data['current_user']['uid'] = $user->id();
       }
-      if ($user->get('roles')->access('view', $user)) {
+      // @todo: Expose roles in response:
+      // @see https://www.drupal.org/project/drupal/issues/2958921
+      //if ($user->get('roles')->access('view', $user)) {
         $response_data['current_user']['roles'] = $user->getRoles();
-      }
+      //}
       if ($user->get('name')->access('view', $user)) {
         $response_data['current_user']['name'] = $user->getAccountName();
       }
