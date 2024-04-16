@@ -11,7 +11,6 @@ use Drupal\user\Entity\Role;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
 use Psr\Http\Client\ClientExceptionInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @coversDefaultClass \Drupal\KernelTests\KernelTestBase
