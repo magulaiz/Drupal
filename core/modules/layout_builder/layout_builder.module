@@ -101,16 +101,6 @@ function layout_builder_form_entity_form_display_edit_form_alter(&$form, FormSta
 }
 
 /**
- * Implements hook_form_BASE_FORM_ID_alter() for layout_builder_configure_block.
- */
-function layout_builder_form_layout_builder_configure_block_alter(&$form, FormStateInterface $form_state, $form_id) {
-  // Change layout builder "Block description" label to "Block type", since
-  // Drupal\Core\Block\BlockPluginTrait::buildConfigurationForm()
-  // sets admin_label to the plugin's admin_label which in fact is the block's type.
-  $form['settings']['admin_label']['#title'] = new TranslatableMarkup('Block type');
-}
-
-/**
  * Implements hook_field_config_insert().
  */
 function layout_builder_field_config_insert(FieldConfigInterface $field_config) {
