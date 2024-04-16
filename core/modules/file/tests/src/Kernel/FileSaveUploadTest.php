@@ -48,10 +48,7 @@ class FileSaveUploadTest extends KernelTestBase {
       ),
     ]);
     $request->setSession(new Session(new MockArraySessionStorage()));
-
     $requestStack = new RequestStack();
-
-
     $requestStack->push($request);
 
     $this->container->set('request_stack', $requestStack);
