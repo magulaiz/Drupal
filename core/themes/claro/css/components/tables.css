@@ -47,8 +47,8 @@ th {
   padding-inline: 0 1.5rem;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: inherit;
   overflow: hidden;
+  color: inherit;
   text-overflow: ellipsis;
 }
 

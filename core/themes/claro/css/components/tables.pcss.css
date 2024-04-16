@@ -36,8 +36,8 @@ th {
     padding-block: var(--space-xs);
     padding-inline: 0 1.5rem;
     text-decoration: none;
-    color: inherit;
     overflow: hidden;
+    color: inherit;
     text-overflow: ellipsis;
 
     &:focus,
