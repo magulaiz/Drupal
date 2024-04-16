@@ -267,7 +267,8 @@ class Registry implements DestructableInterface {
 
       // We might have poisoned the cache with only info from 'system'.
       $this->cache->delete("theme_registry:build:modules");
-    } else {
+    }
+    else {
       $this->build();
       // Only persist it if all modules are loaded to ensure it is complete.
       if ($this->moduleHandler->isLoaded()) {
