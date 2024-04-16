@@ -30,6 +30,7 @@ class EnvironmentTest extends TestCase {
    * @param bool $expected
    *   The expected return value from
    *   \Drupal\Component\Utility\Environment::setTimeLimit().
+   * @runInSeparateProcess
    */
   public function testSetTimeLimit(int $max_execution_time, int $time_limit, bool $expected): void {
     ini_set('max_execution_time', $max_execution_time);
