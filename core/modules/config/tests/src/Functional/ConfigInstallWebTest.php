@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\config\Functional;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\config_test\Entity\ConfigTest;
 use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\Config\StorageInterface;
@@ -242,6 +243,41 @@ class ConfigInstallWebTest extends BrowserTestBase {
     }
     $this->drupalGet('/admin/reports/status');
     $this->assertSession()->pageTextContains("The directory $directory does not exist.");
+  }
+
+  /**
+   * Tests the behavior of the Backed Enum in a module.
+   */
+  public function testBackedEnumInModule() {
+    $this->drupalLogin($this->adminUser);
+    $this->drupalGet('admin/modules');
+    // Enable a module which does not have Enum in configuration.
+    $this->assertSession()->fieldExists('edit-modules-config-test-enable')->check();
+    $this->submitForm([], 'Install');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('Module Configuration test has been installed.');
+
+    // Enable a module which has Enum in configuration.
+    $this->assertSession()->fieldExists('edit-modules-config-backed-enum-test-enable')->check();
+    $this->submitForm([], 'Install');
+    // Below code will fail, once https://www.drupal.org/i/2951046 is fixed.
+    $error_exception = [
+      '%type' => 'Drupal\Core\Config\UnsupportedDataTypeConfigException',
+      '%function' => 'Drupal\Core\Config\FileStorage->read()',
+      '@message' => 'Invalid data type in config config_backed_enum_test.settings, found in file core/modules/config/tests/config_backed_enum_test/config/install/config_backed_enum_test.settings.yml: The enum "Drupal\config_backed_enum_test\BackedEnumValue::Maybe" is not defined at line 1 (near "foo: !php/enum Drupal\config_backed_enum_test\BackedEnumValue::Maybe->value").',
+    ];
+    $this->assertErrorMessage($error_exception);
+    $this->assertSession()->statusCodeEquals(500);
+  }
+
+  /**
+   * Helper function: assert that the error message is found.
+   *
+   * @internal
+   */
+  public function assertErrorMessage(array $error): void {
+    $message = new FormattableMarkup('%type: @message in %function (line ', $error);
+    $this->assertSession()->responseContains($message);
   }
 
 }

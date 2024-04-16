@@ -281,27 +281,4 @@ class ConfigInstallTest extends KernelTestBase {
     $this->container = \Drupal::getContainer();
   }
 
-  /**
-   * Tests the behavior of the Backed Enum in a module.
-   */
-  public function testBackedEnumInModule() {
-    $default_config = 'config_backed_enum_test.settings';
-
-    // Verify that default module config does not exist before installation yet.
-    $config = $this->config($default_config);
-    $this->assertTrue($config->isNew());
-
-    // Ensure that schema provided by modules that are not installed is not
-    // available.
-    $this->assertFalse(\Drupal::service('config.typed')->hasConfigSchema('config_backed_enum_test.settings'), 'Configuration schema does not exist.');
-
-    // Install the test module.
-    $this->installModules(['config_backed_enum_test']);
-    \Drupal::configFactory()->reset($default_config);
-    $config = $this->config($default_config);
-    $this->assertFalse($config->isNew());
-    $this->assertSame('maybe', $config->get('foo'));
-    $this->assertTrue(\Drupal::service('config.typed')->hasConfigSchema('config_backed_enum_test.settings'), 'Configuration schema exist.');
-  }
-
 }
