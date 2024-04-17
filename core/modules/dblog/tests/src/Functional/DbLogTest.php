@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\dblog\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
@@ -17,6 +19,7 @@ use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
  * Verifies log entries and user access based on permissions.
  *
  * @group dblog
+ * @group #slow
  */
 class DbLogTest extends BrowserTestBase {
   use FakeLogEntries;
@@ -120,7 +123,7 @@ class DbLogTest extends BrowserTestBase {
       'channel' => 'testing',
       'link' => 'foo/bar',
       'ip' => '0.0.1.0',
-      'timestamp' => REQUEST_TIME,
+      'timestamp' => \Drupal::time()->getRequestTime(),
     ];
     \Drupal::service('logger.dblog')->log(RfcLogLevel::NOTICE, 'Test message', $context);
     $query = Database::getConnection()->select('watchdog');
@@ -303,11 +306,12 @@ class DbLogTest extends BrowserTestBase {
     $edit['dblog_row_limit'] = $row_limit;
     $this->drupalGet('admin/config/development/logging');
     $this->submitForm($edit, 'Save configuration');
+    $this->assertSession()->statusMessageContains('The configuration options have been saved.');
     $this->assertSession()->statusCodeEquals(200);
 
     // Check row limit variable.
     $current_limit = $this->config('dblog.settings')->get('row_limit');
-    $this->assertEquals($current_limit, $row_limit, new FormattableMarkup('[Cache] Row limit variable of @count equals row limit of @limit', ['@count' => $current_limit, '@limit' => $row_limit]));
+    $this->assertEquals($current_limit, $row_limit, "[Cache] Row limit variable of $current_limit equals row limit of $row_limit");
   }
 
   /**
@@ -473,7 +477,7 @@ class DbLogTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
     // Retrieve the user object.
     $user = user_load_by_name($name);
-    $this->assertNotNull($user, new FormattableMarkup('User @name was loaded', ['@name' => $name]));
+    $this->assertNotNull($user, "User $name was loaded");
     // pass_raw property is needed by drupalLogin.
     $user->passRaw = $pass;
     // Log in user.
@@ -486,7 +490,7 @@ class DbLogTest extends BrowserTestBase {
       $ids[] = $row->wid;
     }
     $count_before = (isset($ids)) ? count($ids) : 0;
-    $this->assertGreaterThan(0, $count_before, new FormattableMarkup('DBLog contains @count records for @name', ['@count' => $count_before, '@name' => $user->getAccountName()]));
+    $this->assertGreaterThan(0, $count_before, "DBLog contains $count_before records for {$user->getAccountName()}");
 
     // Log in the admin user.
     $this->drupalLogin($this->adminUser);
@@ -561,7 +565,7 @@ class DbLogTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
     // Retrieve the node object.
     $node = $this->drupalGetNodeByTitle($title);
-    $this->assertNotNull($node, new FormattableMarkup('Node @title was loaded', ['@title' => $title]));
+    $this->assertNotNull($node, "Node $title was loaded");
     // Edit the node.
     $edit = [
       'body[0][value]' => $this->randomMachineName(32),
@@ -628,12 +632,12 @@ class DbLogTest extends BrowserTestBase {
       'request_uri' => $base_root . \Drupal::request()->getRequestUri(),
       'referer'     => \Drupal::request()->server->get('HTTP_REFERER'),
       'ip'          => '127.0.0.1',
-      'timestamp'   => REQUEST_TIME,
+      'timestamp'   => \Drupal::time()->getRequestTime(),
     ];
     // Add a watchdog entry.
     $this->container->get('logger.dblog')->log($log['severity'], $log['message'], $log);
     // Make sure the table count has actually been incremented.
-    $this->assertEquals($count + 1, (int) $connection->select('watchdog')->countQuery()->execute()->fetchField(), new FormattableMarkup('\Drupal\dblog\Logger\DbLog->log() added an entry to the dblog :count', [':count' => $count]));
+    $this->assertEquals($count + 1, (int) $connection->select('watchdog')->countQuery()->execute()->fetchField(), '\Drupal\dblog\Logger\DbLog->log() added an entry to the dblog ' . $count);
     // Log in the admin user.
     $this->drupalLogin($this->adminUser);
     // Post in order to clear the database table.
@@ -642,7 +646,7 @@ class DbLogTest extends BrowserTestBase {
     $this->submitForm([], 'Confirm');
     // Count the rows in watchdog that previously related to the deleted user.
     $count = $connection->select('watchdog')->countQuery()->execute()->fetchField();
-    $this->assertEquals(0, $count, new FormattableMarkup('DBLog contains :count records after a clear.', [':count' => $count]));
+    $this->assertEquals(0, $count, "DBLog contains $count records after a clear.");
   }
 
   /**

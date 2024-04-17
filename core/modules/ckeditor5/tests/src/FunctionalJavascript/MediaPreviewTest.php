@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\Core\Database\Database;
@@ -184,7 +186,7 @@ class MediaPreviewTest extends MediaTestBase {
   /**
    * Data provider for ::testEmbedPreviewAccess.
    */
-  public function previewAccessProvider() {
+  public static function previewAccessProvider() {
     return [
       'media_embed filter enabled' => [
         TRUE,
