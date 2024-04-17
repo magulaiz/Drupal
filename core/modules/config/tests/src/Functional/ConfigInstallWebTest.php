@@ -260,24 +260,14 @@ class ConfigInstallWebTest extends BrowserTestBase {
     // Enable a module which has Enum in configuration.
     $this->assertSession()->fieldExists('edit-modules-config-backed-enum-test-enable')->check();
     $this->submitForm([], 'Install');
-    // Below code will fail, once https://www.drupal.org/i/2951046 is fixed.
+    // Below code will pass, once https://www.drupal.org/i/2951046 is fixed.
     $error_exception = [
       '%type' => 'Drupal\Core\Config\UnsupportedDataTypeConfigException',
       '%function' => 'Drupal\Core\Config\FileStorage->read()',
       '@message' => 'Invalid data type in config config_backed_enum_test.settings, found in file core/modules/config/tests/config_backed_enum_test/config/install/config_backed_enum_test.settings.yml: The enum "Drupal\config_backed_enum_test\BackedEnumValue::Maybe" is not defined at line 1 (near "foo: !php/enum Drupal\config_backed_enum_test\BackedEnumValue::Maybe->value").',
     ];
-    $this->assertErrorMessage($error_exception);
-    $this->assertSession()->statusCodeEquals(500);
-  }
-
-  /**
-   * Helper function: assert that the error message is found.
-   *
-   * @internal
-   */
-  public function assertErrorMessage(array $error): void {
-    $message = new FormattableMarkup('%type: @message in %function (line ', $error);
-    $this->assertSession()->responseContains($message);
+    $this->assertSession()->responseNotContains(new FormattableMarkup('%type: @message in %function (line ', $error_exception));
+    $this->assertSession()->statusCodeEquals(200);
   }
 
 }
