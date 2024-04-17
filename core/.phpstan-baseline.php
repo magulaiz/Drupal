@@ -2714,11 +2714,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/action/tests/src/FunctionalJavascript/ActionFormAjaxTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/action/tests/src/FunctionalJavascript/ActionFormAjaxTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to method execute\\(\\) on an unknown class Drupal\\\\node\\\\Plugin\\\\Action\\\\UnpublishByKeywordNode\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/action/tests/src/Kernel/UnpublishByKeywordActionTest.php',
@@ -2792,16 +2787,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Behat\\\\Mink\\\\Driver\\\\DriverInterface\\:\\:getClient\\(\\)\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/modules/big_pipe/tests/src/Functional/BigPipeTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementRemoved\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/big_pipe/tests/src/FunctionalJavascript/BigPipePreviewTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/big_pipe/tests/src/FunctionalJavascript/BigPipeRegressionTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Property Drupal\\\\Tests\\\\big_pipe\\\\Kernel\\\\BigPipeInterfacePreviewThemeSuggestionsTest\\:\\:\\$block has unknown class Drupal\\\\block\\\\Entity\\\\BlockInterface as its type\\.$#',
@@ -2922,26 +2907,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\views\\\\ViewEntityInterface\\:\\:invalidateCaches\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/block/tests/src/Functional/Views/DisplayBlockTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/block/tests/src/FunctionalJavascript/BlockAddTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/tests/src/FunctionalJavascript/BlockContextualLinksTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/tests/src/FunctionalJavascript/BlockDragTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/block/tests/src/FunctionalJavascript/BlockFilterTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
@@ -3314,11 +3279,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/book/tests/src/Functional/Views/BookRelationshipTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/book/tests/src/FunctionalJavascript/BookJavascriptTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/book/tests/src/Kernel/Block/BlockConfigSchemaTest.php',
@@ -3599,164 +3559,14 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/ckeditor5/tests/src/Functional/Update/CKEditor5UpdateImageToolbarItemTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertExpectedAjaxRequest\\(\\)\\.$#',
-	'count' => 7,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/AdminUiTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 15,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/AdminUiTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/AdminUiTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementRemoved\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/AdminUiTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/AdminUiTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/AdminUiTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertExpectedAjaxRequest\\(\\)\\.$#',
-	'count' => 5,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/CKEditor5AllowedTagsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 18,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/CKEditor5AllowedTagsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 11,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/CKEditor5AllowedTagsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementRemoved\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/CKEditor5AllowedTagsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/CKEditor5AllowedTagsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
-	'count' => 11,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/CKEditor5AllowedTagsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/CKEditor5DialogTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/CKEditor5DialogTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/CKEditor5DialogTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertNotVisibleInViewport\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/CKEditor5FragmentLinkTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertVisibleInViewport\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/CKEditor5FragmentLinkTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/CKEditor5FragmentLinkTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/CKEditor5OffCanvasTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/CKEditor5OffCanvasTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 10,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/CKEditor5Test.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 12,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/CKEditor5Test.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 7,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/CKEditor5Test.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
-	'count' => 5,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/CKEditor5Test.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Behat\\\\Mink\\\\Driver\\\\DriverInterface\\:\\:getWebDriverSession\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/CKEditor5TestBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/CKEditor5ToolbarTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/CKEditor5ToolbarTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\node\\\\NodeInterface\\:\\:\\$body\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/EmphasisTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/EmphasisTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/EmphasisTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/ImageTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/ImageTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\node\\\\NodeInterface\\:\\:\\$body\\.$#',
@@ -3769,93 +3579,18 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/ImageTestBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 8,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/ImageTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementRemoved\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/ImageTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 14,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/ImageTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/ImageUrlTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Field\\\\FieldStorageDefinitionInterface\\:\\:save\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/JSTranslationTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertExpectedAjaxRequest\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/JSTranslationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/JSTranslationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/LanguageTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/LanguageTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/LanguageTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Field\\\\FieldStorageDefinitionInterface\\:\\:save\\(\\)\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/MediaLibraryTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/MediaLibraryTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 5,
 	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/MediaLibraryTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\node\\\\NodeInterface\\:\\:\\$body\\.$#',
 	'count' => 2,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/MediaLinkabilityTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertNoElementAfterWait\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/MediaLinkabilityTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/MediaLinkabilityTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementRemoved\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/MediaLinkabilityTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 5,
 	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/MediaLinkabilityTest.php',
 ];
 $ignoreErrors[] = [
@@ -3864,48 +3599,8 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/MediaPreviewTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/MediaPreviewTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 7,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/MediaPreviewTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForLink\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/MediaPreviewTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/MediaPreviewTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\node\\\\NodeInterface\\:\\:\\$body\\.$#',
 	'count' => 17,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/MediaTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertNoElementAfterWait\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/MediaTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 18,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/MediaTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementRemoved\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/MediaTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 34,
 	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/MediaTest.php',
 ];
 $ignoreErrors[] = [
@@ -3915,16 +3610,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Field\\\\FieldStorageDefinitionInterface\\:\\:save\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/MediaTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/MediaTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/MediaTestBase.php',
 ];
@@ -3939,67 +3624,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/SourceEditingTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/SourceEditingTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/SourceEditingTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/SourceEditingTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/SourceEditingTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/SourceEditingTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 5,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/StyleTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 5,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/StyleTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/StyleTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\node\\\\NodeInterface\\:\\:\\$body\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/TableTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertNoElementAfterWait\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/TableTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/TableTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 6,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/TableTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/ckeditor5/tests/src/FunctionalJavascript/TableTest.php',
 ];
@@ -4904,16 +4529,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/config/tests/src/Functional/ConfigSingleImportExportTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForField\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/tests/src/FunctionalJavascript/ConfigEntityTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/modules/config/tests/src/FunctionalJavascript/ConfigExportTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:getPlugin\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/config_translation/src/Controller/ConfigTranslationBlockListBuilder.php',
@@ -4952,11 +4567,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Language\\\\LanguageManagerInterface\\:\\:getLanguageConfigOverride\\(\\)\\.$#',
 	'count' => 3,
 	'path' => __DIR__ . '/modules/config_translation/tests/src/Functional/ConfigTranslationUiSiteInformationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/modules/config_translation/tests/src/FunctionalJavascript/ConfigTranslationUiTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Language\\\\LanguageManager\\:\\:getLanguageConfigOverride\\(\\)\\.$#',
@@ -6329,11 +5939,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationWorkflowsTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/tests/src/FunctionalJavascript/ContentTranslationContextualLinksTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\ContentEntityInterface\\:\\:\\$langcode\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_translation/tests/src/Kernel/ContentTranslationFieldSyncRevisionTest.php',
@@ -6352,41 +5957,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Behat\\\\Mink\\\\Driver\\\\DriverInterface\\:\\:getWebDriverSession\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/contextual/tests/src/FunctionalJavascript/ContextualLinksTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertExpectedAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/contextual/tests/src/FunctionalJavascript/ContextualLinksTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertNoElementAfterWait\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/contextual/tests/src/FunctionalJavascript/ContextualLinksTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 7,
-	'path' => __DIR__ . '/modules/contextual/tests/src/FunctionalJavascript/ContextualLinksTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/contextual/tests/src/FunctionalJavascript/ContextualLinksTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/contextual/tests/src/FunctionalJavascript/DuplicateContextualLinksTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/contextual/tests/src/FunctionalJavascript/EditModeTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/contextual/tests/src/FunctionalJavascript/EditModeTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$unrestricted_tab_count might not be defined\\.$#',
@@ -6557,11 +6127,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:set\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/datetime_range/tests/src/Functional/EntityResource/EntityTest/EntityTestDateRangeTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/datetime_range/tests/src/FunctionalJavascript/DateRangeFieldTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$view in isset\\(\\) always exists and is not nullable\\.$#',
@@ -6762,26 +6327,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\editor\\\\EditorInterface\\:\\:getFields\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/editor/tests/src/Functional/Rest/EditorXmlCookieTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementRemoved\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/editor/tests/src/FunctionalJavascript/EditorAdminTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/editor/tests/src/FunctionalJavascript/EditorAdminTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForField\\(\\)\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/modules/editor/tests/src/FunctionalJavascript/EditorAdminTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/editor/tests/src/FunctionalJavascript/EditorAdminTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\TypedData\\\\TypedDataInterface\\:\\:\\$summary\\.$#',
@@ -7234,44 +6779,9 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/field/tests/src/Functional/TranslationWebTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field/tests/src/FunctionalJavascript/Boolean/BooleanFormatterSettingsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field/tests/src/FunctionalJavascript/EntityReference/EntityReferenceAdminTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/field/tests/src/FunctionalJavascript/EntityReference/EntityReferenceAdminTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field/tests/src/FunctionalJavascript/EntityReference/EntityReferenceAdminTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 7,
-	'path' => __DIR__ . '/modules/field/tests/src/FunctionalJavascript/MultipleValueWidgetTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForField\\(\\)\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/modules/field/tests/src/FunctionalJavascript/MultipleValueWidgetTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\field\\\\FieldConfigInterface\\:\\:setRequired\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field/tests/src/FunctionalJavascript/MultipleValueWidgetTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/modules/field/tests/src/FunctionalJavascript/Number/NumberFieldTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\FieldItemInterface\\:\\:\\$value\\.$#',
@@ -7704,21 +7214,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/field_layout/tests/modules/field_layout_test/src/Form/EmbeddedForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertExpectedAjaxRequest\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/field_layout/tests/src/FunctionalJavascript/FieldLayoutTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 8,
-	'path' => __DIR__ . '/modules/field_layout/tests/src/FunctionalJavascript/FieldLayoutTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/modules/field_layout/tests/src/FunctionalJavascript/FieldLayoutTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Cannot call method shouldNotBeCalled\\(\\) on array\\<Drupal\\\\Core\\\\Field\\\\FieldDefinitionInterface\\>\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field_layout/tests/src/Unit/FieldLayoutBuilderTest.php',
@@ -7994,114 +7489,9 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/field_ui/tests/src/Functional/ManageFieldsLifecycleTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/field_ui/tests/src/FunctionalJavascript/DefaultValueWidgetTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/field_ui/tests/src/FunctionalJavascript/DefaultValueWidgetTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_ui/tests/src/FunctionalJavascript/DefaultValueWidgetTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitOnAutocomplete\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_ui/tests/src/FunctionalJavascript/DefaultValueWidgetTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
-	'count' => 7,
-	'path' => __DIR__ . '/modules/field_ui/tests/src/FunctionalJavascript/DisplayModeBundleSelectionTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_ui/tests/src/FunctionalJavascript/EntityDisplayTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/field_ui/tests/src/FunctionalJavascript/EntityDisplayTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/field_ui/tests/src/FunctionalJavascript/EntityDisplayTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertExpectedAjaxRequest\\(\\)\\.$#',
-	'count' => 11,
-	'path' => __DIR__ . '/modules/field_ui/tests/src/FunctionalJavascript/ManageDisplayTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertNoElementAfterWait\\(\\)\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/modules/field_ui/tests/src/FunctionalJavascript/ManageDisplayTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/field_ui/tests/src/FunctionalJavascript/ManageDisplayTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 19,
-	'path' => __DIR__ . '/modules/field_ui/tests/src/FunctionalJavascript/ManageDisplayTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForField\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/field_ui/tests/src/FunctionalJavascript/ManageDisplayTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/field_ui/tests/src/FunctionalJavascript/ManageDisplayTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Interface Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface referenced with incorrect case\\: Drupal\\\\Core\\\\Entity\\\\entityTypeManagerInterface\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field_ui/tests/src/FunctionalJavascript/ManageDisplayTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertExpectedAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_ui/tests/src/FunctionalJavascript/ManageFieldsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_ui/tests/src/FunctionalJavascript/ManageFieldsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_ui/tests/src/FunctionalJavascript/ManageFieldsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementRemoved\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field_ui/tests/src/FunctionalJavascript/ManageFieldsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 6,
-	'path' => __DIR__ . '/modules/field_ui/tests/src/FunctionalJavascript/ManageFieldsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForField\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/field_ui/tests/src/FunctionalJavascript/ManageFieldsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/field_ui/tests/src/FunctionalJavascript/ManageFieldsTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Interface Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface referenced with incorrect case\\: Drupal\\\\Core\\\\Entity\\\\entityTypeManagerInterface\\.$#',
@@ -8489,19 +7879,9 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/file/tests/src/Functional/SaveUploadTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/FunctionalJavascript/AjaxFileManagedMultipleTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/file/tests/src/FunctionalJavascript/FileFieldValidateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/file/tests/src/FunctionalJavascript/FileFieldWidgetClaroThemeTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
@@ -8511,21 +7891,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Behat\\\\Mink\\\\Driver\\\\DriverInterface\\:\\:uploadFileAndGetRemoteFilePath\\(\\)\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/FunctionalJavascript/FileFieldWidgetTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/FunctionalJavascript/FileFieldWidgetTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForButton\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/file/tests/src/FunctionalJavascript/FileFieldWidgetTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 6,
 	'path' => __DIR__ . '/modules/file/tests/src/FunctionalJavascript/FileFieldWidgetTest.php',
 ];
 $ignoreErrors[] = [
@@ -8542,31 +7907,6 @@ $ignoreErrors[] = [
 	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
 	'count' => 4,
 	'path' => __DIR__ . '/modules/file/tests/src/FunctionalJavascript/FileFieldWidgetTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/file/tests/src/FunctionalJavascript/FileManagedFileElementTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/file/tests/src/FunctionalJavascript/FileManagedFileElementTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:statusMessageContainsAfterWait\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/FunctionalJavascript/MaximumFileSizeExceededUploadTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:statusMessageNotExistsAfterWait\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/FunctionalJavascript/MaximumFileSizeExceededUploadTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/FunctionalJavascript/MaximumFileSizeExceededUploadTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Access\\\\AccessResultInterface\\:\\:getCacheContexts\\(\\)\\.$#',
@@ -9479,27 +8819,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/image/tests/src/Functional/Rest/ImageStyleXmlCookieTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/image/tests/src/FunctionalJavascript/ImageAdminStylesTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/image/tests/src/FunctionalJavascript/ImageFieldValidateTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Cannot access property \\$uri on Drupal\\\\file\\\\FileInterface\\|false\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/image/tests/src/FunctionalJavascript/ImageFieldValidateTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Behat\\\\Mink\\\\Driver\\\\DriverInterface\\:\\:uploadFileAndGetRemoteFilePath\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/tests/src/FunctionalJavascript/ImageFieldWidgetMultipleTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/image/tests/src/FunctionalJavascript/ImageFieldWidgetMultipleTest.php',
 ];
@@ -9602,26 +8927,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\image\\\\ImageStyleInterface\\:\\:expects\\(\\)\\.$#',
 	'count' => 4,
 	'path' => __DIR__ . '/modules/image/tests/src/Unit/ImageStyleTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertNotVisibleInViewport\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/inline_form_errors/tests/src/FunctionalJavascript/FormErrorHandlerCKEditor5Test.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertVisibleInViewport\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/inline_form_errors/tests/src/FunctionalJavascript/FormErrorHandlerCKEditor5Test.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/inline_form_errors/tests/src/FunctionalJavascript/FormErrorHandlerCKEditor5Test.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/inline_form_errors/tests/src/FunctionalJavascript/FormErrorHandlerCKEditor5Test.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:isDefaultRevision\\(\\)\\.$#',
@@ -10629,128 +9934,13 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/layout_builder/tests/src/Functional/Rest/LayoutRestTestBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/AjaxBlockTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/AjaxBlockTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/BlockFilterTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/BlockFilterTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertNoElementAfterWait\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/BlockFormMessagesTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/BlockFormMessagesTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/BlockFormMessagesTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/BlockFormMessagesTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Behat\\\\Mink\\\\Driver\\\\DriverInterface\\:\\:getWebDriverSession\\(\\)\\.$#',
 	'count' => 3,
 	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/ContentPreviewToggleTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertNoElementAfterWait\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/ContentPreviewToggleTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/ContentPreviewToggleTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForButton\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/ContentPreviewToggleTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/ContentPreviewToggleTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/ContentPreviewToggleTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/ContentPreviewToggleTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertNoElementAfterWait\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/ContextualLinksTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/ContextualLinksTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 5,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/ContextualLinksTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/FieldBlockTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/FieldBlockTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:getFileUri\\(\\)\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockPrivateFilesTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 5,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockPrivateFilesTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockPrivateFilesTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockPrivateFilesTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForLink\\(\\)\\.$#',
-	'count' => 2,
 	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockPrivateFilesTest.php',
 ];
 $ignoreErrors[] = [
@@ -10769,154 +9959,14 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 7,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertNoElementAfterWait\\(\\)\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 5,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForLink\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/ItemLayoutFieldBlockTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Behat\\\\Mink\\\\Driver\\\\DriverInterface\\:\\:getWebDriverSession\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderDisableInteractionsTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertNoElementAfterWait\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderDisableInteractionsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderDisableInteractionsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderDisableInteractionsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 7,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderDisableInteractionsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderNestedFormUiTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderNestedFormUiTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderOptInTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Behat\\\\Mink\\\\Driver\\\\DriverInterface\\:\\:getWebDriverSession\\(\\)\\.$#',
 	'count' => 3,
 	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertNoElementAfterWait\\(\\)\\.$#',
-	'count' => 8,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 12,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 8,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 14,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderUiTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderUiTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 14,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/LayoutBuilderUiTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertNoElementAfterWait\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/MoveBlockFormTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/MoveBlockFormTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/MoveBlockFormTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertNoElementAfterWait\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/TestMultiWidthLayoutsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 5,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/FunctionalJavascript/TestMultiWidthLayoutsTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityFieldManagerInterface\\:\\:reveal\\(\\)\\.$#',
@@ -11999,99 +11049,14 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/media/tests/src/Functional/Update/MediaSettingsDefaultIframeDomainUpdateTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForButton\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/media/tests/src/FunctionalJavascript/MediaDisplayTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/media/tests/src/FunctionalJavascript/MediaDisplayTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Field\\\\FieldStorageDefinitionInterface\\:\\:save\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media/tests/src/FunctionalJavascript/MediaJavascriptTestBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForButton\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/media/tests/src/FunctionalJavascript/MediaSourceAudioVideoTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForButton\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/src/FunctionalJavascript/MediaSourceImageTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/media/tests/src/FunctionalJavascript/MediaSourceImageTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/media/tests/src/FunctionalJavascript/MediaSourceOEmbedVideoTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/media/tests/src/FunctionalJavascript/MediaSourceTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForButton\\(\\)\\.$#',
-	'count' => 8,
-	'path' => __DIR__ . '/modules/media/tests/src/FunctionalJavascript/MediaStandardProfileTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForField\\(\\)\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/modules/media/tests/src/FunctionalJavascript/MediaStandardProfileTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/src/FunctionalJavascript/MediaTypeCreationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/src/FunctionalJavascript/MediaTypeCreationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 5,
-	'path' => __DIR__ . '/modules/media/tests/src/FunctionalJavascript/MediaTypeCreationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/media/tests/src/FunctionalJavascript/MediaUiJavascriptTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/media/tests/src/FunctionalJavascript/MediaUiJavascriptTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForLink\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/media/tests/src/FunctionalJavascript/MediaUiJavascriptTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\media\\\\MediaTypeInterface\\:\\:getStatus\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media/tests/src/FunctionalJavascript/MediaUiJavascriptTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/src/FunctionalJavascript/MediaViewsWizardTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/src/FunctionalJavascript/MediaViewsWizardTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Access\\\\AccessResultInterface\\:\\:getCacheContexts\\(\\)\\.$#',
@@ -12314,29 +11279,9 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/ContentModerationTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 10,
-	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/ContentModerationTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\workflows\\\\WorkflowTypeInterface\\:\\:addEntityTypeAndBundle\\(\\)\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/ContentModerationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementRemoved\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/EmbeddedFormWidgetTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/EmbeddedFormWidgetTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/EmbeddedFormWidgetTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$jpg_image might not be defined\\.$#',
@@ -12349,19 +11294,9 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/EntityReferenceWidgetTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/EntityReferenceWidgetTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\field\\\\FieldConfigInterface\\:\\:setRequired\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/EntityReferenceWidgetTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForField\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/FieldUiIntegrationTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\media\\\\MediaInterface\\:\\:\\$bundle\\.$#',
@@ -12369,39 +11304,9 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/MediaLibraryTestBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/MediaLibraryTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/MediaLibraryTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForField\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/MediaLibraryTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/MediaLibraryTestBase.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Field\\\\FieldStorageDefinitionInterface\\:\\:save\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/TranslationsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/TranslationsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 10,
-	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/WidgetOEmbedTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Behat\\\\Mink\\\\Driver\\\\DriverInterface\\:\\:uploadFileAndGetRemoteFilePath\\(\\)\\.$#',
@@ -12412,26 +11317,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Behat\\\\Mink\\\\Driver\\\\DriverInterface\\:\\:uploadFileAndGetRemoteFilePath\\(\\)\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/WidgetUploadTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/WidgetUploadTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/WidgetUploadTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/WidgetViewsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForLink\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/WidgetViewsTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Field\\\\FieldStorageDefinitionInterface\\:\\:save\\(\\)\\.$#',
@@ -12747,16 +11632,6 @@ $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\menu_link_content\\\\MenuLinkContentInterface\\:\\:\\$link\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/menu_ui/tests/src/Functional/MenuUiTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_ui/tests/src/FunctionalJavascript/MenuUiJavascriptTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_ui/tests/src/FunctionalJavascript/MenuUiJavascriptTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^PHPDoc tag @return with type array\\<string\\> is incompatible with native type string\\.$#',
@@ -14189,16 +13064,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/node/tests/src/Functional/Views/Wizard/NodeRevisionWizardTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/node/tests/src/FunctionalJavascript/CollapsedSummariesTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/node/tests/src/FunctionalJavascript/CollapsedSummariesTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\node\\\\NodeInterface\\:\\:\\$body\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/tests/src/FunctionalJavascript/ContextualLinksTest.php',
@@ -14207,21 +13072,6 @@ $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\node\\\\NodeInterface\\:\\:\\$title\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/tests/src/FunctionalJavascript/ContextualLinksTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/modules/node/tests/src/FunctionalJavascript/NodeDeleteConfirmTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/modules/node/tests/src/FunctionalJavascript/NodeDeleteConfirmTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/FunctionalJavascript/SettingSummariesContentTypeTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\RevisionableInterface\\:\\:get\\(\\)\\.$#',
@@ -14547,26 +13397,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\options\\\\Plugin\\\\Field\\\\FieldType\\\\ListStringItem\\:\\:validateAllowedValue\\(\\) should return string but return statement is missing\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/options/src/Plugin/Field/FieldType/ListStringItem.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 9,
-	'path' => __DIR__ . '/modules/options/tests/src/FunctionalJavascript/OptionsFieldUITest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/options/tests/src/FunctionalJavascript/OptionsFieldUITest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 5,
-	'path' => __DIR__ . '/modules/options/tests/src/FunctionalJavascript/OptionsFieldUITest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/options/tests/src/FunctionalJavascript/OptionsFieldUITest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:\\$test_options\\.$#',
@@ -15177,16 +14007,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\responsive_image\\\\ResponsiveImageStyleInterface\\:\\:getFields\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/responsive_image/tests/src/Functional/Rest/ResponsiveImageStyleXmlCookieTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/responsive_image/tests/src/FunctionalJavascript/ResponsiveImageFieldUiTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/responsive_image/tests/src/FunctionalJavascript/ResponsiveImageFieldUiTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\rest\\\\ResourceResponseInterface\\:\\:\\$headers\\.$#',
@@ -15949,36 +14769,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/settings_tray/src/Block/BlockEntitySettingTrayForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertNoElementAfterWait\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/settings_tray/tests/src/FunctionalJavascript/SettingsTrayBlockFormTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/settings_tray/tests/src/FunctionalJavascript/SettingsTrayBlockFormTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/settings_tray/tests/src/FunctionalJavascript/SettingsTrayBlockFormTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/settings_tray/tests/src/FunctionalJavascript/SettingsTrayBlockFormTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/settings_tray/tests/src/FunctionalJavascript/SettingsTrayTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/settings_tray/tests/src/FunctionalJavascript/SettingsTrayTestBase.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\link\\\\LinkItemInterface\\:\\:first\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/shortcut/src/Entity/Shortcut.php',
@@ -16162,11 +14952,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method GuzzleHttp\\\\ClientInterface\\:\\:post\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/statistics/tests/src/Functional/Views/IntegrationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/statistics/tests/src/FunctionalJavascript/StatisticsLoggingTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
@@ -17521,94 +16306,9 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/UpdateSystem/UpdateRemovedPostUpdateTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForLink\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/FunctionalJavascript/Batch/ProcessingTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/system/tests/src/FunctionalJavascript/Form/ConfigTargetTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/system/tests/src/FunctionalJavascript/Form/ElementsTableSelectTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/FunctionalJavascript/Form/RebuildTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Behat\\\\Mink\\\\Element\\\\NodeElement\\:\\:setValue\\(\\) invoked with 2 parameters, 1 required\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/modules/system/tests/src/FunctionalJavascript/Form/TriggeringElementTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertExpectedAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/FunctionalJavascript/FrameworkTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/system/tests/src/FunctionalJavascript/FrameworkTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertVisibleInViewport\\(\\)\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/modules/system/tests/src/FunctionalJavascript/ModalRendererTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/modules/system/tests/src/FunctionalJavascript/ModalRendererTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 9,
-	'path' => __DIR__ . '/modules/system/tests/src/FunctionalJavascript/ModalRendererTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertNoElementAfterWait\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/FunctionalJavascript/OffCanvasTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/FunctionalJavascript/OffCanvasTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertNoElementAfterWait\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/system/tests/src/FunctionalJavascript/OffCanvasTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/FunctionalJavascript/OffCanvasTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/system/tests/src/FunctionalJavascript/OffCanvasTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForLink\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/FunctionalJavascript/System/DateFormatTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/FunctionalJavascript/System/DateFormatTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForButton\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/FunctionalJavascript/ThemeSettingsFormTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
@@ -18366,51 +17066,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/toolbar/src/PageCache/AllowToolbarPath.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/toolbar/tests/src/FunctionalJavascript/ToolbarActiveTrailTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementRemoved\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/toolbar/tests/src/FunctionalJavascript/ToolbarActiveTrailTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 10,
-	'path' => __DIR__ . '/modules/toolbar/tests/src/FunctionalJavascript/ToolbarActiveTrailTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/toolbar/tests/src/FunctionalJavascript/ToolbarIntegrationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/toolbar/tests/src/FunctionalJavascript/ToolbarIntegrationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertNoElementAfterWait\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/toolbar/tests/src/FunctionalJavascript/ToolbarStoredStateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/toolbar/tests/src/FunctionalJavascript/ToolbarStoredStateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementRemoved\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/toolbar/tests/src/FunctionalJavascript/ToolbarStoredStateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/modules/toolbar/tests/src/FunctionalJavascript/ToolbarStoredStateTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\tour\\\\TipPluginBase\\:\\:get\\(\\) should return string but return statement is missing\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/tour/src/TipPluginBase.php',
@@ -18489,16 +17144,6 @@ $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\tour\\\\Entity\\\\Tour\\:\\:\\$loaded\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/tour/tests/src/Functional/TourTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertNoElementAfterWait\\(\\)\\.$#',
-	'count' => 5,
-	'path' => __DIR__ . '/modules/tour/tests/src/FunctionalJavascript/TourJavascriptTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 6,
-	'path' => __DIR__ . '/modules/tour/tests/src/FunctionalJavascript/TourJavascriptTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Database\\\\Query\\\\ExtendableInterface\\:\\:addMetaData\\(\\)\\.$#',
@@ -19185,11 +17830,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/modules/user/tests/src/FunctionalJavascript/RegistrationWithUserFieldsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForButton\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/FunctionalJavascript/UserPasswordResetTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
@@ -20692,124 +19332,14 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/tests/src/Functional/TaxonomyGlossaryTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementRemoved\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/views/tests/src/FunctionalJavascript/BlockExposedFilterAJAXTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/FunctionalJavascript/ClickSortingAJAXTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertExpectedAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/FunctionalJavascript/ExposedFilterAJAXTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 5,
-	'path' => __DIR__ . '/modules/views/tests/src/FunctionalJavascript/ExposedFilterAJAXTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/views/tests/src/FunctionalJavascript/ExposedFilterAJAXTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/views/tests/src/FunctionalJavascript/ExposedFilterAJAXTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/views/tests/src/FunctionalJavascript/GlossaryViewTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 15,
-	'path' => __DIR__ . '/modules/views/tests/src/FunctionalJavascript/PaginationAJAXTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/FunctionalJavascript/Plugin/BulkOperationsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForField\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/views/tests/src/FunctionalJavascript/Plugin/views/Handler/ContextualFilterTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/FunctionalJavascript/Plugin/views/Handler/FieldTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 7,
-	'path' => __DIR__ . '/modules/views/tests/src/FunctionalJavascript/Plugin/views/Handler/FieldTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForButton\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/views/tests/src/FunctionalJavascript/Plugin/views/Handler/FieldTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/FunctionalJavascript/Plugin/views/Handler/FieldTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForField\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/views/tests/src/FunctionalJavascript/Plugin/views/Handler/FieldTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForLink\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/FunctionalJavascript/Plugin/views/Handler/FieldTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
-	'count' => 2,
 	'path' => __DIR__ . '/modules/views/tests/src/FunctionalJavascript/Plugin/views/Handler/FieldTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Property Drupal\\\\Tests\\\\views\\\\FunctionalJavascript\\\\Plugin\\\\views\\\\Handler\\\\FieldTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/src/FunctionalJavascript/Plugin/views/Handler/FieldTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForField\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/views/tests/src/FunctionalJavascript/Plugin/views/Handler/FilterTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/FunctionalJavascript/Plugin/views/Handler/FilterTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/views/tests/src/FunctionalJavascript/Plugin/views/Handler/GroupedExposedFilterTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForField\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/FunctionalJavascript/Plugin/views/Handler/GroupedExposedFilterTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/views/tests/src/FunctionalJavascript/RedirectAjaxTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/FunctionalJavascript/RedirectAjaxTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:setCacheBackend\\(\\)\\.$#',
@@ -21399,79 +19929,9 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views_ui/tests/src/Functional/HandlerTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/views_ui/tests/src/FunctionalJavascript/AdminAjaxTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementRemoved\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/tests/src/FunctionalJavascript/AdminAjaxTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/tests/src/FunctionalJavascript/AdminAjaxTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/tests/src/FunctionalJavascript/DisplayTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForField\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/tests/src/FunctionalJavascript/DisplayTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/tests/src/FunctionalJavascript/FieldDialogsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 5,
-	'path' => __DIR__ . '/modules/views_ui/tests/src/FunctionalJavascript/FilterCriteriaTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForLink\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/tests/src/FunctionalJavascript/FilterCriteriaTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForField\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/tests/src/FunctionalJavascript/FilterOptionsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/views_ui/tests/src/FunctionalJavascript/PreviewTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/tests/src/FunctionalJavascript/PreviewTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$message in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views_ui/tests/src/FunctionalJavascript/PreviewTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/views_ui/tests/src/FunctionalJavascript/ViewsListingTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/views_ui/tests/src/FunctionalJavascript/ViewsWizardTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/tests/src/FunctionalJavascript/ViewsWizardTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views_ui\\\\ViewUI\\:\\:unsetLock\\(\\) invoked with 1 parameter, 0 required\\.$#',
@@ -21950,26 +20410,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspaceTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertNoElementAfterWait\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/FunctionalJavascript/WorkspaceToolbarIntegrationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:statusMessageContainsAfterWait\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/FunctionalJavascript/WorkspaceToolbarIntegrationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/FunctionalJavascript/WorkspaceToolbarIntegrationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/FunctionalJavascript/WorkspacesLayoutBuilderIntegrationTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:validate\\(\\)\\.$#',
 	'count' => 9,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/EntityWorkspaceConflictConstraintValidatorTest.php',
@@ -22130,11 +20570,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/profiles/standard/tests/src/Functional/StandardTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/profiles/standard/tests/src/FunctionalJavascript/StandardJavascriptTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^PHPDoc tag @param for parameter \\$performance_data with type Drupal\\\\Tests\\\\standard\\\\FunctionalJavascript\\\\Drupal\\\\Tests\\\\PerformanceData is not subtype of native type Drupal\\\\Tests\\\\PerformanceData\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/profiles/standard/tests/src/FunctionalJavascript/StandardPerformanceTest.php',
@@ -22181,154 +20616,9 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/BuildTests/Framework/Tests/BuildTestTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Ajax/AjaxCallbacksTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForButton\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Ajax/AjaxFormCacheTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Ajax/AjaxFormCacheTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Ajax/AjaxFormImageButtonTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 5,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Ajax/AjaxFormPageCacheTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Ajax/AjaxInGroupTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Ajax/AjaxMaintenanceModeTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 10,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Ajax/AjaxTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:statusMessageContainsAfterWait\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Ajax/AjaxTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Behat\\\\Mink\\\\Driver\\\\DriverInterface\\:\\:getWebDriverSession\\(\\)\\.$#',
 	'count' => 3,
 	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Ajax/CommandsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Ajax/DialogTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Ajax/DialogTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 8,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Ajax/DialogTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Ajax/ElementValidationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 7,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Ajax/FocusFirstCommandTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 5,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Ajax/FormValuesTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Ajax/FormValuesTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:statusMessageContainsAfterWait\\(\\)\\.$#',
-	'count' => 5,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Ajax/MessageCommandTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:statusMessageExistsAfterWait\\(\\)\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Ajax/MessageCommandTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:statusMessageNotContainsAfterWait\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Ajax/MessageCommandTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:statusMessageNotExistsAfterWait\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Ajax/MessageCommandTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Ajax/MessageCommandTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementRemoved\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Ajax/MessageCommandTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Ajax/MessageCommandTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertNoElementAfterWait\\(\\)\\.$#',
-	'count' => 5,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Ajax/ThrobberTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Ajax/ThrobberTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Ajax/ThrobberTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Ajax/ThrobberTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertExpectedAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/AjaxWaitTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/AjaxWaitTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Behat\\\\Mink\\\\Driver\\\\DriverInterface\\:\\:getWebdriverSession\\(\\)\\.$#',
@@ -22336,54 +20626,9 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/BrowserWithJavascriptTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Core/CsrfTokenRaceTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 7,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Core/Form/FormGroupingElementsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForField\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Core/Form/FormGroupingElementsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Core/Form/FormGroupingElementsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Core/JsMessageTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Core/MachineNameTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Dialog/DialogPositionTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^PHPDoc tag @var with type Exception is not subtype of native type null\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/DrupalSelenium2Driver.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/EntityReference/EntityReferenceAutocompleteWidgetTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitOnAutocomplete\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/EntityReference/EntityReferenceAutocompleteWidgetTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Database\\\\Event\\\\DatabaseEvent\\:\\:\\$caller\\.$#',
@@ -22406,104 +20651,9 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/PerformanceTestBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/TableDrag/TableDragTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/TableDrag/TableDragTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Behat\\\\Mink\\\\Driver\\\\Selenium2Driver\\:\\:uploadFileAndGetRemoteFilePath\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Tests/DrupalSelenium2DriverTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Tests/DrupalSelenium2DriverTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertNoElementAfterWait\\(\\)\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Tests/JSWebAssertTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Tests/JSWebAssertTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForButton\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Tests/JSWebAssertTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Tests/JSWebAssertTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForField\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Tests/JSWebAssertTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForId\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Tests/JSWebAssertTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForLink\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Tests/JSWebAssertTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForText\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Tests/JSWebAssertTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Theme/ClaroEntityDisplayTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Theme/ClaroEntityDisplayTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Theme/ClaroEntityDisplayTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 7,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Theme/ClaroViewsBulkOperationsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 7,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Theme/ClaroViewsBulkOperationsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:assertWaitOnAjaxRequest\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Theme/ClaroViewsUiTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Theme/ClaroViewsUiTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElementVisible\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/Theme/OliveroMessagesTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Unsafe access to private property Drupal\\\\FunctionalJavascriptTests\\\\WebDriverCurlService\\:\\:\\$retry through static\\:\\:\\.$#',
