@@ -273,6 +273,12 @@ class ResponsiveImageStyle extends ConfigEntityBase implements ResponsiveImageSt
             return FALSE;
           }
           break;
+
+        case 'group_image_styles':
+          // The image style mapping must have at least first image selected.
+          if ($image_style_mapping['image_mapping']['first']) {
+            return FALSE;
+          }
       }
     }
     return TRUE;
