@@ -29,9 +29,18 @@ class QueueFactory implements ContainerAwareInterface {
 
   /**
    * Constructs a queue factory.
+   *
+   * @param \Drupal\Core\Site\Settings $settings
+   *   The settings object.
+   * @param \Drupal\Core\Queue\QueueWorkerManagerInterface|null $queueManager
+   *   The Queue Worker Manager service.
    */
-  public function __construct(Settings $settings) {
+  public function __construct(Settings $settings, protected ?QueueWorkerManagerInterface $queueManager = NULL) {
     $this->settings = $settings;
+    if ($this->queueManager === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $queueManager argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3338022', E_USER_DEPRECATED);
+      $this->queueManager = \Drupal::service('plugin.manager.queue_worker');
+    }
   }
 
   /**
@@ -40,27 +49,66 @@ class QueueFactory implements ContainerAwareInterface {
    * @param string $name
    *   The name of the queue to work with.
    * @param bool $reliable
-   *   (optional) TRUE if the ordering of items and guaranteeing every item executes at
-   *   least once is important, FALSE if scalability is the main concern. Defaults
-   *   to FALSE.
+   *   (optional) TRUE if the ordering of items and guaranteeing every item
+   *   executes at least once is important, FALSE if scalability is the main
+   *   concern. Defaults to FALSE.
    *
    * @return \Drupal\Core\Queue\QueueInterface
    *   A queue implementation for the given name.
    */
   public function get($name, $reliable = FALSE) {
     if (!isset($this->queues[$name])) {
-      // If it is a reliable queue, check the specific settings first.
-      if ($reliable) {
-        $service_name = $this->settings->get('queue_reliable_service_' . $name);
-      }
-      // If no reliable queue was defined, check the service and global
-      // settings, fall back to queue.database.
-      if (empty($service_name)) {
-        $service_name = $this->settings->get('queue_service_' . $name, $this->settings->get('queue_default', 'queue.database'));
-      }
+      $service_name = $this->getServiceName($name, $reliable);
       $this->queues[$name] = $this->container->get($service_name)->get($name);
     }
     return $this->queues[$name];
+  }
+
+  /**
+   * Get the service name which responsible to handle the queue.
+   *
+   * @param string $queue_id
+   *   Queue Worker ID. The ID of the queue.
+   * @param bool $reliable
+   *   (optional) TRUE if the ordering of items and guaranteeing every item
+   *   executes at least once is important, FALSE if scalability is the main
+   *   concern. Defaults to FALSE.
+   *
+   * @return string
+   *   Service name. The 'queue.database' is used by the default.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  protected function getServiceName(string $queue_id, bool $reliable = FALSE): string {
+    $definition = $this->queueManager->getDefinition($queue_id, FALSE);
+    $service_name = NULL;
+    /* @todo: remove $service_name detection legacy logic before drupal:11.0.0. */
+    // If it is a reliable queue, check the specific settings first.
+    if ($reliable) {
+      $service_name = $this->settings::get('queue_reliable_service_' . $queue_id);
+      if ($service_name) {
+        @trigger_error("The \"queue_reliable_service_{$queue_id}\" key is deprecated in drupal:10.1.0 and has no effect in drupal:11.0.0. Use hook_queue_info_alter() and `\$queue['{$queue_id}']['queue_reliable_service'] = '{$service_name}';` alter instead. See https://www.drupal.org/node/3338022", \E_USER_DEPRECATED);
+      }
+    }
+    // If no reliable queue was defined, check the service and global
+    // settings, fall back to queue.database.
+    if (empty($service_name)) {
+      $service_name = $this->settings::get('queue_service_' . $queue_id);
+      if ($service_name) {
+        @trigger_error("The \"queue_service_{$queue_id}\" key is deprecated in drupal:10.1.0 and has no effect in drupal:11.0.0. Use hook_queue_info_alter() and `\$queue['{$queue_id}']['queue_service'] = '{$service_name}';` alter instead. See https://www.drupal.org/node/3338022", \E_USER_DEPRECATED);
+      }
+    }
+
+    if ($reliable && isset($definition['queue_reliable_service'])) {
+      $service_name = $definition['queue_reliable_service'];
+    }
+    elseif (isset($definition['queue_service'])) {
+      $service_name = $definition['queue_service'];
+    }
+    elseif ($service_name === NULL) {
+      $service_name = $this->settings::get('queue_default', 'queue.database');
+    }
+    return $service_name;
   }
 
 }
