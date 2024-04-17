@@ -131,6 +131,19 @@ class StorageComparer implements StorageComparerInterface {
       );
     }
 
+    $source_core_extension = $this->getSourceStorage()->read('core.extension') ?? [];
+    $target_core_extension = $this->getTargetStorage()->read('core.extension') ?? [];
+    foreach (array_diff_key($source_core_extension['module'] ?? [], $target_core_extension['module'] ?? []) as $name => $weight) {
+      $new_extensions[$name] = \Drupal::root() . '/' . \Drupal::service('extension.path.resolver')->getPath('module', $name);
+    }
+    foreach (array_diff_key($source_core_extension['theme'] ?? [], $target_core_extension['theme'] ?? []) as $name => $weight) {
+      $new_extensions[$name] = \Drupal::root() . '/' . \Drupal::service('extension.path.resolver')->getPath('theme', $name);
+    }
+    if (!empty($new_extensions)) {
+      // Ensure enums and constants from uninstalled modules can be autoloaded.
+      $this->sourceStorage = new AutoloadingStorage($this->sourceStorage, $new_extensions);
+    }
+
     $this->targetCacheStorage = new MemoryBackend($time);
     $this->targetStorage = $target_storage;
     $this->changelist[StorageInterface::DEFAULT_COLLECTION] = $this->getEmptyChangelist();

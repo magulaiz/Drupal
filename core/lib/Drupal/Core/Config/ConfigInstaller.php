@@ -118,6 +118,9 @@ class ConfigInstaller implements ConfigInstallerInterface {
       if (!$this->isSyncing()) {
         $storage = new FileStorage($default_install_path, StorageInterface::DEFAULT_COLLECTION);
         $prefix = '';
+        // Ensure enums and constants from uninstalled modules can be
+        // autoloaded.
+        $storage = new AutoloadingStorage($storage, [$name => \Drupal::root() . '/' . $extension_path]);
       }
       else {
         // The configuration importer sets the source storage on the config
@@ -520,6 +523,9 @@ class ConfigInstaller implements ConfigInstallerInterface {
     $enabled_extensions[] = $name;
     // Gets profile storages to search for overrides if necessary.
     $profile_storages = $this->getProfileStorages($name);
+
+    // Ensure enums and constants from uninstalled modules can be autoloaded.
+    $storage = new AutoloadingStorage($storage, [$name => \Drupal::root() . '/' . $this->extensionPathResolver->getPath($type, $name)]);
 
     // Check the dependencies of configuration provided by the module.
     [$invalid_default_config, $missing_dependencies] = $this->findDefaultConfigWithUnmetDependencies($storage, $enabled_extensions, $profile_storages);
