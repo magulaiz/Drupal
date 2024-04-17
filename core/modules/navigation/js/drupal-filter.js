@@ -3,34 +3,34 @@
  * Common admin filter by text behaviors.
  */
 
-const FILTER_EVENT = 'navigation-block-filter-event';
-
-function hideElement(element) {
-  element.classList.add('hidden');
-  element.setAttribute('hidden', true);
-  element.style.display = 'none';
-}
-
-function showElement(element) {
-  element.classList.remove('hidden');
-  element.removeAttribute('hidden');
-  element.style.display = 'revert';
-}
-
-function searchMethod(target, query) {
-  return target?.textContent.toLowerCase().includes(query);
-}
-
-function foundInItem(query, item) {
-  if (item?.searchTargets) {
-    return Array.from(item.searchTargets).some((target) =>
-      searchMethod(target, query),
-    );
-  }
-  return searchMethod(item, query);
-}
-
 ((Drupal, debounce, once) => {
+  const FILTER_EVENT = 'navigation-block-filter-event';
+
+  function hideElement(element) {
+    element.classList.add('hidden');
+    element.setAttribute('hidden', true);
+    element.style.display = 'none';
+  }
+
+  function showElement(element) {
+    element.classList.remove('hidden');
+    element.removeAttribute('hidden');
+    element.style.display = 'revert';
+  }
+
+  function searchMethod(target, query) {
+    return target?.textContent.toLowerCase().includes(query);
+  }
+
+  function foundInItem(query, item) {
+    if (item?.searchTargets) {
+      return Array.from(item.searchTargets).some((target) =>
+        searchMethod(target, query),
+      );
+    }
+    return searchMethod(item, query);
+  }
+
   /**
    * Filters the table by a text input search string.
    *

@@ -36,11 +36,14 @@
        */
       attach: (context) => {
         if (context === document) {
-          const doc = once(
-            'admin-toolbar-document-triggers-listener',
-            document.documentElement,
-          )?.shift();
-          if (doc) {
+          if (
+            once(
+              'admin-toolbar-document-triggers-listener',
+              document.documentElement,
+            ).length
+          ) {
+            const doc = document.documentElement;
+
             // This is special attribute which added to apply css
             // with animations and avoid layout shift.
             doc.setAttribute('data-admin-toolbar-transitions', true);
@@ -117,7 +120,8 @@
       attach: (context) => {
         const triggers = once(
           'admin-toolbar-trigger',
-          context.querySelectorAll('[aria-controls="admin-toolbar"]'),
+          '[aria-controls="admin-toolbar"]',
+          context,
         );
 
         /**

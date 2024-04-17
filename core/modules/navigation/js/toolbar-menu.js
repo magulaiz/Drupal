@@ -33,7 +33,8 @@
       attach: (context) => {
         once(
           'toolbar-menu-trigger',
-          context.querySelectorAll('[data-toolbar-menu-trigger]'),
+          '[data-toolbar-menu-trigger]',
+          context,
         ).forEach((button) => {
           const menu = button.nextElementSibling;
 
@@ -102,7 +103,8 @@
       attach: (context) => {
         once(
           'toolbar-menu-link',
-          context.querySelectorAll('a.toolbar-menu__link, a.toolbar-button'),
+          'a.toolbar-menu__link, a.toolbar-button',
+          context,
         ).forEach((link) => {
           // What we do if menu link is in current url.
           if (document.URL === link.href) {
