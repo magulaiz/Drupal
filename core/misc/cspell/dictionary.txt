@@ -1,3 +1,4 @@
+Syncer
 absolutezero
 adamson
 addedline
@@ -80,6 +81,7 @@ blockrelated
 blocktest
 bodyless
 boing
+bootable
 bovigo
 brotli
 browserkit
@@ -260,6 +262,7 @@ fieldlayout
 fieldlinks
 fieldnames
 fieldsets
+filedate
 filemime
 filesystems
 filetransfer
@@ -283,6 +286,7 @@ fulltext
 funic
 gabilondo
 gids
+gitlabci
 gloop
 googleapis
 greeking
@@ -295,6 +299,7 @@ guzzlehttp
 hande
 hateoas
 hexcode
+hhvm
 hilited
 hmac
 hookname
@@ -337,6 +342,7 @@ keyevent
 keypresses
 keyvalue
 kinberg
+kirk
 kolkata
 lamoids
 languageswitcher
@@ -530,6 +536,7 @@ prerendered
 presave
 pretransaction
 preuninstall
+proc_open
 processlist
 proname
 prophesize
@@ -631,6 +638,8 @@ squiz
 squizlabs
 srcset
 ssess
+stage's
+stager's
 starterkit
 statuscode
 stddev
@@ -682,6 +691,8 @@ subview
 sulaco
 supercede
 svgz
+syncer
+syncers
 synchronizable
 syrop
 tabbingmanager
@@ -768,6 +779,7 @@ unpromote
 unpublish
 unpublishes
 unpublishing
+unrequested
 unrevisionable
 unrouted
 unsanitized
@@ -777,8 +789,10 @@ unserializes
 unserializing
 unsets
 unsetting
+unshallow
 unsticky
 untabbable
+unwritable
 upcasted
 upcasting
 updateprogress
