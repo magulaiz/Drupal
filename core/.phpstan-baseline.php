@@ -3439,11 +3439,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/ckeditor5/tests/src/Functional/ImageUploadAccessTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/Functional/ImageUploadAccessTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Behat\\\\Mink\\\\Driver\\\\DriverInterface\\:\\:getClient\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/ckeditor5/tests/src/Functional/ImageUploadTest.php',
@@ -3451,11 +3446,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Cannot access property \\$uri on bool\\|object\\.$#',
 	'count' => 4,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/Functional/ImageUploadTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
-	'count' => 2,
 	'path' => __DIR__ . '/modules/ckeditor5/tests/src/Functional/ImageUploadTest.php',
 ];
 $ignoreErrors[] = [
@@ -4005,11 +3995,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\comment\\\\CommentInterface\\:\\:\\$comment_body\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/tests/src/Functional/CommentPreviewTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/comment/tests/src/Functional/CommentPreviewTest.php',
 ];
@@ -6399,11 +6384,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/field/tests/src/Functional/EntityReference/EntityReferenceFieldTranslatedReferenceViewTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field/tests/src/Functional/EntityReference/EntityReferenceFileUploadTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$field_storage in PHPDoc tag @var does not exist\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field/tests/src/Functional/FieldDefaultValueCallbackTest.php',
@@ -7514,22 +7494,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/file/tests/src/Functional/DownloadTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/Functional/FileFieldDisplayTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\field\\\\FieldConfigInterface\\:\\:setSettings\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/file/tests/src/Functional/FileFieldTestBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$filesize on object\\|false\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/Functional/FileFieldTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
+	'message' => '#^Cannot access property \\$filesize on object\\{filename\\: string, name\\: string, uri\\: string\\}\\|false\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/file/tests/src/Functional/FileFieldTestBase.php',
 ];
@@ -7684,11 +7654,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/file/tests/src/Functional/SaveUploadFormTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
-	'count' => 5,
-	'path' => __DIR__ . '/modules/file/tests/src/Functional/SaveUploadFormTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Cannot access property \\$uri on string\\.$#',
 	'count' => 3,
 	'path' => __DIR__ . '/modules/file/tests/src/Functional/SaveUploadFormTest.php',
@@ -7699,24 +7664,9 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/file/tests/src/Functional/SaveUploadTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
-	'count' => 6,
-	'path' => __DIR__ . '/modules/file/tests/src/Functional/SaveUploadTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Cannot access property \\$uri on string\\.$#',
 	'count' => 3,
 	'path' => __DIR__ . '/modules/file/tests/src/Functional/SaveUploadTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/FunctionalJavascript/FileFieldValidateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/FunctionalJavascript/FileFieldWidgetClaroThemeTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Behat\\\\Mink\\\\Driver\\\\DriverInterface\\:\\:uploadFileAndGetRemoteFilePath\\(\\)\\.$#',
@@ -7724,18 +7674,8 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/file/tests/src/FunctionalJavascript/FileFieldWidgetTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$filesize on object\\|false\\.$#',
+	'message' => '#^Cannot access property \\$filesize on object\\{filename\\: string, name\\: string, uri\\: string\\}\\|false\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/FunctionalJavascript/FileFieldWidgetTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$name on object\\|false\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/FunctionalJavascript/FileFieldWidgetTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
-	'count' => 4,
 	'path' => __DIR__ . '/modules/file/tests/src/FunctionalJavascript/FileFieldWidgetTest.php',
 ];
 $ignoreErrors[] = [
@@ -8504,34 +8444,9 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/image/src/Routing/ImageStyleRoutes.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/tests/src/Functional/ImageAdminStylesTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/tests/src/Functional/ImageDimensionsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$filename on object\\|false\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/tests/src/Functional/ImageFieldDisplayTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/image/tests/src/Functional/ImageFieldDisplayTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Image\\\\ImageInterface\\:\\:\\$uri\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/image/tests/src/Functional/ImageFieldTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$filename on object\\|false\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/image/tests/src/Functional/ImageFieldValidateTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$image_that_is_too_small_file might not be defined\\.$#',
@@ -8629,11 +8544,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/image/tests/src/FunctionalJavascript/ImageFieldWidgetMultipleTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/tests/src/Kernel/ImageEffectsTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\FieldItemListInterface\\:\\:\\$alt\\.$#',
 	'count' => 3,
 	'path' => __DIR__ . '/modules/image/tests/src/Kernel/ImageItemTest.php',
@@ -8686,11 +8596,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\FieldItemListInterface\\:\\:\\$uri\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/image/tests/src/Kernel/ImageThemeFunctionTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
-	'count' => 2,
 	'path' => __DIR__ . '/modules/image/tests/src/Kernel/ImageThemeFunctionTest.php',
 ];
 $ignoreErrors[] = [
@@ -10657,11 +10562,6 @@ $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Symfony\\\\Component\\\\Validator\\\\Constraint\\:\\:\\$message\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media/tests/modules/media_test_source/src/Plugin/Validation/Constraint/MediaTestConstraintValidator.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/src/Functional/FieldFormatter/MediaThumbnailFormatterTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Access\\\\AccessResultInterface\\:\\:getReason\\(\\)\\.$#',
@@ -12699,11 +12599,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/node/tests/src/Functional/NodeTypeTranslationTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/PagePreviewTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Session\\\\AccountInterface\\:\\:\\$name\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/tests/src/Functional/Rest/NodeJsonBasicAuthTest.php',
@@ -13697,11 +13592,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\responsive_image\\\\ResponsiveImageStyleForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/responsive_image/src/ResponsiveImageStyleForm.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/responsive_image/tests/src/Functional/ResponsiveImageFieldDisplayTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Session\\\\AccountInterface\\:\\:\\$name\\.$#',
@@ -15661,11 +15551,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/Form/StateValuesCleanAdvancedTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Form/StateValuesCleanAdvancedTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\node\\\\NodeInterface\\:\\:\\$path\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/Menu/BreadcrumbFrontCacheContextsTest.php',
@@ -15831,11 +15716,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/System/HtaccessTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
-	'count' => 11,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/System/ThemeTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$theme_handler in PHPDoc tag @var does not match assigned variable \\$theme_data\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/Theme/EntityFilteringThemeTest.php',
@@ -15859,11 +15739,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Behat\\\\Mink\\\\Element\\\\NodeElement\\:\\:setValue\\(\\) invoked with 2 parameters, 1 required\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/modules/system/tests/src/FunctionalJavascript/Form/TriggeringElementTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/FunctionalJavascript/ThemeSettingsFormTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Executable\\\\ExecutableInterface\\:\\:execute\\(\\) invoked with 1 parameter, 0 required\\.$#',
@@ -16516,11 +16391,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/text/src/TextProcessed.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/text/tests/src/Functional/TextFieldTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:\\$formatted_text\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/text/tests/src/Kernel/TextFormatterTest.php',
@@ -16714,11 +16584,6 @@ $ignoreErrors[] = [
 	'message' => '#^Cannot access property \\$data on object\\|true\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/update/src/UpdateProcessor.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/update/tests/src/Functional/UpdateUploadTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^PHPDoc tag @return with type mixed is not subtype of native type array\\.$#',
@@ -17320,11 +17185,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\WebAssert\\:\\:waitForElement\\(\\)\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/modules/user/tests/src/FunctionalJavascript/RegistrationWithUserFieldsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/FunctionalJavascript/UserPasswordResetTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Condition\\\\ConditionInterface\\:\\:setConfig\\(\\)\\.$#',
@@ -20051,11 +19911,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Entity/ContentEntityFormFieldValidationFilteringTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Entity/ContentEntityFormFieldValidationFilteringTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\entity_test\\\\Entity\\\\EntityTestRev\\:\\:setPublished\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Entity/RevisionRevertFormTest.php',
@@ -20489,16 +20344,6 @@ $ignoreErrors[] = [
 	'message' => '#^Cannot access property \\$variables on array\\|object\\|false\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Action/EmailActionTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Archiver/TarTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
-	'count' => 7,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Archiver/ZipTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Extension\\\\Extension\\:\\:\\$origin\\.$#',
@@ -21724,11 +21569,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\ImageToolkit\\\\ImageToolkitInterface\\:\\:getType\\(\\)\\.$#',
 	'count' => 3,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Image/ToolkitGdTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Image/ToolkitTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Cannot call method addContextDefinition\\(\\) on array\\|Drupal\\\\Component\\\\Plugin\\\\Definition\\\\PluginDefinitionInterface\\.$#',
