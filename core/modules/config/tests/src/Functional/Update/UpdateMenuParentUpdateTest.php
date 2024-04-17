@@ -26,7 +26,7 @@ class UpdateMenuParentUpdateTest extends UpdatePathTestBase {
   /**
    * Tests update of core.menu.static_menu_link_overrides:definitions.*.parent.
    */
-  public function testUpdate() {
+  public function testUpdate(): void {
     $this->assertNotNull($this->config('core.menu.static_menu_link_overrides')->get('definitions.contact__site_page.parent'));
 
     $this->runUpdates();
