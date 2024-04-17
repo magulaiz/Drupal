@@ -11,6 +11,7 @@ use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
  *
  * @group OpenTelemetry
  * @group #slow
+ * @requires extension apcu
  */
 class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
 
@@ -35,6 +36,10 @@ class OpenTelemetryAuthenticatedPerformanceTest extends PerformanceTestBase {
     $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('<front>');
     }, 'authenticatedFrontPage');
+    $this->assertSame(2, $performance_data->getStylesheetCount());
+    $this->assertSame(44958, $performance_data->getStylesheetBytes());
+    $this->assertSame(1, $performance_data->getScriptCount());
+    $this->assertSame(132067, $performance_data->getScriptBytes());
 
     $expected_queries = [
       'SELECT "session" FROM "sessions" WHERE "sid" = "SESSION_ID" LIMIT 0, 1',
