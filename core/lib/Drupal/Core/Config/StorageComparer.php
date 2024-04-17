@@ -8,6 +8,7 @@ use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Cache\NullBackend;
 use Drupal\Core\Config\Entity\ConfigDependencyManager;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
+use Drupal\Core\Extension\Exception\UnknownExtensionException;
 
 /**
  * Defines a config storage comparer.
@@ -137,10 +138,20 @@ class StorageComparer implements StorageComparerInterface {
     $source_core_extension = $this->getSourceStorage()->read('core.extension') ?? [];
     $target_core_extension = $this->getTargetStorage()->read('core.extension') ?? [];
     foreach (array_diff_key($source_core_extension['module'] ?? [], $target_core_extension['module'] ?? []) as $name => $weight) {
-      $new_extensions[$name] = \Drupal::root() . '/' . \Drupal::service('extension.path.resolver')->getPath('module', $name);
+      try {
+        $new_extensions[$name] = \Drupal::root() . '/' . \Drupal::service('extension.list.module')->getPath($name);
+      }
+      catch (UnknownExtensionException $e) {
+        // If the extension is missing this will surface at validation time.
+      }
     }
     foreach (array_diff_key($source_core_extension['theme'] ?? [], $target_core_extension['theme'] ?? []) as $name => $weight) {
-      $new_extensions[$name] = \Drupal::root() . '/' . \Drupal::service('extension.path.resolver')->getPath('theme', $name);
+      try {
+        $new_extensions[$name] = \Drupal::root() . '/' . \Drupal::service('extension.list.theme')->getPath($name);
+      }
+      catch (UnknownExtensionException $e) {
+        // If the extension is missing this will surface at validation time.
+      }
     }
     if (!empty($new_extensions)) {
       // Ensure enums and constants from uninstalled modules can be autoloaded.
