@@ -7,7 +7,7 @@ appear after main classes #}
     extra_classes,
   ]
 %}
-<{{html_tag|default('button')}}{{ attributes.addClass(classes) }}>
+<{{html_tag|default('button')}}{{ attributes.addClass(classes) }} data-index-text="{{ text|first|lower }}">
   {% if avatar %}
     <span class="toolbar-button__avatar">{{~ avatar ~}}</span>
   {% endif %}

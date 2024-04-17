@@ -1,4 +1,5 @@
-<aside class="admin-toolbar" id="admin-toolbar" data-drupal-admin-styles>
+<aside
+  class="admin-toolbar" id="admin-toolbar" data-drupal-admin-styles>
   {# This lil' div will get the Drupal.displace() attributes added to it via JS. #}
   <div class="admin-toolbar__displace-placeholder"></div>
 
@@ -10,19 +11,25 @@
       <h3 id="{{ title_menu }}" class="visually-hidden">{{ 'Administrative toolbar content'|t }}</h3>
       {# @todo - Needs to be placed here so we can have the header footer on mobile. #}
       <div class="admin-toolbar__header">
-       {% if not hide_logo %}
-        <a class="admin-toolbar__logo" href="{{ path('<front>') }}">
-          <img alt="{{ 'Navigation logo'|t }}" src="{{ file_url(logo_path) }}" loading="eager" width="{{ logo_width }}" height="{{ logo_height }}">
-        </a>
+        {% if not hide_logo %}
+          <a class="admin-toolbar__logo" href="{{ path('<front>') }}">
+            {% if logo_path %}
+              <img alt="{{ 'Navigation logo'|t }}" src="{{ file_url(logo_path) }}" loading="eager" width="{{ logo_width|default(40) }}" height="{{ logo_height|default(40) }}">
+            {% else %}
+              {% include '@navigation/logo.svg.twig' with {
+                label: 'Navigation logo'|t
+              } only %}
+            {% endif %}
+          </a>
         {% endif %}
         {% include '@navigation/toolbar-button.html.twig' with {
-          attributes: create_attribute({ 'data-toolbar-back-control': true }),
+          attributes: create_attribute({ 'data-toolbar-back-control': true, 'tabindex': '-1' }),
           extra_classes: 'admin-toolbar__back-button',
           icon: 'back',
           text: 'Back'|t,
         } only %}
         {% include '@navigation/toolbar-button.html.twig' with {
-          attributes: create_attribute({ 'aria-controls': 'admin-toolbar' }),
+          attributes: create_attribute({ 'aria-controls': 'admin-toolbar', 'tabindex': '-1' }),
           extra_classes: 'admin-toolbar__close-button',
           icon: 'cross',
           label_classes: 'visually-hidden',
@@ -37,10 +44,7 @@
     <nav id="menu-footer" class="admin-toolbar__footer" aria-labelledby="{{ title_menu_footer }}">
       <h3 id="{{ title_menu_footer }}" class="visually-hidden">{{ 'Administrative toolbar footer'|t }}</h3>
       {{ menu_footer }}
-      <button
-        aria-controls="admin-toolbar"
-        class="admin-toolbar__expand-button"
-      >
+      <button aria-controls="admin-toolbar" class="admin-toolbar__expand-button">
         <span class="visually-hidden" data-text>{{ 'Collapse sidebar'|t }}</span>
       </button>
     </nav>
@@ -48,8 +52,7 @@
 </aside>
 <div class="admin-toolbar-overlay" aria-controls="admin-toolbar"></div>
 <script>
-  if (localStorage.getItem('Drupal.navigation.sidebarExpanded') !== 'false'
-    && (window.matchMedia('(min-width: 1024px)').matches) ) {
+  if (localStorage.getItem('Drupal.navigation.sidebarExpanded') !== 'false' && (window.matchMedia('(min-width: 1024px)').matches)) {
     document.documentElement.setAttribute('data-admin-toolbar', 'expanded');
   }
 </script>

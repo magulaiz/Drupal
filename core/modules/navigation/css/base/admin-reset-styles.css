@@ -19,17 +19,17 @@
   outline: var(--admin-toolbar-size-focus) solid var(--admin-toolbar-color-focus);
 }
 
-:where([data-drupal-admin-styles] *) {
+:where([data-drupal-admin-styles] :not(svg *)) {
   all: revert;
   box-sizing: border-box;
 }
 
-:where([data-drupal-admin-styles] *) button {
+:where([data-drupal-admin-styles] :not(svg *)) button {
   font-family: inherit;
 }
 
-:where([data-drupal-admin-styles] *)::after,
-:where([data-drupal-admin-styles] *)::before {
+:where([data-drupal-admin-styles] :not(svg *))::after,
+:where([data-drupal-admin-styles] :not(svg *))::before {
   all: revert;
   box-sizing: border-box;
 }

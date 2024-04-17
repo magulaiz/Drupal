@@ -5,6 +5,7 @@ navigation:
     js/tooltip.js: {}
     js/sidebar.js: {}
     js/admin-toolbar-wrapper.js: {}
+    js/arrow-navigation.js: {}
   css:
     theme:
       css/base/fonts.css: {}
@@ -17,6 +18,7 @@ navigation:
   dependencies:
     - core/drupal.displace
     - core/once
+    - core/tabbable
     - navigation/admin-reset-styles
     - navigation/body-scroll-lock
     - navigation/dropdown

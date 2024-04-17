@@ -12,7 +12,7 @@
   }
 }
 
-:where([data-drupal-admin-styles] *) {
+:where([data-drupal-admin-styles] :not(svg *)) {
   all: revert;
   box-sizing: border-box;
 

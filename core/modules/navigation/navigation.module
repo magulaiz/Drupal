@@ -53,9 +53,6 @@ function navigation_module_implements_alter(&$implementations, $hook) {
  * Implements hook_theme().
  */
 function navigation_theme($existing, $type, $theme, $path) {
-  $module_path = \Drupal::service('extension.list.module')->getPath('navigation');
-  $logo_path = '/' . $module_path . '/assets/images/logo.svg';
-
   $items['top_bar'] = [
     'variables' => [
       'local_tasks' => [],
@@ -77,7 +74,7 @@ function navigation_theme($existing, $type, $theme, $path) {
   $items['navigation'] = [
     'variables' => [
       'hide_logo' => FALSE,
-      'logo_path' => $logo_path,
+      'logo_path' => FALSE,
       'logo_width' => 40,
       'logo_height' => 40,
       'menu_content' => [],

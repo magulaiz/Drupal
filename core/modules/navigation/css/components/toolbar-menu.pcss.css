@@ -19,7 +19,7 @@
 }
 
 [data-toolbar-menu-trigger][aria-expanded='true'] + [class*="toolbar-menu--level-"] {
-  display: block;
+  display: grid;
 }
 
 .toolbar-menu__item {

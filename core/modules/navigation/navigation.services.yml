@@ -26,13 +26,6 @@ services:
       ]
   Drupal\navigation\NavigationRenderer: '@navigation.renderer'
 
-  navigation.menu.invalidator:
-    class: Drupal\navigation\Cache\SystemMenuNavigationBlockCacheTagInvalidator
-    arguments: ['@plugin.manager.navigation_block', '@entity_type.manager']
-    public: false
-    tags:
-      - { name: cache_tags_invalidator }
-
   navigation.menu_tree:
     class: Drupal\navigation\Menu\NavigationMenuLinkTree
     arguments:

@@ -35,6 +35,8 @@
           'toolbar-menu-trigger',
           context.querySelectorAll('[data-toolbar-menu-trigger]'),
         ).forEach((button) => {
+          const menu = button.nextElementSibling;
+
           /**
            * Element containing the button text.
            *
@@ -54,6 +56,11 @@
               text.textContent = state
                 ? Drupal.t('Collapse')
                 : Drupal.t('Extend');
+            }
+            if (state) {
+              menu.removeAttribute('inert');
+            } else {
+              menu.setAttribute('inert', true);
             }
           };
 

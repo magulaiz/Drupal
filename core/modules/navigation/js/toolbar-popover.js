@@ -40,6 +40,16 @@ const POPOVER_CLOSE_DELAY = 400;
           );
         };
 
+        const expandPopover = () => {
+          popover.classList.add('toolbar-popover--expanded');
+          tooltip.removeAttribute('inert');
+        };
+
+        const collapsePopover = () => {
+          popover.classList.remove('toolbar-popover--expanded');
+          tooltip.setAttribute('inert', true);
+        };
+
         /**
          * We need to change state of trigger and popover.
          *
@@ -49,9 +59,7 @@ const POPOVER_CLOSE_DELAY = 400;
          */
         const toggleState = (state, initialLoad = false) => {
           /* eslint-disable-next-line no-unused-expressions */
-          state && !initialLoad
-            ? popover.classList.add('toolbar-popover--expanded')
-            : popover.classList.remove('toolbar-popover--expanded');
+          state && !initialLoad ? expandPopover() : collapsePopover();
           button.setAttribute('aria-expanded', state && !initialLoad);
 
           const text = button.querySelector('[data-toolbar-action]');
@@ -60,6 +68,16 @@ const POPOVER_CLOSE_DELAY = 400;
               ? Drupal.t('Collapse')
               : Drupal.t('Extend');
           }
+
+          // Dispatch event to sidebar.js
+          popover.dispatchEvent(
+            new CustomEvent('toolbar-popover-toggled', {
+              bubbles: true,
+              detail: {
+                state,
+              },
+            }),
+          );
         };
 
         const isPopoverHoverOrFocus = () =>
@@ -90,74 +108,43 @@ const POPOVER_CLOSE_DELAY = 400;
 
         button.addEventListener('mousemove', handleMouseMove);
 
-        ['mouseover', 'keyup', 'keydown'].forEach((e) => {
-          button.addEventListener(e, () => {
-            if (e === 'keydown' && e.shiftKey && e.keyCode === 9) {
-              close();
-              return;
-            }
+        button.addEventListener('mouseover', () => {
+          // This is not needed because no hover on mobile.
+          // @todo test is after.
 
-            if ((e === 'keyup' && e.keyCode !== 13) || e === 'keydown') {
-              return;
-            }
+          if (window.matchMedia('(max-width: 1023px)').matches) {
+            return;
+          }
 
-            // This is not needed because no hover on mobile.
-            // @todo test is after.
-
+          setTimeout(() => {
+            // If it is accident hover ignore it.
+            // If in this timeout popover already opened by click.
             if (
-              window.matchMedia('(max-width: 1023px)').matches &&
-              e === 'mouseover'
+              !button.matches(':hover') ||
+              !button.getAttribute('aria-expanded') === 'false'
             ) {
               return;
             }
 
-            const delay = e === 'mouseover' ? POPOVER_OPEN_DELAY : 0;
-            setTimeout(() => {
-              // If it is accident hover ignore it.
-              // If in this timeout popover already opened by click.
-              if (
-                e === 'mouseover' &&
-                (!button.matches(':hover') ||
-                  !button.getAttribute('aria-expanded') === 'false')
-              ) {
-                return;
-              }
-
-              toggleState(true);
-
-              // Dispatch event to sidebar.js
-              popover.dispatchEvent(
-                new CustomEvent('toolbar-popover-toggled', {
-                  bubbles: true,
-                  detail: {
-                    state: true,
-                  },
-                }),
-              );
-              open();
-            }, delay);
-          });
+            toggleState(true);
+            open();
+          }, POPOVER_OPEN_DELAY);
         });
 
         button.addEventListener('click', (e) => {
           const state =
             e.currentTarget.getAttribute('aria-expanded') === 'false';
           toggleState(state);
-
-          // Dispatch event to sidebar.js
-          popover.dispatchEvent(
-            new CustomEvent('toolbar-popover-toggled', {
-              bubbles: true,
-              detail: {
-                state,
-              },
-            }),
-          );
         });
 
         // Listens events from sidebar.js.
         popover.addEventListener('toolbar-popover-close', () => {
           close();
+        });
+
+        // TODO: Add toggle with state.
+        popover.addEventListener('toolbar-popover-open', () => {
+          toggleState(true);
         });
 
         // Listens events from toolbar-menu.js

@@ -31,11 +31,11 @@
             extra_classes: 'toolbar-button--expand--side toolbar-button--collapsible toolbar-popover__control',
             has_safe_triangle: TRUE,
           } only %}
-          <div class="toolbar-popover__wrapper" data-toolbar-popover-wrapper>
+          <div class="toolbar-popover__wrapper" data-toolbar-popover-wrapper inert>
             {% if item.url %}
               {{ link(item.title, item.url, create_attribute({'class': ['toolbar-popover__header', 'toolbar-button', 'toolbar-button--large']})) }}
             {% else %}
-              <span class="toolbar-popover__header toolbar-button toolbar-button--large">{{ item.title }}</span>
+              <span class="toolbar-popover__header toolbar-button toolbar-button--large toolbar-button--non-interactive">{{ item.title }}</span>
             {% endif %}
             <ul class="toolbar-menu toolbar-popover__menu">
               {{ menus.menu_items(item.below, attributes, 1) }}
@@ -50,17 +50,19 @@
           <a
             href="{{ item.url }}"
             class="toolbar-button"
+            data-index-text="{{ item.title|first|lower }}"
           >{{ item.title }}</a>
         {% else %}
           <button
             class="toolbar-button toolbar-button--expand--down"
             data-toolbar-menu-trigger="{{ menu_level }}"
             aria-expanded="false"
+            data-index-text="{{ item.title|first|lower }}"
           >
             <span class="toolbar-menu__link-action visually-hidden">{{ 'Extend'|t }}</span>
             <span class="toolbar-menu__link-title">{{ item.title }}</span>
           </button>
-          <ul class="toolbar-menu toolbar-menu--level-{{ menu_level + 1 }}">
+          <ul class="toolbar-menu toolbar-menu--level-{{ menu_level + 1 }}" inert>
             {{ menus.menu_items(item.below, attributes, menu_level + 1) }}
           </ul>
         {% endif %}
@@ -71,17 +73,19 @@
           <a
             href="{{ item.url }}"
             class="toolbar-menu__link toolbar-menu__link--{{ menu_level }}"
+            data-index-text="{{ item.title|first|lower }}"
           >{{ item.title }}</a>
         {% else %}
           <button
             class="toolbar-menu__link toolbar-menu__link--{{ menu_level }}"
             data-toolbar-menu-trigger="{{ menu_level }}"
             aria-expanded="false"
+            data-index-text="{{ item.title|first|lower }}"
           >
             <span class="toolbar-menu__link-action visually-hidden">{{ 'Extend'|t }}</span>
             <span class="toolbar-menu__link-title">{{ item.title }}</span>
           </button>
-          <ul class="toolbar-menu toolbar-menu--level-{{ menu_level + 1 }}">
+          <ul class="toolbar-menu toolbar-menu--level-{{ menu_level + 1 }}" inert>
             {{ menus.menu_items(item.below, attributes, menu_level + 1) }}
           </ul>
         {% endif %}
