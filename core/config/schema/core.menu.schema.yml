@@ -1,6 +1,8 @@
 core.menu.static_menu_link_overrides:
   type: config_object
   label: 'Static menu link overrides'
+  constraints:
+    FullyValidatable: ~
   mapping:
     definitions:
       type: sequence
@@ -12,9 +14,27 @@ core.menu.static_menu_link_overrides:
           menu_name:
             type: string
             label: 'Menu name'
+            # Menu names(IDs) are specifically limited to 32 characters, and allow dashes but not
+            # underscores.
+            # @see \Drupal\menu_ui\MenuForm::form()
+            constraints:
+              Regex:
+                pattern: '/^[a-z0-9-]+$/'
+                message: "The %value menu name is not valid."
+              Length:
+                max: 32
           parent:
             type: string
             label: 'Parent'
+            nullable: true
+            constraints:
+              NotBlank:
+                allowNull: true
+              Regex:
+                pattern: '/^[a-z0-9-]+$/'
+                message: "The %value parent menu name is not valid."
+              Length:
+                max: 32
           weight:
             type: weight
             label: 'Weight'
