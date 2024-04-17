@@ -723,6 +723,7 @@ function _user_cancel_session_regenerate() {
  *
  * @param bool $getKeys
  *   Get keys for schema callback.
+ *
  * @return array
  *   An array containing all account cancellation methods as form elements.
  *
