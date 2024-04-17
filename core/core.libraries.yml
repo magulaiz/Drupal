@@ -815,6 +815,8 @@ drupal.tablesort:
       css:
         component:
           css/components/tablesort.module.css: misc/components/tablesort.module.css
+  dependencies:
+    - core/drupal.tabledrag
 
 drupal.time-diff:
   version: VERSION

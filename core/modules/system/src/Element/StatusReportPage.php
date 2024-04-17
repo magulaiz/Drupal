@@ -27,7 +27,7 @@ class StatusReportPage extends RenderElementBase {
       ],
       '#attached' => [
         'library' => [
-          'system.status.report',
+          'system/status.report',
         ],
       ],
     ];

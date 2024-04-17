@@ -22,7 +22,7 @@ class Fieldgroup extends Fieldset {
   public function getInfo() {
     return [
       '#attributes' => ['class' => ['fieldgroup']],
-      '#attach' => ['library' => ['drupal.fieldgroup']],
+      '#attach' => ['library' => ['core/drupal.fieldgroup']],
     ] + parent::getInfo();
   }
 
