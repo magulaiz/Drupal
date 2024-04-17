@@ -2,12 +2,14 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -24,6 +26,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
 
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $deprecatedProperties = ['loggerFactory' => 'logger.factory'];
+
   /**
    * The number of times this formatter allows rendering the same entity.
    *
@@ -32,11 +41,9 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
   const RECURSIVE_RENDER_LIMIT = 20;
 
   /**
-   * The logger factory.
-   *
-   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
+   * The logger service.
    */
-  protected $loggerFactory;
+  protected LoggerInterface $logger;
 
   /**
    * The entity type manager.
@@ -81,16 +88,20 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
    *   The view mode.
    * @param array $third_party_settings
    *   Any third party settings.
-   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
-   *   The logger factory.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   The logger service.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
    *   The entity display repository.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, LoggerChannelFactoryInterface $logger_factory, EntityTypeManagerInterface $entity_type_manager, EntityDisplayRepositoryInterface $entity_display_repository) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, LoggerChannelFactoryInterface|LoggerInterface $logger, EntityTypeManagerInterface $entity_type_manager, EntityDisplayRepositoryInterface $entity_display_repository) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
-    $this->loggerFactory = $logger_factory;
+    if ($logger instanceof LoggerChannelFactoryInterface) {
+      @trigger_error('Calling ' . __METHOD__ . '() with a logger factory as the eighth argument is deprecated in drupal:10.1.0 and will trigger an error from drupal:11.0.0. Pass a logger channel instead. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+      $logger = $logger->get('system');
+    }
+    $this->logger = $logger;
     $this->entityTypeManager = $entity_type_manager;
     $this->entityDisplayRepository = $entity_display_repository;
   }
@@ -107,7 +118,7 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
       $configuration['label'],
       $configuration['view_mode'],
       $configuration['third_party_settings'],
-      $container->get('logger.factory'),
+      $container->get('logger.channel.default'),
       $container->get('entity_type.manager'),
       $container->get('entity_display.repository')
     );
@@ -182,7 +193,7 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
 
       // Protect ourselves from recursive rendering.
       if (static::$recursiveRenderDepth[$recursive_render_id] > static::RECURSIVE_RENDER_LIMIT) {
-        $this->loggerFactory->get('entity')->error('Recursive rendering detected when rendering entity %entity_type: %entity_id, using the %field_name field on the %parent_entity_type:%parent_bundle %parent_entity_id entity. Aborting rendering.', [
+        $this->logger->error('Recursive rendering detected when rendering entity %entity_type: %entity_id, using the %field_name field on the %parent_entity_type:%parent_bundle %parent_entity_id entity. Aborting rendering.', [
           '%entity_type' => $entity->getEntityTypeId(),
           '%entity_id' => $entity->id(),
           '%field_name' => $items->getName(),

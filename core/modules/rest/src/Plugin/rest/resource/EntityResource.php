@@ -104,7 +104,7 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
       $plugin_definition,
       $container->get('entity_type.manager'),
       $container->getParameter('serializer.formats'),
-      $container->get('logger.factory')->get('rest'),
+      $container->get('logger.channel.rest'),
       $container->get('config.factory'),
       $container->get('plugin.manager.link_relation_type')
     );

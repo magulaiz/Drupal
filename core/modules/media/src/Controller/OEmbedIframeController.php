@@ -101,7 +101,7 @@ class OEmbedIframeController implements ContainerInjectionInterface {
       $container->get('media.oembed.resource_fetcher'),
       $container->get('media.oembed.url_resolver'),
       $container->get('renderer'),
-      $container->get('logger.factory')->get('media'),
+      $container->get('logger.channel.media'),
       $container->get('media.oembed.iframe_url_helper')
     );
   }

@@ -18,6 +18,7 @@ use Drupal\media\OEmbed\ResourceException;
 use Drupal\media\OEmbed\ResourceFetcherInterface;
 use Drupal\media\OEmbed\UrlResolverInterface;
 use Drupal\media\Plugin\media\Source\OEmbedInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 // cspell:ignore allowtransparency
@@ -105,19 +106,23 @@ class OEmbedFormatter extends FormatterBase {
    *   The oEmbed resource fetcher service.
    * @param \Drupal\media\OEmbed\UrlResolverInterface $url_resolver
    *   The oEmbed URL resolver service.
-   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
-   *   The logger factory service.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   The logger service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory service.
    * @param \Drupal\media\IFrameUrlHelper $iframe_url_helper
    *   The iFrame URL helper service.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, MessengerInterface $messenger, ResourceFetcherInterface $resource_fetcher, UrlResolverInterface $url_resolver, LoggerChannelFactoryInterface $logger_factory, ConfigFactoryInterface $config_factory, IFrameUrlHelper $iframe_url_helper) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, MessengerInterface $messenger, ResourceFetcherInterface $resource_fetcher, UrlResolverInterface $url_resolver, LoggerChannelFactoryInterface|LoggerInterface $logger, ConfigFactoryInterface $config_factory, IFrameUrlHelper $iframe_url_helper) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->messenger = $messenger;
     $this->resourceFetcher = $resource_fetcher;
     $this->urlResolver = $url_resolver;
-    $this->logger = $logger_factory->get('media');
+    if ($logger instanceof LoggerChannelFactoryInterface) {
+      @trigger_error('Calling ' . __METHOD__ . '() with a logger factory as the eleventh argument is deprecated in drupal:10.1.0 and will trigger an error from drupal:11.0.0. Pass a logger channel instead. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+      $logger = $logger->get('media');
+    }
+    $this->logger = $logger;
     $this->config = $config_factory->get('media.settings');
     $this->iFrameUrlHelper = $iframe_url_helper;
   }
@@ -137,7 +142,7 @@ class OEmbedFormatter extends FormatterBase {
       $container->get('messenger'),
       $container->get('media.oembed.resource_fetcher'),
       $container->get('media.oembed.url_resolver'),
-      $container->get('logger.factory'),
+      $container->get('logger.channel.media'),
       $container->get('config.factory'),
       $container->get('media.oembed.iframe_url_helper')
     );

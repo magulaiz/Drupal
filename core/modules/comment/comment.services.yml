@@ -22,3 +22,7 @@ services:
   comment.link_builder:
     class: Drupal\comment\CommentLinkBuilder
     arguments: ['@current_user', '@comment.manager', '@module_handler', '@string_translation', '@entity_type.manager']
+
+  logger.channel.comment:
+    parent: logger.channel_base
+    arguments: ['comment']

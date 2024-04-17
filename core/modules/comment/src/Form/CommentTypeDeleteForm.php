@@ -56,7 +56,7 @@ class CommentTypeDeleteForm extends EntityDeleteForm {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('comment.manager'),
-      $container->get('logger.factory')->get('comment')
+      $container->get('logger.channel.comment')
     );
   }
 

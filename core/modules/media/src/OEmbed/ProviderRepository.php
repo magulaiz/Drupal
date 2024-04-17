@@ -9,6 +9,7 @@ use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
+use Psr\Log\LoggerInterface;
 
 /**
  * Retrieves and caches information about oEmbed providers.
@@ -68,18 +69,22 @@ class ProviderRepository implements ProviderRepositoryInterface {
    *   The time service.
    * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory
    *   The key-value store factory.
-   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
-   *   The logger channel factory.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   The logger service.
    * @param int $max_age
    *   (optional) How long the cache data should be kept. Defaults to a week.
    */
-  public function __construct(ClientInterface $http_client, ConfigFactoryInterface $config_factory, TimeInterface $time, KeyValueFactoryInterface $key_value_factory, LoggerChannelFactoryInterface $logger_factory, int $max_age = 604800) {
+  public function __construct(ClientInterface $http_client, ConfigFactoryInterface $config_factory, TimeInterface $time, KeyValueFactoryInterface $key_value_factory, LoggerChannelFactoryInterface|LoggerInterface $logger, int $max_age = 604800) {
     $this->httpClient = $http_client;
     $this->providersUrl = $config_factory->get('media.settings')->get('oembed_providers_url');
     $this->time = $time;
     $this->maxAge = $max_age;
     $this->keyValue = $key_value_factory->get('media');
-    $this->logger = $logger_factory->get('media');
+    if ($logger instanceof LoggerChannelFactoryInterface) {
+      @trigger_error('Calling ' . __METHOD__ . '() with a logger factory as the fifth argument is deprecated in drupal:10.1.0 and will trigger an error from drupal:11.0.0. Pass a logger channel instead. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+      $logger = $logger->get('media');
+    }
+    $this->logger = $logger;
   }
 
   /**

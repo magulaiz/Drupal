@@ -3,6 +3,7 @@
 namespace Drupal\media\Plugin\Filter;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
@@ -19,6 +20,7 @@ use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\media\MediaInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -40,6 +42,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, TrustedCallbackInterface {
+
+  use DeprecatedServicePropertyTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $deprecatedProperties = ['loggerFactory' => 'logger.factory'];
 
   /**
    * The entity repository.
@@ -77,11 +86,11 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
   protected $renderer;
 
   /**
-   * The logger factory.
+   * The logger service.
    *
-   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
+   * @var \Psr\Log\LoggerInterface
    */
-  protected $loggerFactory;
+  protected $logger;
 
   /**
    * An array of counters for the recursive rendering protection.
@@ -114,17 +123,21 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
    *   The entity type bundle info service.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
-   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
-   *   The logger factory.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   The logger service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityRepositoryInterface $entity_repository, EntityTypeManagerInterface $entity_type_manager, EntityDisplayRepositoryInterface $entity_display_repository, EntityTypeBundleInfoInterface $bundle_info, RendererInterface $renderer, LoggerChannelFactoryInterface $logger_factory) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityRepositoryInterface $entity_repository, EntityTypeManagerInterface $entity_type_manager, EntityDisplayRepositoryInterface $entity_display_repository, EntityTypeBundleInfoInterface $bundle_info, RendererInterface $renderer, LoggerChannelFactoryInterface|LoggerInterface $logger) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityRepository = $entity_repository;
     $this->entityTypeManager = $entity_type_manager;
     $this->entityDisplayRepository = $entity_display_repository;
     $this->entityTypeBundleInfo = $bundle_info;
     $this->renderer = $renderer;
-    $this->loggerFactory = $logger_factory;
+    if ($logger instanceof LoggerChannelFactoryInterface) {
+      @trigger_error('Calling ' . __METHOD__ . '() with a logger factory as the ninth argument is deprecated in drupal:10.1.0 and will trigger an error from drupal:11.0.0. Pass a logger channel instead. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+      $logger = $logger->get('media');
+    }
+    $this->logger = $logger;
   }
 
   /**
@@ -140,7 +153,7 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
       $container->get('entity_display.repository'),
       $container->get('entity_type.bundle.info'),
       $container->get('renderer'),
-      $container->get('logger.factory')
+      $container->get('logger.channel.media')
     );
   }
 
@@ -224,7 +237,7 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
     }
     // Protect ourselves from recursive rendering: return an empty render array.
     if (static::$recursiveRenderDepth[$recursive_render_id] > EntityReferenceEntityFormatter::RECURSIVE_RENDER_LIMIT) {
-      $this->loggerFactory->get('media')->error('During rendering of embedded media: recursive rendering detected for %entity_id. Aborting rendering.', [
+      $this->logger->error('During rendering of embedded media: recursive rendering detected for %entity_id. Aborting rendering.', [
         '%entity_id' => $media->id(),
       ]);
       return [];
@@ -296,7 +309,7 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
       $media = $this->entityRepository->loadEntityByUuid('media', $uuid);
       assert($media === NULL || $media instanceof MediaInterface);
       if (!$media) {
-        $this->loggerFactory->get('media')->error('During rendering of embedded media: the media item with UUID "@uuid" does not exist.', ['@uuid' => $uuid]);
+        $this->logger->error('During rendering of embedded media: the media item with UUID "@uuid" does not exist.', ['@uuid' => $uuid]);
       }
       else {
         $media = $this->entityRepository->getTranslationFromContext($media, $langcode);
@@ -308,7 +321,7 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
       if ($view_mode_id !== EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE) {
         $view_mode = $this->entityRepository->loadEntityByConfigTarget('entity_view_mode', "media.$view_mode_id");
         if (!$view_mode) {
-          $this->loggerFactory->get('media')->error('During rendering of embedded media: the view mode "@view-mode-id" does not exist.', ['@view-mode-id' => $view_mode_id]);
+          $this->logger->error('During rendering of embedded media: the view mode "@view-mode-id" does not exist.', ['@view-mode-id' => $view_mode_id]);
         }
       }
 
