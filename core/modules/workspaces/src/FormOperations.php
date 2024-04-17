@@ -4,6 +4,8 @@ namespace Drupal\workspaces;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\WorkspaceDynamicSafeFormInterface;
+use Drupal\Core\Form\WorkspaceSafeFormInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -68,13 +70,9 @@ class FormOperations implements ContainerInjectionInterface {
       return;
     }
 
-    if (method_exists($form_state->getFormObject(), 'isWorkspaceSafeForm')) {
-      $workspace_safe = $form_state->getFormObject()->isWorkspaceSafeForm($form, $form_state);
-    }
-    else {
-      // No forms are safe to submit in a workspace by default.
-      $workspace_safe = FALSE;
-    }
+    $form_object = $form_state->getFormObject();
+    $workspace_safe = $form_object instanceof WorkspaceSafeFormInterface
+      || ($form_object instanceof WorkspaceDynamicSafeFormInterface && $form_object->isWorkspaceSafeForm($form, $form_state));
 
     $form_state->set('workspace_safe', $workspace_safe);
   }

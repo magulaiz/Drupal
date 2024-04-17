@@ -11,7 +11,7 @@ use Drupal\workspaces\WorkspaceInformationInterface;
 /**
  * Provides a trait that marks Layout Builder forms as workspace-safe.
  */
-trait LayoutBuilderWorkspaceSafeFormTrait {
+trait WorkspaceSafeFormTrait {
 
   /**
    * The workspace information service.

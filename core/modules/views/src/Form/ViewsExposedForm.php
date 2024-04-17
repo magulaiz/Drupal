@@ -5,7 +5,7 @@ namespace Drupal\views\Form;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Form\WorkspaceSafeFormTrait;
+use Drupal\Core\Form\WorkspaceSafeFormInterface;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Render\Element\Checkboxes;
 use Drupal\Core\Url;
@@ -17,9 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @internal
  */
-class ViewsExposedForm extends FormBase {
-
-  use WorkspaceSafeFormTrait;
+class ViewsExposedForm extends FormBase implements WorkspaceSafeFormInterface {
 
   /**
    * The exposed form cache.

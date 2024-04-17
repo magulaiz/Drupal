@@ -5,7 +5,7 @@ namespace Drupal\workspaces\Form;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Form\WorkspaceSafeFormTrait;
+use Drupal\Core\Form\WorkspaceSafeFormInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\workspaces\WorkspaceAccessException;
 use Drupal\workspaces\WorkspaceManagerInterface;
@@ -14,9 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a form that activates a different workspace.
  */
-class WorkspaceSwitcherForm extends FormBase {
-
-  use WorkspaceSafeFormTrait;
+class WorkspaceSwitcherForm extends FormBase implements WorkspaceSafeFormInterface {
 
   /**
    * The workspace manager.
