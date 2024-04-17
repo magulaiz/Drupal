@@ -81,7 +81,6 @@ class WorkspaceMenuLinkContentIntegrationTest extends BrowserTestBase {
     $pending_title = 'pending';
     $pending_link = 'http://example.com';
 
-
     // Change the menu link in 'stage' and check that the updated values are
     // visible in that workspace.
     $this->switchToWorkspace($stage);
