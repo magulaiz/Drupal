@@ -456,7 +456,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    * @return bool
    *   TRUE if arrays are equal, FALSE if not.
    */
-  protected function arrayEquals(array $array1, array $array2) {
+  protected function arrayEquals(array $array1, array $array2): bool {
     if (count($array1) !== count($array2)) {
       return FALSE;
     }
