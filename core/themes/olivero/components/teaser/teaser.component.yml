@@ -1,0 +1,23 @@
+name: Teaser
+props:
+  type: object
+  properties:
+    attributes: 
+      type: Drupal\Core\Template\Attribute
+    classes:
+      type: array
+    label:
+      type: string
+    content:
+      type: object
+    url:
+      type: string
+    title_suffix:
+      type: array
+    title_prefix:
+      type: array
+    page:
+      type: boolean
+slots:
+  author: {}
+  description: {}

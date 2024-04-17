@@ -78,28 +78,38 @@
   ]
 %}
 
-<article{{ attributes.addClass(classes) }}>
-  <header>
-    {{ title_prefix }}
-    {{ title_suffix }}
-    {% if display_submitted %}
-      <div class="node__meta">
-        <span{{ author_attributes }}>
-          {{ 'By'|t }} {% apply spaceless %}<span class="node__author">{{ author_name }}</span>{% endapply %}, {{ date }}
-        </span>
-        {{ metadata }}
-      </div>
-    {% endif %}
-    {% if label and not page %}
-      <div class="node__top-wrapper">
-        {{ content.field_image }}
-        <h2{{ title_attributes.addClass('node__title') }}>
-          <a href="{{ url }}" rel="bookmark">{{ label }}</a>
-        </h2>
-      </div>
-    {% endif %}
-  </header>
-  <div{{ content_attributes.addClass('node__content') }}>
-    {{ content|without('field_image', 'links') }}
-  </div>
-</article>
+{% embed 'olivero:teaser' with {
+    attributes,
+    classes,
+    label,
+    content,
+    title_prefix,
+    title_suffix,
+    display_submitted,
+    label,
+    author_name,
+    author_attributes,
+    url,
+    metadata,
+    date,
+    page,
+
+} 
+only %}
+
+{% block author %}
+	<span{{author_attributes}}>
+		{{ 'By'|t }}
+		{% apply spaceless %}<span class="teaser__author">{{ author_name }}</span>
+		{% endapply %},
+		{{ date }}
+	</span>
+{% endblock %}
+
+{% block description %}
+	{{ content.field_image }}
+	<h2{{title_attributes.addClass('teaser__title')}}>
+		<a href="{{ url }}" rel="bookmark">{{ label }}</a>
+	</h2>
+{% endblock %}
+{% endembed %}
