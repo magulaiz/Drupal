@@ -201,7 +201,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     $this->assertUserLogIn(2, 'john.doe_pass');
 
     $this->assertFollowUpMigrationResults();
-
+    $this->assertEntityRevisionsCount('node', 26);
     $this->assertEmailsSent();
   }
 
