@@ -26,7 +26,7 @@ final class LoggingCommitter implements CommitterInterface {
    *
    * @var \PhpTuf\ComposerStager\API\Core\CommitterInterface
    */
-  private $inner;
+  private CommitterInterface $inner;
 
   /**
    * Constructs an Committer object.

@@ -377,14 +377,14 @@ class ComposerInspectorTest extends PackageManagerKernelTestBase {
        *
        * @var string
        */
-      public $packagePath;
+      public string $packagePath;
 
       /**
        * {@inheritdoc}
        */
       protected function show(string $working_dir): array {
         $data = parent::show($working_dir);
-        if ($this->packagePath) {
+        if (isset($this->packagePath)) {
           $data['test/package']['path'] = $this->packagePath;
         }
         return $data;

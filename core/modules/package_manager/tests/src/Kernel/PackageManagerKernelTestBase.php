@@ -61,7 +61,7 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
    *
    * @see ::register()
    */
-  private $client;
+  private Client $client;
 
   /**
    * {@inheritdoc}
@@ -80,7 +80,7 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
    *
    * @var string[]
    */
-  protected $disableValidators = [];
+  protected array $disableValidators = [];
 
   /**
    * The test root directory, if any, created by ::createTestProject().
@@ -151,7 +151,7 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
 
     // If we previously set up a mock HTTP client in ::setReleaseMetadata(),
     // re-inject it into the container.
-    if ($this->client) {
+    if (isset($this->client)) {
       $container->set('http_client', $this->client);
     }
 
@@ -489,14 +489,14 @@ class TestDiskSpaceValidator extends DiskSpaceValidator {
    *
    * @var bool
    */
-  public $sharedDisk = TRUE;
+  public bool $sharedDisk = TRUE;
 
   /**
    * The amount of free space, keyed by path.
    *
    * @var float[]
    */
-  public $freeSpace = [];
+  public array $freeSpace = [];
 
   /**
    * {@inheritdoc}

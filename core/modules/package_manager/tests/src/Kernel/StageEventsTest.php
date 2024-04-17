@@ -15,6 +15,7 @@ use Drupal\package_manager\Event\PreRequireEvent;
 use Drupal\package_manager\Event\StageEvent;
 use Drupal\package_manager\Event\StatusCheckEvent;
 use Drupal\package_manager\Exception\StageEventException;
+use Drupal\package_manager\StageBase;
 use Drupal\package_manager\ValidationResult;
 use PhpTuf\ComposerStager\API\Path\Value\PathListInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -33,14 +34,14 @@ class StageEventsTest extends PackageManagerKernelTestBase implements EventSubsc
    *
    * @var string[]
    */
-  private $events = [];
+  private array $events = [];
 
   /**
    * The stage under test.
    *
    * @var \Drupal\package_manager\StageBase
    */
-  private $stage;
+  private StageBase $stage;
 
   /**
    * {@inheritdoc}

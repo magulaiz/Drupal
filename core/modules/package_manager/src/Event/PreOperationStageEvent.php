@@ -18,7 +18,7 @@ abstract class PreOperationStageEvent extends StageEvent {
    *
    * @var \Drupal\package_manager\ValidationResult[]
    */
-  protected $results = [];
+  protected array $results = [];
 
   /**
    * Gets the validation results.

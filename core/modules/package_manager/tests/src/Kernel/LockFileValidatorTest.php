@@ -29,7 +29,7 @@ class LockFileValidatorTest extends PackageManagerKernelTestBase {
    *
    * @var string
    */
-  private $activeDir;
+  private string $activeDir;
 
   /**
    * {@inheritdoc}

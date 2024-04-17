@@ -11,6 +11,7 @@ use Drupal\package_manager\Validator\RsyncValidator;
 use PhpTuf\ComposerStager\API\Exception\LogicException;
 use PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface;
 use PhpTuf\ComposerStager\API\Translation\Factory\TranslatableFactoryInterface;
+use Prophecy\Prophecy\ObjectProphecy;
 
 /**
  * @covers \Drupal\package_manager\Validator\RsyncValidator
@@ -24,7 +25,7 @@ class RsyncValidatorTest extends PackageManagerKernelTestBase {
    *
    * @var \PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface
    */
-  private $executableFinder;
+  private ObjectProphecy|ExecutableFinderInterface $executableFinder;
 
   /**
    * {@inheritdoc}

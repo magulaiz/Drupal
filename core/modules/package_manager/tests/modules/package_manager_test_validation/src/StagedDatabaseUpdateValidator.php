@@ -18,7 +18,7 @@ class StagedDatabaseUpdateValidator extends BaseValidator {
    *
    * @var \Drupal\Core\State\StateInterface
    */
-  private $state;
+  private StateInterface $state;
 
   /**
    * Sets the state service dependency.

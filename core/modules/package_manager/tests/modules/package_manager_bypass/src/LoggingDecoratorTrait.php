@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\package_manager_bypass;
 
+use Drupal\Core\State\StateInterface;
+
 /**
  * Records information about method invocations.
  *
@@ -20,7 +22,7 @@ trait LoggingDecoratorTrait {
    *
    * @var \Drupal\Core\State\StateInterface
    */
-  private $state;
+  private StateInterface $state;
 
   /**
    * Returns the arguments from every invocation of the main class method.

@@ -821,7 +821,7 @@ class TestTime extends Time {
    *
    * @var int
    */
-  public static $offset = 0;
+  public static int $offset = 0;
 
   /**
    * {@inheritdoc}

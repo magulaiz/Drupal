@@ -17,33 +17,17 @@ use Drupal\package_manager\StageBase;
 trait RequireEventTrait {
 
   /**
-   * The runtime packages, in the form 'vendor/name:constraint'.
-   *
-   * @var string[]
-   */
-  private $runtimePackages;
-
-  /**
-   * The dev packages to be required, in the form 'vendor/name:constraint'.
-   *
-   * @var string[]
-   */
-  private $devPackages;
-
-  /**
    * Constructs the object.
    *
    * @param \Drupal\package_manager\StageBase $stage
    *   The stage.
-   * @param string[] $runtime_packages
+   * @param string[] $runtimePackages
    *   The runtime (i.e., non-dev) packages to be required, in the form
    *   'vendor/name:constraint'.
-   * @param string[] $dev_packages
+   * @param string[] $devPackages
    *   The dev packages to be required, in the form 'vendor/name:constraint'.
    */
-  public function __construct(StageBase $stage, array $runtime_packages, array $dev_packages = []) {
-    $this->runtimePackages = $runtime_packages;
-    $this->devPackages = $dev_packages;
+  public function __construct(StageBase $stage, private readonly array $runtimePackages, private readonly array $devPackages = []) {
     parent::__construct($stage);
   }
 
