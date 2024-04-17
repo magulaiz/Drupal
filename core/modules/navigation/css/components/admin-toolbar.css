@@ -121,7 +121,7 @@ body {
 }
 @media (min-width: 64rem) {
   .admin-toolbar:has([data-toolbar-popover-control][aria-expanded="true"]) .admin-toolbar__logo {
-    display: block;
+    display: inline-flex;
   }
 }
 .admin-toolbar__close-button {
@@ -225,7 +225,7 @@ body {
   flex: 1 0 100%;
 }
 .admin-toolbar__logo {
-  display: inline-block;
+  display: inline-flex;
   overflow: hidden;
   border-radius: var(--admin-toolbar-space-8);
 }

@@ -125,7 +125,7 @@ body {
     display: none;
 
     @media (--admin-toolbar-desktop) {
-      display: block;
+      display: inline-flex;
     }
   }
 }
@@ -235,7 +235,7 @@ body {
 }
 
 .admin-toolbar__logo {
-  display: inline-block;
+  display: inline-flex;
   overflow: hidden;
   border-radius: var(--admin-toolbar-space-8);
 

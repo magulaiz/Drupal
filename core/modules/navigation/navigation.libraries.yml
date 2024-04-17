@@ -69,7 +69,6 @@ popover:
       css/components/toolbar-popover.css: {}
   dependencies:
     - core/once
-    - navigation/floating-ui
 
 tooltip:
   js:
@@ -79,7 +78,7 @@ tooltip:
       css/components/tooltip.css: {}
   dependencies:
     - core/once
-    - navigation/floating-ui
+    - core/internal.floating-ui
 
 dropdown:
   js:
@@ -89,7 +88,7 @@ dropdown:
       css/components/toolbar-dropdown.css: {}
   dependencies:
     - core/once
-    - navigation/floating-ui
+    - core/internal.floating-ui
 
 navigation_block:
   version: VERSION
