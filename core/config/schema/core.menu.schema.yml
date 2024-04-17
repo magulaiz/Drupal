@@ -28,8 +28,6 @@ core.menu.static_menu_link_overrides:
             label: 'Parent'
             nullable: true
             constraints:
-              NotBlank:
-                allowNull: true
               Regex:
                 pattern: '/^[a-z0-9-]+$/'
                 message: "The %value parent menu name is not valid."
