@@ -26,14 +26,13 @@ class FieldUIPrefixUpdateTest extends UpdatePathTestBase {
   /**
    * Tests update of field_ui.settings:field_prefix.
    */
-  public function testUpdate() {
+  public function testUpdate(): void {
     $this->config('field_ui.settings')->set('field_prefix', 'prefix_greater_then_thirty_characters')->save();
 
     $this->runUpdates();
 
     $prefix = $this->config('field_ui.settings')->get('field_prefix');
-    $this->assertEquals(30, strlen($prefix));
-    $this->assertEquals('prefix_greater_then_thirty_cha', $prefix);
+    $this->assertSame('prefix_greater_then_thirty_cha', $prefix);
   }
 
 }
