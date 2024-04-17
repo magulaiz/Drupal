@@ -4,6 +4,7 @@ namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Plugin implementation of the 'basic_string' formatter.
@@ -18,6 +19,8 @@ use Drupal\Core\Field\FieldItemListInterface;
  * )
  */
 class BasicStringFormatter extends FormatterBase {
+
+  use WrapperLabelFormatterTrait;
 
   /**
    * {@inheritdoc}
@@ -36,6 +39,22 @@ class BasicStringFormatter extends FormatterBase {
     }
 
     return $elements;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    return parent::defaultSettings() + self::wrapperLabelDefaultSettings();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsForm(array $form, FormStateInterface $form_state) {
+    $form = parent::settingsForm($form, $form_state);
+    $this->settingsFormWrapperOption($form);
+    return $form;
   }
 
 }

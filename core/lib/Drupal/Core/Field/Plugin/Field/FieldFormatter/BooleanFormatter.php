@@ -19,6 +19,8 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class BooleanFormatter extends FormatterBase {
 
+  use WrapperLabelFormatterTrait;
+
   /**
    * {@inheritdoc}
    */
@@ -30,7 +32,7 @@ class BooleanFormatter extends FormatterBase {
     $settings['format_custom_false'] = '';
     $settings['format_custom_true'] = '';
 
-    return $settings;
+    return $settings + self::wrapperLabelDefaultSettings();
   }
 
   /**
@@ -106,6 +108,7 @@ class BooleanFormatter extends FormatterBase {
       ],
     ];
 
+    $this->settingsFormWrapperOption($form);
     return $form;
   }
 

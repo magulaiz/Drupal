@@ -101,4 +101,23 @@ class FieldFormatterTest extends KernelTestBase {
     $this->assertEquals($third_party_settings, $build['#third_party_settings']);
   }
 
+  /**
+   * Test wrap label settings.
+   */
+  public function testWrapperLabel() {
+    $component = $this->display->getComponent($this->fieldName);
+
+    $settings = $component['settings'];
+    $settings['wrap_label_tag'] = 'h4';
+
+    $component['settings'] = $settings;
+    $this->display->setComponent($this->fieldName, $component)->save();
+    $entity = EntityTestRev::create([]);
+
+    $entity->{$this->fieldName}->value = $this->randomString();
+    $build = $entity->{$this->fieldName}->view('default');
+    $this->assertNotNull($build['#label_wrapper']);
+    $this->assertEquals($build['#label_wrapper'], $settings['wrap_label_tag']);
+  }
+
 }

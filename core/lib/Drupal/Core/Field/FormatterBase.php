@@ -98,6 +98,7 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
         '#theme' => 'field',
         '#title' => $this->fieldDefinition->getLabel(),
         '#label_display' => $this->label,
+        '#label_wrapper' => $this->getSetting('wrap_label_tag'),
         '#view_mode' => $this->viewMode,
         '#language' => $items->getLangcode(),
         '#field_name' => $field_name,

@@ -4,6 +4,7 @@ namespace Drupal\text\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Field\Plugin\Field\FieldFormatter\WrapperLabelFormatterTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 
@@ -27,13 +28,16 @@ use Drupal\Core\Security\TrustedCallbackInterface;
  */
 class TextTrimmedFormatter extends FormatterBase implements TrustedCallbackInterface {
 
+  use WrapperLabelFormatterTrait;
+
   /**
    * {@inheritdoc}
    */
   public static function defaultSettings() {
     return [
       'trim_length' => '600',
-    ] + parent::defaultSettings();
+    ] + parent::defaultSettings()
+      + self::wrapperLabelDefaultSettings();
   }
 
   /**
@@ -49,6 +53,7 @@ class TextTrimmedFormatter extends FormatterBase implements TrustedCallbackInter
       '#min' => 1,
       '#required' => TRUE,
     ];
+    $this->settingsFormWrapperOption($element);
     return $element;
   }
 

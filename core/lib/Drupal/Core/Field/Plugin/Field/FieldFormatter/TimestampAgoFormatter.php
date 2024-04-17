@@ -28,6 +28,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class TimestampAgoFormatter extends FormatterBase {
 
+  use WrapperLabelFormatterTrait;
+
   /**
    * The date formatter service.
    *
@@ -93,11 +95,12 @@ class TimestampAgoFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return [
+    $settings = [
       'future_format' => '@interval hence',
       'past_format' => '@interval ago',
       'granularity' => 2,
-    ] + parent::defaultSettings();
+    ] + self::wrapperLabelDefaultSettings();
+    return $settings + parent::defaultSettings();
   }
 
   /**
@@ -129,6 +132,7 @@ class TimestampAgoFormatter extends FormatterBase {
       '#max' => 6,
     ];
 
+    $this->settingsFormWrapperOption($form);
     return $form;
   }
 

@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFormBuilderInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Field\Plugin\Field\FieldFormatter\WrapperLabelFormatterTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -29,6 +30,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class CommentDefaultFormatter extends FormatterBase {
 
+  use WrapperLabelFormatterTrait;
+
   /**
    * {@inheritdoc}
    */
@@ -36,7 +39,8 @@ class CommentDefaultFormatter extends FormatterBase {
     return [
       'view_mode' => 'default',
       'pager_id' => 0,
-    ] + parent::defaultSettings();
+    ] + parent::defaultSettings()
+      + self::wrapperLabelDefaultSettings();
   }
 
   /**
@@ -239,6 +243,7 @@ class CommentDefaultFormatter extends FormatterBase {
       '#default_value' => $this->getSetting('pager_id'),
       '#description' => $this->t("Unless you're experiencing problems with pagers related to this field, you should leave this at 0. If using multiple pagers on one page you may need to set this number to a higher value so as not to conflict within the ?page= array. Large values will add a lot of commas to your URLs, so avoid if possible."),
     ];
+    $this->settingsFormWrapperOption($element);
     return $element;
   }
 

@@ -28,6 +28,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class TimestampFormatter extends FormatterBase {
 
+  use WrapperLabelFormatterTrait;
+
   /**
    * Used to specify a date format that is customizable by user.
    *
@@ -99,7 +101,7 @@ class TimestampFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return [
+    $timestampSettings = [
       'date_format' => 'medium',
       'custom_date_format' => '',
       'timezone' => '',
@@ -114,7 +116,10 @@ class TimestampFormatter extends FormatterBase {
         'granularity' => 2,
         'refresh' => 60,
       ],
-    ] + parent::defaultSettings();
+    ] + parent::defaultSettings()
+      + self::wrapperLabelDefaultSettings();
+
+    return $timestampSettings;
   }
 
   /**
@@ -226,6 +231,7 @@ class TimestampFormatter extends FormatterBase {
       ]),
     ];
 
+    $this->settingsFormWrapperOption($form);
     return $form;
   }
 

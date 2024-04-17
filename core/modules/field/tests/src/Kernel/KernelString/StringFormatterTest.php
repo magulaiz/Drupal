@@ -64,7 +64,6 @@ class StringFormatterTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-
     // Configure the theme system.
     $this->installConfig(['system', 'field']);
     $this->installEntitySchema('entity_test_rev');
@@ -72,7 +71,7 @@ class StringFormatterTest extends KernelTestBase {
 
     $this->entityType = 'entity_test_rev';
     $this->bundle = $this->entityType;
-    $this->fieldName = mb_strtolower($this->randomMachineName());
+    $this->fieldName = mb_strtolower('my_test_field');
 
     $field_storage = FieldStorageConfig::create([
       'field_name' => $this->fieldName,
@@ -227,6 +226,48 @@ class StringFormatterTest extends KernelTestBase {
 
     $this->renderEntityFields($entity, $display);
     $this->assertRaw($value);
+  }
+
+  /**
+   * Test if label was wrapped with correct heading tag.
+   */
+  public function testWrapperLabel() {
+    $field_name = 'test_field_name';
+    $entity_type = $bundle = 'entity_test_label';
+    $label = $this->randomMachineName();
+    $field_storage = FieldStorageConfig::create([
+      'field_name' => $field_name,
+      'entity_type' => $entity_type,
+      'type' => 'string',
+    ]);
+    $field_storage->save();
+
+    $instance = FieldConfig::create([
+      'field_storage' => $field_storage,
+      'bundle' => $entity_type,
+      'label' => $label,
+    ]);
+    $instance->save();
+
+    $display = \Drupal::service('entity_display.repository')
+      ->getViewDisplay($entity_type, $bundle)
+      ->setComponent($field_name, [
+        'type' => 'string',
+        'settings' => [
+          'link_to_entity' => FALSE,
+          'wrap_label_tag' => 'h3',
+        ],
+        'region' => 'content',
+      ]);
+    $display->save();
+
+    $value = $this->randomMachineName();
+    $entity = EntityTestLabel::create(['name' => 'test']);
+    $entity->{$field_name}->value = $value;
+    $entity->save();
+    $this->renderEntityFields($entity, $display);
+    $raw = '<h3>' . $label . '</h3>';
+    $this->assertRaw($raw);
   }
 
 }

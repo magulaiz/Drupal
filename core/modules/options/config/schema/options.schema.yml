@@ -102,10 +102,18 @@ field.value.list_string:
 field.formatter.settings.list_default:
   type: mapping
   label: 'Options list default display settings'
+  mapping:
+    wrap_label_tag:
+      type: string
+      label: 'Heading text.'
 
 field.formatter.settings.list_key:
   type: mapping
   label: 'Key format settings'
+  mapping:
+    wrap_label_tag:
+      type: string
+      label: 'Heading text.'
 
 field.widget.settings.options_buttons:
   type: mapping

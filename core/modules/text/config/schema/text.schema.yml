@@ -99,6 +99,10 @@ field.value.text_with_summary:
 field.formatter.settings.text_default:
   type: mapping
   label: 'Formatted text default display format settings'
+  mapping:
+    wrap_label_tag:
+      type: string
+      label: 'Heading text.'
 
 field.formatter.settings.text_summary_or_trimmed:
   type: mapping
@@ -107,6 +111,9 @@ field.formatter.settings.text_summary_or_trimmed:
     trim_length:
       type: integer
       label: 'Trim length'
+    wrap_label_tag:
+      type: string
+      label: 'Heading text.'
 
 field.formatter.settings.text_trimmed:
   type: mapping
@@ -115,6 +122,9 @@ field.formatter.settings.text_trimmed:
     trim_length:
       type: integer
       label: 'Trim length'
+    wrap_label_tag:
+      type: string
+      label: 'Heading text.'
 
 field.widget.settings.text_textarea:
   type: mapping

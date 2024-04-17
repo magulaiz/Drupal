@@ -7,6 +7,9 @@ field.formatter.settings.telephone_link:
     title:
       type: label
       label: 'Title to replace basic numeric telephone number display'
+    wrap_label_tag:
+      type: string
+      label: 'Heading text.'
 
 field.widget.settings.telephone_default:
   type: mapping

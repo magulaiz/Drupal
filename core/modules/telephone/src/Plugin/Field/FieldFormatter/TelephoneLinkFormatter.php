@@ -4,6 +4,7 @@ namespace Drupal\telephone\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Field\Plugin\Field\FieldFormatter\WrapperLabelFormatterTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
@@ -20,13 +21,16 @@ use Drupal\Core\Url;
  */
 class TelephoneLinkFormatter extends FormatterBase {
 
+  use WrapperLabelFormatterTrait;
+
   /**
    * {@inheritdoc}
    */
   public static function defaultSettings() {
     return [
       'title' => '',
-    ] + parent::defaultSettings();
+    ] + parent::defaultSettings()
+      + self::wrapperLabelDefaultSettings();
   }
 
   /**
@@ -38,7 +42,7 @@ class TelephoneLinkFormatter extends FormatterBase {
       '#title' => $this->t('Title to replace basic numeric telephone number display'),
       '#default_value' => $this->getSetting('title'),
     ];
-
+    $this->settingsFormWrapperOption($elements);
     return $elements;
   }
 
