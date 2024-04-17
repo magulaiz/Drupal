@@ -37,8 +37,6 @@ update.settings:
         timeout:
           type: integer
           label: 'Timeout in seconds'
-          constraints:
-            NotNull: []
     notification:
       type: mapping
       label: 'Notification settings'
@@ -48,9 +46,6 @@ update.settings:
           label: 'Email addresses to notify when updates are available'
           # @see \_update_cron_notify()
           nullable: true
-          constraints:
-            NotBlank:
-              allowNull: true
           sequence:
             type: email
             label: 'Email'
