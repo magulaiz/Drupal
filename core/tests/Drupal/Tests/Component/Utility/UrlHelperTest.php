@@ -130,7 +130,7 @@ class UrlHelperTest extends TestCase {
   public function testUncompressInvalidString() {
     // Pass an invalid string to ::uncompressQueryParameter() and ensure it
     // doesn't result in a PHP warning.
-    $this->assertFalse(UrlHelper::uncompressQueryParameter('llama'));
+    $this->assertSame('llama', UrlHelper::uncompressQueryParameter('llama'));
   }
 
   /**
