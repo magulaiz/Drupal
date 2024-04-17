@@ -3489,10 +3489,11 @@ function _user_sort($a, $b) {
  * List user administration filters that can be applied.
  */
 function user_filters() {
-  // Regular filters
   $filters = array();
   $roles = user_roles(TRUE);
-  unset($roles[DRUPAL_AUTHENTICATED_RID]); // Don't list authorized role.
+  // Don't list authorized role.
+  unset($roles[DRUPAL_AUTHENTICATED_RID]);
+
   if (count($roles)) {
     $filters['role'] = array(
       'title' => t('role'),
@@ -3509,7 +3510,7 @@ function user_filters() {
     if ($permissions = $function()) {
       asort($permissions);
       foreach ($permissions as $permission => $description) {
-        $options[t('@module module', array('@module' => $module))][$permission] = t($permission);
+        $options[t('@module module', array('@module' => $module))][$permission] = $description['title'];
       }
     }
   }
