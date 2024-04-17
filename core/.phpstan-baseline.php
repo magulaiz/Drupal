@@ -4584,16 +4584,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/contact/tests/src/Functional/ContactLanguageTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\contact\\\\Functional\\\\ContactLanguageTest\\:\\:createLanguageFromLangcode\\(\\) has invalid return type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/contact/tests/src/Functional/ContactLanguageTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @return with type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface is not subtype of native type Drupal\\\\language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/contact/tests/src/Functional/ContactLanguageTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Config\\\\Config\\:\\:get\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/contact/tests/src/Functional/ContactPersonalTest.php',
@@ -5059,32 +5049,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/content_moderation/tests/src/Functional/ModerationContentTranslationTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Functional\\\\ModerationContentTranslationTest\\:\\:createLanguageFromLangcode\\(\\) has invalid return type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Functional/ModerationContentTranslationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @return with type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface is not subtype of native type Drupal\\\\language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Functional/ModerationContentTranslationTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\field\\\\FieldConfigInterface\\:\\:setTranslatable\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_moderation/tests/src/Functional/ModerationFormTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\workflows\\\\WorkflowTypeInterface\\:\\:addEntityTypeAndBundle\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Functional/ModerationFormTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Functional\\\\ModerationFormTest\\:\\:createLanguageFromLangcode\\(\\) has invalid return type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Functional/ModerationFormTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @return with type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface is not subtype of native type Drupal\\\\language\\\\ConfigurableLanguageInterface\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_moderation/tests/src/Functional/ModerationFormTest.php',
 ];
@@ -5101,16 +5071,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Cannot access property \\$moderation_state on Drupal\\\\node\\\\NodeInterface\\|false\\.$#',
 	'count' => 5,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Functional/ModerationLocaleTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Functional\\\\ModerationLocaleTest\\:\\:createLanguageFromLangcode\\(\\) has invalid return type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Functional/ModerationLocaleTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @return with type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface is not subtype of native type Drupal\\\\language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
 	'path' => __DIR__ . '/modules/content_moderation/tests/src/Functional/ModerationLocaleTest.php',
 ];
 $ignoreErrors[] = [
@@ -5629,27 +5589,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationContextualLinksTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\content_translation\\\\Functional\\\\ContentTranslationContextualLinksTest\\:\\:createLanguageFromLangcode\\(\\) has invalid return type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationContextualLinksTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @return with type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface is not subtype of native type Drupal\\\\language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationContextualLinksTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\field\\\\FieldConfigInterface\\:\\:setTranslatable\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationLanguageChangeTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\content_translation\\\\Functional\\\\ContentTranslationLanguageChangeTest\\:\\:createLanguageFromLangcode\\(\\) has invalid return type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationLanguageChangeTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @return with type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface is not subtype of native type Drupal\\\\language\\\\ConfigurableLanguageInterface\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationLanguageChangeTest.php',
 ];
@@ -5675,16 +5615,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\field\\\\FieldConfigInterface\\:\\:setTranslatable\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationOperationsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\content_translation\\\\Functional\\\\ContentTranslationOperationsTest\\:\\:createLanguageFromLangcode\\(\\) has invalid return type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationOperationsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @return with type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface is not subtype of native type Drupal\\\\language\\\\ConfigurableLanguageInterface\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationOperationsTest.php',
 ];
@@ -5765,16 +5695,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\field\\\\FieldConfigInterface\\:\\:setTranslatable\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationUntranslatableFieldsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\content_translation\\\\Functional\\\\ContentTranslationUntranslatableFieldsTest\\:\\:createLanguageFromLangcode\\(\\) has invalid return type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationUntranslatableFieldsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @return with type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface is not subtype of native type Drupal\\\\language\\\\ConfigurableLanguageInterface\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_translation/tests/src/Functional/ContentTranslationUntranslatableFieldsTest.php',
 ];
@@ -6370,16 +6290,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\field\\\\FieldConfigInterface\\:\\:setTranslatable\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field/tests/src/Functional/EntityReference/EntityReferenceFieldTranslatedReferenceViewTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\field\\\\Functional\\\\EntityReference\\\\EntityReferenceFieldTranslatedReferenceViewTest\\:\\:createLanguageFromLangcode\\(\\) has invalid return type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field/tests/src/Functional/EntityReference/EntityReferenceFieldTranslatedReferenceViewTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @return with type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface is not subtype of native type Drupal\\\\language\\\\ConfigurableLanguageInterface\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field/tests/src/Functional/EntityReference/EntityReferenceFieldTranslatedReferenceViewTest.php',
 ];
@@ -7544,16 +7454,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/file/tests/src/Functional/FileOnTranslatedEntityTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\file\\\\Functional\\\\FileOnTranslatedEntityTest\\:\\:createLanguageFromLangcode\\(\\) has invalid return type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/Functional/FileOnTranslatedEntityTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @return with type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface is not subtype of native type Drupal\\\\language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/Functional/FileOnTranslatedEntityTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Session\\\\AccountInterface\\:\\:\\$name\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/file/tests/src/Functional/FileUploadJsonBasicAuthTest.php',
@@ -7590,16 +7490,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\field\\\\FieldConfigInterface\\:\\:setTranslatable\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/Functional/PrivateFileOnTranslatedEntityTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\file\\\\Functional\\\\PrivateFileOnTranslatedEntityTest\\:\\:createLanguageFromLangcode\\(\\) has invalid return type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/Functional/PrivateFileOnTranslatedEntityTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @return with type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface is not subtype of native type Drupal\\\\language\\\\ConfigurableLanguageInterface\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/file/tests/src/Functional/PrivateFileOnTranslatedEntityTest.php',
 ];
@@ -8464,16 +8354,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/image/tests/src/Functional/ImageOnTranslatedEntityTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\image\\\\Functional\\\\ImageOnTranslatedEntityTest\\:\\:createLanguageFromLangcode\\(\\) has invalid return type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/tests/src/Functional/ImageOnTranslatedEntityTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @return with type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface is not subtype of native type Drupal\\\\language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/image/tests/src/Functional/ImageOnTranslatedEntityTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$edit in empty\\(\\) always exists and is not falsy\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/image/tests/src/Functional/ImageStyleFlushTest.php',
@@ -9285,16 +9165,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\field\\\\FieldConfigInterface\\:\\:setTranslatable\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/language/tests/src/Functional/LanguageSelectorTranslatableTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\language\\\\Functional\\\\LanguageSelectorTranslatableTest\\:\\:createLanguageFromLangcode\\(\\) has invalid return type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/language/tests/src/Functional/LanguageSelectorTranslatableTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @return with type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface is not subtype of native type Drupal\\\\language\\\\ConfigurableLanguageInterface\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/language/tests/src/Functional/LanguageSelectorTranslatableTest.php',
 ];
@@ -11274,27 +11144,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/menu_ui/tests/src/Functional/MenuUiContentTranslationTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\menu_ui\\\\Functional\\\\MenuUiContentTranslationTest\\:\\:createLanguageFromLangcode\\(\\) has invalid return type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_ui/tests/src/Functional/MenuUiContentTranslationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @return with type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface is not subtype of native type Drupal\\\\language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_ui/tests/src/Functional/MenuUiContentTranslationTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\field\\\\FieldConfigInterface\\:\\:setTranslatable\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_ui/tests/src/Functional/MenuUiNodeTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\menu_ui\\\\Functional\\\\MenuUiNodeTest\\:\\:createLanguageFromLangcode\\(\\) has invalid return type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_ui/tests/src/Functional/MenuUiNodeTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @return with type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface is not subtype of native type Drupal\\\\language\\\\ConfigurableLanguageInterface\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/menu_ui/tests/src/Functional/MenuUiNodeTest.php',
 ];
@@ -12584,16 +12434,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/node/tests/src/Functional/NodeTranslationUITest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Functional\\\\NodeTranslationUITest\\:\\:createLanguageFromLangcode\\(\\) has invalid return type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/NodeTranslationUITest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @return with type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface is not subtype of native type Drupal\\\\language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Functional/NodeTranslationUITest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Part \\$this\\-\\>defaultLangcode \\(array\\) of encapsed string cannot be cast to string\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/tests/src/Functional/NodeTypeTranslationTest.php',
@@ -13169,16 +13009,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/path/tests/src/Functional/PathContentModerationTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\path\\\\Functional\\\\PathContentModerationTest\\:\\:createLanguageFromLangcode\\(\\) has invalid return type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/path/tests/src/Functional/PathContentModerationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @return with type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface is not subtype of native type Drupal\\\\language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/path/tests/src/Functional/PathContentModerationTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\node\\\\NodeInterface\\:\\:\\$body\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/path/tests/src/Functional/PathLanguageTest.php',
@@ -13189,32 +13019,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/path/tests/src/Functional/PathLanguageTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\path\\\\Functional\\\\PathLanguageTest\\:\\:createLanguageFromLangcode\\(\\) has invalid return type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/path/tests/src/Functional/PathLanguageTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @return with type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface is not subtype of native type Drupal\\\\language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/path/tests/src/Functional/PathLanguageTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\field\\\\FieldConfigInterface\\:\\:setTranslatable\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/path/tests/src/Functional/PathWithNodeAccessGrantsTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\workflows\\\\WorkflowTypeInterface\\:\\:addEntityTypeAndBundle\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/path/tests/src/Functional/PathWithNodeAccessGrantsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\path\\\\Functional\\\\PathWithNodeAccessGrantsTest\\:\\:createLanguageFromLangcode\\(\\) has invalid return type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/path/tests/src/Functional/PathWithNodeAccessGrantsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @return with type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface is not subtype of native type Drupal\\\\language\\\\ConfigurableLanguageInterface\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/path/tests/src/Functional/PathWithNodeAccessGrantsTest.php',
 ];
@@ -18527,16 +18337,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/DisplayFeedTranslationTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\Plugin\\\\DisplayFeedTranslationTest\\:\\:createLanguageFromLangcode\\(\\) has invalid return type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/DisplayFeedTranslationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @return with type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface is not subtype of native type Drupal\\\\language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/DisplayFeedTranslationTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$languageManager in PHPDoc tag @var does not match assigned variable \\$language_manager\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/src/Functional/Plugin/DisplayFeedTranslationTest.php',
@@ -18623,16 +18423,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\field\\\\FieldConfigInterface\\:\\:setTranslatable\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/SearchMultilingualTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\SearchMultilingualTest\\:\\:createLanguageFromLangcode\\(\\) has invalid return type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/SearchMultilingualTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @return with type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface is not subtype of native type Drupal\\\\language\\\\ConfigurableLanguageInterface\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/src/Functional/SearchMultilingualTest.php',
 ];
@@ -19560,16 +19350,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/PathWorkspacesTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\PathWorkspacesTest\\:\\:createLanguageFromLangcode\\(\\) has invalid return type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/PathWorkspacesTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @return with type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface is not subtype of native type Drupal\\\\language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/PathWorkspacesTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Session\\\\AccountInterface\\:\\:\\$name\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/Rest/WorkspaceJsonBasicAuthTest.php',
@@ -20287,16 +20067,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\field\\\\FieldConfigInterface\\:\\:setTranslatable\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Routing/RouteCachingLanguageTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\FunctionalTests\\\\Routing\\\\RouteCachingLanguageTest\\:\\:createLanguageFromLangcode\\(\\) has invalid return type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Routing/RouteCachingLanguageTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^PHPDoc tag @return with type Drupal\\\\Core\\\\Language\\\\ConfigurableLanguageInterface is not subtype of native type Drupal\\\\language\\\\ConfigurableLanguageInterface\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Routing/RouteCachingLanguageTest.php',
 ];
