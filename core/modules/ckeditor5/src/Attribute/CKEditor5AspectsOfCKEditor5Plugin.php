@@ -7,7 +7,7 @@ namespace Drupal\ckeditor5\Attribute;
 use Drupal\Component\Plugin\Attribute\Plugin;
 
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class CKEditor5AspectsIfCKEditor5Plugin extends Plugin {
+class CKEditor5AspectsOfCKEditor5Plugin extends Plugin {
 
   /**
    * Constructs a CKEditor5AspectsOfCKEditor5Plugin attribute.
