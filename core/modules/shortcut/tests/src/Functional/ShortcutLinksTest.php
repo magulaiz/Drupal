@@ -37,7 +37,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
    *
    * @var \Drupal\user\UserInterface
    */
-  protected $adminUser;
+  protected UserInterface $adminUser;
 
   /**
    * {@inheritdoc}
