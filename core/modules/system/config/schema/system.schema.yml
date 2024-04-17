@@ -416,7 +416,7 @@ system.advisories:
       label: 'How often to check for security advisories, in hours'
       constraints:
         Range:
-          min: 0
+          min: 1
 
 block.settings.system_branding_block:
   type: block_settings
