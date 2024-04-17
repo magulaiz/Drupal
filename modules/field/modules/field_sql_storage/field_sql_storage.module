@@ -544,7 +544,9 @@ function field_sql_storage_field_storage_write($entity_type, $entity, $op, $fiel
   }
 
   // Allow this optimization to be optional.
-  $skip_unchanged_fields = variable_get('field_sql_storage_skip_writing_unchanged_fields', FALSE);
+  $skip_storage_optimization = empty($entity->skip_field_sql_storage_optimization);
+  $skip_writing_unchanged_fields = variable_get('field_sql_storage_skip_writing_unchanged_fields', FALSE);
+  $skip_unchanged_fields = $skip_storage_optimization && $skip_writing_unchanged_fields;
 
   foreach ($fields as $field_id) {
     $field = field_info_field_by_id($field_id);
