@@ -36,7 +36,10 @@ class UpdateSettingsForm extends ConfigFormBase {
     $form['update_check_frequency'] = [
       '#type' => 'radios',
       '#title' => $this->t('Check for updates'),
-      '#config_target' => 'update.settings:check.interval_days',
+      '#config_target' => new ConfigTarget(
+        'update.settings',
+        'check.interval_days',
+        toConfig: fn($value) => intval($value)),
       '#options' => [
         1 => $this->t('Daily'),
         7 => $this->t('Weekly'),
