@@ -11,6 +11,8 @@ use Drupal\shortcut\Entity\Shortcut;
 use Drupal\shortcut\Entity\ShortcutSet;
 use Drupal\Tests\block\Functional\AssertBlockAppearsTrait;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
+use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
 use Drupal\views\Entity\View;
 
 /**
@@ -62,6 +64,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
       'edit any article content',
       'edit any page content',
       'administer blocks',
+      'access shortcuts',
     ]);
 
     $this->drupalPlaceBlock('page_title_block');
@@ -242,6 +245,9 @@ class ShortcutLinksTest extends ShortcutTestBase {
       'label' => 'Basic block',
       'revision' => FALSE,
     ])->save();
+    $user_role = Role::load(RoleInterface::AUTHENTICATED_ID);
+    $user_role->grantPermission('administer block types');
+    $user_role->save();
     // Test page with HTML tags in title.
     $this->drupalGet('admin/structure/block-content/manage/basic');
     $page_title = "Edit Basic block block type";
