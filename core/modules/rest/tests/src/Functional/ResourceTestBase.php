@@ -72,7 +72,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   /**
    * The account to use for authentication, if any.
    *
-   * @var null|\Drupal\Core\Session\AccountInterface
+   * @var \Drupal\Core\Session\AccountInterface|object{name: \Drupal\Core\Field\FieldItemList, passRaw: string}
    */
   protected $account = NULL;
 
