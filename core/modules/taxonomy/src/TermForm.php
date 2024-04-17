@@ -27,6 +27,13 @@ class TermForm extends ContentEntityForm {
     $form_state->set(['taxonomy', 'parent'], $parent);
     $form_state->set(['taxonomy', 'vocabulary'], $vocabulary);
 
+    if (!$term->isNew()) {
+      $form['#title'] = $this->t('<em>Edit @type</em> @title', [
+        '@type' => $vocabulary->getName() ?? '',
+        '@title' => $term->label(),
+      ]);
+    }
+
     $form['relations'] = [
       '#type' => 'details',
       '#title' => $this->t('Relations'),
