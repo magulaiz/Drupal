@@ -18,9 +18,9 @@
   color: var(--color-text-neutral-soft);
   font-size: 0.875rem;
   line-height: var(--sp);
-}
 
-.meta__text a {
-  color: var(--color-text-primary-medium);
-  font-weight: bold;
+  & a {
+    color: var(--color-text-primary-medium);
+    font-weight: bold;
+  }
 }
