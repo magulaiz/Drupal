@@ -12,6 +12,7 @@ use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\system\Functional\Entity\EntityCacheTagsTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Tests the Shortcut entity's cache tags.
@@ -29,7 +30,6 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
     'shortcut',
     'test_page_test',
     'block',
-    'node',
   ];
 
   /**
@@ -37,7 +37,7 @@ class ShortcutCacheTagsTest extends EntityCacheTagsTestBase {
    *
    * @var \Drupal\user\UserInterface
    */
-  protected $adminUser;
+  protected UserInterface $adminUser;
 
   /**
    * {@inheritdoc}
