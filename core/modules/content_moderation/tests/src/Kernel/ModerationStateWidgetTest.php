@@ -75,7 +75,7 @@ class ModerationStateWidgetTest extends KernelTestBase {
     // The moderation_state field should have no values for an entity that isn't
     // being moderated.
     $entity_form_display->extractFormValues($entity, $form, $form_state);
-    $this->assertEquals(0, $entity->moderation_state->count());
+    $this->assertNull($entity->moderation_state);
   }
 
   /**
@@ -83,7 +83,7 @@ class ModerationStateWidgetTest extends KernelTestBase {
    */
   public function testIsApplicable() {
     // The moderation_state field definition should be applicable to our widget.
-    $fields = $this->container->get('entity_field.manager')->getFieldDefinitions('node', 'test_type');
+    $fields = $this->container->get('entity_field.manager')->getFieldDefinitions('node', 'moderated');
     $this->assertTrue(ModerationStateWidget::isApplicable($fields['moderation_state']));
     $this->assertFalse(ModerationStateWidget::isApplicable($fields['status']));
     // A config override should still be applicable.
