@@ -33,11 +33,9 @@ class ShortcutLinksTest extends ShortcutTestBase {
   protected static $modules = ['router_test', 'views', 'block'];
 
   /**
-   * User with permission to administer shortcuts.
-   *
-   * @var \Drupal\user\UserInterface
+   * {@inheritdoc}
    */
-  protected UserInterface $adminUser;
+  protected $adminUser;
 
   /**
    * {@inheritdoc}
