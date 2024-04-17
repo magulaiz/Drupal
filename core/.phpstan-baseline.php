@@ -739,16 +739,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Config/ConfigManager.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Config/Development/ConfigSchemaChecker.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Core\\\\Config\\\\Development\\\\ConfigSchemaChecker\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Config/Development/ConfigSchemaChecker.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:getListCacheTagsToInvalidate\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Config/Entity/ConfigEntityBase.php',
@@ -2754,16 +2744,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/automated_cron/src/EventSubscriber/AutomatedCron.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ban/tests/src/Kernel/Migrate/d7/MigrateBlockedIpsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\ban\\\\Kernel\\\\Migrate\\\\d7\\\\MigrateBlockedIpsTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ban/tests/src/Kernel/Migrate/d7/MigrateBlockedIpsTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\basic_auth\\\\PageCache\\\\DisallowBasicAuthRequests\\:\\:check\\(\\) should return string\\|null but return statement is missing\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/basic_auth/src/PageCache/DisallowBasicAuthRequests.php',
@@ -2907,16 +2887,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\views\\\\ViewEntityInterface\\:\\:invalidateCaches\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/block/tests/src/Functional/Views/DisplayBlockTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/tests/src/Kernel/BlockConfigSchemaTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\block\\\\Kernel\\\\BlockConfigSchemaTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/tests/src/Kernel/BlockConfigSchemaTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:getPlugin\\(\\)\\.$#',
@@ -3279,16 +3249,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/book/tests/src/Functional/Views/BookRelationshipTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/book/tests/src/Kernel/Block/BlockConfigSchemaTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\book\\\\Kernel\\\\Block\\\\BlockConfigSchemaTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/book/tests/src/Kernel/Block/BlockConfigSchemaTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\node\\\\NodeInterface\\:\\:\\$book\\.$#',
 	'count' => 5,
 	'path' => __DIR__ . '/modules/book/tests/src/Kernel/BookMultilingualTest.php',
@@ -3302,26 +3262,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Session\\\\AccountInterface\\:\\:set\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/book/tests/src/Kernel/BookMultilingualTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/book/tests/src/Kernel/Migrate/d6/MigrateBookConfigsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\book\\\\Kernel\\\\Migrate\\\\d6\\\\MigrateBookConfigsTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/book/tests/src/Kernel/Migrate/d6/MigrateBookConfigsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/book/tests/src/Kernel/Migrate/d7/MigrateBookConfigsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\book\\\\Kernel\\\\Migrate\\\\d7\\\\MigrateBookConfigsTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/book/tests/src/Kernel/Migrate/d7/MigrateBookConfigsTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\breakpoint\\\\BreakpointInterface\\:\\:getPluginDefinition\\(\\)\\.$#',
@@ -3372,16 +3312,6 @@ $ignoreErrors[] = [
 	'message' => '#^Cannot call method getElements\\(\\) on array\\|Drupal\\\\Component\\\\Plugin\\\\Definition\\\\PluginDefinitionInterface\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/ckeditor5/src/Plugin/CKEditor5Plugin/Media.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/src/Plugin/CKEditor5PluginDefinition.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\ckeditor5\\\\Plugin\\\\CKEditor5PluginDefinition\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/src/Plugin/CKEditor5PluginDefinition.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\filter\\\\Plugin\\\\FilterInterface\\:\\:\\$status\\.$#',
@@ -3649,16 +3579,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/ckeditor5/tests/src/Kernel/CKEditor5PluginManagerTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/Kernel/CKEditor5PluginManagerTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\ckeditor5\\\\Kernel\\\\CKEditor5PluginManagerTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/Kernel/CKEditor5PluginManagerTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Component\\\\Plugin\\\\PluginManagerInterface\\:\\:getPlugin\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/ckeditor5/tests/src/Kernel/ConfigurablePluginTest.php',
@@ -3672,26 +3592,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Component\\\\Plugin\\\\PluginManagerInterface\\:\\:getProvidedElements\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/ckeditor5/tests/src/Kernel/SmartDefaultSettingsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/Kernel/SmartDefaultSettingsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\ckeditor5\\\\Kernel\\\\SmartDefaultSettingsTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/Kernel/SmartDefaultSettingsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/Kernel/ValidatorsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\ckeditor5\\\\Kernel\\\\ValidatorsTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/tests/src/Kernel/ValidatorsTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\FieldableEntityInterface\\:\\:\\$rss_elements\\.$#',
@@ -4479,16 +4379,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/config/tests/src/Functional/ConfigImportAllTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/tests/src/Functional/ConfigImportAllTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\config\\\\Functional\\\\ConfigImportAllTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config/tests/src/Functional/ConfigImportAllTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Cannot call method delete\\(\\) on null\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/config/tests/src/Functional/ConfigInstallProfileOverrideTest.php',
@@ -4584,16 +4474,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/config_translation/tests/src/Kernel/Migrate/d6/MigrateUserConfigsTranslationTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config_translation/tests/src/Kernel/Migrate/d6/MigrateUserConfigsTranslationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\config_translation\\\\Kernel\\\\Migrate\\\\d6\\\\MigrateUserConfigsTranslationTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config_translation/tests/src/Kernel/Migrate/d6/MigrateUserConfigsTranslationTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Language\\\\LanguageManager\\:\\:getLanguageConfigOverride\\(\\)\\.$#',
 	'count' => 8,
 	'path' => __DIR__ . '/modules/config_translation/tests/src/Kernel/Migrate/d6/MigrateUserProfileFieldInstanceTranslationTest.php',
@@ -4611,16 +4491,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Language\\\\LanguageManager\\:\\:getLanguageConfigOverride\\(\\)\\.$#',
 	'count' => 2,
-	'path' => __DIR__ . '/modules/config_translation/tests/src/Kernel/Migrate/d7/MigrateUserConfigsTranslationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/config_translation/tests/src/Kernel/Migrate/d7/MigrateUserConfigsTranslationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\config_translation\\\\Kernel\\\\Migrate\\\\d7\\\\MigrateUserConfigsTranslationTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
 	'path' => __DIR__ . '/modules/config_translation/tests/src/Kernel/Migrate/d7/MigrateUserConfigsTranslationTest.php',
 ];
 $ignoreErrors[] = [
@@ -4837,16 +4707,6 @@ $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Session\\\\AccountInterface\\:\\:\\$passRaw\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/contact/tests/src/Functional/Rest/MessageXmlCookieTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/contact/tests/src/Kernel/Migrate/d6/MigrateContactSettingsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\contact\\\\Kernel\\\\Migrate\\\\d6\\\\MigrateContactSettingsTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/contact/tests/src/Kernel/Migrate/d6/MigrateContactSettingsTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:\\$moderation_state\\.$#',
@@ -6064,16 +5924,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/datetime/tests/src/Kernel/DateTimeItemTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/datetime/tests/src/Kernel/Views/DateTimeSchemaTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\datetime\\\\Kernel\\\\Views\\\\DateTimeSchemaTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/datetime/tests/src/Kernel/Views/DateTimeSchemaTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\node\\\\NodeInterface\\:\\:\\$field_date\\.$#',
 	'count' => 3,
 	'path' => __DIR__ . '/modules/datetime/tests/src/Kernel/Views/FilterDateTest.php',
@@ -6187,16 +6037,6 @@ $ignoreErrors[] = [
 	'message' => '#^Cannot access property \\$passRaw on Drupal\\\\user\\\\UserInterface\\|false\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/dblog/tests/src/Functional/DbLogTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/dblog/tests/src/Kernel/Migrate/d6/MigrateDblogConfigsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\dblog\\\\Kernel\\\\Migrate\\\\d6\\\\MigrateDblogConfigsTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/dblog/tests/src/Kernel/Migrate/d6/MigrateDblogConfigsTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\dynamic_page_cache\\\\PageCache\\\\ResponsePolicy\\\\DenyAdminRoutes\\:\\:check\\(\\) should return string\\|null but return statement is missing\\.$#',
@@ -6540,16 +6380,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\FieldItemInterface\\:\\:\\$target_id\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field/tests/src/Functional/EntityReference/EntityReferenceFieldDefaultValueTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field/tests/src/Functional/EntityReference/EntityReferenceFieldDefaultValueTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\field\\\\Functional\\\\EntityReference\\\\EntityReferenceFieldDefaultValueTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field/tests/src/Functional/EntityReference/EntityReferenceFieldDefaultValueTest.php',
 ];
@@ -7974,16 +7804,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/file/tests/src/Kernel/FileUriItemTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/Kernel/Migrate/d6/MigrateFileConfigsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\file\\\\Kernel\\\\Migrate\\\\d6\\\\MigrateFileConfigsTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/Kernel/Migrate/d6/MigrateFileConfigsTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\migrate\\\\Plugin\\\\MigrateIdMapInterface\\:\\:mapTableName\\(\\)\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/modules/file/tests/src/Kernel/Migrate/d6/MigrateFileTest.php',
@@ -8012,16 +7832,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TypedDataInterface\\:\\:isDisplayed\\(\\)\\.$#',
 	'count' => 4,
 	'path' => __DIR__ . '/modules/file/tests/src/Kernel/Migrate/d6/MigrateUploadTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/Kernel/Migrate/d7/MigrateFileConfigsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\file\\\\Kernel\\\\Migrate\\\\d7\\\\MigrateFileConfigsTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/Kernel/Migrate/d7/MigrateFileConfigsTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityTypeManager\\:\\:reveal\\(\\)\\.$#',
@@ -8507,16 +8317,6 @@ $ignoreErrors[] = [
 	'message' => '#^Cannot access property \\$tid on object\\|false\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/forum/tests/src/Functional/NodeAccessPagerTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/forum/tests/src/Kernel/Migrate/d6/MigrateForumConfigsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\forum\\\\Kernel\\\\Migrate\\\\d6\\\\MigrateForumConfigsTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/forum/tests/src/Kernel/Migrate/d6/MigrateForumConfigsTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\taxonomy\\\\TermInterface\\:\\:\\$forum_container\\.$#',
@@ -9572,16 +9372,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Language\\\\LanguageManagerInterface\\:\\:getLanguageConfigOverride\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/language/tests/src/Functional/LanguageConfigOverrideImportTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/language/tests/src/Functional/LanguageConfigSchemaTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\language\\\\Functional\\\\LanguageConfigSchemaTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/language/tests/src/Functional/LanguageConfigSchemaTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Language\\\\LanguageManagerInterface\\:\\:getLanguageConfigOverride\\(\\)\\.$#',
@@ -10649,16 +10439,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/locale/tests/src/Kernel/LocaleStringTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/locale/tests/src/Kernel/Migrate/MigrateLocaleConfigsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\locale\\\\Kernel\\\\Migrate\\\\MigrateLocaleConfigsTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/locale/tests/src/Kernel/Migrate/MigrateLocaleConfigsTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Field\\\\FieldDefinitionInterface\\:\\:label\\(\\)\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/modules/media/media.install',
@@ -11037,16 +10817,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Field\\\\FieldStorageDefinitionInterface\\:\\:save\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media/tests/src/Functional/Update/MediaMappingUpdateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/src/Functional/Update/MediaSettingsDefaultIframeDomainUpdateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\FunctionalTests\\\\Update\\\\UpdatePathTestBase\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/src/Functional/Update/MediaSettingsDefaultIframeDomainUpdateTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Field\\\\FieldStorageDefinitionInterface\\:\\:save\\(\\)\\.$#',
@@ -13089,16 +12859,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/node/tests/src/Kernel/Migrate/d6/MigrateNodeCompleteTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Kernel/Migrate/d6/MigrateNodeConfigsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\node\\\\Kernel\\\\Migrate\\\\d6\\\\MigrateNodeConfigsTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Kernel/Migrate/d6/MigrateNodeConfigsTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\node\\\\NodeInterface\\:\\:\\$body\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/modules/node/tests/src/Kernel/Migrate/d6/MigrateNodeRevisionTest.php',
@@ -13227,16 +12987,6 @@ $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\node\\\\NodeInterface\\:\\:\\$revision_log\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/tests/src/Kernel/Migrate/d7/MigrateNodeRevisionTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Kernel/Migrate/d7/MigrateNodeSettingsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\node\\\\Kernel\\\\Migrate\\\\d7\\\\MigrateNodeSettingsTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Kernel/Migrate/d7/MigrateNodeSettingsTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\FieldItemListInterface\\:\\:\\$alt\\.$#',
@@ -14619,16 +14369,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/search/tests/src/Kernel/Migrate/d6/MigrateSearchPageTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/search/tests/src/Kernel/Migrate/d6/MigrateSearchSettingsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\search\\\\Kernel\\\\Migrate\\\\d6\\\\MigrateSearchSettingsTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/search/tests/src/Kernel/Migrate/d6/MigrateSearchSettingsTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\search\\\\Plugin\\\\SearchInterface\\:\\:getConfiguration\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/search/tests/src/Kernel/Migrate/d7/MigrateSearchPageTest.php',
@@ -14952,46 +14692,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method GuzzleHttp\\\\ClientInterface\\:\\:post\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/statistics/tests/src/Functional/Views/IntegrationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/statistics/tests/src/Kernel/Migrate/d6/MigrateStatisticsConfigsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\statistics\\\\Kernel\\\\Migrate\\\\d6\\\\MigrateStatisticsConfigsTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/statistics/tests/src/Kernel/Migrate/d6/MigrateStatisticsConfigsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/statistics/tests/src/Kernel/Migrate/d7/MigrateStatisticsConfigsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\statistics\\\\Kernel\\\\Migrate\\\\d7\\\\MigrateStatisticsConfigsTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/statistics/tests/src/Kernel/Migrate/d7/MigrateStatisticsConfigsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/syslog/tests/src/Kernel/Migrate/d6/MigrateSyslogConfigsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\syslog\\\\Kernel\\\\Migrate\\\\d6\\\\MigrateSyslogConfigsTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/syslog/tests/src/Kernel/Migrate/d6/MigrateSyslogConfigsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/syslog/tests/src/Kernel/Migrate/d7/MigrateSyslogConfigsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\syslog\\\\Kernel\\\\Migrate\\\\d7\\\\MigrateSyslogConfigsTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/syslog/tests/src/Kernel/Migrate/d7/MigrateSyslogConfigsTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Access\\\\AccessResultInterface\\:\\:cachePerPermissions\\(\\)\\.$#',
@@ -16146,164 +15846,14 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/Theme/ThemeUiTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Theme/ThemeUpdateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\system\\\\Functional\\\\Theme\\\\ThemeUpdateTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Theme/ThemeUpdateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Update/CronLoggingUpdateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\FunctionalTests\\\\Update\\\\UpdatePathTestBase\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Update/CronLoggingUpdateTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Extension\\\\Extension\\:\\:getAutoloadInfo\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/Update/DatabaseVersionCheckUpdateTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Update/DatabaseVersionCheckUpdateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\system\\\\Functional\\\\Update\\\\DatabaseVersionCheckUpdateTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Update/DatabaseVersionCheckUpdateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Update/GlobalThemeSettingsDefaultLogoUrlUpdateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\FunctionalTests\\\\Update\\\\UpdatePathTestBase\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Update/GlobalThemeSettingsDefaultLogoUrlUpdateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Update/Y2038TimestampUpdateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\FunctionalTests\\\\Update\\\\UpdatePathTestBase\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Update/Y2038TimestampUpdateTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$connection in PHPDoc tag @var does not exist\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/Update/Y2038TimestampUpdateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/UpdateSystem/BrokenCacheUpdateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\system\\\\Functional\\\\UpdateSystem\\\\BrokenCacheUpdateTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/UpdateSystem/BrokenCacheUpdateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/UpdateSystem/EntityUpdateInitialTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\system\\\\Functional\\\\UpdateSystem\\\\EntityUpdateInitialTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/UpdateSystem/EntityUpdateInitialTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/UpdateSystem/UpdatePathLastRemovedTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\system\\\\Functional\\\\UpdateSystem\\\\UpdatePathLastRemovedTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/UpdateSystem/UpdatePathLastRemovedTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/UpdateSystem/UpdatePathNewDependencyTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\system\\\\Functional\\\\UpdateSystem\\\\UpdatePathNewDependencyTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/UpdateSystem/UpdatePathNewDependencyTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/UpdateSystem/UpdatePathTestJavaScriptTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\system\\\\Functional\\\\UpdateSystem\\\\UpdatePathTestJavaScriptTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/UpdateSystem/UpdatePathTestJavaScriptTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/UpdateSystem/UpdatePathWithBrokenRoutingTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\system\\\\Functional\\\\UpdateSystem\\\\UpdatePathWithBrokenRoutingTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/UpdateSystem/UpdatePathWithBrokenRoutingTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/UpdateSystem/UpdatePostUpdateExceptionTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\system\\\\Functional\\\\UpdateSystem\\\\UpdatePostUpdateExceptionTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/UpdateSystem/UpdatePostUpdateExceptionTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/UpdateSystem/UpdatePostUpdateFailingTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\system\\\\Functional\\\\UpdateSystem\\\\UpdatePostUpdateFailingTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/UpdateSystem/UpdatePostUpdateFailingTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/UpdateSystem/UpdatePostUpdateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\system\\\\Functional\\\\UpdateSystem\\\\UpdatePostUpdateTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/UpdateSystem/UpdatePostUpdateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/UpdateSystem/UpdateRemovedPostUpdateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\system\\\\Functional\\\\UpdateSystem\\\\UpdateRemovedPostUpdateTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/UpdateSystem/UpdateRemovedPostUpdateTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Behat\\\\Mink\\\\Element\\\\NodeElement\\:\\:setValue\\(\\) invoked with 2 parameters, 1 required\\.$#',
@@ -16356,16 +15906,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/src/Kernel/MenuAccessControlHandlerTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Kernel/Migrate/d6/MigrateActionConfigsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\system\\\\Kernel\\\\Migrate\\\\d6\\\\MigrateActionConfigsTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Kernel/Migrate/d6/MigrateActionConfigsTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\migrate\\\\Plugin\\\\MigrateIdMapInterface\\:\\:mapTableName\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/src/Kernel/Migrate/d6/MigrateDateFormatTest.php',
@@ -16374,16 +15914,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\migrate\\\\Plugin\\\\MigrateIdMapInterface\\:\\:mapTableName\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/src/Kernel/Migrate/d6/MigrateMenuTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Kernel/Migrate/d7/MigrateActionConfigsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\system\\\\Kernel\\\\Migrate\\\\d7\\\\MigrateActionConfigsTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Kernel/Migrate/d7/MigrateActionConfigsTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\migrate\\\\Plugin\\\\MigrateIdMapInterface\\:\\:mapTableName\\(\\)\\.$#',
@@ -16836,16 +16366,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/taxonomy/tests/src/Functional/Views/TermNameFieldTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/tests/src/Kernel/Migrate/MigrateTaxonomyConfigsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\taxonomy\\\\Kernel\\\\Migrate\\\\MigrateTaxonomyConfigsTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/tests/src/Kernel/Migrate/MigrateTaxonomyConfigsTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Language\\\\LanguageManager\\:\\:getLanguageConfigOverride\\(\\)\\.$#',
 	'count' => 6,
 	'path' => __DIR__ . '/modules/taxonomy/tests/src/Kernel/Migrate/d6/MigrateTaxonomyVocabularyTranslationTest.php',
@@ -16999,16 +16519,6 @@ $ignoreErrors[] = [
 	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/text/tests/src/Functional/TextFieldTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/text/tests/src/Kernel/Migrate/MigrateTextConfigsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\text\\\\Kernel\\\\Migrate\\\\MigrateTextConfigsTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/text/tests/src/Kernel/Migrate/MigrateTextConfigsTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:\\$formatted_text\\.$#',
@@ -17206,29 +16716,9 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/update/src/UpdateProcessor.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/update/tests/src/Functional/Update/UpdateSettingsDefaultFetchUrlUpdateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\FunctionalTests\\\\Update\\\\UpdatePathTestBase\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/update/tests/src/Functional/Update/UpdateSettingsDefaultFetchUrlUpdateTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Cannot access property \\$uri on object\\|false\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/update/tests/src/Functional/UpdateUploadTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/update/tests/src/Kernel/Migrate/d6/MigrateUpdateConfigsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\update\\\\Kernel\\\\Migrate\\\\d6\\\\MigrateUpdateConfigsTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/update/tests/src/Kernel/Migrate/d6/MigrateUpdateConfigsTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^PHPDoc tag @return with type mixed is not subtype of native type array\\.$#',
@@ -17852,16 +17342,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Migrate/d6/MigrateProfileFieldOptionTranslationTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Migrate/d6/MigrateUserConfigsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\user\\\\Kernel\\\\Migrate\\\\d6\\\\MigrateUserConfigsTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Migrate/d6/MigrateUserConfigsTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\migrate\\\\Plugin\\\\MigrationInterface\\:\\:set\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Migrate/d6/MigrateUserPictureD6FileTest.php',
@@ -17917,16 +17397,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Migrate/d6/ProfileFieldCheckRequirementsTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Migrate/d7/MigrateUserSettingsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\user\\\\Kernel\\\\Migrate\\\\d7\\\\MigrateUserSettingsTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Migrate/d7/MigrateUserSettingsTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\user\\\\UserInterface\\:\\:\\$field_file\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Migrate/d7/MigrateUserTest.php',
@@ -17970,16 +17440,6 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$migrations in PHPDoc tag @var does not exist\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Migrate/d7/UserMigrationClassTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/UserActionConfigSchemaTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\user\\\\Kernel\\\\UserActionConfigSchemaTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/UserActionConfigSchemaTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\field\\\\FieldConfigInterface\\:\\:setSetting\\(\\)\\.$#',
@@ -19177,16 +18637,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/tests/src/Functional/Handler/FieldWebTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Handler/FilterDateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\views\\\\Functional\\\\Handler\\\\FilterDateTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/Handler/FilterDateTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\views\\\\Plugin\\\\views\\\\field\\\\FieldPluginBase\\:\\:getPlaceholder\\(\\)\\.$#',
 	'count' => 6,
 	'path' => __DIR__ . '/modules/views/tests/src/Functional/Handler/HandlerTest.php',
@@ -19330,16 +18780,6 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$link might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/src/Functional/TaxonomyGlossaryTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/FunctionalJavascript/Plugin/views/Handler/FieldTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\views\\\\FunctionalJavascript\\\\Plugin\\\\views\\\\Handler\\\\FieldTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/FunctionalJavascript/Plugin/views/Handler/FieldTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityTypeManagerInterface\\:\\:setCacheBackend\\(\\)\\.$#',
@@ -19550,16 +18990,6 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$entities in PHPDoc tag @var does not exist\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/src/Kernel/RenderCacheIntegrationTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Kernel/TestViewsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\views\\\\Kernel\\\\TestViewsTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Kernel/TestViewsTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\views\\\\Plugin\\\\views\\\\ViewsPluginInterface\\:\\:setItemsPerPage\\(\\)\\.$#',
@@ -19884,16 +19314,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views_ui/tests/src/Functional/CachedDataUITest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/tests/src/Functional/DisplayPathTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\views_ui\\\\Functional\\\\DisplayPathTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/tests/src/Functional/DisplayPathTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Language\\\\LanguageManager\\:\\:getLanguageConfigOverride\\(\\)\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/modules/views_ui/tests/src/Functional/DuplicateTest.php',
@@ -19902,16 +19322,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\WebAssert\\:\\:linkByHrefNotExists\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views_ui/tests/src/Functional/FieldUITest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/tests/src/Functional/FilterNumericWebTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\views_ui\\\\Functional\\\\FilterNumericWebTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/tests/src/Functional/FilterNumericWebTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\WebAssert\\:\\:linkByHrefNotExists\\(\\) invoked with 3 parameters, 1\\-2 required\\.$#',
@@ -20380,16 +19790,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/Rest/WorkspaceXmlCookieTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/UpdateSystem/ActiveWorkspaceUpdateTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\UpdateSystem\\\\ActiveWorkspaceUpdateTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/UpdateSystem/ActiveWorkspaceUpdateTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$bears in PHPDoc tag @var does not match assigned variable \\$entity_list\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/WorkspacePermissionsTest.php',
@@ -20538,36 +19938,6 @@ $ignoreErrors[] = [
 	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Session\\\\AccountInterface\\:\\:\\$sessionId\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/profiles/demo_umami/tests/src/Functional/DemoUmamiProfileTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/profiles/demo_umami/tests/src/Functional/DemoUmamiProfileTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\demo_umami\\\\Functional\\\\DemoUmamiProfileTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/profiles/demo_umami/tests/src/Functional/DemoUmamiProfileTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/profiles/minimal/tests/src/Functional/MinimalTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\minimal\\\\Functional\\\\MinimalTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/profiles/minimal/tests/src/Functional/MinimalTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/profiles/standard/tests/src/Functional/StandardTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\Tests\\\\standard\\\\Functional\\\\StandardTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/profiles/standard/tests/src/Functional/StandardTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^PHPDoc tag @param for parameter \\$performance_data with type Drupal\\\\Tests\\\\standard\\\\FunctionalJavascript\\\\Drupal\\\\Tests\\\\PerformanceData is not subtype of native type Drupal\\\\Tests\\\\PerformanceData\\.$#',
@@ -21081,16 +20451,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Update/UpdatePathTestBase.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Update/UpdatePathTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\FunctionalTests\\\\Update\\\\UpdatePathTestBase\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Update/UpdatePathTestBase.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:calculateDependencies\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Config/DefaultConfigTest.php',
@@ -21274,16 +20634,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Entity\\\\EntityInterface\\:\\:getDependencies\\(\\)\\.$#',
 	'count' => 6,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Config/Entity/ConfigEntityUpdaterTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Config/SchemaCheckTraitTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\KernelTests\\\\Core\\\\Config\\\\SchemaCheckTraitTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Config/SchemaCheckTraitTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\Config\\\\StorageInterface\\:\\:getFilePath\\(\\)\\.$#',
@@ -21811,17 +21161,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/EntityReferenceFieldTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\TraversableTypedDataInterface\\:\\:get\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/EntityReferenceFieldTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\field\\\\FieldConfigInterface\\:\\:setDefaultValue\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/EntityReferenceFieldTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Property Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\EntityReferenceFieldTest\\:\\:\\$ignoredPropertyPaths has unknown class string as its type\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/EntityReferenceFieldTest.php',
 ];
