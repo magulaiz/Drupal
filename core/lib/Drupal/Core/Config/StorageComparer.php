@@ -131,6 +131,9 @@ class StorageComparer implements StorageComparerInterface {
       );
     }
 
+    $this->targetCacheStorage = new MemoryBackend($time);
+    $this->targetStorage = $target_storage;
+
     $source_core_extension = $this->getSourceStorage()->read('core.extension') ?? [];
     $target_core_extension = $this->getTargetStorage()->read('core.extension') ?? [];
     foreach (array_diff_key($source_core_extension['module'] ?? [], $target_core_extension['module'] ?? []) as $name => $weight) {
@@ -144,8 +147,6 @@ class StorageComparer implements StorageComparerInterface {
       $this->sourceStorage = new AutoloadingStorage($this->sourceStorage, $new_extensions);
     }
 
-    $this->targetCacheStorage = new MemoryBackend($time);
-    $this->targetStorage = $target_storage;
     $this->changelist[StorageInterface::DEFAULT_COLLECTION] = $this->getEmptyChangelist();
   }
 
