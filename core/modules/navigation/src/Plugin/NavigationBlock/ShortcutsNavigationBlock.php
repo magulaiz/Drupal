@@ -79,7 +79,7 @@ class ShortcutsNavigationBlock extends NavigationBlockPluginBase implements Cont
         'contexts' => ['user'],
       ],
       '#lazy_builder_preview' => [
-        '#markup' => '<a href="#" class="toolbar-tray-lazy-placeholder-link">&nbsp;</a>'
+        '#markup' => '<a href="#" class="toolbar-tray-lazy-placeholder-link">&nbsp;</a>',
       ],
     ];
   }

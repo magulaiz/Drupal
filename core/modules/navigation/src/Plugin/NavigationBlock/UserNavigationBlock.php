@@ -66,7 +66,7 @@ class UserNavigationBlock extends NavigationBlockPluginBase implements Container
         'contexts' => ['user'],
       ],
       '#lazy_builder_preview' => [
-        '#markup' => '<a href="#" class="toolbar-tray-lazy-placeholder-link">&nbsp;</a>'
+        '#markup' => '<a href="#" class="toolbar-tray-lazy-placeholder-link">&nbsp;</a>',
       ],
     ];
   }
