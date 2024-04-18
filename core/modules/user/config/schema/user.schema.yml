@@ -122,7 +122,7 @@ user.flood:
       label: 'IP window'
       constraints:
         Range:
-          min: 72
+          min: 1
     user_limit:
       type: integer
       label: 'User limit'
@@ -134,7 +134,7 @@ user.flood:
       label: 'User window'
       constraints:
         Range:
-          min: 4320
+          min: 1
 
 user.role.*:
   type: config_entity
