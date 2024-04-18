@@ -208,11 +208,6 @@ abstract class AssetControllerBase extends FileDownloadController {
   }
 
   /**
-   * Validates an array of libraries.
-   *
-   * @param
-
-  /**
    * Gets a group.
    *
    * @param array $groups
