@@ -150,7 +150,7 @@ class NodeOperationAccessTest extends UnitTestCase {
       FALSE,
     ];
     $data['bypass, revert'] = [
-      'revert revision',
+      'revert',
       [
         ['access content', TRUE],
         ['bypass node access', TRUE],
@@ -207,7 +207,7 @@ class NodeOperationAccessTest extends UnitTestCase {
 
     // Cannot revert if no update access.
     $data['revert, without update access, non default'] = [
-      'revert revision',
+      'revert',
       [
         ['access content', TRUE],
         ['revert all revisions', TRUE],
@@ -218,7 +218,7 @@ class NodeOperationAccessTest extends UnitTestCase {
 
     // Can revert if has update access.
     $data['revert, with update access, non default'] = [
-      'revert revision',
+      'revert',
       [
         ['access content', TRUE],
         ['revert all revisions', TRUE],
@@ -231,7 +231,7 @@ class NodeOperationAccessTest extends UnitTestCase {
 
     // Can never revert default revision.
     $data['revert, with update access, default revision'] = [
-      'revert revision',
+      'revert',
       [
         ['access content', TRUE],
         ['revert all revisions', TRUE],
