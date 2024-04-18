@@ -242,9 +242,13 @@ class ShortcutLinksTest extends ShortcutTestBase {
       'label' => 'Basic block',
       'revision' => FALSE,
     ])->save();
-    $user_role = \Drupal::entityTypeManager()->getStorage('user_role')->load(RoleInterface::AUTHENTICATED_ID);
-    $user_role->grantPermission('administer block types');
-    $user_role->save();
+    \Drupal::service('module_installer')->install(['block_content']);
+    $this->adminUser->addRole($this->drupalCreateRole(['administer block types']))->save();
+    BlockContentType::create([
+      'id' => 'basic',
+      'label' => 'Basic block',
+      'revision' => FALSE,
+    ])->save();
     // Test page with HTML tags in title.
     $this->drupalGet('admin/structure/block-content/manage/basic');
     $page_title = "Edit Basic block block type";
