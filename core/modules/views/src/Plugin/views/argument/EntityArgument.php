@@ -5,17 +5,15 @@ namespace Drupal\views\Plugin\views\argument;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\views\Attribute\ViewsArgument;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Argument handler to accept an entity argument.
  *
  * @ingroup views_argument_handlers
+ *
+ * @ViewsArgument("entity_id")
  */
-#[ViewsArgument(
-  id: 'entity_id',
-)]
 class EntityArgument extends NumericArgument implements ContainerFactoryPluginInterface {
 
   /**
