@@ -1,0 +1,5 @@
+toolbar.settings:
+  title: Toolbar
+  description: 'Configure toolbar settings.'
+  route_name: toolbar.settings
+  parent: system.admin_config_ui
