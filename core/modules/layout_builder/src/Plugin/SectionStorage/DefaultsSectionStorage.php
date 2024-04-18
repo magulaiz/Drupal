@@ -176,6 +176,7 @@ class DefaultsSectionStorage extends SectionStorageBase implements ContainerFact
 
       $options = $entity_route->getOptions();
       $options['_admin_route'] = FALSE;
+      $options['no_cache'] = TRUE;
 
       $this->buildLayoutRoutes($collection, $this->getPluginDefinition(), $path, $defaults, $requirements, $options, $entity_type_id, 'entity_view_display');
 

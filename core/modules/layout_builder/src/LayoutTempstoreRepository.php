@@ -2,6 +2,7 @@
 
 namespace Drupal\layout_builder;
 
+use Drupal\Core\TempStore\Lock;
 use Drupal\Core\TempStore\SharedTempStoreFactory;
 
 /**
@@ -41,6 +42,14 @@ class LayoutTempstoreRepository implements LayoutTempstoreRepositoryInterface {
       }
     }
     return $section_storage;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLock(SectionStorageInterface $section_storage): Lock|NULL {
+    $key = $this->getKey($section_storage);
+    return $this->getTempstore($section_storage)->getMetadata($key);
   }
 
   /**
