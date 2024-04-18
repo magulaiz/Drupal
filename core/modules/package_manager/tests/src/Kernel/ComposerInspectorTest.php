@@ -10,7 +10,6 @@ use Drupal\fixture_manipulator\ActiveFixtureManipulator;
 use Drupal\package_manager\ComposerInspector;
 use Drupal\package_manager\Exception\ComposerNotReadyException;
 use Drupal\package_manager\InstalledPackage;
-use Drupal\package_manager\ProcessOutputCallback;
 use Drupal\package_manager\InstalledPackagesList;
 use Drupal\Tests\package_manager\Traits\InstalledPackagesListTrait;
 use Drupal\package_manager\PathLocator;
@@ -19,6 +18,7 @@ use PhpTuf\ComposerStager\API\Exception\RuntimeException;
 use PhpTuf\ComposerStager\API\Path\Factory\PathFactoryInterface;
 use PhpTuf\ComposerStager\API\Precondition\Service\ComposerIsAvailableInterface;
 use PhpTuf\ComposerStager\API\Process\Service\ComposerProcessRunnerInterface;
+use PhpTuf\ComposerStager\API\Process\Service\OutputCallbackInterface;
 use PhpTuf\ComposerStager\API\Process\Value\OutputTypeEnum;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -250,10 +250,18 @@ class ComposerInspectorTest extends PackageManagerKernelTestBase {
   public function testVersionCheck(?string $reported_version, ?string $expected_message): void {
     $runner = $this->mockComposerRunner($reported_version);
 
+    // Mock the ComposerIsAvailableInterface so that if it uses the Composer
+    // runner it will not affect the test expectations.
+    $composerPrecondition = $this->prophesize(ComposerIsAvailableInterface::class);
+    $composerPrecondition
+      ->assertIsFulfilled(Argument::cetera())
+      ->shouldBeCalledOnce();
+    $this->container->set(ComposerIsAvailableInterface::class, $composerPrecondition->reveal());
+
     // The result of the version check is statically cached, so the runner
     // should only be called once, even though we call validate() twice in this
     // test.
-    $runner->getMethodProphecies('run')[0]->shouldBeCalledOnce();
+    $runner->getMethodProphecies('run')[0]->withArguments([['--format=json'], NULL, [], Argument::any()])->shouldBeCalledOnce();
     // The runner should be called with `validate` as the first argument, but
     // it won't affect the outcome of this test.
     $runner->run(Argument::withEntry(0, 'validate'));
@@ -535,7 +543,7 @@ class ComposerInspectorTest extends PackageManagerKernelTestBase {
       ]);
 
       $callback = end($arguments_passed_to_runner);
-      assert($callback instanceof ProcessOutputCallback);
+      assert($callback instanceof OutputCallbackInterface);
       $callback(OutputTypeEnum::OUT, $command_output);
     };
 

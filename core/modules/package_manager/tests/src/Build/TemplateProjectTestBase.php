@@ -10,6 +10,7 @@ use Drupal\BuildTests\QuickStart\QuickStartTestBase;
 use Drupal\Composer\Composer;
 use Drupal\package_manager\Event\CollectPathsToExcludeEvent;
 use Drupal\package_manager_test_event_logger\EventSubscriber\EventLogSubscriber;
+use Drupal\sqlite\Driver\Database\sqlite\Install\Tasks;
 use Drupal\Tests\package_manager\Traits\AssertPreconditionsTrait;
 use Drupal\Tests\package_manager\Traits\FixtureUtilityTrait;
 use Drupal\Tests\RandomGeneratorTrait;
@@ -60,6 +61,18 @@ abstract class TemplateProjectTestBase extends QuickStartTestBase {
    * @var int
    */
   protected const MAX_EXECUTION_TIME = 20;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    // Build tests cannot be run if Sqlite minimum version is not met.
+    $sqlite = (new \PDO('sqlite::memory:'))->query('select sqlite_version()')->fetch()[0];
+    if (version_compare($sqlite, Tasks::SQLITE_MINIMUM_VERSION) < 0) {
+      $this->markTestSkipped();
+    }
+    parent::setUp();
+  }
 
   /**
    * {@inheritdoc}
@@ -169,19 +182,7 @@ abstract class TemplateProjectTestBase extends QuickStartTestBase {
    * {@inheritdoc}
    */
   public function installQuickStart($profile, $working_dir = NULL) {
-    // parent::installQuickStart("$profile --no-ansi", $working_dir ?: $this->webRoot);.
-    // Change to match our previous call to parent.
-    $profile = "$profile --no-ansi";
-    $working_dir = $working_dir ?: $this->webRoot;
-    // Just for debugging copy parent here.
-    $php_finder = new PhpExecutableFinder();
-    $install_process = $this->executeCommand($php_finder->find() . ' ./core/scripts/drupal install ' . $profile, $working_dir);
-    // This will get the error output.
-    $this->assertCommandSuccessful();
-    $this->assertCommandOutputContains('Username:');
-    preg_match('/Username: (.+)\vPassword: (.+)/', $install_process->getOutput(), $matches);
-    $this->assertNotEmpty($this->adminUsername = $matches[1]);
-    $this->assertNotEmpty($this->adminPassword = $matches[2]);
+    parent::installQuickStart("$profile --no-ansi", $working_dir ?: $this->webRoot);
 
     // Always allow test modules to be installed in the UI and, for easier
     // debugging, always display errors in their dubious glory.
