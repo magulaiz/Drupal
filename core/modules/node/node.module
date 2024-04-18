@@ -468,7 +468,6 @@ function node_preprocess_block(&$variables) {
 function node_preprocess_field__node(&$variables) {
   // Set a variable 'is_inline' in cases where inline markup is required,
   // without any block elements such as <div>.
-
   if ($variables['element']['#is_page_title'] ?? FALSE) {
     // Page title is always inline because it will be displayed inside <h1>.
     $variables['is_inline'] = TRUE;
