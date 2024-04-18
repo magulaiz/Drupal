@@ -3,6 +3,7 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Lock\LockBackendInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -111,6 +112,29 @@ final class ImportStorageTransformer {
       if (!$this->requestLock->acquire(self::LOCK_NAME)) {
         throw new StorageTransformerException("Cannot acquire config import transformer lock.");
       }
+    }
+
+    $source_core_extension = $storage->read('core.extension') ?? [];
+    $target_core_extension = \Drupal::config('core.extension')->get() ?? [];
+    foreach (array_diff_key($source_core_extension['module'] ?? [], $target_core_extension['module'] ?? []) as $name => $weight) {
+      try {
+        $new_extensions[$name] = \Drupal::root() . '/' . \Drupal::service('extension.list.module')->getPath($name);
+      }
+      catch (UnknownExtensionException $e) {
+        // If the extension is missing this will surface at validation time.
+      }
+    }
+    foreach (array_diff_key($source_core_extension['theme'] ?? [], $target_core_extension['theme'] ?? []) as $name => $weight) {
+      try {
+        $new_extensions[$name] = \Drupal::root() . '/' . \Drupal::service('extension.list.theme')->getPath($name);
+      }
+      catch (UnknownExtensionException $e) {
+        // If the extension is missing this will surface at validation time.
+      }
+    }
+    if (!empty($new_extensions)) {
+      // Ensure enums and constants from uninstalled modules can be autoloaded.
+      $storage = new AutoloadingStorage($storage, $new_extensions);
     }
 
     // Copy the sync configuration to the created mutable storage.
