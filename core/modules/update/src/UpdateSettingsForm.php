@@ -119,14 +119,14 @@ class UpdateSettingsForm extends ConfigFormBase {
   /**
    * Prepares the submitted value to be stored in the notify_emails property.
    *
-   * @param string|null $value
+   * @param string $value
    *   The submitted value.
    *
    * @return array
    *   The value to be stored in config.
    */
-  public static function multiLineStringToArray(string|null $value): array {
-    return $value ? array_map('trim', explode("\n", trim($value))) : [];
+  public static function multiLineStringToArray(string $value): array {
+    return array_map('trim', explode("\n", trim($value)));
   }
 
   /**
