@@ -42,6 +42,8 @@ class TextFormatterTest extends EntityKernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    $this->installConfig(['text']);
+
     FilterFormat::create([
       'format' => 'my_text_format',
       'name' => 'My text format',

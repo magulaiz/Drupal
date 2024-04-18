@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the text module.
+ */
+
+/**
+ * Update summary marker configuration setting.
+ */
+function text_update_10101() {
+  \Drupal::configFactory()->getEditable('text.settings')->set('summary_marker', '<!--break-->')->save(TRUE);
+}
