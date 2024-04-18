@@ -218,8 +218,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->drupalGet('node/' . $node1->id() . '/edit');
     $this->submitForm([], 'Preview');
     $this->assertSession()->pageTextContains($label);
-    // The previewed node object has no revision ID.
-    $this->assertSession()->pageTextContains('Displaying node #' . $node1->id() . ', revision #: Node revision 2 title');
+    $this->assertSession()->pageTextContains('Displaying node #' . $node1->id() . ', revision #' . $node1->getRevisionId() . ': Node revision 2 title');
 
     // Assert that the revision page for both revisions displays the block.
     $this->drupalGet(Url::fromRoute('entity.node.revision', ['node' => $node1->id(), 'node_revision' => $node1_revision_1->getRevisionId()]));
