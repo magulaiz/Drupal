@@ -7,7 +7,6 @@ namespace Drupal\Tests\navigation\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\navigation\Entity\NavigationBlock;
 use Drupal\navigation\NavigationBlockRepositoryInterface;
-use Drupal\navigation\Plugin\NavigationBlock\UserNavigationBlock;
 use Drupal\user\Entity\User;
 
 /**
