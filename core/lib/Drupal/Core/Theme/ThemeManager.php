@@ -3,10 +3,11 @@
 namespace Drupal\Core\Theme;
 
 use Drupal\Component\Render\MarkupInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Template\Attribute;
+use Psr\Log\LoggerInterface;
 
 /**
  * Provides the default implementation of a theme manager.
@@ -56,6 +57,13 @@ class ThemeManager implements ThemeManagerInterface {
   protected $root;
 
   /**
+   * The logger.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
    * Constructs a new ThemeManager object.
    *
    * @param string $root
@@ -66,12 +74,15 @@ class ThemeManager implements ThemeManagerInterface {
    *   The theme initialization.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   The logger.
    */
-  public function __construct($root, ThemeNegotiatorInterface $theme_negotiator, ThemeInitializationInterface $theme_initialization, ModuleHandlerInterface $module_handler) {
+  public function __construct($root, ThemeNegotiatorInterface $theme_negotiator, ThemeInitializationInterface $theme_initialization, ModuleHandlerInterface $module_handler, LoggerInterface $logger) {
     $this->root = $root;
     $this->themeNegotiator = $theme_negotiator;
     $this->themeInitialization = $theme_initialization;
     $this->moduleHandler = $module_handler;
+    $this->logger = $logger;
   }
 
   /**
@@ -178,7 +189,7 @@ class ThemeManager implements ThemeManagerInterface {
       // #theme to an array containing the form ID and don't implement that as a
       // theme hook, so we want to prevent errors for that common use case.
       if (!$is_hook_array) {
-        \Drupal::logger('theme')->warning('Theme hook %hook not found.', ['%hook' => $original_hook]);
+        $this->logger->warning('Theme hook %hook not found.', ['%hook' => $original_hook]);
       }
       // There is no theme implementation for the hook passed. Return FALSE so
       // the function calling
