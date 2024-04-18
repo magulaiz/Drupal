@@ -159,7 +159,8 @@ class UserLoginForm extends FormBase {
         'entity.user.canonical',
         ['user' => $account->id()]
       );
-    } else {
+    }
+    else {
       $this->getRequest()->query->set('destination', $this->getRequest()->request->get('destination'));
     }
 
@@ -196,18 +197,21 @@ class UserLoginForm extends FormBase {
       // Lookup / load the account from the given name.
       if ($this->userAuth instanceof UserAuthenticationInterface) {
         $account = $this->userAuth->lookupAccount($form_state->getValue('name'));
-      } else {
+      }
+      else {
         $accounts = $this->userStorage->loadByProperties(['name' => $form_state->getValue('name')]);
         $account = reset($accounts);
       }
       if ($account && $account->isBlocked()) {
         $form_state->setErrorByName('name', $this->t('The username %name has not been activated or is blocked.', ['%name' => $form_state->getValue('name')]));
-      } elseif ($account && $account->isActive()) {
+      }
+      elseif ($account && $account->isActive()) {
         if ($flood_config->get('uid_only')) {
           // Register flood events based on the uid only, so they apply for any
           // IP address. This is the most secure option.
           $identifier = $account->id();
-        } else {
+        }
+        else {
           // The default identifier is a combination of uid and IP address. This
           // is less secure but more resistant to denial-of-service attacks that
           // could lock out all users with public user names.
@@ -236,14 +240,16 @@ class UserLoginForm extends FormBase {
             $form_state->set('flood_control_triggered', 'user');
             return;
           }
-        } else {
+        }
+        else {
           $form_state->set('flood_control_skip_clear', 'user');
         }
         // We are not limited by flood control, so try to authenticate.
         // Store the user ID in form state as a flag for self::validateFinal().
         if ($this->userAuth instanceof UserAuthenticationInterface) {
           $form_state->set('uid', $this->userAuth->authenticateAccount($account, $password) ? $account->id() : FALSE);
-        } else {
+        }
+        else {
           $uid = $this->userAuth->authenticate($form_state->getValue('name'), $password);
           $form_state->set('uid', $uid);
         }
@@ -269,28 +275,33 @@ class UserLoginForm extends FormBase {
       if ($flood_control_triggered = $form_state->get('flood_control_triggered')) {
         if ($flood_control_triggered == 'user') {
           $message = $this->formatPlural($flood_config->get('user_limit'), 'There has been more than one failed login attempt for this account. It is temporarily blocked. Try again later or <a href=":url">request a new password</a>.', 'There have been more than @count failed login attempts for this account. It is temporarily blocked. Try again later or <a href=":url">request a new password</a>.', [':url' => Url::fromRoute('user.pass')->toString()]);
-        } else {
+        }
+        else {
           // We did not find a uid, so the limit is IP-based.
           $message = $this->t('Too many failed login attempts from your IP address. This IP address is temporarily blocked. Try again later or <a href=":url">request a new password</a>.', [':url' => Url::fromRoute('user.pass')->toString()]);
         }
         $response = $this->bareHtmlPageRenderer->renderBarePage(['#markup' => $message], $this->t('Login failed'), 'maintenance_page');
         $response->setStatusCode(403);
         $form_state->setResponse($response);
-      } else {
+      }
+      else {
         $form_state->setErrorByName('name', $this->t('Unrecognized username or password. <a href=":password">Forgot your password?</a>', [':password' => Url::fromRoute('user.pass')->toString()]));
         $accounts = $this->userStorage->loadByProperties(['name' => $form_state->getValue('name')]);
         if (!empty($accounts)) {
           $this->logger('user')->notice('Login attempt failed for %user.', ['%user' => $form_state->getValue('name')]);
-        } else {
+        }
+        else {
           // If the username entered is not a valid user,
           // only store the IP address.
           $this->logger('user')->notice('Login attempt failed from %ip.', ['%ip' => $this->getRequest()->getClientIp()]);
         }
       }
-    } elseif (!$form_state->get('flood_control_skip_clear') && $flood_control_user_identifier = $form_state->get('flood_control_user_identifier')) {
+    }
+    elseif (!$form_state->get('flood_control_skip_clear') && $flood_control_user_identifier = $form_state->get('flood_control_user_identifier')) {
       // Clear past failures for this user so as not to block a user who might
       // log in and out more than once in an hour.
       $this->userFloodControl->clear('user.failed_login_user', $flood_control_user_identifier);
     }
   }
+
 }
