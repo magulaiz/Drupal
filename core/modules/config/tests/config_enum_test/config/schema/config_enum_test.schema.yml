@@ -6,4 +6,5 @@ config_enum_test.settings:
   mapping:
     foo:
       type: enum
+      enum_class: '\Drupal\config_enum_test\EnumValue'
       label: 'Foo'

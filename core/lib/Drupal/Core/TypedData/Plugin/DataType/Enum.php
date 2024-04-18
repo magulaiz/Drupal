@@ -33,8 +33,14 @@ class Enum extends TypedData {
    *   avoid being notified again.
    */
   public function setValue($value, $notify = TRUE) {
-    if (isset($value) && !($value instanceof \UnitEnum)) {
-      throw new \InvalidArgumentException("Invalid value given. Value must be an enum.");
+    if (isset($value)) {
+      if (!$value instanceof \UnitEnum) {
+        throw new \InvalidArgumentException('Invalid value given. Value must be an enum.');
+      }
+      $class = $this->getDataDefinition()['enum_class'] ?? '';
+      if (!empty($class) && !($value instanceof $class)) {
+        throw new \InvalidArgumentException(sprintf('Invalid value given. Value must be a "%s" but have "%s" instead.', $class, get_class($value)));
+      }
     }
     parent::setValue($value, $notify);
   }
