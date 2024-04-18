@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\config\Functional;
 
+use Drupal\config_backed_enum_test\BackedEnumValue;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Tests\BrowserTestBase;
@@ -548,6 +549,27 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->assertSession()->responseContains('_config_import_test_config_import_steps_alter batch error');
     $this->assertSession()->responseContains('_config_import_test_config_import_steps_alter ConfigImporter error');
     $this->assertSession()->responseContains('The configuration was imported with errors.');
+  }
+
+  /**
+   * Tests importing backed enum.
+   */
+  public function testBackedEnumViaConfigImporter() {
+    $sync = \Drupal::service('config.storage.sync');
+    $config_data = $this->config('config_backed_enum_test.settings')->get();
+    $config_data['foo'] = BackedEnumValue::Maybe;
+    $sync->write('config_backed_enum_test.settings', $config_data);
+
+    $core_extension = $this->config('core.extension')->get();
+    $core_extension['module']['config_backed_enum_test'] = 0;
+    $core_extension['module'] = module_config_sort($core_extension['module']);
+    $sync->write('core.extension', $core_extension);
+
+    $this->drupalGet('admin/config/development/configuration');
+    $this->assertSession()->responseContains('<td>config_backed_enum_test.settings');
+    $this->assertSession()->pageTextNotContains('The staged configuration is identical to the active configuration.');
+    $this->submitForm([], 'Import all');
+    $this->assertSession()->responseNotContains('<td>config_backed_enum_test.settings');
   }
 
 }
