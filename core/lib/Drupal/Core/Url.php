@@ -6,12 +6,12 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
-use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Routing\RouteObjectInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
+use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Utility\UnroutedUrlAssemblerInterface;
-use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 // cspell:ignore abempty
@@ -112,7 +112,7 @@ class Url implements TrustedCallbackInterface {
    * code more self-documenting.
    *
    * @param string $route_name
-   *   The name of the route
+   *   The name of the route.
    * @param array $route_parameters
    *   (optional) An associative array of parameter names and values.
    * @param array $options
@@ -138,7 +138,7 @@ class Url implements TrustedCallbackInterface {
    * path (like robots.txt) use Url::fromUri() with the base: scheme.
    *
    * @param string $route_name
-   *   The name of the route
+   *   The name of the route.
    * @param array $route_parameters
    *   (optional) An associative array of route parameter names and values.
    * @param array $options
@@ -540,6 +540,7 @@ class Url implements TrustedCallbackInterface {
    * Indicates if this URL is external.
    *
    * @return bool
+   *   TRUE if the URL is external, or FALSE if not.
    */
   public function isExternal() {
     return $this->external;
@@ -549,6 +550,7 @@ class Url implements TrustedCallbackInterface {
    * Indicates if this URL has a Drupal route.
    *
    * @return bool
+   *   TRUE if the URL has a Drupal route, or FALSE if not.
    */
   public function isRouted() {
     return !$this->unrouted;
@@ -558,6 +560,7 @@ class Url implements TrustedCallbackInterface {
    * Returns the route name.
    *
    * @return string
+   *   The route name.
    *
    * @throws \UnexpectedValueException.
    *   If this is a URI with no corresponding route.
@@ -573,7 +576,8 @@ class Url implements TrustedCallbackInterface {
   /**
    * Returns the route parameters.
    *
-   * @return array
+   * @return \Drupal\Core\Url[]
+   *   The route parameters as an array of Url objects.
    *
    * @throws \UnexpectedValueException.
    *   If this is a URI with no corresponding route.
@@ -854,7 +858,10 @@ class Url implements TrustedCallbackInterface {
   }
 
   /**
+   * Returns the access manager service.
+   *
    * @return \Drupal\Core\Access\AccessManagerInterface
+   *   The access manager service.
    */
   protected function accessManager() {
     if (!isset($this->accessManager)) {
