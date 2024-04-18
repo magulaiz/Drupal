@@ -29,10 +29,10 @@ core.menu.static_menu_link_overrides:
             nullable: true
             constraints:
               Regex:
-                pattern: '/^[a-z0-9-]+$/'
-                message: "The %value parent menu name is not valid."
-              Length:
-                max: 32
+                # Menu parent can have underscore and dot
+                # along with alphanumeric characters.
+                pattern: '/^[a-z0-9_.]+$/'
+                message: "The %value parent menu is not valid."
           weight:
             type: weight
             label: 'Weight'
