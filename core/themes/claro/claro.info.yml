@@ -37,13 +37,6 @@ libraries-override:
       component:
         misc/components/autocomplete-loading.module.css: css/components/autocomplete-loading.module.css
 
-  system/base:
-    css:
-      component:
-        css/components/system-status-counter.css: css/components/system-status-counter.css
-        css/components/system-status-report-counters.css: css/components/system-status-report-counters.css
-        css/components/system-status-report-general-info.css: css/components/system-status-report-general-info.css
-
   system/admin:
     css:
       theme:
@@ -118,6 +111,8 @@ libraries-extend:
     - claro/dropbutton
   core/drupal.checkbox:
     - claro/checkbox
+  core/drupal.item_list:
+    - claro/item_list
   core/drupal.message:
     - claro/messages
   core/drupal.progress:
@@ -128,6 +123,8 @@ libraries-extend:
     - claro/claro.tabledrag
   core/drupal.tableselect:
     - claro/tableselect
+  core/drupal.tablesort:
+    - claro/tablesort
   core/drupal.vertical-tabs:
     - claro/vertical-tabs
   file/drupal.file:
@@ -138,6 +135,8 @@ libraries-extend:
     - claro/filter
   system/admin:
     - claro/system.admin
+  system/status.report:
+    - claro/system.status.report
   core/drupal.autocomplete:
     - claro/autocomplete
   tour/tour-styling:

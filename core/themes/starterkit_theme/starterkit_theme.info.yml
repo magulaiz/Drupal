@@ -10,11 +10,17 @@ libraries:
 libraries-extend:
   user/drupal.user:
     - starterkit_theme/user
+  core/drupal.collapse:
+    - starterkit_theme/details
   core/drupal.dropbutton:
     - starterkit_theme/dropbutton
+  core/drupal.item_list:
+    - starterkit_theme/item_list
   core/drupal.dialog:
     - starterkit_theme/dialog
   file/drupal.file:
     - starterkit_theme/file
   core/drupal.progress:
     - starterkit_theme/progress
+  core/drupal.tabledrag:
+    - starterkit_theme/tabledrag

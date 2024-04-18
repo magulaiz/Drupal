@@ -69,6 +69,11 @@ class TableSort {
         $tablesort_indicator = [
           '#theme' => 'tablesort_indicator',
           '#style' => $context['sort'],
+          '#attached' => [
+            'library' => [
+              'core/drupal.tablesort',
+            ],
+          ],
         ];
         $image = \Drupal::service('renderer')->render($tablesort_indicator);
       }

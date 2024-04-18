@@ -512,11 +512,22 @@ drupal.collapse:
     misc/details-summarized-content.js: {}
     misc/details-aria.js: {}
     misc/details.js: {}
+  css:
+    component:
+      misc/components/details.module.css: { weight: -10 }
   dependencies:
     - core/jquery
     - core/drupal
     - core/drupal.form
     - core/once
+  moved_files:
+    system/base:
+      deprecation_version: 10.3.0
+      removed_version: 11.0.0
+      deprecation_link: https://www.drupal.org/node/3432346
+      css:
+        component:
+          css/components/details.module.css: misc/components/details.module.css
 
 drupal.debounce:
   version: VERSION
@@ -605,6 +616,20 @@ drupal.entity-form:
   dependencies:
     - core/drupal.form
 
+drupal.fieldgroup:
+  version: VERSION
+  css:
+    component:
+      misc/components/fieldgroup.module.css: { weight: -10 }
+  moved_files:
+    system/base:
+      deprecation_version: 10.3.0
+      removed_version: 11.0.0
+      deprecation_link: https://www.drupal.org/node/3432346
+      css:
+        component:
+          css/components/fieldgroup.module.css: misc/components/fieldgroup.module.css
+
 drupal.form:
   version: VERSION
   js:
@@ -614,6 +639,20 @@ drupal.form:
     - core/drupal
     - core/drupal.debounce
     - core/once
+
+drupal.item_list:
+  version: VERSION
+  css:
+    component:
+      misc/components/item-list.module.css: { weight: -10 }
+  moved_files:
+    system/base:
+      deprecation_version: 10.3.0
+      removed_version: 11.0.0
+      deprecation_link: https://www.drupal.org/node/3432346
+      css:
+        component:
+          css/components/item-list.module.css: misc/components/item-list.module.css
 
 drupal.machine-name:
   version: VERSION
@@ -654,6 +693,20 @@ drupal.progress:
     - core/drupal
     - core/jquery
     - core/drupalSettings
+
+drupal.resize:
+  version: VERSION
+  css:
+    component:
+      misc/components/resize.module.css: { weight: -10 }
+  moved_files:
+    system/base:
+      deprecation_version: 10.3.0
+      removed_version: 11.0.0
+      deprecation_link: https://www.drupal.org/node/3432346
+      css:
+        component:
+          css/components/resize.module.css: misc/components/resize.module.css
 
 drupal.states:
   version: VERSION
@@ -708,6 +761,9 @@ drupal.tabledrag.ajax:
 
 drupal.tableheader:
   version: VERSION
+  css:
+    component:
+      misc/components/sticky-header.module.css: { weight: -10 }
   js:
     misc/tableheader.js: {}
   dependencies:
@@ -716,6 +772,14 @@ drupal.tableheader:
     - core/drupalSettings
     - core/once
     - core/drupal.displace
+  moved_files:
+    system/base:
+      deprecation_version: 10.3.0
+      removed_version: 11.0.0
+      deprecation_link: https://www.drupal.org/node/3432346
+      css:
+        component:
+          css/components/sticky-header.module.css: misc/components/sticky-header.module.css
 
 drupal.tableresponsive:
   version: VERSION
@@ -735,6 +799,20 @@ drupal.tableselect:
     - core/drupal.checkbox
     - core/jquery
     - core/once
+
+drupal.tablesort:
+  version: VERSION
+  css:
+    component:
+      misc/components/tablesort.module.css: { weight: -10 }
+  moved_files:
+    system/base:
+      deprecation_version: 10.3.0
+      removed_version: 11.0.0
+      deprecation_link: https://www.drupal.org/node/3432346
+      css:
+        component:
+          css/components/tablesort.module.css: misc/components/tablesort.module.css
 
 drupal.time-diff:
   version: VERSION
