@@ -21,4 +21,5 @@ field_ui.settings:
           # to its maximum length, only two characters will remain available
           # for the actual field name based on the above specified pattern.
           # @see \Drupal\field\Entity\FieldStorageConfig::NAME_MAX_LENGTH
+          # @see \Drupal\field\Entity\FieldStorageConfig::preSaveNew()
           max: 30
