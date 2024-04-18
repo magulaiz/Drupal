@@ -19,7 +19,7 @@ class AutoloadingStorage implements StorageInterface, StorageCacheInterface {
    *
    * @var \Composer\Autoload\ClassLoader|null
    */
-  protected ?ClassLoader $classloader;
+  protected ?ClassLoader $classloader = NULL;
 
   /**
    * Constructs a new AutoloadingStorage.
@@ -54,7 +54,7 @@ class AutoloadingStorage implements StorageInterface, StorageCacheInterface {
    * {@inheritdoc}
    */
   public function read($name) {
-    $this->classloader?->register();
+    $this->classloader?->register(TRUE);
     $data = $this->storage->read($name);
     $this->classloader?->unregister();
     return $data;
@@ -64,7 +64,7 @@ class AutoloadingStorage implements StorageInterface, StorageCacheInterface {
    * {@inheritdoc}
    */
   public function readMultiple(array $names) {
-    $this->classloader?->register();
+    $this->classloader?->register(TRUE);
     $data = $this->storage->readMultiple($names);
     $this->classloader?->unregister();
     return $data;
