@@ -30,8 +30,6 @@ class UserNavigationBlock extends NavigationBlockPluginBase implements Container
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\navigation\UserLazyBuilder $userLazyBuilder
-   *   The navigation user lazy builder.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler.
    */
@@ -39,7 +37,6 @@ class UserNavigationBlock extends NavigationBlockPluginBase implements Container
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    protected readonly UserLazyBuilder $userLazyBuilder,
     protected readonly ModuleHandlerInterface $moduleHandler,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
@@ -53,7 +50,6 @@ class UserNavigationBlock extends NavigationBlockPluginBase implements Container
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('navigation.user_lazy_builder'),
       $container->get('module_handler'),
     );
   }
@@ -70,11 +66,7 @@ class UserNavigationBlock extends NavigationBlockPluginBase implements Container
         'contexts' => ['user'],
       ],
       '#lazy_builder_preview' => [
-        '#help' => $this->moduleHandler->moduleExists('help'),
-        '#theme' => 'menu_region__footer',
-        '#items' => $this->userLazyBuilder->userOperationLinks(FALSE),
-        '#menu_name' => 'user',
-        '#title' => $this->t('My Account'),
+        '#markup' => '<a href="#" class="toolbar-tray-lazy-placeholder-link">&nbsp;</a>'
       ],
     ];
   }

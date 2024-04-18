@@ -79,15 +79,7 @@ class ShortcutsNavigationBlock extends NavigationBlockPluginBase implements Cont
         'contexts' => ['user'],
       ],
       '#lazy_builder_preview' => [
-        '#items' => [
-          [
-            'title' => $this->configuration['label'],
-            'class' => 'shortcuts',
-            'below' => [],
-          ],
-        ],
-        '#theme' => 'navigation_menu',
-        '#menu_name' => 'shortcuts',
+        '#markup' => '<a href="#" class="toolbar-tray-lazy-placeholder-link">&nbsp;</a>'
       ],
     ];
   }
