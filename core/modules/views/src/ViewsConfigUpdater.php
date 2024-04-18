@@ -557,10 +557,11 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
    *   Whether the handler was updated.
    */
   public function processEntityArgumentUpdate(array &$handler, string $handler_type): bool {
-    if ($handler_type === 'argument' && $handler['plugin_id'] === 'numeric') {
+    $plugin_id = $handler['plugin_id'] ?? '';
+    if ($handler_type === 'argument' && $plugin_id === 'numeric') {
       $argument_table_data = $this->viewsData->get($handler['table']);
       $argument_definition = $argument_table_data[$handler['field']]['argument'] ?? [];
-      if ($argument_definition['id'] === 'entity_target_id') {
+      if (isset($argument_definition['id']) && $argument_definition['id'] === 'entity_target_id') {
         $handler['plugin_id'] = 'entity_target_id';
         $handler['target_entity_type_id'] = $argument_definition['target_entity_type_id'];
         return TRUE;
