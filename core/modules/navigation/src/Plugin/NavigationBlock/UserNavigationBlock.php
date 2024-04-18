@@ -9,7 +9,6 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\navigation\Attribute\NavigationBlock;
 use Drupal\navigation\NavigationBlockPluginBase;
-use Drupal\navigation\UserLazyBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
