@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Form\FormElementHelper;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\RenderElement;
 use Drupal\Core\Template\Attribute;
@@ -67,6 +68,7 @@ function template_preprocess_select(&$variables) {
  *   - value: A string that contains the value attribute for the option.
  */
 function form_select_options($element, $choices = NULL) {
+  $element['#options'] = FormElementHelper::extractOptions($element['#options']);
   if (!isset($choices)) {
     if (empty($element['#options'])) {
       return [];

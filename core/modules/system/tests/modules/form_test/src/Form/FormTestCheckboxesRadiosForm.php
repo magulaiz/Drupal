@@ -4,6 +4,8 @@ namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\form_test\FormTestIntEnum;
+use Drupal\form_test\FormTestStringEnum;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -37,6 +39,7 @@ class FormTestCheckboxesRadiosForm extends FormBase {
         '>' => "<em>Special Char</em><script>alert('checkboxes');</script>",
       ],
     ];
+
     if ($customize) {
       $form['checkboxes'] += [
         'foo' => [
@@ -47,6 +50,17 @@ class FormTestCheckboxesRadiosForm extends FormBase {
         ],
       ];
     }
+
+    $form['checkboxes_string_enum'] = [
+      '#type' => 'checkboxes',
+      '#title' => 'Checkboxes from string enum',
+      '#options' => FormTestStringEnum::class,
+    ];
+    $form['checkboxes_int_enum'] = [
+      '#type' => 'checkboxes',
+      '#title' => 'Checkboxes from int enum',
+      '#options' => FormTestIntEnum::class,
+    ];
 
     // Expand #type radios, setting custom element properties for some but not
     // all options.
@@ -71,6 +85,16 @@ class FormTestCheckboxesRadiosForm extends FormBase {
         ],
       ];
     }
+    $form['radios_string_enum'] = [
+      '#type' => 'radios',
+      '#title' => 'Radios from string enum',
+      '#options' => FormTestStringEnum::class,
+    ];
+    $form['radios_int_enum'] = [
+      '#type' => 'radios',
+      '#title' => 'Radios from int enum',
+      '#options' => FormTestIntEnum::class,
+    ];
 
     $form['submit'] = ['#type' => 'submit', '#value' => 'Submit'];
 
