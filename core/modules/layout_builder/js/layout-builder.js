@@ -34,30 +34,6 @@
       const filterBlockList = (e) => {
         const query = e.target.value.toLowerCase();
 
-        /**
-         * Shows or hides the block entry based on the query.
-         *
-         * @param {number} index
-         *   The index in the loop, as provided by `jQuery.each`
-         * @param {HTMLElement} link
-         *   The link to add the block.
-         */
-        const toggleBlockEntry = (index, link) => {
-          const $link = $(link);
-          const textMatch = link.textContent.toLowerCase().includes(query);
-          // Checks if a category is currently hidden.
-          // Toggles the category on if so.
-          if (
-            Drupal.elementIsHidden(
-              $link.closest('.js-layout-builder-category')[0],
-            )
-          ) {
-            $link.closest('.js-layout-builder-category').show();
-          }
-          // Toggle the li tag of the matching link.
-          $link.parent().toggle(textMatch);
-        };
-
         // Filter if the length of the query is at least 2 characters.
         if (query.length >= 2) {
           // Attribute to note which categories are closed before opening all.
@@ -67,35 +43,63 @@
 
           // Open all categories so every block is available to filtering.
           $categories.find('.js-layout-builder-category').attr('open', '');
-          // Toggle visibility of links based on query.
-          $filterLinks.each(toggleBlockEntry);
 
-          // Only display categories containing visible links.
-          $categories
+          let categoryDetails = [];
+          let parentsToToggle = [];
+
+          // First read..
+          $filterLinks.each((index, link) => {
+            const $link = $(link);
+            const textMatch =
+              link.textContent.toLowerCase().indexOf(query) !== -1;
+            // Checks if a category is currently hidden.
+            // Toggles the category on if so.
+            const $categoryTitle = $link.closest('.js-layout-builder-category');
+            if ($categoryTitle.hasClass('.hidden')) {
+              categoryDetails.push($categoryTitle);
+            }
+            parentsToToggle.push({ parent: $link.parent(), state: textMatch });
+          });
+
+          // ...then write.
+          // Toggle visibility of links based on query.
+          categoryDetails.forEach($linkToShow => $linkToShow.removeClass('hidden'));
+          parentsToToggle.forEach($parentToToggle => $parentToToggle.parent.toggleClass('hidden', !$parentToToggle.state));
+
+          const categoriesWithoutVisibleLinks = $categories
             .find(
-              '.js-layout-builder-category:not(:has(.js-layout-builder-block-link:visible))',
-            )
-            .hide();
+              '.js-layout-builder-category:not(:has(li:not(.hidden) .js-layout-builder-block-link))',
+            );
+
+          // Hide any categories without visible links.
+          categoriesWithoutVisibleLinks.addClass('hidden');
 
           announce(
             formatPlural(
-              $categories.find('.js-layout-builder-block-link:visible').length,
+              $categories.find('li:not(.hidden):has(.js-layout-builder-block-link)').length,
               '1 block is available in the modified list.',
               '@count blocks are available in the modified list.',
             ),
           );
           layoutBuilderBlocksFiltered = true;
-        } else if (layoutBuilderBlocksFiltered) {
+        }
+        else if (layoutBuilderBlocksFiltered) {
           layoutBuilderBlocksFiltered = false;
+
+          // Do all the reading first:
+          const $closedCategories = $categories
+            .find('.js-layout-builder-category[remember-closed]');
+          const $builderCategories = $categories.find('.js-layout-builder-category');
+          const $filterLinksParent = $filterLinks.parent();
+
+          // Then do the writing:
           // Remove "open" attr from categories that were closed pre-filtering.
-          $categories
-            .find('.js-layout-builder-category[remember-closed]')
-            .removeAttr('open')
-            .removeAttr('remember-closed');
+          $closedCategories.removeAttr('open').removeAttr('remember-closed');
           // Show all categories since filter is turned off.
-          $categories.find('.js-layout-builder-category').show();
+          $builderCategories.removeClass('hidden');
           // Show all li tags since filter is turned off.
-          $filterLinks.parent().show();
+          $filterLinksParent.removeClass('hidden');
+
           announce(Drupal.t('All available blocks are listed.'));
         }
       };
