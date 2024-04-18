@@ -53,6 +53,7 @@ final class SiteFilesExcluder implements EventSubscriberInterface {
     // relative, depending on site settings. If they are absolute, treat them
     // as relative to the project root. Otherwise, treat them as relative to
     // the web root.
+    // @todo Take into account `assets:://` in https://drupal.org/i/3441926.
     foreach (['public', 'private'] as $scheme) {
       $wrapper = $this->streamWrapperManager->getViaScheme($scheme);
       if ($wrapper instanceof LocalStream) {
