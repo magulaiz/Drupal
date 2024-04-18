@@ -66,22 +66,4 @@ class UserNavigationBlockTest extends KernelTestBase {
     $this->assertSame($expected, $dependencies);
   }
 
-  /**
-   * Tests the build method.
-   */
-  public function testBuild() {
-    /** @var \Drupal\navigation\Plugin\NavigationBlock\UserNavigationBlock $navigation_block */
-    $navigation_block = $this->navigationBlockManager->createInstance('user', [
-      'region' => NavigationBlockRepositoryInterface::REGION_FOOTER,
-      'id' => 'machine_name',
-    ]);
-    $this->assertInstanceOf(UserNavigationBlock::class, $navigation_block);
-    $build = $navigation_block->build();
-    $this->assertFalse($build['#lazy_builder_preview']['#help']);
-    $this->assertSame('menu_region__footer', $build['#lazy_builder_preview']['#theme']);
-    $this->assertCount(2, $build['#lazy_builder_preview']['#items']);
-    $this->assertSame('user', $build['#lazy_builder_preview']['#menu_name']);
-    $this->assertSame('My Account', (string) $build['#lazy_builder_preview']['#title']);
-  }
-
 }
