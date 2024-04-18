@@ -14,7 +14,7 @@ class LocaleTranslationProjectsTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['locale', 'locale_test', 'system'];
+  protected static $modules = ['language', 'locale', 'locale_test', 'system'];
 
   /**
    * The module handler used in this test.

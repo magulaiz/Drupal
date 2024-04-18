@@ -5,6 +5,7 @@ namespace Drupal\locale;
 use Drupal\Core\Config\ExtensionInstallStorage;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\language\ConfigurableLanguageManagerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Provides access to default configuration for locale integration.
@@ -59,7 +60,12 @@ class LocaleDefaultConfigStorage {
    * @param string $install_profile
    *   The current installation profile.
    */
-  public function __construct(StorageInterface $config_storage, ConfigurableLanguageManagerInterface $language_manager, $install_profile) {
+  public function __construct(
+    StorageInterface $config_storage,
+    ConfigurableLanguageManagerInterface $language_manager,
+    #[Autowire('%install_profile')]
+    $install_profile,
+  ) {
     $this->configStorage = $config_storage;
     $this->languageManager = $language_manager;
 

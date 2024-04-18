@@ -12,6 +12,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -122,7 +123,18 @@ class WorkspaceManager implements WorkspaceManagerInterface {
    * @param array $negotiator_ids
    *   The workspace negotiator service IDs.
    */
-  public function __construct(RequestStack $request_stack, EntityTypeManagerInterface $entity_type_manager, MemoryCacheInterface $entity_memory_cache, AccountProxyInterface $current_user, StateInterface $state, LoggerInterface $logger, ClassResolverInterface $class_resolver, WorkspaceAssociationInterface $workspace_association, array $negotiator_ids) {
+  public function __construct(
+    RequestStack $request_stack,
+    EntityTypeManagerInterface $entity_type_manager,
+    MemoryCacheInterface $entity_memory_cache,
+    AccountProxyInterface $current_user,
+    StateInterface $state,
+    #[Autowire(service: 'logger.channel.workspaces')]
+    LoggerInterface $logger,
+    ClassResolverInterface $class_resolver,
+    WorkspaceAssociationInterface $workspace_association,
+    array $negotiator_ids,
+  ) {
     $this->requestStack = $request_stack;
     $this->entityTypeManager = $entity_type_manager;
     $this->entityMemoryCache = $entity_memory_cache;

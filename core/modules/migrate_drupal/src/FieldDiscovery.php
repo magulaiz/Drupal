@@ -9,6 +9,7 @@ use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Drupal\migrate\Plugin\RequirementsInterface;
 use Drupal\migrate_drupal\Plugin\MigrateFieldPluginManagerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Provides field discovery for Drupal 6 & 7 migrations.
@@ -99,7 +100,12 @@ class FieldDiscovery implements FieldDiscoveryInterface {
    * @param \Psr\Log\LoggerInterface $logger
    *   The logger channel service.
    */
-  public function __construct(MigrateFieldPluginManagerInterface $field_plugin_manager, MigrationPluginManagerInterface $migration_plugin_manager, LoggerInterface $logger) {
+  public function __construct(
+    MigrateFieldPluginManagerInterface $field_plugin_manager,
+    MigrationPluginManagerInterface $migration_plugin_manager,
+    #[Autowire(service: 'logger.channel.migrate_drupal')]
+    LoggerInterface $logger,
+  ) {
     $this->fieldPluginManager = $field_plugin_manager;
     $this->migrationPluginManager = $migration_plugin_manager;
     $this->logger = $logger;

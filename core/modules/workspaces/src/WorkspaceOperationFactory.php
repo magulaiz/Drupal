@@ -6,6 +6,7 @@ use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -78,7 +79,16 @@ class WorkspaceOperationFactory {
    * @param \Psr\Log\LoggerInterface|null $logger
    *   The logger.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, Connection $database, WorkspaceManagerInterface $workspace_manager, WorkspaceAssociationInterface $workspace_association, CacheTagsInvalidatorInterface $cache_tags_invalidator, EventDispatcherInterface $event_dispatcher = NULL, protected ?LoggerInterface $logger = NULL) {
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    Connection $database,
+    WorkspaceManagerInterface $workspace_manager,
+    WorkspaceAssociationInterface $workspace_association,
+    CacheTagsInvalidatorInterface $cache_tags_invalidator,
+    EventDispatcherInterface $event_dispatcher = NULL,
+    #[Autowire(service: 'logger.channel.workspaces')]
+    protected ?LoggerInterface $logger = NULL,
+  ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->database = $database;
     $this->workspaceManager = $workspace_manager;

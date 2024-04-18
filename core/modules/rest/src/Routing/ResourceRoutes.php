@@ -8,6 +8,7 @@ use Drupal\Core\Routing\RoutingEvents;
 use Drupal\rest\Plugin\Type\ResourcePluginManager;
 use Drupal\rest\RestResourceConfigInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -47,7 +48,12 @@ class ResourceRoutes implements EventSubscriberInterface {
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
    */
-  public function __construct(ResourcePluginManager $manager, EntityTypeManagerInterface $entity_type_manager, LoggerInterface $logger) {
+  public function __construct(
+    ResourcePluginManager $manager,
+    EntityTypeManagerInterface $entity_type_manager,
+    #[Autowire(service: 'logger.channel.rest')]
+    LoggerInterface $logger,
+  ) {
     $this->manager = $manager;
     $this->resourceConfigStorage = $entity_type_manager->getStorage('rest_resource_config');
     $this->logger = $logger;

@@ -6,6 +6,7 @@ use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Manages migrate plugins.
@@ -40,7 +41,14 @@ class MigratePluginManager extends DefaultPluginManager implements MigratePlugin
    *   (optional) The annotation class name. Defaults to
    *   'Drupal\Component\Annotation\PluginID'.
    */
-  public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, $annotation = 'Drupal\Component\Annotation\PluginID') {
+  public function __construct(
+    $type,
+    \Traversable $namespaces,
+    #[Autowire(service: 'cache.discovery')]
+    CacheBackendInterface $cache_backend,
+    ModuleHandlerInterface $module_handler,
+    $annotation = 'Drupal\Component\Annotation\PluginID',
+  ) {
     parent::__construct("Plugin/migrate/$type", $namespaces, $module_handler, NULL, $annotation);
     $this->alterInfo('migrate_' . $type . '_info');
     $this->setCacheBackend($cache_backend, 'migrate_plugins_' . $type);

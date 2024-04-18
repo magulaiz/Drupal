@@ -5,6 +5,7 @@ namespace Drupal\views\Plugin;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DependencyInjection\Container;
 
 /**
@@ -27,7 +28,13 @@ class ViewsPluginManager extends DefaultPluginManager {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
    */
-  public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
+  public function __construct(
+    $type,
+    \Traversable $namespaces,
+    #[Autowire(service: 'cache.discovery')]
+    CacheBackendInterface $cache_backend,
+    ModuleHandlerInterface $module_handler,
+  ) {
     $plugin_definition_annotation_name = 'Drupal\views\Annotation\Views' . Container::camelize($type);
     parent::__construct("Plugin/views/$type", $namespaces, $module_handler, 'Drupal\views\Plugin\views\ViewsPluginInterface', $plugin_definition_annotation_name);
 

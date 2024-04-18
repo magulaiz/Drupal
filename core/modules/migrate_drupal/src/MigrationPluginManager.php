@@ -9,6 +9,7 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\migrate\Plugin\Exception\BadPluginDefinitionException;
 use Drupal\migrate\Plugin\MigrateSourcePluginManager;
 use Drupal\migrate\Plugin\MigrationPluginManager as BaseMigrationPluginManager;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Manages migration plugins.
@@ -60,7 +61,14 @@ class MigrationPluginManager extends BaseMigrationPluginManager {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory service.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, LanguageManagerInterface $language_manager, MigrateSourcePluginManager $source_manager, ConfigFactoryInterface $config_factory) {
+  public function __construct(
+    ModuleHandlerInterface $module_handler,
+    #[Autowire(service: 'cache.discovery_migration')]
+    CacheBackendInterface $cache_backend,
+    LanguageManagerInterface $language_manager,
+    MigrateSourcePluginManager $source_manager,
+    ConfigFactoryInterface $config_factory,
+  ) {
     parent::__construct($module_handler, $cache_backend, $language_manager);
     $this->sourceManager = $source_manager;
     $this->configFactory = $config_factory;

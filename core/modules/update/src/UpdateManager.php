@@ -7,7 +7,7 @@ use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
-use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
+use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Utility\ProjectInfo;
@@ -86,14 +86,14 @@ class UpdateManager implements UpdateManagerInterface {
    *   The Update Processor service.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $translation
    *   The translation service.
-   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_expirable_factory
+   * @param \Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface $key_value_expirable_factory
    *   The expirable key/value factory.
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler.
    * @param \Drupal\Core\Extension\ModuleExtensionList|null $extension_list_module
    *   The module extension list.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, UpdateProcessorInterface $update_processor, TranslationInterface $translation, KeyValueFactoryInterface $key_value_expirable_factory, ThemeHandlerInterface $theme_handler, ModuleExtensionList $extension_list_module) {
+  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, UpdateProcessorInterface $update_processor, TranslationInterface $translation, KeyValueExpirableFactoryInterface $key_value_expirable_factory, ThemeHandlerInterface $theme_handler, ModuleExtensionList $extension_list_module) {
     $this->updateSettings = $config_factory->get('update.settings');
     $this->moduleHandler = $module_handler;
     $this->updateProcessor = $update_processor;

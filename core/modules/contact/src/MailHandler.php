@@ -9,6 +9,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Provides a class for handling assembly and dispatch of contact mail messages.
@@ -59,7 +60,14 @@ class MailHandler implements MailHandlerInterface {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    */
-  public function __construct(MailManagerInterface $mail_manager, LanguageManagerInterface $language_manager, LoggerInterface $logger, TranslationInterface $string_translation, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(
+    MailManagerInterface $mail_manager,
+    LanguageManagerInterface $language_manager,
+    #[Autowire(service: 'logger.channel.contact')]
+    LoggerInterface $logger,
+    TranslationInterface $string_translation,
+    EntityTypeManagerInterface $entity_type_manager,
+  ) {
     $this->languageManager = $language_manager;
     $this->mailManager = $mail_manager;
     $this->logger = $logger;

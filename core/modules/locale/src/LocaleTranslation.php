@@ -10,6 +10,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\StringTranslation\Translator\TranslatorInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -96,7 +97,15 @@ class LocaleTranslation implements TranslatorInterface, DestructableInterface {
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
    */
-  public function __construct(StringStorageInterface $storage, CacheBackendInterface $cache, LockBackendInterface $lock, ConfigFactoryInterface $config_factory, LanguageManagerInterface $language_manager, RequestStack $request_stack) {
+  public function __construct(
+    StringStorageInterface $storage,
+    #[Autowire(service: 'cache.default')]
+    CacheBackendInterface $cache,
+    LockBackendInterface $lock,
+    ConfigFactoryInterface $config_factory,
+    LanguageManagerInterface $language_manager,
+    RequestStack $request_stack,
+  ) {
     $this->storage = $storage;
     $this->cache = $cache;
     $this->lock = $lock;

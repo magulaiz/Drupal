@@ -5,6 +5,7 @@ namespace Drupal\serialization\EventSubscriber;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheableResponse;
 use Drupal\Core\EventSubscriber\HttpExceptionSubscriberBase;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -36,7 +37,11 @@ class DefaultExceptionSubscriber extends HttpExceptionSubscriberBase {
    * @param array $serializer_formats
    *   The available serialization formats.
    */
-  public function __construct(SerializerInterface $serializer, array $serializer_formats) {
+  public function __construct(
+    SerializerInterface $serializer,
+    #[Autowire('%serializer.formats%')]
+    array $serializer_formats,
+  ) {
     $this->serializer = $serializer;
     $this->serializerFormats = $serializer_formats;
   }

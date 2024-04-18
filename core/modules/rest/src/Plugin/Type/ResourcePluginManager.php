@@ -5,6 +5,7 @@ namespace Drupal\rest\Plugin\Type;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Manages discovery and instantiation of resource plugins.
@@ -27,7 +28,12 @@ class ResourcePluginManager extends DefaultPluginManager {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
+  public function __construct(
+    \Traversable $namespaces,
+    #[Autowire(service: 'cache.discovery')]
+    CacheBackendInterface $cache_backend,
+    ModuleHandlerInterface $module_handler,
+  ) {
     parent::__construct('Plugin/rest/resource', $namespaces, $module_handler, 'Drupal\rest\Plugin\ResourceInterface', 'Drupal\rest\Annotation\RestResource');
 
     $this->setCacheBackend($cache_backend, 'rest_plugins');

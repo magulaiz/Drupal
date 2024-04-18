@@ -1,7 +1,9 @@
 services:
+  _defaults:
+    autowire: true
+
   path_processor.image_styles:
     class: Drupal\image\PathProcessor\PathProcessorImageStyles
-    arguments: ['@stream_wrapper_manager']
     tags:
       - { name: path_processor_inbound, priority: 300 }
   plugin.manager.image.effect:
@@ -9,7 +11,6 @@ services:
     parent: default_plugin_manager
   image.page_cache_response_policy.deny_private_image_style_download:
     class: Drupal\image\PageCache\DenyPrivateImageStyleDownload
-    arguments: ['@current_route_match']
     public: false
     tags:
       - { name: page_cache_response_policy }
