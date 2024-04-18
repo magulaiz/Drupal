@@ -704,9 +704,9 @@ function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
         $item['title'] = t($item['title'], menu_unserialize($item['title_arguments'], $map));
       }
     }
-    elseif ($callback && function_exists($callback)) {
+    elseif ($callback) {
       if (empty($item['title_arguments'])) {
-        $item['title'] = $callback($item['title']);
+        $item['title'] = call_user_func($callback, $item['title']);
       }
       else {
         $item['title'] = call_user_func_array($callback, menu_unserialize($item['title_arguments'], $map));
