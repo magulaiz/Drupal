@@ -60,10 +60,11 @@ user.settings:
     password_reset_timeout:
       type: integer
       label: 'Password reset timeout'
-      # A reasonable time would be 10 minutes.
+      # After a bit of research, 20 minutes seemed appropriate as it
+      # gives enough time to even access a mail account with MFA.
       constraints:
         Range:
-          min: 600
+          min: 1200
     password_strength:
       type: boolean
       label: 'Enable password strength indicator'
