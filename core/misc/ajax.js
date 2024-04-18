@@ -1101,14 +1101,14 @@
             let target = false;
             if (this.element) {
               if (
-                $(this.element).data('refocus-blur') &&
+                this.element.dataset.refocusBlur &&
                 this.preCommandsFocusedElementSelector
               ) {
                 target = document.querySelector(
                   `[data-drupal-selector="${this.preCommandsFocusedElementSelector}"]`,
                 );
               }
-              if (!target && !$(this.element).data('disable-refocus')) {
+              if (!target && !this.element.dataset.disableRefocus) {
                 for (
                   let n = elementParents.length - 1;
                   !target && n >= 0;
@@ -1591,7 +1591,8 @@
      *   The XMLHttpRequest status.
      */
     data(ajax, response, status) {
-      $(response.selector).data(response.name, response.value);
+      document.querySelector(response.selector).dataset[response.name] =
+        response.value;
     },
 
     /**
