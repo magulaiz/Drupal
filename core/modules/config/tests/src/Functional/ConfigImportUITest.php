@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\config\Functional;
 
-use Drupal\config_backed_enum_test\BackedEnumValue;
+use Drupal\config_enum_test\EnumValue;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Tests\BrowserTestBase;
@@ -552,18 +552,18 @@ class ConfigImportUITest extends BrowserTestBase {
   }
 
   /**
-   * Tests importing backed enum.
+   * Tests importing an enum.
    */
-  public function testBackedEnumViaConfigImporter() {
-    $config_name = 'config_backed_enum_test.settings';
+  public function testEnumViaConfigImporter() {
+    $config_name = 'config_enum_test.settings';
     $assert_session = $this->assertSession();
     $sync = \Drupal::service('config.storage.sync');
     $config_data = $this->config($config_name)->get();
-    $config_data['foo'] = BackedEnumValue::Maybe;
+    $config_data['foo'] = EnumValue::Maybe;
     $sync->write($config_name, $config_data);
 
     $core_extension = $this->config('core.extension')->get();
-    $core_extension['module']['config_backed_enum_test'] = 0;
+    $core_extension['module']['config_enum_test'] = 0;
     $core_extension['module'] = module_config_sort($core_extension['module']);
     $sync->write('core.extension', $core_extension);
 
@@ -571,13 +571,13 @@ class ConfigImportUITest extends BrowserTestBase {
     $assert_session->responseNotContains('&amp;nbsp;');
     $assert_session->titleEquals("View changes of $config_name | Drupal");
     $assert_session->elementsCount('xpath', '//table[contains(@class, "diff")]', 1);
-    $assert_session->pageTextContains("foo: !php/const Drupal\config_backed_enum_test\BackedEnumValue::Maybe");
+    $assert_session->pageTextContains("foo: !php/const Drupal\config_enum_test\EnumValue::Maybe");
 
     $this->drupalGet('admin/config/development/configuration');
-    $assert_session->responseContains('<td>config_backed_enum_test.settings');
+    $assert_session->responseContains('<td>config_enum_test.settings');
     $assert_session->pageTextNotContains('The staged configuration is identical to the active configuration.');
     $this->submitForm([], 'Import all');
-    $assert_session->responseNotContains('<td>config_backed_enum_test.settings');
+    $assert_session->responseNotContains('<td>config_enum_test.settings');
     $assert_session->pageTextContains('The staged configuration is identical to the active configuration.');
   }
 
