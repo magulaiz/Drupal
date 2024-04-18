@@ -6,7 +6,6 @@
  */
 
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
-use Drupal\views\Views;
 use Drupal\views\ViewEntityInterface;
 use Drupal\views\ViewsConfigUpdater;
 
