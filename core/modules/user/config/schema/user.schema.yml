@@ -44,7 +44,7 @@ user.settings:
       type: string
       label: 'Who can register accounts?'
       # Choices are derived from the constants.
-      # @see \Drupal\user\UserInterface
+      # @see \Drupal\user\UserInterface::REGISTER_*
       constraints:
         Choice:
           choices:
