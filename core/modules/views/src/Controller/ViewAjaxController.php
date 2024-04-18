@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\Ajax\SettingsCommand;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
@@ -213,6 +214,11 @@ class ViewAjaxController implements ContainerInjectionInterface {
         $response->addCommand(new ReplaceCommand(".js-view-dom-id-$dom_id", $preview));
         $response->addCommand(new PrependCommand(".js-view-dom-id-$dom_id", ['#type' => 'status_messages']));
         $request->query->set('ajax_page_state', $existing_page_state);
+
+        if (!empty($preview['#attached']['drupalSettings'])) {
+          $settings_command = new SettingsCommand($preview['#attached']['drupalSettings']);
+          $response->addCommand($settings_command);
+        }
 
         return $response;
       }
