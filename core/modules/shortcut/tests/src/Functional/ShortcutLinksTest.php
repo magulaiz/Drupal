@@ -11,7 +11,6 @@ use Drupal\shortcut\Entity\Shortcut;
 use Drupal\shortcut\Entity\ShortcutSet;
 use Drupal\Tests\block\Functional\AssertBlockAppearsTrait;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
-use Drupal\user\RoleInterface;
 use Drupal\views\Entity\View;
 
 /**
@@ -235,13 +234,6 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $this->clickLink('Remove from Default shortcuts');
     $this->assertSession()->pageTextContains("The shortcut $title has been deleted.");
     $this->assertShortcutQuickLink('Add to Default shortcuts');
-
-    \Drupal::service('module_installer')->install(['block_content']);
-    BlockContentType::create([
-      'id' => 'basic',
-      'label' => 'Basic block',
-      'revision' => FALSE,
-    ])->save();
     \Drupal::service('module_installer')->install(['block_content']);
     $this->adminUser->addRole($this->drupalCreateRole(['administer block types']))->save();
     BlockContentType::create([
