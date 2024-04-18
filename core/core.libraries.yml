@@ -563,7 +563,6 @@ drupal.dialog:
     - core/drupal.debounce
     - core/drupal.displace
     - core/once
-    - core/tabbable.jquery.shim
     - core/drupal.jquery.position
     - core/tabbable
 
