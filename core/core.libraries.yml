@@ -802,8 +802,6 @@ drupal.tableselect:
 
 drupal.tablesort:
   version: VERSION
-  js:
-    misc/tabledrag.js: { weight: -1 }
   css:
     component:
       misc/components/tablesort.module.css: { weight: -10 }
@@ -815,8 +813,6 @@ drupal.tablesort:
       css:
         component:
           css/components/tablesort.module.css: misc/components/tablesort.module.css
-  dependencies:
-    - core/drupal.tabledrag
 
 drupal.time-diff:
   version: VERSION
