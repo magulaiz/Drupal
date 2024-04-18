@@ -555,21 +555,30 @@ class ConfigImportUITest extends BrowserTestBase {
    * Tests importing backed enum.
    */
   public function testBackedEnumViaConfigImporter() {
+    $config_name = 'config_backed_enum_test.settings';
+    $assert_session = $this->assertSession();
     $sync = \Drupal::service('config.storage.sync');
-    $config_data = $this->config('config_backed_enum_test.settings')->get();
+    $config_data = $this->config($config_name)->get();
     $config_data['foo'] = BackedEnumValue::Maybe;
-    $sync->write('config_backed_enum_test.settings', $config_data);
+    $sync->write($config_name, $config_data);
 
     $core_extension = $this->config('core.extension')->get();
     $core_extension['module']['config_backed_enum_test'] = 0;
     $core_extension['module'] = module_config_sort($core_extension['module']);
     $sync->write('core.extension', $core_extension);
 
+    $this->drupalGet('admin/config/development/configuration/sync/diff/' . $config_name);
+    $assert_session->responseNotContains('&amp;nbsp;');
+    $assert_session->titleEquals("View changes of $config_name | Drupal");
+    $assert_session->elementsCount('xpath', '//table[contains(@class, "diff")]', 1);
+    $assert_session->pageTextContains("foo: !php/const Drupal\config_backed_enum_test\BackedEnumValue::Maybe");
+
     $this->drupalGet('admin/config/development/configuration');
-    $this->assertSession()->responseContains('<td>config_backed_enum_test.settings');
-    $this->assertSession()->pageTextNotContains('The staged configuration is identical to the active configuration.');
+    $assert_session->responseContains('<td>config_backed_enum_test.settings');
+    $assert_session->pageTextNotContains('The staged configuration is identical to the active configuration.');
     $this->submitForm([], 'Import all');
-    $this->assertSession()->responseNotContains('<td>config_backed_enum_test.settings');
+    $assert_session->responseNotContains('<td>config_backed_enum_test.settings');
+    $assert_session->pageTextContains('The staged configuration is identical to the active configuration.');
   }
 
 }
