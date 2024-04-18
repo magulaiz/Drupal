@@ -559,7 +559,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $assert_session = $this->assertSession();
     $sync = \Drupal::service('config.storage.sync');
     $config_data = $this->config($config_name)->get();
-    $config_data['foo'] = EnumValue::Maybe;
+    $config_data['foo'] = EnumValue::No;
     $sync->write($config_name, $config_data);
 
     $core_extension = $this->config('core.extension')->get();
@@ -571,7 +571,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $assert_session->responseNotContains('&amp;nbsp;');
     $assert_session->titleEquals("View changes of $config_name | Drupal");
     $assert_session->elementsCount('xpath', '//table[contains(@class, "diff")]', 1);
-    $assert_session->pageTextContains("foo: !php/const Drupal\config_enum_test\EnumValue::Maybe");
+    $assert_session->pageTextContains("foo: !php/const Drupal\config_enum_test\EnumValue::No");
 
     $this->drupalGet('admin/config/development/configuration');
     $assert_session->responseContains('<td>config_enum_test.settings');
@@ -579,6 +579,9 @@ class ConfigImportUITest extends BrowserTestBase {
     $this->submitForm([], 'Import all');
     $assert_session->responseNotContains('<td>config_enum_test.settings');
     $assert_session->pageTextContains('The staged configuration is identical to the active configuration.');
+
+    // Ensure the value returned from config is an enum.
+    $this->assertSame(EnumValue::No, $this->config('config_enum_test.settings')->get('foo'));
   }
 
 }
