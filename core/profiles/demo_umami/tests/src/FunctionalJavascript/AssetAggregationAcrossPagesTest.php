@@ -39,30 +39,9 @@ class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
     $this->rebuildAll();
     $performance_data = $this->doRequests();
     $this->assertSame(4, $performance_data->getStylesheetCount());
-<<<<<<< HEAD
-<<<<<<< HEAD
     $this->assertLessThan(89500, $performance_data->getStylesheetBytes());
-    $this->assertSame(2, $performance_data->getScriptCount());
-    $this->assertLessThan(250000, $performance_data->getScriptBytes());
-=======
-=======
->>>>>>> 33667d7883 (Issue #3441844 by catch: Set budgets rather than exact numbers of asset size assertions)
-    $this->assertSame(89167, $performance_data->getStylesheetBytes());
     $this->assertSame(1, $performance_data->getScriptCount());
-<<<<<<< HEAD
-    $this->assertSame(132083, $performance_data->getScriptBytes());
->>>>>>> 0f7d442276 (Update assertions to reflect less file downloads.)
-=======
-    $this->assertSame(132067, $performance_data->getScriptBytes());
-<<<<<<< HEAD
->>>>>>> 01db883bf5 (Fix merge conflicts.)
-=======
-=======
-    $this->assertLessThan(89500, $performance_data->getStylesheetBytes());
-    $this->assertSame(2, $performance_data->getScriptCount());
-    $this->assertLessThan(264500, $performance_data->getScriptBytes());
->>>>>>> 05e4d1a843 (Issue #3441844 by catch: Set budgets rather than exact numbers of asset size assertions)
->>>>>>> 33667d7883 (Issue #3441844 by catch: Set budgets rather than exact numbers of asset size assertions)
+    $this->assertLessThan(125500, $performance_data->getScriptBytes());
   }
 
   /**
