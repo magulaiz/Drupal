@@ -535,9 +535,6 @@ services:
   logger.channel.router:
     parent: logger.channel_base
     arguments: ['router']
-  logger.channel.theme:
-    parent: logger.channel_base
-    arguments: ['theme']
   logger.log_message_parser:
     class: Drupal\Core\Logger\LogMessageParser
   Drupal\Core\Logger\LogMessageParserInterface: '@logger.log_message_parser'
@@ -1542,7 +1539,7 @@ services:
   Drupal\Core\Datetime\DateFormatterInterface: '@date.formatter'
   theme.manager:
     class: Drupal\Core\Theme\ThemeManager
-    arguments: ['%app.root%', '@theme.negotiator', '@theme.initialization', '@module_handler', '@logger.channel.theme']
+    arguments: ['%app.root%', '@theme.negotiator', '@theme.initialization', '@module_handler']
     calls:
       - [setThemeRegistry, ['@theme.registry']]
   Drupal\Core\Theme\ThemeManagerInterface: '@theme.manager'
