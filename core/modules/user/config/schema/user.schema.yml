@@ -55,16 +55,15 @@ user.settings:
       type: string
       label: 'When cancelling a user account'
       constraints:
-        Choice:
-          callback: 'Drupal\user\Plugin\Validation\Constraint\UserCancelMethodsConstraints::getCancelMethodChoices'
+        UserCancelMethod: []
     password_reset_timeout:
       type: integer
       label: 'Password reset timeout'
-      # After a bit of research, 20 minutes seemed appropriate as it
-      # gives enough time to even access a mail account with MFA.
+      # Any higher value could break sites using a lower value.
+      # Harden this in a follow-up.
       constraints:
         Range:
-          min: 1200
+          min: 1
     password_strength:
       type: boolean
       label: 'Enable password strength indicator'
