@@ -89,7 +89,7 @@ class MetaEventSubscriber implements EventSubscriberInterface {
       $event->addCacheTags(['jsonapi_test_meta_events.relationship_meta']);
     }
 
-    if ($config['user_is_superuser_context']) {
+    if ($config['user_is_superuser_context'] ?? FALSE) {
       $event->addCacheContexts(['user.is_super_user']);
       $event->setMetaValue('resource_meta_user_is_superuser', (int) \Drupal::currentUser()->id() === 1 ? 'yes' : 'no');
     }
