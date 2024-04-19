@@ -17,19 +17,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class EntityArgument extends NumericArgument implements ContainerFactoryPluginInterface {
 
-  /**
-   * The entity repository.
-   *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface
-   */
-  protected $entityRepository;
+  protected EntityRepositoryInterface $entityRepository;
 
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * {@inheritdoc}
