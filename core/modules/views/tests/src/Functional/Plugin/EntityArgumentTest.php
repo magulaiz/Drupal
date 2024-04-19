@@ -21,14 +21,14 @@ class EntityArgumentTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_entity_id_argument'];
+  public static array $testViews = ['test_entity_id_argument'];
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  protected static $modules = ['node', 'taxonomy'];
+  protected static array $modules = ['node', 'taxonomy'];
 
   /**
    * {@inheritdoc}
@@ -40,7 +40,7 @@ class EntityArgumentTest extends TaxonomyTestBase {
    *
    * @var \Drupal\user\UserInterface
    */
-  protected $adminUser;
+  protected UserInterface $adminUser;
 
   /**
    * {@inheritdoc}
