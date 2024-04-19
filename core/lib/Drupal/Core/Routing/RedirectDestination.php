@@ -69,7 +69,7 @@ class RedirectDestination implements RedirectDestinationInterface {
         // If an absolute url was generated for change it to relative path.
         if (strpos($this->destination, 'http') !== FALSE) {
           $request = \Drupal::request();
-          $base_url = $request->getSchemeAndHttpHost() . $request->getBasePath();
+          $base_url = $request->getSchemeAndHttpHost();
           $this->destination = str_replace($base_url, '', $this->destination);
         }
       }
