@@ -159,3 +159,15 @@ function views_post_update_rendered_entity_field_cache_metadata(?array &$sandbox
     return $view_config_updater->needsRenderedEntityFieldUpdate($view);
   });
 }
+
+/**
+ * Fix views containing entity fields with an empty group column value set.
+ */
+function views_post_update_empty_entity_field_group_column(?array &$sandbox = NULL) {
+  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
+  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
+  $view_config_updater->setDeprecationsEnabled(FALSE);
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function ($view) use ($view_config_updater) {
+    return $view_config_updater->needsFixForEmptyGroupColumn($view);
+  });
+}
