@@ -7,7 +7,7 @@ namespace Drupal\Tests\views\Functional\Update;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 
 /**
- * Tests the upgrade path for views field plugins.
+ * Tests the upgrade path for converting numeric arguments to entity_target_id.
  *
  * @group Update
  *
@@ -26,7 +26,7 @@ class EntityArgumentUpdateTest extends UpdatePathTestBase {
   }
 
   /**
-   * Tests that field plugins are updated properly.
+   * Tests that numeric argument plugins are updated properly.
    */
   public function testViewsFieldPluginConversion(): void {
     $config = \Drupal::config('views.view.test_entity_id_argument_update');
