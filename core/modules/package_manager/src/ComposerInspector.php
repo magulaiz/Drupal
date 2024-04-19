@@ -263,7 +263,7 @@ class ComposerInspector implements LoggerAwareInterface {
       }
     }
     $output = $this->processCallback->getOutput();
-    return isset($output) ? trim($output) : $output;
+    return $output ? trim(implode('', $output)) : NULL;
   }
 
   /**
