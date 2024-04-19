@@ -189,15 +189,18 @@
     const $link = $(link);
     const viewData = {};
     const href = $link.attr('href');
-    // Construct an object using the settings defaults and then overriding
-    // with data specific to the link.
-    $.extend(
-      viewData,
-      this.settings,
-      Drupal.Views.parseQueryString(href),
-      // Extract argument data from the URL.
-      Drupal.Views.parseViewArgs(href, this.settings.view_base_path),
-    );
+
+    if (href) { 
+      // Construct an object using the settings defaults and then overriding
+      // with data specific to the link.
+      $.extend(
+        viewData,
+        this.settings,
+        Drupal.Views.parseQueryString(href),
+        // Extract argument data from the URL.
+        Drupal.Views.parseViewArgs(href, this.settings.view_base_path),
+      );
+    } 
 
     const selfSettings = $.extend({}, this.element_settings, {
       submit: viewData,
