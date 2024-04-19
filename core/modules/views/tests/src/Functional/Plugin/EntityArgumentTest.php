@@ -36,7 +36,7 @@ class EntityArgumentTest extends TaxonomyTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * An user with permissions to administer taxonomy.
+   * A user with permission to administer taxonomy.
    *
    * @var \Drupal\user\UserInterface
    */
@@ -56,7 +56,7 @@ class EntityArgumentTest extends TaxonomyTestBase {
   }
 
   /**
-   * Tests the generated title of a view: entity target argument.
+   * Tests the generated title of a view with an entity target argument.
    */
   public function testArgumentTitle(): void {
     $view = Views::getView('test_entity_id_argument');
