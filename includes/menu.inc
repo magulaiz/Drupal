@@ -705,8 +705,11 @@ function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
       }
     }
     elseif ($callback) {
-      if (empty($item['title_arguments'])) {
-        $item['title'] = call_user_func($callback, $item['title']);
+      if (!function_exists($callback)) {
+        watchdog('menu', 'The %callback title callback does not exist or is an invalid function name.', array('%callback' => $callback), WATCHDOG_ALERT);
+      }
+      elseif (empty($item['title_arguments'])) {
+        $item['title'] = $callback($item['title']);
       }
       else {
         $item['title'] = call_user_func_array($callback, menu_unserialize($item['title_arguments'], $map));
