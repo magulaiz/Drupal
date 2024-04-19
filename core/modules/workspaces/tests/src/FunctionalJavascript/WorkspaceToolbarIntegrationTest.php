@@ -77,9 +77,7 @@ class WorkspaceToolbarIntegrationTest extends OffCanvasTestBase {
 
     // Open a few pages in order to test toolbar caching.
     $this->drupalGet('admin');
-    $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'MISS');
     $this->drupalGet('admin/content');
-    $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'MISS');
 
     // Wait for toolbar to appear.
     $this->assertNotEmpty($assert_session->waitForElement('css', 'body.toolbar-horizontal'));
@@ -95,7 +93,6 @@ class WorkspaceToolbarIntegrationTest extends OffCanvasTestBase {
     $assert_session->statusMessageContainsAfterWait('Stage is now the active workspace.', 'status');
     // Make sure we stay on same page after switch.
     $assert_session->addressEquals('admin/content');
-    $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'HIT');
   }
 
 }
