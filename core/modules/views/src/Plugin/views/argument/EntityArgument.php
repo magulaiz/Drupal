@@ -73,16 +73,17 @@ class EntityArgument extends NumericArgument implements ContainerFactoryPluginIn
   }
 
   /**
+   * Array of deprecated storage properties that legacy classes might access.
+   *
    * This class is replacing many separate plugins from different core modules,
    * each of which had a storage property for their own entity type. We can't
    * use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait since
-   * these are not registered as services, but are the storage "subservice" from
-   * the entityTypeManager.
+   * these are not registered as services, but are the storage "sub-service"
+   * from the entityTypeManager for each entity type.
    */
   protected array $deprecatedStorageProperties = [
     'nodeStorage' => 'node',
     'termStorage' => 'taxonomy_term',
-    'vocabularyStorage' => 'taxonomy_vocabulary',
     'vocabularyStorage' => 'taxonomy_vocabulary',
     'storage' => 'user',
   ];
