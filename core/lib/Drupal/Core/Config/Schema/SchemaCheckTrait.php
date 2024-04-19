@@ -22,7 +22,7 @@ trait SchemaCheckTrait {
   /**
    * The config schema wrapper object for the configuration object under test.
    */
-  protected TraversableTypedDataInterface $schema;
+  protected TypedConfigInterface $schema;
 
   /**
    * The configuration object name under test.
@@ -41,7 +41,7 @@ trait SchemaCheckTrait {
    * path segment can use a wildcard (`*`) to indicate any value for that
    * segment should be accepted for this property path to be ignored.
    *
-   * @var \string[][]
+   * @var string[][]
    */
   protected static array $ignoredPropertyPaths = [
     'search.page.*' => [

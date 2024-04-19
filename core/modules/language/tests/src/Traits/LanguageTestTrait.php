@@ -22,7 +22,7 @@ trait LanguageTestTrait {
    * @param string $langcode
    *   The language code to use to create the object.
    *
-   * @return \Drupal\Core\Language\ConfigurableLanguageInterface
+   * @return \Drupal\language\Entity\ConfigurableLanguage
    *   The created language.
    *
    * @see \Drupal\Core\Language\LanguageManager::getStandardLanguageList()

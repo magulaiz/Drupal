@@ -212,6 +212,8 @@ abstract class WebDriverTestBase extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @return \Drupal\FunctionalJavascriptTests\JSWebAssert
    */
   public function assertSession($name = NULL) {
     return new WebDriverWebAssert($this->getSession($name), $this->baseUrl);
