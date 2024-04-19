@@ -96,6 +96,7 @@ function block_content_post_update_configure_status_field_widget(&$sandbox = NUL
         'settings' => [
           'display_label' => TRUE,
         ],
+        'weight' => 10,
       ]);
       return TRUE;
     }
