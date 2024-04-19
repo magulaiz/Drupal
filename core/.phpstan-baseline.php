@@ -582,11 +582,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Updater/Module.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\action\\\\Form\\\\ActionFormBase\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/action/src/Form/ActionFormBase.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$position might not be defined\\.$#',
 	'count' => 4,
 	'path' => __DIR__ . '/modules/block/tests/src/Functional/BlockRenderOrderTest.php',
@@ -1644,18 +1639,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/user/tests/src/Functional/UserRegistrationRestTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to deprecated method expectWarning\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Views/HandlerFilterRolesTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method expectWarningMessage\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Views/HandlerFilterRolesTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$result in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/tests/src/Unit/UserAccessControlHandlerTest.php',
@@ -2157,18 +2140,6 @@ $ignoreErrors[] = [
 	'message' => '#^Result of static method Drupal\\\\Composer\\\\Composer\\:\\:ensureComposerVersion\\(\\) \\(void\\) is used\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Composer/ComposerTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method expectError\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Config/ConfigTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method expectError\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Database/ConditionTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Trying to mock an undefined method getRevisionId\\(\\) on class Drupal\\\\Tests\\\\Core\\\\Entity\\\\UrlTestEntity\\.$#',
