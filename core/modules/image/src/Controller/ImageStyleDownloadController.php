@@ -15,7 +15,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
@@ -117,7 +116,7 @@ class ImageStyleDownloadController extends FileDownloadController {
         if (!in_array($scheme, Settings::get('file_sa_core_2023_005_schemes', []))) {
           $parts = explode('/', $normalized_target);
           if (array_intersect($parts, ['.', '..'])) {
-            throw new NotFoundHttpException();
+            return new Response($this->t('Error generating image, stream wrapper scheme is invalid.'), 404);
           }
         }
       }
@@ -148,7 +147,20 @@ class ImageStyleDownloadController extends FileDownloadController {
       // image token is for DDoS protection rather than access checking. 404s
       // are more likely to be cached (e.g. at a proxy) which enhances
       // protection from DDoS.
-      throw new NotFoundHttpException();
+      $message = $this->t('Error generating image.');
+      if (empty($image_style)) {
+        $message = $this->t('Error generating image, image style name is invalid.');
+      }
+      elseif (!$this->sourceImageExists($image_uri, TRUE)) {
+        $message = $this->t('Error generating image, missing source file.');
+      }
+      elseif (empty($token)) {
+        $message = $this->t('Error generating image, missing image token.');
+      }
+      elseif (!$token_is_valid) {
+        $message = $this->t('Error generating image, invalid image token.');
+      }
+      return new Response($message, 400);
     }
 
     $derivative_uri = $image_style->buildUri($image_uri);
