@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Cache;
 
+use Drupal\Core\Cache\Optimizer\CacheTagsAggregatorManagerInterface;
+
 /**
  * A trait for cache tag checksum implementations.
  *
@@ -32,6 +34,8 @@ trait CacheTagsChecksumTrait {
    */
   protected $tagCache = [];
 
+  protected  ?CacheTagsAggregatorManagerInterface $cacheTagsAggregatorManager;
+
   /**
    * Callback to be invoked just after a database transaction gets committed.
    *
@@ -51,6 +55,9 @@ trait CacheTagsChecksumTrait {
    * Implements \Drupal\Core\Cache\CacheTagsInvalidatorInterface::invalidateTags()
    */
   public function invalidateTags(array $tags) {
+    if ($this->cacheTagsAggregatorManager) {
+      $tags = $this->cacheTagsAggregatorManager->aggregateTags($tags);
+    }
     // Only invalidate tags once per request unless they are written again.
     foreach ($tags as $key => $tag) {
       if (isset($this->invalidatedTags[$tag])) {
@@ -81,6 +88,9 @@ trait CacheTagsChecksumTrait {
    * Implements \Drupal\Core\Cache\CacheTagsChecksumInterface::getCurrentChecksum()
    */
   public function getCurrentChecksum(array $tags) {
+    if ($this->cacheTagsAggregatorManager) {
+      $tags = $this->cacheTagsAggregatorManager->aggregateTags($tags);
+    }
     // Any cache writes in this request containing cache tags whose invalidation
     // has been delayed due to an in-progress transaction must not be read by
     // any other request, so use a nonsensical checksum which will cause any
@@ -103,6 +113,9 @@ trait CacheTagsChecksumTrait {
    * Implements \Drupal\Core\Cache\CacheTagsChecksumInterface::isValid()
    */
   public function isValid($checksum, array $tags) {
+    if ($this->cacheTagsAggregatorManager) {
+      $tags = $this->cacheTagsAggregatorManager->aggregateTags($tags);
+    }
     // Any cache reads in this request involving cache tags whose invalidation
     // has been delayed due to an in-progress transaction are not allowed to use
     // data stored in cache; it must be assumed to be stale. This forces those
