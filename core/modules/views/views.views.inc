@@ -767,9 +767,10 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
 /**
  * Implements hook_field_views_data().
  *
- * The function implements the hook in behalf of 'core' because it adds a
+ * The function implements the hook on behalf of 'core' because it adds a
  * relationship and a reverse relationship to entity_reference field type, which
- * is provided by core.
+ * is provided by core. This function also provides an argument plugin for
+ * entity_reference fields that handles title token replacement.
  */
 function core_field_views_data(FieldStorageConfigInterface $field_storage) {
   $data = views_field_default_views_data($field_storage);
