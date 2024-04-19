@@ -18,7 +18,7 @@
         "ext-tokenizer": "*",
         "ext-xml": "*",
         "php": ">=8.3.0",
-        "symfony/console": "^7.0",
+        "symfony/console": "^7",
         "symfony/dependency-injection": "^7.0",
         "symfony/event-dispatcher": "^7.0",
         "symfony/filesystem": "^7.0",
@@ -47,7 +47,8 @@
         "pear/archive_tar": "^1.4.14",
         "psr/log": "^3.0",
         "mck89/peast": "^1.14",
-        "sebastian/diff": "^4|^5"
+        "sebastian/diff": "^4|^5",
+        "php-tuf/composer-stager": "^2-rc1"
     },
     "conflict": {
         "drush/drush": "<12.4.3"
