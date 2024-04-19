@@ -78,10 +78,6 @@ class BlockContentAccessControlHandler extends EntityAccessControlHandler implem
       };
     }
 
-    if ($operation === 'view' && !$access->isAllowed() && !$entity->isPublished()) {
-      $access = AccessResult::forbidden();
-    }
-
     // Add the entity as a cacheable dependency because access will at least be
     // determined by whether the block is reusable.
     $access->addCacheableDependency($entity);
