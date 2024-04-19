@@ -125,7 +125,7 @@ class FieldStorageConfigEditForm extends EntityForm {
       '#tree' => TRUE,
       '#weight' => 11,
     ];
-    
+
     return $form;
   }
 
