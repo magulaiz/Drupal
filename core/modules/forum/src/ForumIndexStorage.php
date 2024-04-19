@@ -81,10 +81,23 @@ class ForumIndexStorage implements ForumIndexStorageInterface {
    * {@inheritdoc}
    */
   public function update(NodeInterface $node) {
-    $this->database->update('forum')
-      ->fields(['tid' => $node->forum_tid])
-      ->condition('vid', $node->getRevisionId())
-      ->execute();
+    if (count($node->forum_tid) > 1) {
+      // If there is more than one value, we're leaving a shadow.
+      // Create a new record.
+      $this->database->insert('forum')
+        ->fields([
+          'tid' => $node->forum_tid,
+          'vid' => $node->getRevisionId(),
+          'nid' => $node->id(),
+        ])
+        ->execute();
+    }
+    else {
+      $this->database->update('forum')
+        ->fields(['tid' => $node->forum_tid])
+        ->condition('vid', $node->getRevisionId())
+        ->execute();
+    }
   }
 
   /**
