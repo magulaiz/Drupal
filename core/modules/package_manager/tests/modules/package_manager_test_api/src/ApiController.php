@@ -26,22 +26,16 @@ class ApiController extends ControllerBase {
 
   /**
    * The route to redirect to after the stage has been applied.
-   *
-   * @var string
    */
   protected string $finishedRoute = 'package_manager_test_api.finish';
 
   /**
    * The stage.
-   *
-   * @var \Drupal\package_manager\StageBase
    */
   protected StageBase $stage;
 
   /**
    * The path locator service.
-   *
-   * @var \Drupal\package_manager\PathLocator
    */
   private PathLocator $pathLocator;
 

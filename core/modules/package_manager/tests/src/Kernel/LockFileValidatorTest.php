@@ -26,8 +26,6 @@ class LockFileValidatorTest extends PackageManagerKernelTestBase {
 
   /**
    * The path of the active directory in the test project.
-   *
-   * @var string
    */
   private string $activeDir;
 

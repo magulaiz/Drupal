@@ -151,7 +151,7 @@ composer (next major):
     # not affect Package Manager or Automatic Updates at all. We should remove this
     # line once we make the converter command's calls to `patch` work properly on
     # GitLab CI.
-    - rm ./scripts/core-patches/3331078-allow-beta.patch
+    - rm ./scripts/core-patches/3331078-allow-prerelease.patch
     # Use Symfony 7, which is required by Drupal 11.x.
     - composer require --no-update "symfony/console:^7"
     - composer require --no-update --dev "symfony/config:^7"

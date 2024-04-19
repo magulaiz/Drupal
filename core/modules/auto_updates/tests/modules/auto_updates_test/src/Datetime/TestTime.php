@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\auto_updates_test\Datetime;
 
 use Drupal\Component\Datetime\Time;
+use Drupal\Component\Datetime\TimeInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -14,10 +15,8 @@ class TestTime extends Time {
 
   /**
    * The time service.
-   *
-   * @var \Drupal\Component\Datetime\Time
    */
-  protected Time $decoratorTime;
+  protected TimeInterface $decoratorTime;
 
   /**
    * Constructs a TestTime object.

@@ -19,8 +19,6 @@ trait LoggingDecoratorTrait {
 
   /**
    * The state service.
-   *
-   * @var \Drupal\Core\State\StateInterface
    */
   private StateInterface $state;
 

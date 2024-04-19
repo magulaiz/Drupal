@@ -33,8 +33,6 @@ class CronUpdateRunner implements CronInterface, LoggerAwareInterface {
 
   /**
    * The current interface between PHP and the server.
-   *
-   * @var string
    */
   private static string $serverApi = PHP_SAPI;
 

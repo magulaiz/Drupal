@@ -18,15 +18,11 @@ class RequestTimeRecorder implements EventSubscriberInterface {
 
   /**
    * The state service.
-   *
-   * @var \Drupal\Core\State\StateInterface
    */
   protected StateInterface $state;
 
   /**
    * The time service.
-   *
-   * @var \Drupal\Component\Datetime\TimeInterface
    */
   protected TimeInterface $time;
 

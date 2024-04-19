@@ -25,8 +25,6 @@ final class SupportedBranchInstalled implements ContainerInjectionInterface {
 
   /**
    * The config factory service.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   private ConfigFactoryInterface $configFactory;
 

@@ -27,8 +27,6 @@ class CoreUpdateTest extends UpdateTestBase {
 
   /**
    * WebAssert object.
-   *
-   * @var \Drupal\Tests\WebAssert
    */
   protected WebAssert $webAssert;
 

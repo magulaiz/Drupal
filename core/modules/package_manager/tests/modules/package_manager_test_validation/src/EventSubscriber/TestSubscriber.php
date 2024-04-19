@@ -29,8 +29,6 @@ class TestSubscriber implements EventSubscriberInterface {
 
   /**
    * The state service.
-   *
-   * @var \Drupal\Core\State\StateInterface
    */
   protected StateInterface $state;
 

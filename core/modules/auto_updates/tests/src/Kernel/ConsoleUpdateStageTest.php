@@ -58,8 +58,6 @@ class ConsoleUpdateStageTest extends AutoUpdatesKernelTestBase {
 
   /**
    * The test logger.
-   *
-   * @var \ColinODell\PsrTestLogger\TestLogger
    */
   private TestLogger $logger;
 

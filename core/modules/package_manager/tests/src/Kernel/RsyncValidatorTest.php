@@ -22,8 +22,6 @@ class RsyncValidatorTest extends PackageManagerKernelTestBase {
 
   /**
    * The mocked executable finder.
-   *
-   * @var \PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface
    */
   private ObjectProphecy|ExecutableFinderInterface $executableFinder;
 

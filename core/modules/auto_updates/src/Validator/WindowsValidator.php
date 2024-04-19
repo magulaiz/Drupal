@@ -22,8 +22,6 @@ final class WindowsValidator implements EventSubscriberInterface {
 
   /**
    * The value of the PHP_OS constant.
-   *
-   * @var string
    */
   private static string $os = PHP_OS;
 

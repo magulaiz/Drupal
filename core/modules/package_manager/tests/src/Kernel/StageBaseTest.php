@@ -818,8 +818,6 @@ class TestTime extends Time {
 
   /**
    * An offset to add to the request time.
-   *
-   * @var int
    */
   public static int $offset = 0;
 

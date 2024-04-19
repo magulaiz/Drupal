@@ -17,7 +17,7 @@ use Drupal\package_manager_test_validation\EventSubscriber\TestSubscriber;
 use Drupal\system\SystemManager;
 use Drupal\Tests\auto_updates\Traits\ValidationTestTrait;
 use Drupal\Tests\Traits\Core\CronRunTrait;
-use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 
 /**
  * Tests status checks.
@@ -37,22 +37,16 @@ class StatusCheckTest extends AutoUpdatesFunctionalTestBase {
 
   /**
    * A user who can view the status report.
-   *
-   * @var \Drupal\user\Entity\User
    */
-  protected User $reportViewerUser;
+  protected UserInterface $reportViewerUser;
 
   /**
    * A user who can view the status report and run status checks.
-   *
-   * @var \Drupal\user\Entity\User
    */
-  protected User $checkerRunnerUser;
+  protected UserInterface $checkerRunnerUser;
 
   /**
    * The test checker.
-   *
-   * @var \Drupal\auto_updates_test\EventSubscriber\TestSubscriber1
    */
   protected TestSubscriber1 $testChecker;
 

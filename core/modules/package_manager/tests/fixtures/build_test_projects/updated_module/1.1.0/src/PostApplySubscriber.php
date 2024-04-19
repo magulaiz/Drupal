@@ -19,8 +19,6 @@ class PostApplySubscriber implements EventSubscriberInterface {
 
   /**
    * The path locator service.
-   *
-   * @var \Drupal\package_manager\PathLocator
    */
   private PathLocator $pathLocator;
 

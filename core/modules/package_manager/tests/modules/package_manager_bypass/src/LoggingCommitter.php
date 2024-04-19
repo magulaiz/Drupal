@@ -23,8 +23,6 @@ final class LoggingCommitter implements CommitterInterface {
 
   /**
    * The decorated service.
-   *
-   * @var \PhpTuf\ComposerStager\API\Core\CommitterInterface
    */
   private CommitterInterface $inner;
 

@@ -23,8 +23,6 @@ final class LoggingBeginner implements BeginnerInterface {
 
   /**
    * The decorated service.
-   *
-   * @var \PhpTuf\ComposerStager\API\Core\BeginnerInterface
    */
   private BeginnerInterface $inner;
 
