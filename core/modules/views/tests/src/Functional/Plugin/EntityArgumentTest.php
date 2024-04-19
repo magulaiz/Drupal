@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\views\Functional\Plugin;
 
 use Drupal\Tests\taxonomy\Functional\Views\TaxonomyTestBase;
+use Drupal\user\UserInterface;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 
@@ -28,7 +29,7 @@ class EntityArgumentTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  protected static array $modules = ['node', 'taxonomy'];
+  protected static $modules = ['node', 'taxonomy'];
 
   /**
    * {@inheritdoc}
