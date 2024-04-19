@@ -78,7 +78,7 @@ class HandlerTest extends UITestBase {
       'help' => 'The test data UID',
       'relationship' => [
         'id' => 'standard',
-        'base' => 'users_field_data',
+        'base' => 'users',
         'base field' => 'uid',
       ],
     ];

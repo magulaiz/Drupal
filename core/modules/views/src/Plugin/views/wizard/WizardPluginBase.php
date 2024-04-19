@@ -858,8 +858,6 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     // choose the first field with a field handler.
     $default_table = $this->base_table;
     $data = Views::viewsData()->get($default_table);
-dump('$data');
-dump($data);
     if (isset($data['table']['base']['defaults']['field'])) {
       $default_field = $data['table']['base']['defaults']['field'];
       // If the table for the default field is different to the base table,

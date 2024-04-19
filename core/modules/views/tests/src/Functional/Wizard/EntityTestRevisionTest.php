@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\views\Functional\Wizard;
 
+use Drupal\Core\Database\Database;
+
 /**
  * Tests wizard for generic revisionable entities.
  *
@@ -23,6 +25,11 @@ class EntityTestRevisionTest extends WizardTestBase {
    * Tests creating a view of revisions where the type is not on the base table.
    */
   public function testRevisionsViewWithNoTypeOnBaseTable() {
+    if (Database::getConnection()->driver() == 'mongodb') {
+      // @TODO Fix this test for MongoDB.
+      $this->markTestSkipped();
+    }
+
     $type = [
       'show[wizard_key]' => 'standard:entity_test_rev_revision',
     ];

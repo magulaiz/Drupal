@@ -157,7 +157,12 @@ class ManyToOneHelper extends CoreManyToOneHelper {
             $this->handler->view->many_to_one_aliases[$field][$value] = $this->handler->table . '_value_' . ($this->handler->view->many_to_one_count[$this->handler->table]++);
           }
 
-          $this->handler->tableAliases[$value] = $this->addTable($join, $this->handler->view->many_to_one_aliases[$field][$value]);
+          if ($join) {
+            $this->handler->tableAliases[$value] = $this->addTable($join, $this->handler->view->many_to_one_aliases[$field][$value]);
+          }
+          else {
+            $this->handler->tableAliases[$value] = $this->handler->tableAlias;
+          }
           // Set tableAlias to the first of these.
           if (empty($this->handler->tableAlias)) {
             $this->handler->tableAlias = $this->handler->tableAliases[$value];
@@ -186,85 +191,6 @@ class ManyToOneHelper extends CoreManyToOneHelper {
       }
     }
     return $this->handler->tableAlias;
-  }
-
-  public function addFilter() {
-    if (empty($this->handler->value)) {
-      return;
-    }
-    $this->handler->ensureMyTable();
-
-    // Shorten some variables:
-    $field = $this->getField();
-    $options = $this->handler->options;
-    $operator = $this->handler->operator;
-    $formula = !empty($this->formula);
-    $value = $this->handler->value;
-    if (empty($options['group'])) {
-      $options['group'] = 0;
-    }
-
-    // If $add_condition is set to FALSE, a single expression is enough. If it
-    // is set to TRUE, conditions will be added.
-    $add_condition = TRUE;
-    if ($operator == 'not') {
-      $value = NULL;
-      $operator = 'IS NULL';
-      $add_condition = FALSE;
-    }
-    elseif ($operator == 'or' && empty($options['reduce_duplicates'])) {
-      if (count($value) > 1) {
-        $operator = 'IN';
-      }
-      else {
-        $value = is_array($value) ? array_pop($value) : $value;
-        $operator = '=';
-      }
-      $add_condition = FALSE;
-    }
-
-    if (!$add_condition) {
-      if ($formula) {
-        // TODO: MongoDB needs to do something here!
-        // $this->handler->query->addSubstringField($placeholder, $field, $start, $length);
-      }
-      else {
-        if (count($this->handler->value) > 1) {
-          if ($operator == 'IS NULL') {
-            $condition = $this->handler->query->getConnection()->condition('AND');
-            $condition->condition($field, $this->handler->value, 'NOT IN');
-            $this->handler->query->addCondition(0, $condition);
-          }
-          else {
-            $condition = $this->handler->query->getConnection()->condition('AND');
-            $condition->condition($field, $this->handler->value, 'IN');
-            $this->handler->query->addCondition(0, $condition);
-          }
-        }
-        else {
-          if ($operator == 'IS NULL') {
-            $condition = $this->handler->query->getConnection()->condition('AND');
-            $condition->condition($field, $this->handler->value, 'NOT IN');
-            $this->handler->query->addCondition(0, $condition);
-          }
-          else {
-            $this->handler->query->addCondition(0, $field, $value, $operator);
-          }
-        }
-      }
-    }
-
-    if ($add_condition) {
-      $field = $this->handler->realField;
-      $clause = $operator == 'or' ? $this->handler->query->getConnection()->condition('OR') : $this->handler->query->getConnection()->condition('AND');
-      foreach ($this->handler->tableAliases as $value => $alias) {
-        // TODO: This only works if the base table is the users table.
-        $clause->condition($field, $value);
-      }
-
-      // implode on either AND or OR.
-      $this->handler->query->addCondition($options['group'], $clause);
-    }
   }
 
 }

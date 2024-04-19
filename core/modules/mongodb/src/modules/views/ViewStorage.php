@@ -173,7 +173,7 @@ class ViewStorage extends ConfigEntityStorage {
       }
     }
 
-//    if ($values['id'] == 'frontpage') {
+//    if ($values['id'] == 'test_view_empty') {
 //      dump($values);
 //    }
 

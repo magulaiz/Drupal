@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\views\Functional\Wizard;
 
+use Drupal\Core\Database\Database;
+
 /**
  * Tests that the views wizard can specify the number of items per page.
  *
@@ -48,7 +50,12 @@ class ItemsPerPageTest extends WizardTestBase {
     $view['description'] = $this->randomMachineName(16);
     $view['show[wizard_key]'] = 'node';
     $view['show[type]'] = 'article';
-    $view['show[sort]'] = 'node_field_data-created:DESC';
+    if (Database::getConnection()->driver() == 'mongodb') {
+      $view['show[sort]'] = 'node-created:DESC';
+    }
+    else {
+      $view['show[sort]'] = 'node_field_data-created:DESC';
+    }
     $view['page[create]'] = 1;
     $view['page[title]'] = $this->randomMachineName(16);
     $view['page[path]'] = $this->randomMachineName(16);

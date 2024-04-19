@@ -92,6 +92,11 @@ class Condition extends QueryCondition {
   protected $mongodbEmbeddedTableProjection = NULL;
 
   /**
+   * Disable the use of $elemMatch in the condition.
+   */
+  protected $useElementMatch = TRUE;
+
+  /**
    * Use the condition to create a MongoDB projection condition.
    *
    * MongoDB will return all embedded table rows with a normal query for an
@@ -149,6 +154,18 @@ class Condition extends QueryCondition {
    */
   public function setMetaData($meta_data) {
     $this->alterMetaData = $meta_data;
+  }
+
+  /**
+   * Enable/disable the use of $elemMatch in the condition.
+   *
+   * @param bool $set
+   *
+   *
+   * @return void
+   */
+  public function useElementMatch(bool $set) {
+    $this->useElementMatch = $set;
   }
 
   /**
@@ -924,30 +941,32 @@ class Condition extends QueryCondition {
         }
       }
 
-      // Combine multiple conditions on the same embedded table in a MongoDB
-      // "$elemMatch". See:
-      // https://docs.mongodb.com/manual/tutorial/query-array-of-documents/.
-      $number_of_embedded_tables_condition_fragments = count($embedded_tables_condition_fragments);
-      foreach ($embedded_tables_condition_fragments as $embedded_table => $condition_fragments) {
-        if (($number_of_embedded_tables_condition_fragments > 1) || ($number_of_condition_fragments > 0)) {
-          if (in_array($embedded_table, [$this->mongodbBaseTable, $this->mongodbBaseAlias])) {
-            $this->mongodbVersion['$and'] = [$condition_fragments];
-            $this->mongodbAggregateVersion['$and'] = [$condition_fragments];
+      if ($this->useElementMatch) {
+        // Combine multiple conditions on the same embedded table in a MongoDB
+        // "$elemMatch". See:
+        // https://docs.mongodb.com/manual/tutorial/query-array-of-documents/.
+        $number_of_embedded_tables_condition_fragments = count($embedded_tables_condition_fragments);
+        foreach ($embedded_tables_condition_fragments as $embedded_table => $condition_fragments) {
+          if (($number_of_embedded_tables_condition_fragments > 1) || ($number_of_condition_fragments > 0)) {
+            if (in_array($embedded_table, [$this->mongodbBaseTable, $this->mongodbBaseAlias])) {
+              $this->mongodbVersion['$and'] = [$condition_fragments];
+              $this->mongodbAggregateVersion['$and'] = [$condition_fragments];
+            }
+            else {
+              $this->mongodbVersion['$and'][] = [$embedded_table => ['$elemMatch' => $condition_fragments]];
+              $this->mongodbAggregateVersion['$and'][] = [$embedded_table => ['$elemMatch' => $condition_fragments]];
+              $this->mongodbElemMatchEmbeddedTables[] = $embedded_table;
+            }
           }
           else {
-            $this->mongodbVersion['$and'][] = [$embedded_table => ['$elemMatch' => $condition_fragments]];
-            $this->mongodbAggregateVersion['$and'][] = [$embedded_table => ['$elemMatch' => $condition_fragments]];
-            $this->mongodbElemMatchEmbeddedTables[] = $embedded_table;
-          }
-        }
-        else {
-          if (in_array($embedded_table, [$this->mongodbBaseTable, $this->mongodbBaseAlias])) {
-            $this->mongodbVersion['$and'] = [$condition_fragments];
-            $this->mongodbAggregateVersion['$and'] = [$condition_fragments];
-          }
-          else {
-            $this->mongodbVersion = $this->mongodbAggregateVersion = [$embedded_table => ['$elemMatch' => $condition_fragments]];
-            $this->mongodbElemMatchEmbeddedTables[] = $embedded_table;
+            if (in_array($embedded_table, [$this->mongodbBaseTable, $this->mongodbBaseAlias])) {
+              $this->mongodbVersion['$and'] = [$condition_fragments];
+              $this->mongodbAggregateVersion['$and'] = [$condition_fragments];
+            }
+            else {
+              $this->mongodbVersion = $this->mongodbAggregateVersion = [$embedded_table => ['$elemMatch' => $condition_fragments]];
+              $this->mongodbElemMatchEmbeddedTables[] = $embedded_table;
+            }
           }
         }
       }

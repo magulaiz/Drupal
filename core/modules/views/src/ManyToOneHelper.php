@@ -240,7 +240,7 @@ class ManyToOneHelper {
             }
             $this->handler->view->many_to_one_aliases[$field][$value] = $this->handler->table . '_value_' . ($this->handler->view->many_to_one_count[$this->handler->table]++);
           }
-
+dump(2);
           $this->handler->tableAliases[$value] = $this->addTable($join, $this->handler->view->many_to_one_aliases[$field][$value]);
           // Set tableAlias to the first of these.
           if (empty($this->handler->tableAlias)) {
@@ -379,14 +379,20 @@ class ManyToOneHelper {
       $field = $this->handler->realField;
       $clause = $operator == 'or' ? $this->handler->query->getConnection()->condition('OR') : $this->handler->query->getConnection()->condition('AND');
       foreach ($this->handler->tableAliases as $value => $alias) {
-        $clause->condition("$alias.$field", $value);
+        if ($this->handler->view->getDatabaseDriver() == 'mongodb' && (in_array($alias, [NULL, $this->handler->table, $this->handler->tableAlias], TRUE))) {
+          $clause->condition($field, $value);
+        }
+        else {
+          $clause->condition("$alias.$field", $value);
+        }
       }
 
-      // implode on either AND or OR.
       if ($this->handler->view->getDatabaseDriver() == 'mongodb') {
+        $clause->useElementMatch(FALSE);
         $this->handler->query->addCondition($options['group'], $clause);
       }
       else {
+        // implode on either AND or OR.
         $this->handler->query->addWhere($options['group'], $clause);
       }
     }

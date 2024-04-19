@@ -32,7 +32,7 @@ class Date extends CoreDate {
       $this->query->addCondition($this->options['group'], $field, $b, '<=');
     }
     else {
-      $condition = $this->handler->query->getConnection()->condition('OR');
+      $condition = $this->query->getConnection()->condition('OR');
       $condition->condition($field, $a, '<');
       $condition->condition($field, $b, '>');
       $this->query->addCondition($this->options['group'], $condition);

@@ -2,7 +2,11 @@
 
 namespace Drupal\comment\Plugin\views\wizard;
 
+use Drupal\Core\Database\Connection;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\Menu\MenuParentFormSelectorInterface;
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @todo: replace numbers with constants.
@@ -40,6 +44,32 @@ class Comment extends WizardPluginBase {
       'entity_field' => 'status',
     ],
   ];
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('entity_type.bundle.info'),
+      $container->get('menu.parent_form_selector'),
+      $container->get('database')
+    );
+  }
+
+  /**
+   * Constructs a WizardPluginBase object.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeBundleInfoInterface $bundle_info_service, MenuParentFormSelectorInterface $parent_form_selector, Connection $connection) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $bundle_info_service, $parent_form_selector, $connection);
+
+    if ($connection->driver() == 'mongodb') {
+      $this->base_table = 'comment';
+      $this->filters['status_node']['table'] = 'node';
+    }
+  }
 
   /**
    * {@inheritdoc}

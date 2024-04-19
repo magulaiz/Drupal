@@ -51,7 +51,10 @@ trait JoinPluginTrait {
         $left_field = str_replace($search_needle, $replace_needle, $left_field);
       }
     }
-
+//dump('$left_table');
+//dump($left_table);
+//dump('$table');
+//dump($table);
     $operator = $this->configuration['operator'] ?? '=';
     $join_condition = $select_query->joinCondition()->compare($left_table['alias'] . '.' . $left_field, $table['alias'] . '.' . $right_field, $operator);
 
