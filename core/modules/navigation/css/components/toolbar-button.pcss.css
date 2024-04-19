@@ -95,8 +95,8 @@
   &::before {
     display: block;
     flex-shrink: 0;
-    width: var(--admin-toolbar-space-20);
-    height: var(--admin-toolbar-space-20);
+    inline-size: var(--admin-toolbar-space-20);
+    block-size: var(--admin-toolbar-space-20);
     content: '';
     background-color: currentColor;
     mask-repeat: no-repeat;

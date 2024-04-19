@@ -11,7 +11,8 @@
   position: relative;
   z-index: var(--admin-toolbar-z-index-top-bar);
   display: flex;
-  padding: var(--admin-toolbar-space-4);
+  padding-inline: var(--admin-toolbar-space-4);
+  padding-block: var(--admin-toolbar-space-4);
   background-color: white;
   box-shadow: 0 0 8px 0 var(--admin-toolbar-color-shadow-15);
   font-family: var(--admin-toolbar-font-family);

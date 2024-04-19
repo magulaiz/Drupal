@@ -42,7 +42,7 @@
   position: fixed;
   z-index: 1000;
   display: none;
-  width: calc(11.25 * var(--admin-toolbar-rem));
+  inline-size: calc(11.25 * var(--admin-toolbar-rem));
   padding: var(--admin-toolbar-space-24) var(--admin-toolbar-space-12);
   border-radius: var(--admin-toolbar-space-8);
   background: white;

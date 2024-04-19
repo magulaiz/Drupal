@@ -779,7 +779,7 @@ internal.floating-ui:
   version: "1.1.1"
   license:
     name: MIT
-    url: https://github.com/floating-ui/floating-ui/blob/v2.11.6/LICENSE
+    url: https://github.com/floating-ui/floating-ui/blob/master/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/floating-ui/floating-ui.core.umd.min.js: { minified: true }
