@@ -3,6 +3,7 @@
 namespace Drupal\views\Plugin\views\argument;
 
 use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -33,10 +34,16 @@ class EntityArgument extends NumericArgument implements ContainerFactoryPluginIn
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityRepositoryInterface $entity_repository, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    EntityRepositoryInterface | EntityStorageInterface | EntityTypeManagerInterface $entityRepository,
+    ?EntityTypeManagerInterface $entityTypeManager = NULL,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->entityRepository = $entity_repository;
-    $this->entityTypeManager = $entity_type_manager;
+    $this->entityRepository = $entityRepository instanceof EntityRepositoryInterface ? $entityRepository : \Drupal::service('entity.repository');
+    $this->entityTypeManager = $entityTypeManager ?? \Drupal::service('entity_type.manager');
   }
 
   /**
@@ -63,6 +70,32 @@ class EntityArgument extends NumericArgument implements ContainerFactoryPluginIn
       $titles[$entity->id()] = $this->entityRepository->getTranslationFromContext($entity)->label();
     }
     return $titles;
+  }
+
+  /**
+   * This class is replacing many separate plugins from different core modules,
+   * each of which had a storage property for their own entity type. We can't
+   * use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait since
+   * these are not registered as services, but are the storage "subservice" from
+   * the entityTypeManager.
+   */
+  protected array $deprecatedStorageProperties = [
+    'nodeStorage' => 'node',
+    'termStorage' => 'taxonomy_term',
+    'vocabularyStorage' => 'taxonomy_vocabulary',
+    'vocabularyStorage' => 'taxonomy_vocabulary',
+    'storage' => 'user',
+  ];
+
+  /**
+   * Allows to access deprecated/removed properties.
+   *
+   * This method must be public.
+   */
+  public function __get($name) {
+    if (isset($this->deprecatedStorageProperties[$name])) {
+      return $this->entityTypeManager->getStorage($storage_name);
+    }
   }
 
 }
