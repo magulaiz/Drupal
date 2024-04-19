@@ -785,8 +785,8 @@ class EntityViewsDataTest extends KernelTestBase {
   protected function assertEntityReferenceField(array $data): void {
     $this->assertEquals('field', $data['field']['id']);
     $this->assertEquals('numeric', $data['filter']['id']);
-    $this->assertEquals('entity_target_id', $data['argument']['id']);
-    $this->assertEquals('user', $data['argument']['target_entity_type_id']);
+    $this->assertEquals('entity_id', $data['argument']['id']);
+    $this->assertEquals('user', $data['argument']['entity_type']);
     $this->assertEquals('standard', $data['sort']['id']);
   }
 
