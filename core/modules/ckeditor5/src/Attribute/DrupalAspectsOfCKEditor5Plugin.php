@@ -14,7 +14,7 @@ class DrupalAspectsOfCKEditor5Plugin extends Plugin {
   /**
    * Constructs a DrupalAspectsOfCKEditor5Plugin attribute.
    *
-   * @param \Drupal\Core\StringTranslation\TranslatableMarkup $label
+   * @param string|\Drupal\Core\StringTranslation\TranslatableMarkup $label
    *   The human-readable name of the CKEditor plugin.
    * @param class-string $class
    *   (optional) The CKEditor 5 plugin class.If not specified, the
@@ -55,7 +55,7 @@ class DrupalAspectsOfCKEditor5Plugin extends Plugin {
    * @see \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition::getCreatableElements()
    */
   public function __construct(
-    public readonly TranslatableMarkup $label,
+    public readonly string|TranslatableMarkup $label,
     public string $class = CKEditor5PluginDefault::class,
     public readonly string|false $library = FALSE,
     public readonly string|false $admin_library = FALSE,
