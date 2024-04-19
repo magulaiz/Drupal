@@ -8,7 +8,14 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Argument handler to accept an entity argument.
+ * Argument handler to accept an entity reference ID value.
+ *
+ * This handler accepts entity reference ID values. The definition defines the
+ * `target_entity_type_id` parameter to determine what kind of ID to load.
+ * Entity ID values that are directly part of an entity are handled by
+ * EntityArgument.
+ *
+ * @see \Drupal\views\Plugin\views\argument\EntityArgument
  *
  * @ingroup views_argument_handlers
  *
