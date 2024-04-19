@@ -6,6 +6,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\ContentEntityType;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityHandlerInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
@@ -74,6 +75,13 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
   protected $entityFieldManager;
 
   /**
+  * The entity bundle info.
+  *
+  * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
+  */
+  protected $entityTypeBundleInfo;
+
+  /**
    * Constructs an EntityViewsData object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -89,13 +97,14 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
    */
-  public function __construct(EntityTypeInterface $entity_type, SqlEntityStorageInterface $storage_controller, EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, TranslationInterface $translation_manager, EntityFieldManagerInterface $entity_field_manager) {
+  public function __construct(EntityTypeInterface $entity_type, SqlEntityStorageInterface $storage_controller, EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, TranslationInterface $translation_manager, EntityFieldManagerInterface $entity_field_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info) {
     $this->entityType = $entity_type;
     $this->entityTypeManager = $entity_type_manager;
     $this->storage = $storage_controller;
     $this->moduleHandler = $module_handler;
     $this->setStringTranslation($translation_manager);
     $this->entityFieldManager = $entity_field_manager;
+    $this->entityTypeBundleInfo = $entity_type_bundle_info;
   }
 
   /**
@@ -108,7 +117,8 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
       $container->get('entity_type.manager'),
       $container->get('module_handler'),
       $container->get('string_translation'),
-      $container->get('entity_field.manager')
+      $container->get('entity_field.manager'),
+      $container->get('entity_type.bundle.info')
     );
   }
 
@@ -121,6 +131,16 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
     if (!isset($this->fieldStorageDefinitions)) {
       $this->fieldStorageDefinitions = $this->entityFieldManager->getFieldStorageDefinitions($this->entityType->id());
     }
+
+    if ($this->entityType->hasKey('bundle')) {
+      $bundle_field_definitions = [];
+      foreach ($this->entityTypeBundleInfo->getBundleInfo($this->entityType->id()) as $bundle_id => $bundle_info) {
+        $bundle_field_definitions += $this->entityFieldManager->getFieldDefinitions($this->entityType->id(), $bundle_id);
+      }
+
+      $this->fieldStorageDefinitions += $bundle_field_definitions;
+    }
+
     return $this->fieldStorageDefinitions;
   }
 
@@ -311,8 +331,27 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
     // Load all typed data definitions of all fields. This should cover each of
     // the entity base, revision, data tables.
     $field_definitions = $this->entityFieldManager->getBaseFieldDefinitions($this->entityType->id());
+
+    $field_storage_definitions = array_map(function (FieldDefinitionInterface $definition) {
+      return $definition->getFieldStorageDefinition();
+    }, $field_definitions);
+
+    // Add any bundle fields defined in code.
+    if ($this->entityType->hasKey('bundle')) {
+      $bundle_field_definitions = [];
+      foreach ($this->entityTypeBundleInfo->getBundleInfo($this->entityType->id()) as $bundle_id => $bundle_info) {
+        $bundle_field_definitions += $this->entityFieldManager->getFieldDefinitions($this->entityType->id(), $bundle_id);
+      }
+
+      $field_definitions += $bundle_field_definitions;
+    }
+
+    $field_storage_definitions = array_map(function (FieldDefinitionInterface $definition) {
+      return $definition->getFieldStorageDefinition();
+    }, $field_definitions);
+
     /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
-    $table_mapping = $this->storage->getTableMapping($field_definitions);
+    $table_mapping = $this->storage->getTableMapping($field_storage_definitions);
     // Fetch all fields that can appear in both the base table and the data
     // table.
     $duplicate_fields = array_intersect_key($entity_keys, array_flip(['id', 'revision', 'bundle']));
@@ -334,9 +373,9 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
       }
     }
 
-    foreach ($field_definitions as $field_definition) {
-      if ($table_mapping->requiresDedicatedTableStorage($field_definition->getFieldStorageDefinition())) {
-        $table = $table_mapping->getDedicatedDataTableName($field_definition->getFieldStorageDefinition());
+    foreach ($field_storage_definitions as $field_storage_definition) {
+      if ($table_mapping->requiresDedicatedTableStorage($field_storage_definition)) {
+        $table = $table_mapping->getDedicatedDataTableName($field_storage_definition);
 
         $data[$table]['table']['group'] = $this->entityType->getLabel();
         $data[$table]['table']['provider'] = $this->entityType->getProvider();
@@ -349,7 +388,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
         ];
 
         if ($revisionable) {
-          $revision_table = $table_mapping->getDedicatedRevisionTableName($field_definition->getFieldStorageDefinition());
+          $revision_table = $table_mapping->getDedicatedRevisionTableName($field_storage_definition);
 
           $data[$revision_table]['table']['group'] = $this->t('@entity_type revision', ['@entity_type' => $this->entityType->getLabel()]);
           $data[$revision_table]['table']['provider'] = $this->entityType->getProvider();
@@ -435,7 +474,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
   protected function mapFieldDefinition($table, $field_name, FieldDefinitionInterface $field_definition, TableMappingInterface $table_mapping, &$table_data) {
     // Create a dummy instance to retrieve property definitions.
     $field_column_mapping = $table_mapping->getColumnNames($field_name);
-    $field_schema = $this->getFieldStorageDefinitions()[$field_name]->getSchema();
+    $field_schema = $field_definition->getFieldStorageDefinition()->getSchema();
 
     $field_definition_type = $field_definition->getType();
     // Add all properties to views table data. We need an entry for each
@@ -449,6 +488,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
       $table_data = $table_data ?: [];
       $table_data += [$schema_field_name => []];
       $table_data[$schema_field_name] = NestedArray::mergeDeep($table_data[$schema_field_name], $this->mapSingleFieldViewsData($table, $field_name, $field_definition_type, $field_column_name, $field_schema['columns'][$field_column_name]['type'], $first, $field_definition));
+
       $table_data[$schema_field_name]['entity field'] = $field_name;
       $first = FALSE;
     }
@@ -556,6 +596,7 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
             $views_field['sort']['id'] = 'standard';
             break;
 
+          case 'blob':
           case 'char':
           case 'string':
           case 'varchar':
@@ -583,6 +624,14 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
     $process_method = 'processViewsDataFor' . Container::camelize($field_type);
     if (method_exists($this, $process_method)) {
       $this->{$process_method}($table, $field_definition, $views_field, $column_name);
+    }
+
+    $target_bundle = $field_definition->getTargetBundle();
+    if (!empty($target_bundle)) {
+      $views_field['field']['bundle'] = $field_definition->getTargetBundle();
+      $views_field['filter']['bundle'] = $field_definition->getTargetBundle();
+      $views_field['sort']['bundle'] = $field_definition->getTargetBundle();
+      $views_field['argument']['bundle'] = $field_definition->getTargetBundle();
     }
 
     return $views_field;
