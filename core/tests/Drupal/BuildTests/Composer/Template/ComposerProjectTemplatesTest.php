@@ -30,12 +30,9 @@ class ComposerProjectTemplatesTest extends ComposerBuildTestBase {
   /**
    * The minimum stability requirement for dependencies.
    *
-   * @todo Temporarily changing to 'beta' to allow php-tuf/composer-stager
-   *   dependency. This will be done in https://drupal.org/i/3331078.
-   *
    * @see https://getcomposer.org/doc/04-schema.md#minimum-stability
    */
-  protected const MINIMUM_STABILITY = 'beta';
+  protected const MINIMUM_STABILITY = 'RC';
 
   /**
    * The order of stability strings from least stable to most stable.
