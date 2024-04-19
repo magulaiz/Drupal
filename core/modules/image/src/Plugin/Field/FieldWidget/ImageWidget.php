@@ -144,23 +144,23 @@ class ImageWidget extends FileWidget {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
 
     $field_settings = $this->getFieldSettings();
+    $extensions = $field_settings['file_extensions'];
 
-    // Add image validation.
-    $element['#upload_validators']['file_validate_is_image'] = [];
+    // Add image validation. Only validate the image if the file extension is
+    // one of those configured for the field.
+    $element['#upload_validators']['file_validate_is_image'] = [$extensions];
 
     // Add upload resolution validation.
     if ($field_settings['max_resolution'] || $field_settings['min_resolution']) {
       $element['#upload_validators']['file_validate_image_resolution'] = [$field_settings['max_resolution'], $field_settings['min_resolution']];
     }
 
-    $extensions = $field_settings['file_extensions'];
-    $supported_extensions = $this->imageFactory->getSupportedExtensions();
-
     // If using custom extension validation, ensure that the extensions are
     // supported by the current image toolkit. Otherwise, validate against all
     // toolkit supported extensions.
-    $extensions = !empty($extensions) ? array_intersect(explode(' ', $extensions), $supported_extensions) : $supported_extensions;
-    $element['#upload_validators']['file_validate_extensions'][0] = implode(' ', $extensions);
+    $supported_extensions = $this->imageFactory->getSupportedExtensions();
+    $valid_extensions = !empty($extensions) ? array_intersect(explode(' ', $extensions), $supported_extensions) : $supported_extensions;
+    $element['#upload_validators']['file_validate_extensions'][0] = implode(' ', $valid_extensions);
 
     // Add mobile device image capture acceptance.
     $element['#accept'] = 'image/*';
