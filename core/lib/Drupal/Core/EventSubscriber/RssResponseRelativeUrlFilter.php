@@ -3,6 +3,7 @@
 namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\Xss;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
@@ -62,12 +63,8 @@ class RssResponseRelativeUrlFilter implements EventSubscriberInterface {
         $html_markup = $node->nodeValue;
         if (!empty($html_markup)) {
           $html_markup = Html::transformRootRelativeUrlsToAbsolute($html_markup, $request->getSchemeAndHttpHost());
-          if ($node->firstChild instanceof \DOMCdataSection) {
-            $new_node = $rss_dom->createCDATASection($html_markup);
-          }
-          else {
-            $new_node = $rss_dom->createTextNode($html_markup);
-          }
+          $html_markup = Xss::filterAdmin($html_markup);
+          $new_node = $rss_dom->createCDATASection($html_markup);
           $node->replaceChild($new_node, $node->firstChild);
         }
       }
