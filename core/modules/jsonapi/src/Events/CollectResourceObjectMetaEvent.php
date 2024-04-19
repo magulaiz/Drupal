@@ -37,7 +37,7 @@ final class CollectResourceObjectMetaEvent extends Event implements RefinableCac
    */
   public function __construct(
     private readonly ResourceObject $resourceObject,
-    private array $context
+    private readonly array $context
   ) {
     if (empty($context['resource_object']) || !($context['resource_object'] instanceof ResourceObject) || $this->context['resource_object']->getId() !== $this->resourceObject->getId()) {
       throw new \RuntimeException('The context must contain a valid resource object.');
