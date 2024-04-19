@@ -70,8 +70,9 @@ class WorkspaceToolbarIntegrationTest extends OffCanvasTestBase {
     // Wait for toolbar to appear.
     $this->getSession()->resizeWindow(1200, 600);
 
-    // Open a couple of pages in order to test toolbar caching.
+    // Open a few pages in order to test toolbar caching.
     $this->drupalGet('admin');
+    $this->drupalGet('<front>');
     $this->drupalGet('admin/content');
 
     // Wait for toolbar to appear.
