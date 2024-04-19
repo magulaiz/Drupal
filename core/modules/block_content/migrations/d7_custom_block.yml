@@ -17,7 +17,6 @@ process:
 destination:
   plugin: entity:block_content
   default_bundle: basic
-  no_stub: true
 migration_dependencies:
   required:
     - d7_filter_format
