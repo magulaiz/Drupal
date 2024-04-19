@@ -43,14 +43,14 @@ class MetaEventSubscriber implements EventSubscriberInterface {
 
     if ($config['user_is_superuser_context']) {
       $event->addCacheContexts(['user.is_super_user']);
-      $event->setMeta('resource_meta_user_is_superuser', (int) \Drupal::currentUser()->id() === 1 ? 'yes' : 'no');
-      $event->setMeta('resource_meta_user_id', \Drupal::currentUser()->id());
+      $event->setMetaValue('resource_meta_user_is_superuser', (int) \Drupal::currentUser()->id() === 1 ? 'yes' : 'no');
+      $event->setMetaValue('resource_meta_user_id', \Drupal::currentUser()->id());
     }
 
     // Fields expect an array of field names, the value of the fields are then
     // added to the metadata.
     foreach ($config['fields'] as $field_name) {
-      $event->setMeta('resource_meta_' . $field_name, $event->getResourceObject()->getField($field_name)->value);
+      $event->setMetaValue('resource_meta_' . $field_name, $event->getResourceObject()->getField($field_name)->value);
     }
 
     $event->addCacheTags(['jsonapi_test_meta_events.object_meta']);

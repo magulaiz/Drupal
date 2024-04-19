@@ -13,7 +13,7 @@ use Drupal\Component\EventDispatcher\Event;
 /**
  * Event for collecting resource object metadata of a JSON:API resource types.
  *
- * Subscribers of this event that call ::setMeta() must set the appropriate
+ * Subscribers of this event that call ::setMetaValue() must set the appropriate
  * cache tags and contexts. These will then bubble up to the normalization.
  */
 final class CollectResourceObjectMetaEvent extends Event implements RefinableCacheableDependencyInterface {
@@ -75,16 +75,16 @@ final class CollectResourceObjectMetaEvent extends Event implements RefinableCac
   }
 
   /**
-   * Sets a value value.
+   * Sets a meta value.
    *
-   * @param $property
-   *   The key.
-   * @param $value
+   * @param array|string $property
+   *   The key or array of keys.
+   * @param mixed $value
    *   The value.
    *
    * @return $this
    */
-  public function setMeta($property, $value): self {
+  public function setMetaValue(array|string $property, mixed $value): self {
     NestedArray::setValue($this->meta, (array) $property, $value, TRUE);
     return $this;
   }
