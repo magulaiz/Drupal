@@ -7,7 +7,7 @@ namespace Drupal\Tests\views\Functional\Update;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 
 /**
- * Tests the upgrade path for converting numeric arguments to entity_target_id.
+ * Tests the upgrade path for converting numeric arguments to entity_id.
  *
  * @group Update
  *
@@ -30,14 +30,14 @@ class EntityArgumentUpdateTest extends UpdatePathTestBase {
    */
   public function testViewsFieldPluginConversion(): void {
     $config = \Drupal::config('views.view.test_entity_id_argument_update');
-    $this->assertNotEquals('entity_target_id', $config->get('display.default.display_options.arguments.field_tags_target_id.plugin_id'));
-    $this->assertNotEquals('taxonomy_term', $config->get('display.default.display_options.arguments.field_tags_target_id.target_entity_type_id'));
+    $this->assertNotEquals('entity_id', $config->get('display.default.display_options.arguments.field_tags_target_id.plugin_id'));
+    $this->assertNotEquals('taxonomy_term', $config->get('display.default.display_options.arguments.field_tags_target_id.entity_type'));
 
     $this->runUpdates();
 
     $config = \Drupal::config('views.view.test_entity_id_argument_update');
-    $this->assertEquals('entity_target_id', $config->get('display.default.display_options.arguments.field_tags_target_id.plugin_id'));
-    $this->assertEquals('taxonomy_term', $config->get('display.default.display_options.arguments.field_tags_target_id.target_entity_type_id'));
+    $this->assertEquals('entity_id', $config->get('display.default.display_options.arguments.field_tags_target_id.plugin_id'));
+    $this->assertEquals('taxonomy_term', $config->get('display.default.display_options.arguments.field_tags_target_id.entity_type'));
   }
 
 }

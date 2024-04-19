@@ -43,12 +43,8 @@ views.argument.numeric:
 views.argument.entity_id:
   type: views.argument.numeric
   label: 'Entity ID'
-
-views.argument.entity_target_id:
-  type: views.argument.numeric
-  label: 'Entity Target ID'
   mapping:
-    target_entity_type_id:
+    entity_type:
       type: string
       label: 'Target entity type ID'
 

@@ -530,14 +530,14 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
   }
 
   /**
-   * Checks if 'numeric' arguments should be converted to 'entity_target_id'.
+   * Checks if 'numeric' arguments should be converted to 'entity_id'.
    *
    * @param \Drupal\views\ViewEntityInterface $view
    *   The view entity.
    *
    * @return bool
    *   TRUE if the view has any arguments that reference an entity reference
-   *   that need to be converted from 'numeric' to 'entity_target_id'.
+   *   that need to be converted from 'numeric' to 'entity_id'.
    */
   public function needsEntityArgumentUpdate(ViewEntityInterface $view) {
     return $this->processDisplayHandlers($view, TRUE, function (&$handler, $handler_type) {
@@ -546,7 +546,7 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
   }
 
   /**
-   * Processes arguments and convert 'numeric' to 'entity_target_id' if needed.
+   * Processes arguments and converts 'numeric' to 'entity_id' if needed.
    *
    * @param array $handler
    *   A display handler.
@@ -561,9 +561,9 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
     if ($handler_type === 'argument' && $plugin_id === 'numeric') {
       $argument_table_data = $this->viewsData->get($handler['table']);
       $argument_definition = $argument_table_data[$handler['field']]['argument'] ?? [];
-      if (isset($argument_definition['id']) && $argument_definition['id'] === 'entity_target_id') {
-        $handler['plugin_id'] = 'entity_target_id';
-        $handler['target_entity_type_id'] = $argument_definition['target_entity_type_id'];
+      if (isset($argument_definition['id']) && $argument_definition['id'] === 'entity_id') {
+        $handler['plugin_id'] = 'entity_id';
+        $handler['entity_type'] = $argument_definition['entity_type'];
         return TRUE;
       }
     }

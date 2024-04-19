@@ -195,7 +195,8 @@ display:
           validate_options: {  }
           break_phrase: true
           not: false
-          plugin_id: numeric
+          plugin_id: entity_id
+          entity_type: taxonomy_term
       display_extenders: {  }
     cache_metadata:
       max-age: -1
