@@ -124,7 +124,7 @@ class NodeFieldFilterTest extends NodeTestBase {
   /**
    * Tests grouped nid filter.
    */
-  public function testNodeIdGroupedFilter() {
+  public function testNodeIdGroupedFilter(): void {
     // The page should not break when access without array of nid[] parameters
     // test-id-grouped-filter?nid=1
     $this->drupalGet('test-id-grouped-filter', ['query' => ['nid' => '1']]);
