@@ -14,6 +14,7 @@ use Drupal\Core\Form\SubformState;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\Element;
 use Drupal\views\FieldAPIHandlerTrait;
+use Drupal\views\Plugin\EntityReferenceSelection\ViewsSelection;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -236,23 +237,21 @@ class EntityReference extends ManyToOne {
       $subform_state = SubformState::createForSubform($subform, $form, $form_state);
       $sub_handler_settings = $selection_handler->buildConfigurationForm($subform, $subform_state);
 
-      switch ($sub_handler) {
-        case 'views':
-          if (isset($sub_handler_settings['view']['no_view_help'])) {
-            // If there are no views with entity reference displays,
-            // ViewsSelection still validates the view.
-            // This will prevent form config extra form submission,
-            // so we remove it here.
-            unset($sub_handler_settings['view']['#element_validate']);
-          }
-          break;
-
-        default:
-          // Remove unnecessary and inappropriate handler settings from the
-          // filter config form.
-          $sub_handler_settings['target_bundles_update']['#access'] = FALSE;
-          $sub_handler_settings['auto_create']['#access'] = FALSE;
-          $sub_handler_settings['auto_create_bundle']['#access'] = FALSE;
+      if ($selection_handler instanceof ViewsSelection) {
+        if (isset($sub_handler_settings['view']['no_view_help'])) {
+          // If there are no views with entity reference displays,
+          // ViewsSelection still validates the view.
+          // This will prevent form config extra form submission,
+          // so we remove it here.
+          unset($sub_handler_settings['view']['#element_validate']);
+        }
+      }
+      else {
+        // Remove unnecessary and inappropriate handler settings from the
+        // filter config form.
+        $sub_handler_settings['target_bundles_update']['#access'] = FALSE;
+        $sub_handler_settings['auto_create']['#access'] = FALSE;
+        $sub_handler_settings['auto_create_bundle']['#access'] = FALSE;
       }
 
       $subform = NestedArray::mergeDeepArray([
