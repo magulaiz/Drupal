@@ -22,6 +22,10 @@ class CKEditor5AspectsOfCKEditor5Plugin extends Plugin {
   public function __construct(
     public readonly array $plugins,
     public readonly array $config = [],
-  ) {}
+  ) {
+    // The "class" property is not used, but it needs to be initialized to avoid
+    // error on ::get().
+    $this->setClass('');
+  }
 
 }

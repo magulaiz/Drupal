@@ -77,8 +77,9 @@ class CKEditor5Plugin extends Plugin {
   public function get(): CKEditor5PluginDefinition {
     return new CKEditor5PluginDefinition([
       'id' => $this->id,
-      'ckeditor' => $this->ckeditor5->get(),
+      'ckeditor5' => $this->ckeditor5->get(),
       'drupal' => $this->drupal->get(),
+      'provider' => $this->getProvider(),
     ]);
   }
 
