@@ -65,19 +65,18 @@
         // avoid database errors associated with concurrent requests
         // during install.
         const path = `system/timezone/${abbreviation}/${offsetNow}/${isDaylightSavingTime}`;
-        $.ajax({
-          async: false,
-          url: Drupal.url(path),
-          data: { date: dateString },
-          dataType: 'json',
-          success(data) {
-            if (data) {
-              document.querySelectorAll('.timezone-detect').forEach((item) => {
-                item.value = data;
-              });
-            }
-          },
-        });
+
+        (async () => {
+          const response = await fetch(Drupal.url(path));
+
+          const data = await response.json();
+
+          if (data) {
+            document.querySelectorAll('.timezone-detect').forEach((item) => {
+              item.value = data;
+            });
+          }
+        })();
       }
     },
   };

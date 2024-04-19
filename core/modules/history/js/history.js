@@ -32,28 +32,35 @@
      * @param {function} callback
      *   A callback that is called after the requested timestamps were fetched.
      */
-    fetchTimestamps(nodeIDs, callback) {
+    async fetchTimestamps(nodeIDs, callback) {
       // Use the data embedded in the page, if available.
       if (embeddedLastReadTimestamps) {
         callback();
         return;
       }
-
-      $.ajax({
-        url: Drupal.url('history/get_node_read_timestamps'),
-        type: 'POST',
-        data: { 'node_ids[]': nodeIDs },
-        dataType: 'json',
-        success(results) {
-          Object.keys(results || {}).forEach((nodeID) => {
-            storage.setItem(
-              `Drupal.history.${currentUserID}.${nodeID}`,
-              results[nodeID],
-            );
-          });
-          callback();
+      const params = new URLSearchParams();
+      params.append('node_ids', nodeIDs);
+      const response = await fetch(
+        Drupal.url('history/get_node_read_timestamps'),
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: params.toString(),
         },
+      );
+
+      const results = await response.json();
+
+      Object.keys(results || {}).forEach((nodeID) => {
+        storage.setItem(
+          `Drupal.history.${currentUserID}.${nodeID}`,
+          results[nodeID],
+        );
       });
+
+      callback();
     },
 
     /**
@@ -82,27 +89,21 @@
      * @param {number|string} nodeID
      *   A node ID.
      */
-    markAsRead(nodeID) {
-      $.ajax({
-        url: Drupal.url(`history/${nodeID}/read`),
-        type: 'POST',
-        dataType: 'json',
-        success(timestamp) {
-          // If the data is embedded in the page, don't store on the client
-          // side.
-          if (
-            embeddedLastReadTimestamps &&
-            embeddedLastReadTimestamps[nodeID]
-          ) {
-            return;
-          }
-
-          storage.setItem(
-            `Drupal.history.${currentUserID}.${nodeID}`,
-            timestamp,
-          );
+    async markAsRead(nodeID) {
+      const response = await fetch(Drupal.url(`history/${nodeID}/read`), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
       });
+
+      const timestamp = await response.json();
+
+      // If the data is embedded in the page, don't store on the client side.
+      if (embeddedLastReadTimestamps && embeddedLastReadTimestamps[nodeID]) {
+        return;
+      }
+      storage.setItem(`Drupal.history.${currentUserID}.${nodeID}`, timestamp);
     },
 
     /**

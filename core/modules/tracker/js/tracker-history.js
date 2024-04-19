@@ -24,7 +24,7 @@
     });
   }
 
-  function processNewRepliesIndicators(placeholders) {
+  async function processNewRepliesIndicators(placeholders) {
     // Figure out which placeholders need the "x new" replies links.
     const placeholdersToUpdate = {};
     placeholders.forEach((placeholder) => {
@@ -49,26 +49,33 @@
     if (nodeIDs.length === 0) {
       return;
     }
-    $.ajax({
-      url: Drupal.url('comments/render_new_comments_node_links'),
-      type: 'POST',
-      data: { 'node_ids[]': nodeIDs },
-      dataType: 'json',
-      success(results) {
-        Object.keys(results || {}).forEach((nodeID) => {
-          if (placeholdersToUpdate.hasOwnProperty(nodeID)) {
-            const url = results[nodeID].first_new_comment_link;
-            const text = Drupal.formatPlural(
-              results[nodeID].new_comment_count,
-              '1 new',
-              '@count new',
-            );
-            $(placeholdersToUpdate[nodeID]).append(
-              `<br /><a href="${url}">${text}</a>`,
-            );
-          }
-        });
+    const params = new URLSearchParams();
+    params.append('node_ids[]', nodeIDs);
+    const response = await fetch(
+      Drupal.url('comments/render_new_comments_node_links'),
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: params.toString(),
       },
+    );
+
+    const results = await response.json();
+
+    Object.keys(results || {}).forEach((nodeID) => {
+      if (placeholdersToUpdate.hasOwnProperty(nodeID)) {
+        const url = results[nodeID].first_new_comment_link;
+        const text = Drupal.formatPlural(
+          results[nodeID].new_comment_count,
+          '1 new',
+          '@count new',
+        );
+        $(placeholdersToUpdate[nodeID]).append(
+          `<br /><a href="${url}">${text}</a>`,
+        );
+      }
     });
   }
 

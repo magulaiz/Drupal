@@ -69,7 +69,7 @@
    * @param {Array.<Element>} placeholders
    *   The placeholder elements of the current page.
    */
-  function processNodeNewCommentLinks(placeholders) {
+  async function processNodeNewCommentLinks(placeholders) {
     // Figure out which placeholders need the "x new comments" links.
     const $placeholdersToUpdate = {};
     let fieldName = 'comment';
@@ -133,13 +133,22 @@
     if (drupalSettings.comment && drupalSettings.comment.newCommentsLinks) {
       render(drupalSettings.comment.newCommentsLinks.node[fieldName]);
     } else {
-      $.ajax({
-        url: Drupal.url('comments/render_new_comments_node_links'),
-        type: 'POST',
-        data: { 'node_ids[]': nodeIDs, field_name: fieldName },
-        dataType: 'json',
-        success: render,
-      });
+      const params = new URLSearchParams();
+      params.append('node_ids[]', nodeIDs);
+      params.append('field_name', fieldName);
+      const response = await fetch(
+        Drupal.url('comments/render_new_comments_node_links'),
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: params.toString(),
+        },
+      );
+
+      const results = await response.json();
+      render(results);
     }
   }
 
