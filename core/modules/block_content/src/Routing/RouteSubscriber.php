@@ -2,6 +2,7 @@
 
 namespace Drupal\block_content\Routing;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -11,7 +12,7 @@ use Drupal\Core\Routing\RoutingEvents;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Subscriber for Block content BC routes.
+ * Subscriber for Block content routes.
  */
 class RouteSubscriber extends RouteSubscriberBase {
 
@@ -64,8 +65,14 @@ class RouteSubscriber extends RouteSubscriberBase {
    *   The entity type manager service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
+   *   The config factory.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler) {
+  public function __construct(
+    EntityTypeManagerInterface $entity_type_manager,
+    ModuleHandlerInterface $module_handler,
+    protected ConfigFactoryInterface $configFactory
+  ) {
     $this->entityTypeManager = $entity_type_manager;
     $this->moduleHandler = $module_handler;
   }
@@ -86,6 +93,20 @@ class RouteSubscriber extends RouteSubscriberBase {
       foreach ($this->childRoutes($entity_type) as $route_name) {
         $this->addRedirectRoute($route_name);
       }
+    }
+
+    $route = $collection->get('entity.block_content.canonical');
+    if ($this->configFactory->get('block_content.settings')->get('standalone_url') && $route !== NULL) {
+      $route->setPath('/admin/content/block/{block_content}');
+      $defaults = $route->getDefaults();
+      unset($defaults['_entity_form']);
+      $defaults = [
+        '_controller' => "\Drupal\block_content\Controller\BlockContentController::buildView",
+        '_title_callback' => "\Drupal\Core\Entity\Controller\EntityController::title",
+      ];
+      $route->setDefaults($defaults);
+      $route->setOption('_admin_route', FALSE);
+      $route->setRequirement('_entity_access', 'block_content.update');
     }
   }
 

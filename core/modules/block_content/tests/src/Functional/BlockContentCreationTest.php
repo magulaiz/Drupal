@@ -56,10 +56,12 @@ class BlockContentCreationTest extends BlockContentTestBase {
   public function testBlockContentCreation() {
     $this->drupalLogin($this->adminUser);
 
+    $body = $this->randomMachineName(16);
+
     // Create a block.
     $edit = [];
     $edit['info[0][value]'] = 'Test Block';
-    $edit['body[0][value]'] = $this->randomMachineName(16);
+    $edit['body[0][value]'] = $body;
     $this->drupalGet('block/add/basic');
     $this->submitForm($edit, 'Save');
 
@@ -72,6 +74,20 @@ class BlockContentCreationTest extends BlockContentTestBase {
     // Check that the block exists in the database.
     $block = $this->getBlockByLabel($edit['info[0][value]']);
     $this->assertNotEmpty($block, 'Content Block found in database.');
+
+    // Check that the canonical route is the edit page without
+    // standalone_url enabled.
+    $this->drupalGet($block->toUrl());
+    $this->assertSession()->addressEquals('/admin/content/block/' . $block->id() . '/edit');
+
+    // Enable standalone_url setting.
+    $this->drupalGet('/admin/config/block-content/block-content-settings');
+    $this->submitForm(['standalone_url' => TRUE], 'Save');
+
+    $this->drupalGet($block->toUrl());
+    $this->assertSession()->linkByHrefExists('/admin/content/block/' . $block->id());
+    $this->assertSession()->pageTextContains('Test Block');
+    $this->assertSession()->pageTextContains($body);
   }
 
   /**

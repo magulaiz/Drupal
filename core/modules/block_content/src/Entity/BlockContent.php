@@ -51,9 +51,9 @@ use Drupal\block_content\BlockContentInterface;
  *   revision_data_table = "block_content_field_revision",
  *   show_revision_ui = TRUE,
  *   links = {
- *     "canonical" = "/admin/content/block/{block_content}",
+ *     "canonical" = "/admin/content/block/{block_content}/edit",
  *     "delete-form" = "/admin/content/block/{block_content}/delete",
- *     "edit-form" = "/admin/content/block/{block_content}",
+ *     "edit-form" = "/admin/content/block/{block_content}/edit",
  *     "collection" = "/admin/content/block",
  *     "create" = "/block",
  *     "revision-delete-form" = "/admin/content/block/{block_content}/revision/{block_content_revision}/delete",

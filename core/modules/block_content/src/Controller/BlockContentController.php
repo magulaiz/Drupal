@@ -2,12 +2,17 @@
 
 namespace Drupal\block_content\Controller;
 
+use Drupal\block_content\BlockContentInterface;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\block_content\BlockContentTypeInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
+use Drupal\Core\Routing\PathChangedHelper;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class BlockContentController extends ControllerBase {
@@ -134,6 +139,43 @@ class BlockContentController extends ControllerBase {
    */
   public function getAddFormTitle(BlockContentTypeInterface $block_content_type) {
     return $this->t('Add %type content block', ['%type' => $block_content_type->label()]);
+  }
+
+  /**
+   * Provides a redirect to block edit page.
+   *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   A route match object, used for the route name and the parameters.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request object.
+   * @param \Drupal\block_content\BlockContentInterface $block_content
+   *   The block to be edited.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   */
+  public function canonicalRedirect(RouteMatchInterface $route_match, Request $request, BlockContentInterface $block_content): RedirectResponse {
+    $helper = new PathChangedHelper($route_match, $request);
+    if (!$this->config('block_content.settings')->get('standalone_url')) {
+      return $helper->redirect();
+    }
+    return new RedirectResponse($helper->oldPath());
+  }
+
+  /**
+   * Provides renders array to preview a block_content without placing on a page.
+   *
+   * @param \Drupal\block_content\BlockContentInterface $block_content
+   *   The block to be edited.
+   *
+   * @return array
+   */
+  public function buildView(BlockContentInterface $block_content): array {
+    $build = [
+      '#theme' => 'block_content',
+    ];
+    $build['#content'] = $this->entityTypeManager()->getViewBuilder('block_content')->view($block_content);
+    CacheableMetadata::createFromObject($block_content)->applyTo($build);
+    return $build;
   }
 
 }

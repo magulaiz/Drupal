@@ -83,6 +83,15 @@ function block_content_post_update_sort_permissions(&$sandbox = NULL) {
 }
 
 /**
+ * Add new block content settings.
+ */
+function block_content_post_update_add_settings(): void {
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable('block_content.settings');
+  $config->set('standalone_url', FALSE)->save(TRUE);
+}
+
+/**
  * Update configuration for revision type.
  */
 function block_content_post_update_revision_type(&$sandbox = NULL) {

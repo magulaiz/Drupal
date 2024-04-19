@@ -3,3 +3,9 @@ entity.block_content_type.collection:
   parent: system.admin_structure
   description: 'Create and manage fields, forms, and display settings for your content blocks.'
   route_name: entity.block_content_type.collection
+
+block_content.settings:
+  title: 'Block Content settings'
+  parent: system.admin_config_block
+  description: 'Manage block content settings.'
+  route_name: block_content.settings

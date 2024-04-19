@@ -27,6 +27,7 @@ class BlockContentLocalTasksTest extends LocalTaskIntegrationTestBase {
 
     $config_factory = $this->getConfigFactoryStub([
       'system.theme' => ['default' => 'test_c'],
+      'block_content.settings' => ['standalone_url', FALSE],
     ]);
 
     $themes = [];
@@ -60,6 +61,7 @@ class BlockContentLocalTasksTest extends LocalTaskIntegrationTestBase {
     $container->set('config.factory', $config_factory);
     $container->set('theme_handler', $theme_handler);
     $container->set('entity_type.manager', $entity_type_manager);
+    $container->set('string_translation', $this->getStringTranslationStub());
     \Drupal::setContainer($container);
   }
 

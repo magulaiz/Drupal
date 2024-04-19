@@ -1,5 +1,13 @@
 # Schema for the configuration files of the Content Block module.
 
+block_content.settings:
+  type: config_object
+  label: 'Block Content settings'
+  mapping:
+    standalone_url:
+      type: boolean
+      label: 'Allow block content items to be viewed standalone at /admin/content/block/{id}'
+
 block_content.type.*:
   type: config_entity
   label: 'Block type settings'
