@@ -25,6 +25,11 @@ use Drupal\Tests\BrowserTestBase;
 abstract class UpdateTestBase extends BrowserTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['update', 'update_test'];
+
+  /**
    * Denotes a security update will be required in the test case.
    */
   const SECURITY_UPDATE_REQUIRED = 'SECURITY_UPDATE_REQUIRED';

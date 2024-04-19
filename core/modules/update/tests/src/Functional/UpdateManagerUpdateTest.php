@@ -17,8 +17,6 @@ class UpdateManagerUpdateTest extends UpdateTestBase {
    * @var array
    */
   protected static $modules = [
-    'update',
-    'update_test',
     'aaa_update_test',
     'bbb_update_test',
   ];
