@@ -29,7 +29,7 @@ class BlockContent extends WizardPluginBase {
       'value' => '1',
       'entity_type' => $this->entityTypeId,
       'entity_field' => 'reusable',
-      'status' => 1
+      'status' => 1,
     ];
     return $filters;
   }
