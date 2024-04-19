@@ -578,7 +578,7 @@ class FieldTest extends UnitTestCase {
 
     $handler->query(TRUE);
 
-    $this->assertEmpty($handler->group_fields);
+    $this->assertTrue(empty($handler->group_fields));
     $this->assertNull($handler->tableAlias);
   }
 
@@ -704,7 +704,7 @@ class FieldTest extends UnitTestCase {
     $this->executable->query = $query;
 
     $handler->query(TRUE);
-    $this->assertEmpty($handler->group_fields);
+    $this->assertTrue(empty($handler->group_fields));
     $this->assertNull($handler->tableAlias);
   }
 
