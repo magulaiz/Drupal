@@ -85,7 +85,7 @@ class EntityArgument extends NumericArgument implements ContainerFactoryPluginIn
    */
   public function __get($name) {
     if (isset($this->deprecatedStorageProperties[$name])) {
-      return $this->entityTypeManager->getStorage($storage_name);
+      return $this->entityTypeManager->getStorage($this->deprecatedStorageProperties[$name]);
     }
   }
 
