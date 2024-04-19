@@ -53,12 +53,11 @@ class BlockRepository implements BlockRepositoryInterface {
    * {@inheritdoc}
    */
   public function getVisibleBlocksPerRegion(array &$cacheable_metadata = []) {
-    $active_theme = $this->themeManager->getActiveTheme();
     // Build an array of the region names in the right order.
-    $empty = array_fill_keys($active_theme->getRegions(), []);
+    $empty = array_fill_keys($this->getRegionsList(), []);
 
     $full = [];
-    foreach ($this->blockStorage->loadByProperties(['theme' => $active_theme->getName()]) as $block_id => $block) {
+    foreach ($this->blockStorage->loadByProperties($this->buildBlockPropertyQuery()) as $block_id => $block) {
       /** @var \Drupal\block\BlockInterface $block */
       $access = $block->access('view', NULL, TRUE);
       $region = $block->getRegion();
@@ -109,6 +108,16 @@ class BlockRepository implements BlockRepositoryInterface {
       $machine_default = $suggestion . '_' . ++$count;
     }
     return $machine_default;
+  }
+
+  protected function buildBlockPropertyQuery(): array {
+    $active_theme = $this->themeManager->getActiveTheme();
+    return ['theme' => $active_theme->getName()];
+  }
+
+  protected function getRegionsList(): array {
+    $active_theme = $this->themeManager->getActiveTheme();
+    return $active_theme->getRegions();
   }
 
 }

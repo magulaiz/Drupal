@@ -31,11 +31,18 @@ class BlockDeleteForm extends EntityDeleteForm {
    */
   public function getQuestion() {
     $entity = $this->getEntity();
-    $regions = $this->systemRegionList($entity->getTheme(), REGIONS_VISIBLE);
-    return $this->t('Are you sure you want to remove the @entity-type %label from the %region region?', [
+    $theme = $entity->getTheme();
+    if ($theme) {
+      $regions = $this->systemRegionList($theme, REGIONS_VISIBLE);
+      return $this->t('Are you sure you want to remove the @entity-type %label from the %region region?', [
+        '@entity-type' => $entity->getEntityType()->getSingularLabel(),
+        '%label' => $entity->label(),
+        '%region' => $regions[$entity->getRegion()],
+      ]);
+    }
+    return $this->t('Are you sure you want to remove the @entity-type %label?', [
       '@entity-type' => $entity->getEntityType()->getSingularLabel(),
       '%label' => $entity->label(),
-      '%region' => $regions[$entity->getRegion()],
     ]);
   }
 
@@ -43,8 +50,16 @@ class BlockDeleteForm extends EntityDeleteForm {
    * {@inheritdoc}
    */
   public function getDescription() {
+    $theme = $this->getEntity()->getTheme();
+    if ($theme) {
+      return $this->t('This will remove the block placement. You will need to <a href=":url">place it again</a> in order to undo this action.', [
+        ':url' => Url::fromRoute('block.admin_display_theme', ['theme' => $theme])
+          ->toString(),
+      ]);
+    }
     return $this->t('This will remove the block placement. You will need to <a href=":url">place it again</a> in order to undo this action.', [
-      ':url' => Url::fromRoute('block.admin_display_theme', ['theme' => $this->getEntity()->getTheme()])->toString(),
+      ':url' => Url::fromRoute('block.block.admin_display')
+        ->toString(),
     ]);
   }
 
@@ -53,11 +68,18 @@ class BlockDeleteForm extends EntityDeleteForm {
    */
   protected function getDeletionMessage() {
     $entity = $this->getEntity();
-    $regions = $this->systemRegionList($entity->getTheme(), REGIONS_VISIBLE);
-    return $this->t('The @entity-type %label has been removed from the %region region.', [
+    $theme = $entity->getTheme();
+    if ($theme) {
+      $regions = $this->systemRegionList($theme, REGIONS_VISIBLE);
+      return $this->t('The @entity-type %label has been removed from the %region region.', [
+        '@entity-type' => $entity->getEntityType()->getSingularLabel(),
+        '%label' => $entity->label(),
+        '%region' => $regions[$entity->getRegion()],
+      ]);
+    }
+    return $this->t('The @entity-type %label has been removed.', [
       '@entity-type' => $entity->getEntityType()->getSingularLabel(),
       '%label' => $entity->label(),
-      '%region' => $regions[$entity->getRegion()],
     ]);
   }
 

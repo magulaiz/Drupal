@@ -110,19 +110,19 @@ class NavigationRenderer {
    * @see hook_page_top()
    */
   public function buildNavigation(array &$page_top): void {
-    $view_builder = $this->entityTypeManager->getViewBuilder('navigation_block');
-    $navigation_block_list_cache_tags = $this->entityTypeManager->getDefinition('navigation_block')->getListCacheTags();
+    $view_builder = $this->entityTypeManager->getViewBuilder('block');
+    $block_list_cache_tags = $this->entityTypeManager->getDefinition('block')->getListCacheTags();
 
-    // Load all navigation_block content by region.
+    // Load all configured blocks by region.
     $cacheable_metadata_list = [];
     $build = [];
-    foreach ($this->navigationBlockRepository->getVisibleNavigationBlocksPerRegion($cacheable_metadata_list) as $region => $navigation_blocks) {
+    foreach ($this->navigationBlockRepository->getVisibleBlocksPerRegion($cacheable_metadata_list) as $region => $navigation_blocks) {
       /** @var \Drupal\navigation\NavigationBlockInterface[] $navigation_blocks */
       foreach ($navigation_blocks as $key => $navigation_block) {
         $build[$region][$key] = $view_builder->view($navigation_block);
       }
       if (!empty($build[$region])) {
-        // \Drupal\navigation\NavigationBlockRepositoryInterface::getVisibleNavigationBlocksPerRegion()
+        // \Drupal\block\BlockRepositoryInterface::getVisibleBlocksPerRegion()
         // returns the navigation_blocks in sorted order.
         $build[$region]['#sorted'] = TRUE;
       }
@@ -147,7 +147,7 @@ class NavigationRenderer {
     // Merge cacheability metadata.
     CacheableMetadata::createFromRenderArray($page_top['navigation'])
       ->addCacheableDependency($logo_settings)
-      ->addCacheTags($navigation_block_list_cache_tags)
+      ->addCacheTags($block_list_cache_tags)
       ->applyTo($page_top['navigation']);
 
     if ($logo_provider === self::LOGO_PROVIDER_CUSTOM) {

@@ -58,7 +58,7 @@ class NavigationBlockRepositoryTest extends UnitTestCase {
   /**
    * Tests the retrieval of navigation block entities.
    *
-   * @covers ::getVisibleNavigationBlocksPerRegion
+   * @covers ::getVisibleBlocksPerRegion
    *
    * @dataProvider providerBlocksConfig
    */
@@ -86,7 +86,7 @@ class NavigationBlockRepositoryTest extends UnitTestCase {
       ->willReturn($navigation_blocks);
     $result = [];
     $cacheable_metadata = [];
-    foreach ($this->navigationBlockRepository->getVisibleNavigationBlocksPerRegion($cacheable_metadata) as $region => $resulting_blocks) {
+    foreach ($this->navigationBlockRepository->getVisibleBlocksPerRegion($cacheable_metadata) as $region => $resulting_blocks) {
       $result[$region] = [];
       foreach ($resulting_blocks as $plugin_id => $block) {
         $result[$region][] = $plugin_id;
@@ -132,7 +132,7 @@ class NavigationBlockRepositoryTest extends UnitTestCase {
   /**
    * Tests the retrieval of navigation block entities that are context-aware.
    *
-   * @covers ::getVisibleNavigationBlocksPerRegion
+   * @covers ::getVisibleBlocksPerRegion
    */
   public function testGetVisibleNavigationBlocksPerRegionWithContext() {
     $navigation_block = $this->createMock('Drupal\navigation\NavigationBlockInterface');
@@ -149,7 +149,7 @@ class NavigationBlockRepositoryTest extends UnitTestCase {
       ->willReturn($blocks);
     $result = [];
     $cacheable_metadata = [];
-    foreach ($this->navigationBlockRepository->getVisibleNavigationBlocksPerRegion($cacheable_metadata) as $region => $resulting_blocks) {
+    foreach ($this->navigationBlockRepository->getVisibleBlocksPerRegion($cacheable_metadata) as $region => $resulting_blocks) {
       $result[$region] = [];
       foreach ($resulting_blocks as $plugin_id => $navigation_block) {
         $result[$region][] = $plugin_id;

@@ -197,7 +197,7 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
     }
 
     // Loop over each region and build blocks.
-    $regions = $this->systemRegionList($this->getThemeName(), REGIONS_VISIBLE);
+    $regions = $this->getRegionList();
     foreach ($regions as $region => $title) {
       $form['#tabledrag'][] = [
         'action' => 'match',
@@ -399,6 +399,10 @@ class BlockListBuilder extends ConfigEntityListBuilder implements FormInterface 
    */
   protected function systemRegionList($theme, $show = REGIONS_ALL) {
     return system_region_list($theme, $show);
+  }
+
+  protected function getRegionList(): array {
+    return $this->systemRegionList($this->getThemeName(), REGIONS_VISIBLE);
   }
 
 }

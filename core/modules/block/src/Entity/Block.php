@@ -134,7 +134,7 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
   /**
    * The theme that includes the block plugin for this entity.
    *
-   * @var string
+   * @var string|null
    */
   protected $theme;
 
@@ -235,7 +235,9 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
    */
   public function calculateDependencies() {
     parent::calculateDependencies();
-    $this->addDependency('theme', $this->theme);
+    if ($this->theme) {
+      $this->addDependency('theme', $this->theme);
+    }
     return $this;
   }
 
@@ -342,6 +344,10 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
    */
   public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
+
+    if (!$this->theme){
+      return;
+    }
 
     // Ensure the region is valid to mirror the behavior of block_rebuild().
     // This is done primarily for backwards compatibility support of

@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace Drupal\navigation\Plugin\NavigationBlock;
 
+use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\navigation\Attribute\NavigationBlock;
-use Drupal\navigation\NavigationBlockPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a user navigation block.
  */
 #[NavigationBlock(
-  id: 'user',
+  id: 'navigation_user',
   admin_label: new TranslatableMarkup('User'),
 )]
-class UserNavigationBlock extends NavigationBlockPluginBase implements ContainerFactoryPluginInterface {
+class UserNavigationBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
    * Constructs the plugin instance.

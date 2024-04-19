@@ -1,14 +1,15 @@
 langcode: en
 status: true
 dependencies: {}
-id: shortcuts
-region: content
+id: navigation_user
+region: _navigation_footer
 weight: 0
 provider: navigation
-plugin: shortcuts
+plugin: navigation_user
+theme: null
 settings:
-  id: shortcuts
-  label: Shortcuts
+  id: user
+  label: User
   label_display: '0'
   provider: navigation
   status: true

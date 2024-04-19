@@ -105,16 +105,7 @@ class BlockLibraryController extends ControllerBase {
     $weight = $request->query->get('weight');
 
     // Only add blocks which work without any available context.
-    $definitions = $this->blockManager->getFilteredDefinitions('block_ui', $this->contextRepository->getAvailableContexts(), [
-      'theme' => $theme,
-      'region' => $region,
-    ]);
-    // Order by category, and then by admin label.
-    $definitions = $this->blockManager->getSortedDefinitions($definitions);
-    // Filter out definitions that are not intended to be placed by the UI.
-    $definitions = array_filter($definitions, function (array $definition) {
-      return empty($definition['_block_ui_hidden']);
-    });
+    $definitions = $this->getFilteredBlockDefinitions($theme, $region);
 
     $rows = [];
     foreach ($definitions as $plugin_id => $plugin_definition) {
@@ -195,5 +186,27 @@ class BlockLibraryController extends ControllerBase {
     }
     return $build;
   }
+
+  /**
+   * ${CARET}.
+   *
+   * @param string $theme
+   * @param float|bool|int|string|null $region
+   *
+   * @return \Drupal\Core\Block\BlockPluginInterface[]
+   */
+  protected function getFilteredBlockDefinitions(string $theme, float|bool|int|string|null $region): array {
+    $definitions = $this->blockManager->getFilteredDefinitions('block_ui', $this->contextRepository->getAvailableContexts(), [
+      'theme' => $theme,
+      'region' => $region,
+    ]);
+    // Order by category, and then by admin label.
+    $definitions = $this->blockManager->getSortedDefinitions($definitions);
+    // Filter out definitions that are not intended to be placed by the UI.
+    $definitions = array_filter($definitions, function (array $definition) {
+      return empty($definition['_block_ui_hidden']);
+    });
+    return $definitions;
+ }
 
 }
