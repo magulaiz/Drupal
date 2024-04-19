@@ -88,6 +88,12 @@ class Roles extends ManyToOne {
     }
 
     foreach ((array) $this->value as $role_id) {
+      if ($role_id === 'all') {
+        // Reset of filter was set to 'Select all' value.
+        $dependencies = [];
+        break;
+      }
+
       if ($role = $this->roleStorage->load($role_id)) {
         $dependencies[$role->getConfigDependencyKey()][] = $role->getConfigDependencyName();
       }
