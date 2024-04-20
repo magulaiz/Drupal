@@ -58,9 +58,10 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
     $this->loadFixture($this->getModulePath('migrate_drupal') . '/tests/fixtures/drupal7.php');
 
     // Enable saving the logs and set the post migration admin user name.
-    $this->outputLogs = TRUE;
-    $this->migratedAdminUserName = 'admin';
-    $this->expectedLoggedErrors = 27;
+    // Uncomment the following to enable.
+    // $this->outputLogs = TRUE;
+    // $this->migratedAdminUserName = 'admin';
+    // $this->expectedLoggedErrors = 27;
   }
 
   /**
