@@ -2349,23 +2349,25 @@ function form_type_image_button_value($form, $input, $form_state) {
 /**
  * Determines the value for a checkbox form element.
  *
- * @param $form
+ * @param $element
  *   The form element whose value is being populated.
  * @param $input
  *   The incoming input to populate the form element. If this is FALSE,
  *   the element's default value should be returned.
+ * @param $form_state
+ *   A keyed array containing the current state of the form.
  *
- * @return
+ * @return mixed
  *   The data that will appear in $form_state['values'] for this element, or
  *   nothing to use the default.
  */
-function form_type_checkbox_value($element, $input = FALSE) {
+function form_type_checkbox_value($element, $input = FALSE, $form_state = []) {
   if ($input === FALSE) {
     // Use #default_value as the default value of a checkbox, except change
     // NULL to 0, because _form_builder_handle_input_element() would otherwise
     // replace NULL with empty string, but an empty string is a potentially
     // valid value for a checked checkbox.
-    return isset($element['#default_value']) ? $element['#default_value'] : 0;
+    return isset($input) ? ($form_state['programmed'] ? $input : $element['#return_value']) : 0;
   }
   else {
     // Checked checkboxes are submitted with a value (possibly '0' or ''):
