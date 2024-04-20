@@ -2367,7 +2367,7 @@ function form_type_checkbox_value($element, $input = FALSE, $form_state = []) {
     // NULL to 0, because _form_builder_handle_input_element() would otherwise
     // replace NULL with empty string, but an empty string is a potentially
     // valid value for a checked checkbox.
-    return isset($input) ? ($form_state['programmed'] ? $input : $element['#return_value']) : 0;
+    return isset($element['#default_value']) ? $element['#default_value'] : 0;
   }
   else {
     // Checked checkboxes are submitted with a value (possibly '0' or ''):
@@ -2385,7 +2385,7 @@ function form_type_checkbox_value($element, $input = FALSE, $form_state = []) {
     // common use-case for setting #return_value to either 0 or '0' is for the
     // first option within a 0-indexed array of checkboxes, and for this,
     // form_process_checkboxes() uses the string rather than the integer.
-    return isset($input) ? $element['#return_value'] : 0;
+    return $form_state['programmed'] ? $input : $element['#return_value'];
   }
 }
 
