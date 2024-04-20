@@ -14,7 +14,6 @@ use Drupal\Tests\datetime\Functional\DateTestBase;
  * Tests Daterange field functionality.
  *
  * @group datetime
- * @group #slow
  */
 class DateRangeFieldFromToTest extends DateTestBase {
 
