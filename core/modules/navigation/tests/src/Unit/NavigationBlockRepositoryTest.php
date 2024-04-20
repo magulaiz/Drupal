@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\navigation\Unit;
 
+use Drupal\block\BlockInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\navigation\NavigationBlockInterface;
+use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\navigation\NavigationBlockRepository;
 use Drupal\navigation\NavigationBlockRepositoryInterface;
 use Drupal\Tests\UnitTestCase;
@@ -22,14 +23,14 @@ class NavigationBlockRepositoryTest extends UnitTestCase {
    *
    * @var \Drupal\navigation\NavigationBlockRepositoryInterface
    */
-  protected NavigationBlockRepositoryInterface $navigationBlockRepository;
+  protected NavigationBlockRepositoryInterface $blockRepository;
 
   /**
    * The navigation block storage mock instance.
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected $navigationBlockStorage;
+  protected $blockStorage;
 
   /**
    * The context handler mock instance.
@@ -45,14 +46,14 @@ class NavigationBlockRepositoryTest extends UnitTestCase {
     parent::setUp();
 
     $this->contextHandler = $this->createMock('Drupal\Core\Plugin\Context\ContextHandlerInterface');
-    $this->navigationBlockStorage = $this->createMock('Drupal\Core\Entity\EntityStorageInterface');
+    $this->blockStorage = $this->createMock('Drupal\Core\Entity\EntityStorageInterface');
     /** @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject $entity_type_manager */
     $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
     $entity_type_manager->expects($this->any())
       ->method('getStorage')
-      ->willReturn($this->navigationBlockStorage);
+      ->willReturn($this->blockStorage);
 
-    $this->navigationBlockRepository = new NavigationBlockRepository($entity_type_manager, $this->contextHandler);
+    $this->blockRepository = new NavigationBlockRepository($entity_type_manager, $this->prophesize(ThemeManagerInterface::class)->reveal(), $this->contextHandler);
   }
 
   /**
@@ -65,7 +66,7 @@ class NavigationBlockRepositoryTest extends UnitTestCase {
   public function testGetVisibleNavigationBlocksPerRegion(array $blocks_config, array $expected_blocks) {
     $navigation_blocks = [];
     foreach ($blocks_config as $block_id => $block_config) {
-      $block = $this->createMock(NavigationBlockInterface::class);
+      $block = $this->createMock(BlockInterface::class);
       $block->expects($this->once())
         ->method('access')
         ->willReturn($block_config[0]);
@@ -81,12 +82,12 @@ class NavigationBlockRepositoryTest extends UnitTestCase {
       $navigation_blocks[$block_id] = $block;
     }
 
-    $this->navigationBlockStorage->expects($this->once())
+    $this->blockStorage->expects($this->once())
       ->method('loadMultiple')
       ->willReturn($navigation_blocks);
     $result = [];
     $cacheable_metadata = [];
-    foreach ($this->navigationBlockRepository->getVisibleBlocksPerRegion($cacheable_metadata) as $region => $resulting_blocks) {
+    foreach ($this->blockRepository->getVisibleBlocksPerRegion($cacheable_metadata) as $region => $resulting_blocks) {
       $result[$region] = [];
       foreach ($resulting_blocks as $plugin_id => $block) {
         $result[$region][] = $plugin_id;
@@ -144,12 +145,12 @@ class NavigationBlockRepositoryTest extends UnitTestCase {
       ->willReturn(NavigationBlockRepositoryInterface::REGION_CONTENT);
     $blocks['block_id'] = $navigation_block;
 
-    $this->navigationBlockStorage->expects($this->once())
+    $this->blockStorage->expects($this->once())
       ->method('loadMultiple')
       ->willReturn($blocks);
     $result = [];
     $cacheable_metadata = [];
-    foreach ($this->navigationBlockRepository->getVisibleBlocksPerRegion($cacheable_metadata) as $region => $resulting_blocks) {
+    foreach ($this->blockRepository->getVisibleBlocksPerRegion($cacheable_metadata) as $region => $resulting_blocks) {
       $result[$region] = [];
       foreach ($resulting_blocks as $plugin_id => $navigation_block) {
         $result[$region][] = $plugin_id;

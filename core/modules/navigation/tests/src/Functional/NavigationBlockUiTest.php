@@ -7,9 +7,8 @@ namespace Drupal\Tests\navigation\Functional;
 use Drupal\Component\Utility\Html;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
-use Drupal\navigation\Entity\NavigationBlock;
+use Drupal\Tests\block\Traits\BlockCreationTrait;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\navigation\Traits\NavigationBlockCreationTrait;
 
 // cspell:ignore displaymessage scriptalertxsssubjectscript
 // cspell:ignore testcontextawarenavigationblock
@@ -21,7 +20,7 @@ use Drupal\Tests\navigation\Traits\NavigationBlockCreationTrait;
  */
 class NavigationBlockUiTest extends BrowserTestBase {
 
-  use NavigationBlockCreationTrait;
+  use BlockCreationTrait;
 
   /**
    * Modules to install.
@@ -115,24 +114,6 @@ class NavigationBlockUiTest extends BrowserTestBase {
       // Check if the weight settings changes have persisted.
       $this->assertTrue($this->assertSession()->optionExists(str_replace('_', '-', 'edit-navigation-blocks-' . $values['settings']['id'] . '-weight'), $values['test_weight'])->isSelected());
     }
-  }
-
-  /**
-   * Tests the navigation block categories on the listing page.
-   */
-  public function testCandidateNavigationBlockList() {
-    $this->drupalGet('/admin/config/user-interface/navigation-block');
-    $this->clickLink('Place navigation block');
-    $this->assertSession()->elementExists('xpath', '//tr[.//td/div[text()="User"] and .//td[text()="Navigation"] and .//td//a[contains(@href, "admin/config/user-interface/navigation-block/add/user")]]');
-
-    // Trigger the custom category addition in
-    // navigation_test_navigation_block_alter().
-    $this->container->get('state')->set('navigation_test_info_alter', TRUE);
-    $this->container->get('plugin.manager.navigation_block')->clearCachedDefinitions();
-
-    $this->drupalGet('/admin/config/user-interface/navigation-block');
-    $this->clickLink('Place navigation block');
-    $this->assertSession()->elementExists('xpath', '//tr[.//td/div[text()="User"] and .//td[text()="Custom category"] and .//td//a[contains(@href, "admin/config/user-interface/navigation-block/add/user")]]');
   }
 
   /**
@@ -297,26 +278,12 @@ class NavigationBlockUiTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that the enable/disable routes are protected from CSRF.
-   */
-  public function testRouteProtection() {
-    // Get the user navigation block provided by the module.
-    /** @var \Drupal\navigation\NavigationBlockInterface $navigation_block */
-    $navigation_block = NavigationBlock::load('user');
-    // Ensure that the enable and disable routes are protected.
-    $this->drupalGet('admin/config/user-interface/navigation-block/manage/' . $navigation_block->id() . '/disable');
-    $this->assertSession()->statusCodeEquals(403);
-    $this->drupalGet('admin/config/user-interface/navigation-block/manage/' . $navigation_block->id() . '/enable');
-    $this->assertSession()->statusCodeEquals(403);
-  }
-
-  /**
    * Tests that users without permission are not able to view broken nav blocks.
    */
   public function testBrokenNavigationBlockVisibility() {
     $assert_session = $this->assertSession();
 
-    $navigation_block = $this->drupalPlaceNavigationBlock('broken');
+    $navigation_block = $this->drupalPlaceBlock('broken');
 
     // Ensure that broken block configuration can be accessed.
     $this->drupalGet('admin/config/user-interface/navigation-block/manage/' . $navigation_block->id());
@@ -327,14 +294,14 @@ class NavigationBlockUiTest extends BrowserTestBase {
     $this->drupalGet('');
     $assert_session->statusCodeEquals(200);
     // Check that this user can view the Broken Navigation Block message.
-    $assert_session->pageTextContains('This navigation block is broken or missing. You may be missing content or you might need to install the original module.');
+    $assert_session->pageTextContains('This block is broken or missing. You may be missing content or you might need to install the original module.');
     $this->drupalLogout();
 
     // Visit the same page as anonymous.
     $this->drupalGet('');
     $assert_session->statusCodeEquals(200);
     // Check that this user cannot view the Broken Navigation Block message.
-    $assert_session->pageTextNotContains('This navigation block is broken or missing. You may be missing content or you might need to install the original module.');
+    $assert_session->pageTextNotContains('This block is broken or missing. You may be missing content or you might need to install the original module.');
 
     // Visit same page as an authorized user that does not have access to
     // administer blocks.
@@ -342,7 +309,7 @@ class NavigationBlockUiTest extends BrowserTestBase {
     $this->drupalGet('');
     $assert_session->statusCodeEquals(200);
     // Check that this user cannot view the Broken Block message.
-    $assert_session->pageTextNotContains('This navigation block is broken or missing. You may be missing content or you might need to install the original module.');
+    $assert_session->pageTextNotContains('This block is broken or missing. You may be missing content or you might need to install the original module.');
   }
 
 }
