@@ -34,7 +34,7 @@ class LocaleDefaultConfigStorageTest extends KernelTestBase {
       'locale_test_translate.settings',
       'block.block.test_default_config',
     ];
-    $actual = $storage->getComponentNames(
+    $actual = $storage->getConfigurationNames(
       'module',
       [
         \Drupal::moduleHandler()->getModule('locale_test'),
