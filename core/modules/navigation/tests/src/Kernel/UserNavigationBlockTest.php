@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\navigation\Kernel;
 
+use Drupal\block\Entity\Block;
+use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\navigation\Entity\NavigationBlock;
 use Drupal\navigation\NavigationBlockRepositoryInterface;
 use Drupal\user\Entity\User;
 
 /**
- * Tests \Drupal\navigation\Plugin\NavigationBlock\UserNavigationBlock.
+ * Tests \Drupal\block\Plugin\NavigationBlock\UserNavigationBlock.
  *
  * @group navigation
  */
@@ -28,11 +29,11 @@ class UserNavigationBlockTest extends KernelTestBase {
   ];
 
   /**
-   * The navigation block manager service.
+   * The block manager service.
    *
-   * @var \Drupal\navigation\NavigationBlockManagerInterface
+   * @var \Drupal\Core\Block\BlockManagerInterface
    */
-  protected $navigationBlockManager;
+  protected BlockManagerInterface $blockManager;
 
   /**
    * {@inheritdoc}
@@ -48,19 +49,19 @@ class UserNavigationBlockTest extends KernelTestBase {
     $account->save();
     $this->container->get('current_user')->setAccount($account);
 
-    $this->navigationBlockManager = $this->container->get('plugin.manager.navigation_block');
+    $this->blockManager = $this->container->get('plugin.manager.block');
   }
 
   /**
    * Tests calculation of a user navigation block's config dependencies.
    */
   public function testUserNavigationBlockConfigDependencies() {
-    $navigation_block = NavigationBlock::create([
-      'plugin' => 'user',
+    $block = Block::create([
+      'plugin' => 'navigation_user',
       'region' => NavigationBlockRepositoryInterface::REGION_FOOTER,
       'id' => 'machine_name',
     ]);
-    $dependencies = $navigation_block->calculateDependencies()->getDependencies();
+    $dependencies = $block->calculateDependencies()->getDependencies();
     $expected = [];
     $this->assertSame($expected, $dependencies);
   }

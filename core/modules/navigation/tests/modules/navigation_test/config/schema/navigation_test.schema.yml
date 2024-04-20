@@ -1,7 +1,0 @@
-navigation_block.settings.test_navigation_block_instantiation:
-  type: navigation_block_settings
-  label: 'Test navigation block instantiation settings'
-  mapping:
-    display_message:
-      type: string
-      label: 'Message text'
