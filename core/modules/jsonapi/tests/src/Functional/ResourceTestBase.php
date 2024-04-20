@@ -59,8 +59,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
 
   use ResourceResponseTestTrait;
   use ContentModerationTestTrait;
-  use JsonApiRequestTestTrait;
   use GetDocumentFromRequestTrait;
+  use JsonApiRequestTestTrait;
 
   /**
    * {@inheritdoc}
