@@ -50,14 +50,24 @@ class DateRangeFieldFromToTest extends DateTestBase {
 
   /**
    * Tests displaying dates with the 'from_to' setting.
-   *
-   * @dataProvider fromToSettingDataProvider
    */
-  public function testFromToSetting(array $expected, string $datetime_type, string $field_formatter_type, array $display_settings = []): void {
-    $field_name = $this->fieldStorage->getName();
-
+  public function testFromSetting(): void {
     // Create a test content type.
     $this->drupalCreateContentType(['type' => 'date_content']);
+    foreach (static::fromToSettingDataProvider() as $data) {
+      $expected = $data['expected'];
+      $datetime_type = $data['datetime_type'];
+      $field_formatter_type = $data['field_formatter_type'];
+      $display_settings = $data[0] ?? [];
+      $this->doTestFromToSetting($expected, $datetime_type, $field_formatter_type, $display_settings);
+    }
+  }
+
+  /**
+   * Helper to test with different combinations.
+   */
+  protected function doTestFromToSetting(array $expected, string $datetime_type, string $field_formatter_type, array $display_settings = []): void {
+    $field_name = $this->fieldStorage->getName();
 
     // Ensure the field to a datetime field.
     $this->fieldStorage->setSetting('datetime_type', $datetime_type);
