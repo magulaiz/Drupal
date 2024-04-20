@@ -1766,7 +1766,69 @@ YAML,
       ],
     ];
 
-    yield 'VALID: simple deriver, base definition in PHP' => [
+    yield 'VALID: simple deriver, base definition in PHP with Attribute' => [
+      '',
+      NULL,
+      NULL,
+      [
+        'src' => [
+          'Plugin' => [
+            'CKEditor5Plugin' => [
+              'Foo.php' => <<<'PHP'
+<?php
+declare(strict_types = 1);
+namespace Drupal\ckeditor5_derived_plugin\Plugin\CKEditor5Plugin;
+use Drupal\ckeditor5\Attribute\CKEditor5AspectsOfCKEditor5Plugin;
+use Drupal\ckeditor5\Attribute\CKEditor5Plugin;
+use Drupal\ckeditor5\Attribute\DrupalAspectsOfCKEditor5Plugin;
+use Drupal\ckeditor5\Plugin\CKEditor5PluginDefault;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
+#[CKEditor5Plugin(
+  id: 'ckeditor5_derived_plugin_foo',
+  ckeditor5: new CKEditor5AspectsOfCKEditor5Plugin(
+    plugins: [],
+  ),
+  drupal: new DrupalAspectsOfCKEditor5Plugin(
+    elements: false,
+    deriver: 'Drupal\ckeditor5_derived_plugin\Plugin\CKEditor5Plugin\SimpleDeriver',
+  ),
+)]
+class Foo extends CKEditor5PluginDefault {
+}
+PHP,
+              'SimpleDeriver.php' => $simple_deriver_additional_files['src']['Plugin']['CKEditor5Plugin']['SimpleDeriver.php'],
+            ],
+          ],
+        ],
+      ],
+      [
+        'ckeditor5_derived_plugin_foo:bar' => new CKEditor5PluginDefinition([
+          'provider' => 'ckeditor5_derived_plugin',
+          'id' => 'ckeditor5_derived_plugin_foo:bar',
+          'ckeditor5' => ['plugins' => []] + $ckeditor5_aspects_defaults,
+          'drupal' => [
+              'class' => 'Drupal\ckeditor5_derived_plugin\Plugin\CKEditor5Plugin\Foo',
+              'label' => 'Foo bar',
+              'elements' => FALSE,
+              'deriver' => 'Drupal\ckeditor5_derived_plugin\Plugin\CKEditor5Plugin\SimpleDeriver',
+            ] + $drupal_aspects_defaults,
+        ]),
+        'ckeditor5_derived_plugin_foo:baz' => new CKEditor5PluginDefinition([
+          'provider' => 'ckeditor5_derived_plugin',
+          'id' => 'ckeditor5_derived_plugin_foo:baz',
+          'ckeditor5' => ['plugins' => []] + $ckeditor5_aspects_defaults,
+          'drupal' => [
+              'class' => 'Drupal\ckeditor5_derived_plugin\Plugin\CKEditor5Plugin\Foo',
+              'label' => 'Foo baz',
+              'elements' => FALSE,
+              'deriver' => 'Drupal\ckeditor5_derived_plugin\Plugin\CKEditor5Plugin\SimpleDeriver',
+            ] + $drupal_aspects_defaults,
+        ]),
+      ],
+    ];
+
+    yield 'VALID: simple deriver, base definition in PHP with Annotation' => [
       '',
       NULL,
       NULL,
