@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\block_content\Plugin\migrate\source\d6;
+namespace Drupal\migrate_drupal\Plugin\migrate\source\d6;
 
-use Drupal\block_content\Plugin\migrate\source\d7\BlockCustomTranslation as D7BlockCustomTranslation;
+use Drupal\migrate_drupal\Plugin\migrate\source\d7\BlockCustomTranslation as D7BlockCustomTranslation;
 
 /**
  * Drupal 6 i18n content block translations source from database.
