@@ -496,7 +496,7 @@ $(document).bind('state:required', function(e) {
       var $label = $(e.target).closest('.form-item, .form-wrapper').find('label');
       // Avoids duplicate required markers on initialization.
       if (!$label.find('.form-required').length) {
-        $label.append('<span class="form-required">*</span>');
+        $label.append('<span class="form-required"> *</span>');
       }
     }
     else {
