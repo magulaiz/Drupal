@@ -134,7 +134,7 @@ class ConfigurableLanguageTest extends ConfigEntityResourceTestBase {
     $this->setUpAuthorization('GET');
     $response = $this->request('GET', $url, $request_options);
 
-    $normalization = Json::decode((string) $response->getBody());
+    $normalization = $this->getDocumentFromResponse($response);
     $this->assertArrayNotHasKey('_core', $normalization['data']['attributes']);
   }
 

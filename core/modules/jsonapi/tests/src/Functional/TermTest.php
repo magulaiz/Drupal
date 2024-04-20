@@ -416,7 +416,7 @@ class TermTest extends ResourceTestBase {
 
     // GET term's current normalization.
     $response = $this->request('GET', $url, $request_options);
-    $normalization = Json::decode((string) $response->getBody());
+    $normalization = $this->getDocumentFromResponse($response);
 
     // Change term's path alias.
     $normalization['data']['attributes']['path']['alias'] .= 's-rule-the-world';
@@ -427,7 +427,7 @@ class TermTest extends ResourceTestBase {
     // PATCH request: 200.
     $response = $this->request('PATCH', $url, $request_options);
     $this->assertResourceResponse(200, FALSE, $response);
-    $updated_normalization = Json::decode((string) $response->getBody());
+    $updated_normalization = $this->getDocumentFromResponse($response);
     $this->assertSame($normalization['data']['attributes']['path']['alias'], $updated_normalization['data']['attributes']['path']['alias']);
   }
 

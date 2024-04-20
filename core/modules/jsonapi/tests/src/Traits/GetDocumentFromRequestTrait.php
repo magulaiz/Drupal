@@ -9,7 +9,7 @@ use Psr\Http\Message\ResponseInterface;
 trait GetDocumentFromRequestTrait {
 
   /**
-   *  @param ReponseInterface $response Reponse to extract JSON:API document from.
+   *  @param ResponseInterface $response Response to extract JSON:API document from.
    *  @param bool $dataRequired Validate the data property is available in the response.
    *
    *  @return array

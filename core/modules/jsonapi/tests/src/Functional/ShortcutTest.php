@@ -183,7 +183,7 @@ class ShortcutTest extends ResourceTestBase {
     // No results because the current user does not have access to shortcuts
     // not in the user's assigned set or the default set.
     $response = $this->request('GET', $collection_filter_url, $request_options);
-    $doc = Json::decode((string) $response->getBody());
+    $doc = $this->getDocumentFromResponse($response);
     $this->assertCount(0, $doc['data']);
 
     // Assign the alternate shortcut set to the current user.
@@ -192,7 +192,7 @@ class ShortcutTest extends ResourceTestBase {
     // 1 result because the alternate shortcut set is now assigned to the
     // current user.
     $response = $this->request('GET', $collection_filter_url, $request_options);
-    $doc = Json::decode((string) $response->getBody());
+    $doc = $this->getDocumentFromResponse($response);
     $this->assertCount(1, $doc['data']);
   }
 
