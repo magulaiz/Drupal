@@ -16,16 +16,16 @@ class CKEditor5Plugin extends Plugin {
   /**
    * The CKEditor 5 aspects of the plugin definition.
    *
-   * @var \Drupal\ckeditor5\Attribute\CKEditor5AspectsOfCKEditor5Plugin
+   * @var \Drupal\ckeditor5\Attribute\CKEditor5AspectsOfCKEditor5Plugin|null
    */
-  public readonly CKEditor5AspectsOfCKEditor5Plugin $ckeditor5;
+  public readonly ?CKEditor5AspectsOfCKEditor5Plugin $ckeditor5;
 
   /**
    * The Drupal aspects of the plugin definition.
    *
-   * @var \Drupal\ckeditor5\Attribute\DrupalAspectsOfCKEditor5Plugin
+   * @var \Drupal\ckeditor5\Attribute\DrupalAspectsOfCKEditor5Plugin|null
    */
-  public readonly DrupalAspectsOfCKEditor5Plugin $drupal;
+  public readonly ?DrupalAspectsOfCKEditor5Plugin $drupal;
 
   /**
    * Constructs a CKEditor5Plugin attribute.
@@ -40,17 +40,19 @@ class CKEditor5Plugin extends Plugin {
    *
    * @param string $id
    *   The plugin ID.
-   * @param array|\Drupal\ckeditor5\Attribute\CKEditor5AspectsOfCKEditor5Plugin $ckeditor5
-   *   The CKEditor 5 aspects of the plugin definition.
-   * @param array|\Drupal\ckeditor5\Attribute\DrupalAspectsOfCKEditor5Plugin $drupal
-   *   The Drupal aspects of the plugin definition.
+   * @param array|\Drupal\ckeditor5\Attribute\CKEditor5AspectsOfCKEditor5Plugin|null $ckeditor5
+   *   (optional) The CKEditor 5 aspects of the plugin definition. Required
+   *   unless set by deriver.
+   * @param array|\Drupal\ckeditor5\Attribute\DrupalAspectsOfCKEditor5Plugin|null $drupal
+   *   (optional) The Drupal aspects of the plugin definition. Required unless
+   *   set by deriver.
    * @param class-string|null $deriver
    *   (optional) The deriver class.
    */
   public function __construct(
     public readonly string $id,
-    array|CKEditor5AspectsOfCKEditor5Plugin $ckeditor5,
-    array|DrupalAspectsOfCKEditor5Plugin $drupal,
+    array|CKEditor5AspectsOfCKEditor5Plugin|null $ckeditor5 = NULL,
+    array|DrupalAspectsOfCKEditor5Plugin|null $drupal = NULL,
     public readonly ?string $deriver = NULL,
   ) {
     $this->ckeditor5 = is_array($ckeditor5) ? new CKEditor5AspectsOfCKEditor5Plugin(...$ckeditor5) : $ckeditor5;
@@ -77,8 +79,8 @@ class CKEditor5Plugin extends Plugin {
   public function get(): CKEditor5PluginDefinition {
     return new CKEditor5PluginDefinition([
       'id' => $this->id,
-      'ckeditor5' => $this->ckeditor5->get(),
-      'drupal' => $this->drupal->get(),
+      'ckeditor5' => $this->ckeditor5?->get(),
+      'drupal' => $this->drupal?->get(),
       'provider' => $this->getProvider(),
     ]);
   }

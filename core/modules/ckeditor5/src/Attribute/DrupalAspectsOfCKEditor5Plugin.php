@@ -14,8 +14,9 @@ class DrupalAspectsOfCKEditor5Plugin extends Plugin {
   /**
    * Constructs a DrupalAspectsOfCKEditor5Plugin attribute.
    *
-   * @param string|\Drupal\Core\StringTranslation\TranslatableMarkup $label
-   *   The human-readable name of the CKEditor plugin.
+   * @param string|\Drupal\Core\StringTranslation\TranslatableMarkup|null $label
+   *   (optional) The human-readable name of the CKEditor plugin. Required
+   *   unless set by deriver.
    * @param class-string $class
    *   (optional) The CKEditor 5 plugin class.If not specified, the
    *   CKEditor5PluginDefault class is used.
@@ -23,9 +24,9 @@ class DrupalAspectsOfCKEditor5Plugin extends Plugin {
    *   (optional) The library this plugin requires.
    * @param string|false $admin_library
    *   (optional) The admin library this plugin provides.
-   * @param string[]|false $elements
+   * @param string[]|false|null $elements
    *   (optional) List of elements and attributes provided. An array of strings,
-   *   or false if no elements are provided.
+   *   or false if no elements are provided. Required unless set by deriver.
    *   Syntax for each array value:
    *   - <element> only allows that HTML element with no attributes
    *   - <element attrA attrB> only allows that HTML element with attributes
@@ -55,11 +56,11 @@ class DrupalAspectsOfCKEditor5Plugin extends Plugin {
    * @see \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition::getCreatableElements()
    */
   public function __construct(
-    public readonly string|TranslatableMarkup $label,
+    public readonly string|TranslatableMarkup|null $label = NULL,
     public string $class = CKEditor5PluginDefault::class,
     public readonly string|false $library = FALSE,
     public readonly string|false $admin_library = FALSE,
-    public readonly array|false $elements = FALSE,
+    public readonly array|false|null $elements = NULL,
     public readonly array $toolbar_items = [],
     public readonly array|false $conditions = FALSE,
     public readonly ?string $deriver = NULL,
