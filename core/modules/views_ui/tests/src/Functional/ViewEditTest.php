@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views_ui\Functional;
 
+use Drupal\Core\Database\Database;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\views\Entity\View;
 
@@ -256,7 +257,12 @@ class ViewEditTest extends UITestBase {
    */
   public function testRelationRepresentativeNode() {
     // Populate and submit the form.
-    $edit["name[taxonomy_term_field_data.tid_representative]"] = TRUE;
+    if (Database::getConnection()->driver() == 'mongodb') {
+      $edit["name[taxonomy_term_data.tid_representative]"] = TRUE;
+    }
+    else {
+      $edit["name[taxonomy_term_field_data.tid_representative]"] = TRUE;
+    }
     $this->drupalGet('admin/structure/views/nojs/add-handler/test_groupwise_term_ui/default/relationship');
     $this->submitForm($edit, 'Add and configure relationships');
     // Apply changes.
