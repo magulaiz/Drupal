@@ -108,7 +108,9 @@ class FormErrorHandler extends CoreFormErrorHandler {
     if (!empty($error_links)) {
       $render_array = [
         [
-          '#markup' => $this->formatPlural(count($error_links), '1 error has been found: ', '@count errors have been found: '),
+          '#value' => $this->formatPlural(count($error_links), '1 error has been found: ', '@count errors have been found: '),
+          '#type' => 'html_tag',
+          '#tag' => 'p',
         ],
         [
           '#theme' => 'item_list',
