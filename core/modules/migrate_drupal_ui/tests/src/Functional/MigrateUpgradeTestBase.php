@@ -361,4 +361,20 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
     }
   }
 
+  /**
+   * Confirm emails were sent.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no
+   *    replacement.
+   *
+   * @see https://www.drupal.org/node/3442209
+   */
+  protected function assertEmailsSent() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3442209', E_USER_DEPRECATED);
+    // There should be one user activation email.
+    $captured_emails = \Drupal::state()->get('system.test_mail_collector', []);
+    $this->assertCount(1, $captured_emails);
+    $this->assertEquals('user_status_activated', $captured_emails[0]['id']);
+  }
+
 }
