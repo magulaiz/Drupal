@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Drupal\navigation\Plugin\NavigationBlock;
+namespace Drupal\navigation\Plugin\Block;
 
+use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\navigation\Attribute\NavigationBlock;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a user navigation block.
  */
-#[NavigationBlock(
+#[Block(
   id: 'navigation_user',
   admin_label: new TranslatableMarkup('User'),
 )]

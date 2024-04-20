@@ -5,19 +5,3 @@ navigation.settings:
     _form: 'Drupal\navigation\Form\SettingsForm'
   requirements:
     _permission: 'administer site configuration'
-
-navigation_block.admin_display:
-  path: '/admin/config/user-interface/navigation-block'
-  defaults:
-    _controller: '\Drupal\navigation\Controller\NavigationBlockListController::listing'
-    _title: 'Navigation blocks'
-  requirements:
-    _permission: 'administer navigation_block'
-
-navigation_block.admin_library:
-  path: '/admin/config/user-interface/navigation-block/library'
-  defaults:
-    _controller: '\Drupal\navigation\Controller\NavigationBlockLibraryController::listBlocks'
-    _title: 'Place navigation block'
-  requirements:
-    _permission: 'administer navigation_block'

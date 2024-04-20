@@ -6,7 +6,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -64,12 +63,8 @@ class ConfigTranslationBlockListBuilder extends ConfigTranslationEntityListBuild
       'class' => 'table-filter-text-source',
     ];
 
-    $theme_label = new TranslatableMarkup('N/A');
-    if ($theme) {
-      $theme_label = $this->themes[$theme]->info['name'];
-    }
     $row['theme'] = [
-      'data' => $theme_label,
+      'data' => $this->themes[$theme]->info['name'],
       'class' => 'table-filter-text-source',
     ];
 

@@ -73,17 +73,6 @@ function navigation_theme($existing, $type, $theme, $path) {
     ],
   ];
 
-  $items['navigation'] = [
-    'variables' => [
-      'hide_logo' => FALSE,
-      'logo_path' => FALSE,
-      'logo_width' => 40,
-      'logo_height' => 40,
-      'menu_content' => [],
-      'menu_footer' => [],
-    ],
-  ];
-
   $items['navigation_menu'] = [
     'base hook' => 'menu',
     'variables' => [
@@ -127,39 +116,6 @@ function navigation_block_build_local_tasks_block_alter(array &$build, BlockPlug
 }
 
 /**
- * Implements hook_ENTITY_TYPE_insert() for menu.
- */
-function navigation_menu_insert(MenuInterface $menu) {
-  // @todo This code should be moved to Drupal\system\Entity\Menu::save() once
-  // Navigation lands in core, in a similar way BlockManager cache is
-  // invalidated there.
-  \Drupal::service('plugin.manager.navigation_block')
-    ->clearCachedDefinitions();
-}
-
-/**
- * Implements hook_ENTITY_TYPE_update() for menu.
- */
-function navigation_menu_update(MenuInterface $menu) {
-  // @todo This code should be moved to Drupal\system\Entity\Menu::save() once
-  // Navigation lands in core, in a similar way BlockManager cache is
-  // invalidated there.
-  \Drupal::service('plugin.manager.navigation_block')
-    ->clearCachedDefinitions();
-}
-
-/**
- * Implements hook_ENTITY_TYPE_delete() for menu.
- */
-function navigation_menu_delete(MenuInterface $menu) {
-  // @todo This code should be moved to Drupal\system\Entity\Menu::delete() once
-  // Navigation lands in core, in a similar way BlockManager cache is
-  // invalidated there.
-  \Drupal::service('plugin.manager.navigation_block')
-    ->clearCachedDefinitions();
-}
-
-/**
  * Implements hook_preprocess_html().
  */
 function navigation_preprocess_html(&$variables) {
@@ -197,11 +153,8 @@ function navigation_block_alter(&$definitions): void {
 }
 
 /**
- * Implements hook_entity_type_build().
+ * Implements hook_preprocess_HOOK().
  */
-function navigation_entity_type_build(array &$entity_types) {
-  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
-  if (array_key_exists('block', $entity_types)) {
-    $entity_types['block']->setHandlerClass('navigation_block_list', NavigationBlockListBuilder::class);
-  }
+function template_preprocess_navigation(array &$variables): void {
+  $variables['hide_logo'] = $variables['content']['#hide_logo'] ?? TRUE;
 }

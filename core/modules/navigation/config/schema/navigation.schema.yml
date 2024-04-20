@@ -23,45 +23,10 @@ navigation.settings:
       type: integer
       label: 'Maximum file sizes (bytes)'
 
-navigation.navigation_block.*:
-  type: config_entity
-  label: Navigation Block
+navigation.block_layout:
+  type: config_object
   mapping:
-    id:
-      type: machine_name
-      label: ID
-    region:
-      type: string
-      label: 'Region'
-    weight:
-      type: integer
-      label: 'Weight'
-    provider:
-      type: string
-      label: 'Provider'
-    plugin:
-      type: string
-      label: 'Plugin'
-      constraints:
-        PluginExists:
-          manager: plugin.manager.navigation_block
-          interface: Drupal\navigation\NavigationBlockPluginInterface
-    settings:
-      type: navigation_block.settings.[%parent.plugin]
-    visibility:
+    sections:
       type: sequence
-      label: 'Visibility Conditions'
       sequence:
-        type: condition.plugin.[id]
-        label: 'Visibility Condition'
-
-navigation_block.settings.system_menu_navigation_block:*:
-  type: navigation_block_settings
-  label: 'Menu navigation block'
-  mapping:
-    level:
-      type: integer
-      label: 'Starting level'
-    depth:
-      type: integer
-      label: 'Maximum number of levels'
+        type: layout_builder.section

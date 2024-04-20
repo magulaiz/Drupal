@@ -40,6 +40,11 @@ navigation.escapeAdmin:
     - core/once
     - core/drupal.displace
 
+navigation.layout:
+  dependencies:
+    - navigation/navigation
+    - navigation/navigation.escapeAdmin
+
 body-scroll-lock:
   version: VERSION
   css:

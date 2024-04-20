@@ -16,6 +16,7 @@ use Drupal\Core\Menu\LocalTaskManagerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\file\Entity\File;
+use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 
 /**
  * Handle rendering for different pieces of the navigation.
@@ -53,28 +54,8 @@ class NavigationRenderer {
 
   /**
    * Construct a new NavigationRenderer object.
-   *
-   * @param \Drupal\navigation\NavigationBlockRepositoryInterface $navigationBlockRepository
-   *   Navigation block repository service.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
-   *   Config factory service.
-   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
-   *   Current route match.
-   * @param \Drupal\Core\Menu\LocalTaskManagerInterface $localTaskManager
-   *   Local tasks plugin manager.
-   * @param \Drupal\Core\Session\AccountInterface $currentUser
-   *   The current user object.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
-   *   Entity type manager service.
-   * @param \Drupal\Core\Image\ImageFactory $imageFactory
-   *   The image factory service.
-   * @param \Drupal\Core\File\FileUrlGeneratorInterface $fileUrlGenerator
-   *   The file URL generator.
-   * @param \Drupal\Core\File\FileSystemInterface $fileSystem
-   *   File system service.
    */
   public function __construct(
-    private NavigationBlockRepositoryInterface $navigationBlockRepository,
     private ConfigFactoryInterface $configFactory,
     private RouteMatchInterface $routeMatch,
     private LocalTaskManagerInterface $localTaskManager,
@@ -82,7 +63,7 @@ class NavigationRenderer {
     private EntityTypeManagerInterface $entityTypeManager,
     private ImageFactory $imageFactory,
     private FileUrlGeneratorInterface $fileUrlGenerator,
-    private FileSystemInterface $fileSystem
+    private SectionStorageManagerInterface $sectionStorageManager,
   ) {}
 
   /**
@@ -110,45 +91,29 @@ class NavigationRenderer {
    * @see hook_page_top()
    */
   public function buildNavigation(array &$page_top): void {
-    $view_builder = $this->entityTypeManager->getViewBuilder('block');
-    $block_list_cache_tags = $this->entityTypeManager->getDefinition('block')->getListCacheTags();
-
-    // Load all configured blocks by region.
-    $cacheable_metadata_list = [];
-    $build = [];
-    foreach ($this->navigationBlockRepository->getVisibleBlocksPerRegion($cacheable_metadata_list) as $region => $navigation_blocks) {
-      /** @var \Drupal\navigation\NavigationBlockInterface[] $navigation_blocks */
-      foreach ($navigation_blocks as $key => $navigation_block) {
-        $build[$region][$key] = $view_builder->view($navigation_block);
-      }
-      if (!empty($build[$region])) {
-        // \Drupal\block\BlockRepositoryInterface::getVisibleBlocksPerRegion()
-        // returns the navigation_blocks in sorted order.
-        $build[$region]['#sorted'] = TRUE;
-      }
-    }
-
     $logo_settings = $this->configFactory->get('navigation.settings');
     $logo_provider = $logo_settings->get('logo_provider');
 
-    $page_top['navigation'] = [
-      '#theme' => 'navigation',
+    $cacheability = new CacheableMetadata();
+    $storage = $this->sectionStorageManager->loadEmpty('navigation');
+
+    $build = [];
+    if ($storage) {
+      foreach ($storage->getSections() as $delta => $section) {
+        $build[$delta] = $section->toRenderArray([]);
+      }
+    }
+    // The render array is built based on decisions made by SectionStorage
+    // plugins and therefore it needs to depend on the accumulated
+    // cacheability of those decisions.
+    $cacheability->addCacheableDependency($logo_settings);
+    $cacheability->applyTo($build);
+
+    $build[0] += [
       '#hide_logo' => $logo_provider === self::LOGO_PROVIDER_HIDE,
-      '#menu_content' => $build[NavigationBlockRepositoryInterface::REGION_CONTENT] ?? [],
-      '#menu_footer' => $build[NavigationBlockRepositoryInterface::REGION_FOOTER] ?? [],
-      '#attached' => [
-        'library' => [
-          'navigation/navigation',
-          'navigation/navigation.escapeAdmin',
-        ],
-      ],
       '#access' => $this->currentUser->hasPermission('access navigation'),
     ];
-    // Merge cacheability metadata.
-    CacheableMetadata::createFromRenderArray($page_top['navigation'])
-      ->addCacheableDependency($logo_settings)
-      ->addCacheTags($block_list_cache_tags)
-      ->applyTo($page_top['navigation']);
+    $page_top['navigation'] = $build;
 
     if ($logo_provider === self::LOGO_PROVIDER_CUSTOM) {
       $logo_managed_fid = $logo_settings->get('logo_managed');
