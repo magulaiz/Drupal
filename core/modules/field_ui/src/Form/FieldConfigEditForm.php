@@ -39,13 +39,6 @@ class FieldConfigEditForm extends EntityForm {
   protected $entity;
 
   /**
-   * The entity type bundle info service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
-   */
-  protected $entityTypeBundleInfo;
-
-  /**
    * The name of the entity type.
    *
    * @var string
@@ -64,8 +57,8 @@ class FieldConfigEditForm extends EntityForm {
     protected TypedDataManagerInterface $typedDataManager,
     protected EntityDisplayRepositoryInterface $entityDisplayRepository,
     protected PrivateTempStore $tempStore,
-    protected ElementInfoManagerInterface,
-  ) { }
+    protected ElementInfoManagerInterface $elementInfo,
+  ) {}
 
   /**
    * {@inheritdoc}

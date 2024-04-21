@@ -38,35 +38,8 @@ class FieldStorageAddForm extends FormBase {
    */
   protected $bundle;
 
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The entity field manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
-   * The field type plugin manager.
-   *
-   * @var \Drupal\Core\Field\FieldTypePluginManagerInterface
-   */
-  protected $fieldTypePluginManager;
-
-  /**
-   * The configuration factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  public function __construct(protected EntityTypeManagerInterface $entityTypeManager, protected FieldTypePluginManagerInterface $fieldTypePluginManager, protected ConfigFactoryInterface $configFactory, protected EntityFieldManagerInterface $entityFieldManager, protected PrivateTempStore $tempStore, protected FieldTypeCategoryManagerInterface $fieldTypeCategoryManager) {
+  public function __construct(protected EntityTypeManagerInterface $entityTypeManager, protected FieldTypePluginManagerInterface $fieldTypePluginManager, ConfigFactoryInterface $configFactory, protected EntityFieldManagerInterface $entityFieldManager, protected PrivateTempStore $tempStore, protected FieldTypeCategoryManagerInterface $fieldTypeCategoryManager) {
+    $this->setConfigFactory($configFactory);
   }
 
   /**

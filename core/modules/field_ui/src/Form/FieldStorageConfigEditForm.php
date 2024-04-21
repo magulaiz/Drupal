@@ -6,7 +6,6 @@ use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Form\SubformStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\field\Entity\FieldConfig;
@@ -193,9 +192,7 @@ class FieldStorageConfigEditForm extends EntityForm {
    * {@inheritdoc}
    */
   protected function actions(array $form, FormStateInterface $form_state) {
-    if ($form_state instanceof SubformStateInterface) {
-      return [];
-    }
+    return [];
   }
 
   /**

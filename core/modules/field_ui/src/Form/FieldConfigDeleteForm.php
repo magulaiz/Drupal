@@ -18,14 +18,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class FieldConfigDeleteForm extends EntityDeleteForm {
 
-  /**
-   * The entity type bundle info service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
-   */
-  protected $entityTypeBundleInfo;
-
-  public function __construct(protected EntityTypeBundleInfoInterface $entityTypeBundleInfo, protected EntityTypeManagerInterface $entityTypeManager) {
+  public function __construct(protected EntityTypeBundleInfoInterface $entityTypeBundleInfo, EntityTypeManagerInterface $entityTypeManager) {
+    $this->entityTypeManager = $entityTypeManager;
   }
 
   /**
