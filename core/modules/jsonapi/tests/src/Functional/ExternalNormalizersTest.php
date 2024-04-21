@@ -10,7 +10,7 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\jsonapi\Traits\GetDocumentFromRequestTrait;
+use Drupal\Tests\jsonapi\Traits\GetDocumentFromResponseTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use GuzzleHttp\RequestOptions;
@@ -24,7 +24,7 @@ use GuzzleHttp\RequestOptions;
  */
 class ExternalNormalizersTest extends BrowserTestBase {
 
-  use GetDocumentFromRequestTrait;
+  use GetDocumentFromResponseTrait;
 
   /**
    * {@inheritdoc}

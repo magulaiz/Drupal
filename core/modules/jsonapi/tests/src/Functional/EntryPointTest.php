@@ -6,7 +6,7 @@ namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\Tests\jsonapi\Traits\GetDocumentFromRequestTrait;
+use Drupal\Tests\jsonapi\Traits\GetDocumentFromResponseTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use GuzzleHttp\RequestOptions;
 
@@ -19,7 +19,7 @@ use GuzzleHttp\RequestOptions;
  */
 class EntryPointTest extends BrowserTestBase {
 
-  use GetDocumentFromRequestTrait;
+  use GetDocumentFromResponseTrait;
   use JsonApiRequestTestTrait;
   use UserCreationTrait;
 

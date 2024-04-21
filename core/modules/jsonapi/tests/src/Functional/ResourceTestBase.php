@@ -43,7 +43,7 @@ use Drupal\jsonapi\ResourceResponse;
 use Drupal\path\Plugin\Field\FieldType\PathItem;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
-use Drupal\Tests\jsonapi\Traits\GetDocumentFromRequestTrait;
+use Drupal\Tests\jsonapi\Traits\GetDocumentFromResponseTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\EntityOwnerInterface;
 use Drupal\user\RoleInterface;
@@ -59,7 +59,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
 
   use ResourceResponseTestTrait;
   use ContentModerationTestTrait;
-  use GetDocumentFromRequestTrait;
+  use GetDocumentFromResponseTrait;
   use JsonApiRequestTestTrait;
 
   /**
