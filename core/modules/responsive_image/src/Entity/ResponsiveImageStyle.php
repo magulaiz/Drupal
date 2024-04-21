@@ -3,7 +3,6 @@
 namespace Drupal\responsive_image\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\responsive_image\ResponsiveImageStyleInterface;
 
