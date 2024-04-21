@@ -63,7 +63,7 @@ class RssResponseRelativeUrlFilter implements EventSubscriberInterface {
         $html_markup = $node->nodeValue;
         if (!empty($html_markup)) {
           $html_markup = Html::transformRootRelativeUrlsToAbsolute($html_markup, $request->getSchemeAndHttpHost());
-          $html_markup = Xss::filterAdmin($html_markup);
+          $html_markup = Xss::filter($html_markup);
           $new_node = $rss_dom->createCDATASection($html_markup);
           $node->replaceChild($new_node, $node->firstChild);
         }
