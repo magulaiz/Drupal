@@ -2385,7 +2385,7 @@ function form_type_checkbox_value($element, $input = FALSE, $form_state = []) {
     // common use-case for setting #return_value to either 0 or '0' is for the
     // first option within a 0-indexed array of checkboxes, and for this,
     // form_process_checkboxes() uses the string rather than the integer.
-    return $form_state['programmed'] ? $input : $element['#return_value'];
+    return isset($input) ? ($form_state['programmed'] ? $input : $element['#return_value']) : 0;
   }
 }
 
