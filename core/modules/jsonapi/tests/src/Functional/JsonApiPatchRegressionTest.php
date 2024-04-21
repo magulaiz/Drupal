@@ -7,7 +7,6 @@ namespace Drupal\Tests\jsonapi\Functional;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
-use Drupal\Component\Serialization\Json;
 use Drupal\Core\Entity\TranslatableInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\LanguageInterface;

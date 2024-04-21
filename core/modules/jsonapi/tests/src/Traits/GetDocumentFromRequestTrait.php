@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Traits;
 
 use Drupal\Component\Serialization\Json;
@@ -9,12 +11,14 @@ use Psr\Http\Message\ResponseInterface;
 trait GetDocumentFromRequestTrait {
 
   /**
-   *  @param ResponseInterface $response Response to extract JSON:API document from.
-   *  @param bool $dataRequired Validate the data property is available in the response.
+   * @param \Psr\Http\Message\ResponseInterface $response
+   *   Response to extract JSON:API document from.
+   * @param bool $dataRequired
+   *   Validate the data property is available in the response.
    *
-   *  @return array
-   *    JSON:API document extracted from the response.
-   **/
+   * @return array
+   *   JSON:API document extracted from the response.
+   */
   protected function getDocumentFromResponse(ResponseInterface $response, bool $dataRequired = TRUE): array {
     assert($this instanceof ResourceTestBase);
 
@@ -23,7 +27,7 @@ trait GetDocumentFromRequestTrait {
     if ($dataRequired === TRUE && !isset($document['data'])) {
       if (isset($document['errors'])) {
         $errors = [];
-        foreach($document['errors'] as $error) {
+        foreach ($document['errors'] as $error) {
           $errors[] = $error['title'] . ': ' . $error['detail'];
         }
         $this->fail('Missing expected data property in document. Errors: ' . implode(', ', $errors));
