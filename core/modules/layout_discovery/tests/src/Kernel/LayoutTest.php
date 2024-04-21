@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_discovery\Kernel;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\FormState;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -78,6 +79,10 @@ class LayoutTest extends KernelTestBase {
 
     // Match the HTML to the full form element.
     $this->assertSame(implode("\n", $html), $this->cssSelect('#the-form-id')[0]->asXML());
+
+    // We need to reset seen IDs since with dataproviders the Html static
+    // class remains loaded once across all test cases.
+    Html::resetSeenIds();
   }
 
   /**
