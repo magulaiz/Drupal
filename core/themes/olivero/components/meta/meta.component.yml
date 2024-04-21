@@ -30,7 +30,8 @@ props:
       title: Date
       description: Date
       type: string
-    metadata:
-      title: Metadata
-      description: Additional metadata
-      type: string
+slots:
+  metadata:
+    title: Metadata
+    description: Additional metadata
+    type: object
