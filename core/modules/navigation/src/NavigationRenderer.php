@@ -13,6 +13,8 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Image\ImageFactory;
 use Drupal\Core\Menu\LocalTaskManagerInterface;
+use Drupal\Core\Plugin\Context\Context;
+use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\file\Entity\File;
@@ -95,7 +97,10 @@ class NavigationRenderer {
     $logo_provider = $logo_settings->get('logo_provider');
 
     $cacheability = new CacheableMetadata();
-    $storage = $this->sectionStorageManager->loadEmpty('navigation');
+    $contexts = [
+      'navigation' => new Context(ContextDefinition::create('string'), 'navigation'),
+    ];
+    $storage = $this->sectionStorageManager->findByContext($contexts, $cacheability);
 
     $build = [];
     if ($storage) {

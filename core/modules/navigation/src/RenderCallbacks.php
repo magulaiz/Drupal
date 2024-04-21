@@ -21,10 +21,11 @@ final class RenderCallbacks {
       // Remove add section links that exist before and after the existing
       // section.
       unset($element['layout_builder'][0], $element['layout_builder'][2]);
-      // Remove add block link from the footer section and the remove button
-      // from the existing section.
+      // Remove add block link from the footer section and the remove and
+      // configure buttons from the existing section.
       unset(
         $element['layout_builder'][1]['remove'],
+        $element['layout_builder'][1]['configure'],
         $element['layout_builder'][1]['layout-builder__section']['footer']['layout_builder_add_block'],
       );
     }

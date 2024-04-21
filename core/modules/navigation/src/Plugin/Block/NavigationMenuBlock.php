@@ -28,25 +28,6 @@ final class NavigationMenuBlock extends SystemMenuBlock implements ContainerFact
   const NAVIGATION_MAX_DEPTH = 3;
 
   /**
-   * Constructs a new SystemMenuNavigationBlock.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param array $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menuLinkTree
-   *   The menu tree service.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected MenuLinkTreeInterface $menuLinkTree) {
-    $this->configuration = $configuration;
-    $this->pluginId = $plugin_id;
-    $this->pluginDefinition = $plugin_definition;
-    $this->setConfiguration($configuration);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static {
@@ -54,7 +35,8 @@ final class NavigationMenuBlock extends SystemMenuBlock implements ContainerFact
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('navigation.menu_tree')
+      $container->get('navigation.menu_tree'),
+      $container->get('menu.active_trail'),
     );
   }
 
@@ -97,15 +79,15 @@ final class NavigationMenuBlock extends SystemMenuBlock implements ContainerFact
     $parameters = new MenuTreeParameters();
     $parameters
       ->setMinDepth($level)
-      ->setMaxDepth(min($level + $depth, $this->menuLinkTree->maxDepth()))
+      ->setMaxDepth(min($level + $depth, $this->menuTree->maxDepth()))
       ->onlyEnabledLinks();
-    $tree = $this->menuLinkTree->load($menu_name, $parameters);
+    $tree = $this->menuTree->load($menu_name, $parameters);
     $manipulators = [
       ['callable' => 'menu.default_tree_manipulators:checkAccess'],
       ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
     ];
-    $tree = $this->menuLinkTree->transform($tree, $manipulators);
-    $build = $this->menuLinkTree->build($tree);
+    $tree = $this->menuTree->transform($tree, $manipulators);
+    $build = $this->menuTree->build($tree);
     if (!empty($build)) {
       $build['#title'] = $this->configuration['label'];
     }

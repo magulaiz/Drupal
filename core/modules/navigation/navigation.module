@@ -6,15 +6,12 @@
  */
 
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\Component\Utility\Html;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\navigation\NavigationBlockListBuilder;
 use Drupal\navigation\NavigationContentLinks;
 use Drupal\navigation\NavigationRenderer;
 use Drupal\navigation\Plugin\SectionStorage\NavigationSectionStorage;
 use Drupal\navigation\RenderCallbacks;
-use Drupal\system\MenuInterface;
 
 /**
  * Implements hook_help().
@@ -28,6 +25,15 @@ function navigation_help($route_name, RouteMatchInterface $route_match) {
         ':docs' => 'https://www.drupal.org/project/navigation',
       ]) . '</p>';
       return $output;
+  }
+  $configuration_route = 'layout_builder.navigation.';
+  if (!$route_match->getRouteObject()->getOption('_layout_builder') || !str_starts_with($route_name, $configuration_route)) {
+    return layout_builder_help($route_name, $route_match);
+  }
+  if (str_starts_with($route_name, $configuration_route)) {
+    $output = '<p>' . t('This layout builder tool allows you to configure the blocks in the navigation toolbar.') . '</p>';
+    $output .= '<p>' . t('Forms and links inside the content of the layout builder tool have been disabled.') . '</p>';
+    return $output;
   }
 }
 
@@ -50,6 +56,10 @@ function navigation_module_implements_alter(&$implementations, $hook) {
     $group = $implementations['navigation'];
     unset($implementations['navigation']);
     $implementations['navigation'] = $group;
+  }
+  if ($hook == 'help') {
+    // We take over the layout_builder hook_help().
+    unset($implementations['layout_builder']);
   }
 }
 
@@ -168,9 +178,9 @@ function navigation_plugin_filter_layout__layout_builder_alter(array &$definitio
  * Implements hook_block_alter().
  */
 function navigation_block_alter(&$definitions): void {
-  // Hide the navigation user block from the normal block UI.
+  // Hide the navigation blocks from the normal block UI.
   $definitions['navigation_user']['_block_ui_hidden'] = TRUE;
-  // Hide the navigation menu block from the normal block UI.
+  $definitions['navigation_shortcuts']['_block_ui_hidden'] = TRUE;
   $definitions['navigation_menu']['_block_ui_hidden'] = TRUE;
 }
 

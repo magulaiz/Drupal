@@ -94,3 +94,8 @@ dropdown:
   dependencies:
     - core/once
     - core/internal.floating-ui
+
+navigation.layoutBuilder:
+  css:
+    base:
+      css/base/layout-builder.css: {}
