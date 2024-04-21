@@ -16,8 +16,7 @@
 .admin-toolbar__content .toolbar-block:nth-last-child(n + 2)::after {
   margin-top: var(--admin-toolbar-space-8);
   content: "";
-  /* TODO: rework color to palette */
-  border-top: 1px solid #cfd4dd;
+  border-top: 1px solid var(--admin-toolbar-color-gray-200);
 }
 .toolbar-block__list {
   display: grid;

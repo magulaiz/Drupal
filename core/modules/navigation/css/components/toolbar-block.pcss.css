@@ -13,8 +13,7 @@
       &::after {
         margin-top: var(--admin-toolbar-space-8);
         content: "";
-        /* TODO: rework color to palette */
-        border-top: 1px solid #CFD4DD;
+        border-top: 1px solid var(--admin-toolbar-color-gray-200);
       }
     }
   }
