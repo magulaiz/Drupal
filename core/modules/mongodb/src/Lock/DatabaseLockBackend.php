@@ -36,7 +36,7 @@ class DatabaseLockBackend extends CoreDatabaseLockBackend {
     if (isset($this->locks[$name])) {
       try {
         // Try to extend the expiration of a lock we already acquired.
-        $success = (bool) $this->database->update(static::TABLE_NAME)
+        $success = (bool) $this->database->update('semaphore')
           ->fields(['expire' => $expire])
           ->condition('name', $name)
           ->condition('value', $this->getLockId())
@@ -58,7 +58,7 @@ class DatabaseLockBackend extends CoreDatabaseLockBackend {
       // We always want to do this code at least once.
       do {
         try {
-          $this->database->insert(static::TABLE_NAME)
+          $this->database->insert('semaphore')
             ->fields([
               'name' => $name,
               'value' => $this->getLockId(),
@@ -98,7 +98,7 @@ class DatabaseLockBackend extends CoreDatabaseLockBackend {
     $name = $this->normalizeName($name);
 
     try {
-      $prefixed_table = $this->database->getPrefix() . static::TABLE_NAME;
+      $prefixed_table = $this->database->getPrefix() . 'semaphore';
       $cursor = $this->database->getConnection()->{$prefixed_table}->find(
         ['name' => ['$eq' => $name]],
         ['projection' => ['expire' => 1, 'value' => 1, '_id' => 0]]
@@ -121,7 +121,7 @@ class DatabaseLockBackend extends CoreDatabaseLockBackend {
       // We check two conditions to prevent a race condition where another
       // request acquired the lock and set a new expire time. We add a small
       // number to $expire to avoid errors with float to string conversion.
-      return (bool) $this->database->delete(static::TABLE_NAME)
+      return (bool) $this->database->delete('semaphore')
         ->condition('name', $name)
         ->condition('value', $lock['value'])
         ->condition('expire', 0.0001 + $expire, '<=')
