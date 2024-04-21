@@ -12,6 +12,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\navigation\NavigationBlockListBuilder;
 use Drupal\navigation\NavigationContentLinks;
 use Drupal\navigation\NavigationRenderer;
+use Drupal\navigation\Plugin\SectionStorage\NavigationSectionStorage;
 use Drupal\navigation\RenderCallbacks;
 use Drupal\system\MenuInterface;
 
@@ -133,24 +134,44 @@ function navigation_preprocess_html(&$variables) {
 }
 
 /**
+ * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
+ *
+ * Curate the blocks available in the Layout Builder "Add Block" UI.
+ */
+function navigation_plugin_filter_block__layout_builder_alter(array &$definitions, array $extra) {
+  if (($extra['section_storage'] ?? NULL) instanceof NavigationSectionStorage) {
+    // Remove all blocks other than the ones we support.
+    $navigation_safe = [
+      'navigation_user',
+      'navigation_shortcuts',
+      'navigation_menu',
+    ];
+    $definitions = array_filter($definitions, static function (array $definition, string $plugin_id) use ($navigation_safe): bool {
+      [$base_plugin_id] = explode(PluginBase::DERIVATIVE_SEPARATOR, $plugin_id);
+      return in_array($base_plugin_id, $navigation_safe, TRUE);
+    }, ARRAY_FILTER_USE_BOTH);
+  }
+}
+
+/**
+ * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
+ */
+function navigation_plugin_filter_layout__layout_builder_alter(array &$definitions, array $extra) {
+  if (($extra['section_storage'] ?? NULL) instanceof NavigationSectionStorage) {
+    // We don't allow adding a new section.
+    $definitions = [];
+  }
+}
+
+
+/**
  * Implements hook_block_alter().
  */
 function navigation_block_alter(&$definitions): void {
-  // Mark blocks that are supported by the navigation module as such.
-  $navigation_safe = [
-    'shortcuts',
-    'system_menu_block',
-    'navigation_user',
-  ];
-  $matching_ids = array_filter(array_keys($definitions), static function (string $plugin_id) use ($navigation_safe): bool {
-    [$base_plugin_id] = explode(PluginBase::DERIVATIVE_SEPARATOR, $plugin_id);
-    return in_array($base_plugin_id, $navigation_safe, TRUE);
-  });
-  foreach ($matching_ids as $plugin_id) {
-    $definitions[$plugin_id]['supports_navigation'] = TRUE;
-  }
   // Hide the navigation user block from the normal block UI.
   $definitions['navigation_user']['_block_ui_hidden'] = TRUE;
+  // Hide the navigation menu block from the normal block UI.
+  $definitions['navigation_menu']['_block_ui_hidden'] = TRUE;
 }
 
 /**

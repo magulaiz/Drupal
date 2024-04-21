@@ -134,6 +134,10 @@ class NavigationSectionStorage extends PluginBase implements SectionStorageInter
    */
   public function buildRoutes(RouteCollection $collection): void {
     $this->buildLayoutRoutes($collection, $this->getPluginDefinition(), '/admin/config/user-interface/navigation-block');
+    $default_route = 'layout_builder.' . $this->getPluginDefinition()->id() . '.view';
+    $route = $collection->get($default_route);
+    // @todo Move to a form from a controller.
+
   }
 
   /**

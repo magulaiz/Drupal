@@ -76,14 +76,14 @@ class NavigationBlockUiTest extends BrowserTestBase {
       [
         'label' => 'Content',
         'tr' => '4',
-        'plugin_id' => 'system_menu_navigation_block:content',
+        'plugin_id' => 'navigation_menu:content',
         'settings' => ['region' => 'content', 'id' => 'content_menu'],
         'test_weight' => '-2',
       ],
       [
         'label' => 'Administration',
         'tr' => '5',
-        'plugin_id' => 'system_menu_navigation_block:admin',
+        'plugin_id' => 'navigation_menu:admin',
         'settings' => ['region' => 'content', 'id' => 'administration_menu'],
         'test_weight' => '-1',
       ],
