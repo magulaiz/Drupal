@@ -12,6 +12,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\navigation\NavigationBlockListBuilder;
 use Drupal\navigation\NavigationContentLinks;
 use Drupal\navigation\NavigationRenderer;
+use Drupal\navigation\RenderCallbacks;
 use Drupal\system\MenuInterface;
 
 /**
@@ -157,4 +158,13 @@ function navigation_block_alter(&$definitions): void {
  */
 function template_preprocess_navigation(array &$variables): void {
   $variables['hide_logo'] = $variables['content']['#hide_logo'] ?? TRUE;
+}
+
+/**
+ * Implements hook_element_info_alter().
+ */
+function navigation_element_info_alter(array &$info) {
+  if (array_key_exists('layout_builder', $info)) {
+    $info['layout_builder']['#pre_render'][] = [RenderCallbacks::class, 'alterLayoutBuilder'];
+  }
 }
