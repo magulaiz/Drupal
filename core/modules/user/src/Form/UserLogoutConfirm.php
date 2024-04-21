@@ -6,13 +6,14 @@ namespace Drupal\user\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\WorkspaceSafeFormInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 
 /**
  * Provides a confirmation form for user logout.
  */
-class UserLogoutConfirm extends ConfirmFormBase {
+class UserLogoutConfirm extends ConfirmFormBase implements WorkspaceSafeFormInterface {
 
   /**
    * {@inheritdoc}

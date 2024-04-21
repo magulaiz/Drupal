@@ -52,8 +52,6 @@ class StateFileExistsTest extends MigrateDrupalTestBase {
     'field',
     'file',
     'filter',
-    // @todo Remove forum in https://www.drupal.org/project/drupal/issues/3261653
-    'forum',
     'image',
     'language',
     'link',
@@ -76,8 +74,6 @@ class StateFileExistsTest extends MigrateDrupalTestBase {
     'taxonomy',
     'telephone',
     'text',
-    // @todo Remove tracker in https://www.drupal.org/project/drupal/issues/3261452
-    'tracker',
     'update',
     'user',
   ];

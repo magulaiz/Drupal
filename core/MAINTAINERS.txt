@@ -60,9 +60,6 @@ subsystems. See https://www.drupal.org/contribute/core-maintainers for more
 information on their responsibilities, and to find out how to become a subsystem
 maintainer. Current subsystem maintainers:
 
-Actions UI
-- ?
-
 Ajax
 - Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
 - Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
@@ -219,9 +216,6 @@ File
 
 Filter
 - ?
-
-Forum
-- Lee Rowlands 'larowlan' https://www.drupal.org/u/larowlan
 
 Form API
 - Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
@@ -403,12 +397,6 @@ Token
 
 Toolbar
 - Théodore Biadala 'nod_' https://www.drupal.org/u/nod_
-
-Tour
-- Nick Schuch 'nick_schuch' https://www.drupal.org/u/nick_schuch
-
-Tracker
-- ?
 
 Transliteration
 - Andrei Mateescu 'amateescu' https://www.drupal.org/u/amateescu
