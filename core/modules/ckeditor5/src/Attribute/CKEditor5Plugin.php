@@ -63,14 +63,14 @@ class CKEditor5Plugin extends Plugin {
    * {@inheritdoc}
    */
   public function getClass(): string {
-    return $this->drupal->getClass();
+    return $this->drupal?->getClass() ?? '';
   }
 
   /**
    * {@inheritdoc}
    */
   public function setClass($class): void {
-    $this->drupal->setClass($class);
+    $this->drupal?->setClass($class);
   }
 
   /**
