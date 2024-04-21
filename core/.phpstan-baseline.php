@@ -697,11 +697,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/contact/src/MessageForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^@dataProvider getSendMailMessages related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/contact/tests/src/Unit/MailHandlerTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$state in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 3,
 	'path' => __DIR__ . '/modules/content_moderation/src/Form/ContentModerationStateForm.php',
@@ -875,16 +870,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/modules/filter/tests/src/Unit/FilterUninstallValidatorTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\forum\\\\ForumManager\\:\\:getTopicOrder\\(\\) should return array but return statement is missing\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/forum/src/ForumManager.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$vocabulary in empty\\(\\) always exists and is not falsy\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/forum/src/ForumUninstallValidator.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
