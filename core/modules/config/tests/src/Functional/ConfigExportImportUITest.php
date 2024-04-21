@@ -79,6 +79,8 @@ class ConfigExportImportUITest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    // Create a content type.
+    $this->contentType = $this->drupalCreateContentType(['type' => 'test']);
 
     $this->drupalLogin($this->drupalCreateUser([
       'export configuration',
@@ -107,9 +109,6 @@ class ConfigExportImportUITest extends BrowserTestBase {
       ->set('slogan', $this->newSlogan)
       ->save();
     $this->assertEquals($this->newSlogan, $this->config('system.site')->get('slogan'));
-
-    // Create a content type.
-    $this->contentType = $this->drupalCreateContentType(['type' => 'test']);
 
     // Create a field.
     $this->fieldName = $this->randomMachineName();
