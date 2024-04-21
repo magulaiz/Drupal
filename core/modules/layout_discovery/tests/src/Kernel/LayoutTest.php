@@ -80,7 +80,7 @@ class LayoutTest extends KernelTestBase {
     // Match the HTML to the full form element.
     $this->assertSame(implode("\n", $html), $this->cssSelect('#the-form-id')[0]->asXML());
 
-    // We need to reset seen IDs since with dataproviders the Html static
+    // We need to reset seen IDs since with data providers the Html static
     // class remains loaded once across all test cases.
     Html::resetSeenIds();
   }
