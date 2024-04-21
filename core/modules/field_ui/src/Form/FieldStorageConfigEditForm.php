@@ -196,11 +196,6 @@ class FieldStorageConfigEditForm extends EntityForm {
     if ($form_state instanceof SubformStateInterface) {
       return [];
     }
-    $elements = parent::actions($form, $form_state);
-    $elements['submit']['#value'] = $this->entity->isNew() ? $this->t('Continue') : $this->t('Save');
-
-    @trigger_error('Rendering ' . __CLASS__ . ' outside of a subform is deprecated in drupal:10.2.0 and is removed in drupal:11.0.0. See https://www.drupal.org/node/3391538', E_USER_DEPRECATED);
-    return $elements;
   }
 
   /**
