@@ -21,13 +21,13 @@ trait GetDocumentFromResponseTrait {
    * @param bool $dataRequired
    *   Validate the data property is available in the response.
    *
-   * @return array
-   *   JSON:API document extracted from the response.
+   * @return ?array
+   *   JSON:API document extracted from the response, or NULL.
    *
    * @throws \PHPUnit\Framework\AssertionFailedError
    *   Thrown when the document does not pass basic validation against the spec.
    */
-  protected function getDocumentFromResponse(ResponseInterface $response, bool $dataRequired = TRUE): array {
+  protected function getDocumentFromResponse(ResponseInterface $response, bool $dataRequired = TRUE): ?array {
     assert($this instanceof BrowserTestBase);
 
     $document = Json::decode((string) $response->getBody());
