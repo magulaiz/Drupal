@@ -16,10 +16,10 @@ trait GetDocumentFromRequestTrait {
    * @param bool $dataRequired
    *   Validate the data property is available in the response.
    *
-   * @return array
+   * @return ?array
    *   JSON:API document extracted from the response.
    */
-  protected function getDocumentFromResponse(ResponseInterface $response, bool $dataRequired = TRUE): array {
+  protected function getDocumentFromResponse(ResponseInterface $response, bool $dataRequired = TRUE): ?array {
     assert($this instanceof ResourceTestBase);
 
     $document = Json::decode((string) $response->getBody());
@@ -32,7 +32,7 @@ trait GetDocumentFromRequestTrait {
         }
         $this->fail('Missing expected data property in document. Errors: ' . implode(', ', $errors));
       }
-      $this->fail('Missing expected data property in document but no errors found.');
+      $this->fail('Missing expected data property in document but no errors found. Response body: ' . $response->getBody());
     }
     return $document;
   }
