@@ -5,14 +5,12 @@
  * Responsive image display formatter for image fields.
  */
 
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\responsive_image\Entity\ResponsiveImageStyle;
-use Drupal\responsive_image\ResponsiveImageConfigUpdater;
 use Drupal\responsive_image\ResponsiveImageStyleInterface;
 use Drupal\breakpoint\BreakpointInterface;
 

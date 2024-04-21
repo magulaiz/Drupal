@@ -7,7 +7,6 @@
 
 use Drupal\Component\Plugin\DerivativeInspectionInterface;
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldTypeCategoryManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -18,7 +17,6 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\field\FieldConfigInterface;
-use Drupal\media\MediaConfigUpdater;
 use Drupal\media\Plugin\media\Source\OEmbedInterface;
 use Drupal\views\ViewExecutable;
 

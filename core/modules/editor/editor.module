@@ -8,7 +8,6 @@
 use Drupal\Core\Url;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Form\SubformState;
-use Drupal\editor\EditorInterface;
 use Drupal\editor\Entity\Editor;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;

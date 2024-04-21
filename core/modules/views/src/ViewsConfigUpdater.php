@@ -3,13 +3,10 @@
 namespace Drupal\views;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
-use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Field\Plugin\Field\FieldFormatter\TimestampFormatter;
-use Drupal\Core\Language\LanguageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -129,7 +126,7 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
    *   Whether the view was updated.
    */
   public function updateAll(ViewEntityInterface $view) {
-    return $this->processDisplayHandlers($view, FALSE, function (&$handler, $handler_type, $key, $display_id) use ($view) {
+    return $this->processDisplayHandlers($view, FALSE, function (&$handler, $handler_type, $key, $display_id) {
       $changed = FALSE;
       return $changed;
     });

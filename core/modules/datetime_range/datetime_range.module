@@ -5,13 +5,8 @@
  * Field hooks to implement a datetime field that stores a start and end date.
  */
 
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\datetime_range\DateTimeRangeConstantsInterface;
-use Drupal\datetime_range\Plugin\Field\FieldFormatter\DateRangeCustomFormatter;
-use Drupal\datetime_range\Plugin\Field\FieldFormatter\DateRangeDefaultFormatter;
-use Drupal\datetime_range\Plugin\Field\FieldFormatter\DateRangePlainFormatter;
 
 /**
  * Implements hook_help().
