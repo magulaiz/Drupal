@@ -30,9 +30,9 @@ trait GetDocumentFromRequestTrait {
         foreach ($document['errors'] as $error) {
           $errors[] = $error['title'] . ': ' . $error['detail'];
         }
-        $this->fail('Missing expected data property in document. Errors: ' . implode(', ', $errors));
+        $this->fail('Missing expected data property in document. Error(s): ' . PHP_EOL . '  ' . implode('  ' . PHP_EOL, $errors));
       }
-      $this->fail('Missing expected data property in document but no errors found. Response body: ' . $response->getBody());
+      $this->fail('Missing expected data property in document but no errors found. Response body: ' . PHP_EOL . '  ' . $response->getBody());
     }
     return $document;
   }
