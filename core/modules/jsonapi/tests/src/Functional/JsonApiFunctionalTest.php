@@ -723,7 +723,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
         'Content-Type' => 'application/vnd.api+json',
       ],
     ]);
-    $document = $this->getDocumentFromResponse($response);
+    $document = $this->getDocumentFromResponse($response, FALSE);
     $this->assertSame(400, $response->getStatusCode());
     $this->assertNotEmpty($document['errors']);
     $this->assertSame("Bad Request", $document['errors'][0]['title']);
