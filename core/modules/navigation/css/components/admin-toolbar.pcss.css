@@ -11,8 +11,8 @@
  * fallback value to the margin-inline-start property of the layout container.
  */
 body {
-  --admin-toolbar-sidebar-width: var(--admin-toolbar-space-72);
-  --admin-toolbar-sidebar-header: var(--admin-toolbar-space-56);
+  --admin-toolbar-sidebar-width: calc(4.5 * var(--admin-toolbar-rem));
+  --admin-toolbar-sidebar-header: calc(3.5 * var(--admin-toolbar-rem));
 
   [data-admin-toolbar='expanded'] & {
     --admin-toolbar-sidebar-width: 80vw;
@@ -279,7 +279,8 @@ body {
 .admin-toolbar__content {
   display: grid;
   gap: var(--admin-toolbar-space-12);
-  padding: var(--admin-toolbar-sidebar-header) var(--admin-toolbar-space-16) var(--admin-toolbar-space-16);
+  padding-block: var(--admin-toolbar-sidebar-header) var(--admin-toolbar-space-16);
+  padding-inline: var(--admin-toolbar-space-16);
 
   @media (--admin-toolbar-desktop) {
     display: flex;

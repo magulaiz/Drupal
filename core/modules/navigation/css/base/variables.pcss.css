@@ -1,6 +1,12 @@
 @import "../base/media-queries.pcss.css";
 
+/* This is a universal size that helps in the case of themes with a size of 10 pixels.
+We need it root to calculate the size of the displace in .dialog-off-canvas-main-canvas */
 :root {
+  --admin-toolbar-rem: max(1rem, 16PX); /* Workaround until postcss-px-to-rem is removed so this is not converted to rems. */
+}
+
+[data-drupal-admin-styles] {
   /*
    * Color Palette.
    */
@@ -75,7 +81,6 @@
   /**
    * Spaces.
    */
-  --admin-toolbar-rem: max(1rem, 16PX); /* Workaround until postcss-px-to-rem is removed so this is not converted to rems. */
   --admin-toolbar-space-4: var(--drupal-admin-space-4, calc(0.25 * var(--admin-toolbar-rem))); /* 0.25 * 16px = 4px */
   --admin-toolbar-space-8: var(--drupal-admin-space-8, calc(0.5 * var(--admin-toolbar-rem))); /* 0.5 * 16px = 8px */
   --admin-toolbar-space-12: var(--drupal-admin-space-12, calc(0.75 * var(--admin-toolbar-rem))); /* 0.75 * 16px = 12px */
@@ -161,7 +166,7 @@
 }
 
 @media (--admin-toolbar-reduced-motion) {
-  :root {
+  [data-drupal-admin-styles] {
     --admin-toolbar-transition: 0s linear;
   }
 }
