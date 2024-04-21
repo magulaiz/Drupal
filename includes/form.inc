@@ -2358,8 +2358,7 @@ function form_type_image_button_value($form, $input, $form_state) {
  *   A keyed array containing the current state of the form.
  *
  * @return mixed
- *   The data that will appear in $form_state['values'] for this element, or
- *   nothing to use the default.
+ *   The data that will appear in $form_state['values'] for this element.
  */
 function form_type_checkbox_value($element, $input = FALSE, $form_state = []) {
   if ($input === FALSE) {
