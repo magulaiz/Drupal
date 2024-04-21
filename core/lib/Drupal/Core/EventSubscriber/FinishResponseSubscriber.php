@@ -181,6 +181,14 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
       // header declaring the response as not cacheable.
       $this->setResponseNotCacheable($response, $request);
     }
+
+    // The Vary header is used to indicates the set of request-header fields
+    // that fully determine whether a cache is permitted to use the response
+    // to reply to a subsequent request for a given URL. This header must be
+    // present in every response, regardless of whether it is cacheable or not.
+    if (!$response->hasVary() && !Settings::get('omit_vary_cookie')) {
+      $response->setVary('Cookie', FALSE);
+    }
   }
 
   /**
@@ -226,10 +234,9 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
 
     // There is no point in sending along headers necessary for cache
     // revalidation, if caching by proxies and browsers is denied in the first
-    // place. Therefore remove ETag, Last-Modified and Vary in that case.
+    // place. Therefore remove ETag and Last-Modified in that case.
     $response->setEtag(NULL);
     $response->setLastModified(NULL);
-    $response->headers->remove('Vary');
   }
 
   /**
@@ -262,15 +269,6 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
       $timestamp = $response->getLastModified()->getTimestamp();
     }
     $response->setEtag($timestamp);
-
-    // Allow HTTP proxies to cache pages for anonymous users without a session
-    // cookie. The Vary header is used to indicates the set of request-header
-    // fields that fully determines whether a cache is permitted to use the
-    // response to reply to a subsequent request for a given URL without
-    // revalidation.
-    if (!$response->hasVary() && !Settings::get('omit_vary_cookie')) {
-      $response->setVary('Cookie', FALSE);
-    }
   }
 
   /**
