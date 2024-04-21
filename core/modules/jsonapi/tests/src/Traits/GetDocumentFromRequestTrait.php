@@ -18,7 +18,7 @@ trait GetDocumentFromRequestTrait {
   protected function getDocumentFromResponse(ResponseInterface $response, bool $dataRequired = TRUE): array {
     assert($this instanceof ResourceTestBase);
 
-    $doc = Json::decode((string) $response->getBody());
+    $document = Json::decode((string) $response->getBody());
 
     if ($dataRequired === TRUE && !isset($document['data'])) {
       if (isset($document['errors'])) {
@@ -30,7 +30,7 @@ trait GetDocumentFromRequestTrait {
       }
       $this->fail('Missing expected data property in document but no errors found.');
     }
-    return $doc;
+    return $document;
   }
 
 }
