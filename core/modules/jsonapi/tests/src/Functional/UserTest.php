@@ -544,8 +544,8 @@ class UserTest extends ResourceTestBase {
     $this->assertCount(0, $doc['data']);
     // /jsonapi/user/user?filter[field_favorite_animal]: 0 results.
     $response = $this->request('GET', $favorite_animal_test_url, $request_options);
-    $this->assertSame(200, $response->getStatusCode());
     $doc = $this->getDocumentFromResponse($response);
+    $this->assertSame(200, $response->getStatusCode());
     $this->assertCount(0, $doc['data']);
     // Grant "view" permission.
     $this->grantPermissionsToTestedRole(['access user profiles']);
@@ -567,8 +567,8 @@ class UserTest extends ResourceTestBase {
     $this->assertCount(0, $doc['data']);
     // /jsonapi/user/user?filter[field_favorite_animal]: 0 results.
     $response = $this->request('GET', $favorite_animal_test_url, $request_options);
-    $this->assertSame(200, $response->getStatusCode());
     $doc = $this->getDocumentFromResponse($response);
+    $this->assertSame(200, $response->getStatusCode());
     $this->assertCount(0, $doc['data']);
     // Grant "admin" permission.
     $this->grantPermissionsToTestedRole(['administer users']);
@@ -580,8 +580,8 @@ class UserTest extends ResourceTestBase {
     $this->assertSame($node_b->uuid(), $doc['data'][0]['id']);
     // /jsonapi/user/user?filter[field_favorite_animal]: 1 result.
     $response = $this->request('GET', $favorite_animal_test_url, $request_options);
-    $this->assertSame(200, $response->getStatusCode());
     $doc = $this->getDocumentFromResponse($response);
+    $this->assertSame(200, $response->getStatusCode());
     $this->assertCount(1, $doc['data']);
     $this->assertSame($user_b->uuid(), $doc['data'][0]['id']);
   }

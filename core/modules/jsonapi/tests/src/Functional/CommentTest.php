@@ -387,8 +387,8 @@ class CommentTest extends ResourceTestBase {
 
     // Status must be TRUE when posting as anonymous and skip comment approval.
     $response = $this->request('POST', $url, $request_options);
-    $this->assertResourceResponse(201, FALSE, $response);
     $document = $this->getDocumentFromResponse($response);
+    $this->assertResourceResponse(201, FALSE, $response);
     $this->assertTrue($document['data']['attributes']['status']);
     $this->assertTrue($this->entityStorage->loadUnchanged(3)->isPublished());
   }

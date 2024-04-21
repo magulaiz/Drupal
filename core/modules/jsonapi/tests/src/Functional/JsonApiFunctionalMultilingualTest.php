@@ -165,8 +165,8 @@ class JsonApiFunctionalMultilingualTest extends JsonApiFunctionalTestBase {
     // first verify that it currently is 'en', then change it to 'ca-fr', and
     // verify that the title is unchanged, but the langcode is updated.
     $response = $this->request('GET', Url::fromUri('base:/jsonapi/node/article/' . $this->nodes[0]->uuid()), $request_options);
-    $this->assertSame(200, $response->getStatusCode());
     $document = $this->getDocumentFromResponse($response);
+    $this->assertSame(200, $response->getStatusCode());
     $this->assertSame($node->getTitle(), $document['data']['attributes']['title']);
     $this->assertSame('en', $document['data']['attributes']['langcode']);
     $response = $this->request('PATCH', Url::fromUri('base:/jsonapi/node/article/' . $this->nodes[0]->uuid()), $request_options);
@@ -271,8 +271,8 @@ class JsonApiFunctionalMultilingualTest extends JsonApiFunctionalTestBase {
     unset($request_document['data']['attributes']['langcode']);
     $request_options[RequestOptions::BODY] = Json::encode($request_document);
     $response = $this->request('POST', Url::fromUri('base:/ca/jsonapi/node/article/'), $request_options);
-    $this->assertSame(201, $response->getStatusCode());
     $document = $this->getDocumentFromResponse($response);
+    $this->assertSame(201, $response->getStatusCode());
     $this->assertSame($title, $document['data']['attributes']['title']);
     $this->assertSame('en', $document['data']['attributes']['langcode']);
     $this->assertSame(['en'], array_keys(Node::load($document['data']['attributes']['drupal_internal__nid'])->getTranslationLanguages()));
@@ -285,16 +285,16 @@ class JsonApiFunctionalMultilingualTest extends JsonApiFunctionalTestBase {
     $request_document['data']['attributes']['langcode'] = 'ca';
     $request_options[RequestOptions::BODY] = Json::encode($request_document);
     $response = $this->request('POST', Url::fromUri('base:/ca/jsonapi/node/article/'), $request_options);
-    $this->assertSame(201, $response->getStatusCode());
     $document = $this->getDocumentFromResponse($response);
+    $this->assertSame(201, $response->getStatusCode());
     $this->assertSame($title, $document['data']['attributes']['title']);
     $this->assertSame('ca', $document['data']['attributes']['langcode']);
     $this->assertSame(['ca'], array_keys(Node::load($document['data']['attributes']['drupal_internal__nid'])->getTranslationLanguages()));
 
     // Same request, but sent to the URL without the language prefix.
     $response = $this->request('POST', Url::fromUri('base:/jsonapi/node/article/'), $request_options);
-    $this->assertSame(201, $response->getStatusCode());
     $document = $this->getDocumentFromResponse($response);
+    $this->assertSame(201, $response->getStatusCode());
     $this->assertSame($title, $document['data']['attributes']['title']);
     $this->assertSame('ca', $document['data']['attributes']['langcode']);
     $this->assertSame(['ca'], array_keys(Node::load($document['data']['attributes']['drupal_internal__nid'])->getTranslationLanguages()));

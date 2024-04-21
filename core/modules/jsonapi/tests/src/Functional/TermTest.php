@@ -426,8 +426,8 @@ class TermTest extends ResourceTestBase {
 
     // PATCH request: 200.
     $response = $this->request('PATCH', $url, $request_options);
-    $this->assertResourceResponse(200, FALSE, $response);
     $updated_normalization = $this->getDocumentFromResponse($response);
+    $this->assertResourceResponse(200, FALSE, $response);
     $this->assertSame($normalization['data']['attributes']['path']['alias'], $updated_normalization['data']['attributes']['path']['alias']);
   }
 
