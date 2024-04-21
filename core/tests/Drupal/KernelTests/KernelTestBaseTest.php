@@ -10,7 +10,6 @@ use Drupal\Tests\StreamCapturer;
 use Drupal\user\Entity\Role;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
-use PHPUnit\Framework\Attributes\ExcludeGlobalVariableFromBackup;
 use Psr\Http\Client\ClientExceptionInterface;
 
 /**
@@ -65,7 +64,6 @@ class KernelTestBaseTest extends KernelTestBase {
   /**
    * @covers ::setUp
    */
-  #[ExcludeGlobalVariableFromBackup('destroy-me')]
   public function testSetUp() {
     $this->assertTrue($this->container->has('request_stack'));
     $this->assertTrue($this->container->initialized('request_stack'));
