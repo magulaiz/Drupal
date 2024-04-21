@@ -5,11 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\views\Kernel;
 
 use Drupal\Core\Config\FileStorage;
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\responsive_image\Entity\ResponsiveImageStyle;
-use Drupal\Tests\responsive_image\Functional\ViewsIntegrationTest;
-use Drupal\views\ViewsConfigUpdater;
 
 /**
  * @coversDefaultClass \Drupal\views\ViewsConfigUpdater
