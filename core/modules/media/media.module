@@ -20,6 +20,7 @@ use Drupal\field\FieldConfigInterface;
 use Drupal\media\MediaConfigUpdater;
 use Drupal\media\Plugin\media\Source\OEmbedInterface;
 use Drupal\views\ViewExecutable;
+use Drupal\media\Plugin\media\Source\File;
 
 /**
  * Implements hook_help().
@@ -61,7 +62,42 @@ function media_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<li>' . t('Existing media items can be reused on any other content items with a media reference field.') . '</li>';
       $output .= '</ul>';
       $output .= '<p>' . t('Use <em>Media</em> reference fields for most files, images, audio, videos, and remote media. Use <em>File</em> or <em>Image</em> reference fields when creating your own media types, or for legacy files and images created before enabling the Media module.') . '</p>';
+      $output .= '<h3>' . t('Media and private file access') . '</h3>';
+      $output .= '<p>' . t('Media reference fields behave differently than file and image fields regarding restricted access. Media items have their own access restrictions, detached from the access restriction of their referenced files and images. While file and image fields, when configured to use the private storage, will inherit access permissions from the content they are attached. This usually means that by default users could have access to files on media items even though they do not have access to the content that references the media items. <a href=":doc_url">More information on configuring media access restrictions</a>.', [
+        ':doc_url' => 'https://www.drupal.org/docs/8/core/modules/media/setting-up-private-access-to-media-items',
+      ]) . '</p>';
       return $output;
+
+    case 'entity.media.field_ui_fields':
+      // If there are file fields on media types using the private scheme, users
+      // may have the expectation that they inherit access from their parent
+      // entities, which is something that media items don't do by default.
+      // Show a message letting them know that.
+      $media_type = \Drupal::routeMatch()->getParameter('media_type');
+      $build = [
+        // By returning an uncacheable render array we ensure that this has
+        // up-to-date information every time the field config changes.
+        '#markup' => '',
+        '#cache' => [
+          'max-age' => 0,
+        ],
+      ];
+      if (!File::acceptsFileInSourceField($media_type)) {
+        return $build;
+      }
+      /** @var \Drupal\field\FieldConfigInterface $source_definition */
+      $source_definition = $media_type->getSource()->getSourceFieldDefinition($media_type);
+      if (
+        $source_definition->getSetting('uri_scheme') === 'private'
+        && \Drupal::config('media.settings')->get('show_private_file_warning')
+      ) {
+        $warning = '<p>' . t('The source field is configured to use the private file storage. By default, the media items will be accessible to any users with access to %type media, even if the user does not have access to content that references it. <a href=":doc_url">More information on configuring media access restrictions</a>.', [
+          '%type' => $media_type->label(),
+          ':doc_url' => 'https://www.drupal.org/docs/8/core/modules/media/setting-up-private-access-to-media-items',
+        ]) . '</p>';
+        $build['#markup'] = $warning;
+      }
+      return $build;
   }
 }
 

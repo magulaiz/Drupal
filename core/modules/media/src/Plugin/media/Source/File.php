@@ -124,4 +124,24 @@ class File extends MediaSourceBase {
     return parent::createSourceField($type)->set('settings', ['file_extensions' => 'txt doc docx pdf']);
   }
 
+  /**
+   * Detects if a given media type accepts files on its source field.
+   *
+   * @param \Drupal\media\MediaTypeInterface $type
+   *   The media type object we are interested in.
+   *
+   * @return bool
+   *   TRUE if the type uses a source plugin with a file/image as a source
+   *   field, FALSE otherwise.
+   */
+  public static function acceptsFileInSourceField(MediaTypeInterface $type) {
+    $source_field_definition = $type->getSource()->getSourceFieldDefinition($type);
+    $target_type = $source_field_definition->getSetting('target_type');
+    if (empty($target_type)) {
+      return FALSE;
+    }
+    $target_types = is_array($target_type) ? $target_type : [$target_type];
+    return in_array('file', $target_types, TRUE);
+  }
+
 }
