@@ -721,7 +721,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     $response = $this->request('PATCH', $url, $request_options);
     $responseDocument = $this->getDocumentFromResponse($response);
     $this->assertSame(200, $response->getStatusCode());
-    $this->assertSame($doc['data']['attributes']['data'], Json::decode((string) $responseDocument->getBody())['data']['attributes']['data']);
+    $this->assertSame($doc['data']['attributes']['data'], $responseDocument['data']['attributes']['data']);
   }
 
   /**

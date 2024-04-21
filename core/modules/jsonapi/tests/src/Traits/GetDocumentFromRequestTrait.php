@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\jsonapi\Traits;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Tests\jsonapi\Functional\ResourceTestBase;
+use Drupal\Tests\BrowserTestBase;
 use Psr\Http\Message\ResponseInterface;
 
 trait GetDocumentFromRequestTrait {
@@ -20,7 +20,7 @@ trait GetDocumentFromRequestTrait {
    *   JSON:API document extracted from the response.
    */
   protected function getDocumentFromResponse(ResponseInterface $response, bool $dataRequired = TRUE): ?array {
-    assert($this instanceof ResourceTestBase);
+    assert($this instanceof BrowserTestBase);
 
     $document = Json::decode((string) $response->getBody());
 
