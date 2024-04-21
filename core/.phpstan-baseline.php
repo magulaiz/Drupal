@@ -2180,6 +2180,11 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Component/DependencyInjection/Dumper/OptimizedPhpArrayDumperTest.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^@dataProvider \\\\Drupal\\\\Tests\\\\Component\\\\DrupalComponentTest\\:\\:getComponents related method must be static in PHPUnit 10 and newer\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Component/DrupalComponentTest.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^@dataProvider configurationDataProvider related method must be static in PHPUnit 10 and newer\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Component/FileCache/FileCacheFactoryTest.php',
@@ -2263,6 +2268,31 @@ $ignoreErrors[] = [
 	'message' => '#^Missing cache backend declaration for performance\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Plugin/StubPluginManagerBaseWithMapper.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^@dataProvider providerBoolTest related method must be static in PHPUnit 10 and newer\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Serialization/YamlPeclTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^@dataProvider providerDecodeTests related method must be static in PHPUnit 10 and newer\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Serialization/YamlPeclTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^@dataProvider providerEncodeDecodeTests related method must be static in PHPUnit 10 and newer\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Serialization/YamlPeclTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^@dataProvider providerDecodeTests related method must be static in PHPUnit 10 and newer\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Serialization/YamlTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^@dataProvider providerEncodeDecodeTests related method must be static in PHPUnit 10 and newer\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Serialization/YamlTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Result of static method Drupal\\\\Composer\\\\Composer\\:\\:ensureComposerVersion\\(\\) \\(void\\) is used\\.$#',
