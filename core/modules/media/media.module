@@ -365,15 +365,6 @@ function media_entity_type_alter(array &$entity_types) {
 }
 
 /**
- * Implements hook_ENTITY_TYPE_presave() for entity_view_display.
- */
-function media_entity_view_display_presave(EntityViewDisplayInterface $view_display): void {
-  $config_updater = \Drupal::classResolver(MediaConfigUpdater::class);
-  assert($config_updater instanceof MediaConfigUpdater);
-  $config_updater->processOembedEagerLoadField($view_display);
-}
-
-/**
  * Implements hook_form_FORM_ID_alter().
  */
 function media_form_filter_format_edit_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
