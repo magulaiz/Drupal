@@ -1431,7 +1431,7 @@ class DateRangeFieldTest extends DateTestBase {
   }
 
   /**
-   * Helper to test with different combinations.
+   * Performs the test of the 'from_to' setting for given test data.
    */
   public function doTestFromToSetting(array $expected, string $datetime_type, string $field_formatter_type, array $display_settings = []): void {
     $field_name = $this->fieldStorage->getName();
