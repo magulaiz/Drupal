@@ -13,7 +13,8 @@ use Drupal\Core\Session\AccountInterface;
  * @Action(
  *   id = "action_form_ajax_test",
  *   label = @Translation("action_form_ajax_test"),
- *   type = "system"
+ *   type = "system",
+ *   category = "Test Action"
  * )
  */
 class ActionAjaxTest extends ConfigurableActionBase {
