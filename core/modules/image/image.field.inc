@@ -39,6 +39,7 @@ function template_preprocess_image_widget(&$variables) {
  *   - item_attributes: An optional associative array of html attributes to be
  *     placed in the img tag.
  *   - image_style: An optional image style.
+ *   - image_preload: Determine whether we need to add preload link.
  *   - url: An optional \Drupal\Core\Url object.
  */
 function template_preprocess_image_formatter(&$variables) {
@@ -54,6 +55,7 @@ function template_preprocess_image_formatter(&$variables) {
     ];
   }
   $variables['image']['#attributes'] = $variables['item_attributes'];
+  $variables['image']['#image_preload'] = $variables['image_preload'];
 
   $item = $variables['item'];
 

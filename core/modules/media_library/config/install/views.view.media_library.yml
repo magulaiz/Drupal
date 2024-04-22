@@ -1131,6 +1131,7 @@ display:
             image_link: ''
             image_style: media_library
             image_loading:
+              preload: false
               attribute: eager
         name:
           id: name

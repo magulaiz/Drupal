@@ -138,18 +138,22 @@ class MediaThumbnailFormatter extends ImageFormatter {
       return $elements;
     }
 
+    $item_attributes = [];
     $image_style_setting = $this->getSetting('image_style');
+    $image_loading_settings = $this->getSetting('image_loading');
+    if (empty($image_loading_settings['preload'])) {
+      $item_attributes['loading'] = $image_loading_settings['attribute'];
+    }
 
     /** @var \Drupal\media\MediaInterface[] $media_items */
     foreach ($media_items as $delta => $media) {
       $elements[$delta] = [
         '#theme' => 'image_formatter',
         '#item' => $media->get('thumbnail')->first(),
-        '#item_attributes' => [
-          'loading' => $this->getSetting('image_loading')['attribute'],
-        ],
+        '#item_attributes' => $item_attributes,
         '#image_style' => $this->getSetting('image_style'),
         '#url' => $this->getMediaThumbnailUrl($media, $items->getEntity()),
+        '#image_preload' => $image_loading_settings['preload'] ?? FALSE,
       ];
 
       // Add cacheability of each item in the field.

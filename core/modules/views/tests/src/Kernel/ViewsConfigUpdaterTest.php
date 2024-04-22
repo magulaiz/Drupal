@@ -40,18 +40,6 @@ class ViewsConfigUpdaterTest extends ViewsKernelTestBase {
       ->getInstanceFromDefinition(ViewsConfigUpdater::class);
     assert($config_updater instanceof ViewsConfigUpdater);
 
-    FieldStorageConfig::create([
-      'field_name' => 'user_picture',
-      'entity_type' => 'user',
-      'type' => 'image',
-    ])->save();
-    FieldConfig::create([
-      'entity_type' => 'user',
-      'field_name' => 'user_picture',
-      'file_directory' => 'pictures/[date:custom:Y]-[date:custom:m]',
-      'bundle' => 'user',
-    ])->save();
-
     // Create a responsive image style.
     ResponsiveImageStyle::create([
       'id' => ViewsIntegrationTest::RESPONSIVE_IMAGE_STYLE_ID,
@@ -77,6 +65,72 @@ class ViewsConfigUpdaterTest extends ViewsKernelTestBase {
 
     $default_display = $test_view->getDisplay('default');
     self::assertEquals('eager', $default_display['display_options']['fields']['bar']['settings']['image_loading']['attribute']);
+  }
+
+  /**
+   * @covers ::needsImagePreloadFieldUpdate
+   */
+  public function testNeedsResponsiveImagePreloadFieldUpdate(): void {
+    $config_updater = $this->container
+      ->get('class_resolver')
+      ->getInstanceFromDefinition(ViewsConfigUpdater::class);
+    assert($config_updater instanceof ViewsConfigUpdater);
+
+    // Create a responsive image style.
+    ResponsiveImageStyle::create([
+      'id' => ViewsIntegrationTest::RESPONSIVE_IMAGE_STYLE_ID,
+      'label' => 'Foo',
+      'breakpoint_group' => 'responsive_image_test_module',
+    ]);
+    // Create an image field to be used with a responsive image formatter.
+    FieldStorageConfig::create([
+      'type' => 'image',
+      'entity_type' => 'entity_test',
+      'field_name' => 'bar',
+    ])->save();
+    FieldConfig::create([
+      'entity_type' => 'entity_test',
+      'bundle' => 'entity_test',
+      'field_name' => 'bar',
+    ])->save();
+
+    $test_view = $this->loadTestView('views.view.test_responsive_images');
+    $needs_update = $config_updater->needsImagePreloadFieldUpdate($test_view);
+    $test_view->save();
+    $this->assertTrue($needs_update);
+
+    $default_display = $test_view->getDisplay('default');
+    self::assertEquals(FALSE, $default_display['display_options']['fields']['bar']['settings']['image_loading']['preload']);
+  }
+
+  /**
+   * @covers ::needsImagePreloadFieldUpdate
+   */
+  public function testNeedsImagePreloadFieldUpdate(): void {
+    $config_updater = $this->container
+      ->get('class_resolver')
+      ->getInstanceFromDefinition(ViewsConfigUpdater::class);
+    assert($config_updater instanceof ViewsConfigUpdater);
+
+    // Create an image field to be used with a responsive image formatter.
+    FieldStorageConfig::create([
+      'type' => 'image',
+      'entity_type' => 'entity_test',
+      'field_name' => 'bar',
+    ])->save();
+    FieldConfig::create([
+      'entity_type' => 'entity_test',
+      'bundle' => 'entity_test',
+      'field_name' => 'bar',
+    ])->save();
+
+    $test_view = $this->loadTestView('views.view.test_images');
+    $needs_update = $config_updater->needsImagePreloadFieldUpdate($test_view);
+    $test_view->save();
+    $this->assertTrue($needs_update);
+
+    $default_display = $test_view->getDisplay('default');
+    self::assertEquals(FALSE, $default_display['display_options']['fields']['bar']['settings']['image_loading']['preload']);
   }
 
   /**

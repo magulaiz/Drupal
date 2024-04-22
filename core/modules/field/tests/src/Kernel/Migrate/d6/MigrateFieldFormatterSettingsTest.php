@@ -151,6 +151,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
       'image_link' => '',
       'image_style' => '',
       'image_loading' => [
+        'preload' => FALSE,
         'attribute' => 'lazy',
       ],
     ];

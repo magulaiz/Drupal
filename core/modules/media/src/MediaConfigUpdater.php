@@ -69,4 +69,30 @@ class MediaConfigUpdater {
     return $changed;
   }
 
+  /**
+   * Add the image preload setting to image field formatter instances.
+   *
+   * @param \Drupal\Core\Entity\Display\EntityViewDisplayInterface $view_display
+   *   The view display.
+   *
+   * @return bool
+   *   Whether the display was updated.
+   */
+  public function processImagePreload(EntityViewDisplayInterface $view_display): bool {
+    $changed = FALSE;
+
+    foreach ($view_display->getComponents() as $field => $component) {
+      if (isset($component['type'])
+        && ($component['type'] === 'media_thumbnail')
+        && !array_key_exists('preload', $component['settings']['image_loading'])
+      ) {
+        $component['settings']['image_loading'] = ['preload' => FALSE] + $component['settings']['image_loading'];
+        $view_display->setComponent($field, $component);
+        $changed = TRUE;
+      }
+    }
+
+    return $changed;
+  }
+
 }

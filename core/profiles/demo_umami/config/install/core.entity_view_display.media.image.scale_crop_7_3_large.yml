@@ -25,6 +25,7 @@ content:
       image_style: scale_crop_7_3_large
       image_link: ''
       image_loading:
+        preload: false
         attribute: lazy
     third_party_settings: {  }
     weight: 1

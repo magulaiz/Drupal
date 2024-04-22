@@ -777,13 +777,16 @@ function template_preprocess_links(&$variables) {
  *   - srcset: Array of multiple URIs and sizes/multipliers.
  *   - sizes: The sizes attribute for viewport-based selection of images.
  *     - http://www.whatwg.org/specs/web-apps/current-work/multipage/embedded-content.html#introduction-3:viewport-based-selection-2
+ *   - image_preload: Determine whether we need to add preload link.
  */
 function template_preprocess_image(&$variables) {
   /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
   $file_url_generator = \Drupal::service('file_url_generator');
+  $image_src = '';
 
   if (!empty($variables['uri'])) {
-    $variables['attributes']['src'] = $file_url_generator->generateString($variables['uri']);
+    $image_src = $file_url_generator->generateString($variables['uri']);
+    $variables['attributes']['src'] = $image_src;
   }
   // Generate a srcset attribute conforming to the spec at
   // http://www.w3.org/html/wg/drafts/html/master/embedded-content.html#attr-img-srcset
@@ -817,8 +820,49 @@ function template_preprocess_image(&$variables) {
   // Without dimensions specified, layout shifts can occur,
   // which are more noticeable on pages that take some time to load.
   // As a result, only mark images as lazy load that have dimensions.
-  if (isset($variables['width'], $variables['height']) && !isset($variables['attributes']['loading'])) {
+  if (isset($variables['width'], $variables['height'])
+    && !isset($variables['attributes']['loading'])
+    && !$variables['image_preload']
+  ) {
     $variables['attributes']['loading'] = 'lazy';
+  }
+
+  if ($image_src !== '' && $variables['image_preload']) {
+    // Make sure that we don't have loading attribute when we use preload.
+    unset($variables['attributes']['loading']);
+
+    // Prepare head links.
+    $html_heads = [];
+    if (is_array($variables['image_preload'])) {
+      // The case when image preload was prepared earlier.
+      // @see template_preprocess_responsive_image().
+      $html_heads = $variables['image_preload'];
+    }
+    else {
+      // Prepare link attributes.
+      $attributes = [
+        'rel' => 'preload',
+        'as' => 'image',
+        'href' => $image_src,
+      ];
+
+      // Each field may have different mime types for each image just like URIs.
+      if ($mime = @mime_content_type('.' . preg_replace('/\?itok=.*$/', '', $image_src))) {
+        $attributes['type'] = $mime;
+      }
+
+      // Prepare a unique key to prevent the case when we have several preloaded
+      // images on the page and the IDs of the html_head attachments
+      // will conflict.
+      $key = hash('xxh32', serialize($image_src));
+      $html_heads[] = [
+        ['#tag' => 'link', '#attributes' => $attributes],
+        'image_preload_' . $key,
+      ];
+    }
+
+    // Add HTML head link to preload the image.
+    $variables['#attached']['html_head'] = array_merge($variables['#attached']['html_head'] ?? [], $html_heads);
   }
 }
 
@@ -1999,7 +2043,7 @@ function drupal_common_theme() {
       // - http://dev.w3.org/html5/spec/Overview.html#alt
       // The title attribute is optional in all cases, so it is omitted by
       // default.
-      'variables' => ['uri' => NULL, 'width' => NULL, 'height' => NULL, 'alt' => '', 'title' => NULL, 'attributes' => [], 'sizes' => NULL, 'srcset' => [], 'style_name' => NULL],
+      'variables' => ['uri' => NULL, 'width' => NULL, 'height' => NULL, 'alt' => '', 'title' => NULL, 'attributes' => [], 'sizes' => NULL, 'srcset' => [], 'style_name' => NULL, 'image_preload' => FALSE],
     ],
     'breadcrumb' => [
       'variables' => ['links' => []],
