@@ -414,6 +414,8 @@ system.advisories:
     interval_hours:
       type: integer
       label: 'How often to check for security advisories, in hours'
+      # Can't be set to 0 as it will fetch advisories that expire instantly.
+      # @see \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher::getSecurityAdvisories
       constraints:
         Range:
           min: 1
