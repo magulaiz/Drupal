@@ -72,7 +72,7 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
       $plugin_id,
       $plugin_definition,
       $container->get('menu.link_tree'),
-      $container->get('menu.active_trail'),
+      $container->get('menu.active_trail')
     );
   }
 

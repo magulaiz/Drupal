@@ -94,11 +94,4 @@ class Broken extends PluginBase implements BlockPluginInterface, ContainerFactor
     return $build;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getOperationLinks(): array {
-    return [];
-  }
-
 }

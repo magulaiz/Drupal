@@ -215,24 +215,4 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
     return $this->blockContent;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getOperationLinks(): array {
-    $custom_block = $this->getEntity();
-    $links = [];
-
-    if ($custom_block->access('edit')) {
-      $links['block-edit'] = [
-        'title' => $this->t('Edit block'),
-        // Set URL options to an empty array as the destination will be set
-        // later in \Drupal\block\BlockListBuilder.
-        'url' => $custom_block->toUrl('edit-form')->setOptions([]),
-        // Using this weight so this option appears at the top.
-        'weight' => 50,
-      ];
-    }
-    return $links;
-  }
-
 }

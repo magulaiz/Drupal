@@ -41,11 +41,4 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface, Plu
     return $form;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getOperationLinks(): array {
-    return [];
-  }
-
 }

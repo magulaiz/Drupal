@@ -354,11 +354,4 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getOperationLinks(): array {
-    return $this->getPlugin()->getOperationLinks();
-  }
-
 }
