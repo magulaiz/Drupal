@@ -59,8 +59,8 @@ user.settings:
     password_reset_timeout:
       type: integer
       label: 'Password reset timeout'
-      # Any higher value could break sites using a lower value.
-      # Harden this in a follow-up.
+      # Increase min in a followup.
+      # @see https://www.drupal.org/i/3441772
       constraints:
         Range:
           min: 1
