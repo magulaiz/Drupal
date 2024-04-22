@@ -2,12 +2,12 @@
 
 namespace Drupal\mongodb\Driver\Database\mongodb;
 
-use Drupal\Core\Database\Database as BaseDatabase;
+use Drupal\Core\Database\Database as CoreDatabase;
 
 /**
  * The MongoDB implementation of \Drupal\Core\Database\Database.
  */
-abstract class Database extends BaseDatabase {
+abstract class Database extends CoreDatabase {
 
   /**
    * Gets the connection object for the specified database key to the admin database.

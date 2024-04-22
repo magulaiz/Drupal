@@ -29,6 +29,10 @@ class Tasks extends InstallTasks {
       'arguments'   => [],
     ],
     [
+      'function'    => 'ensureReplicaSet',
+      'arguments'   => [],
+    ],
+    [
       'function'    => 'checkDropCollectionIfExists',
       'arguments'   => ['name' => 'drupal_install_test'],
     ],
@@ -135,6 +139,19 @@ class Tasks extends InstallTasks {
       $form['advanced_options']['port']['#default_value'] = '27017';
     }
     return $form;
+  }
+
+  /**
+   * Ensure that the database is set up with a replica set.
+   */
+  public function ensureReplicaSet() {
+    $name = Database::getConnection()->getReplicaSet();
+    if ($name) {
+      $this->pass(t("The database is set up with the replica set: %name.", ['%name' => $name]));
+    }
+    else {
+      $this->fail(t('The database is not set up with a replica set.'));
+    }
   }
 
   /**

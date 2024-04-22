@@ -7,6 +7,7 @@ use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\Transaction\TransactionManagerInterface;
+use Drupal\mongodb\Driver\Database\mongodb\Database;
 use MongoDB\Client;
 use MongoDB\Database as MongodbDatabase;
 use MongoDB\Driver\Exception\AuthenticationException;
@@ -597,6 +598,42 @@ class Connection extends DatabaseConnection {
 
     return $this->session;
   }
+
+  /**
+   * Check the replica set status of the MongoDB database.
+   *
+   * @return bool|string
+   *   Returns the name of the replica set, or FALSE when MongoDB is not set up
+   *   with a replica set.
+   */
+  public function getReplicaSetName() {
+    $result = Database::getAdminConnection()->getConnection()->command(
+      ['replSetGetStatus' => 1],
+      ['session' => $this->getMongodbSession()],
+    )->toArray()[0];
+
+    $status = $result->ok ?? FALSE;
+    if (!$status) {
+      // The status of a replica set must be "OK".
+      return FALSE;
+    }
+
+    if ($result->members) {
+      $members = (array) $result->members;
+      // A replica set must have a minimum of 3 members.
+      if (count($members) < 3) {
+        return FALSE;
+      }
+    }
+
+    $set = $result->set ?? FALSE;
+    if ($set) {
+      return $set;
+    }
+
+    return FALSE;
+  }
+
 
   /**
    * {@inheritdoc}

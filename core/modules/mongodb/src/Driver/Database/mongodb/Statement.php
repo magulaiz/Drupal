@@ -3,7 +3,6 @@
 namespace Drupal\mongodb\Driver\Database\mongodb;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\Database;
 use Drupal\Core\Database\StatementPrefetchIterator;
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\Decimal128;
