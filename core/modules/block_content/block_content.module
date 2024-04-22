@@ -230,10 +230,10 @@ function block_content_entity_operation(EntityInterface $entity): array {
       $custom_block = \Drupal::entityTypeManager()->getStorage('block_content')->loadByProperties(['uuid' => $custom_block_uuid]);
       if ($custom_block) {
         $custom_block = reset($custom_block);
-        if ($custom_block && $custom_block->access('edit')) {
+        if ($custom_block && $custom_block->access('update')) {
           $operations['block-edit'] = [
             'title' => t('Edit block'),
-            'url' => $custom_block->toUrl('edit-form'),
+            'url' => $custom_block->toUrl('edit-form')->setOptions([]),
             'weight' => 50,
           ];
         }
