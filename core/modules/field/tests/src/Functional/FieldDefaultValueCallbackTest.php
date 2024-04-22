@@ -49,9 +49,20 @@ class FieldDefaultValueCallbackTest extends BrowserTestBase {
         'name' => 'Article',
       ]);
     }
-
+    // Create the admin user.
+    $this->drupalLogin($this->drupalCreateUser([
+      'view the administration theme',
+      'access administration pages',
+      'administer content types',
+      'administer node fields',
+      'administer nodes',
+      'administer article fields',
+    ]));
   }
 
+  /**
+   * Test default value callback form.
+   */
   public function testDefaultValueCallbackForm() {
     // Create a field and storage for checking.
     /** @var \Drupal\field\Entity\FieldStorageConfig $field_storage */
@@ -67,8 +78,6 @@ class FieldDefaultValueCallbackTest extends BrowserTestBase {
       'bundle' => 'article',
     ]);
     $field_config->save();
-
-    $this->drupalLogin($this->rootUser);
 
     // Check that the default field form is visible when no callback is set.
     $this->drupalGet('/admin/structure/types/manage/article/fields/node.article.field_test');

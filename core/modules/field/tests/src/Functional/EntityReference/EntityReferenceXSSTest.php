@@ -33,7 +33,7 @@ class EntityReferenceXSSTest extends BrowserTestBase {
   /**
    * Tests markup is escaped in the entity reference select and label formatter.
    */
-  public function testEntityReferenceXSS() {
+  public function testEntityReferenceXss() {
     $this->drupalCreateContentType(['type' => 'article']);
 
     // Create a node with markup in the title.
@@ -59,8 +59,15 @@ class EntityReferenceXSSTest extends BrowserTestBase {
       ->setComponent('entity_reference_test', ['type' => 'entity_reference_label'])
       ->save();
 
-    // Create a node and reference the node with markup in the title.
-    $this->drupalLogin($this->rootUser);
+    // Create test user.
+    $admin_user = $this->drupalCreateUser([
+      'create ' . $node_type_one->id() . ' content',
+      'edit own ' . $node_type_one->id() . ' content',
+      'create ' . $node_type_two->id() . ' content',
+      'edit own ' . $node_type_two->id() . ' content',
+      'access administration pages',
+    ]);
+    $this->drupalLogin($admin_user);
     $this->drupalGet('node/add/article');
     $this->assertSession()->assertEscaped($referenced_node->getTitle());
     $this->assertSession()->assertEscaped($node_type_two->label());
