@@ -26,7 +26,7 @@ class ViewsConfigUpdaterTest extends ViewsKernelTestBase {
   /**
    * Tests ViewsConfigUpdater.
    */
-  function testViewsConfigUpdater() {
+  public function testViewsConfigUpdater(): void {
     // ViewsConfigUpdater currently contains no actual configuration update
     // logic. Replace this method with a real test when it does.
     $this->markTestSkipped();
