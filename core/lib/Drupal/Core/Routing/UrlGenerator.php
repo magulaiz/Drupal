@@ -227,7 +227,7 @@ class UrlGenerator implements UrlGeneratorInterface {
    * Gets the path of a route.
    *
    * @param string $name
-   *   The route name or other debug message.
+   *   The route name.
    * @param \Symfony\Component\Routing\Route $route
    *   The route object.
    * @param array $parameters
@@ -412,7 +412,7 @@ class UrlGenerator implements UrlGeneratorInterface {
    * Find the route using the provided route name.
    *
    * @param string $name
-   *   The route name
+   *   The route name.
    *
    * @return \Symfony\Component\Routing\Route
    *   The found route.

@@ -15,7 +15,7 @@ interface UrlGeneratorInterface extends SymfonyUrlGeneratorInterface {
    * Gets the internal path (system path) for a route.
    *
    * @param string $name
-   *   The route name
+   *   The route name.
    * @param array $parameters
    *   An array of parameters as passed to
    *   \Symfony\Component\Routing\Generator\UrlGeneratorInterface::generate().
@@ -34,7 +34,7 @@ interface UrlGeneratorInterface extends SymfonyUrlGeneratorInterface {
    * strings to the URL.
    *
    * @param string $name
-   *   The route name
+   *   The route name.
    * @param array $parameters
    *   An associative array of parameter names and values.
    * @param array $options
