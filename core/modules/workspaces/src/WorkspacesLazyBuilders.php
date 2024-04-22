@@ -58,7 +58,7 @@ final class WorkspacesLazyBuilders implements TrustedCallbackInterface {
         'library' => ['workspaces/drupal.workspaces.toolbar'],
       ],
       '#cache' => [
-        'contexts' => ['url.path'],
+        'max-age' => 0,
       ],
     ];
 

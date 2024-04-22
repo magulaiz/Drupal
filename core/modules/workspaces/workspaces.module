@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\ViewExecutable;
 use Drupal\workspaces\EntityAccess;
@@ -240,11 +241,16 @@ function workspaces_toolbar() {
   $items['workspace'] += [
     '#type' => 'toolbar_item',
     'tab' => [
-      '#lazy_builder' => [
-        'workspaces.lazy_builders:renderToolbarTab',
-        [],
-      ],
+      '#lazy_builder' => ['workspaces.lazy_builders:renderToolbarTab', []],
       '#create_placeholder' => TRUE,
+      '#lazy_builder_preview' => [
+        '#type' => 'link',
+        '#title' => $active_workspace ? $active_workspace->label() : t('Live'),
+        '#url' => Url::fromRoute('entity.workspace.collection'),
+        '#attributes' => [
+          'class' => ['toolbar-tray-lazy-placeholder-link'],
+        ],
+      ],
     ],
     '#wrapper_attributes' => [
       'class' => ['workspaces-toolbar-tab'],
