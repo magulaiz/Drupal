@@ -65,7 +65,7 @@ class AliasManager implements AliasManagerInterface {
   protected $preloadedPathLookups = FALSE;
 
   public function __construct(
-    protected AliasRepositoryInterface $aliasRepository,
+    protected AliasRepositoryInterface $pathAliasRepository,
     protected AliasWhitelistInterface $whitelist,
     protected LanguageManagerInterface $languageManager,
     protected CacheBackendInterface $cache,
