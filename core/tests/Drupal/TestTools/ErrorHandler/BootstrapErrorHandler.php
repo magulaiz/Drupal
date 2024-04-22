@@ -33,7 +33,8 @@ final class BootstrapErrorHandler {
 
     // We collect a deprecation no matter what.
     if (E_USER_DEPRECATED === $errorNumber || E_DEPRECATED === $errorNumber) {
-      DeprecationHandler::collectActualDeprecation($errorString);
+      $prefix = (error_reporting() & $errorNumber) ? 'Unsilenced deprecation: ' : '';
+      DeprecationHandler::collectActualDeprecation($prefix . $errorString);
     }
 
     // If the deprecation handled is one of those in the ignore list, we keep

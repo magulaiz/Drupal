@@ -34,7 +34,8 @@ final class TestErrorHandler {
     // a deprecation test, than we just collect the deprecation and return to
     // execution, since deprecations are expected.
     if ((E_USER_DEPRECATED === $errorNumber || E_DEPRECATED === $errorNumber) && DeprecationHandler::isDeprecationTest($this->testCase)) {
-      DeprecationHandler::collectActualDeprecation($errorString);
+      $prefix = (error_reporting() & $errorNumber) ? 'Unsilenced deprecation: ' : '';
+      DeprecationHandler::collectActualDeprecation($prefix . $errorString);
       return TRUE;
     }
 
