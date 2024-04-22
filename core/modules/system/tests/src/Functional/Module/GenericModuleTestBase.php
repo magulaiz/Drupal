@@ -35,6 +35,15 @@ abstract class GenericModuleTestBase extends BrowserTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    // Create user for the test with correct permissions.
+    $this->rootUser = $this->createUser(['access help pages']);
+  }
+
+  /**
    * Checks some generic things about a module.
    */
   public function testModuleGenericIssues(): void {
