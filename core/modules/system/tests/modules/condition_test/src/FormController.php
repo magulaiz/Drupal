@@ -95,6 +95,9 @@ class FormController implements FormInterface {
     if ($this->conditionCurrentTheme->execute()) {
       \Drupal::messenger()->addStatus($this->conditionCurrentTheme->summary());
     }
+    if ($this->condition_current_theme->execute()) {
+      \Drupal::messenger()->addStatus($this->condition_current_theme->summary());
+    }
   }
 
 }
