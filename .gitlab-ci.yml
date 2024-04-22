@@ -329,7 +329,7 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "16"
   script:
-    - source ./core/scripts/dev/commit-code-check-phpstan.sh --gitlabci
+    - source ./core/scripts/dev/commit-code-check.sh --check phpstan
   artifacts:
     reports:
       codequality: phpstan-quality-report.json
@@ -345,7 +345,7 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "16"
   script:
-    - source ./core/scripts/dev/commit-code-check-phpcs.sh --gitlabci
+    - source ./core/scripts/dev/commit-code-check.sh --check phpcs
   artifacts:
     reports:
       codequality: phpcs-quality-report.json
@@ -367,7 +367,7 @@ default:
     - when: manual
       allow_failure: true
   script:
-    - source ./core/scripts/dev/commit-code-check-eslint.sh --gitlabci
+    - source ./core/scripts/dev/commit-code-check.sh --check js
   artifacts:
     reports:
       codequality: eslint-quality-report.json
@@ -388,7 +388,7 @@ default:
     - when: manual
       allow_failure: true
   script:
-    - source ./core/scripts/dev/commit-code-check-stylelint.sh --gitlabci
+    - source ./core/scripts/dev/commit-code-check.sh --check css
   artifacts:
     reports:
       codequality: stylelint-quality-report.json
@@ -399,7 +399,7 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "2"
   script:
-    - source ./core/scripts/dev/commit-code-check-cspell.sh --gitlabci
+    - source ./core/scripts/dev/commit-code-check.sh --check cspell
 
 '📔 Validatable config':
   <<: [ *default-job-settings-lint ]

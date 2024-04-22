@@ -9,22 +9,13 @@
 # The script makes the following checks:
 # - PHPStan checks PHP files.
 
-# @todo. If an input argument is supplied then enable CI.
-if [ $# -eq 1 ]; then
-  GITLABCI=1
-fi
-
-if [[ "$GITLABCI" == "1" ]]; then
-  source core/scripts/dev/commit-code-check-setup.sh
-fi
-
 cd "$TOP_LEVEL"
 STATUS=0
 # Run PHPStan on all files on GitLabCI or when phpstan files are changed.
 # APCu is disabled to ensure that the composer classmap is not corrupted.
-if [[ $PHPSTAN_DIST_FILE_CHANGED == "1" ]] || [[ "$GITLABCI" == "1" ]]; then
+if [[ $PHPSTAN_DIST_FILE_CHANGED == "1" ]] || [[ "$CI" == "1" ]]; then
   printf "\nRunning PHPStan on *all* files.\n"
-  if [[ "$GITLABCI" == "1" ]]; then
+  if [[ "$CI" == "1" ]]; then
     # Rely on PHPStan caching to execute analysis multiple times without performance drawback.
     # Output a copy in junit.
     php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > phpstan-quality-report.json || EXIT_CODE=$?
@@ -45,7 +36,7 @@ else
   php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --no-progress --configuration="$TOP_LEVEL/core/phpstan-partial.neon" $ABS_FILES
 fi
 
-if [ "$?" -ne "0" ] || [ "$EXIT_CODE" -ne "0" ]; then
+if [[ "$?" -ne "0" ]] || [[ "$EXIT_CODE" -ne "0" ]]; then
   STATUS=1
   printf "\nPHPStan: ${red}failed${reset}\n"
 else
@@ -57,7 +48,7 @@ printf "\n"
 printf -- '-%.0s' {1..100}
 printf "\n"
 
-if [[ "$STATUS" == "1" ]] && [[ "$GITLABCI" == "1" ]]; then
+if [[ "$STATUS" == "1" ]] && [[ "$CI" == "1" ]]; then
   printf "${red}Drupal code quality checks failed.${reset}\n"
   printf "To reproduce this output locally:\n"
   printf "* Apply the change as a patch\n"

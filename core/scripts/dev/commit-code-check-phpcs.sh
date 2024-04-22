@@ -9,22 +9,13 @@
 # The script makes the following checks:
 # - PHPCS checks PHP and YAML files.
 
-# @todo. If an input argument is supplied then enable CI.
-if [ $# -eq 1 ]; then
-  GITLABCI=1
-fi
-
-if [[ "$GITLABCI" == "1" ]]; then
-  source core/scripts/dev/commit-code-check-setup.sh
-fi
-
 # Run PHPCS on all files on GitLabCI or when phpcs files are changed.
 PHPCS=0
 STATUS=0
-if [[ $PHPCS_XML_DIST_FILE_CHANGED == "1" ]] || [[ "$GITLABCI" == "1" ]]; then
+if [[ $PHPCS_XML_DIST_FILE_CHANGED == "1" ]] || [[ "$CI" == "1" ]]; then
   # Test all files with phpcs rules.
   printf "\nRunning  PHP_CodeSniffer on *all* files.\n"
-  if [[ "$GITLABCI" == "1" ]]; then
+  if [[ "$CI" == "1" ]]; then
     composer phpcs -- --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
   else
     vendor/bin/phpcs -ps --parallel=$(nproc) --standard="$TOP_LEVEL/core/phpcs.xml.dist"
@@ -39,7 +30,7 @@ else
     ############################################################################
     ### PHP AND YAML FILES
     ############################################################################
-    if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.(inc|install|module|php|profile|test|theme|yml)$ ]] && [[ $PHPCS_XML_DIST_FILE_CHANGED == "0" ]] && [[ "$GITLABCI" == "0" ]]; then
+    if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.(inc|install|module|php|profile|test|theme|yml)$ ]] && [[ $PHPCS_XML_DIST_FILE_CHANGED == "0" ]] && [[ "$CI" == "0" ]]; then
       # Test files with phpcs rules.
       vendor/bin/phpcs "$TOP_LEVEL/$FILE" --standard="$TOP_LEVEL/core/phpcs.xml.dist"
       PHPCS=$?
@@ -65,7 +56,7 @@ printf "\n"
 printf -- '-%.0s' {1..100}
 printf "\n"
 
-if [[ "$STATUS" == "1" ]] && [[ "$GITLABCI" == "1" ]]; then
+if [[ "$STATUS" == "1" ]] && [[ "$CI" == "1" ]]; then
   printf "${red}Drupal code quality checks failed.${reset}\n"
   printf "To reproduce this output locally:\n"
   printf "* Apply the change as a patch\n"

@@ -5,19 +5,19 @@
 # @internal
 #   This script is not covered by Drupal core's backwards compatibility promise.
 #   It exists only for core development purposes.
-#
-# The script makes the following checks:
-# - Spell checking.
-# - File modes.
-# - No changes to core/node_modules directory.
-# - PHPCS checks PHP and YAML files.
-# - PHPStan checks PHP files.
-# - ESLint checks JavaScript and YAML files.
-# - Stylelint checks CSS files.
-# - Checks .pcss.css and .css files are equivalent.
+
+# Searches an array.
+contains_element() {
+  local e
+  for e in ${@:2}; do [[ "$e" == "$1" ]] && return 0; done
+  return 1
+}
 
 CACHED=0
 BRANCH=""
+
+ALL_CHECKS=("phpstan" "phpcs" "js" "css" "cspell" "config" "file")
+SELECTED_CHECKS=("${ALL_CHECKS[@]}")
 
 while test $# -gt 0; do
   case "$1" in
@@ -28,6 +28,7 @@ while test $# -gt 0; do
       echo "-h, --help                show brief help"
       echo "--branch BRANCH           creates list of files to check by comparing against a branch"
       echo "--cached                  checks staged files"
+      echo "--check CHECK1,CHECK2     runs specific checks (comma-separated) among phpstan, phpcs, js, css, cspell, config, file"
       echo " "
       echo "Example usage: sh ./core/scripts/dev/commit-code-check.sh --branch 9.2.x"
       exit 0
@@ -37,6 +38,27 @@ while test $# -gt 0; do
       if [[ "$BRANCH" == "" ]]; then
         printf "The --branch option requires a value. For example: --branch 9.2.x\n"
         exit;
+      fi
+      shift 2
+      ;;
+    --check)
+      SELECTED_CHECKS="$2"
+      if [[ "$SELECTED_CHECKS" == "" ]]; then
+        printf "The --check option requires a value. For example: --check phpstan,phpcs\n"
+        exit 1;
+      else
+        IFS=',' read -ra SELECTED_CHECKS <<< "$SELECTED_CHECKS"
+        INVALID_CHECKS=0
+        for i in "${SELECTED_CHECKS[@]}"
+        do
+          if ! contains_element "$i" "${ALL_CHECKS[@]}"; then
+            printf "Check %s is invalid.\n" "$i"
+            INVALID_CHECKS=1
+          fi
+        done
+        if [[ "$INVALID_CHECKS" == 1 ]]; then
+          exit 1;
+        fi
       fi
       shift 2
       ;;
@@ -186,10 +208,6 @@ if ! [[ -f 'vendor/bin/phpcs' ]]; then
   DEPENDENCIES_NEED_INSTALLING=1;
 fi
 
-# Ensure JavaScript development dependencies are installed.
-yarn --version
-yarn >/dev/null
-
 # Setup variables.
 source core/scripts/dev/commit-code-check-setup.sh
 
@@ -199,40 +217,17 @@ if [[ "$ABS_FILES" == "" ]]; then
   exit
 fi
 
+source core/scripts/dev/commit-code-check-setup.sh
+
 FINAL_STATUS=0
-# Check spelling.
-if source core/scripts/dev/commit-code-check-cspell.sh; then
-  FINAL_STATUS=1
-fi
 
-# Run PHPStan.
-if source core/scripts/dev/commit-code-check-phpstan.sh; then
-  FINAL_STATUS=1
-fi
+for i in "${SELECTED_CHECKS[@]}"
+do
+  # shellcheck source=/dev/null
+  if ! source "core/scripts/dev/commit-code-check-$i.sh"; then
+    FINAL_STATUS=1
+  fi
 
-# Run PHPCS.
-if ! source core/scripts/dev/commit-code-check-phpcs.sh; then
-  FINAL_STATUS=1
-fi
-
-# Run eslint.
-if source core/scripts/dev/commit-code-check-eslint.sh; then
-  FINAL_STATUS=1
-fi
-
-# Run stylelint.
-if source core/scripts/dev/commit-code-check-stylelint.sh; then
-  FINAL_STATUS=1
-fi
-
-# Compile check.
-if source core/scripts/dev/commit-code-check-compile.sh; then
-  FINAL_STATUS=1
-fi
-
-# File check.
-if source core/scripts/dev/commit-code-check-file.sh; then
-  FINAL_STATUS=1
-fi
+done
 
 exit $FINAL_STATUS

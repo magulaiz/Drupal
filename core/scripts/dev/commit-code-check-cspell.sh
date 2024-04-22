@@ -9,14 +9,9 @@
 # The script makes the following checks:
 # - Spell checking.
 
-# @todo. If an input argument is supplied then enable CI.
-if [ $# -eq 1 ]; then
-  GITLABCI=1
-fi
-
-if [[ "$GITLABCI" == "1" ]]; then
-  source core/scripts/dev/commit-code-check-setup.sh
-fi
+# Ensure JavaScript development dependencies are installed.
+yarn --version
+yarn >/dev/null
 
 cd "$TOP_LEVEL/core"
 
@@ -47,7 +42,7 @@ printf "\n"
 
 cd "$TOP_LEVEL"
 
-if [[ "$STATUS" == "1" ]] && [[ "$GITLABCI" == "1" ]]; then
+if [[ "$STATUS" == "1" ]] && [[ "$CI" == "1" ]]; then
   printf "${red}Drupal code quality checks failed.${reset}\n"
   printf "To reproduce this output locally:\n"
   printf "* Apply the change as a patch\n"

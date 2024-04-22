@@ -9,21 +9,12 @@
 # The script makes the following checks:
 # - ESLint checks JavaScript and YAML files.
 
-# @todo. If an input argument is supplied then enable CI.
-if [ $# -eq 1 ]; then
-  GITLABCI=1
-fi
-
-if [[ "$GITLABCI" == "1" ]]; then
-  source core/scripts/dev/commit-code-check-setup.sh
-fi
-
 STATUS=0
 # When the eslint config has been changed, then eslint must check all files.
 if [[ $ESLINT_CONFIG_PASSING_FILE_CHANGED == "1" ]]; then
   printf "\nRunning lint:core-js-passing on *all* files.\n"
   cd "$TOP_LEVEL/core"
-  if [[ "$GITLABCI" == "1" ]]; then
+  if [[ "$CI" == "1" ]]; then
     yarn --cwd=./core run -s lint:core-js-passing --format gitlab
   else
     yarn run -s lint:core-js-passing "$TOP_LEVEL/core"
@@ -85,7 +76,7 @@ printf "\n"
 printf -- '-%.0s' {1..100}
 printf "\n"
 
-if [[ "$STATUS" == "1" ]] && [[ "$GITLABCI" == "1" ]]; then
+if [[ "$STATUS" == "1" ]] && [[ "$CI" == "1" ]]; then
   printf "${red}Drupal code quality checks failed.${reset}\n"
   printf "To reproduce this output locally:\n"
   printf "* Apply the change as a patch\n"

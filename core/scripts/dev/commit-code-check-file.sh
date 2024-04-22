@@ -7,17 +7,8 @@
 #   It exists only for core development purposes.
 #
 # The script makes the following checks:
-# - Spell checking.
 # - File modes.
 # - No changes to core/node_modules directory.
-
-# @todo. If an input argument is supplied then enable CI.
-if [ $# -eq 1 ]; then
-  GITLABCI=1
-fi
-if [[ "$GITLABCI" == "1" ]]; then
-  source core/scripts/dev/commit-code-check-setup.sh
-fi
 
 if [[ "$FILES" != "" ]]; then
   printf "\nRunning file checks on changed files.\n"
@@ -62,7 +53,7 @@ printf "\n"
 printf -- '-%.0s' {1..100}
 printf "\n"
 
-if [[ "$STATUS" == "1" ]] && [[ "$GITLABCI" == "1" ]]; then
+if [[ "$STATUS" == "1" ]] && [[ "$CI" == "1" ]]; then
   printf "${red}Drupal code quality checks failed.${reset}\n"
   printf "To reproduce this output locally:\n"
   printf "* Apply the change as a patch\n"

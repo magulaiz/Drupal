@@ -9,7 +9,7 @@
 
 # Set up variables to make colored output simple. Color output is disabled on
 # GitLabCI because it is breaks reporting.
-if [[ "$GITLABCI" == "1" ]]; then
+if [[ "$CI" == "1" ]]; then
   red="\e[31m"
   green="\e[32m"
   reset="\e[0m"
@@ -43,7 +43,7 @@ else
   FILES=$($GIT diff --cached --name-only $AGAINST);
 fi
 
-if [[ "$FILES" == "" ]] && [[ "$GITLABCI" == "1" ]]; then
+if [[ "$FILES" == "" ]] && [[ "$CI" == "1" ]]; then
   # If the FILES is empty we might be testing a merge request on GitLabCI. We
   # need to diff against the Drupal branch or tag related to the Drupal version.
   printf "Creating list of files to check by comparing branch to %s\n" "$DRUPAL_VERSION"
