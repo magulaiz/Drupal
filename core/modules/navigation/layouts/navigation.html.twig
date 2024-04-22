@@ -42,7 +42,7 @@
     </nav>
 
     {% set title_menu_footer = 'admin-toolbar-footer'|clean_unique_id %}
-    <nav {{ region_attributes.content.setAttribute('id', 'menu-footer').addClass('admin-toolbar__footer').setAttribute('aria-labelledby', title_menu_footer) }}>
+    <nav {{ region_attributes.footer.setAttribute('id', 'menu-footer').addClass('admin-toolbar__footer').setAttribute('aria-labelledby', title_menu_footer) }}>
       <h3 id="{{ title_menu_footer }}" class="visually-hidden">{{ 'Administrative toolbar footer'|t }}</h3>
       {{ content.footer }}
       <button aria-controls="admin-toolbar" class="admin-toolbar__expand-button">
