@@ -250,19 +250,4 @@ class AliasManager implements AliasManagerInterface {
     $this->whitelist->clear();
   }
 
-  /**
-   * Wrapper method for REQUEST_TIME constant.
-   *
-   * @return int
-   *
-   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
-   *   the $this->time->getRequestTime() service instead.
-   *
-   * @see https://www.drupal.org/node/3387233
-   */
-  protected function getRequestTime() {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use the $this->time->getRequestTime() instead. See https://www.drupal.org/node/3387233', E_USER_DEPRECATED);
-    return $this->time->getRequestTime();
-  }
-
 }
