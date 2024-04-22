@@ -74,6 +74,10 @@ function mongodb_field_info_alter(array &$info) {
  * Implements hook_search_plugin_alter().
  */
 function mongodb_search_plugin_alter(array &$definitions) {
+  if (isset($definitions['help_search'])) {
+    $definitions['help_search']['class'] = 'Drupal\mongodb\Plugin\Search\HelpSearch';
+    $definitions['help_search']['provider'] = 'mongodb';
+  }
   if (isset($definitions['node_search'])) {
     $definitions['node_search']['class'] = 'Drupal\mongodb\Plugin\Search\NodeSearch';
     $definitions['node_search']['provider'] = 'mongodb';
