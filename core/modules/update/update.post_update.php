@@ -14,15 +14,3 @@ function update_remove_post_updates() {
     'update_post_update_set_blank_fetch_url_to_null' => '11.0.0',
   ];
 }
-
-/**
- * Updates update.settings:notification.emails to null if it is an empty array.
- */
-function update_post_update_empty_notification_emails_to_null(): void {
-  $update_settings = \Drupal::configFactory()->getEditable('update.settings');
-  if (empty($update_settings->get('notification.emails'))) {
-    $update_settings
-      ->set('notification.emails', NULL)
-      ->save();
-  }
-}
