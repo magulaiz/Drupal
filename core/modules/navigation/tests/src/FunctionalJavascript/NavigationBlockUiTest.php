@@ -36,6 +36,7 @@ class NavigationBlockUiTest extends WebDriverTestBase {
     'field_ui',
     'shortcut',
     'off_canvas_test',
+    'navigation_test',
   ];
 
   /**
