@@ -30,10 +30,9 @@ function mongodb_requirements($phase) {
       else {
         $requirements['mongodb_replica_set']['severity'] = REQUIREMENT_ERROR;
         $requirements['mongodb_replica_set']['value'] = t('Not available');
-        $requirements['mongodb_replica_set']['description'] = t('The MongoDB is not set up as a <a href=":replication">replica set</a>. Replica sets offer support for multi document <a href=":transactions">transactions</a>, which is needed by Drupal.', [
+        $requirements['mongodb_replica_set']['description'] = t('The MongoDB is not set up with a <a href=":replication">replica set</a>. Replica sets offer support for multi document <a href=":transactions">transactions</a>, which is needed by Drupal.', [
           ':replication' => 'https://www.mongodb.com/docs/manual/replication/',
           ':transactions' => 'https://www.mongodb.com/docs/manual/core/transactions/',
-
         ]);
       }
     }
