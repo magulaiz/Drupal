@@ -113,11 +113,13 @@ class UpdateScriptTest extends BrowserTestBase {
     // Access the update page as user 1.
     $this->drupalLogin($this->rootUser);
     $this->drupalGet($this->updateUrl, ['external' => TRUE]);
-    $this->assertSession()->statusCodeEquals(200);
+    // Check for uid 1 is removed. User 1 has no permission.
+    // So changed status code to 403.
+    $this->assertSession()->statusCodeEquals(403);
 
     // Check that a link to the update page is accessible to user 1.
     $this->drupalGet('/update-script-test/database-updates-menu-item');
-    $this->assertSession()->linkExists('Run database updates');
+    $this->assertSession()->linkNotExists('Run database updates');
   }
 
   /**

@@ -19,6 +19,7 @@ use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\User;
 use Drupal\comment\Entity\Comment;
+use Drupal\user\Entity\Role;
 
 /**
  * Tests for the base handlers provided by Entity Reference.
@@ -74,10 +75,15 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
       'name' => '',
     ]);
     $anonymous_user->save();
+
+    // Create role for administrator.
+    $rid = $this->createRole(['administer users']);
+
     $admin_user = User::create([
       'uid' => 1,
       'name' => 'admin',
       'status' => 1,
+      'roles' => [$rid],
     ]);
     $admin_user->save();
   }

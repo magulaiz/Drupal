@@ -260,15 +260,24 @@ class LocalTasksTest extends BrowserTestBase {
    * Tests that local tasks blocks cache is invalidated correctly.
    */
   public function testLocalTaskBlockCache() {
-    $this->drupalLogin($this->rootUser);
+    // Create user with following permission.
+    $permissions = [
+      'administer content types',
+      'administer permissions',
+      'administer account settings',
+    ];
+    $user = $this->drupalCreateUser($permissions);
+    $this->drupalLogin($user);
     $this->drupalCreateContentType(['type' => 'page']);
 
     // Only the Edit task. The block avoids showing a single tab.
     $this->drupalGet('/admin/config/people/accounts');
+    $this->assertSession()->pageTextContains('Account settings');
     $this->assertNoLocalTasks();
 
     // Only the Edit and Manage permission tabs.
     $this->drupalGet('/admin/structure/types/manage/page');
+    $this->assertSession()->pageTextContains('Edit page content type');
     $this->assertLocalTasks([
       ['entity.node_type.edit_form', ['node_type' => 'page']],
       ['entity.node_type.entity_permissions_form', ['node_type' => 'page']],
@@ -276,6 +285,19 @@ class LocalTasksTest extends BrowserTestBase {
 
     // Field UI adds the usual Manage fields etc tabs.
     \Drupal::service('module_installer')->install(['field_ui']);
+
+    $permissions = [
+      'administer content types',
+      'administer permissions',
+      'administer account settings',
+      'administer display modes',
+      'administer node display',
+      'administer node fields',
+      'administer node form display',
+    ];
+    $user = $this->drupalCreateUser($permissions);
+    $this->drupalLogin($user);
+
     $this->drupalGet('/admin/structure/types/manage/page');
     $this->assertLocalTasks([
       ['entity.node_type.edit_form', ['node_type' => 'page']],

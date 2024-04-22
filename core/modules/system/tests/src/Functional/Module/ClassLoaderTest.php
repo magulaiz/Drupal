@@ -89,7 +89,13 @@ class ClassLoaderTest extends BrowserTestBase {
    * Ensures the negative caches in the class loader don't result in crashes.
    */
   public function testMultipleModules() {
-    $this->drupalLogin($this->rootUser);
+    // Create use with required permissions.
+    $permissions = [
+      'administer modules',
+    ];
+    $user = $this->drupalCreateUser($permissions);
+    $this->drupalLogin($user);
+
     $edit = [
       "modules[module_install_class_loader_test1][enable]" => TRUE,
       "modules[module_install_class_loader_test2][enable]" => TRUE,
@@ -105,7 +111,13 @@ class ClassLoaderTest extends BrowserTestBase {
    */
   public function testAutoloadFromModuleFile() {
     $this->assertFalse(defined('MODULE_AUTOLOAD_TEST_CONSTANT'));
-    $this->drupalLogin($this->rootUser);
+    // Create use with required permissions.
+    $permissions = [
+      'administer modules',
+    ];
+    $user = $this->drupalCreateUser($permissions);
+    $this->drupalLogin($user);
+
     $edit = [
       "modules[module_autoload_test][enable]" => TRUE,
     ];

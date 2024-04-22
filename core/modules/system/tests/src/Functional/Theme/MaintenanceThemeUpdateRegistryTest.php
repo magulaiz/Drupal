@@ -66,7 +66,13 @@ class MaintenanceThemeUpdateRegistryTest extends BrowserTestBase {
    * Tests that after installing the profile there are no outstanding updates.
    */
   public function testMaintenanceThemeUpdateRegistration() {
-    $this->drupalLogin($this->rootUser);
+    // Create use with required permissions.
+    $permissions = [
+      'administer software updates',
+    ];
+    $user = $this->drupalCreateUser($permissions);
+    $this->drupalLogin($user);
+
     $this->drupalGet('update.php/selection');
     $this->updateRequirementsProblem();
     $this->drupalGet('update.php/selection');

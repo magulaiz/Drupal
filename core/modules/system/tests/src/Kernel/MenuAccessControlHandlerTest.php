@@ -56,13 +56,11 @@ class MenuAccessControlHandlerTest extends KernelTestBase {
     // We must always create user 1, so that a "normal" user has an ID >1.
     $root_user = $this->drupalCreateUser();
 
-    if ($which_user === 'user1') {
+    if ($which_user === 'permissionless') {
       $user = $root_user;
     }
     else {
-      $permissions = ($which_user === 'admin')
-        ? ['administer menu']
-        : [];
+      $permissions = ['administer menu'];
       $user = $this->drupalCreateUser($permissions);
     }
 
