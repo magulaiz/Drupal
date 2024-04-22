@@ -19,7 +19,7 @@ class UserNavigationBlockTest extends PageCacheTagsTestBase {
    *
    * @var array
    */
-  protected static $modules = ['navigation', 'test_page_test'];
+  protected static $modules = ['navigation', 'test_page_test', 'block'];
 
   /**
    * {@inheritdoc}

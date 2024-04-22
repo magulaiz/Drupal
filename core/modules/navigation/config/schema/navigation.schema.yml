@@ -30,3 +30,14 @@ navigation.block_layout:
       type: sequence
       sequence:
         type: layout_builder.section
+
+block.settings.navigation_menu:*:
+  type: block_settings
+  label: 'Menu block'
+  mapping:
+    level:
+      type: integer
+      label: 'Starting level'
+    depth:
+      type: integer
+      label: 'Maximum number of levels'

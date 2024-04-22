@@ -55,14 +55,12 @@ class ShortcutsNavigationBlockTest extends PageCacheTagsTestBase {
       'block_view',
       'config:block.block.title',
       'config:block_list',
-      'config:navigation.navigation_block.administration_menu',
-      'config:navigation.navigation_block.content_menu',
-      'config:navigation.navigation_block.shortcuts',
-      'config:navigation.navigation_block.user',
       'config:navigation.settings',
-      'config:navigation_block_list',
+      'config:navigation.block_layout',
       'config:shortcut.set.default',
-      'navigation_block_view',
+      'config:system.menu.admin',
+      'config:system.menu.content',
+      'http_response',
       'rendered',
     ];
     $this->assertCacheTags($expected_cache_tags);
@@ -94,7 +92,7 @@ class ShortcutsNavigationBlockTest extends PageCacheTagsTestBase {
     ]));
     $this->verifyDynamicPageCache($test_page_url, 'MISS');
     $this->verifyDynamicPageCache($test_page_url, 'HIT');
-    $this->assertSession()->elementExists('xpath', '//*[@id="navigation-block-shortcuts"]');
+    $this->assertSession()->elementNotExists('css', '#menu--shortcuts');
     $this->assertSession()->pageTextNotContains('Shortcuts');
     $this->assertSession()->linkNotExists('Cron');
 
@@ -121,7 +119,7 @@ class ShortcutsNavigationBlockTest extends PageCacheTagsTestBase {
     $this->verifyDynamicPageCache($test_page_url, 'MISS');
     $this->verifyDynamicPageCache($test_page_url, 'HIT');
     $this->assertCacheContexts(['user', 'url.query_args:_wrapper_format', 'url.path']);
-    $this->assertSession()->elementExists('xpath', '//*[@id="navigation-block-shortcuts"]');
+    $this->assertSession()->elementExists('css', '#menu--shortcuts');
     $this->assertSession()->pageTextContains('Shortcuts');
     $this->assertSession()->linkExists('Cron');
 

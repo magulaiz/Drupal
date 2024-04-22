@@ -1,3 +1,4 @@
+langcode: en
 sections:
   - layout_id: navigation_layout
     layout_settings:

@@ -9,7 +9,6 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Image\ImageFactory;
 use Drupal\Core\Menu\LocalTaskManagerInterface;
@@ -111,7 +110,8 @@ class NavigationRenderer {
     // The render array is built based on decisions made by SectionStorage
     // plugins and therefore it needs to depend on the accumulated
     // cacheability of those decisions.
-    $cacheability->addCacheableDependency($logo_settings);
+    $cacheability->addCacheableDependency($logo_settings)
+      ->addCacheableDependency($this->configFactory->get('navigation.block_layout'));
     $cacheability->applyTo($build);
 
     $build[0] += [

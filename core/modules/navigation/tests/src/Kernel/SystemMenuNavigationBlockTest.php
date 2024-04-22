@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\navigation\Kernel;
 
+use Drupal\block\Entity\Block;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\navigation\Entity\NavigationBlock;
-use Drupal\navigation\NavigationBlockRepositoryInterface;
 use Drupal\navigation\Plugin\Block\NavigationMenuBlock;
 use Drupal\system\Entity\Menu;
 use Drupal\system\Tests\Routing\MockRouteProvider;
@@ -26,9 +25,8 @@ use Symfony\Component\Routing\RouteCollection;
  * @group navigation
  * @see \Drupal\navigation\Plugin\Derivative\SystemMenuNavigationBlock
  * @see \Drupal\navigation\Plugin\Block\NavigationMenuBlock
- *@todo Expand test coverage to all SystemMenuNavigationBlock functionality,
+ * @todo Expand test coverage to all SystemMenuNavigationBlock functionality,
  * including block_menu_delete().
- *
  */
 class SystemMenuNavigationBlockTest extends KernelTestBase {
 
@@ -43,8 +41,10 @@ class SystemMenuNavigationBlockTest extends KernelTestBase {
     'menu_test',
     'menu_link_content',
     'field',
+    'block',
     'user',
     'link',
+    'layout_builder',
   ];
 
   /**
@@ -76,11 +76,11 @@ class SystemMenuNavigationBlockTest extends KernelTestBase {
   protected $menuLinkManager;
 
   /**
-   * The navigation block manager service.
+   * The block manager service.
    *
-   * @var \Drupal\navigation\NavigationBlockManagerInterface
+   * @var \Drupal\Core\Block\BlockManager
    */
-  protected $navigationBlockManager;
+  protected $blockManager;
 
   /**
    * {@inheritdoc}
@@ -99,7 +99,7 @@ class SystemMenuNavigationBlockTest extends KernelTestBase {
 
     $this->menuLinkManager = $this->container->get('plugin.manager.menu.link');
     $this->linkTree = $this->container->get('menu.link_tree');
-    $this->navigationBlockManager = $this->container->get('plugin.manager.navigation_block');
+    $this->blockManager = $this->container->get('plugin.manager.block');
 
     $routes = new RouteCollection();
     $requirements = ['_access' => 'TRUE'];
@@ -162,9 +162,9 @@ class SystemMenuNavigationBlockTest extends KernelTestBase {
    */
   public function testSystemMenuBlockConfigDependencies() {
 
-    $block = NavigationBlock::create([
+    $block = Block::create([
       'plugin' => 'navigation_menu:' . $this->menu->id(),
-      'region' => NavigationBlockRepositoryInterface::REGION_CONTENT,
+      'region' => 'content',
       'id' => 'machine_name',
     ]);
 
@@ -186,8 +186,8 @@ class SystemMenuNavigationBlockTest extends KernelTestBase {
   public function testConfigLevelDepth() {
     // Helper function to generate a configured navigation block instance.
     $place_block = function ($level, $depth) {
-      return $this->navigationBlockManager->createInstance('navigation_menu:' . $this->menu->id(), [
-        'region' => NavigationBlockRepositoryInterface::REGION_FOOTER,
+      return $this->blockManager->createInstance('navigation_menu:' . $this->menu->id(), [
+        'region' => 'content',
         'id' => 'machine_name',
         'level' => $level,
         'depth' => $depth,

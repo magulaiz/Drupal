@@ -12,8 +12,6 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\navigation\Attribute\NavigationBlock;
-use Drupal\navigation\NavigationBlockPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -73,15 +71,20 @@ class NavigationShortcutsBlock extends BlockBase implements ContainerFactoryPlug
    */
   public function build(): array {
     return [
-      // @phpstan-ignore-next-line
-      '#lazy_builder' => ['navigation.shortcut_lazy_builder:lazyLinks', [$this->configuration['label']]],
-      '#create_placeholder' => TRUE,
-      '#cache' => [
-        'keys' => ['shortcut_set_navigation_links'],
-        'contexts' => ['user'],
-      ],
-      '#lazy_builder_preview' => [
-        '#markup' => '<a href="#" class="toolbar-tray-lazy-placeholder-link">&nbsp;</a>',
+      'shortcuts' => [
+        // @phpstan-ignore-next-line
+        '#lazy_builder' => [
+          'navigation.shortcut_lazy_builder:lazyLinks',
+          [$this->configuration['label']],
+        ],
+        '#create_placeholder' => TRUE,
+        '#cache' => [
+          'keys' => ['shortcut_set_navigation_links'],
+          'contexts' => ['user'],
+        ],
+        '#lazy_builder_preview' => [
+          '#markup' => '<a href="#" class="toolbar-tray-lazy-placeholder-link">&nbsp;</a>',
+        ],
       ],
     ];
   }

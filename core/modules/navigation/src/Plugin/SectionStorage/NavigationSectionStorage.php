@@ -4,6 +4,7 @@ namespace Drupal\navigation\Plugin\SectionStorage;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -33,7 +34,7 @@ use Symfony\Component\Routing\RouteCollection;
     label: new TranslatableMarkup("Navigation flag"),
   ),
 ])]
-class NavigationSectionStorage extends PluginBase implements SectionStorageInterface, SectionStorageLocalTaskProviderInterface, ContainerFactoryPluginInterface {
+class NavigationSectionStorage extends PluginBase implements SectionStorageInterface, SectionStorageLocalTaskProviderInterface, ContainerFactoryPluginInterface, CacheableDependencyInterface {
 
   const STORAGE_ID = 'navigation.block_layout';
   use ContextAwarePluginTrait;

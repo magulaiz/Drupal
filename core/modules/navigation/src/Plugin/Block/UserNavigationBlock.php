@@ -58,14 +58,19 @@ class UserNavigationBlock extends BlockBase implements ContainerFactoryPluginInt
    */
   public function build(): array {
     return [
-      '#lazy_builder' => ['navigation.user_lazy_builder:renderNavigationLinks', []],
-      '#create_placeholder' => TRUE,
-      '#cache' => [
-        'keys' => ['user_set_navigation_links'],
-        'contexts' => ['user'],
-      ],
-      '#lazy_builder_preview' => [
-        '#markup' => '<a href="#" class="toolbar-tray-lazy-placeholder-link">&nbsp;</a>',
+      'user' => [
+        '#lazy_builder' => [
+          'navigation.user_lazy_builder:renderNavigationLinks',
+          [],
+        ],
+        '#create_placeholder' => TRUE,
+        '#cache' => [
+          'keys' => ['user_set_navigation_links'],
+          'contexts' => ['user'],
+        ],
+        '#lazy_builder_preview' => [
+          '#markup' => '<a href="#" class="toolbar-tray-lazy-placeholder-link">&nbsp;</a>',
+        ],
       ],
     ];
   }

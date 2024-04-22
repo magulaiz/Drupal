@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\navigation\Form;
 
-use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -68,7 +67,7 @@ final class LayoutForm extends FormBase {
       'submit' => [
         '#type' => 'submit',
         '#value' => $this->t('Save'),
-      ]
+      ],
     ] + $this->buildActionsElement([]);
     return $form;
   }

@@ -173,7 +173,6 @@ function navigation_plugin_filter_layout__layout_builder_alter(array &$definitio
   }
 }
 
-
 /**
  * Implements hook_block_alter().
  */
