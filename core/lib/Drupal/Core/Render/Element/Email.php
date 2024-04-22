@@ -94,6 +94,7 @@ class Email extends FormElementBase {
     // Display an error when an email address is empty.
     if (in_array('', $emails)) {
       $form_state->setError($element, t('All email addresses must be non-empty.'));
+      return;
     }
 
     // Validate each email address.
@@ -114,7 +115,7 @@ class Email extends FormElementBase {
     $form_state->setValueForElement($element, implode(',', $emails));
 
     if ($invalid_emails) {
-      $multiple_error_suffix = $multiple ? ' and separate the addresses with a comma.' : '.';
+      $multiple_error_suffix = $multiple ? ', and separate the addresses with a comma.' : '.';
       $form_state->setError($element, new PluralTranslatableMarkup(
         count($invalid_emails),
         'The email address %mails is not valid. Use the format user@example.com' . $multiple_error_suffix,
