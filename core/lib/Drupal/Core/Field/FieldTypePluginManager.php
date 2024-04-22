@@ -102,7 +102,7 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
 
     if ($definition['category'] instanceof TranslatableMarkup) {
       @trigger_error('Using a translatable string as a category for field type is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3375748', E_USER_DEPRECATED);
-      $definition['category'] = FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY;
+      $definition['category'] = (string) $definition['category'];
     }
     elseif (empty($definition['category'])) {
       // Ensure that every field type has a category.

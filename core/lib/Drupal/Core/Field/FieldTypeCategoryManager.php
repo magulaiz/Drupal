@@ -7,6 +7,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\Discovery\YamlDiscovery;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines a field type category info plugin manager.
@@ -88,6 +89,29 @@ class FieldTypeCategoryManager extends DefaultPluginManager implements FieldType
     if (!isset($definitions[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY])) {
       throw new \LogicException('Missing fallback category.');
     }
+
+
+    // Add BC definitions for field types which for pre-10.2 define a category
+    // as a simple label.
+    $field_type_definitions = \Drupal::service('plugin.manager.field.field_type')->getDefinitions();
+
+    // dump($field_type_definitions);
+    foreach ($field_type_definitions as $field_type_definition) {
+      if ($field_type_definition['category'] instanceof TranslatableMarkup) {
+        $bc_category = (string) $field_type_definition['category'];
+        dump($bc_category);
+        if (!isset($definitions[$bc_category])) {
+          $definitions[$bc_category] = [
+            "id" => $bc_category,
+            'label' => $field_type_definition['category'],
+            "class" => "Drupal\Core\Field\FieldTypeCategory",
+            "provider" => "core",
+          ];
+        }
+      }
+    }
+    // dump($definitions);
+
   }
 
   /**
