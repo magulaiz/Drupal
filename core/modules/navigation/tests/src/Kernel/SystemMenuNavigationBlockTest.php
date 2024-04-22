@@ -161,11 +161,11 @@ class SystemMenuNavigationBlockTest extends KernelTestBase {
    * Tests calculation of a system navigation menu block's config dependencies.
    */
   public function testSystemMenuBlockConfigDependencies() {
-
     $block = Block::create([
       'plugin' => 'navigation_menu:' . $this->menu->id(),
       'region' => 'content',
       'id' => 'machine_name',
+      'theme' => 'stark',
     ]);
 
     $dependencies = $block->calculateDependencies()->getDependencies();
@@ -174,7 +174,11 @@ class SystemMenuNavigationBlockTest extends KernelTestBase {
         'system.menu.' . $this->menu->id(),
       ],
       'module' => [
+        'navigation',
         'system',
+      ],
+      'theme' => [
+        'stark',
       ],
     ];
     $this->assertSame($expected, $dependencies);

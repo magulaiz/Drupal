@@ -22,7 +22,7 @@ trait ContextualLinkClickTrait {
   protected function clickContextualLink($selector, $link_locator, $force_visible = TRUE) {
     $page = $this->getSession()->getPage();
     $page->waitFor(10, function () use ($page, $selector) {
-      return $page->find('css', "$selector .contextual-links");
+      return $page->find('css', "$selector .contextual button");
     });
 
     if ($force_visible) {

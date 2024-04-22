@@ -73,10 +73,7 @@ class NavigationShortcutsBlock extends BlockBase implements ContainerFactoryPlug
     return [
       'shortcuts' => [
         // @phpstan-ignore-next-line
-        '#lazy_builder' => [
-          'navigation.shortcut_lazy_builder:lazyLinks',
-          [$this->configuration['label']],
-        ],
+        '#lazy_builder' => ['navigation.shortcut_lazy_builder:lazyLinks', [$this->configuration['label']]],
         '#create_placeholder' => TRUE,
         '#cache' => [
           'keys' => ['shortcut_set_navigation_links'],
