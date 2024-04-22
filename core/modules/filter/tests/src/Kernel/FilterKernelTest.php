@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\filter\Kernel;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Render\RenderContext;
@@ -514,7 +515,7 @@ class FilterKernelTest extends KernelTestBase {
       'children' => 'Test two',
     ];
     include_once $this->root . '/core/themes/engines/twig/twig.engine';
-    $render = twig_render_template('container.html.twig', $variables);
+    $render = (string) twig_render_template('container.html.twig', $variables);
     $render = trim($render);
 
     // Render text before applying the auto paragraph filter.
@@ -992,18 +993,18 @@ class FilterKernelTest extends KernelTestBase {
       $result = $filter->process($source, $filter)->getProcessedText();
       foreach ($tasks as $value => $is_expected) {
         if ($is_expected) {
-          $this->assertStringContainsString($value, $result, new FormattableMarkup('@source: @value found. Filtered result: @result.', [
-            '@source' => var_export($source, TRUE),
-            '@value' => var_export($value, TRUE),
-            '@result' => var_export($result, TRUE),
-          ]));
+          $this->assertStringContainsString($value, $result, sprintf('%s: %s found. Filtered result: %s.',
+            var_export($source, TRUE),
+            var_export($value, TRUE),
+            var_export($result, TRUE),
+          ));
         }
         else {
-          $this->assertStringNotContainsString($value, $result, new FormattableMarkup('@source: @value not found. Filtered result: @result.', [
-            '@source' => var_export($source, TRUE),
-            '@value' => var_export($value, TRUE),
-            '@result' => var_export($result, TRUE),
-          ]));
+          $this->assertStringNotContainsString($value, $result, sprintf('%s: %s not found. Filtered result: %s.',
+            var_export($source, TRUE),
+            var_export($value, TRUE),
+            var_export($result, TRUE),
+          ));
         }
       }
     }
@@ -1176,7 +1177,7 @@ class FilterKernelTest extends KernelTestBase {
 body {color:red}
 /*]]>*/
 </style></p>';
-    $this->assertEquals($html, Html::normalize($html), new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '/*<![CDATA[*/']));
+    $this->assertEquals($html, Html::normalize($html), 'HTML corrector -- Existing cdata section /*<![CDATA[*/ properly escaped');
 
     $html = '<p><style>
 /*<![CDATA[*/
@@ -1184,28 +1185,28 @@ body {color:red}
   body {color:red}
 /*]]>*/
 </style></p>';
-    $this->assertEquals($html, Html::normalize($html), new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '<!--/*--><![CDATA[/* ><!--*/']));
+    $this->assertEquals($html, Html::normalize($html), 'HTML corrector -- Existing cdata section <!--/*--><![CDATA[/* ><!--*/ properly escaped');
 
     $html = '<p><script>
 //<![CDATA[
   alert("test");
 //]]>
 </script></p>';
-    $this->assertEquals($html, Html::normalize($html), new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '<!--//--><![CDATA[// ><!--']));
+    $this->assertEquals($html, Html::normalize($html), 'HTML corrector -- Existing cdata section <!--//--><![CDATA[// ><!-- properly escaped');
 
     $html = '<p><script>
 // <![CDATA[
   alert("test");
 //]]>
 </script></p>';
-    $this->assertEquals($html, Html::normalize($html), new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '// <![CDATA[']));
+    $this->assertEquals($html, Html::normalize($html), 'HTML corrector -- Existing cdata section // <![CDATA[ properly escaped');
 
     $html = '<p><script>
 // <![CDATA[![CDATA[![CDATA[
   alert("test");
 //]]]]]]>
 </script></p>';
-    $this->assertEquals($html, Html::normalize($html), new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '// <![CDATA[![CDATA[![CDATA[']));
+    $this->assertEquals($html, Html::normalize($html), 'HTML corrector -- Existing cdata section // <![CDATA[![CDATA[![CDATA[ properly escaped');
 
     // Test calling Html::normalize() twice.
     $html = '<p><script>
@@ -1213,7 +1214,7 @@ body {color:red}
   alert("test");
 //]]]]]]>
 </script></p>';
-    $this->assertEquals($html, Html::normalize(Html::normalize($html)), new FormattableMarkup('HTML corrector -- Existing cdata section @pattern_name properly escaped', ['@pattern_name' => '// <![CDATA[![CDATA[![CDATA[']));
+    $this->assertEquals($html, Html::normalize(Html::normalize($html)), 'HTML corrector -- Existing cdata section // <![CDATA[![CDATA[![CDATA[ properly escaped');
   }
 
   /**

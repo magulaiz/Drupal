@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Kernel\Plugin;
 
 use Drupal\Core\Database\Database;
@@ -37,8 +39,6 @@ class MigrationPluginListTest extends KernelTestBase {
     'field',
     'file',
     'filter',
-    // @todo Remove forum in https://www.drupal.org/project/drupal/issues/3261653
-    'forum',
     'image',
     'language',
     'locale',
@@ -49,14 +49,10 @@ class MigrationPluginListTest extends KernelTestBase {
     'path',
     'search',
     'shortcut',
-    // @todo Remove statistics in https://www.drupal.org/project/drupal/issues/3341092
-    'statistics',
     'syslog',
     'system',
     'taxonomy',
     'text',
-    // @todo Remove tracker in https://www.drupal.org/project/drupal/issues/3261452
-    'tracker',
     'update',
     'user',
   ];
