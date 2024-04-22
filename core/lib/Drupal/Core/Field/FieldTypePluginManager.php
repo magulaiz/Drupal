@@ -103,6 +103,7 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
     if ($definition['category'] instanceof TranslatableMarkup) {
       @trigger_error('Using a translatable string as a category for field type is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3375748', E_USER_DEPRECATED);
       $definition['category'] = (string) $definition['category'];
+      $definition['category_bc'] = TRUE;
     }
     elseif (empty($definition['category'])) {
       // Ensure that every field type has a category.
@@ -179,6 +180,7 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
   public function getGroupedDefinitions(array $definitions = NULL, $label_key = 'label', $category_label_key = 'label') {
     $grouped_categories = $this->getGroupedDefinitionsTrait($definitions, $label_key);
     $category_info = $this->fieldTypeCategoryManager->getDefinitions();
+    dump($category_info);
 
     // Ensure that all the referenced categories exist.
     foreach ($grouped_categories as $group => $definitions) {
