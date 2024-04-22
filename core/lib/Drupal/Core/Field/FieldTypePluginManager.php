@@ -180,7 +180,6 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
   public function getGroupedDefinitions(array $definitions = NULL, $label_key = 'label', $category_label_key = 'label') {
     $grouped_categories = $this->getGroupedDefinitionsTrait($definitions, $label_key);
     $category_info = $this->fieldTypeCategoryManager->getDefinitions();
-    dump($category_info);
 
     // Ensure that all the referenced categories exist.
     foreach ($grouped_categories as $group => $definitions) {
