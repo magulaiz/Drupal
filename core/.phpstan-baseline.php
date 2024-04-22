@@ -2229,15 +2229,5 @@ in drupal\\:10\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
 	'count' => 1,
 	'path' => __DIR__ . '/tests/TestSuites/UnitTestSuite.php',
 ];
-$ignoreErrors[] = [
-  'message' => '#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#',
-  'count' => 1,
-  'path' => __DIR__ . '/modules/navigation/src/NavigationBlockManager.php',
-];
-$ignoreErrors[] = [
-  'message' => '#^Call to method getSortedDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#',
-  'count' => 1,
-  'path' => __DIR__ . '/modules/navigation/src/NavigationBlockManager.php',
-];
 
 return ['parameters' => ['ignoreErrors' => $ignoreErrors]];

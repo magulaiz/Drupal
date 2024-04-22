@@ -40,6 +40,11 @@ navigation.escapeAdmin:
     - core/once
     - core/drupal.displace
 
+navigation.layout:
+  dependencies:
+    - navigation/navigation
+    - navigation/navigation.escapeAdmin
+
 body-scroll-lock:
   version: VERSION
   css:
@@ -90,23 +95,7 @@ dropdown:
     - core/once
     - core/internal.floating-ui
 
-navigation_block:
-  version: VERSION
-  js:
-    js/navigation-block.js: {}
-  dependencies:
-    - core/drupal
-    - core/once
-
-navigation_block.admin:
-  version: VERSION
-  js:
-    js/navigation-block.admin.js: {}
+navigation.layoutBuilder:
   css:
-    theme:
-      css/navigation-block.admin.css: {}
-  dependencies:
-    - navigation/drupalFilter
-    - core/drupal.announce
-    - core/drupal.debounce
-    - core/drupal.dialog.ajax
+    base:
+      css/base/layout-builder.css: {}

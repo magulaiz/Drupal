@@ -1,20 +1,8 @@
 services:
-  plugin.manager.navigation_block:
-    class: Drupal\navigation\NavigationBlockManager
-    parent: default_plugin_manager
-    arguments: ['@logger.channel.default']
-  Drupal\navigation\NavigationBlockManagerInterface: '@plugin.manager.navigation_block'
-
-  navigation_block.repository:
-    class: Drupal\navigation\NavigationBlockRepository
-    arguments: ['@entity_type.manager', '@context.handler']
-  Drupal\navigation\NavigationBlockRepositoryInterface: '@navigation_block.repository'
-
   navigation.renderer:
     class: Drupal\navigation\NavigationRenderer
     arguments:
       [
-        '@navigation_block.repository',
         '@config.factory',
         '@current_route_match',
         '@plugin.manager.menu.local_task',
@@ -22,7 +10,7 @@ services:
         '@entity_type.manager',
         '@image.factory',
         '@file_url_generator',
-        '@file_system',
+        '@plugin.manager.layout_builder.section_storage',
       ]
   Drupal\navigation\NavigationRenderer: '@navigation.renderer'
 

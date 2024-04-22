@@ -8,3 +8,4 @@ type: module
 dependencies:
   - drupal:block
   - drupal:file
+  - drupal:layout_builder

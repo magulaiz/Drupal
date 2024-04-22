@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides navigation block plugin definitions for custom menus.
  *
- * @see \Drupal\navigation\Plugin\NavigationBlock\SystemMenuNavigationBlock
+ * @see \Drupal\navigation\Plugin\Block\NavigationMenuBlock
  */
 class SystemMenuNavigationBlock extends DeriverBase implements ContainerDeriverInterface {
 

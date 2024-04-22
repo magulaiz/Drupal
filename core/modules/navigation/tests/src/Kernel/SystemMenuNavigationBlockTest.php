@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\navigation\Kernel;
 
+use Drupal\block\Entity\Block;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\navigation\Entity\NavigationBlock;
-use Drupal\navigation\NavigationBlockRepositoryInterface;
-use Drupal\navigation\Plugin\NavigationBlock\SystemMenuNavigationBlock;
+use Drupal\navigation\Plugin\Block\NavigationMenuBlock;
 use Drupal\system\Entity\Menu;
 use Drupal\system\Tests\Routing\MockRouteProvider;
 use Drupal\Tests\Core\Menu\MenuLinkMock;
@@ -21,14 +20,13 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Tests \Drupal\navigation\Plugin\NavigationBlock\SystemMenuNavigationBlock.
+ * Tests \Drupal\navigation\Plugin\Block\SystemMenuNavigationBlock.
  *
  * @group navigation
+ * @see \Drupal\navigation\Plugin\Derivative\SystemMenuNavigationBlock
+ * @see \Drupal\navigation\Plugin\Block\NavigationMenuBlock
  * @todo Expand test coverage to all SystemMenuNavigationBlock functionality,
  * including block_menu_delete().
- *
- * @see \Drupal\navigation\Plugin\Derivative\SystemMenuNavigationBlock
- * @see \Drupal\navigation\Plugin\NavigationBlock\SystemMenuNavigationBlock
  */
 class SystemMenuNavigationBlockTest extends KernelTestBase {
 
@@ -43,14 +41,16 @@ class SystemMenuNavigationBlockTest extends KernelTestBase {
     'menu_test',
     'menu_link_content',
     'field',
+    'block',
     'user',
     'link',
+    'layout_builder',
   ];
 
   /**
    * The navigation block under test.
    *
-   * @var \Drupal\navigation\Plugin\NavigationBlock\SystemMenuNavigationBlock
+   * @var \Drupal\navigation\Plugin\Block\NavigationMenuBlock
    */
   protected $navigationBlock;
 
@@ -76,11 +76,11 @@ class SystemMenuNavigationBlockTest extends KernelTestBase {
   protected $menuLinkManager;
 
   /**
-   * The navigation block manager service.
+   * The block manager service.
    *
-   * @var \Drupal\navigation\NavigationBlockManagerInterface
+   * @var \Drupal\Core\Block\BlockManager
    */
-  protected $navigationBlockManager;
+  protected $blockManager;
 
   /**
    * {@inheritdoc}
@@ -99,7 +99,7 @@ class SystemMenuNavigationBlockTest extends KernelTestBase {
 
     $this->menuLinkManager = $this->container->get('plugin.manager.menu.link');
     $this->linkTree = $this->container->get('menu.link_tree');
-    $this->navigationBlockManager = $this->container->get('plugin.manager.navigation_block');
+    $this->blockManager = $this->container->get('plugin.manager.block');
 
     $routes = new RouteCollection();
     $requirements = ['_access' => 'TRUE'];
@@ -161,11 +161,11 @@ class SystemMenuNavigationBlockTest extends KernelTestBase {
    * Tests calculation of a system navigation menu block's config dependencies.
    */
   public function testSystemMenuBlockConfigDependencies() {
-
-    $block = NavigationBlock::create([
-      'plugin' => 'system_menu_navigation_block:' . $this->menu->id(),
-      'region' => NavigationBlockRepositoryInterface::REGION_CONTENT,
+    $block = Block::create([
+      'plugin' => 'navigation_menu:' . $this->menu->id(),
+      'region' => 'content',
       'id' => 'machine_name',
+      'theme' => 'stark',
     ]);
 
     $dependencies = $block->calculateDependencies()->getDependencies();
@@ -174,7 +174,11 @@ class SystemMenuNavigationBlockTest extends KernelTestBase {
         'system.menu.' . $this->menu->id(),
       ],
       'module' => [
+        'navigation',
         'system',
+      ],
+      'theme' => [
+        'stark',
       ],
     ];
     $this->assertSame($expected, $dependencies);
@@ -186,8 +190,8 @@ class SystemMenuNavigationBlockTest extends KernelTestBase {
   public function testConfigLevelDepth() {
     // Helper function to generate a configured navigation block instance.
     $place_block = function ($level, $depth) {
-      return $this->navigationBlockManager->createInstance('system_menu_navigation_block:' . $this->menu->id(), [
-        'region' => NavigationBlockRepositoryInterface::REGION_FOOTER,
+      return $this->blockManager->createInstance('navigation_menu:' . $this->menu->id(), [
+        'region' => 'content',
         'id' => 'machine_name',
         'level' => $level,
         'depth' => $depth,
@@ -199,9 +203,9 @@ class SystemMenuNavigationBlockTest extends KernelTestBase {
       'level_1_only' => $place_block(1, 0),
       'level_2_only' => $place_block(2, 0),
       'level_3_only' => $place_block(3, 0),
-      'level_1_and_beyond' => $place_block(1, SystemMenuNavigationBlock::NAVIGATION_MAX_DEPTH - 1),
-      'level_2_and_beyond' => $place_block(2, SystemMenuNavigationBlock::NAVIGATION_MAX_DEPTH - 1),
-      'level_3_and_beyond' => $place_block(3, SystemMenuNavigationBlock::NAVIGATION_MAX_DEPTH - 1),
+      'level_1_and_beyond' => $place_block(1, NavigationMenuBlock::NAVIGATION_MAX_DEPTH - 1),
+      'level_2_and_beyond' => $place_block(2, NavigationMenuBlock::NAVIGATION_MAX_DEPTH - 1),
+      'level_3_and_beyond' => $place_block(3, NavigationMenuBlock::NAVIGATION_MAX_DEPTH - 1),
     ];
 
     // Expectations are independent of the active trail.

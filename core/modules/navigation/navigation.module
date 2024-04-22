@@ -5,12 +5,13 @@
  * Primary module hooks for navigation module.
  */
 
-use Drupal\Component\Utility\Html;
+use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\navigation\NavigationContentLinks;
 use Drupal\navigation\NavigationRenderer;
-use Drupal\system\MenuInterface;
+use Drupal\navigation\Plugin\SectionStorage\NavigationSectionStorage;
+use Drupal\navigation\RenderCallbacks;
 
 /**
  * Implements hook_help().
@@ -24,6 +25,15 @@ function navigation_help($route_name, RouteMatchInterface $route_match) {
         ':docs' => 'https://www.drupal.org/project/navigation',
       ]) . '</p>';
       return $output;
+  }
+  $configuration_route = 'layout_builder.navigation.';
+  if (!$route_match->getRouteObject()->getOption('_layout_builder') || !str_starts_with($route_name, $configuration_route)) {
+    return layout_builder_help($route_name, $route_match);
+  }
+  if (str_starts_with($route_name, $configuration_route)) {
+    $output = '<p>' . t('This layout builder tool allows you to configure the blocks in the navigation toolbar.') . '</p>';
+    $output .= '<p>' . t('Forms and links inside the content of the layout builder tool have been disabled.') . '</p>';
+    return $output;
   }
 }
 
@@ -47,6 +57,10 @@ function navigation_module_implements_alter(&$implementations, $hook) {
     unset($implementations['navigation']);
     $implementations['navigation'] = $group;
   }
+  if ($hook == 'help') {
+    // We take over the layout_builder hook_help().
+    unset($implementations['layout_builder']);
+  }
 }
 
 /**
@@ -69,21 +83,6 @@ function navigation_theme($existing, $type, $theme, $path) {
     'variables' => [
       'link' => [],
     ],
-  ];
-
-  $items['navigation'] = [
-    'variables' => [
-      'hide_logo' => FALSE,
-      'logo_path' => FALSE,
-      'logo_width' => 40,
-      'logo_height' => 40,
-      'menu_content' => [],
-      'menu_footer' => [],
-    ],
-  ];
-
-  $items['navigation_block'] = [
-    'render element' => 'elements',
   ];
 
   $items['navigation_menu'] = [
@@ -129,84 +128,6 @@ function navigation_block_build_local_tasks_block_alter(array &$build, BlockPlug
 }
 
 /**
- * Prepares variables for navigation_block templates.
- *
- * Default template: navigation-block.html.twig.
- *
- * Prepares the values passed to the theme_navigation_block function to be
- * passed into a pluggable template engine. Uses navigation_block properties
- * to generate a series of template file suggestions. If none are found, the
- * default navigation-block.html.twig is used.
- *
- * The default template is located inside
- * "templates/navigation-block.html.twig". Look in there for the full list of
- * available variables.
- *
- * @param array $variables
- *   An associative array containing:
- *   - elements: An associative array containing the properties of the element.
- *     Properties used: #navigation_block, #configuration, #children,
- *     #plugin_id.
- */
-function template_preprocess_navigation_block(&$variables) {
-  $variables['configuration'] = $variables['elements']['#configuration'];
-  $variables['plugin_id'] = $variables['elements']['#plugin_id'];
-  $variables['base_plugin_id'] = $variables['elements']['#base_plugin_id'];
-  $variables['derivative_plugin_id'] = $variables['elements']['#derivative_plugin_id'];
-  $variables['label'] = !empty($variables['configuration']['label_display']) ? $variables['configuration']['label'] : '';
-  $variables['content'] = $variables['elements']['content'];
-  // A navigation_blocks label is configuration: it is static. Allow dynamic
-  // labels to be set in the render array.
-  if (isset($variables['elements']['content']['#title']) && !empty($variables['configuration']['label_display'])) {
-    $variables['label'] = $variables['elements']['content']['#title'];
-  }
-
-  // Create a valid HTML ID and make sure it is unique.
-  if (!empty($variables['elements']['#id'])) {
-    $variables['attributes']['id'] = Html::getUniqueId('navigation-block-' . $variables['elements']['#id']);
-  }
-
-  // Proactively add aria-describedby if possible to improve accessibility.
-  if ($variables['label'] && isset($variables['attributes']['role'])) {
-    $variables['title_attributes']['id'] = Html::getUniqueId($variables['label']);
-    $variables['attributes']['aria-describedby'] = $variables['title_attributes']['id'];
-  }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_insert() for menu.
- */
-function navigation_menu_insert(MenuInterface $menu) {
-  // @todo This code should be moved to Drupal\system\Entity\Menu::save() once
-  // Navigation lands in core, in a similar way BlockManager cache is
-  // invalidated there.
-  \Drupal::service('plugin.manager.navigation_block')
-    ->clearCachedDefinitions();
-}
-
-/**
- * Implements hook_ENTITY_TYPE_update() for menu.
- */
-function navigation_menu_update(MenuInterface $menu) {
-  // @todo This code should be moved to Drupal\system\Entity\Menu::save() once
-  // Navigation lands in core, in a similar way BlockManager cache is
-  // invalidated there.
-  \Drupal::service('plugin.manager.navigation_block')
-    ->clearCachedDefinitions();
-}
-
-/**
- * Implements hook_ENTITY_TYPE_delete() for menu.
- */
-function navigation_menu_delete(MenuInterface $menu) {
-  // @todo This code should be moved to Drupal\system\Entity\Menu::delete() once
-  // Navigation lands in core, in a similar way BlockManager cache is
-  // invalidated there.
-  \Drupal::service('plugin.manager.navigation_block')
-    ->clearCachedDefinitions();
-}
-
-/**
  * Implements hook_preprocess_html().
  */
 function navigation_preprocess_html(&$variables) {
@@ -220,4 +141,60 @@ function navigation_preprocess_html(&$variables) {
       'crossorigin' => 'anonymous',
     ],
   ];
+}
+
+/**
+ * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
+ *
+ * Curate the blocks available in the Layout Builder "Add Block" UI.
+ */
+function navigation_plugin_filter_block__layout_builder_alter(array &$definitions, array $extra) {
+  if (($extra['section_storage'] ?? NULL) instanceof NavigationSectionStorage) {
+    // Remove all blocks other than the ones we support.
+    $navigation_safe = [
+      'navigation_user',
+      'navigation_shortcuts',
+      'navigation_menu',
+    ];
+    $definitions = array_filter($definitions, static function (array $definition, string $plugin_id) use ($navigation_safe): bool {
+      [$base_plugin_id] = explode(PluginBase::DERIVATIVE_SEPARATOR, $plugin_id);
+      return in_array($base_plugin_id, $navigation_safe, TRUE);
+    }, ARRAY_FILTER_USE_BOTH);
+  }
+}
+
+/**
+ * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
+ */
+function navigation_plugin_filter_layout__layout_builder_alter(array &$definitions, array $extra) {
+  if (($extra['section_storage'] ?? NULL) instanceof NavigationSectionStorage) {
+    // We don't allow adding a new section.
+    $definitions = [];
+  }
+}
+
+/**
+ * Implements hook_block_alter().
+ */
+function navigation_block_alter(&$definitions): void {
+  // Hide the navigation blocks from the normal block UI.
+  $definitions['navigation_user']['_block_ui_hidden'] = TRUE;
+  $definitions['navigation_shortcuts']['_block_ui_hidden'] = TRUE;
+  $definitions['navigation_menu']['_block_ui_hidden'] = TRUE;
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ */
+function template_preprocess_navigation(array &$variables): void {
+  $variables['hide_logo'] = $variables['content']['#hide_logo'] ?? TRUE;
+}
+
+/**
+ * Implements hook_element_info_alter().
+ */
+function navigation_element_info_alter(array &$info) {
+  if (array_key_exists('layout_builder', $info)) {
+    $info['layout_builder']['#pre_render'][] = [RenderCallbacks::class, 'alterLayoutBuilder'];
+  }
 }
