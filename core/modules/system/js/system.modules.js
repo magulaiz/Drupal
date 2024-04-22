@@ -64,12 +64,13 @@
           // Mark the <details> elements that were closed before filtering, so
           // they can be closed again when filtering is removed.
           $details
-            .not('[open]')
-            .attr('data-drupal-system-state', 'forced-open');
+            .not('[open]')[0]
+            .setAttribute('data-drupal-system-state', 'forced-open');
 
           // Hide the package <details> if they don't have any visible rows.
           // Note that we first show() all <details> to be able to use ':visible'.
-          $details.attr('open', true).each(hidePackageDetails);
+          $details[0].setAttribute('open', true);
+          hidePackageDetails($details);
 
           Drupal.announce(
             Drupal.formatPlural(
@@ -83,10 +84,14 @@
           $rowsAndDetails.show();
           // Return <details> elements that had been closed before filtering
           // to a closed state.
-          $details
-            .filter('[data-drupal-system-state="forced-open"]')
-            .removeAttr('data-drupal-system-state')
-            .attr('open', false);
+          $details[0].forEach((detail) => {
+            if (
+              detail.getAttribute('data-drupal-system-state') === 'forced-open'
+            ) {
+              detail.removeAttribute('data-drupal-system-state');
+              detail.setAttribute('open', 'false');
+            }
+          });
         }
       }
 

@@ -223,7 +223,7 @@
             .addClass('is-active')
             // Mark the tab as pressed.
             .prop('aria-pressed', true);
-          const name = $tab.attr('data-toolbar-tray');
+          const name = $tab[0].getAttribute('data-toolbar-tray');
           // Store the active tab name or remove the setting.
           const id = $tab.get(0).id;
           if (id) {
@@ -256,7 +256,7 @@
       updateBarAttributes() {
         const isOriented = this.model.get('isOriented');
         if (isOriented) {
-          this.$el.find('.toolbar-bar').attr('data-offset-top', '');
+          this.$el.find('.toolbar-bar')[0].setAttribute('data-offset-top', '');
         } else {
           this.$el.find('.toolbar-bar').removeAttr('data-offset-top');
         }
@@ -299,10 +299,11 @@
           .toggle(this.model.get('isTrayToggleVisible'));
         const $orientationToggleButton = $orientationToggle.find('button');
         $orientationToggleButton[0].value = antiOrientation;
-        $orientationToggleButton
-          .attr('title', this.strings[antiOrientation])
-          .removeClass(iconClass)
-          .addClass(iconAntiClass);
+        $orientationToggleButton.removeClass(iconClass).addClass(iconAntiClass);
+        $orientationToggleButton[0].setAttribute(
+          'title',
+          this.strings[antiOrientation],
+        );
         $orientationToggleButton[0].textContent = this.strings[antiOrientation];
 
         // Update data offset attributes for the trays.
@@ -311,13 +312,23 @@
         // Remove data-offset attributes from the trays so they can be refreshed.
         $trays.removeAttr('data-offset-left data-offset-right data-offset-top');
         // If an active vertical tray exists, mark it as an offset element.
-        $trays
-          .filter('.toolbar-tray-vertical.is-active')
-          .attr(`data-offset-${edge}`, '');
+        $trays[0].forEach((tray) => {
+          if (
+            tray.classList.contains('toolbar-tray-vertical') &&
+            tray.classList.contains('is-active')
+          ) {
+            tray.setAttribute(`data-offset-${edge}`, '');
+          }
+        });
         // If an active horizontal tray exists, mark it as an offset element.
-        $trays
-          .filter('.toolbar-tray-horizontal.is-active')
-          .attr('data-offset-top', '');
+        $trays[0].forEach((tray) => {
+          if (
+            tray.classList.contains('toolbar-tray-horizontal') &&
+            tray.classList.contains('is-active')
+          ) {
+            tray.setAttribute('data-offset-top', '');
+          }
+        });
       },
 
       /**

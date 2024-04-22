@@ -255,17 +255,17 @@
         .closest('div.js-form-managed-file')
         .find('input.file-progress');
       if ($progressId.length) {
-        const originalName = $progressId.attr('name');
+        const originalName = $progressId[0].getAttribute('name');
 
         // Replace the name with the required identifier.
-        $progressId.attr(
+        $progressId[0].setAttribute(
           'name',
           originalName.match(/APC_UPLOAD_PROGRESS|UPLOAD_IDENTIFIER/)[0],
         );
 
         // Restore the original name after the upload begins.
         setTimeout(() => {
-          $progressId.attr('name', originalName);
+          $progressId[0].setAttribute('name', originalName);
         }, 1000);
       }
       // Show the progress bar if the upload takes longer than half a second.
@@ -288,7 +288,7 @@
      */
     openInNewWindow(event) {
       event.preventDefault();
-      $(this).attr('target', '_blank');
+      $(this)[0].setAttribute('target', '_blank');
       window.open(
         this.href,
         'filePreview',

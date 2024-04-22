@@ -77,13 +77,15 @@
     placeholders.forEach((placeholder) => {
       $placeholder = $(placeholder);
       const timestamp = parseInt(
-        $placeholder.attr('data-history-node-last-comment-timestamp'),
+        $placeholder[0].getAttribute(
+          'data-history-node-last-comment-timestamp',
+        ),
         10,
       );
-      fieldName = $placeholder.attr('data-history-node-field-name');
+      fieldName = $placeholder[0].getAttribute('data-history-node-field-name');
       const nodeID = $placeholder
-        .closest('[data-history-node-id]')
-        .attr('data-history-node-id');
+        .closest('[data-history-node-id]')[0]
+        .getAttribute('data-history-node-id');
       const lastViewTimestamp = Drupal.history.getLastRead(nodeID);
 
       // Queue this placeholder's "X new comments" link to be downloaded from
@@ -122,9 +124,11 @@
             '1 new comment',
             '@count new comments',
           );
-          $placeholderItem
-            .attr('href', result.first_new_comment_link)
-            .removeClass('hidden');
+          $placeholderItem.removeClass('hidden');
+          $placeholderItem[0].setAttribute(
+            'href',
+            result.first_new_comment_link,
+          );
           show($placeholderItem);
         }
       });
@@ -164,12 +168,14 @@
       ).filter((placeholder) => {
         const $placeholder = $(placeholder);
         const lastCommentTimestamp = parseInt(
-          $placeholder.attr('data-history-node-last-comment-timestamp'),
+          $placeholder[0].getAttribute(
+            'data-history-node-last-comment-timestamp',
+          ),
           10,
         );
         const nodeID = $placeholder
-          .closest('[data-history-node-id]')
-          .attr('data-history-node-id');
+          .closest('[data-history-node-id]')[0]
+          .getAttribute('data-history-node-id');
         if (Drupal.history.needsServerCheck(nodeID, lastCommentTimestamp)) {
           nodeIDs.push(nodeID);
           // Hide this placeholder link until it is certain we'll need it.

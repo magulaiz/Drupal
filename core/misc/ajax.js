@@ -59,7 +59,7 @@
 
         // Ajax submits specified in this manner automatically submit to the
         // normal form action.
-        elementSettings.url = $(el.form).attr('action');
+        elementSettings.url = $(el.form)[0].getAttribute('action');
         // Form submit button clicks need to tell the form what was clicked so
         // it gets passed in the POST request.
         elementSettings.setClick = true;
@@ -313,10 +313,10 @@
         dialogType: $linkElement.data('dialog-type'),
         dialog: $linkElement.data('dialog-options'),
         dialogRenderer: $linkElement.data('dialog-renderer'),
-        base: $linkElement.attr('id'),
+        base: $linkElement[0].getAttribute('id'),
         element: ajaxLink,
       };
-      const href = $linkElement.attr('href');
+      const href = $linkElement[0].getAttribute('href');
       /**
        * For anchor tags, these will go to the target of the anchor rather than
        * the usual location.
@@ -467,7 +467,7 @@
     if (!this.url) {
       const $element = $(this.element);
       if (this.element.tagName === 'A') {
-        this.url = $element.attr('href');
+        this.url = $element[0].getAttribute('href');
       } else if (this.element && element.form) {
         this.url = this.$form.attr('action');
       }

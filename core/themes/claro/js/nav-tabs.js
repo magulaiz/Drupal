@@ -40,20 +40,24 @@
       }
     };
 
-    const toggleCollapsed = ({ matches }) => {
-      if (matches) {
-        if ($tab.hasClass('is-horizontal') && !$tab.attr('data-width')) {
+    const toggleCollapsed = () => {
+      if (window.matchMedia('(min-width: 48em)').matches) {
+        if (
+          $tab.hasClass('is-horizontal') &&
+          !$tab[0].getAttribute('data-width')
+        ) {
           let width = 0;
 
           $target.find('.js-tabs-link').each((index, value) => {
             width += $(value).outerWidth();
           });
-          $tab.attr('data-width', width);
+          $tab[0].setAttribute('data-width', width);
         }
 
         // Collapse the tabs if the combined width of the tabs is greater than
         // the width of the parent container.
-        const isHorizontal = $tab.attr('data-width') <= $tab.outerWidth();
+        const isHorizontal =
+          $tab[0].getAttribute('data-width') <= $tab.outerWidth();
         $tab.toggleClass('is-horizontal', isHorizontal);
         $tab.find('button').attr('aria-expanded', null);
         toggleOrder(isHorizontal);
@@ -67,7 +71,7 @@
 
     $target.find('.js-tab').each((index, element) => {
       const $item = $(element);
-      $item.attr('data-original-order', $item.index());
+      $item[0].setAttribute('data-original-order', $item.index());
     });
 
     $tab.on('click.tabs', '[data-drupal-nav-tabs-trigger]', openMenu);

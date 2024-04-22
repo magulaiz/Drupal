@@ -58,7 +58,7 @@
       const elementSettings = {
         url: response.url,
         event: 'submit',
-        base: $form.attr('id'),
+        base: $form[0].getAttribute('id'),
         element: form,
       };
       const ajaxForm = Drupal.ajax(elementSettings);
@@ -192,7 +192,7 @@
   Drupal.behaviors.syncPreviewDisplay = {
     attach(context) {
       $(once('views-ajax', '#views-tabset a')).on('click', function () {
-        const href = $(this).attr('href');
+        const href = $(this)[0].getAttribute('href');
         // Cut of #views-tabset.
         const displayId = href.substring(11);
         const viewsPreviewId = document.querySelector(
@@ -225,11 +225,11 @@
       once('views-ajax', 'a.views-ajax-link', context).forEach((link) => {
         const $link = $(link);
         const elementSettings = baseElementSettings;
-        elementSettings.base = $link.attr('id');
+        elementSettings.base = $link[0].getAttribute('id');
         elementSettings.element = link;
         // Set the URL to go to the anchor.
-        if ($link.attr('href')) {
-          elementSettings.url = $link.attr('href');
+        if ($link[0].getAttribute('href')) {
+          elementSettings.url = $link[0].getAttribute('href');
         }
         Drupal.ajax(elementSettings);
       });
@@ -237,13 +237,13 @@
       once('views-ajax', 'div#views-live-preview a').forEach((link) => {
         const $link = $(link);
         // We don't bind to links without a URL.
-        if (!$link.attr('href')) {
+        if (!$link[0].getAttribute('href')) {
           return true;
         }
 
         const elementSettings = baseElementSettings;
         // Set the URL to go to the anchor.
-        elementSettings.url = $link.attr('href');
+        elementSettings.url = $link[0].getAttribute('href');
         if (
           !Drupal.Views.getPath(elementSettings.url).startsWith(
             'admin/structure/views',
@@ -272,7 +272,7 @@
           });
           const elementSettings = baseElementSettings;
           // Set the URL to go to the anchor.
-          elementSettings.url = $(submit.form).attr('action');
+          elementSettings.url = $(submit.form)[0].getAttribute('action');
           if (
             !Drupal.Views.getPath(elementSettings.url).startsWith(
               'admin/structure/views',

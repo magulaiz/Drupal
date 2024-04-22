@@ -62,11 +62,13 @@
         if (query.length >= 2) {
           // Attribute to note which categories are closed before opening all.
           $categories
-            .find('.js-layout-builder-category:not([open])')
-            .attr('remember-closed', '');
+            .find('.js-layout-builder-category:not([open])')[0]
+            .setAttribute('remember-closed', '');
 
           // Open all categories so every block is available to filtering.
-          $categories.find('.js-layout-builder-category').attr('open', '');
+          $categories
+            .find('.js-layout-builder-category')[0]
+            .setAttribute('open', '');
           // Toggle visibility of links based on query.
           $filterLinks.each(toggleBlockEntry);
 
@@ -213,8 +215,8 @@
         .not(
           (index, element) =>
             $(element).closest('[data-contextual-id]').length > 0,
-        )
-        .attr('tabindex', -1);
+        )[0]
+        .setAttribute('tabindex', -1);
     },
   };
 
@@ -237,8 +239,8 @@
        * 'is-layout-builder-highlighted' is added to element.
        */
       const id = $element
-        .find('[data-layout-builder-target-highlight-id]')
-        .attr('data-layout-builder-target-highlight-id');
+        .find('[data-layout-builder-target-highlight-id]')[0]
+        .getAttribute('data-layout-builder-target-highlight-id');
       if (id) {
         $(`[data-layout-builder-highlight-id="${id}"]`).addClass(
           'is-layout-builder-highlighted',
@@ -257,8 +259,8 @@
        * to add a class to the Layout Builder UI while opened.
        */
       const layoutBuilderWrapperValue = $element
-        .find('[data-add-layout-builder-wrapper]')
-        .attr('data-add-layout-builder-wrapper');
+        .find('[data-add-layout-builder-wrapper]')[0]
+        .getAttribute('data-add-layout-builder-wrapper');
       if (layoutBuilderWrapperValue) {
         $('#layout-builder').addClass(layoutBuilderWrapperValue);
       }
@@ -373,7 +375,7 @@
             // Hide everything in block that isn't contextual link related.
             $element.children(':not([data-contextual-id])').hide(0);
 
-            const contentPreviewPlaceholderText = $element.attr(
+            const contentPreviewPlaceholderText = $element[0].getAttribute(
               'data-layout-content-preview-placeholder-label',
             );
 
@@ -433,7 +435,7 @@
        * disable content preview in the Layout Builder UI.
        */
       if (!isContentPreview) {
-        $layoutBuilderContentPreview.attr('checked', false);
+        $layoutBuilderContentPreview[0].setAttribute('checked', false);
         disableContentPreview();
       }
     },
@@ -462,7 +464,7 @@
   // Remove all contextual links outside the layout.
   $(window).on('drupalContextualLinkAdded', (event, data) => {
     const element = data.$el;
-    const contextualId = element.attr('data-contextual-id');
+    const contextualId = element[0].getAttribute('data-contextual-id');
     if (contextualId && !contextualId.startsWith('layout_builder_block:')) {
       element.remove();
     }

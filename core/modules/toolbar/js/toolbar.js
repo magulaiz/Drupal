@@ -259,7 +259,9 @@
                 Drupal.toolbar.models.toolbarModel.get('orientation'),
               hasActiveTab,
               activeTabId: hasActiveTab ? this.get('activeTab').id : null,
-              activeTray: $(this.get('activeTab')).attr('data-toolbar-tray'),
+              activeTray: $(this.get('activeTab'))[0].getAttribute(
+                'data-toolbar-tray',
+              ),
               isOriented: this.get('isOriented'),
               isFixed: this.get('isFixed'),
               userButtonMinWidth: userButton ? userButton.clientWidth : 0,

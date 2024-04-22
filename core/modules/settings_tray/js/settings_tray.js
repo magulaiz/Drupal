@@ -153,7 +153,8 @@
       .filter(
         (instance) =>
           instance &&
-          $(instance.element).attr('data-dialog-renderer') === 'off_canvas',
+          $(instance.element)[0].getAttribute('data-dialog-renderer') ===
+            'off_canvas',
       )
       /**
        * Loop through all Ajax instances that use the 'off_canvas' renderer to

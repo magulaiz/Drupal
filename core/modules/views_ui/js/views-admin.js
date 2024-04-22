@@ -220,8 +220,9 @@
         const suffix = this.suffix;
         this.target.each(function (i) {
           // Ensure that the maxlength is not exceeded by prepopulating the field.
-          const maxlength = $(this).attr('maxlength') - suffix.length;
-          this.value = transliterated.substring(0, maxlength) + suffix;
+          const maxlength =
+            $(this)[0].getAttribute('maxlength') - suffix.length;
+          this.value = transliterated.substr(0, maxlength) + suffix;
         });
       },
 
@@ -397,7 +398,7 @@
         .addClass('last');
       $displayButtons.each(function () {
         const $this = $(this);
-        this.value = $this.attr('data-drupal-dropdown-label');
+        this.value = $this[0].getAttribute('data-drupal-dropdown-label');
       });
       $addDisplayDropdown.appendTo($menu);
 
@@ -778,7 +779,7 @@
         let i;
         for (i = 0; i < length; i++) {
           const $removeGroupButton = $(this.removeGroupButtons[i]);
-          const buttonId = $removeGroupButton.attr('id');
+          const buttonId = $removeGroupButton[0].getAttribute('id');
           $(
             once(
               'views-rearrange-filter-handler',
@@ -867,7 +868,7 @@
           titleRow = $(titleRows[i]);
           // Make a copy of the operator dropdown and put it in a new table row.
           const fakeOperator = this.operator.clone();
-          fakeOperator.attr('id', '');
+          fakeOperator[0].setAttribute('id', '');
           newRow = $(
             '<tr class="filter-group-operator-row"><td colspan="5"></td></tr>',
           );
@@ -986,8 +987,8 @@
             this.rowObject.element,
           );
           if (!groupField[0].matches(`.views-group-select-${groupName}`)) {
-            const oldGroupName = groupField
-              .attr('class')
+            const oldGroupName = groupField[0]
+              .getAttribute('class')
               .replace(
                 /([^ ]+[ ]+)*views-group-select-([^ ]+)([ ]+[^ ]+)*/,
                 '$2',
@@ -1076,7 +1077,7 @@
               .addClass('group-empty');
             // The cell with the dropdown operator should span the title row and
             // the "this group is empty" row.
-            $operatorCell.attr('rowspan', 2);
+            $operatorCell[0].setAttribute('rowspan', 2);
           } else if (
             $row.hasClass('draggable') &&
             Drupal.elementIsVisible(rows[i])
@@ -1088,7 +1089,7 @@
               .removeClass('group-empty')
               .addClass('group-populated');
             // The operator cell should span all draggable rows, plus the title.
-            $operatorCell.attr('rowspan', draggableCount + 1);
+            $operatorCell[0].setAttribute('rowspan', draggableCount + 1);
           }
         }
       },
@@ -1297,7 +1298,9 @@
       $(once('views', 'a.views-remove-link', context)).on(
         'click',
         function (event) {
-          const id = $(this).attr('id').replace('views-remove-link-', '');
+          const id = $(this)[0]
+            .getAttribute('id')
+            .replace('views-remove-link-', '');
           $context.find(`#views-row-${id}`).hide();
           $context.find(`#views-removed-${id}`).prop('checked', true);
           event.preventDefault();
@@ -1309,7 +1312,9 @@
       $(once('display', 'a.display-remove-link', context)).on(
         'click',
         function (event) {
-          const id = $(this).attr('id').replace('display-remove-link-', '');
+          const id = $(this)[0]
+            .getAttribute('id')
+            .replace('display-remove-link-', '');
           $context.find(`#display-row-${id}`).hide();
           $context.find(`#display-removed-${id}`).prop('checked', true);
           event.preventDefault();
