@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Kernel\process;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -109,7 +111,7 @@ class SubProcessWithSkipTest extends KernelTestBase {
    *
    * @return array
    */
-  public function providerTestSubProcessSkip(): array {
+  public static function providerTestSubProcessSkip(): array {
     return [
       'skip row' => [
         'method' => 'row',

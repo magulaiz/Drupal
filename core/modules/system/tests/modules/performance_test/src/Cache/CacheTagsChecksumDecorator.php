@@ -19,10 +19,16 @@ class CacheTagsChecksumDecorator implements CacheTagsChecksumInterface, CacheTag
    * {@inheritdoc}
    */
   public function getCurrentChecksum(array $tags) {
+    // If there are no cache tags, there is no checksum to get and the decorated
+    // method will be a no-op, so don't log anything.
+    if (empty($tags)) {
+      return $this->checksumInvalidator->getCurrentChecksum($tags);
+    }
+
     $start = microtime(TRUE);
     $return = $this->checksumInvalidator->getCurrentChecksum($tags);
     $stop = microtime(TRUE);
-    $this->logCacheTagOperation($tags, $start, $stop, CacheTagOperation::getCurrentChecksum);
+    $this->logCacheTagOperation($tags, $start, $stop, CacheTagOperation::GetCurrentChecksum);
     return $return;
   }
 
@@ -38,7 +44,7 @@ class CacheTagsChecksumDecorator implements CacheTagsChecksumInterface, CacheTag
     $start = microtime(TRUE);
     $return = $this->checksumInvalidator->isValid($checksum, $tags);
     $stop = microtime(TRUE);
-    $this->logCacheTagOperation($tags, $start, $stop, CacheTagOperation::isValid);
+    $this->logCacheTagOperation($tags, $start, $stop, CacheTagOperation::IsValid);
     return $return;
   }
 
@@ -46,10 +52,15 @@ class CacheTagsChecksumDecorator implements CacheTagsChecksumInterface, CacheTag
    * {@inheritdoc}
    */
   public function invalidateTags(array $tags) {
+    // If there are no cache tags, there is nothing to invalidate, and the
+    // decorated method will be a no-op, so don't log anything.
+    if (empty($tags)) {
+      return $this->checksumInvalidator->invalidateTags($tags);
+    }
     $start = microtime(TRUE);
     $return = $this->checksumInvalidator->invalidateTags($tags);
     $stop = microtime(TRUE);
-    $this->logCacheTagOperation($tags, $start, $stop, CacheTagOperation::invalidateTags);
+    $this->logCacheTagOperation($tags, $start, $stop, CacheTagOperation::InvalidateTags);
     return $return;
   }
 

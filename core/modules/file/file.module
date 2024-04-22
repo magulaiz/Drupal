@@ -14,9 +14,11 @@ use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\Exception\FileExistsException;
 use Drupal\Core\File\Exception\FileWriteException;
 use Drupal\Core\File\Exception\InvalidStreamWrapperException;
+use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Lock\LockAcquiringException;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
@@ -289,6 +291,8 @@ function file_validate_image_resolution(FileInterface $file, $maximum_dimensions
         if ($image->scale($width, $height)) {
           $scaling = TRUE;
           $image->save();
+          // Update the file size now that the image has been resized.
+          $file->setSize($image->getFileSize());
           if (!empty($width) && !empty($height)) {
             $message = t('The image was resized to fit within the maximum allowed dimensions of %dimensions pixels. The new dimensions of the resized image are %new_widthx%new_height pixels.',
               [
@@ -496,18 +500,16 @@ function file_cron() {
  * @param null|int $delta
  *   (optional) The delta of the file to return the file entity.
  *   Defaults to NULL.
- * @param int $replace
+ * @param \Drupal\Core\File\FileExists|int $fileExists
  *   (optional) The replace behavior when the destination file already exists.
- *   Possible values include:
- *   - FileSystemInterface::EXISTS_REPLACE: Replace the existing file.
- *   - FileSystemInterface::EXISTS_RENAME: (default) Append
- *     _{incrementing number} until the filename is unique.
- *   - FileSystemInterface::EXISTS_ERROR: Do nothing and return FALSE.
  *
  * @return array|\Drupal\file\FileInterface|null|false
  *   An array of file entities or a single file entity if $delta != NULL. Each
  *   array element contains the file entity if the upload succeeded or FALSE if
  *   there was an error. Function returns NULL if no file was uploaded.
+ *
+ * @throws \ValueError
+ *    Thrown if $fileExists is a legacy int and not a valid value.
  *
  * @internal
  *   This function is internal, and may be removed in a minor version release.
@@ -518,7 +520,11 @@ function file_cron() {
  * @see https://www.drupal.org/project/drupal/issues/3069020
  * @see https://www.drupal.org/project/drupal/issues/2482783
  */
-function _file_save_upload_from_form(array $element, FormStateInterface $form_state, $delta = NULL, $replace = FileSystemInterface::EXISTS_RENAME) {
+function _file_save_upload_from_form(array $element, FormStateInterface $form_state, $delta = NULL, FileExists|int $fileExists = FileExists::Rename) {
+  if (!$fileExists instanceof FileExists) {
+    // @phpstan-ignore-next-line
+    $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
+  }
   // Get all errors set before calling this method. This will also clear them
   // from the messenger service.
   $errors_before = \Drupal::messenger()->deleteByType(MessengerInterface::TYPE_ERROR);
@@ -527,7 +533,7 @@ function _file_save_upload_from_form(array $element, FormStateInterface $form_st
   $upload_name = implode('_', $element['#parents']);
   $upload_validators = $element['#upload_validators'] ?? [];
 
-  $result = file_save_upload($upload_name, $upload_validators, $upload_location, $delta, $replace);
+  $result = file_save_upload($upload_name, $upload_validators, $upload_location, $delta, $fileExists);
 
   // Get new errors that are generated while trying to save the upload. This
   // will also clear them from the messenger service.
@@ -546,7 +552,7 @@ function _file_save_upload_from_form(array $element, FormStateInterface $form_st
           '#items' => $errors_new,
         ],
       ];
-      $error_message = \Drupal::service('renderer')->renderPlain($render_array);
+      $error_message = \Drupal::service('renderer')->renderInIsolation($render_array);
     }
     else {
       $error_message = reset($errors_new);
@@ -595,22 +601,24 @@ function _file_save_upload_from_form(array $element, FormStateInterface $form_st
  * @param null|int $delta
  *   (optional) The delta of the file to return the file entity.
  *   Defaults to NULL.
- * @param int $replace
+ * @param \Drupal\Core\File\FileExists|int $fileExists
  *   (optional) The replace behavior when the destination file already exists.
- *   Possible values include:
- *   - FileSystemInterface::EXISTS_REPLACE: Replace the existing file.
- *   - FileSystemInterface::EXISTS_RENAME: (default) Append
- *     _{incrementing number} until the filename is unique.
- *   - FileSystemInterface::EXISTS_ERROR: Do nothing and return FALSE.
  *
  * @return array|\Drupal\file\FileInterface|null|false
  *   An array of file entities or a single file entity if $delta != NULL. Each
  *   array element contains the file entity if the upload succeeded or FALSE if
  *   there was an error. Function returns NULL if no file was uploaded.
  *
+ * @throws \ValueError
+ *   Thrown if $fileExists is a legacy int and not a valid value.
+ *
  * @see _file_save_upload_from_form()
  */
-function file_save_upload($form_field_name, $validators = [], $destination = FALSE, $delta = NULL, $replace = FileSystemInterface::EXISTS_RENAME) {
+function file_save_upload($form_field_name, $validators = [], $destination = FALSE, $delta = NULL, FileExists|int $fileExists = FileExists::Rename) {
+  if (!$fileExists instanceof FileExists) {
+    // @phpstan-ignore-next-line
+    $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
+  }
   static $upload_cache;
 
   $all_files = \Drupal::request()->files->get('files', []);
@@ -645,20 +653,11 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
   /** @var \Drupal\Core\Render\RendererInterface $renderer */
   $renderer = \Drupal::service('renderer');
   $files = [];
-  /** @var \Drupal\file\Validation\UploadedFileValidatorInterface $uploaded_file_validator */
-  $uploaded_file_validator = \Drupal::service('file.uploaded_file_validator');
   /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $uploaded_file */
   foreach ($uploaded_files as $i => $uploaded_file) {
     try {
-      $violations = $uploaded_file_validator->validate($uploaded_file);
-      if (count($violations) > 0) {
-        // We only get one violation for uploaded files.
-        \Drupal::messenger()->addError($violations->get(0)->getMessage());
-        $files[$i] = FALSE;
-        continue;
-      }
       $form_uploaded_file = new FormUploadedFile($uploaded_file);
-      $result = $file_upload_handler->handleFileUpload($form_uploaded_file, $validators, $destination, $replace, FALSE);
+      $result = $file_upload_handler->handleFileUpload($form_uploaded_file, $validators, $destination, $fileExists, FALSE);
       if ($result->hasViolations()) {
         $errors = [];
         foreach ($result->getViolations() as $violation) {
@@ -676,7 +675,7 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
         // @todo Add support for render arrays in
         // \Drupal\Core\Messenger\MessengerInterface::addMessage()?
         // @see https://www.drupal.org/node/2505497.
-        \Drupal::messenger()->addError($renderer->renderPlain($message));
+        \Drupal::messenger()->addError($renderer->renderInIsolation($message));
         $files[$i] = FALSE;
         continue;
       }
@@ -708,6 +707,10 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
     }
     catch (FileException $e) {
       \Drupal::messenger()->addError(t('The file %filename could not be uploaded because the name is invalid.', ['%filename' => $uploaded_file->getClientOriginalName()]));
+      $files[$i] = FALSE;
+    }
+    catch (LockAcquiringException $e) {
+      \Drupal::messenger()->addError(t('File already locked for writing.'));
       $files[$i] = FALSE;
     }
   }
@@ -1129,7 +1132,7 @@ function template_preprocess_file_widget_multiple(&$variables) {
     // Save the uploading row for last.
     if (empty($widget['#files'])) {
       $widget['#title'] = $element['#file_upload_title'];
-      $widget['#description'] = \Drupal::service('renderer')->renderPlain($element['#file_upload_description']);
+      $widget['#description'] = \Drupal::service('renderer')->renderInIsolation($element['#file_upload_description']);
       continue;
     }
 
