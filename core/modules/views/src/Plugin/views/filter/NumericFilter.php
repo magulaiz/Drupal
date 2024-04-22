@@ -429,7 +429,7 @@ class NumericFilter extends FilterPluginBase {
             break;
 
           case 2:
-            if ($value['min'] === '' && $value['max'] === '') {
+            if (empty($value['min']) && empty($value['max'])) {
               return FALSE;
             }
             break;
