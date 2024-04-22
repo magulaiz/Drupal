@@ -106,24 +106,6 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
         { from: 'dist/once.min.js.map', to: 'once.min.js.map' },
       ],
     },
-    {
-      pack: 'shepherd.js',
-      folder: 'shepherd',
-      library: 'internal.shepherd',
-      files: [
-        { from: 'dist/js/shepherd.min.js', to: 'shepherd.min.js' },
-        { from: 'dist/js/shepherd.min.js.map', to: 'shepherd.min.js.map' },
-      ],
-    },
-    {
-      pack: '@floating-ui',
-      folder: 'floating-ui',
-      library: 'internal.floating-ui',
-      files: [
-        { from: 'core/dist/floating-ui.core.umd.min.js', to: 'floating-ui.core.umd.min.js' },
-        { from: 'dom/dist/floating-ui.dom.umd.min.js', to: 'floating-ui.dom.umd.min.js' },
-      ],
-    },
     { pack: 'sortablejs', folder: 'sortable', files: ['Sortable.min.js'] },
     {
       pack: 'tabbable',
