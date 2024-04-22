@@ -138,12 +138,6 @@ drupal.node.preview:
     theme:
       css/components/node-preview.css: {}
 
-tour-styling:
-  version: VERSION
-  css:
-    theme:
-      css/theme/tour.theme.css: {}
-
 media-form:
   version: VERSION
   css:
@@ -326,12 +320,6 @@ classy.file:
   css:
     component:
       css/classy/components/file.css: { weight: -10 }
-
-classy.forum:
-  version: VERSION
-  css:
-    component:
-      css/classy/components/forum.css: { weight: -10 }
 
 classy.indented:
   version: VERSION
