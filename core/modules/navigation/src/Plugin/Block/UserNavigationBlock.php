@@ -13,12 +13,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a user navigation block.
+ *
+ * @internal
  */
 #[Block(
   id: 'navigation_user',
   admin_label: new TranslatableMarkup('User'),
 )]
-class UserNavigationBlock extends BlockBase implements ContainerFactoryPluginInterface {
+final class UserNavigationBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
    * Constructs the plugin instance.

@@ -21,8 +21,10 @@ use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 
 /**
  * Handle rendering for different pieces of the navigation.
+ *
+ * @internal The navigation module is experimental.
  */
-class NavigationRenderer {
+final class NavigationRenderer {
 
   /**
    * Use the default Drupal logo in the navigation.

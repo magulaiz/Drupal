@@ -14,6 +14,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a form for configuring navigation blocks.
+ *
+ * @internal
  */
 final class LayoutForm extends FormBase {
 

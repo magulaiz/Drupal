@@ -9,6 +9,8 @@ use Drupal\Core\Render\Element;
 
 /**
  * Defines a layout class for navigation.
+ *
+ * @internal
  */
 final class NavigationLayout extends LayoutDefault {
 

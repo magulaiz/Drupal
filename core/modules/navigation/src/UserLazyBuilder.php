@@ -12,8 +12,10 @@ use Drupal\Core\Url;
 
 /**
  * User navigation block lazy builder.
+ *
+ * @internal The navigation module is experimental.
  */
-class UserLazyBuilder implements TrustedCallbackInterface {
+final class UserLazyBuilder implements TrustedCallbackInterface {
 
   use StringTranslationTrait;
 

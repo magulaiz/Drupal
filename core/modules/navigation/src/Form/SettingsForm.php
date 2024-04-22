@@ -19,6 +19,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Configure Navigation settings for this site.
+ *
+ * @internal
  */
 final class SettingsForm extends ConfigFormBase {
 

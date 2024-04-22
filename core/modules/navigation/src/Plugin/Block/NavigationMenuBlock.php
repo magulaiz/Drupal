@@ -15,6 +15,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a generic menu navigation block.
+ *
+ * @internal
  */
 #[Block(
   id: "navigation_menu",

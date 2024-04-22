@@ -10,9 +10,10 @@ use Drupal\shortcut\ShortcutLazyBuilders;
 /**
  * Lazy Builders for Navigation shortcuts links.
  *
+ * @internal The navigation module is experimental.
  * @see \Drupal\shortcut\ShortcutLazyBuilders
  */
-class ShortcutLazyBuilder implements TrustedCallbackInterface {
+final class ShortcutLazyBuilder implements TrustedCallbackInterface {
 
   /**
    * Constructs a ShortcutLazyBuilders object.

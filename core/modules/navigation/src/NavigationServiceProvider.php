@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\Reference;
 /**
  * Defines a service provider for the Navigation module.
  *
- * @see https://www.drupal.org/node/2026959
+ * @internal
  */
 final class NavigationServiceProvider implements ServiceProviderInterface {
 

@@ -27,6 +27,8 @@ use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Provides navigation section storage.
+ *
+ * @internal The navigation module is experimental.
  */
 #[SectionStorage(id: "navigation", context_definitions: [
   "navigation" => new ContextDefinition(
@@ -34,7 +36,7 @@ use Symfony\Component\Routing\RouteCollection;
     label: new TranslatableMarkup("Navigation flag"),
   ),
 ])]
-class NavigationSectionStorage extends PluginBase implements SectionStorageInterface, SectionStorageLocalTaskProviderInterface, ContainerFactoryPluginInterface, CacheableDependencyInterface {
+final class NavigationSectionStorage extends PluginBase implements SectionStorageInterface, SectionStorageLocalTaskProviderInterface, ContainerFactoryPluginInterface, CacheableDependencyInterface {
 
   const STORAGE_ID = 'navigation.block_layout';
   use ContextAwarePluginTrait;

@@ -9,6 +9,8 @@ use Drupal\navigation\Plugin\SectionStorage\NavigationSectionStorage;
 
 /**
  * Defines a class for render element callbacks.
+ *
+ * @internal
  */
 final class RenderCallbacks {
 

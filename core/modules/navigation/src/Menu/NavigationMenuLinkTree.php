@@ -8,13 +8,15 @@ use Drupal\Core\Menu\MenuLinkTree;
 
 /**
  * Extends MenuLinkTree to add specific theme suggestions for the navigation.
+ *
+ * @internal
  */
-class NavigationMenuLinkTree extends MenuLinkTree {
+final class NavigationMenuLinkTree extends MenuLinkTree {
 
   /**
    * {@inheritdoc}
    */
-  public function build(array $tree) {
+  public function build(array $tree): array {
     if (!$tree) {
       return [];
     }

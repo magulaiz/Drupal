@@ -17,13 +17,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Defines a shortcuts navigation block class.
  *
+ * @internal
+ *
  * @todo Move to Shortcut module as part of the core MR process.
  */
 #[Block(
   id: 'navigation_shortcuts',
   admin_label: new TranslatableMarkup('Navigation Shortcuts'),
 )]
-class NavigationShortcutsBlock extends BlockBase implements ContainerFactoryPluginInterface {
+final class NavigationShortcutsBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
    * Constructs a new ShortcutsNavigationBlock.
