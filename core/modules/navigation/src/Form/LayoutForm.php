@@ -25,6 +25,13 @@ final class LayoutForm extends FormBase {
   /**
    * {@inheritdoc}
    */
+  public function getBaseFormId(): string {
+    return 'navigation_layout';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getFormId(): string {
     return 'navigation_layout';
   }
