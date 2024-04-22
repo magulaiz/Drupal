@@ -132,3 +132,8 @@ machine name. */
     display: none;
   }
 }
+
+/* Hide the machine name field when JavaScript is disabled or unsupported */
+html:not(.js) .js-form-item:has(.form-element--api-machine-name:not(.error)) {
+  display: none;
+}
