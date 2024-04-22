@@ -19,7 +19,6 @@ use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\User;
 use Drupal\comment\Entity\Comment;
-use Drupal\user\Entity\Role;
 
 /**
  * Tests for the base handlers provided by Entity Reference.
