@@ -18,7 +18,7 @@ trait GetDocumentFromResponseTrait {
    *
    * @param \Psr\Http\Message\ResponseInterface $response
    *   Response to extract JSON:API document from.
-   * @param bool $validated
+   * @param bool $validate
    *   Determines whether the data is validated or not. Defaults to TRUE.
    *
    * @return ?array
@@ -27,7 +27,7 @@ trait GetDocumentFromResponseTrait {
    * @throws \PHPUnit\Framework\AssertionFailedError
    *   Thrown when the document does not pass basic validation against the spec.
    */
-  protected function getDocumentFromResponse(ResponseInterface $response, bool $dataRequired = TRUE): ?array {
+  protected function getDocumentFromResponse(ResponseInterface $response, bool $validate = TRUE): ?array {
     assert($this instanceof BrowserTestBase);
 
     $document = Json::decode((string) $response->getBody());
@@ -36,7 +36,7 @@ trait GetDocumentFromResponseTrait {
       $this->fail('Document contains both data and errors members; only one is allowed.');
     }
 
-    if ($dataRequired === TRUE && !isset($document['data'])) {
+    if ($validate === TRUE && !isset($document['data'])) {
       if (isset($document['errors'])) {
         $errors = [];
         foreach ($document['errors'] as $error) {
