@@ -221,11 +221,11 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
     $this->assertSame(15, $performance_data->getQueryCount());
-    $this->assertSame(67, $performance_data->getCacheGetCount());
+    $this->assertSame(60, $performance_data->getCacheGetCount());
     $this->assertSame(1, $performance_data->getCacheSetCount());
     $this->assertSame(1, $performance_data->getCacheDeleteCount());
     $this->assertSame(1, $performance_data->getCacheTagChecksumCount());
-    $this->assertSame(30, $performance_data->getCacheTagIsValidCount());
+    $this->assertSame(25, $performance_data->getCacheTagIsValidCount());
     $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
   }
 
@@ -275,11 +275,19 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
     $this->assertSame(17, $performance_data->getQueryCount());
+<<<<<<< HEAD
     $this->assertSame(110, $performance_data->getCacheGetCount());
     $this->assertSame(1, $performance_data->getCacheSetCount());
     $this->assertSame(1, $performance_data->getCacheDeleteCount());
     $this->assertSame(1, $performance_data->getCacheTagChecksumCount());
     $this->assertSame(46, $performance_data->getCacheTagIsValidCount());
+=======
+    $this->assertSame(106, $performance_data->getCacheGetCount());
+    $this->assertSame(1, $performance_data->getCacheSetCount());
+    $this->assertSame(1, $performance_data->getCacheDeleteCount());
+    $this->assertSame(1, $performance_data->getCacheTagChecksumCount());
+    $this->assertSame(42, $performance_data->getCacheTagIsValidCount());
+>>>>>>> 4ab757c1af (Return early if there's no CSS to load.)
     $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
   }
 
