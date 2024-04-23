@@ -12,6 +12,7 @@ use Drupal\migrate\Event\MigratePreRowSaveEvent;
 use Drupal\migrate\Event\MigrateRollbackEvent;
 use Drupal\migrate\Event\MigrateRowDeleteEvent;
 use Drupal\migrate\Exception\RequirementsException;
+use Drupal\migrate\Instrument\MigrateInstrument;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -146,6 +147,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
    * {@inheritdoc}
    */
   public function import() {
+    MigrateInstrument::start('import');
     // Only begin the import operation if the migration is currently idle.
     if ($this->migration->getStatus() !== MigrationInterface::STATUS_IDLE) {
       $this->message->display($this->t('Migration @id is busy with another operation: @status',
@@ -155,7 +157,9 @@ class MigrateExecutable implements MigrateExecutableInterface {
         ]), 'error');
       return MigrationInterface::RESULT_FAILED;
     }
+    MigrateInstrument::start('import.event.' . MigrateEvents::PRE_IMPORT);
     $this->getEventDispatcher()->dispatch(new MigrateImportEvent($this->migration, $this->message), MigrateEvents::PRE_IMPORT);
+    MigrateInstrument::stop('import.event.' . MigrateEvents::PRE_IMPORT);
 
     // Knock off migration if the requirements haven't been met.
     try {
@@ -180,7 +184,9 @@ class MigrateExecutable implements MigrateExecutableInterface {
     $source = $this->getSource();
 
     try {
+      MigrateInstrument::start('import.rewind');
       $source->rewind();
+      MigrateInstrument::stop('import.rewind');
     }
     catch (\Exception $e) {
       $this->message->display(
@@ -212,11 +218,15 @@ class MigrateExecutable implements MigrateExecutableInterface {
       $id_map = $this->getIdMap();
       $destination = $this->migration->getDestinationPlugin();
       while ($source->valid()) {
+        // A new iteration started.
+        MigrateInstrument::iterationStart('import_row');
+
         $row = $source->current();
         $this->sourceIdValues = $row->getSourceIdValues();
 
         try {
           foreach ($pipeline as $destination_property_name => $plugins) {
+            MigrateInstrument::iterationStart('process_pipeline');
             $this->processPipeline($row, $destination_property_name, $plugins, NULL);
           }
           $save = TRUE;
@@ -240,13 +250,22 @@ class MigrateExecutable implements MigrateExecutableInterface {
 
         if ($save) {
           try {
+            MigrateInstrument::start('import.event.' . MigrateEvents::PRE_ROW_SAVE);
             $this->getEventDispatcher()
               ->dispatch(new MigratePreRowSaveEvent($this->migration, $this->message, $row), MigrateEvents::PRE_ROW_SAVE);
+            MigrateInstrument::stop('import.event.' . MigrateEvents::PRE_ROW_SAVE);
+
+            MigrateInstrument::start('import.save');
             $destination_ids = $id_map->lookupDestinationIds($this->sourceIdValues);
             $destination_id_values = $destination_ids ? reset($destination_ids) : [];
             $destination_id_values = $destination->import($row, $destination_id_values);
+            MigrateInstrument::stop('import.save');
+
+            MigrateInstrument::start('import.event.' . MigrateEvents::POST_ROW_SAVE);
             $this->getEventDispatcher()
               ->dispatch(new MigratePostRowSaveEvent($this->migration, $this->message, $row, $destination_id_values), MigrateEvents::POST_ROW_SAVE);
+            MigrateInstrument::stop('import.event.' . MigrateEvents::POST_ROW_SAVE);
+
             if ($destination_id_values) {
               // We do not save an idMap entry for config.
               if ($destination_id_values !== TRUE) {
@@ -288,7 +307,9 @@ class MigrateExecutable implements MigrateExecutableInterface {
         }
 
         try {
+          MigrateInstrument::start('import.next');
           $source->next();
+          MigrateInstrument::stop('import.next');
         }
         catch (\Exception $e) {
           $this->message->display(
@@ -303,8 +324,11 @@ class MigrateExecutable implements MigrateExecutableInterface {
       }
     }
 
+    MigrateInstrument::start('import.event.' . MigrateEvents::POST_IMPORT);
     $this->getEventDispatcher()->dispatch(new MigrateImportEvent($this->migration, $this->message), MigrateEvents::POST_IMPORT);
+    MigrateInstrument::stop('import.event.' . MigrateEvents::POST_IMPORT);
     $this->migration->setStatus(MigrationInterface::STATUS_IDLE);
+    MigrateInstrument::stop('import');
     return $return;
   }
 
@@ -410,8 +434,14 @@ class MigrateExecutable implements MigrateExecutableInterface {
    */
   protected function processPipeline(Row $row, string $destination, array $plugins, $value) {
     $multiple = FALSE;
+    MigrateInstrument::start('import.process_pipeline');
     /** @var \Drupal\migrate\Plugin\MigrateProcessInterface $plugin */
     foreach ($plugins as $plugin) {
+      // @todo Although here is a single point to start,
+      //   there are several points to stop. Try to write the workflow better
+      //   with only one exit point.
+      $pluginId = $plugin->getPluginId();
+      MigrateInstrument::start('import.process_pipeline.' . $pluginId);
       $definition = $plugin->getPluginDefinition();
       // Many plugins expect a scalar value but the current value of the
       // pipeline might be multiple scalars (this is set by the previous plugin)
@@ -420,7 +450,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
       if ($multiple && !$definition['handle_multiples']) {
         $new_value = [];
         if (!is_array($value)) {
-          throw new MigrateException(sprintf('Pipeline failed at %s plugin for destination %s: %s received instead of an array,', $plugin->getPluginId(), $destination, $value));
+          throw new MigrateException(sprintf('Pipeline failed at %s plugin for destination %s: %s received instead of an array,', $pluginId, $destination, $value));
         }
         $break = FALSE;
         foreach ($value as $scalar_value) {
@@ -433,12 +463,13 @@ class MigrateExecutable implements MigrateExecutableInterface {
           }
           catch (MigrateException $e) {
             // Prepend the process plugin id to the message.
-            $message = sprintf("%s: %s", $plugin->getPluginId(), $e->getMessage());
+            $message = sprintf("%s: %s", $pluginId, $e->getMessage());
             throw new MigrateException($message);
           }
         }
         $value = $new_value;
         if ($break) {
+          MigrateInstrument::stop('import.process_pipeline.' . $pluginId);
           break;
         }
       }
@@ -447,17 +478,19 @@ class MigrateExecutable implements MigrateExecutableInterface {
           $value = $plugin->transform($value, $this, $row, $destination);
         }
         catch (MigrateSkipProcessException $e) {
+          MigrateInstrument::stop('import.process_pipeline.' . $pluginId);
           $value = NULL;
           break;
         }
         catch (MigrateException $e) {
           // Prepend the process plugin id to the message.
-          $message = sprintf("%s: %s", $plugin->getPluginId(), $e->getMessage());
+          $message = sprintf("%s: %s", $pluginId, $e->getMessage());
           throw new MigrateException($message);
         }
 
         $multiple = $plugin->multiple();
       }
+      MigrateInstrument::stop('import.process_pipeline.' . $pluginId);
     }
     // Ensure all values, including nulls, are migrated.
     if ($plugins) {
@@ -468,6 +501,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
         $row->setEmptyDestinationProperty($destination);
       }
     }
+    MigrateInstrument::stop('import.process_pipeline');
   }
 
   /**
