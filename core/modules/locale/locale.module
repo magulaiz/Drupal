@@ -27,6 +27,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\ConfigurableLanguageInterface;
 use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Asset\AttachedAssets;
 use Drupal\locale\Locale;
 use Drupal\locale\LocaleEvent;
 use Drupal\locale\LocaleEvents;
@@ -466,6 +467,48 @@ function locale_cache_flush() {
 }
 
 /**
+ * Implements hook_rebuild().
+ */
+function locale_rebuild() {
+  $extensions = array_merge(
+    ['core'],
+    array_keys(\Drupal::moduleHandler()->getModuleList()),
+    array_keys(\Drupal::service('theme_handler')->listInfo())
+  );
+  $library_discovery = \Drupal::service('library.discovery');
+  $libraries = array_reduce($extensions, function ($libraries, $extension) use ($library_discovery) {
+    $extensionLibraries = array_map(
+      function ($library) use ($extension) {
+        return $extension . '/' . $library;
+      },
+      array_keys($library_discovery->getLibrariesByExtension($extension))
+    );
+    return array_merge($libraries, $extensionLibraries);
+  }, []);
+  $assets = new AttachedAssets();
+  $assets->setLibraries($libraries);
+  // This triggers hook_js_alter() where all files are scanned for translatable
+  // strings.
+  \Drupal::service('asset.resolver')->getJsAssets($assets, FALSE);
+
+  // Create the translation map files for all languages.
+  $languages = \Drupal::languageManager()->getLanguages();
+  $parsed = \Drupal::state()->get('system.javascript_parsed', []);
+  foreach ($languages as $language) {
+    // If necessary, rebuild the translation file.
+    if (!empty($parsed['refresh:' . $language->getId()])) {
+      // Don't clear the refresh flag on failure, so that another try will
+      // be performed later.
+      if (_locale_rebuild_js($language->getId())) {
+        unset($parsed['refresh:' . $language->getId()]);
+        // Store any changes if refresh was successful.
+        \Drupal::state()->set('system.javascript_parsed', $parsed);
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_js_alter().
  */
 function locale_js_alter(&$javascript, AttachedAssetsInterface $assets, LanguageInterface $language) {
@@ -545,7 +588,7 @@ function locale_js_translate(array $files = [], $language_interface = NULL) {
   if (!empty($parsed['refresh:' . $language_interface->getId()])) {
     // Don't clear the refresh flag on failure, so that another try will
     // be performed later.
-    if (_locale_rebuild_js()) {
+    if (_locale_rebuild_js($language_interface->getId())) {
       unset($parsed['refresh:' . $language_interface->getId()]);
     }
     // Store any changes after refresh was attempted.
