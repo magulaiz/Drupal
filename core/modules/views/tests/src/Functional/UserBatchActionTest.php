@@ -38,6 +38,7 @@ class UserBatchActionTest extends BrowserTestBase {
     $themes = ['stark', 'olivero', 'claro'];
     $this->container->get('theme_installer')->install($themes);
 
+    $this->rootUser = $this->createUser(['administer users']);
     $this->drupalLogin($this->rootUser);
 
     foreach ($themes as $theme) {

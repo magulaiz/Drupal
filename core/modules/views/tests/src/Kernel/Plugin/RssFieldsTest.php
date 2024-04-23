@@ -50,9 +50,7 @@ class RssFieldsTest extends ViewsKernelTestBase {
    * subdirectory.
    */
   public function testRssFields() {
-    // Set up the current user as uid 1 so the test doesn't need to deal with
-    // permission.
-    $this->setUpCurrentUser(['uid' => 1]);
+    $this->setUpCurrentUser([], ['access content']);
 
     $date = '1975-05-18';
 

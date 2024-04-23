@@ -65,6 +65,7 @@ class ContextualFiltersStringTest extends ViewTestBase {
     $this->createUser([], 'user4', FALSE, ['roles' => [$this->role2]]);
     $this->createUser([], 'user5', FALSE, ['roles' => [$this->role1, $this->role2]]);
 
+    $this->rootUser = $this->createUser(['administer views']);
     $this->drupalLogin($this->rootUser);
   }
 

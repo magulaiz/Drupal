@@ -22,7 +22,12 @@ class DisplayPageWebTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_page_display', 'test_page_display_arguments', 'test_page_display_menu', 'test_page_display_path'];
+  public static $testViews = [
+    'test_page_display',
+    'test_page_display_arguments',
+    'test_page_display_menu',
+    'test_page_display_path',
+  ];
 
   /**
    * Modules to enable.
@@ -44,6 +49,8 @@ class DisplayPageWebTest extends ViewTestBase {
 
     $this->enableViewsTestModule();
     $this->drupalPlaceBlock('local_tasks_block');
+
+    $this->rootUser = $this->createUser(['administer views']);
   }
 
   /**
