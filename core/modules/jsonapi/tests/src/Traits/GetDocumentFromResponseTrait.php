@@ -18,8 +18,8 @@ trait GetDocumentFromResponseTrait {
    *
    * @param \Psr\Http\Message\ResponseInterface $response
    *   Response to extract JSON:API document from.
-   * @param bool $dataRequired
-   *   Validate the data property is available in the response.
+   * @param bool $validated
+   *   Determines whether the data is validated or not. Defaults to TRUE.
    *
    * @return ?array
    *   JSON:API document extracted from the response, or NULL.
