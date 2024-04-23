@@ -71,7 +71,7 @@
 
     $tab.on('click.tabs', '[data-drupal-nav-tabs-trigger]', openMenu);
     const mql = window.matchMedia('(min-width: 48em)');
-    mql.addEventListener('change', Drupal.debounce(toggleCollapsed, 150));
+    mql.addEventListener('change', toggleCollapsed);
     toggleCollapsed(mql);
   }
   /**
