@@ -146,27 +146,27 @@ class AssetResolver implements AssetResolverInterface {
     foreach ($libraries_to_load as $key => $library) {
       [$extension, $name] = explode('/', $library, 2);
       $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
-      if (!empty($definition['css'])) {
-        foreach ($definition['css'] as $options) {
-          $options += $default_options;
-          // Copy the asset library license information to each file.
-          $options['license'] = $definition['license'];
-
-          // Files with a query string cannot be preprocessed.
-          if ($options['type'] === 'file' && $options['preprocess'] && str_contains($options['data'], '?')) {
-            $options['preprocess'] = FALSE;
-          }
-
-          // Always add a tiny value to the weight, to conserve the insertion
-          // order.
-          $options['weight'] += count($css) / 30000;
-
-          // CSS files are being keyed by the full path.
-          $css[$options['data']] = $options;
-        }
-      }
-      else {
+      if (empty($definition['css'])) {
         unset($libraries_to_load[$key]);
+        continue;
+      }
+
+      foreach ($definition['css'] as $options) {
+        $options += $default_options;
+        // Copy the asset library license information to each file.
+        $options['license'] = $definition['license'];
+
+        // Files with a query string cannot be preprocessed.
+        if ($options['type'] === 'file' && $options['preprocess'] && str_contains($options['data'], '?')) {
+          $options['preprocess'] = FALSE;
+        }
+
+        // Always add a tiny value to the weight, to conserve the insertion
+        // order.
+        $options['weight'] += count($css) / 30000;
+
+        // CSS files are being keyed by the full path.
+        $css[$options['data']] = $options;
       }
     }
 
@@ -249,11 +249,12 @@ class AssetResolver implements AssetResolverInterface {
       foreach ($libraries_to_load as $key => $library) {
         [$extension, $name] = explode('/', $library, 2);
         $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
-        if (isset($definition['js']) && !empty($definition['header'])) {
-          $header_js_libraries[] = $library;
-        }
         if (empty($definition['js'])) {
           unset($libraries_to_load[$key]);
+          continue;
+        }
+        if (!empty($definition['header'])) {
+          $header_js_libraries[] = $library;
         }
       }
       $libraries_to_load = array_values($libraries_to_load);
