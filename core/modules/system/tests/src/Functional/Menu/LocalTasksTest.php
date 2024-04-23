@@ -261,12 +261,11 @@ class LocalTasksTest extends BrowserTestBase {
    */
   public function testLocalTaskBlockCache() {
     // Create user with following permission.
-    $permissions = [
+    $user = $this->drupalCreateUser([
       'administer content types',
       'administer permissions',
       'administer account settings',
-    ];
-    $user = $this->drupalCreateUser($permissions);
+    ]);
     $this->drupalLogin($user);
     $this->drupalCreateContentType(['type' => 'page']);
 
@@ -286,7 +285,7 @@ class LocalTasksTest extends BrowserTestBase {
     // Field UI adds the usual Manage fields etc tabs.
     \Drupal::service('module_installer')->install(['field_ui']);
 
-    $permissions = [
+    $user = $this->drupalCreateUser([
       'administer content types',
       'administer permissions',
       'administer account settings',
@@ -294,8 +293,7 @@ class LocalTasksTest extends BrowserTestBase {
       'administer node display',
       'administer node fields',
       'administer node form display',
-    ];
-    $user = $this->drupalCreateUser($permissions);
+    ]);
     $this->drupalLogin($user);
 
     $this->drupalGet('/admin/structure/types/manage/page');

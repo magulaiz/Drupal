@@ -60,8 +60,7 @@ class MenuAccessControlHandlerTest extends KernelTestBase {
       $user = $root_user;
     }
     else {
-      $permissions = ['administer menu'];
-      $user = $this->drupalCreateUser($permissions);
+      $user = $this->drupalCreateUser(['administer menu']);
     }
 
     $entity_values = ($which_entity === 'unlocked')

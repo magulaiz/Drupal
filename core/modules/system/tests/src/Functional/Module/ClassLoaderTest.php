@@ -90,10 +90,7 @@ class ClassLoaderTest extends BrowserTestBase {
    */
   public function testMultipleModules() {
     // Create use with required permissions.
-    $permissions = [
-      'administer modules',
-    ];
-    $user = $this->drupalCreateUser($permissions);
+    $user = $this->drupalCreateUser(['administer modules']);
     $this->drupalLogin($user);
 
     $edit = [
@@ -112,10 +109,7 @@ class ClassLoaderTest extends BrowserTestBase {
   public function testAutoloadFromModuleFile() {
     $this->assertFalse(defined('MODULE_AUTOLOAD_TEST_CONSTANT'));
     // Create use with required permissions.
-    $permissions = [
-      'administer modules',
-    ];
-    $user = $this->drupalCreateUser($permissions);
+    $user = $this->drupalCreateUser(['administer modules']);
     $this->drupalLogin($user);
 
     $edit = [

@@ -57,8 +57,7 @@ class DrupalMessengerServiceTest extends BrowserTestBase {
     $assert = $this->assertSession();
 
     // Create a user with 'administer modules' permission.
-    $permissions = ['administer modules'];
-    $user = $this->drupalCreateUser($permissions);
+    $user = $this->drupalCreateUser(['administer modules']);
     $this->drupalLogin($user);
     $this->drupalGet('admin/modules');
     $assert->pageTextContains('Extend');
