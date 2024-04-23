@@ -217,7 +217,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     // Set MySQL sql_mode options to defaults, unless the legacy property
     // 'sql_mode' is already defined.
     if (isset($connection_options['init_commands']['sql_mode'])) {
-      @trigger_error("The 'sql_mode' database command is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. Use an array of options in 'sql_mode_options' instead.", E_USER_DEPRECATED);
+      @trigger_error("The 'sql_mode' database command is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use an array of options in 'sql_mode_options' instead.", E_USER_DEPRECATED);
     }
     else {
       $sql_mode_defaults = [
