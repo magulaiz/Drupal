@@ -225,7 +225,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $this->assertSame(1, $performance_data->getCacheSetCount());
     $this->assertSame(1, $performance_data->getCacheDeleteCount());
     $this->assertSame(1, $performance_data->getCacheTagChecksumCount());
-    $this->assertSame(25, $performance_data->getCacheTagIsValidCount());
+    $this->assertSame(23, $performance_data->getCacheTagIsValidCount());
     $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
   }
 
