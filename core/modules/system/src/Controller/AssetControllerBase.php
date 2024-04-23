@@ -164,8 +164,7 @@ abstract class AssetControllerBase extends FileDownloadController {
 
     $validate = function ($libraries_to_check) {
       foreach ($libraries_to_check as $library) {
-        $parts = explode('/', $library);
-        if (!isset($parts[1]) || isset($parts[2])) {
+        if (substr_count($library, '/') !== 1) {
           throw new BadRequestHttpException('The libraries to include are encoded incorrectly.');
         }
       }
