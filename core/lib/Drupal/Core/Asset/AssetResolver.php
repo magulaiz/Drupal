@@ -122,10 +122,10 @@ class AssetResolver implements AssetResolverInterface {
    * {@inheritdoc}
    */
   public function getCssAssets(AttachedAssetsInterface $assets, $optimize, LanguageInterface $language = NULL) {
-    $libraries_to_load = $this->getLibrariesToLoad($assets);
-    if (empty($libraries_to_load)) {
+    if (!$assets->getLibraries()) {
       return [];
     }
+    $libraries_to_load = $this->getLibrariesToLoad($assets);
     if (!isset($language)) {
       $language = $this->languageManager->getCurrentLanguage();
     }
