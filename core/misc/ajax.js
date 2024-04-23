@@ -224,8 +224,8 @@
    *     };
    *
    *     // This command will remove this Ajax object from the page.
-   *     myAjaxObject.commands.destroyObject = function (ajax, response,
-   *     status) { Drupal.ajax.instances[this.instanceIndex] = null;
+   *     myAjaxObject.commands.destroyObject = function (ajax, response, status) {
+   *       Drupal.ajax.instances[this.instanceIndex] = null;
    *     };
    *
    *     // Programmatically trigger the Ajax request.
