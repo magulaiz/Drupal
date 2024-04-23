@@ -353,7 +353,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
   template: "templates/plugin-provided-layout",
   regions: [
     "main" => [
-      "label" => new TranslatableMarkup("Main Region", context = "layout_region")
+      "label" => new TranslatableMarkup("Main Region", [], ["context" => "layout_region"]),
     ],
   ],
 )]
