@@ -97,4 +97,19 @@ class UserSessionTest extends UnitTestCase {
     $this->assertFalse($user->hasPermission(NULL));
   }
 
+  /**
+   * Tests deprecation when permission is not a string.
+   *
+   * @covers ::hasPermission
+   * @group legacy
+   */
+  public function testHasPermissionLegacy() {
+    $this->expectDeprecation('Calling Drupal\Core\Session\UserSession::hasPermission() with a $permission parameter of type other than string is deprecated in drupal:10.3.0 and will cause an error in drupal:11.0.0. See https://www.drupal.org/node/3411485');
+    $this->assertFalse((new UserSession())->hasPermission(NULL));
+    $this->expectDeprecation('Calling Drupal\user\Entity\User::hasPermission() with a $permission parameter of type other than string is deprecated in drupal:10.3.0 and will cause an error in drupal:11.0.0. See https://www.drupal.org/node/3411485');
+    $reflection = new \ReflectionClass(User::class);
+    $user = $reflection->newInstanceWithoutConstructor();
+    $this->assertFalse($user->hasPermission(NULL));
+  }
+
 }
