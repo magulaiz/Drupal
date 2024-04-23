@@ -11,6 +11,7 @@ use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\StreamCapturer;
 use Drupal\Tests\Traits\Core\CronRunTrait;
+use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 use Drupal\user\Entity\Role;
 use PHPUnit\Framework\ExpectationFailedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
  * @group #slow
  */
 class BrowserTestBaseTest extends BrowserTestBase {
-
+  use PathAliasTestTrait;
   use CronRunTrait;
 
   /**
@@ -123,6 +124,19 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->drupalGet('/test-page/');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->addressEquals('/test-page/');
+    // Test alias handling.
+    $this->createPathAlias('/test-page', '/test-alias');
+    $this->rebuildAll();
+    $this->drupalGet('test-page');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->addressEquals('test-alias');
+    $this->drupalGet('/test-page');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->addressEquals('test-alias');
+    $this->drupalGet('/test-page/');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->addressEquals('/test-page/');
+
   }
 
   /**
@@ -601,11 +615,11 @@ class BrowserTestBaseTest extends BrowserTestBase {
    * Tests the dump() function provided by the var-dumper Symfony component.
    */
   public function testVarDump() {
-    // Append the stream capturer to the STDOUT stream, so that we can test the
+    // Append the stream capturer to the STDERR stream, so that we can test the
     // dump() output and also prevent it from actually outputting in this
     // particular test.
     stream_filter_register("capture", StreamCapturer::class);
-    stream_filter_append(STDOUT, "capture");
+    stream_filter_append(STDERR, "capture");
 
     // Dump some variables to check that dump() in test code produces output
     // on the command line that is running the test.
