@@ -343,8 +343,18 @@ class TaxonomyIndexTid extends ManyToOne {
       return;
     }
 
+    if (empty($this->options['expose']['identifier'])) {
+      return;
+    }
+
     $identifier = $this->options['expose']['identifier'];
     $input = $form_state->getValue($identifier);
+
+    if (isset($this->options['group_info']['group_items'][$input])) {
+      $this->validated_exposed_input = $this->options['group_info']['group_items'][$input]['value'];
+      return;
+    }
+
     if ($this->options['is_grouped']) {
       if (is_array($input)) {
         $filtered_inputs = array_filter($input);
@@ -357,10 +367,6 @@ class TaxonomyIndexTid extends ManyToOne {
           return;
         }
       }
-      elseif (isset($this->options['group_info']['group_items'][$input])) {
-        $this->validated_exposed_input = $this->options['group_info']['group_items'][$input]['value'];
-        return;
-      }
     }
 
     // We only validate if they've chosen the text field style.
@@ -368,10 +374,6 @@ class TaxonomyIndexTid extends ManyToOne {
       if ($form_state->getValue($identifier) != 'All') {
         $this->validated_exposed_input = (array) $form_state->getValue($identifier);
       }
-      return;
-    }
-
-    if (empty($this->options['expose']['identifier'])) {
       return;
     }
 
