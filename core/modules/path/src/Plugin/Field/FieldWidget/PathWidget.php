@@ -3,6 +3,7 @@
 namespace Drupal\path\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\path_alias\Entity\PathAlias;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
@@ -83,7 +84,7 @@ class PathWidget extends WidgetBase {
    */
   public static function validateFormElement(array &$element, FormStateInterface $form_state) {
     // Trim the submitted value of whitespace and slashes.
-    $alias = rtrim(trim($element['alias']['#value']), " \\/");
+    $alias = PathAlias::trimAlias($element['alias']['#value']);
     if ($alias !== '') {
       $form_state->setValueForElement($element['alias'], $alias);
 

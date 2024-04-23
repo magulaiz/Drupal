@@ -47,6 +47,9 @@ class AliasTest extends KernelTestBase {
     $path_alias_repository = $this->container->get('path_alias.repository');
     $this->assertEquals('/test-alias', $path_alias_repository->lookupBySystemPath('/test-source-Case', LanguageInterface::LANGCODE_NOT_SPECIFIED)['alias']);
     $this->assertEquals('/test-alias', $path_alias_repository->lookupBySystemPath('/test-source-case', LanguageInterface::LANGCODE_NOT_SPECIFIED)['alias']);
+
+    $this->createPathAlias('/test-root-page-alias', '/');
+    $this->assertEquals('/', $path_alias_repository->lookupBySystemPath('/test-root-page-alias', LanguageInterface::LANGCODE_NOT_SPECIFIED)['alias']);
   }
 
   /**
@@ -58,6 +61,9 @@ class AliasTest extends KernelTestBase {
     $path_alias_repository = $this->container->get('path_alias.repository');
     $this->assertEquals('/test-source', $path_alias_repository->lookupByAlias('/test-alias-Case', LanguageInterface::LANGCODE_NOT_SPECIFIED)['path']);
     $this->assertEquals('/test-source', $path_alias_repository->lookupByAlias('/test-alias-case', LanguageInterface::LANGCODE_NOT_SPECIFIED)['path']);
+
+    $this->createPathAlias('/test-root-page-alias', '/');
+    $this->assertEquals('/test-root-page-alias', $path_alias_repository->lookupByAlias('/', LanguageInterface::LANGCODE_NOT_SPECIFIED)['path']);
   }
 
   /**

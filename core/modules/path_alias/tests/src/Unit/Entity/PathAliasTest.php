@@ -1,0 +1,46 @@
+<?php
+
+namespace Drupal\Tests\path_alias\Unit\Entity;
+
+use Drupal\path_alias\Entity\PathAlias;
+use Drupal\Tests\UnitTestCase;
+
+/**
+ * @coversDefaultClass \Drupal\path_alias\Entity\PathAlias
+ * @group path_alias
+ */
+class PathAliasTest extends UnitTestCase {
+
+  /**
+   * @covers ::trimAlias
+   * @dataProvider provideTrimAliases
+   */
+  public function testTrimAlias($alias, $expected) {
+    $this->assertEquals($expected, PathAlias::trimAlias($alias));
+  }
+
+  /**
+   * Data provider method to provide trim aliases actual / expected values.
+   */
+  public function provideTrimAliases() {
+    return [
+      ['/', '/'],
+      ['/ ', '/'],
+      ['//alias', '//alias'],
+      ['/alias ', '/alias'],
+      ['/first/second/', '/first/second'],
+      ['/first/second\\', '/first/second'],
+      ['/first/second//', '/first/second'],
+      ['/first/second// / ', '/first/second'],
+      ['/first/second//  ', '/first/second'],
+      ['/first/second // / ', '/first/second'],
+      ['/first/second\\\\', '/first/second'],
+      ['/first/second\\\\ / \\ ', '/first/second'],
+      // These values shouldn't be changed, as it is not in scope of the
+      // function:
+      ['/first/second /third', '/first/second /third'],
+      ['/first//second', '/first//second'],
+    ];
+  }
+
+}

@@ -243,6 +243,22 @@ class PathAliasTest extends PathTestBase {
     $this->assertSession()->addressEquals('admin/config/search/path/add');
     $this->assertSession()->statusMessageContains('The source path has to start with a slash.', 'error');
     $this->assertSession()->statusMessageContains('The alias path has to start with a slash.', 'error');
+
+    // Create an alias to /.
+    $node6 = $this->drupalCreateNode();
+
+    $edit = [];
+    $edit['path[0][value]'] = '/node/' . $node6->id();
+    $edit['alias[0][value]'] = '/';
+    $this->drupalGet('admin/config/search/path/add');
+    $this->submitForm($edit, 'Save');
+    $this->assertSession()->statusMessageContains('The alias has been saved.', 'status');
+    $this->config('system.site')->set('page.front', '/')->save();
+    $this->drupalGet('<front>');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains($node6->label());
+    $this->drupalGet($node6->toUrl('edit-form'));
+    $this->assertSession()->fieldValueEquals('path[0][alias]', '/');
   }
 
   /**
@@ -390,6 +406,20 @@ class PathAliasTest extends PathTestBase {
     $this->assertSession()->elementAttributeContains('xpath', "//a[normalize-space(text())='{$node6->getTitle()}']", 'href', base_path() . $alias);
     $this->clickLink($node6->getTitle());
     $this->assertSession()->statusCodeEquals(404);
+
+    // Create an alias to /.
+    $node7 = $this->drupalCreateNode();
+
+    $edit = [];
+    $edit['path[0][alias]'] = '/';
+    $this->drupalGet($node7->toUrl('edit-form'));
+    $this->submitForm($edit, 'Save');
+    $this->config('system.site')->set('page.front', '/')->save();
+    $this->drupalGet('<front>');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains($node7->label());
+    $this->drupalGet($node7->toUrl('edit-form'));
+    $this->assertSession()->fieldValueEquals('path[0][alias]', '/');
   }
 
   /**

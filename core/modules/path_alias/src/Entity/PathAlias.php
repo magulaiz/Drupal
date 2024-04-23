@@ -49,6 +49,36 @@ class PathAlias extends ContentEntityBase implements PathAliasInterface {
   use EntityPublishedTrait;
 
   /**
+   * Trims a path alias.
+   *
+   * Trim whitespaces and slashes from a path alias.
+   * Ensures the leading slash is retained.
+   *
+   * @param string $alias
+   *   The path alias to trim.
+   *
+   * @throws Exception
+   *
+   * @return string
+   *   The trimmed alias.
+   */
+  public static function trimAlias(string $alias): string {
+    $filteredAlias = preg_replace('%
+      (         # At start
+        [^\/]   # never trim slash.
+      )
+      (         # Then
+        [\\\/]* # trim slashes
+        \s*     # and whitespaces
+      )*        # in zero or more repetitions at the end.
+      $%x', '\1', $alias);
+    if ($filteredAlias === NULL) {
+      throw new \Exception('A problem occurred while trimming the path alias.');
+    }
+    return trim($filteredAlias);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
@@ -94,9 +124,9 @@ class PathAlias extends ContentEntityBase implements PathAliasInterface {
   public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
 
-    // Trim the alias value of whitespace and slashes. Ensure to not trim the
+    // Trim the alias value of whitespaces and slashes. Ensure to not trim the
     // slash on the left side.
-    $alias = rtrim(trim($this->getAlias()), "\\/");
+    $alias = static::trimAlias($this->getAlias());
     $this->setAlias($alias);
   }
 
