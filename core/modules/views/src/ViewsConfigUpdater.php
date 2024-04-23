@@ -539,7 +539,7 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
    *   TRUE if the view has any arguments that reference an entity reference
    *   that need to be converted from 'numeric' to 'entity_target_id'.
    */
-  public function needsEntityArgumentUpdate(ViewEntityInterface $view) {
+  public function needsEntityArgumentUpdate(ViewEntityInterface $view): bool {
     return $this->processDisplayHandlers($view, TRUE, function (&$handler, $handler_type) {
       return $this->processEntityArgumentUpdate($handler, $handler_type);
     });
