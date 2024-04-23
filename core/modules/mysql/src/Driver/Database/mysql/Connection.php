@@ -84,7 +84,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
         $is_ansi_quotes_mode = TRUE;
         break;
       }
-      if (isset($connection_options['init_commands']['sql_mode_options']) && !empty($connection_options['init_commands']['sql_mode'][$mode])) {
+      if (isset($connection_options['sql_mode_options']) && !empty($connection_options['init_commands']['sql_mode'][$mode])) {
         $is_ansi_quotes_mode = TRUE;
         break;
       }
@@ -210,19 +210,16 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
         'TRADITIONAL' => TRUE,
       ];
 
-      $connection_options['init_commands'] += [
+      $connection_options += [
         'sql_mode_options' => [],
       ];
-      $connection_options['init_commands']['sql_mode_options'] += $sql_mode_defaults;
+      $connection_options['sql_mode_options'] += $sql_mode_defaults;
 
-      $sql_mode_options = implode(',', array_keys(array_filter($connection_options['init_commands']['sql_mode_options'])));
+      $sql_mode_options = implode(',', array_keys(array_filter($connection_options['sql_mode_options'])));
       // Don't set the sql_mode command into the init_commands array, as
       // otherwise the $connection_options variable which is passed by reference
       // gets polluted with it.
       $sql_mode_command = "SET sql_mode = '{$sql_mode_options}'";
-
-      // Unset the array of options so it's not executed.
-      unset($connection_options['init_commands']['sql_mode_options']);
     }
     if (!empty($connection_options['isolation_level'])) {
       $connection_options['init_commands'] += [
