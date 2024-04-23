@@ -162,7 +162,7 @@ abstract class AssetControllerBase extends FileDownloadController {
     $attached_assets = new AttachedAssets();
     $include_libraries = explode(',', UrlHelper::uncompressQueryParameter($request->query->get('include')));
 
-    $validate = function($libraries_to_check) {
+    $validate = function ($libraries_to_check) {
       foreach ($libraries_to_check as $library) {
         $parts = explode('/', $library);
         if (!isset($parts[1]) || isset($parts[2])) {
