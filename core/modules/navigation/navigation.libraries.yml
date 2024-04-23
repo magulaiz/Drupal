@@ -51,16 +51,6 @@ body-scroll-lock:
     base:
       css/components/body-scroll-lock.css: {}
 
-drupalFilter:
-  version: VERSION
-  js:
-    js/drupal-filter.js: {}
-  dependencies:
-    - core/drupal
-    - core/drupal.announce
-    - core/drupal.debounce
-    - core/once
-
 floating-ui:
   js:
     assets/vendor/floating-ui/floating-ui.core.umd.js: { minified: true }
