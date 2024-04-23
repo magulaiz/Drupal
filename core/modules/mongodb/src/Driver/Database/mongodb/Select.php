@@ -1475,7 +1475,7 @@ class Select extends QuerySelect {
           );
           $this->connection->dispatchEvent($startEvent);
         }
-//if ($this->mongodbBaseTable == 'help_search_items') {
+//if ($this->mongodbBaseTable == 'search_index') {
 //  dump('$pipeline');
 //  dump($pipeline);
 //}

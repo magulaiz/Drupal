@@ -192,7 +192,7 @@ class NodeSearch extends CoreNodeSearch {
     $query->fields('sd', ['sid', 'reindex']);
     $query->condition(
       $query->orConditionGroup()
-        ->condition('sd.sid', NULL, 'IS NULL')
+        ->isNull('sd.sid')
         ->condition('sd.reindex', 0, '<>')
     );
     $query->orderBy('sd.reindex', 'DESC')

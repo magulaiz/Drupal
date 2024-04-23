@@ -145,7 +145,9 @@ class Tasks extends InstallTasks {
    * Ensure that the database is set up with a replica set.
    */
   public function ensureReplicaSet() {
-    $name = Database::getConnection()->getReplicaSet();
+    // When the method getReplicaSetName() return FALSE, then MongoDB is not
+    // using a replica set.
+    $name = Database::getConnection()->getReplicaSetName();
     if ($name) {
       $this->pass(t("The database is set up with the replica set: %name.", ['%name' => $name]));
     }

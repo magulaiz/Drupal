@@ -41,6 +41,15 @@ class Merge extends QueryMerge {
   /**
    * {@inheritdoc}
    */
+  public function expression($field, $expression, array $arguments = NULL) {
+    throw new MongodbSQLException('MongoDB does not support expressions in Merge queries.');
+
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function keys(array $fields, array $values = []) {
     if ($values) {
       $fields = array_combine($fields, $values);
