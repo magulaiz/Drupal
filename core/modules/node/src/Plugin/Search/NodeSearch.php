@@ -847,7 +847,8 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       $form['content_ranking']['rankings'][$var]['value'] = [
         '#type' => 'select',
         '#options' => $options,
-        '#attributes' => ['aria-label' => $this->t("Influence of '@title'", ['@title' => $values['title']])],
+        '#title' => $this->t("Influence of '@title'", ['@title' => $values['title']]),
+        '#title_display' => 'invisible',
         '#default_value' => $this->configuration['rankings'][$var] ?? 0,
       ];
     }

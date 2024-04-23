@@ -32,6 +32,7 @@ class OptionsSelectWidget extends OptionsWidgetBase {
 
     $element += [
       '#type' => 'select',
+      '#title' => '@todo',
       '#options' => $this->getOptions($items->getEntity()),
       '#default_value' => $this->getSelectedOptions($items),
       // Do not display a 'multiple' select box if there is only one option.

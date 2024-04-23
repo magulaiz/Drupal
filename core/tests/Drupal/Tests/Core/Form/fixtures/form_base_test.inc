@@ -20,6 +20,7 @@ function test_form_id() {
   ];
   $form['options'] = [
     '#type' => 'radios',
+    '#title' => 'Options',
     '#options' => [
       'foo' => 'foo',
       'bar' => 'bar',

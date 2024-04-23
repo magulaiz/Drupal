@@ -120,6 +120,7 @@ class FormTestSelectForm extends FormBase {
 
     $form['opt_groups'] = [
       '#type' => 'select',
+      '#title' => 'Opt groups',
       '#options' => [
         'optgroup_one' => ['one' => 'one', 'two' => 'two', 'three' => 'three', 'four' => '<strong>four</strong>'],
         'optgroup_two' => ['five' => 'five', 'six' => 'six'],

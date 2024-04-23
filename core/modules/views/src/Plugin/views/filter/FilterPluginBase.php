@@ -979,7 +979,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       $form[$value] = $form['value'];
 
       if (isset($form[$value]['#title']) && !empty($form[$value]['#type']) && $form[$value]['#type'] != 'checkbox') {
-        unset($form[$value]['#title']);
+        $form[$value]['#title_display'] = 'invisible';
       }
 
       $this->exposedTranslate($form[$value], 'value');
@@ -1183,10 +1183,10 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
         ],
         'operator' => $row['operator'],
         'value' => $row['value'],
-        // No title is given here, since this input is never displayed. It is
-        // only triggered by JavaScript.
         'remove' => [
           '#type' => 'checkbox',
+          '#title' => $this->t('Remove'),
+          '#title_display' => 'invisible',
           '#id' => 'views-removed-' . $item_id,
           '#attributes' => ['class' => ['views-remove-checkbox']],
           '#default_value' => 0,
@@ -1204,6 +1204,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     // From all groups, let chose which is the default.
     $form['group_info']['default_group'] = [
       '#type' => 'radios',
+      '#title' => $this->t('Default group'),
+      '#title_display' => 'invisible',
       '#options' => $groups,
       '#default_value' => $this->options['group_info']['default_group'],
       '#required' => TRUE,
@@ -1214,6 +1216,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     // From all groups, let chose which is the default.
     $form['group_info']['default_group_multiple'] = [
       '#type' => 'checkboxes',
+      '#title' => $this->t('Default group (multiple)'),
+      '#title_display' => 'invisible',
       '#options' => $groups,
       '#default_value' => $this->options['group_info']['default_group_multiple'],
       '#attributes' => [
