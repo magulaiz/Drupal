@@ -220,6 +220,10 @@ class AssetResolver implements AssetResolverInterface {
    * {@inheritdoc}
    */
   public function getJsAssets(AttachedAssetsInterface $assets, $optimize, LanguageInterface $language = NULL) {
+    if (!$assets->getLibraries() && !$assets->getSettings()) {
+      return [[], []];
+    }
+    $libraries_to_load = $this->getLibrariesToLoad($assets);
     if (!isset($language)) {
       $language = $this->languageManager->getCurrentLanguage();
     }
@@ -227,7 +231,6 @@ class AssetResolver implements AssetResolverInterface {
     // Add the theme name to the cache key since themes may implement
     // hook_library_info_alter(). Additionally add the current language to
     // support translation of JavaScript files via hook_js_alter().
-    $libraries_to_load = $this->getLibrariesToLoad($assets);
     $cid = 'js:' . $theme_info->getName() . ':' . $language->getId() . ':' . Crypt::hashBase64(serialize($libraries_to_load)) . (int) (count($assets->getSettings()) > 0) . (int) $optimize;
 
     if ($cached = $this->cache->get($cid)) {
