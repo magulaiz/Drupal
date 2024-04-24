@@ -379,6 +379,7 @@ ckeditor5_list:
     plugins:
       - list.DocumentList
       - list.DocumentListProperties
+      - list.AdjacentListsSupport
     config:
       list:
         properties:
