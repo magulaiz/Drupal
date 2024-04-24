@@ -84,7 +84,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
         $is_ansi_quotes_mode = TRUE;
         break;
       }
-      if (isset($connection_options['sql_mode_options']) && !empty($connection_options['init_commands']['sql_mode'][$mode])) {
+      if (!empty($connection_options['sql_mode_options'][$mode])) {
         $is_ansi_quotes_mode = TRUE;
         break;
       }
