@@ -54,24 +54,15 @@ abstract class PhpassHashedPasswordBase implements PasswordInterface {
   /**
    * Constructs a new password hashing instance.
    *
-   * @param \Drupal\Core\Password\PasswordInterface|int $corePassword
+   * @param \Drupal\Core\Password\PasswordInterface $corePassword
    *   The core PHP password interface (or the countLog2 value for BC).
    */
-  public function __construct(PasswordInterface|int $corePassword) {
-    if ($corePassword instanceof PasswordInterface) {
-      // Note: If $corePassword is set, $countLog2 isn't used anywhere in the
-      // code path of this class. Still, set it to the default value for BC
-      // reasons.
-      $this->countLog2 = 16;
-      $this->corePassword = $corePassword;
-    }
-    else {
-      $countLog2 = $corePassword;
-      @trigger_error('Calling ' . __METHOD__ . '() with numeric $countLog2 as the first parameter is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use PhpassHashedPasswordInterface::__construct() with $corePassword parameter set to an instance of Drupal\Core\Password\PhpPassword instead. See https://www.drupal.org/node/3322420', E_USER_DEPRECATED);
-      // Ensure that $countLog2 is within set bounds.
-      $this->countLog2 = $this->enforceLog2Boundaries($countLog2);
-      $this->corePassword = NULL;
-    }
+  public function __construct(PasswordInterface $corePassword) {
+    // Note: If $corePassword is set, $countLog2 isn't used anywhere in the
+    // code path of this class. Still, set it to the default value for BC
+    // reasons.
+    $this->countLog2 = 16;
+    $this->corePassword = $corePassword;
   }
 
   /**
