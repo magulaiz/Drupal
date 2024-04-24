@@ -1673,18 +1673,12 @@
       // we count from 1, so we're out of sync.
       // Match immediate children of the parent element to allow nesting.
       $(response.selector)
-        .find(
-          '> tbody > tr:not([style*="display: none"]), > tr:not([style*="display: none"])',
-        )
+        .find('> tbody > tr:visible, > tr:visible')
         .removeClass('odd even')
-        .filter(function (index) {
-          return index % 2 === 0;
-        })
+        .filter(':nth-child(even)')
         .addClass('odd')
         .end()
-        .filter(function (index) {
-          return index % 2 !== 0;
-        })
+        .filter(':nth-child(odd)')
         .addClass('even');
     },
 

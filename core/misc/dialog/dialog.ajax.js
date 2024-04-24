@@ -68,7 +68,7 @@
         if (
           ajaxContainer.length &&
           (document.activeElement === document.body ||
-            $(document.activeElement).not(':not([style*="display: none"])'))
+            $(document.activeElement).not(':visible'))
         ) {
           const focusableChildren = focusable(ajaxContainer[0]);
           if (focusableChildren.length > 0) {

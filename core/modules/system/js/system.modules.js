@@ -30,9 +30,7 @@
 
       function hidePackageDetails(index, element) {
         const $packDetails = $(element);
-        const $visibleRows = $packDetails.find(
-          'tbody tr:not([style*="display: none"])',
-        );
+        const $visibleRows = $packDetails.find('tbody tr:visible');
         $packDetails.toggle($visibleRows.length > 0);
       }
 
@@ -75,8 +73,7 @@
 
           Drupal.announce(
             Drupal.formatPlural(
-              $rowsAndDetails.filter('tbody tr:not([style*="display: none"])')
-                .length,
+              $rowsAndDetails.filter('tbody tr:visible').length,
               '1 module is available in the modified list.',
               '@count modules are available in the modified list.',
             ),

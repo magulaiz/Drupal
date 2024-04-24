@@ -88,37 +88,19 @@
       once(
         'translation-entity-admin-hide',
         // Keep jQuery because of the use of `:input`.
-        context.querySelectorAll('table .bundle-settings .translatable input'),
+        context.querySelectorAll('table .bundle-settings .translatable input, select, textarea, button'),
       ).forEach((input) => {
         const $input = $(input);
         const $bundleSettings = $input.closest('.bundle-settings');
         if (!input.checked) {
           $bundleSettings.nextUntil('.bundle-settings').hide();
         } else {
-          let nextElement = $bundleSettings.nextElementSibling;
-          while (
-            nextElement &&
-            !nextElement.classList.contains('bundle-settings')
-          ) {
-            if (nextElement.classList.contains('field-settings')) {
-              const translatableInputs = nextElement.classList.contains(
-                '.translatable :input:not(:checked)',
-              );
-              translatableInputs.forEach((input) => {
-                const closestBundleSettings = input.closest('.bundle-settings');
-                let nextColumnSettings =
-                  closestBundleSettings.nextElementSibling;
-                while (
-                  nextColumnSettings &&
-                  nextColumnSettings.classList.contains('column-settings')
-                ) {
-                  nextColumnSettings.style.display = 'none';
-                  nextColumnSettings = nextColumnSettings.nextElementSibling;
-                }
-              });
-            }
-            nextElement = nextElement.nextElementSibling;
-          }
+          $bundleSettings
+            .nextUntil('.bundle-settings', '.field-settings')
+            .find('.translatable :checkbox:not(:checked), .translatable :radio:not(:checked)')
+            .closest('.field-settings')
+            .nextUntil(':not(.column-settings)')
+            .hide();
         }
       });
 
@@ -130,27 +112,12 @@
           const $target = $(e.target);
           const $bundleSettings = $target.closest('.bundle-settings');
           const $settings = $bundleSettings.nextUntil('.bundle-settings');
-          const bSettings = e.target.closest('.bundle-settings');
-          const settings = Array.from(bSettings.nextElementSibling.children);
-          const fSettings = settings.filter((ele) =>
-            ele.classList.contains('.field-settings'),
-          );
-          if (e.target.checked) {
-            const allBSettings = bSettings.querySelectorAll(
-              '.operations :input[name$="[language_alterable]"]',
-            );
-            allBSettings.forEach(function (ele) {
-              ele.checked = true;
-            });
-
-            fSettings.forEach((item) => {
-              Array.from(item.querySelectorAll('.translatable input')).forEach(
-                (input) => {
-                  input.selected = true;
-                },
-              );
-            });
-            $settings.show();
+          const $fieldSettings = $settings.filter('.field-settings');          
+          if (e.target.checked) {           
+            $bundleSettings
+              .find('.operations [name$="[language_alterable]"]')
+              .prop('checked', true);
+            $fieldSettings.find('.translatable :checkbox, :radio').prop('checked', true);
           } else {
             $settings.hide();
           }

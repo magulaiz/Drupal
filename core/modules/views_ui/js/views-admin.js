@@ -1009,45 +1009,22 @@
           // table cell (next to the filter name).
           const $draggableRow = $(this.draggableRows[i]);
           const $firstCell = $draggableRow.find('td').eq(0);
-          console.log('$firstCell:', $firstCell);
           if ($firstCell.length) {
             // The value of the operator label ("And" or "Or") is taken from the
             // first operator dropdown we encounter, going backwards from the
             // current row. This dropdown is the one associated with the current
             // row's filter group.
-            let allRowElementSiblings = $draggableRow.previousElementSibling;
-            const siblings = [];
-            while (allRowElementSiblings) {
-              if (
-                allRowElementSiblings.classList.contains('views-group-title')
-              ) {
-                siblings.unshift(allRowElementSiblings);
-              }
-              allRowElementSiblings =
-                allRowElementSiblings.previousElementSibling;
-            }
-
-            let selectedOption;
-            siblings.forEach(function (eachSibling) {
-              const options = eachSibling.querySelectorAll('option');
-              options.forEach(function (option) {
-                if (option.selected) {
-                  selectedOption = option;
-                }
-              });
-            });
-            const operatorValue = selectedOption
-              ? selectedOption.innerHTML
-              : null;
+            const operatorValue = $draggableRow
+              .prevAll('.views-group-title')
+              .find('option:checked')
+              .html();
 
             const operatorLabel = `<span class="views-operator-label">${operatorValue}</span>`;
             // If the next visible row after this one is a draggable filter row,
             // display the operator label next to the current row. (Checking for
             // visibility is necessary here since the "Remove" links hide the
             // removed row but don't actually remove it from the document).
-            const $nextRow = $draggableRow
-              .nextAll(':not([style*="display: none"])')
-              .eq(0);
+            const $nextRow = $draggableRow.nextAll(':visible').eq(0);
             const $existingOperatorLabel = $firstCell.find(
               '.views-operator-label',
             );

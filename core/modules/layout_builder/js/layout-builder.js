@@ -79,9 +79,8 @@
 
           announce(
             formatPlural(
-              $categories.find(
-                '.js-layout-builder-category > ul > li:not([style]), li[style=""]',
-              ).length,
+              $categories.find('.js-layout-builder-category > ul > li:visible')
+                .length,
               '1 block is available in the modified list.',
               '@count blocks are available in the modified list.',
             ),

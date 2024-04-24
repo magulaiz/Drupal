@@ -64,7 +64,7 @@
       once('vertical-tabs', '[data-vertical-tabs-panes]', context).forEach(
         (verticalTab) => {
           const $this = $(verticalTab).addClass('vertical-tabs__panes');
-          const focusID = document.querySelectorAll(
+          const focusID = document.querySelector(
             '.vertical-tabs__active-tab',
           )[0].value;
 
@@ -173,9 +173,7 @@
         self.focus();
         // Set focus on the first input field of the visible details/tab pane.
         document
-          .querySelector(
-            '.vertical-tabs__pane input:not([type=hidden]:not([type="disabled"]))',
-          )
+          .querySelector('.vertical-tabs__pane input:visible:enabled')
           .focus();
       }
     });

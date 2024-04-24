@@ -39,12 +39,12 @@
       });
       $('#edit-language', context).drupalSetSummary((context) => {
         const values = [];
-        const selectElement = context.querySelector(
-          '..js-form-item-language-configuration-langcode select',
+        values.push(
+          $(
+            '.js-form-item-language-configuration-langcode select option:checked',
+            context,
+          )[0].textContent,
         );
-        const selectedOption =
-          selectElement.options[selectElement.selectedIndex];
-        values.push(selectedOption.textContent);
 
         $('input:checked', context)
           .next('label')

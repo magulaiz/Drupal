@@ -168,13 +168,9 @@
           $rows.each(showPermissionRow);
 
           // Hide the empty header if they don't have any visible rows.
-          const visibleRows = $table.find(
-            'tbody tr:not([style*="display: none"])',
-          );
+          const visibleRows = $table.find('tbody tr:visible');
           visibleRows.each(hideEmptyPermissionHeader);
-          const rowsWithoutEmptyModuleName = $table.find(
-            'tbody tr:not([style*="display: none"])',
-          );
+          const rowsWithoutEmptyModuleName = $table.find('tbody tr:visible');
           // Find elements with class "permission" within visible rows.
           const tdsWithModuleOrPermissionClass =
             rowsWithoutEmptyModuleName.find('.permission');
