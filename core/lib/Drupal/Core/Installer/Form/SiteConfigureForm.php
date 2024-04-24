@@ -3,8 +3,11 @@
 namespace Drupal\Core\Installer\Form;
 
 use Drupal\Core\Datetime\TimeZoneFormHelper;
+<<<<<<< HEAD
 use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+=======
+>>>>>>> 8a641a75d6 (Remove SiteConfigurationForm deprecations)
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -21,17 +24,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class SiteConfigureForm extends ConfigFormBase {
-
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * Defines deprecated injected properties.
-   *
-   * @var array
-   */
-  protected array $deprecatedProperties = [
-    'countryManager' => 'country_manager',
-  ];
 
   /**
    * The site path.
@@ -72,7 +64,7 @@ class SiteConfigureForm extends ConfigFormBase {
    *   The entity type manager.
    * @param \Drupal\Core\Extension\ModuleInstallerInterface $module_installer
    *   The module installer.
-   * @param \Drupal\Core\Locale\CountryManagerInterface|\Drupal\user\UserNameValidator $userNameValidator
+   * @param \Drupal\user\UserNameValidator $userNameValidator
    *   The user validator.
    * @param bool|null $superUserAccessPolicy
    *   The value of the 'security.enable_super_user' container parameter.
@@ -82,8 +74,12 @@ class SiteConfigureForm extends ConfigFormBase {
     $site_path,
     protected EntityTypeManagerInterface|UserStorageInterface $entityTypeManager,
     ModuleInstallerInterface $module_installer,
+<<<<<<< HEAD
     protected CountryManagerInterface|UserNameValidator $userNameValidator,
     protected ?bool $superUserAccessPolicy = NULL,
+=======
+    protected UserNameValidator $userNameValidator,
+>>>>>>> 8a641a75d6 (Remove SiteConfigurationForm deprecations)
   ) {
     $this->root = $root;
     $this->sitePath = $site_path;
@@ -93,14 +89,7 @@ class SiteConfigureForm extends ConfigFormBase {
     }
     $this->userStorage = $this->entityTypeManager->getStorage('user');
     $this->moduleInstaller = $module_installer;
-    if ($userNameValidator instanceof CountryManagerInterface) {
-      @trigger_error('Calling ' . __METHOD__ . '() with the $userNameValidator argument as CountryManagerInterface is deprecated in drupal:10.3.0 and must be UserNameValidator in drupal:11.0.0. See https://www.drupal.org/node/3431205', E_USER_DEPRECATED);
-      $this->userNameValidator = \Drupal::service('user.name_validator');
-    }
-    if ($this->superUserAccessPolicy === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $superUserAccessPolicy argument is deprecated in drupal:10.3.0 and must be passed in drupal:11.0.0. See https://www.drupal.org/node/3443172', E_USER_DEPRECATED);
-      $this->superUserAccessPolicy = \Drupal::getContainer()->getParameter('security.enable_super_user') ?? TRUE;
-    }
+    $this->userNameValidator = $userNameValidator;
   }
 
   /**
