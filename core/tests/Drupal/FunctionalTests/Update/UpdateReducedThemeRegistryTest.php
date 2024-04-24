@@ -10,7 +10,7 @@ use Drupal\Tests\BrowserTestBase;
 /**
  * Tests that update.php is accessible even if there are unstable modules.
  *
- * @ingroup update_api
+ * @group Update
  */
 class UpdateReducedThemeRegistryTest extends BrowserTestBase {
 
