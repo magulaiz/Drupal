@@ -897,6 +897,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/image/tests/src/Functional/ImageStyleFlushTest.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Call to deprecated method returnValue\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
+Use \\<code\\>\\$double\\-\\>willReturn\\(\\)\\</code\\> instead of \\<code\\>\\$double\\-\\>will\\(\\$this\\-\\>returnValue\\(\\)\\)\\</code\\>$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/image/tests/src/Unit/ImageStyleTest.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Variable \\$reason in empty\\(\\) always exists and is not falsy\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/jsonapi/src/Context/FieldResolver.php',
@@ -1637,11 +1643,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\user\\\\Functional\\\\UserRegistrationRestTest\\:\\:getExpectedUnauthorizedEntityAccessCacheability\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/tests/src/Functional/UserRegistrationRestTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^@dataProvider providerTestValidate related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Unit/Plugin/Validation/Constraint/ProtectedUserFieldConstraintValidatorTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$result in isset\\(\\) always exists and is not nullable\\.$#',
