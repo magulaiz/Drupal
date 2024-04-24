@@ -8,7 +8,9 @@ use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * tests that update.php is accessible even if there are unstable modules.
+ * Tests that update.php is accessible even if there are unstable modules.
+ *
+ * @ingroup update_api
  */
 class UpdateReducedThemeRegistryTest extends BrowserTestBase {
 
