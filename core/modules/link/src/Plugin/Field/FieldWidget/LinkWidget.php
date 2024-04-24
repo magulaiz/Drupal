@@ -198,7 +198,7 @@ class LinkWidget extends WidgetBase implements ContainerFactoryPluginInterface {
         // Validates that given entity exists.
         if (empty($entity)) {
           $form_state->setError(
-            $element, t(
+            $element, $this->t(
               'Internal link contains invalid ID: @id', [
                 '@id' => $params[$entity_type],
               ]
@@ -215,7 +215,7 @@ class LinkWidget extends WidgetBase implements ContainerFactoryPluginInterface {
             $entity_bundle_labels[] = (!empty($bundle_info['label'])) ? $bundle_info['label'] : $bundle_name;
           }
           $form_state->setError(
-            $element, t(
+            $element, $this->t(
               'For internal links, you may only reference entities of the following types: %entity_bundles', [
                 '%entity_bundles' => implode(', ', $entity_bundle_labels),
               ]

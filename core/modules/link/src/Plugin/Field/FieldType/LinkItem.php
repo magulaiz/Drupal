@@ -122,8 +122,8 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
     // Adds select input for choosing entity bundles to filter by.
     $element['entity_bundles'] = [
       '#type' => 'select',
-      '#title' => t('Allowed types of internal links'),
-      '#description' => t('If internal links are being used, then select which types of internal links are allowed.'),
+      '#title' => $this->t('Allowed types of internal links'),
+      '#description' => $this->t('If internal links are being used, then select which types of internal links are allowed.'),
       '#default_value' => $this->getSetting('entity_bundles') ?: [],
       '#options' => $bundle_option_list,
       '#multiple' => TRUE,
