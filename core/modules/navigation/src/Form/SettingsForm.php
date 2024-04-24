@@ -117,12 +117,6 @@ final class SettingsForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state): array {
     $config = $this->config('navigation.settings');
     $form['#attached']['library'][] = 'core/drupal.states';
-    $form['show_top_bar'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Show Top Bar (experimental)'),
-      '#description' => $this->t('Provides relevant administrative information and tasks for the respective page. It is not feature complete nor fully functional.'),
-      '#default_value' => $this->config('navigation.settings')->get('show_top_bar'),
-    ];
     $form['logo'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Logo options'),
@@ -220,7 +214,6 @@ final class SettingsForm extends ConfigFormBase {
     }
 
     $config
-      ->set('show_top_bar', $form_state->getValue('show_top_bar'))
       ->set('logo_provider', $form_state->getValue('logo_provider'))
       ->set('logo_managed', $form_state->getValue('logo_managed'))
       ->save();

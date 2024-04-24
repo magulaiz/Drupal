@@ -9,6 +9,7 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Image\ImageFactory;
 use Drupal\Core\Menu\LocalTaskManagerInterface;
@@ -60,6 +61,7 @@ final class NavigationRenderer {
    */
   public function __construct(
     private ConfigFactoryInterface $configFactory,
+    private ModuleHandlerInterface $moduleHandler,
     private RouteMatchInterface $routeMatch,
     private LocalTaskManagerInterface $localTaskManager,
     private AccountInterface $currentUser,
@@ -166,14 +168,7 @@ final class NavigationRenderer {
       '#access' => $this->currentUser->hasPermission('access navigation'),
     ];
 
-    // Whether we will add more elements to the top bar depends on if the top
-    // bar has been set as hidden or not. Therefore, we're dependent on that
-    // configuration.
-    $navigation_settings = $this->configFactory->get('navigation.settings');
-    CacheableMetadata::createFromRenderArray($page_top['top_bar'])
-      ->addCacheableDependency($navigation_settings)
-      ->applyTo($page_top['top_bar']);
-    if ($navigation_settings->get('show_top_bar') === FALSE) {
+    if (!$this->moduleHandler->moduleExists('navigation_top_bar')) {
       return;
     }
 
@@ -209,12 +204,7 @@ final class NavigationRenderer {
     if ($block->getPluginId() !== 'local_tasks_block') {
       return;
     }
-    $navigation_settings = $this->configFactory->get('navigation.settings');
-    // We're always dependent on the navigation settings config.
-    CacheableMetadata::createFromRenderArray($build)
-      ->addCacheableDependency($navigation_settings)
-      ->applyTo($build);
-    if ($this->hasLocalTasks() && $navigation_settings->get('show_top_bar')) {
+    if ($this->hasLocalTasks() && $this->moduleHandler->moduleExists('navigation_top_bar')) {
       $build['#access'] = FALSE;
     }
   }

@@ -4,6 +4,7 @@ services:
     arguments:
       [
         '@config.factory',
+        '@module_handler',
         '@current_route_match',
         '@plugin.manager.menu.local_task',
         '@current_user',

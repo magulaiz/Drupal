@@ -80,17 +80,16 @@ class NavigationTopBarTest extends BrowserTestBase {
   public function testTopBarVisibility() {
     $this->drupalGet($this->node->toUrl());
 
-    // Top Bar is not visible if the hide option is enabled.
-    $this->assertSession()->elementNotExists('xpath', "//div[contains(@class, 'top-bar__content')]/button[2]/span");
+    // Top Bar is not visible if the feature flag module is disabled.
+    $this->assertSession()->elementNotExists('xpath', "//div[contains(@class, 'top-bar__content')]/button/span");
     $this->assertSession()->elementExists('xpath', '//div[@id="block-tabs"]');
 
-    $this->drupalGet('/admin/config/user-interface/navigation/settings');
-    $this->submitForm(['show_top_bar' => TRUE], 'Save configuration');
+    \Drupal::service('module_installer')->install(['navigation_top_bar']);
 
-    // Top Bar is visible once the hide option is disabled.
+    // Top Bar is visible once the feature flag module is enabled.
     $this->drupalGet($this->node->toUrl());
-    $this->assertSession()->elementExists('xpath', "//div[contains(@class, 'top-bar__content')]/button[2]/span");
-    $this->assertSession()->elementTextEquals('xpath', "//div[contains(@class, 'top-bar__content')]/button[2]/span", 'More actions');
+    $this->assertSession()->elementExists('xpath', "//div[contains(@class, 'top-bar__content')]/button/span");
+    $this->assertSession()->elementTextEquals('xpath', "//div[contains(@class, 'top-bar__content')]/button/span", 'More actions');
     $this->assertSession()->elementNotExists('xpath', '//div[@id="block-tabs"]');
 
     // Find all the dropdown links and check if the top bar is there as well.
@@ -98,11 +97,10 @@ class NavigationTopBarTest extends BrowserTestBase {
 
     foreach ($toolbar_links->findAll('css', 'li') as $toolbar_link) {
       $this->clickLink($toolbar_link->getText());
-      $this->assertSession()->elementExists('xpath', "//div[contains(@class, 'top-bar__content')]/button[2]/span");
-      $this->assertSession()->elementTextEquals('xpath', "//div[contains(@class, 'top-bar__content')]/button[2]/span", 'More actions');
+      $this->assertSession()->elementExists('xpath', "//div[contains(@class, 'top-bar__content')]/button/span");
+      $this->assertSession()->elementTextEquals('xpath', "//div[contains(@class, 'top-bar__content')]/button/span", 'More actions');
       $this->assertSession()->elementNotExists('xpath', '//div[@id="block-tabs"]');
     }
-
   }
 
 }

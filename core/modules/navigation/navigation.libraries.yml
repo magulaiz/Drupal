@@ -13,6 +13,7 @@ navigation:
       css/components/toolbar-button.css: {}
       css/components/admin-toolbar.css: {}
       css/components/top-bar.css: {}
+      css/components/admin-toolbar-control-bar.css: {}
       css/components/toolbar-menu.css: {}
       css/components/toolbar-block.css: {}
   dependencies:
