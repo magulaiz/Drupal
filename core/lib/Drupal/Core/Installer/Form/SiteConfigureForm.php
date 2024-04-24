@@ -88,7 +88,6 @@ class SiteConfigureForm extends ConfigFormBase {
     }
     $this->userStorage = $this->entityTypeManager->getStorage('user');
     $this->moduleInstaller = $module_installer;
-    $this->userNameValidator = $userNameValidator;
   }
 
   /**
