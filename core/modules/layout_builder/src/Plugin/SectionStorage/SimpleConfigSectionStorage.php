@@ -24,7 +24,7 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * Provides section storage utilizing simple config.
  */
-#[SectionStorage(id: "test_simple_config", context_definitions: [
+#[SectionStorage(id: "simple_config", context_definitions: [
   "config_id" => new ContextDefinition(
     data_type: "string",
     label: new TranslatableMarkup("Configuration ID"),
@@ -95,7 +95,7 @@ class SimpleConfigSectionStorage extends PluginBase implements SectionStorageInt
    * Returns the name to be used to store in the config system.
    */
   protected function getConfigName() {
-    return 'layout_builder_test.' . $this->getStorageType() . '.' . $this->getStorageId();
+    return 'layout_builder.' . $this->getStorageType() . '.' . $this->getStorageId();
   }
 
   /**
@@ -135,7 +135,7 @@ class SimpleConfigSectionStorage extends PluginBase implements SectionStorageInt
    * {@inheritdoc}
    */
   public function buildRoutes(RouteCollection $collection) {
-    $this->buildLayoutRoutes($collection, $this->getPluginDefinition(), 'layout-builder-test-simple-config/{id}');
+    $this->buildLayoutRoutes($collection, $this->getPluginDefinition(), 'layout-builder-simple-config/{id}');
   }
 
   /**

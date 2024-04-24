@@ -710,12 +710,12 @@ class LayoutBuilderTest extends LayoutBuilderTestBase {
       ->save();
 
     // The pre-existing section is found.
-    $this->drupalGet('layout-builder-test-simple-config/existing');
+    $this->drupalGet('layout-builder-simple-config/existing');
     $assert_session->elementsCount('css', '.layout', 1);
     $assert_session->elementsCount('css', '.layout--twocol', 1);
 
     // No layout is selected for a new object.
-    $this->drupalGet('layout-builder-test-simple-config/new');
+    $this->drupalGet('layout-builder-simple-config/new');
     $assert_session->elementNotExists('css', '.layout');
   }
 

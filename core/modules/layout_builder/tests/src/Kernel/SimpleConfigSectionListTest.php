@@ -37,8 +37,8 @@ class SimpleConfigSectionListTest extends SectionListTestBase {
     }, $section_data);
     $config->set('sections', $section_data)->save();
 
-    $definition = new SectionStorageDefinition(['id' => 'test_simple_config']);
-    $plugin = SimpleConfigSectionStorage::create($this->container, [], 'test_simple_config', $definition);
+    $definition = new SectionStorageDefinition(['id' => 'simple_config']);
+    $plugin = SimpleConfigSectionStorage::create($this->container, [], 'simple_config', $definition);
     $plugin->setContext('config_id', new Context(new ContextDefinition('string'), 'foobar'));
     return $plugin;
   }
