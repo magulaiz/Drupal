@@ -218,6 +218,9 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
       ];
     }
 
+    // Ensure sql_mode is not in the init commands.
+    unset($connection_options['init_commands']['sql_mode']);
+
     // Execute initial commands.
     foreach ($connection_options['init_commands'] as $sql) {
       $pdo->exec($sql);
