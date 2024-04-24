@@ -346,7 +346,7 @@ class SiteConfigureForm extends ConfigFormBase {
         $account->addRole($admin_role);
       }
       elseif ($this->superUserAccessPolicy === FALSE) {
-        $this->messenger()->addWarning($this->t('User 1 does not have administrator access.'));
+        $this->messenger()->addWarning($this->t('User 1 does not have administrator access. For more information, see the documentation on <a href="@secure-user-1-docs">securing the admin super user</a>.', ['@secure-user-1-docs' => 'https://www.drupal.org/docs/administering-a-drupal-site/security-in-drupal/securing-the-admin-super-user-1#s-disable-the-super-user-access-policy']));
       }
     }
 

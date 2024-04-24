@@ -19,7 +19,7 @@ class SuperUserAccessInstallTest extends InstallerTestBase {
    *
    * @see \Drupal\Core\Installer\Form\SiteConfigureForm::submitForm())
    */
-  protected const NO_ACCESS_MESSAGE = 'User 1 does not have administrator access.';
+  protected const NO_ACCESS_MESSAGE = 'User 1 does not have administrator access. For more information, see the documentation on securing the admin super user.';
 
   /**
    * {@inheritdoc}
