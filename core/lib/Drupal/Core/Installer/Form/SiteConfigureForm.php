@@ -11,7 +11,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Locale\CountryManagerInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\user\UserInterface;
 use Drupal\user\UserStorageInterface;
