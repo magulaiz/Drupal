@@ -93,9 +93,19 @@ class Comment extends WizardPluginBase {
 
     // Add a relationship to nodes.
     $display_options['relationships']['node']['id'] = 'node';
-    $display_options['relationships']['node']['table'] = 'comment_field_data';
+    if ($this->connection->driver() == 'mongodb') {
+      $display_options['relationships']['node']['table'] = 'comment';
+    }
+    else {
+      $display_options['relationships']['node']['table'] = 'comment_field_data';
+    }
     $display_options['relationships']['node']['field'] = 'node';
-    $display_options['relationships']['node']['entity_type'] = 'comment_field_data';
+    if ($this->connection->driver() == 'mongodb') {
+      $display_options['relationships']['node']['entity_type'] = 'comment';
+    }
+    else {
+      $display_options['relationships']['node']['entity_type'] = 'comment_field_data';
+    }
     $display_options['relationships']['node']['required'] = 1;
     $display_options['relationships']['node']['plugin_id'] = 'standard';
 
@@ -104,7 +114,12 @@ class Comment extends WizardPluginBase {
 
     /* Field: Comment: Title */
     $display_options['fields']['subject']['id'] = 'subject';
-    $display_options['fields']['subject']['table'] = 'comment_field_data';
+    if ($this->connection->driver() == 'mongodb') {
+      $display_options['fields']['subject']['table'] = 'comment';
+    }
+    else {
+      $display_options['fields']['subject']['table'] = 'comment_field_data';
+    }
     $display_options['fields']['subject']['field'] = 'subject';
     $display_options['fields']['subject']['entity_type'] = 'comment';
     $display_options['fields']['subject']['entity_field'] = 'subject';

@@ -4,6 +4,7 @@ namespace Drupal\comment;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -18,6 +19,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
+use MongoDB\BSON\UTCDateTime;
 
 /**
  * Comment manager contains common functions to manage comment fields.
@@ -218,14 +220,17 @@ class CommentManager implements CommentManagerInterface {
         }
       }
       $timestamp = ($timestamp > HISTORY_READ_LIMIT ? $timestamp : HISTORY_READ_LIMIT);
+      if (Database::getConnection()->databaseType() == 'mongodb') {
+        $timestamp = new UTCDateTime($timestamp * 1000);
+      }
 
       // Use the timestamp to retrieve the number of new comments.
       $query = $this->entityTypeManager->getStorage('comment')->getQuery()
         ->accessCheck(TRUE)
         ->condition('entity_type', $entity->getEntityTypeId())
-        ->condition('entity_id', $entity->id())
+        ->condition('entity_id', (int) $entity->id())
         ->condition('created', $timestamp, '>')
-        ->condition('status', CommentInterface::PUBLISHED);
+        ->condition('status', (bool) CommentInterface::PUBLISHED);
       if ($field_name) {
         // Limit to a particular field.
         $query->condition('field_name', $field_name);

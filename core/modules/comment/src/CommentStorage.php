@@ -277,7 +277,7 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
         // Threaded comments.
 
         // 1. Find all the threads with a new comment.
-        $unread_threads = $this->database->select('comment', 'comment')
+        $unread_threads = $this->database->select($base_table, 'comment')
           ->fields('comment', ['thread'])
           ->condition('comment_translations.entity_id', (int) $entity->id())
           ->condition('comment_translations.entity_type', $entity->getEntityTypeId())
@@ -300,7 +300,7 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
         $first_thread = reset($unread_threads);
 
         // 3. Find the number of the first comment of the first unread thread.
-        $threads_query = $this->database->select('comment', 'comment')
+        $threads_query = $this->database->select($base_table, 'comment')
           ->fields('comment', ['cid'])
           ->condition('comment_translations.entity_id', (int) $entity->id())
           ->condition('comment_translations.entity_type', $entity->getEntityTypeId())

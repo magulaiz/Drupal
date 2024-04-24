@@ -496,6 +496,12 @@ function mongodb_views_plugins_field_alter(array &$plugins) {
         $plugins[$id]['provider'] = 'mongodb';
         break;
 
+      // Overrides for the module comment.
+      case 'node_new_comments':
+        $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\field\NodeNewComments';
+        $plugins[$id]['provider'] = 'mongodb';
+        break;
+
       // Overrides for the module content_moderation.
       case 'moderation_state_field':
         $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\field\ModerationStateField';
@@ -846,6 +852,12 @@ function mongodb_views_plugins_row_alter(array &$plugins) {
         $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\row\UserRow';
         $plugins[$id]['provider'] = 'mongodb';
         $plugins[$id]['base'] = ['users'];
+        break;
+
+      case 'comment_rss':
+        $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\row\CommentRss';
+        $plugins[$id]['provider'] = 'mongodb';
+        $plugins[$id]['base'] = ['comment'];
         break;
 
       case 'node_rss':
