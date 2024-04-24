@@ -693,7 +693,7 @@ class LayoutBuilderTest extends LayoutBuilderTestBase {
   /**
    * Tests a config-based implementation of Layout Builder.
    *
-   * @see \Drupal\layout_builder_test\Plugin\SectionStorage\SimpleConfigSectionStorage
+   * @see \Drupal\layout_builder\Plugin\SectionStorage\SimpleConfigSectionStorage
    */
   public function testSimpleConfigBasedLayout() {
     $assert_session = $this->assertSession();

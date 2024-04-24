@@ -8,12 +8,12 @@ use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionStorage\SectionStorageDefinition;
-use Drupal\layout_builder_test\Plugin\SectionStorage\SimpleConfigSectionStorage;
+use Drupal\layout_builder\Plugin\SectionStorage\SimpleConfigSectionStorage;
 
 /**
  * Tests the test implementation of section storage.
  *
- * @coversDefaultClass \Drupal\layout_builder_test\Plugin\SectionStorage\SimpleConfigSectionStorage
+ * @coversDefaultClass \Drupal\layout_builder\Plugin\SectionStorage\SimpleConfigSectionStorage
  *
  * @group layout_builder
  * @group #slow
