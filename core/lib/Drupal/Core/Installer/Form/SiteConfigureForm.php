@@ -9,6 +9,7 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Locale\CountryManagerInterface;
 use Drupal\Core\Site\Settings;
+use Drupal\user\Entity\Role;
 use Drupal\user\UserInterface;
 use Drupal\user\UserStorageInterface;
 use Drupal\user\UserNameValidator;
@@ -300,6 +301,7 @@ class SiteConfigureForm extends ConfigFormBase {
     }
 
     // We created user 1 with placeholder values. Let's save the real values.
+    /** @var \Drupal\user\UserInterface $account */
     $account = $this->userStorage->load(1);
     $account->init = $account->mail = $account_values['mail'];
     $account->roles = $account->getRoles();
@@ -307,6 +309,26 @@ class SiteConfigureForm extends ConfigFormBase {
     $account->timezone = $form_state->getValue('date_default_timezone');
     $account->pass = $account_values['pass'];
     $account->name = $account_values['name'];
+
+    // Ensure user 1 has an administrator role if one exists.
+    $admin_role = NULL;
+    $user_1_is_admin = FALSE;
+    foreach (Role::loadMultiple() as $role) {
+      if ($role->isAdmin()) {
+        if ($admin_role === NULL) {
+          $admin_role = $role->id();
+        }
+        $user_1_is_admin = $account->hasRole($role->id());
+        if ($user_1_is_admin) {
+          break;
+        }
+      }
+    }
+    // @todo What to do if there is no admin role?
+    if ($user_1_is_admin === FALSE && $admin_role !== NULL) {
+      $account->addRole($admin_role);
+    }
+
     $account->save();
   }
 

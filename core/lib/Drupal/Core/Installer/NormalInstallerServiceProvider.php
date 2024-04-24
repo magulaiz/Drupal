@@ -33,6 +33,9 @@ class NormalInstallerServiceProvider implements ServiceProviderInterface {
    * {@inheritdoc}
    */
   public function register(ContainerBuilder $container) {
+    // During the installer user 1 is a superuser.
+    $container->setParameter('security.enable_super_user', TRUE);
+
     // Replace cache services with in-memory implementations. The results in
     // less queries to set caches which will only be cleared on the next module
     // install.
