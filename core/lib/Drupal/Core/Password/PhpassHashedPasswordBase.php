@@ -36,33 +36,12 @@ abstract class PhpassHashedPasswordBase implements PasswordInterface {
   public static $ITOA64 = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
   /**
-   * Password stretching iteration count.
-   *
-   * Specifies the number of times the hashing function will be applied when
-   * generating new password hashes. The number of times is calculated by
-   * raising 2 to the power of the given value.
-   *
-   * @var int
-   */
-  protected $countLog2;
-
-  /**
-   * The core PHP password interface.
-   */
-  protected ?PasswordInterface $corePassword;
-
-  /**
    * Constructs a new password hashing instance.
    *
    * @param \Drupal\Core\Password\PasswordInterface $corePassword
-   *   The core PHP password interface (or the countLog2 value for BC).
+   *   The core PHP password interface.
    */
-  public function __construct(PasswordInterface $corePassword) {
-    // Note: If $corePassword is set, $countLog2 isn't used anywhere in the
-    // code path of this class. Still, set it to the default value for BC
-    // reasons.
-    $this->countLog2 = 16;
-    $this->corePassword = $corePassword;
+  public function __construct(protected PasswordInterface $corePassword) {
   }
 
   /**
@@ -99,27 +78,6 @@ abstract class PhpassHashedPasswordBase implements PasswordInterface {
       $output .= static::$ITOA64[($value >> 18) & 0x3f];
     } while ($i < $count);
 
-    return $output;
-  }
-
-  /**
-   * Generates a random base 64-encoded salt prefixed with hash settings.
-   *
-   * Proper use of salts may defeat a number of attacks, including:
-   *  - The ability to try candidate passwords against multiple hashes at once.
-   *  - The ability to use pre-hashed lists of candidate passwords.
-   *  - The ability to determine whether two users have the same (or different)
-   *    password without actually having to guess one of the passwords.
-   *
-   * @return string
-   *   A 12 character string containing the iteration count and a random salt.
-   */
-  protected function generateSalt() {
-    $output = '$S$';
-    // We encode the final log2 iteration count in base 64.
-    $output .= static::$ITOA64[$this->countLog2];
-    // 6 bytes is the standard salt for a portable phpass hash.
-    $output .= $this->base64Encode(random_bytes(6), 6);
     return $output;
   }
 
@@ -224,11 +182,7 @@ abstract class PhpassHashedPasswordBase implements PasswordInterface {
    * {@inheritdoc}
    */
   public function hash(#[\SensitiveParameter] $password) {
-    if (isset($this->corePassword)) {
-      return $this->corePassword->hash($password);
-    }
-
-    return $this->crypt('sha512', $password, $this->generateSalt());
+    return $this->corePassword->hash($password);
   }
 
   /**
@@ -281,18 +235,7 @@ abstract class PhpassHashedPasswordBase implements PasswordInterface {
    * {@inheritdoc}
    */
   public function needsRehash(#[\SensitiveParameter] $hash) {
-    if (isset($this->corePassword)) {
-      return $this->corePassword->needsRehash($hash);
-    }
-
-    // Check whether this was an updated password.
-    if (!str_starts_with($hash, '$S$') || (strlen($hash) != static::HASH_LENGTH)) {
-      return TRUE;
-    }
-    // Ensure that $count_log2 is within set bounds.
-    $count_log2 = $this->enforceLog2Boundaries($this->countLog2);
-    // Check whether the iteration count used differs from the standard number.
-    return ($this->getCountLog2($hash) !== $count_log2);
+    return $this->corePassword->needsRehash($hash);
   }
 
 }
