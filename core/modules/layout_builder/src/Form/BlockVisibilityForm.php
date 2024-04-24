@@ -244,7 +244,7 @@ class BlockVisibilityForm extends FormBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state object.
    */
-  public function updateOperator(array $form, FormStateInterface $form_state) {
+  public function updateOperator(array $form, FormStateInterface $form_state): void {
     $operator_value = $form_state->getValue('operator');
     $component = $this->getCurrentComponent();
     $component->set('visibility_operator', $operator_value);
@@ -255,7 +255,7 @@ class BlockVisibilityForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     $parameters = $this->getParameters($form_state->getValue('condition'));
     $operator = $form_state->getValue('operator');
     $parameters['operator'] = $operator === 'or' ? $operator : 'and';
@@ -272,7 +272,7 @@ class BlockVisibilityForm extends FormBase {
    * @return array
    *   List of Url parameters.
    */
-  protected function getParameters($visibility_id) {
+  protected function getParameters(string $visibility_id): array {
     return [
       'section_storage_type' => $this->sectionStorage->getStorageType(),
       'section_storage' => $this->sectionStorage->getStorageId(),
@@ -295,7 +295,7 @@ class BlockVisibilityForm extends FormBase {
    * @return string
    *   The title for the block visibility form.
    */
-  public function title(SectionStorageInterface $section_storage, $delta, $uuid) {
+  public function title(SectionStorageInterface $section_storage, int $delta, string $uuid): string {
     $block_label = $section_storage
       ->getSection($delta)
       ->getComponent($uuid)

@@ -87,7 +87,7 @@ class BlockVisibilityTest extends WebDriverTestBase {
   /**
    * Tests conditional visibility.
    */
-  public function testConditionalVisibility() {
+  public function testConditionalVisibility(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -239,7 +239,7 @@ class BlockVisibilityTest extends WebDriverTestBase {
    * @param string $condition
    *   The visibility condition to add.
    */
-  protected function beginAddCondition($condition) {
+  protected function beginAddCondition(string $condition): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -256,7 +256,7 @@ class BlockVisibilityTest extends WebDriverTestBase {
   /**
    * Removes the visibility rules from the body field block.
    */
-  protected function removeVisibilityConditions() {
+  protected function removeVisibilityConditions(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
