@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\layout_builder\Form;
 
 use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Ajax\AjaxFormHelperTrait;
+use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Condition\ConditionInterface;
 use Drupal\Core\Condition\ConditionManager;
 use Drupal\Core\Form\FormBase;
@@ -12,7 +15,9 @@ use Drupal\Core\Form\SubformState;
 use Drupal\Core\Plugin\ContextAwarePluginAssignmentTrait;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Plugin\PluginFormFactoryInterface;
+use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Plugin\PluginWithFormsInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\layout_builder\Context\LayoutBuilderContextTrait;
 use Drupal\layout_builder\Controller\LayoutRebuildTrait;
@@ -93,7 +98,7 @@ class ConfigureVisibilityForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
+  public function getFormId(): string {
     return 'layout_builder_configure_visibility';
   }
 
@@ -108,7 +113,7 @@ class ConfigureVisibilityForm extends FormBase {
    * @return \Drupal\Core\Condition\ConditionInterface
    *   The condition plugin.
    */
-  protected function prepareCondition($condition_id, array $value) {
+  protected function prepareCondition($condition_id, array $value): ConditionInterface {
     if ($value) {
       return $this->conditionManager->createInstance($value['id'], $value);
     }
@@ -123,7 +128,7 @@ class ConfigureVisibilityForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL, $delta = NULL, $uuid = NULL, $plugin_id = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL, $delta = NULL, $uuid = NULL, $plugin_id = NULL): array {
     $this->sectionStorage = $section_storage;
     $this->delta = $delta;
     $this->uuid = $uuid;
@@ -228,7 +233,7 @@ class ConfigureVisibilityForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  protected function successfulAjaxSubmit(array $form, FormStateInterface $form_state) {
+  protected function successfulAjaxSubmit(array $form, FormStateInterface $form_state): AjaxResponse {
     return $this->rebuildAndClose($this->sectionStorage);
   }
 
@@ -241,7 +246,7 @@ class ConfigureVisibilityForm extends FormBase {
    * @return \Drupal\Core\Plugin\PluginFormInterface
    *   The plugin form for the condition.
    */
-  protected function getConditionPluginForm(ConditionInterface $condition) {
+  protected function getConditionPluginForm(ConditionInterface $condition): PluginFormInterface {
     if ($condition instanceof PluginWithFormsInterface) {
       return $this->pluginFormFactory->createInstance($condition, 'configure');
     }
@@ -258,10 +263,10 @@ class ConfigureVisibilityForm extends FormBase {
    * @param string $uuid
    *   The UUID of the block being updated.
    *
-   * @return string
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
    *   The title for the block visibility form.
    */
-  public function title(SectionStorageInterface $section_storage, $delta, $uuid) {
+  public function title(SectionStorageInterface $section_storage, $delta, $uuid): TranslatableMarkup {
     $block_label = $section_storage
       ->getSection($delta)
       ->getComponent($uuid)
