@@ -5,7 +5,6 @@ namespace Drupal\datetime\Plugin\views\filter;
 use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\views\FieldAPIHandlerTrait;
 use Drupal\views\Plugin\views\filter\Date as NumericDate;
@@ -76,7 +75,7 @@ class Date extends NumericDate implements ContainerFactoryPluginInterface {
     $this->requestStack = $request_stack;
 
     $definition = $this->getFieldStorageDefinition();
-    if ($definition->getSetting('datetime_type') === DateTimeItem::DATETIME_TYPE_DATE) {
+    if ($definition->getSetting('datetime_type') === DateTimeItemInterface::DATETIME_TYPE_DATE) {
       // Date format depends on field storage format.
       $this->dateFormat = DateTimeItemInterface::DATE_STORAGE_FORMAT;
       // Timezone offset calculation is not applicable to dates that are stored

@@ -3,7 +3,6 @@
 namespace Drupal\Tests\datetime\Functional\Views;
 
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
@@ -80,7 +79,7 @@ class FilterDateTest extends ViewTestBase {
       'field_name' => $this->fieldName,
       'entity_type' => 'node',
       'type' => 'datetime',
-      'settings' => ['datetime_type' => DateTimeItem::DATETIME_TYPE_DATETIME],
+      'settings' => ['datetime_type' => DateTimeItemInterface::DATETIME_TYPE_DATETIME],
     ]);
     $fieldStorage->save();
     $field = FieldConfig::create([

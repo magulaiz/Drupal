@@ -6,7 +6,6 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 
 /**
@@ -26,7 +25,7 @@ class DateTimeWidgetBase extends WidgetBase {
       '#required' => $element['#required'],
     ];
 
-    if ($this->getFieldSetting('datetime_type') == DateTimeItem::DATETIME_TYPE_DATE) {
+    if ($this->getFieldSetting('datetime_type') == DateTimeItemInterface::DATETIME_TYPE_DATE) {
       // A date-only field should have no timezone conversion performed, so
       // use the same timezone as for storage.
       $element['value']['#date_timezone'] = DateTimeItemInterface::STORAGE_TIMEZONE;
@@ -48,7 +47,7 @@ class DateTimeWidgetBase extends WidgetBase {
     // storage timezone and format.
 
     $datetime_type = $this->getFieldSetting('datetime_type');
-    if ($datetime_type === DateTimeItem::DATETIME_TYPE_DATE) {
+    if ($datetime_type === DateTimeItemInterface::DATETIME_TYPE_DATE) {
       $storage_format = DateTimeItemInterface::DATE_STORAGE_FORMAT;
     }
     else {
@@ -90,7 +89,7 @@ class DateTimeWidgetBase extends WidgetBase {
     $month = $date->format('m');
     $day = $date->format('d');
     $date->setTimezone(new \DateTimeZone($timezone));
-    if ($this->getFieldSetting('datetime_type') === DateTimeItem::DATETIME_TYPE_DATE) {
+    if ($this->getFieldSetting('datetime_type') === DateTimeItemInterface::DATETIME_TYPE_DATE) {
       $date->setDefaultDateTime();
       // Reset the date to handle cases where the UTC offset is greater than
       // 12 hours.
