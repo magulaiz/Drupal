@@ -12,6 +12,7 @@ use Symfony\Component\DependencyInjection\Compiler\InlineServiceDefinitionsPass;
 use Symfony\Component\DependencyInjection\Compiler\RemoveUnusedDefinitionsPass;
 use Symfony\Component\DependencyInjection\Compiler\ReplaceAliasByActualDefinitionPass;
 use Symfony\Component\DependencyInjection\Compiler\ResolveHotPathPass;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -34,7 +35,7 @@ class NormalInstallerServiceProvider implements ServiceProviderInterface {
    */
   public function register(ContainerBuilder $container) {
     // During the installer user 1 is a superuser.
-    $container->setParameter('security.enable_super_user', TRUE);
+    $container->setDefinition(InstallerAccessPolicy::class, (new Definition())->addTag('access_policy'));
 
     // Replace cache services with in-memory implementations. The results in
     // less queries to set caches which will only be cleared on the next module

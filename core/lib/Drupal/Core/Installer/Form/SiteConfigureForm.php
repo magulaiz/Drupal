@@ -74,6 +74,8 @@ class SiteConfigureForm extends ConfigFormBase {
    *   The module installer.
    * @param \Drupal\Core\Locale\CountryManagerInterface|\Drupal\user\UserNameValidator $userNameValidator
    *   The user validator.
+   * @param bool|null $superUserAccessPolicy
+   *   The value of the 'security.enable_super_user' container parameter.
    */
   public function __construct(
     $root,
@@ -81,6 +83,7 @@ class SiteConfigureForm extends ConfigFormBase {
     UserStorageInterface $user_storage,
     ModuleInstallerInterface $module_installer,
     protected CountryManagerInterface|UserNameValidator $userNameValidator,
+    protected ?bool $superUserAccessPolicy = NULL,
   ) {
     $this->root = $root;
     $this->sitePath = $site_path;
@@ -88,9 +91,11 @@ class SiteConfigureForm extends ConfigFormBase {
     $this->moduleInstaller = $module_installer;
     if ($userNameValidator instanceof CountryManagerInterface) {
       @trigger_error('Calling ' . __METHOD__ . '() with the $userNameValidator argument as CountryManagerInterface is deprecated in drupal:10.3.0 and must be UserNameValidator in drupal:11.0.0. See https://www.drupal.org/node/3431205', E_USER_DEPRECATED);
-      $userNameValidator = \Drupal::service('user.name_validator');
+      $this->userNameValidator = \Drupal::service('user.name_validator');
     }
-    $this->userNameValidator = $userNameValidator;
+    if ($this->superUserAccessPolicy === NULL) {
+      $this->superUserAccessPolicy = \Drupal::getContainer()->getParameter('security.enable_super_user');
+    }
   }
 
   /**
@@ -103,6 +108,7 @@ class SiteConfigureForm extends ConfigFormBase {
       $container->get('entity_type.manager')->getStorage('user'),
       $container->get('module_installer'),
       $container->get('user.name_validator'),
+      $container->getParameter('security.enable_super_user'),
     );
   }
 
@@ -324,9 +330,14 @@ class SiteConfigureForm extends ConfigFormBase {
         }
       }
     }
-    // @todo What to do if there is no admin role?
-    if ($user_1_is_admin === FALSE && $admin_role !== NULL) {
-      $account->addRole($admin_role);
+
+    if ($user_1_is_admin === FALSE) {
+      if ($admin_role !== NULL) {
+        $account->addRole($admin_role);
+      }
+      elseif ($this->superUserAccessPolicy === FALSE) {
+        $this->messenger()->addWarning($this->t('User 1 does not have administrator access.'));
+      }
     }
 
     $account->save();
