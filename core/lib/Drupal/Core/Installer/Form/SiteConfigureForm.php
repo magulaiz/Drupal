@@ -4,12 +4,13 @@ namespace Drupal\Core\Installer\Form;
 
 use Drupal\Core\Datetime\TimeZoneFormHelper;
 use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleInstallerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Locale\CountryManagerInterface;
 use Drupal\Core\Site\Settings;
-use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
 use Drupal\user\UserStorageInterface;
 use Drupal\user\UserNameValidator;
@@ -68,8 +69,8 @@ class SiteConfigureForm extends ConfigFormBase {
    *   The app root.
    * @param string $site_path
    *   The site path.
-   * @param \Drupal\user\UserStorageInterface $user_storage
-   *   The user storage.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface|\Drupal\user\UserStorageInterface $entityTypeManager
+   *   The entity type manager.
    * @param \Drupal\Core\Extension\ModuleInstallerInterface $module_installer
    *   The module installer.
    * @param \Drupal\Core\Locale\CountryManagerInterface|\Drupal\user\UserNameValidator $userNameValidator
@@ -80,14 +81,18 @@ class SiteConfigureForm extends ConfigFormBase {
   public function __construct(
     $root,
     $site_path,
-    UserStorageInterface $user_storage,
+    protected EntityTypeManagerInterface|UserStorageInterface $entityTypeManager,
     ModuleInstallerInterface $module_installer,
     protected CountryManagerInterface|UserNameValidator $userNameValidator,
     protected ?bool $superUserAccessPolicy = NULL,
   ) {
     $this->root = $root;
     $this->sitePath = $site_path;
-    $this->userStorage = $user_storage;
+    if ($this->entityTypeManager instanceof UserStorageInterface) {
+      @trigger_error('Calling ' . __METHOD__ . '() with the $entityTypeManager argument as UserStorageInterface is deprecated in drupal:10.3.0 and must be EntityTypeManagerInterface in drupal:11.0.0. See https://www.drupal.org/node/3443172', E_USER_DEPRECATED);
+      $this->entityTypeManager = \Drupal::entityTypeManager();
+    }
+    $this->userStorage = $this->entityTypeManager->getStorage('user');
     $this->moduleInstaller = $module_installer;
     if ($userNameValidator instanceof CountryManagerInterface) {
       @trigger_error('Calling ' . __METHOD__ . '() with the $userNameValidator argument as CountryManagerInterface is deprecated in drupal:10.3.0 and must be UserNameValidator in drupal:11.0.0. See https://www.drupal.org/node/3431205', E_USER_DEPRECATED);
@@ -105,7 +110,7 @@ class SiteConfigureForm extends ConfigFormBase {
     return new static(
       $container->getParameter('app.root'),
       $container->getParameter('site.path'),
-      $container->get('entity_type.manager')->getStorage('user'),
+      $container->get('entity_type.manager'),
       $container->get('module_installer'),
       $container->get('user.name_validator'),
       $container->getParameter('security.enable_super_user'),
@@ -319,7 +324,8 @@ class SiteConfigureForm extends ConfigFormBase {
     // Ensure user 1 has an administrator role if one exists.
     $admin_role = NULL;
     $user_1_is_admin = FALSE;
-    foreach (Role::loadMultiple() as $role) {
+    foreach ($this->entityTypeManager->getStorage('user_role')->loadMultiple() as $role) {
+      assert($role instanceof RoleInterface);
       if ($role->isAdmin()) {
         if ($admin_role === NULL) {
           $admin_role = $role->id();
