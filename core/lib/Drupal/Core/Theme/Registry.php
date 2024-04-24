@@ -257,11 +257,13 @@ class Registry implements DestructableInterface {
     // Some theme hook implementations such as the one in Views request a lot of
     // information such as field schemas. These might be broken until an update
     // is run, so we need to build a limited registry while on update.php.
-    // @todo Put list of modules to enable behind a setting.
-    if (\Drupal::hasContainer() && \Drupal::getContainer()->get('kernel') instanceof UpdateKernel) {
+    $filter_list = \Drupal::service('settings')->get('update_theme_registry_module_filter', ['system']);
+    if ($filter_list !== FALSE && \Drupal::hasContainer() && \Drupal::service('kernel') instanceof UpdateKernel) {
+      $filter_list = array_fill_keys($filter_list, TRUE);
+
       // Call ::build() with only the system module and then revert the list.
       $module_list = $this->moduleHandler->getModuleList();
-      $system_only = array_intersect_key($module_list, ['system' => TRUE]);
+      $system_only = array_intersect_key($module_list, $filter_list);
       $this->moduleHandler->setModuleList($system_only);
       $this->build();
       $this->moduleHandler->setModuleList($module_list);
