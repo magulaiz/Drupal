@@ -177,7 +177,6 @@ class Sql extends QueryPluginBase {
     $this->messenger = $messenger;
     if (!$logger) {
       @trigger_error('Calling ' . __CLASS__ . '::__construct() without the $logger argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/2932520', E_USER_DEPRECATED);
-      @trigger_error('Calling ' . __CLASS__ . '::__construct() without the $logger argument is deprecated in drupal:10.3.0 and will be required before drupal:11.0.0.', E_USER_DEPRECATED);
       $logger = \Drupal::service('logger.channel.views');
     }
     $this->logger = $logger;
