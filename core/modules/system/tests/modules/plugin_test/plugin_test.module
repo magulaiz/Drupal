@@ -5,6 +5,8 @@
  * Helper module for the plugin tests.
  */
 
+use Drupal\Component\Plugin\PluginInspectionInterface;
+use Drupal\Core\Form\SubformStateInterface;
 use Drupal\plugin_test\Plugin\plugin_test\fruit\Apple;
 
 /**
@@ -27,4 +29,11 @@ function plugin_test_plugin_test_alter(&$definitions) {
     $definition['altered'] = TRUE;
   }
   $definitions['user_login']['altered_single'] = TRUE;
+}
+
+/**
+ * Implements hook_plugin_subform_alter().
+ */
+function plugin_test_plugin_subform_alter(array &$form, SubformStateInterface $form_state, PluginInspectionInterface $plugin) {
+  $form['#' . __FUNCTION__] = TRUE;
 }

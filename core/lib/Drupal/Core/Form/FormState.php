@@ -772,6 +772,14 @@ class FormState implements FormStateInterface {
   /**
    * {@inheritdoc}
    */
+  public function addSubmitHandler($submit_handler) {
+    $this->submit_handlers[] = $submit_handler;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getSubmitHandlers() {
     return $this->submit_handlers;
   }
@@ -851,6 +859,14 @@ class FormState implements FormStateInterface {
    */
   public function setValidateHandlers(array $validate_handlers) {
     $this->validate_handlers = $validate_handlers;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addValidateHandler($validate_handler) {
+    $this->validate_handlers[] = $validate_handler;
     return $this;
   }
 

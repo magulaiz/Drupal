@@ -305,6 +305,15 @@ abstract class FormStateDecoratorBase implements FormStateInterface {
   /**
    * {@inheritdoc}
    */
+  public function addSubmitHandler($submit_handler) {
+    $this->decoratedFormState->addSubmitHandler($submit_handler);
+
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getSubmitHandlers() {
     return $this->decoratedFormState->getSubmitHandlers();
   }
@@ -385,6 +394,15 @@ abstract class FormStateDecoratorBase implements FormStateInterface {
    */
   public function setValidateHandlers(array $validate_handlers) {
     $this->decoratedFormState->setValidateHandlers($validate_handlers);
+
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addValidateHandler($validate_handler) {
+    $this->decoratedFormState->addValidateHandler($validate_handler);
 
     return $this;
   }
