@@ -287,6 +287,8 @@
         this.$stickyTable[0].style.visibility = this.stickyVisible
           ? 'visible'
           : 'hidden';
+        // Recalculate sticky.
+        this.recalculateSticky();
       },
 
       /**
