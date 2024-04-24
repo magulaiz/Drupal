@@ -186,7 +186,7 @@ class UrlHelper {
    *
    * @ingroup php_wrappers
    */
-  public static function parse($url) {
+  public static function parse(string $url) {
     $options = [
       'path' => NULL,
       'query' => [],
