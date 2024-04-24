@@ -214,6 +214,17 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
       'init_commands' => [],
     ];
 
+    if (!empty($connection_options['isolation_level'])) {
+      $connection_options['init_commands'] += [
+        'isolation_level' => 'SET SESSION TRANSACTION ISOLATION LEVEL ' . strtoupper($connection_options['isolation_level']),
+      ];
+    }
+
+    // Execute initial commands.
+    foreach ($connection_options['init_commands'] as $sql) {
+      $pdo->exec($sql);
+    }
+
     // Set MySQL sql_mode options to defaults, unless the legacy property
     // 'sql_mode' is already defined.
     if (isset($connection_options['init_commands']['sql_mode'])) {
@@ -237,18 +248,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
       // otherwise the $connection_options variable which is passed by reference
       // gets polluted with it.
       $sql_mode_command = "SET sql_mode = '{$sql_mode_options}'";
-    }
-    if (!empty($connection_options['isolation_level'])) {
-      $connection_options['init_commands'] += [
-        'isolation_level' => 'SET SESSION TRANSACTION ISOLATION LEVEL ' . strtoupper($connection_options['isolation_level']),
-      ];
-    }
 
-    // Execute initial commands.
-    foreach ($connection_options['init_commands'] as $sql) {
-      $pdo->exec($sql);
-    }
-    if (isset($sql_mode_command)) {
       $pdo->exec($sql_mode_command);
     }
 
