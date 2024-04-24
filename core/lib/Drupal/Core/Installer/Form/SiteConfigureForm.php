@@ -99,7 +99,8 @@ class SiteConfigureForm extends ConfigFormBase {
       $this->userNameValidator = \Drupal::service('user.name_validator');
     }
     if ($this->superUserAccessPolicy === NULL) {
-      $this->superUserAccessPolicy = \Drupal::getContainer()->getParameter('security.enable_super_user');
+      @trigger_error('Calling ' . __METHOD__ . '() without the $superUserAccessPolicy argument is deprecated in drupal:10.3.0 and must be passed in drupal:11.0.0. See https://www.drupal.org/node/3443172', E_USER_DEPRECATED);
+      $this->superUserAccessPolicy = \Drupal::getContainer()->getParameter('security.enable_super_user') ?? TRUE;
     }
   }
 
@@ -113,7 +114,10 @@ class SiteConfigureForm extends ConfigFormBase {
       $container->get('entity_type.manager'),
       $container->get('module_installer'),
       $container->get('user.name_validator'),
-      $container->getParameter('security.enable_super_user'),
+      // In order to disable the super user policy this must be set to FALSE. If
+      // the container parameter is missing then the policy is enabled. See
+      // \Drupal\Core\DependencyInjection\Compiler\SuperUserAccessPolicyPass.
+      $container->getParameter('security.enable_super_user') ?? TRUE,
     );
   }
 
