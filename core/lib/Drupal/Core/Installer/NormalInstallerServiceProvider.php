@@ -35,7 +35,7 @@ class NormalInstallerServiceProvider implements ServiceProviderInterface {
    */
   public function register(ContainerBuilder $container) {
     // During the installer user 1 is a superuser.
-    $container->setDefinition(InstallerAccessPolicy::class, (new Definition())->addTag('access_policy'));
+    $container->setDefinition(InstallerAccessPolicy::class, (new Definition())->addTag('access_policy')->setPublic(FALSE));
 
     // Replace cache services with in-memory implementations. The results in
     // less queries to set caches which will only be cleared on the next module
