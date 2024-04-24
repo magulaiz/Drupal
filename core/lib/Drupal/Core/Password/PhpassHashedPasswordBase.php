@@ -124,6 +124,8 @@ abstract class PhpassHashedPasswordBase implements PasswordInterface {
    *   A 12 character string containing the iteration count and a random salt.
    */
   protected function generateSalt() {
+    @trigger_error('Calling ' . __METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. See https://www.drupal.org/node/3443277', E_USER_DEPRECATED);
+
     $output = '$S$';
     // We encode the final log2 iteration count in base 64.
     $output .= static::$ITOA64[$this->countLog2];
