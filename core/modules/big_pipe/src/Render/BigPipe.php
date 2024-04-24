@@ -172,7 +172,8 @@ class BigPipe {
     protected HttpKernelInterface $httpKernel,
     protected EventDispatcherInterface $eventDispatcher,
     protected ConfigFactoryInterface $configFactory,
-    protected MessengerInterface $messenger) {
+    protected MessengerInterface $messenger,
+  ) {
   }
 
   /**
