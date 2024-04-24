@@ -7,9 +7,9 @@
   display: block;
   padding-inline: var(--admin-toolbar-space-16) var(--admin-toolbar-space-12);
   padding-block: var(--admin-toolbar-space-12);
-  border-radius: var(--admin-toolbar-space-8);
   text-decoration: none;
   color: var(--admin-toolbar-color-gray-800);
+  border-radius: var(--admin-toolbar-space-8);
   font-size: var(--admin-toolbar-font-size-info-sm);
   line-height: var(--admin-toolbar-line-height-info-sm);
   font-variation-settings: "wght" 700;
