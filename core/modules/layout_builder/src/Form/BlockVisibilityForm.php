@@ -31,20 +31,6 @@ class BlockVisibilityForm extends FormBase {
   use SectionComponentTrait;
 
   /**
-   * The condition manager.
-   *
-   * @var \Drupal\Core\Condition\ConditionManager
-   */
-  protected $conditionManager;
-
-  /**
-   * The form builder.
-   *
-   * @var \Drupal\Core\Form\FormBuilderInterface
-   */
-  protected $formBuilder;
-
-  /**
    * The section storage.
    *
    * @var \Drupal\layout_builder\SectionStorageInterface
@@ -66,26 +52,9 @@ class BlockVisibilityForm extends FormBase {
   protected $uuid;
 
   /**
-   * The layout tempstore repository.
-   *
-   * @var \Drupal\layout_builder\LayoutTempstoreRepositoryInterface
-   */
-  protected $layoutTempstoreRepository;
-
-  /**
    * Constructs a BlockVisibilityForm object.
-   *
-   * @param \Drupal\Core\Executable\ExecutableManagerInterface $condition_manager
-   *   The condition plugin manager.
-   * @param \Drupal\Core\Form\FormBuilderInterface $form_builder
-   *   The form builder.
-   * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layout_tempstore_repository
-   *   The layout tempstore repository.
    */
-  public function __construct(ExecutableManagerInterface $condition_manager, FormBuilderInterface $form_builder, LayoutTempstoreRepositoryInterface $layout_tempstore_repository) {
-    $this->conditionManager = $condition_manager;
-    $this->formBuilder = $form_builder;
-    $this->layoutTempstoreRepository = $layout_tempstore_repository;
+  public function __construct(protected ExecutableManagerInterface $conditionManager, protected FormBuilderInterface $formBuilder, protected LayoutTempstoreRepositoryInterface $layoutTempstoreRepository) {
   }
 
   /**

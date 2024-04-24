@@ -18,30 +18,9 @@ class SectionComponentVisibility implements EventSubscriberInterface {
   use ConditionAccessResolverTrait;
 
   /**
-   * The context handler.
-   *
-   * @var \Drupal\Core\Plugin\Context\ContextHandlerInterface
-   */
-  protected $contextHandler;
-
-  /**
-   * The condition plugin manager.
-   *
-   * @var \Drupal\Core\Executable\ExecutableManagerInterface
-   */
-  protected $conditionManager;
-
-  /**
    * Creates a SectionComponentVisibility object.
-   *
-   * @param \Drupal\Core\Plugin\Context\ContextHandlerInterface $context_handler
-   *   The context handler.
-   * @param \Drupal\Core\Executable\ExecutableManagerInterface $condition_manager
-   *   The condition plugin manager.
    */
-  public function __construct(ContextHandlerInterface $context_handler, ExecutableManagerInterface $condition_manager) {
-    $this->contextHandler = $context_handler;
-    $this->conditionManager = $condition_manager;
+  public function __construct(protected ContextHandlerInterface $contextHandler, protected ExecutableManagerInterface $conditionManager) {
   }
 
   /**

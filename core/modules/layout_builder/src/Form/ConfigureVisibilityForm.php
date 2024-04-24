@@ -38,34 +38,6 @@ class ConfigureVisibilityForm extends FormBase {
   use SectionComponentTrait;
 
   /**
-   * The layout tempstore repository.
-   *
-   * @var \Drupal\layout_builder\LayoutTempstoreRepositoryInterface
-   */
-  protected $layoutTempstoreRepository;
-
-  /**
-   * The condition manager.
-   *
-   * @var \Drupal\Core\Condition\ConditionManager
-   */
-  protected $conditionManager;
-
-  /**
-   * The uuid generator.
-   *
-   * @var \Drupal\Component\Uuid\UuidInterface
-   */
-  protected $uuidGenerator;
-
-  /**
-   * The plugin form factory.
-   *
-   * @var \Drupal\Core\Plugin\PluginFormFactoryInterface
-   */
-  protected $pluginFormFactory;
-
-  /**
    * The section storage.
    *
    * @var \Drupal\layout_builder\SectionStorageInterface
@@ -102,21 +74,8 @@ class ConfigureVisibilityForm extends FormBase {
 
   /**
    * Constructs a ConfigureVisibilityForm object.
-   *
-   * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layout_tempstore_repository
-   *   The layout tempstore repository.
-   * @param \Drupal\Core\Condition\ConditionManager $condition_manager
-   *   The condition plugin manager.
-   * @param \Drupal\Component\Uuid\UuidInterface $uuid_generator
-   *   The uuid generator.
-   * @param \Drupal\Core\Plugin\PluginFormFactoryInterface $plugin_form_manager
-   *   The plugin form manager.
    */
-  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository, ConditionManager $condition_manager, UuidInterface $uuid_generator, PluginFormFactoryInterface $plugin_form_manager) {
-    $this->layoutTempstoreRepository = $layout_tempstore_repository;
-    $this->conditionManager = $condition_manager;
-    $this->uuidGenerator = $uuid_generator;
-    $this->pluginFormFactory = $plugin_form_manager;
+  public function __construct(protected LayoutTempstoreRepositoryInterface $layoutTempstoreRepository, protected ConditionManager $conditionManager, protected UuidInterface $uuidGenerator, protected PluginFormFactoryInterface $pluginFormFactory) {
   }
 
   /**
