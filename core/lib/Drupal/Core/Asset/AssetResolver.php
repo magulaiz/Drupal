@@ -125,13 +125,24 @@ class AssetResolver implements AssetResolverInterface {
     if (!$assets->getLibraries()) {
       return [];
     }
+    $libraries_to_load = $this->getLibrariesToLoad($assets);
+    foreach ($libraries_to_load as $key => $library) {
+      [$extension, $name] = explode('/', $library, 2);
+      $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
+      if (empty($definition['css'])) {
+        unset($libraries_to_load[$key]);
+      }
+    }
+    $libraries_to_load = array_values($libraries_to_load);
+    if (!$libraries_to_load) {
+      return [];
+    }
     if (!isset($language)) {
       $language = $this->languageManager->getCurrentLanguage();
     }
     $theme_info = $this->themeManager->getActiveTheme();
     // Add the theme name to the cache key since themes may implement
     // hook_library_info_alter().
-    $libraries_to_load = $this->getLibrariesToLoad($assets);
     $cid = 'css:' . $theme_info->getName() . ':' . $language->getId() . Crypt::hashBase64(serialize($libraries_to_load)) . (int) $optimize;
     if ($cached = $this->cache->get($cid)) {
       return $cached->data;
@@ -149,11 +160,6 @@ class AssetResolver implements AssetResolverInterface {
     foreach ($libraries_to_load as $key => $library) {
       [$extension, $name] = explode('/', $library, 2);
       $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
-      if (empty($definition['css'])) {
-        unset($libraries_to_load[$key]);
-        continue;
-      }
-
       foreach ($definition['css'] as $options) {
         $options += $default_options;
         // Copy the asset library license information to each file.
