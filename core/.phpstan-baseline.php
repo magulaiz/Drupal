@@ -582,11 +582,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Updater/Module.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\action\\\\Form\\\\ActionFormBase\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/action/src/Form/ActionFormBase.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$position might not be defined\\.$#',
 	'count' => 4,
 	'path' => __DIR__ . '/modules/block/tests/src/Functional/BlockRenderOrderTest.php',
@@ -615,26 +610,6 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$loaded might not be defined\\.$#',
 	'count' => 9,
 	'path' => __DIR__ . '/modules/block_content/tests/src/Functional/BlockContentRevisionsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$callable in empty\\(\\) always exists and is not falsy\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/book/src/BookExport.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\book\\\\BookOutline\\:\\:nextLink\\(\\) should return array but return statement is missing\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/book/src/BookOutline.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\book\\\\BookOutline\\:\\:prevLink\\(\\) should return array but return statement is missing\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/book/src/BookOutline.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\book\\\\Form\\\\BookOutlineForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/book/src/Form/BookOutlineForm.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$ghs_config_classes in empty\\(\\) always exists and is always falsy\\.$#',
@@ -827,11 +802,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/file/file.module',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Variable \\$message might not be defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/file.module',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$rows in empty\\(\\) always exists and is not falsy\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/file/src/Plugin/Field/FieldFormatter/TableFormatter.php',
@@ -870,16 +840,6 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$rows might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/filter/src/Plugin/Filter/FilterHtml.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\forum\\\\ForumManager\\:\\:getTopicOrder\\(\\) should return array but return statement is missing\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/forum/src/ForumManager.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$vocabulary in empty\\(\\) always exists and is not falsy\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/forum/src/ForumUninstallValidator.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\history\\\\Plugin\\\\views\\\\field\\\\HistoryUserTimestamp\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#',
@@ -1569,16 +1529,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/taxonomy/src/VocabularyForm.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Method Drupal\\\\tour\\\\TipPluginBase\\:\\:get\\(\\) should return string but return statement is missing\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/tour/src/TipPluginBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Variable \\$location on left side of \\?\\? always exists and is not nullable\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/tour/src/TipPluginBase.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$violation_messages might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/update/src/ProjectRelease.php',
@@ -2145,12 +2095,6 @@ $ignoreErrors[] = [
 	'message' => '#^Result of static method Drupal\\\\Composer\\\\Composer\\:\\:ensureComposerVersion\\(\\) \\(void\\) is used\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Composer/ComposerTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to deprecated method expectError\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\:
-https\\://github\\.com/sebastianbergmann/phpunit/issues/5062$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Config/ConfigTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Trying to mock an undefined method getRevisionId\\(\\) on class Drupal\\\\Tests\\\\Core\\\\Entity\\\\UrlTestEntity\\.$#',
