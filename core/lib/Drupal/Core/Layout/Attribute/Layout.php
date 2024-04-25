@@ -24,6 +24,15 @@ use Drupal\Core\Layout\LayoutDefinition;
 class Layout extends Plugin {
 
   /**
+   * Any additional properties and values.
+   *
+   * @see \Drupal\Core\Layout\LayoutDefinition::$additional
+   *
+   * @var array
+   */
+  public readonly array $additional;
+
+  /**
    * Constructs a Layout attribute.
    *
    * @param string $id
@@ -58,6 +67,8 @@ class Layout extends Plugin {
    *   The context definition.
    * @param array $config_dependencies
    *   The config dependencies.
+   * @param mixed $additional
+   *   Additional properties passed in that can be used by a deriver.
    */
   public function __construct(
     public readonly string $id,
@@ -76,30 +87,16 @@ class Layout extends Plugin {
     public string $class = LayoutDefault::class,
     public readonly array $context_definitions = [],
     public readonly array $config_dependencies = [],
-  ) {}
+    ...$additional,
+  ) {
+    $this->additional = $additional;
+  }
 
   /**
    * {@inheritdoc}
    */
   public function get(): LayoutDefinition {
-    return new LayoutDefinition([
-      'id' => $this->id,
-      'label' => $this->label,
-      'category' => $this->category,
-      'description' => $this->description,
-      'template' => $this->template,
-      'theme_hook' => $this->theme_hook,
-      'path' => $this->path,
-      'library' => $this->library,
-      'icon' => $this->icon,
-      'icon_map' => $this->icon_map,
-      'regions' => $this->regions,
-      'default_region' => $this->default_region,
-      'deriver' => $this->deriver,
-      'class' => $this->class,
-      'context_definitions' => $this->context_definitions,
-      'config_dependencies' => $this->config_dependencies,
-    ]);
+    return new LayoutDefinition(parent::get());
   }
 
 }

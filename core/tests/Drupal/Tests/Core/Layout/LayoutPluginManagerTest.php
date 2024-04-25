@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Layout;
 
+use Composer\Autoload\ClassLoader;
 use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -91,6 +92,9 @@ class LayoutPluginManagerTest extends UnitTestCase {
     $this->cacheBackend = $this->prophesize(CacheBackendInterface::class);
 
     $namespaces = new \ArrayObject(['Drupal\Core' => vfsStream::url('root/core/lib/Drupal/Core')]);
+    $class_loader = new ClassLoader();
+    $class_loader->addPsr4("Drupal\\Core\\", vfsStream::url("root/core/lib/Drupal/Core"));
+    $class_loader->register(TRUE);
     $this->layoutPluginManager = new LayoutPluginManager($namespaces, $this->cacheBackend->reveal(), $this->moduleHandler->reveal(), $this->themeHandler->reveal());
   }
 
@@ -316,6 +320,7 @@ module_a_provided_layout:
     bottom:
       label: Bottom region
 module_a_derived_layout:
+  label: 'Invalid provider derived layout'
   deriver: \Drupal\Tests\Core\Layout\LayoutDeriver
   invalid_provider: true
 EOS;
