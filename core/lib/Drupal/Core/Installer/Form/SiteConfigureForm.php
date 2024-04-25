@@ -338,11 +338,6 @@ class SiteConfigureForm extends ConfigFormBase {
       foreach ($admin_roles as $role) {
         $account->addRole($role->id());
       }
-      if (count($admin_roles) > 0) {
-        foreach ($admin_roles as $role) {
-          $account->addRole($role->id());
-        }
-      }
       elseif ($this->superUserAccessPolicy === FALSE) {
         $this->messenger()->addWarning($this->t(
           'The user %username does not have administrator access. For more information, see the documentation on <a href="@secure-user-1-docs">securing the admin super user</a>.',
