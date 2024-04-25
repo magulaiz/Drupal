@@ -12,7 +12,7 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
-use Drupal\views\Attribute\ViewsQuery;
+use Drupal\views\Annotation\ViewsQuery;
 use Drupal\views\Plugin\views\join\JoinPluginBase;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\ResultRow;
@@ -141,6 +141,13 @@ class Sql extends QueryPluginBase {
    * The count field definition.
    */
   public array $count_field;
+
+  /**
+   * The views logger channel.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelInterface
+   */
+  protected $logger;
 
   /**
    * Constructs a Sql object.
