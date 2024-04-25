@@ -8,6 +8,7 @@ use Drupal\comment\CommentManagerInterface;
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\comment\Entity\Comment;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
@@ -222,6 +223,68 @@ class CommentPreviewTest extends CommentTestBase {
     $comment_loaded = Comment::load($comment->id());
     $this->assertEquals($expected_created_time, $comment_loaded->getCreatedTime(), 'Expected date and time for comment edited.');
     $this->drupalLogout();
+  }
+
+  /**
+   * Test preview on translated node.
+   */
+  public function testCommentPreviewOnTranslatedNode(): void {
+    \Drupal::service('module_installer')->install(['content_translation', 'language']);
+    $admin_user = $this->drupalCreateUser([
+      'administer site configuration',
+      'administer languages',
+      'access administration pages',
+      'administer content types',
+      'administer comments',
+      'create article content',
+      'access comments',
+      'post comments',
+      'skip comment approval',
+      'administer content translation',
+      'translate any entity',
+    ]);
+    $this->drupalLogin($admin_user);
+
+    // Add language.
+    $edit = ['predefined_langcode' => 'fr'];
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, 'Add language');
+
+    // Enable translation for node and comments.
+    $edit = [
+      'entity_types[node]' => TRUE,
+      'entity_types[comment]' => TRUE,
+      'settings[node][article][translatable]' => TRUE,
+      'settings[comment][comment][translatable]' => TRUE,
+    ];
+    $this->drupalGet('admin/config/regional/content-language');
+    $this->submitForm($edit, 'Save configuration');
+
+    // Enable content language negotiation UI.
+    \Drupal::state()->set('language_test.content_language_type', TRUE);
+
+    // Create comment field on article.
+    $this->addDefaultCommentField('node', 'article');
+
+    // Make comment body translatable.
+    $field_storage = FieldStorageConfig::loadByName('comment', 'comment_body');
+    $field_storage->setTranslatable(TRUE);
+    $field_storage->save();
+    $this->assertTrue($field_storage->isTranslatable(), 'Comment body is translatable.');
+
+    // Add a translation for the node.
+    $url_options = ['language' => \Drupal::languageManager()->getLanguage('fr')];
+    $this->drupalGet('node/' . $this->node->id() . '/translations/add/en/fr', $url_options);
+    $this->getSession()->getPage()->pressButton('Save (this translation)');
+
+    // Preview a comment on the translated node.
+    $this->drupalGet('fr/node/' . $this->node->id());
+    $edit = [
+      'subject[0][value]' => $this->randomMachineName(8),
+      'comment_body[0][value]' => $this->randomMachineName(16),
+    ];
+    $this->submitForm($edit, 'Preview');
+    $this->assertSession()->pageTextContains('Preview comment');
   }
 
 }
