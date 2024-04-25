@@ -10,7 +10,6 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Locale\CountryManagerInterface;
 use Drupal\Core\Site\Settings;
-use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
 use Drupal\user\UserStorageInterface;
 use Drupal\user\UserNameValidator;
@@ -326,24 +325,11 @@ class SiteConfigureForm extends ConfigFormBase {
     $account->name = $account_values['name'];
 
     // Ensure user 1 has an administrator role if one exists.
-    $admin_role = NULL;
-    $user_1_is_admin = FALSE;
-    foreach ($this->entityTypeManager->getStorage('user_role')->loadMultiple() as $role) {
-      assert($role instanceof RoleInterface);
-      if ($role->isAdmin()) {
-        if ($admin_role === NULL) {
-          $admin_role = $role->id();
-        }
-        $user_1_is_admin = $account->hasRole($role->id());
-        if ($user_1_is_admin) {
-          break;
-        }
-      }
-    }
-
-    if ($user_1_is_admin === FALSE) {
-      if ($admin_role !== NULL) {
-        $account->addRole($admin_role);
+    /** @var \Drupal\user\RoleInterface[] $admin_roles */
+    $admin_roles = $this->entityTypeManager->getStorage('user_role')->loadByProperties(['is_admin' => TRUE]);
+    if (count(array_intersect($account->getRoles(), array_keys($admin_roles))) === 0) {
+      if (count($admin_roles) > 0) {
+        $account->addRole(array_key_first($admin_roles));
       }
       elseif ($this->superUserAccessPolicy === FALSE) {
         $this->messenger()->addWarning($this->t('User 1 does not have administrator access. For more information, see the documentation on <a href="@secure-user-1-docs">securing the admin super user</a>.', ['@secure-user-1-docs' => 'https://www.drupal.org/docs/administering-a-drupal-site/security-in-drupal/securing-the-admin-super-user-1#s-disable-the-super-user-access-policy']));
