@@ -14,6 +14,7 @@ use Drupal\Core\Routing\RedirectDestinationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Routing\ResettableStackedRouteMatchInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\Entity\Render\EntityTranslationRenderTrait;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\style\Table;
@@ -23,9 +24,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines an actions-based bulk operation form element.
- *
- * @ViewsField("bulk_form")
  */
+#[ViewsField("bulk_form")]
 class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
 
   use RedirectDestinationTrait;
@@ -104,7 +104,7 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, LanguageManagerInterface $language_manager, MessengerInterface $messenger, EntityRepositoryInterface $entity_repository, ResettableStackedRouteMatchInterface $route_match = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, LanguageManagerInterface $language_manager, MessengerInterface $messenger, EntityRepositoryInterface $entity_repository, ResettableStackedRouteMatchInterface $route_match) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityTypeManager = $entity_type_manager;
@@ -112,10 +112,6 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
     $this->languageManager = $language_manager;
     $this->messenger = $messenger;
     $this->entityRepository = $entity_repository;
-    if (!$route_match) {
-      @trigger_error('Calling BulkForm::__construct() without the $route_match argument is deprecated in drupal:10.3.0 and the $route_match argument will be required in drupal:11.0.0. See https://www.drupal.org/node/3115868', E_USER_DEPRECATED);
-      $route_match = \Drupal::routeMatch();
-    }
     $this->routeMatch = $route_match;
   }
 
