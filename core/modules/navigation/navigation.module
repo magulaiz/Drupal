@@ -22,6 +22,9 @@ function navigation_help($route_name, RouteMatchInterface $route_match) {
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Navigation module provides a left-aligned, collapsible, vertical sidebar navigation.') . '</p>';
+      $output .= '<p>' . t('For more information, see the <a href=":docs">online documentation for the Navigation module</a>.', [
+        ':docs' => 'https://www.drupal.org/project/navigation',
+      ]) . '</p>';
       return $output;
   }
   $configuration_route = 'layout_builder.navigation.';
