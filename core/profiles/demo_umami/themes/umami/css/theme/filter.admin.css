@@ -14,7 +14,7 @@
   overflow: hidden;
   margin: 0;
   padding: 0.5em 0.666em;
-  border: 1px solid #ccc;
+  border: var(--border-width) solid var(--color-gray-light);
   border-top: 0;
 }
 .filter-wrapper .form-item {

@@ -12,14 +12,14 @@
 }
 .tabs__tab {
   margin: 0; /* LTR */
-  background-color: #e6eee0;
+  background-color: var(--color-primary-lightest);
 }
 .tabs__tab.is-active {
-  background-color: #fff;
+  background-color: var(--color-white);
 }
 .tabs__link {
   display: block;
-  padding: 0.75rem 1rem;
+  padding: var(--spacing-small) var(--spacing);
   text-decoration: none;
   color: inherit;
   background-color: inherit;
@@ -30,5 +30,5 @@
 .tabs__link:focus,
 .tabs__link:hover {
   outline-offset: -5px;
-  background-color: #fff;
+  background-color: var(--color-white);
 }

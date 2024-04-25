@@ -8,7 +8,7 @@
 }
 
 .menu-footer__title {
-  font-size: 1.5rem;
+  font-size: var(--spacing-larger);
   font-weight: 400;
 }
 
@@ -19,7 +19,7 @@
 
 .menu-footer .menu-footer__link {
   text-decoration: none;
-  color: #fff;
+  color: var(--color-white);
   background-color: inherit;
   font-weight: 700;
 }
@@ -28,8 +28,8 @@
 .menu-footer .menu-footer__link:focus,
 .menu-footer .menu-footer__link:hover {
   text-decoration: underline;
-  outline-color: #fff;
-  background-color: #000;
+  outline-color: var(--color-white);
+  background-color: var(--color-black);
 }
 
 @media screen and (min-width: 60rem) {

@@ -13,10 +13,10 @@
   transition: background-color 0.5s ease;
   text-align: center;
   text-decoration: none;
-  color: #fff;
-  border: 2px solid #008068;
-  border-radius: 3px;
-  background-color: #008068;
+  color: var(--color-white);
+  border: var(--border-width-medium) solid var(--color-primary);
+  border-radius: var(--border-radius);
+  background-color: var(--color-primary);
   font-family: "Scope One", Georgia, serif;
   font-size: 1.2rem;
 }
@@ -26,8 +26,8 @@
 .button:focus {
   transition: background-color 0.5s ease;
   text-decoration: none;
-  color: #000;
-  background-color: #e6eee0;
+  color: var(--color-black);
+  background-color: var(--color-primary-lightest);
 }
 
 .button[disabled]:hover,
@@ -35,26 +35,26 @@
 .button[disabled]:focus,
 .button[disabled] {
   cursor: default;
-  color: #464646;
-  background: #767775;
+  color: var(--color-gray-dark);
+  background: var(--color-gray);
 }
 
 .form-actions {
   display: flex;
   flex-wrap: wrap;
-  margin: -0.5rem;
-  padding: 0.75rem 0;
+  margin: calc(var(--spacing-small) * -1);
+  padding: var(--spacing-small) 0;
 }
 
 @media screen and (min-width: 77em) {
   .form-actions {
-    margin: 1rem -0.5rem;
+    margin: var(--spacing) calc(var(--spacing-small) * -1);
     padding: 0;
   }
 }
 
 .form-actions > .button,
 .form-actions > .form-wrapper {
-  margin: 0.5rem;
+  margin: var(--spacing-small);
   line-height: normal;
 }

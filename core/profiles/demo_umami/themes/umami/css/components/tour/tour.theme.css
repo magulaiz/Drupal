@@ -1,7 +1,7 @@
 .shepherd-element:focus {
   outline-width: 1px;
   outline-style: dotted;
-  outline-color: #008068;
+  outline-color: var(--color-primary);
   outline-offset: 2px;
   box-shadow: none;
 }
@@ -12,19 +12,19 @@
 }
 
 .shepherd-cancel-icon:focus {
-  color: #fff;
+  color: var(--color-white);
   background-color: transparent;
 }
 
 .shepherd-cancel-icon:hover,
 .shepherd-cancel-icon:focus {
-  color: #000;
+  color: var(--color-black);
   background-color: #efefef;
 }
 
 .shepherd-title {
   margin: 0;
-  color: #fff;
+  color: var(--color-white);
   font-family: "Lucida Grande", "Lucida Sans Unicode", "DejaVu Sans", "Lucida Sans", sans-serif;
   font-size: 18px;
   font-weight: bold;

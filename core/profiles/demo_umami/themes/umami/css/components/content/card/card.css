@@ -7,8 +7,8 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 1rem;
-  border: 1px solid #fcece7;
+  padding: var(--spacing);
+  border: var(--border-width) solid var(--color-tertiary-dark);
 }
 
 .view-mode-card .node__title {
@@ -17,21 +17,21 @@
 
 .view-mode-card .field--name-title {
   text-decoration: none;
-  color: #000;
+  color: var(--color-black);
   font-size: 1.424rem;
   font-weight: 400;
 }
 
 .view-mode-card .node__link {
   text-decoration: none;
-  color: #000;
+  color: var(--color-black);
   background-color: inherit;
 }
 
 .view-mode-card .node__link:focus,
 .view-mode-card .node__link:hover {
   text-decoration: underline;
-  color: #000;
+  color: var(--color-black);
 }
 
 .view-mode-card .field--name-field-media-image img {
@@ -41,6 +41,6 @@
 }
 
 .view-mode-card .label-items {
-  color: #5f635d;
+  color: var(--color-gray-dark);
   font-size: 0.889rem;
 }
