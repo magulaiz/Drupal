@@ -9,7 +9,6 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\User;
 use Drupal\views\Plugin\views\field\EntityField;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
@@ -24,8 +23,6 @@ use Drupal\views\Views;
  * @group #slow
  */
 class FieldFieldTest extends ViewsKernelTestBase {
-
-  use UserCreationTrait;
 
   /**
    * {@inheritdoc}
