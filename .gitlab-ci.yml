@@ -376,6 +376,7 @@ default:
       changes:
         - core/package.json
         - core/yarn.lock
+        - core/.eslint*
         - "**/*.js"
         - "**/*.yml"
     - when: manual
