@@ -4,7 +4,6 @@ namespace Drupal\views\Controller;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\Ajax\AjaxResponseAttachmentsProcessor;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
@@ -99,16 +98,13 @@ class ViewAjaxController implements ContainerInjectionInterface {
    *   The current path.
    * @param \Drupal\Core\Routing\RedirectDestinationInterface $redirect_destination
    *   The redirect destination.
-   * @param \Drupal\Core\Ajax\AjaxResponseAttachmentsProcessor
-   *   The attachments processor.
    */
-  public function __construct(EntityStorageInterface $storage, ViewExecutableFactory $executable_factory, RendererInterface $renderer, CurrentPathStack $current_path, RedirectDestinationInterface $redirect_destination, AjaxResponseAttachmentsProcessor $attachments_processor) {
+  public function __construct(EntityStorageInterface $storage, ViewExecutableFactory $executable_factory, RendererInterface $renderer, CurrentPathStack $current_path, RedirectDestinationInterface $redirect_destination) {
     $this->storage = $storage;
     $this->executableFactory = $executable_factory;
     $this->renderer = $renderer;
     $this->currentPath = $current_path;
     $this->redirectDestination = $redirect_destination;
-    $this->attachmentsProcessor = $attachments_processor;
   }
 
   /**
@@ -120,8 +116,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
       $container->get('views.executable'),
       $container->get('renderer'),
       $container->get('path.current'),
-      $container->get('redirect.destination'),
-      $container->get('ajax_response.attachments_processor')
+      $container->get('redirect.destination')
     );
   }
 
@@ -228,7 +223,6 @@ class ViewAjaxController implements ContainerInjectionInterface {
 
         if (!empty($preview['#attached'])) {
           $response->setAttachments($preview['#attached']);
-          $this->attachmentsProcessor->processAttachments($response);
         }
 
         return $response;
