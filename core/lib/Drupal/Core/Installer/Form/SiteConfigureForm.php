@@ -20,13 +20,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class SiteConfigureForm extends ConfigFormBase {
 
   /**
-   * The user storage.
-   *
-   * @var \Drupal\user\UserStorageInterface
-   */
-  protected $userStorage;
-
-  /**
    * Constructs a new SiteConfigureForm.
    *
    * @param string $root
@@ -49,9 +42,7 @@ class SiteConfigureForm extends ConfigFormBase {
     protected ModuleInstallerInterface $moduleInstaller,
     protected UserNameValidator $userNameValidator,
     protected bool $superUserAccessPolicy,
-  ) {
-    $this->userStorage = $this->entityTypeManager->getStorage('user');
-  }
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -273,7 +264,7 @@ class SiteConfigureForm extends ConfigFormBase {
 
     // We created user 1 with placeholder values. Let's save the real values.
     /** @var \Drupal\user\UserInterface $account */
-    $account = $this->userStorage->load(1);
+    $account = $this->entityTypeManager->getStorage('user')->load(1);
     $account->init = $account->mail = $account_values['mail'];
     $account->roles = $account->getRoles();
     $account->activate();
