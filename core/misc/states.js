@@ -571,8 +571,10 @@
 
         // For single element, handle based on its type.
         const element = this[0];
-        if (element.tagName.toLowerCase() === "select" && element.multiple) {
-          return Array.from(element.selectedOptions).map((option) => option.value);
+        if (element.tagName.toLowerCase() === 'select' && element.multiple) {
+          return Array.from(element.selectedOptions).map(
+            (option) => option.value,
+          );
         }
         // For other cases, return the value of the single element.
         return element.value;
@@ -587,8 +589,10 @@
 
         // For single element, handle based on its type.
         const element = this[0];
-        if (element.tagName.toLowerCase() === "select" && element.multiple) {
-          return Array.from(element.selectedOptions).map((option) => option.value);
+        if (element.tagName.toLowerCase() === 'select' && element.multiple) {
+          return Array.from(element.selectedOptions).map(
+            (option) => option.value,
+          );
         }
         // For other cases, return the value of the single element.
         return element.value;
