@@ -157,6 +157,7 @@ class TaxonomyIndexTid extends PrerenderList {
     }
   }
 
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   public function render_item($count, $item) {
     return $item['name'];
   }

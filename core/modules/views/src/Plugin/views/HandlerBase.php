@@ -572,6 +572,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
   /**
    * Returns TRUE if the exposed filter works like a grouped filter.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   public function isAGroup() {
     return FALSE;
   }

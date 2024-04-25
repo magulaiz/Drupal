@@ -416,6 +416,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    * @see \Drupal\Core\Config\Entity\ConfigEntityStorageInterface::createFromStorageRecord()
    * @see \Drupal\Core\Config\Entity\ImportableEntityStorageInterface::importCreate()
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   protected function _doCreateFromStorageRecord(array $values, $is_syncing = FALSE) {
     // Assign a new UUID if there is none yet.
     if ($this->uuidKey && $this->uuidService && !isset($values[$this->uuidKey])) {

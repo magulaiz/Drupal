@@ -28,6 +28,7 @@ trait ToStringTrait {
   /**
    * For test purposes, wrap die() in an overridable method.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   protected function _die() {
     die();
   }

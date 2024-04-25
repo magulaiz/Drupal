@@ -20,6 +20,7 @@ interface MultiItemsFieldHandlerInterface extends FieldHandlerInterface {
    * @return string
    *   The rendered output.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   public function render_item($count, $item);
 
   /**

@@ -67,6 +67,7 @@ class Type extends StringArgument {
     return $this->node_type($this->argument);
   }
 
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   public function node_type($type_name) {
     $type = $this->nodeTypeStorage->load($type_name);
     $output = $type ? $type->label() : $this->t('Unknown content type');

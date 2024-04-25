@@ -95,6 +95,7 @@ abstract class RssPluginBase extends RowPluginBase {
   /**
    * Return the main options, which are shown in the summary title.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   public function buildOptionsForm_summary_options() {
     $view_modes = $this->entityDisplayRepository->getViewModes($this->entityTypeId);
     $options = [];
