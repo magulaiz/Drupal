@@ -335,8 +335,10 @@ class SiteConfigureForm extends ConfigFormBase {
     /** @var \Drupal\user\RoleInterface[] $admin_roles */
     $admin_roles = $this->getAdminRoles();
     if (count(array_intersect($account->getRoles(), array_keys($admin_roles))) === 0) {
-      foreach ($admin_roles as $role) {
-        $account->addRole($role->id());
+      if (count($admin_roles) > 0) {
+        foreach ($admin_roles as $role) {
+          $account->addRole($role->id());
+        }
       }
       elseif ($this->superUserAccessPolicy === FALSE) {
         $this->messenger()->addWarning($this->t(
