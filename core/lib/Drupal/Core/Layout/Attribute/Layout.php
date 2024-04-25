@@ -39,7 +39,7 @@ class Layout extends Plugin {
    *   The plugin ID.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup $label
    *   The human-readable name.
-   * @param \Drupal\Core\StringTranslation\TranslatableMarkup $category
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $category
    *   (optional) The human-readable category.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $description
    *   (optional) The description for advanced layouts.
@@ -80,7 +80,7 @@ class Layout extends Plugin {
     public readonly ?string $path = NULL,
     public readonly ?string $library = NULL,
     public readonly ?string $icon = NULL,
-    public readonly ?string $icon_map = NULL,
+    public readonly ?array $icon_map = NULL,
     public readonly array $regions = [],
     public readonly ?string $default_region = NULL,
     public readonly ?string $deriver = NULL,
