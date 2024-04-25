@@ -574,7 +574,8 @@
         if (
           element &&
           element.tagName.toLowerCase() === 'select' &&
-          element.multiple) {
+          element.multiple
+        ) {
           return Array.from(element.selectedOptions).map(
             (option) => option.value,
           );
@@ -595,7 +596,8 @@
         if (
           element &&
           element.tagName.toLowerCase() === 'select' &&
-          element.multiple) {
+          element.multiple
+        ) {
           return Array.from(element.selectedOptions).map(
             (option) => option.value,
           );
