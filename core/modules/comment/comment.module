@@ -538,7 +538,7 @@ function comment_preview(CommentInterface $comment, FormStateInterface $form_sta
       ->view($entity, 'full');
 
     // If content translation is enabled and translated content
-    // is available then the entity is replaced with the transalated entity.
+    // is available then the entity is replaced with the translated entity.
     // Set the status to hidden after the build is done.
     $build['#' . $entity->getEntityTypeId()]->$field_name->status = CommentItemInterface::HIDDEN;
   }
