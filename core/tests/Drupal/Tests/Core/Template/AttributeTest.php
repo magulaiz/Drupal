@@ -389,7 +389,7 @@ class AttributeTest extends UnitTestCase {
    */
   protected function assertClass(string $class, string $html): void {
     $xpath = "//*[@class='$class']";
-    self::assertTrue((bool) $this->getXPathResultCount($xpath, $html));
+    self::assertTrue((bool) $this->getXpathResultCount($xpath, $html));
   }
 
   /**
@@ -404,7 +404,7 @@ class AttributeTest extends UnitTestCase {
    */
   protected function assertNoClass(string $class, string $html): void {
     $xpath = "//*[@class='$class']";
-    self::assertFalse((bool) $this->getXPathResultCount($xpath, $html));
+    self::assertFalse((bool) $this->getXpathResultCount($xpath, $html));
   }
 
   /**
@@ -419,7 +419,7 @@ class AttributeTest extends UnitTestCase {
    */
   protected function assertId(string $id, string $html): void {
     $xpath = "//*[@id='$id']";
-    self::assertTrue((bool) $this->getXPathResultCount($xpath, $html));
+    self::assertTrue((bool) $this->getXpathResultCount($xpath, $html));
   }
 
   /**
@@ -434,7 +434,7 @@ class AttributeTest extends UnitTestCase {
    */
   protected function assertNoId(string $id, string $html): void {
     $xpath = "//*[@id='$id']";
-    self::assertFalse((bool) $this->getXPathResultCount($xpath, $html));
+    self::assertFalse((bool) $this->getXpathResultCount($xpath, $html));
   }
 
   /**
@@ -448,7 +448,7 @@ class AttributeTest extends UnitTestCase {
    * @return int
    *   The number of results that are found.
    */
-  protected function getXPathResultCount($query, $html) {
+  protected function getXpathResultCount($query, $html) {
     $document = Html::load($html);
     $xpath = new \DOMXPath($document);
 
