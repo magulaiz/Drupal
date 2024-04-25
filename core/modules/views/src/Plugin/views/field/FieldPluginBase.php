@@ -1427,8 +1427,6 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     $options = [
       'absolute' => !empty($alter['absolute']) ? TRUE : FALSE,
       'alias' => FALSE,
-      'entity' => NULL,
-      'entity_type' => NULL,
       'fragment' => NULL,
       'language' => NULL,
       'query' => [],
@@ -1596,14 +1594,6 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     }
     if (isset($alter['language'])) {
       $options['language'] = $alter['language'];
-    }
-
-    // If the URL came from entity_uri(), pass along the required options.
-    if (isset($alter['entity'])) {
-      $options['entity'] = $alter['entity'];
-    }
-    if (isset($alter['entity_type'])) {
-      $options['entity_type'] = $alter['entity_type'];
     }
 
     // The path has been heavily processed above, so it should be used as-is.
