@@ -192,9 +192,16 @@ class SiteConfigureForm extends ConfigFormBase {
       '#access' => empty($install_state['config_install_path']),
     ];
 
+    if (count($this->getAdminRoles()) === 0 && $this->superUserAccessPolicy === FALSE) {
+      $account_label = $this->t('Site account');
+    }
+    else {
+      $account_label = $this->t('Site maintenance account');
+    }
+
     $form['admin_account'] = [
       '#type' => 'fieldgroup',
-      '#title' => $this->t('Site maintenance account'),
+      '#title' => $account_label,
     ];
     $form['admin_account']['account']['name'] = [
       '#type' => 'textfield',
@@ -326,10 +333,15 @@ class SiteConfigureForm extends ConfigFormBase {
 
     // Ensure user 1 has an administrator role if one exists.
     /** @var \Drupal\user\RoleInterface[] $admin_roles */
-    $admin_roles = $this->entityTypeManager->getStorage('user_role')->loadByProperties(['is_admin' => TRUE]);
+    $admin_roles = $this->getAdminRoles();
     if (count(array_intersect($account->getRoles(), array_keys($admin_roles))) === 0) {
+      foreach ($admin_roles as $role) {
+        $account->addRole($role->id());
+      }
       if (count($admin_roles) > 0) {
-        $account->addRole(array_key_first($admin_roles));
+        foreach ($admin_roles as $role) {
+          $account->addRole($role->id());
+        }
       }
       elseif ($this->superUserAccessPolicy === FALSE) {
         $this->messenger()->addWarning($this->t(
@@ -343,6 +355,16 @@ class SiteConfigureForm extends ConfigFormBase {
     }
 
     $account->save();
+  }
+
+  /**
+   * Returns the list of admin roles.
+   *
+   * @return \Drupal\user\RoleInterface[]
+   *   The list of admin roles.
+   */
+  protected function getAdminRoles(): array {
+    return $this->entityTypeManager->getStorage('user_role')->loadByProperties(['is_admin' => TRUE]);
   }
 
 }

@@ -54,6 +54,21 @@ class SuperUserAccessInstallTest extends InstallerTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUpSite() {
+    if ($this->getProvidedData()['super_user_policy'] === FALSE && empty($this->getProvidedData()['expected_roles'])) {
+      $this->assertSession()->pageTextContains('Site account');
+      $this->assertSession()->pageTextNotContains('Site maintenance account');
+    }
+    else {
+      $this->assertSession()->pageTextNotContains('Site account');
+      $this->assertSession()->pageTextContains('Site maintenance account');
+    }
+    parent::setUpSite();
+  }
+
+  /**
    * Confirms that the installation succeeded.
    *
    * @dataProvider getInstallTests
@@ -106,6 +121,24 @@ class SuperUserAccessInstallTest extends InstallerTestBase {
         \$user = \Drupal\user\Entity\User::load(1);
         \Drupal::state()->set('admin_permission_in_installer', \$user->hasPermission('administer software updates'));
         \Drupal\user\Entity\Role::create(['id' => 'admin_role', 'label' => 'Admin role'])->setIsAdmin(TRUE)->save();
+        \Drupal\user\Entity\Role::create(['id' => 'another_role', 'label' => 'Another role'])->save();
+      }
+      PHP,
+      'super_user_policy' => FALSE,
+    ];
+
+    $test_cases['no super user policy enabled and multiple admin role'] = [
+      'expected_runtime_has_permission' => TRUE,
+      'expected_no_access_message' => FALSE,
+      'expected_roles' => ['admin_role', 'another_admin_role'],
+      'install_code' => <<<PHP
+      <?php
+      function superuser_install() {
+        \$user = \Drupal\user\Entity\User::load(1);
+        \Drupal::state()->set('admin_permission_in_installer', \$user->hasPermission('administer software updates'));
+        \Drupal\user\Entity\Role::create(['id' => 'admin_role', 'label' => 'Admin role'])->setIsAdmin(TRUE)->save();
+        \Drupal\user\Entity\Role::create(['id' => 'another_admin_role', 'label' => 'Another admin role'])->setIsAdmin(TRUE)->save();
+        \Drupal\user\Entity\Role::create(['id' => 'another_role', 'label' => 'Another role'])->save();
       }
       PHP,
       'super_user_policy' => FALSE,
