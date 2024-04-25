@@ -38,7 +38,7 @@ class RestExport extends PathPluginBase implements ResponseDisplayPluginInterfac
   /**
    * {@inheritdoc}
    */
-  protected $usesAJAX = FALSE;
+  protected $usesAjax = FALSE;
 
   /**
    * {@inheritdoc}

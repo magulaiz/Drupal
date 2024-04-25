@@ -87,7 +87,7 @@ class RouteSubscriber extends RouteSubscriberBase {
   /**
    * Gets all the views and display IDs using a route.
    */
-  protected function getViewsDisplayIDsWithRoute() {
+  protected function getViewsDisplayIdsWithRoute() {
     if (!isset($this->viewsDisplayPairs)) {
       $this->viewsDisplayPairs = [];
 
@@ -110,7 +110,7 @@ class RouteSubscriber extends RouteSubscriberBase {
    */
   public function routes() {
     $collection = new RouteCollection();
-    foreach ($this->getViewsDisplayIDsWithRoute() as $pair) {
+    foreach ($this->getViewsDisplayIdsWithRoute() as $pair) {
       [$view_id, $display_id] = explode('.', $pair);
       $view = $this->viewStorage->load($view_id);
       // @todo This should have an executable factory injected.
@@ -132,7 +132,7 @@ class RouteSubscriber extends RouteSubscriberBase {
    * {@inheritdoc}
    */
   protected function alterRoutes(RouteCollection $collection) {
-    foreach ($this->getViewsDisplayIDsWithRoute() as $pair) {
+    foreach ($this->getViewsDisplayIdsWithRoute() as $pair) {
       [$view_id, $display_id] = explode('.', $pair);
       $view = $this->viewStorage->load($view_id);
       // @todo This should have an executable factory injected.

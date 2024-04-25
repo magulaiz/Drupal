@@ -31,7 +31,7 @@ class EntityReference extends DisplayPluginBase {
   /**
    * {@inheritdoc}
    */
-  protected $usesAJAX = FALSE;
+  protected $usesAjax = FALSE;
 
   /**
    * {@inheritdoc}

@@ -29,7 +29,7 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
  * process, render, understand or otherwise interact with it.
  *
  * @see \Drupal\text\Plugin\Field\FieldType\TextItemBase
- * @see \Drupal\filter\Plugin\Filter\FilterInterface::getHTMLRestrictions()
+ * @see \Drupal\filter\Plugin\Filter\FilterInterface::getHtmlRestrictions()
  *
  * On the other hand, CKEditor 5 must not only be able to render these
  * blobs, but also allow editing and creating it. This requires a much deeper

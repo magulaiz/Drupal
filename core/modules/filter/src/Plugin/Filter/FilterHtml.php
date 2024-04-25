@@ -104,7 +104,7 @@ class FilterHtml extends FilterBase {
    *   Filtered HTML with attributes filtered according to the settings.
    */
   public function filterAttributes($text) {
-    $restrictions = $this->getHTMLRestrictions();
+    $restrictions = $this->getHtmlRestrictions();
     $global_allowed_attributes = array_filter($restrictions['allowed']['*']);
     unset($restrictions['allowed']['*']);
 
@@ -242,7 +242,7 @@ class FilterHtml extends FilterBase {
   /**
    * {@inheritdoc}
    */
-  public function getHTMLRestrictions() {
+  public function getHtmlRestrictions() {
     if ($this->restrictions) {
       return $this->restrictions;
     }

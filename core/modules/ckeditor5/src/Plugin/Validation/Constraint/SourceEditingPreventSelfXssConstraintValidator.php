@@ -61,7 +61,7 @@ class SourceEditingPreventSelfXssConstraintValidator extends ConstraintValidator
     // `*` HTML tag allows attributes to be forbidden.
     // @see https://html.spec.whatwg.org/multipage/dom.html#global-attributes
     // @see \Drupal\ckeditor5\HTMLRestrictions::validateAllowedRestrictionsPhase4()
-    // @see \Drupal\filter\Plugin\Filter\FilterHtml::getHTMLRestrictions()
+    // @see \Drupal\filter\Plugin\Filter\FilterHtml::getHtmlRestrictions()
     $forbidden_attributes = [];
     if (array_key_exists('*', $text_format_allowed_elements)) {
       $forbidden_attributes = array_keys(array_filter($text_format_allowed_elements['*'], function ($attribute_value_restriction, string $attribute_name) {

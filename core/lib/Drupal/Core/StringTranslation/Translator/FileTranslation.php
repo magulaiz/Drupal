@@ -124,7 +124,7 @@ class FileTranslation extends StaticTranslation {
     $writer->setLangcode($langcode);
     foreach ($files as $file) {
       $reader = new PoStreamReader();
-      $reader->setURI($file->uri);
+      $reader->setUri($file->uri);
       $reader->setLangcode($langcode);
       $reader->open();
       $writer->writeItems($reader, -1);

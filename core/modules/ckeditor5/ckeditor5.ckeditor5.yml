@@ -143,7 +143,7 @@ ckeditor5_globalAttributeDir:
   drupal:
     label: Global `dir` attribute
     class: \Drupal\ckeditor5\Plugin\CKEditor5Plugin\GlobalAttribute
-    # @see \Drupal\filter\Plugin\Filter\FilterHtml::getHTMLRestrictions()
+    # @see \Drupal\filter\Plugin\Filter\FilterHtml::getHtmlRestrictions()
     elements:
       - <* dir="ltr rtl">
     library: core/ckeditor5.htmlSupport
@@ -164,7 +164,7 @@ ckeditor5_globalAttributeLang:
   drupal:
     label: Global `lang` attribute
     class: \Drupal\ckeditor5\Plugin\CKEditor5Plugin\GlobalAttribute
-    # @see \Drupal\filter\Plugin\Filter\FilterHtml::getHTMLRestrictions()
+    # @see \Drupal\filter\Plugin\Filter\FilterHtml::getHtmlRestrictions()
     elements:
       - <* lang>
     library: core/ckeditor5.htmlSupport

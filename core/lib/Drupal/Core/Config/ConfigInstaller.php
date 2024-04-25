@@ -375,7 +375,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
           ->getEntityTypeManager()
           ->getStorage($entity_type);
 
-        $id = $entity_storage->getIDFromConfigName($name, $entity_storage->getEntityType()->getConfigPrefix());
+        $id = $entity_storage->getIdFromConfigName($name, $entity_storage->getEntityType()->getConfigPrefix());
         // It is possible that secondary writes can occur during configuration
         // creation. Updates of such configuration are allowed.
         if ($this->getActiveStorages($collection)->exists($name)) {

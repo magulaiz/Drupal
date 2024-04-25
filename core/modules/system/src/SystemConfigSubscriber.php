@@ -72,7 +72,7 @@ class SystemConfigSubscriber implements EventSubscriberInterface {
    * @param \Drupal\Core\Config\ConfigImporterEvent $event
    *   The config import event.
    */
-  public function onConfigImporterValidateSiteUUID(ConfigImporterEvent $event) {
+  public function onConfigImporterValidateSiteUuid(ConfigImporterEvent $event) {
     if (!$event->getConfigImporter()->getStorageComparer()->getSourceStorage()->exists('system.site')) {
       $event->getConfigImporter()->logError($this->t('This import does not contain system.site configuration, so has been rejected.'));
     }
@@ -89,7 +89,7 @@ class SystemConfigSubscriber implements EventSubscriberInterface {
     // The empty check has a high priority so that it can stop propagation if
     // there is no configuration to import.
     $events[ConfigEvents::IMPORT_VALIDATE][] = ['onConfigImporterValidateNotEmpty', 512];
-    $events[ConfigEvents::IMPORT_VALIDATE][] = ['onConfigImporterValidateSiteUUID', 256];
+    $events[ConfigEvents::IMPORT_VALIDATE][] = ['onConfigImporterValidateSiteUuid', 256];
     return $events;
   }
 

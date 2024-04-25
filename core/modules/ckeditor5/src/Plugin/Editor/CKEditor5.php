@@ -915,7 +915,7 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function getJSSettings(EditorEntity $editor) {
+  public function getJsSettings(EditorEntity $editor) {
     $toolbar_items = $editor->getSettings()['toolbar']['items'];
     $plugin_config = $this->ckeditor5PluginManager->getCKEditor5PluginConfig($editor);
 

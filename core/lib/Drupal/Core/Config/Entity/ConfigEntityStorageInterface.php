@@ -21,7 +21,7 @@ interface ConfigEntityStorageInterface extends EntityStorageInterface {
    * @return string
    *   The ID of the configuration entity.
    */
-  public static function getIDFromConfigName($config_name, $config_prefix);
+  public static function getIdFromConfigName($config_name, $config_prefix);
 
   /**
    * Creates a configuration entity from storage values.

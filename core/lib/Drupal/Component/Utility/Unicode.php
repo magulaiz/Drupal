@@ -148,7 +148,7 @@ EOD;
    * @return string|bool
    *   The name of the encoding, or FALSE if no byte order mark was present.
    */
-  public static function encodingFromBOM($data) {
+  public static function encodingFromBom($data) {
     static $bomMap = [
       "\xEF\xBB\xBF" => 'UTF-8',
       "\xFE\xFF" => 'UTF-16BE',

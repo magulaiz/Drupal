@@ -56,7 +56,7 @@ class BundleConfigImportValidate extends ConfigImportValidateEventSubscriberBase
         if ($bundle_of = $entity_type->getBundleOf()) {
           // Work out if there are entities with this bundle.
           $bundle_of_entity_type = $this->entityTypeManager->getDefinition($bundle_of);
-          $bundle_id = ConfigEntityStorage::getIDFromConfigName($config_name, $entity_type->getConfigPrefix());
+          $bundle_id = ConfigEntityStorage::getIdFromConfigName($config_name, $entity_type->getConfigPrefix());
           $entity_query = $this->entityTypeManager->getStorage($bundle_of)->getQuery();
           $entity_ids = $entity_query->condition($bundle_of_entity_type->getKey('bundle'), $bundle_id)
             ->accessCheck(FALSE)

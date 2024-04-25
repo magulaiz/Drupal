@@ -80,7 +80,7 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
    */
   public function open() {
     // Open in write mode. Will overwrite the stream if it already exists.
-    $this->fd = fopen($this->getURI(), 'w');
+    $this->fd = fopen($this->getUri(), 'w');
     // Write the header at the start.
     $this->writeHeader();
   }
@@ -142,12 +142,12 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
   }
 
   /**
-   * Implements Drupal\Component\Gettext\PoStreamInterface::getURI().
+   * Implements Drupal\Component\Gettext\PoStreamInterface::getUri().
    *
    * @throws \Exception
    *   If the URI is not set.
    */
-  public function getURI() {
+  public function getUri() {
     if (empty($this->uri)) {
       throw new \Exception('No URI set.');
     }
@@ -157,7 +157,7 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
   /**
    * {@inheritdoc}
    */
-  public function setURI($uri) {
+  public function setUri($uri) {
     $this->uri = $uri;
   }
 

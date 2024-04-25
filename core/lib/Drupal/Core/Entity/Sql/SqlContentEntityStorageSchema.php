@@ -764,7 +764,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       }
 
       try {
-        if ($this->database->supportsTransactionalDDL()) {
+        if ($this->database->supportsTransactionalDdl()) {
           // If the database supports transactional DDL, we can go ahead and rely
           // on it. If not, we will have to rollback manually if something fails.
           $transaction = $this->database->startTransaction();
@@ -789,7 +789,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
         }
       }
       catch (\Exception $e) {
-        if ($this->database->supportsTransactionalDDL()) {
+        if ($this->database->supportsTransactionalDdl()) {
           if (isset($transaction)) {
             $transaction->rollBack();
           }
@@ -1722,7 +1722,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     if (!$this->storage->countFieldData($original, TRUE)) {
       // There is no data. Re-create the tables completely.
       try {
-        if ($this->database->supportsTransactionalDDL()) {
+        if ($this->database->supportsTransactionalDdl()) {
           // If the database supports transactional DDL, we can go ahead and rely
           // on it. If not, we will have to rollback manually if something fails.
           $transaction = $this->database->startTransaction();
@@ -1733,7 +1733,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
         $this->performFieldSchemaOperation('create', $storage_definition);
       }
       catch (\Exception $e) {
-        if ($this->database->supportsTransactionalDDL()) {
+        if ($this->database->supportsTransactionalDdl()) {
           if (isset($transaction)) {
             $transaction->rollBack();
           }
@@ -1815,7 +1815,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
   protected function updateSharedTableSchema(FieldStorageDefinitionInterface $storage_definition, FieldStorageDefinitionInterface $original) {
     if (!$this->storage->countFieldData($original, TRUE)) {
       try {
-        if ($this->database->supportsTransactionalDDL()) {
+        if ($this->database->supportsTransactionalDdl()) {
           // If the database supports transactional DDL, we can go ahead and rely
           // on it. If not, we will have to rollback manually if something fails.
           $transaction = $this->database->startTransaction();
@@ -1826,7 +1826,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
         $this->performFieldSchemaOperation('create', $storage_definition);
       }
       catch (\Exception $e) {
-        if ($this->database->supportsTransactionalDDL()) {
+        if ($this->database->supportsTransactionalDdl()) {
           if (isset($transaction)) {
             $transaction->rollBack();
           }
