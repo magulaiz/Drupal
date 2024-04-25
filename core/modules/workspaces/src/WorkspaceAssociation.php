@@ -4,7 +4,6 @@ namespace Drupal\workspaces;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\PagerSelectExtender;
-use Drupal\Core\Database\Query\TableSortExtender;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
