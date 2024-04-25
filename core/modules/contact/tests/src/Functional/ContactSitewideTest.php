@@ -317,7 +317,7 @@ class ContactSitewideTest extends BrowserTestBase {
     // Create a simple textfield.
     $field_name = $this->randomMachineName();
     $field_label = $this->randomMachineName();
-    $this->fieldUIAddNewField(NULL, $field_name, $field_label, 'text');
+    $this->fieldUiAddNewField(NULL, $field_name, $field_label, 'text');
     $field_name = 'field_' . $field_name;
 
     // Check preview field can be ordered.

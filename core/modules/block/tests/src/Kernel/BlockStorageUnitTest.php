@@ -46,7 +46,7 @@ class BlockStorageUnitTest extends KernelTestBase {
   /**
    * Tests CRUD operations.
    */
-  public function testBlockCRUD() {
+  public function testBlockCrud() {
     $this->assertInstanceOf(ConfigEntityStorage::class, $this->controller);
 
     // Run each test method in the same installation.

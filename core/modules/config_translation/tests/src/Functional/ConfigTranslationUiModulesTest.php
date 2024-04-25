@@ -161,7 +161,7 @@ class ConfigTranslationUiModulesTest extends ConfigTranslationUiTestBase {
   /**
    * Tests the views translation interface.
    */
-  public function testViewsTranslationUI() {
+  public function testViewsTranslationUi() {
     $this->drupalLogin($this->adminUser);
 
     $description = 'All content promoted to the front page.';

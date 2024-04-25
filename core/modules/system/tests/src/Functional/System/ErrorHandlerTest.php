@@ -132,7 +132,7 @@ class ErrorHandlerTest extends BrowserTestBase {
     $error_pdo_exception = [
       '%type' => 'DatabaseExceptionWrapper',
       '@message' => 'SELECT "b".* FROM {bananas_are_awesome} "b"',
-      '%function' => 'Drupal\error_test\Controller\ErrorTestController->triggerPDOException()',
+      '%function' => 'Drupal\error_test\Controller\ErrorTestController->triggerPdoException()',
       '%line' => 64,
       '%file' => $this->getModulePath('error_test') . '/error_test.module',
     ];

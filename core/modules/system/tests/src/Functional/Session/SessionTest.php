@@ -300,7 +300,7 @@ class SessionTest extends BrowserTestBase {
   /**
    * Tests that empty session IDs are not allowed.
    */
-  public function testEmptySessionID() {
+  public function testEmptySessionId() {
     $user = $this->drupalCreateUser([]);
     $this->drupalLogin($user);
     $this->drupalGet('session-test/is-logged-in');

@@ -34,7 +34,7 @@ class FrameworkTest extends BrowserTestBase {
   /**
    * Verifies the Ajax rendering of a command in the settings.
    */
-  public function testAJAXRender() {
+  public function testAjaxRender() {
     // Verify that settings command is generated if JavaScript settings exist.
     $commands = $this->drupalGetAjax('ajax-test/render');
     $expected = new SettingsCommand(['ajax' => 'test'], TRUE);
@@ -81,7 +81,7 @@ class FrameworkTest extends BrowserTestBase {
   /**
    * Tests the behavior of an error alert command.
    */
-  public function testAJAXRenderError() {
+  public function testAjaxRenderError() {
     // Verify custom error message.
     $edit = [
       'message' => 'Custom error message.',

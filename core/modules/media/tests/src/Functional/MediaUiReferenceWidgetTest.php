@@ -189,7 +189,7 @@ class MediaUiReferenceWidgetTest extends MediaFunctionalTestBase {
     foreach ($media_types as $type) {
       $field_edit["settings[handler_settings][target_bundles][$type]"] = TRUE;
     }
-    $this->fieldUIAddNewField("admin/structure/types/manage/{$content_type->id()}", 'media_reference', "Media (cardinality $cardinality)", 'field_ui:entity_reference:media', [], $field_edit);
+    $this->fieldUiAddNewField("admin/structure/types/manage/{$content_type->id()}", 'media_reference', "Media (cardinality $cardinality)", 'field_ui:entity_reference:media', [], $field_edit);
     \Drupal::entityTypeManager()
       ->getStorage('entity_form_display')
       ->load('node.' . $content_type->id() . '.default')

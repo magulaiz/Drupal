@@ -216,7 +216,7 @@ class ConfigEntityListTest extends BrowserTestBase {
   /**
    * Tests the listing UI.
    */
-  public function testListUI() {
+  public function testListUi() {
     // Log in as an administrative user to access the full menu trail.
     $this->drupalLogin($this->drupalCreateUser([
       'access administration pages',

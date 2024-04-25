@@ -28,7 +28,7 @@ class ConfigEntityStatusUITest extends BrowserTestBase {
   /**
    * Tests status operations.
    */
-  public function testCRUD() {
+  public function testCrud() {
     $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',
     ]));

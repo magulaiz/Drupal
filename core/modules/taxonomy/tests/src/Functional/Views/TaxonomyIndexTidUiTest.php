@@ -115,7 +115,7 @@ class TaxonomyIndexTidUiTest extends UITestBase {
   /**
    * Tests the filter UI.
    */
-  public function testFilterUI() {
+  public function testFilterUi() {
     $this->drupalGet('admin/structure/views/nojs/handler/test_filter_taxonomy_index_tid/default/filter/tid');
 
     $result = $this->assertSession()->selectExists('edit-options-value')->findAll('css', 'option');

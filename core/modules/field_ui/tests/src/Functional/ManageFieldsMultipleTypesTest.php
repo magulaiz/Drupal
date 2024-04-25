@@ -29,9 +29,9 @@ class ManageFieldsMultipleTypesTest extends ManageFieldsFunctionalTestBase {
 
     // Create field with pre-configured options.
     $this->drupalGet($bundle1['path'] . "/fields/add-field");
-    $this->fieldUIAddNewField(NULL, $field_name, $label, 'field_ui:test_field_with_preconfigured_options:custom_options');
+    $this->fieldUiAddNewField(NULL, $field_name, $label, 'field_ui:test_field_with_preconfigured_options:custom_options');
     $new_label = $this->randomMachineName();
-    $this->fieldUIAddExistingField($bundle2['path'], "field_{$field_name}", $new_label);
+    $this->fieldUiAddExistingField($bundle2['path'], "field_{$field_name}", $new_label);
     $field = FieldConfig::loadByName($entity_type, $bundle2['id'], "field_{$field_name}");
     $this->assertTrue($field->isRequired());
     $this->assertEquals($new_label, $field->label());
@@ -104,7 +104,7 @@ class ManageFieldsMultipleTypesTest extends ManageFieldsFunctionalTestBase {
 
     // Create field with pre-configured options.
     $this->drupalGet($bundle1['path'] . "/fields/add-field");
-    $this->fieldUIAddNewField(NULL, $field_name, $label, 'field_ui:test_field_with_preconfigured_options:custom_options');
+    $this->fieldUiAddNewField(NULL, $field_name, $label, 'field_ui:test_field_with_preconfigured_options:custom_options');
     $view_display->setComponent("field_{$field_name}", [
       'type' => 'field_test_default',
       'region' => 'content',
@@ -115,7 +115,7 @@ class ManageFieldsMultipleTypesTest extends ManageFieldsFunctionalTestBase {
     ])->save();
 
     $new_label = $this->randomMachineName();
-    $this->fieldUIAddExistingField($bundle2['path'], "field_{$field_name}", $new_label);
+    $this->fieldUiAddExistingField($bundle2['path'], "field_{$field_name}", $new_label);
 
     $field = FieldConfig::loadByName($entity_type, $bundle2['id'], "field_{$field_name}");
     $this->assertTrue($field->isRequired());

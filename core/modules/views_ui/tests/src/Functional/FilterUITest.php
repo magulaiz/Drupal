@@ -69,7 +69,7 @@ class FilterUITest extends UITestBase {
   /**
    * Tests the filters from the UI.
    */
-  public function testFiltersUI() {
+  public function testFiltersUi() {
     $admin_user = $this->drupalCreateUser([
       'administer views',
       'administer site configuration',

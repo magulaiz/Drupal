@@ -95,9 +95,9 @@ class ManageFieldsTest extends WebDriverTestBase {
     $this->assertSession()->linkNotExists('Re-use an existing field');
     $field_label = 'Test field';
     // Create a field, and a node with some data for the field.
-    $this->fieldUIAddNewFieldJS($path, 'test', $field_label);
+    $this->fieldUiAddNewFieldJs($path, 'test', $field_label);
     // Add an existing field.
-    $this->fieldUIAddExistingFieldJS($path2, 'field_test', $field_label);
+    $this->fieldUiAddExistingFieldJs($path2, 'field_test', $field_label);
     // Confirm the button is no longer visible after re-using the field.
     $this->assertSession()->linkNotExists('Re-use an existing field');
   }
@@ -110,9 +110,9 @@ class ManageFieldsTest extends WebDriverTestBase {
     $page = $session->getPage();
     $path = 'admin/structure/types/manage/article';
     $path2 = 'admin/structure/types/manage/page';
-    $this->fieldUIAddNewFieldJS($path, 'horse', 'Horse');
-    $this->fieldUIAddNewFieldJS($path, 'horseradish', 'Horseradish', 'text');
-    $this->fieldUIAddNewFieldJS($path, 'carrot', 'Carrot', 'text');
+    $this->fieldUiAddNewFieldJs($path, 'horse', 'Horse');
+    $this->fieldUiAddNewFieldJs($path, 'horseradish', 'Horseradish', 'text');
+    $this->fieldUiAddNewFieldJs($path, 'carrot', 'Carrot', 'text');
     $this->drupalGet($path2 . '/fields');
     $this->assertSession()->linkExists('Re-use an existing field');
     $this->clickLink('Re-use an existing field');

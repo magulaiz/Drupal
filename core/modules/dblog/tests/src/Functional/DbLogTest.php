@@ -617,7 +617,7 @@ class DbLogTest extends BrowserTestBase {
    * Logs in the admin user, creates a database log event, and tests the
    * functionality of clearing the database log through the admin interface.
    */
-  public function testDBLogAddAndClear() {
+  public function testDbLogAddAndClear() {
     global $base_root;
     $connection = Database::getConnection();
     // Get a count of how many watchdog entries already exist.

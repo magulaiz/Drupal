@@ -218,7 +218,7 @@ class OptionsFieldUITest extends WebDriverTestBase {
     $assert_session = $this->assertSession();
     $bundle_path = 'admin/structure/types/manage/' . $this->type;
     // Create a field of type list:string.
-    $this->fieldUIAddNewFieldJS($bundle_path, 'test_string_list', 'Test string list', 'list_string', FALSE);
+    $this->fieldUiAddNewFieldJs($bundle_path, 'test_string_list', 'Test string list', 'list_string', FALSE);
     $page->findField('field_storage[subform][settings][allowed_values][table][0][item][label]')->setValue('first');
     $assert_session->assertWaitOnAjaxRequest();
     $page->findField('set_default_value')->setValue(TRUE);
@@ -235,7 +235,7 @@ class OptionsFieldUITest extends WebDriverTestBase {
     $assert_session->pageTextContains('Saved Test string list configuration.');
 
     // Create a field of type list:integer.
-    $this->fieldUIAddNewFieldJS($bundle_path, 'test_int_list', 'Test int list', 'list_integer', FALSE);
+    $this->fieldUiAddNewFieldJs($bundle_path, 'test_int_list', 'Test int list', 'list_integer', FALSE);
     $page->findField('field_storage[subform][settings][allowed_values][table][0][item][label]')->setValue('first');
     $assert_session->assertWaitOnAjaxRequest();
     // Assert that no validation is performed.

@@ -116,7 +116,7 @@ class PathAliasTest extends PathTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Change alias to one containing "exotic" characters.
-    $pid = $this->getPID($edit['alias[0][value]']);
+    $pid = $this->getPid($edit['alias[0][value]']);
 
     $previous = $edit['alias[0][value]'];
     // Lower-case letters.
@@ -217,7 +217,7 @@ class PathAliasTest extends PathTestBase {
     $this->assertSession()->pageTextContains(trim($edit['alias[0][value]'], '/'));
 
     // Update an existing alias to point to a different source.
-    $pid = $this->getPID($node4_alias);
+    $pid = $this->getPid($node4_alias);
     $edit = [];
     $edit['alias[0][value]'] = $node4_alias;
     $edit['path[0][value]'] = '/node/' . $node2->id();
@@ -232,7 +232,7 @@ class PathAliasTest extends PathTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Update an existing alias to use a duplicate alias.
-    $pid = $this->getPID($node3_alias);
+    $pid = $this->getPid($node3_alias);
     $edit = [];
     $edit['alias[0][value]'] = $node4_alias;
     $edit['path[0][value]'] = '/node/' . $node3->id();
@@ -411,7 +411,7 @@ class PathAliasTest extends PathTestBase {
    * @return int
    *   Integer representing the path ID.
    */
-  public function getPID($alias) {
+  public function getPid($alias) {
     $result = \Drupal::entityTypeManager()->getStorage('path_alias')->getQuery()
       ->condition('alias', $alias, '=')
       ->accessCheck(FALSE)

@@ -89,7 +89,7 @@ class FilterAPITest extends EntityKernelTestBase {
    * @covers \Drupal\filter\Entity\FilterFormat::getHtmlRestrictions
    * @covers \Drupal\filter\Entity\FilterFormat::getFilterTypes
    */
-  public function testFilterFormatAPI() {
+  public function testFilterFormatApi() {
     // Test on filtered_html.
     $filtered_html_format = FilterFormat::load('filtered_html');
     $this->assertSame(
@@ -325,7 +325,7 @@ class FilterAPITest extends EntityKernelTestBase {
   /**
    * Tests the function of the typed data type.
    */
-  public function testTypedDataAPI() {
+  public function testTypedDataApi() {
     $definition = DataDefinition::create('filter_format');
     $data = \Drupal::typedDataManager()->create($definition);
 

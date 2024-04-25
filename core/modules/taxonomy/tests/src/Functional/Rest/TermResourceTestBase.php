@@ -352,9 +352,9 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
     $this->setUpAuthorization('GET');
     $response = $this->request('GET', $url, $request_options);
     $expected = $this->getExpectedNormalizedEntity();
-    static::recursiveKSort($expected);
+    static::recursiveKsort($expected);
     $actual = $this->serializer->decode((string) $response->getBody(), static::$format);
-    static::recursiveKSort($actual);
+    static::recursiveKsort($actual);
     $this->assertSame($expected, $actual);
   }
 

@@ -62,7 +62,7 @@ class DefaultValueWidgetTest extends WebDriverTestBase {
     $this->createTerm($vocab_2, ['name' => 'random tag 2']);
 
     $field_name = 'test_field';
-    $this->fieldUIAddNewFieldJS('admin/structure/types/manage/test_content', $field_name, $field_name, 'entity_reference', FALSE);
+    $this->fieldUiAddNewFieldJs('admin/structure/types/manage/test_content', $field_name, $field_name, 'entity_reference', FALSE);
     $page = $this->getSession()->getPage();
     $page->findField('field_storage[subform][settings][target_type]')->selectOption('taxonomy_term');
     $this->assertSession()->assertWaitOnAjaxRequest();

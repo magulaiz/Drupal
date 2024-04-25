@@ -149,7 +149,7 @@ class ManageFieldsTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('This second line contains important information');
 
     // Create a new field without actually saving it.
-    $this->fieldUIAddNewField('admin/structure/types/manage/' . $type->id(), 'test_field', 'Test field', 'test_field', [], [], FALSE);
+    $this->fieldUiAddNewField('admin/structure/types/manage/' . $type->id(), 'test_field', 'Test field', 'test_field', [], [], FALSE);
     // Assert that the field was not created.
     $this->assertNull(FieldStorageConfig::loadByName('node', "field_test_field"));
 
@@ -319,7 +319,7 @@ class ManageFieldsTest extends BrowserTestBase {
       'set_default_value' => '1',
       "default_value_input[$field_name][0][target_id]" => $this->adminUser->label() . ' (' . $this->adminUser->id() . ')',
     ];
-    $this->fieldUIAddNewField($bundle_path, 'user_reference', NULL, 'field_ui:entity_reference:user', [], $field_edit);
+    $this->fieldUiAddNewField($bundle_path, 'user_reference', NULL, 'field_ui:entity_reference:user', [], $field_edit);
     $field = FieldConfig::loadByName('node', 'kittens', $field_name);
     $this->assertEquals([['target_id' => $this->adminUser->id()]], $field->getDefaultValue(User::create(['name' => '1337'])));
   }

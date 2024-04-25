@@ -37,7 +37,7 @@ class AreaHTTPStatusCodeTest extends ViewTestBase {
   /**
    * Tests the area handler.
    */
-  public function testHTTPStatusCodeHandler() {
+  public function testHttpStatusCodeHandler() {
     $this->drupalGet('test-http-status-code');
     $this->assertSession()->statusCodeEquals(200);
 

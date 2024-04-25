@@ -54,7 +54,7 @@ class SearchPageTextTest extends BrowserTestBase {
    *
    * This is a regression test for https://www.drupal.org/node/2338081
    */
-  public function testSearchLabelXSS() {
+  public function testSearchLabelXss() {
     $this->drupalLogin($this->drupalCreateUser(['administer search']));
 
     $keys['label'] = '<script>alert("Don\'t Panic");</script>';

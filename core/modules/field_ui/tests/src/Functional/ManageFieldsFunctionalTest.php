@@ -285,10 +285,10 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     // Create a new field.
     $bundle_path = 'admin/structure/taxonomy/manage/tags/overview';
 
-    $this->fieldUIAddNewField($bundle_path, $this->fieldNameInput, $this->fieldLabel);
+    $this->fieldUiAddNewField($bundle_path, $this->fieldNameInput, $this->fieldLabel);
 
     // Delete the field.
-    $this->fieldUIDeleteField($bundle_path, "taxonomy_term.tags.$this->fieldName", $this->fieldLabel, 'Tags', 'taxonomy vocabulary');
+    $this->fieldUiDeleteField($bundle_path, "taxonomy_term.tags.$this->fieldName", $this->fieldLabel, 'Tags', 'taxonomy vocabulary');
 
     // Check that the field was deleted.
     $this->assertNull(FieldConfig::loadByName('taxonomy_term', 'tags', $this->fieldName), 'Field was deleted.');
@@ -355,7 +355,7 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     $this->assertSession()->elementExists('css', "[name='new_storage_type'][value='test_field_with_preconfigured_options']");
 
     // Add a field with every possible preconfigured value.
-    $this->fieldUIAddNewField(NULL, 'test_custom_options', 'Test label', 'field_ui:test_field_with_preconfigured_options:custom_options');
+    $this->fieldUiAddNewField(NULL, 'test_custom_options', 'Test label', 'field_ui:test_field_with_preconfigured_options:custom_options');
     $field_storage = FieldStorageConfig::loadByName('node', 'field_test_custom_options');
     $this->assertEquals(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED, $field_storage->getCardinality());
     $this->assertEquals('preconfigured_storage_setting', $field_storage->getSetting('test_field_storage_setting'));
@@ -410,7 +410,7 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
     $this->assertSession()->pageTextContains('Machine-readable name cannot be longer than 22 characters but is currently 23 characters long.');
 
     // Create a valid field.
-    $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->contentType, $this->fieldNameInput, $this->fieldLabel);
+    $this->fieldUiAddNewField('admin/structure/types/manage/' . $this->contentType, $this->fieldNameInput, $this->fieldLabel);
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/node.' . $this->contentType . '.' . $field_prefix . $this->fieldNameInput);
     $this->assertSession()->pageTextContains($this->fieldLabel . ' settings for ' . $this->contentType);
   }
@@ -419,7 +419,7 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
    * Test translation defaults.
    */
   public function testTranslationDefaults() {
-    $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->contentType, $this->fieldNameInput, $this->fieldLabel);
+    $this->fieldUiAddNewField('admin/structure/types/manage/' . $this->contentType, $this->fieldNameInput, $this->fieldLabel);
     $field_storage = FieldStorageConfig::loadByName('node', 'field_' . $this->fieldNameInput);
     $this->assertTrue($field_storage->isTranslatable(), 'Field storage translatable.');
 
@@ -428,7 +428,7 @@ class ManageFieldsFunctionalTest extends ManageFieldsFunctionalTestBase {
 
     // Add a new field based on an existing field.
     $this->drupalCreateContentType(['type' => 'additional', 'name' => 'Additional type']);
-    $this->fieldUIAddExistingField("admin/structure/types/manage/additional", $this->fieldName, 'Additional type');
+    $this->fieldUiAddExistingField("admin/structure/types/manage/additional", $this->fieldName, 'Additional type');
 
     $field_storage = FieldStorageConfig::loadByName('node', 'field_' . $this->fieldNameInput);
     $this->assertTrue($field_storage->isTranslatable(), 'Field storage translatable.');

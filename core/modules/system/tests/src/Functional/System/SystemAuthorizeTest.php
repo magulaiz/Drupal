@@ -48,7 +48,7 @@ class SystemAuthorizeTest extends BrowserTestBase {
    *
    * @see system_authorized_init()
    */
-  public function drupalGetAuthorizePHP($page_title = 'system-test-auth') {
+  public function drupalGetAuthorizePhp($page_title = 'system-test-auth') {
     $this->drupalGet('system-test/authorize-init/' . $page_title);
   }
 
@@ -57,7 +57,7 @@ class SystemAuthorizeTest extends BrowserTestBase {
    */
   public function testFileTransferHooks() {
     $page_title = $this->randomMachineName(16);
-    $this->drupalGetAuthorizePHP($page_title);
+    $this->drupalGetAuthorizePhp($page_title);
     $this->assertSession()->titleEquals("$page_title | Drupal");
     $this->assertSession()->pageTextNotContains('It appears you have reached this page in error.');
     $this->assertSession()->pageTextContains('To continue, provide your server connection details');

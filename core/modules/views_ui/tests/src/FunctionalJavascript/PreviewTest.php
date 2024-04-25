@@ -116,15 +116,15 @@ class PreviewTest extends WebDriverTestBase {
    *
    * @see https://www.drupal.org/node/2452659
    */
-  public function testTaxonomyAJAX() {
+  public function testTaxonomyAjax() {
     \Drupal::service('module_installer')->install(['taxonomy']);
-    $this->getPreviewAJAX('taxonomy_term', 'page_1', 0);
+    $this->getPreviewAjax('taxonomy_term', 'page_1', 0);
   }
 
   /**
    * Tests pagers in the preview form.
    */
-  public function testPreviewWithPagersUI() {
+  public function testPreviewWithPagersUi() {
     // Create 11 nodes and make sure that everyone is returned.
     $this->drupalCreateContentType(['type' => 'page']);
     for ($i = 0; $i < 11; $i++) {
@@ -132,7 +132,7 @@ class PreviewTest extends WebDriverTestBase {
     }
 
     // Test Full Pager.
-    $this->getPreviewAJAX('test_pager_full_ajax', 'default', 5);
+    $this->getPreviewAjax('test_pager_full_ajax', 'default', 5);
 
     // Test that the pager is present and rendered.
     $elements = $this->xpath('//ul[contains(@class, "pager__items")]/li');
@@ -158,7 +158,7 @@ class PreviewTest extends WebDriverTestBase {
 
     // Navigate to next page.
     $element = $this->assertSession()->elementExists('xpath', '//li[contains(@class, "pager__item--next")]/a');
-    $this->clickPreviewLinkAJAX($element, 5);
+    $this->clickPreviewLinkAjax($element, 5);
 
     // Test that the pager is present and rendered.
     $elements = $this->xpath('//ul[contains(@class, "pager__items")]/li');
@@ -190,7 +190,7 @@ class PreviewTest extends WebDriverTestBase {
     $this->assertNotEmpty($elements[6]->find('css', 'a'), 'Link to last page found.');
 
     // Test Mini Pager.
-    $this->getPreviewAJAX('test_mini_pager_ajax', 'default', 3);
+    $this->getPreviewAjax('test_mini_pager_ajax', 'default', 3);
 
     // Test that the pager is present and rendered.
     $elements = $this->xpath('//ul[contains(@class, "pager__items")]/li');
@@ -206,7 +206,7 @@ class PreviewTest extends WebDriverTestBase {
     $this->assertEquals('Go to next page', $next_page_link->getAttribute('title'));
 
     // Navigate to next page.
-    $this->clickPreviewLinkAJAX($next_page_link, 3);
+    $this->clickPreviewLinkAjax($next_page_link, 3);
 
     // Test that the pager is present and rendered.
     $elements = $this->xpath('//ul[contains(@class, "pager__items")]/li');
@@ -231,7 +231,7 @@ class PreviewTest extends WebDriverTestBase {
    */
   public function testPreviewSortLink() {
     // Get the preview.
-    $this->getPreviewAJAX('test_click_sort_ajax', 'page_1', 0);
+    $this->getPreviewAjax('test_click_sort_ajax', 'page_1', 0);
 
     // Test that the header label is present.
     $element = $this->assertSession()->elementExists('xpath', '//th[contains(@class, "views-field views-field-name")]/a');
@@ -259,11 +259,11 @@ class PreviewTest extends WebDriverTestBase {
    * @param int $row_count
    *   The expected number of rows in the preview.
    */
-  protected function getPreviewAJAX($view_name, $panel_id, $row_count) {
+  protected function getPreviewAjax($view_name, $panel_id, $row_count) {
     $this->drupalGet('admin/structure/views/view/' . $view_name . '/edit/' . $panel_id);
     $this->getSession()->getPage()->pressButton('Update preview');
     $this->assertSession()->assertWaitOnAjaxRequest();
-    $this->assertPreviewAJAX($row_count);
+    $this->assertPreviewAjax($row_count);
   }
 
   /**
@@ -274,10 +274,10 @@ class PreviewTest extends WebDriverTestBase {
    * @param int $row_count
    *   The expected number of rows in the preview.
    */
-  protected function clickPreviewLinkAJAX(NodeElement $element, $row_count) {
+  protected function clickPreviewLinkAjax(NodeElement $element, $row_count) {
     $element->click();
     $this->assertSession()->assertWaitOnAjaxRequest();
-    $this->assertPreviewAJAX($row_count);
+    $this->assertPreviewAjax($row_count);
   }
 
   /**
@@ -288,7 +288,7 @@ class PreviewTest extends WebDriverTestBase {
    *
    * @internal
    */
-  protected function assertPreviewAJAX(int $row_count): void {
+  protected function assertPreviewAjax(int $row_count): void {
     $elements = $this->getSession()->getPage()->findAll('css', '#views-live-preview .views-row');
     $this->assertCount($row_count, $elements, 'Expected items found on page.');
   }

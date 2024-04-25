@@ -811,9 +811,9 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
    *   The file upload response.
    */
   protected function assertResponseData(array $expected, ResponseInterface $response) {
-    static::recursiveKSort($expected);
+    static::recursiveKsort($expected);
     $actual = $this->serializer->decode((string) $response->getBody(), static::$format);
-    static::recursiveKSort($actual);
+    static::recursiveKsort($actual);
 
     $this->assertSame($expected, $actual);
   }

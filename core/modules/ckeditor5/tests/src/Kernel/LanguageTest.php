@@ -78,7 +78,7 @@ class LanguageTest extends KernelTestBase {
     if ($is_missing_mapping) {
       // CKEditor 5's UI language falls back to English, until the language
       // mapping is expanded.
-      $settings = $this->ckeditor5->getJSSettings($editor);
+      $settings = $this->ckeditor5->getJsSettings($editor);
       $this->assertSame('en', $settings['language']['ui']);
 
       // Expand the language mapping.
@@ -88,7 +88,7 @@ class LanguageTest extends KernelTestBase {
       $config->set('map', $mapping)->save();
     }
 
-    $settings = $this->ckeditor5->getJSSettings($editor);
+    $settings = $this->ckeditor5->getJsSettings($editor);
     $this->assertSame($cke5_langcode, $settings['language']['ui']);
   }
 

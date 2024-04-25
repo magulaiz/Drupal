@@ -221,7 +221,7 @@ class DateTimeTest extends BrowserTestBase {
       'field_storage[subform][cardinality]' => 'number',
       'field_storage[subform][cardinality_number]' => '1',
     ];
-    $this->fieldUIAddNewField('admin/structure/types/manage/page_with_date', 'dt', 'dt', 'datetime', $storage_edit);
+    $this->fieldUiAddNewField('admin/structure/types/manage/page_with_date', 'dt', 'dt', 'datetime', $storage_edit);
 
     $this->drupalGet('admin/structure/types/manage/page_with_date/fields');
     $this->assertSession()->pageTextContains('field_dt');

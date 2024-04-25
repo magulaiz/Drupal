@@ -30,7 +30,7 @@ class DisplayAttachmentTest extends UITestBase {
   /**
    * Tests the attachment UI.
    */
-  public function testAttachmentUI() {
+  public function testAttachmentUi() {
     $this->drupalGet('admin/structure/views/view/test_attachment_ui/edit/attachment_1');
     $this->assertSession()->pageTextContains('Not defined');
 

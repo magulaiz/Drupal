@@ -116,7 +116,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
 
     // Create a test entity reference field.
     $field_name = 'test_entity_ref_field';
-    $this->fieldUIAddNewField($bundle_path, $field_name, 'Test Entity Reference Field', 'field_ui:entity_reference:node', [], [], FALSE);
+    $this->fieldUiAddNewField($bundle_path, $field_name, 'Test Entity Reference Field', 'field_ui:entity_reference:node', [], [], FALSE);
 
     // Set to unlimited.
     $edit = [
@@ -404,7 +404,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
       $field_edit['settings[handler_settings][target_bundles][' . $bundle . ']'] = TRUE;
     }
 
-    $this->fieldUIAddNewField($bundle_path, $field_name, $field_name, 'entity_reference', $storage_edit, $field_edit);
+    $this->fieldUiAddNewField($bundle_path, $field_name, $field_name, 'entity_reference', $storage_edit, $field_edit);
 
     // Returns the generated field name.
     return $field_name;

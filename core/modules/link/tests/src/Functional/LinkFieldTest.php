@@ -76,7 +76,7 @@ class LinkFieldTest extends BrowserTestBase {
    * This is being as one to avoid multiple Drupal install.
    */
   public function testLinkField() {
-    $this->doTestURLValidation();
+    $this->doTestUrlValidation();
     $this->doTestLinkTitle();
     $this->doTestLinkFormatter();
     $this->doTestLinkSeparateFormatter();
@@ -87,7 +87,7 @@ class LinkFieldTest extends BrowserTestBase {
   /**
    * Tests link field URL validation.
    */
-  protected function doTestURLValidation() {
+  protected function doTestUrlValidation() {
     $field_name = $this->randomMachineName();
     // Create a field with settings to validate.
     $this->fieldStorage = FieldStorageConfig::create([

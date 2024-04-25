@@ -30,7 +30,7 @@ class LocaleContentTest extends BrowserTestBase {
   /**
    * Verifies that machine name fields are always LTR.
    */
-  public function testMachineNameLTR() {
+  public function testMachineNameLtr() {
     // User to add and remove language.
     $admin_user = $this->drupalCreateUser([
       'administer languages',

@@ -101,7 +101,7 @@ class FrameworkTest extends WebDriverTestBase {
   /**
    * Tests that overridden CSS files are not added during lazy load.
    */
-  public function testLazyLoadOverriddenCSS() {
+  public function testLazyLoadOverriddenCss() {
     // The test_theme throws a few JavaScript errors. Since we're only
     // interested in CSS for this test, we're not letting this test fail on
     // those.

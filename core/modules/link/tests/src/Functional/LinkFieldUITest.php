@@ -74,17 +74,17 @@ class LinkFieldUITest extends BrowserTestBase {
   /**
    * Tests the link field UI.
    */
-  public function testFieldUI() {
-    foreach ($this->providerTestFieldUI() as $item) {
+  public function testFieldUi() {
+    foreach ($this->providerTestFieldUi() as $item) {
       [$cardinality, $link_type, $title, $label, $field_name, $default_uri] = $item;
-      $this->runFieldUIItem($cardinality, $link_type, $title, $label, $field_name, $default_uri);
+      $this->runFieldUiItem($cardinality, $link_type, $title, $label, $field_name, $default_uri);
     }
   }
 
   /**
-   * Provides test data for ::testFieldUI().
+   * Provides test data for ::testFieldUi().
    */
-  protected function providerTestFieldUI() {
+  protected function providerTestFieldUi() {
     // There are many combinations of field settings: where the description
     // should show: variation on internal, external, both; cardinality (where
     // the fieldset is hidden or used); and link text shown (required or
@@ -151,7 +151,7 @@ class LinkFieldUITest extends BrowserTestBase {
    * @param string $default_uri
    *   The default URI value.
    */
-  public function runFieldUIItem($cardinality, $link_type, $title, $label, $field_name, $default_uri) {
+  public function runFieldUiItem($cardinality, $link_type, $title, $label, $field_name, $default_uri) {
     $this->drupalLogin($this->adminUser);
     $type_path = 'admin/structure/types/manage/' . $this->contentType->id();
 
@@ -169,7 +169,7 @@ class LinkFieldUITest extends BrowserTestBase {
     $storage_edit = [
       'cardinality_number' => $cardinality,
     ];
-    $this->fieldUIAddNewField($type_path, $field_name, $label, 'link', $storage_edit, $field_edit);
+    $this->fieldUiAddNewField($type_path, $field_name, $label, 'link', $storage_edit, $field_edit);
 
     // Load the formatter page to check that the settings summary does not
     // generate warnings.

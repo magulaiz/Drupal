@@ -41,7 +41,7 @@ class EntityReferenceXSSTest extends BrowserTestBase {
   /**
    * Tests markup is escaped in the entity reference select and label formatter.
    */
-  public function testEntityReferenceXSS() {
+  public function testEntityReferenceXss() {
     $this->drupalCreateContentType(['type' => 'article']);
 
     // Create a node with markup in the title.

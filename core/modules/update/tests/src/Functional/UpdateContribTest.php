@@ -433,7 +433,7 @@ class UpdateContribTest extends UpdateTestBase {
   /**
    * Makes sure that if we fetch from a broken URL, sane things happen.
    */
-  public function testUpdateBrokenFetchURL() {
+  public function testUpdateBrokenFetchUrl() {
     $this->mockInstalledExtensionsInfo([
       'aaa_update_test' => [
         'project' => 'aaa_update_test',

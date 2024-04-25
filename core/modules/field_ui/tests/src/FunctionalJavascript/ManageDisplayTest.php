@@ -83,12 +83,12 @@ class ManageDisplayTest extends WebDriverTestBase {
   /**
    * Tests formatter settings.
    */
-  public function testFormatterUI() {
+  public function testFormatterUi() {
     $manage_fields = 'admin/structure/types/manage/' . $this->type;
     $manage_display = $manage_fields . '/display';
 
     // Create a field, and a node with some data for the field.
-    $this->fieldUIAddNewFieldJS($manage_fields, 'test', 'Test field');
+    $this->fieldUiAddNewFieldJs($manage_fields, 'test', 'Test field');
 
     $display_id = 'node.' . $this->type . '.default';
     $displayStorage = $this->entityTypeManager->getStorage('entity_view_display');
@@ -254,7 +254,7 @@ class ManageDisplayTest extends WebDriverTestBase {
   /**
    * Tests widget settings.
    */
-  public function testWidgetUI() {
+  public function testWidgetUi() {
     // Admin Manage Fields page.
     $manage_fields = 'admin/structure/types/manage/' . $this->type;
     // Admin Manage Display page.
@@ -264,7 +264,7 @@ class ManageDisplayTest extends WebDriverTestBase {
 
     // Creates a new field that can be used with multiple formatters.
     // Reference: Drupal\field_test\Plugin\Field\FieldWidget\TestFieldWidgetMultiple::isApplicable().
-    $this->fieldUIAddNewFieldJS($manage_fields, 'test', 'Test field');
+    $this->fieldUiAddNewFieldJs($manage_fields, 'test', 'Test field');
 
     // Get the display options (formatter and settings) that were automatically
     // assigned for the 'default' display.
@@ -346,7 +346,7 @@ class ManageDisplayTest extends WebDriverTestBase {
 
     // Creates a new field that can not be used with the multiple formatter.
     // Reference: Drupal\field_test\Plugin\Field\FieldWidget\TestFieldWidgetMultiple::isApplicable().
-    $this->fieldUIAddNewFieldJS($manage_fields, 'onewidgetfield', 'One Widget Field');
+    $this->fieldUiAddNewFieldJs($manage_fields, 'onewidgetfield', 'One Widget Field');
 
     // Go to the Manage Form Display.
     $this->drupalGet($manage_display);
@@ -431,7 +431,7 @@ class ManageDisplayTest extends WebDriverTestBase {
     // Admin Manage Fields page.
     $manage_fields = 'admin/structure/types/manage/' . $this->type;
 
-    $this->fieldUIAddNewFieldJS($manage_fields, 'test', 'Test field');
+    $this->fieldUiAddNewFieldJs($manage_fields, 'test', 'Test field');
     $manage_display = 'admin/structure/types/manage/' . $this->type . '/display';
     $manage_form = 'admin/structure/types/manage/' . $this->type . '/form-display';
 

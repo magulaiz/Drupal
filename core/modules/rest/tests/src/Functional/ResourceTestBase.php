@@ -490,14 +490,14 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @param array $array
    *   An array to sort.
    */
-  protected static function recursiveKSort(array &$array) {
+  protected static function recursiveKsort(array &$array) {
     // First, sort the main array.
     ksort($array);
 
     // Then check for child arrays.
     foreach ($array as $key => &$value) {
       if (is_array($value)) {
-        static::recursiveKSort($value);
+        static::recursiveKsort($value);
       }
     }
   }

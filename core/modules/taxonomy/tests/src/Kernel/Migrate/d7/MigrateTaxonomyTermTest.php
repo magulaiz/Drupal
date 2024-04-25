@@ -93,7 +93,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
     $this->assertEquals($expected_description, $entity->getDescription());
     $this->assertEquals($expected_format, $entity->getFormat());
     $this->assertEquals($expected_weight, $entity->getWeight());
-    $this->assertEquals($expected_parents, $this->getParentIDs($id));
+    $this->assertEquals($expected_parents, $this->getParentIds($id));
     $this->assertHierarchy($expected_vid, $id, $expected_parents);
     if (!is_null($expected_field_integer_value)) {
       $this->assertTrue($entity->hasField('field_integer'));
@@ -207,7 +207,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
    * @return array
    *   List of parent term IDs.
    */
-  protected function getParentIDs($tid) {
+  protected function getParentIds($tid) {
     return array_keys(\Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadParents($tid));
   }
 
