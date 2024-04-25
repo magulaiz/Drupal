@@ -122,6 +122,14 @@ class TwigTransTest extends BrowserTestBase {
   }
 
   /**
+   * Testing trans with render array value.
+   */
+  public function testTransRenderArray() {
+    $this->drupalGet('twig-theme-test/render-array');
+    $this->assertSession()->pageTextContains('This is a trans render array', '{% trans %} with render array value is working correctly.');
+  }
+
+  /**
    * Asserts Twig trans tags.
    *
    * @internal

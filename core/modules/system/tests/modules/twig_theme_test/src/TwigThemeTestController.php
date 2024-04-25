@@ -118,4 +118,13 @@ class TwigThemeTestController {
     return ['#theme' => 'twig_theme_test_dump'];
   }
 
+  /**
+   * Controller for testing trans with render array value.
+   */
+  public function transRenderArray() {
+    return [
+      '#theme' => 'twig_theme_test_trans_render_array',
+    ];
+  }
+
 }
