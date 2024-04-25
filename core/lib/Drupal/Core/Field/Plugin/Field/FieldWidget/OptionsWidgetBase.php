@@ -33,6 +33,27 @@ abstract class OptionsWidgetBase extends WidgetBase {
   protected $column;
 
   /**
+   * Whether the element is required.
+   *
+   * @var bool
+   */
+  protected $required;
+
+  /**
+   * Whether the element is multi cardinality.
+   *
+   * @var bool
+   */
+  protected $multiple;
+
+  /**
+   * Whether the element has a value.
+   *
+   * @var bool
+   */
+  protected $has_value;
+
+  /**
    * Tracks whether the field is required.
    */
   protected bool $required;
