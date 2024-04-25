@@ -19,7 +19,7 @@ class SuperUserAccessInstallTest extends InstallerTestBase {
    *
    * @see \Drupal\Core\Installer\Form\SiteConfigureForm::submitForm())
    */
-  protected const NO_ACCESS_MESSAGE = 'User 1 does not have administrator access. For more information, see the documentation on securing the admin super user.';
+  protected const NO_ACCESS_MESSAGE = 'The user %s does not have administrator access. For more information, see the documentation on securing the admin super user.';
 
   /**
    * {@inheritdoc}
@@ -62,11 +62,12 @@ class SuperUserAccessInstallTest extends InstallerTestBase {
     $user = User::load(1);
     $this->assertSame($expected_runtime_has_permission, $user->hasPermission('administer software updates'));
     $this->assertTrue(\Drupal::state()->get('admin_permission_in_installer'));
+    $message = sprintf(static::NO_ACCESS_MESSAGE, $this->rootUser->getDisplayName());
     if ($expected_no_access_message) {
-      $this->assertSession()->pageTextContains(static::NO_ACCESS_MESSAGE);
+      $this->assertSession()->pageTextContains($message);
     }
     else {
-      $this->assertSession()->pageTextNotContains(static::NO_ACCESS_MESSAGE);
+      $this->assertSession()->pageTextNotContains($message);
     }
     $this->assertSame($expected_roles, $user->getRoles(TRUE));
   }
