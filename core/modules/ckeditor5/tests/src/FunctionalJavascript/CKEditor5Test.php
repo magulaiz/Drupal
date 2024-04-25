@@ -7,6 +7,7 @@ use Drupal\Core\Language\LanguageManager;
 use Drupal\editor\Entity\Editor;
 use Drupal\file\Entity\File;
 use Drupal\filter\Entity\FilterFormat;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Drupal\Tests\TestFileCreationTrait;
@@ -31,6 +32,7 @@ class CKEditor5Test extends CKEditor5TestBase {
    */
   protected static $modules = [
     'media_library',
+    'language',
   ];
 
   /**
@@ -215,6 +217,9 @@ class CKEditor5Test extends CKEditor5TestBase {
    * Test for plugin Language of parts.
    */
   public function testLanguageOfPartsPlugin() {
+    // Add a predefined language to test the 'Enabled Languages' option.
+    ConfigurableLanguage::createFromLangcode('fr')->save();
+
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -257,6 +262,18 @@ JS;
     $this->drupalGet('admin/config/content/formats/manage/ckeditor5');
     $languages = LanguageManager::getStandardLanguageList();
     $this->languageOfPartsPluginTestHelper($page, $assert_session, $languages, "all");
+
+    // Test for "Enabled Languages" options.
+    $this->drupalGet('admin/config/content/formats/manage/ckeditor5');
+    $enabled_languages = \Drupal::languageManager()->getLanguages();
+    $languages = [];
+    foreach ($enabled_languages as $language) {
+      $language_name = $language->getName();
+      $language_code = $language->getId();
+      $languages[$language_code] = [$language_name];
+    }
+
+    $this->languageOfPartsPluginTestHelper($page, $assert_session, $languages, "enabled");
   }
 
   /**

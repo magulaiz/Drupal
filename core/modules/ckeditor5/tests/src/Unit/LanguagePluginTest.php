@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Drupal\Tests\ckeditor5\Unit;
 
 use Drupal\ckeditor5\Plugin\CKEditor5Plugin\Language;
+use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
+use Drupal\Core\Language\Language as LanguageLanguage;
 use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\editor\EditorInterface;
 use Drupal\Tests\UnitTestCase;
 
@@ -56,6 +59,24 @@ class LanguagePluginTest extends UnitTestCase {
         ['language_list' => 'un'],
         $un_expected_output,
       ],
+      'enabled' => [
+        ['language_list' => 'enabled'],
+        [
+          'language' => [
+            'textPartLanguage' => [
+              [
+                'title' => 'Arabic',
+                'languageCode' => 'ar',
+                'textDirection' => 'rtl',
+              ],
+              [
+                'title' => 'German',
+                'languageCode' => 'de',
+              ],
+            ],
+          ],
+        ],
+      ],
       'all' => [
         ['language_list' => 'all'],
         [
@@ -101,7 +122,19 @@ class LanguagePluginTest extends UnitTestCase {
    * @dataProvider providerGetDynamicPluginConfig
    */
   public function testGetDynamicPluginConfig(array $configuration, array $expected_dynamic_config): void {
-    $plugin = new Language($configuration, 'ckeditor5_language', NULL);
+    $language_manager = $this->prophesize(LanguageManagerInterface::class);
+    $language_manager->getLanguages()->willReturn([
+      new LanguageLanguage([
+        'id' => 'de',
+        'name' => 'German',
+      ]),
+      new LanguageLanguage([
+        'id' => 'ar',
+        'name' => 'Arabic',
+        'direction' => 'rtl',
+      ]),
+    ]);
+    $plugin = new Language($configuration, 'ckeditor5_language', new CKEditor5PluginDefinition(['id' => 'IRRELEVANT-FOR-A-UNIT-TEST']), $language_manager->reveal());
     $dynamic_config = $plugin->getDynamicPluginConfig([], $this->prophesize(EditorInterface::class)
       ->reveal());
     $this->assertSame($expected_dynamic_config, $dynamic_config);
