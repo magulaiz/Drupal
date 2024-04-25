@@ -308,7 +308,7 @@
 		// [value] (issue #113), also see comment:
 		// https://github.com/malsup/form/commit/588306aedba1de01388032d5f42a60159eea9228#commitcomment-2180219
 		var fileInputs = $('input[type=file]:enabled', this).filter(function() {
-			return this.value !== '';
+			return $(this).val() !== '';
 		});
 		var hasFileInputs = fileInputs.length > 0;
 		var mp = 'multipart/form-data';
@@ -1135,7 +1135,7 @@
 			if (semantic && form.clk && el.type === 'image') {
 				// handle image inputs on the fly when semantic == true
 				if (form.clk === el) {
-					a.push({ name: n, value: el.value, type: el.type });
+					a.push({name: n, value: $(el).val(), type: el.type});
 					a.push({name: n + '.x', value: form.clk_x}, {name: n + '.y', value: form.clk_y});
 				}
 				continue;
@@ -1181,7 +1181,7 @@
 			n = input.name;
 
 			if (n && !input.disabled && input.type === 'image') {
-				a.push({name: n, value: input.value});
+				a.push({name: n, value: $input.val()});
 				a.push({name: n + '.x', value: form.clk_x}, {name: n + '.y', value: form.clk_y});
 			}
 		}
@@ -1336,7 +1336,7 @@
 			return a;
 		}
 
-		return el.value.replace(rCRLF, '\r\n');
+		return $(el).val().replace(rCRLF, '\r\n');
 	};
 
 	/**
@@ -1375,7 +1375,7 @@
 				if (/MSIE/.test(navigator.userAgent)) {
 					$(this).replaceWith($(this).clone(true));
 				} else {
-					this.value = '';
+					$(this).val('');
 				}
 
 			} else if (includeHidden) {
