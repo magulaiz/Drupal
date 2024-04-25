@@ -10,9 +10,7 @@
  * @see template_preprocess_image()
  */
 #}
-{%
-set classes = [
-  style_name ? 'image-style-' ~ style_name|clean_class,
-]
-%}
-<img{{ attributes.addClass(classes) }} />
+{% if style_name %}
+{% set attributes = attributes.addClass('image-style-' ~ style_name|clean_class) %}
+{% endif %}
+<img{{ attributes }} />
