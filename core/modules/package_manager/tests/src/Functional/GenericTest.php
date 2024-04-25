@@ -10,6 +10,5 @@ use Drupal\Tests\system\Functional\Module\GenericModuleTestBase;
  * Generic module test for package_manager.
  *
  * @group package_manager
- * @group legacy
  */
 class GenericTest extends GenericModuleTestBase {}
