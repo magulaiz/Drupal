@@ -4,6 +4,7 @@ namespace Drupal\migrate\Plugin\migrate\destination;
 
 use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Entity\DependencyTrait;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -100,8 +101,18 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface,
    *   The configuration factory.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typedConfigManager
+   *   The typed config manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration, ConfigFactoryInterface $config_factory, LanguageManagerInterface $language_manager) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    MigrationInterface $migration,
+    ConfigFactoryInterface $config_factory,
+    LanguageManagerInterface $language_manager,
+    protected TypedConfigManagerInterface $typedConfigManager,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migration);
     $this->config = $config_factory->getEditable($configuration['config_name']);
     $this->language_manager = $language_manager;
@@ -120,7 +131,8 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface,
       $plugin_definition,
       $migration,
       $container->get('config.factory'),
-      $container->get('language_manager')
+      $container->get('language_manager'),
+      $container->get(TypedConfigManagerInterface::class)
     );
   }
 
@@ -136,6 +148,16 @@ class Config extends DestinationBase implements ContainerFactoryPluginInterface,
       if (isset($value) || !empty($this->configuration['store null'])) {
         $this->config->set(str_replace(Row::PROPERTY_SEPARATOR, '.', $key), $value);
       }
+    }
+
+    $name = $this->config->getName();
+    // Ensure that translatable config has `langcode` specified.
+    // @see \Drupal\Core\Config\Plugin\Validation\Constraint\LangcodeRequiredIfTranslatableValuesConstraint
+    if ($this->typedConfigManager->hasConfigSchema($name)
+      && $this->typedConfigManager->createFromNameAndData($name, $this->config->getRawData())->hasTranslatableElements()
+      && !$this->config->get('langcode')
+    ) {
+      $this->config->set('langcode', $this->language_manager->getDefaultLanguage()->getId());
     }
     $this->config->save();
     $ids[] = $this->config->getName();
