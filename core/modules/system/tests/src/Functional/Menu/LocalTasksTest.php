@@ -272,7 +272,7 @@ class LocalTasksTest extends BrowserTestBase {
     $this->drupalGet('/admin/config/people/accounts');
     // Check we opened the account settings page.
     // If the permissions were wrong then we get 401 and
-    // there won't be a localtask and will result in false positive.
+    // there won't be a local task and will result in false positive.
     $this->assertSession()->pageTextContains('Account settings');
     $this->assertNoLocalTasks();
 
@@ -280,7 +280,7 @@ class LocalTasksTest extends BrowserTestBase {
     $this->drupalGet('/admin/structure/types/manage/page');
     // Check we opened the edit content type page.
     // If the permissions were wrong then we get 401 and
-    // there won't be a localtask and will result in false positive.
+    // there won't be a local task and will result in false positive.
     $this->assertSession()->pageTextContains('Edit page content type');
     $this->assertLocalTasks([
       ['entity.node_type.edit_form', ['node_type' => 'page']],
