@@ -81,8 +81,8 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
     if ($url_system_theme_settings->access()) {
       // Provide links to the Appearance Settings page if the user has access to
       // administer themes.
-      $site_logo_description = $this->t('Defined on the <a href="@appearance">Appearance Settings</a> page.', [
-        '@appearance' => $url_system_theme_settings->toString(),
+      $site_logo_description = $this->t('Defined on the <a href=":appearance">Appearance Settings</a> page.', [
+        ':appearance' => $url_system_theme_settings->toString(),
       ]);
     }
     else {
