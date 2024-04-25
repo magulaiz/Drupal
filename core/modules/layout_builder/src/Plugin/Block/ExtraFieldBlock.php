@@ -171,8 +171,8 @@ class ExtraFieldBlock extends BlockBase implements ContextAwarePluginInterface, 
         $built_cache = CacheableMetadata::createFromRenderArray($built_field);
         $merged_cache = $placeholder_cache->merge($built_cache);
         $build[$child] = $built_field;
-        $merged_cache->applyTo($build);
         $build['#pre_render'][] = [static::class, 'preRenderBlock'];
+        $merged_cache->applyTo($build);
       }
       else {
         static::replaceFieldPlaceholder($build[$child], $built_field, $field_name);
@@ -203,7 +203,7 @@ class ExtraFieldBlock extends BlockBase implements ContextAwarePluginInterface, 
   /**
    * {@inheritdoc}
    */
-  public static function trustedCallbacks() {
+  public static function trustedCallbacks(): array {
     return ['preRenderBlock'];
   }
 
