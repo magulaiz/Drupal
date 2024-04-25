@@ -11,7 +11,6 @@
   <!--Exclude the PHPStan baseline from coding standards.-->
   <exclude-pattern>./core/.phpstan-baseline.php</exclude-pattern>
   <!-- Exclude third-party code maintained within core that does not follow our standards. -->
-  <exclude-pattern>./core/lib/Drupal/Component/Diff/</exclude-pattern>
   <exclude-pattern>./core/tests/Drupal/Tests/Component/Annotation/Doctrine/</exclude-pattern>
 
   <!--Exclude test files that are intentionally empty, or intentionally violate coding standards.-->
