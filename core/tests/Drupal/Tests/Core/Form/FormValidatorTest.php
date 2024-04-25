@@ -267,24 +267,24 @@ class FormValidatorTest extends UnitTestCase {
     $form_validator = new FormValidator(new RequestStack(), $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $this->formErrorHandler);
 
     $mock = $this->getMockBuilder(FormValidatorTestMockInterface::class)
-      ->onlyMethods(['validate_handler', 'hash_validate', 'element_validate'])
+      ->onlyMethods(['validateHandler', 'hashValidate', 'elementValidate'])
       ->getMock();
     $mock->expects($this->once())
-      ->method('validate_handler')
+      ->method('validateHandler')
       ->with($this->isType('array'), $this->isInstanceOf('Drupal\Core\Form\FormStateInterface'));
     $mock->expects($this->once())
-      ->method('hash_validate')
+      ->method('hashValidate')
       ->with($this->isType('array'), $this->isInstanceOf('Drupal\Core\Form\FormStateInterface'));
 
     $form = [];
     $form_state = new FormState();
     $form_validator->executeValidateHandlers($form, $form_state);
 
-    $form['#validate'][] = [$mock, 'hash_validate'];
+    $form['#validate'][] = [$mock, 'hashValidate'];
     $form_validator->executeValidateHandlers($form, $form_state);
 
     // $form_state validate handlers will supersede $form handlers.
-    $validate_handlers[] = [$mock, 'validate_handler'];
+    $validate_handlers[] = [$mock, 'validateHandler'];
     $form_state->setValidateHandlers($validate_handlers);
     $form_validator->executeValidateHandlers($form, $form_state);
   }
@@ -350,10 +350,10 @@ class FormValidatorTest extends UnitTestCase {
     $form_validator->expects($this->once())
       ->method('executeValidateHandlers');
     $mock = $this->getMockBuilder(FormValidatorTestMockInterface::class)
-      ->onlyMethods(['validate_handler', 'hash_validate', 'element_validate'])
+      ->onlyMethods(['validateHandler', 'hashValidate', 'elementValidate'])
       ->getMock();
     $mock->expects($this->once())
-      ->method('element_validate')
+      ->method('elementValidate')
       ->with($this->isType('array'), $this->isInstanceOf('Drupal\Core\Form\FormStateInterface'), NULL);
 
     $form = [];
@@ -361,7 +361,7 @@ class FormValidatorTest extends UnitTestCase {
       '#type' => 'textfield',
       '#title' => 'Test',
       '#parents' => ['test'],
-      '#element_validate' => [[$mock, 'element_validate']],
+      '#element_validate' => [[$mock, 'elementValidate']],
     ];
     $form_state = new FormState();
     $form_validator->validateForm('test_form_id', $form, $form_state);
@@ -475,16 +475,16 @@ interface FormValidatorTestMockInterface {
   /**
    * Function used in the mocking process of this test.
    */
-  public function validate_handler();
+  public function validateHandler();
 
   /**
    * Function used in the mocking process of this test.
    */
-  public function hash_validate();
+  public function hashValidate();
 
   /**
    * Function used in the mocking process of this test.
    */
-  public function element_validate();
+  public function elementValidate();
 
 }
