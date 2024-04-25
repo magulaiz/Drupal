@@ -6,6 +6,7 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface;
 use Drupal\Core\Entity\EntityReferenceSelection\SelectionWithAutocreateInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\user\EntityOwnerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -139,7 +140,10 @@ class ValidReferenceConstraintValidator extends ConstraintValidator implements C
           // Check if any of the invalid existing references are simply not
           // accessible by the user, in which case they need to be excluded from
           // validation
-          if (isset($previously_referenced_ids[$target_id]) && isset($existing_entities[$target_id]) && !$existing_entities[$target_id]->access('view')) {
+          $owner = $value->getEntity() instanceof EntityOwnerInterface
+            ? $value->getEntity()->getOwner()
+            : NULL;
+          if (isset($previously_referenced_ids[$target_id]) && isset($existing_entities[$target_id]) && !$existing_entities[$target_id]->access('view', $owner)) {
             continue;
           }
 
