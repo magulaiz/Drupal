@@ -132,7 +132,10 @@
    *   arbitrary AND and OR clauses.
    */
   states.Dependent = function (args) {
-    $.extend(this, { values: {}, oldValue: null }, args);
+    $.extend(this, {
+      values: {},
+      oldValue: null
+    }, args);
 
     this.dependees = this.getDependees();
     Object.keys(this.dependees || {}).forEach((selector) => {
@@ -175,9 +178,9 @@
       // compare().
       // Otherwise numeric keys in the form's #states array fail to match
       // string values returned from jQuery's val().
-      return typeof value === 'string'
-        ? compare(reference.toString(), value)
-        : compare(reference, value);
+      return typeof value === 'string' ?
+        compare(reference.toString(), value) :
+        compare(reference, value);
     },
   };
 
@@ -211,12 +214,18 @@
         this.values[selector][state.name] = null;
 
         // Monitor state changes of the specified state for this dependee.
-        $(selector).on(`state:${state}`, { selector, state }, (e) => {
+        $(selector).on(`state:${state}`, {
+          selector,
+          state
+        }, (e) => {
           this.update(e.data.selector, e.data.state, e.value);
         });
 
         // Make sure the event we just bound ourselves to is actually fired.
-        new states.Trigger({ selector, state });
+        new states.Trigger({
+          selector,
+          state
+        });
       });
     },
 
@@ -562,30 +571,45 @@
     // For radio buttons, only return the value if the radio button is selected.
     value: {
       keyup() {
-        // Radio buttons share the same :input[name="key"] selector.
+        // Check if there are multiple elements.
         if (this.length > 1) {
-          // Initial checked value of radios is undefined, so we return false.
-          const checked = this.filter(':checked');
-          return checked[0]?.value || false;
+          // Find the checked element among radio buttons.
+          const checked = Array.from(this).find(element => element.checked);
+          return checked ? checked.value : false;
         }
-        return this[0].value;
+
+        // For single element, handle based on its type.
+        const element = this[0];
+        if (element.tagName.toLowerCase() === 'select' && element.multiple) {
+          return Array.from(element.selectedOptions).map(option => option.value);
+        }
+        // For other cases, return the value of the single element.
+        return element.value;
       },
       change() {
-        // Radio buttons share the same :input[name="key"] selector.
+        // Check if there are multiple elements.
         if (this.length > 1) {
-          // Initial checked value of radios is undefined, so we return false.
-          const checked = this.filter(':checked');
-          return checked[0]?.value || false;
+          // Find the checked element among radio buttons.
+          const checked = Array.from(this).find(element => element.checked);
+          return checked ? checked.value : false;
         }
-        return this[0].value;
+
+        // For single element, handle based on its type.
+        const element = this[0];
+        if (element.tagName.toLowerCase() === 'select' && element.multiple) {
+          return Array.from(element.selectedOptions).map(option => option.value);
+        }
+
+        // For other cases, return the value of the single element.
+        return element.value;
       },
     },
 
     collapsed: {
       collapsed(e) {
-        return typeof e !== 'undefined' && 'value' in e
-          ? e.value
-          : !this[0].hasAttribute('open');
+        return typeof e !== 'undefined' && 'value' in e ?
+          e.value :
+          !this[0].hasAttribute('open');
       },
     },
   };
@@ -720,7 +744,10 @@
       if (e.value) {
         const label = `label${e.target.id ? `[for=${e.target.id}]` : ''}`;
         const $label = $(e.target)
-          .attr({ required: 'required', 'aria-required': 'true' })
+          .attr({
+            required: 'required',
+            'aria-required': 'true'
+          })
           .closest('.js-form-item, .js-form-wrapper')
           .find(label);
         // Avoids duplicate required markers on initialization.
