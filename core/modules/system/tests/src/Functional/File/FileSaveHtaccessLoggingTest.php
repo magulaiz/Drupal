@@ -39,8 +39,7 @@ class FileSaveHtaccessLoggingTest extends BrowserTestBase {
     $this->assertFalse($htaccess->write($private, TRUE));
 
     // Create user with access site report permissions.
-    $user = $this->drupalCreateUser(['access site reports']);
-    $this->drupalLogin($user);
+    $this->drupalLogin($this->drupalCreateUser(['access site reports']));
 
     $this->drupalGet('admin/reports/dblog');
     $this->clickLink("Security warning: Couldn't write .htaccess file.");

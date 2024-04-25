@@ -39,8 +39,6 @@ abstract class GenericModuleTestBase extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    // Create user for the test with correct permissions.
-    $this->rootUser = $this->createUser(['access help pages']);
   }
 
   /**
@@ -53,7 +51,7 @@ abstract class GenericModuleTestBase extends BrowserTestBase {
     if (!empty($info['required']) && !empty($info['hidden'])) {
       $this->markTestSkipped('Nothing to assert for hidden, required modules.');
     }
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($this->createUser(['access help pages']));
     $this->assertHookHelp($module);
 
     if (empty($info['required'])) {

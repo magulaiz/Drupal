@@ -76,13 +76,11 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
     $anonymous_user->save();
 
     // Create role for administrator.
-    $rid = $this->createRole(['administer users']);
-
     $admin_user = User::create([
       'uid' => 1,
       'name' => 'admin',
       'status' => 1,
-      'roles' => [$rid],
+      'roles' => [$this->createRole(['administer users'])],
     ]);
     $admin_user->save();
   }

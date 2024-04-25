@@ -61,8 +61,7 @@ class DateFormatAccessControlHandlerTest extends KernelTestBase {
       $user = $root_user;
     }
     else {
-      $permissions = ['administer site configuration'];
-      $user = $this->drupalCreateUser($permissions);
+      $user = $this->drupalCreateUser(['administer site configuration']);
     }
 
     $entity_values = ($which_entity === 'unlocked')

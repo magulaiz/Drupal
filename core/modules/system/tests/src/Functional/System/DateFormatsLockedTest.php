@@ -23,8 +23,7 @@ class DateFormatsLockedTest extends BrowserTestBase {
    */
   public function testDateLocking() {
     // Create use with required permissions.
-    $user = $this->drupalCreateUser(['administer site configuration']);
-    $this->drupalLogin($user);
+    $this->drupalLogin($this->drupalCreateUser(['administer site configuration']));
 
     // Locked date formats are not linked on the listing page, locked date
     // formats are clearly marked as such; unlocked formats are not marked as

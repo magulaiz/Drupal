@@ -261,21 +261,26 @@ class LocalTasksTest extends BrowserTestBase {
    */
   public function testLocalTaskBlockCache() {
     // Create user with following permission.
-    $user = $this->drupalCreateUser([
+    $this->drupalLogin($this->drupalCreateUser([
       'administer content types',
       'administer permissions',
       'administer account settings',
-    ]);
-    $this->drupalLogin($user);
+    ]));
     $this->drupalCreateContentType(['type' => 'page']);
 
     // Only the Edit task. The block avoids showing a single tab.
     $this->drupalGet('/admin/config/people/accounts');
+    // Check we opened the account settings page.
+    // If the permissions were wrong then we get 401 and
+    // there won't be a localtask and will result in false positive.
     $this->assertSession()->pageTextContains('Account settings');
     $this->assertNoLocalTasks();
 
     // Only the Edit and Manage permission tabs.
     $this->drupalGet('/admin/structure/types/manage/page');
+    // Check we opened the edit content type page.
+    // If the permissions were wrong then we get 401 and
+    // there won't be a localtask and will result in false positive.
     $this->assertSession()->pageTextContains('Edit page content type');
     $this->assertLocalTasks([
       ['entity.node_type.edit_form', ['node_type' => 'page']],
@@ -285,7 +290,7 @@ class LocalTasksTest extends BrowserTestBase {
     // Field UI adds the usual Manage fields etc tabs.
     \Drupal::service('module_installer')->install(['field_ui']);
 
-    $user = $this->drupalCreateUser([
+    $this->drupalLogin($this->drupalCreateUser([
       'administer content types',
       'administer permissions',
       'administer account settings',
@@ -293,8 +298,7 @@ class LocalTasksTest extends BrowserTestBase {
       'administer node display',
       'administer node fields',
       'administer node form display',
-    ]);
-    $this->drupalLogin($user);
+    ]));
 
     $this->drupalGet('/admin/structure/types/manage/page');
     $this->assertLocalTasks([

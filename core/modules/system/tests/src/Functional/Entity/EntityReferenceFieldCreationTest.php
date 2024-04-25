@@ -36,11 +36,10 @@ class EntityReferenceFieldCreationTest extends BrowserTestBase {
     $node_type = $this->drupalCreateContentType()->id();
 
     // Create user with administer content types & fields permission.
-    $user = $this->drupalCreateUser([
+    $this->drupalLogin($this->drupalCreateUser([
       'administer content types',
       'administer node fields',
-    ]);
-    $this->drupalLogin($user);
+    ]));
 
     // Entity types without an ID key should not be presented as options when
     // creating an entity reference field in the UI.

@@ -67,8 +67,7 @@ class MaintenanceThemeUpdateRegistryTest extends BrowserTestBase {
    */
   public function testMaintenanceThemeUpdateRegistration() {
     // Create use with required permissions.
-    $user = $this->drupalCreateUser(['administer software updates']);
-    $this->drupalLogin($user);
+    $this->drupalLogin($this->drupalCreateUser(['administer software updates']));
 
     $this->drupalGet('update.php/selection');
     $this->updateRequirementsProblem();
