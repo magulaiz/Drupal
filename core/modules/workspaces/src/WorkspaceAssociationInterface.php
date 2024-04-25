@@ -46,20 +46,30 @@ interface WorkspaceAssociationInterface {
    * @param int[]|string[]|null $entity_ids
    *   (optional) An array of entity IDs to filter the results by. Defaults to
    *   NULL.
-   * @param int|null $offset
-   *   (optional) The zero-based offset of the first result returned. Defaults
-   *   to NULL.
-   * @param int|null $limit
-   *   (optional) The number of results to return. Defaults to NULL.
-   * @param string $order
-   *   (optional) The order to sort the revision IDs by, either 'ASC' or 'DESC'.
-   *   Defaults to 'ASC'.
    *
    * @return array
    *   Returns a multidimensional array where the first level keys are entity
    *   type IDs and the values are an array of entity IDs keyed by revision IDs.
    */
-  public function getTrackedEntities($workspace_id, $entity_type_id = NULL, $entity_ids = NULL, int $offset = NULL, int $limit = NULL, string $order = 'ASC');
+  public function getTrackedEntities($workspace_id, $entity_type_id = NULL, $entity_ids = NULL);
+
+  /**
+   * Retrieves a paged list of entities tracked by a given workspace.
+   *
+   * @param string $workspace_id
+   *   The ID of the workspace.
+   * @param int|null $pager_id
+   *   (optional) A pager ID. Defaults to NULL.
+   * @param int|false $limit
+   *   (optional) An integer specifying the number of elements per page. If
+   *   passed a false value (FALSE, 0, NULL), the pager is disabled. Defaults to
+   *   50.
+   *
+   * @return array
+   *   Returns a multidimensional array where the first level keys are entity
+   *   type IDs and the values are an array of entity IDs keyed by revision IDs.
+   */
+  public function getTrackedEntitiesForListing($workspace_id, int $pager_id = NULL, int|false $limit = 50);
 
   /**
    * Retrieves all content revisions tracked by a given workspace.

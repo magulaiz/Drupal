@@ -43,18 +43,9 @@ class WorkspaceViewBuilder extends EntityViewBuilder {
   protected $bundleInfo;
 
   /**
-   * The pager manager.
-   *
-   * @var \Drupal\Core\Pager\PagerManagerInterface
+   * The number of entities to display on the workspace manage page.
    */
-  protected $pagerManager;
-
-  /**
-   * The number of entities to display on the workspace's Manage page.
-   *
-   * @var int
-   */
-  protected $limit = 50;
+  protected int|false $limit = 50;
 
   /**
    * {@inheritdoc}
@@ -65,7 +56,6 @@ class WorkspaceViewBuilder extends EntityViewBuilder {
     $instance->workspaceAssociation = $container->get('workspaces.association');
     $instance->dateFormatter = $container->get('date.formatter');
     $instance->bundleInfo = $container->get('entity_type.bundle.info');
-    $instance->pagerManager = $container->get('pager.manager');
     return $instance;
   }
 
@@ -103,8 +93,7 @@ class WorkspaceViewBuilder extends EntityViewBuilder {
         '#empty' => $this->t('This workspace has no changes.'),
       ];
 
-      $start = $this->pagerManager->findPage($build_id) * $this->limit;
-      $paged_tracked_entities = $this->workspaceAssociation->getTrackedEntities($entity->id(), NULL, NULL, $start, $this->limit, 'DESC');
+      $paged_tracked_entities = $this->workspaceAssociation->getTrackedEntitiesForListing($entity->id(), $build_id, $this->limit);
       foreach ($paged_tracked_entities as $entity_type_id => $tracked_entities) {
         $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
         if ($this->entityTypeManager->hasHandler($entity_type_id, 'list_builder')) {
@@ -184,8 +173,6 @@ class WorkspaceViewBuilder extends EntityViewBuilder {
         $build[$build_id]['changes']['overview']['#markup'] = implode(', ', $changes_count);
       }
 
-      $pager_count = count($all_tracked_entities, COUNT_RECURSIVE) - count($all_tracked_entities);
-      $this->pagerManager->createPager($pager_count, $this->limit, $build_id);
       $build[$build_id]['pager'] = [
         '#type' => 'pager',
         '#element' => $build_id,
