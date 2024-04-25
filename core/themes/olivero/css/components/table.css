@@ -34,11 +34,11 @@
   line-height: var(--sp);
 }
 
-:is(.forum table, .text-content table, .views-table, .draggable-table) tbody tr:last-child th {
+:is(.text-content table, .views-table, .draggable-table) tbody tr:last-child th {
   border-block-end: 0;
 }
 
-:is(.forum table, .text-content table, .views-table, .draggable-table) tr:last-child td {
+:is(.text-content table, .views-table, .draggable-table) tr:last-child td {
   border-block-end: 0;
 }
 
