@@ -564,20 +564,34 @@
       keyup() {
         // Radio buttons share the same :input[name="key"] selector.
         if (this.length > 1) {
-          // Initial checked value of radios is undefined, so we return false.
-          const checked = this.filter(':checked');
-          return checked[0]?.value || false;
+          // Find the checked element among radio buttons.
+          const checked = Array.from(this).find((element) => element.checked);
+          return checked ? checked.value : false;
         }
-        return this[0].value;
+
+        // For single element, handle based on its type.
+        const element = this[0];
+        if (element.tagName.toLowerCase() === "select" && element.multiple) {
+          return Array.from(element.selectedOptions).map((option) => option.value);
+        }
+        // For other cases, return the value of the single element.
+        return element.value;
       },
       change() {
         // Radio buttons share the same :input[name="key"] selector.
         if (this.length > 1) {
-          // Initial checked value of radios is undefined, so we return false.
-          const checked = this.filter(':checked');
-          return checked[0]?.value || false;
+          // Find the checked element among radio buttons.
+          const checked = Array.from(this).find((element) => element.checked);
+          return checked ? checked.value : false;
         }
-        return this[0].value;
+
+        // For single element, handle based on its type.
+        const element = this[0];
+        if (element.tagName.toLowerCase() === "select" && element.multiple) {
+          return Array.from(element.selectedOptions).map((option) => option.value);
+        }
+        // For other cases, return the value of the single element.
+        return element.value;
       },
     },
 
