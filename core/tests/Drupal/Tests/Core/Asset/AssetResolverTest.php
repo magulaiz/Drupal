@@ -213,7 +213,6 @@ class AssetResolverTest extends UnitTestCase {
         $this->libraries['drupal'],
         $this->libraries['drupal'],
         $this->libraries['jquery'],
-        $this->libraries['llama'],
       );
     $this->assetResolver->getJsAssets($assets_a, FALSE, $this->english);
     $this->assetResolver->getJsAssets($assets_b, FALSE, $this->english);
