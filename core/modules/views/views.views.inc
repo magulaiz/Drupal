@@ -79,7 +79,6 @@ function views_views_data() {
     'help' => t('Override the default view title for this view. This is useful to display an alternative title when a view is empty.'),
     'area' => [
       'id' => 'title',
-      'sub_type' => 'empty',
     ],
   ];
 
