@@ -61,6 +61,13 @@ class ViewAjaxControllerTest extends UnitTestCase {
   protected $redirectDestination;
 
   /**
+   * The attachments processor.
+   *
+   * @var \Drupal\Core\Ajax\AjaxResponseAttachmentsProcessor
+   */
+  protected $attachmentsProcessor;
+
+  /**
    * The renderer.
    *
    * @var \Drupal\Core\Render\RendererInterface|\PHPUnit\Framework\MockObject\MockObject
@@ -94,8 +101,9 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
     $this->redirectDestination = $this->createMock('\Drupal\Core\Routing\RedirectDestinationInterface');
+    $this->attachmentsProcessor = $this->createMock('\Drupal\Core\Ajax\AjaxResponseAttachmentsProcessor');
 
-    $this->viewAjaxController = new ViewAjaxController($this->viewStorage, $this->executableFactory, $this->renderer, $this->currentPath, $this->redirectDestination);
+    $this->viewAjaxController = new ViewAjaxController($this->viewStorage, $this->executableFactory, $this->renderer, $this->currentPath, $this->redirectDestination, $this->attachmentsProcessor);
 
     $element_info_manager = $this->createMock('\Drupal\Core\Render\ElementInfoManagerInterface');
     $element_info_manager->expects($this->any())

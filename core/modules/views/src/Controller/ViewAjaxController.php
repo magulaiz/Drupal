@@ -4,9 +4,9 @@ namespace Drupal\views\Controller;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Ajax\AjaxResponseAttachmentsProcessor;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
-use Drupal\Core\Ajax\SettingsCommand;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
@@ -80,6 +80,13 @@ class ViewAjaxController implements ContainerInjectionInterface {
   protected $redirectDestination;
 
   /**
+   * The attachments processor.
+   *
+   * @var \Drupal\Core\Ajax\AjaxResponseAttachmentsProcessor
+   */
+  protected $attachmentsProcessor;
+
+  /**
    * Constructs a ViewAjaxController object.
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
@@ -92,13 +99,16 @@ class ViewAjaxController implements ContainerInjectionInterface {
    *   The current path.
    * @param \Drupal\Core\Routing\RedirectDestinationInterface $redirect_destination
    *   The redirect destination.
+   * @param \Drupal\Core\Ajax\AjaxResponseAttachmentsProcessor
+   *   The attachments processor.
    */
-  public function __construct(EntityStorageInterface $storage, ViewExecutableFactory $executable_factory, RendererInterface $renderer, CurrentPathStack $current_path, RedirectDestinationInterface $redirect_destination) {
+  public function __construct(EntityStorageInterface $storage, ViewExecutableFactory $executable_factory, RendererInterface $renderer, CurrentPathStack $current_path, RedirectDestinationInterface $redirect_destination, AjaxResponseAttachmentsProcessor $attachments_processor) {
     $this->storage = $storage;
     $this->executableFactory = $executable_factory;
     $this->renderer = $renderer;
     $this->currentPath = $current_path;
     $this->redirectDestination = $redirect_destination;
+    $this->attachmentsProcessor = $attachments_processor;
   }
 
   /**
@@ -110,7 +120,8 @@ class ViewAjaxController implements ContainerInjectionInterface {
       $container->get('views.executable'),
       $container->get('renderer'),
       $container->get('path.current'),
-      $container->get('redirect.destination')
+      $container->get('redirect.destination'),
+      $container->get('ajax_response.attachments_processor')
     );
   }
 
@@ -215,9 +226,9 @@ class ViewAjaxController implements ContainerInjectionInterface {
         $response->addCommand(new PrependCommand(".js-view-dom-id-$dom_id", ['#type' => 'status_messages']));
         $request->query->set('ajax_page_state', $existing_page_state);
 
-        if (!empty($preview['#attached']['drupalSettings'])) {
-          $settings_command = new SettingsCommand($preview['#attached']['drupalSettings']);
-          $response->addCommand($settings_command);
+        if (!empty($preview['#attached'])) {
+          $response->setAttachments($preview['#attached']);
+          $this->attachmentsProcessor->processAttachments($response);
         }
 
         return $response;
