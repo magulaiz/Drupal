@@ -50,7 +50,7 @@ abstract class StorageTestBase extends KernelTestBase {
   /**
    * Tests CRUD operations.
    */
-  public function testCRUD() {
+  public function testCrud() {
     $stores = $this->createStorage();
     // Verify that each store returns its own collection name.
     $this->assertSame($this->collections[0], $stores[0]->getCollectionName());

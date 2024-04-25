@@ -33,7 +33,7 @@ abstract class PhpStorageTestBase extends TestCase {
   /**
    * Assert that a PHP storage's load/save/delete operations work.
    */
-  public function assertCRUD($php) {
+  public function assertCrud($php) {
     // Random generator.
     $random_generator = new Random();
 
@@ -52,7 +52,7 @@ abstract class PhpStorageTestBase extends TestCase {
     $this->assertTrue($GLOBALS[$random], 'File saved correctly with correct value');
 
     // Run additional asserts.
-    $this->additionalAssertCRUD($php, $name);
+    $this->additionalAssertCrud($php, $name);
 
     // If the file was successfully loaded, it must also exist, but ensure the
     // exists() method returns that correctly.
@@ -76,7 +76,7 @@ abstract class PhpStorageTestBase extends TestCase {
    * @param string $name
    *   The name of an object. It should exist in the storage.
    */
-  protected function additionalAssertCRUD(PhpStorageInterface $php, $name) {
+  protected function additionalAssertCrud(PhpStorageInterface $php, $name) {
     // By default do not do any additional asserts. This is a way of extending
     // tests in contrib.
   }

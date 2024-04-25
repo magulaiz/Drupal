@@ -38,7 +38,7 @@ class ConfigCRUDTest extends KernelTestBase {
   /**
    * Tests CRUD operations.
    */
-  public function testCRUD() {
+  public function testCrud() {
     $event_dispatcher = $this->container->get('event_dispatcher');
     $typed_config_manager = $this->container->get('config.typed');
 

@@ -42,7 +42,7 @@ class QueryTest extends DatabaseTestBase {
   /**
    * Tests SQL injection via database query array arguments.
    */
-  public function testArrayArgumentsSQLInjection() {
+  public function testArrayArgumentsSqlInjection() {
     // Attempt SQL injection and verify that it does not work.
     $condition = [
       "1 ;INSERT INTO {test} (name) VALUES ('test12345678'); -- " => '',
@@ -69,7 +69,7 @@ class QueryTest extends DatabaseTestBase {
   /**
    * Tests SQL injection via condition operator.
    */
-  public function testConditionOperatorArgumentsSQLInjection() {
+  public function testConditionOperatorArgumentsSqlInjection() {
     $injection = "IS NOT NULL) ;INSERT INTO {test} (name) VALUES ('test12345678'); -- ";
 
     try {

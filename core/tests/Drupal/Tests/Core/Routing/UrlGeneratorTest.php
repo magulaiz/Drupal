@@ -399,7 +399,7 @@ class UrlGeneratorTest extends UnitTestCase {
   /**
    * Confirms that absolute URLs work with generated routes.
    */
-  public function testAbsoluteURLGeneration() {
+  public function testAbsoluteUrlGeneration() {
     $url = $this->generator->generate('test_1', [], TRUE);
     $this->assertEquals('http://localhost/hello/world', $url);
     // No cacheability to test; UrlGenerator::generate() doesn't support
@@ -417,7 +417,7 @@ class UrlGeneratorTest extends UnitTestCase {
   /**
    * Confirms that absolute URLs work with generated routes using interface constants.
    */
-  public function testAbsoluteURLGenerationUsingInterfaceConstants() {
+  public function testAbsoluteUrlGenerationUsingInterfaceConstants() {
     $url = $this->generator->generate('test_1', [], UrlGenerator::ABSOLUTE_URL);
     $this->assertEquals('http://localhost/hello/world', $url);
     // No cacheability to test; UrlGenerator::generate() doesn't support
@@ -435,7 +435,7 @@ class UrlGeneratorTest extends UnitTestCase {
   /**
    * Confirms that explicitly setting the base_url works with generated routes.
    */
-  public function testBaseURLGeneration() {
+  public function testBaseUrlGeneration() {
     $options = ['base_url' => 'http://www.example.com:8888'];
     $this->assertGenerateFromRoute('test_1', [], $options, 'http://www.example.com:8888/hello/world', (new BubbleableMetadata())->setCacheMaxAge(Cache::PERMANENT));
 

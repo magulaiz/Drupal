@@ -42,7 +42,7 @@ class DatabaseStorageExpirableTest extends StorageTestBase {
   /**
    * Tests CRUD functionality with expiration.
    */
-  public function testCRUDWithExpiration() {
+  public function testCrudWithExpiration() {
     $stores = $this->createStorage();
 
     // Verify that an item can be stored with setWithExpire().

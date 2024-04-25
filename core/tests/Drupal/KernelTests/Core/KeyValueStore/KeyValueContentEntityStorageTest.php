@@ -36,7 +36,7 @@ class KeyValueContentEntityStorageTest extends KernelTestBase {
    *
    * @covers \Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage::hasData
    */
-  public function testCRUD() {
+  public function testCrud() {
     $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
 
     $storage = \Drupal::entityTypeManager()->getStorage('entity_test_label');

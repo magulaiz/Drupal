@@ -24,7 +24,7 @@ class ConfigEntityStorageTest extends KernelTestBase {
   /**
    * Tests creating configuration entities with changed UUIDs.
    */
-  public function testUUIDConflict() {
+  public function testUuidConflict() {
     $entity_type = 'config_test';
     $id = 'test_1';
     // Load the original configuration entity.

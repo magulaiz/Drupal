@@ -306,10 +306,10 @@ class EntityTranslationTest extends EntityLanguageTestBase {
   /**
    * Tests the Entity Translation API behavior.
    */
-  public function testEntityTranslationAPI() {
+  public function testEntityTranslationApi() {
     // Test all entity variations with data table support.
     foreach (entity_test_entity_types(ENTITY_TEST_TYPES_MULTILINGUAL) as $entity_type) {
-      $this->doTestEntityTranslationAPI($entity_type);
+      $this->doTestEntityTranslationApi($entity_type);
     }
   }
 
@@ -319,7 +319,7 @@ class EntityTranslationTest extends EntityLanguageTestBase {
    * @param string $entity_type
    *   The entity type to run the tests with.
    */
-  protected function doTestEntityTranslationAPI($entity_type) {
+  protected function doTestEntityTranslationApi($entity_type) {
     $default_langcode = $this->langcodes[0];
     $langcode = $this->langcodes[1];
     $langcode_key = $this->entityTypeManager->getDefinition($entity_type)->getKey('langcode');

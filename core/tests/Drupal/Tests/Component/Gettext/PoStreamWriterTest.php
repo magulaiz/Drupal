@@ -51,13 +51,13 @@ class PoStreamWriterTest extends TestCase {
   }
 
   /**
-   * @covers ::getURI
+   * @covers ::getUri
    */
   public function testGetUriException() {
     $this->expectException(\Exception::class);
     $this->expectExceptionMessage('No URI set.');
 
-    $this->poWriter->getURI();
+    $this->poWriter->getUri();
   }
 
   /**
@@ -73,7 +73,7 @@ class PoStreamWriterTest extends TestCase {
     // Limit the file system quota to make the write fail on long strings.
     vfsStream::setQuota(10);
 
-    $this->poWriter->setURI($this->poFile->url());
+    $this->poWriter->setUri($this->poFile->url());
     $this->poWriter->open();
 
     $poItem = $this->prophesize(PoItem::class);

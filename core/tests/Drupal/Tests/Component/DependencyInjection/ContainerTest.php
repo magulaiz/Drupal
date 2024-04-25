@@ -360,7 +360,7 @@ class ContainerTest extends TestCase {
    * @covers ::get
    * @covers ::createService
    */
-  public function testGetForNonExistentNULLService() {
+  public function testGetForNonExistentNullService() {
     $this->expectException(ServiceNotFoundException::class);
     $this->container->get(NULL);
   }

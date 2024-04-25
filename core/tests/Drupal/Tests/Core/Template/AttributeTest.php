@@ -350,8 +350,8 @@ class AttributeTest extends UnitTestCase {
     $this->assertClass('example-class', $html);
     $this->assertNoClass('example-class2', $html);
 
-    $this->assertID('example-id', $html);
-    $this->assertNoID('example-id2', $html);
+    $this->assertId('example-id', $html);
+    $this->assertNoId('example-id2', $html);
 
     $this->assertStringContainsString('enabled', $html);
   }
@@ -417,7 +417,7 @@ class AttributeTest extends UnitTestCase {
    *
    * @internal
    */
-  protected function assertID(string $id, string $html): void {
+  protected function assertId(string $id, string $html): void {
     $xpath = "//*[@id='$id']";
     self::assertTrue((bool) $this->getXPathResultCount($xpath, $html));
   }
@@ -432,7 +432,7 @@ class AttributeTest extends UnitTestCase {
    *
    * @internal
    */
-  protected function assertNoID(string $id, string $html): void {
+  protected function assertNoId(string $id, string $html): void {
     $xpath = "//*[@id='$id']";
     self::assertFalse((bool) $this->getXPathResultCount($xpath, $html));
   }
