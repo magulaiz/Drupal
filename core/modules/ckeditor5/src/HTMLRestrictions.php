@@ -1200,6 +1200,7 @@ final class HTMLRestrictions {
    *
    * @see https://ckeditor.com/docs/ckeditor5/latest/framework/guides/contributing/package-metadata.html
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   public function toCKEditor5ElementsArray(): array {
     $readable = [];
     foreach ($this->elements as $tag => $attributes) {

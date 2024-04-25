@@ -95,6 +95,7 @@ interface CKEditor5PluginManagerInterface extends DiscoveryInterface {
    *
    * @see \Drupal\ckeditor5\Plugin\Editor\CKEditor5::getJsSettings()
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
   public function getCKEditor5PluginConfig(EditorInterface $editor): array;
 
   /**
