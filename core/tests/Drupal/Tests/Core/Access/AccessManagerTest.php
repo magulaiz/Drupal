@@ -248,7 +248,7 @@ class AccessManagerTest extends UnitTestCase {
    *
    * @see \Drupal\Tests\Core\Access\AccessManagerTest::testCheckConjunctions()
    */
-  public function providerTestCheckConjunctions() {
+  public static function providerTestCheckConjunctions() {
     $access_allow = AccessResult::allowed();
     $access_deny = AccessResult::neutral();
     $access_kill = AccessResult::forbidden();
@@ -258,7 +258,7 @@ class AccessManagerTest extends UnitTestCase {
       'name' => 'test_route_4',
       'condition_one' => 'TRUE',
       'condition_two' => 'FALSE',
-      'expected' => $access_kill,
+      'expected_access' => $access_kill,
     ];
     $access_configurations[] = [
       'name' => 'test_route_5',
@@ -270,25 +270,25 @@ class AccessManagerTest extends UnitTestCase {
       'name' => 'test_route_6',
       'condition_one' => 'FALSE',
       'condition_two' => 'NULL',
-      'expected' => $access_kill,
+      'expected_access' => $access_kill,
     ];
     $access_configurations[] = [
       'name' => 'test_route_7',
       'condition_one' => 'TRUE',
       'condition_two' => 'TRUE',
-      'expected' => $access_allow,
+      'expected_access' => $access_allow,
     ];
     $access_configurations[] = [
       'name' => 'test_route_8',
       'condition_one' => 'FALSE',
       'condition_two' => 'FALSE',
-      'expected' => $access_kill,
+      'expected_access' => $access_kill,
     ];
     $access_configurations[] = [
       'name' => 'test_route_9',
       'condition_one' => 'NULL',
       'condition_two' => 'NULL',
-      'expected' => $access_deny,
+      'expected_access' => $access_deny,
     ];
 
     return $access_configurations;
@@ -507,7 +507,7 @@ class AccessManagerTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerCheckException() {
+  public static function providerCheckException() {
     return [
       [[1]],
       ['string'],

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\media_library\Kernel;
 
 use Drupal\Core\Access\AccessResult;
@@ -163,7 +165,7 @@ class MediaLibraryAccessTest extends KernelTestBase {
   /**
    * Data provider for ::testEditorOpenerAccess.
    */
-  public function editorOpenerAccessProvider() {
+  public static function editorOpenerAccessProvider() {
     return [
       'media_embed filter enabled' => [
         TRUE,
@@ -244,7 +246,7 @@ class MediaLibraryAccessTest extends KernelTestBase {
    * @return array[]
    *   Sets of arguments to pass to the test method.
    */
-  public function providerFieldWidgetEntityFieldAccess(): array {
+  public static function providerFieldWidgetEntityFieldAccess(): array {
     return [
       ['entity_reference'],
       ['entity_reference_subclass'],

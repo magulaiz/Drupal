@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Kernel\System;
 
 use Drupal\Core\Database\Database;
@@ -202,9 +204,10 @@ class CronQueueTest extends KernelTestBase {
     // The item should be left in the queue.
     $this->assertEquals(1, $queue->numberOfItems(), 'Failing item still in the queue after throwing an exception.');
 
-    // Expire the queue item manually. system_cron() relies in REQUEST_TIME to
-    // find queue items whose expire field needs to be reset to 0. This is a
-    // Kernel test, so REQUEST_TIME won't change when cron runs.
+    // Expire the queue item manually. system_cron() relies in
+    // \Drupal::time()->getRequestTime() to find queue items whose expire field needs to be
+    // reset to 0. This is a Kernel test, so \Drupal::time()->getRequestTime() won't change
+    // when cron runs.
     // @see system_cron()
     // @see \Drupal\Core\Cron::processQueues()
     $this->connection->update('queue')

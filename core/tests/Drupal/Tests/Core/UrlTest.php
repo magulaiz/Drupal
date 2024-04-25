@@ -498,38 +498,6 @@ class UrlTest extends UnitTestCase {
   }
 
   /**
-   * Tests the renderAccess() method.
-   *
-   * @param bool $access
-   *   The access value.
-   *
-   * @covers ::renderAccess
-   * @dataProvider accessProvider
-   * @group legacy
-   */
-  public function testRenderAccess($access) {
-    $element = [
-      '#url' => Url::fromRoute('entity.node.canonical', ['node' => 3]),
-    ];
-    $this->container->set('current_user', $this->createMock('Drupal\Core\Session\AccountInterface'));
-    $this->container->set('access_manager', $this->getMockAccessManager($access));
-    $this->expectDeprecation('Drupal\Core\Url::renderAccess() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3342977');
-    $this->assertEquals($access, TestUrl::renderAccess($element));
-  }
-
-  /**
-   * Tests deprecation of toRenderArray() method.
-   *
-   * @covers ::toRenderArray
-   * @group legacy
-   */
-  public function testToRenderArray() {
-    $this->expectDeprecation('Drupal\Core\Url::toRenderArray() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3342977');
-    $url = Url::fromRoute('entity.node.canonical', ['node' => 3]);
-    $this->assertIsArray($url->toRenderArray());
-  }
-
-  /**
    * Tests the fromRouteMatch() method.
    */
   public function testFromRouteMatch() {
@@ -543,7 +511,7 @@ class UrlTest extends UnitTestCase {
   /**
    * Data provider for testing entity URIs.
    */
-  public function providerTestEntityUris() {
+  public static function providerTestEntityUris() {
     return [
       [
         'entity:test_entity/1',
@@ -645,7 +613,7 @@ class UrlTest extends UnitTestCase {
   /**
    * Data provider for testing string entity URIs.
    */
-  public function providerTestToUriStringForEntity() {
+  public static function providerTestToUriStringForEntity() {
     return [
       ['entity:test_entity/1', [], 'route:entity.test_entity.canonical;test_entity=1'],
       ['entity:test_entity/1', ['fragment' => 'top', 'query' => ['page' => '2']], 'route:entity.test_entity.canonical;test_entity=1?page=2#top'],
@@ -676,7 +644,7 @@ class UrlTest extends UnitTestCase {
   /**
    * Data provider for testing internal URIs.
    */
-  public function providerTestToUriStringForInternal() {
+  public static function providerTestToUriStringForInternal() {
     return [
       // The four permutations of a regular path.
       ['internal:/test-entity/1', [], 'route:entity.test_entity.canonical;test_entity=1'],
@@ -712,7 +680,7 @@ class UrlTest extends UnitTestCase {
   /**
    * Data provider for testFromValidInternalUri().
    */
-  public function providerFromValidInternalUri() {
+  public static function providerFromValidInternalUri() {
     return [
       // Normal paths with a leading slash.
       ['/kittens'],
@@ -752,7 +720,7 @@ class UrlTest extends UnitTestCase {
   /**
    * Data provider for testFromInvalidInternalUri().
    */
-  public function providerFromInvalidInternalUri() {
+  public static function providerFromInvalidInternalUri() {
     return [
       // Normal paths without a leading slash.
       'normal_path0' => ['kittens'],
@@ -799,7 +767,7 @@ class UrlTest extends UnitTestCase {
   /**
    * Data provider for testing route: URIs.
    */
-  public function providerTestToUriStringForRoute() {
+  public static function providerTestToUriStringForRoute() {
     return [
       ['route:entity.test_entity.canonical;test_entity=1', [], 'route:entity.test_entity.canonical;test_entity=1'],
       ['route:entity.test_entity.canonical;test_entity=1', ['fragment' => 'top', 'query' => ['page' => '2']], 'route:entity.test_entity.canonical;test_entity=1?page=2#top'],
@@ -844,7 +812,7 @@ class UrlTest extends UnitTestCase {
   /**
    * Data provider for the access test methods.
    */
-  public function accessProvider() {
+  public static function accessProvider() {
     return [
       [TRUE],
       [FALSE],
