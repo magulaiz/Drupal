@@ -59,11 +59,11 @@ class FieldEntityLinkBaseTest extends ViewTestBase {
       $translation->set('title', $entity->getTitle() . ' in Spanish');
       $translation->save();
     }
-    $this->rootUser = $this->createUser([
+
+    $this->drupalLogin($this->createUser([
       'delete any article content',
       'edit any article content',
-    ]);
-    $this->drupalLogin($this->rootUser);
+    ]));
 
   }
 

@@ -50,7 +50,6 @@ class DisplayPageWebTest extends ViewTestBase {
     $this->enableViewsTestModule();
     $this->drupalPlaceBlock('local_tasks_block');
 
-    $this->rootUser = $this->createUser(['administer views']);
   }
 
   /**
@@ -150,7 +149,7 @@ class DisplayPageWebTest extends ViewTestBase {
    * Tests the views page path functionality.
    */
   public function testPagePaths() {
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($this->createUser(['administer views']));
     $this->assertPagePath('0');
     $this->assertPagePath('9999');
     $this->assertPagePath('☺');

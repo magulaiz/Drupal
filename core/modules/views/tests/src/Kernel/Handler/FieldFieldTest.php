@@ -85,11 +85,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
     ViewTestData::createTestViews(static::class, ['views_test_config']);
 
     // Bypass any field access.
-    $rid = $this->createRole(['administer users']);
-    $this->adminUser = User::create([
-      'name' => $this->randomString(),
-      'roles' => [$rid],
-    ]);
+    $this->adminUser = $this->createUser(['administer users'], $this->randomString());
     $this->adminUser->save();
     $this->container->get('current_user')->setAccount($this->adminUser);
 
