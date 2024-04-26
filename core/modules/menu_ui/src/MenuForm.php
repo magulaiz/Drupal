@@ -230,7 +230,15 @@ class MenuForm extends EntityForm {
     // We indicate that a menu administrator is running the menu access check.
     $this->getRequest()->attributes->set('_menu_admin', TRUE);
     $manipulators = [
-      ['callable' => 'menu.default_tree_manipulators:checkAccess'],
+      // Use a dedicated menu tree access check manipulator as users editing
+      // this form, granted with 'administer menu' permission, should be able to
+      // access even the menu links with inaccessible routes. Such cases are the
+      // login menu link, whose route is not accessible by a logged-in user, or
+      // a link to a page not created yet. The main menu tree manipulator only
+      // allows the access to menu links with accessible routes.
+      // @see \Drupal\Core\Menu\DefaultMenuLinkTreeManipulators::checkAccess()
+      // @see \Drupal\menu_ui\Menu\MenuUiMenuTreeManipulators::checkAccess()
+      ['callable' => 'menu_ui.menu_tree_manipulators:checkAccess'],
       ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
     ];
     $tree = $this->menuTree->transform($tree, $manipulators);

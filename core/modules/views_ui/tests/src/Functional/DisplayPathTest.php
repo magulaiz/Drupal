@@ -216,6 +216,7 @@ class DisplayPathTest extends UITestBase {
       'administer menu',
       'link to any page',
       'access toolbar',
+      'access administration pages',
     ]);
     $this->drupalLogin($admin_user);
 

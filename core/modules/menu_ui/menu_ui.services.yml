@@ -1,0 +1,3 @@
+services:
+  menu_ui.menu_tree_manipulators:
+    class: Drupal\menu_ui\Menu\MenuUiMenuTreeManipulators
