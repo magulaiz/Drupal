@@ -244,8 +244,49 @@ class LayoutPluginManagerTest extends UnitTestCase {
     $module_a_provided_layout = <<<'EOS'
 module_a_derived_layout:
   label: 'Derived layout'
+  category: 'Derived'
   deriver: \Drupal\Tests\Core\Layout\LayoutDeriver
   array_based: true
+EOS;
+    vfsStream::create([
+      'modules' => [
+        'module_a' => [
+          'module_a.layouts.yml' => $module_a_provided_layout,
+        ],
+      ],
+    ]);
+    $this->layoutPluginManager->getDefinitions();
+  }
+
+  /**
+   * Tests that layout plugin 'label' property is required.
+   */
+  public function testLabelRequired(): void {
+    $this->moduleHandler->alter('layout', Argument::type('array'))->shouldNotBeCalled();
+    $this->expectException(\ArgumentCountError::class);
+    $module_a_provided_layout = <<<'EOS'
+module_a_layout_no_label:
+  category: 'No Label'
+EOS;
+    vfsStream::create([
+      'modules' => [
+        'module_a' => [
+          'module_a.layouts.yml' => $module_a_provided_layout,
+        ],
+      ],
+    ]);
+    $this->layoutPluginManager->getDefinitions();
+  }
+
+  /**
+   * Tests that layout plugin 'category' property is required.
+   */
+  public function testCategoryRequired(): void {
+    $this->moduleHandler->alter('layout', Argument::type('array'))->shouldNotBeCalled();
+    $this->expectException(\ArgumentCountError::class);
+    $module_a_provided_layout = <<<'EOS'
+module_a_layout_no_label:
+  label: 'No Category'
 EOS;
     vfsStream::create([
       'modules' => [
@@ -361,6 +402,7 @@ module_a_provided_layout:
       label: Bottom region
 module_a_derived_layout:
   label: 'Invalid provider derived layout'
+  category: 'Invalid'
   deriver: \Drupal\Tests\Core\Layout\LayoutDeriver
   invalid_provider: true
 EOS;
