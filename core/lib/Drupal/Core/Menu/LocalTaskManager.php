@@ -18,8 +18,10 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
+use function trigger_error;
 
 /**
  * Provides the default local task manager using YML as primary definition.
@@ -107,12 +109,18 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
   protected $account;
 
   /**
+   * The logger service.
+   */
+  protected readonly LoggerInterface $logger;
+
+  /**
    * Constructs a \Drupal\Core\Menu\LocalTaskManager object.
    *
    * @param \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface $argument_resolver
    *   An object to use in resolving route arguments.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
-   *   The request object to use for building titles and paths for plugin instances.
+   *   The request object to use for building titles and paths for plugin
+   *   instances.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The current route match.
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
@@ -127,8 +135,10 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
    *   The access manager.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   The logger service.
    */
-  public function __construct(ArgumentResolverInterface $argument_resolver, RequestStack $request_stack, RouteMatchInterface $route_match, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, AccessManagerInterface $access_manager, AccountInterface $account) {
+  public function __construct(ArgumentResolverInterface $argument_resolver, RequestStack $request_stack, RouteMatchInterface $route_match, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, AccessManagerInterface $access_manager, AccountInterface $account, ?LoggerInterface $logger = NULL) {
     $this->factory = new ContainerFactory($this, '\Drupal\Core\Menu\LocalTaskInterface');
     $this->argumentResolver = $argument_resolver;
     $this->requestStack = $request_stack;
@@ -137,6 +147,11 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
     $this->accessManager = $access_manager;
     $this->account = $account;
     $this->moduleHandler = $module_handler;
+    if ($logger === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $logger argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3443775', E_USER_DEPRECATED);
+      $logger = \Drupal::service('logger.channel.default');
+    }
+    $this->logger = $logger;
     $this->alterInfo('local_tasks');
     $this->setCacheBackend($cache, 'local_task_plugins:' . $language_manager->getCurrentLanguage()->getId(), ['local_task']);
   }
@@ -217,6 +232,10 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
             // reference like &$task_info causes bugs.
             $definitions[$plugin_id]['base_route'] = $definitions[$task_info['parent_id']]['base_route'];
           }
+          if (!isset($task_info['route_name'])) {
+            $this->logger->error('Local task "@plugin" is missing a route name', ['@plugin' => $plugin_id]);
+            continue;
+          }
           if ($route_name == $task_info['route_name']) {
             if (!empty($task_info['base_route'])) {
               $base_routes[$task_info['base_route']] = $task_info['base_route'];
@@ -235,6 +254,10 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
           // Find all the plugins with the same root and that are at the top
           // level or that have a visible parent.
           foreach ($definitions as $plugin_id => $task_info) {
+            if (!isset($task_info['base_route'])) {
+              $this->logger->error('Local task "@plugin" is missing a base route', ['@plugin' => $plugin_id]);
+              continue;
+            }
             if (!empty($base_routes[$task_info['base_route']]) && (empty($task_info['parent_id']) || !empty($parents[$task_info['parent_id']]))) {
               // Concat '> ' with root ID for the parent of top-level tabs.
               $parent = empty($task_info['parent_id']) ? '> ' . $task_info['base_route'] : $task_info['parent_id'];
