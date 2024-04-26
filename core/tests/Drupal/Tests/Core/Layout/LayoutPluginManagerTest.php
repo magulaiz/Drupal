@@ -107,6 +107,7 @@ class LayoutPluginManagerTest extends UnitTestCase {
       'module_a_provided_layout',
       'theme_a_provided_layout',
       'plugin_provided_layout',
+      'plugin_provided_by_annotation_layout',
     ];
 
     $layout_definitions = $this->layoutPluginManager->getDefinitions();
@@ -202,6 +203,35 @@ class LayoutPluginManagerTest extends UnitTestCase {
     $regions = $layout_definition->getRegions();
     $this->assertEquals($expected_regions, $regions);
     $this->assertInstanceOf(TranslatableMarkup::class, $regions['main']['label']);
+
+    $layout_definition = $this->layoutPluginManager->getDefinition('plugin_provided_by_annotation_layout');
+    $this->assertSame('plugin_provided_by_annotation_layout', $layout_definition->id());
+    $this->assertEquals('Layout by annotation plugin', $layout_definition->getLabel());
+    $this->assertEquals('Columns: 2', $layout_definition->getCategory());
+    $this->assertEquals('Test layout provided by annotated plugin', $layout_definition->getDescription());
+    $this->assertInstanceOf(TranslatableMarkup::class, $layout_definition->getLabel());
+    $this->assertInstanceOf(TranslatableMarkup::class, $layout_definition->getCategory());
+    $this->assertInstanceOf(TranslatableMarkup::class, $layout_definition->getDescription());
+    $this->assertSame('plugin-provided-annotation-layout', $layout_definition->getTemplate());
+    $this->assertSame($core_path, $layout_definition->getPath());
+    $this->assertNull($layout_definition->getLibrary());
+    $this->assertSame('plugin_provided_annotation_layout', $layout_definition->getThemeHook());
+    $this->assertSame("$core_path/templates", $layout_definition->getTemplatePath());
+    $this->assertSame('core', $layout_definition->getProvider());
+    $this->assertSame('left', $layout_definition->getDefaultRegion());
+    $this->assertSame('Drupal\Core\Plugin\Layout\TestAnnotationLayout', $layout_definition->getClass());
+    $expected_regions = [
+      'left' => [
+        'label' => new TranslatableMarkup('Left Region', [], ['context' => 'layout_region']),
+      ],
+      'right' => [
+        'label' => new TranslatableMarkup('Right Region', [], ['context' => 'layout_region']),
+      ],
+    ];
+    $regions = $layout_definition->getRegions();
+    $this->assertEquals($expected_regions, $regions);
+    $this->assertInstanceOf(TranslatableMarkup::class, $regions['left']['label']);
+    $this->assertInstanceOf(TranslatableMarkup::class, $regions['right']['label']);
   }
 
   /**
@@ -248,6 +278,12 @@ EOS;
         'template' => 'plugin-provided-layout',
         'path' => "$core_path/templates",
       ],
+      'plugin_provided_annotation_layout' => [
+        'render element' => 'content',
+        'base hook' => 'layout',
+        'template' => 'plugin-provided-annotation-layout',
+        'path' => "$core_path/templates",
+      ],
     ];
     $theme_implementations = $this->layoutPluginManager->getThemeImplementations();
     $this->assertEquals($expected, $theme_implementations);
@@ -269,10 +305,12 @@ EOS;
    * @covers ::getSortedDefinitions
    */
   public function testGetSortedDefinitions() {
+    // Sorted by category first, then label.
     $expected = [
       'module_a_provided_layout',
       'plugin_provided_layout',
       'theme_a_provided_layout',
+      'plugin_provided_by_annotation_layout',
     ];
 
     $layout_definitions = $this->layoutPluginManager->getSortedDefinitions();
@@ -291,6 +329,7 @@ EOS;
       ],
       'Columns: 2' => [
         'theme_a_provided_layout',
+        'plugin_provided_by_annotation_layout',
       ],
     ];
 
@@ -365,6 +404,31 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 )]
 class TestLayout extends LayoutDefault {}
 EOS;
+    $plugin_provided_by_annotation_layout = <<<'EOS'
+<?php
+namespace Drupal\Core\Plugin\Layout;
+use Drupal\Core\Layout\LayoutDefault;
+/**
+ * @Layout(
+ *   id = "plugin_provided_by_annotation_layout",
+ *   label = @Translation("Layout by annotation plugin"),
+ *   category = @Translation("Columns: 2"),
+ *   description = @Translation("Test layout provided by annotated plugin"),
+ *   path = "core/lib/Drupal/Core",
+ *   template = "templates/plugin-provided-annotation-layout",
+ *   default_region = "left",
+ *   regions = {
+ *     "left" = {
+ *       "label" = @Translation("Left Region", context = "layout_region")
+ *     },
+ *     "right" = {
+ *        "label" = @Translation("Right Region", context = "layout_region")
+ *     }
+ *   }
+ * )
+ */
+class TestAnnotationLayout extends LayoutDefault {}
+EOS;
     vfsStream::setup('root');
     vfsStream::create([
       'modules' => [
@@ -388,6 +452,7 @@ EOS;
               'Plugin' => [
                 'Layout' => [
                   'TestLayout.php' => $plugin_provided_layout,
+                  'TestAnnotationLayout.php' => $plugin_provided_by_annotation_layout,
                 ],
               ],
             ],
