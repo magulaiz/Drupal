@@ -18,7 +18,7 @@ default:
       - runner_system_failure
       - scheduler_failure
   image:
-    name: mstrelan/drupalci-php:8.3-frankenphp-2
+    name: mstrelan/drupalci-php:8.3-frankenphp-3
   before_script:
     - |
       [[ $_TARGET_DB == sqlite* ]] && export SIMPLETEST_DB=sqlite://localhost/$CI_PROJECT_DIR/sites/default/files/db.sqlite?module=sqlite
@@ -58,7 +58,7 @@ default:
 
 variables:
   FF_NETWORK_PER_BUILD: 1
-  SIMPLETEST_BASE_URL: http://localhost/subdirectory
+  SIMPLETEST_BASE_URL: http://localhost
   DB_DRIVER: mysql
   MYSQL_ROOT_PASSWORD: root
   MYSQL_DATABASE: mysql
@@ -186,7 +186,7 @@ variables:
 #    # dotenv-safe/config does not support environment variables
 #    # @see https://github.com/rolodato/dotenv-safe/issues/126
 #    # @todo move this to `variables` when the above is resolved
-#    - echo "DRUPAL_TEST_BASE_URL='http://localhost/subdirectory'" >> ./core/.env
+#    - echo "DRUPAL_TEST_BASE_URL='http://localhost'" >> ./core/.env
 #    - echo "DRUPAL_TEST_CHROMEDRIVER_AUTOSTART=false" >> ./core/.env
 #    - echo "DRUPAL_TEST_DB_URL='${DRUPAL_TEST_DB_URL}'" >> ./core/.env
 #    - echo "DRUPAL_TEST_WEBDRIVER_HOSTNAME='localhost'" >> ./core/.env
@@ -233,7 +233,7 @@ variables:
   script:
     #  Determine DB driver.
     - |
-      [[ $_TARGET_DB == sqlite* ]] && export SIMPLETEST_DB=sqlite://localhost/subdirectory/sites/default/files/db.sqlite?module=sqlite
+      [[ $_TARGET_DB == sqlite* ]] && export SIMPLETEST_DB=sqlite://localhost/sites/default/files/db.sqlite?module=sqlite
       [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
       [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
       [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
@@ -241,4 +241,4 @@ variables:
     - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
     - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
     - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
-    - sudo SIMPLETEST_BASE_URL="http://$HOSTNAME/subdirectory" SIMPLETEST_DB="$SIMPLETEST_DB" MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" OTEL_COLLECTOR="$OTEL_COLLECTOR" -u www-data ./vendor/bin/phpunit --verbose -c core --group OpenTelemetry --log-junit=./sites/default/files/simpletest/phpunit-performance.xml
+    - sudo SIMPLETEST_BASE_URL="http://$HOSTNAME" SIMPLETEST_DB="$SIMPLETEST_DB" MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" OTEL_COLLECTOR="$OTEL_COLLECTOR" -u www-data ./vendor/bin/phpunit --verbose -c core --group OpenTelemetry --log-junit=./sites/default/files/simpletest/phpunit-performance.xml

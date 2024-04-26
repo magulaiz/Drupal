@@ -88,7 +88,7 @@ default:
       - runner_system_failure
       - scheduler_failure
   image:
-    name: mstrelan/drupalci-php:8.3-frankenphp-2
+    name: mstrelan/drupalci-php:8.3-frankenphp-3
 
 #############
 # Templates #
