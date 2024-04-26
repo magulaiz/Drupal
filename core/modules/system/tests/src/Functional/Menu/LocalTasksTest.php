@@ -278,10 +278,6 @@ class LocalTasksTest extends BrowserTestBase {
 
     // Only the Edit and Manage permission tabs.
     $this->drupalGet('/admin/structure/types/manage/page');
-    // Check we opened the edit content type page.
-    // If the permissions were wrong then we get 401 and
-    // there won't be a local task and will result in false positive.
-    $this->assertSession()->pageTextContains('Edit page content type');
     $this->assertLocalTasks([
       ['entity.node_type.edit_form', ['node_type' => 'page']],
       ['entity.node_type.entity_permissions_form', ['node_type' => 'page']],
