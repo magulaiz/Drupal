@@ -226,8 +226,8 @@ export default class DrupalMediaGeneralHtmlSupport extends Plugin {
       // before the General HTML Support has been initialized.
       // @see module:html-support/generalhtmlsupport~GeneralHtmlSupport
       dataSchema.registerBlockElement({
-        model: model,
-        view: view,
+        model,
+        view,
       });
 
       dataFilter.on(`register:${view}`, (evt, definition) => {
@@ -241,16 +241,18 @@ export default class DrupalMediaGeneralHtmlSupport extends Plugin {
 
         conversion
           .for('upcast')
-          .add(viewToModelDrupalMediaAttributeConverter(dataFilter, model, view));
+          .add(
+            viewToModelDrupalMediaAttributeConverter(dataFilter, model, view),
+          );
         conversion
           .for('editingDowncast')
           .add(modelToEditingViewAttributeConverter(model));
-        conversion.for('dataDowncast').add(modelToDataViewAttributeConverter(model));
+        conversion
+          .for('dataDowncast')
+          .add(modelToDataViewAttributeConverter(model));
 
         evt.stop();
       });
-
-
     });
   }
 
