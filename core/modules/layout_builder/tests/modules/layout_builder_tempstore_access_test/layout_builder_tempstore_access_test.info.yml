@@ -1,0 +1,9 @@
+name: 'Layout Builder tempstore access test'
+type: module
+description: 'Support module for testing layout builder tempstore access checks.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:layout_builder
+  - drupal:node
+  - drupal:user

@@ -69,3 +69,10 @@ function layout_builder_post_update_timestamp_formatter(array &$sandbox = NULL):
     return $update;
   });
 }
+
+/**
+ * Clear caches due to removing the route enhancer.
+ */
+function layout_builder_post_update_remove_tempstore_route_enhancer() {
+  // Empty post-update hook.
+}
