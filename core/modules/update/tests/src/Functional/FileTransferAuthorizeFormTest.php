@@ -8,6 +8,7 @@ namespace Drupal\Tests\update\Functional;
  * Tests the Update Manager module upload via authorize.php functionality.
  *
  * @group update
+ * @runTestsInSeparateProcesses
  */
 class FileTransferAuthorizeFormTest extends UpdateUploaderTestBase {
 
@@ -42,7 +43,6 @@ class FileTransferAuthorizeFormTest extends UpdateUploaderTestBase {
    * Tests the Update Manager module upload via authorize.php functionality.
    *
    * @dataProvider archiveFileUrlProvider
-   * @runInSeparateProcess
    */
   public function testViaAuthorize($url) {
     // Ensure the that we can select which file transfer backend to use.

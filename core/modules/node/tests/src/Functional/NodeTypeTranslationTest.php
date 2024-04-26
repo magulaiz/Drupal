@@ -15,6 +15,7 @@ use Drupal\Tests\BrowserTestBase;
  * ensures the asserts pass regardless of the Drupal version.
  *
  * @group node
+ * @runTestsInSeparateProcesses
  */
 class NodeTypeTranslationTest extends BrowserTestBase {
 
@@ -140,8 +141,6 @@ class NodeTypeTranslationTest extends BrowserTestBase {
 
   /**
    * Tests the node type title label translation.
-   *
-   * @runInSeparateProcess
    */
   public function testNodeTypeTitleLabelTranslation() {
     $type = $this->randomMachineName(16);
