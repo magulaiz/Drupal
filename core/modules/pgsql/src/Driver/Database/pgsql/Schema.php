@@ -12,8 +12,8 @@ use Drupal\pgsql\Schema\IndexType;
 // cSpell:ignore adbin adnum adrelid adsrc attisdropped attname attnum attrdef
 // cSpell:ignore attrelid atttypid atttypmod bigserial conkey conname conrelid
 // cSpell:ignore contype fillfactor indexname indexrelid indisprimary indkey
-// cSpell:ignore indrelid nextval nspname regclass regtype relkind relname
-// cSpell:ignore relnamespace schemaname setval
+// cSpell:ignore indrelid nextval nspname regclass relkind relname relnamespace
+// cSpell:ignore schemaname setval regtype tsvector indexdef
 
 /**
  * @addtogroup schemaapi
@@ -393,7 +393,7 @@ EOD;
         'auto_gen_%s',
         $field_name,
       ),
-      new IndexSpecification(
+      new Index(
         [$field_name],
         ['pgsql' => ['type' => IndexType::GIN]]
       )
@@ -944,8 +944,8 @@ EOD;
    * @throws \Drupal\Core\Database\Exception\SchemaIndexOnJsonFieldUnsupportedException
    *   Thrown when index specification is malformed.
    */
-  protected function processIndexFields(array|IndexSpecification $fields, array $table_spec, string $table, string $index): array|IndexSpecification {
-    if (!($fields instanceof IndexSpecification) || (($config = $fields->getDriverConfig('pgsql')) && !($config['type'] ?? NULL) instanceof IndexType)) {
+  protected function processIndexFields(array|Index $fields, array $table_spec, string $table, string $index): array|Index {
+    if (!($fields instanceof Index) || (($config = $fields->getDriverConfig('pgsql')) && !($config['type'] ?? NULL) instanceof IndexType)) {
       $contains_json_field = FALSE;
       foreach ($fields as $field_spec) {
         if (($table_spec['fields'][is_array($field_spec) ? $field_spec[0] : $field_spec]['type'] ?? NULL) === 'json') {
@@ -955,8 +955,8 @@ EOD;
       }
       if ($contains_json_field) {
         if (count($fields) === 1) {
-          return !($fields instanceof IndexSpecification)
-            ? new IndexSpecification($fields, ['pgsql' => ['type' => IndexType::GIN]])
+          return !($fields instanceof Index)
+            ? new Index($fields, ['pgsql' => ['type' => IndexType::GIN]])
             : $fields;
         }
         throw new SchemaIndexOnJsonFieldUnsupportedException(
@@ -1000,7 +1000,7 @@ EOD;
 
     // Get the schema and tablename for the table without identifier quotes.
     $full_name = str_replace('"', '', $this->connection->prefixTables('{' . $table . '}'));
-    $result = $this->connection->query("SELECT i.relname AS index_name, a.attname AS column_name FROM pg_class t, pg_class i, pg_index ix, pg_attribute a WHERE t.oid = ix.indrelid AND i.oid = ix.indexrelid AND a.attrelid = t.oid AND a.attnum = ANY(ix.indkey) AND t.relkind = 'r' AND t.relname = :table_name ORDER BY index_name ASC, column_name ASC", [
+    $result = $this->connection->query("SELECT i.relname AS index_name, a.attname AS column_name, pg_get_indexdef(i.oid) AS indexdef FROM pg_class t, pg_class i, pg_index ix, pg_attribute a WHERE t.oid = ix.indrelid AND i.oid = ix.indexrelid AND a.attrelid = t.oid AND a.attnum = ANY(ix.indkey) AND t.relkind = 'r' AND t.relname = :table_name ORDER BY index_name ASC, column_name ASC", [
       ':table_name' => $full_name,
     ])->fetchAll();
     foreach ($result as $row) {
@@ -1012,6 +1012,7 @@ EOD;
       }
       elseif (str_ends_with($row->index_name, '_idx')) {
         $index_schema['indexes'][$row->index_name][] = $row->column_name;
+        $index_schema['index_definitions'][$row->index_name] = $row->indexdef;
       }
     }
 
