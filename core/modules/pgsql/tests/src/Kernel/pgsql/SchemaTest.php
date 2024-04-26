@@ -9,7 +9,7 @@ use Drupal\KernelTests\Core\Database\DriverSpecificSchemaTestBase;
 use Drupal\pgsql\Schema\IndexType;
 
 // cSpell:ignore relkind objid refobjid regclass attname attrelid attnum
-// cSpell:ignore refobjsubid
+// cSpell:ignore refobjsubid indexdef tsvector
 
 /**
  * Tests schema API for the PostgreSQL driver.
