@@ -21,6 +21,7 @@
  * @ingroup themeable
  */
 #}
+{{ attach_library('system/drupal.system.item.list.module') }}
 {% if context.list_style %}
   {%- set attributes = attributes.addClass('item-list__' ~ context.list_style) %}
 {% endif %}
