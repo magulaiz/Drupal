@@ -374,6 +374,8 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
 
   /**
    * Tests recursive rendering protection.
+   *
+   * @runInSeparateProcess
    */
   public function testRecursionProtection() {
     $text = $this->createEmbedCode([
