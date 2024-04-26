@@ -18,7 +18,6 @@ use Drupal\Core\Url;
  *
  * @group language
  * @runTestsInSeparateProcesses
- * @todo Figure out why @runTestsInSeparateProcesses is needed and remove it.
  */
 class LanguageSwitchingTest extends BrowserTestBase {
 

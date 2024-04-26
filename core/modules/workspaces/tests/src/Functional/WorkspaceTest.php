@@ -324,7 +324,6 @@ class WorkspaceTest extends BrowserTestBase {
    * Verifies that a workspace can be published.
    *
    * @runInSeparateProcess
-   * @todo Figure out why @runInSeparateProcess is needed and remove it.
    */
   public function testPublishWorkspace() {
     $this->createContentType(['type' => 'test', 'label' => 'Test']);

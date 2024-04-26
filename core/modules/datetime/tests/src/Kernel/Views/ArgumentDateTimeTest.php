@@ -12,7 +12,6 @@ use Drupal\views\Views;
  *
  * @group datetime
  * @runTestsInSeparateProcesses
- * @todo Figure out why @runTestsInSeparateProcesses is needed and remove it.
  */
 class ArgumentDateTimeTest extends DateTimeHandlerTestBase {
 

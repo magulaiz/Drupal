@@ -13,7 +13,6 @@ use Drupal\language\Entity\ConfigurableLanguage;
  *
  * @group locale
  * @runTestsInSeparateProcesses
- * @todo Figure out why @runTestsInSeparateProcesses is needed and remove it.
  */
 class LocaleConfigTranslationImportTest extends BrowserTestBase {
 

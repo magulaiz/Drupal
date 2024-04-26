@@ -142,7 +142,6 @@ class NodeTypeTranslationTest extends BrowserTestBase {
    * Tests the node type title label translation.
    *
    * @runInSeparateProcess
-   * @todo Figure out why @runInSeparateProcess is needed and remove it.
    */
   public function testNodeTypeTitleLabelTranslation() {
     $type = $this->randomMachineName(16);

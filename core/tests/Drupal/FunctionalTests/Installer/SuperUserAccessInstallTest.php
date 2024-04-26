@@ -12,7 +12,6 @@ use Drupal\user\Entity\User;
  *
  * @group Installer
  * @runTestsInSeparateProcesses
- * @todo Figure out why @runTestsInSeparateProcesses is needed and remove it.
  */
 class SuperUserAccessInstallTest extends InstallerTestBase {
 

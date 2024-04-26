@@ -189,7 +189,6 @@ YAML,
    * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::processDefinition
    * @dataProvider providerTestInvalidPluginDefinitions
    * @runInSeparateProcess
-   * @todo Figure out why @runInSeparateProcess is needed and remove it.
    */
   public function testInvalidPluginDefinitions(string $yaml, ?string $expected_message, array $additional_files = []): void {
     if ($expected_message) {
@@ -1582,7 +1581,6 @@ PHP,
    * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getDiscovery
    * @dataProvider providerTestDerivedPluginDefinitions
    * @runInSeparateProcess
-   * @todo Figure out why @runInSeparateProcess is needed and remove it.
    */
   public function testDerivedPluginDefinitions(string $yaml, ?string $expected_message, array $additional_files = [], ?array $expected_derived_plugin_definitions = NULL): void {
     if ($expected_message) {
