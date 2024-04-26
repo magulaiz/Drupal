@@ -37,8 +37,6 @@ class FileSaveHtaccessLoggingTest extends BrowserTestBase {
     /** @var \Drupal\Core\File\HtaccessWriterInterface $htaccess */
     $htaccess = \Drupal::service('file.htaccess_writer');
     $this->assertFalse($htaccess->write($private, TRUE));
-
-    // Create user with access site report permissions.
     $this->drupalLogin($this->drupalCreateUser(['access site reports']));
 
     $this->drupalGet('admin/reports/dblog');

@@ -35,13 +35,6 @@ abstract class GenericModuleTestBase extends BrowserTestBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-  }
-
-  /**
    * Checks some generic things about a module.
    */
   public function testModuleGenericIssues(): void {

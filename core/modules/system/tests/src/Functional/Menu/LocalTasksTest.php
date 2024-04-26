@@ -260,7 +260,6 @@ class LocalTasksTest extends BrowserTestBase {
    * Tests that local tasks blocks cache is invalidated correctly.
    */
   public function testLocalTaskBlockCache() {
-    // Create user with following permission.
     $this->drupalLogin($this->drupalCreateUser([
       'administer content types',
       'administer permissions',

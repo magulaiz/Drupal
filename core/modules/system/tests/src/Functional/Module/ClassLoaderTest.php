@@ -89,7 +89,6 @@ class ClassLoaderTest extends BrowserTestBase {
    * Ensures the negative caches in the class loader don't result in crashes.
    */
   public function testMultipleModules() {
-    // Create use with required permissions.
     $this->drupalLogin($this->drupalCreateUser(['administer modules']));
 
     $edit = [

@@ -55,8 +55,6 @@ class DrupalMessengerServiceTest extends BrowserTestBase {
 
     // Ensure messages survive a container rebuild.
     $assert = $this->assertSession();
-
-    // Create a user with 'administer modules' permission.
     $this->drupalLogin($this->drupalCreateUser(['administer modules']));
 
     $edit = [];

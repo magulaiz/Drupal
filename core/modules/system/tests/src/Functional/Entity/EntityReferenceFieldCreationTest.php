@@ -34,8 +34,6 @@ class EntityReferenceFieldCreationTest extends BrowserTestBase {
   public function testAddReferenceFieldTargetingEntityTypeWithoutId() {
 
     $node_type = $this->drupalCreateContentType()->id();
-
-    // Create user with administer content types & fields permission.
     $this->drupalLogin($this->drupalCreateUser([
       'administer content types',
       'administer node fields',

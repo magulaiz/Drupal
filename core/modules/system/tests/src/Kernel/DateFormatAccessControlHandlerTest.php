@@ -54,15 +54,10 @@ class DateFormatAccessControlHandlerTest extends KernelTestBase {
    * @dataProvider testAccessProvider
    */
   public function testAccess($which_user, $which_entity, $view_label_access_result, $view_access_result, $update_access_result, $delete_access_result, $create_access_result) {
-    // We must always create user 1, so that a "normal" user has an ID >1.
-    $root_user = $this->drupalCreateUser();
-
-    if ($which_user === 'permissionless') {
-      $user = $root_user;
-    }
-    else {
-      $user = $this->drupalCreateUser(['administer site configuration']);
-    }
+    $permissions = ($which_user === 'admin' || $which_user === 'user1')
+      ? ['administer site configuration']
+      : [];
+    $user = $this->drupalCreateUser($permissions);
 
     $entity_values = ($which_entity === 'unlocked')
       ? ['locked' => FALSE]
