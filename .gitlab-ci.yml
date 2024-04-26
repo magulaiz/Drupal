@@ -364,6 +364,33 @@ default:
     reports:
       codequality: phpcs-quality-report.json
 
+'🧹 JavaScript linting (eslint)':
+  <<: [ *with-yarn ]
+  stage: 🪄 Lint
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
+  # Run on push, or on MRs if CSS files have changed, or manually.
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - core/.eslint*
+        - core/.prettier*
+        - core/package.json
+        - core/yarn.lock
+        - "**/*.js"
+        - "**/*.yml"
+    - when: manual
+      allow_failure: true
+  script:
+    - cd core
+    - corepack enable
+    - yarn run check:ckeditor5
+    - yarn run lint:core-js-passing --format gitlab
+  artifacts:
+    reports:
+      codequality: eslint-quality-report.json
+
 '🧹 CSS linting (stylelint)':
   <<: [ *with-yarn ]
   stage: 🪄 Lint
