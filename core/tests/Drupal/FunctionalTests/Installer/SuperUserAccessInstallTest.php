@@ -11,7 +11,6 @@ use Drupal\user\Entity\User;
  * Tests superuser access and the installer.
  *
  * @group Installer
- * @runTestsInSeparateProcesses
  */
 class SuperUserAccessInstallTest extends InstallerTestBase {
 
