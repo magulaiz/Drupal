@@ -37,7 +37,13 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
    * @param \Drupal\Core\Field\FieldTypeCategoryManagerInterface $fieldTypeCategoryManager
    *   The field type category plugin manager.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, TypedDataManagerInterface $typed_data_manager, protected ?FieldTypeCategoryManagerInterface $fieldTypeCategoryManager = NULL) {
+  public function __construct(
+    \Traversable $namespaces,
+    protected $cache_backend,
+    protected ModuleHandlerInterface $module_handler,
+    protected TypedDataManagerInterface $typedDataManager,
+    protected FieldTypeCategoryManagerInterface $fieldTypeCategoryManager,
+  ) {
     parent::__construct(
       'Plugin/Field/FieldType',
       $namespaces,
