@@ -13,6 +13,11 @@
   padding-block: 10px;
 }
 
+[dir="rtl"] .node-preview-container {
+  padding-inline-start: var(--drupal-displace-offset-right, 10px);
+  padding-inline-end: var(--drupal-displace-offset-left, 10px);
+}
+
 @media only screen and (min-width: 36em) {
   .node-preview-container .form-type-select {
     margin-left: 25%; /* LTR */
