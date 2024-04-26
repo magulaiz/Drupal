@@ -12,6 +12,8 @@ use Drupal\language\Entity\ConfigurableLanguage;
  * Tests translation update's effects on configuration translations.
  *
  * @group locale
+ * @runTestsInSeparateProcesses
+ * @todo Figure out why @runTestsInSeparateProcesses is needed and remove it.
  */
 class LocaleConfigTranslationImportTest extends BrowserTestBase {
 

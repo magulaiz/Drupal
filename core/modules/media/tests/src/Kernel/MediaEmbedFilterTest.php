@@ -397,6 +397,8 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
    * @covers \Drupal\filter\Plugin\Filter\FilterAlign
    * @covers \Drupal\filter\Plugin\Filter\FilterCaption
    * @dataProvider providerFilterIntegration
+   * @runInSeparateProcess
+   * @todo Figure out why @runInSeparateProcess is needed and remove it.
    */
   public function testFilterIntegration(array $filter_ids, array $additional_attributes, $verification_selector, $expected_verification_success, array $expected_asset_libraries = [], $prefix = '', $suffix = '') {
     $content = $this->createEmbedCode([

@@ -15,6 +15,8 @@ use Drupal\help\Plugin\Search\HelpSearch;
  *
  * @group help
  * @group #slow
+ * @runTestsInSeparateProcesses
+ * @todo Figure out why @runTestsInSeparateProcesses is needed and remove it.
  */
 class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
 

@@ -42,6 +42,8 @@ class FileTransferAuthorizeFormTest extends UpdateUploaderTestBase {
    * Tests the Update Manager module upload via authorize.php functionality.
    *
    * @dataProvider archiveFileUrlProvider
+   * @runInSeparateProcess
+   * @todo Figure out why @runInSeparateProcess is needed and remove it.
    */
   public function testViaAuthorize($url) {
     // Ensure the that we can select which file transfer backend to use.

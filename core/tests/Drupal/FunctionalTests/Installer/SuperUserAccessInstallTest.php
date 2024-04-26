@@ -11,6 +11,8 @@ use Drupal\user\Entity\User;
  * Tests superuser access and the installer.
  *
  * @group Installer
+ * @runTestsInSeparateProcesses
+ * @todo Figure out why @runTestsInSeparateProcesses is needed and remove it.
  */
 class SuperUserAccessInstallTest extends InstallerTestBase {
 

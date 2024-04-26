@@ -11,6 +11,8 @@ use Drupal\views\Views;
  * Tests the Drupal\datetime\Plugin\views\filter\Date handler.
  *
  * @group datetime
+ * @runTestsInSeparateProcesses
+ * @todo Figure out why @runTestsInSeparateProcesses is needed and remove it.
  */
 class ArgumentDateTimeTest extends DateTimeHandlerTestBase {
 
