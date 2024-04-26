@@ -151,6 +151,22 @@ class EditorFileReferenceFilterTest extends KernelTestBase {
     $output = $test($input);
     $this->assertSame($expected_output, $output->getProcessedText());
     $this->assertEquals($cache_tag, $output->getCacheTags());
+
+    // An invalid width attribute means the absent height attribute should not
+    // be computed.
+    $input = '<img src="llama.jpg" data-entity-type="file" data-entity-uuid="' . $uuid . '" width="30%" />';
+    $expected_output = '<img src="/' . $this->siteDirectory . '/files/llama.jpg" data-entity-type="file" data-entity-uuid="' . $uuid . '" width="30%" />';
+    $output = $test($input);
+    $this->assertSame($expected_output, $output->getProcessedText());
+    $this->assertEquals($cache_tag, $output->getCacheTags());
+
+    // An invalid height attribute means the absent width attribute should not
+    // be computed.
+    $input = '<img src="llama.jpg" data-entity-type="file" data-entity-uuid="' . $uuid . '" height="50%" />';
+    $expected_output = '<img src="/' . $this->siteDirectory . '/files/llama.jpg" data-entity-type="file" data-entity-uuid="' . $uuid . '" height="50%" />';
+    $output = $test($input);
+    $this->assertSame($expected_output, $output->getProcessedText());
+    $this->assertEquals($cache_tag, $output->getCacheTags());
   }
 
 }

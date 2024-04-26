@@ -97,10 +97,10 @@ class EditorFileReference extends FilterBase implements ContainerFactoryPluginIn
               $height = $image->getHeight();
               // Set dimensions to avoid content layout shift (CLS).
               // @see https://web.dev/cls/
-              if ($width !== NULL && !$node->hasAttribute('width')) {
+              if ($width !== NULL && !$node->hasAttribute('width') && (!$node->hasAttribute('height') || is_numeric($node->getAttribute('height')))) {
                 $node->setAttribute('width', (string) $width);
               }
-              if ($height !== NULL && !$node->hasAttribute('height')) {
+              if ($height !== NULL && !$node->hasAttribute('height') && (!$node->hasAttribute('width') || is_numeric($node->getAttribute('width')))) {
                 $node->setAttribute('height', (string) $height);
               }
             }
