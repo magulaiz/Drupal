@@ -213,6 +213,7 @@ class LayoutPluginManagerTest extends UnitTestCase {
     $this->expectExceptionMessage('The "module_a_derived_layout:array_based" layout definition must extend ' . LayoutDefinition::class);
     $module_a_provided_layout = <<<'EOS'
 module_a_derived_layout:
+  label: 'Derived layout'
   deriver: \Drupal\Tests\Core\Layout\LayoutDeriver
   array_based: true
 EOS;
