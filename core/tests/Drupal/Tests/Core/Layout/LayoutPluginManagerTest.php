@@ -264,6 +264,7 @@ EOS;
   public function testLabelRequired(): void {
     $this->moduleHandler->alter('layout', Argument::type('array'))->shouldNotBeCalled();
     $this->expectException(\ArgumentCountError::class);
+    $this->expectExceptionMessage('Drupal\Core\Layout\Attribute\Layout::__construct(): Argument #2 ($label) not passed');
     $module_a_provided_layout = <<<'EOS'
 module_a_layout_no_label:
   category: 'No Label'
@@ -284,6 +285,7 @@ EOS;
   public function testCategoryRequired(): void {
     $this->moduleHandler->alter('layout', Argument::type('array'))->shouldNotBeCalled();
     $this->expectException(\ArgumentCountError::class);
+    $this->expectExceptionMessageMatches('/^' . preg_quote('Too few arguments to function Drupal\Core\Layout\Attribute\Layout::__construct(), 2 passed') . '/');
     $module_a_provided_layout = <<<'EOS'
 module_a_layout_no_label:
   label: 'No Category'
