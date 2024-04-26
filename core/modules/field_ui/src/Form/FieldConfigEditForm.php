@@ -436,9 +436,7 @@ class FieldConfigEditForm extends EntityForm {
       $new_entity_values['field_name'] = $form_state->getValue('field_name');
       $new_entity_values['type'] = $this->entity->getType();
       unset($new_entity_values['label']);
-      // Delete temporary entity and create a new field instance as machine name
-      // is immutable.
-      $this->entity->delete();
+      // Create a new field instance as machine name is immutable.
       $this->entity = $this->entityTypeManager->getStorage('field_config')->create($new_entity_values);
       $this->copyFormValuesToEntity($this->entity, $form, $form_state);
     }
