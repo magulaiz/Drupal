@@ -2321,11 +2321,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Lock/LockBackendAbstractTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^@dataProvider providerTestLog related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Logger/LoggerChannelTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Plugin/CategorizingPluginManagerTraitTest.php',
