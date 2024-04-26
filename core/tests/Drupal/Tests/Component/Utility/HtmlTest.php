@@ -22,8 +22,6 @@ use PHPUnit\Framework\TestCase;
  */
 class HtmlTest extends TestCase {
 
-  use ExpectDeprecationTrait;
-
   /**
    * {@inheritdoc}
    */
@@ -416,19 +414,6 @@ class HtmlTest extends TestCase {
       'host and path' => ['example.com/llama'],
       'scheme, host and path' => ['http://example.com/llama'],
     ];
-  }
-
-  /**
-   * Test deprecations.
-   *
-   * @group legacy
-   */
-  public function testDeprecations(): void {
-    $this->expectDeprecation('Passing NULL to Drupal\Component\Utility\Html::decodeEntities is deprecated in drupal:9.5.0 and will trigger a PHP error from drupal:11.0.0. Pass a string instead. See https://www.drupal.org/node/3318826');
-    $this->assertSame('', Html::decodeEntities(NULL));
-
-    $this->expectDeprecation('Passing NULL to Drupal\Component\Utility\Html::escape is deprecated in drupal:9.5.0 and will trigger a PHP error from drupal:11.0.0. Pass a string instead. See https://www.drupal.org/node/3318826');
-    $this->assertSame('', Html::escape(NULL));
   }
 
 }
