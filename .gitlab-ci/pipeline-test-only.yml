@@ -20,7 +20,7 @@ variables:
   stage: 🗜️ Test
   interruptible: true
   image:
-    name: mstrelan/drupalci-php:8.3-frankenphp-3
+    name: mstrelan/drupalci-php:frankenphp-3
   rules:
     - if: $CI_PIPELINE_SOURCE == "parent_pipeline" && $PERFORMANCE_TEST != "1"
   needs:
