@@ -132,6 +132,14 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
   public function match($pathinfo): array {
     $request = Request::create($pathinfo);
 
+    // why do this - see https://www.drupal.org/project/drupal/issues/3443822
+    $currentRequest = \Drupal::request();
+    if($currentRequest->getPathInfo() == $pathinfo) {
+      // extra check with if to impact only the current request
+      // still worked without it good with JSON api and REST API and HTML
+      $request->setRequestFormat($currentRequest->getRequestFormat());
+    }
+
     return $this->matchRequest($request);
   }
 
