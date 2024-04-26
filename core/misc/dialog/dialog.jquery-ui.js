@@ -31,12 +31,12 @@
       }
     },
     _createWrapper() {
-      this.uiDialog = $('<div>').hide().get(0);
+      this.uiDialog = $('<div>').hide();
 
-      this.uiDialog.setAttribute('tabIndex', '-1');
-      this.uiDialog.setAttribute('role', 'dialog');
+      this.uiDialog[0].setAttribute('tabIndex', '-1');
+      this.uiDialog[0].setAttribute('role', 'dialog');
 
-      this._appendTo().append(this.uiDialog);
+      this._appendTo().append(this.uiDialog[0]);
 
       this._addClass(
         this.uiDialog,
