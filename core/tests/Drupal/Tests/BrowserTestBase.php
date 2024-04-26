@@ -173,19 +173,6 @@ abstract class BrowserTestBase extends TestCase {
   protected $mink;
 
   /**
-   * {@inheritdoc}
-   *
-   * Browser tests are run in separate processes to prevent collisions between
-   * code that may be loaded by tests.
-   */
-  protected $runTestInSeparateProcess = TRUE;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $preserveGlobalState = FALSE;
-
-  /**
    * The base URL.
    *
    * @var string
