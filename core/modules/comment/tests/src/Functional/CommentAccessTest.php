@@ -121,7 +121,7 @@ class CommentAccessTest extends CommentTestBase {
   /**
    * Tests admins can access reply form for unpublished comments.
    */
-  public function testUnpublishedCommentReplyForCommentAdministrators() {
+  public function testUnpublishedCommentReplyForCommentAdministrators(): void {
     $assert = $this->assertSession();
 
     // Publish the node.
