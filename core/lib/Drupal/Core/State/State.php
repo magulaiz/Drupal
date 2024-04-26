@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\State;
 
-use Drupal\Core\Asset\AssetQueryString;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheCollector;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
