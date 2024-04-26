@@ -12,6 +12,7 @@ use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
  * @group OpenTelemetry
  * @group #slow
  * @requires extension apcu
+ * @runTestsInSeparateProcesses
  */
 class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
 
