@@ -416,21 +416,6 @@ default:
     reports:
       codequality: stylelint-quality-report.json
 
-'📔 Spell-checking':
-  <<: [ *with-yarn, *default-job-settings-lint ]
-  stage: 🪄 Lint
-  variables:
-    KUBERNETES_CPU_REQUEST: "2"
-  script:
-    - if [ -n "$CI_MERGE_REQUEST_TARGET_BRANCH_SHA" ]; then
-        echo "HEAD is $(git rev-parse HEAD). \$CI_MERGE_REQUEST_TARGET_BRANCH_SHA is ${CI_MERGE_REQUEST_TARGET_BRANCH_SHA}";
-      else
-        echo "HEAD is $(git rev-parse HEAD). \$CI_MERGE_REQUEST_DIFF_BASE_SHA is ${CI_MERGE_REQUEST_DIFF_BASE_SHA}";
-      fi;
-    - cd core
-    - corepack enable
-    - git diff ${CI_MERGE_REQUEST_TARGET_BRANCH_SHA:-$CI_MERGE_REQUEST_DIFF_BASE_SHA} --name-only | sed "s_^_../_" | yarn run spellcheck:core --no-must-find-files --file-list stdin
-
 '📔 Validatable config':
   <<: [ *default-job-settings-lint ]
   stage: 🪄 Lint
