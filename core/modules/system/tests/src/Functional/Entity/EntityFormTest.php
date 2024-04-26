@@ -237,4 +237,13 @@ class EntityFormTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Add entity test route add page');
   }
 
+  /**
+   * Tests the route add-page with multiple parameters.
+   */
+  public function testAddPageWithMultipleParameters(): void {
+    $this->drupalGet('entity_test_add_page/' . $this->webUser->id() . '/add');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('Add entity test route add page');
+  }
+
 }
