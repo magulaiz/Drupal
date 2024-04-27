@@ -87,7 +87,7 @@
 }
 
 /* Class starts with `toolbar-button--icon`  */
-[class*='toolbar-button--icon'] {
+[class*="toolbar-button--icon"] {
   --icon: url(../../assets/icons/basic.svg); /* Default icon, aka --basic */
 
   padding-inline: calc(0.625 * var(--admin-toolbar-rem));
@@ -97,7 +97,7 @@
     flex-shrink: 0;
     inline-size: var(--admin-toolbar-space-20);
     block-size: var(--admin-toolbar-space-20);
-    content: '';
+    content: "";
     background-color: currentColor;
     mask-repeat: no-repeat;
     mask-position: center center;
@@ -135,12 +135,12 @@
   }
 }
 
-.toolbar-button--secondary--expanded[aria-expanded='true'] {
+.toolbar-button--secondary--expanded[aria-expanded="true"] {
   color: white;
   background-color: var(--admin-toolbar-color-gray-900);
 }
 
-.toolbar-button--tertiary--expanded[aria-expanded='true'] {
+.toolbar-button--tertiary--expanded[aria-expanded="true"] {
   background-color: var(--admin-toolbar-color-gray-050);
 }
 
@@ -154,11 +154,11 @@
   flex-grow: 1;
 }
 
-[class*='toolbar-button--expand'] {
+[class*="toolbar-button--expand"] {
   &::after {
     flex-shrink: 0;
     margin-inline-start: auto;
-    content: '';
+    content: "";
     transition: transform var(--admin-toolbar-transition);
     background-color: currentColor;
     block-size: var(--admin-toolbar-space-16);
@@ -188,7 +188,7 @@
     }
   }
 
-  &[aria-expanded='true'] {
+  &[aria-expanded="true"] {
     &::after {
       transform: rotate(-90deg);
     }
@@ -277,7 +277,7 @@
   --icon: url(../../assets/icons/user.svg);
 }
 
-html:not([data-admin-toolbar='expanded']) {
+html:not([data-admin-toolbar="expanded"]) {
   .toolbar-button--collapsible::after {
     display: none;
   }
