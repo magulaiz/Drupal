@@ -64,12 +64,18 @@ final class LayoutForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL) {
+    $form['#attached']['library'][] = 'navigation/navigation.layoutBuilder';
     $form['#attributes']['class'][] = 'layout-builder-form';
     $form['layout_builder'] = [
       '#type' => 'layout_builder',
       '#section_storage' => $section_storage,
     ];
-    $form['#attached']['library'][] = 'navigation/navigation.layoutBuilder';
+
+    $form['content'] = [
+      '#type' => 'markup',
+      '#weight' => -1,
+      '#markup' => $this->t('This layout builder tool allows you to configure the blocks in the navigation toolbar.')
+    ];
 
     $this->sectionStorage = $section_storage;
     $form['actions'] = [
@@ -78,6 +84,12 @@ final class LayoutForm extends FormBase {
         '#value' => $this->t('Save'),
       ],
     ] + $this->buildActionsElement([]);
+
+    // Adjust the layout overall items will sort by to keep this information remain readible.
+    $form['actions']['#weight'] = 1;
+    $form['actions']['preview_toggle']['toggle_content_preview']['#description'] = $this->t('Forms and links inside the content of the layout builder tool have been disabled.');
+    $form['actions']['preview_toggle']['#weight'] = -1;
+
     return $form;
   }
 
