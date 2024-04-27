@@ -59,7 +59,7 @@ class FileImageTest extends BrowserTestBase {
   /**
    * Tests image filed default file.
    */
-  public function testDefaultImageFile() {
+  public function testDefaultImageFile(): void {
     // Create files to use as the default images.
     $files = $this->drupalGetTestFiles('image');
 
