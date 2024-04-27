@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Plugin;
 
 use Drupal\Component\Plugin\ConfigurableInterface;
@@ -62,7 +64,7 @@ class DefaultLazyPluginCollectionTest extends LazyPluginCollectionTestBase {
    * @return array
    *   The test data.
    */
-  public function providerTestSortHelper() {
+  public static function providerTestSortHelper() {
     return [
       ['apple', 'apple', 0],
       ['apple', 'cherry', -1],
@@ -232,11 +234,13 @@ class DefaultLazyPluginCollectionTest extends LazyPluginCollectionTestBase {
     $plugin = $this->pluginInstances['apple'];
     $this->assertSame(['value' => 'pineapple', 'id' => 'apple'], $plugin->getConfiguration());
 
+    $this->defaultPluginCollection->setConfiguration([]);
+    $this->assertSame([], $this->defaultPluginCollection->getConfiguration());
+
     $this->defaultPluginCollection->setConfiguration(['cherry' => ['value' => 'kiwi', 'id' => 'cherry']]);
     $expected['cherry'] = ['value' => 'kiwi', 'id' => 'cherry'];
     $config = $this->defaultPluginCollection->getConfiguration();
     $this->assertSame($expected, $config);
-
   }
 
   /**

@@ -119,7 +119,7 @@ class UserSession implements AccountInterface {
   /**
    * {@inheritdoc}
    */
-  public function hasPermission($permission) {
+  public function hasPermission(string $permission) {
     return \Drupal::service('permission_checker')->hasPermission($permission, $this);
   }
 

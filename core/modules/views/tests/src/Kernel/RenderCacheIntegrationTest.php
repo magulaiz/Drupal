@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Kernel;
 
 use Drupal\Core\Cache\Cache;
@@ -14,6 +16,7 @@ use Drupal\views\Entity\View;
  * Tests the general integration between views and the render cache.
  *
  * @group views
+ * @group #slow
  */
 class RenderCacheIntegrationTest extends ViewsKernelTestBase {
 

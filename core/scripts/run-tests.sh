@@ -271,7 +271,7 @@ All arguments are long options.
               Required when running tests without a Drupal installation that
               contains default database connection info in settings.php.
               Examples:
-                mysql://username:password@localhost/databasename#table_prefix
+                mysql://username:password@localhost/database_name#table_prefix
                 sqlite://localhost/relative/path/db.sqlite
                 sqlite://localhost//absolute/path/db.sqlite
 
@@ -334,6 +334,14 @@ All arguments are long options.
               specified in core/phpunit.xml (if it exists), or the default value
               will be used. The default is that any unexpected silenced
               deprecation error will fail tests.
+
+  --ci-parallel-node-total
+
+              The total number of instances of this job running in parallel.
+
+  --ci-parallel-node-index
+
+              The index of the job in the job set.
 
   <test1>[,<test2>[,<test3> ...]]
 

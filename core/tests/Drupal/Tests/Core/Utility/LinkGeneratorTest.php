@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Utility;
 
 use Drupal\Component\Render\MarkupInterface;
@@ -89,7 +91,7 @@ class LinkGeneratorTest extends UnitTestCase {
    * @return array
    *   Returns some test data.
    */
-  public function providerTestGenerateHrefs() {
+  public static function providerTestGenerateHrefs() {
     return [
       // Test that the URL returned by the URL generator is used.
       ['test_route_1', [], FALSE, '/test-route-1'],
@@ -249,7 +251,7 @@ class LinkGeneratorTest extends UnitTestCase {
     $this->urlAssembler->expects($this->once())
       ->method('assemble')
       ->with('https://www.drupal.org', ['set_active_class' => TRUE, 'external' => TRUE] + $this->defaultOptions)
-      ->will($this->returnArgument(0));
+      ->willReturnArgument(0);
 
     $this->moduleHandler->expects($this->once())
       ->method('alter')
@@ -411,7 +413,7 @@ class LinkGeneratorTest extends UnitTestCase {
     $url = new Url('test_route_4');
     $url->setUrlGenerator($this->urlGenerator);
     $result = $this->linkGenerator->generate("<script>alert('XSS!')</script>", $url);
-    $this->assertNoXPathResults('//a[@href="/test-route-4"]/script', $result);
+    $this->assertNoXPathResults('//a[@href="/test-route-4"]/script', (string) $result);
   }
 
   /**
@@ -450,7 +452,7 @@ class LinkGeneratorTest extends UnitTestCase {
         'tag' => 'em',
       ],
     ], $result);
-    $this->assertStringContainsString('<em>HTML output</em>', $result);
+    $this->assertStringContainsString('<em>HTML output</em>', (string) $result);
   }
 
   /**
@@ -499,7 +501,7 @@ class LinkGeneratorTest extends UnitTestCase {
     $url = new Url('test_route_1', [], ['set_active_class' => FALSE]);
     $url->setUrlGenerator($this->urlGenerator);
     $result = $this->linkGenerator->generate('Test', $url);
-    $this->assertNoXPathResults('//a[@data-drupal-link-system-path="test-route-1"]', $result);
+    $this->assertNoXPathResults('//a[@data-drupal-link-system-path="test-route-1"]', (string) $result);
 
     // Render a link with an associated language.
     $url = new Url('test_route_1', [], [
@@ -548,9 +550,6 @@ class LinkGeneratorTest extends UnitTestCase {
    * Tests the LinkGenerator's support for collecting bubbleable metadata.
    *
    * @see \Drupal\Core\Utility\LinkGenerator::generate()
-   * @see \Drupal\Core\Utility\LinkGenerator::generateFromLink()
-   *
-   * @group legacy
    */
   public function testGenerateBubbleableMetadata() {
     $options = ['query' => [], 'language' => NULL, 'set_active_class' => FALSE, 'absolute' => FALSE];
@@ -576,13 +575,6 @@ class LinkGeneratorTest extends UnitTestCase {
     $this->assertSame($expected_link_markup, (string) $generated_link->getGeneratedLink());
     $this->assertInstanceOf('\Drupal\Core\Render\BubbleableMetadata', $generated_link);
 
-    // Test ::generateFromLink().
-    $this->expectDeprecation('\Drupal\Core\Utility\LinkGeneratorInterface::generateFromLink() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Utility\LinkGeneratorInterface::generate() instead. See https://www.drupal.org/node/3342992');
-    $link = new Link('Test', $url);
-    $this->assertSame($expected_link_markup, (string) $this->linkGenerator->generateFromLink($link));
-    $generated_link = $this->linkGenerator->generateFromLink($link);
-    $this->assertSame($expected_link_markup, (string) $generated_link->getGeneratedLink());
-    $this->assertInstanceOf('\Drupal\Core\Render\BubbleableMetadata', $generated_link);
   }
 
   /**
