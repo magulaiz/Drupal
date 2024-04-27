@@ -9,6 +9,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\TestTools\Comparator\MarkupInterfaceComparator;
 use SebastianBergmann\Comparator\Factory;
+use SebastianBergmann\Comparator\ComparisonFailure;
 
 /**
  * Tests \Drupal\TestTools\Comparator\MarkupInterfaceComparator.
@@ -56,11 +57,59 @@ class MarkupInterfaceComparatorTest extends KernelTestBase {
    */
   public static function dataSetProvider() {
     return [
+      'FormattableMarkup vs FormattableMarkup, equal' => [
+        new FormattableMarkup('GoldFinger', []),
+        new FormattableMarkup('GoldFinger', []),
+        TRUE,
+        TRUE,
+      ],
+      'FormattableMarkup vs FormattableMarkup, not equal' => [
+        new FormattableMarkup('GoldFinger', []),
+        new FormattableMarkup('moonraker', []),
+        TRUE,
+        ComparisonFailure::class,
+      ],
+      'FormattableMarkup vs string, equal' => [
+        new FormattableMarkup('GoldFinger', []),
+        'GoldFinger',
+        TRUE,
+        TRUE,
+      ],
+      'string vs FormattableMarkup, equal' => [
+        'GoldFinger',
+        new FormattableMarkup('GoldFinger', []),
+        TRUE,
+        TRUE,
+      ],
+      'TranslatableMarkup vs FormattableMarkup, equal' => [
+        new TranslatableMarkup('GoldFinger'),
+        new FormattableMarkup('GoldFinger', []),
+        TRUE,
+        TRUE,
+      ],
+      'TranslatableMarkup vs string, not equal' => [
+        new TranslatableMarkup('GoldFinger'),
+        'moonraker',
+        TRUE,
+        ComparisonFailure::class,
+      ],
+      'TranslatableMarkup vs int, equal' => [
+        new TranslatableMarkup('1234'),
+        1234,
+        TRUE,
+        TRUE,
+      ],
+      'int vs TranslatableMarkup, equal' => [
+        1234,
+        new TranslatableMarkup('1234'),
+        TRUE,
+        TRUE,
+      ],
       'FormattableMarkup vs array' => [
         new FormattableMarkup('GoldFinger', []),
         ['GoldFinger'],
         FALSE,
-        \RuntimeException::class,
+        FALSE,
       ],
       'stdClass vs TranslatableMarkup' => [
         (object) ['GoldFinger'],
@@ -114,35 +163,35 @@ class MarkupInterfaceComparatorTest extends KernelTestBase {
    *     thrown.
    *   - the expected deprecation message.
    */
-  public static function dataSetProviderExceptionCases(): array {
+  public static function dataSetProviderDeprecatedCases() {
     return [
       'html string with tags vs FormattableMarkup, equal' => [
         '<em class="placeholder">For Your Eyes</em> Only',
         new FormattableMarkup('%placeholder Only', ['%placeholder' => 'For Your Eyes']),
         TRUE,
         TRUE,
-        'Can not compare markup between MarkupInterface objects and plain strings',
+        'Using assert[Not]Equals() to compare markup between MarkupInterface objects and plain strings is deprecated in drupal:10.1.0 and will throw an error from drupal:11.0.0. Expected: \'<em class="placeholder">For Your Eyes</em> Only\' - Actual \'<em class="placeholder">For Your Eyes</em> Only\'. Use assert[Not]Same() and cast objects to string instead. See https://www.drupal.org/node/3334057',
       ],
       'html string with tags vs FormattableMarkup, not equal' => [
         '<em class="placeholder">For Your Eyes</em> Too',
         new FormattableMarkup('%placeholder Only', ['%placeholder' => 'For Your Eyes']),
         TRUE,
         FALSE,
-        'Can not compare markup between MarkupInterface objects and plain strings',
+        'Using assert[Not]Equals() to compare markup between MarkupInterface objects and plain strings is deprecated in drupal:10.1.0 and will throw an error from drupal:11.0.0. Expected: \'<em class="placeholder">For Your Eyes</em> Too\' - Actual \'<em class="placeholder">For Your Eyes</em> Only\'. Use assert[Not]Same() and cast objects to string instead. See https://www.drupal.org/node/3334057',
       ],
       'FormattableMarkup vs html string with tags, equal' => [
         new FormattableMarkup('%placeholder Only', ['%placeholder' => 'For Your Eyes']),
         '<em class="placeholder">For Your Eyes</em> Only',
         TRUE,
         TRUE,
-        'Can not compare markup between MarkupInterface objects and plain strings',
+        'Using assert[Not]Equals() to compare markup between MarkupInterface objects and plain strings is deprecated in drupal:10.1.0 and will throw an error from drupal:11.0.0. Expected: \'<em class="placeholder">For Your Eyes</em> Only\' - Actual \'<em class="placeholder">For Your Eyes</em> Only\'. Use assert[Not]Same() and cast objects to string instead. See https://www.drupal.org/node/3334057',
       ],
       'FormattableMarkup vs html string with tags, not equal' => [
         new FormattableMarkup('%placeholder Only', ['%placeholder' => 'For Your Eyes']),
         '<em class="placeholder">For Your Eyes</em> Too',
         TRUE,
         FALSE,
-        'Can not compare markup between MarkupInterface objects and plain strings',
+        'Using assert[Not]Equals() to compare markup between MarkupInterface objects and plain strings is deprecated in drupal:10.1.0 and will throw an error from drupal:11.0.0. Expected: \'<em class="placeholder">For Your Eyes</em> Only\' - Actual \'<em class="placeholder">For Your Eyes</em> Too\'. Use assert[Not]Same() and cast objects to string instead. See https://www.drupal.org/node/3334057',
       ],
     ];
   }
@@ -181,7 +230,7 @@ class MarkupInterfaceComparatorTest extends KernelTestBase {
 
   /**
    * @covers ::assertEquals
-   * @dataProvider dataSetProviderExceptionCases
+   * @dataProvider dataSetProviderDeprecatedCases
    * @group legacy
    */
   public function testDeprecatedAssertEquals($expected, $actual, bool $accepts_result, $equals_result, string $deprecation_message): void {
@@ -191,10 +240,21 @@ class MarkupInterfaceComparatorTest extends KernelTestBase {
     else {
       $this->assertFalse($this->comparator->accepts($expected, $actual));
     }
-
-    $this->expectException(\RuntimeException::class);
-    $this->expectExceptionMessage($deprecation_message);
-    $this->comparator->assertEquals($expected, $actual);
+    if ($deprecation_message) {
+      $this->expectDeprecation($deprecation_message);
+    }
+    try {
+      $this->assertNull($this->comparator->assertEquals($expected, $actual));
+      $this->assertTrue($equals_result);
+    }
+    catch (\Throwable $e) {
+      if ($equals_result === FALSE) {
+        $this->assertNotNull($e->getMessage());
+      }
+      else {
+        $this->assertInstanceOf($equals_result, $e);
+      }
+    }
   }
 
 }
