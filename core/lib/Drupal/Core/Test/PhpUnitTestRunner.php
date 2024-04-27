@@ -130,6 +130,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
 
     $command = [
       $phpunit_bin,
+      '--process-isolation',
       '--display-errors',
       '--display-warnings',
       '--fail-on-warning',
