@@ -2044,11 +2044,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/BuildTests/Framework/Tests/BuildTestTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\FunctionalTests\\\\Installer\\\\SuperUserAccessInstallTest\\:\\:getProvidedData\\(\\)\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Installer/SuperUserAccessInstallTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$found might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Cache/ApcuBackendTest.php',
@@ -2057,11 +2052,6 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$expected_driver might not be defined\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Database/DriverSpecificKernelTestBase.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Caught class PHPUnit\\\\Framework\\\\Error\\\\Warning not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Database/DriverSpecificTransactionTestBase.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$title might not be defined\\.$#',
