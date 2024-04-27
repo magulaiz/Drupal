@@ -9,6 +9,7 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional;
  *
  * @group migrate_drupal_ui
  * @group #slow
+ * @runTestsInSeparateProcesses
  */
 class SourceProviderTest extends MigrateUpgradeTestBase {
 

@@ -11,6 +11,7 @@ use Drupal\migrate\Plugin\MigrateIdMapInterface;
  * Tests for the MigrateController class.
  *
  * @group migrate_drupal_ui
+ * @runTestsInSeparateProcesses
  */
 class MigrateMessageControllerTest extends MigrateUpgradeTestBase {
 
