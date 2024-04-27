@@ -79,13 +79,6 @@ class ViewAjaxController implements ContainerInjectionInterface {
   protected $redirectDestination;
 
   /**
-   * The attachments processor.
-   *
-   * @var \Drupal\Core\Ajax\AjaxResponseAttachmentsProcessor
-   */
-  protected $attachmentsProcessor;
-
-  /**
    * Constructs a ViewAjaxController object.
    *
    * @param \Drupal\Core\Entity\EntityStorageInterface $storage
