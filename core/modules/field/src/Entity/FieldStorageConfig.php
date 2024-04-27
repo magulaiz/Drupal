@@ -270,6 +270,9 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
     }
 
     parent::__construct($values, $entity_type);
+    // Changes to this entity should invalidate cached field info.
+    // @see \Drupal\Core\Entity\EntityFieldManager::getFieldStorageDefinitions()
+    $this->addCacheTags(['entity_field_info']);
   }
 
   /**
