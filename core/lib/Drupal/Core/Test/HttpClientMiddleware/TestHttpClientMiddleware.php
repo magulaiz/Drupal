@@ -23,6 +23,11 @@ class TestHttpClientMiddleware {
     // database prefix were stored statically in a file or database variable.
     return function ($handler) {
       return function (RequestInterface $request, array $options) use ($handler) {
+        $host = parse_url(getenv('SIMPLETEST_BASE_URL'), PHP_URL_HOST);
+        if ($request->getUri()->getHost() !== $host) {
+          throw new \RuntimeException('Tests should only make requests to the SIMPLETEST_BASE_URL host.');
+        }
+
         if ($test_prefix = drupal_valid_test_ua()) {
           $request = $request->withHeader('User-Agent', drupal_generate_test_ua($test_prefix));
         }
