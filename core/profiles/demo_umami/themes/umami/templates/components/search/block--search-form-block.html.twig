@@ -29,26 +29,22 @@
 #}
 {%
   set classes = [
-    'block',
-    'block-search',
-    'container-inline',
-  ]
+  'block',
+  'block-search',
+  'container-inline',
+]
 %}
 
-<div class="search-iconwrap">
-  <a class="search-link" title="{{ 'Go to the search page'|t }}" href="{{ path('search.view') }}">
-    <span class="search-icon" aria-hidden="true">{% include active_theme_path() ~ '/images/svg/search.svg' %}</span>
-    <span class="visually-hidden">{{ 'Search'|t }}</span>
-  </a>
-</div>
+{% embed 'umami:search' with {
+  attributes : attributes.addClass(classes),
+  title_prefix,
+  title_suffix,
+  label,
+  title_attributes,
+} %}
 
-<div{{ attributes.addClass(classes) }}>
-  {{ title_prefix }}
-  {% if label %}
-    <h2{{ title_attributes.addClass('visually-hidden') }}>{{ label }}</h2>
-  {% endif %}
-  {{ title_suffix }}
-  {% block content %}
-    {{ content }}
-  {% endblock %}
-</div>
+{% block content %}
+  {{ content }}
+{% endblock %}
+
+{% endembed %}

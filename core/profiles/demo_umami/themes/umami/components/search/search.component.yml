@@ -1,0 +1,44 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/11.x/core/modules/sdc/src/metadata.schema.json
+
+# The human readable name.
+name: Search
+
+# Status can be: "experimental", "stable", "deprecated", "obsolete".
+status: experimental
+
+# Schema for the props. We support www.json-schema.org. Learn more about the
+# syntax there.
+props:
+  # Props are always an object with keys. Each key is a variable in your
+  # component template.
+  type: object
+
+  properties:
+    attributes:
+      type: Drupal\Core\Template\Attribute
+      title: Attributes
+      description: Wrapper attributes
+    title_prefix:
+      type: array
+      title: Title prefix
+      description: Content that should be presented immediately prior to the title in a template.
+    title_suffix:
+      type: array
+      title: Title suffix
+      description: Content that should be shown immediately following the title in a template.
+    label:
+      type: string
+      title: Label
+      description: Label text
+    title_attributes:
+      type: Drupal\Core\Template\Attribute
+      title: Title attributes
+      description: Title attributes.
+
+# Slots always hold arbitrary markup. We know that beforehand, so no need for
+# a schema for slots.
+slots:
+  # The key is the name of the slot. In your template you will use
+  # {% block body %}.
+  content:
+    label: content

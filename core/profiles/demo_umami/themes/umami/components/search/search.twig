@@ -1,0 +1,17 @@
+<div class="umami-search-iconwrap">
+  <a class="umami-search-link" title="{{ 'Go to the search page'|t }}" href="{{ path('search.view') }}">
+    <span class="umami-search-icon" aria-hidden="true">{% include "@demo_umami/themes/umami/images/svg/search.svg" %}</span>
+    <span class="visually-hidden">{{ 'Search'|t }}</span>
+  </a>
+</div>
+
+<div{{ attributes.addClass('umami-search') }}>
+  {{ title_prefix }}
+  {% if label %}
+    <h2{{ title_attributes.addClass('visually-hidden') }}>{{ label }}</h2>
+  {% endif %}
+  {{ title_suffix }}
+  {% block content %}
+    {{ content }}
+  {% endblock %}
+</div>
