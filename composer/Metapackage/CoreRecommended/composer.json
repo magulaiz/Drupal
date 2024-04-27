@@ -49,6 +49,7 @@
         "symfony/polyfill-intl-idn": "~v1.29.0",
         "symfony/polyfill-intl-normalizer": "~v1.29.0",
         "symfony/polyfill-mbstring": "~v1.29.0",
+        "symfony/polyfill-php83": "~v1.29.0",
         "symfony/process": "~v7.0.4",
         "symfony/psr-http-message-bridge": "~v7.0.6",
         "symfony/routing": "~v7.0.6",
