@@ -212,11 +212,11 @@ class ViewAjaxControllerTest extends UnitTestCase {
 
     // Test that the ajax controller for Views contains the
     // Drupal Settings.
-    $commands = $this->getCommands($response);
-    $this->assertEquals('settings', $commands[2]['command']);
     $this->assertEquals([
-      'testSetting' => ['Setting'],
-    ], $commands[2]['settings']);
+      'drupalSettings' => [
+        'testSetting' => ['Setting'],
+      ],
+    ], $response->getAttachments());
   }
 
   /**
