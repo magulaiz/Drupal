@@ -130,7 +130,6 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
 
     $command = [
       $phpunit_bin,
-      '--process-isolation',
       '--display-errors',
       '--display-warnings',
       '--fail-on-warning',
@@ -143,6 +142,14 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
         '--display-deprecations',
         '--fail-on-deprecation',
       ]);
+    }
+
+    // Non-Unit tests should be run in isolation.
+    foreach ($unescaped_test_classnames as $class) {
+      if (TestDiscovery::getPhpunitTestSuite($class) !== 'Unit') {
+        $command[] = '--process-isolation';
+        break;
+      }
     }
 
     // Optimized for running a single test.
