@@ -7,6 +7,7 @@ namespace Drupal\navigation\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Url;
 use Drupal\layout_builder\Form\LayoutBuilderEntityFormTrait;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\layout_builder\SectionStorageInterface;
@@ -78,6 +79,31 @@ final class LayoutForm extends FormBase {
         '#value' => $this->t('Save'),
       ],
     ] + $this->buildActionsElement([]);
+
+    $form['actions']['footer'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'footer',
+      '#weight' => 50,
+    ];
+    $form['actions']['footer']['content'] = [
+      '#theme' => 'links',
+      '#links' => [
+      'first_link' => [
+        'title' => t('Goto Frontpage'),
+        'url' =>  Url::fromRoute('<front>'),
+      ],
+      'second_link' => [
+        'title' => t('Goto Administration'),
+        'url' => Url::fromRoute('system.admin'),
+      ],
+    ],
+      '#attributes' => ['class' => ['links-inline']],
+      '#heading' => [
+        'text' => 'Layout Complete — Proceed',
+        'attributes' => ['class' => 'proceed-links']
+      ],
+    ];
+
     return $form;
   }
 
