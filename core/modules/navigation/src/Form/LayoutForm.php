@@ -79,6 +79,14 @@ final class LayoutForm extends FormBase {
         '#value' => $this->t('Save'),
       ],
     ] + $this->buildActionsElement([]);
+
+    $form['actions']['return-link'] = [
+      '#type' => 'link',
+      '#weight' => 50,
+      '#title' => t('Return to site'),
+      '#url' =>  Url::fromRoute('<front>'),
+    ];
+    $form['actions']['preview_toggle']['#weight'] = -10;
     return $form;
   }
 
