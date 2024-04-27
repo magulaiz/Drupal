@@ -1,0 +1,10 @@
+navigation.forntpage:
+  route_name: <front>
+  title: 'Goto frontpage'
+  appears_on:
+    - layout_builder.navigation.view
+navigation.admin_index:
+  route_name: system.admin_config_ui
+  title: 'Goto administration'
+  appears_on:
+    - layout_builder.navigation.view

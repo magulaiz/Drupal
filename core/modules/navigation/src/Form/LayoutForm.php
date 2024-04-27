@@ -79,31 +79,6 @@ final class LayoutForm extends FormBase {
         '#value' => $this->t('Save'),
       ],
     ] + $this->buildActionsElement([]);
-
-    $form['actions']['footer'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'footer',
-      '#weight' => 50,
-    ];
-    $form['actions']['footer']['content'] = [
-      '#theme' => 'links',
-      '#links' => [
-      'first_link' => [
-        'title' => t('Goto Frontpage'),
-        'url' =>  Url::fromRoute('<front>'),
-      ],
-      'second_link' => [
-        'title' => t('Goto Administration'),
-        'url' => Url::fromRoute('system.admin'),
-      ],
-    ],
-      '#attributes' => ['class' => ['links-inline']],
-      '#heading' => [
-        'text' => 'Layout Complete — Proceed',
-        'attributes' => ['class' => 'proceed-links']
-      ],
-    ];
-
     return $form;
   }
 

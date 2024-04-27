@@ -95,7 +95,7 @@ final class NavigationSectionStorage extends PluginBase implements SectionStorag
    * {@inheritdoc}
    */
   public function label(): string {
-    return 'Navigation layout';
+    return 'Navigation';
   }
 
   /**
@@ -142,7 +142,7 @@ final class NavigationSectionStorage extends PluginBase implements SectionStorag
    * {@inheritdoc}
    */
   public function buildRoutes(RouteCollection $collection): void {
-    $this->buildLayoutRoutes($collection, $this->getPluginDefinition(), '/admin/config/user-interface/navigation-block');
+    $this->buildLayoutRoutes($collection, $this->getPluginDefinition(), '/admin/config/user-interface/navigation/layout');
     $default_route = 'layout_builder.' . $this->getPluginDefinition()->id() . '.view';
     $route = $collection->get($default_route);
     // Use a form for editing the layout instead of a controller.
