@@ -25,7 +25,7 @@ class TestHttpClientMiddleware {
       return function (RequestInterface $request, array $options) use ($handler) {
         $host = parse_url(getenv('SIMPLETEST_BASE_URL'), PHP_URL_HOST);
         if ($request->getUri()->getHost() !== $host) {
-          throw new \RuntimeException('Tests should only make requests to the SIMPLETEST_BASE_URL host.');
+          throw new \RuntimeException(sprintf('Tests should only make requests to the SIMPLETEST_BASE_URL host of %s, but a request to %s was made.', $host, $request->getUri()->getHost()));
         }
 
         if ($test_prefix = drupal_valid_test_ua()) {
