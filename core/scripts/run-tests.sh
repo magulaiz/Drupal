@@ -815,11 +815,6 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
  * Run a PHPUnit-based test.
  */
 function simpletest_script_run_phpunit(TestRun $test_run, $class) {
-  $reflection = new \ReflectionClass($class);
-  if ($reflection->hasProperty('runLimit')) {
-    set_time_limit($reflection->getStaticPropertyValue('runLimit'));
-  }
-
   $runner = PhpUnitTestRunner::create(\Drupal::getContainer());
   $results = $runner->execute($test_run, [$class], $status);
   $runner->processPhpUnitResults($test_run, $results);
