@@ -4,12 +4,11 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
+
 .admin-toolbar .layout-builder-block {
   padding: 0;
 }
+
 #navigation-layout .layout-builder {
   border: none;
-}
-#navigation-layout .proceed-links {
-  font-size: var(--admin-toolbar-font-size-info-md);
 }

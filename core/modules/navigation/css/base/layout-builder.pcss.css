@@ -5,11 +5,3 @@
 #navigation-layout .layout-builder {
   border: none;
 }
-
-#navigation-layout .layout-builder {
-  border: none;
-}
-
-#navigation-layout .proceed-links {
-  font-size: var(--admin-toolbar-font-size-info-md);
-}
