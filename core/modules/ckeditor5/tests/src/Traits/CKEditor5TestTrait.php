@@ -161,8 +161,10 @@ JS;
    *
    * @param string $text
    *   The text to be set for the editor.
+   *
+   * @return string
    */
-  protected function setEditorText(string $text) {
+  protected function setEditorText(string $text): string {
     $javascript = <<<JS
 (function(){
   return Drupal.CKEditor5Instances.get(Drupal.CKEditor5Instances.keys().next().value).setData(`$text`);

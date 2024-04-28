@@ -80,7 +80,7 @@ class StatesTest extends WebDriverTestBase {
   /**
    * Tests the editor field works with required states.
    */
-  public function testRequiredStatesEditorField() {
+  public function testRequiredStatesEditorField(): void {
     $this->drupalGet('node/add/page');
 
     // Fill in the title which will trigger the required state on the body.
