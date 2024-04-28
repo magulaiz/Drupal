@@ -92,7 +92,7 @@ final class DeprecationHandler {
   /**
    * Initializes the extension.
    *
-   * @param string|null $ignorefile
+   * @param string|null $ignoreFile
    *   The path to a file containing ignore patterns for deprecations.
    */
   public static function init(?string $ignoreFile = NULL): void {
@@ -159,7 +159,7 @@ final class DeprecationHandler {
   /**
    * Returns all expected deprecations.
    *
-   * @param list<string>
+   * @return list<string>
    *   The expected deprecation messages.
    */
   public static function getExpectedDeprecations(): array {
@@ -189,7 +189,7 @@ final class DeprecationHandler {
   /**
    * Returns all collected deprecations.
    *
-   * @param list<string>
+   * @return list<string>
    *   The collected deprecation messages.
    */
   public static function getCollectedDeprecations(): array {
@@ -205,7 +205,7 @@ final class DeprecationHandler {
    * Deprecations that match the patterns included in the ignore file should
    * be ignored.
    *
-   * @param string $message
+   * @param string $deprecationMessage
    *   The actual deprecation message triggered via trigger_error().
    */
   public static function isIgnoredDeprecation(string $deprecationMessage): bool {
@@ -225,7 +225,7 @@ final class DeprecationHandler {
    * Deprecation tests are those that are annotated with '@group legacy' or
    * that have a '#[IgnoreDeprecations]' attribute.
    *
-   * @param TestCase $testCase
+   * @param \PHPUnit\Framework\TestCase $testCase
    *   The test case being executed.
    */
   public static function isDeprecationTest(TestCase $testCase): bool {
@@ -235,7 +235,7 @@ final class DeprecationHandler {
   /**
    * Determines if a test case is part of the 'legacy' group.
    *
-   * @param TestCase $testCase
+   * @param \PHPUnit\Framework\TestCase $testCase
    *   The test case being executed.
    */
   private static function isTestInLegacyGroup(TestCase $testCase): bool {
