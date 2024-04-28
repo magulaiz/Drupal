@@ -3,7 +3,6 @@
 namespace Drupal\Tests;
 
 use Behat\Mink\Exception\ExpectationException;
-use Behat\Mink\Exception\ResponseTextException;
 use Behat\Mink\WebAssert as MinkWebAssert;
 use Behat\Mink\Element\TraversableElement;
 use Behat\Mink\Exception\ElementNotFoundException;
@@ -11,7 +10,6 @@ use Behat\Mink\Session;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use PHPUnit\Framework\Assert;
-use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Constraint\ArrayHasKey;
 use PHPUnit\Framework\Constraint\IsIdentical;
 use PHPUnit\Framework\Constraint\IsEqual;
@@ -720,12 +718,7 @@ class WebAssert extends MinkWebAssert {
    */
   public function pageTextContainsOnce($text) {
     $regex = '/' . preg_quote($text, '/') . '/ui';
-    try {
-      $this->pageTextMatchesCount(1, $regex);
-    }
-    catch (AssertionFailedError $e) {
-      throw new ResponseTextException($e->getMessage(), $this->session->getDriver());
-    }
+    $this->pageTextMatchesCount(1, $regex);
   }
 
   /**
@@ -788,13 +781,7 @@ class WebAssert extends MinkWebAssert {
    *   The optional message type: status, error, or warning.
    */
   public function statusMessageExists(string $type = NULL): void {
-    $selector = $this->buildStatusMessageSelector(NULL, $type);
-    try {
-      $this->elementExists('xpath', $selector);
-    }
-    catch (ExpectationException $e) {
-      Assert::fail($e->getMessage());
-    }
+    $this->elementExists('xpath', $this->buildStatusMessageSelector(NULL, $type));
   }
 
   /**
@@ -804,13 +791,7 @@ class WebAssert extends MinkWebAssert {
    *   The optional message type: status, error, or warning.
    */
   public function statusMessageNotExists(string $type = NULL): void {
-    $selector = $this->buildStatusMessageSelector(NULL, $type);
-    try {
-      $this->elementNotExists('xpath', $selector);
-    }
-    catch (ExpectationException $e) {
-      Assert::fail($e->getMessage());
-    }
+    $this->elementNotExists('xpath', $this->buildStatusMessageSelector(NULL, $type));
   }
 
   /**
@@ -822,13 +803,7 @@ class WebAssert extends MinkWebAssert {
    *   The optional message type: status, error, or warning.
    */
   public function statusMessageContains(string $message, string $type = NULL): void {
-    $selector = $this->buildStatusMessageSelector($message, $type);
-    try {
-      $this->elementExists('xpath', $selector);
-    }
-    catch (ExpectationException $e) {
-      Assert::fail($e->getMessage());
-    }
+    $this->elementExists('xpath', $this->buildStatusMessageSelector($message, $type));
   }
 
   /**
@@ -840,13 +815,7 @@ class WebAssert extends MinkWebAssert {
    *   The optional message type: status, error, or warning.
    */
   public function statusMessageNotContains(string $message, string $type = NULL): void {
-    $selector = $this->buildStatusMessageSelector($message, $type);
-    try {
-      $this->elementNotExists('xpath', $selector);
-    }
-    catch (ExpectationException $e) {
-      Assert::fail($e->getMessage());
-    }
+    $this->elementNotExists('xpath', $this->buildStatusMessageSelector($message, $type));
   }
 
   /**
