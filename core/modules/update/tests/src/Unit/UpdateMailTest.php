@@ -77,7 +77,7 @@ class UpdateMailTest extends UnitTestCase {
    *
    * @dataProvider providerTestUpdateEmail
    */
-  public function testUpdateEmail($notification_threshold, $params, $authorized, $expected_subject, array $expected_body) {
+  public function testUpdateEmail(string $notification_threshold, array $params, bool $authorized, string $expected_subject, array $expected_body): void {
     $site_name = 'Test site';
     $expected_subject .= $site_name;
     $langcode = 'en';
