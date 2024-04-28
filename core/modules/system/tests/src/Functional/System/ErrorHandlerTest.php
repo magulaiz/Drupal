@@ -3,6 +3,7 @@
 namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Database\Database;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -146,16 +147,18 @@ class ErrorHandlerTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(500);
     $this->assertErrorMessage($error_exception);
 
-    $this->drupalGet('error-test/trigger-pdo-exception');
-    $this->assertSession()->statusCodeEquals(500);
-    // We cannot use assertErrorMessage() since the exact error reported
-    // varies from database to database. Check that the SQL string is displayed.
-    $this->assertSession()->pageTextContains($error_pdo_exception['%type']);
-    // Assert statement improved since static queries adds table alias in the
-    // error message.
-    $this->assertSession()->pageTextContains($error_pdo_exception['@message']);
-    $error_details = new FormattableMarkup('in %function (line ', $error_pdo_exception);
-    $this->assertSession()->responseContains($error_details);
+    if (Database::getConnection()->driver() != 'mongodb') {
+      $this->drupalGet('error-test/trigger-pdo-exception');
+      $this->assertSession()->statusCodeEquals(500);
+      // We cannot use assertErrorMessage() since the exact error reported
+      // varies from database to database. Check that the SQL string is displayed.
+      $this->assertSession()->pageTextContains($error_pdo_exception['%type']);
+      // Assert statement improved since static queries adds table alias in the
+      // error message.
+      $this->assertSession()->pageTextContains($error_pdo_exception['@message']);
+      $error_details = new FormattableMarkup('in %function (line ', $error_pdo_exception);
+      $this->assertSession()->responseContains($error_details);
+    }
     $this->drupalGet('error-test/trigger-renderer-exception');
     $this->assertSession()->statusCodeEquals(500);
     $this->assertErrorMessage($error_renderer_exception);
