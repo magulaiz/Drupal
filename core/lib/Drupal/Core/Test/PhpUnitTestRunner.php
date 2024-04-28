@@ -96,7 +96,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
   /**
    * Executes the PHPUnit command.
    *
-   * @param string string $test_class_name
+   * @param string $test_class_name
    *   A fully qualified test class name.
    * @param string $log_junit_file_path
    *   A filepath to use for PHPUnit's --log-junit option.
@@ -162,7 +162,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
    *
    * @param \Drupal\Core\Test\TestRun $test_run
    *   The test run object.
-   * @param string string $test_class_name
+   * @param string $test_class_name
    *   A fully qualified test class name.
    * @param int $status
    *   (optional) The exit status code of the PHPUnit process will be assigned
