@@ -85,6 +85,11 @@ class State extends CacheCollector implements StateInterface {
    * {@inheritdoc}
    */
   public function set($key, $value) {
+    if (isset(self::$deprecatedState[$key])) {
+      // phpcs:ignore Drupal.Semantics.FunctionTriggerError
+      @trigger_error(self::$deprecatedState[$key]['message'], E_USER_DEPRECATED);
+      $key = self::$deprecatedState[$key]['replacement'];
+    }
     $this->keyValueStore->set($key, $value);
     // If another request had a cache miss before this request, and also hasn't
     // written to cache yet, then it may already have read this value from the
