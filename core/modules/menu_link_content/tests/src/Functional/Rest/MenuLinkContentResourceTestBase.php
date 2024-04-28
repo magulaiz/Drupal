@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\menu_link_content\Functional\Rest;
 
-use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\menu_link_content\Entity\MenuLinkContent;

@@ -158,6 +158,16 @@ class ViewsQuery extends Sql {
   }
 
   /**
+   * Get the current revision table from the view.
+   *
+   * @return string
+   *   The current revision table.
+   */
+  public function getTranslationsTable() {
+    return $this->view->storage->get('translations_table');
+  }
+
+  /**
    * Join against another table in the database.
    *
    * @param $type
@@ -922,6 +932,9 @@ class ViewsQuery extends Sql {
       }
       elseif (!empty($this->getCurrentRevisionTable())) {
         $query->embeddedTableToUseAsBaseTable($this->getCurrentRevisionTable());
+      }
+      elseif (!empty($this->getTranslationsTable())) {
+        $query->embeddedTableToUseAsBaseTable($this->getTranslationsTable());
       }
     }
 

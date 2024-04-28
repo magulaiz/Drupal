@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\jsonapi\Functional;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Field\Entity\BaseFieldOverride;
 use Drupal\Core\Url;
 use Drupal\node\Entity\NodeType;
@@ -74,7 +75,7 @@ class BaseFieldOverrideTest extends ConfigEntityResourceTestBase {
    */
   protected function getExpectedDocument() {
     $self_url = Url::fromUri('base:/jsonapi/base_field_override/base_field_override/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
-    return [
+    $return = [
       'jsonapi' => [
         'meta' => [
           'links' => [
@@ -118,6 +119,19 @@ class BaseFieldOverrideTest extends ConfigEntityResourceTestBase {
         ],
       ],
     ];
+
+    if (Database::getConnection()->driver() == 'mongodb') {
+      $return['data']['attributes']['dependencies'] = [
+        'config' => [
+          'node.type.camelids',
+        ],
+        'module' => [
+          'mongodb',
+        ],
+      ];
+    }
+
+    return $return;
   }
 
   /**

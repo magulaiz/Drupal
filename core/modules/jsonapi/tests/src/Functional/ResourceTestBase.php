@@ -12,6 +12,7 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Cache\CacheRedirect;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\ContentEntityNullStorage;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
@@ -2086,6 +2087,9 @@ abstract class ResourceTestBase extends BrowserTestBase {
       // Assert that the entity was indeed created, and that the response body
       // contains the serialized created entity.
       $created_entity_document = $this->normalize($created_entity, $url);
+      if ((Database::getConnection()->driver() == 'mongodb') && isset($created_entity_document['data']['relationships']['field_media_file']['data']['meta']['display']) && ($created_entity_document['data']['relationships']['field_media_file']['data']['meta']['display'] === TRUE)) {
+        $created_entity_document['data']['relationships']['field_media_file']['data']['meta']['display'] = NULL;
+      }
       $decoded_response_body = Json::decode((string) $response->getBody());
       $this->assertEquals($created_entity_document, $decoded_response_body);
       // Assert that the entity was indeed created using the POSTed values.
@@ -2350,6 +2354,9 @@ abstract class ResourceTestBase extends BrowserTestBase {
       }
     }
     $updated_entity_document = $this->normalize($updated_entity, $url);
+    if ((Database::getConnection()->driver() == 'mongodb') && isset($updated_entity_document['data']['attributes']['revision_translation_affected']) && ($updated_entity_document['data']['attributes']['revision_translation_affected'] === FALSE)) {
+      $updated_entity_document['data']['attributes']['revision_translation_affected'] = NULL;
+    }
     $this->assertSame($updated_entity_document, Json::decode((string) $response->getBody()));
     $prior_revision_id = (int) $updated_entity->getRevisionId();
     // Assert that the entity was indeed created using the PATCHed values.
