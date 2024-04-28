@@ -29,8 +29,23 @@ class EntityViewDisplayEditForm extends EntityDisplayFormBase {
       $container->get('plugin.manager.field.field_type'),
       $container->get('plugin.manager.field.formatter'),
       $container->get('entity_display.repository'),
-      $container->get('entity_field.manager')
+      $container->get('entity_field.manager'),
+      $container->get('entity_type.bundle.info'),
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function form(array $form, FormStateInterface $form_state) {
+    $form = parent::form($form, $form_state);
+
+    $bundle_info = $this->entityTypeBundleInfo->getBundleInfo($this->entity->getTargetEntityTypeId());
+    $form['#title'] = $this->t('Manage display: @bundle-label', [
+      '@bundle-label' => $bundle_info[$this->entity->getTargetBundle()]['label'],
+    ]);
+
+    return $form;
   }
 
   /**

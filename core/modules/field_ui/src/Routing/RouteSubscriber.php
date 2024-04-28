@@ -10,6 +10,11 @@ use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Subscriber for Field UI routes.
+ *
+ * Most of the routes that specify a fixed title in the route definition have it
+ * overridden with a dynamic title in the form or controller class, in order to
+ * give clearer context in the UI. The fixed title allows breadcrumbs to use a
+ * more succinct string.
  */
 class RouteSubscriber extends RouteSubscriberBase {
 
