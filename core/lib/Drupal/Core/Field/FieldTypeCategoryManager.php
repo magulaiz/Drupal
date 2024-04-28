@@ -88,6 +88,26 @@ class FieldTypeCategoryManager extends DefaultPluginManager implements FieldType
     if (!isset($definitions[FieldTypeCategoryManagerInterface::FALLBACK_CATEGORY])) {
       throw new \LogicException('Missing fallback category.');
     }
+
+    // Add BC definitions for field types which for pre-10.2 define a category
+    // as a simple label.
+    $field_type_definitions = \Drupal::service('plugin.manager.field.field_type')->getDefinitions();
+    foreach ($field_type_definitions as $field_type_definition) {
+      // Identify pre-10.2 categories. We can't check for TranslatableMarkup at
+      // this point, because the FieldTypePluginManager has changed those to
+      // plain strings already.
+      // category_bc
+      if (!isset($definitions[$field_type_definition['category']]) && !empty($field_type_definition['category_bc'])) {
+        $definitions[$field_type_definition['category']] = [
+          "id" => $field_type_definition['category'],
+          'label' => $field_type_definition['category'],
+          'description' => $field_type_definition['category'],
+          "class" => "Drupal\Core\Field\FieldTypeCategory",
+          "provider" => "core",
+          "weight" => 0,
+        ];
+      }
+    }
   }
 
   /**
