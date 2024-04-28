@@ -15,6 +15,8 @@ use Drupal\Component\EventDispatcher\Event;
  *
  * Subscribers of this event that call ::setMetaValue() must set the appropriate
  * cache tags and contexts. These will then bubble up to the normalization.
+ *
+ * @Event
  */
 final class CollectRelationshipMetaEvent extends Event implements RefinableCacheableDependencyInterface {
 
