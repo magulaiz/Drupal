@@ -130,16 +130,14 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
 
     $command = [
       $phpunit_bin,
-      '--display-errors',
-      '--display-warnings',
-      '--fail-on-warning',
       '--log-junit',
       $log_junit_file_path,
     ];
 
+    // If the deprecation handler bridge is active, we need to fail when there
+    // are deprecations that get reported (i.e. not ignored or expected).
     if (DeprecationHandler::getConfiguration() !== FALSE) {
       $command = array_merge($command, [
-        '--display-deprecations',
         '--fail-on-deprecation',
       ]);
     }
