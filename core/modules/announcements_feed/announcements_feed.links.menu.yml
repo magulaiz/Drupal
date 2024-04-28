@@ -4,3 +4,5 @@ announcements_feed.announcement:
   route_name: announcements_feed.announcement
   weight: 10
   parent: system.admin
+  options:
+    navigation_icon: 'megaphone'

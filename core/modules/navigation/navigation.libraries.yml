@@ -24,6 +24,7 @@ internal.navigation:
     - core/tabbable
     - navigation/admin-reset-styles
     - navigation/body-scroll-lock
+    - navigation/icons
     - navigation/internal.dropdown
     - navigation/internal.tooltip
     - navigation/internal.popover
@@ -42,6 +43,11 @@ body-scroll-lock:
   css:
     base:
       css/components/body-scroll-lock.css: {}
+
+icons:
+  css:
+    base:
+      https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css: { type: external, minified: true }
 
 internal.popover:
   # Internal library. Do not depend on it outside core nor add core usage

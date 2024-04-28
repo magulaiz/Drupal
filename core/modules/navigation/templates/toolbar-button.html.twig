@@ -8,6 +8,9 @@ appear after main classes #}
   ]
 %}
 <{{html_tag|default('button')}}{{ attributes.addClass(classes) }} data-index-text="{{ text|first|lower }}">
+  {% if navigation_icon %}
+    {{ include('navigation:icon', { icon: navigation_icon }) }}
+  {% endif %}
   {% if avatar %}
     <span class="toolbar-button__avatar">{{~ avatar ~}}</span>
   {% endif %}
