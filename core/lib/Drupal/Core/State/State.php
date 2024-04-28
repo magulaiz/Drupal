@@ -13,6 +13,17 @@ use Drupal\Core\Lock\LockBackendInterface;
 class State extends CacheCollector implements StateInterface {
 
   /**
+   * Information about all deprecated state, keyed by legacy state key.
+   *
+   * Each entry should be an array that defines the following keys:
+   *   - 'replacement': The new name for the state.
+   *   - 'message': The deprecation message to use for trigger_error().
+   *
+   * @var array
+   */
+  private static array $deprecatedState = [];
+
+  /**
    * The key value store to use.
    *
    * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
@@ -38,6 +49,13 @@ class State extends CacheCollector implements StateInterface {
    * {@inheritdoc}
    */
   public function get($key, $default = NULL) {
+    // If the caller is asking for the value of a deprecated state, trigger a
+    // deprecation message about it.
+    if (isset(self::$deprecatedState[$key])) {
+      // phpcs:ignore Drupal.Semantics.FunctionTriggerError
+      @trigger_error(self::$deprecatedState[$key]['message'], E_USER_DEPRECATED);
+      $key = self::$deprecatedState[$key]['replacement'];
+    }
     return parent::get($key) ?? $default;
   }
 
