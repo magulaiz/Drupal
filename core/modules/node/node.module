@@ -1216,3 +1216,15 @@ function node_comment_delete($comment) {
 function node_config_translation_info_alter(&$info) {
   $info['node_type']['class'] = 'Drupal\node\ConfigTranslation\NodeTypeMapper';
 }
+
+/**
+ * Implements hook_entity_translation_delete().
+ */
+function node_entity_translation_delete(EntityInterface $translation) {
+  // Ensure that deleted translation is removed from the search index.
+  if (\Drupal::hasService('search.index')) {
+    $search_index = \Drupal::service('search.index');
+
+    $search_index->clear('node_search', $translation->nid->value, $translation->activeLangcode);
+  }
+}
