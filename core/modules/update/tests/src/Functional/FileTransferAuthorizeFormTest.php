@@ -8,7 +8,6 @@ namespace Drupal\Tests\update\Functional;
  * Tests the Update Manager module upload via authorize.php functionality.
  *
  * @group update
- * @runTestsInSeparateProcesses
  */
 class FileTransferAuthorizeFormTest extends UpdateUploaderTestBase {
 

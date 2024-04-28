@@ -10,7 +10,6 @@ use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
  * Tests demo_umami profile performance.
  *
  * @group Performance
- * @runTestsInSeparateProcesses
  */
 class PerformanceTest extends PerformanceTestBase {
 

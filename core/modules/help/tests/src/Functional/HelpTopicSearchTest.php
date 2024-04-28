@@ -15,7 +15,6 @@ use Drupal\help\Plugin\Search\HelpSearch;
  *
  * @group help
  * @group #slow
- * @runTestsInSeparateProcesses
  */
 class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
 

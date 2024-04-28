@@ -15,7 +15,6 @@ use Drupal\Tests\BrowserTestBase;
  * ensures the asserts pass regardless of the Drupal version.
  *
  * @group node
- * @runTestsInSeparateProcesses
  */
 class NodeTypeTranslationTest extends BrowserTestBase {
 

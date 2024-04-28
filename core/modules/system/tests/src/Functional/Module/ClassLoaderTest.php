@@ -11,7 +11,6 @@ use Drupal\Tests\BrowserTestBase;
  * Tests class loading for modules.
  *
  * @group Module
- * @runTestsInSeparateProcesses
  */
 class ClassLoaderTest extends BrowserTestBase {
 

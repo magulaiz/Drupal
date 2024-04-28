@@ -322,8 +322,6 @@ class WorkspaceTest extends BrowserTestBase {
 
   /**
    * Verifies that a workspace can be published.
-   *
-   * @runInSeparateProcess
    */
   public function testPublishWorkspace() {
     $this->createContentType(['type' => 'test', 'label' => 'Test']);

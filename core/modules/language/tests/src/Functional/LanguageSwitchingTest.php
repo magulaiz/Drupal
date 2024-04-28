@@ -17,7 +17,6 @@ use Drupal\Core\Url;
  * Functional tests for the language switching feature.
  *
  * @group language
- * @runTestsInSeparateProcesses
  */
 class LanguageSwitchingTest extends BrowserTestBase {
 

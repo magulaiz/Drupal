@@ -176,7 +176,6 @@ class DrupalKernelTest extends KernelTestBase {
 
   /**
    * Tests setting of site path after kernel boot.
-   * @runInSeparateProcess
    */
   public function testPreventChangeOfSitePath() {
     // @todo: write a memory based storage backend for testing.
@@ -264,7 +263,6 @@ class DrupalKernelTest extends KernelTestBase {
 
   /**
    * @covers ::resetContainer
-   * @runInSeparateProcess
    */
   public function testResetContainer() {
     $modules_enabled = [

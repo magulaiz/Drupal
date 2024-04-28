@@ -11,7 +11,6 @@ use Drupal\Tests\PerformanceData;
  * Tests demo_umami profile performance.
  *
  * @group #slow
- * @runTestsInSeparateProcesses
  */
 class AssetAggregationAcrossPagesTest extends PerformanceTestBase {
 

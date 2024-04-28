@@ -16,7 +16,6 @@ use Drupal\node\NodeInterface;
  *
  * @group Common
  * @requires extension apcu
- * @runTestsInSeparateProcesses
  */
 class StandardPerformanceTest extends PerformanceTestBase {
 

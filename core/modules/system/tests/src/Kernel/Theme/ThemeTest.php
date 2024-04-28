@@ -185,8 +185,6 @@ class ThemeTest extends KernelTestBase {
 
   /**
    * Tests the update registry is correct during theme install and uninstall.
-   *
-   * @runInSeparateProcess
    */
   public function testThemeUpdateManagementRemovedPostUpdates() {
     // Install modules the theme is dependent on and enable the removed post
