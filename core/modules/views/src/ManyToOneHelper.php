@@ -240,7 +240,7 @@ class ManyToOneHelper {
             }
             $this->handler->view->many_to_one_aliases[$field][$value] = $this->handler->table . '_value_' . ($this->handler->view->many_to_one_count[$this->handler->table]++);
           }
-dump(2);
+
           $this->handler->tableAliases[$value] = $this->addTable($join, $this->handler->view->many_to_one_aliases[$field][$value]);
           // Set tableAlias to the first of these.
           if (empty($this->handler->tableAlias)) {
