@@ -7,25 +7,38 @@ namespace Drupal\TestTools\Extension\DeprecationBridge;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @todo
+ * Drupal's PHPUnit extension to manage code deprecation.
+ *
+ * This class is a replacement for symfony/phpunit-bridge that is not
+ * supporting PHPUnit 10. In the future this extension might be dropped if
+ * PHPUnit will support all deprecation management needs.
  *
  * @internal
  */
 final class DeprecationHandler {
 
+  /**
+   * Indicates if the extension is enabled.
+   */
   private static bool $enabled = FALSE;
 
   /**
+   * A list of deprecation messages that should be ignored if detected.
+   *
    * @var list<string>
    */
   private static array $deprecationIgnorePatterns = [];
 
   /**
+   * A list of expected deprecation messages.
+   *
    * @var list<string>
    */
   private static array $expectedDeprecations = [];
 
   /**
+   * A list of deprecation messages collected during test run.
+   *
    * @var list<string>
    */
   private static array $collectedDeprecations = [];
@@ -38,7 +51,14 @@ final class DeprecationHandler {
   }
 
   /**
-   * @todo
+   * Returns the extension configuration.
+   *
+   * For historical reasons, the configuration is stored in the
+   * SYMFONY_DEPRECATIONS_HELPER environment variable.
+   *
+   * @return array|false
+   *   An array of configuration variables, of FALSE if the extension is
+   *   disabled.
    */
   public static function getConfiguration(): array|FALSE {
     $environmentVariable = getenv('SYMFONY_DEPRECATIONS_HELPER');
@@ -60,14 +80,20 @@ final class DeprecationHandler {
   }
 
   /**
-   * @todo
+   * Determines if the extension is enabled.
+   *
+   * @return bool
+   *   TRUE if enabled, FALSE if disabled.
    */
   public static function isEnabled(): bool {
     return self::$enabled;
   }
 
   /**
-   * @todo
+   * Initializes the extension.
+   *
+   * @param string|null $ignorefile
+   *   The path to a file containing ignore patterns for deprecations.
    */
   public static function init(?string $ignoreFile = NULL): void {
     if (self::isEnabled()) {
@@ -99,6 +125,12 @@ final class DeprecationHandler {
     self::$enabled = TRUE;
   }
 
+  /**
+   * Resets the extension.
+   *
+   * The extension should be reset at the beginning of each test run to ensure
+   * matching of expected and actual deprecations.
+   */
   public static function reset(): void {
     if (!self::isEnabled()) {
       return;
@@ -107,6 +139,16 @@ final class DeprecationHandler {
     self::$collectedDeprecations = [];
   }
 
+  /**
+   * Adds an expected deprecation.
+   *
+   * Tests will expect deprecations during the test execution; at the end of
+   * each test run, collected deprecations are checked against the expected
+   * ones.
+   *
+   * @param string $message
+   *   The expected deprecation message.
+   */
   public static function expectDeprecation(string $message): void {
     if (!self::isEnabled()) {
       return;
@@ -114,6 +156,12 @@ final class DeprecationHandler {
     self::$expectedDeprecations[] = $message;
   }
 
+  /**
+   * Returns all expected deprecations.
+   *
+   * @param list<string>
+   *   The expected deprecation messages.
+   */
   public static function getExpectedDeprecations(): array {
     if (!self::isEnabled()) {
       throw new \LogicException(__CLASS__ . ' is not initialized');
@@ -121,6 +169,16 @@ final class DeprecationHandler {
     return self::$expectedDeprecations;
   }
 
+  /**
+   * Collects an actual deprecation.
+   *
+   * Tests will expect deprecations during the test execution; at the end of
+   * each test run, collected deprecations are checked against the expected
+   * ones.
+   *
+   * @param string $message
+   *   The actual deprecation message triggered via trigger_error().
+   */
   public static function collectActualDeprecation(string $message): void {
     if (!self::isEnabled()) {
       return;
@@ -128,6 +186,12 @@ final class DeprecationHandler {
     self::$collectedDeprecations[] = $message;
   }
 
+  /**
+   * Returns all collected deprecations.
+   *
+   * @param list<string>
+   *   The collected deprecation messages.
+   */
   public static function getCollectedDeprecations(): array {
     if (!self::isEnabled()) {
       throw new \LogicException(__CLASS__ . ' is not initialized');
@@ -135,6 +199,15 @@ final class DeprecationHandler {
     return self::$collectedDeprecations;
   }
 
+  /**
+   * Determines if an actual deprecation should be ignored.
+   *
+   * Deprecations that match the patterns included in the ignore file should
+   * be ignored.
+   *
+   * @param string $message
+   *   The actual deprecation message triggered via trigger_error().
+   */
   public static function isIgnoredDeprecation(string $deprecationMessage): bool {
     if (!self::$deprecationIgnorePatterns) {
       return FALSE;
@@ -146,10 +219,25 @@ final class DeprecationHandler {
     return (bool) $result;
   }
 
+  /**
+   * Determines if a test case is a deprecation test.
+   *
+   * Deprecation tests are those that are annotated with '@group legacy' or
+   * that have a '#[IgnoreDeprecations]' attribute.
+   *
+   * @param TestCase $testCase
+   *   The test case being executed.
+   */
   public static function isDeprecationTest(TestCase $testCase): bool {
     return $testCase->valueObjectForEvents()->metadata()->isIgnoreDeprecations()->isNotEmpty() || self::isTestInLegacyGroup($testCase);
   }
 
+  /**
+   * Determines if a test case is part of the 'legacy' group.
+   *
+   * @param TestCase $testCase
+   *   The test case being executed.
+   */
   private static function isTestInLegacyGroup(TestCase $testCase): bool {
     $groups = [];
     foreach ($testCase->valueObjectForEvents()->metadata()->isGroup() as $metadata) {
