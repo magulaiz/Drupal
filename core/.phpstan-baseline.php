@@ -2084,11 +2084,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Installer/InstallerRedirectTraitTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Class PHPUnit\\\\Framework\\\\Error\\\\Warning not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Test/Comparator/MarkupInterfaceComparatorTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\KernelTests\\\\KernelTestBase\\:\\:getTestResultObject\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/KernelTestBase.php',
