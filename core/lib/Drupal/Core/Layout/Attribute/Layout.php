@@ -61,7 +61,7 @@ class Layout extends Plugin {
    *   The default region.
    * @param class-string|null $deriver
    *   (optional) The deriver class.
-   * @param string $class
+   * @param class-string $class
    *   The layout plugin class.
    * @param array $context_definitions
    *   The context definition.
