@@ -7,6 +7,9 @@ node.settings:
     use_admin_theme:
       type: boolean
       label: 'Use administration theme when editing or creating content'
+    add_default_body_field:
+      type: boolean
+      label: 'Automatically add a body field to new content types'
 
 node.type.*:
   type: config_entity
