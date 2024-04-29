@@ -25,13 +25,13 @@ class TestHttpClientMiddleware {
       return function (RequestInterface $request, array $options) use ($handler) {
         $host = parse_url(getenv('SIMPLETEST_BASE_URL'), PHP_URL_HOST);
         switch ($request->getUri()->getHost()) {
+          // Continue processing for the Drupal test site.
           case $host:
-            // Continue processing for the Drupal test site.
             break;
 
+          // Allow these hosts, but do not alter the request.
           case 'ftp.drupal.org':
-            // Allow ftp.drupal.org for translation downloads, but do not
-            // alter the request.
+          case 'oembed.com':
             return $handler($request, $options);
 
           default:
