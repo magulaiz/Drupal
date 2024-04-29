@@ -322,7 +322,7 @@ class SqlTest extends UnitTestCase {
    * @covers ::loadEntities
    * @covers ::assignEntitiesToResult
    */
-  public function testLoadEntitiesWithMissingEntity() {
+  public function testLoadEntitiesWithMissingEntity(): void {
     $view = $this->prophesize(ViewExecutable::class)->reveal();
     $this->setupViewWithRelationships($view);
 
