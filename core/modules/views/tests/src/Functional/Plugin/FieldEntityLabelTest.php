@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\file\Functional;
+namespace Drupal\Tests\views\Functional\Plugin;
 
 use Drupal\file\Entity\File;
 use Drupal\Tests\BrowserTestBase;
@@ -10,11 +10,11 @@ use Drupal\Tests\image\Kernel\ImageFieldCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
- * Tests image field functionality.
+ * Tests field entity label functionality.
  *
  * @group file
  */
-class FileImageTest extends BrowserTestBase {
+class FieldEntityLabelTest extends BrowserTestBase {
 
   use ImageFieldCreationTrait;
   use TestFileCreationTrait {
@@ -57,9 +57,10 @@ class FileImageTest extends BrowserTestBase {
   }
 
   /**
-   * Tests image filed default file.
+   * Test file usage view.
+   * @see https://www.drupal.org/project/drupal/issues/3442346
    */
-  public function testDefaultImageFile(): void {
+  public function testFileUsageView(): void {
     // Create files to use as the default images.
     $files = $this->drupalGetTestFiles('image');
 
