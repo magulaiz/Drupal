@@ -45,8 +45,8 @@ class DisplayPathTest extends UITestBase {
   /**
    * Runs the tests.
    */
-  public function testPathUI() {
-    $this->doBasicPathUITest();
+  public function testPathUi() {
+    $this->doBasicPathUiTest();
     $this->doAdvancedPathsValidationTest();
     $this->doPathXssFilterTest();
   }
@@ -54,7 +54,7 @@ class DisplayPathTest extends UITestBase {
   /**
    * Tests basic functionality in configuring a view.
    */
-  protected function doBasicPathUITest() {
+  protected function doBasicPathUiTest() {
     $this->drupalGet('admin/structure/views/view/test_view');
 
     // Add a new page display and check the appearing text.

@@ -27,7 +27,7 @@ class UrlTest extends KernelTestBase {
   /**
    * Confirms that invalid URLs are filtered in link generating functions.
    */
-  public function testLinkXSS() {
+  public function testLinkXss() {
     // Test link generator.
     $text = $this->randomMachineName();
     $path = "<SCRIPT>alert('XSS')</SCRIPT>";

@@ -39,7 +39,7 @@ class QueryTest extends UITestBase {
   /**
    * Tests query plugins settings.
    */
-  public function testQueryUI() {
+  public function testQueryUi() {
     $view = View::load('test_view');
     $display = &$view->getDisplay('default');
     $display['display_options']['query'] = ['type' => 'query_test'];

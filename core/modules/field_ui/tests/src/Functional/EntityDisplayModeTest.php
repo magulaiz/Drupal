@@ -47,7 +47,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
   /**
    * Tests the EntityViewMode user interface.
    */
-  public function testEntityViewModeUI() {
+  public function testEntityViewModeUi() {
     // Test the listing page.
     $this->drupalGet('admin/structure/display-modes/view');
     $this->assertSession()->statusCodeEquals(403);
@@ -104,7 +104,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
   /**
    * Tests the EntityFormMode user interface.
    */
-  public function testEntityFormModeUI() {
+  public function testEntityFormModeUi() {
     // Test the listing page.
     $this->drupalGet('admin/structure/display-modes/form');
     $this->assertSession()->statusCodeEquals(403);

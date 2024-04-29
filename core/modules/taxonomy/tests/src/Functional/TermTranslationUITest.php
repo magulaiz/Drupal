@@ -108,8 +108,8 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
   /**
    * {@inheritdoc}
    */
-  public function testTranslationUI() {
-    parent::testTranslationUI();
+  public function testTranslationUi() {
+    parent::testTranslationUi();
 
     // Make sure that no row was inserted for taxonomy vocabularies which do
     // not have translations enabled.

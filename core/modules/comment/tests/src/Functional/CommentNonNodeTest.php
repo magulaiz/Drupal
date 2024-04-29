@@ -441,10 +441,10 @@ class CommentNonNodeTest extends BrowserTestBase {
     $storage_edit = [
       'settings[comment_type]' => 'foobar',
     ];
-    $this->fieldUIAddNewField('entity_test/structure/entity_test', 'foobar', 'Foobar', 'comment', $storage_edit);
+    $this->fieldUiAddNewField('entity_test/structure/entity_test', 'foobar', 'Foobar', 'comment', $storage_edit);
 
     // Add a third comment field.
-    $this->fieldUIAddNewField('entity_test/structure/entity_test', 'bar_foo', 'Bar_Foo', 'comment', $storage_edit);
+    $this->fieldUiAddNewField('entity_test/structure/entity_test', 'bar_foo', 'Bar_Foo', 'comment', $storage_edit);
 
     // Check the field contains the correct comment type.
     $field_storage = FieldStorageConfig::load('entity_test.field_bar_foo');
@@ -479,7 +479,7 @@ class CommentNonNodeTest extends BrowserTestBase {
 
     $this->drupalGet('comment/reply/entity_test/' . $this->entity->id() . '/comment');
     $this->assertSession()->fieldValueEquals('comment_body[0][value]', '');
-    $this->fieldUIDeleteField('admin/structure/comment/manage/comment', 'comment.comment.comment_body', 'Comment', 'Comment settings', 'comment type');
+    $this->fieldUiDeleteField('admin/structure/comment/manage/comment', 'comment.comment.comment_body', 'Comment', 'Comment settings', 'comment type');
     $this->drupalGet('comment/reply/entity_test/' . $this->entity->id() . '/comment');
     $this->assertSession()->fieldNotExists('comment_body[0][value]');
     // Set subject field to autogenerate it.

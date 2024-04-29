@@ -269,7 +269,7 @@ class LayoutBuilderTest extends LayoutBuilderTestBase {
     $assert_session->linkNotExists('Layout');
 
     // Add a new field.
-    $this->fieldUIAddNewField($field_ui_prefix, 'my_text', 'My text field', 'string');
+    $this->fieldUiAddNewField($field_ui_prefix, 'my_text', 'My text field', 'string');
     $this->drupalGet("$field_ui_prefix/display/default/layout");
     $assert_session->pageTextContains('My text field');
     $assert_session->elementExists('css', '.field--name-field-my-text');

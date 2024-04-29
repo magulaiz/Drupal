@@ -78,7 +78,7 @@ class ResponsiveImageFieldUiTest extends WebDriverTestBase {
     /** @var \Drupal\FunctionalJavascriptTests\JSWebAssert $assert_session */
     $assert_session = $this->assertSession();
 
-    $this->fieldUIAddNewFieldJS('admin/structure/types/manage/' . $this->type, 'image', 'Image', 'image');
+    $this->fieldUiAddNewFieldJs('admin/structure/types/manage/' . $this->type, 'image', 'Image', 'image');
 
     // Display the "Manage display" page.
     $this->drupalGet($manage_display);

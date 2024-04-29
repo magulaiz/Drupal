@@ -22,7 +22,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
   /**
    * Tests the validation message is displayed only once for ajax uploads.
    */
-  public function testAJAXValidationMessage() {
+  public function testAjaxValidationMessage() {
     $field_name = $this->randomMachineName();
     $this->createImageField($field_name, 'node', 'article', ['cardinality' => -1]);
 

@@ -45,7 +45,7 @@ class FilterPermissionUiTest extends ViewTestBase {
   /**
    * Tests basic filter handler settings in the UI.
    */
-  public function testHandlerUI() {
+  public function testHandlerUi() {
     $this->drupalLogin($this->drupalCreateUser([
       'administer views',
       'administer users',

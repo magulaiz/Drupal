@@ -27,7 +27,7 @@ trait FieldUiJSTestTrait {
    *
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    */
-  public function fieldUIAddNewFieldJS(?string $bundle_path, string $field_name, ?string $label = NULL, string $field_type = 'test_field', bool $save_settings = TRUE): void {
+  public function fieldUiAddNewFieldJs(?string $bundle_path, string $field_name, ?string $label = NULL, string $field_type = 'test_field', bool $save_settings = TRUE): void {
     $label = $label ?: $field_name;
 
     // Allow the caller to set a NULL path in case they navigated to the right
@@ -48,7 +48,7 @@ trait FieldUiJSTestTrait {
       $field_card = $page->find('css', "[name='new_storage_type'][value='$field_type']")->getParent();
     }
     else {
-      $field_card = $this->getFieldFromGroupJS($field_type);
+      $field_card = $this->getFieldFromGroupJs($field_type);
     }
     $field_card?->click();
     $page->findButton('Continue')->click();
@@ -91,7 +91,7 @@ trait FieldUiJSTestTrait {
    *   (optional) $edit parameter for submitForm() on the second step
    *   ('Field settings' form).
    */
-  public function fieldUIAddExistingFieldJS(string $bundle_path, string $existing_storage_name, ?string $label = NULL, array $field_edit = []): void {
+  public function fieldUiAddExistingFieldJs(string $bundle_path, string $existing_storage_name, ?string $label = NULL, array $field_edit = []): void {
     $label = $label ?: $this->randomMachineName();
     $field_edit['edit-label'] = $label;
 
@@ -131,7 +131,7 @@ trait FieldUiJSTestTrait {
    * @return \Behat\Mink\Element\NodeElement|false|mixed|null
    *   Field card element within a group.
    */
-  public function getFieldFromGroupJS($field_type) {
+  public function getFieldFromGroupJs($field_type) {
     $group_elements = $this->getSession()->getPage()->findAll('css', '.field-option-radio');
     $groups = [];
     foreach ($group_elements as $group_element) {

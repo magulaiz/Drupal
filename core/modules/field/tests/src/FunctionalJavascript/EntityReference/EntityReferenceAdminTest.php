@@ -131,7 +131,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $this->assertSession()->elementExists('css', "[name='group_field_options_wrapper'][value='field_ui:entity_reference:user']");
 
     $page->pressButton('Back');
-    $this->fieldUIAddNewFieldJS(NULL, 'test', 'Test', 'entity_reference', FALSE);
+    $this->fieldUiAddNewFieldJs(NULL, 'test', 'Test', 'entity_reference', FALSE);
 
     // Node should be selected by default.
     $this->assertSession()->fieldValueEquals('field_storage[subform][settings][target_type]', 'node');

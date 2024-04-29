@@ -60,7 +60,7 @@ class AreaTest extends ViewTestBase {
   /**
    * Tests the generic UI of an area handler.
    */
-  public function testUI() {
+  public function testUi() {
     $admin_user = $this->drupalCreateUser([
       'administer views',
       'administer site configuration',

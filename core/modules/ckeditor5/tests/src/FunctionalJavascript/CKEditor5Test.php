@@ -723,7 +723,7 @@ JS;
    * either `ltr` or `rtl` as value). It's important that those last two
    * attributes are guaranteed to be retained.
    *
-   * @see \Drupal\filter\Plugin\Filter\FilterHtml::getHTMLRestrictions()
+   * @see \Drupal\filter\Plugin\Filter\FilterHtml::getHtmlRestrictions()
    * @see ckeditor5_globalAttributeDir
    * @see ckeditor5_globalAttributeLang
    * @see https://html.spec.whatwg.org/multipage/dom.html#global-attributes

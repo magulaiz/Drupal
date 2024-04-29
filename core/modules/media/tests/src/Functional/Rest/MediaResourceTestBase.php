@@ -372,9 +372,9 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
     $response = $this->request('POST', $url, $request_options);
     $this->assertSame(201, $response->getStatusCode());
     $expected = $this->getExpectedNormalizedFileEntity();
-    static::recursiveKSort($expected);
+    static::recursiveKsort($expected);
     $actual = $this->serializer->decode((string) $response->getBody(), static::$format);
-    static::recursiveKSort($actual);
+    static::recursiveKsort($actual);
     $this->assertSame($expected, $actual);
 
     // Make sure the role save below properly invalidates cache tags.

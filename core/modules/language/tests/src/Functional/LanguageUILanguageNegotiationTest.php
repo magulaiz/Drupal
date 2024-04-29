@@ -50,7 +50,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
    */
   protected static $configSchemaCheckerExclusions = [
     // Necessary to allow setting `selected_langcode` to NULL.
-    // @see testUILanguageNegotiation()
+    // @see testUiLanguageNegotiation()
     'language.negotiation',
   ];
 
@@ -101,7 +101,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
   /**
    * Tests for language switching by URL path.
    */
-  public function testUILanguageNegotiation() {
+  public function testUiLanguageNegotiation() {
     // A few languages to switch to.
     // This one is unknown, should get the default lang version.
     $langcode_unknown = 'blah-blah';

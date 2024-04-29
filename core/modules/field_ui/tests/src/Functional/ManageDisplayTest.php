@@ -105,7 +105,7 @@ class ManageDisplayTest extends BrowserTestBase {
    */
   public function testViewModeCustom() {
     // Create a field, and a node with some data for the field.
-    $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->type, 'test', 'Test field');
+    $this->fieldUiAddNewField('admin/structure/types/manage/' . $this->type, 'test', 'Test field');
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
     // For this test, use a formatter setting value that is an integer unlikely
     // to appear in a rendered node other than as part of the field being tested
@@ -196,7 +196,7 @@ class ManageDisplayTest extends BrowserTestBase {
    */
   public function testNonInitializedFields() {
     // Create a test field.
-    $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->type, 'test', 'Test');
+    $this->fieldUiAddNewField('admin/structure/types/manage/' . $this->type, 'test', 'Test');
 
     // Check that the field appears as 'hidden' on the 'Manage display' page
     // for the 'teaser' mode.

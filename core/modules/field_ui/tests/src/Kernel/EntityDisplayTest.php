@@ -54,7 +54,7 @@ class EntityDisplayTest extends KernelTestBase {
   /**
    * Tests basic CRUD operations on entity display objects.
    */
-  public function testEntityDisplayCRUD() {
+  public function testEntityDisplayCrud() {
     $display = EntityViewDisplay::create([
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',
@@ -134,7 +134,7 @@ class EntityDisplayTest extends KernelTestBase {
   /**
    * Tests sorting of components by name on basic CRUD operations.
    */
-  public function testEntityDisplayCRUDSort() {
+  public function testEntityDisplayCrudSort() {
     $display = EntityViewDisplay::create([
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',

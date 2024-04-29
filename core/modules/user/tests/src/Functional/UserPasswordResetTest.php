@@ -119,7 +119,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->submitForm($edit, 'Submit');
     $this->assertValidPasswordReset($edit['name']);
 
-    $resetURL = $this->getResetURL();
+    $resetURL = $this->getResetUrl();
     $this->drupalGet($resetURL);
     // Ensure that the current URL does not contain the hash and timestamp.
     $this->assertSession()->addressEquals(Url::fromRoute('user.reset.form', ['uid' => $this->account->id()]));
@@ -168,7 +168,7 @@ class UserPasswordResetTest extends BrowserTestBase {
 
     // Visit the user edit page without pass-reset-token and make sure it does
     // not cause an error.
-    $resetURL = $this->getResetURL();
+    $resetURL = $this->getResetUrl();
     $this->drupalGet($resetURL);
     $this->submitForm([], 'Log in');
     $this->drupalGet('user/' . $this->account->id() . '/edit');
@@ -205,7 +205,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->drupalGet('user/password');
     $edit = ['name' => $this->account->getAccountName()];
     $this->submitForm($edit, 'Submit');
-    $old_email_reset_link = $this->getResetURL();
+    $old_email_reset_link = $this->getResetUrl();
     $this->account->setEmail("1" . $this->account->getEmail());
     $this->account->save();
     $this->drupalGet($old_email_reset_link);
@@ -218,7 +218,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->drupalGet('user/password');
     $edit = ['name' => $this->account->getAccountName()];
     $this->submitForm($edit, 'Submit');
-    $reset_url = $this->getResetURL();
+    $reset_url = $this->getResetUrl();
     $this->drupalGet($reset_url . '/login');
     $this->assertSession()->linkExists('Log out');
     $this->assertSession()->titleEquals($this->account->getAccountName() . ' | Drupal');
@@ -271,7 +271,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->submitForm($edit, 'Submit');
     $this->assertValidPasswordReset($edit['name']);
 
-    $resetURL = $this->getResetURL();
+    $resetURL = $this->getResetUrl();
     $this->assertStringContainsString($expectedResetUrl, $resetURL);
     $this->assertStringNotContainsString($unexpectedResetUrl, $resetURL);
   }
@@ -313,7 +313,7 @@ class UserPasswordResetTest extends BrowserTestBase {
   /**
    * Retrieves password reset email and extracts the login link.
    */
-  public function getResetURL() {
+  public function getResetUrl() {
     // Assume the most recent email.
     $_emails = $this->drupalGetMails();
     $email = end($_emails);
@@ -333,7 +333,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->submitForm([], 'Submit');
 
     // Click the reset URL while logged and change our password.
-    $resetURL = $this->getResetURL();
+    $resetURL = $this->getResetUrl();
     // Log in as a different user.
     $this->drupalLogin($this->account);
     $this->drupalGet($resetURL);
@@ -360,7 +360,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->submitForm([], 'Submit');
 
     // Click the reset URL while logged and change our password.
-    $resetURL = $this->getResetURL();
+    $resetURL = $this->getResetUrl();
     $this->drupalGet($resetURL);
     $this->submitForm([], 'Log in');
 
@@ -487,7 +487,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $this->assertCount($before + 3, $this->drupalGetMails(['id' => 'user_password_reset']), '3 emails sent without triggering flood control.');
 
     // Use the last password reset URL which was generated.
-    $reset_url = $this->getResetURL();
+    $reset_url = $this->getResetUrl();
     $this->drupalGet($reset_url . '/login');
     $this->assertSession()->linkExists('Log out');
     $this->assertSession()->titleEquals($this->account->getAccountName() . ' | Drupal');

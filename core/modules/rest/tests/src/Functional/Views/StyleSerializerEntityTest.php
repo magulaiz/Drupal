@@ -383,7 +383,7 @@ class StyleSerializerEntityTest extends ViewTestBase {
   /**
    * Tests the field ID alias functionality of the DataFieldRow plugin.
    */
-  public function testUIFieldAlias() {
+  public function testUiFieldAlias() {
     $this->drupalLogin($this->adminUser);
 
     // Test the UI settings for adding field ID aliases.
@@ -574,7 +574,7 @@ class StyleSerializerEntityTest extends ViewTestBase {
   /**
    * Tests the views interface for REST export displays.
    */
-  public function testSerializerViewsUI() {
+  public function testSerializerViewsUi() {
     $this->drupalLogin($this->adminUser);
     // Click the "Update preview button".
     $this->drupalGet('admin/structure/views/view/test_serializer_display_field/edit/rest_export_1');

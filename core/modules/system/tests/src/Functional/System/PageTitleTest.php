@@ -76,7 +76,7 @@ class PageTitleTest extends BrowserTestBase {
   /**
    * Tests if the title of the site is XSS proof.
    */
-  public function testTitleXSS() {
+  public function testTitleXss() {
     // Set some title with JavaScript and HTML chars to escape.
     $title = '</title><script type="text/javascript">alert("Title XSS!");</script> & < > " \' ';
     $title_filtered = Html::escape($title);

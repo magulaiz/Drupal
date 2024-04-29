@@ -49,7 +49,7 @@ class NodeRSSContentTest extends NodeTestBase {
   /**
    * Ensures that a new node includes the custom data when added to an RSS feed.
    */
-  public function testNodeRSSContent() {
+  public function testNodeRssContent() {
     // Create a node.
     $node = $this->drupalCreateNode(['type' => 'article', 'promote' => 1]);
 

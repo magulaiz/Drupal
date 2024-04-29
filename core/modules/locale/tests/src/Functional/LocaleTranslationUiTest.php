@@ -552,7 +552,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
   /**
    * Tests that only changed strings are saved customized when edited.
    */
-  public function testUICustomizedStrings() {
+  public function testUiCustomizedStrings() {
     $user = $this->drupalCreateUser([
       'translate interface',
       'administer languages',

@@ -86,7 +86,7 @@ class FieldUIDeleteTest extends BrowserTestBase {
 
     // Create a new field.
     $bundle_path1 = 'admin/structure/types/manage/' . $type_name1;
-    $this->fieldUIAddNewField($bundle_path1, $field_name_input, $field_label);
+    $this->fieldUiAddNewField($bundle_path1, $field_name_input, $field_label);
 
     // Create an additional node type.
     $type_name2 = $this->randomMachineName(8) . '_test';
@@ -95,7 +95,7 @@ class FieldUIDeleteTest extends BrowserTestBase {
 
     // Add a field to the second node type.
     $bundle_path2 = 'admin/structure/types/manage/' . $type_name2;
-    $this->fieldUIAddExistingField($bundle_path2, $field_name, $field_label);
+    $this->fieldUiAddExistingField($bundle_path2, $field_name, $field_label);
 
     \Drupal::service('module_installer')->install(['views']);
     ViewTestData::createTestViews(static::class, ['field_test_views']);
@@ -115,7 +115,7 @@ class FieldUIDeleteTest extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains('test_view_field_delete');
 
     // Delete the first field.
-    $this->fieldUIDeleteField($bundle_path1, "node.$type_name1.$field_name", $field_label, $type_name1, 'content type');
+    $this->fieldUiDeleteField($bundle_path1, "node.$type_name1.$field_name", $field_label, $type_name1, 'content type');
 
     // Check that the field was deleted.
     $this->assertNull(FieldConfig::loadByName('node', $type_name1, $field_name), 'Field was deleted.');
@@ -131,7 +131,7 @@ class FieldUIDeleteTest extends BrowserTestBase {
     $this->assertSession()->elementNotExists('css', '#edit-entity-deletes');
 
     // Delete the second field.
-    $this->fieldUIDeleteField($bundle_path2, "node.$type_name2.$field_name", $field_label, $type_name2, 'content type');
+    $this->fieldUiDeleteField($bundle_path2, "node.$type_name2.$field_name", $field_label, $type_name2, 'content type');
 
     // Check that the field was deleted.
     $this->assertNull(FieldConfig::loadByName('node', $type_name2, $field_name), 'Field was deleted.');

@@ -84,7 +84,7 @@ class UserPasswordResetTest extends WebDriverTestBase {
     $edit['name'] = $this->account->getAccountName();
     $this->submitForm($edit, 'Submit');
 
-    $resetURL = $this->getResetURL();
+    $resetURL = $this->getResetUrl();
     $this->drupalGet($resetURL);
 
     // Login
@@ -112,7 +112,7 @@ class UserPasswordResetTest extends WebDriverTestBase {
   /**
    * Retrieves password reset email and extracts the login link.
    */
-  public function getResetURL() {
+  public function getResetUrl() {
     // Assume the most recent email.
     $_emails = $this->drupalGetMails();
     $email = end($_emails);

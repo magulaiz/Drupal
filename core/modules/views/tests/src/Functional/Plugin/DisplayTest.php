@@ -220,7 +220,7 @@ class DisplayTest extends ViewTestBase {
   /**
    * Tests the readmore with custom URL.
    */
-  public function testReadMoreCustomURL() {
+  public function testReadMoreCustomUrl() {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
 

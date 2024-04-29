@@ -48,7 +48,7 @@ class FieldUIRouteTest extends BrowserTestBase {
   /**
    * Ensures that entity types with bundles do not break following entity types.
    */
-  public function testFieldUIRoutes() {
+  public function testFieldUiRoutes() {
     $this->drupalGet('entity_test_no_id/structure/entity_test/fields');
     $this->assertSession()->pageTextContains('No fields are present yet.');
 

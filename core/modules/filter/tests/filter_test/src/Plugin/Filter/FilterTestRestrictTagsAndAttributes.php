@@ -33,7 +33,7 @@ class FilterTestRestrictTagsAndAttributes extends FilterBase {
   /**
    * {@inheritdoc}
    */
-  public function getHTMLRestrictions() {
+  public function getHtmlRestrictions() {
     $restrictions = $this->settings['restrictions'];
 
     // The configuration system stores FALSE as '0' and TRUE as '1'. Fix that.

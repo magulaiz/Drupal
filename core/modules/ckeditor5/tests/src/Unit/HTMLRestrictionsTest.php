@@ -232,13 +232,13 @@ class HTMLRestrictionsTest extends UnitTestCase {
 
     // ::fromTextFormat()
     $text_format = $this->prophesize(FilterFormatInterface::class);
-    $text_format->getHTMLRestrictions()->willReturn([
+    $text_format->getHtmlRestrictions()->willReturn([
       'allowed' => $expected_raw,
     ]);
     $this->assertSame($expected, HTMLRestrictions::fromTextFormat($text_format->reveal())->getAllowedElements());
     $this->assertSame($expected_raw, HTMLRestrictions::fromTextFormat($text_format->reveal())->getAllowedElements(FALSE));
 
-    // @see \Drupal\filter\Plugin\Filter\FilterHtml::getHTMLRestrictions()
+    // @see \Drupal\filter\Plugin\Filter\FilterHtml::getHtmlRestrictions()
     $filter_html_additional_expectations = [
       '*' => [
         'style' => FALSE,
@@ -249,7 +249,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
     ];
     // ::fromFilterPluginInstance()
     $filter_plugin_instance = $this->prophesize(FilterInterface::class);
-    $filter_plugin_instance->getHTMLRestrictions()->willReturn([
+    $filter_plugin_instance->getHtmlRestrictions()->willReturn([
       'allowed' => $expected_raw + $filter_html_additional_expectations,
     ]);
     $this->assertSame($expected + $filter_html_additional_expectations, HTMLRestrictions::fromFilterPluginInstance($filter_plugin_instance->reveal())->getAllowedElements());

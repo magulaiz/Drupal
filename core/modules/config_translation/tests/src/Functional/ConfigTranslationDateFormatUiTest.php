@@ -47,7 +47,7 @@ class ConfigTranslationDateFormatUiTest extends BrowserTestBase {
   /**
    * Tests date format translation behavior.
    */
-  public function testDateFormatUI() {
+  public function testDateFormatUi() {
     $this->drupalGet('admin/config/regional/date-time');
 
     // Assert translation link unlocked date format.

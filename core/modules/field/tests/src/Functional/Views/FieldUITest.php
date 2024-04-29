@@ -58,7 +58,7 @@ class FieldUITest extends FieldTestBase {
   /**
    * Tests basic field handler settings in the UI.
    */
-  public function testHandlerUI() {
+  public function testHandlerUi() {
     $url = "admin/structure/views/nojs/handler/test_view_fieldapi/default/field/field_name_0";
     $this->drupalGet($url);
 
@@ -107,7 +107,7 @@ class FieldUITest extends FieldTestBase {
   /**
    * Tests the basic field handler form when aggregation is enabled.
    */
-  public function testHandlerUIAggregation() {
+  public function testHandlerUiAggregation() {
     // Enable aggregation.
     $edit = ['group_by' => '1'];
     $this->drupalGet('admin/structure/views/nojs/display/test_view_fieldapi/default/group_by');

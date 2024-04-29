@@ -231,7 +231,7 @@ class HandlerTest extends ViewTestBase {
   /**
    * Tests the relationship ui for field/filter/argument/relationship.
    */
-  public function testRelationshipUI() {
+  public function testRelationshipUi() {
     $views_admin = $this->drupalCreateUser(['administer views']);
     $this->drupalLogin($views_admin);
 

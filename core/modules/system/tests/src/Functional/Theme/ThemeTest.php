@@ -107,7 +107,7 @@ class ThemeTest extends BrowserTestBase {
    *
    * @see test_theme.info.yml
    */
-  public function testCSSOverride() {
+  public function testCssOverride() {
     // Reuse the same page as in testPreprocessForSuggestions(). We're testing
     // what is output to the HTML HEAD based on what is in a theme's .info.yml
     // file, so it doesn't matter what page we get, as long as it is themed with

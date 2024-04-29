@@ -96,7 +96,7 @@ class EditorManagerTest extends KernelTestBase {
             'full_html' => [
               'format'  => 'full_html',
               'editor' => 'unicorn',
-              'editorSettings' => $unicorn_plugin->getJSSettings($editor),
+              'editorSettings' => $unicorn_plugin->getJsSettings($editor),
               'editorSupportsContentFiltering' => TRUE,
               'isXssSafe' => FALSE,
             ],

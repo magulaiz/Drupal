@@ -122,7 +122,7 @@ class MenuUiTest extends BrowserTestBase {
     $this->doMenuTests();
     $this->doTestMenuBlock();
     $this->addInvalidMenuLink();
-    $this->addCustomMenuCRUD();
+    $this->addCustomMenuCrud();
 
     // Verify that the menu links rebuild is idempotent and leaves the same
     // number of links in the table.
@@ -237,7 +237,7 @@ class MenuUiTest extends BrowserTestBase {
   /**
    * Adds a custom menu using CRUD functions.
    */
-  public function addCustomMenuCRUD() {
+  public function addCustomMenuCrud() {
     // Add a new custom menu.
     $menu_name = $this->randomMachineName(MenuStorage::MAX_ID_LENGTH);
     $label = $this->randomMachineName(16);

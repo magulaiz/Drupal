@@ -56,7 +56,7 @@ class FilterDateTest extends DateTimeHandlerTestBase {
     parent::setUp($import_test_views);
 
     // Set to 'today'.
-    static::$date = $this->getUTCEquivalentOfUserNowAsTimestamp();
+    static::$date = $this->getUtcEquivalentOfUserNowAsTimestamp();
 
     // Change field storage to date-only.
     $storage = FieldStorageConfig::load('node.' . static::$fieldName);

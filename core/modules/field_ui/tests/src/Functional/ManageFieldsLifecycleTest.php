@@ -22,7 +22,7 @@ class ManageFieldsLifecycleTest extends ManageFieldsFunctionalTestBase {
    * In order to act on the same fields, and not create the fields over and over
    * again the following tests create, update and delete the same fields.
    */
-  public function testCRUDFields() {
+  public function testCrudFields() {
     $this->manageFieldsPage();
     $this->createField();
     $this->updateField();
@@ -83,7 +83,7 @@ class ManageFieldsLifecycleTest extends ManageFieldsFunctionalTestBase {
    */
   protected function createField() {
     // Create a test field.
-    $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->contentType, $this->fieldNameInput, $this->fieldLabel);
+    $this->fieldUiAddNewField('admin/structure/types/manage/' . $this->contentType, $this->fieldNameInput, $this->fieldLabel);
   }
 
   /**
@@ -126,7 +126,7 @@ class ManageFieldsLifecycleTest extends ManageFieldsFunctionalTestBase {
     $this->assertSession()->elementExists('css', ".js-reuse-table [data-field-id='{$this->fieldName}']");
     $new_label = $this->fieldLabel . '_2';
     // Add a new field based on an existing field.
-    $this->fieldUIAddExistingField("admin/structure/types/manage/page", $this->fieldName, $new_label);
+    $this->fieldUiAddExistingField("admin/structure/types/manage/page", $this->fieldName, $new_label);
   }
 
   /**
@@ -294,7 +294,7 @@ class ManageFieldsLifecycleTest extends ManageFieldsFunctionalTestBase {
     // Ensure that we test with a label that contains HTML.
     $label = $this->randomString(4) . '<br/>' . $this->randomString(4);
     // Add a new field for the orphaned storage.
-    $this->fieldUIAddExistingField("admin/structure/types/manage/page", $this->fieldName, $label);
+    $this->fieldUiAddExistingField("admin/structure/types/manage/page", $this->fieldName, $label);
   }
 
   /**

@@ -57,7 +57,7 @@ class FilterDateTest extends DateTimeHandlerTestBase {
     $storage->save();
 
     // Retrieve tomorrow, today and yesterday dates just to create the nodes.
-    $timestamp = $this->getUTCEquivalentOfUserNowAsTimestamp();
+    $timestamp = $this->getUtcEquivalentOfUserNowAsTimestamp();
     $dates = $this->getRelativeDateValuesFromTimestamp($timestamp);
 
     // Clean the nodes on setUp.
@@ -94,7 +94,7 @@ class FilterDateTest extends DateTimeHandlerTestBase {
     foreach (static::$timezones as $timezone) {
 
       $this->setSiteTimezone($timezone);
-      $timestamp = $this->getUTCEquivalentOfUserNowAsTimestamp();
+      $timestamp = $this->getUtcEquivalentOfUserNowAsTimestamp();
       $dates = $this->getRelativeDateValuesFromTimestamp($timestamp);
       $this->updateNodesDateFieldsValues($dates);
 
@@ -178,7 +178,7 @@ class FilterDateTest extends DateTimeHandlerTestBase {
     foreach (static::$timezones as $timezone) {
 
       $this->setSiteTimezone($timezone);
-      $timestamp = $this->getUTCEquivalentOfUserNowAsTimestamp();
+      $timestamp = $this->getUtcEquivalentOfUserNowAsTimestamp();
       $dates = $this->getRelativeDateValuesFromTimestamp($timestamp);
       $this->updateNodesDateFieldsValues($dates);
 

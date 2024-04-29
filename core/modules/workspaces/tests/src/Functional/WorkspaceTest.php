@@ -237,7 +237,7 @@ class WorkspaceTest extends BrowserTestBase {
     // Create a new filed.
     $field_name = $this->randomMachineName();
     $field_label = $this->randomMachineName();
-    $this->fieldUIAddNewField('admin/config/workflow/workspaces', $field_name, $field_label, 'string');
+    $this->fieldUiAddNewField('admin/config/workflow/workspaces', $field_name, $field_label, 'string');
 
     // Check that the field is displayed on the manage form display page.
     $this->drupalGet('admin/config/workflow/workspaces/form-display');

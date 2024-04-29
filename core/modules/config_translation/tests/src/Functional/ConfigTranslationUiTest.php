@@ -197,7 +197,7 @@ class ConfigTranslationUiTest extends ConfigTranslationUiTestBase {
   /**
    * Tests translation storage in locale storage.
    */
-  public function testLocaleDBStorage() {
+  public function testLocaleDbStorage() {
     // Enable import of translations. By default this is disabled for automated
     // tests.
     $this->config('locale.settings')
@@ -249,7 +249,7 @@ class ConfigTranslationUiTest extends ConfigTranslationUiTestBase {
   /**
    * Tests the single language existing.
    */
-  public function testSingleLanguageUI() {
+  public function testSingleLanguageUi() {
     $this->drupalLogin($this->adminUser);
 
     // Delete French language

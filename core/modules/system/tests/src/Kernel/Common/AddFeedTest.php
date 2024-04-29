@@ -70,14 +70,14 @@ class AddFeedTest extends KernelTestBase {
     $this->setRawContent($response->getContent());
     // Assert that the content contains the RSS links we specified.
     foreach ($urls as $description => $feed_info) {
-      $this->assertPattern($this->urlToRSSLinkPattern($feed_info['url'], $feed_info['title']));
+      $this->assertPattern($this->urlToRssLinkPattern($feed_info['url'], $feed_info['title']));
     }
   }
 
   /**
    * Creates a pattern representing the RSS feed in the page.
    */
-  public function urlToRSSLinkPattern($url, $title = '') {
+  public function urlToRssLinkPattern($url, $title = '') {
     // Escape any regular expression characters in the URL ('?' is the worst).
     $url = preg_replace('/([+?.*])/', '[$0]', $url);
     $generated_pattern = '%<link +href="' . $url . '" +rel="alternate" +title="' . $title . '" +type="application/rss.xml" */>%';

@@ -85,7 +85,7 @@ class ErrorTestController extends ControllerBase {
   /**
    * Trigger an exception to test the PDO exception handler.
    */
-  public function triggerPDOException() {
+  public function triggerPdoException() {
     define('SIMPLETEST_COLLECT_ERRORS', FALSE);
     $this->database->select('bananas_are_awesome', 'b')
       ->fields('b')

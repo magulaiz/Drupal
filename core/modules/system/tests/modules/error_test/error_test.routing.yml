@@ -30,7 +30,7 @@ error_test.trigger_exception:
 error_test.trigger_pdo_exception:
   path: '/error-test/trigger-pdo-exception'
   defaults:
-    _controller: '\Drupal\error_test\Controller\ErrorTestController::triggerPDOException'
+    _controller: '\Drupal\error_test\Controller\ErrorTestController::triggerPdoException'
   requirements:
     _access: 'TRUE'
 

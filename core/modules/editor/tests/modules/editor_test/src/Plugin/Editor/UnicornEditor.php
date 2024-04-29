@@ -62,7 +62,7 @@ class UnicornEditor extends EditorBase {
   /**
    * {@inheritdoc}
    */
-  public function getJSSettings(EditorEntity $editor) {
+  public function getJsSettings(EditorEntity $editor) {
     $js_settings = [];
     $settings = $editor->getSettings();
     if ($settings['ponies_too']) {

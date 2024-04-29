@@ -304,7 +304,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $name = $this->randomMachineName();
     $label = $this->randomMachineName();
     $storage_edit = ['settings[uri_scheme]' => 'private'];
-    $this->fieldUIAddNewField('admin/structure/comment/manage/comment', $name, $label, 'file', $storage_edit);
+    $this->fieldUiAddNewField('admin/structure/comment/manage/comment', $name, $label, 'file', $storage_edit);
 
     // Manually clear cache on the tester side.
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
