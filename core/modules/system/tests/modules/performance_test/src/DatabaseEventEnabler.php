@@ -3,12 +3,10 @@
 namespace Drupal\performance_test;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
+use Drupal\Core\Database\Event\StatementEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Drupal\Core\Database\Event\StatementExecutionEndEvent;
-use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 
 class DatabaseEventEnabler implements HttpKernelInterface {
 
