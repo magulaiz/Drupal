@@ -3,6 +3,7 @@
 namespace Drupal\performance_test;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,6 +25,7 @@ class DatabaseEventEnabler implements HttpKernelInterface {
         // to the latter event.
         StatementExecutionStartEvent::class,
         StatementExecutionEndEvent::class,
+        StatementExecutionFailureEvent::class,
       ]);
     }
     return $this->httpKernel->handle($request, $type, $catch);
