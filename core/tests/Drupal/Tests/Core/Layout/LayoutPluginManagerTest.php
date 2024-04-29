@@ -21,6 +21,8 @@ use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
 use Prophecy\Argument;
 
+// cspell:ignore lorem, ipsum, consectetur, adipiscing
+
 /**
  * @coversDefaultClass \Drupal\Core\Layout\LayoutPluginManager
  * @group Layout
