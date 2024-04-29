@@ -132,6 +132,7 @@ class AttributeClassDiscovery implements DiscoveryInterface {
    *
    * @throws \ReflectionException
    * @throws \Error
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
   protected function parseClass(string $class, \SplFileInfo $fileinfo): array {
     // @todo Consider performance improvements over using reflection.
