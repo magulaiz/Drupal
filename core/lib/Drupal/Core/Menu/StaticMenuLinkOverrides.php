@@ -127,7 +127,7 @@ class StaticMenuLinkOverrides implements StaticMenuLinkOverridesInterface {
     // Only allow to override a specific subset of the keys.
     $expected = [
       'menu_name' => '',
-      'parent' => NULL,
+      'parent' => '',
       'weight' => 0,
       'expanded' => FALSE,
       'enabled' => FALSE,

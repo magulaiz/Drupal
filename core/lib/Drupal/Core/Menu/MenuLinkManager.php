@@ -84,7 +84,7 @@ class MenuLinkManager implements MenuLinkManagerInterface {
    */
   protected function processDefinition(array &$definition, $plugin_id) {
     $definition = NestedArray::mergeDeep($this->defaults, $definition);
-    $definition['parent'] = empty($definition['parent']) ? NULL : (string) $definition['parent'];
+    $definition['parent'] = (string) $definition['parent'];
     $definition['id'] = $plugin_id;
   }
 
