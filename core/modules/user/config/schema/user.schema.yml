@@ -64,7 +64,9 @@ user.settings:
       constraints:
         Range:
           min: 1
-
+    password_strength:
+      type: boolean
+      label: 'Enable password strength indicator'
 user.mail:
   type: config_object
   label: 'Email settings'
