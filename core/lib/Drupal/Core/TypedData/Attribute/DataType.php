@@ -36,7 +36,7 @@ use Drupal\Core\TypedData\Plugin\DataType\ItemList;
  * @ingroup typed_data
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class DataType extends Plugin {
+readonly class DataType extends Plugin {
 
   /**
    * Constructs a new DataType attribute.
@@ -66,15 +66,15 @@ class DataType extends Plugin {
    * @see \Drupal\Core\TypedData\TypedDataManager::getCanonicalRepresentation()
    */
   public function __construct(
-    public readonly string $id,
-    public readonly TranslatableMarkup $label,
-    public readonly ?TranslatableMarkup $description = NULL,
-    public readonly ?string $definition_class = DataDefinition::class,
-    public readonly ?string $list_class = ItemList::class,
-    public readonly ?string $list_definition_class = ListDataDefinition::class,
-    public readonly array $constraints = [],
-    public readonly bool $unwrap_for_canonical_representation = TRUE,
-    public readonly ?string $deriver = NULL,
+    public string $id,
+    public TranslatableMarkup $label,
+    public ?TranslatableMarkup $description = NULL,
+    public ?string $definition_class = DataDefinition::class,
+    public ?string $list_class = ItemList::class,
+    public ?string $list_definition_class = ListDataDefinition::class,
+    public array $constraints = [],
+    public bool $unwrap_for_canonical_representation = TRUE,
+    public ?string $deriver = NULL,
   ) {}
 
 }

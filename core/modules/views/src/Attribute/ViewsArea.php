@@ -12,6 +12,6 @@ use Drupal\Component\Plugin\Attribute\PluginID;
  * @ingroup views_area_handlers
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class ViewsArea extends PluginID {
+readonly class ViewsArea extends PluginID {
 
 }

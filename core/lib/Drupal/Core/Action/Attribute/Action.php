@@ -17,7 +17,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @see plugin_api
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class Action extends Plugin {
+readonly class Action extends Plugin {
 
   /**
    * Constructs an Action attribute.
@@ -39,13 +39,13 @@ class Action extends Plugin {
    *   (optional) The entity type the action can apply to.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly ?TranslatableMarkup $label = NULL,
-    public readonly ?TranslatableMarkup $action_label = NULL,
-    public readonly ?TranslatableMarkup $category = NULL,
-    public readonly ?string $deriver = NULL,
-    public readonly ?string $confirm_form_route_name = NULL,
-    public readonly ?string $type = NULL
+    public string $id,
+    public ?TranslatableMarkup $label = NULL,
+    public ?TranslatableMarkup $action_label = NULL,
+    public ?TranslatableMarkup $category = NULL,
+    public ?string $deriver = NULL,
+    public ?string $confirm_form_route_name = NULL,
+    public ?string $type = NULL
   ) {}
 
 }

@@ -14,7 +14,7 @@ use Drupal\layout_builder\SectionStorage\SectionStorageDefinition;
  * @see plugin_api
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class SectionStorage extends Plugin {
+readonly class SectionStorage extends Plugin {
 
   /**
    * Constructs a SectionStorage attribute.
@@ -42,11 +42,11 @@ class SectionStorage extends Plugin {
    *   (optional) The deriver class.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly int $weight = 0,
-    public readonly array $context_definitions = [],
-    public readonly bool $handles_permission_check = FALSE,
-    public readonly ?string $deriver = NULL,
+    public string $id,
+    public int $weight = 0,
+    public array $context_definitions = [],
+    public bool $handles_permission_check = FALSE,
+    public ?string $deriver = NULL,
   ) {}
 
   /**

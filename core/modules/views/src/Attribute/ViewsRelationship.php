@@ -14,6 +14,6 @@ use Drupal\Component\Plugin\Attribute\PluginID;
  * @ingroup views_relationship_handlers
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class ViewsRelationship extends PluginID {
+readonly class ViewsRelationship extends PluginID {
 
 }

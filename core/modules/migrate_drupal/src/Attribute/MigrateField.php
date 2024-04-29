@@ -28,14 +28,7 @@ use Drupal\Component\Plugin\Attribute\Plugin;
  * @ingroup migration
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class MigrateField extends Plugin {
-
-  /**
-   * The plugin definition.
-   *
-   * @var array
-   */
-  protected $definition;
+readonly class MigrateField extends Plugin {
 
   /**
    * Constructs a migrate field attribute object.
@@ -62,13 +55,13 @@ class MigrateField extends Plugin {
    *   (optional) The deriver class.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly array $core = [6],
-    public readonly int $weight = 0,
-    public readonly array $type_map = [],
-    public readonly ?string $source_module = NULL,
-    public readonly ?string $destination_module = NULL,
-    public readonly ?string $deriver = NULL
+    public string $id,
+    public array $core = [6],
+    public int $weight = 0,
+    public array $type_map = [],
+    public ?string $source_module = NULL,
+    public ?string $destination_module = NULL,
+    public ?string $deriver = NULL
   ) {}
 
 }

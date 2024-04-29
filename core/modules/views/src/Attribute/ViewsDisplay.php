@@ -15,7 +15,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @ingroup views_display_plugins
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class ViewsDisplay extends Plugin {
+readonly class ViewsDisplay extends Plugin {
 
   /**
    * Constructs a views display attribute object.
@@ -68,22 +68,22 @@ class ViewsDisplay extends Plugin {
    *   (optional) The deriver class.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly TranslatableMarkup $title,
-    public readonly ?TranslatableMarkup $short_title = NULL,
-    public readonly ?TranslatableMarkup $admin = NULL,
-    public readonly ?TranslatableMarkup $help = NULL,
-    public readonly bool $uses_menu_links = FALSE,
-    public readonly bool $uses_route = FALSE,
-    public readonly bool $uses_hook_block = FALSE,
-    public readonly bool $returns_response = FALSE,
-    public readonly ?array $contextual_links_locations = NULL,
-    public readonly array $base = [],
-    public readonly ?string $theme = NULL,
-    public readonly bool $no_ui = FALSE,
-    public readonly bool $register_theme = TRUE,
-    public readonly bool $entity_reference_display = FALSE,
-    public readonly ?string $deriver = NULL
+    public string $id,
+    public TranslatableMarkup $title,
+    public ?TranslatableMarkup $short_title = NULL,
+    public ?TranslatableMarkup $admin = NULL,
+    public ?TranslatableMarkup $help = NULL,
+    public bool $uses_menu_links = FALSE,
+    public bool $uses_route = FALSE,
+    public bool $uses_hook_block = FALSE,
+    public bool $returns_response = FALSE,
+    public ?array $contextual_links_locations = NULL,
+    public array $base = [],
+    public ?string $theme = NULL,
+    public bool $no_ui = FALSE,
+    public bool $register_theme = TRUE,
+    public bool $entity_reference_display = FALSE,
+    public ?string $deriver = NULL
   ) {}
 
 }

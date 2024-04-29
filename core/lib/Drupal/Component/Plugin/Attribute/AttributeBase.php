@@ -5,26 +5,14 @@ namespace Drupal\Component\Plugin\Attribute;
 /**
  * Provides a base class for classed attributes.
  */
-abstract class AttributeBase implements AttributeInterface {
-
-  /**
-   * The class used for this attribute class.
-   *
-   * @var class-string
-   */
-  protected string $class;
-
-  /**
-   * The provider of the attribute class.
-   */
-  protected string|null $provider = NULL;
+abstract readonly class AttributeBase implements AttributeInterface {
 
   /**
    * @param string $id
    *   The attribute class ID.
    */
   public function __construct(
-    protected readonly string $id
+    protected string $id
   ) {}
 
   /**

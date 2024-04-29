@@ -25,5 +25,5 @@ use Drupal\Component\Plugin\Attribute\Plugin;
  * @ingroup theme_render
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class RenderElement extends Plugin {
+readonly class RenderElement extends Plugin {
 }

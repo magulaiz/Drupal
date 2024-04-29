@@ -23,7 +23,7 @@ use Drupal\Component\Plugin\Attribute\Plugin;
  * @ingroup migration
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class MigrateProcess extends Plugin {
+readonly class MigrateProcess extends Plugin {
 
   /**
    * Constructs a migrate process plugin attribute object.
@@ -41,9 +41,9 @@ class MigrateProcess extends Plugin {
    *   (optional) The deriver class.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly bool $handle_multiples = FALSE,
-    public readonly ?string $deriver = NULL,
+    public string $id,
+    public bool $handle_multiples = FALSE,
+    public ?string $deriver = NULL,
   ) {}
 
 }

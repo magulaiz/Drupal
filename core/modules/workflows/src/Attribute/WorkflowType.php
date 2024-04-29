@@ -18,14 +18,14 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @see plugin_api
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class WorkflowType extends Plugin {
+readonly class WorkflowType extends Plugin {
 
   /**
    * States required to exist.
    *
    * Normally supplied by WorkflowType::defaultConfiguration().
    */
-  public array $required_states = [];
+  public array $required_states;
 
   /**
    * A list of optional form classes implementing PluginFormInterface.
@@ -44,7 +44,7 @@ class WorkflowType extends Plugin {
    * @see \Drupal\workflows\StateInterface::PLUGIN_FORM_KEY
    * @see \Drupal\workflows\TransitionInterface::PLUGIN_FORM_KEY
    */
-  public array $forms = [];
+  public array $forms;
 
   /**
    * Constructs an Action attribute.
@@ -59,8 +59,8 @@ class WorkflowType extends Plugin {
    *   States required to exist.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly ?TranslatableMarkup $label = NULL,
+    public string $id,
+    public ?TranslatableMarkup $label = NULL,
     array $forms = [],
     array $required_states = [],
   ) {

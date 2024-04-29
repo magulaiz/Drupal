@@ -14,7 +14,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @ingroup views_wizard_plugins
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class ViewsWizard extends Plugin {
+readonly class ViewsWizard extends Plugin {
 
   /**
    * Constructs an ViewsWizard attribute.
@@ -30,10 +30,10 @@ class ViewsWizard extends Plugin {
    *   (optional) The deriver class.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly TranslatableMarkup $title,
-    public readonly ?string $base_table = NULL,
-    public readonly ?string $deriver = NULL
+    public string $id,
+    public TranslatableMarkup $title,
+    public ?string $base_table = NULL,
+    public ?string $deriver = NULL
   ) {}
 
 }

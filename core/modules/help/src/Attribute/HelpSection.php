@@ -21,7 +21,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @see plugin_api
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class HelpSection extends Plugin {
+readonly class HelpSection extends Plugin {
 
   /**
    * Constructs a HelpSection attribute.
@@ -46,12 +46,12 @@ class HelpSection extends Plugin {
    *   The sections will be ordered by this weight on the help page.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly TranslatableMarkup $title,
-    public readonly ?TranslatableMarkup $description = NULL,
-    public readonly ?string $permission = NULL,
-    public readonly ?int $weight = NULL,
-    public readonly ?string $deriver = NULL,
+    public string $id,
+    public TranslatableMarkup $title,
+    public ?TranslatableMarkup $description = NULL,
+    public ?string $permission = NULL,
+    public ?int $weight = NULL,
+    public ?string $deriver = NULL,
   ) {}
 
 }

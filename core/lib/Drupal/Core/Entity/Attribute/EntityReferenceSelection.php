@@ -18,7 +18,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @see plugin_api
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class EntityReferenceSelection extends Plugin {
+readonly class EntityReferenceSelection extends Plugin {
 
   /**
    * Constructs an EntityReferenceSelection attribute.
@@ -54,12 +54,12 @@ class EntityReferenceSelection extends Plugin {
    *   (optional) The deriver class.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly TranslatableMarkup $label,
-    public readonly string $group,
-    public readonly int $weight,
-    public readonly array $entity_types = [],
-    public readonly ?string $deriver = NULL
+    public string $id,
+    public TranslatableMarkup $label,
+    public string $group,
+    public int $weight,
+    public array $entity_types = [],
+    public ?string $deriver = NULL
   ) {}
 
 }

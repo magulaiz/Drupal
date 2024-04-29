@@ -45,6 +45,6 @@ class AttributeBaseTest extends TestCase {
 /**
  * {@inheritdoc}
  */
-class AttributeBaseStub extends AttributeBase {
+readonly class AttributeBaseStub extends AttributeBase {
 
 }

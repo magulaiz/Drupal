@@ -25,7 +25,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @see plugin_api
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class MediaSource extends Plugin {
+readonly class MediaSource extends Plugin {
 
   /**
    * Constructs a new MediaSource attribute.
@@ -69,19 +69,19 @@ class MediaSource extends Plugin {
    *   (optional) The deriver class.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly TranslatableMarkup $label,
-    public readonly ?TranslatableMarkup $description = NULL,
-    public readonly array $allowed_field_types = [],
-    public readonly array $forms = [],
-    public readonly string $default_thumbnail_filename = 'generic.png',
-    public readonly string $thumbnail_uri_metadata_attribute = 'thumbnail_uri',
-    public readonly string $thumbnail_width_metadata_attribute = 'thumbnail_width',
-    public readonly string $thumbnail_height_metadata_attribute = 'thumbnail_height',
-    public readonly ?string $thumbnail_alt_metadata_attribute = NULL,
-    public readonly ?string $thumbnail_title_metadata_attribute = NULL,
-    public readonly string $default_name_metadata_attribute = 'default_name',
-    public readonly ?string $deriver = NULL
+    public string $id,
+    public TranslatableMarkup $label,
+    public ?TranslatableMarkup $description = NULL,
+    public array $allowed_field_types = [],
+    public array $forms = [],
+    public string $default_thumbnail_filename = 'generic.png',
+    public string $thumbnail_uri_metadata_attribute = 'thumbnail_uri',
+    public string $thumbnail_width_metadata_attribute = 'thumbnail_width',
+    public string $thumbnail_height_metadata_attribute = 'thumbnail_height',
+    public ?string $thumbnail_alt_metadata_attribute = NULL,
+    public ?string $thumbnail_title_metadata_attribute = NULL,
+    public string $default_name_metadata_attribute = 'default_name',
+    public ?string $deriver = NULL
   ) {}
 
 }

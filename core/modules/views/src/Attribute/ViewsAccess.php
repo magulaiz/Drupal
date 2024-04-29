@@ -13,14 +13,14 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @ingroup views_access_plugins
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class ViewsAccess extends Plugin {
+readonly class ViewsAccess extends Plugin {
 
   /**
    * Constructs a ViewsAccess attribute.
    *
    * @param string $id
    *   The plugin ID.
-   * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $title
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup $title
    *   The plugin title used in the views UI.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $short_title
    *   (optional) The short title used in the views UI.
@@ -41,14 +41,14 @@ class ViewsAccess extends Plugin {
    *   (optional) The deriver class.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly TranslatableMarkup $title,
-    public readonly ?TranslatableMarkup $short_title = NULL,
-    public readonly ?TranslatableMarkup $help = NULL,
-    public readonly ?array $display_types = NULL,
-    public readonly array $base = [],
-    public readonly bool $no_ui = FALSE,
-    public readonly ?string $deriver = NULL
+    public string $id,
+    public TranslatableMarkup $title,
+    public ?TranslatableMarkup $short_title = NULL,
+    public ?TranslatableMarkup $help = NULL,
+    public ?array $display_types = NULL,
+    public array $base = [],
+    public bool $no_ui = FALSE,
+    public ?string $deriver = NULL
   ) {}
 
 }

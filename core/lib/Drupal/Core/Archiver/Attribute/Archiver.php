@@ -18,7 +18,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @see hook_archiver_info_alter()
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class Archiver extends Plugin {
+readonly class Archiver extends Plugin {
 
   /**
    * Constructs an archiver plugin attribute object.
@@ -35,10 +35,10 @@ class Archiver extends Plugin {
    *   (optional) The deriver class.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly ?TranslatableMarkup $title = NULL,
-    public readonly ?TranslatableMarkup $description = NULL,
-    public readonly array $extensions = [],
-    public readonly ?string $deriver = NULL) {}
+    public string $id,
+    public ?TranslatableMarkup $title = NULL,
+    public ?TranslatableMarkup $description = NULL,
+    public array $extensions = [],
+    public ?string $deriver = NULL) {}
 
 }

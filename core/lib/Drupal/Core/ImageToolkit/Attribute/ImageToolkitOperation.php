@@ -29,7 +29,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @Annotation
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class ImageToolkitOperation extends Plugin {
+readonly class ImageToolkitOperation extends Plugin {
 
   /**
    * Constructs a new ImageToolkitOperation instance.
@@ -60,12 +60,12 @@ class ImageToolkitOperation extends Plugin {
    *   (optional) The deriver class for the image toolkit operation.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly string $toolkit,
-    public readonly string $operation,
-    public readonly TranslatableMarkup $label,
-    public readonly ?TranslatableMarkup $description = NULL,
-    public readonly ?string $deriver = NULL,
+    public string $id,
+    public string $toolkit,
+    public string $operation,
+    public TranslatableMarkup $label,
+    public ?TranslatableMarkup $description = NULL,
+    public ?string $deriver = NULL,
   ) {}
 
 }

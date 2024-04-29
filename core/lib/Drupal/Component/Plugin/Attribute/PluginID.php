@@ -6,7 +6,7 @@ namespace Drupal\Component\Plugin\Attribute;
  * Defines a Plugin attribute object that just contains an ID.
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class PluginID extends AttributeBase {
+readonly class PluginID extends AttributeBase {
 
   /**
    * {@inheritdoc}

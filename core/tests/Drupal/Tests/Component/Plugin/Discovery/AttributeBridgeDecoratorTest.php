@@ -76,7 +76,7 @@ interface ExtendedDiscoveryInterface extends DiscoveryInterface {
 /**
  * {@inheritdoc}
  */
-class TestAttribute extends Plugin {
+readonly class TestAttribute extends Plugin {
 
   /**
    * {@inheritdoc}

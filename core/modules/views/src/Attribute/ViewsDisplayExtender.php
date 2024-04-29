@@ -13,7 +13,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @ingroup views_display_extender_plugins
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class ViewsDisplayExtender extends Plugin {
+readonly class ViewsDisplayExtender extends Plugin {
 
   /**
    * Constructs an ViewsDisplayExtender attribute.
@@ -34,12 +34,12 @@ class ViewsDisplayExtender extends Plugin {
    *   (optional) The deriver class.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly ?TranslatableMarkup $title = NULL,
-    public readonly ?TranslatableMarkup $short_title = NULL,
-    public readonly ?TranslatableMarkup $help = NULL,
-    public readonly bool $no_ui = FALSE,
-    public readonly ?string $deriver = NULL
+    public string $id,
+    public ?TranslatableMarkup $title = NULL,
+    public ?TranslatableMarkup $short_title = NULL,
+    public ?TranslatableMarkup $help = NULL,
+    public bool $no_ui = FALSE,
+    public ?string $deriver = NULL
   ) {}
 
 }

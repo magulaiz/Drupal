@@ -19,7 +19,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @see plugin_api
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class Constraint extends Plugin {
+readonly class Constraint extends Plugin {
 
   /**
    * Constructs a Constraint attribute.
@@ -38,10 +38,10 @@ class Constraint extends Plugin {
    *   (optional) The deriver class.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly ?TranslatableMarkup $label = NULL,
-    public readonly string|array|false $type = [],
-    public readonly ?string $deriver = NULL
+    public string $id,
+    public ?TranslatableMarkup $label = NULL,
+    public string|array|false $type = [],
+    public ?string $deriver = NULL
   ) {}
 
 }

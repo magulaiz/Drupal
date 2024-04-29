@@ -23,5 +23,5 @@ namespace Drupal\Core\Render\Attribute;
  * @ingroup theme_render
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class FormElement extends RenderElement {
+readonly class FormElement extends RenderElement {
 }

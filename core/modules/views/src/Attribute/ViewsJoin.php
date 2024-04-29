@@ -12,6 +12,6 @@ use Drupal\Component\Plugin\Attribute\PluginID;
  * @ingroup views_join_handlers
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class ViewsJoin extends PluginID {
+readonly class ViewsJoin extends PluginID {
 
 }

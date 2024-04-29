@@ -25,7 +25,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
  * @ingroup plugin_api
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class Condition extends Plugin {
+readonly class Condition extends Plugin {
 
   /**
    * Constructs a Condition attribute.
@@ -46,12 +46,12 @@ class Condition extends Plugin {
    *   (optional) The deriver class.
    */
   public function __construct(
-    public readonly string $id,
-    public readonly ?TranslatableMarkup $label = NULL,
-    public readonly ?string $module = NULL,
-    public readonly ?TranslatableMarkup $category = NULL,
-    public readonly array $context_definitions = [],
-    public readonly ?string $deriver = NULL,
+    public string $id,
+    public ?TranslatableMarkup $label = NULL,
+    public ?string $module = NULL,
+    public ?TranslatableMarkup $category = NULL,
+    public array $context_definitions = [],
+    public ?string $deriver = NULL,
   ) {}
 
 }

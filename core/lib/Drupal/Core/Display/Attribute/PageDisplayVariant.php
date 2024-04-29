@@ -18,4 +18,4 @@ namespace Drupal\Core\Display\Attribute;
  * @see plugin_api
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class PageDisplayVariant extends DisplayVariant {}
+readonly class PageDisplayVariant extends DisplayVariant {}

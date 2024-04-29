@@ -60,6 +60,6 @@ class PluginTest extends TestCase {
 /**
  * {@inheritdoc}
  */
-class PluginStub extends Plugin {
+readonly class PluginStub extends Plugin {
 
 }
