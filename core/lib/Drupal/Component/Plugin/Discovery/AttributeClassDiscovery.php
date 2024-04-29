@@ -140,6 +140,9 @@ class AttributeClassDiscovery implements DiscoveryInterface {
 
     $id = $content = NULL;
     if ($attributes = $reflection_class->getAttributes($this->pluginDefinitionAttributeName, \ReflectionAttribute::IS_INSTANCEOF)) {
+      if (count($attributes) > 1) {
+        throw new InvalidPluginDefinitionException(sprintf('Only one instance of %s attribute is allowed on a plugin.', $this->pluginDefinitionAttributeName));
+      }
       /** @var \Drupal\Component\Plugin\Attribute\AttributeInterface $attribute */
       $attribute = $attributes[0]->newInstance();
       $this->prepareAttributeDefinition($attribute, $class);
