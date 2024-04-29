@@ -97,8 +97,9 @@ class MediaFilterController implements ContainerInjectionInterface {
   public function preview(Request $request, FilterFormatInterface $filter_format) {
     self::checkCsrf($request, \Drupal::currentUser());
 
-    $text = $request->query->get('text');
-    $uuid = $request->query->get('uuid');
+    $body = $request->getPayload();
+    $text = $body->get('text');
+    $uuid = $body->get('uuid');
     if ($text == '' || $uuid == '') {
       throw new NotFoundHttpException();
     }

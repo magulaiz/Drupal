@@ -17,7 +17,7 @@ media.filter.preview:
   path: '/media/{filter_format}/preview'
   defaults:
     _controller: '\Drupal\media\Controller\MediaFilterController::preview'
-  methods: [GET]
+  methods: [POST]
   requirements:
     _entity_access: 'filter_format.use'
     _custom_access: '\Drupal\media\Controller\MediaFilterController::formatUsesMediaEmbedFilter'
