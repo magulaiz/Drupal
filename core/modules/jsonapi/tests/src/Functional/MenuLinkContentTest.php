@@ -114,7 +114,7 @@ class MenuLinkContentTest extends ResourceTestBase {
         'attributes' => [
           'bundle' => 'menu_link_content',
           'link' => [
-            'uri' => 'entity:user/1',
+            'uri' => 'https://nl.wikipedia.org/wiki/Llama',
             'title' => NULL,
             'options' => [],
           ],
