@@ -6,6 +6,7 @@ namespace Drupal\Tests\media\FunctionalJavascript;
 
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Test\HttpClientMiddleware\TestHttpClientMiddleware;
 use Drupal\dblog\Controller\DbLogController;
 use Drupal\media\Entity\Media;
 use Drupal\media\Entity\MediaType;
@@ -41,6 +42,8 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->lockHttpClientToFixtures();
+    TestHttpClientMiddleware::allowHost('youtube.com');
+    TestHttpClientMiddleware::allowHost('vimeo.com');
   }
 
   /**

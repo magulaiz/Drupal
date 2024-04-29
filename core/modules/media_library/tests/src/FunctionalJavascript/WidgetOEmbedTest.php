@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media_library\FunctionalJavascript;
 
+use Drupal\Core\Test\HttpClientMiddleware\TestHttpClientMiddleware;
 use Drupal\media\Entity\Media;
 use Drupal\media_test_oembed\Controller\ResourceController;
 use Drupal\Tests\media\Traits\OEmbedTestTrait;
@@ -36,6 +37,8 @@ class WidgetOEmbedTest extends MediaLibraryTestBase {
     parent::setUp();
     $this->lockHttpClientToFixtures();
     $this->hijackProviderEndpoints();
+    TestHttpClientMiddleware::allowHost('youtube.com');
+    TestHttpClientMiddleware::allowHost('vimeo.com');
 
     // Create a user who can use the Media library.
     $user = $this->drupalCreateUser([
