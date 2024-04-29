@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Kernel\Plugin;
 
-use Drupal\block\Entity\Block;
-use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\views\Plugin\Block\ViewsBlock;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
@@ -18,14 +16,12 @@ use Drupal\views\Views;
  */
 class ViewsBlockTest extends ViewsKernelTestBase {
 
-  use UserCreationTrait;
-
   /**
    * Modules to enable.
    *
    * @var array
    */
-  protected static $modules = ['block', 'block_test_views', 'views_ui'];
+  protected static $modules = ['block', 'block_test_views'];
 
   /**
    * Views used by this test.
