@@ -58,7 +58,6 @@ class FieldEntityLabelTest extends BrowserTestBase {
 
   /**
    * Test file usage view.
-   * @see https://www.drupal.org/project/drupal/issues/3442346
    */
   public function testFileUsageView(): void {
     // Create files to use as the default images.
