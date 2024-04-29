@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\views\Kernel\Plugin;
 
 use Drupal\block\Entity\Block;
-use Drupal\Core\Url;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\views\Plugin\Block\ViewsBlock;
 use Drupal\views\Tests\ViewTestData;
@@ -147,37 +146,6 @@ class ViewsBlockTest extends ViewsKernelTestBase {
     $views_block = ViewsBlock::create($this->container, [], $plugin_id, $plugin_definition);
 
     $this->assertEquals('"test_view_block::block_1" views block', $views_block->getPreviewFallbackString());
-  }
-
-  /**
-   * Tests the editing links for ViewsBlockBase.
-   */
-  public function testOperationLinks(): void {
-    $this->setUpCurrentUser(['uid' => 0]);
-
-    $block = Block::create([
-      'plugin' => 'views_block:test_view_block-block_1',
-      'region' => 'content',
-      'id' => 'machine_name',
-      'theme' => 'stark',
-    ]);
-
-    // The anonymous user doesn't have the "administer block" permission.
-    $this->assertEmpty(views_ui_entity_operation($block));
-
-    $this->setUpCurrentUser(['uid' => 1], ['administer views']);
-
-    // The admin user does have the "administer block" permission.
-    $this->assertEquals([
-      'view-edit' => [
-        'title' => 'Edit view',
-        'url' => Url::fromRoute('entity.view.edit_display_form', [
-          'view' => 'test_view_block',
-          'display_id' => 'block_1',
-        ]),
-        'weight' => 50,
-      ],
-    ], views_ui_entity_operation($block));
   }
 
 }

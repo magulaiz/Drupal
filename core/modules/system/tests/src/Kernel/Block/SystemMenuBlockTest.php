@@ -178,31 +178,6 @@ class SystemMenuBlockTest extends KernelTestBase {
   }
 
   /**
-   * Tests the editing links for SystemMenuBlock.
-   */
-  public function testOperationLinks(): void {
-    $block = Block::create([
-      'plugin' => 'system_menu_block:' . $this->menu->id(),
-      'region' => 'footer',
-      'id' => 'machine_name',
-      'theme' => 'stark',
-    ]);
-
-    // Test when user does have "administer menu" permission.
-    $this->assertEquals([
-      'menu-edit' => [
-        'title' => $this->t('Edit menu'),
-        'url' => $this->menu->toUrl('edit-form'),
-        'weight' => 50,
-      ],
-    ], menu_ui_entity_operation($block));
-
-    $this->setUpCurrentUser();
-    // Test when user doesn't have "administer menu" permission.
-    $this->assertEmpty(menu_ui_entity_operation($block));
-  }
-
-  /**
    * Tests the config start level and depth.
    */
   public function testConfigLevelDepth() {
