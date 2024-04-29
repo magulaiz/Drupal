@@ -7,12 +7,29 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Overrides the User-Agent HTTP header for outbound HTTP requests.
+ * Blocks unknown external hosts and replaces the user agent for test requests.
  */
 class TestHttpClientMiddleware {
 
   /**
-   * HTTP middleware that replaces the user agent for test requests.
+   * List of external host names that tests can make HTTP requests to.
+   *
+   * @var string[]
+   */
+  protected static array $allowedHosts = ['ftp.drupal.org', 'oembed.com'];
+
+  /**
+   * Adds a host name to the allow list for the remainder of this test run.
+   *
+   * @param string $host
+   *   The hostname to allow.
+   */
+  public static function allowHost(string $host): void {
+    static::$allowedHosts[] = $host;
+  }
+
+  /**
+   * Block unknown external hosts and replace the user agent.
    */
   public function __invoke() {
     // If the database prefix is being used to run the tests in a copied
@@ -23,21 +40,18 @@ class TestHttpClientMiddleware {
     // database prefix were stored statically in a file or database variable.
     return function ($handler) {
       return function (RequestInterface $request, array $options) use ($handler) {
-        $host = parse_url(getenv('SIMPLETEST_BASE_URL'), PHP_URL_HOST);
-        switch ($request->getUri()->getHost()) {
-          // Continue processing for the Drupal test site.
-          case $host:
-            break;
-
-          // Allow these hosts, but do not alter the request.
-          case 'ftp.drupal.org':
-          case 'oembed.com':
-            return $handler($request, $options);
-
-          default:
-            throw new \RuntimeException(sprintf('Tests should only make requests to the SIMPLETEST_BASE_URL host of %s, but a request to %s was made.', $host, $request->getUri()->getHost()));
+        // Allow specific hosts with no alterations.
+        if (in_array($request->getUri()->getHost(), static::$allowedHosts, TRUE)) {
+          return $handler($request, $options);
         }
 
+        // Disallow other external hosts.
+        $host = parse_url(getenv('SIMPLETEST_BASE_URL'), PHP_URL_HOST);
+        if ($host !== $request->getUri()->getHost()) {
+          throw new \RuntimeException(sprintf('Tests should only make requests to the SIMPLETEST_BASE_URL host of %s, but a request to %s was made.', $host, $request->getUri()->getHost()));
+        }
+
+        // Alter the request to include the test prefix in the User-Agent.
         if ($test_prefix = drupal_valid_test_ua()) {
           $request = $request->withHeader('User-Agent', drupal_generate_test_ua($test_prefix));
         }
