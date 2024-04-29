@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Kernel\Block;
 
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\Entity\Menu;
 use Drupal\block\Entity\Block;
 use Drupal\Core\Render\Element;
 use Drupal\system\Tests\Routing\MockRouteProvider;
 use Drupal\Tests\Core\Menu\MenuLinkMock;
-use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\Core\Routing\RouteObjectInterface;
+use Drupal\user\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
@@ -31,9 +30,6 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class SystemMenuBlockTest extends KernelTestBase {
 
-  use UserCreationTrait;
-  use StringTranslationTrait;
-
   /**
    * Modules to enable.
    *
@@ -44,7 +40,6 @@ class SystemMenuBlockTest extends KernelTestBase {
     'block',
     'menu_test',
     'menu_link_content',
-    'menu_ui',
     'field',
     'user',
     'link',
@@ -93,7 +88,12 @@ class SystemMenuBlockTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('menu_link_content');
 
-    $this->setUpCurrentUser([], ['administer menu']);
+    $account = User::create([
+      'name' => $this->randomMachineName(),
+      'status' => 1,
+    ]);
+    $account->save();
+    $this->container->get('current_user')->setAccount($account);
 
     $this->menuLinkManager = $this->container->get('plugin.manager.menu.link');
     $this->linkTree = $this->container->get('menu.link_tree');
