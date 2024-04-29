@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\views_ui\Kernel\Block;
+namespace Drupal\Tests\views_ui\Kernel;
 
 use Drupal\Core\Url;
 use Drupal\block\Entity\Block;

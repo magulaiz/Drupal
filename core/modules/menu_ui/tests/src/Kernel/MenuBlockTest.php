@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\menu_ui\Kernel\Block;
+namespace Drupal\Tests\menu_ui\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\Entity\Menu;
