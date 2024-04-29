@@ -6,4 +6,3 @@ navigation.layout:
   title: 'Manage Layout'
   route_name: layout_builder.navigation.view
   base_route: navigation.settings
-
