@@ -244,7 +244,7 @@ trait PerformanceTestTrait {
       }
     }
     elseif (str_starts_with($query, 'SELECT "name", "value" FROM "key_value_expire" WHERE "expire" >')) {
-      $args[':now'] = 'EXPIRE';
+      $args[':now'] = 'NOW';
       $args[':keys__0'] = 'KEY';
     }
 
