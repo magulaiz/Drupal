@@ -59,14 +59,14 @@ class Layout extends Plugin {
    *   (optional) An associative array of regions in this layout.
    * @param string|null $default_region
    *   (optional) The default region.
-   * @param class-string|null $deriver
-   *   (optional) The deriver class.
    * @param class-string $class
    *   (optional) The layout plugin class.
    * @param \Drupal\Core\Plugin\Context\ContextDefinitionInterface[] $context_definitions
    *   (optional) The context definition.
    * @param array $config_dependencies
    *   (optional) The config dependencies.
+   * @param class-string|null $deriver
+   *   (optional) The deriver class.
    * @param mixed $additional
    *   (optional) Additional properties passed in that can be used by a deriver.
    */
@@ -83,10 +83,10 @@ class Layout extends Plugin {
     public readonly ?array $icon_map = NULL,
     public readonly array $regions = [],
     public readonly ?string $default_region = NULL,
-    public readonly ?string $deriver = NULL,
     public string $class = LayoutDefault::class,
     public readonly array $context_definitions = [],
     public readonly array $config_dependencies = [],
+    public readonly ?string $deriver = NULL,
     ...$additional,
   ) {
     $this->additional = $additional;
