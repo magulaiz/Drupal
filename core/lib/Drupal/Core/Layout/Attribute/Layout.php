@@ -63,7 +63,7 @@ class Layout extends Plugin {
    *   (optional) The deriver class.
    * @param class-string $class
    *   The layout plugin class.
-   * @param array $context_definitions
+   * @param \Drupal\Core\Plugin\Context\ContextDefinitionInterface[] $context_definitions
    *   The context definition.
    * @param array $config_dependencies
    *   The config dependencies.
