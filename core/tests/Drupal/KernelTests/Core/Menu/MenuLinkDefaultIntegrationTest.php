@@ -41,8 +41,7 @@ class MenuLinkDefaultIntegrationTest extends KernelTestBase {
     $this->assertEquals('menu_test.child', $tree['menu_test.parent']->subtree['menu_test.child']->link->getPluginId());
 
     // Ensure that the menu name is not forgotten.
-    $menu_link_manager->updateDefinition('menu_test.child', ['parent' => NULL]);
-    $menu_link_manager->rebuild();
+    $menu_link_manager->updateDefinition('menu_test.child', ['parent' => '']);
     $menu_link = $menu_link_manager->getDefinition('menu_test.child');
 
     $this->assertEquals('', $menu_link['parent']);
