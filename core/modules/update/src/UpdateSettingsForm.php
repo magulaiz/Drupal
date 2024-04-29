@@ -67,16 +67,29 @@ class UpdateSettingsForm extends ConfigFormBase implements ContainerInjectionInt
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('update.settings');
 
+    // Adjust the frequency so it's never 0.
+    $frequency = intval($config->get('check.interval_days'));
+    if ($frequency < 1) {
+      $frequency = 1;
+    }
+    // Use the radio buttons if frequency is daily or weekly.
     $form['update_check_frequency'] = [
       '#type' => 'radios',
       '#title' => $this->t('Check for updates'),
-      '#default_value' => $config->get('check.interval_days'),
+      '#default_value' => $frequency,
       '#options' => [
         '1' => $this->t('Daily'),
         '7' => $this->t('Weekly'),
       ],
       '#description' => $this->t('Select how frequently you want to automatically check for new releases of your currently installed modules and themes.'),
     ];
+    // If the frequency isn't daily or weekly, allow the form to validate
+    // against an arbitrary number with a numeric field.
+    if ($frequency !== 1 && $frequency !== 7) {
+      unset($form['update_check_frequency']['#options']);
+      $form['update_check_frequency']['#type'] = 'number';
+      $form['update_check_frequency']['#min'] = 1;
+    }
 
     $form['update_check_disabled'] = [
       '#type' => 'checkbox',
@@ -84,7 +97,8 @@ class UpdateSettingsForm extends ConfigFormBase implements ContainerInjectionInt
       '#default_value' => $config->get('check.disabled_extensions'),
     ];
 
-    $notification_emails = $config->get('notification.emails');
+    // Empty config is returned as string, not sequence.
+    $notification_emails = $config->get('notification.emails') ?? [];
     $form['update_notify_emails'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Email addresses to notify when updates are available'),
