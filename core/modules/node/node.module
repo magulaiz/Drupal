@@ -429,7 +429,7 @@ function template_preprocess_node_add_list(&$variables) {
         'type' => $type->id(),
         'add_link' => Link::fromTextAndUrl($type->label(), Url::fromRoute('node.add', ['node_type' => $type->id()]))->toString(),
         'description' => [
-          '#markup' => $type->getDescription(),
+          '#markup' => method_exists($type, 'getDescription') ? $type->getDescription() : '',
         ],
       ];
     }
@@ -1316,4 +1316,21 @@ function node_comment_delete($comment) {
  */
 function node_config_translation_info_alter(&$info) {
   $info['node_type']['class'] = 'Drupal\node\ConfigTranslation\NodeTypeMapper';
+}
+
+function node_toolbar() {
+  $items['add_content'] = [
+    '#type' => 'toolbar_item',
+    'tab' => [
+      '#type' => 'link',
+      '#title' => t('Add Content'),
+      '#url' => Url::fromRoute('node.add_page'),
+      '#attributes' => [
+        'title' => t('Return to site content'),
+        'class' => ['toolbar-icon', 'toolbar-icon-add-content'],
+      ],
+    ],
+    '#weight' => -10,
+  ];
+  return $items;
 }

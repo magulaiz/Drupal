@@ -25,14 +25,6 @@ function standard_install() {
   // Populate the default shortcut set.
   $shortcut = Shortcut::create([
     'shortcut_set' => 'default',
-    'title' => t('Add content'),
-    'weight' => -20,
-    'link' => ['uri' => 'internal:/node/add'],
-  ]);
-  $shortcut->save();
-
-  $shortcut = Shortcut::create([
-    'shortcut_set' => 'default',
     'title' => t('All content'),
     'weight' => -19,
     'link' => ['uri' => 'internal:/admin/content'],

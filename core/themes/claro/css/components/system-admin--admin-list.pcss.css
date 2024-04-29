@@ -78,3 +78,29 @@
 [dir="rtl"] .admin-item__description {
   margin-right: 0;
 }
+
+.other-entity-types {
+  display:flex;
+  flex-wrap: wrap;
+}
+
+.other-entity-types__box {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 1rem;
+  & .node-type-list {
+    width: fit-content;
+  }
+}
+
+@media screen and (min-width: 38em) {
+  .other-entity-types__box {
+    width: 50%;
+  }
+}
+
+@media screen and (min-width: 60em) {
+  .other-entity-types__box {
+    width: 25%;
+  }
+}
