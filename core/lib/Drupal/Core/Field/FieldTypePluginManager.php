@@ -3,6 +3,7 @@
 namespace Drupal\Core\Field;
 
 use Drupal\Component\Plugin\Factory\DefaultFactory;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\Attribute\FieldType;
@@ -38,7 +39,7 @@ class FieldTypePluginManager extends DefaultPluginManager implements FieldTypePl
    */
   public function __construct(
     \Traversable $namespaces,
-    protected $cache_backend,
+    CacheBackendInterface $cache_backend,
     protected ModuleHandlerInterface $module_handler,
     protected TypedDataManagerInterface $typedDataManager,
     protected FieldTypeCategoryManagerInterface $fieldTypeCategoryManager,

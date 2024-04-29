@@ -30,13 +30,6 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
   protected $config;
 
   /**
-   * Whether to send cacheability headers for debugging purposes.
-   *
-   * @var bool
-   */
-  protected $debugCacheabilityHeaders = FALSE;
-
-  /**
    * Constructs a FinishResponseSubscriber object.
    *
    * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
@@ -56,15 +49,14 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    */
   public function __construct(
     protected LanguageManagerInterface $languageManager,
-    protected ConfigFactoryInterface $config_factory,
+    ConfigFactoryInterface $config_factory,
     protected RequestPolicyInterface $requestPolicy,
     protected ResponsePolicyInterface $responsePolicy,
     protected CacheContextsManager $cacheContextsManager,
     protected TimeInterface $time,
-    bool $http_response_debug_cacheability_headers = FALSE,
+    protected bool $debugCacheabilityHeaders = FALSE,
   ) {
     $this->config = $config_factory->get('system.performance');
-    $this->debugCacheabilityHeaders = $http_response_debug_cacheability_headers;
   }
 
   /**
