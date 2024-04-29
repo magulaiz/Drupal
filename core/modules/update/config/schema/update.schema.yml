@@ -39,7 +39,7 @@ update.settings:
           label: 'Timeout in seconds'
           constraints:
             Range:
-              min: 0
+              min: 1
     notification:
       type: mapping
       label: 'Notification settings'
