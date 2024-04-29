@@ -1342,6 +1342,32 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@floating-ui/core@npm:^1.0.0":
+  version: 1.6.0
+  resolution: "@floating-ui/core@npm:1.6.0"
+  dependencies:
+    "@floating-ui/utils": "npm:^0.2.1"
+  checksum: 10c0/667a68036f7dd5ed19442c7792a6002ca02d1799221c4396691bbe0b6008b48f6ccad581225e81fa266bb91232f6c66838a5f825f554217e1ec886178b93381b
+  languageName: node
+  linkType: hard
+
+"@floating-ui/dom@npm:^1.6.3":
+  version: 1.6.3
+  resolution: "@floating-ui/dom@npm:1.6.3"
+  dependencies:
+    "@floating-ui/core": "npm:^1.0.0"
+    "@floating-ui/utils": "npm:^0.2.0"
+  checksum: 10c0/d6cac10877918ce5a8d1a24b21738d2eb130a0191043d7c0dd43bccac507844d3b4dc5d4107d3891d82f6007945ca8fb4207a1252506e91c37e211f0f73cf77e
+  languageName: node
+  linkType: hard
+
+"@floating-ui/utils@npm:^0.2.0, @floating-ui/utils@npm:^0.2.1":
+  version: 0.2.1
+  resolution: "@floating-ui/utils@npm:0.2.1"
+  checksum: 10c0/ee77756712cf5b000c6bacf11992ffb364f3ea2d0d51cc45197a7e646a17aeb86ea4b192c0b42f3fbb29487aee918a565e84f710b8c3645827767f406a6b4cc9
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/config-array@npm:^0.11.13":
   version: 0.11.13
   resolution: "@humanwhocodes/config-array@npm:0.11.13"
@@ -1500,13 +1526,6 @@ __metadata:
     picocolors: "npm:^1.0.0"
     tslib: "npm:^2.6.0"
   checksum: 10c0/7c3e68f6405a1d4c51f418d8d580e71d7bade2683d5db07e8413d8e57f7e389047eda44a2341f77a1b3085895fca7676a9d45e8812a58312524f8c4c65d501be
-  languageName: node
-  linkType: hard
-
-"@popperjs/core@npm:^2.11.5":
-  version: 2.11.8
-  resolution: "@popperjs/core@npm:2.11.8"
-  checksum: 10c0/4681e682abc006d25eb380d0cf3efc7557043f53b6aea7a5057d0d1e7df849a00e281cd8ea79c902a35a414d7919621fc2ba293ecec05f413598e0b23d5a1e63
   languageName: node
   linkType: hard
 
@@ -1814,6 +1833,7 @@ __metadata:
     "@ckeditor/ckeditor5-style": "npm:~41.2.0"
     "@ckeditor/ckeditor5-table": "npm:~41.2.0"
     "@drupal/once": "npm:1.0.x"
+    "@floating-ui/dom": "npm:^1.6.3"
     backbone: "npm:^1.5.0"
     chokidar: "npm:^3.3.1"
     ckeditor5: "npm:~41.2.0"
@@ -1844,7 +1864,6 @@ __metadata:
     postcss-pxtorem: "npm:^6.0.0"
     postcss-url: "npm:^10.1.3"
     prettier: "npm:^3.0.3"
-    shepherd.js: "npm:~10.0.1"
     sortablejs: "npm:1.15.x"
     stylelint: "npm:^15.10.1"
     stylelint-checkstyle-formatter: "npm:^0.1.2"
@@ -3095,13 +3114,6 @@ __metadata:
   version: 0.1.4
   resolution: "deep-is@npm:0.1.4"
   checksum: 10c0/7f0ee496e0dff14a573dc6127f14c95061b448b87b995fc96c017ce0a1e66af1675e73f1d6064407975bc4ea6ab679497a29fff7b5b9c4e99cb10797c1ad0b4c
-  languageName: node
-  linkType: hard
-
-"deepmerge@npm:^4.2.2":
-  version: 4.3.1
-  resolution: "deepmerge@npm:4.3.1"
-  checksum: 10c0/e53481aaf1aa2c4082b5342be6b6d8ad9dfe387bc92ce197a66dea08bd4265904a087e75e464f14d1347cf2ac8afe1e4c16b266e0561cc5df29382d3c5f80044
   languageName: node
   linkType: hard
 
@@ -7303,17 +7315,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"shepherd.js@npm:~10.0.1":
-  version: 10.0.1
-  resolution: "shepherd.js@npm:10.0.1"
-  dependencies:
-    "@popperjs/core": "npm:^2.11.5"
-    deepmerge: "npm:^4.2.2"
-    smoothscroll-polyfill: "npm:^0.4.4"
-  checksum: 10c0/c1b127fe109a1f0276c223f3d20275d56ecd81d5caaafedd9c89ce2f610641338030dc5711a306f02b174d02e6cb41fe996068339a0696bfbb507f62dd95b50a
-  languageName: node
-  linkType: hard
-
 "side-channel@npm:^1.0.4":
   version: 1.0.4
   resolution: "side-channel@npm:1.0.4"
@@ -7361,13 +7362,6 @@ __metadata:
   version: 4.2.0
   resolution: "smart-buffer@npm:4.2.0"
   checksum: 10c0/a16775323e1404dd43fabafe7460be13a471e021637bc7889468eb45ce6a6b207261f454e4e530a19500cc962c4cc5348583520843b363f4193cee5c00e1e539
-  languageName: node
-  linkType: hard
-
-"smoothscroll-polyfill@npm:^0.4.4":
-  version: 0.4.4
-  resolution: "smoothscroll-polyfill@npm:0.4.4"
-  checksum: 10c0/33a1167f40c7ede76d6cdf1686a1f003afaf21557863cbd90fb8880f40f02eb28bc600147c3340db62f96275448106054aa8c53a8f61f7b6acdc6a5f21557e10
   languageName: node
   linkType: hard
 

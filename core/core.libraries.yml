@@ -774,6 +774,17 @@ drupal.vertical-tabs:
     - core/drupalSettings
     - core/drupal.form
 
+internal.floating-ui:
+  remote: https://github.com/floating-ui/floating-ui
+  version: "1.1.1"
+  license:
+    name: MIT
+    url: https://github.com/floating-ui/floating-ui/blob/master/LICENSE
+    gpl-compatible: true
+  js:
+    assets/vendor/floating-ui/floating-ui.core.umd.min.js: { minified: true }
+    assets/vendor/floating-ui/floating-ui.dom.umd.min.js: { minified: true }
+
 jquery:
   remote: https://github.com/jquery/jquery
   version: "4.0.0-beta"
@@ -795,16 +806,6 @@ internal.jquery.form:
     misc/jquery.form.js: {}
   dependencies:
     - core/jquery
-
-internal.shepherd:
-  remote: https://github.com/shipshapecode/shepherd
-  version: "10.0.1"
-  license:
-    name: MIT
-    url: https://raw.githubusercontent.com/shipshapecode/shepherd/v10.0.1/LICENSE
-    gpl-compatible: true
-  js:
-    assets/vendor/shepherd/shepherd.min.js: { minified: true }
 
 drupal.jquery.position:
   # This is a modified version of jQuery UI position for that does not require
