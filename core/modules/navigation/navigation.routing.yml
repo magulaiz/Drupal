@@ -5,3 +5,13 @@ navigation.settings:
     _form: 'Drupal\navigation\Form\SettingsForm'
   requirements:
     _permission: 'administer site configuration'
+
+navigation.subtrees:
+  path: '/navigation/subtrees/{menu_name}/{level}/{depth}/{hash}'
+  defaults:
+    _controller: '\Drupal\navigation\Controller\NavigationMenuBlockController::subtreesAjax'
+  requirements:
+    _custom_access: '\Drupal\navigation\Controller\NavigationMenuBlockController::checkSubTreeAccess'
+    menu_name: '[a-z0-9-]+'
+    level: '\d+'
+    depth: '\d+'

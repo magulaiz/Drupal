@@ -6,9 +6,9 @@ namespace Drupal\navigation\Plugin\Block;
 
 use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\navigation\Controller\NavigationMenuBlockController;
 use Drupal\navigation\Plugin\Derivative\SystemMenuNavigationBlock as SystemMenuNavigationBlockDeriver;
 use Drupal\system\Plugin\Block\SystemMenuBlock;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -77,21 +77,47 @@ final class NavigationMenuBlock extends SystemMenuBlock implements ContainerFact
     $menu_name = $this->getDerivativeId();
     $level = $this->configuration['level'];
     $depth = $this->configuration['depth'];
-    $parameters = new MenuTreeParameters();
-    $parameters
-      ->setMinDepth($level)
-      ->setMaxDepth(min($level + $depth, $this->menuTree->maxDepth()))
-      ->onlyEnabledLinks();
-    $tree = $this->menuTree->load($menu_name, $parameters);
-    $manipulators = [
-      ['callable' => 'menu.default_tree_manipulators:checkAccess'],
-      ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
+    // To conserve bandwidth, we only include the top-level links in the HTML.
+    // The subtrees are fetched through an AJAX call.
+    [$hash] = _navigation_get_subtrees_hash($menu_name, $level, $depth);
+    $subtrees_attached = [
+      'drupalSettings' => [
+        'navigation' => [
+          'subtrees' => [
+            $hash => [
+              'hash' => $hash,
+              'menuName' => $menu_name,
+              'level' => $level,
+              'depth' => $depth,
+            ],
+          ],
+        ],
+      ],
+      'library' => [
+        'navigation/menu_block',
+      ],
     ];
-    $tree = $this->menuTree->transform($tree, $manipulators);
-    $build = $this->menuTree->build($tree);
-    if (!empty($build)) {
-      $build['#title'] = $this->configuration['label'];
-    }
+
+    $build = [
+      'menu' => [
+        '#title' => $this->configuration['label'],
+        '#attached' => $subtrees_attached,
+        '#pre_render' => [[NavigationMenuBlockController::class, 'preRenderNavigationTray']],
+        '#type' => 'container',
+        '#attributes' => [
+          'class' => [
+            'navigation-menu-' . $menu_name,
+          ],
+          // We need to include all this information here because it is not
+          // possible to get the block unique ID from here.
+          // @see https://www.drupal.org/project/drupal/issues/2540088
+          'data-menu-level' => $level,
+          'data-menu-name' => $menu_name,
+          'data-menu-depth' => $depth,
+          'data-menu-hash' => $hash,
+        ],
+      ],
+    ];
 
     return $build;
   }
