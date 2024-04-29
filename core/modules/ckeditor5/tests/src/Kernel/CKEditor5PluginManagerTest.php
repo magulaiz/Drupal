@@ -228,6 +228,15 @@ YAML,
 ckeditor5_invalid_plugin_foo_bar: {}
 YAML,
       InvalidPluginDefinitionException::class,
+      'The "ckeditor5_invalid_plugin_foo_bar" CKEditor 5 plugin definition must contain a "drupal" key.',
+    ];
+
+    yield 'added drupal' => [
+      <<<YAML
+ckeditor5_invalid_plugin_foo_bar:
+  drupal: {}
+YAML,
+      InvalidPluginDefinitionException::class,
       'The "ckeditor5_invalid_plugin_foo_bar" CKEditor 5 plugin definition must contain a "ckeditor5" key.',
     ];
 
@@ -235,22 +244,13 @@ YAML,
       <<<YAML
 ckeditor5_invalid_plugin_foo_bar:
   ckeditor5: {}
+  drupal: {}
 YAML,
       InvalidPluginDefinitionException::class,
       'The "ckeditor5_invalid_plugin_foo_bar" CKEditor 5 plugin definition must contain a "ckeditor5.plugins" key.',
     ];
 
     yield 'added ckeditor5.plugins' => [
-      <<<YAML
-ckeditor5_invalid_plugin_foo_bar:
-  ckeditor5:
-    plugins: {}
-YAML,
-      InvalidPluginDefinitionException::class,
-      'The "ckeditor5_invalid_plugin_foo_bar" CKEditor 5 plugin definition must contain a "drupal" key.',
-    ];
-
-    yield 'added drupal' => [
       <<<YAML
 ckeditor5_invalid_plugin_foo_bar:
   ckeditor5:
