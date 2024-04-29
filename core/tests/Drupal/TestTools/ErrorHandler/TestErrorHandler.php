@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
  * This code works in coordination with DeprecationHandler.
  *
  * This error handler is registered during the preparation of a PHPUnit's test,
- * and is essentially used to capture deprecations occuring during test
+ * and is essentially used to capture deprecations occurring during test
  * executions. When test runs are torn down, the more generic
  * BootstrapErrorHandler is restored.
  *
@@ -24,14 +24,13 @@ use PHPUnit\Framework\TestCase;
 final class TestErrorHandler {
 
   /**
-   * @param callable $parentHandler
-   *   The parent error handler. It should be an instance of
-   *   BootstrapErrorHandler.
+   * @param \Drupal\TestTools\ErrorHandler\BootstrapErrorHandler $parentHandler
+   *   The parent error handler.
    * @param \PHPUnit\Framework\TestCase $testCase
    *   The test case being executed.
    */
   public function __construct(
-    private readonly callable $parentHandler,
+    private readonly BootstrapErrorHandler $parentHandler,
     private readonly TestCase $testCase,
   ) {
   }

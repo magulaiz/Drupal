@@ -14,7 +14,7 @@ use PHPUnit\Runner\ErrorHandler as PhpUnitErrorHandler;
  * This code works in coordination with DeprecationHandler.
  *
  * This error handler is registered during PHPUnit's runner bootstrap, and is
- * essentially used to capture deprecations occuring before tests are run (for
+ * essentially used to capture deprecations occurring before tests are run (for
  * example, deprecations triggered by the DebugClassloader). When test runs
  * are prepared, a test specific TestErrorHandler is activated instead.
  *
