@@ -7,6 +7,7 @@ namespace Drupal\Tests\menu_ui\Kernel\Block;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\Entity\Menu;
 use Drupal\block\Entity\Block;
+use Drupal\system\MenuInterface;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
@@ -35,7 +36,7 @@ class MenuBlockTest extends KernelTestBase {
    *
    * @var \Drupal\system\MenuInterface
    */
-  protected $menu;
+  protected MenuInterface $menu;
 
   /**
    * {@inheritdoc}
@@ -73,7 +74,7 @@ class MenuBlockTest extends KernelTestBase {
     // Test when user does have "administer menu" permission.
     $this->assertEquals([
       'menu-edit' => [
-        'title' => $this->t('Edit menu'),
+        'title' => 'Edit menu',
         'url' => $this->menu->toUrl('edit-form'),
         'weight' => 50,
       ],
