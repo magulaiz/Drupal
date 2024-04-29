@@ -67,7 +67,6 @@ user.settings:
     password_strength:
       type: boolean
       label: 'Enable password strength indicator'
-
 user.mail:
   type: config_object
   label: 'Email settings'
