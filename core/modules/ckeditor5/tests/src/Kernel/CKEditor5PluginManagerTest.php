@@ -225,14 +225,6 @@ YAML,
 
     yield 'only plugin ID, nothing else' => [
       <<<YAML
-foo_bar: {}
-YAML,
-      InvalidPluginDefinitionException::class,
-      'The "foo_bar" CKEditor 5 plugin definition must have a plugin ID that starts with "ckeditor5_invalid_plugin_".',
-    ];
-
-    yield 'fixed plugin ID' => [
-      <<<YAML
 ckeditor5_invalid_plugin_foo_bar: {}
 YAML,
       InvalidPluginDefinitionException::class,
@@ -346,6 +338,21 @@ ckeditor5_invalid_plugin_foo_bar:
       - <foo>
       - <bar>
 YAML,
+    ];
+
+    yield 'change plugin ID to something invalid' => [
+      <<<YAML
+foo_bar:
+  ckeditor5:
+    plugins: {}
+  drupal:
+    label: "Foo bar"
+    elements:
+      - <foo>
+      - <bar>
+YAML,
+      InvalidPluginDefinitionException::class,
+      'The "foo_bar" CKEditor 5 plugin definition must have a plugin ID that starts with "ckeditor5_invalid_plugin_".',
     ];
 
     yield 'alternative fix for drupal.elements' => [
