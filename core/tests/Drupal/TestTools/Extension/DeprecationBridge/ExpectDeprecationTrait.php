@@ -12,11 +12,13 @@ use PHPUnit\Framework\Attributes\Before;
 /**
  * A trait to include in Drupal tests to manage expected deprecations.
  *
- * This code work in coordination with DeprecationHandler.
+ * This code works in coordination with DeprecationHandler.
  *
  * This trait is a replacement for symfony/phpunit-bridge that is not
  * supporting PHPUnit 10. In the future this extension might be dropped if
  * PHPUnit will support all deprecation management needs.
+ *
+ * @see \Drupal\TestTools\Extension\DeprecationBridge\DeprecationHandler
  *
  * @internal
  */

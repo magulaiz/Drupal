@@ -5,25 +5,52 @@ declare(strict_types=1);
 namespace Drupal\TestTools\ErrorHandler;
 
 use Drupal\TestTools\Extension\DeprecationBridge\DeprecationHandler;
+use PHPUnit\Framework\TestCase;
 
 /**
- * @todo
+ * Drupal's PHPUnit test level error handler.
+ *
+ * This code works in coordination with DeprecationHandler.
+ *
+ * This error handler is registered during the preparation of a PHPUnit's test,
+ * and is essentially used to capture deprecations occuring during test
+ * executions. When test runs are torn down, the more generic
+ * BootstrapErrorHandler is restored.
+ *
+ * @see \Drupal\TestTools\Extension\DeprecationBridge\DeprecationHandler
  *
  * @internal
  */
 final class TestErrorHandler {
 
   /**
-   * @todo
+   * @param callable $parentHandler
+   *   The parent error handler. It should be an instance of
+   *   BootstrapErrorHandler.
+   * @param \PHPUnit\Framework\TestCase $testCase
+   *   The test case being executed.
    */
   public function __construct(
-    private $parentHandler,
-    private $testCase,
+    private readonly callable $parentHandler,
+    private readonly TestCase $testCase,
   ) {
   }
 
   /**
-   * @todo
+   * Executes when the object is called as a function.
+   *
+   * @param int $errorNumber
+   *   The level of the error raised.
+   * @param string $errorString
+   *   The error message.
+   * @param string $errorFile
+   *   The filename that the error was raised in.
+   * @param int $errorLine
+   *   The line number the error was raised at.
+   *
+   * @return bool
+   *   TRUE to stop error handling, FALSE to let the normal error handler
+   *   continue.
    */
   public function __invoke(int $errorNumber, string $errorString, string $errorFile, int $errorLine): bool {
     if (!DeprecationHandler::isEnabled()) {
