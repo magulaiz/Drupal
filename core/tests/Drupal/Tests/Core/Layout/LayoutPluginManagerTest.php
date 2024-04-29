@@ -177,6 +177,8 @@ class LayoutPluginManagerTest extends UnitTestCase {
     $this->assertEquals($expected_regions, $regions);
     $this->assertInstanceOf(TranslatableMarkup::class, $regions['top']['label']);
     $this->assertInstanceOf(TranslatableMarkup::class, $regions['bottom']['label']);
+    // Check that arbitrary property value gets set correctly.
+    $this->assertSame('ipsum', $layout_definition->get('lorem'));
 
     $core_path = '/core/lib/Drupal/Core';
     $layout_definition = $this->layoutPluginManager->getDefinition('plugin_provided_layout');
@@ -203,6 +205,8 @@ class LayoutPluginManagerTest extends UnitTestCase {
     $regions = $layout_definition->getRegions();
     $this->assertEquals($expected_regions, $regions);
     $this->assertInstanceOf(TranslatableMarkup::class, $regions['main']['label']);
+    // Check that arbitrary property value gets set correctly.
+    $this->assertSame('adipiscing', $layout_definition->get('consectetur'));
 
     $layout_definition = $this->layoutPluginManager->getDefinition('plugin_provided_by_annotation_layout');
     $this->assertSame('plugin_provided_by_annotation_layout', $layout_definition->id());
@@ -358,6 +362,7 @@ module_a_provided_layout:
       label: Top region
     bottom:
       label: Bottom region
+  lorem: ipsum
 module_a_derived_layout:
   label: 'Invalid provider derived layout'
   deriver: \Drupal\Tests\Core\Layout\LayoutDeriver
@@ -400,6 +405,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
       "label" => new TranslatableMarkup("Main Region", [], ["context" => "layout_region"]),
     ],
   ],
+  consectetur: 'adipiscing',
 )]
 class TestLayout extends LayoutDefault {}
 EOS;
