@@ -123,11 +123,10 @@ final class NavigationRenderer {
       ->addCacheableDependency($this->configFactory->get('navigation.block_layout'));
     $cacheability->applyTo($build);
 
-
     $module_path = $this->requestStack->getCurrentRequest()->getBasePath() . '/' . $this->moduleExtensionList->getPath('navigation');
     $asset_url = $module_path . '/assets/fonts/inter-var.woff2';
 
-    $build[0] = NestedArray::mergeDeepArray([$build[0],[
+    $defaults = [
       '#hide_logo' => $logo_provider === self::LOGO_PROVIDER_HIDE,
       '#access' => $this->currentUser->hasPermission('access navigation'),
       '#attached' => [
@@ -142,7 +141,8 @@ final class NavigationRenderer {
           ],
         ],
       ],
-    ]]);
+    ];
+    $build[0] = NestedArray::mergeDeepArray([$build[0], $defaults]);
     $page_top['navigation'] = $build;
 
     if ($logo_provider === self::LOGO_PROVIDER_CUSTOM) {
