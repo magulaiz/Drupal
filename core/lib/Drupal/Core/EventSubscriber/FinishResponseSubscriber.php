@@ -44,7 +44,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    *   The cache contexts manager service.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
-   * @param bool $http_response_debug_cacheability_headers
+   * @param bool $debugCacheabilityHeaders
    *   (optional) Whether to send cacheability headers for debugging purposes.
    */
   public function __construct(
