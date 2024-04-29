@@ -3,6 +3,8 @@
 user.settings:
   type: config_object
   label: 'User settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     anonymous:
       type: required_label
@@ -41,15 +43,27 @@ user.settings:
     register:
       type: string
       label: 'Who can register accounts?'
+      # Choices are derived from the constants.
+      # @see \Drupal\user\UserInterface::REGISTER_*
+      constraints:
+        Choice:
+          choices:
+            - 'visitors'
+            - 'admin_only'
+            - 'visitors_admin_approval'
     cancel_method:
       type: string
       label: 'When cancelling a user account'
+      constraints:
+        UserCancelMethod: []
     password_reset_timeout:
       type: integer
       label: 'Password reset timeout'
-    password_strength:
-      type: boolean
-      label: 'Enable password strength indicator'
+      # Increase min in a followup.
+      # @see https://www.drupal.org/i/3441772
+      constraints:
+        Range:
+          min: 1
 
 user.mail:
   type: config_object
