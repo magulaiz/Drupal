@@ -37,10 +37,12 @@ class Layout extends Plugin {
    *
    * @param string $id
    *   The plugin ID.
-   * @param \Drupal\Core\StringTranslation\TranslatableMarkup $label
-   *   The human-readable name.
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $label
+   *   (optional) The human-readable name. @todo Deprecate option label in
+   *   https://www.drupal.org/project/drupal/issues/3392572.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $category
-   *   (optional) The human-readable category.
+   *   (optional) The human-readable category. @todo Deprecate option category
+   *   in https://www.drupal.org/project/drupal/issues/3392572.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $description
    *   (optional) The description for advanced layouts.
    * @param string|null $template
@@ -72,7 +74,7 @@ class Layout extends Plugin {
    */
   public function __construct(
     public readonly string $id,
-    public readonly TranslatableMarkup $label,
+    public readonly ?TranslatableMarkup $label = NULL,
     public readonly ?TranslatableMarkup $category = NULL,
     public readonly ?TranslatableMarkup $description = NULL,
     public readonly ?string $template = NULL,
@@ -89,6 +91,13 @@ class Layout extends Plugin {
     public readonly ?string $deriver = NULL,
     ...$additional,
   ) {
+    // Layout definitions support arbitrary properties being passed in, which
+    // are stored in the 'additional' property in LayoutDefinition. The variadic
+    // 'additional' parameter here saves arbitrary parameters passed into the
+    // 'additional' property in this attribute class. The 'additional' property
+    // gets passed to the LayoutDefinition constructor in ::get().
+    // @see \Drupal\Core\Layout\LayoutDefinition::$additional
+    // @see \Drupal\Core\Layout\LayoutDefinition::get()
     $this->additional = $additional;
   }
 
