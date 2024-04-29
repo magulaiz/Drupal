@@ -13,7 +13,11 @@ import { isWidget } from 'ckeditor5/src/widget';
  * @private
  */
 export function isDrupalMedia(modelElement) {
-  return !!modelElement && modelElement.is('element', 'drupalMedia');
+  return (
+    !!modelElement &&
+    (modelElement.is('element', 'drupalMedia') ||
+      modelElement.is('element', 'drupalMediaInline'))
+  );
 }
 
 /**
