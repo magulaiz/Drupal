@@ -68,7 +68,7 @@ class ModerationStateFilter extends CoreModerationStateFilter {
       }
       // Otherwise, force the query to return an empty result.
       else {
-        $this->query->addWhereExpression($this->options['group'], '1 = 0');
+        $this->query->addCondition($this->options['group'], $this->view->query->getConnection()->condition('AND')->alwaysFalse());
         return;
       }
     }

@@ -84,17 +84,17 @@ class Query extends BaseQuery {
           $entities = [];
           foreach ($results as $record) {
             $revision_id = NULL;
-            if (!empty($record->{$this->mongodbRevisionField})) {
+            if (isset($record->{$this->mongodbRevisionField})) {
               $revision_id = $record->{$this->mongodbRevisionField};
             }
-            elseif (!empty($record->coalesce_target_entity_revision_id)) {
+            elseif (isset($record->coalesce_target_entity_revision_id)) {
               $revision_id = $record->coalesce_target_entity_revision_id;
             }
-            elseif (!empty($record->{'coalesce_' . $this->mongodbRevisionField})) {
+            elseif (isset($record->{'coalesce_' . $this->mongodbRevisionField})) {
               $revision_id = $record->{'coalesce_' . $this->mongodbRevisionField};
             }
 
-            if ($revision_id && !empty($record->{$this->mongodbIdField})) {
+            if ($revision_id !== NULL && isset($record->{$this->mongodbIdField})) {
               $entities[$revision_id] = $record->{$this->mongodbIdField};
             }
           }

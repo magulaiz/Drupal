@@ -1475,7 +1475,7 @@ class Select extends QuerySelect {
           );
           $this->connection->dispatchEvent($startEvent);
         }
-//if ($this->mongodbBaseTable == 'comment') {
+//if ($this->mongodbBaseTable == 'users') {
 //  dump('$pipeline');
 //  dump($pipeline);
 //}
