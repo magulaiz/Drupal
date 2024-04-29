@@ -12,7 +12,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 #[Layout(
   id: 'layout_builder_test_plugin',
   label: new TranslatableMarkup('Layout Builder Test Plugin'),
-  category: new TranslatableMarkup('Test'),
   regions: [
     "main" => [
       "label" => new TranslatableMarkup("Main Region"),

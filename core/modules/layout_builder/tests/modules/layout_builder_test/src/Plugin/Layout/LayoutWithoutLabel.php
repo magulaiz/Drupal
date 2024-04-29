@@ -13,7 +13,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 #[Layout(
   id: 'layout_without_label',
   label: new TranslatableMarkup('Layout Without Label'),
-  category: new TranslatableMarkup('Test'),
   regions: [
     "main" => [
       "label" => new TranslatableMarkup("Main Region"),

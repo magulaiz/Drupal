@@ -19,7 +19,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 #[Layout(
   id: 'layout_builder_blank',
   label: new TranslatableMarkup('Blank'),
-  category: new TranslatableMarkup('Blank'),
 )]
 class BlankLayout extends LayoutDefault {
 

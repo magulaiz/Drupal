@@ -13,7 +13,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 #[Layout(
   id: 'layout_builder_test_context_aware',
   label: new TranslatableMarkup('Layout Builder Test: Context Aware'),
-  category: new TranslatableMarkup('Test'),
   regions: [
     "main" => [
       "label" => new TranslatableMarkup("Main Region"),

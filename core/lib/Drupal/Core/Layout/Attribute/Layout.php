@@ -39,8 +39,8 @@ class Layout extends Plugin {
    *   The plugin ID.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup $label
    *   The human-readable name.
-   * @param \Drupal\Core\StringTranslation\TranslatableMarkup $category
-   *   The human-readable category.
+   * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $category
+   *   (optional) The human-readable category.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $description
    *   (optional) The description for advanced layouts.
    * @param string|null $template
@@ -73,7 +73,7 @@ class Layout extends Plugin {
   public function __construct(
     public readonly string $id,
     public readonly TranslatableMarkup $label,
-    public readonly TranslatableMarkup $category,
+    public readonly ?TranslatableMarkup $category = NULL,
     public readonly ?TranslatableMarkup $description = NULL,
     public readonly ?string $template = NULL,
     public readonly string $theme_hook = 'layout',
