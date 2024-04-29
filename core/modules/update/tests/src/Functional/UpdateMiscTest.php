@@ -44,6 +44,8 @@ class UpdateMiscTest extends UpdateTestBase {
    * Ensures that the local actions appear.
    */
   public function testLocalActions(): void {
+    $this->config('update.settings')->set('fetch.url', $this->baseUrl)->save();
+
     $admin_user = $this->drupalCreateUser([
       'administer site configuration',
       'administer modules',
