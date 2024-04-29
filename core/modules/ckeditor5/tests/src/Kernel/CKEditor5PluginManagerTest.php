@@ -244,8 +244,8 @@ YAML,
 ckeditor5_invalid_plugin_foo_bar:
   ckeditor5: {}
 YAML,
-      \ArgumentCountError::class,
-      NULL,
+      InvalidPluginDefinitionException::class,
+      'The "ckeditor5_invalid_plugin_foo_bar" CKEditor 5 plugin definition must contain a "ckeditor5.plugins" key.',
     ];
 
     yield 'added ckeditor5.plugins' => [
@@ -277,7 +277,8 @@ ckeditor5_invalid_plugin_foo_bar:
   drupal:
     label: {}
 YAML,
-      \TypeError::class,
+      InvalidPluginDefinitionException::class,
+      'The "ckeditor5_invalid_plugin_foo_bar" CKEditor 5 plugin definition has a "drupal.label" value that is not a string nor a TranslatableMarkup instance.',
     ];
 
     yield 'fixed drupal.label' => [
