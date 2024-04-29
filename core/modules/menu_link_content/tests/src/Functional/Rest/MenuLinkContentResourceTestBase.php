@@ -60,7 +60,7 @@ abstract class MenuLinkContentResourceTestBase extends EntityResourceTestBase {
       'title' => 'Llama Gabilondo',
       'description' => 'Llama Gabilondo',
       'link' => [
-        'uri' => 'entity:user/1',
+        'uri' => 'https://nl.wikipedia.org/wiki/Llama',
         'options' => [
           'fragment' => 'a-fragment',
           'attributes' => [
@@ -132,7 +132,7 @@ abstract class MenuLinkContentResourceTestBase extends EntityResourceTestBase {
       ],
       'link' => [
         [
-          'uri' => 'entity:user/1',
+          'uri' => 'https://nl.wikipedia.org/wiki/Llama',
           'title' => NULL,
           'options' => [
             'fragment' => 'a-fragment',
