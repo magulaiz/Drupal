@@ -85,13 +85,6 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
   protected $overrideFree = FALSE;
 
   /**
-   * The messenger service.
-   *
-   * @var \Drupal\Core\Messenger\MessengerInterface
-   */
-  protected $messenger;
-
-  /**
    * Constructs a ConfigEntityStorage object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -107,7 +100,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger service.
    */
-  public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, UuidInterface $uuid_service, LanguageManagerInterface $language_manager, MemoryCacheInterface $memory_cache, MessengerInterface $messenger) {
+  public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, UuidInterface $uuid_service, LanguageManagerInterface $language_manager, MemoryCacheInterface $memory_cache, protected MessengerInterface $messenger) {
     parent::__construct($entity_type, $memory_cache);
 
     $this->configFactory = $config_factory;

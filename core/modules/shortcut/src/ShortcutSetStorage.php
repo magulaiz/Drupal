@@ -55,7 +55,7 @@ class ShortcutSetStorage extends ConfigEntityStorage implements ShortcutSetStora
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger service.
    */
-  public function __construct(EntityTypeInterface $entity_info, ConfigFactoryInterface $config_factory, UuidInterface $uuid_service, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager, MemoryCacheInterface $memory_cache, Connection $connection, MessengerInterface $messenger) {
+  public function __construct(EntityTypeInterface $entity_info, ConfigFactoryInterface $config_factory, UuidInterface $uuid_service, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager, MemoryCacheInterface $memory_cache, Connection $connection, protected MessengerInterface $messenger) {
     parent::__construct($entity_info, $config_factory, $uuid_service, $language_manager, $memory_cache, $messenger);
 
     $this->moduleHandler = $module_handler;

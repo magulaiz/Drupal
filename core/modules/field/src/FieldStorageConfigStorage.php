@@ -74,7 +74,7 @@ class FieldStorageConfigStorage extends ConfigEntityStorage {
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger service.
    */
-  public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, UuidInterface $uuid_service, LanguageManagerInterface $language_manager, EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, FieldTypePluginManagerInterface $field_type_manager, DeletedFieldsRepositoryInterface $deleted_fields_repository, MemoryCacheInterface $memory_cache, MessengerInterface $messenger) {
+  public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, UuidInterface $uuid_service, LanguageManagerInterface $language_manager, EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, FieldTypePluginManagerInterface $field_type_manager, DeletedFieldsRepositoryInterface $deleted_fields_repository, MemoryCacheInterface $memory_cache, protected MessengerInterface $messenger) {
     parent::__construct($entity_type, $config_factory, $uuid_service, $language_manager, $memory_cache, $messenger);
     $this->entityTypeManager = $entity_type_manager;
     $this->moduleHandler = $module_handler;
