@@ -322,7 +322,6 @@ function block_configurable_language_delete(ConfigurableLanguageInterface $langu
  * Implements hook_block_build_BASE_BLOCK_ID_alter().
  */
 function block_block_build_local_actions_block_alter(array &$build, BlockPluginInterface $block) {
-  $build['#create_placeholder'] = TRUE;
   $build['#lazy_builder_preview'] = [
     '#type' => 'container',
     '#attributes' => [
