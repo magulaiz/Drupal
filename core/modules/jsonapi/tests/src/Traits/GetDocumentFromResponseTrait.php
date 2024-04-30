@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\jsonapi\Traits;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Tests\BrowserTestBase;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -28,7 +28,7 @@ trait GetDocumentFromResponseTrait {
    *   Thrown when the document does not pass basic validation against the spec.
    */
   protected function getDocumentFromResponse(ResponseInterface $response, bool $validate = TRUE): ?array {
-    assert($this instanceof BrowserTestBase);
+    assert($this instanceof TestCase);
 
     $document = Json::decode((string) $response->getBody());
 
