@@ -79,6 +79,7 @@ class NavigationBaseTest extends BrowserTestBase {
    * Tests that Navigation Layout Builder page has Managed Tabs and returning links.
    */
   public function testLayoutBuilderManagedTabsLinking() {
+    $this->drupalLogin($this->adminUser);
     $this->drupalGet('/admin/config/user-interface/navigation/layout');
 
     // Check for Managed Tab links. Travel between them.
