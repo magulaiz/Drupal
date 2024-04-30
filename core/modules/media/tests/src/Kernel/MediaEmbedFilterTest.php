@@ -29,11 +29,9 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
    */
   public function testBasics(array $embed_attributes, $expected_view_mode, array $expected_attributes, CacheableMetadata $expected_cacheability) {
     $content = $this->createEmbedCode($embed_attributes);
-//dump('$content');
-//dump($content);
+
     $result = $this->applyFilter($content);
-//dump('$result');
-//dump($result);
+
     $this->assertCount(1, $this->cssSelect('div[data-media-embed-test-view-mode="' . $expected_view_mode . '"]'));
     $this->assertHasAttributes($this->cssSelect('div[data-media-embed-test-view-mode="' . $expected_view_mode . '"]')[0], $expected_attributes);
     $this->assertEqualsCanonicalizing($expected_cacheability->getCacheTags(), $result->getCacheTags());
@@ -70,59 +68,59 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
         [],
         $default_cacheability,
       ],
-//      'data-entity-uuid + data-view-mode=full ⇒ specified view mode used' => [
-//        [
-//          'data-entity-type' => 'media',
-//          'data-entity-uuid' => static::EMBEDDED_ENTITY_UUID,
-//          'data-view-mode' => 'full',
-//        ],
-//        'full',
-//        [],
-//        $default_cacheability,
-//      ],
-//      'data-entity-uuid + data-view-mode=default ⇒ specified view mode used' => [
-//        [
-//          'data-entity-type' => 'media',
-//          'data-entity-uuid' => static::EMBEDDED_ENTITY_UUID,
-//          'data-view-mode' => EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE,
-//        ],
-//        EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE,
-//        [],
-//        $default_cacheability,
-//      ],
-//      'data-entity-uuid + data-view-mode=foobar ⇒ specified view mode used' => [
-//        [
-//          'data-entity-type' => 'media',
-//          'data-entity-uuid' => static::EMBEDDED_ENTITY_UUID,
-//          'data-view-mode' => 'foobar',
-//        ],
-//        'foobar',
-//        [],
-//        (new CacheableMetadata())
-//          ->setCacheTags([
-//            '_media_test_embed_filter_access:media:1',
-//            'config:image.style.medium',
-//            'file:1',
-//            'media:1',
-//            'media_view',
-//          ])
-//          ->setCacheContexts(['user.permissions'])
-//          ->setCacheMaxAge(Cache::PERMANENT),
-//      ],
-//      'custom attributes are retained' => [
-//        [
-//          'data-foo' => 'bar',
-//          'foo' => 'bar',
-//          'data-entity-type' => 'media',
-//          'data-entity-uuid' => static::EMBEDDED_ENTITY_UUID,
-//        ],
-//        EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE,
-//        [
-//          'data-foo' => 'bar',
-//          'foo' => 'bar',
-//        ],
-//        $default_cacheability,
-//      ],
+      'data-entity-uuid + data-view-mode=full ⇒ specified view mode used' => [
+        [
+          'data-entity-type' => 'media',
+          'data-entity-uuid' => static::EMBEDDED_ENTITY_UUID,
+          'data-view-mode' => 'full',
+        ],
+        'full',
+        [],
+        $default_cacheability,
+      ],
+      'data-entity-uuid + data-view-mode=default ⇒ specified view mode used' => [
+        [
+          'data-entity-type' => 'media',
+          'data-entity-uuid' => static::EMBEDDED_ENTITY_UUID,
+          'data-view-mode' => EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE,
+        ],
+        EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE,
+        [],
+        $default_cacheability,
+      ],
+      'data-entity-uuid + data-view-mode=foobar ⇒ specified view mode used' => [
+        [
+          'data-entity-type' => 'media',
+          'data-entity-uuid' => static::EMBEDDED_ENTITY_UUID,
+          'data-view-mode' => 'foobar',
+        ],
+        'foobar',
+        [],
+        (new CacheableMetadata())
+          ->setCacheTags([
+            '_media_test_embed_filter_access:media:1',
+            'config:image.style.medium',
+            'file:1',
+            'media:1',
+            'media_view',
+          ])
+          ->setCacheContexts(['user.permissions'])
+          ->setCacheMaxAge(Cache::PERMANENT),
+      ],
+      'custom attributes are retained' => [
+        [
+          'data-foo' => 'bar',
+          'foo' => 'bar',
+          'data-entity-type' => 'media',
+          'data-entity-uuid' => static::EMBEDDED_ENTITY_UUID,
+        ],
+        EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE,
+        [
+          'data-foo' => 'bar',
+          'foo' => 'bar',
+        ],
+        $default_cacheability,
+      ],
     ];
   }
 
@@ -232,13 +230,10 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
       'alt' => '""',
       'title' => 'title 4',
     ] + $base);
-//dump('$input');
-//dump($input);
+
     $this->applyFilter($input);
 
     $img_nodes = $this->cssSelect('img');
-//dump('$img_nodes');
-//dump($img_nodes);
     $this->assertCount(5, $img_nodes);
     $this->assertHasAttributes($img_nodes[0], [
       'alt' => 'default alt',
@@ -271,10 +266,10 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
         FALSE,
         [NULL, NULL, NULL, NULL, NULL],
       ],
-//      '`title` field property enabled ⇒ `title` is overridable' => [
-//        TRUE,
-//        [NULL, 'title 1', 'title 2', 'title 3', 'title 4'],
-//      ],
+      '`title` field property enabled ⇒ `title` is overridable' => [
+        TRUE,
+        [NULL, 'title 1', 'title 2', 'title 3', 'title 4'],
+      ],
     ];
   }
 

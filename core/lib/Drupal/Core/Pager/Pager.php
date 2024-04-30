@@ -75,12 +75,6 @@ class Pager {
    *   The maximum number of items per page.
    */
   protected function setTotalPages($totalItems, $limit) {
-if (!is_int($totalItems)) {
-  dump('$totalItems');
-  dump($totalItems);
-  dump('$limit');
-  dump($limit);
-}
     $this->totalPages = (int) ceil($totalItems / $limit);
   }
 
