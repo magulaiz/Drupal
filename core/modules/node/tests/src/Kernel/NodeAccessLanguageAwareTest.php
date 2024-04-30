@@ -26,14 +26,6 @@ class NodeAccessLanguageAwareTest extends NodeAccessTestBase {
   protected static $modules = ['language', 'node_access_test_language'];
 
   /**
-   * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
-
-  /**
    * A set of nodes to use in testing.
    *
    * @var \Drupal\node\NodeInterface[]
@@ -90,7 +82,9 @@ class NodeAccessLanguageAwareTest extends NodeAccessTestBase {
 
     // Load the user 1 user for later use as an admin user with permission to
     // see everything.
-    $this->adminUser = User::load(1);
+    $this->adminUser =  $this->drupalCreateUser([
+      'bypass node access'
+    ]);
 
     // Add Hungarian and Catalan.
     ConfigurableLanguage::createFromLangcode('hu')->save();

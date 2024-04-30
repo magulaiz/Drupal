@@ -24,14 +24,6 @@ class NodeAccessLanguageTest extends NodeAccessTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
-
-  /**
-   * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
@@ -195,7 +187,9 @@ class NodeAccessLanguageTest extends NodeAccessTestBase {
 
     // Load the user 1 user for later use as an admin user with permission to
     // see everything.
-    $admin_user = User::load(1);
+    $admin_user = $this->drupalCreateUser([
+      'bypass node access'
+    ]);
 
     // Creating a private node with langcode Hungarian, will be saved as
     // the fallback in node access table.

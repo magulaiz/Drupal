@@ -31,14 +31,6 @@ class NodeAccessLanguageAwareCombinationTest extends NodeAccessTestBase {
   ];
 
   /**
-   * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
-
-  /**
    * A set of nodes to use in testing.
    *
    * @var \Drupal\node\NodeInterface[]
@@ -101,7 +93,9 @@ class NodeAccessLanguageAwareCombinationTest extends NodeAccessTestBase {
 
     // Load the user 1 user for later use as an admin user with permission to
     // see everything.
-    $this->adminUser = User::load(1);
+    $this->adminUser =  $this->drupalCreateUser([
+      'bypass node access'
+    ]);
 
     // The node_access_test_language module allows individual translations of a
     // node to be marked private (not viewable by normal users), and the
