@@ -82,10 +82,10 @@ class NavigationBaseTest extends BrowserTestBase {
     $this->drupalGet('admin/config/user-interface/navigation/layout');
 
     // Check for Managed Tab links. Travel between them.
-    $this->getSession()->getPage()->findLink('Manage Settings')->click();
+    $this->findLink('Manage Settings')->click();
     $this->assertSession()->pageTextContains('Logo options');
     // Return to Navigation Layout Builder.
-    $this->getSession()->getPage()->findLink('Manage Layout')->click();
+    $this->findLink('Manage Layout')->click();
     $this->assertSession()->pageTextContains('Edit layout for Navigation');
 
     // Check the Logo visibility, acts as a 'return to site' landmark.
