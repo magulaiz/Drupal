@@ -329,7 +329,13 @@ function block_block_build_local_actions_block_alter(array &$build, BlockPluginI
       '#type' => 'list',
       '#attributes' => 'local-actions',
       'items' => [
-        Link::fromTextAndUrl(t('Add'), Url::fromUserInput('#', ['attributes' => ['class' =>'button button--action button--primary']])),
+        [
+          '#theme' => 'menu_local_action',
+          '#link' => [
+            '#title' => t('Add'),
+            '#url' => Url::fromUserInput('#'),
+          ],
+        ],
       ],
     ],
   ];
