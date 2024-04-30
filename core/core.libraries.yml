@@ -549,6 +549,7 @@ drupal.debounce:
 drupal.dialog:
   version: VERSION
   js:
+    misc/dialog/dialog-deprecation.js: {}
     misc/dialog/dialog.js: {}
     misc/dialog/dialog.position.js: {}
     misc/dialog/dialog.jquery-ui.js: {}
@@ -581,7 +582,11 @@ drupal.dialog:
     - core/drupalSettings
     - core/drupal.debounce
     - core/drupal.displace
+<<<<<<< HEAD
     - core/tabbable.jquery.shim
+=======
+    - core/once
+>>>>>>> 9b2d61c6e1 (Issue #3390549 by finnsky, nod_, smustgrave, larowlan, catch, bnjmnm: Get rid of jQuery in dialog events)
     - core/drupal.jquery.position
 
 drupal.dialog.ajax:
