@@ -138,7 +138,7 @@ button.button--danger:hover::before {
 
 button.button--danger:focus {
   color: var(--color-maximumred);
-  background-color: var(--color-white);
+  background-color: transparent;
 }
 
 button.button--danger:active {

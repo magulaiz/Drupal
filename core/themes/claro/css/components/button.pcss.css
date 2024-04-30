@@ -126,7 +126,7 @@ button {
 
     &:focus {
       color: var(--color-maximumred);
-      background-color: var(--color-white);
+      background-color: transparent;
     }
 
     &:active {
