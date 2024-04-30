@@ -12,6 +12,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class MetaEventSubscriber implements EventSubscriberInterface {
 
+  /**
+   * {@inheritdoc}
+   */
   public static function getSubscribedEvents() {
     return [
       CollectResourceObjectMetaEvent::class => 'addResourceObjectMeta',
@@ -19,7 +22,12 @@ class MetaEventSubscriber implements EventSubscriberInterface {
     ];
   }
 
-  public function addResourceObjectMeta(CollectResourceObjectMetaEvent $event) {
+  /**
+   * @param \Drupal\jsonapi\Events\CollectResourceObjectMetaEvent $event
+   *
+   * @return void
+   */
+  public function addResourceObjectMeta(CollectResourceObjectMetaEvent $event): void {
     $config = \Drupal::state()->get('jsonapi_test_meta_events.object_meta', [
       'enabled_type' => FALSE,
       'enabled_id' => FALSE,
@@ -56,7 +64,12 @@ class MetaEventSubscriber implements EventSubscriberInterface {
     $event->addCacheTags(['jsonapi_test_meta_events.object_meta']);
   }
 
-  public function addRelationshipMeta(CollectRelationshipMetaEvent $event) {
+  /**
+   * @param \Drupal\jsonapi\Events\CollectRelationshipMetaEvent $event
+   *
+   * @return void
+   */
+  public function addRelationshipMeta(CollectRelationshipMetaEvent $event): void {
     $config = \Drupal::state()->get('jsonapi_test_meta_events.relationship_meta', [
       'enabled_type' => FALSE,
       'enabled_id' => FALSE,

@@ -626,7 +626,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
   /**
    * Tests adding metadata to relationship.
    */
-  public function testMetaRelationEvent() {
+  public function testMetaRelationEvent(): void {
     $this->createDefaultContent(3, 5, FALSE, FALSE, static::IS_NOT_MULTILINGUAL);
 
     $this->container->get('module_installer')->install(['jsonapi_test_meta_events']);
@@ -681,7 +681,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
   /**
    * Tests adding metadata to relationship endpoint.
    */
-  public function testMetaRelationEventOnRelationshipEndpoint() {
+  public function testMetaRelationEventOnRelationshipEndpoint(): void {
     $this->createDefaultContent(1, 1, FALSE, FALSE, static::IS_NOT_MULTILINGUAL);
 
     $this->container->get('module_installer')->install(['jsonapi_test_meta_events']);
