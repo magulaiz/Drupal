@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\navigation\Functional;
 
+use Drupal\Core\Url;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\BrowserTestBase;
 
@@ -80,14 +81,20 @@ class NavigationBaseTest extends BrowserTestBase {
   public function testLayoutBuilderLogoVisibility() {
     $this->drupalGet('/admin/config/user-interface/navigation-block');
 
-    // The Logo acts as a 'return to site' landmark item.  It should also be seen on
-    // the Layout Builder as Layout 'preview' mode disables all links.
+    // Check for Managed Tab links. Travel between them.
+    $gotoSettings = $this->getSession()->getPage()->findLink('Manage Settings').click();
+    $this->assertSession()->pageTextContains('Logo options');
+    $gotoSettings = $this->getSession()->getPage()->findLink('Manage Layout').click();
+    $this->assertSession()->pageTextContains('Edit layout for Navigation');
+
+    // Check the Logo visibility, acts as a 'return to site' landmark.
     $this->assertSession()->elementExists('xpath', "//div[contains(@class, 'admin-toolbar__logo')]");
 
-    // Check for additional 'Return to site' href in form.
+    // Check for 'Return to site' link in the layout builder form.
     $link = $this->getSession()->getPage()->findLink('Return to site');
-    $this->assertNotNull($link, 'The link "Return to site" is present on the layout builder.');
-
+    $this->assertNotNull($link, "The link 'Return to site' is present on the layout builder.");
+    $front_page_path = Url::fromRoute('<front>')->toString();
+    $this->assertEquals($front_page_path, $link->getAttribute('href'), "The href attribute of 'Return to site' links to <front>.");
   }
 
 }
