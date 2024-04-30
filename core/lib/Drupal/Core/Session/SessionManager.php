@@ -67,7 +67,7 @@ class SessionManager extends NativeSessionStorage implements SessionManagerInter
   public function __construct(
     protected RequestStack $requestStack,
     protected Connection $connection,
-    protected MetadataBag $metadata_bag,
+    MetadataBag $metadata_bag,
     protected SessionConfigurationInterface $sessionConfiguration,
     protected TimeInterface $time,
     $handler = NULL,
