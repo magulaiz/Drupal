@@ -4,31 +4,51 @@ parameters:
   # allow IDEs to autocomplete them when writing new service YAML files.
   app.root: ''
   site.path: ''
+  session.storage.options.gc_probability: 1
+  session.storage.options.gc_divisor: 100
+  session.storage.options.gc_maxlifetime: 200000
+  session.storage.options.cookie_lifetime: 2000000
+  session.storage.options.cookie_samesite: Lax
+  session.storage.options.sid_length: 48
+  session.storage.options.sid_bits_per_character: 6
   session.storage.options:
-    gc_probability: 1
-    gc_divisor: 100
-    gc_maxlifetime: 200000
-    cookie_lifetime: 2000000
-    cookie_samesite: Lax
-    sid_length: 48
-    sid_bits_per_character: 6
+    gc_probability: '%session.storage.options.gc_probability%'
+    gc_divisor: '%session.storage.options.gc_divisor%'
+    gc_maxlifetime: '%session.storage.options.gc_maxlifetime%'
+    cookie_lifetime: '%session.storage.options.cookie_lifetime%'
+    cookie_samesite: '%session.storage.options.cookie_samesite%'
+    sid_length: '%session.storage.options.sid_length%'
+    sid_bits_per_character: '%session.storage.options.sid_bits_per_character%'
+  twig.config.debug: false
+  twig.config.auto_reload: null
+  twig.config.cache: true
+  twig.config.allowed_file_extensions:
+    - css
+    - html
+    - js
+    - svg
+    - twig
   twig.config:
-    debug: false
-    auto_reload: null
-    cache: true
-    allowed_file_extensions:
-      - css
-      - html
-      - js
-      - svg
-      - twig
+    debug: '%twig.config.debug%'
+    auto_reload: '%twig.config.auto_reload%'
+    cache: '%twig.config.cache%'
+    allowed_file_extensions: '%twig.config.allowed_file_extensions%'
+  renderer.config.required_cache_contexts:
+    - 'languages:language_interface'
+    - 'theme'
+    - 'user.permissions'
+  renderer.config.auto_placeholder_conditions.max_age: 0
+  renderer.config.auto_placeholder_conditions.contexts: ['session', 'user']
+  renderer.config.auto_placeholder_conditions.tags: []
+  renderer.config.auto_placeholder_conditions:
+    max-age: '%renderer.config.auto_placeholder_conditions.max_age%'
+    contexts: '%renderer.config.auto_placeholder_conditions.contexts%'
+    tags: '%renderer.config.auto_placeholder_conditions.tags%'
+  renderer.config.debug: false
   renderer.config:
-    required_cache_contexts: ['languages:language_interface', 'theme', 'user.permissions']
-    auto_placeholder_conditions:
-      max-age: 0
-      contexts: ['session', 'user']
-      tags: []
-    debug: false
+    required_cache_contexts: '%renderer.config.required_cache_contexts%'
+    auto_placeholder_conditions: '%renderer.config.auto_placeholder_conditions%'
+    debug: '%renderer.config.debug%'
   factory.keyvalue:
     default: keyvalue.database
   http.response.debug_cacheability_headers: false
@@ -48,17 +68,25 @@ parameters:
     - sftp
     - webcal
     - rtsp
+  cors.config.enabled: false
+  cors.config.allowed_headers: []
+  cors.config.allowed_methods: []
+  cors.config.allowed_origins: ['*']
+  cors.config.exposed_headers: false
+  cors.config.max_age: false
+  cors.config.supports_credentials: false
   cors.config:
-    enabled: false
-    allowedHeaders: []
-    allowedMethods: []
-    allowedOrigins: ['*']
-    exposedHeaders: false
-    maxAge: false
-    supportsCredentials: false
+    enabled: '%cors.config.enabled%'
+    allowedHeaders: '%cors.config.allowed_headers%'
+    allowedMethods: '%cors.config.allowed_methods%'
+    allowedOrigins: '%cors.config.allowed_origins%'
+    exposedHeaders: '%cors.config.exposed_headers%'
+    maxAge: '%cors.config.max_age%'
+    supportsCredentials: '%cors.config.supports_credentials%'
   tempstore.expire: 604800
+  queue.config.suspend_maximum_wait: 30.0
   queue.config:
-    suspendMaximumWait: 30.0
+    suspendMaximumWait: '%queue.config.suspend_maximum_wait%'
 services:
   # Simple cache contexts, directly derived from the request context.
   cache_context.ip:
