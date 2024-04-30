@@ -25,7 +25,7 @@
   function DropButton(dropbutton, settings, index) {
     // Merge defaults with settings.
     const options = $.extend(
-      { title: Drupal.t('Show additional actions') },
+      { title: Drupal.t('Additional actions') },
       settings,
     );
     const $dropbutton = $(dropbutton);
@@ -87,10 +87,8 @@
     const $buttonText = $(e.target).find('.visually-hidden');
     $wrapper.toggleClass('open');
     if ($wrapper.hasClass('open')) {
-      $buttonText.html('Hide additional actions');
       $(e.target).attr('aria-expanded', 'true');
     } else {
-      $buttonText.html('Show additional actions');
       $(e.target).attr('aria-expanded', 'false');
     }
   }
