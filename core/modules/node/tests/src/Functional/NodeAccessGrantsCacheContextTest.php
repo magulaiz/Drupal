@@ -84,7 +84,7 @@ class NodeAccessGrantsCacheContextTest extends NodeTestBase {
       'access content',
     ]);
     $this->adminUser = $this->drupalCreateUser([
-      'bypass node access'
+      'bypass node access',
     ]);
 
     $this->userMapping = [

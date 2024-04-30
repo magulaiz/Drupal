@@ -9,7 +9,6 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\NodeType;
-use Drupal\user\Entity\User;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
@@ -93,8 +92,8 @@ class NodeAccessLanguageAwareCombinationTest extends NodeAccessTestBase {
 
     // Load the user 1 user for later use as an admin user with permission to
     // see everything.
-    $this->adminUser =  $this->drupalCreateUser([
-      'bypass node access'
+    $this->adminUser = $this->drupalCreateUser([
+      'bypass node access',
     ]);
 
     // The node_access_test_language module allows individual translations of a

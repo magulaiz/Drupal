@@ -8,7 +8,6 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\NodeType;
-use Drupal\user\Entity\User;
 
 /**
  * Tests multilingual node access with a module that is not language-aware.
@@ -188,7 +187,7 @@ class NodeAccessLanguageTest extends NodeAccessTestBase {
     // Load the user 1 user for later use as an admin user with permission to
     // see everything.
     $admin_user = $this->drupalCreateUser([
-      'bypass node access'
+      'bypass node access',
     ]);
 
     // Creating a private node with langcode Hungarian, will be saved as

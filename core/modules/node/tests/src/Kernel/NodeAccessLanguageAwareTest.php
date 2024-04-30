@@ -8,7 +8,6 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\user\Entity\User;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
@@ -82,8 +81,8 @@ class NodeAccessLanguageAwareTest extends NodeAccessTestBase {
 
     // Load the user 1 user for later use as an admin user with permission to
     // see everything.
-    $this->adminUser =  $this->drupalCreateUser([
-      'bypass node access'
+    $this->adminUser = $this->drupalCreateUser([
+      'bypass node access',
     ]);
 
     // Add Hungarian and Catalan.
