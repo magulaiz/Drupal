@@ -314,8 +314,8 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
 
     $build = [];
     if ($storage) {
-      foreach ($storage->getSections() as $delta => $section) {
-        $build[$delta] = $section->toRenderArray($contexts);
+      foreach ($storage->getSections() as $uuid => $section) {
+        $build[$section->getWeight()] = $section->toRenderArray($contexts);
       }
     }
     // The render array is built based on decisions made by @SectionStorage
@@ -379,13 +379,13 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
 
     // Loop through all sections and determine if the removed dependencies are
     // used by their layout plugins.
-    foreach ($this->getSections() as $delta => $section) {
+    foreach ($this->getSections() as $section) {
       $layout_dependencies = $this->getPluginDependencies($section->getLayout());
       $layout_removed_dependencies = $this->getPluginRemovedDependencies($layout_dependencies, $dependencies);
       if ($layout_removed_dependencies) {
         // @todo Allow the plugins to react to their dependency removal in
         //   https://www.drupal.org/project/drupal/issues/2579743.
-        $this->removeSection($delta);
+        $this->removeSection($section->getWeight());
         $changed = TRUE;
       }
       // If the section is not removed, loop through all components.

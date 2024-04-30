@@ -123,7 +123,13 @@ class MoveBlockForm extends FormBase {
     $sections = $section_storage->getSections();
     $contexts = $this->getPopulatedContexts($section_storage);
     $region_options = [];
-    foreach ($sections as $section_delta => $section) {
+    $original_section = NULL;
+    foreach ($sections as $uuid => $section) {
+      $section_delta = $section->getWeight();
+      // Get the original section.
+      if ($delta == $section->getWeight()) {
+        $original_section = $section;
+      }
       $layout = $section->getLayout($contexts);
       $layout_definition = $layout->getPluginDefinition();
       if (!($section_label = $section->getLayoutSettings()['label'])) {
@@ -187,8 +193,8 @@ class MoveBlockForm extends FormBase {
     $components = $current_section->getComponentsByRegion($selected_region);
 
     // If the component is not in this region, add it to the listed components.
-    if (!isset($components[$uuid])) {
-      $components[$uuid] = $sections[$delta]->getComponent($uuid);
+    if (!isset($components[$uuid]) && !is_null($original_section)) {
+      $components[$uuid] = $original_section->getComponent($uuid);
     }
     $state_weight_delta = round(count($components) / 2);
     foreach ($components as $component_uuid => $component) {

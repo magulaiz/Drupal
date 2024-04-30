@@ -51,7 +51,7 @@ class TestSectionList implements SectionListInterface {
     // Loop through each section and reconstruct it to ensure that all default
     // values are present.
     foreach ($sections as $section) {
-      $this->sections[] = Section::fromArray($section->toArray());
+      $this->sections[$section->getUuid()] = Section::fromArray($section->toArray());
     }
   }
 
