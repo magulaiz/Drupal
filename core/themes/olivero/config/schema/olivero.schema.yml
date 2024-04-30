@@ -18,6 +18,9 @@ olivero.settings:
     mobile_menu_all_widths:
       type: integer
       label: 'Mobile menu all widths'
+    center_align_layout:
+      type: integer
+      label: 'Center align site layout'
     site_branding_bg_color:
       type: string
       label: 'Site branding background color'

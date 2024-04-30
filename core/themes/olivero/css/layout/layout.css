@@ -29,6 +29,10 @@ body.is-fixed .container {
   background: var(--color--white);
 }
 
+.page-wrapper.page-wrapper--centered {
+  margin-inline: auto;
+}
+
 /**
  * Creates stacking context ensuring that child elements can never appear in
  * front of mobile navigation.
