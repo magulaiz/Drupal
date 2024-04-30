@@ -118,7 +118,9 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
     }
 
     try {
-      $transaction = $this->database->startTransaction();
+      if ($this->database->driver() != 'mongodb') {
+        $transaction = $this->database->startTransaction();
+      }
       // @todo Handle the publishing of a workspace with a batch operation in
       //   https://www.drupal.org/node/2958752.
       $this->workspaceManager->executeOutsideWorkspace(function () use ($tracked_entities) {
