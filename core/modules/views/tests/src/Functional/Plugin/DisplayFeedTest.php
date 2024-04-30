@@ -78,8 +78,14 @@ class DisplayFeedTest extends ViewTestBase {
     $this->assertEquals('Copyright 2019 Dries Buytaert', $this->getSession()->getDriver()->getText('//channel/copyright'));
     $this->assertEquals($node_title, $this->getSession()->getDriver()->getText('//item/title'));
     $this->assertEquals($node_link, $this->getSession()->getDriver()->getText('//item/link'));
-    // Verify HTML is properly escaped in the description field.
-    $this->assertSession()->responseContains('&lt;p&gt;A paragraph&lt;/p&gt;');
+    // HTML Should no longer be escaped since it is CDATA.
+    // Confirm it is wrapped in CDATA.
+    // See https://www.drupal.org/project/drupal/issues/3433
+    $this->assertSession()->responseContains('<description><![CDATA[');
+    // Confirm that the view is still displaying the content.
+    $this->assertSession()->responseContains('<p>A paragraph</p>');
+    // Confirm that the CDATA is closed properly.
+    $this->assertSession()->responseContains(']]></description>');
 
     $view = $this->container->get('entity_type.manager')->getStorage('view')->load('test_display_feed');
     $display = &$view->getDisplay('feed_1');
