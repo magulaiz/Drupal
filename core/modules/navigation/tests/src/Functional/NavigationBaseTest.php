@@ -79,8 +79,7 @@ class NavigationBaseTest extends BrowserTestBase {
    * Tests that Navigation Layout Builder page has Managed Tabs and returning links.
    */
   public function testLayoutBuilderManagedTabsLinking() {
-    $this->drupalLogin($this->adminUser);
-    $this->drupalGet('/admin/config/user-interface/navigation/layout');
+    $this->drupalGet('admin/config/user-interface/navigation/layout');
 
     // Check for Managed Tab links. Travel between them.
     $gotoSettings = $this->clickLink('Manage Settings');
@@ -89,7 +88,7 @@ class NavigationBaseTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Edit layout for Navigation');
 
     // Check the Logo visibility, acts as a 'return to site' landmark.
-    $this->assertSession()->elementExists('xpath', "//div[contains(@class, 'admin-toolbar__logo')]");
+    $this->assertSession()->elementExists('xpath', "//a[contains(@class, 'admin-toolbar__logo')]");
 
     // Check for 'Return to site' link in the layout builder form.
     $link = $this->getSession()->getPage()->findLink('Return to site');
