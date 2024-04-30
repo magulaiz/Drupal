@@ -40,7 +40,7 @@ trait GetDocumentFromResponseTrait {
       if (isset($document['errors'])) {
         $errors = [];
         foreach ($document['errors'] as $error) {
-          $errors[] = $error['title'] . ': ' . $error['detail'];
+          $errors[] = $error['title'] . ' (' . $error['status'] . '): ' . $error['detail'];
         }
         $this->fail('Missing expected data member in document. Error(s): ' . PHP_EOL . '  ' . implode('  ' . PHP_EOL, $errors));
       }
