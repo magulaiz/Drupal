@@ -1087,9 +1087,8 @@ HTML;
     return [
       '#cache' => [
         'keys' => ['test_render'],
-        'contexts' => ['user'],
       ],
-      '#lazy_builder' => [__namespace__ . '\\PlaceholdersTest::callback', ['foo']],
+      '#lazy_builder' => [__namespace__ . '\\PlaceholdersTest::callbackPerUser', ['foo']],
       '#lazy_builder_preview' => ['#markup' => 'Lazy Builder Preview'],
     ];
   }
