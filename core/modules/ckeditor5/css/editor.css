@@ -24,3 +24,9 @@
 .ck-editor__main > .ck-source-editing-area textarea {
   overflow: auto;
 }
+
+.ck.ck-content:not(.ck-comment__input *) {
+  overflow-y: auto;
+  height: var(--ck-min-height);
+  resize: vertical;
+}
