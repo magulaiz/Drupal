@@ -115,7 +115,6 @@
 
   $(window).on({
     'dialog:aftercreate': function (event, dialog, $element, settings) {
-      const autoResize = debounce(resetSize, 20);
       const eventData = { settings, $element };
       if (settings.autoResize === true || settings.autoResize === 'true') {
         const uiDialog = $element
@@ -123,12 +122,12 @@
           .dialog('widget');
         uiDialog[0].style.position = 'fixed';
         $(window)
-          .on('resize.dialogResize scroll.dialogResize', eventData, autoResize)
+          .on('resize.dialogResize scroll.dialogResize', eventData, resetSize)
           .trigger('resize.dialogResize');
         $(document).on(
           'drupalViewportOffsetChange.dialogResize',
           eventData,
-          autoResize,
+          resetSize,
         );
       }
     },
