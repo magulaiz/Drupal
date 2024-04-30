@@ -946,6 +946,7 @@
   border-radius: 0 0 var(--input-border-radius-size) var(--input-border-radius-size);
   background: var(--jui-dropdown-bg-color);
   box-shadow: 0 0.125rem 0.25rem var(--jui-dropdown-shadow-color);
+  z-index: 500;
 }
 
 /* Suggestion list */
