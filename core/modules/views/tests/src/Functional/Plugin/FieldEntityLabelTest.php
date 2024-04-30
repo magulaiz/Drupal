@@ -26,7 +26,7 @@ class FieldEntityLabelTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['views', 'file', 'image', 'entity_test', 'node'];
+  protected static $modules = ['views', 'file', 'image', 'node'];
 
   /**
    * {@inheritdoc}
@@ -103,6 +103,8 @@ class FieldEntityLabelTest extends BrowserTestBase {
     // Confirm the default image file is used.
     $this->drupalGet('/admin/content/files/usage/' . $default_images['field_storage_new']->id());
     $this->assertSession()->statusCodeEquals(200);
+    // Confirm the number of usage.
+    $this->assertSession()->elementTextEquals('xpath', '//td[@headers="view-count-table-column"]', '1');
   }
 
 }
