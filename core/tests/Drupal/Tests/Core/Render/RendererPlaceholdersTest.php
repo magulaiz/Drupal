@@ -1083,7 +1083,7 @@ HTML;
   /**
    * Generates an element with a lazy builder and preview.
    */
-  function generatePlaceholderWithLazyBuilderPreview() {
+  public function generatePlaceholderWithLazyBuilderPreview(): array {
     return [
       '#cache' => [
         'keys' => ['test_render'],
@@ -1216,4 +1216,5 @@ class TestPlaceholderingRenderCache extends PlaceholderingRenderCache {
     $this->placeholderElements[] = $placeholder_element;
     return $placeholder_element;
   }
+
 }
