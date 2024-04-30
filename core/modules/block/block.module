@@ -324,7 +324,7 @@ function block_configurable_language_delete(ConfigurableLanguageInterface $langu
 function block_block_build_local_actions_block_alter(array &$build, BlockPluginInterface $block) {
   $build['#lazy_builder_preview'] = [
     '#type' => 'container',
-    '#attributes' => ['class' => 'invisible'],
+    '#attributes' => ['class' => ['invisible']],
     'actions' => [
       '#type' => 'list',
       '#attributes' => ['class' => ['local-actions']],
