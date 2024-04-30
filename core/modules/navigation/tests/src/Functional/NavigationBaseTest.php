@@ -79,7 +79,7 @@ class NavigationBaseTest extends BrowserTestBase {
    * Tests the top bar visibility.
    */
   public function testLayoutBuilderLogoVisibility() {
-    $this->drupalGet('/admin/config/user-interface/navigation-block');
+    $this->drupalGet('/admin/config/user-interface/navigation/layout');
 
     // Check for Managed Tab links. Travel between them.
     $gotoSettings = $this->getSession()->getPage()->findLink('Manage Settings').click();
