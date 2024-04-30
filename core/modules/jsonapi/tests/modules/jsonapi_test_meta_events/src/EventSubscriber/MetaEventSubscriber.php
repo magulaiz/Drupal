@@ -24,6 +24,7 @@ class MetaEventSubscriber implements EventSubscriberInterface {
 
   /**
    * @param \Drupal\jsonapi\Events\CollectResourceObjectMetaEvent $event
+   *   Event to be processed.
    *
    * @return void
    */
@@ -66,6 +67,7 @@ class MetaEventSubscriber implements EventSubscriberInterface {
 
   /**
    * @param \Drupal\jsonapi\Events\CollectRelationshipMetaEvent $event
+   *   Event to be processed.
    *
    * @return void
    */
