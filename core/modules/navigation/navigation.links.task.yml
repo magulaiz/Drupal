@@ -1,4 +1,4 @@
-navigation.logo:
+navigation.settings:
   title: 'Manage Settings'
   route_name: navigation.settings
   base_route: navigation.settings
