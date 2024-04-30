@@ -327,7 +327,7 @@ function block_block_build_local_actions_block_alter(array &$build, BlockPluginI
     '#attributes' => ['class' => 'invisible'],
     'actions' => [
       '#type' => 'list',
-      '#attributes' => 'local-actions',
+      '#attributes' => ['class' => ['local-actions']],
       'items' => [
         [
           '#theme' => 'menu_local_action',
