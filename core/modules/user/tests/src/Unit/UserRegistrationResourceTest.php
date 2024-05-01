@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\user\Unit;
 
 use Drupal\Core\Config\ImmutableConfig;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Password\PasswordGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
