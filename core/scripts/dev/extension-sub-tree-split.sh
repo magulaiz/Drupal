@@ -62,14 +62,14 @@ echo "Executing a sub-tree split for $TYPE/$EXTENSION."
 
 # 1. Create a working directory and clone Drupal.
 mkdir "$WORKING_DIR"
-cd "$WORKING_DIR" || exit
+cd "$WORKING_DIR" || exit 1
 if ! git clone https://git.drupalcode.org/project/drupal.git
 then
   printf "\ngit clone failed."
   exit 1
 fi
 
-cd drupal || exit
+cd drupal || exit 1
 
 # 2. Split core/extension_type/extension.
 if ! git subtree split -P core/"$TYPE"/"$EXTENSION" -b "$EXTENSION"
@@ -108,7 +108,7 @@ git checkout "$EXTENSION"
 # Create the repository in a new directory.
 cd ..
 mkdir "$EXTENSION"
-cd "$EXTENSION" || exit
+cd "$EXTENSION" || exit 1
 git init
 git pull ../drupal "$EXTENSION"
 git remote add origin https://git.drupalcode.org/project/"$EXTENSION".git
