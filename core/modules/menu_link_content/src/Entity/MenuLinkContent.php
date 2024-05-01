@@ -186,13 +186,6 @@ class MenuLinkContent extends EditorialContentEntityBase implements MenuLinkCont
   /**
    * {@inheritdoc}
    */
-  public static function preCreate(EntityStorageInterface $storage, array &$values) {
-    $values += ['bundle' => 'menu_link_content'];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
 

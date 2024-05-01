@@ -139,7 +139,6 @@ class MenuLinksTest extends KernelTestBase {
   public function testCreateLink() {
     $options = [
       'menu_name' => 'menu_test',
-      'bundle' => 'menu_link_content',
       'link' => [['uri' => 'internal:/']],
       'title' => 'Link test',
     ];
@@ -177,7 +176,6 @@ class MenuLinksTest extends KernelTestBase {
       'title' => 'username profile',
       'menu_name' => 'menu_test',
       'link' => [['uri' => 'entity:user/' . $user->id()]],
-      'bundle' => 'menu_test',
     ]);
     $menu_link_content->save();
 
@@ -186,7 +184,6 @@ class MenuLinksTest extends KernelTestBase {
       'title' => 'users listing',
       'menu_name' => 'menu_test',
       'link' => [['uri' => 'internal:/' . $user->toUrl('collection')->getInternalPath()]],
-      'bundle' => 'menu_test',
     ]);
     $menu_link_content_collection->save();
 
