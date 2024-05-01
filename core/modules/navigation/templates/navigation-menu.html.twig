@@ -18,6 +18,7 @@
             icon: item.class|clean_class,
             html_tag: 'a',
             text: item.title,
+            has_abbreviation: TRUE,
             extra_classes: 'toolbar-button--collapsible',
           } only %}
         </li>
@@ -29,6 +30,7 @@
             icon: item.class|clean_class,
             text: item.title,
             extra_classes: 'toolbar-button--expand--side toolbar-button--collapsible toolbar-popover__control',
+            has_abbreviation: TRUE,
             has_safe_triangle: TRUE,
           } only %}
           <div class="toolbar-popover__wrapper" data-toolbar-popover-wrapper inert>

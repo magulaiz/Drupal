@@ -25,6 +25,7 @@
       attributes: create_attribute({'aria-expanded': 'false', 'aria-controls': 'admin-toolbar'}),
       icon: 'burger',
       text: 'Expand sidebar'|t,
+      has_abbreviation: TRUE,
       extra_classes: 'admin-toolbar-control-bar__burger',
     } only %}
   </div>
@@ -60,6 +61,7 @@
           extra_classes: 'admin-toolbar__back-button',
           icon: 'back',
           text: 'Back'|t,
+          has_abbreviation: TRUE,
         } only %}
         {% include '@navigation/toolbar-button.html.twig' with {
           attributes: create_attribute({ 'aria-controls': 'admin-toolbar', 'tabindex': '-1' }),
@@ -67,6 +69,7 @@
           icon: 'cross',
           label_classes: 'visually-hidden',
           text: 'Collapse sidebar'|t,
+          has_abbreviation: TRUE,
         } only %}
       </div>
 
