@@ -393,7 +393,14 @@ class ExtensionDiscovery {
     // directory being scanned, so relative paths can be reconstructed below
     // (all paths are expected to be relative to $this->root).
     $dir_prefix = ($dir == '' ? '' : "$dir/");
-    $absolute_dir = ($dir == '' ? $this->root : $this->root . "/$dir");
+    // Don't prefix the directory if it has a scheme, as in this case it's
+    // already absolute.
+    if (strpos($dir, '://') === FALSE) {
+      $absolute_dir = ($dir == '' ? $this->root : $this->root . "/$dir");
+    }
+    else {
+      $absolute_dir = $dir;
+    }
 
     if (!is_dir($absolute_dir)) {
       return $files;

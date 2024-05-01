@@ -8,6 +8,7 @@ use Drupal\ckeditor5\Annotation\DrupalAspectsOfCKEditor5Plugin;
 use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\ckeditor5\Plugin\CKEditor5Plugin\Heading;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
+use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\editor\Entity\Editor;
@@ -63,6 +64,12 @@ class CKEditor5PluginManagerTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+
+    // To discover per-test case config schema YAML files, disable the static
+    // file cache that \Drupal\Core\Extension\ExtensionDiscovery uses.
+    FileCacheFactory::setConfiguration([FileCacheFactory::DISABLE_CACHE => TRUE]);
+    // Ensure that FileCacheFactory has a prefix.
+    FileCacheFactory::setPrefix('prefix');
 
     FilterFormat::create(
       Yaml::parseFile('core/profiles/standard/config/install/filter.format.basic_html.yml')
@@ -150,24 +157,6 @@ YAML,
     // @see \Symfony\Component\DependencyInjection\Compiler\ResolveParameterPlaceHoldersPass
     // @see \Drupal\Core\DrupalKernel::guessApplicationRoot()
     $container->getDefinition('module_handler')->setArgument(0, '%app.root%');
-
-    // To discover per-test case config schema YAML files, work around the
-    // static file cache in \Drupal\Core\Extension\ExtensionDiscovery. There is
-    // no work-around that allows using both the files on disk and some in vfs.
-    // To make matters worse, decorating a service within the test only is not
-    // an option either, because \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition
-    // is a pure value object, so it uses the global container. Therefore the
-    // only work-around possible is to manipulate the config schema definition
-    // cache.
-    // @todo Remove this in https://www.drupal.org/project/drupal/issues/2961541.
-    if (isset($additional_files['config']['schema']["$module_name.schema.yml"])) {
-      $cache = \Drupal::service('cache.discovery')
-        ->get('typed_config_definitions');
-      $typed_config_definitions = $cache->data;
-      $typed_config_definitions += Yaml::parse($additional_files['config']['schema']["$module_name.schema.yml"]);
-      \Drupal::service('config.typed')->clearCachedDefinitions();
-      \Drupal::service('cache.discovery')->set('typed_config_definitions', $typed_config_definitions, $cache->expire, $cache->tags);
-    }
 
     return $container;
   }
