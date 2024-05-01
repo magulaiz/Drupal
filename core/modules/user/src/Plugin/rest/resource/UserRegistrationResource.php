@@ -60,7 +60,7 @@ class UserRegistrationResource extends ResourceBase {
     $plugin_id,
     $plugin_definition,
     array $serializer_formats,
-    protected LoggerInterface $logger,
+    LoggerInterface $logger,
     protected ImmutableConfig $userSettings,
     protected AccountInterface $currentUser,
     protected PasswordGeneratorInterface $passwordGenerator,
