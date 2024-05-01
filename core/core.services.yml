@@ -8,6 +8,7 @@ parameters:
   # function properly before that runs.
   cache_default_bin_backends: []
   memory_cache_default_bin_backends: []
+  security.enable_super_user: true
   session.storage.options:
     gc_probability: 1
     gc_divisor: 100
@@ -706,7 +707,7 @@ services:
   Drupal\Core\Entity\EntityTypeManagerInterface: '@entity_type.manager'
   entity_type.repository:
     class: Drupal\Core\Entity\EntityTypeRepository
-    arguments: ['@entity_type.manager']
+    arguments: ['@entity_type.manager', '@entity_type.bundle.info']
   Drupal\Core\Entity\EntityTypeRepositoryInterface: '@entity_type.repository'
   entity_type.bundle.info:
     class: Drupal\Core\Entity\EntityTypeBundleInfo
@@ -1878,3 +1879,4 @@ services:
       - '@logger.channel.default'
     tags:
       - { name: twig.loader, priority: 5 }
+  Drupal\Core\EventSubscriber\CsrfExceptionSubscriber: ~

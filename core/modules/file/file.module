@@ -14,6 +14,7 @@ use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\Exception\FileExistsException;
 use Drupal\Core\File\Exception\FileWriteException;
 use Drupal\Core\File\Exception\InvalidStreamWrapperException;
+use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
@@ -216,18 +217,16 @@ function file_cron() {
  * @param null|int $delta
  *   (optional) The delta of the file to return the file entity.
  *   Defaults to NULL.
- * @param int $replace
+ * @param \Drupal\Core\File\FileExists|int $fileExists
  *   (optional) The replace behavior when the destination file already exists.
- *   Possible values include:
- *   - FileSystemInterface::EXISTS_REPLACE: Replace the existing file.
- *   - FileSystemInterface::EXISTS_RENAME: (default) Append
- *     _{incrementing number} until the filename is unique.
- *   - FileSystemInterface::EXISTS_ERROR: Do nothing and return FALSE.
  *
  * @return array|\Drupal\file\FileInterface|null|false
  *   An array of file entities or a single file entity if $delta != NULL. Each
  *   array element contains the file entity if the upload succeeded or FALSE if
  *   there was an error. Function returns NULL if no file was uploaded.
+ *
+ * @throws \ValueError
+ *    Thrown if $fileExists is a legacy int and not a valid value.
  *
  * @internal
  *   This function is internal, and may be removed in a minor version release.
@@ -238,7 +237,11 @@ function file_cron() {
  * @see https://www.drupal.org/project/drupal/issues/3069020
  * @see https://www.drupal.org/project/drupal/issues/2482783
  */
-function _file_save_upload_from_form(array $element, FormStateInterface $form_state, $delta = NULL, $replace = FileSystemInterface::EXISTS_RENAME) {
+function _file_save_upload_from_form(array $element, FormStateInterface $form_state, $delta = NULL, FileExists|int $fileExists = FileExists::Rename) {
+  if (!$fileExists instanceof FileExists) {
+    // @phpstan-ignore-next-line
+    $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
+  }
   // Get all errors set before calling this method. This will also clear them
   // from the messenger service.
   $errors_before = \Drupal::messenger()->deleteByType(MessengerInterface::TYPE_ERROR);
@@ -247,7 +250,7 @@ function _file_save_upload_from_form(array $element, FormStateInterface $form_st
   $upload_name = implode('_', $element['#parents']);
   $upload_validators = $element['#upload_validators'] ?? [];
 
-  $result = file_save_upload($upload_name, $upload_validators, $upload_location, $delta, $replace);
+  $result = file_save_upload($upload_name, $upload_validators, $upload_location, $delta, $fileExists);
 
   // Get new errors that are generated while trying to save the upload. This
   // will also clear them from the messenger service.
@@ -301,13 +304,13 @@ function _file_save_upload_from_form(array $element, FormStateInterface $form_st
  *   A string that is the associative array key of the upload form element in
  *   the form array.
  * @param array $validators
- *   (optional) An associative array of callback functions used to validate the
- *   file. See file_validate() for a full discussion of the array format.
- *   If the array is empty, it will be set up to call file_validate_extensions()
- *   with a safe list of extensions, as follows: "jpg jpeg gif png txt doc
- *   xls pdf ppt pps odt ods odp". To allow all extensions, you must explicitly
- *   set this array to ['FileExtension' => []]. (Beware: this is not
- *   safe and should only be allowed for trusted users, if at all.)
+ *   (optional) An associative array of Validation Constraint plugins used to
+ *   validate the file.
+ *   If the array is empty, 'FileExtension' will be used by default with a safe
+ *   list of extensions, as follows: "jpg jpeg gif png txt doc xls pdf ppt pps
+ *   odt ods odp". To allow all extensions, you must explicitly set this array
+ *   to ['FileExtension' => []]. (Beware: this is not safe and should only be
+ *   allowed for trusted users, if at all.)
  * @param string|false $destination
  *   (optional) A string containing the URI that the file should be copied to.
  *   This must be a stream wrapper URI. If this value is omitted or set to
@@ -315,22 +318,24 @@ function _file_save_upload_from_form(array $element, FormStateInterface $form_st
  * @param null|int $delta
  *   (optional) The delta of the file to return the file entity.
  *   Defaults to NULL.
- * @param int $replace
+ * @param \Drupal\Core\File\FileExists|int $fileExists
  *   (optional) The replace behavior when the destination file already exists.
- *   Possible values include:
- *   - FileSystemInterface::EXISTS_REPLACE: Replace the existing file.
- *   - FileSystemInterface::EXISTS_RENAME: (default) Append
- *     _{incrementing number} until the filename is unique.
- *   - FileSystemInterface::EXISTS_ERROR: Do nothing and return FALSE.
  *
  * @return array|\Drupal\file\FileInterface|null|false
  *   An array of file entities or a single file entity if $delta != NULL. Each
  *   array element contains the file entity if the upload succeeded or FALSE if
  *   there was an error. Function returns NULL if no file was uploaded.
  *
+ * @throws \ValueError
+ *   Thrown if $fileExists is a legacy int and not a valid value.
+ *
  * @see _file_save_upload_from_form()
  */
-function file_save_upload($form_field_name, $validators = [], $destination = FALSE, $delta = NULL, $replace = FileSystemInterface::EXISTS_RENAME) {
+function file_save_upload($form_field_name, $validators = [], $destination = FALSE, $delta = NULL, FileExists|int $fileExists = FileExists::Rename) {
+  if (!$fileExists instanceof FileExists) {
+    // @phpstan-ignore-next-line
+    $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
+  }
   static $upload_cache;
 
   $all_files = \Drupal::request()->files->get('files', []);
@@ -365,20 +370,11 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
   /** @var \Drupal\Core\Render\RendererInterface $renderer */
   $renderer = \Drupal::service('renderer');
   $files = [];
-  /** @var \Drupal\file\Validation\UploadedFileValidatorInterface $uploaded_file_validator */
-  $uploaded_file_validator = \Drupal::service('file.uploaded_file_validator');
   /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $uploaded_file */
   foreach ($uploaded_files as $i => $uploaded_file) {
     try {
-      $violations = $uploaded_file_validator->validate($uploaded_file);
-      if (count($violations) > 0) {
-        // We only get one violation for uploaded files.
-        \Drupal::messenger()->addError($violations->get(0)->getMessage());
-        $files[$i] = FALSE;
-        continue;
-      }
       $form_uploaded_file = new FormUploadedFile($uploaded_file);
-      $result = $file_upload_handler->handleFileUpload($form_uploaded_file, $validators, $destination, $replace);
+      $result = $file_upload_handler->handleFileUpload($form_uploaded_file, $validators, $destination, $fileExists);
       if ($result->hasViolations()) {
         $errors = [];
         foreach ($result->getViolations() as $violation) {
