@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Test;
 
+use Drupal\TestTools\Extension\DeprecationBridge\DeprecationHandler;
+
 /**
  * Implements an object that tracks execution of a test run.
  *
@@ -74,14 +76,14 @@ class TestRun {
     TestRunResultsStorageInterface $testRunResultsStorage,
     string $testClassName,
   ): TestRun {
-    $testId = $testRunResultsStorage->createNew();
+    $testId = $testRunResultsStorage->createNew($testClassName);
     return new static($testRunResultsStorage, $testClassName, $testId);
   }
 
   /**
    * Returns a test run object from storage.
    *
-   * @param \Drupal\Core\Test\TestRunResultsStorageInterface $test_run_results_storage
+   * @param \Drupal\Core\Test\TestRunResultsStorageInterface $testRunResultsStorage
    *   The test run results storage.
    * @param int|string $test_id
    *   The test run id.
@@ -89,8 +91,12 @@ class TestRun {
    * @return self
    *   The test run object.
    */
-  public static function get(TestRunResultsStorageInterface $test_run_results_storage, int|string $test_id): TestRun {
-    return new static($test_run_results_storage, $test_id);
+  public static function get(
+    TestRunResultsStorageInterface $testRunResultsStorage,
+    int|string $test_id,
+  ): TestRun {
+    $testClassName = $testRunResultsStorage->getTestClassName($test_id);
+    return new static($testRunResultsStorage, $testClassName, $test_id);
   }
 
   /**

@@ -56,10 +56,22 @@ class SimpletestTestRunResultsStorage implements TestRunResultsStorageInterface 
   /**
    * {@inheritdoc}
    */
-  public function createNew(): int|string {
+  public function createNew(string $testClassName): int|string {
     return $this->connection->insert('simpletest_test_id')
       ->useDefaults(['test_id'])
+      ->fields(['test_class' => $testClassName])
       ->execute();
+  }
+
+  /**
+   * @todo
+   */
+  public function getTestClassName(int|string $testId): string {
+    return $this->connection->select('simpletest_test_id', 'sttid')
+      ->fields('sttid', ['test_class'])
+      ->condition('test_id', $testId)
+      ->execute()
+      ->fetchField();
   }
 
   /**
@@ -255,6 +267,13 @@ class SimpletestTestRunResultsStorage implements TestRunResultsStorageInterface 
           'type' => 'serial',
           'not null' => TRUE,
           'description' => 'Primary Key: Unique simpletest ID used to group test results together. Each time a set of tests are run a new test ID is used.',
+        ],
+        'test_class' => [
+          'type' => 'varchar_ascii',
+          'length' => 255,
+          'not null' => TRUE,
+          'default' => '',
+          'description' => 'The name of the class being tested.',
         ],
         'last_prefix' => [
           'type' => 'varchar',
