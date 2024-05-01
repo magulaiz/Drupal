@@ -7,31 +7,37 @@
 #   It exists only for core development purposes.
 #
 
-# Set default values.
-# The commit hash when most extensions were moved to core/extension_type.
-MODULE_COMMIT_HASH=06fb770bd340e5a18555e0da55a4dd6ba22f76ba
-THEME_COMMIT_HASH=06fb770bd340e5a18555e0da55a4dd6ba22f76ba
 # Working directory.
 WORKING_DIR=/tmp/split
 
-#
-# Helpful messages.
-#
-echo -e "\nCreate a sub-tree split for extension removal."
-echo -e "This script assumes the extension was moved to core/modules or core/themes in issue #22336 in Oct 2011,"
-echo -e "If not you can find the commit using  git log -- modules/MODULE_NAME and save the commit hash."
-echo -e "You will be prompted to change this commit, if needed.".
+while test $# -gt 0; do
+  case "$1" in
+    -h|--help)
+      echo "Create a sub-tree split for extension removal."
+      echo " "
+      echo "You need the commit hash for where to make the split."
+      echo "Use 'git log -- modules/MODULE_NAME' or 'git log -- themes/THEME_NAME' and save the commit hash."
+      echo " "
+      echo "options:"
+      echo "-h, --help                show brief help"
+      echo " "
+      echo "Example usage: sh ./core/scripts/dev/extension-sub-tree-split"
+      exit 0
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
 
 # Get user input for the extension name and type.
 echo -e "\nEnter the extension name:"
 read EXTENSION
 
 TYPE=modules
-COMMIT_HASH=$MODULE_COMMIT_HASH
 if [ -d "./core/themes/$EXTENSION" ]
 then
   TYPE=themes
-  COMMIT_HASH=$THEME_COMMIT_HASH
   if [ -d "./core/modules/$EXTENSION" ]
   then
     echo -e "Is this a module (Y/n)?:"
@@ -39,13 +45,12 @@ then
     if [ -z "$ANSWER" ]
     then
       TYPE=modules
-      COMMIT_HASH=$MODULE_COMMIT_HASH
     fi
   fi
 fi
 
 # Ask for a user-specified hash.
-echo -e "Enter a commit hash, if different than the default:"
+echo -e "Enter a commit hash: "
 read HASH
 if [ -n "$HASH" ]
 then
