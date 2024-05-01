@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\navigation\Functional;
+namespace Drupal\Tests\navigation_top_bar\Functional;
 
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\Tests\BrowserTestBase;
@@ -10,7 +10,7 @@ use Drupal\Tests\BrowserTestBase;
 /**
  * Tests the top bar functionality.
  *
- * @group navigation
+ * @group navigation_top_bar
  */
 class NavigationTopBarTest extends BrowserTestBase {
 
