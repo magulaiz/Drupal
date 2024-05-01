@@ -122,28 +122,19 @@ class FormSubmitter implements FormSubmitterInterface {
   public function redirectForm(FormStateInterface $form_state) {
     $redirect = $form_state->getRedirect();
 
-    // Allow using redirect responses directly if needed.
-    if ($redirect instanceof RedirectResponse) {
-      return $redirect;
-    }
-
-    $url = NULL;
-    // Check for a route-based redirection.
     if ($redirect instanceof Url) {
       $url = $redirect->setAbsolute()->toString();
     }
     // If no redirect was specified, redirect to the current path.
-    elseif ($redirect === NULL) {
+    else {
       $request = $this->requestStack->getCurrentRequest();
       $url = $this->urlGenerator->generateFromRoute('<current>', [], ['query' => $request->query->all(), 'absolute' => TRUE]);
     }
 
-    if ($url) {
-      // According to RFC 7231, 303 See Other status code must be used to redirect
-      // user agent (and not default 302 Found).
-      // @see http://tools.ietf.org/html/rfc7231#section-6.4.4
-      return new RedirectResponse($url, Response::HTTP_SEE_OTHER);
-    }
+    // According to RFC 7231, 303 See Other status code must be used to redirect
+    // user agent (and not default 302 Found).
+    // @see http://tools.ietf.org/html/rfc7231#section-6.4.4
+    return new RedirectResponse($url, Response::HTTP_SEE_OTHER);
   }
 
   /**
