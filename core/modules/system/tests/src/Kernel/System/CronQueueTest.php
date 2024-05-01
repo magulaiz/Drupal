@@ -14,7 +14,6 @@ use Drupal\cron_queue_test\Plugin\QueueWorker\CronQueueTestSuspendQueue;
 use Drupal\Core\Queue\QueueWorkerManagerInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\cron_queue_test\Plugin\QueueWorker\CronQueueTestDatabaseDelayException;
-use Drupal\mongodb\Queue\DatabaseQueue as MongodbDatabaseQueue;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
 

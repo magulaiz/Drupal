@@ -6,7 +6,6 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Serialization\ObjectAwareSerializationInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Site\Settings;
-use Drupal\mongodb\Driver\Database\mongodb\Cache\DatabaseBackend as MongodbDatabaseBackend;
 
 class DatabaseBackendFactory implements CacheFactoryInterface {
 

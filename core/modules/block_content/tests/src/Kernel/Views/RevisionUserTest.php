@@ -53,7 +53,7 @@ class RevisionUserTest extends ViewsKernelTestBase {
    * {@inheritdoc}
    */
   protected function setUp($import_test_views = TRUE): void {
-    parent::setUp(FALSE);
+    parent::setUp($import_test_views);
 
     $this->installEntitySchema('block_content');
     $this->installEntitySchema('user');

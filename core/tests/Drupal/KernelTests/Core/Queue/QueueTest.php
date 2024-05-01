@@ -23,6 +23,7 @@ class QueueTest extends KernelTestBase {
     $queue1->createQueue();
     $queue2 = new DatabaseQueue($this->randomMachineName(), Database::getConnection());
     $queue2->createQueue();
+
     $this->runQueueTest($queue1, $queue2);
   }
 
