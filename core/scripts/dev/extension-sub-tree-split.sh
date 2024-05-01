@@ -1,13 +1,13 @@
 #!/bin/bash
 #
-# This script creates the sub tree split when an extension is removed from core.
+# This script creates the sub-tree split when an extension is removed from core.
 #
 # @internal
 #   This script is not covered by Drupal core's backwards compatibility promise.
 #   It exists only for core development purposes.
 #
 
-# Set default values
+# Set default values.
 # The commit hash when most extensions were moved to core/extension_type.
 MODULE_COMMIT_HASH=06fb770bd340e5a18555e0da55a4dd6ba22f76ba
 THEME_COMMIT_HASH=06fb770bd340e5a18555e0da55a4dd6ba22f76ba
@@ -17,7 +17,7 @@ WORKING_DIR=/tmp/split
 #
 # Helpful messages.
 #
-echo -e "\nCreate a sub tree split for extension removal."
+echo -e "\nCreate a sub-tree split for extension removal."
 echo -e "This script assumes the extension was moved to core/modules or core/themes in issue #22336 in Oct 2011,"
 echo -e "If not you can find the commit using  git log -- modules/MODULE_NAME and save the commit hash."
 echo -e "You will be prompted to change this commit, if needed.".
@@ -44,7 +44,7 @@ then
   fi
 fi
 
-# Ask for a user specified hash.
+# Ask for a user-specified hash.
 echo -e "Enter a commit hash, if different than the default:"
 read HASH
 if [ -n "$HASH" ]
@@ -52,35 +52,38 @@ then
   COMMIT_HASH=$HASH
 fi
 
-# Start the subtree split process.
-echo "Executing a sub tree split for $TYPE/$EXTENSION."
+# Start the sub-tree split process.
+echo "Executing a sub-tree split for $TYPE/$EXTENSION."
 
-# 1. Create a working directory and clone drupal.
+# 1. Create a working directory and clone Drupal.
 mkdir "$WORKING_DIR"
 cd "$WORKING_DIR" || exit
 if ! git clone https://git.drupalcode.org/project/drupal.git
 then
-  printf "\ngit clone failed"
+  printf "\ngit clone failed."
   exit 1
 fi
 
 cd drupal || exit
 
-# 2. Split core/extension_type/extension
+# 2. Split core/extension_type/extension.
 if ! git subtree split -P core/"$TYPE"/"$EXTENSION" -b "$EXTENSION"
 then
-  printf "\First subtree split failed"
+  printf "\First subtree split failed."
   exit 1
 fi
 
-# 3. Split core/extension_type/extension and merge with history for core/core/extension_type/extension
-# Find the commit where extension were moved to core/extension_type/extension
-# If no output, SKIP TO STEP 4. Otherwise, note the SHA of the most recent commit.
+# 3. Split core/extension_type/extension and merge it with the history for
+#    core/core/extension_type/extension.
+#    - Find the commit where the extension was moved to
+#      core/extension_type/extension.
+#    - If there is no output, SKIP TO STEP 4. Otherwise, note the SHA of the
+#      most recent commit.
 git tag core-move "$COMMIT_HASH"
 git checkout core-move
 if ! git subtree split -P core/"$TYPE"/"$EXTENSION" -b "$EXTENSION"-pre-core
 then
-  printf "\Second subtree split failed"
+  printf "\Second sub-tree split failed"
   exit 1
 fi
 git checkout "$EXTENSION"
@@ -95,9 +98,9 @@ then
   exit 1
 fi
 
-# 4.Create new repo from the subtree split.
+# 4.Create the new repository from the sub-tree split.
 git checkout "$EXTENSION"
-# Create repository in a new directory.
+# Create the repository in a new directory.
 cd ..
 mkdir "$EXTENSION"
 cd "$EXTENSION" || exit
@@ -105,6 +108,6 @@ git init
 git pull ../drupal "$EXTENSION"
 git remote add origin https://git.drupalcode.org/project/"$EXTENSION".git
 
-echo -e "The split is at $WORKING_DIR/$EXTENSION"
+echo -e "The split is at $WORKING_DIR/$EXTENSION."
 
 
