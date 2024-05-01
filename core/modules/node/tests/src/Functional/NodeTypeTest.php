@@ -88,8 +88,11 @@ class NodeTypeTest extends NodeTestBase {
     ];
     $this->drupalGet('admin/structure/types/add');
     $this->submitForm($edit, 'Save and manage fields');
-    $type_exists = (bool) NodeType::load('foo');
-    $this->assertTrue($type_exists, 'The new content type has been created in the database.');
+    $type_exists = NodeType::load('foo');
+    $this->assertTrue((bool) $type_exists);
+    $text = "The content type {$type_exists->label()} has been added. Please remember to check user permissions for this content type";
+    $this->assertSession()->statusMessageExists('status');
+    $this->assertSession()->statusMessageContains($text, 'status');
 
     $this->drupalGet('node/add');
     $elements = $this->cssSelect('dl dt');
