@@ -82,7 +82,7 @@ class DisplayFeedTest extends ViewTestBase {
     $this->assertEquals($node_link, $this->getSession()->getDriver()->getText('//item/link'));
     // HTML Should no longer be escaped since it is CDATA.
     // Confirm it is wrapped in CDATA.
-    // See https://www.drupal.org/project/drupal/issues/3433
+    // See https://www.drupal.org/node/3440505
     $this->assertSession()->responseContains('<description><![CDATA[');
     // Confirm that the view is still displaying the content.
     $this->assertSession()->responseContains('<p>A paragraph</p>');
