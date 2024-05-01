@@ -77,11 +77,6 @@ class UserRegistrationResource extends ResourceBase {
    *   The password generator.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger, ImmutableConfig $user_settings, AccountInterface $current_user, PasswordGeneratorInterface $password_generator = NULL) {
-    if (is_null($password_generator)) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $password_generator argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3405799', E_USER_DEPRECATED);
-      $password_generator = \Drupal::service('password_generator');
-    }
-
     parent::__construct($configuration, $plugin_id, $plugin_definition, $serializer_formats, $logger);
     $this->userSettings = $user_settings;
     $this->currentUser = $current_user;
