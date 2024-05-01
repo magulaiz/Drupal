@@ -566,7 +566,6 @@ class RouteProviderTest extends KernelTestBase {
   public function testRouteCaching() {
     $connection = Database::getConnection();
     $language_manager = \Drupal::languageManager();
-
     $provider = new RouteProvider($connection, $this->state, $this->currentPath, $this->cache, $this->pathProcessor, $this->cacheTagsInvalidator, 'test_routes', $language_manager);
 
     $this->fixtures->createTables($connection);

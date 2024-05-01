@@ -51,7 +51,6 @@ class Stable9TemplateOverrideTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-
     $this->themeHandler = $this->container->get('theme_handler');
 
     $this->container->get('theme_installer')->install(['stable9']);

@@ -27,7 +27,6 @@ trait SchemaIntrospectionTestTrait {
         return;
       }
     }
-
     $this->assertTrue(FALSE);
   }
 
