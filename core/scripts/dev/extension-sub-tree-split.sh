@@ -31,7 +31,7 @@ while test $# -gt 0; do
 done
 
 # Get user input for the extension name and type.
-echo -e "\nEnter the extension name:"
+echo -e "\nEnter the extension name: "
 read EXTENSION
 
 TYPE=modules
