@@ -17,7 +17,6 @@ use Drupal\Component\Utility\Timer;
 use Drupal\Core\Composer\Composer;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Test\EnvironmentCleaner;
-use Drupal\Core\Test\PhpUnitTestRunner;
 use Drupal\Core\Test\SimpletestTestRunResultsStorage;
 use Drupal\Core\Test\RunTests\TestFileParser;
 use Drupal\Core\Test\TestDatabase;
@@ -25,6 +24,7 @@ use Drupal\Core\Test\TestRun;
 use Drupal\Core\Test\TestRunnerKernel;
 use Drupal\Core\Test\TestRunResultsStorageInterface;
 use Drupal\Core\Test\TestDiscovery;
+use Drupal\TestTools\PhpUnitRunner;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Runner\Version;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -815,16 +815,17 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
 /**
  * Run a PHPUnit-based test.
  */
-function simpletest_script_run_phpunit(TestRun $test_run, $class) {
-  $runner = PhpUnitTestRunner::create(\Drupal::getContainer());
-  $results = $runner->execute($test_run, $class, $status);
+function simpletest_script_run_phpunit(TestRun $test_run) {
+  $runner = PhpUnitRunner::create(\Drupal::getContainer());
+  $testRunResult = $runner->runOneTestClass($test_run);
+  $results = $runner->decodeResults($test_run, $testRunResult);
   $runner->processPhpUnitResults($test_run, $results);
 
   $summaries = $runner->summarizeResults($results);
   foreach ($summaries as $class => $summary) {
     simpletest_script_reporter_display_summary($class, $summary);
   }
-  return $status;
+  return $testRunResult->status;
 }
 
 /**
@@ -837,7 +838,7 @@ function simpletest_script_run_one_test(TestRun $test_run, $test_class) {
     if ($args['suppress-deprecations']) {
       putenv('SYMFONY_DEPRECATIONS_HELPER=disabled');
     }
-    $status = simpletest_script_run_phpunit($test_run, $test_class);
+    $status = simpletest_script_run_phpunit($test_run);
     exit($status);
   }
   // DrupalTestCase::run() catches exceptions already, so this is only reached
