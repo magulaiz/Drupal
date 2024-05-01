@@ -74,7 +74,7 @@ class UserRegistrationResource extends ResourceBase {
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
    * @param \Drupal\Core\Password\PasswordGeneratorInterface|null $password_generator
-   * The password generator.
+   *   The password generator.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, array $serializer_formats, LoggerInterface $logger, ImmutableConfig $user_settings, AccountInterface $current_user, PasswordGeneratorInterface $password_generator = NULL) {
     if (is_null($password_generator)) {
