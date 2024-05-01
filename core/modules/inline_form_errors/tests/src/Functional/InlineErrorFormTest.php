@@ -1,16 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\inline_form_errors\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 
-class InlineErrorFormTest extends BrowserTestBase
-{
+class InlineErrorFormTest extends BrowserTestBase {
 
   protected $defaultTheme = 'stark';
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   protected static $modules = [
     'inline_form_errors',
