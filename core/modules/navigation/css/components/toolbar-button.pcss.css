@@ -78,6 +78,20 @@
     color: var(--admin-toolbar-color-blue-700);
     background-color: var(--admin-toolbar-color-gray-050);
   }
+
+  @media (--forced-colors) {
+    &::before,
+    &:hover::before {
+      background: canvastext;
+    }
+
+    &a {
+      &::before,
+      &:hover::before {
+        background: linktext;
+      }
+    }
+  }
 }
 
 .toolbar-button--large {
@@ -99,44 +113,6 @@
     color: var(--admin-toolbar-color-gray-800);
     outline: 0;
     background-color: transparent;
-  }
-}
-
-/* Class starts with `toolbar-button--icon`  */
-[class*="toolbar-button--icon"] {
-  --icon: url(../../assets/icons/basic.svg); /* Default icon, aka --basic */
-
-  padding-inline: calc(0.75 * var(--admin-toolbar-rem));
-
-  &::before {
-    display: block;
-    flex-shrink: 0;
-    inline-size: var(--admin-toolbar-space-20);
-    block-size: var(--admin-toolbar-space-20);
-    content: "";
-    background-color: currentColor;
-    mask-repeat: no-repeat;
-    mask-position: center center;
-    mask-size: 100% auto;
-    mask-image: var(--icon);
-  }
-
-  &:hover::before {
-    background-color: var(--admin-toolbar-color-blue-600);
-  }
-
-  @media (--forced-colors) {
-    &::before,
-    &:hover::before {
-      background: canvastext;
-    }
-
-    &a {
-      &::before,
-      &:hover::before {
-        background: linktext;
-      }
-    }
   }
 }
 
