@@ -734,8 +734,10 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
         break;
       }
 
+      $test_class = array_shift($test_classes);
+
       try {
-        $test_run = TestRun::createNew($test_run_results_storage);
+        $test_run = TestRun::createNew($test_run_results_storage, $test_class);
       }
       catch (Exception $e) {
         echo (string) $e;
@@ -743,9 +745,8 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
       }
       $test_ids[] = $test_run->id();
 
-      $test_class = array_shift($test_classes);
       // Fork a child process.
-      $command = simpletest_script_command($test_run, $test_class);
+      $command = simpletest_script_command($test_run);
       $process = proc_open($command, [], $pipes, NULL, NULL, ['bypass_shell' => TRUE]);
 
       if (!is_resource($process)) {
@@ -858,7 +859,7 @@ function simpletest_script_run_one_test(TestRun $test_run, $test_class) {
  * @return string
  *   The assembled command string.
  */
-function simpletest_script_command(TestRun $test_run, $test_class) {
+function simpletest_script_command(TestRun $test_run) {
   global $args, $php;
 
   $command = escapeshellarg($php) . ' ' . escapeshellarg('./core/scripts/' . $args['script']);
@@ -877,7 +878,7 @@ function simpletest_script_command(TestRun $test_run, $test_class) {
     }
   }
   // --execute-test and class name needs to come last.
-  $command .= ' --execute-test ' . escapeshellarg($test_class);
+  $command .= ' --execute-test ' . escapeshellarg($test_run->testClassName);
   return $command;
 }
 

@@ -24,31 +24,58 @@ class TestRun {
   protected $testClass;
 
   /**
+   * @todo
+   */
+  public readonly bool $failOnDeprecation;
+  public readonly bool $processIsolation;
+  public readonly string $testFilePath;
+  public readonly string $logFileName;
+
+  /**
    * TestRun constructor.
    *
    * @param \Drupal\Core\Test\TestRunResultsStorageInterface $testRunResultsStorage
    *   The test run results storage.
+   * @param string $testClassName
+   *   The test class name of this test run.
    * @param int|string $testId
    *   A unique test run id.
    */
   public function __construct(
-    protected TestRunResultsStorageInterface $testRunResultsStorage,
-    protected int|string $testId
+    protected readonly TestRunResultsStorageInterface $testRunResultsStorage,
+    public readonly string $testClassName,
+    public readonly int|string $testId,
   ) {
+    // If the deprecation handler bridge is active, we need to fail when there
+    // are deprecations that get reported (i.e. not ignored or expected).
+    $this->failOnDeprecation = DeprecationHandler::getConfiguration() !== FALSE ? TRUE : FALSE;
+
+    // Non-Unit tests should be run in isolation.
+    $this->processIsolation = TestDiscovery::getPhpunitTestSuite($this->testClassName) !== 'Unit' ? TRUE : FALSE;
+
+    // The file containing the test class to be run.
+    $this->testFilePath = (new \ReflectionClass($this->testClassName))->getFileName();
+
+    $this->logFileName = 'phpunit-' . $this->testId . '.xml';
   }
 
   /**
    * Returns a new test run object.
    *
-   * @param \Drupal\Core\Test\TestRunResultsStorageInterface $test_run_results_storage
+   * @param \Drupal\Core\Test\TestRunResultsStorageInterface $testRunResultsStorage
    *   The test run results storage.
+   * @param string $testClassName
+   *   The test class name of this test run.
    *
    * @return self
    *   The new test run object.
    */
-  public static function createNew(TestRunResultsStorageInterface $test_run_results_storage): TestRun {
-    $test_id = $test_run_results_storage->createNew();
-    return new static($test_run_results_storage, $test_id);
+  public static function createNew(
+    TestRunResultsStorageInterface $testRunResultsStorage,
+    string $testClassName,
+  ): TestRun {
+    $testId = $testRunResultsStorage->createNew();
+    return new static($testRunResultsStorage, $testClassName, $testId);
   }
 
   /**

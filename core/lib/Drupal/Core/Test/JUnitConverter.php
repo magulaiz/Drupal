@@ -16,7 +16,7 @@ class JUnitConverter {
    *
    * @param int $test_id
    *   The current test ID.
-   * @param string $phpunit_xml_file
+   * @param string|false $junit_xml
    *   Path to the PHPUnit XML file.
    *
    * @return array[]
@@ -25,12 +25,11 @@ class JUnitConverter {
    *
    * @internal
    */
-  public static function xmlToRows($test_id, $phpunit_xml_file) {
-    $contents = @file_get_contents($phpunit_xml_file);
-    if (!$contents) {
+  public static function xmlToRows($test_id, $junit_xml) {
+    if ($junit_xml === FALSE) {
       return [];
     }
-    return static::xmlElementToRows($test_id, new \SimpleXMLElement($contents));
+    return static::xmlElementToRows($test_id, new \SimpleXMLElement($junit_xml));
   }
 
   /**
