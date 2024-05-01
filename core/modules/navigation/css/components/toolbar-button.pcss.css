@@ -230,7 +230,7 @@
 .toolbar-button--icon--sidebar-toggle,
 .toolbar-button--icon--user {
   &::before {
-    content: '';
+    content: "";
   }
   .toolbar-button__abbreviation {
     display: none;
@@ -313,25 +313,25 @@
   --icon: url(../../assets/icons/user.svg);
 }
 
-.toolbar-button--icon--sidebar-toggle[aria-expanded='true'],
-.toolbar-button--icon--sidebar-toggle-end[aria-expanded='false'] {
+.toolbar-button--icon--sidebar-toggle[aria-expanded="true"],
+.toolbar-button--icon--sidebar-toggle-end[aria-expanded="false"] {
   --icon: url(../../assets/icons/toggle-left.svg);
 }
 
 /* RTL collapse sidebar */
-[dir='rtl'] .toolbar-button--icon--sidebar-toggle[aria-expanded='true'],
-[dir='rtl'] .toolbar-button--icon--sidebar-toggle-end[aria-expanded='false'] {
+[dir="rtl"] .toolbar-button--icon--sidebar-toggle[aria-expanded="true"],
+[dir="rtl"] .toolbar-button--icon--sidebar-toggle-end[aria-expanded="false"] {
   --icon: url(../../assets/icons/toggle-right.svg);
 }
 
-.toolbar-button--icon--sidebar-toggle[aria-expanded='false'],
-.toolbar-button--icon--sidebar-toggle-end[aria-expanded='true'] {
+.toolbar-button--icon--sidebar-toggle[aria-expanded="false"],
+.toolbar-button--icon--sidebar-toggle-end[aria-expanded="true"] {
   --icon: url(../../assets/icons/toggle-right.svg);
 }
 
 /* RTL expand sidebar */
-[dir='rtl'] .toolbar-button--icon--sidebar-toggle[aria-expanded='false'],
-[dir='rtl'] .toolbar-button--icon--sidebar-toggle-end[aria-expanded='true'] {
+[dir="rtl"] .toolbar-button--icon--sidebar-toggle[aria-expanded="false"],
+[dir="rtl"] .toolbar-button--icon--sidebar-toggle-end[aria-expanded="true"] {
   --icon: url(../../assets/icons/toggle-left.svg);
 }
 
