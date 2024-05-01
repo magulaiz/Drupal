@@ -216,7 +216,7 @@ class FormTest extends BrowserTestBase {
     }
 
     // Fail if any expected messages were not found.
-    $this->assertEmpty($expected, 'Found unexecpted error messages');
+    $this->assertEmpty($expected, 'Found unexpected error messages');
 
     // Verify that input elements are still empty.
     $session->fieldValueEquals('textfield', '');
