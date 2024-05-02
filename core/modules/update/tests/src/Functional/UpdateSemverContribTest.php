@@ -9,6 +9,7 @@ namespace Drupal\Tests\update\Functional;
  * @group #slow
  */
 class UpdateSemverContribTest extends UpdateSemverTestBase {
+  use UpdateTestTrait;
 
   /**
    * {@inheritdoc}
@@ -34,7 +35,7 @@ class UpdateSemverContribTest extends UpdateSemverTestBase {
    * {@inheritdoc}
    */
   protected function setProjectInstalledVersion($version) {
-    $system_info = [
+    $this->mockInstalledExtensionsInfo([
       $this->updateProject => [
         'project' => $this->updateProject,
         'version' => $version,
@@ -46,8 +47,8 @@ class UpdateSemverContribTest extends UpdateSemverTestBase {
         'version' => '8.0.0',
         'hidden' => FALSE,
       ],
-    ];
-    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+    ]);
+    $this->mockDefaultExtensionsInfo(['version' => '8.0.0']);
   }
 
 }
