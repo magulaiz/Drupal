@@ -91,6 +91,10 @@ services:
     class: Drupal\serialization\Encoder\XmlEncoder
     tags:
       - { name: encoder, format: xml }
+  serializer.encoder.yaml:
+    class: Drupal\serialization\Encoder\YamlEncoder
+    tags:
+      - { name: encoder, format: yaml }
   serializer.entity_resolver:
     class: Drupal\serialization\EntityResolver\ChainEntityResolver
   serializer.entity_resolver.uuid:
@@ -112,3 +116,7 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['%serializer.formats%']
+  serialization.serializer_subscriber:
+    class: Drupal\serialization\EventSubscriber\SerializerSubscriber
+    tags:
+      - { name: event_subscriber }
