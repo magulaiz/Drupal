@@ -207,4 +207,11 @@ class SimpleConfigSectionStorage extends PluginBase implements SectionStorageInt
     return TRUE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function inlineBlocksAllowedInContext(int $delta, string $region): array {
+    return [];
+  }
+
 }
