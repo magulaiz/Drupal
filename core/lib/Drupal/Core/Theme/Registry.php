@@ -10,8 +10,10 @@ use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\Update\UpdateKernel;
 use Drupal\Core\Utility\ThemeRegistry;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Defines the theme registry service.
@@ -182,7 +184,7 @@ class Registry implements DestructableInterface {
    * @param string $theme_name
    *   (optional) The name of the theme for which to construct the registry.
    */
-  public function __construct($root, CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, ThemeInitializationInterface $theme_initialization, CacheBackendInterface $runtime_cache, ModuleExtensionList $module_list, $theme_name = NULL) {
+  public function __construct($root, CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, ThemeInitializationInterface $theme_initialization, CacheBackendInterface $runtime_cache, ModuleExtensionList $module_list, $theme_name = NULL, protected ?HttpKernelInterface $kernel = NULL, protected ?Settings $settings = NULL) {
     $this->root = $root;
     $this->cache = $cache;
     $this->lock = $lock;
@@ -192,6 +194,14 @@ class Registry implements DestructableInterface {
     $this->runtimeCache = $runtime_cache;
     $this->moduleList = $module_list;
     $this->themeName = $theme_name;
+    if (!isset($kernel)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $kernel argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
+      $this->kernel = \Drupal::service('kernel');
+    }
+    if (!isset($settings)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $settings argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
+      $this->kernel = \Drupal::service('settings');
+    }
   }
 
   /**
@@ -257,8 +267,8 @@ class Registry implements DestructableInterface {
     // Some theme hook implementations such as the one in Views request a lot of
     // information such as field schemas. These might be broken until an update
     // is run, so we need to build a limited registry while on update.php.
-    $filter_list = \Drupal::hasContainer() ? \Drupal::service('settings')->get('update_theme_registry_module_filter', ['system']) : FALSE;
-    if ($filter_list !== FALSE && \Drupal::hasContainer() && \Drupal::service('kernel') instanceof UpdateKernel) {
+    $filter_list = $this->settings->get('update_theme_registry_module_filter', ['system']);
+    if ($filter_list !== FALSE && $this->kernel instanceof UpdateKernel) {
       $filter_list = array_fill_keys($filter_list, TRUE);
 
       // Call ::build() with only the system module and then revert the list.
