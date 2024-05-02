@@ -35,9 +35,6 @@ trait JoinPluginTrait {
 
     $right_field = $this->field;
     $left_field = $this->leftField ?? NULL;
-//    $condition = "$left_field = $table[alias].$this->field";
-//dump('$condition: ' . $condition);
-    $arguments = [];
 
     if (!empty($view_query->getCurrentRevisionTable()) && !empty($view_query->getAllRevisionsTable()) && !empty($view_query->getLatestRevisionTable())) {
       $search_needle = $view_query->getCurrentRevisionTable() . '.';
@@ -51,23 +48,9 @@ trait JoinPluginTrait {
         $left_field = str_replace($search_needle, $replace_needle, $left_field);
       }
     }
-//dump('$left_table');
-//dump($left_table);
-//dump('$table');
-//dump($table);
+
     $operator = $this->configuration['operator'] ?? '=';
     $join_condition = $select_query->joinCondition()->compare($left_table['alias'] . '.' . $left_field, $table['alias'] . '.' . $right_field, $operator);
-
-//if (!empty($this->extra)) {
-//  dump('$this->extra');
-//  dump($this->extra);
-//}
-
-//dump('$table[alias]: ' . $table['alias']);
-//dump('$right_field: ' . $right_field);
-//dump('$left_table[alias]: ' . $left_table['alias']);
-//dump('$left_field: ' . $left_field);
-
 
     if (isset($this->extra) && is_array($this->extra)) {
       $substitutions = \Drupal::moduleHandler()->invokeAll('views_query_substitutions', [$view_query->view]);
@@ -90,9 +73,6 @@ trait JoinPluginTrait {
     else {
       $this->extra = [];
     }
-
-//dump('$join_condition');
-//dump($join_condition);
 
     $select_query->addJoin($this->type, $right_table, $table['alias'], $join_condition);
     if (isset($this->configuration['one_to_many']) && $this->configuration['one_to_many']) {

@@ -41,10 +41,6 @@ function mongodb_entity_type_alter(array &$entity_types) {
       $entity_types['view']->setStorageClass('Drupal\mongodb\modules\views\ViewStorage');
       $entity_types['view']->setClass('Drupal\mongodb\modules\views\View');
     }
-
-    if (!empty($entity_types['workspace_association'])) {
-      // $entity_types['workspace_association']->setStorageClass('Drupal\mongodb\EntityStorage\WorkspaceAssociationStorage');
-    }
   }
 }
 

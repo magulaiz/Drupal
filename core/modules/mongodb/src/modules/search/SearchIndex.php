@@ -151,8 +151,6 @@ class SearchIndex extends CoreSearchIndex {
           ->fetchObject();
 
         if ($index) {
-dump('$index');
-dump($index);
           $this->connection->update('search_index')
             ->fields([
               'score' => $index->score + $score,

@@ -34,8 +34,6 @@ class Status extends CoreStatus {
       $or_condition->condition('***VIEW_ANY_UNPUBLISHED_NODES***', 1);
     }
 
-//dump('$or_condition');
-//dump($or_condition);
     $this->query->addCondition($this->options['group'], $or_condition);
   }
 

@@ -1127,14 +1127,10 @@ class ViewsQuery extends Sql {
         }
 
         $result = $query->execute();
-//dump('$result->getData()');
-//dump($result->getData());
         $result->setFetchMode(\PDO::FETCH_CLASS, 'Drupal\views\ResultRow');
 
         // Setup the result row objects.
         $view->result = iterator_to_array($result);
-//dump('$view->result1');
-//dump($view->result);
 
         array_walk($view->result, function (ResultRow $row, $index) {
           $row->index = $index;
@@ -1151,8 +1147,6 @@ class ViewsQuery extends Sql {
 
         // Load all entities contained in the results.
         $this->loadEntities($view->result);
-//dump('$view->result2');
-//dump($view->result);
       }
       catch (DatabaseExceptionWrapper $e) {
         $view->result = [];
@@ -1307,11 +1301,6 @@ class ViewsQuery extends Sql {
         }
       }
     }
-
-//dump('$entity_ids_by_type');
-//dump($entity_ids_by_type);
-//dump('$revision_ids_by_type');
-//dump($revision_ids_by_type);
 
     // Load all entities and assign them to the correct result row.
     foreach ($entity_ids_by_type as $entity_type => $ids) {
