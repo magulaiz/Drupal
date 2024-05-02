@@ -4,6 +4,7 @@ namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\Core\Render\Builder\DropbuttonBuilder;
 use Drupal\Core\Render\Element;
 
 /**
@@ -93,9 +94,7 @@ class Actions extends Container {
         $dropbutton = $element[$key]['#dropbutton'];
         // If there is no dropbutton for this button group yet, create one.
         if (!isset($dropbuttons[$dropbutton])) {
-          $dropbuttons[$dropbutton] = [
-            '#type' => 'dropbutton',
-          ];
+          $dropbuttons[$dropbutton] = DropbuttonBuilder::create()->toRenderable();
         }
         // Add this button to the corresponding dropbutton.
         // @todo Change #type 'dropbutton' to be based on item-list.html.twig

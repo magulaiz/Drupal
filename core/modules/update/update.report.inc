@@ -5,6 +5,7 @@
  * Code required only when rendering the available updates report.
  */
 
+use Drupal\Core\Render\Builder\ImageBuilder;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\update\ProjectRelease;
@@ -326,14 +327,13 @@ function template_preprocess_update_project_status(&$variables) {
       break;
   }
 
-  $variables['status']['icon'] = [
-    '#theme' => 'image',
-    '#width' => 18,
-    '#height' => 18,
-    '#uri' => $uri,
-    '#alt' => $text,
-    '#title' => $text,
-  ];
+  $variables['status']['icon'] = ImageBuilder::create()
+    ->width(18)
+    ->height(18)
+    ->uri($uri)
+    ->alt($text)
+    ->title($text)
+    ->toRenderable();
 }
 
 /**

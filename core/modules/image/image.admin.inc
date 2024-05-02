@@ -5,6 +5,7 @@
  * Administration pages for image settings.
  */
 
+use Drupal\Core\Render\Builder\ImageBuilder;
 use Drupal\Core\Render\Element;
 
 /**
@@ -73,17 +74,16 @@ function template_preprocess_image_style_preview(&$variables) {
   }
 
   // Build the preview of the original image.
-  $variables['original']['rendered'] = [
-    '#theme' => 'image',
-    '#uri' => $original_path,
-    '#alt' => t('Sample original image'),
-    '#title' => '',
-    '#attributes' => [
+  $variables['original']['rendered'] = ImageBuilder::create()
+    ->uri($original_path)
+    ->alt(t('Sample original image'))
+    ->title('')
+    ->attributes([
       'width' => $variables['original']['width'],
       'height' => $variables['original']['height'],
       'style' => 'width: ' . $variables['preview']['original']['width'] . 'px; height: ' . $variables['preview']['original']['height'] . 'px;',
-    ],
-  ];
+    ])
+    ->toRenderable();
 
   // Build the preview of the image style derivative. Timestamps are added
   // to prevent caching of images on the client side.

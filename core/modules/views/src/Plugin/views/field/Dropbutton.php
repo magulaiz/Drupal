@@ -2,6 +2,7 @@
 
 namespace Drupal\views\Plugin\views\field;
 
+use Drupal\Core\Render\Builder\DropbuttonBuilder;
 use Drupal\views\ResultRow;
 
 /**
@@ -20,10 +21,9 @@ class Dropbutton extends Links {
     $links = $this->getLinks();
 
     if (!empty($links)) {
-      return [
-        '#type' => 'dropbutton',
-        '#links' => $links,
-      ];
+      return DropbuttonBuilder::create()
+        ->links($links)
+        ->toRenderable();
     }
     else {
       return '';
