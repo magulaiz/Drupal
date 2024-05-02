@@ -484,7 +484,7 @@ class ThemeManager implements ThemeManagerInterface {
       }
     }
     else {
-      $context->addViolation('Theme not defined in configuration');
+      $context->addViolation('Theme not defined in configuration.');
     }
   }
 
