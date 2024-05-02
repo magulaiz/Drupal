@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\EventSubscriber;
 
+use Drupal\Component\Serialization\Yaml;
 use Drupal\file\Entity\File;
 use Drupal\Tests\BrowserTestBase;
 
@@ -61,28 +62,15 @@ class Fast404Test extends BrowserTestBase {
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache', 'Miss');
     $this->assertSession()->pageTextNotContains('Oops I did it again!');
 
-    // Ensure settings.php can override settings.
-    // @todo Do we actually need this? Surely the ability for settings to
-    //   override active config is tested elsewhere?? Maybe we can remove this
-    //   entirely.
-    $settings['config']['system.performance']['fast_404'] = [
-      'enabled' => (object) [
-        'value' => TRUE,
-        'required' => TRUE,
-      ],
-      'paths' => (object) [
-        'value' => '/\.(?:txt|png|gif|jpe?g|css|js|ico|swf|flv|cgi|bat|pl|dll|exe|asp)$/i',
-        'required' => TRUE,
-      ],
-      'exclude_paths' => (object) [
-        'value' => '/\/(?:styles|imagecache)\//',
-        'required' => TRUE,
-      ],
-      'html' => (object) [
-        'value' => '<!DOCTYPE html><html><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL "@path" was not found on this server.</p></body></html>',
-        'required' => TRUE,
-      ]
-    ];
+    // Ensure settings.php can override settings; read the original shipped
+    // configuration and write it into settings.
+    $data = file_get_contents($this->getDrupalRoot() . '/core/modules/system/config/install/system.performance.yml');
+    $data = Yaml::decode($data);
+    $settings['config']['system.performance']['fast_404'] = array_map(
+      // Prepare the values for ::writeSettings().
+      fn ($value) => (object) ['value' => $value, 'required' => TRUE],
+      $data['fast_404'],
+    );
     $this->writeSettings($settings);
     // Changing settings using an override means we need to rebuild everything.
     $this->rebuildAll();
