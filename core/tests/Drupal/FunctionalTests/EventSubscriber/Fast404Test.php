@@ -54,7 +54,7 @@ class Fast404Test extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Oops I did it again!');
 
     // Ensure disabling works.
-    $this->config('system.performance')->set('fast_404.enabled', FALSE)->save();
+    $this->config('system.performance')->set('fast_404', ['enabled' => FALSE])->save();
     $this->drupalGet('does-not-exist.txt');
     $this->assertSession()->responseContains('modules/system/css/');
     $this->assertSession()->statusCodeEquals(404);
@@ -62,9 +62,23 @@ class Fast404Test extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains('Oops I did it again!');
 
     // Ensure settings.php can override settings.
-    $settings['config']['system.performance']['fast_404']['enabled'] = (object) [
-      'value' => TRUE,
-      'required' => TRUE,
+    $settings['config']['system.performance']['fast_404'] = [
+      'enabled' => (object) [
+        'value' => TRUE,
+        'required' => TRUE,
+      ],
+      'paths' => (object) [
+        'value' => '/\.(?:txt|png|gif|jpe?g|css|js|ico|swf|flv|cgi|bat|pl|dll|exe|asp)$/i',
+        'required' => TRUE,
+      ],
+      'exclude_paths' => (object) [
+        'value' => '/\/(?:styles|imagecache)\//',
+        'required' => TRUE,
+      ],
+      'html' => (object) [
+        'value' => '<!DOCTYPE html><html><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL "@path" was not found on this server.</p></body></html>',
+        'required' => TRUE,
+      ]
     ];
     $this->writeSettings($settings);
     // Changing settings using an override means we need to rebuild everything.
