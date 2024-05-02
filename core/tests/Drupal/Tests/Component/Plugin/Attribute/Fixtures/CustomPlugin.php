@@ -19,10 +19,13 @@ class CustomPlugin extends Plugin {
    *   The attribute class ID.
    * @param string $title
    *   The title.
+   * @param string|null $deriver
+   *   (optional) The deriver class.
    */
   public function __construct(
     public readonly string $id,
-    public readonly string $title
+    public readonly string $title,
+    public readonly ?string $deriver = NULL,
   ) {}
 
 }

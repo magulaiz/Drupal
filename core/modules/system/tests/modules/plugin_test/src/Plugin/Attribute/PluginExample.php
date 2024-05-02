@@ -17,10 +17,13 @@ class PluginExample extends Plugin {
    *   The plugin ID.
    * @param string $custom
    *   Some other sample plugin metadata.
+   * @param string|null $deriver
+   *   (optional) The deriver class.
    */
   public function __construct(
     public readonly string $id,
-    public readonly ?string $custom = NULL
+    public readonly ?string $custom = NULL,
+    public readonly ?string $deriver = NULL,
   ) {}
 
 }
