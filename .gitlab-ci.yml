@@ -88,7 +88,7 @@ default:
       - runner_system_failure
       - scheduler_failure
   image:
-    name: mstrelan/drupalci-php:frankenphp-3
+    name: mstrelan/drupalci-php:8.3-frankenphp-3
 
 #############
 # Templates #
@@ -297,26 +297,26 @@ default:
           composer outdated;
         fi
 
-#'📦️ Yarn':
-#  variables:
-#    KUBERNETES_CPU_REQUEST: "2"
-#  stage: 🏗️ Build
-#  cache:
-#    key:
-#      files:
-#        - ./core/package.json
-#        - ./core/yarn.lock
-#    paths:
-#      - ./core/node_modules
-#  artifacts:
-#    expire_in: 1 week
-#    expose_as: 'yarn-vendor'
-#    paths:
-#      - core/node_modules/
-#  script:
-#    - cd core
-#    - corepack enable
-#    - yarn install
+'📦️ Yarn':
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
+  stage: 🏗️ Build
+  cache:
+    key:
+      files:
+        - ./core/package.json
+        - ./core/yarn.lock
+    paths:
+      - ./core/node_modules
+  artifacts:
+    expire_in: 1 week
+    expose_as: 'yarn-vendor'
+    paths:
+      - core/node_modules/
+  script:
+    - cd core
+    - corepack enable
+    - yarn install
 
 ################
 # Lint Jobs
