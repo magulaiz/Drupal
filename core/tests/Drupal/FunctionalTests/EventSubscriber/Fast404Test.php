@@ -62,6 +62,9 @@ class Fast404Test extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains('Oops I did it again!');
 
     // Ensure settings.php can override settings.
+    // @todo Do we actually need this? Surely the ability for settings to
+    //   override active config is tested elsewhere?? Maybe we can remove this
+    //   entirely.
     $settings['config']['system.performance']['fast_404'] = [
       'enabled' => (object) [
         'value' => TRUE,
