@@ -1,4 +1,4 @@
-navigation:
+internal.navigation:
   version: VERSION
   js:
     js/toolbar-menu.js: {}
@@ -24,14 +24,14 @@ navigation:
     - navigation/body-scroll-lock
     - navigation/dropdown
     - navigation/tooltip
-    - navigation/popover
+    - navigation/internal.popover
 
 admin-reset-styles:
   css:
     base:
       css/base/admin-reset-styles.css: {}
 
-navigation.escapeAdmin:
+internal.navigation.escapeAdmin:
   version: VERSION
   js:
     js/escapeAdmin.js: {}
@@ -43,8 +43,8 @@ navigation.escapeAdmin:
 
 navigation.layout:
   dependencies:
-    - navigation/navigation
-    - navigation/navigation.escapeAdmin
+    - navigation/internal.navigation
+    - navigation/internal.navigation.escapeAdmin
 
 body-scroll-lock:
   version: VERSION
@@ -52,7 +52,7 @@ body-scroll-lock:
     base:
       css/components/body-scroll-lock.css: {}
 
-popover:
+internal.popover:
   js:
     js/toolbar-popover.js: {}
   css:
