@@ -152,7 +152,6 @@ class SimpleConfigValidationTest extends KernelTestBase {
 
   public function testPageCacheMaxAgeMustBeDivisibleBy60(): void {
     $config = $this->config('system.performance')
-      ->set('langcode', 'en')
       ->set('cache.page.max_age', 67);
 
     $violations = $this->container->get('config.typed')
