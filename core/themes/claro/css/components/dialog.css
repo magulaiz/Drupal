@@ -157,6 +157,10 @@
   background: none;
 }
 
+body #drupal-off-canvas .claro-details__summary-summary {
+  margin-left: 0.5rem;
+}
+
 #drupal-off-canvas .form-type--boolean {
   margin-left: 0;
 }
@@ -164,4 +168,37 @@
 #drupal-off-canvas .form-item .form-item__description {
   color: var(--color-gray-050);
   font-size: 0.75rem;
+}
+
+#drupal-off-canvas .button--primary:not([data-drupal-ck-style-fence] *) {
+  margin: 0.3125rem;
+  padding: 0.9375rem 1.4375rem;
+  color: var(--button-fg-color--primary);
+  border: 1px solid transparent;
+  border-radius: 2px;
+  background-color: var(--button-bg-color--primary);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  line-height: 1rem;
+}
+
+#drupal-off-canvas label:not([data-drupal-ck-style-fence] *) {
+  margin-block-end: 0.3125rem;
+}
+
+#drupal-off-canvas a:not([data-drupal-ck-style-fence] *),
+#drupal-off-canvas .link:not([data-drupal-ck-style-fence] *) {
+  display: block;
+  text-align: right;
+  font-size: var(--font-size-xs);
+}
+
+#drupal-off-canvas input,
+#drupal-off-canvas textarea {
+  width: 100% !important;
+}
+
+#drupal-off-canvas .form-item:where(:not(fieldset)):not([data-drupal-ck-style-fence] *) {
+  padding: 0.1875rem 0;
 }
