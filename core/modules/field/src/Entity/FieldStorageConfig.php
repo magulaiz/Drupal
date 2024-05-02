@@ -6,6 +6,8 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Entity\FieldableEntityStorageInterface;
+use Drupal\Core\Entity\Sql\StorageMapperDelegatorTrait;
+use Drupal\Core\Entity\Sql\StorageMapperInterface;
 use Drupal\Core\Field\FieldException;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\OptionsProviderInterface;
@@ -49,7 +51,9 @@ use Drupal\field\FieldStorageConfigInterface;
  *   }
  * )
  */
-class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigInterface {
+class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigInterface, StorageMapperInterface {
+
+  use StorageMapperDelegatorTrait;
 
   /**
    * The maximum length of the field name, in characters.
