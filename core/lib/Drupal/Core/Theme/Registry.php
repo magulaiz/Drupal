@@ -183,6 +183,10 @@ class Registry implements DestructableInterface {
    *   The module list.
    * @param string $theme_name
    *   (optional) The name of the theme for which to construct the registry.
+   * @param \Symfony\Component\HttpKernel\HttpKernelInterface|null $kernel
+   *   The kernel.
+   * @param \Drupal\Core\Site\Settings|null $settings
+   *   The settings.
    */
   public function __construct($root, CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, ThemeInitializationInterface $theme_initialization, CacheBackendInterface $runtime_cache, ModuleExtensionList $module_list, $theme_name = NULL, protected ?HttpKernelInterface $kernel = NULL, protected ?Settings $settings = NULL) {
     $this->root = $root;
@@ -195,11 +199,11 @@ class Registry implements DestructableInterface {
     $this->moduleList = $module_list;
     $this->themeName = $theme_name;
     if (!isset($kernel)) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $kernel argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $kernel argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3441222', E_USER_DEPRECATED);
       $this->kernel = \Drupal::service('kernel');
     }
     if (!isset($settings)) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $settings argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $settings argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3441222', E_USER_DEPRECATED);
       $this->kernel = \Drupal::service('settings');
     }
   }
