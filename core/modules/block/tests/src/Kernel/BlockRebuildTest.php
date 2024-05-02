@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block\Kernel;
 
-use Drupal\block\Entity\Block;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
 
@@ -64,45 +62,6 @@ class BlockRebuildTest extends KernelTestBase {
     $messages = \Drupal::messenger()->all();
     \Drupal::messenger()->deleteAll();
     $this->assertEquals([], $messages);
-  }
-
-  /**
-   * @covers ::block_rebuild
-   */
-  public function testRebuildInvalidBlocks(): void {
-    $this->placeBlock('system_powered_by_block', ['region' => 'content']);
-    $block1 = $this->placeBlock('system_powered_by_block');
-    $block2 = $this->placeBlock('system_powered_by_block');
-    $block2->disable()->save();
-    // Use the config API directly to bypass Block::preSave().
-    \Drupal::configFactory()->getEditable('block.block.' . $block1->id())->set('region', 'INVALID')->save();
-    \Drupal::configFactory()->getEditable('block.block.' . $block2->id())->set('region', 'INVALID')->save();
-
-    // Reload block entities.
-    $block1 = Block::load($block1->id());
-    $block2 = Block::load($block2->id());
-
-    $this->assertSame('INVALID', $block1->getRegion());
-    $this->assertTrue($block1->status());
-    $this->assertSame('INVALID', $block2->getRegion());
-    $this->assertFalse($block2->status());
-
-    block_rebuild();
-
-    // Reload block entities.
-    $block1 = Block::load($block1->id());
-    $block2 = Block::load($block2->id());
-
-    $messages = \Drupal::messenger()->all();
-    \Drupal::messenger()->deleteAll();
-    $expected = ['warning' => [new TranslatableMarkup('The block %info was assigned to the invalid region %region and has been disabled.', ['%info' => $block1->id(), '%region' => 'INVALID'])]];
-    $this->assertEquals($expected, $messages);
-
-    $default_region = system_default_region('stark');
-    $this->assertSame($default_region, $block1->getRegion());
-    $this->assertFalse($block1->status());
-    $this->assertSame($default_region, $block2->getRegion());
-    $this->assertFalse($block2->status());
   }
 
 }

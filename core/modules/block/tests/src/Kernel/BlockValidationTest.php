@@ -119,6 +119,7 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
   public function testThemeValidation(): void {
     $this->entity->set('theme', 'non_existent');
     $this->assertValidationErrors([
+      'region' => 'This is not a valid region for <em class="placeholder">non_existent</em>.',
       'theme' => "Theme 'non_existent' is not installed.",
     ]);
 
