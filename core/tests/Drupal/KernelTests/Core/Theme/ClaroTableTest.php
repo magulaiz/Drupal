@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Theme;
 
 use Drupal\claro\ClaroPreRender;
@@ -64,7 +66,7 @@ class ClaroTableTest extends KernelTestBase {
       ],
     ];
 
-    $renderedTable = \Drupal::service('renderer')->renderRoot($table);
+    $renderedTable = (string) \Drupal::service('renderer')->renderRoot($table);
 
     // Confirm that table is rendered.
     $this->assertStringContainsString('class="class"', $renderedTable);

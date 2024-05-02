@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\editor\Kernel;
 
 use Drupal\Core\Form\FormState;
@@ -102,7 +104,9 @@ class EditorImageDialogTest extends EntityKernelTestBase {
       ],
       'dialogOptions' => [
         'title' => 'Edit Image',
-        'dialogClass' => 'editor-image-dialog',
+        'classes' => [
+          'ui-dialog' => 'editor-image-dialog',
+        ],
         'autoResize' => 'true',
       ],
       '_drupal_ajax' => '1',

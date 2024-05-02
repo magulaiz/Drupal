@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\statistics\Kernel\Migrate\d6;
 
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
@@ -8,6 +10,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
  * Tests the migration of node counter data to Drupal 8.
  *
  * @group statistics
+ * @group legacy
  */
 class MigrateNodeCounterTest extends MigrateDrupal6TestBase {
 
