@@ -97,7 +97,8 @@ class FieldConfigEditForm extends EntityForm {
     $field_storage = $this->entity->getFieldStorageDefinition();
     $bundles = $this->entityTypeBundleInfo->getBundleInfo($this->entity->getTargetEntityTypeId());
 
-    $form_title = $this->t('Field settings for %bundle', [
+    $form_title = $this->t('%field_type settings for %bundle', [
+      '%field_type' => ucfirst($this->entity->getType()),
       '%bundle' => $bundles[$this->entity->getTargetBundle()]['label'],
     ]);
     $form['#title'] = $form_title;
@@ -352,10 +353,10 @@ class FieldConfigEditForm extends EntityForm {
   }
 
   /**
-   * Checks if a field machine name is taken.
+   * Checks whether a field machine name is already in use.
    *
    * @param string $value
-   *   The machine name, not prefixed.
+   *   The machine name, not prefixed (ex- field_some_name, without 'field_').
    * @param array $element
    *   An array containing the structure of the 'field_name' element.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
@@ -364,7 +365,7 @@ class FieldConfigEditForm extends EntityForm {
    * @return bool
    *   Whether or not the field machine name is taken.
    */
-  public function fieldNameExists($value, $element, FormStateInterface $form_state): bool {
+  public function fieldNameExists(string $value, array $element, FormStateInterface $form_state): bool {
     // Add the field prefix.
     $field_name = $this->configFactory->get('field_ui.settings')->get('field_prefix') . $value;
 
@@ -378,10 +379,10 @@ class FieldConfigEditForm extends EntityForm {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 
-    // Change message, visible only when client-side HTML form validation
+    // Set the error message. Visible only when client-side HTML form validation
     // doesn't work.
     if (!$form_state->getValue('label')) {
-      $form_state->setErrorByName('label', $this->t('Label is required'));
+      $form_state->setErrorByName('label', $this->t('A label is required.'));
     }
     if (empty($form_state->getValue('field_name'))) {
       if ($this->entity->isNew()) {
@@ -423,20 +424,25 @@ class FieldConfigEditForm extends EntityForm {
     parent::submitForm($form, $form_state);
 
     if ($this->entity->isNew()) {
-      // See \Drupal\field_ui\Form\FieldStorageAddForm::submitForm() for context
-      // of retrieval.
+      // See \Drupal\field_ui\Form\FieldStorageAddForm::submitForm() for where
+      // the values being fetched below were set.
       $existing_values = $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->tempStore->get('temp_name'))['field_config_values'] ?: $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->entity->getName())['field_config_values'];
-      // Fetch field_storage entity.
+
+      // Fetch the field_storage entity.
       $field_storage = $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->tempStore->get('temp_name'))['field_storage'];
+
       // Update the field_name.
       $field_storage = $field_storage->set('field_name', $form_state->getValue('field_name'));
+
       // Start building the new entity.
       $new_entity_values = $existing_values;
       $new_entity_values['field_storage'] = $field_storage;
       $new_entity_values['field_name'] = $form_state->getValue('field_name');
       $new_entity_values['type'] = $this->entity->getType();
       unset($new_entity_values['label']);
-      // Create a new field instance as machine name is immutable.
+
+      // Create a new field instance to set the machine name, as the field
+      // machine name is an immutable property.
       $this->entity = $this->entityTypeManager->getStorage('field_config')->create($new_entity_values);
       $this->copyFormValuesToEntity($this->entity, $form, $form_state);
     }

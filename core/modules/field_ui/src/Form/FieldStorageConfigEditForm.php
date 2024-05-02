@@ -92,7 +92,7 @@ class FieldStorageConfigEditForm extends EntityForm {
 
     $field_label = $form_state->get('field_config')->label();
     if ($this->entity->isNew() && !isset($form_state->getUserInput()['label'])) {
-      $field_label = $this->t('new');
+      $field_label = $this->t('New');
     }
     else {
       $field_label = $this->t('%field', ['%field' => $field_label]);

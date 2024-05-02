@@ -121,6 +121,7 @@ trait FieldUiTestTrait {
       }
       $this->submitForm($field_edit_ini, 'Save settings');
       $this->assertSession()->pageTextContains("Saved $label configuration.");
+
       if ($field_edit && $uses_field_name) {
         $this->drupalGet($base_bundle_path . "/fields/node.$bundle.field_$field_name");
         $this->submitForm($field_edit, 'Save settings');

@@ -250,6 +250,7 @@ class FieldStorageAddForm extends FormBase {
       '#value' => $this->t('Back'),
       '#submit' => ['::startOver'],
     ];
+
     // Using the validate method to run this before submit.
     $form['actions']['back']['#validate'][] = '::unsetStorageType';
     $field_type_options = $form_state->get('field_type_options');
@@ -335,7 +336,7 @@ class FieldStorageAddForm extends FormBase {
    *
    * @see \Drupal\field_ui\Form\FieldStorageAddForm::startOver
    */
-  public static function unsetStorageType(array &$form, FormStateInterface $form_state) {
+  public static function unsetStorageType(array &$form, FormStateInterface $form_state): void {
     $form_state->unsetValue('new_storage_type');
   }
 
@@ -483,7 +484,8 @@ class FieldStorageAddForm extends FormBase {
   public function rebuildWithOptions($form, FormStateInterface &$form_state) {
     $storage_type = $form_state->getValue('new_storage_type');
     $storage_type_list = $form['add']['new_storage_type'];
-    // Skip step in case of no storage type options (eg- Boolean, Email).
+    // Skip rebuilding for field types with no storage type options (for
+    // example, Boolean or Email fields).
     if (array_key_exists($storage_type, $storage_type_list) &&  !$storage_type_list[$storage_type]['radio']['#display_as_group']) {
       $this->submitForm($form, $form_state);
     }
@@ -496,7 +498,6 @@ class FieldStorageAddForm extends FormBase {
    * Submit handler for resetting the form.
    */
   public static function startOver($form, FormStateInterface &$form_state) {
-    // Need to do this as the parameters for buildForm are retained on rebuild.
     $form_state->setRebuild();
   }
 
