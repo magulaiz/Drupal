@@ -6,8 +6,6 @@ use Drupal\Core\Render\RenderContext;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
-use Drupal\user\Entity\Role;
-use Drupal\user\Entity\User;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -74,17 +72,7 @@ class TaxonomyFieldVidTest extends ViewsKernelTestBase {
     $vocabulary2 = $this->createVocabulary(['vid' => 'bbb']);
     $term = $this->createTerm($vocabulary2);
     $this->terms[$term->id()] = $term;
-    $admin_role = Role::create([
-      'id' => 'admin',
-      'permissions' => ['administer taxonomy'],
-      'label' => 'Admin',
-    ]);
-    $admin_role->save();
-    $this->adminUser = User::create([
-      'name' => $this->randomString(),
-      'roles' => [$admin_role->id()],
-    ]);
-    $this->adminUser->save();
+    $this->adminUser = $this->createUser(['administer taxonomy']);
     $this->container->get('current_user')->setAccount($this->adminUser);
 
     ViewTestData::createTestViews(static::class, ['taxonomy_test_views']);
