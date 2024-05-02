@@ -312,13 +312,14 @@ $settings['hash_salt'] = '';
 $settings['update_free_access'] = FALSE;
 
 /**
- * Limits the modules to build the theme registry for on update.php.
+ * Modules the theme registry will be built for on update.php.
  *
- * Because update.php needs to render things, the theme registry is built. Some
- * modules such as Views need to load a lot of data to build this registry and
- * some of that data may be unstable until the updates are ran. By default, the
- * list of modules is reduced to just system, but you can add to this list or
- * set the setting to FALSE to have all modules loaded.
+ * Because update.php needs to render things, the theme registry has to be
+ * built. Some of the data required to build this may be unstable for a module
+ * until the update process has completed. To prevent the update.php page from
+ * crashing and therefore leaving a website in limbo, only the system module is
+ * used to build the theme registry. More modules can be added, if needed. Set
+ * this setting to FALSE to use all modules to build the theme registry.
  */
 # $settings['update_theme_registry_module_filter'] = ['system'];
 
