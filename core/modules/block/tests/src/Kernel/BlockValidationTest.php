@@ -151,4 +151,17 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
     ]);
   }
 
+  /**
+   * Tests validating a region in block.
+   */
+  public function testRegionValidation(): void {
+    $this->entity->set('region', 'non_existent');
+    $this->assertValidationErrors([
+      'region' => 'This is not a valid region for <em class="placeholder">stark</em>.',
+    ]);
+    // Set a valid region and assert it is saved properly.
+    $this->entity->set('region', 'header')->save();
+    self::assertSame('header', Block::load($this->entity->id())->get('region'));
+  }
+
 }
