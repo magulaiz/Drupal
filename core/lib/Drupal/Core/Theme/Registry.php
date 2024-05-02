@@ -269,12 +269,15 @@ class Registry implements DestructableInterface {
     // is run, so we need to build a limited registry while on update.php.
     $filter_list = $this->settings->get('update_theme_registry_module_filter', ['system']);
     if ($filter_list !== FALSE && $this->kernel instanceof UpdateKernel) {
-      $filter_list = array_fill_keys($filter_list, TRUE);
-
-      // Call ::build() with only the system module and then revert the list.
+      // Ensure:
+      // - The system module is in the filtered list.
+      // - All the filtered modules are enabled.
+      // - The modules are in the correct order.
       $module_list = $this->moduleHandler->getModuleList();
-      $system_only = array_intersect_key($module_list, $filter_list);
-      $this->moduleHandler->setModuleList($system_only);
+      $filter_list = array_intersect_key($module_list, array_fill_keys($filter_list, TRUE) + ['system' => TRUE]);
+
+      // Call ::build() with only the filtered module list and then revert.
+      $this->moduleHandler->setModuleList($filter_list);
       $this->build();
       $this->moduleHandler->setModuleList($module_list);
 
