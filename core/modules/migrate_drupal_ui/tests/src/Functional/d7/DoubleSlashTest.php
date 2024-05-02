@@ -62,7 +62,6 @@ class DoubleSlashTest extends MigrateUpgradeExecuteTestBase {
     $this->drupalGet('/upgrade');
     $this->submitForm([], 'Continue');
     $this->submitForm($edits, 'Review upgrade');
-    $this->submitForm([], 'I acknowledge I may lose data. Continue anyway.');
     $this->useTestMailCollector();
     $this->submitForm([], 'Perform upgrade');
 
