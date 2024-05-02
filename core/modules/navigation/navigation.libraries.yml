@@ -1,4 +1,6 @@
 internal.navigation:
+  # Internal library. Do not depend on it outside core nor add core usage
+  # beyond the Navigation module.
   version: VERSION
   js:
     js/toolbar-menu.js: {}
@@ -32,6 +34,8 @@ admin-reset-styles:
       css/base/admin-reset-styles.css: {}
 
 internal.navigation.escapeAdmin:
+  # Internal library. Do not depend on it outside core nor add core usage
+  # beyond the Navigation module.
   version: VERSION
   js:
     js/escapeAdmin.js: {}
@@ -53,6 +57,8 @@ body-scroll-lock:
       css/components/body-scroll-lock.css: {}
 
 internal.popover:
+  # Internal library. Do not depend on it outside core nor add core usage
+  # beyond the Navigation module.
   js:
     js/toolbar-popover.js: {}
   css:
