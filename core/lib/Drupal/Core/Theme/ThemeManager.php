@@ -471,12 +471,12 @@ class ThemeManager implements ThemeManagerInterface {
   /**
    * Validates a region for active theme.
    *
-   * @param string $region
+   * @param null|string $region
    *   The region to validate.
    * @param \Symfony\Component\Validator\Context\ExecutionContextInterface $context
    *   The validation context.
    */
-  public static function validateRegion(string $region, ExecutionContextInterface $context): void {
+  public static function validateRegion(?string $region, ExecutionContextInterface $context): void {
     if ($theme = $context->getRoot()->get('theme')->getValue()) {
       $regions = array_keys(system_region_list($theme));
       if (!in_array($region, $regions)) {

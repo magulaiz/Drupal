@@ -52,7 +52,6 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
       'id' => 'test_block',
       'theme' => 'stark',
       'plugin' => 'system_powered_by_block',
-      'region' => 'header',
       'settings' => [
         'label' => 'Powered by Drupal 🚀',
       ],
@@ -133,6 +132,23 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
     // block has been deleted.
     // @see \Drupal\Core\Extension\ThemeInstaller::uninstall()
     $this->assertNull(Block::load($this->entity->id()));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function testRequiredPropertyValuesMissing(?array $additional_expected_validation_errors_when_missing = NULL): void {
+    parent::testRequiredPropertyValuesMissing([
+      'region' => [
+        'region' => [
+          'This value should not be null.',
+          'This is not a valid region for <em class="placeholder">stark</em>.',
+        ],
+      ],
+      'theme' => [
+        'region' => 'Theme not defined in configuration.',
+      ],
+    ]);
   }
 
 }
