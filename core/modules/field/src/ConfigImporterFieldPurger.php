@@ -109,7 +109,7 @@ class ConfigImporterFieldPurger {
    *   synchronized.
    */
   public static function getFieldStoragesToPurge(array $extensions, array $deletes) {
-    $providers = array_keys($extensions['module']);
+    $providers = !empty($extensions['module']) ? array_keys($extensions['module']) : [];
     $providers[] = 'core';
     $storages_to_delete = [];
 
