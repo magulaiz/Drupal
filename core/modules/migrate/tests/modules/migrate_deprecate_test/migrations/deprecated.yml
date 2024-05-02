@@ -1,0 +1,14 @@
+id: deprecated
+label: deprecated
+deprecation_message: some deprecation message
+source:
+  plugin: embedded_data
+  data_rows:
+    - id: 0
+  ids:
+    id:
+      type: integer
+process:
+  id: id
+destination:
+  plugin: null
