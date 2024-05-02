@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# sudo ln -s $CI_PROJECT_DIR /var/www/html
+sudo ln -s $CI_PROJECT_DIR /var/www/html
 # sudo service apache2 start
 sudo mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
 # chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
