@@ -11,10 +11,6 @@ const {transformFromAst, transform} = Babel;
 
 const jsx = `<h1 style={{marginLeft: '80px'}} onClick={() => console.log('clicked')}>Hello world!</h1>`;
 
-// function hello() {
-//   return <div>Hello world!</div>;
-// }
-
 // AST
 const ast = parser.parse(jsx, {
   sourceType: 'module',
@@ -25,9 +21,6 @@ const { code } = transformFromAst(ast, '', {
   presets: ['react'],
 });
 console.log(code);
-
-console.log('gen', generator.default(ast));
-
 
 const domNode = document.getElementById('react-app');
 const root = ReactDOM.createRoot(domNode);
