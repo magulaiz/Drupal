@@ -204,7 +204,7 @@ class Registry implements DestructableInterface {
     }
     if (!isset($settings)) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $settings argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3441222', E_USER_DEPRECATED);
-      $this->kernel = \Drupal::service('settings');
+      $this->settings = \Drupal::service('settings');
     }
   }
 
