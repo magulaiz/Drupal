@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\FunctionalJavascriptTests;
 
 use Behat\Mink\Exception\DriverException;
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Tests\BrowserTestBase;
 use PHPUnit\Runner\BaseTestRunner;
@@ -40,6 +41,20 @@ abstract class WebDriverTestBase extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected $minkDefaultDriverClass = DrupalSelenium2Driver::class;
+
+  /**
+   * A screenshot taken on test exit.
+   *
+   * @var string
+   */
+  private $screenshotOnExit;
+
+  /**
+   * The file name to use on exit for that screenshot.
+   *
+   * @var string
+   */
+  protected $filenameScreenshotOnFail;
 
   /**
    * {@inheritdoc}
@@ -100,6 +115,15 @@ abstract class WebDriverTestBase extends BrowserTestBase {
       if ($status === BaseTestRunner::STATUS_ERROR || $status === BaseTestRunner::STATUS_WARNING || $status === BaseTestRunner::STATUS_FAILURE) {
         // Ensure we capture the output at point of failure.
         @$this->htmlOutput();
+        $directory = getenv('SCREENSHOT_REPORT_DIRECTORY') ?: './sites/default/files/simpletest/screenshots';
+        // Ensure directory exists.
+        if (!is_dir($directory)) {
+          mkdir($directory, 0777, TRUE);
+        }
+        $current_url = Html::cleanCssIdentifier($this->getSession()->getCurrentUrl());
+        $filenameScreenshotOnFail = \Drupal::service('file_system')->createFilename(uniqid() . '_' . $current_url . '_test-failure.png', $directory);
+        $this->createScreenshot($filenameScreenshotOnFail);
+
       }
       // Wait for all requests to finish. It is possible that an AJAX request is
       // still on-going.
