@@ -25,9 +25,9 @@ function mongodb_entity_type_alter(array &$entity_types) {
       $entity_types['content_moderation_state']->setHandlerClass('storage_schema', 'Drupal\mongodb\modules\content_moderation\ContentModerationStateStorageSchema');
     }
 
-    if (!empty($entity_types['menu_link_content'])) {
-      $entity_types['menu_link_content']->setStorageClass('Drupal\mongodb\modules\menu_link_content\MenuLinkContentStorage');
-    }
+//    if (!empty($entity_types['menu_link_content'])) {
+//      $entity_types['menu_link_content']->setStorageClass('Drupal\mongodb\modules\menu_link_content\MenuLinkContentStorage');
+//    }
 
     if (!empty($entity_types['node'])) {
       $entity_types['node']->setStorageClass('Drupal\mongodb\modules\node\NodeStorage');

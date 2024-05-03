@@ -12,13 +12,6 @@ use Drupal\Core\Entity\EntityTypeInterface;
 class ViewStorage extends ConfigEntityStorage {
 
   /**
-   * The MongoDB table information service.
-   *
-   * @var \Drupal\mongodb\Driver\Database\mongodb\TableInformation
-   */
-  protected $tableInformation;
-
-  /**
    * Helper method for updating a view from relational to MongoDB.
    *
    * @param array $values
@@ -31,9 +24,6 @@ class ViewStorage extends ConfigEntityStorage {
     // TODO: Remove reverse relationships and associated fields. MongoDB does
     // not need or support them.
     // See: Drupal\Tests\field\Kernel\EntityReference\Views\EntityReferenceRelationshipTest.
-
-    $removed_relationships = [];
-    $original_base_table = '';
 
     // Update the records so that they will work for MongoDB.
     if (!empty($values['base_table'])) {
@@ -70,6 +60,11 @@ class ViewStorage extends ConfigEntityStorage {
         }
       }
     }
+
+    // JSON entity storage uses far fewer relationships then relational entity
+    // storage.
+    $removed_relationships = [];
+
     if (isset($values['display']) && is_array($values['display'])) {
       foreach ($values['display'] as &$display) {
         if (isset($display['display_options']) && is_array($display['display_options'])) {
@@ -313,15 +308,20 @@ class ViewStorage extends ConfigEntityStorage {
     // For contrib and custom modules we shall need a hook or plugin system to
     // allow them to override the default functionality.
     //
-    // Tables for entity field values use the naming convention were the first
-    // part is the base table name, then two underscore characters followed by
-    // the field name.
+    // Table names for entity field values use the naming convention were the
+    // first part is the entity name and base table name, then two underscore
+    // characters followed by the field name.
     $double_underscore_parts = explode('__', $table);
     if (count($double_underscore_parts) == 2) {
       // The entity taxonomy_term does not adhere to the default naming
       // convention.
       if ($double_underscore_parts[0] == 'taxonomy_term') {
         return 'taxonomy_term_data';
+      }
+      // For the user entity is the base table name not the same as the entity
+      // name.
+      elseif ($double_underscore_parts[0] == 'user') {
+        return 'users';
       }
 
       return $double_underscore_parts[0];

@@ -2,10 +2,9 @@
 
 namespace Drupal\mongodb\modules\views;
 
+use Drupal\views\ManyToOneHelper as CoreManyToOneHelper;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Plugin\views\join\JoinPluginBase;
-
-use Drupal\views\ManyToOneHelper as CoreManyToOneHelper;
 
 /**
  * Overrides the class \Drupal\views\ManyToOneHelper.

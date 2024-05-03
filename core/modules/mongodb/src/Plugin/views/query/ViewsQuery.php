@@ -4,7 +4,6 @@ namespace Drupal\mongodb\Plugin\views\query;
 
 use Drupal\Core\Database\Query\ConditionInterface;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
-use Drupal\Core\Database\Query\Condition;
 use Drupal\mongodb\Driver\Database\mongodb\MongodbSQLException;
 use Drupal\views\Plugin\views\filter\LatestRevision;
 use Drupal\views\Plugin\views\query\Sql;
@@ -12,7 +11,6 @@ use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 
-// cspell:ignore datedate datestring substringed
 // cspell:ignore datedate datestring substringed
 
 /**
@@ -165,55 +163,6 @@ class ViewsQuery extends Sql {
    */
   public function getTranslationsTable() {
     return $this->view->storage->get('translations_table');
-  }
-
-  /**
-   * Join against another table in the database.
-   *
-   * @param $type
-   *   The type of join. This can be INNER, LEFT (OUTER). Defaults to LEFT.
-   * @param $table
-   *   The table against which to join. May be a string or another SelectQuery
-   *   object. If a query object is passed, it will be used as a subselect.
-   *   Unless the table name starts with the database / schema name and a dot
-   *   it will be prefixed.
-   * @param $field
-   *   The field of the table $table to use in the join.
-   * @param $left_table
-   *   The table to which the table $table joins to.
-   * @param $left_field
-   *   The field of the table $left_table to use in the join.
-   * @param $operator
-   *   The operator to use in the join. Defaults to '='.
-   * @param $alias
-   *   The alias for the table. In most cases this should be the first letter
-   *   of the table, or the first letter of each "word" in the table. If omitted,
-   *   one will be dynamically generated.
-   * @param $extra
-   *   An array of extra conditions on the join.
-   *
-   * @return string
-   *   The unique alias that was assigned for this table.
-   *
-   * @see \Drupal\mongodb\Driver\Select::addJoin()
-   */
-  public function addUnrelatedJoin($type, $table, $field, $left_table, $left_field, $operator = '=', $alias = NULL, $extra = []) {
-    if (empty($alias)) {
-      $alias = $table . '_' . str_replace('.', '_', $field);
-    }
-
-    $this->mongodbUnrelatedJoins[] = [
-      'type' => $type,
-      'table' => $table,
-      'field' => $field,
-      'left_table' => $left_table,
-      'left_field' => $left_field,
-      'operator' => $operator,
-      'alias' => $alias,
-      'extra' => $extra,
-    ];
-
-    return $alias;
   }
 
   /**

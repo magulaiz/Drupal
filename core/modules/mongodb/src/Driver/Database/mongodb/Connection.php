@@ -7,7 +7,6 @@ use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\Transaction\TransactionManagerInterface;
-use Drupal\mongodb\Driver\Database\mongodb\Database;
 use MongoDB\Client;
 use MongoDB\Database as MongodbDatabase;
 use MongoDB\Driver\Exception\AuthenticationException;
@@ -23,13 +22,6 @@ use MongoDB\Operation\FindOneAndUpdate;
  * MongoDB implementation of \Drupal\Core\Database\Connection.
  */
 class Connection extends DatabaseConnection {
-
-  /**
-   * Whether this database connection supports transactions.
-   *
-   * @var bool
-   */
-  protected $transactionSupport = FALSE;
 
   /**
    * {@inheritdoc}
@@ -108,15 +100,6 @@ class Connection extends DatabaseConnection {
     // Default to TCP connection on port 27017.
     if (empty($connection_options['port'])) {
       $connection_options['port'] = 27017;
-    }
-    // If the password contains a backslash it is treated as an escape character
-    // http://bugs.php.net/bug.php?id=53217
-    // so backslashes in the password need to be doubled up.
-    // The bug was reported against pdo_mongodb 1.0.2, backslashes in passwords
-    // will break on this doubling up when the bug is fixed, so check the version
-    // elseif (phpversion('pdo_mongodb') < 'version_this_was_fixed_in') {
-    if (!empty($connection_options['password'])) {
-      $connection_options['password'] = str_replace('\\', '\\\\', $connection_options['password']);
     }
 
     // Default database is test.
@@ -383,7 +366,7 @@ class Connection extends DatabaseConnection {
    * {@inheritdoc}
    */
   public function clientVersion() {
-    // @TODO Needs to return something.
+    return '';
   }
 
   /**
