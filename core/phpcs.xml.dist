@@ -275,7 +275,6 @@
     <!-- <include-pattern>*/tests/*</include-pattern> -->
     <include-pattern>*/tests/src/*</include-pattern>
     <include-pattern>./tests/Drupal/*</include-pattern>
-    <include-pattern>./tests/TestSuites/*</include-pattern>
     <include-pattern>./modules/system/src/Tests/Routing/*</include-pattern>
     <exclude-pattern>./tests/Drupal/Tests/*/Fixture/*</exclude-pattern>
     <exclude-pattern>./tests/Drupal/Tests/*/fixtures/*</exclude-pattern>

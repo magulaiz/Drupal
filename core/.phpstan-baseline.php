@@ -2157,40 +2157,5 @@ The `TestListener` interface is deprecated$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Listeners/DrupalListener.php',
 ];
-$ignoreErrors[] = [
-	'message' => '#^Class Drupal\\\\Tests\\\\TestSuites\\\\BuildTestSuite extends deprecated class Drupal\\\\Tests\\\\TestSuites\\\\TestSuiteBase\\:
-in drupal\\:10\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
-  replacement and test discovery will be handled differently in PHPUnit 10\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/TestSuites/BuildTestSuite.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Drupal\\\\Tests\\\\TestSuites\\\\FunctionalJavascriptTestSuite extends deprecated class Drupal\\\\Tests\\\\TestSuites\\\\TestSuiteBase\\:
-in drupal\\:10\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
-  replacement and test discovery will be handled differently in PHPUnit 10\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/TestSuites/FunctionalJavascriptTestSuite.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Drupal\\\\Tests\\\\TestSuites\\\\FunctionalTestSuite extends deprecated class Drupal\\\\Tests\\\\TestSuites\\\\TestSuiteBase\\:
-in drupal\\:10\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
-  replacement and test discovery will be handled differently in PHPUnit 10\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/TestSuites/FunctionalTestSuite.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Drupal\\\\Tests\\\\TestSuites\\\\KernelTestSuite extends deprecated class Drupal\\\\Tests\\\\TestSuites\\\\TestSuiteBase\\:
-in drupal\\:10\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
-  replacement and test discovery will be handled differently in PHPUnit 10\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/TestSuites/KernelTestSuite.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Class Drupal\\\\Tests\\\\TestSuites\\\\UnitTestSuite extends deprecated class Drupal\\\\Tests\\\\TestSuites\\\\TestSuiteBase\\:
-in drupal\\:10\\.3\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is no
-  replacement and test discovery will be handled differently in PHPUnit 10\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/TestSuites/UnitTestSuite.php',
-];
 
 return ['parameters' => ['ignoreErrors' => $ignoreErrors]];
