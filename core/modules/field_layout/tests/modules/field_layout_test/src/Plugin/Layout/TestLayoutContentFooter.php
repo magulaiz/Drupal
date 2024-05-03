@@ -7,7 +7,7 @@ use Drupal\Core\Layout\LayoutDefault;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
- * Provides an attributed layout plugin for field_layout tests.
+ * Provides a Layout plugin for field_layout tests.
  */
 #[Layout(
   id: 'test_layout_content_and_footer',
