@@ -38,10 +38,10 @@ class Layout extends Plugin {
    * @param string $id
    *   The plugin ID.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $label
-   *   (optional) The human-readable name. @todo Deprecate option label in
+   *   (optional) The human-readable name. @todo Deprecate optional label in
    *   https://www.drupal.org/project/drupal/issues/3392572.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $category
-   *   (optional) The human-readable category. @todo Deprecate option category
+   *   (optional) The human-readable category. @todo Deprecate optional category
    *   in https://www.drupal.org/project/drupal/issues/3392572.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $description
    *   (optional) The description for advanced layouts.
