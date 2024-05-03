@@ -3,7 +3,6 @@
 namespace Drupal\field_ui\Form;
 
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\Random;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -349,7 +348,7 @@ class FieldStorageAddForm extends FormBase {
     // We just don't need the temp field_name to clash with other saved field
     // entities so just adding a prefix 'temp_' instead of default machine
     // name prefix 'field_'.
-    $values['field_name'] = "temp_field_". $values['new_storage_type'];
+    $values['field_name'] = "temp_field_" . $values['new_storage_type'];
     $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
 
     $field_storage_type = $values['group_field_options_wrapper'] ?? $values['new_storage_type'];
