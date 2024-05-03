@@ -1863,7 +1863,12 @@ function claro_preprocess_html(&$variables) {
     'imports' => [
       'react' => base_path() . 'core/assets/vendor/react/react.development.js',
       'react-dom'=> base_path() . 'core/assets/vendor/react-dom/react-dom.development.js',
-      'babel' => base_path() . 'core/assets/vendor/babel/babel.min.js'
+      'babel' => base_path() . 'core/assets/vendor/babel/babel.min.js',
+      'redux' => base_path() . 'core/assets/vendor/redux/redux.js',
+      'redux-toolkit' => base_path() . 'core/assets/vendor/redux-toolkit/redux-toolkit.js',
+      'immer' => base_path() . 'core/assets/vendor/redux-toolkit/immer/immer.legacy-esm.js',
+      'reselect' => base_path() . 'core/assets/vendor/redux-toolkit/reselect/reselect.legacy-esm.js',
+      'redux-thunk' => base_path() . 'core/assets/vendor/redux-toolkit/redux-thunk/redux-thunk.legacy-esm.js',
     ],
   ]);
   $importmap = [

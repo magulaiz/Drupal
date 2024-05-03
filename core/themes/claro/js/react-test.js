@@ -20,7 +20,6 @@ const ast = parser.parse(jsx, {
 const { code } = transformFromAst(ast, '', {
   presets: ['react'],
 });
-console.log(code);
 
 const domNode = document.getElementById('react-app');
 const root = ReactDOM.createRoot(domNode);

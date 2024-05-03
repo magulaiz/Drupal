@@ -350,5 +350,8 @@ react-test:
     js/react-test.js: {
       attributes: { type: module }
     }
+    js/redux-test.js: {
+        attributes: { type: module }
+    }
   dependencies:
     - core/drupal.react
