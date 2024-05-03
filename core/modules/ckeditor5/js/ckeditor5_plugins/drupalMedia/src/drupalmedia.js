@@ -7,6 +7,7 @@ import DrupalMediaUI from './drupalmediaui';
 import DrupalMediaToolbar from './drupalmediatoolbar';
 
 import MediaImageTextAlternative from './mediaimagetextalternative';
+import MediaImageTitle from './mediaimagetitle';
 import DrupalMediaGeneralHtmlSupport from './drupalmediageneralhtmlsupport';
 
 /**
@@ -18,6 +19,7 @@ import DrupalMediaGeneralHtmlSupport from './drupalmediageneralhtmlsupport';
  *  - {@link DrupalMediaUI}
  *  - {@link DrupalMediaToolbar}
  *  - {@link MediaImageTextAlternative}
+ *  - {@link MediaImageTitle}
  *
  * @private
  */
@@ -32,6 +34,7 @@ export default class DrupalMedia extends Plugin {
       DrupalMediaUI,
       DrupalMediaToolbar,
       MediaImageTextAlternative,
+      MediaImageTitle,
     ];
   }
 

@@ -24,6 +24,7 @@ function createDrupalMedia(writer, attributes) {
  * @example
  *    editor.execute('insertDrupalMedia', {
  *      'alt': 'Alt text',
+ *      'title': 'Title text',
  *      'data-align': 'left',
  *      'data-caption': 'Caption text',
  *      'data-entity-type': 'media',

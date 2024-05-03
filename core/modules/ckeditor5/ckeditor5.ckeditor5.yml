@@ -509,7 +509,7 @@ ckeditor5_image:
       - drupalImage.DrupalInsertImage
     config:
       image:
-        toolbar: [drupalImageAlternativeText]
+        toolbar: [drupalImageAlternativeText, drupalImageTitle]
   drupal:
     label: Image
     class: \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Image
@@ -517,7 +517,7 @@ ckeditor5_image:
     admin_library: ckeditor5/internal.admin.image
     elements:
       - <img>
-      - <img src alt height width>
+      - <img src title alt height width>
     toolbar_items:
       drupalInsertImage:
         label: Image
@@ -536,7 +536,7 @@ ckeditor5_imageUpload:
   drupal:
     label: Image Upload
     elements:
-      - <img data-entity-uuid data-entity-type>
+      - <img data-entity-uuid data-entity-type title>
     conditions:
       imageUploadStatus: true
       plugins: [ckeditor5_image]
@@ -658,7 +658,7 @@ media_media:
       - drupalMedia.DrupalElementStyle
     config:
       drupalMedia:
-        toolbar: [mediaImageTextAlternative]
+        toolbar: [mediaImageTextAlternative, mediaImageTitle]
         themeError:
           func:
             name: Drupal.theme
@@ -670,7 +670,7 @@ media_media:
     class: Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media
     elements:
       - <drupal-media>
-      - <drupal-media data-entity-type data-entity-uuid alt>
+      - <drupal-media data-entity-type data-entity-uuid alt title>
       - <drupal-media data-view-mode>
     conditions:
       filter: media_embed

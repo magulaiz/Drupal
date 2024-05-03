@@ -691,6 +691,7 @@ export default class DrupalImageEditing extends Plugin {
           'isDecorative',
           'width',
           'height',
+          'title',
         ],
       });
     }
@@ -703,6 +704,7 @@ export default class DrupalImageEditing extends Plugin {
           'isDecorative',
           'width',
           'height',
+          'title',
         ],
       });
     }
