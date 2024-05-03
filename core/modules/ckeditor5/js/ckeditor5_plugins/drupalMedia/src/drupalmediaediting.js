@@ -208,6 +208,8 @@ export default class DrupalMediaEditing extends Plugin {
     const schema = this.editor.model.schema;
     schema.register('drupalMedia', {
       inheritAllFrom: '$blockObject',
+      allowIn: ["$block", "$text"],
+      allowWhere: ["$block", "$text"],
       allowAttributes: Object.keys(this.attrs),
     });
     // Register `<drupal-media>` as a block element in the DOM converter. This
