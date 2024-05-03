@@ -491,7 +491,11 @@ class Url implements TrustedCallbackInterface {
     $result = \Drupal::service('router.no_access_checks')->matchRequest($request);
     $route_name = $result[RouteObjectInterface::ROUTE_NAME];
     $route_parameters = $result['_raw_variables']->all();
-    return new static($route_name, $route_parameters);
+    $options = [];
+    if (!empty($request->query->all())) {
+      $options['query'] = $request->query->all();
+    }
+    return new static($route_name, $route_parameters, $options);
   }
 
   /**
