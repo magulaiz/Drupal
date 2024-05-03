@@ -1,0 +1,25 @@
+
+
+[Claro] @ckrina @lauriii @bnjmnm
+# Theme Files
+core/themes/claro
+
+# Tests
+core/tests/Drupal/FunctionalJavascriptTests/Theme/ClaroBlockFilterTest.php
+core/tests/Drupal/FunctionalJavascriptTests/Theme/ClaroEntityDisplayTest.php
+core/tests/Drupal/FunctionalJavascriptTests/Theme/ClaroMenuUiJavascriptTest.php
+core/tests/Drupal/FunctionalJavascriptTests/Theme/ClaroPasswordConfirmWidgetTest.php
+core/tests/Drupal/FunctionalJavascriptTests/Theme/ClaroTableDragTest.php
+core/tests/Drupal/FunctionalJavascriptTests/Theme/ClaroViewsBulkOperationsTest.php
+core/tests/Drupal/FunctionalJavascriptTests/Theme/ClaroViewsUiTest.php
+core/tests/Drupal/KernelTests/Core/Theme/ClaroVerticalTabsTest.php
+core/tests/Drupal/Nightwatch/Tests/claroAutocompleteTest.js
+
+[Olivero] @mherchel @ablum
+# Theme Files
+core/themes/olivero
+
+# Tests
+core/tests/Drupal/FunctionalJavascriptTests/Theme/OliveroMessagesTest.php
+core/tests/Drupal/FunctionalTests/Theme/OliveroTest.php
+core/tests/Drupal/Nightwatch/Tests/Olivero
