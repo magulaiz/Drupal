@@ -164,4 +164,24 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
     self::assertSame('header', Block::load($this->entity->id())->get('region'));
   }
 
+  /**
+   * Tests validating weight.
+   */
+  public function testWeightValidation(): void {
+    $this->entity->set('weight', NULL);
+    $this->assertNull($this->entity->getWeight());
+    $this->assertValidationErrors([]);
+
+    $this->entity->set('weight', '');
+    $this->assertValidationErrors([
+      'weight' => [
+        'This value should be a valid number.',
+        'This value should be of the correct primitive type.',
+      ],
+    ]);
+
+    $this->entity->set('weight', 10);
+    $this->assertValidationErrors([]);
+  }
+
 }
