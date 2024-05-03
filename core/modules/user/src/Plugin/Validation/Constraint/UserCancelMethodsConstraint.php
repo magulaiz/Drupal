@@ -20,7 +20,7 @@ class UserCancelMethodsConstraint implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): Choice {
-    $configuration['choices'] = user_cancel_methods(TRUE);
+    $configuration['choices'] = array_keys(get_user_cancel_methods_array());
     return new Choice($configuration);
   }
 
