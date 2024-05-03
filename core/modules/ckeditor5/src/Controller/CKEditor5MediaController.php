@@ -9,7 +9,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityRepositoryInterface;
-use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\editor\Entity\Editor;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\media\MediaInterface;
@@ -31,7 +31,7 @@ class CKEditor5MediaController extends ControllerBase {
   /**
    * The currently authenticated user.
    *
-   * @var \Drupal\Core\Session\AccountInterface
+   * @var \Drupal\Core\Session\AccountProxyInterface
    */
   protected $currentUser;
 
@@ -52,14 +52,14 @@ class CKEditor5MediaController extends ControllerBase {
   /**
    * Constructs a new CKEditor5MediaController.
    *
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
    *   The currently authenticated user.
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
    */
-  public function __construct(AccountInterface $current_user, EntityRepositoryInterface $entity_repository, RequestStack $request_stack) {
+  public function __construct(AccountProxyInterface $current_user, EntityRepositoryInterface $entity_repository, RequestStack $request_stack) {
     $this->currentUser = $current_user;
     $this->entityRepository = $entity_repository;
     $this->requestStack = $request_stack;

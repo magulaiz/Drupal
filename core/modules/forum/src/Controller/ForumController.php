@@ -8,7 +8,7 @@ use Drupal\Core\Entity\EntityAccessControlHandlerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Render\RendererInterface;
-use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
 use Drupal\forum\ForumManagerInterface;
 use Drupal\taxonomy\TermInterface;
@@ -93,7 +93,7 @@ class ForumController extends ControllerBase {
    *   Vocabulary storage.
    * @param \Drupal\taxonomy\TermStorageInterface $term_storage
    *   Term storage.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
    *   The current logged in user.
    * @param \Drupal\Core\Entity\EntityAccessControlHandlerInterface $node_access
    *   Node access control handler.
@@ -108,7 +108,7 @@ class ForumController extends ControllerBase {
    * @param \Drupal\Core\Entity\EntityTypeInterface $comment_entity_type_definition
    *   Comment entity type definition object
    */
-  public function __construct(ForumManagerInterface $forum_manager, VocabularyStorageInterface $vocabulary_storage, TermStorageInterface $term_storage, AccountInterface $current_user, EntityAccessControlHandlerInterface $node_access, array $field_map, EntityStorageInterface $node_type_storage, RendererInterface $renderer, EntityTypeInterface $node_entity_type_definition, EntityTypeInterface $comment_entity_type_definition) {
+  public function __construct(ForumManagerInterface $forum_manager, VocabularyStorageInterface $vocabulary_storage, TermStorageInterface $term_storage, AccountProxyInterface $current_user, EntityAccessControlHandlerInterface $node_access, array $field_map, EntityStorageInterface $node_type_storage, RendererInterface $renderer, EntityTypeInterface $node_entity_type_definition, EntityTypeInterface $comment_entity_type_definition) {
     $this->forumManager = $forum_manager;
     $this->vocabularyStorage = $vocabulary_storage;
     $this->termStorage = $term_storage;
