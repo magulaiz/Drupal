@@ -41,7 +41,7 @@ class DrupalSelenium2Driver extends Selenium2Driver {
       // and an expire date, as otherwise cookies leak from one test site into
       // another.
       'domain' => parse_url($this->getWebDriverSession()->url(), PHP_URL_HOST),
-      'expires' => time() + 80000,
+      'expiry' => time() + 80000,
     ];
 
     $this->getWebDriverSession()->setCookie($cookieArray);
