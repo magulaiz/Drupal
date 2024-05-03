@@ -3,12 +3,14 @@
 namespace Drupal\Core\Layout;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContextAwarePluginAssignmentTrait;
 use Drupal\Core\Plugin\ContextAwarePluginTrait;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Plugin\PreviewAwarePluginInterface;
+use Drupal\Core\Render\Element;
 
 /**
  * Provides a default class for Layout plugins.
@@ -44,20 +46,45 @@ class LayoutDefault extends PluginBase implements LayoutInterface, PluginFormInt
    * {@inheritdoc}
    */
   public function build(array $regions) {
+    $cacheable_metadata = new CacheableMetadata();
     // Ensure $build only contains defined regions and in the order defined.
     $build = [];
     foreach ($this->getPluginDefinition()->getRegionNames() as $region_name) {
       if (array_key_exists($region_name, $regions)) {
-        $build[$region_name] = $regions[$region_name];
+        foreach ($regions[$region_name] as $uuid => $block) {
+          // Remove empty blocks from the list but retain their cache metadata.
+          if (Element::isEmpty($block)) {
+            $cacheable_metadata->addCacheableDependency(CacheableMetadata::createFromRenderArray($block));
+            unset($regions[$region_name][$uuid]);
+          }
+        }
+        if (!empty($regions[$region_name])) {
+          $build[$region_name] = $regions[$region_name];
+        }
       }
     }
+
+    // Check for presence of layout_builder_tempstore parameter option.
+    // _layout_builder and _admin_route didn't offer complete coverage.
+    $temp_store = FALSE;
+    if (!empty(\Drupal::routeMatch()->getRouteObject()->getOption('parameters')) && isset(\Drupal::routeMatch()->getRouteObject()->getOption('parameters')['section_storage'])) {
+      $temp_store = \Drupal::routeMatch()->getRouteObject()->getOption('parameters')['section_storage']['layout_builder_tempstore'];
+    }
+
+    // Only add the theme info if there is something to render.
+    if ($build || $temp_store) {
+      $build['#theme'] = $this->pluginDefinition->getThemeHook();
+      if ($library = $this->pluginDefinition->getLibrary()) {
+        $build['#attached']['library'][] = $library;
+      }
+    }
+
+    // Always add the relevant metadata.
     $build['#in_preview'] = $this->inPreview;
     $build['#settings'] = $this->getConfiguration();
     $build['#layout'] = $this->pluginDefinition;
-    $build['#theme'] = $this->pluginDefinition->getThemeHook();
-    if ($library = $this->pluginDefinition->getLibrary()) {
-      $build['#attached']['library'][] = $library;
-    }
+    $cacheable_metadata->applyTo($build);
+
     return $build;
   }
 

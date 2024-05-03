@@ -41,14 +41,14 @@ class LayoutBuilderInstallTest extends LayoutBuilderCompatibilityTestBase {
 
     // The rendered entity has now changed. The non-configurable field is shown
     // outside the layout, the configurable field is not shown at all, and the
-    // layout itself is rendered (but empty).
+    // layout itself is not rendered.
     $new_expected_fields = [
       'field field--name-name field--type-string field--label-hidden field__item',
       'clearfix text-formatted field field--name-test-display-non-configurable field--type-text field--label-above',
       'clearfix text-formatted field field--name-test-display-multiple field--type-text field--label-above',
     ];
     $this->assertFieldAttributes($this->entity, $new_expected_fields);
-    $this->assertNotEmpty($this->cssSelect('.layout--onecol'));
+    $this->assertEmpty($this->cssSelect('.layout--onecol'));
 
     // Removing the layout restores the original rendering of the entity.
     $this->entity->get(OverridesSectionStorage::FIELD_NAME)->removeAllSections();

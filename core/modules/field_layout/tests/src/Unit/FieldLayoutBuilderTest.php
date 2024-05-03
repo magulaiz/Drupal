@@ -2,8 +2,10 @@
 
 namespace Drupal\Tests\field_layout\Unit;
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\field_layout\Display\EntityDisplayWithLayoutInterface;
 use Drupal\field_layout\FieldLayoutBuilder;
 use Drupal\Core\Layout\LayoutPluginManagerInterface;
@@ -11,6 +13,8 @@ use Drupal\Core\Layout\LayoutDefault;
 use Drupal\Core\Layout\LayoutDefinition;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Routing\Route;
 
 /**
  * @coversDefaultClass \Drupal\field_layout\FieldLayoutBuilder
@@ -70,6 +74,11 @@ class FieldLayoutBuilderTest extends UnitTestCase {
     $this->entityFieldManager = $this->prophesize(EntityFieldManagerInterface::class);
 
     $this->fieldLayoutBuilder = new FieldLayoutBuilder($this->layoutPluginManager->reveal(), $this->entityFieldManager->reveal());
+
+    \Drupal::setContainer(new ContainerBuilder());
+    $route_matcher = $this->prophesize(RouteMatchInterface::class);
+    $route_matcher->getRouteObject()->willReturn(new Route('layout_builder.add_section'));
+    \Drupal::getContainer()->set('current_route_match', $route_matcher->reveal());
   }
 
   /**
@@ -143,16 +152,21 @@ class FieldLayoutBuilderTest extends UnitTestCase {
             '#markup' => 'Test1',
           ],
         ],
-        '#in_preview' => FALSE,
-        '#settings' => [
-          'label' => '',
-        ],
-        '#layout' => $this->pluginDefinition,
         '#theme' => 'layout__twocol',
         '#attached' => [
           'library' => [
             'field_layout/drupal.layout.twocol',
           ],
+        ],
+        '#in_preview' => FALSE,
+        '#settings' => [
+          'label' => '',
+        ],
+        '#layout' => $this->pluginDefinition,
+        '#cache' => [
+          'contexts' => [],
+          'tags' => [],
+          'max-age' => CacheBackendInterface::CACHE_PERMANENT,
         ],
       ],
     ];
@@ -244,16 +258,21 @@ class FieldLayoutBuilderTest extends UnitTestCase {
           '#process' => ['\Drupal\Core\Render\Element\RenderElement::processGroup'],
           '#pre_render' => ['\Drupal\Core\Render\Element\RenderElement::preRenderGroup'],
         ],
-        '#in_preview' => FALSE,
-        '#settings' => [
-          'label' => '',
-        ],
-        '#layout' => $this->pluginDefinition,
         '#theme' => 'layout__twocol',
         '#attached' => [
           'library' => [
             'field_layout/drupal.layout.twocol',
           ],
+        ],
+        '#in_preview' => FALSE,
+        '#settings' => [
+          'label' => '',
+        ],
+        '#layout' => $this->pluginDefinition,
+        '#cache' => [
+          'contexts' => [],
+          'tags' => [],
+          'max-age' => CacheBackendInterface::CACHE_PERMANENT,
         ],
       ],
     ];
