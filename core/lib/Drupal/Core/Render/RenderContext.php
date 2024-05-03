@@ -50,7 +50,7 @@ class RenderContext extends \SplStack {
     // Merge the current and the parent stack frame.
     $current = $this->pop();
     $parent = $this->pop();
-    $this->push($current->merge($parent));
+    $this->push($parent->merge($current));
   }
 
 }
