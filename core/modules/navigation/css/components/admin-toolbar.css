@@ -353,3 +353,7 @@ body {
     display: none;
   }
 }
+html[data-admin-toolbar="collapsed"] .admin-toolbar__header {
+  flex-direction: column;
+  align-items: center;
+}
