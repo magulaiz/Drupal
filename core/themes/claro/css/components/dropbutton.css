@@ -57,7 +57,7 @@
   background-color: var(--button-bg-color);
 }
 
-.js .dropbutton-wrapper.open :scope {
+.js .dropbutton-wrapper.open .dropbutton-widget {
   z-index: var(--dropbutton-widget-z-index);
 }
 
@@ -230,10 +230,10 @@
     height: 0.4375rem;
     margin-top: calc(0.4375rem / (2 * -1.41429));
   }
+}
 
-  .no-touchevents .dropbutton-wrapper.open .dropbutton__toggle::before {
-    margin-top: calc(0.4375rem / (2 * 1.41429));
-  }
+.no-touchevents .dropbutton-wrapper.open .dropbutton__toggle::before {
+  margin-top: calc(0.4375rem / (2 * 1.41429));
 }
 
 /**

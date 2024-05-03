@@ -207,13 +207,17 @@
 .toolbar-oriented .toolbar-tray .toolbar-toggle-orientation {
   display: block;
 }
-.toolbar-oriented .toolbar-tray-horizontal .toolbar-toggle-orientation {
+.toolbar-oriented .toolbar-tray-vertical .toolbar-toggle-orientation {
   position: absolute;
   inset-block-start: auto;
   inset-inline-end: 0;
   inset-block-end: 0;
 }
 .toolbar-oriented .toolbar-tray-vertical .toolbar-toggle-orientation {
+  float: right; /* LTR */
+  width: 100%;
+}
+[dir="rtl"] .toolbar-oriented .toolbar-tray-vertical .toolbar-toggle-orientation {
   float: right; /* LTR */
   width: 100%;
 }

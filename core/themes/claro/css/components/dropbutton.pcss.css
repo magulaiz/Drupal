@@ -48,10 +48,10 @@
   flex: 1 1 auto;
   border-radius: var(--button-border-radius-size);
   background-color: var(--button-bg-color);
-}
 
-.js .dropbutton-wrapper.open & {
-  z-index: var(--dropbutton-widget-z-index);
+  .js .dropbutton-wrapper.open & {
+    z-index: var(--dropbutton-widget-z-index);
+  }
 }
 
 /**
@@ -207,10 +207,10 @@
     height: 0.4375rem;
     margin-top: calc(0.4375rem / (2 * -1.41429));
   }
+}
 
-  .no-touchevents .dropbutton-wrapper.open .dropbutton__toggle::before {
-    margin-top: calc(0.4375rem / (2 * 1.41429));
-  }
+.no-touchevents .dropbutton-wrapper.open .dropbutton__toggle::before {
+  margin-top: calc(0.4375rem / (2 * 1.41429));
 }
 
 /**
