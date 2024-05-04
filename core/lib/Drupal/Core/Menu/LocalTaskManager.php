@@ -108,11 +108,6 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
   protected $account;
 
   /**
-   * The logger service.
-   */
-  protected readonly LoggerInterface $logger;
-
-  /**
    * Constructs a \Drupal\Core\Menu\LocalTaskManager object.
    *
    * @param \Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface $argument_resolver
@@ -134,10 +129,10 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
    *   The access manager.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The current user.
-   * @param \Psr\Log\LoggerInterface $logger
+   * @param \Psr\Log\LoggerInterface|null $logger
    *   The logger service.
    */
-  public function __construct(ArgumentResolverInterface $argument_resolver, RequestStack $request_stack, RouteMatchInterface $route_match, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, AccessManagerInterface $access_manager, AccountInterface $account, ?LoggerInterface $logger = NULL) {
+  public function __construct(ArgumentResolverInterface $argument_resolver, RequestStack $request_stack, RouteMatchInterface $route_match, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManagerInterface $language_manager, AccessManagerInterface $access_manager, AccountInterface $account, protected ?LoggerInterface $logger = NULL) {
     $this->factory = new ContainerFactory($this, '\Drupal\Core\Menu\LocalTaskInterface');
     $this->argumentResolver = $argument_resolver;
     $this->requestStack = $request_stack;
@@ -146,11 +141,10 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
     $this->accessManager = $access_manager;
     $this->account = $account;
     $this->moduleHandler = $module_handler;
-    if ($logger === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $logger argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3443775', E_USER_DEPRECATED);
-      $logger = \Drupal::service('logger.channel.default');
+    if ($this->logger === NULL) {
+      @\trigger_error('Calling ' . __METHOD__ . '() without the $logger argument is deprecated in drupal:10.3.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3443775', E_USER_DEPRECATED);
+      $this->logger = \Drupal::service('logger.channel.default');
     }
-    $this->logger = $logger;
     $this->alterInfo('local_tasks');
     $this->setCacheBackend($cache, 'local_task_plugins:' . $language_manager->getCurrentLanguage()->getId(), ['local_task']);
   }
