@@ -262,4 +262,16 @@ class Role extends ConfigEntityBase implements RoleInterface {
     return $changed;
   }
 
+  /**
+   * Returns all valid permissions.
+   *
+   * @return string[]
+   *   All possible valid permissions.
+   *
+   * @see \Drupal\user\PermissionHandler::getPermissions()
+   */
+  public static function getAllValidPermissions(): array {
+    return array_keys(\Drupal::service('user.permissions')->getPermissions());
+  }
+
 }

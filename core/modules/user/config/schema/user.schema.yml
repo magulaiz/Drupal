@@ -106,6 +106,8 @@ user.flood:
 user.role.*:
   type: config_entity
   label: 'User role settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     id:
       type: machine_name
@@ -119,6 +121,7 @@ user.role.*:
     is_admin:
       type: boolean
       label: 'User is admin'
+      nullable: true
     permissions:
       type: sequence
       label: 'Permissions'
@@ -126,6 +129,9 @@ user.role.*:
       sequence:
         type: string
         label: 'Permission'
+        constraints:
+          Callback:
+            callback: [\Drupal\user\Entity\Role, getAllValidPermissions]
 
 action.configuration.user_add_role_action:
   type: mapping
