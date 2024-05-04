@@ -30,14 +30,12 @@
   }
 }
 
-.no-touchevents .form-element--type-select.form-element--extrasmall,
-.no-touchevents .form-element--type-select[name$="][_weight]"] {
+.no-touchevents .form-element--type-select.form-element--extrasmall {
   padding-right: calc(1.5rem - var(--input-border-size));
   background-size: 1.75rem 0.4375rem; /* w: 14px + (2 * 7px), h: 7px */
 }
 
-[dir="rtl"].no-touchevents .form-element--type-select.form-element--extrasmall,
-[dir="rtl"].no-touchevents .form-element--type-select[name$="][_weight]"] {
+[dir="rtl"].no-touchevents .form-element--type-select.form-element--extrasmall {
   padding-right: calc(0.5rem - var(--input-border-size));
   padding-left: calc(1.5rem - var(--input-border-size));
 }

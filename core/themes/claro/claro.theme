@@ -954,10 +954,6 @@ function claro_preprocess_select(&$variables) {
   $variables['attributes']['class'][] = $variables['element']['#multiple'] ?
     'form-element--type-select-multiple' :
     'form-element--type-select';
-
-  if (in_array('block-region-select', $variables['attributes']['class'])) {
-    $variables['attributes']['class'][] = 'form-element--extrasmall';
-  }
 }
 
 /**
