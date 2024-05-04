@@ -50,7 +50,7 @@ class UrlHelper {
         $params[] = static::buildQuery($value, $key);
       }
       // If a query parameter value is NULL, only append its key.
-      elseif (!isset($value)) {
+      elseif (!isset($value) || $value == "" || strlen($value) == 0) {
         $params[] = $key;
       }
       else {
