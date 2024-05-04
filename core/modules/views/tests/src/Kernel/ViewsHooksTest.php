@@ -104,6 +104,10 @@ class ViewsHooksTest extends ViewsKernelTestBase {
       // .views.inc file is loaded actively.
       $this->moduleHandler->resetImplementations();
     }
+    // Test if field_views_data_views_data_alter is added to views hook group.
+    $moduleHookInfo = $this->moduleHandler->getHookInfo();
+    $this->assertArrayHasKey('field_views_data_views_data_alter', $moduleHookInfo);
+    $this->assertEquals('views', $moduleHookInfo['field_views_data_views_data_alter']['group']);
   }
 
   /**
