@@ -645,6 +645,9 @@ class SelectTest extends DatabaseTestBase {
       'Text equals' => ['$.key', 'some text', '=', 1],
       'Boolean TRUE' => ['$.boolean', TRUE, '=', 2],
       'Boolean FALSE' => ['$.boolean', FALSE, '=', 1],
+      'Boolean invalid condition' => ['$.boolean', 'invalid string argument', '=', 0],
+      'Non-matching text' => ['$.key', 'nothing to see here', '=', 0],
+      'String instead of number' => ['$.number', 'stringy', '=', 0],
     ];
   }
 
