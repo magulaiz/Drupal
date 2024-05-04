@@ -174,6 +174,30 @@ class DateTimeNormalizerTest extends UnitTestCase {
     $this->normalizer->denormalize($normalized, DateTimeInterface::class, NULL, []);
   }
 
+  /**
+  * Tests the denormalize pass trough on data that cannot be handled.
+  *
+  * @covers ::denormalize
+  * @dataProvider providerTestDenormalizeHandledUpstream
+  */
+  public function testDenormalizeHandledUpstream($normalized) {
+    $denormalized = $this->normalizer->denormalize($normalized, DateTimeInterface::class, NULL, []);
+    $this->assertSame($normalized, $denormalized);
+  }
+
+  /**
+  * Data provider for testDenormalizeHandledUpstream.
+  *
+  * @return array
+  */
+  public function providerTestDenormalizeHandledUpstream() {
+    return [
+      'NULL' => [NULL],
+      'DateTime Object' => [new \DateTimeImmutable('2016-11-06T09:02:00+00:00')],
+      'Empty string' => [""],
+    ];
+  }
+
 }
 
 
