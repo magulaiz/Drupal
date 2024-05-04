@@ -2,6 +2,7 @@
 
 namespace Drupal\user\Controller;
 
+use Drupal\Core\Access\CsrfRequestHeaderAccessCheck;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
@@ -199,7 +200,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
       if ($user->get('name')->access('view', $user)) {
         $response_data['current_user']['name'] = $user->getAccountName();
       }
-      $response_data['csrf_token'] = $this->csrfToken->get('rest');
+      $response_data['csrf_token'] = $this->csrfToken->get(CsrfRequestHeaderAccessCheck::TOKEN_KEY);
 
       $logout_route = $this->routeProvider->getRouteByName('user.logout.http');
       // Trim '/' off path to match \Drupal\Core\Access\CsrfAccessCheck.
