@@ -59,7 +59,7 @@ class SystemCompactLink extends Link {
    */
   public static function preRenderCompactLink($element) {
     // By default, link options to pass to l() are normally set in #options.
-    $element += ['#options' => []];
+    $element->addFromArray(['#options' => []]);
 
     if (system_admin_compact_mode()) {
       $element['#title'] = t('Show descriptions');

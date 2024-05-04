@@ -5,6 +5,7 @@ namespace Drupal\Core\Render;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Cache\CacheableResponseTrait;
+use Drupal\Core\Render\RenderableElementInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -54,13 +55,19 @@ class HtmlResponse extends Response implements CacheableResponseInterface, Attac
   public function setContent($content): static {
     // A render array can automatically be converted to a string and set the
     // necessary metadata.
-    if (is_array($content) && (isset($content['#markup']))) {
-      $content += [
+    if ((is_array($content) || $content instanceof RenderableElementInterface) && (isset($content['#markup']))) {
+      $attached = [
         '#attached' => [
           'html_response_attachment_placeholders' => [],
           'placeholders' => [],
         ],
       ];
+      if ($content instanceof RenderableElementInterface) {
+        $content->addFromArray($attached);
+      }
+      else {
+        $content += $attached;
+      }
       $this->addCacheableDependency(CacheableMetadata::createFromRenderArray($content));
       $this->setAttachments($content['#attached']);
       $content = $content['#markup'];

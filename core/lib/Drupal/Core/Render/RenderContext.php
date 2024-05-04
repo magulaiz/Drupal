@@ -16,7 +16,7 @@ class RenderContext extends \SplStack {
   /**
    * Updates the current frame of the stack.
    *
-   * @param array &$element
+   * @param array|\Drupal\Core\Render\RenderableElementInterface &$element
    *   The element of the render array that has just been rendered. The stack
    *   frame for this element will be updated with the bubbleable rendering
    *   metadata of this element.
