@@ -71,6 +71,13 @@ abstract class StylePluginBase extends PluginBase {
   protected $usesGrouping = TRUE;
 
   /**
+   * Should grouping fields use a wrapping element tag.
+   *
+   * @var bool
+   */
+  protected $usesGroupingLabelElement = FALSE;
+
+  /**
    * Does the style plugin for itself support to add fields to its output.
    *
    * This option only makes sense on style plugins without row plugins, like
@@ -175,6 +182,15 @@ abstract class StylePluginBase extends PluginBase {
   }
 
   /**
+   * Returns the usesGroupingLabelElement property.
+   *
+   * @return bool
+   */
+  public function usesGroupingLabelElement() {
+    return $this->usesGroupingLabelElement;
+  }
+
+  /**
    * Return TRUE if this style also uses fields.
    *
    * @return bool
@@ -275,6 +291,24 @@ abstract class StylePluginBase extends PluginBase {
   }
 
   /**
+   * Retrieve labels from views configuration.
+   */
+  public function getLabelElements() {
+    static $labelElements = NULL;
+    if (!isset($labelElements)) {
+      $labelElements = [
+        'h3' => $this
+          ->t('- Use default (H3) -'),
+        '' => $this
+          ->t('- None (No wrapping HTML) -'),
+      ];
+      $labelElements += \Drupal::config('views.settings')
+        ->get('field_rewrite_elements');
+    }
+    return $labelElements;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
@@ -305,7 +339,7 @@ abstract class StylePluginBase extends PluginBase {
         // Add a form for every grouping, plus one.
         for ($i = 0; $i <= $c; $i++) {
           $grouping = !empty($this->options['grouping'][$i]) ? $this->options['grouping'][$i] : [];
-          $grouping += ['field' => '', 'rendered' => TRUE, 'rendered_strip' => FALSE];
+          $grouping += ['field' => '', 'rendered' => TRUE, 'rendered_strip' => FALSE, 'grouping_label_element' => ''];
           $form['grouping'][$i]['field'] = [
             '#type' => 'select',
             '#title' => $this->t('Grouping field Nr.@number', ['@number' => $i + 1]),
@@ -334,6 +368,15 @@ abstract class StylePluginBase extends PluginBase {
               ],
             ],
           ];
+          if ($this->usesGroupingLabelElement()) {
+            $form['grouping'][$i]['grouping_label_element'] = [
+              '#type' => 'select',
+              '#title' => $this->t('Grouping Label Tag', ['@number' => $i + 1]),
+              '#options' => $this->getLabelElements(),
+              '#default_value' => $grouping['grouping_label_element'],
+              '#description' => $this->t('You may specify a wrapper tag by which to group the records.'),
+            ];
+          }
         }
       }
     }
@@ -509,6 +552,12 @@ abstract class StylePluginBase extends PluginBase {
       }
 
       $single_output['#grouping_level'] = $level;
+      if ($this->usesGroupingLabelElement() && $this->options['grouping']) {
+        $single_output['#grouping_label_element'] = $this->options['grouping'][$level]['grouping_label_element'];
+      }
+      else {
+        $single_output['#grouping_label_element'] = '';
+      }
       $single_output['#title'] = $set['group'];
       $output[] = $single_output;
     }
@@ -580,6 +629,12 @@ abstract class StylePluginBase extends PluginBase {
           $rendered = $info['rendered'] ?? $group_rendered;
           $rendered_strip = $info['rendered_strip'] ?? FALSE;
           $grouping = '';
+          if ($this->usesGroupingLabelElement()) {
+            $grouping_label_element = $info['grouping_label_element'] ?? 'h3';
+          }
+          else {
+            $grouping_label_element = '';
+          }
           $group_content = '';
           // Group on the rendered version of the field, not the raw.  That way,
           // we can control any special formatting of the grouping field through
@@ -611,6 +666,12 @@ abstract class StylePluginBase extends PluginBase {
             $set[$grouping]['group'] = $group_content;
             $set[$grouping]['level'] = $level;
             $set[$grouping]['rows'] = [];
+            if ($this->usesGroupingLabelElement()) {
+              $set[$grouping]['grouping_label_element'] = $grouping_label_element;
+            }
+            else {
+              $set[$grouping]['grouping_label_element'] = '';
+            }
           }
 
           // Move the set reference into the row set of the group we just determined.

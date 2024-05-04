@@ -32,6 +32,13 @@ class HtmlList extends StylePluginBase {
   protected $usesRowClass = TRUE;
 
   /**
+   * Should grouping fields use a wrapping element tag.
+   *
+   * @var bool
+   */
+  protected $usesGroupingLabelElement = TRUE;
+
+  /**
    * Set default options.
    */
   protected function defineOptions() {

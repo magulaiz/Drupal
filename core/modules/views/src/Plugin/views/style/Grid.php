@@ -26,6 +26,13 @@ class Grid extends StylePluginBase {
   protected $usesRowPlugin = TRUE;
 
   /**
+   * Should grouping fields use a wrapping element tag.
+   *
+   * @var bool
+   */
+  protected $usesGroupingLabelElement = TRUE;
+
+  /**
    * {@inheritdoc}
    */
   protected function defineOptions() {
