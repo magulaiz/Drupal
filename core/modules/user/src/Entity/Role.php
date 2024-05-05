@@ -189,6 +189,9 @@ class Role extends ConfigEntityBase implements RoleInterface {
       });
       $this->weight = $max + 1;
     }
+    elseif (!isset($this->weight)) {
+      $this->weight = 0;
+    }
 
     if (!$this->isSyncing() && $this->hasTrustedData()) {
       // Permissions are always ordered alphabetically to avoid conflicts in the
