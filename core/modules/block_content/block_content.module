@@ -224,19 +224,17 @@ function block_content_entity_operation(EntityInterface $entity): array {
   $operations = [];
   if ($entity instanceof BlockInterface) {
     $plugin = $entity->getPlugin();
-    $plugin_id = $plugin->getBaseId();
-    if ($plugin_id === 'block_content') {
-      $custom_block_uuid = $plugin->getDerivativeId();
-      $custom_block = \Drupal::entityTypeManager()->getStorage('block_content')->loadByProperties(['uuid' => $custom_block_uuid]);
-      if ($custom_block) {
-        $custom_block = reset($custom_block);
-        if ($custom_block && $custom_block->access('update')) {
-          $operations['block-edit'] = [
-            'title' => t('Edit block'),
-            'url' => $custom_block->toUrl('edit-form')->setOptions([]),
-            'weight' => 50,
-          ];
-        }
+    if ($plugin->getBaseId() === 'block_content') {
+      $custom_block = \Drupal::entityTypeManager()->getStorage('block_content')->loadByProperties([
+        'uuid' => $plugin->getDerivativeId(),
+      ]);
+      $custom_block = reset($custom_block);
+      if ($custom_block && $custom_block->access('update')) {
+        $operations['block-edit'] = [
+          'title' => t('Edit block'),
+          'url' => $custom_block->toUrl('edit-form')->setOptions([]),
+          'weight' => 50,
+        ];
       }
     }
   }

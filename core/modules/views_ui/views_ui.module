@@ -345,8 +345,7 @@ function views_ui_entity_operation(EntityInterface $entity): array {
   $operations = [];
   if ($entity instanceof BlockInterface) {
     $plugin = $entity->getPlugin();
-    $plugin_id = $plugin->getBaseId();
-    if ($plugin_id === 'views_block') {
+    if ($plugin->getBaseId() === 'views_block') {
       $view_id_parts = explode('-', $plugin->getDerivativeId());
       $view_id = $view_id_parts[0] ?? '';
       $display_id = $view_id_parts[1] ?? '';

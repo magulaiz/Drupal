@@ -476,10 +476,8 @@ function menu_ui_entity_operation(EntityInterface $entity): array {
   $operations = [];
   if ($entity instanceof BlockInterface) {
     $plugin = $entity->getPlugin();
-    $plugin_id = $plugin->getBaseId();
-    if ($plugin_id === 'system_menu_block') {
-      $menu_id = $plugin->getDerivativeId();
-      $menu = Menu::load($menu_id);
+    if ($plugin->getBaseId() === 'system_menu_block') {
+      $menu = Menu::load($plugin->getDerivativeId());
       if ($menu && $menu->access('edit')) {
         $operations['menu-edit'] = [
           'title' => t('Edit menu'),
