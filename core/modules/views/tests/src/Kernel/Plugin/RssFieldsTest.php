@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Kernel\Plugin;
 
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
@@ -22,14 +24,6 @@ class RssFieldsTest extends ViewsKernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = ['node', 'field', 'text', 'filter'];
-
-  /**
-   * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
 
   /**
    * {@inheritdoc}
@@ -56,9 +50,7 @@ class RssFieldsTest extends ViewsKernelTestBase {
    * subdirectory.
    */
   public function testRssFields() {
-    // Set up the current user as uid 1 so the test doesn't need to deal with
-    // permission.
-    $this->setUpCurrentUser(['uid' => 1]);
+    $this->setUpCurrentUser([], ['access content']);
 
     $date = '1975-05-18';
 
