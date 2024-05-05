@@ -271,7 +271,7 @@ class TranslateEditForm extends TranslateFormBase {
 
     if ($delete) {
       $this->localeStorage->deleteStrings(['lid' => $delete]);
-      $this->messenger()->addStatus('Translations were deleted');
+      $this->messenger()->addStatus($this->t('Translations were deleted'));
       _locale_refresh_translations([$langcode], $delete);
       _locale_refresh_configuration([$langcode], $delete);
     }
