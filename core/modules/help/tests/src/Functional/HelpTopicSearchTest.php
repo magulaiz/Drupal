@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\help\Functional;
 
 use Drupal\Core\Database\Database;
@@ -262,7 +264,10 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
     \Drupal::service('module_installer')->uninstall(['help_topics_test']);
     // Ensure we can uninstall help_topics and use the help system without
     // breaking.
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($this->createUser([
+      'administer modules',
+      'access help pages',
+    ]));
     $edit = [];
     $edit['uninstall[help]'] = TRUE;
     $this->drupalGet('admin/modules/uninstall');
@@ -279,7 +284,10 @@ class HelpTopicSearchTest extends HelpTopicTranslatedTestBase {
   public function testUninstallSearch() {
     // Ensure we can uninstall search and use the help system without
     // breaking.
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($this->createUser([
+      'administer modules',
+      'access help pages',
+    ]));
     $edit = [];
     $edit['uninstall[search]'] = TRUE;
     $this->drupalGet('admin/modules/uninstall');

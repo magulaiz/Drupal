@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views_ui\Functional;
 
 use Drupal\Core\Database\Database;
@@ -63,7 +65,7 @@ class UnsavedPreviewTest extends UITestBase {
     $this->drupalGet('admin/structure/views/nojs/display/content/page_2/path');
     $this->assertSession()->statusCodeEquals(200);
 
-    $this->submitForm(['path' => 'foobarbaz'], 'Apply');
+    $this->submitForm(['path' => 'foobar'], 'Apply');
     $this->assertSession()->statusCodeEquals(200);
 
     $this->submitForm([], 'Update preview');
@@ -80,7 +82,7 @@ class UnsavedPreviewTest extends UITestBase {
     $this->assertSession()->statusCodeEquals(200);
     if (Database::getConnection()->driver() != 'mongodb') {
       // @TODO Fix the next assertion for MongoDB.
-      $this->assertSession()->linkByHrefExists('foobarbaz');
+      $this->assertSession()->linkByHrefExists('foobar');
     }
   }
 

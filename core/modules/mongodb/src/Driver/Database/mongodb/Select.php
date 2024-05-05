@@ -347,8 +347,6 @@ class Select extends QuerySelect {
    * {@inheritdoc}
    */
   public function __construct(DatabaseConnection $connection, $table, $alias = NULL, $options = []) {
-    $options['return'] = Database::RETURN_STATEMENT;
-
     $this->uniqueIdentifier = uniqid('', TRUE);
     $this->connection = $connection;
     $this->connectionKey = $this->connection->getKey();

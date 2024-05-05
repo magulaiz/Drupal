@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\KeyValueStore;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Serialization\SerializationInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\mongodb\Driver\Database\mongodb\Statement;
@@ -24,10 +25,18 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
    *   The serialization class to use.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection to use.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    * @param string $table
    *   The name of the SQL table to use, defaults to key_value_expire.
    */
-  public function __construct($collection, SerializationInterface $serializer, Connection $connection, $table = 'key_value_expire') {
+  public function __construct(
+    $collection,
+    SerializationInterface $serializer,
+    Connection $connection,
+    protected TimeInterface $time,
+    $table = 'key_value_expire',
+  ) {
     parent::__construct($collection, $serializer, $connection, $table);
   }
 
@@ -38,7 +47,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
     if ($this->connection->driver() == 'mongodb') {
       $prefixed_table = $this->connection->getPrefix() . $this->table;
       $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
-        ['collection' => ['$eq' => $this->collection], 'expire' => ['$gt' => new UTCDateTime(REQUEST_TIME * 1000)], 'name' => ['$eq' => (string) $key]],
+        ['collection' => ['$eq' => $this->collection], 'expire' => ['$gt' => new UTCDateTime($this->time->getRequestTime() * 1000)], 'name' => ['$eq' => (string) $key]],
         ['projection' => ['_id' => 1]]
       );
 
@@ -52,7 +61,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
         return (bool) $this->connection->query('SELECT 1 FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] = :key AND [expire] > :now', [
           ':collection' => $this->collection,
           ':key' => $key,
-          ':now' => REQUEST_TIME,
+          ':now' => $this->time->getRequestTime(),
         ])->fetchField();
       }
       catch (\Exception $e) {
@@ -73,7 +82,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
         }
         $prefixed_table = $this->connection->getPrefix() . $this->table;
         $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
-          ['collection' => ['$eq' => $this->collection], 'expire' => ['$gt' => new UTCDateTime(REQUEST_TIME * 1000)], 'name' => ['$in' => $keys]],
+          ['collection' => ['$eq' => $this->collection], 'expire' => ['$gt' => new UTCDateTime($this->time->getRequestTime() * 1000)], 'name' => ['$in' => $keys]],
           ['projection' => ['name' => 1, 'value' => 1, '_id' => 0]]
         );
 
@@ -84,7 +93,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
         $values = $this->connection->query(
           'SELECT [name], [value] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [expire] > :now AND [name] IN ( :keys[] ) AND [collection] = :collection',
           [
-            ':now' => REQUEST_TIME,
+            ':now' => $this->time->getRequestTime(),
             ':keys[]' => $keys,
             ':collection' => $this->collection,
           ])->fetchAllKeyed();
@@ -109,7 +118,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
       if ($this->connection->driver() == 'mongodb') {
         $prefixed_table = $this->connection->getPrefix() . $this->table;
         $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
-          ['collection' => ['$eq' => (string) $this->collection], 'expire' => ['$gt' => new UTCDateTime(REQUEST_TIME * 1000)]],
+          ['collection' => ['$eq' => (string) $this->collection], 'expire' => ['$gt' => new UTCDateTime($this->time->getRequestTime() * 1000)]],
           ['projection' => ['name' => 1, 'value' => 1, '_id' => 0]]
         );
 
@@ -121,7 +130,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
           'SELECT [name], [value] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [expire] > :now',
           [
             ':collection' => $this->collection,
-            ':now' => REQUEST_TIME,
+            ':now' => $this->time->getRequestTime(),
           ])->fetchAllKeyed();
       }
       return array_map([$this->serializer, 'decode'], $values);
@@ -156,7 +165,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
       ])
       ->fields([
         'value' => $this->serializer->encode($value),
-        'expire' => REQUEST_TIME + $expire,
+        'expire' => $this->time->getRequestTime() + $expire,
       ])
       ->execute();
   }

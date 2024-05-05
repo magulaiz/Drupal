@@ -10,6 +10,7 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermStorageInterface;
 use Drupal\taxonomy\VocabularyStorageInterface;
 use Drupal\views\Plugin\views\filter\InOperator;
+use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\filter\ManyToOne;
@@ -19,9 +20,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Filter by term id.
  *
  * @ingroup views_filter_handlers
- *
- * @ViewsFilter("taxonomy_index_tid")
  */
+#[ViewsFilter("taxonomy_index_tid")]
 class TaxonomyIndexTid extends ManyToOne {
 
   /**
@@ -29,6 +29,7 @@ class TaxonomyIndexTid extends ManyToOne {
    *
    * @var array|null
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public $validated_exposed_input = NULL;
 
   /**

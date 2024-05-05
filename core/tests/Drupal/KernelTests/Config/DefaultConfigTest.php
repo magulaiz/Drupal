@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Config;
 
 use Drupal\Core\Config\Entity\ConfigEntityDependency;
@@ -104,12 +106,11 @@ class DefaultConfigTest extends KernelTestBase {
    *
    * @dataProvider moduleListDataProvider
    */
-  public function testModuleConfig($module) {
+  public function testModuleConfig(string $module): void {
     if ((Database::getConnection()->driver() == 'mongodb') && in_array($module, ['content_moderation', 'help'], TRUE)) {
       // @todo For both modules there is still a bug to be fixed.
       $this->markTestSkipped();
     }
-
     $this->assertExtensionConfig($module, 'module');
   }
 
@@ -231,8 +232,8 @@ class DefaultConfigTest extends KernelTestBase {
    *   An array of module names to test, with both key and value being the name
    *   of the module.
    */
-  public function moduleListDataProvider() {
-    $modules_keyed = $this->coreModuleListDataProvider();
+  public static function moduleListDataProvider(): array {
+    $modules_keyed = self::coreModuleListDataProvider();
 
     // Add a deprecated module with config.
     $modules_keyed['deprecated_module'] = ['deprecated_module'];

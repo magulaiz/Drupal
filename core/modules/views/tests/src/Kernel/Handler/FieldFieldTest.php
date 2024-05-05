@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\Core\Database\Database;
@@ -8,6 +10,7 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\User;
 use Drupal\views\Plugin\views\field\EntityField;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
@@ -22,6 +25,8 @@ use Drupal\views\Views;
  * @group #slow
  */
 class FieldFieldTest extends ViewsKernelTestBase {
+
+  use UserCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -79,8 +84,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
     $this->installEntitySchema('entity_test_rev');
 
     // Bypass any field access.
-    $this->adminUser = User::create(['name' => $this->randomString()]);
-    $this->adminUser->save();
+    $this->adminUser = $this->createUser(['administer users'], $this->randomString());
     $this->container->get('current_user')->setAccount($this->adminUser);
 
     $this->testUsers = [];

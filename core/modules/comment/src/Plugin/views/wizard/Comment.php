@@ -5,6 +5,8 @@ namespace Drupal\comment\Plugin\views\wizard;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Menu\MenuParentFormSelectorInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsWizard;
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -14,13 +16,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Tests creating comment views with the wizard.
- *
- * @ViewsWizard(
- *   id = "comment",
- *   base_table = "comment_field_data",
- *   title = @Translation("Comments")
- * )
  */
+#[ViewsWizard(
+  id: 'comment',
+  base_table: 'comment_field_data',
+  title: new TranslatableMarkup('Comments')
+)]
 class Comment extends WizardPluginBase {
 
   /**
