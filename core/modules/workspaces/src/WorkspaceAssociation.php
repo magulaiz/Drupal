@@ -180,8 +180,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
   /**
    * {@inheritdoc}
    */
-  public function getAssociatedRevisions($workspace_id, $entity_type_id, $entity_ids = NULL)
-  {
+  public function getAssociatedRevisions($workspace_id, $entity_type_id, $entity_ids = NULL) {
     if (isset($this->associatedRevisions[$workspace_id][$entity_type_id])) {
       if ($entity_ids) {
         return array_intersect($this->associatedRevisions[$workspace_id][$entity_type_id], $entity_ids);
@@ -209,7 +208,8 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
     $workspace_tree = $this->workspaceRepository->loadTree();
     if (isset($workspace_tree[$workspace_id])) {
       $workspace_candidates = array_merge([$workspace_id], $workspace_tree[$workspace_id]['ancestors']);
-    } else {
+    }
+    else {
       $workspace_candidates = [$workspace_id];
     }
 
@@ -247,7 +247,8 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
         }
       }
       return $revisions;
-    } else {
+    }
+    else {
       $query = $this->database->select($entity_type->getRevisionTable(), 'revision');
       $query->leftJoin($entity_type->getBaseTable(), 'base', $query->joinCondition()->compare("revision.$id_field", "base.$id_field"));
 
@@ -278,12 +279,12 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
   /**
    * {@inheritdoc}
    */
-  public function getAssociatedInitialRevisions(string $workspace_id, string $entity_type_id, array $entity_ids = []) {
+  public function getAssociatedInitialRevisions(string $workspace_id, string $entity_type_id, array $entity_ids = [])
+  {
     if (isset($this->associatedInitialRevisions[$workspace_id][$entity_type_id])) {
       if ($entity_ids) {
         return array_intersect($this->associatedInitialRevisions[$workspace_id][$entity_type_id], $entity_ids);
-      }
-      else {
+      } else {
         return $this->associatedInitialRevisions[$workspace_id][$entity_type_id];
       }
     }
@@ -316,7 +317,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       // Restrict the result to a set of entity ID's if provided.
       if ($entity_ids) {
         foreach ($entity_ids as & $entity_id) {
-          $entity_id = (int) $entity_id;
+          $entity_id = (int)$entity_id;
         }
         $query->condition("$current_revision_table.$id_field", $entity_ids, 'IN');
       }
@@ -337,8 +338,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       }
 
       return $revisions;
-    }
-    else {
+    } else {
       $query->leftJoin($entity_type->getRevisionTable(), 'revision', $query->joinCondition()->compare("base.$revision_id_field", "revision.$revision_id_field"));
 
 //      $query
@@ -351,14 +351,15 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
 //        $query->condition("base.$id_field", $entity_ids, 'IN');
 //      }
 
-    $result = $query->execute()->fetchAllKeyed();
+      $result = $query->execute()->fetchAllKeyed();
 
-    // Cache the list of associated entity IDs if the full list was requested.
-    if (!$entity_ids) {
-      $this->associatedInitialRevisions[$workspace_id][$entity_type_id] = $result;
+      // Cache the list of associated entity IDs if the full list was requested.
+      if (!$entity_ids) {
+        $this->associatedInitialRevisions[$workspace_id][$entity_type_id] = $result;
+      }
+
+      return $result;
     }
-
-    return $result;
   }
 
   /**

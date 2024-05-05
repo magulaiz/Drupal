@@ -1536,7 +1536,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $query = $this->database->update($this->baseTable)->condition($this->idKey, $record->{$this->idKey});
       }
       else {
-        $query = $this->database->insert($this->baseTable, ['return' => Database::RETURN_INSERT_ID]);
+        $query = $this->database->insert($this->baseTable);
       }
 
       $embedded_tables = [];
@@ -1898,7 +1898,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         $set[$this->jsonStorageAllRevisionsTable] = $new_all_revisions_data;
         if (isset($current_revision_id)) {
           $set[$this->revisionKey] = $current_revision_id;
-          $this->entityKeys[$this->revisionKey] = $current_revision_id;
+          // $this->entityKeys[$this->revisionKey] = $current_revision_id;
         }
 
         $this->database->getConnection()->{$prefixed_table}->updateOne(

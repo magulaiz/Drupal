@@ -1246,8 +1246,8 @@ class Select extends QuerySelect {
       }
 
       if (!empty($this->mongodbAddFields)) {
-        foreach ($this->mongodbAddFields as $alias => $this->mongodbAddField) {
-          $pipeline[] = ['$addFields' => [$alias => $this->mongodbAddField]];
+        foreach ($this->mongodbAddFields as $alias => $mongodbAddField) {
+          $pipeline[] = ['$addFields' => [$alias => $mongodbAddField]];
         }
       }
 

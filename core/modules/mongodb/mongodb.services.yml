@@ -49,13 +49,6 @@ services:
   ban.ip_manager:
     alias: mongodb.ban.ip_manager
 
-  # MongoDB overrides module book.
-  mongodb.book.outline_storage:
-    class: Drupal\mongodb\modules\book\BookOutlineStorage
-    arguments: ['@database']
-  book.outline_storage:
-    alias: mongodb.book.outline_storage
-
   # MongoDB overrides module comment.
   mongodb.comment.statistics:
     class: Drupal\mongodb\modules\comment\CommentStatistics
@@ -74,13 +67,6 @@ services:
     arguments: ['@database']
   locale.storage:
     alias: mongodb.locale.storage
-
-  # MongoDB overrides module statistics.
-  mongodb.statistics.storage.node:
-    class: Drupal\mongodb\modules\statistics\NodeStatisticsDatabaseStorage
-    arguments: ['@database', '@state', '@request_stack']
-  statistics.storage.node:
-    alias: mongodb.statistics.storage.node
 
   # MongoDB overrides module user.
   mongodb.user.data:

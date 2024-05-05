@@ -124,8 +124,7 @@ class MenuTreeStorage extends CoreMenuTreeStorage {
       // We may be moving the link to a new menu.
       $affected_menus[$fields['menu_name']] = $fields['menu_name'];
 
-      $options = ['return' => Database::RETURN_INSERT_ID] + $this->options;
-      $insert_id = (int) $this->connection->insert($this->table, $options)
+      $insert_id = (int) $this->connection->insert($this->table, $this->options)
         ->fields($fields)
         ->execute();
 

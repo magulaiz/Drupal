@@ -135,7 +135,7 @@ class NodeSearch extends CoreNodeSearch {
       $build['#pre_render'][] = [$this, 'removeSubmittedInfo'];
 
       // Fetch comments for snippet.
-      $rendered = $this->renderer->renderPlain($build);
+      $rendered = $this->renderer->renderInIsolation($build);
       $this->addCacheableDependency(CacheableMetadata::createFromRenderArray($build));
       $rendered .= ' ' . $this->moduleHandler->invoke('comment', 'node_update_index', [$node]);
 
@@ -167,7 +167,7 @@ class NodeSearch extends CoreNodeSearch {
 
       if ($type->displaySubmitted()) {
         $result += [
-          'user' => $this->renderer->renderPlain($username),
+          'user' => $this->renderer->renderInIsolation($username),
           'date' => $node->getChangedTime(),
         ];
       }

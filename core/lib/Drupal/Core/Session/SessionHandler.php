@@ -220,6 +220,11 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
       ],
     ];
 
+    if ($this->connection->driver() == 'mongodb') {
+      $schema['fields']['timestamp']['type'] = 'date';
+    }
+
+
     return $schema;
   }
 

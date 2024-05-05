@@ -16,33 +16,6 @@ use Drupal\field\FieldStorageConfigInterface;
  */
 function mongodb_views_data_alter(array &$data) {
 
-  // Overrides for the module book.
-  if (isset($data['book']['nid']['relationship']['base'])) {
-    $data['book']['nid']['relationship']['base'] = 'node';
-  }
-  if (isset($data['book']['bid']['relationship']['base'])) {
-    $data['book']['bid']['relationship']['base'] = 'node';
-  }
-  if (isset($data['book']['pid']['relationship']['base'])) {
-    $data['book']['pid']['relationship']['base'] = 'node';
-  }
-  $parents = [
-    1 => t('1st parent'),
-    2 => t('2nd parent'),
-    3 => t('3rd parent'),
-    4 => t('4th parent'),
-    5 => t('5th parent'),
-    6 => t('6th parent'),
-    7 => t('7th parent'),
-    8 => t('8th parent'),
-    9 => t('9th parent'),
-  ];
-  foreach ($parents as $i => $parent_label) {
-    if (isset($data['book']["p$i"]['relationship']['base'])) {
-      $data['book']["p$i"]['relationship']['base'] = 'node';
-    }
-  }
-
   // Overrides for the module dblog.
   if (isset($data['watchdog']['uid']['relationship']['base'])) {
     $data['watchdog']['uid']['relationship']['base'] = 'users';
@@ -52,12 +25,6 @@ function mongodb_views_data_alter(array &$data) {
   if (isset($data['history']['table']['join']['node_field_data'])) {
     $data['history']['table']['join']['node'] = $data['history']['table']['join']['node_field_data'];
     unset($data['history']['table']['join']['node_field_data']);
-  }
-
-  // Overrides for the module statistics.
-  if (isset($data['node_counter']['table']['join']['node_field_data'])) {
-    $data['node_counter']['table']['join']['node'] = $data['node_counter']['table']['join']['node_field_data'];
-    unset($data['node_counter']['table']['join']['node_field_data']);
   }
 
   // Overrides for the module taxonomy.
@@ -75,38 +42,6 @@ function mongodb_views_data_alter(array &$data) {
     $data['node']['term_node_tid_depth_modifier'] = $data['node_field_data']['term_node_tid_depth_modifier'];
     unset($data['node_field_data']['term_node_tid_depth_modifier']);
   }
-
-  // Overrides for the module tracker.
-  if (isset($data['tracker_node']['table']['join']['node_field_data'])) {
-    $data['tracker_node']['table']['join']['node'] = $data['tracker_node']['table']['join']['node_field_data'];
-    unset($data['tracker_node']['table']['join']['node_field_data']);
-  }
-  if (isset($data['tracker_user']['table']['join']['node_field_data'])) {
-    $data['tracker_user']['table']['join']['node'] = $data['tracker_user']['table']['join']['node_field_data'];
-    unset($data['tracker_user']['table']['join']['node_field_data']);
-  }
-  if (isset($data['tracker_user']['table']['join']['user_field_data'])) {
-    $data['tracker_user']['table']['join']['user'] = $data['tracker_user']['table']['join']['user_field_data'];
-    unset($data['tracker_user']['table']['join']['user_field_data']);
-  }
-  $data['node']['uid_touch_tracker'] = [
-    'group' => t('Tracker - User'),
-    'title' => t('User posted or commented'),
-    'help' => t('Display nodes only if a user posted the node or commented on the node.'),
-    'argument' => [
-      'field' => 'uid',
-      'name table' => 'users',
-      'name field' => 'name',
-      'id' => 'tracker_user_uid',
-      'no group by' => TRUE,
-    ],
-    'filter' => [
-      'field' => 'uid',
-      'name table' => 'users',
-      'name field' => 'name',
-      'id' => 'tracker_user_uid',
-    ],
-  ];
 
   // Overrides for the module content_moderation.
   if (\Drupal::moduleHandler()->moduleExists('content_moderation')) {
@@ -367,12 +302,6 @@ function mongodb_views_plugins_argument_alter(array &$plugins) {
       // Overrides for the module taxonomy.
       case 'taxonomy_index_tid_depth':
         $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\argument\TaxonomyIndexTidDepth';
-        $plugins[$id]['provider'] = 'mongodb';
-        break;
-
-      // Overrides for the module "tracker"
-      case 'tracker_user_uid':
-        $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\argument\TrackerUserUid';
         $plugins[$id]['provider'] = 'mongodb';
         break;
 
@@ -742,12 +671,6 @@ function mongodb_views_plugins_filter_alter(array &$plugins) {
 
       case 'views_test_test_cache_context':
         $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\filter\ViewsTestCacheContextFilter';
-        $plugins[$id]['provider'] = 'mongodb';
-        break;
-
-      // Overrides for the module tracker.
-      case 'tracker_user_uid':
-        $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\filter\TrackerUserUid';
         $plugins[$id]['provider'] = 'mongodb';
         break;
 

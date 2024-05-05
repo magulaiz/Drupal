@@ -13,20 +13,6 @@ class TranslateSchema {
   public static function createTable($name, $schema) {
     switch ($name) {
 
-      // Overrides for the module "book"
-      case 'book':
-        if (isset($schema['fields']['has_children']['type'])) {
-          $schema['fields']['has_children']['type'] = 'bool';
-        }
-        if (isset($schema['fields']['has_children']['default'])) {
-          $schema['fields']['has_children']['default'] = FALSE;
-        }
-        if (isset($schema['fields']['has_children']['description'])) {
-          $schema['fields']['has_children']['description'] = 'Flag indicating whether any nodes have this node as a parent (TRUE = children exist, FALSE = no children).';
-        }
-        unset($schema['fields']['has_children']['size']);
-        break;
-
       // Overrides for the module "comment"
       case 'comment_entity_statistics':
         if (isset($schema['fields']['last_comment_timestamp']['type'])) {
@@ -97,36 +83,11 @@ class TranslateSchema {
         unset($schema['fields']['grant_delete']['size']);
         break;
 
-      // Overrides for the module "statistics"
-      case 'node_counter':
-        if (isset($schema['fields']['timestamp']['type'])) {
-          $schema['fields']['timestamp']['type'] = 'date';
-        }
-        unset($schema['fields']['timestamp']['unsigned']);
-        break;
-
       // Overrides for the module "system"
       case 'sessions':
         if (isset($schema['fields']['timestamp']['type'])) {
           $schema['fields']['timestamp']['type'] = 'date';
         }
-        break;
-
-      // Overrides for the module "tracker"
-      case 'tracker_node':
-      case 'tracker_user':
-        if (isset($schema['fields']['published']['type'])) {
-          $schema['fields']['published']['type'] = 'bool';
-        }
-        if (isset($schema['fields']['published']['default'])) {
-          $schema['fields']['published']['default'] = FALSE;
-        }
-        unset($schema['fields']['published']['size']);
-
-        if (isset($schema['fields']['changed']['type'])) {
-          $schema['fields']['changed']['type'] = 'date';
-        }
-        unset($schema['fields']['changed']['unsigned']);
         break;
 
       // Overrides for the module "user"

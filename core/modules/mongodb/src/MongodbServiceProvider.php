@@ -23,6 +23,7 @@ class MongodbServiceProvider extends ServiceProviderBase {
       $container->register('mongodb.workspaces.entity.query.sql', 'Drupal\mongodb\modules\workspaces\EntityQuery\QueryFactory')
         ->addArgument(new Reference(('database')))
         ->addArgument(new Reference(('workspaces.manager')))
+        ->addArgument(new Reference(('workspaces.information')))
         ->setPublic(FALSE)
         ->setDecoratedService('mongodb.entity.query.sql', NULL, 50);
     }
@@ -33,21 +34,6 @@ class MongodbServiceProvider extends ServiceProviderBase {
    */
   public function alter(ContainerBuilder $container) {
     $modules = $container->getParameter('container.modules');
-
-    if (isset($modules['forum'])) {
-      $definition = $container->getDefinition('forum_manager');
-      $definition->setClass('Drupal\mongodb\modules\forum\ForumManager')
-        ->addArgument(new Reference('config.factory'))
-        ->addArgument(new Reference('entity_type.manager'))
-        ->addArgument(new Reference('database'))
-        ->addArgument(new Reference('string_translation'))
-        ->addArgument(new Reference('comment.manager'))
-        ->addArgument(new Reference('entity_field.manager'));
-
-      $definition = $container->getDefinition('forum.index_storage');
-      $definition->setClass('Drupal\mongodb\modules\forum\ForumIndexStorage')
-        ->addArgument(new Reference('database'));
-    }
 
     if (isset($modules['file'])) {
       $definition = $container->getDefinition('file.usage');

@@ -20,8 +20,9 @@ class Date extends CoreDate {
     $b = intval(strtotime($this->value['max'], 0));
 
     if (!empty($this->value['type']) && $this->value['type'] == 'offset') {
-      $a = new UTCDateTime((REQUEST_TIME - $a) * 1000);
-      $b = new UTCDateTime((REQUEST_TIME + $b) * 1000);
+      $time = \Drupal::time()->getRequestMicroTime();
+      $a = new UTCDateTime(($time - $a) * 1000);
+      $b = new UTCDateTime(($time + $b) * 1000);
     }
     else {
       $a = new UTCDateTime($a * 1000);
@@ -46,7 +47,8 @@ class Date extends CoreDate {
     $value = intval(strtotime($this->value['value'], 0));
 
     if (!empty($this->value['type']) && $this->value['type'] == 'offset') {
-      $value = new UTCDateTime((REQUEST_TIME + $value) * 1000);
+      $time = \Drupal::time()->getRequestMicroTime();
+      $value = new UTCDateTime(($time + $value) * 1000);
     }
     else {
       $value = new UTCDateTime($value * 1000);

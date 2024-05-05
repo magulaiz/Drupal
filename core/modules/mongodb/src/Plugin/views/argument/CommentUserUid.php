@@ -10,7 +10,34 @@ use Drupal\views\Views;
  */
 class CommentUserUid extends UserUid {
 
-  use CommentUserUidTrait;
+  /**
+   * {@inheritdoc}
+   */
+  public function title() {
+    if (!$this->argument) {
+      $title = \Drupal::config('user.settings')->get('anonymous');
+    }
+    else {
+      $user_translations = $this->database->select('users', 'u')
+        ->fields('u', ['user_translations'])
+        ->condition('uid', (int) $this->argument)
+        ->execute()
+        ->fetchField();
+      $title = '';
+      if (!empty($user_translations) && is_array($user_translations)) {
+        foreach ($user_translations as $user_translation) {
+          if (isset($user_translation['default_langcode']) && $user_translation['default_langcode'] && isset($user_translation['name'])) {
+            $title = $user_translation['name'];
+          }
+        }
+      }
+    }
+    if (empty($title)) {
+      return $this->t('No user');
+    }
+
+    return $title;
+  }
 
   /**
    * {@inheritdoc}
@@ -43,11 +70,11 @@ class CommentUserUid extends UserUid {
 
       $join = Views::pluginManager('join')->createInstance('standard', $def);
 
-      $this->alias = $this->query->addRelationship('comment', $join, $this->tableAlias, $this->relationship);
+      $alias = $this->query->addRelationship('comment', $join, $this->tableAlias, $this->relationship);
 
       $condition = ($this->view->query->getConnection()->condition('OR'))
         ->condition($field, $this->argument)
-        ->condition("$this->alias.comment_translations.uid", $this->argument);
+        ->condition("$alias.comment_translations.uid", $this->argument);
 
       $this->query->addCondition(0, $condition);
     }
