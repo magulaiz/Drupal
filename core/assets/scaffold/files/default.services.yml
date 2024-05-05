@@ -208,16 +208,28 @@ parameters:
   cors.config:
     enabled: false
     # Specify allowed headers, like 'x-allowed-header'.
+    # This can be set to ['*'], which will echo the request's list of CORS
+    # headers back and vary the response accordingly. However, if your CORS
+    # requests include credentials, this list must be set to an explicit list of
+    # headers. In the case of JSON:API or other requests which require a
+    # specific value for the content-type header, it must also be included as it
+    # would not overlap with the CORS-safelisted content-type values. E.g.,
+    # ['x-csrf-token', 'content-type']. File uploads will also require the
+    # content-disposition header.
     allowedHeaders: []
     # Specify allowed request methods, specify ['*'] to allow all possible ones.
+    # Specifying the wildcard value will echo back the request's
+    # access-control-request-method value and alter the vary header accordingly.
     allowedMethods: []
     # Configure requests allowed from specific origins. Do not include trailing
     # slashes with URLs.
     allowedOrigins: ['*']
     # Sets the Access-Control-Expose-Headers header.
-    exposedHeaders: false
-    # Sets the Access-Control-Max-Age header.
-    maxAge: false
+    exposedHeaders: []
+    # Sets the Access-Control-Max-Age header. A null value will disable setting
+    # the access-control-max-age header entirely and user-agent defaults will be
+    # applied.
+    maxAge: null
     # Sets the Access-Control-Allow-Credentials header.
     supportsCredentials: false
 
