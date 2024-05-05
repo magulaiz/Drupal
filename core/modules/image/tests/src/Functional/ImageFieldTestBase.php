@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\image\Functional;
 
+use Drupal\image\ImageStyleInterface;
 use Drupal\Tests\image\Kernel\ImageFieldCreationTrait;
 use Drupal\Tests\BrowserTestBase;
 
@@ -90,6 +91,27 @@ abstract class ImageFieldTestBase extends BrowserTestBase {
     $edit['files[' . $field_name . '_0]'] = \Drupal::service('file_system')->realpath($image->uri);
     $this->drupalGet('node/add/' . $type);
     $this->submitForm($edit, 'Preview');
+  }
+
+  /**
+   * Creates an image style.
+   *
+   * @param string $style_name
+   *   The name of the style to create.
+   * @param string $style_label
+   *   The label of the style to create.
+   *
+   * @return \Drupal\image\ImageStyleInterface
+   *   Returns an image style entity.
+   */
+  public function createStyle(string $style_name, string $style_label): ImageStyleInterface {
+    /** @var \Drupal\image\ImageStyleInterface $style */
+    $style = \Drupal::entityTypeManager()->getStorage('image_style')->create([
+      'name' => $style_name,
+      'label' => $style_label,
+    ]);
+    $style->save();
+    return $style;
   }
 
   /**
