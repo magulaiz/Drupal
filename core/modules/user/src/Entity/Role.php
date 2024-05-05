@@ -178,6 +178,10 @@ class Role extends ConfigEntityBase implements RoleInterface {
   public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
 
+    // Set Admin to FALSE, if NULL.
+    if (!isset($this->is_admin)) {
+      $this->is_admin = FALSE;
+    }
     if (!isset($this->weight) && ($roles = $storage->loadMultiple())) {
       // Set a role weight to make this new role last.
       $max = array_reduce($roles, function ($max, $role) {

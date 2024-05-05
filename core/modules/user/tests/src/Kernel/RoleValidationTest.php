@@ -22,8 +22,15 @@ class RoleValidationTest extends ConfigEntityValidationTestBase {
   /**
    * {@inheritdoc}
    */
+  protected static array $propertiesWithOptionalValues = ['is_admin'];
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
+
+    $this->installConfig('user');
 
     $this->entity = Role::create([
       'id' => 'test',
