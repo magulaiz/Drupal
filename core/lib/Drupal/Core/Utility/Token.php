@@ -9,11 +9,13 @@ use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\AttachmentsInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Drupal placeholder/token replacement system.
@@ -61,6 +63,8 @@ use Drupal\Core\Render\RendererInterface;
  * @see hook_token_info()
  */
 class Token {
+
+  use StringTranslationTrait;
 
   /**
    * The tag to cache token info with.
@@ -464,6 +468,78 @@ class Token {
   public function resetInfo() {
     $this->tokenInfo = NULL;
     $this->cacheTagsInvalidator->invalidateTags([static::TOKEN_INFO_CACHE_TAG]);
+  }
+
+  /**
+   * Returns an array of available token replacements.
+   *
+   * @param bool $prepared
+   *   Whether to return the raw token info for each token or an array of
+   *   prepared tokens for each type. E.g. "[view:name]".
+   * @param array $types
+   *   An array of additional token types to return, defaults to 'site' and
+   *   'view'.
+   *
+   * @return array
+   *   An array of available token replacement info or tokens, grouped by type.
+   */
+  public function getAvailableGlobalTokens(bool $prepared = FALSE, array $types = []) {
+    $info = $this->getInfo();
+    // Site tokens should always be available.
+    $types += ['site'];
+    $available = array_intersect_key($info['tokens'], array_flip($types));
+
+    // Construct the token string for each token.
+    if ($prepared) {
+      $prepared = [];
+      foreach ($available as $type => $tokens) {
+        foreach (array_keys($tokens) as $token) {
+          $prepared[$type][] = "[$type:$token]";
+        }
+      }
+
+      return $prepared;
+    }
+
+    return $available;
+  }
+
+  /**
+   * Adds elements for available core tokens to a form.
+   *
+   * @param array $form
+   *   The form array to alter, passed by reference.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   * @param array $tokens
+   *   An array of available token replacement info or tokens, grouped by type.
+   */
+  public function globalTokenForm(&$form, FormStateInterface $form_state, array $tokens) {
+    $token_items = [];
+
+    foreach ($tokens as $type => $tokens) {
+      $item = [
+        '#markup' => $type,
+        'children' => [],
+      ];
+      foreach ($tokens as $name => $info) {
+        $item['children'][$name] = "[$type:$name]" . ' - ' . $info['name'] . ': ' . $info['description'];
+      }
+
+      $token_items[$type] = $item;
+    }
+
+    $form['global_tokens'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Available global token replacements'),
+    ];
+    $form['global_tokens']['list'] = [
+      '#theme' => 'item_list',
+      '#items' => $token_items,
+      '#attributes' => [
+        'class' => ['global-tokens'],
+      ],
+    ];
   }
 
 }
