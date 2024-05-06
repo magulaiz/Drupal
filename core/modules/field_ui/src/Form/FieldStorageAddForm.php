@@ -349,7 +349,7 @@ class FieldStorageAddForm extends FormBase {
     // We just don't need the temp field_name to clash with other saved field
     // entities so just adding a prefix 'temp_field_' instead of default machine
     // name prefix 'field_'.
-    $values['field_name'] = "temp_field_". (new Random)->machineName(16, TRUE);
+    $values['field_name'] = "temp_field_" . (new Random)->machineName(16, TRUE);
     $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
 
     $field_storage_type = $values['group_field_options_wrapper'] ?? $values['new_storage_type'];
