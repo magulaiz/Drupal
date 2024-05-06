@@ -200,6 +200,7 @@ class ModerationFormTest extends ModerationStateTestBase {
    */
   public function testNonBundleModerationForm() {
     $this->drupalLogin($this->rootUser);
+    $this->drupalGet('/admin/reports/dblog');
     $this->workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test_mulrevpub', 'entity_test_mulrevpub');
     $this->workflow->save();
 
