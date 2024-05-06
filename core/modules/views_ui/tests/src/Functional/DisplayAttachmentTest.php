@@ -108,7 +108,7 @@ class DisplayAttachmentTest extends UITestBase {
   /**
    * Tests the attachment after changing machine name.
    */
-  public function testAttachmentOnAttachedMachineNameChange() {
+  public function testAttachmentOnAttachedMachineNameChange(): void {
 
     $view = $this->randomView();
     $path_prefix = 'admin/structure/views/view/' . $view['id'] . '/edit';
