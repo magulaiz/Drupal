@@ -29,15 +29,15 @@
           $buttonPane.prepend($moveSelectedCount);
         };
 
-        const $buttonPane = $element
-          .closest('.media-library-widget-modal')
-          .find('.ui-dialog-buttonpane');
-        if (!$buttonPane.length) {
-          return;
-        }
-        const $selectedCount = $buttonPane.find(
-          '.js-media-library-selected-count',
-        );
+          const el = $element[0];
+          const closestWidget = el.closest('.media-library-widget-modal');
+          const $buttonPane = $(closestWidget).find('.ui-dialog-buttonpane');
+          if (!$buttonPane.length) {
+            return;
+          }
+          const $selectedCount = $buttonPane.find(
+            '.js-media-library-selected-count',
+          );
 
         // If the `selected` counter is already present, it can be moved from
         // the end of the button pane to the beginning.
