@@ -357,15 +357,11 @@ class FieldConfigEditForm extends EntityForm {
    *
    * @param string $value
    *   The machine name, not prefixed (ex- field_some_name, without 'field_').
-   * @param array $element
-   *   An array containing the structure of the 'field_name' element.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
    *
    * @return bool
-   *   Whether or not the field machine name is taken.
+   *   Whether the field machine name is taken.
    */
-  public function fieldNameExists(string $value, array $element, FormStateInterface $form_state): bool {
+  public function fieldNameExists(string $value): bool {
     // Add the field prefix.
     $field_name = $this->configFactory->get('field_ui.settings')->get('field_prefix') . $value;
 
