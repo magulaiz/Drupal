@@ -415,16 +415,16 @@ abstract class FormStateDecoratorBase implements FormStateInterface {
   /**
    * {@inheritdoc}
    */
-  public function setValidationCanceled($cancel_validation = TRUE): self {
-    $this->decoratedFormState->setValidationCanceled($cancel_validation);
+  public function setValidationHalted($haltValidation = TRUE): self {
+    $this->decoratedFormState->setValidationHalted($haltValidation);
     return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function isValidationCanceled(): bool {
-    return $this->decoratedFormState->isValidationCanceled();
+  public function isValidationHalted(): bool {
+    return $this->decoratedFormState->isValidationHalted();
   }
 
   /**

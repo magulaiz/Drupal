@@ -136,7 +136,7 @@ class FormValidatorTest extends UnitTestCase {
     $form_state->setValue('form_token', 'some_random_token');
     $form_validator->validateForm('test_form_id', $form, $form_state);
     $this->assertTrue($form_state->isValidationComplete());
-    $this->assertTrue($form_state->isValidationCanceled());
+    $this->assertTrue($form_state->isValidationHalted());
   }
 
   /**
@@ -164,7 +164,7 @@ class FormValidatorTest extends UnitTestCase {
     $form_state->setValue('form_token', 'some_random_token');
     $form_validator->validateForm('test_form_id', $form, $form_state);
     $this->assertTrue($form_state->isValidationComplete());
-    $this->assertFalse($form_state->isValidationCanceled());
+    $this->assertFalse($form_state->isValidationHalted());
   }
 
   /**
@@ -370,9 +370,9 @@ class FormValidatorTest extends UnitTestCase {
   }
 
   /**
-   * If form token is invalid, it should cancel and stop all further validation.
+   * If form token is invalid, it should halt and stop all further validation.
    */
-  public function testCancelingValidationDoesNotRunElementValidation(): void {
+  public function testHaltingValidationDoesNotRunElementValidation(): void {
     $request_stack = new RequestStack();
     $request = new Request([], [], [], [], [], ['REQUEST_URI' => '/test/example?foo=bar']);
     $request_stack->push($request);
@@ -411,7 +411,7 @@ class FormValidatorTest extends UnitTestCase {
     $form_state->setValue('form_token', 'some_random_token');
     $form_validator->validateForm('test_form_id', $form, $form_state);
     $this->assertTrue($form_state->isValidationComplete());
-    $this->assertTrue($form_state->isValidationCanceled());
+    $this->assertTrue($form_state->isValidationHalted());
   }
 
   /**

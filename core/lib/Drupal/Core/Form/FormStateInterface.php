@@ -1110,31 +1110,30 @@ interface FormStateInterface {
   public function isValidationComplete();
 
   /**
-   * Sets that validation has been canceled.
+   * Sets that validation has been halted.
    *
-   * Cancels a form's validation process if it is preferred that further
-   * validation functions are prevented from executing, e.g.: you might set
-   * setValidationCanceled(TRUE) if a CSRF token is not valid, because it
-   * doesn't make sense to perform any further validation (and it might be a
-   * security risk to do so).
+   * Halt a form's validation process to prevent further validation functions
+   * from running. For example, you might set setValidationHalted(TRUE) if a
+   * CSRF token is not valid, because it does not make sense to perform any
+   * further validation (and it might be a security risk to do so).
    *
-   * @param bool $cancel_validation
-   *   TRUE if validation is canceled, FALSE otherwise.
+   * @param bool $haltValidation
+   *   TRUE if validation is halted, FALSE otherwise.
    *
    * @return $this
    */
-  public function setValidationCanceled(bool $cancel_validation = TRUE): self;
+  public function setValidationHalted(bool $haltValidation = TRUE): self;
 
   /**
-   * Determines if validation has been canceled.
+   * Determines if validation has been halted.
    *
-   * A form's validation is only canceled if it doesn't make sense to run any
+   * A form's validation is only halted if it doesn't make sense to run any
    * further validation functions, e.g.: if a CSRF token is not valid.
    *
    * @return bool
-   *   TRUE if validation is canceled, FALSE otherwise.
+   *   TRUE if validation is halted, FALSE otherwise.
    */
-  public function isValidationCanceled(): bool;
+  public function isValidationHalted(): bool;
 
   /**
    * Gets the keys of the form values that will be cleaned.

@@ -80,7 +80,7 @@ class FormValidator implements FormValidatorInterface {
 
     foreach ($handlers as $callback) {
       call_user_func_array($form_state->prepareCallback($callback), [&$form, &$form_state]);
-      if ($form_state->isValidationCanceled()) {
+      if ($form_state->isValidationHalted()) {
         break;
       }
     }
@@ -112,7 +112,7 @@ class FormValidator implements FormValidatorInterface {
         // Stop here and don't run any further validation handlers, because they
         // could invoke non-safe operations which opens the door for CSRF
         // vulnerabilities.
-        $this->cancelValidation($form, $form_state, $form_id);
+        $this->haltValidation($form, $form_state, $form_id);
       }
     }
 
@@ -144,9 +144,8 @@ class FormValidator implements FormValidatorInterface {
    *   The unique string identifying the form.
    */
   protected function handleErrorsWithLimitedValidation(&$form, FormStateInterface &$form_state, $form_id) {
-    // Do not perform any further validation if form validation has been
-    // canceled.
-    if ($form_state->isValidationCanceled()) {
+    // Do not perform any further validation if form validation has been halted.
+    if ($form_state->isValidationHalted()) {
       return;
     }
 
@@ -206,8 +205,8 @@ class FormValidator implements FormValidatorInterface {
     // Display error messages attached to the elements that they occurred in.
     $this->formErrorHandler->handleFormErrors($form, $form_state);
 
-    // Mark this form as validated if not canceled.
-    if (!$form_state->isValidationCanceled()) {
+    // Mark this form as validated if not halted.
+    if (!$form_state->isValidationHalted()) {
       $form_state->setValidationComplete();
     }
   }
@@ -222,12 +221,12 @@ class FormValidator implements FormValidatorInterface {
    * @param string $form_id
    *   The unique string identifying the form.
    */
-  protected function cancelValidation(&$form, FormStateInterface &$form_state, $form_id) {
+  protected function haltValidation(&$form, FormStateInterface &$form_state, $form_id) {
     // Delegate handling of form errors to a service.
     $this->formErrorHandler->handleFormErrors($form, $form_state);
 
-    // Mark this form as canceled.
-    $form_state->setValidationCanceled();
+    // Mark this form as halted.
+    $form_state->setValidationHalted();
     $form_state->setValidationComplete();
   }
 
@@ -257,9 +256,8 @@ class FormValidator implements FormValidatorInterface {
    *   and not on recursive calls.
    */
   protected function doValidateForm(&$elements, FormStateInterface &$form_state, $form_id = NULL) {
-    // Do not perform any further validation if form validation has been
-    // canceled.
-    if ($form_state->isValidationCanceled()) {
+    // Do not perform any further validation if form validation has been halted.
+    if ($form_state->isValidationHalted()) {
       return;
     }
 

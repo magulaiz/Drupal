@@ -497,11 +497,11 @@ class FormState implements FormStateInterface {
   protected $submit_handlers = [];
 
   /**
-   * Tracks if the form has been cancelled early.
+   * Tracks if the form validation has been halted.
    *
    * @var bool
    */
-  protected bool $cancel_validation = FALSE;
+  protected bool $haltValidation = FALSE;
 
   /**
    * {@inheritdoc}
@@ -908,16 +908,16 @@ class FormState implements FormStateInterface {
   /**
    * {@inheritdoc}
    */
-  public function setValidationCanceled(bool $cancel_validation = TRUE): self {
-    $this->cancel_validation = $cancel_validation;
+  public function setValidationHalted(bool $haltValidation = TRUE): self {
+    $this->haltValidation = $haltValidation;
     return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function isValidationCanceled(): bool {
-    return $this->cancel_validation;
+  public function isValidationHalted(): bool {
+    return $this->haltValidation;
   }
 
   /**
