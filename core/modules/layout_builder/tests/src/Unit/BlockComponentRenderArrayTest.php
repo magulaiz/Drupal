@@ -459,7 +459,6 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $this->assertEquals($expected_cache, $result);
   }
 
-
   /**
    * @covers ::onBuildRender
    */
