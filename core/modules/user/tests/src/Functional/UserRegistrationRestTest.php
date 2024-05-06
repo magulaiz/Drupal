@@ -82,7 +82,7 @@ class UserRegistrationRestTest extends ResourceTestBase {
     $this->assertNotEmpty($user->getPassword());
     $email_count = count($this->drupalGetMails());
 
-    $this->assertEquals(0, $email_count);
+    $this->assertEquals(1, $email_count);
 
     // Attempt to register without sending a password.
     $response = $this->registerRequest('Rick.Deckard', FALSE);
