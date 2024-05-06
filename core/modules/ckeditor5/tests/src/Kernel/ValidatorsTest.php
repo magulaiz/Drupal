@@ -1577,6 +1577,31 @@ class ValidatorsTest extends KernelTestBase {
       ],
       'expected_violations' => [],
     ];
+    $data['INVALID: SourceEditing plugin configuration: <p class="text-align-center"> must not be allowed because Text Alignment can generate <p class="text-align-center">'] = [
+      'settings' => [
+        'plugins' => [
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => [
+              '<p class="text-align-center">',
+            ],
+          ],
+          'ckeditor5_alignment' => [
+            'enabled_alignments' => ['center'],
+          ],
+        ],
+        'toolbar' => [
+          'items' => [
+            'sourceEditing',
+            'alignment',
+          ],
+        ],
+      ],
+      'image_upload' => [],
+      'filters' => [],
+      'violations' => [
+        'settings.plugins.ckeditor5_sourceEditing.allowed_tags.0' => 'The following attribute(s) are already supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: <em class="placeholder">Alignment (&lt;p class=&quot;text-align-center&quot;&gt;)</em>.',
+      ],
+    ];
     return $data;
   }
 
