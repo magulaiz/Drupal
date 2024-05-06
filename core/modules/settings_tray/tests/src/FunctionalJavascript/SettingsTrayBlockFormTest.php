@@ -41,6 +41,7 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
       'access toolbar',
       'administer nodes',
       'search content',
+      'access administration pages',
     ]);
     $this->drupalLogin($user);
   }
@@ -87,6 +88,7 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
         $element->click();
         $web_assert->assertNoElementAfterWait('css', "#toolbar-administration a.is-active");
       }
+
       $page->find('css', $toolbar_item)->click();
       $this->assertElementVisibleAfterWait('css', "{$toolbar_item}.is-active");
     }
