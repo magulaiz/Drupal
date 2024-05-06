@@ -148,12 +148,14 @@ body.drag {
 }
 
 /* Disabled tabledrag handle. */
-.tabledrag-disabled .tabledrag-handle {
+.tabledrag-disabled .tabledrag-handle,
+.tabledrag-ajaxing .tabledrag-handle {
   cursor: default;
   opacity: 0.4;
 }
 
-.tabledrag-disabled .tabledrag-handle.tabledrag-handle::before {
+.tabledrag-disabled .tabledrag-handle.tabledrag-handle::before,
+.tabledrag-ajaxing .tabledrag-handle.tabledrag-handle::before {
   content: normal;
 }
 
