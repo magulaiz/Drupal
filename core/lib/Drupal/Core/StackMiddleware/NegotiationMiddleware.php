@@ -16,7 +16,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  * otherwise be sent in an `accept` HTTP header.
  *
  * For certain applications (JSON:API, for instance) developers may wish to
- * utilize the `accept` header for content negotiation; this behaviour can be
+ * utilize the `accept` header for content negotiation; this behavior can be
  * disabled by configuring the `content_negotiation.config.enabled` container
  * parameter.
  */
