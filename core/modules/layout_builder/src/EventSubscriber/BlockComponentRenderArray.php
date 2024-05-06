@@ -82,12 +82,10 @@ class BlockComponentRenderArray implements EventSubscriberInterface {
       }
     }
 
-    // Only check access if the component is not being previewed.
+    $access = $block->access($this->currentUser, TRUE);
+    // Force cache max age 0 if the component is being previewed.
     if ($event->inPreview()) {
-      $access = AccessResult::allowed()->setCacheMaxAge(0);
-    }
-    else {
-      $access = $block->access($this->currentUser, TRUE);
+      $access->setCacheMaxAge(0);
     }
 
     $event->addCacheableDependency($access);

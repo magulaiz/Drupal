@@ -296,7 +296,8 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
       $block = $this->prophesize(BlockPluginInterface::class)->willImplement(PreviewFallbackInterface::class);
     }
 
-    $block->access($this->account->reveal(), TRUE)->shouldNotBeCalled();
+    $access_result = AccessResult::allowed();
+    $block->access($this->account->reveal(), TRUE)->willReturn($access_result)->shouldBeCalled();
     $block->getCacheContexts()->willReturn([]);
     $block->getCacheTags()->willReturn(['test']);
     $block->getCacheMaxAge()->willReturn(Cache::PERMANENT);
@@ -353,7 +354,8 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
   public function testOnBuildRenderInPreviewEmptyBuild() {
     $block = $this->prophesize(BlockPluginInterface::class)->willImplement(PreviewFallbackInterface::class);
 
-    $block->access($this->account->reveal(), TRUE)->shouldNotBeCalled();
+    $access_result = AccessResult::allowed();
+    $block->access($this->account->reveal(), TRUE)->willReturn($access_result)->shouldBeCalled();
     $block->getCacheContexts()->willReturn([]);
     $block->getCacheTags()->willReturn(['test']);
     $block->getCacheMaxAge()->willReturn(Cache::PERMANENT);
@@ -408,6 +410,55 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $event->getCacheableMetadata()->applyTo($result);
     $this->assertEquals($expected_cache, $result);
   }
+
+  /**
+   * @covers ::onBuildRender
+   */
+  public function testOnBuildRenderInPreviewDenied() {
+    $block = $this->prophesize(BlockPluginInterface::class)->willImplement(PreviewFallbackInterface::class);
+
+    $access_result = AccessResult::forbidden();
+    $block->access($this->account->reveal(), TRUE)->willReturn($access_result)->shouldBeCalled();
+    $block->getCacheContexts()->willReturn([]);
+    $block->getCacheTags()->willReturn(['test']);
+    $block->getCacheMaxAge()->willReturn(Cache::PERMANENT);
+    $block->getConfiguration()->willReturn([]);
+    $block->getPluginId()->willReturn('block_plugin_id');
+    $block->getBaseId()->willReturn('block_plugin_id');
+    $block->getDerivativeId()->willReturn(NULL);
+    $block->getPluginDefinition()->willReturn(['admin_label' => 'admin']);
+    $placeholder_string = 'The placeholder string';
+    $block->getPreviewFallbackString()->willReturn($placeholder_string);
+
+    $block_content = [];
+    $block->build()->willReturn($block_content);
+    $this->blockManager->createInstance('some_block_id', ['id' => 'some_block_id'])->willReturn($block->reveal());
+
+    $component = new SectionComponent('some-uuid', 'some-region', ['id' => 'some_block_id']);
+    $event = new SectionComponentBuildRenderArrayEvent($component, [], TRUE);
+
+    $subscriber = new BlockComponentRenderArray($this->account->reveal());
+    $translation = $this->prophesize(TranslationInterface::class);
+    $translation->translateString(Argument::type(TranslatableMarkup::class))
+      ->willReturn($placeholder_string);
+    $subscriber->setStringTranslation($translation->reveal());
+
+    $expected_build = [];
+    $expected_cache = [
+      '#cache' => [
+        'contexts' => [],
+        'tags' => [],
+        'max-age' => 0,
+      ],
+    ];
+
+    $subscriber->onBuildRender($event);
+    $result = $event->getBuild();
+    $this->assertEquals($expected_build, $result);
+    $event->getCacheableMetadata()->applyTo($result);
+    $this->assertEquals($expected_cache, $result);
+  }
+
 
   /**
    * @covers ::onBuildRender
