@@ -353,11 +353,11 @@ body {
     display: none;
   }
 }
-html[data-admin-toolbar="collapsed"] .admin-toolbar__header {
+:where([data-admin-toolbar="collapsed"]) .admin-toolbar__header {
   flex-direction: column;
   align-items: center;
 }
-html[data-admin-toolbar="collapsed"] .admin-toolbar__logo > img {
-  width: 2.5rem;
+:where([data-admin-toolbar="collapsed"])   .admin-toolbar__logo > img {
+  max-width: 2.5rem;
   height: auto;
 }
