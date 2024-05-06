@@ -175,7 +175,7 @@ $databases = [];
  *     'big_selects' => 'SET SQL_BIG_SELECTS=1',
  *   ],
  *   'sql_mode_options' => [
- *     'ONLY_FULL_GROUP_BY' => true,
+ *     'ONLY_FULL_GROUP_BY' => TRUE,
  *   ],
  *   'pdo' => [
  *     PDO::ATTR_TIMEOUT => 5,
