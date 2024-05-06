@@ -37,27 +37,6 @@ use Drupal\jsonapi\ResourceType\ResourceTypeRepositoryInterface;
 class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements DenormalizerInterface, NormalizerInterface {
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The JSON:API resource type repository.
-   *
-   * @var \Drupal\jsonapi\ResourceType\ResourceTypeRepositoryInterface
-   */
-  protected $resourceTypeRepository;
-
-  /**
-   * Entity field manager.
-   *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
-   */
-  protected $entityFieldManager;
-
-  /**
    * Constructs a JsonApiDocumentTopLevelNormalizer object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -67,11 +46,10 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ResourceTypeRepositoryInterface $resource_type_repository, EntityFieldManagerInterface $entity_field_manager) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->resourceTypeRepository = $resource_type_repository;
-    $this->entityFieldManager = $entity_field_manager;
-  }
+  public function __construct(
+    protected EntityTypeManagerInterface $entity_type_manager,
+    protected ResourceTypeRepositoryInterface $resource_type_repository,
+    protected EntityFieldManagerInterface $entity_field_manager) {}
 
   /**
    * {@inheritdoc}

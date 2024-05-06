@@ -130,7 +130,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends UnitTestCase {
    * @return \Drupal\Core\Entity\EntityInterface[]
    *   Mocked entities.
    */
-  protected static function getMockEntities() {
+  protected static function getMockEntities(): array {
     if (empty(static::$entities)) {
       $uuid_to_id = [
         '76dd5c18-ea1b-4150-9e75-b21958a2b836' => 1,
