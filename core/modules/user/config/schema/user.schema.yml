@@ -118,6 +118,7 @@ user.role.*:
     weight:
       type: weight
       label: 'User role weight'
+      nullable: true
     is_admin:
       type: boolean
       label: 'User is admin'
