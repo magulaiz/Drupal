@@ -54,7 +54,7 @@ class UnroutedUrlAssembler implements UnroutedUrlAssemblerInterface {
     $this->requestStack = $request_stack;
     $this->pathProcessor = $path_processor;
     if (!$request_context) {
-      @trigger_error(sprintf('Invoking %s without $request_context is deprecated in 10.3.0 and unsupported in 11.0.0. See https://www.drupal.org/node/3268509', __FUNCTION__), E_USER_DEPRECATED);
+      @trigger_error(sprintf('Invoking %s without $request_context is deprecated in drupal:10.3.0 and unsupported in drupal:11.0.0. See https://www.drupal.org/node/3268509', __FUNCTION__), E_USER_DEPRECATED);
       $request_context = \Drupal::service('router.request_context');
     }
     $this->requestContext = $request_context;
@@ -108,12 +108,12 @@ class UnroutedUrlAssembler implements UnroutedUrlAssemblerInterface {
     }
     // Allow (outbound) path processing, if needed.
     $base_url = $this->requestContext->getCompleteBaseUrl();
-    if (!array_key_exists('path_processing', $options)) {
-      $options['path_processing'] = UrlHelper::externalIsLocal($uri, $base_url);
+    if (!array_key_exists('path_processing', $options) && UrlHelper::externalIsLocal($uri, $base_url)) {
+      // Match UrlGenerator::generateFromRoute()'s default.
+      $options['path_processing'] = TRUE;
     }
     if (!empty($options['path_processing'])) {
-      // Do not pass the request, since this is a special case and we do not
-      // want to include e.g. the request language in the processing.
+      // @see ::buildLocalUrl().
       $uri = $base_url . $this->pathProcessor->processOutbound(
         substr($uri, strlen($base_url)),
         $options
