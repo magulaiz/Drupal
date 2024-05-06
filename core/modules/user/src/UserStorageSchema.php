@@ -48,7 +48,6 @@ class UserStorageSchema extends SqlContentEntityStorageSchema {
           $this->addSharedTableFieldIndex($storage_definition, $schema);
           break;
 
-        case 'access':
         case 'created':
           $this->addSharedTableFieldIndex($storage_definition, $schema, TRUE);
           break;
