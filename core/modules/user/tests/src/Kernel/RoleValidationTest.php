@@ -22,7 +22,7 @@ class RoleValidationTest extends ConfigEntityValidationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static array $propertiesWithOptionalValues = ['is_admin'];
+  protected static array $propertiesWithOptionalValues = ['is_admin', 'weight'];
 
   /**
    * {@inheritdoc}
