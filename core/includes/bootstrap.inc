@@ -10,7 +10,6 @@ use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Utility\Error;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 // cspell:ignore htkey
 
@@ -62,16 +61,6 @@ define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
  * This strips two levels of directories off the current directory.
  */
 define('DRUPAL_ROOT', dirname(__DIR__, 2));
-
-/**
- * Provide an alias for services expecting a ContainerAwareEventDispatcher.
- *
- * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0.
- *   Use \Symfony\Contracts\EventDispatcher\EventDispatcherInterface instead.
- *
- * @see https://www.drupal.org/node/3376090
- */
-class_alias(EventDispatcher::class, 'Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher');
 
 /**
  * Translates a string to the current language or to a given language.
