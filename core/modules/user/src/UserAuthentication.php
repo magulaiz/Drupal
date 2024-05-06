@@ -8,7 +8,7 @@ use Drupal\Core\Password\PasswordInterface;
 /**
  * Validates user authentication credentials.
  */
-class UserAuth implements UserAuthInterface, UserAuthenticationInterface {
+class UserAuthentication implements UserAuthInterface, UserAuthenticationInterface {
 
   /**
    * The entity type manager.
