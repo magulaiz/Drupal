@@ -18,6 +18,7 @@
 body:not(.is-always-mobile-nav) {
   @media (--nav) {
     & .region--secondary-menu {
+      align-items: center;
       justify-content: flex-end;
       margin: 0;
 
