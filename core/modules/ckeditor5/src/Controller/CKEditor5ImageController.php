@@ -129,7 +129,7 @@ class CKEditor5ImageController extends ControllerBase {
 
     $editor = $request->attributes->get('editor');
     $image_upload = $editor->getImageUploadSettings();
-    $destination = $image_upload['scheme'] . '://' . $image_upload['directory'];
+    $destination = $image_upload['scheme'] . '://' . \Drupal::token()->replacePlain($image_upload['directory']);
 
     // Check the destination file path is writable.
     if (!$this->fileSystem->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY)) {
