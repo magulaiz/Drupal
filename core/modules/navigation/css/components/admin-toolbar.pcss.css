@@ -374,4 +374,11 @@ html[data-admin-toolbar="collapsed"] {
     flex-direction: column;
     align-items: center;
   }
+
+  .admin-toolbar__logo {
+    > img {
+      width: 40px;
+      height: auto;
+    }
+  }
 }
