@@ -8,6 +8,8 @@ use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Symfony\Component\HttpFoundation\Request;
 
+// cSpell:ignore changeme
+
 /**
  * Test outbound path processor.
  */
