@@ -33,7 +33,7 @@ class None extends PagerPluginBase {
 
   public function summaryTitle() {
     if (!empty($this->options['offset'])) {
-      return $this->t('All items, skip @skip', ['@skip' => $this->options['offset']]);
+      return $this->t('Except first @skip', ['@skip' => $this->options['offset']]);
     }
     return $this->t('All items');
   }
