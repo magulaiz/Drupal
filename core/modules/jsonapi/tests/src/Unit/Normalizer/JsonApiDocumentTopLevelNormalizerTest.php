@@ -17,6 +17,7 @@ use Drupal\jsonapi\Normalizer\JsonApiDocumentTopLevelNormalizer;
 use Drupal\jsonapi\ResourceType\ResourceTypeField;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
+use Prophecy\Prophet;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -129,14 +130,16 @@ class JsonApiDocumentTopLevelNormalizerTest extends UnitTestCase {
    * @return \Drupal\Core\Entity\EntityInterface[]
    *   Mocked entities.
    */
-  protected function getMockEntities() {
+  protected static function getMockEntities() {
     if (empty(static::$entities)) {
       $uuid_to_id = [
         '76dd5c18-ea1b-4150-9e75-b21958a2b836' => 1,
         'fcce1b61-258e-4054-ae36-244d25a9e04c' => 2,
       ];
+      // Can't use $this->prophesize() in static context.
+      $prophet = new Prophet();
       foreach ($uuid_to_id as $uuid => $id) {
-        $entity = $this->prophesize(EntityInterface::class);
+        $entity = $prophet->prophesize(EntityInterface::class);
         $entity->uuid()->willReturn($uuid);
         $entity->id()->willReturn($id);
         static::$entities[$uuid] = $entity->reveal();
@@ -152,7 +155,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends UnitTestCase {
    *   The data for the test method.
    */
   public static function denormalizeProvider() {
-    $mockEntities = $this->getMockEntities();
+    $mockEntities = static::getMockEntities();
     return [
       [
         [
