@@ -288,6 +288,7 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
       ];
       $build[$region]['layout_builder_add_block']['#weight'] = 1000;
       $build[$region]['#attributes']['data-region'] = $region;
+      $build[$region]['#attributes']['data-layout-group'] = ($info['group'] ?? NULL) ?: ($layout_definition->get('group') ?: 'builder-region');
       $build[$region]['#attributes']['class'][] = 'layout-builder__region';
       $build[$region]['#attributes']['class'][] = 'js-layout-builder-region';
       $build[$region]['#attributes']['role'] = 'group';
