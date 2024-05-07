@@ -21,7 +21,8 @@ libraries:
   - core/drupal.message
   - core/normalize
   - claro/global-styling
-  - claro/react-test
+  - dr_pepper/dr_pepper_prod
+#  - claro/react-test
 libraries-override:
   core/drupal.tabledrag:
     css:
