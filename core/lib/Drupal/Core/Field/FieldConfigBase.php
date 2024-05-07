@@ -329,7 +329,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
   /**
    * {@inheritdoc}
    */
-  #[ActionMethod(adminLabel: new TranslatableMarkup('Change field label'))]
+  #[ActionMethod(adminLabel: new TranslatableMarkup('Change field label'), pluralize: FALSE)]
   public function setLabel($label) {
     $this->label = $label;
     return $this;
@@ -345,6 +345,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
   /**
    * {@inheritdoc}
    */
+  #[ActionMethod(adminLabel: new TranslatableMarkup('Change field description'), pluralize: FALSE)]
   public function setDescription($description) {
     $this->description = $description;
     return $this;

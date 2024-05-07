@@ -7,6 +7,7 @@ namespace Drupal\KernelTests\Core\Recipe;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Recipe\RecipeRunner;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
@@ -156,6 +157,24 @@ YAML;
     RecipeRunner::processRecipe($recipe);
 
     $this->assertSame($expected_status, $storage->load('foo')->status());
+  }
+
+  public function testSetFieldLabelAndDescription(): void {
+    $recipe = <<<YAML
+name: 'Set field label and description'
+config:
+  actions:
+    field.field.node.*.body:
+      setLabel: 'Not what you were expecting!'
+      setDescription: "Any ol' nonsense can go here."
+YAML;
+    $recipe = $this->createRecipe($recipe);
+    RecipeRunner::processRecipe($recipe);
+
+    $field = FieldConfig::loadByName('node', 'test', 'body');
+    $this->assertNotEmpty($field);
+    $this->assertSame('Not what you were expecting!', $field->getLabel());
+    $this->assertSame("Any ol' nonsense can go here.", $field->getDescription());
   }
 
 }
