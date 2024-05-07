@@ -7,19 +7,10 @@
   Drupal.focusTrap = {};
 
   /**
-   * Add a focus trap
-   * @param {Array} elements
-   */
-  Drupal.focusTrap.add = (elements) => {
-    focusTrapElements = elements;
-    document.addEventListener('keydown', createFocusTrap);
-  };
-
-  /**
    * Creates the focus trap.
    * @param {event} e - keydown event object
    */
-  createFocusTrap = (e) => {
+  function createFocusTrap(e) {
     if (e.key === 'Tab') {
       const tabbableElements = [];
 
@@ -42,6 +33,15 @@
         e.preventDefault();
       }
     }
+  }
+
+  /**
+   * Add a focus trap
+   * @param {Array} elements
+   */
+  Drupal.focusTrap.add = (elements) => {
+    focusTrapElements = elements;
+    document.addEventListener('keydown', createFocusTrap);
   };
 
   Drupal.focusTrap.remove = () => {
