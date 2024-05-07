@@ -15,6 +15,7 @@ use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\media\Entity\MediaType;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
@@ -319,6 +320,31 @@ YAML;
     $language = ConfigurableLanguage::load('en');
     $this->assertSame('Wacky language', $language->getName());
     $this->assertSame(39, $language->getWeight());
+  }
+
+  public function testMediaTypeEntityActions(): void {
+    $this->container->get('module_installer')->install(['media_test_type']);
+
+    $media_type = MediaType::load('test');
+    $this->assertSame('Test type.', $media_type->getDescription());
+    $this->assertSame(['metadata_attribute' => 'field_attribute_config_test'], $media_type->getFieldMap());
+
+    $recipe = <<<YAML
+name: 'Change media type'
+config:
+  actions:
+    {$media_type->getConfigDependencyName()}:
+      setDescription: 'Changed by a recipe...'
+      setFieldMap:
+        foo: baz
+YAML;
+
+    $recipe = $this->createRecipe($recipe);
+    RecipeRunner::processRecipe($recipe);
+
+    $media_type = MediaType::load('test');
+    $this->assertSame('Changed by a recipe...', $media_type->getDescription());
+    $this->assertSame(['foo' => 'baz'], $media_type->getFieldMap());
   }
 
 }
