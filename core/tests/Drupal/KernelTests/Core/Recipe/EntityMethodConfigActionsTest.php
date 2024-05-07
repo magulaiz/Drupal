@@ -165,6 +165,8 @@ YAML;
     $field = FieldConfig::loadByName('node', 'test', 'body');
     $this->assertTrue($field->isTranslatable());
     $this->assertFalse($field->isRequired());
+    $this->assertTrue($field->getSetting('display_summary'));
+    $this->assertFalse($field->getSetting('required_summary'));
 
     $recipe = <<<YAML
 name: 'Set field label and description'
@@ -175,6 +177,9 @@ config:
       setDescription: "Any ol' nonsense can go here."
       setTranslatable: false
       setRequired: true
+      setSettings:
+        display_summary: false
+        required_summary: true
 YAML;
     $recipe = $this->createRecipe($recipe);
     RecipeRunner::processRecipe($recipe);
@@ -185,6 +190,8 @@ YAML;
     $this->assertSame("Any ol' nonsense can go here.", $field->getDescription());
     $this->assertFalse($field->isTranslatable());
     $this->assertTrue($field->isRequired());
+    $this->assertFalse($field->getSetting('display_summary'));
+    $this->assertTrue($field->getSetting('required_summary'));
   }
 
 }
