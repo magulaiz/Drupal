@@ -347,4 +347,36 @@ YAML;
     $this->assertSame(['foo' => 'baz'], $media_type->getFieldMap());
   }
 
+  public function testRemoveComponentFromDisplay(): void {
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $repository */
+    $repository = $this->container->get(EntityDisplayRepositoryInterface::class);
+
+    $form_display = $repository->getFormDisplay('node', 'test');
+    $this->assertIsArray($form_display->getComponent('uid'));
+
+    $view_display = $repository->getViewDisplay('node', 'test');
+    $this->assertIsArray($view_display->getComponent('body'));
+    $this->assertIsArray($view_display->getComponent('links'));
+
+    $recipe = <<<YAML
+name: 'Remove display components'
+config:
+  actions:
+    {$form_display->getConfigDependencyName()}:
+      removeComponent: uid
+    {$view_display->getConfigDependencyName()}:
+      removeComponents:
+        - body
+        - links
+YAML;
+
+    $recipe = $this->createRecipe($recipe);
+    RecipeRunner::processRecipe($recipe);
+
+    $this->assertNull($repository->getFormDisplay('node', 'test')->getComponent('uid'));
+    $view_display = $repository->getViewDisplay('node', 'test');
+    $this->assertNull($view_display->getComponent('body'));
+    $this->assertNull($view_display->getComponent('links'));
+  }
+
 }
