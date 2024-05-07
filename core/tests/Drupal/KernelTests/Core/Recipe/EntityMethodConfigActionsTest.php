@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Recipe;
 
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Recipe\RecipeRunner;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
@@ -22,6 +23,7 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'config_test',
     'field',
     'layout_builder',
     'layout_discovery',
@@ -89,6 +91,40 @@ YAML;
       ->getViewDisplay('node', 'test', 'full');
     $this->assertTrue($display->getThirdPartySetting('layout_builder', 'enabled'));
     $this->assertTrue($display->getThirdPartySetting('layout_builder', 'allow_custom'));
+  }
+
+  /**
+   * @testWith [{"set": {"property_name": "protected_property", "value": "Here be sandworms..."}}]
+   *   [{"setMultiple": [{"property_name": "protected_property", "value": "Here be sandworms..."}, {"property_name": "label", "value": "New face"}]}]
+   */
+  public function testSet(array $config_actions): void {
+    $storage = $this->container->get(EntityTypeManagerInterface::class)
+      ->getStorage('config_test');
+
+    $entity = $storage->create([
+      'id' => 'foo',
+      'label' => 'Behold!',
+      'protected_property' => 'Here be dragons...',
+    ]);
+    $this->assertSame('Behold!', $entity->get('label'));
+    $this->assertSame('Here be dragons...', $entity->get('protected_property'));
+    $entity->save();
+
+    $recipe = [
+      'name' => 'Set a value',
+      'config' => [
+        'actions' => [
+          'config_test.dynamic.foo' => $config_actions,
+        ],
+      ],
+    ];
+    $recipe = $this->createRecipe($recipe);
+    RecipeRunner::processRecipe($recipe);
+
+    $entity = $storage->load('foo');
+    foreach ($config_actions as ['property_name' => $name, 'value' => $value]) {
+      $this->assertSame($value, $entity->get($name));
+    }
   }
 
 }
