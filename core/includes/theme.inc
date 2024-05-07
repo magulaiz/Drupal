@@ -588,7 +588,6 @@ function template_preprocess_links(&$variables) {
             // be calculated using JavaScript, to prevent breaking the render
             // cache.
             $system_path = $url->getInternalPath();
-            // @todo System path is deprecated - use the route name and parameters.
             // Special case for the front page.
             $li_attributes['data-drupal-link-system-path'] = $system_path == '' ? '<front>' : $system_path;
           }
