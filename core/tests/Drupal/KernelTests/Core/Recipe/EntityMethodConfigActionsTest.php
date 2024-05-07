@@ -121,8 +121,11 @@ YAML;
     ]);
     RecipeRunner::processRecipe($recipe);
 
+    $expected_values = array_key_exists('set', $config_actions)
+      ? $config_actions
+      : reset($config_actions);
     $entity = $storage->load('foo');
-    foreach ($config_actions as ['property_name' => $name, 'value' => $value]) {
+    foreach ($expected_values as ['property_name' => $name, 'value' => $value]) {
       $this->assertSame($value, $entity->get($name));
     }
   }
