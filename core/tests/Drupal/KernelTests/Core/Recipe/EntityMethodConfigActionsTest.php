@@ -12,6 +12,7 @@ use Drupal\Core\Extension\ThemeInstallerInterface;
 use Drupal\Core\Recipe\RecipeRunner;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
+use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
@@ -269,6 +270,29 @@ YAML;
     $this->assertSame($node->toUrl()->toString(), $form->getRedirectUrl()->toString());
     $this->assertSame("From hell's heart, I reply to thee.", $form->getReply());
     $this->assertSame(-10, $form->getWeight());
+  }
+
+  public function testImageStyleEntityActions(): void {
+    $this->enableModules(['image']);
+    $this->installConfig('image');
+
+    $style = ImageStyle::load('large');
+    $this->assertCount(2, $style->getEffects());
+
+    $recipe = <<<YAML
+name: 'Change image style'
+config:
+  actions:
+    {$style->getConfigDependencyName()}:
+      addImageEffect:
+        id: image_desaturate
+        weight: 1
+YAML;
+
+    $recipe = $this->createRecipe($recipe);
+    RecipeRunner::processRecipe($recipe);
+
+    $this->assertCount(3, ImageStyle::load('large')->getEffects());
   }
 
 }
