@@ -93,6 +93,12 @@ class ElementsFieldsetTest extends KernelTestBase implements FormInterface {
       '#title' => 'Nested text field inside meta_invisible element',
     ];
 
+    $form['fieldset_empty'] = [
+      '#type' => 'fieldset',
+      '#title' => '',
+      '#description' => '',
+    ];
+
     return $form;
   }
 
@@ -139,6 +145,16 @@ class ElementsFieldsetTest extends KernelTestBase implements FormInterface {
     $field_id = 'edit-fieldset-invisible';
     $description_id = $field_id . '--description';
     $elements = $this->xpath('//fieldset[@id="' . $field_id . '" and @aria-describedby="' . $description_id . '"]//div[@id="edit-meta-invisible"]/following-sibling::div[contains(@class, "visually-hidden")]');
+    $this->assertCount(1, $elements);
+
+    // Fieldset should not create title element when title is empty.
+    $field_id = 'edit-fieldset-empty';
+    $elements = $this->xpath('//fieldset[@id="' . $field_id . '"]//legend');
+    $this->assertCount(0, $elements);
+
+    // If the fieldset isn't empty and the title appears the count should be 1.
+    $field_id = 'edit-fieldset-default';
+    $elements = $this->xpath('//fieldset[@id="' . $field_id . '"]//legend');
     $this->assertCount(1, $elements);
 
     \Drupal::formBuilder()->submitForm($this, $form_state);
