@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Drupal\Tests\migrate\Unit;
 
 use Drupal\Component\Utility\Html;
+use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\MigrateSkipProcessException;
+use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\Plugin\MigrateDestinationInterface;
 use Drupal\migrate\Plugin\MigrateProcessInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
@@ -12,6 +15,7 @@ use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Row;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 
 /**
  * @coversDefaultClass \Drupal\migrate\MigrateExecutable
@@ -662,6 +666,144 @@ class MigrateExecutableTest extends MigrateTestCase {
     });
 
     return $id_map;
+  }
+
+  /**
+   * Tests processMultiple().
+   *
+   * @covers ::processMultiple
+   *
+   * @throws \Drupal\migrate\MigrateException
+   * @throws \ReflectionException
+   */
+  public function testProcessMultiple() {
+    $value = [
+      'test_value1',
+      'test_value2',
+    ];
+    $end_value = [
+      'test_new_value1',
+      'test_new_value2',
+    ];
+    $row = new Row();
+    $destination = 'test_destination';
+
+    // Test normal operation.
+    $plugin = $this->getPluginProphecy($value, $end_value);
+    $result = $this->executable->processMultiple($row, $destination, $plugin->reveal(), $value);
+    $this->assertSame($end_value, $result);
+
+    // Test Row Skip.
+    $plugin = $this->getPluginProphecy($value, $end_value, [FALSE, FALSE], [], [TRUE]);
+    $result = $this->executable->processMultiple($row, $destination, $plugin->reveal(), $value);
+    $this->assertSame([], $result);
+    $this->assertTrue($row->getSkip());
+
+    // Test SkipRowException.
+    $plugin = $this->getPluginProphecy($value, $end_value, [], [new MigrateSkipRowException()]);
+    $this->expectException(MigrateSkipRowException::class);
+    $this->executable->processMultiple($row, $destination, $plugin->reveal(), $value);
+
+  }
+
+  /**
+   * Tests processSingle().
+   *
+   * @covers ::processSingle
+   *
+   * @throws \Drupal\migrate\MigrateException
+   */
+  public function testProcessSingle() {
+    $value = 'test_value';
+    $row = new Row();
+    $destination = 'test_destination';
+
+    // Test normal operation.
+    $plugin = $this->getPluginProphecy([$value], ['test_new_value']);
+    $result = $this->executable->processSingle($row, $destination, $plugin->reveal(), $value);
+    $this->assertSame('test_new_value', $result);
+    $this->assertFalse($this->executable->stopPipeline);
+
+    // Test $plugin->isPipelineStopped().
+    $plugin = $this->getPluginProphecy([$value], ['test_new_value'], [TRUE]);
+    $result = $this->executable->processSingle($row, $destination, $plugin->reveal(), $value);
+    $this->assertSame('test_new_value', $result);
+    $this->assertTrue($this->executable->stopPipeline);
+
+    // Test Migrate Exception.
+    $this->executable->stopPipeline = FALSE;
+    $e = new MigrateException("test exception");
+    $plugin = $this->getPluginProphecy([$value], ['test_new_value'], [FALSE], [$e]);
+    $this->expectException(MigrateException::class);
+    $this->expectExceptionMessage('test_plugin: test exception');
+    $this->executable->processSingle($row, $destination, $plugin->reveal(), $value);
+  }
+
+  /**
+   * Tests a plugin skipping a process.
+   *
+   * @throws \Drupal\migrate\MigrateException
+   *
+   * @group legacy
+   */
+  public function testProcessPluginSkipProcess() {
+    $value = 'test_value';
+    $row = new Row();
+    $destination = 'test_destination';
+    $plugin = $this->getPluginProphecy([$value], ['test_new_value'], [], [new MigrateSkipProcessException()]);
+    $result = $this->executable->processSingle($row, $destination, $plugin->reveal(), $value);
+    $this->assertNull($result);
+    $this->assertTrue($this->executable->stopPipeline);
+  }
+
+  /**
+   * Gets a test plugin prophecy.
+   *
+   * @param array $start_values
+   *   An array of starting values.
+   * @param array $end_values
+   *   An array of ending values.
+   * @param array $pipeline_stop_values
+   *   An array of bools indicating if an input value should stop the pipeline.
+   * @param array $exceptions
+   *   An array of exceptions that should be thrown
+   * @param array $row_skip_values
+   *   An array of bools indicating whether the plugin should trigger a row skip.
+   *
+   * @return \Prophecy\Prophecy\ObjectProphecy
+   */
+  protected function getPluginProphecy(array $start_values, array $end_values, array $pipeline_stop_values = [], array $exceptions = [], array $row_skip_values = []): ObjectProphecy {
+    $plugin = $this->prophesize(MigrateProcessInterface::class);
+    $plugin->reset()->shouldBeCalled();
+    $plugin->getPluginId()->willReturn('test_plugin');
+    foreach ($start_values as $key => $start_value) {
+      $end_value = $end_values[$key];
+      $pipeline_stop_value = $pipeline_stop_values[$key] ?? FALSE;
+      $exception = $exceptions[$key] ?? NULL;
+      $row_skip_value = $row_skip_values[$key] ?? FALSE;
+
+      $plugin->transform($start_value, Argument::type(MigrateExecutable::class), Argument::type(Row::class), Argument::type('string'))
+        ->will(function ($args) use ($plugin, $end_value, $pipeline_stop_value, $exception, $row_skip_value) {
+          if ($exception) {
+            $plugin->isPipelineStopped()->willReturn(FALSE);
+            throw $exception;
+          }
+          if ($row_skip_value) {
+            $args[2]->skip();
+            $plugin->isPipelineStopped()->willReturn(FALSE);
+            return NULL;
+          }
+          if ($pipeline_stop_value) {
+            $plugin->isPipelineStopped()->willReturn(TRUE);
+          }
+          else {
+            $plugin->isPipelineStopped()->willReturn(FALSE);
+          }
+          return $end_value;
+
+        });
+    }
+    return $plugin;
   }
 
 }

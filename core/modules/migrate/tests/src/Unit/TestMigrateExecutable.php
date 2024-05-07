@@ -6,6 +6,8 @@ namespace Drupal\Tests\migrate\Unit;
 
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\Plugin\MigrateProcessInterface;
+use Drupal\migrate\Row;
 
 /**
  * Tests MigrateExecutable.
@@ -25,6 +27,11 @@ class TestMigrateExecutable extends MigrateExecutable {
    * @var int
    */
   protected $clearedMemoryUsage;
+
+  /**
+   * {@inheritdoc}
+   */
+  public bool $stopPipeline = FALSE;
 
   /**
    * Sets the string translation service.
@@ -123,6 +130,20 @@ class TestMigrateExecutable extends MigrateExecutable {
    */
   public function setMemoryThreshold($threshold) {
     $this->memoryThreshold = $threshold;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function processMultiple(Row $row, string $destination, MigrateProcessInterface $plugin, array $value): array {
+    return parent::processMultiple($row, $destination, $plugin, $value);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function processSingle(Row $row, string $destination, MigrateProcessInterface $plugin, mixed $value): mixed {
+    return parent::processSingle($row, $destination, $plugin, $value);
   }
 
 }

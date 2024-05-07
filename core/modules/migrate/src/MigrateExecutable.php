@@ -446,10 +446,10 @@ class MigrateExecutable implements MigrateExecutableInterface {
         if (!is_array($value)) {
           throw new MigrateException(sprintf('Pipeline failed at %s plugin for destination %s: %s received instead of an array,', $plugin->getPluginId(), $destination, $value));
         }
-        $value = $this->processMultipleThroughSingle($row, $destination, $plugin, $value);
+        $value = $this->processMultiple($row, $destination, $plugin, $value);
       }
       else {
-        $value = $this->processPlugin($row, $destination, $plugin, $value);
+        $value = $this->processSingle($row, $destination, $plugin, $value);
         $multiple = $plugin->multiple();
       }
       if ($row->getSkip()) {
@@ -486,7 +486,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
    *
    * @throws \Drupal\migrate\MigrateException
    */
-  protected function processPlugin(Row $row, string $destination, MigrateProcessInterface $plugin, mixed $value): mixed {
+  protected function processSingle(Row $row, string $destination, MigrateProcessInterface $plugin, mixed $value): mixed {
     $plugin->reset();
     try {
       $new_value = $plugin->transform($value, $this, $row, $destination);
@@ -521,11 +521,11 @@ class MigrateExecutable implements MigrateExecutableInterface {
    * @throws \Drupal\migrate\MigrateException
    * @throws \ReflectionException
    */
-  protected function processMultipleThroughSingle(Row $row, string $destination, MigrateProcessInterface $plugin, array $value): array {
+  protected function processMultiple(Row $row, string $destination, MigrateProcessInterface $plugin, array $value): array {
     $new_value = [];
     foreach ($value as $element_value) {
       $plugin->reset();
-      $new_value[] = $this->processPlugin($row, $destination, $plugin, $element_value);
+      $new_value[] = $this->processSingle($row, $destination, $plugin, $element_value);
       if ($row->getSkip()) {
         return [];
       }
