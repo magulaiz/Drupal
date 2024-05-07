@@ -14,6 +14,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
@@ -293,6 +294,31 @@ YAML;
     RecipeRunner::processRecipe($recipe);
 
     $this->assertCount(3, ImageStyle::load('large')->getEffects());
+  }
+
+  public function testConfigurableLanguageEntityActions(): void {
+    $this->enableModules(['language']);
+    $this->installConfig('language');
+
+    $language = ConfigurableLanguage::load('en');
+    $this->assertSame('English', $language->getName());
+    $this->assertSame(0, $language->getWeight());
+
+    $recipe = <<<YAML
+name: 'Change configurable language'
+config:
+  actions:
+    {$language->getConfigDependencyName()}:
+      setName: "Wacky language"
+      setWeight: 39
+YAML;
+
+    $recipe = $this->createRecipe($recipe);
+    RecipeRunner::processRecipe($recipe);
+
+    $language = ConfigurableLanguage::load('en');
+    $this->assertSame('Wacky language', $language->getName());
+    $this->assertSame(39, $language->getWeight());
   }
 
 }
