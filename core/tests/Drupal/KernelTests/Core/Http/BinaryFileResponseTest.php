@@ -36,11 +36,11 @@ class BinaryFileResponseTest extends KernelTestBase {
    * @return array
    */
   public function providerTestCalculatedContentType() {
-    $data = [];
-    $data[] = ['core/misc/print.css', 'text/css'];
-    $data[] = ['core/misc/checkbox.js', 'text/javascript'];
-    $data[] = ['core/misc/tree.png', 'image/png'];
-    return $data;
+    return [
+      ['core/misc/print.css', 'text/css'],
+      ['core/misc/checkbox.js', 'text/javascript'],
+      ['core/misc/tree.png', 'image/png'],
+    ];
   }
 
 }
