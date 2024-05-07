@@ -72,49 +72,6 @@ class UserPermissionsForm extends FormBase {
   }
 
   /**
-   * Gets the roles to display in this form.
-   *
-   * @return \Drupal\user\RoleInterface[]
-   *   An array of role objects.
-   */
-  protected function getRoles() {
-    return $this->roleStorage->loadMultiple();
-  }
-
-  /**
-   * Group permissions by the modules that provide them.
-   *
-   * @return string[][]
-   *   A nested array. The outer keys are modules that provide permissions. The
-   *   inner arrays are permission names keyed by their machine names.
-   */
-  protected function permissionsByProvider(): array {
-    $permissions = $this->permissionHandler->getPermissions();
-    $permissions_by_provider = [];
-    foreach ($permissions as $permission_name => $permission) {
-      $permissions_by_provider[$permission['provider']][$permission_name] = $permission;
-    }
-
-    // Move the access content permission to the Node module if it is installed.
-    // @todo Add an alter so that this section can be moved to the Node module.
-    if ($this->moduleHandler->moduleExists('node')) {
-      // Insert 'access content' before the 'view own unpublished content' key
-      // in order to maintain the UI even though the permission is provided by
-      // the system module.
-      $keys = array_keys($permissions_by_provider['node']);
-      $offset = (int) array_search('view own unpublished content', $keys);
-      $permissions_by_provider['node'] = array_merge(
-        array_slice($permissions_by_provider['node'], 0, $offset),
-        ['access content' => $permissions_by_provider['system']['access content']],
-        array_slice($permissions_by_provider['node'], $offset)
-      );
-      unset($permissions_by_provider['system']['access content']);
-    }
-
-    return $permissions_by_provider;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
@@ -188,22 +145,28 @@ class UserPermissionsForm extends FormBase {
           $form['permissions'][$perm]['description']['#context']['warning'] = $perm_item['warning'];
         }
         foreach ($role_names as $rid => $name) {
-          $form['permissions'][$perm][$rid] = [
-            '#title' => $name . ': ' . $perm_item['title'],
-            '#title_display' => 'invisible',
-            '#wrapper_attributes' => [
-              'class' => ['checkbox'],
-            ],
-            '#type' => 'checkbox',
-            '#default_value' => in_array($perm, $role_permissions[$rid]) ? 1 : 0,
-            '#attributes' => ['class' => ['rid-' . $rid, 'js-rid-' . $rid]],
-            '#parents' => [$rid, $perm],
-          ];
-          // Show a column of disabled but checked checkboxes.
-          if ($admin_roles[$rid]) {
-            $form['permissions'][$perm][$rid]['#disabled'] = TRUE;
-            $form['permissions'][$perm][$rid]['#default_value'] = TRUE;
+          if (is_array($role_permissions[$rid])) {
+            $form['permissions'][$perm][$rid] = [
+              '#title' => $name . ': ' . $perm_item['title'],
+              '#title_display' => 'invisible',
+              '#wrapper_attributes' => [
+                'class' => ['checkbox'],
+              ],
+              '#type' => 'checkbox',
+              '#default_value' => in_array($perm, $role_permissions[$rid]) ? 1 : 0,
+              '#attributes' => ['class' => ['rid-' . $rid, 'js-rid-' . $rid]],
+              '#parents' => [$rid, $perm],
+            ];
+            // Show a column of disabled but checked checkboxes.
+            if ($admin_roles[$rid]) {
+              $form['permissions'][$perm][$rid]['#disabled'] = TRUE;
+              $form['permissions'][$perm][$rid]['#default_value'] = TRUE;
+            }
           }
+          else {
+            throw new \InvalidArgumentException('The second argument is of the wrong type');
+          }
+
         }
       }
     }
@@ -218,6 +181,49 @@ class UserPermissionsForm extends FormBase {
     $form['#attached']['library'][] = 'user/drupal.user.permissions';
 
     return $form;
+  }
+
+  /**
+   * Gets the roles to display in this form.
+   *
+   * @return \Drupal\user\RoleInterface[]
+   *   An array of role objects.
+   */
+  protected function getRoles() {
+    return $this->roleStorage->loadMultiple();
+  }
+
+  /**
+   * Group permissions by the modules that provide them.
+   *
+   * @return string[][]
+   *   A nested array. The outer keys are modules that provide permissions. The
+   *   inner arrays are permission names keyed by their machine names.
+   */
+  protected function permissionsByProvider(): array {
+    $permissions = $this->permissionHandler->getPermissions();
+    $permissions_by_provider = [];
+    foreach ($permissions as $permission_name => $permission) {
+      $permissions_by_provider[$permission['provider']][$permission_name] = $permission;
+    }
+
+    // Move the access content permission to the Node module if it is installed.
+    // @todo Add an alter so that this section can be moved to the Node module.
+    if ($this->moduleHandler->moduleExists('node')) {
+      // Insert 'access content' before the 'view own unpublished content' key
+      // in order to maintain the UI even though the permission is provided by
+      // the system module.
+      $keys = array_keys($permissions_by_provider['node']);
+      $offset = (int) array_search('view own unpublished content', $keys);
+      $permissions_by_provider['node'] = array_merge(
+        array_slice($permissions_by_provider['node'], 0, $offset),
+        ['access content' => $permissions_by_provider['system']['access content']],
+        array_slice($permissions_by_provider['node'], $offset)
+      );
+      unset($permissions_by_provider['system']['access content']);
+    }
+
+    return $permissions_by_provider;
   }
 
   /**
