@@ -221,14 +221,14 @@ class NodeTypeForm extends BundleEntityFormBase {
 
     $status = $type->save();
 
-    $t_args = ['%name' => $type->label()];
+    $t_args = ['%name' => $type->label(), '@id' => $type->id()];
 
     if ($status == SAVED_UPDATED) {
       $this->messenger()->addStatus($this->t('The content type %name has been updated.', $t_args));
     }
     elseif ($status == SAVED_NEW) {
       node_add_body_field($type);
-      $this->messenger()->addStatus($this->t('The content type %name has been added.', $t_args));
+      $this->messenger()->addStatus($this->t('The content type %name has been added. Add content <a href=/node/add/@id>here</a>.', $t_args));
       $context = array_merge($t_args, ['link' => $type->toLink($this->t('View'), 'collection')->toString()]);
       $this->logger('node')->notice('Added content type %name.', $context);
     }
