@@ -206,11 +206,6 @@ body {
   padding-block-start: var(--admin-toolbar-space-16);
   background-color: var(--admin-toolbar-color-white);
 
-  :where([data-admin-toolbar="collapsed"]) & {
-    flex-direction: column;
-    align-items: center;
-  }
-
   & + .toolbar-block {
     margin-block-start: calc(var(--admin-toolbar-space-10) * -1);
 
@@ -231,6 +226,11 @@ body {
     margin-block-start: revert;
     padding-block-start: revert;
     padding-block-end: 0;
+
+    :where([data-admin-toolbar="collapsed"]) & {
+      flex-direction: column;
+      align-items: center;
+    }
   }
 }
 
@@ -251,9 +251,9 @@ body {
     display: block;
     max-width: var(--admin-toolbar-space-40);
   }
-  
+
   :where([data-admin-toolbar="collapsed"]) & {
-    .admin-toolbar__logo > img {
+    > img {
       max-width: 40px;
       height: auto;
     }
