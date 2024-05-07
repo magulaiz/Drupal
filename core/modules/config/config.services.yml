@@ -3,3 +3,6 @@ services:
     autoconfigure: true
   config.config_subscriber:
     class: Drupal\config\ConfigSubscriber
+  config.menu_parent_update:
+    class: \Drupal\config\EventSubscriber\MenuParentUpdate
+    arguments: ['@config.factory']
