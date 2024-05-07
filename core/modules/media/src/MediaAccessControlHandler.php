@@ -80,44 +80,45 @@ class MediaAccessControlHandler extends EntityAccessControlHandler implements En
         else {
           $access_result = AccessResult::neutral()
             ->cachePerPermissions()
+            ->cachePerUser()
             ->addCacheableDependency($entity)
             ->setReason("The user must be the owner and the 'view own unpublished media' permission is required when the media item is unpublished.");
         }
         return $access_result;
 
       case 'update':
-        if ($account->hasPermission('edit any ' . $type . ' media')) {
-          return AccessResult::allowed()->cachePerPermissions();
-        }
-        if ($account->hasPermission('edit own ' . $type . ' media') && $is_owner) {
-          return AccessResult::allowed()->cachePerPermissions()->cachePerUser()->addCacheableDependency($entity);
-        }
         // @todo Deprecate this permission in
         // https://www.drupal.org/project/drupal/issues/2925459.
         if ($account->hasPermission('update any media')) {
           return AccessResult::allowed()->cachePerPermissions();
         }
-        if ($account->hasPermission('update media') && $is_owner) {
+        if ($account->hasPermission('edit any ' . $type . ' media')) {
+          return AccessResult::allowed()->cachePerPermissions()->addCacheableDependency($entity);
+        }
+        if (($account->hasPermission('edit own ' . $type . ' media') || $account->hasPermission('update media')) && $is_owner) {
           return AccessResult::allowed()->cachePerPermissions()->cachePerUser()->addCacheableDependency($entity);
         }
-        return AccessResult::neutral("The following permissions are required: 'update any media' OR 'update own media' OR '$type: edit any media' OR '$type: edit own media'.")->cachePerPermissions();
+        return AccessResult::neutral("The following permissions are required: 'update any media' OR 'update own media' OR '$type: edit any media' OR '$type: edit own media'.")
+          ->cachePerPermissions()
+          ->cachePerUser()
+          ->addCacheableDependency($entity);
 
       case 'delete':
-        if ($account->hasPermission('delete any ' . $type . ' media')) {
-          return AccessResult::allowed()->cachePerPermissions();
-        }
-        if ($account->hasPermission('delete own ' . $type . ' media') && $is_owner) {
-          return AccessResult::allowed()->cachePerPermissions()->cachePerUser()->addCacheableDependency($entity);
-        }
         // @todo Deprecate this permission in
         // https://www.drupal.org/project/drupal/issues/2925459.
         if ($account->hasPermission('delete any media')) {
           return AccessResult::allowed()->cachePerPermissions();
         }
-        if ($account->hasPermission('delete media') && $is_owner) {
+        if ($account->hasPermission('delete any ' . $type . ' media')) {
+          return AccessResult::allowed()->cachePerPermissions()->addCacheableDependency($entity);
+        }
+        if (($account->hasPermission('delete own ' . $type . ' media') || $account->hasPermission('delete media')) && $is_owner) {
           return AccessResult::allowed()->cachePerPermissions()->cachePerUser()->addCacheableDependency($entity);
         }
-        return AccessResult::neutral("The following permissions are required: 'delete any media' OR 'delete own media' OR '$type: delete any media' OR '$type: delete own media'.")->cachePerPermissions();
+        return AccessResult::neutral("The following permissions are required: 'delete any media' OR 'delete own media' OR '$type: delete any media' OR '$type: delete own media'.")
+          ->cachePerPermissions()
+          ->cachePerUser()
+          ->addCacheableDependency($entity);
 
       case 'view all revisions':
         // Perform basic permission checks first.
