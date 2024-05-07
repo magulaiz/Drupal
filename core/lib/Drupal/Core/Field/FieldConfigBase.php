@@ -447,6 +447,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
   /**
    * {@inheritdoc}
    */
+  #[ActionMethod(adminLabel: new TranslatableMarkup('Set default value'), pluralize: FALSE)]
   public function setDefaultValue($value) {
     $this->default_value = $this->normalizeValue($value, $this->getFieldStorageDefinition()->getMainPropertyName());
     return $this;

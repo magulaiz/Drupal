@@ -167,6 +167,7 @@ YAML;
     $this->assertFalse($field->isRequired());
     $this->assertTrue($field->getSetting('display_summary'));
     $this->assertFalse($field->getSetting('required_summary'));
+    $this->assertEmpty($field->getDefaultValueLiteral());
 
     $recipe = <<<YAML
 name: 'Set field label and description'
@@ -180,6 +181,8 @@ config:
       setSettings:
         display_summary: false
         required_summary: true
+      setDefaultValue:
+        value: "Don't build a castle in a swamp."
 YAML;
     $recipe = $this->createRecipe($recipe);
     RecipeRunner::processRecipe($recipe);
@@ -192,6 +195,7 @@ YAML;
     $this->assertTrue($field->isRequired());
     $this->assertFalse($field->getSetting('display_summary'));
     $this->assertTrue($field->getSetting('required_summary'));
+    $this->assertSame([['value' => "Don't build a castle in a swamp."]], $field->getDefaultValueLiteral());
   }
 
 }
