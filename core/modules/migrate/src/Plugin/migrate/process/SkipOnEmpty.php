@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate\Plugin\migrate\process;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
@@ -72,11 +73,8 @@ use Drupal\migrate\Row;
  * source.
  *
  * @see \Drupal\migrate\Plugin\MigrateProcessInterface
- *
- * @MigrateProcessPlugin(
- *   id = "skip_on_empty"
- * )
  */
+#[MigrateProcess('skip_on_empty')]
 class SkipOnEmpty extends ProcessPluginBase {
 
   /**
