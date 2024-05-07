@@ -16,6 +16,7 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\media\Entity\MediaType;
+use Drupal\node\Entity\NodeType;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
@@ -377,6 +378,32 @@ YAML;
     $view_display = $repository->getViewDisplay('node', 'test');
     $this->assertNull($view_display->getComponent('body'));
     $this->assertNull($view_display->getComponent('links'));
+  }
+
+  public function testNodeTypeEntityActions(): void {
+    $node_type = NodeType::load('test');
+
+    $this->assertTrue($node_type->shouldCreateNewRevision());
+    $this->assertSame(DRUPAL_OPTIONAL, $node_type->getPreviewMode());
+    $this->assertTrue($node_type->displaySubmitted());
+
+    $recipe = <<<YAML
+name: 'Change content type'
+config:
+  actions:
+    {$node_type->getConfigDependencyName()}:
+      setNewRevision: false
+      setPreviewMode: 2
+      setDisplaySubmitted: false
+YAML;
+
+    $recipe = $this->createRecipe($recipe);
+    RecipeRunner::processRecipe($recipe);
+
+    $node_type = NodeType::load('test');
+    $this->assertFalse($node_type->shouldCreateNewRevision());
+    $this->assertSame(DRUPAL_REQUIRED, $node_type->getPreviewMode());
+    $this->assertFalse($node_type->displaySubmitted());
   }
 
 }
