@@ -13,7 +13,7 @@ use Drupal\Tests\system\Functional\Cache\PageCacheTagsTestBase;
  *
  * @group navigation
  */
-class MissingMenuIconAbbreviationTest extends PageCacheTagsTestBase {
+class NavigationSidebarTest extends PageCacheTagsTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;
 
@@ -56,7 +56,7 @@ class MissingMenuIconAbbreviationTest extends PageCacheTagsTestBase {
   /**
    * Tests the abbreviation visibility.
    */
-  public function testAbbrVisibility() {
+  public function testAbbrVisibility(): void {
     $test_page_url = Url::fromRoute('test_page_test.test_page');
     $this->drupalGet($test_page_url);
 
