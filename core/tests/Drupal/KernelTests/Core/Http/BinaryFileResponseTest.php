@@ -29,7 +29,7 @@ class BinaryFileResponseTest extends KernelTestBase {
     $response = \Drupal::service('http_kernel')->handle($request);
     $response->prepare($request);
 
-    $this->assertSame($content_type, $response->headers->get('Content-Type'));
+    $this->assertSame($content_type, current(explode(';', $response->headers->get('Content-Type'))));
   }
 
   /**
@@ -38,7 +38,7 @@ class BinaryFileResponseTest extends KernelTestBase {
   public function providerTestCalculatedContentType() {
     $data = [];
     $data[] = ['core/misc/print.css', 'text/css'];
-    $data[] = ['core/misc/checkbox.js', 'application/javascript'];
+    $data[] = ['core/misc/checkbox.js', 'text/javascript'];
     $data[] = ['core/misc/tree.png', 'image/png'];
     return $data;
   }
