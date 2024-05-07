@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Recipe\RecipeRunner;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\node\Entity\NodeType;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
@@ -110,21 +111,51 @@ YAML;
     $this->assertSame('Here be dragons...', $entity->get('protected_property'));
     $entity->save();
 
-    $recipe = [
+    $recipe = $this->createRecipe([
       'name' => 'Set a value',
       'config' => [
         'actions' => [
           'config_test.dynamic.foo' => $config_actions,
         ],
       ],
-    ];
-    $recipe = $this->createRecipe($recipe);
+    ]);
     RecipeRunner::processRecipe($recipe);
 
     $entity = $storage->load('foo');
     foreach ($config_actions as ['property_name' => $name, 'value' => $value]) {
       $this->assertSame($value, $entity->get($name));
     }
+  }
+
+  /**
+   * @testWith [true, {"setStatus": false}, false]
+   *   [false, {"setStatus": true}, true]
+   *   [true, {"disable": []}, false]
+   *   [false, {"enable": []}, true]
+   */
+  public function testSetStatus(bool $initial_status, array $actions, bool $expected_status): void {
+    $storage = $this->container->get(EntityTypeManagerInterface::class)
+      ->getStorage('config_test');
+
+    $entity = $storage->create([
+      'id' => 'foo',
+      'label' => 'Behold!',
+      'status' => $initial_status,
+    ]);
+    $this->assertSame($initial_status, $entity->status());
+    $entity->save();
+
+    $recipe = $this->createRecipe([
+      'name' => 'Change config entity status',
+      'config' => [
+        'actions' => [
+          'config_test.dynamic.foo' => $actions,
+        ],
+      ],
+    ]);
+    RecipeRunner::processRecipe($recipe);
+
+    $this->assertSame($expected_status, $storage->load('foo')->status());
   }
 
 }
