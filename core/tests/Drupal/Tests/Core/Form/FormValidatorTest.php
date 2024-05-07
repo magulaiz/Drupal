@@ -391,7 +391,7 @@ class FormValidatorTest extends UnitTestCase {
     $form_state = $this->getMockBuilder('Drupal\Core\Form\FormState')
       ->onlyMethods(['setError'])
       ->getMock();
-    $form_state->expects($this->once())
+    $form_state->expects($this->atLeastOnce())
       ->method('setError')
       ->with($this->isType('array'), $expected_message);
     $form_validator->validateForm('test_form_id', $form, $form_state);
@@ -466,7 +466,10 @@ class FormValidatorTest extends UnitTestCase {
         [
           '#type' => 'confirm_password',
           '#maxlength' => 12,
-          '#value' => Random::machineName(15),
+          '#value' => [
+            'pass1' => Random::machineName(15),
+            'pass2' => Random::machineName(15),
+          ],
         ],
         'Test cannot be longer than <em class="placeholder">12</em> characters but is currently <em class="placeholder">15</em> characters long.',
         FALSE,
