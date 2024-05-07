@@ -1,0 +1,6 @@
+name: 'Automatic Updates Test Status Checker Provider'
+type: module
+description: 'Test module to provide an additional status checker.'
+package: Testing
+dependencies:
+  - drupal:auto_updates_test
