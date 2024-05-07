@@ -59,6 +59,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     if ($this->outputLogs) {
       $this->migratedAdminUserName = 'admin';
     }
+    $this->drupalLogin($this->createUser(['access drupal migration']));
   }
 
   /**
@@ -97,13 +98,13 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'search_page' => 3,
       'shortcut' => 2,
       'shortcut_set' => 1,
-      'action' => 30,
+      'action' => 32,
       'menu' => 8,
       'path_alias' => 8,
       'taxonomy_term' => 15,
       'taxonomy_vocabulary' => 7,
-      'user' => 7,
-      'user_role' => 7,
+      'user' => 8,
+      'user_role' => 8,
       'menu_link_content' => 10,
       'view' => 14,
       'date_format' => 12,
@@ -126,7 +127,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     $counts['menu_link_content'] = 11;
     $counts['node'] = 19;
     $counts['taxonomy_term'] = 16;
-    $counts['user'] = 8;
+    $counts['user'] = 9;
     return $counts;
   }
 
